@@ -1,0 +1,129 @@
+* {
+    font-family: Monospace;
+}
+
+html, body {
+    min-height: 300px;
+    min-width: 250px;
+}
+
+.fully-occupy {
+    height: 100%;
+    width: 100%;
+}
+
+#toolbar-container {
+    width: 100%;
+    height: 30px;
+    background-color: #b3b3b3;
+    min-width: 250px;
+}
+
+#middle-container {
+    width: 100%;
+    height: 65%;
+    min-height: 200px;
+    min-width: 250px;
+}
+
+#testCase-container {
+    width: calc(25% - 20px);
+    height: calc(100% - 20px);
+    float: left;
+    resize: both;
+    border: 10px #b3b3b3 solid;
+    border-left: 15px #b3b3b3 solid;
+    border-right: 5px #b3b3b3 solid;
+}
+
+#testCase-grid {
+    width: 100%;
+    height: 90%;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+#result-container {
+    width: 100%;
+    height: calc(10% - 10px);
+    background-color: #b3b3b3;
+    border-top: 10px solid #b3b3b3;
+}
+
+#result1, #result2 {
+    width: 100%;
+    height: 50%;   
+}
+
+#result-runs {
+    height: 100%;
+    float: right;
+    color: green;
+    font-weight: bold;
+}
+
+#result-failures {
+    height: 100%;
+    float: right;
+    color: red;
+    font-weight: bold;
+}
+
+#command-container {
+    width: calc(75% - 30px);
+    height: calc(100% - 20px);
+    float: left;
+    resize: both;
+    border: 10px #b3b3b3 solid;
+    border-right: 20px #b3b3b3 solid;
+}
+
+#command-grid {
+    width: 100%;
+    height: calc(100% - 115px);
+    background-color: white; 
+    overflow-y: scroll;  
+    overflow-x: hidden;  
+}
+
+#command-toolbar {
+    width: 100%;
+    height: 105px;
+    border-top: 15px #b3b3b3 solid;
+    background-color: #b3b3b3;
+}
+
+#clear-log-container {
+    height: 15px;
+    width: 100%;
+    background-color: #b3b3b3;
+    border: 0px;
+}
+
+#clear-log {
+    float: right;
+    margin-right: 15px;
+    border-bottom: 0px;
+}
+
+#logcontainer {
+    width: calc(100% - 30px);
+    height: calc(35% - 60px);
+    background-color: white;
+    min-height: 45px;
+    min-width: 250px;
+    resize: vertical;
+    border: 15px #b3b3b3 solid;
+    border-top: 0px;
+    overflow: scroll;
+}
+
+.log-info {
+    border-bottom: 1px #efefef solid;
+}
+
+.log-error {
+    border-bottom: 1px #efefef solid;
+    color: red;
+    font-weight:bold;
+}
