@@ -115,7 +115,7 @@ function initializeAfterConnectionFailed() {
 }
 
 function pause() {
-    if(isPlaying) isPause = true;
+    isPause = true;
 }
 
 function resume() {
@@ -300,6 +300,7 @@ function initializePlayingProgress(isDbclick) {
 }
 
 function executionLoop() {
+    console.log("Pause:"+isPause);
     if(isPause){
         return true;
     }
@@ -654,6 +655,7 @@ function finalizePlayingProgress() {
     console.log("success");
     setTimeout(function(){
         isPlaying = false;
+        if(!isPause)
         isRecording = true;
     }, 500);
 }
