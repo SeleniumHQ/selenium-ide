@@ -9975,4 +9975,3 @@ core.select.setSelected = function(a, b) {
   var c = core.select.findSelect(a), c = core.select.option.getOptionLocator_(b).findOption(c);
   bot.dom.isSelected(c) || bot.action.click(c);
 };
-
