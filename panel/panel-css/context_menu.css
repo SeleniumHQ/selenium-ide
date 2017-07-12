@@ -1,4 +1,4 @@
-ul {
+.menu ul {
   list-style:none;
   margin:0px;
   margin-top:4px;
@@ -9,11 +9,11 @@ ul {
   color: #333333;
 }
 
-li{
+.menu li{
     line-height:20px;
 }
 
-a :hover{
+.menu a :hover{
     text-decoration:underline;
 }
 

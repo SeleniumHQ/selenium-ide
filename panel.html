@@ -7,6 +7,10 @@
 	
 	<link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="panel/css/font-awesome.min.css">
+
+    
+    <link rel="stylesheet" type="text/css" href="./panel/panel-css/context_menu.css"><!-- to hide right button feature -->
+    
 	<!--[if lt IE 9]>
 	<link rel="stylesheet" href="panel/css/ie.css" type="text/css" media="screen" />
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,21 +74,48 @@
 		</hgroup>
 	</header> <!-- end of header bar -->
 
+    <!-- right button feature -->
+    <div id="suite-grid-menu" class="menu">
+        <ul>
+          <li id="load-testSuite-show-menu"><a href="#">Open Test Suites</a></li>
+          <li id="add-testSuite-menu"><a href="#">Add New Test Suite</a></li>
+        </ul>
+    </div>
+    <div id="command-grid-menu" class="menu">
+        <ul>
+          <li id="grid-add"><a href="#">Add Command</a></li>
+          <li id="grid-delete"><a href="#">Delete Command</a></li>
+        </ul>
+    </div>
+
 	<section id="main" class="column">
-	    <div class="submit_link">
-			<button class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
-			<button class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlaythisCase</button>
-			<button class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlaythisSuite</button>
-			<button class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayallSuites</button>
-			<button class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-			<button class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
+	    <div id="toolbar-container" class="submit_link">
+            <!-- hidden, because it has default style -->
+            <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display:none"></input>
+            <input id="load-testSuite-show" type="button" value="OpenSuite" style="display:none"></input>
+
+            <button id="save-testSuite" style="display:none">SaveSuite</button>
+            <button id="close-testSuite" style="display:none">CloseSuite</button> 
+            <button id="add-testSuite" style="display:none">+Suite</button>
+            <button id="add-testCase" style="display:none">+Case</button>
+            <button id="delete-testCase" style="display:none">-Case</button>
+            
+            <a download="info.html" id="downloadlink" style="display: none">Download</a>
+            <!-- ?????? -->
+
+			<button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
+			<button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlaythisCase</button>
+			<button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlaythisSuite</button>
+			<button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayallSuites</button>
+			<button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
+			<button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
 		</div>
 		<article class="width_quarter module_right">
-			<div class="module">
+			<div id="middle-container" class="module">
 				<header><h3>Test case</h3></header>
-				<div class="case_list">
-					<div class="module_content">
-						<div class="message"><p>Untitled</p>
+				<div id="testCase-container" class="case_list">
+					<div id="testCase-grid" class="module_content">
+						<!--<div class="message"><p>Untitled</p>
 						<p><strong>John Doe</strong></p></div>
 						<div class="message"><p>Untitled</p>
 						<p><strong>John Doe</strong></p></div>
@@ -93,29 +124,29 @@
 						<div class="message"><p>Untitled</p>
 						<p><strong>John Doe</strong></p></div>
 						<div class="message"><p>Untitled</p>
-						<p><strong>John Doe</strong></p></div>
+						<p><strong>John Doe</strong></p></div>-->
 					</div>
 				</div>
 			</div><!-- end of messages article -->
 			<article class="module">
-				<fieldset class="action">
-					<label>Runs</label>
-					<p class="runs">100000</P>
-					<label>Failures</label>
-					<p class="failures">0</P>
+				<fieldset id="result-container" class="action">
+					<label id="result1">Runs</label>
+					<p id="result-runs" class="runs">0</p>
+					<label id="result2">Failures</label>
+					<p id="result-failures" class="failures">0</p>
 				</fieldset>
 		    </article>
 		</article>
 		<article class="module width_3_quarter">
 		    <header><h3 class="tabs_involved"></h3>
 				<ul class="tabs">
-		   			<li><a href="#tab1">Table</a></li>
+		   			<li><a href="#command-container">Table</a></li>
 		    		<li><a href="#tab2">Source</a></li>
 				</ul>
 			</header>
 		    <div class="tab_container">
-				<div id="tab1" class="tab_content case_hight">
-					<table class="tablesorter" cellspacing="0"> 
+				<div id="command-container" class="tab_content case_hight">
+					<table id="command-grid" class="tablesorter" cellspacing="0"> 
 						<thead> 
 							<tr> 
 			    				<th>Comand</th> 
@@ -123,8 +154,11 @@
 			    				<th>Value</th> 
 							</tr> 
 						</thead> 
-						<tbody> 
-							<tr> 
+						<tbody id="records-grid"> 
+
+                            <input id="records-count" type=hidden value=0></input></tbody>
+                            <!-- set input and /tbody in same line to avoid textNode -->
+							<!--<tr> 
 			   					<td>time</td> 
 			    				<td>open</td> 
 			    				<td></td> 
@@ -144,22 +178,17 @@
 			   					<td>time</td> 
 			    				<td>open</td> 
 			    				<td></td> 
-							</tr> 
-						</tbody> 
+							</tr>-->
 				    </table>
-					<fieldset class="action">
+					<fieldset id="command-toolbar" class="action">
 						<label>Command</label>
-						<input type="text" style="width:92%;">
+						<input id="command-command" type="text" style="width:92%;">
 						<label>Target</label>
-						<select style="width:92%;">
-							<option>Articles</option>
-							<option>Tutorials</option>
-							<option>Freebies</option>
-						</select>
+						<input id="command-target" type="text" style="width:92%;">
 						<label>Value</label>
-						<input type="text" style="width:92%;">
+						<input id="command-value" type="text" style="width:92%;">
 					</fieldset>
-			    </div><!-- end of #tab1 -->
+			    </div><!-- end of #command-container -->
 
 			    <div id="tab2" class="tab_content case_hight">
 			        <table class="tablesorter" cellspacing="0">
@@ -188,9 +217,9 @@
 		
 		<div class="clear"></div>
 		<article class="module width_full">
-			<header>
+			<header class="tabs_involved">
                 <ul class="tabs">
-		   			<li><a href="#tab4">Log</a></li>
+                	<li><a href="#tab4">Log</a></li>
 		    		<li><a href="#tab5">Reference</a></li>
 		    		<li><a href="#tab6">UI-element</a></li>
 		    		<li><a href="#tab7">Rollup</a></li>
@@ -283,7 +312,21 @@
 		</article><!-- end of styles article -->
 		<div class="spacer"></div>
 	</section>
-
+    <!-- script -->
+    <script src="./escape.js"></script>
+    <script src="./panel/panel-js/log.js"></script>
+    <script src="./initial.js"></script>
+    <script src="./panel/panel-js/context_menu.js"></script>
+    <script src="./panel/panel-js/command_grid.js"></script>
+    <script src="./panel/panel-js/command_grid_toolbar.js"></script>
+    <script src="./panel/panel-js/testcase_grid.js"></script>
+    <script src="./IO/load_file.js"></script>
+    <script src="./IO/save_file.js"></script>
+    <script src="./IO/suite.js"></script>
+    <script src="editor.js"></script>
+    <script src="locatorBuilders.js"></script>
+    <!-- playback -->
+    <script type="text/javascript" src="playback-api.js"></script>
 
 </body>
 
