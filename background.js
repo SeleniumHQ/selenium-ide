@@ -97,6 +97,16 @@ browser.contextMenus.create({
     title: "assertTitle"
     //contexts: ["all"]
 });
+browser.contextMenus.create({
+    id: "storeText",
+    title: "storeText"
+    //contexts: ["all"]
+});
+browser.contextMenus.create({
+    id: "storeTitle",
+    title: "storeTitle"
+    //contexts: ["all"]
+});
 
 var port;
 browser.contextMenus.onClicked.addListener(function(info, tab) {
@@ -117,6 +127,14 @@ browser.contextMenus.onClicked.addListener(function(info, tab) {
         console.log("assertTitle:");
         port.postMessage({cmd:"assertTitle"});
         break;
+      case "storeText":
+        console.log("storeText:");
+        port.postMessage({cmd:"storeText"});
+        break;
+      case "storeTitle":
+        console.log("storeTitle:");
+        port.postMessage({cmd:"storeTitle"});
+        break;  
     default:
     }
 });

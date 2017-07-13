@@ -549,6 +549,12 @@ window.addEventListener('contextmenu',function(event){
           case "assertTitle":
             record("assertTitle",[['']],tmpTitle);
             break;
+          case "storeText":
+            record("storeText",tmpText,'i');
+            break;
+          case "storeTitle":
+            record("storeTitle",'t','');
+            break;  
           default:
         }
         this.removeListener();

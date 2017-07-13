@@ -414,6 +414,19 @@ Selenium.prototype.doAssertTitle = function(locator, value) {
     }
 };
 
+Selenium.prototype.doStoreText = function(locator, value) {
+    var element = this.browserbot.findElement(locator);
+    storedVars[value]=element.textContent;
+};
+
+Selenium.prototype.doStoreTitle = function(value) {
+    storedVars[value]=document.title;
+};
+
+Selenium.prototype.doEcho = function(value) {
+    sideex_log.info("echo: "+storedVars[value]);
+};
+
 // xian
 Selenium.prototype.doWaitPreparation = function() {
     // function setNewPageValue(e) {
