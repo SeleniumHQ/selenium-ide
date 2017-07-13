@@ -88,64 +88,64 @@ var unicodeToKeys = {};
 
 function build_sendkeys_maps() {
 
-//  add_sendkeys_key("NULL", '\uE000');
-//  add_sendkeys_key("CANCEL", '\uE001'); // ^break
-//  add_sendkeys_key("HELP", '\uE002');
-  add_sendkeys_key("BACKSPACE", '\uE003', "BKSP");
-  add_sendkeys_key("TAB", '\uE004');
-//  add_sendkeys_key("CLEAR", '\uE005');
-//  add_sendkeys_key("RETURN", '\uE006');
-  add_sendkeys_key("ENTER", '\uE007');
-  add_sendkeys_key("SHIFT", '\uE008');
-  add_sendkeys_key("CONTROL", '\uE009', "CTRL");
-  add_sendkeys_key("ALT", '\uE00A');
-  add_sendkeys_key("PAUSE", '\uE00B');
-  add_sendkeys_key("ESC", '\uE00C', "ESCAPE");
-  add_sendkeys_key("SPACE", '\uE00D');
-  add_sendkeys_key("PAGE_UP", '\uE00E', "PGUP");
-  add_sendkeys_key("PAGE_DOWN", '\uE00F', "PGDN");
-  add_sendkeys_key("END", '\uE010');
-  add_sendkeys_key("HOME", '\uE011');
-  add_sendkeys_key("LEFT", '\uE012');
-  add_sendkeys_key("UP", '\uE013');
-  add_sendkeys_key("RIGHT", '\uE014');
-  add_sendkeys_key("DOWN", '\uE015');
-  add_sendkeys_key("INSERT", '\uE016', "INS");
-  add_sendkeys_key("DELETE", '\uE017', "DEL");
-  add_sendkeys_key("SEMICOLON", '\uE018');
-  add_sendkeys_key("EQUALS", '\uE019');
+    //  add_sendkeys_key("NULL", '\uE000');
+    //  add_sendkeys_key("CANCEL", '\uE001'); // ^break
+    //  add_sendkeys_key("HELP", '\uE002');
+    add_sendkeys_key("BACKSPACE", '\uE003', "BKSP");
+    add_sendkeys_key("TAB", '\uE004');
+    //  add_sendkeys_key("CLEAR", '\uE005');
+    //  add_sendkeys_key("RETURN", '\uE006');
+    add_sendkeys_key("ENTER", '\uE007');
+    add_sendkeys_key("SHIFT", '\uE008');
+    add_sendkeys_key("CONTROL", '\uE009', "CTRL");
+    add_sendkeys_key("ALT", '\uE00A');
+    add_sendkeys_key("PAUSE", '\uE00B');
+    add_sendkeys_key("ESC", '\uE00C', "ESCAPE");
+    add_sendkeys_key("SPACE", '\uE00D');
+    add_sendkeys_key("PAGE_UP", '\uE00E', "PGUP");
+    add_sendkeys_key("PAGE_DOWN", '\uE00F', "PGDN");
+    add_sendkeys_key("END", '\uE010');
+    add_sendkeys_key("HOME", '\uE011');
+    add_sendkeys_key("LEFT", '\uE012');
+    add_sendkeys_key("UP", '\uE013');
+    add_sendkeys_key("RIGHT", '\uE014');
+    add_sendkeys_key("DOWN", '\uE015');
+    add_sendkeys_key("INSERT", '\uE016', "INS");
+    add_sendkeys_key("DELETE", '\uE017', "DEL");
+    add_sendkeys_key("SEMICOLON", '\uE018');
+    add_sendkeys_key("EQUALS", '\uE019');
 
-  add_sendkeys_key("NUMPAD0", '\uE01A', "N0", "NUM_ZERO");  // number pad keys
-  add_sendkeys_key("NUMPAD1", '\uE01B', "N1", "NUM_ONE");
-  add_sendkeys_key("NUMPAD2", '\uE01C', "N2", "NUM_TWO");
-  add_sendkeys_key("NUMPAD3", '\uE01D', "N3", "NUM_THREE");
-  add_sendkeys_key("NUMPAD4", '\uE01E', "N4", "NUM_FOUR");
-  add_sendkeys_key("NUMPAD5", '\uE01F', "N5", "NUM_FIVE");
-  add_sendkeys_key("NUMPAD6", '\uE020', "N6", "NUM_SIX");
-  add_sendkeys_key("NUMPAD7", '\uE021', "N7", "NUM_SEVEN");
-  add_sendkeys_key("NUMPAD8", '\uE022', "N8", "NUM_EIGHT");
-  add_sendkeys_key("NUMPAD9", '\uE023', "N9", "NUM_NINE");
-  add_sendkeys_key("MULTIPLY", '\uE024', "MUL", "NUM_MULTIPLY");
-  add_sendkeys_key("ADD", '\uE025', "PLUS", "NUM_PLUS");
-  add_sendkeys_key("SEPARATOR", '\uE026', "SEP");
-  add_sendkeys_key("SUBTRACT", '\uE027', "MINUS", "NUM_MINUS");
-  add_sendkeys_key("DECIMAL", '\uE028', "PERIOD", "NUM_PERIOD");
-  add_sendkeys_key("DIVIDE", '\uE029', "DIV", "NUM_DIVISION");
+    add_sendkeys_key("NUMPAD0", '\uE01A', "N0", "NUM_ZERO"); // number pad keys
+    add_sendkeys_key("NUMPAD1", '\uE01B', "N1", "NUM_ONE");
+    add_sendkeys_key("NUMPAD2", '\uE01C', "N2", "NUM_TWO");
+    add_sendkeys_key("NUMPAD3", '\uE01D', "N3", "NUM_THREE");
+    add_sendkeys_key("NUMPAD4", '\uE01E', "N4", "NUM_FOUR");
+    add_sendkeys_key("NUMPAD5", '\uE01F', "N5", "NUM_FIVE");
+    add_sendkeys_key("NUMPAD6", '\uE020', "N6", "NUM_SIX");
+    add_sendkeys_key("NUMPAD7", '\uE021', "N7", "NUM_SEVEN");
+    add_sendkeys_key("NUMPAD8", '\uE022', "N8", "NUM_EIGHT");
+    add_sendkeys_key("NUMPAD9", '\uE023', "N9", "NUM_NINE");
+    add_sendkeys_key("MULTIPLY", '\uE024', "MUL", "NUM_MULTIPLY");
+    add_sendkeys_key("ADD", '\uE025', "PLUS", "NUM_PLUS");
+    add_sendkeys_key("SEPARATOR", '\uE026', "SEP");
+    add_sendkeys_key("SUBTRACT", '\uE027', "MINUS", "NUM_MINUS");
+    add_sendkeys_key("DECIMAL", '\uE028', "PERIOD", "NUM_PERIOD");
+    add_sendkeys_key("DIVIDE", '\uE029', "DIV", "NUM_DIVISION");
 
-  add_sendkeys_key("F1", '\uE031');  // function keys
-  add_sendkeys_key("F2", '\uE032');
-  add_sendkeys_key("F3", '\uE033');
-  add_sendkeys_key("F4", '\uE034');
-  add_sendkeys_key("F5", '\uE035');
-  add_sendkeys_key("F6", '\uE036');
-  add_sendkeys_key("F7", '\uE037');
-  add_sendkeys_key("F8", '\uE038');
-  add_sendkeys_key("F9", '\uE039');
-  add_sendkeys_key("F10", '\uE03A');
-  add_sendkeys_key("F11", '\uE03B');
-  add_sendkeys_key("F12", '\uE03C');
+    add_sendkeys_key("F1", '\uE031'); // function keys
+    add_sendkeys_key("F2", '\uE032');
+    add_sendkeys_key("F3", '\uE033');
+    add_sendkeys_key("F4", '\uE034');
+    add_sendkeys_key("F5", '\uE035');
+    add_sendkeys_key("F6", '\uE036');
+    add_sendkeys_key("F7", '\uE037');
+    add_sendkeys_key("F8", '\uE038');
+    add_sendkeys_key("F9", '\uE039');
+    add_sendkeys_key("F10", '\uE03A');
+    add_sendkeys_key("F11", '\uE03B');
+    add_sendkeys_key("F12", '\uE03C');
 
-  add_sendkeys_key("META", '\uE03D', "COMMAND");
+    add_sendkeys_key("META", '\uE03D', "COMMAND");
 
 }
 
@@ -157,7 +157,7 @@ function add_sendkeys_key(key, unicodeChar, alias, botKey) {
         //From runner
         storedVars['KEY_' + key] = unicodeChar;
         if (alias) {
-          storedVars['KEY_' + alias] = unicodeChar;
+            storedVars['KEY_' + alias] = unicodeChar;
         }
 
         return true;
@@ -388,46 +388,26 @@ Selenium.prototype.reset = function() {
     this.browserbot.resetPopups();
 };
 
-Selenium.prototype.doVerifyText = function(locator,value) {
+Selenium.prototype.doVerifyText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if(element.textContent == value){
-      console.log(element.textContent);
-    }
-    else {
-      console.error("VerifyText Not Found!!");
+};
+
+Selenium.prototype.doVerifyTitle = function(locator, value) {
+    if (document.title !== value) {
+        throw new Error("VerifyTitle " + value + " failed!");
     }
 };
 
-Selenium.prototype.doVerifyTitle = function(locator,value) {
-    //var element = this.browserbot.findElement(locator);
-    //console.log("????");
-    if(document.title == value){
-      console.log(document.title);
-    }
-    else {
-      console.error("VerifyTitle Not Found!!");
-    }
-};
-
-Selenium.prototype.doAssertText = function(locator,value) {
+Selenium.prototype.doAssertText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if(element.textContent == value){
-      console.log(element.textContent);
-    }
-    else {
-      console.error("AssertText Not Found!!");
-      throw new Error("error: assert failed!");
+    if (element.textContent !== value) {
+        throw new Error("Assert failed!");
     }
 };
 
-Selenium.prototype.doAssertTitle = function(locator,value) {
-    //var element = this.browserbot.findElement(locator);
-    if(document.title == value){
-      console.log(document.title);
-    }
-    else {
-      console.error("AssertTitle Not Found!!");
-      throw new SeleniumError("error: assert failed!");
+Selenium.prototype.doAssertTitle = function(locator, value) {
+    if (document.title !== value) {
+        throw new Error("Assert failed!");
     }
 };
 
@@ -1643,7 +1623,7 @@ Selenium.prototype.getAlert = function() {
      * page's onload() event handler. In this case a visible dialog WILL be
      * generated and Selenium will hang until someone manually clicks OK.</p>
      * @return string The message of the most recent JavaScript alert
-
+     
      */
     if (!this.browserbot.hasAlerts()) {
         Assert.fail("There were no alerts");
@@ -2304,8 +2284,7 @@ Selenium.prototype.doDragAndDropToObject = function(locatorOfObjectToBeDragged, 
      * @param locatorOfObjectToBeDragged an element to be dragged
      * @param locatorOfDragDestinationObject an element whose location (i.e., whose center-most pixel) will be the point where locatorOfObjectToBeDragged  is dropped
      */
-    if(!this.browserbot.findElement(locatorOfObjectToBeDragged).draggable)
-    {
+    if (!this.browserbot.findElement(locatorOfObjectToBeDragged).draggable) {
         //origin code
         var startX = this.getElementPositionLeft(locatorOfObjectToBeDragged);
         var startY = this.getElementPositionTop(locatorOfObjectToBeDragged);
@@ -2323,11 +2302,11 @@ Selenium.prototype.doDragAndDropToObject = function(locatorOfObjectToBeDragged, 
 
         var movementsString = "" + deltaX + "," + deltaY;
         this.doDragAndDrop(locatorOfObjectToBeDragged, movementsString);
-    }else{
+    } else {
         //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/09/29
         var element = this.browserbot.findElement(locatorOfObjectToBeDragged);
         var target = this.browserbot.findElement(locatorOfDragDestinationObject);
-        this.browserbot.triggerDragEvent(element,target);
+        this.browserbot.triggerDragEvent(element, target);
     }
 };
 
@@ -2986,14 +2965,14 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
 }
 
 //Selenium.prototype.doSetBrowserLogLevel = function(logLevel) {
-    /**
-     * Sets the threshold for browser-side logging messages; log messages beneath this threshold will be discarded.
-     * Valid logLevel strings are: "debug", "info", "warn", "error" or "off".
-     * To see the browser logs, you need to
-     * either show the log window in GUI mode, or enable browser-side logging in Selenium RC.
-     *
-     * @param logLevel one of the following: "debug", "info", "warn", "error" or "off"
-     */
+/**
+ * Sets the threshold for browser-side logging messages; log messages beneath this threshold will be discarded.
+ * Valid logLevel strings are: "debug", "info", "warn", "error" or "off".
+ * To see the browser logs, you need to
+ * either show the log window in GUI mode, or enable browser-side logging in Selenium RC.
+ *
+ * @param logLevel one of the following: "debug", "info", "warn", "error" or "off"
+ */
 /*    if (logLevel == null || logLevel == "") {
         throw new SeleniumError("You must specify a log level");
     }
@@ -3611,22 +3590,19 @@ OptionLocatorFactory.prototype.OptionLocatorById = function(id) {
 
 
 //EditContentExt, Lin Yun Wen, SELAB, CSIE, NCKU, 2016/11/17
-Selenium.prototype.doEditContent = function(locator,value) {
+Selenium.prototype.doEditContent = function(locator, value) {
     /**
-    *to set text in the element which's conentEditable attribute is true
-    *@param locator an element locator
-    *@param value the context of the element in html
-    */
+     *to set text in the element which's conentEditable attribute is true
+     *@param locator an element locator
+     *@param value the context of the element in html
+     */
     var element = this.browserbot.findElement(locator);
     var editable = element.contentEditable;
 
-    if (editable == "true")
-    {
+    if (editable == "true") {
         ////LOG.info("if statement!");
         element.innerHTML = value;
-    }
-    else
-    {
+    } else {
         ////LOG.info("else statement!");
         //LOG.error("The value of contentEditable attribute of this element is not true.");
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
