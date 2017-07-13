@@ -18,6 +18,6 @@ sideex_log.error = function(str) {
     $("#logcontainer").scrollTop($("#logcontainer")[0].scrollHeight);
 }
 
-document.getElementById("clear-log").addEventListener("click", function(){
+document.getElementById("clear-log").addEventListener("click", function() {
     document.getElementById("logcontainer").innerHTML = "";
 }, false);

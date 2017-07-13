@@ -4,7 +4,8 @@ table {
     table-layout: fixed;
 }
 
-thead, tbody {
+thead,
+tbody {
     width: 100%;
 }
 
@@ -37,13 +38,15 @@ td {
     white-space: nowrap;
 }
 
-.executing{
+.executing {
     background-color: #ffffe6;
 }
-.success{
+
+.success {
     background-color: #e5ffe5;
 }
-.fail{
+
+.fail {
     background-color: #ffe5e5;
 }
 
@@ -61,8 +64,8 @@ td {
 }
 
 .selectedCase {
-    font-weight:bold;
-    text-decoration:underline;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .selectedSuite {
@@ -90,7 +93,9 @@ td {
     line-height: 30px;
 }
 
-#command-command, #command-target, #command-value {
+#command-command,
+#command-target,
+#command-value {
     width: 100%;
 }
 

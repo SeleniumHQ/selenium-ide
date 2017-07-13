@@ -18,12 +18,12 @@ function setSelectedCase(id) {
     setSelectedSuite(suite_id);
     $("#" + id).addClass('selectedCase');
     clean_panel();
-    document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records); 
+    document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records);
 }
 
 function getSelectedSuite() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedSuite")) {
-        return document.getElementById("testCase-grid").getElementsByClassName("selectedSuite")[0];    
+        return document.getElementById("testCase-grid").getElementsByClassName("selectedSuite")[0];
     } else {
         return null;
     }
@@ -31,7 +31,7 @@ function getSelectedSuite() {
 
 function getSelectedCase() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedCase")) {
-        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];    
+        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];
     } else {
         return null;
     }
@@ -53,7 +53,7 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Open Test Suites";
     open_suite.appendChild(a);
-    open_suite.addEventListener("click", function(event){
+    open_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('load-testSuite-hidden').click();
     }, false);
@@ -64,7 +64,7 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Save Test Suite As...";
     save_suite.appendChild(a);
-    save_suite.addEventListener("click", function(event){
+    save_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('save-testSuite').click();
     }, false);
@@ -75,7 +75,7 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Add New Test Suite";
     add_suite.appendChild(a);
-    add_suite.addEventListener("click", function(event){
+    add_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById("add-testSuite").click();
     }, false);
@@ -86,22 +86,22 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Close Test Suite";
     close_suite.appendChild(a);
-    close_suite.addEventListener("click", function(event){
+    close_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('close-testSuite').click();
     }, false);
-    ul.appendChild(close_suite);              
+    ul.appendChild(close_suite);
 
     var add_case = document.createElement("li");
     a = document.createElement("a");
     a.setAttribute("href", "#");
     a.innerHTML = "Add New Test Case";
     add_case.appendChild(a);
-    add_case.addEventListener("click", function(event){
+    add_case.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('add-testCase').click();
     }, false);
-    ul.appendChild(add_case);  
+    ul.appendChild(add_case);
 
     if (isCase) {
         var remove_case = document.createElement("li");
@@ -109,33 +109,33 @@ function appendContextMenu(node, isCase) {
         a.setAttribute("href", "#");
         a.innerHTML = "Remove Test Case";
         remove_case.appendChild(a);
-        remove_case.addEventListener("click", function(event){
+        remove_case.addEventListener("click", function(event) {
             event.stopPropagation();
             document.getElementById('delete-testCase').click();
         }, false);
-        ul.appendChild(remove_case); 
+        ul.appendChild(remove_case);
 
         var rename_case = document.createElement("li");
         a = document.createElement("a");
         a.setAttribute("href", "#");
         a.innerHTML = "Rename Test Case's Title";
         rename_case.appendChild(a);
-        rename_case.addEventListener("click", function(event){
+        rename_case.addEventListener("click", function(event) {
             event.stopPropagation();
             var s_case = getSelectedCase();
             var n_title = prompt("Please enter the Test Case's title", sideex_testCase[s_case.id].title);
             // get text node
             s_case.childNodes[0].textContent = n_title;
             sideex_testCase[s_case.id].title = n_title;
-        }, false); 
-        ul.appendChild(rename_case);           
+        }, false);
+        ul.appendChild(rename_case);
     } else {
         var rename_suite = document.createElement("li");
         a = document.createElement("a");
         a.setAttribute("href", "#");
         a.innerHTML = "Rename Test Suite's Title";
         rename_suite.appendChild(a);
-        rename_suite.addEventListener("click", function(event){
+        rename_suite.addEventListener("click", function(event) {
             event.stopPropagation();
             var s_suite = getSelectedSuite();
             var n_title = prompt("Please enter the Test Suite's title", sideex_testSuite[s_suite.id].title);
@@ -143,7 +143,7 @@ function appendContextMenu(node, isCase) {
             s_suite.childNodes[0].textContent = n_title;
             sideex_testSuite[s_suite.id].title = n_title;
         }, false);
-        ul.appendChild(rename_suite); 
+        ul.appendChild(rename_suite);
     }
 
     node.appendChild(ul);
@@ -169,7 +169,7 @@ function addTestCase(title, id) {
     } else {
         getSelectedSuite().appendChild(div);
     }
-    
+
     cleanSelected();
     div.setAttribute("class", "selectedCase");
     div.parentNode.setAttribute("class", "selectedSuite");
@@ -188,10 +188,10 @@ function addTestCase(title, id) {
             records: "",
             title: title
         };
-    }    
+    }
 
     // attach event
-    div.addEventListener("click", function(event){
+    div.addEventListener("click", function(event) {
         event.stopPropagation();
         saveOldCase();
         // use jquery's API to add and remove class property
@@ -211,22 +211,22 @@ function addTestCase(title, id) {
         // prevent event trigger on parent from child
         event.stopPropagation();
     }, false);
-    div.addEventListener("dragstart", function(event){
+    div.addEventListener("dragstart", function(event) {
         event.stopPropagation();
         saveOldCase();
         event.dataTransfer.setData("testCase", event.target.id);
     }, false);
-    div.addEventListener("dragover", function(event){
+    div.addEventListener("dragover", function(event) {
         event.stopPropagation();
         event.preventDefault();
     }, false);
-    div.addEventListener("drop", function(event){
+    div.addEventListener("drop", function(event) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
-        var start_ID = event.dataTransfer.getData("testCase"), 
+        var start_ID = event.dataTransfer.getData("testCase"),
             end_ID = event.target.id;
-        if (end_ID !== start_ID && (end_ID.slice(0,1) == start_ID.slice(0,1))) {
+        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
             event.target.parentNode.insertBefore(document.getElementById(start_ID), event.target.nextSibling);
             cleanSelected();
             $("#" + event.target.nextSibling.id).addClass("selectedCase");
@@ -242,15 +242,15 @@ function addTestCase(title, id) {
     document.body.appendChild(menu);
 
     // right click
-    div.addEventListener("contextmenu", function(event){
+    div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
         event.stopPropagation();
         saveOldCase();
         setSelectedCase(event.target.id);
         var mid = "#" + "menu" + id;
         console.log($(mid));
-        $(".menu").css("left",event.pageX);
-        $(".menu").css("top",event.pageY);
+        $(".menu").css("left", event.pageX);
+        $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
 }
@@ -274,7 +274,7 @@ function addTestSuite(title, id) {
     div.setAttribute("class", "selectedSuite");
 
     // attach event
-    div.addEventListener("click", function(event){
+    div.addEventListener("click", function(event) {
         event.stopPropagation();
         saveOldCase();
         cleanSelected();
@@ -282,22 +282,22 @@ function addTestSuite(title, id) {
         clean_panel();
         // document.getElementById("records-grid").innerHTML = "";
     }, false);
-    div.addEventListener("dragstart", function(event){
+    div.addEventListener("dragstart", function(event) {
         event.stopPropagation();
         saveOldCase();
         event.dataTransfer.setData("testSuite", event.target.id);
     }, false);
-    div.addEventListener("dragover", function(event){
+    div.addEventListener("dragover", function(event) {
         event.stopPropagation();
         event.preventDefault();
     }, false);
-    div.addEventListener("drop", function(event){
+    div.addEventListener("drop", function(event) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
-        var start_ID = event.dataTransfer.getData("testSuite"), 
+        var start_ID = event.dataTransfer.getData("testSuite"),
             end_ID = event.target.id;
-        if (end_ID !== start_ID && (end_ID.slice(0,1) == start_ID.slice(0,1))) {
+        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
             event.target.parentNode.insertBefore(document.getElementById(start_ID), event.target.nextSibling);
             cleanSelected();
             document.getElementById(start_ID).setAttribute("class", "selectedSuite");
@@ -311,20 +311,20 @@ function addTestSuite(title, id) {
     document.body.appendChild(menu);
 
     // right click
-    div.addEventListener("contextmenu", function(event){
+    div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
         event.stopPropagation();
         saveOldCase();
         setSelectedSuite(event.target.id);
         var mid = "#" + "menu" + id;
         console.log($(mid));
-        $(".menu").css("left",event.pageX);
-        $(".menu").css("top",event.pageY);
+        $(".menu").css("left", event.pageX);
+        $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
 }
 
-document.getElementById("add-testSuite").addEventListener("click", function(event){
+document.getElementById("add-testSuite").addEventListener("click", function(event) {
     event.stopPropagation();
     var title = prompt("Please enter the Test Suite's title");
     if (!title) {
@@ -336,12 +336,12 @@ document.getElementById("add-testSuite").addEventListener("click", function(even
     addTestSuite(title, id);
 }, false);
 
-document.getElementById("add-testSuite-menu").addEventListener("click", function(event){
+document.getElementById("add-testSuite-menu").addEventListener("click", function(event) {
     event.stopPropagation();
     document.getElementById('add-testSuite').click();
 }, false);
 
-document.getElementById("close-testSuite").addEventListener('click', function (event) {
+document.getElementById("close-testSuite").addEventListener('click', function(event) {
     event.stopPropagation();
     var s_suite = getSelectedSuite();
     if (s_suite) {
@@ -352,7 +352,7 @@ document.getElementById("close-testSuite").addEventListener('click', function (e
     }
 }, false);
 
-document.getElementById("add-testCase").addEventListener("click", function(event){
+document.getElementById("add-testCase").addEventListener("click", function(event) {
     var title = prompt("Please enter the Test Case's title");
     if (!title) {
         title = "Untitled Test Case";
@@ -362,7 +362,7 @@ document.getElementById("add-testCase").addEventListener("click", function(event
     addTestCase(title, id);
 }, false);
 
-document.getElementById("delete-testCase").addEventListener('click', function () {
+document.getElementById("delete-testCase").addEventListener('click', function() {
     var s_case = getSelectedCase();
     if (s_case) {
         sideex_testCase[s_case.id] = null;

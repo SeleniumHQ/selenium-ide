@@ -36,10 +36,10 @@ function getRecordsNum() {
     return document.getElementById("records-count").value;
 }
 
-function setColor(index, state){
-    if(typeof(index) == "string"){
+function setColor(index, state) {
+    if (typeof(index) == "string") {
         $("#" + index).addClass(state);
-    }else {
+    } else {
         var node = document.getElementById("records-" + index);
         node.className = state
     }
@@ -47,8 +47,9 @@ function setColor(index, state){
 
 // according to "ID" to set odd/even class
 function classifyRecords(start, end) {
-    var i = start, node;
-    try{
+    var i = start,
+        node;
+    try {
         if (i % 2 == 1) {
             while (i <= end) {
                 node = document.getElementById("records-" + i);
@@ -61,7 +62,7 @@ function classifyRecords(start, end) {
                     node.className = "even";
                 }
                 i = parseInt(i) + 1;
-            } 
+            }
         } else {
             while (i <= end) {
                 node = document.getElementById("records-" + i);
@@ -74,9 +75,9 @@ function classifyRecords(start, end) {
                     node.className = "odd";
                 }
                 i = parseInt(i) + 1;
-            } 
+            }
         }
-    }catch(e){}
+    } catch (e) {}
 
     document.getElementById("records-" + getRecordsNum()).style.borderBottom = "green solid 2px";
 }
@@ -86,19 +87,20 @@ function reAssignId(start, end) {
     var records = getRecordsArray();
     start = parseInt(start.split("-")[1]);
     end = parseInt(end.split("-")[1]);
-    var len = end - start, i;
+    var len = end - start,
+        i;
 
     if (len > 0) {
         records[end - 1].id = "records-" + end;
         for (i = start; i < start + len; ++i) {
-            records[i - 1].id  = "records-" + i;
+            records[i - 1].id = "records-" + i;
         }
         classifyRecords(start, end);
     } else if (len < 0) {
         records[end].id = "records-" + (end + 1);
         len *= -1;
         for (i = end + 1; i < end + len; ++i) {
-            records[i].id  = "records-" + (i + 1);
+            records[i].id = "records-" + (i + 1);
         }
         classifyRecords(end, start);
     } else {
@@ -109,7 +111,7 @@ function reAssignId(start, end) {
 
 function getSelectedCase() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedCase")) {
-        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];    
+        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];
     } else {
         return null;
     }
@@ -123,7 +125,7 @@ function attachEvent(start, end) {
 
         // sometimes target will be <td> or <tr>        
         // click
-        node.addEventListener("click", function(event){        
+        node.addEventListener("click", function(event) {
             // use jquery's API to add and remove class property
             $('#records-grid .selectedRecord').removeClass('selectedRecord');
             $(this).addClass('selectedRecord');
@@ -142,7 +144,7 @@ function attachEvent(start, end) {
         }, false);
 
         // right click
-        node.addEventListener("contextmenu", function(event){        
+        node.addEventListener("contextmenu", function(event) {
             // use jquery's API to add and remove class property
             $('#records-grid .selectedRecord').removeClass('selectedRecord');
             $(this).addClass('selectedRecord');
@@ -161,10 +163,10 @@ function attachEvent(start, end) {
         }, false);
 
         // drag n drop
-        node.addEventListener("dragstart", function(event){
+        node.addEventListener("dragstart", function(event) {
             event.dataTransfer.setData("recordID", event.target.id);
         }, false);
-        node.addEventListener("dragover", function(event){
+        node.addEventListener("dragover", function(event) {
             event.preventDefault();
         }, false);
         // node.addEventListener("dragenter", function(event){
@@ -174,7 +176,7 @@ function attachEvent(start, end) {
         //     }
         //     ref.style.borderBottom = "dashed 2px black";
         // }, false);
-        node.addEventListener("dragleave", function(event){
+        node.addEventListener("dragleave", function(event) {
             var ref = event.target.parentNode;
             if (ref.tagName != "TR") {
                 ref = ref.parentNode;
@@ -182,7 +184,7 @@ function attachEvent(start, end) {
             // ref.style.borderBottom = "";
             document.getElementById("records-" + getRecordsNum()).style.borderBottom = "green solid 2px";
         }, false);
-        node.addEventListener("drop", function(event){
+        node.addEventListener("drop", function(event) {
             event.preventDefault();
             var ref = event.target.parentNode;
             if (ref.tagName != "TR") {
@@ -191,7 +193,7 @@ function attachEvent(start, end) {
             var end_ID = ref.id,
                 start_ID = event.dataTransfer.getData("recordID");
             // ref.style.borderBottom = "";
-            
+
             if (start_ID != end_ID) {
                 document.getElementById("records-" + getRecordsNum()).style.borderBottom = "";
                 // remove textNode, and last record do not have textNode

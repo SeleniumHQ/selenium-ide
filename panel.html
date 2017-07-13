@@ -2,316 +2,318 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8"/>
-	<title></title>
-	
-	<link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="panel/css/font-awesome.min.css">
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="panel/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./panel/panel-css/context_menu.css">
+    <!-- to hide right button feature -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" href="panel/css/ie.css" type="text/css" media="screen" />
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="panel/js/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="panel/js/hideshow.js" type="text/javascript"></script>
+    <script src="panel/js/jquery.tablesorter.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
+    <script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        //On Click Button Event 
+        $(".sub_btn").click(function() {
 
-    
-    <link rel="stylesheet" type="text/css" href="./panel/panel-css/context_menu.css"><!-- to hide right button feature -->
-    
-	<!--[if lt IE 9]>
-	<link rel="stylesheet" href="panel/css/ie.css" type="text/css" media="screen" />
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	<script src="panel/js/jquery-1.5.2.min.js" type="text/javascript"></script>
-	<script src="panel/js/hideshow.js" type="text/javascript"></script>
-	<script src="panel/js/jquery.tablesorter.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
-	<script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-		    //On Click Button Event 
-		    $(".sub_btn").click(function() {
+            $(this).addClass('active');
 
-            	$(this).addClass('active');
+            $(this).siblings()
+                .removeClass('active')
+                .attr('disabled', true);
 
-            	$(this).siblings()
-            		.removeClass('active')
-            		.attr('disabled', true);
+            setTimeout(function() {
+                $('.sub_btn').attr('disabled', false);
+            }, 1000);
 
-	       		setTimeout(function(){ $('.sub_btn').attr('disabled', false); }, 1000);
-	       		
-		    });
-	    });
-	</script>
-
-	<script type="text/javascript">
-		$(document).ready(function() { 
-	      	$(".tablesorter").tablesorter(); 
-	   	});
-		$(document).ready(function() {
-
-			//When page loads...
-			$(".tab_content").hide(); //Hide all content
-			$("ul.tabs li:first-child").addClass("active").show(); //Activate first tab
-			$(".tab_content:first-child").show(); //Show first tab content
-
-			//On Click Event
-			$("ul.tabs li").click(function() {
-
-				$("ul.tabs li").removeClass("active"); //Remove any "active" class
-				$(this).addClass("active"); //Add "active" class to selected tab
-				$(this).parents('article').find('.tab_content').hide();
-
-				var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
-				$(activeTab).fadeIn(); //Fade in the active ID content
-				return false;
-		 	});
-	    });
+        });
+    });
     </script>
     <script type="text/javascript">
-    $(function(){
+    $(document).ready(function() {
+        $(".tablesorter").tablesorter();
+    });
+    $(document).ready(function() {
+
+        //When page loads...
+        $(".tab_content").hide(); //Hide all content
+        $("ul.tabs li:first-child").addClass("active").show(); //Activate first tab
+        $(".tab_content:first-child").show(); //Show first tab content
+
+        //On Click Event
+        $("ul.tabs li").click(function() {
+
+            $("ul.tabs li").removeClass("active"); //Remove any "active" class
+            $(this).addClass("active"); //Add "active" class to selected tab
+            $(this).parents('article').find('.tab_content').hide();
+
+            var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+            $(activeTab).fadeIn(); //Fade in the active ID content
+            return false;
+        });
+    });
+    </script>
+    <script type="text/javascript">
+    $(function() {
         $('.column').equalHeight();
     });
     </script>
 </head>
-<body>
-	<header id="header">
-		<hgroup>
-			<h1 class="site_title"><a href="panel.html">SideeX</a></h1>
-		</hgroup>
-	</header> <!-- end of header bar -->
 
+<body>
+    <header id="header">
+        <hgroup>
+            <h1 class="site_title"><a href="panel.html">SideeX</a></h1>
+        </hgroup>
+    </header>
+    <!-- end of header bar -->
     <!-- right button feature -->
     <div id="suite-grid-menu" class="menu">
         <ul>
-          <li id="load-testSuite-show-menu"><a href="#">Open Test Suites</a></li>
-          <li id="add-testSuite-menu"><a href="#">Add New Test Suite</a></li>
+            <li id="load-testSuite-show-menu"><a href="#">Open Test Suites</a></li>
+            <li id="add-testSuite-menu"><a href="#">Add New Test Suite</a></li>
         </ul>
     </div>
     <div id="command-grid-menu" class="menu">
         <ul>
-          <li id="grid-add"><a href="#">Add Command</a></li>
-          <li id="grid-delete"><a href="#">Delete Command</a></li>
+            <li id="grid-add"><a href="#">Add Command</a></li>
+            <li id="grid-delete"><a href="#">Delete Command</a></li>
         </ul>
     </div>
-
-	<section id="main" class="column">
-	    <div id="toolbar-container" class="submit_link">
+    <section id="main" class="column">
+        <div id="toolbar-container" class="submit_link">
             <!-- hidden, because it has default style -->
             <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display:none"></input>
             <input id="load-testSuite-show" type="button" value="OpenSuite" style="display:none"></input>
-
             <button id="save-testSuite" style="display:none">SaveSuite</button>
-            <button id="close-testSuite" style="display:none">CloseSuite</button> 
+            <button id="close-testSuite" style="display:none">CloseSuite</button>
             <button id="add-testSuite" style="display:none">+Suite</button>
             <button id="add-testCase" style="display:none">+Case</button>
             <button id="delete-testCase" style="display:none">-Case</button>
-            
             <a download="info.html" id="downloadlink" style="display: none">Download</a>
             <!-- ?????? -->
 
-			<button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
-			<button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlaythisCase</button>
-			<button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlaythisSuite</button>
-			<button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayallSuites</button>
-			<button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-			<button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
-		</div>
-		<article class="width_quarter module_right">
-			<div id="middle-container" class="module">
-				<header><h3>Test case</h3></header>
-				<div id="testCase-container" class="case_list">
-					<div id="testCase-grid" class="module_content">
-						<!--<div class="message"><p>Untitled</p>
-						<p><strong>John Doe</strong></p></div>
-						<div class="message"><p>Untitled</p>
-						<p><strong>John Doe</strong></p></div>
-						<div class="message"><p>Untitled</p>
-						<p><strong>John Doe</strong></p></div>
-						<div class="message"><p>Untitled</p>
-						<p><strong>John Doe</strong></p></div>
-						<div class="message"><p>Untitled</p>
-						<p><strong>John Doe</strong></p></div>-->
-					</div>
-				</div>
-			</div><!-- end of messages article -->
-			<article class="module">
-				<fieldset id="result-container" class="action">
-					<label id="result1">Runs</label>
-					<p id="result-runs" class="runs">0</p>
-					<label id="result2">Failures</label>
-					<p id="result-failures" class="failures">0</p>
-				</fieldset>
-		    </article>
-		</article>
-		<article class="module width_3_quarter">
-		    <header><h3 class="tabs_involved"></h3>
-				<ul class="tabs">
-		   			<li><a href="#command-container">Table</a></li>
-		    		<li><a href="#tab2">Source</a></li>
-				</ul>
-			</header>
-		    <div class="tab_container">
-				<div id="command-container" class="tab_content case_hight">
-					<table id="command-grid" class="tablesorter" cellspacing="0"> 
-						<thead> 
-							<tr> 
-			    				<th>Comand</th> 
-			    				<th>Target</th> 
-			    				<th>Value</th> 
-							</tr> 
-						</thead> 
-						<tbody id="records-grid"> 
-
-                            <input id="records-count" type=hidden value=0></input></tbody>
-                            <!-- set input and /tbody in same line to avoid textNode -->
-							<!--<tr> 
-			   					<td>time</td> 
-			    				<td>open</td> 
-			    				<td></td> 
-			    
-							</tr> 
-							<tr> 
-			   					<td>time</td> 
-			    				<td>open</td> 
-			    				<td></td> 
-							</tr>
-							<tr> 
-			   					<td>time</td> 
-			    				<td>open</td> 
-			    				<td></td> 
-							</tr>
-							<tr> 
-			   					<td>time</td> 
-			    				<td>open</td> 
-			    				<td></td> 
-							</tr>-->
-				    </table>
-					<fieldset id="command-toolbar" class="action">
-						<label>Command</label>
-						<input id="command-command" type="text" style="width:92%;">
-						<label>Target</label>
-						<input id="command-target" type="text" style="width:92%;">
-						<label>Value</label>
-						<input id="command-value" type="text" style="width:92%;">
-					</fieldset>
-			    </div><!-- end of #command-container -->
-
-			    <div id="tab2" class="tab_content case_hight">
-			        <table class="tablesorter" cellspacing="0">
-						<div class="module_content">
-							<fieldset>
-								<div class="module_content">
-									<h1>Header 1</h1>
-									<h2>Header 2</h2>
-									<h3>Header 3</h3>
-									<h4>Header 4</h4>
-									<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-									<ul>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-									</ul>
-								</div>
-							</fieldset>
-						</div>
-					</table>
-				</div><!-- end of #tab2 -->
-		    </div><!-- end of .tab_container -->
-		
-		</article><!-- end of content manager article -->
-		
-		<div class="clear"></div>
-		<article class="module width_full">
-			<header class="tabs_involved">
+            <button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
+            <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlaythisCase</button>
+            <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlaythisSuite</button>
+            <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayallSuites</button>
+            <button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
+            <button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
+        </div>
+        <article class="width_quarter module_right">
+            <div id="middle-container" class="module">
+                <header>
+                    <h3>Test case</h3></header>
+                <div id="testCase-container" class="case_list">
+                    <div id="testCase-grid" class="module_content">
+                        <!--<div class="message"><p>Untitled</p>
+                        <p><strong>John Doe</strong></p></div>
+                        <div class="message"><p>Untitled</p>
+                        <p><strong>John Doe</strong></p></div>
+                        <div class="message"><p>Untitled</p>
+                        <p><strong>John Doe</strong></p></div>
+                        <div class="message"><p>Untitled</p>
+                        <p><strong>John Doe</strong></p></div>
+                        <div class="message"><p>Untitled</p>
+                        <p><strong>John Doe</strong></p></div>-->
+                    </div>
+                </div>
+            </div>
+            <!-- end of messages article -->
+            <article class="module">
+                <fieldset id="result-container" class="action">
+                    <label id="result1">Runs</label>
+                    <p id="result-runs" class="runs">0</p>
+                    <label id="result2">Failures</label>
+                    <p id="result-failures" class="failures">0</p>
+                </fieldset>
+            </article>
+        </article>
+        <article class="module width_3_quarter">
+            <header>
+                <h3 class="tabs_involved"></h3>
                 <ul class="tabs">
-                	<li><a href="#tab4">Log</a></li>
-		    		<li><a href="#tab5">Reference</a></li>
-		    		<li><a href="#tab6">UI-element</a></li>
-		    		<li><a href="#tab7">Rollup</a></li>
-				</ul>
-			</header>
-			<div class="tab_container">
-				<div id="tab4" class="tab_content case_roll">
-					<table class="tablesorter" cellspacing="0">
-						<div class="module_content">
-							<fieldset>
-								<div class="module_content">
-									<h1>Header 1</h1>
-									<h2>Header 2</h2>
-									<h3>Header 3</h3>
-									<h4>Header 4</h4>
-									<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-								</div>
-							</fieldset>
-						</div>
-					</table>
-			    </div><!-- end of #tab4 -->
-			
-			    <div id="tab5" class="tab_content case_roll">
-			        <table class="tablesorter" cellspacing="0">
-						<div class="module_content">
-							<fieldset>
-								<div class="module_content">
-									<h1>Header 1</h1>
-									<h2>Header 2</h2>
-									<h3>Header 3</h3>
-									<h4>Header 4</h4>
-									<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-									<ul>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-									</ul>
-								</div>
-							</fieldset>
-						</div>
-					</table>
-				</div><!-- end of #tab5 -->
-
-				<div id="tab6" class="tab_content case_roll">
-			        <table class="tablesorter" cellspacing="0">
-						<div class="module_content">
-							<fieldset>
-								<div class="module_content">
-									<h1>Header 1</h1>
-									<h2>Header 2</h2>
-									<h3>Header 3</h3>
-									<h4>Header 4</h4>
-									<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-									<ul>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-									</ul>
-								</div>
-							</fieldset>
-						</div>
-					</table>
-				</div><!-- end of #tab6-->
-
-				<div id="tab7" class="tab_content case_roll">
-			        <table class="tablesorter" cellspacing="0">
-						<div class="module_content">
-							<fieldset>
-								<div class="module_content">
-									<h1>Header 1</h1>
-									<h2>Header 2</h2>
-									<h3>Header 3</h3>
-									<h4>Header 4</h4>
-									<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-									<ul>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-										<li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-										<li>Cras mattis consectetur purus sit amet fermentum.</li>
-									</ul>
-								</div>
-							</fieldset>
-						</div>
-					</table>
-				</div><!-- end of #tab7 -->
-
-		    </div><!-- end of .tab_container -->
-		</article><!-- end of styles article -->
-		<div class="spacer"></div>
-	</section>
+                    <li><a href="#command-container">Table</a></li>
+                    <li><a href="#tab2">Source</a></li>
+                </ul>
+            </header>
+            <div class="tab_container">
+                <div id="command-container" class="tab_content case_hight">
+                    <table id="command-grid" class="tablesorter" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Comand</th>
+                                <th>Target</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-grid">
+                            <input id="records-count" type=hidden value=0></input>
+                            <!-- set input and /tbody in same line to avoid textNode -->
+                            <!--<tr> 
+                                <td>time</td> 
+                                <td>open</td> 
+                                <td></td> 
+                
+                            </tr> 
+                            <tr> 
+                                <td>time</td> 
+                                <td>open</td> 
+                                <td></td> 
+                            </tr>
+                            <tr> 
+                                <td>time</td> 
+                                <td>open</td> 
+                                <td></td> 
+                            </tr>
+                            <tr> 
+                                <td>time</td> 
+                                <td>open</td> 
+                                <td></td> 
+                            </tr>-->
+                        </tbody>
+                    </table>
+                    <fieldset id="command-toolbar" class="action">
+                        <label>Command</label>
+                        <input id="command-command" type="text" style="width:92%;">
+                        <label>Target</label>
+                        <input id="command-target" type="text" style="width:92%;">
+                        <label>Value</label>
+                        <input id="command-value" type="text" style="width:92%;">
+                    </fieldset>
+                </div>
+                <!-- end of #command-container -->
+                <div id="tab2" class="tab_content case_hight">
+                    <table class="tablesorter" cellspacing="0">
+                        <div class="module_content">
+                            <fieldset>
+                                <div class="module_content">
+                                    <h1>Header 1</h1>
+                                    <h2>Header 2</h2>
+                                    <h3>Header 3</h3>
+                                    <h4>Header 4</h4>
+                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                                    <ul>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </table>
+                </div>
+                <!-- end of #tab2 -->
+            </div>
+            <!-- end of .tab_container -->
+        </article>
+        <!-- end of content manager article -->
+        <div class="clear"></div>
+        <article class="module width_full">
+            <header class="tabs_involved">
+                <ul class="tabs">
+                    <li><a href="#tab4">Log</a></li>
+                    <li><a href="#tab5">Reference</a></li>
+                    <li><a href="#tab6">UI-element</a></li>
+                    <li><a href="#tab7">Rollup</a></li>
+                </ul>
+            </header>
+            <div class="tab_container">
+                <div id="tab4" class="tab_content case_roll">
+                    <table class="tablesorter" cellspacing="0">
+                        <div class="module_content">
+                            <fieldset>
+                                <div class="module_content">
+                                    <h1>Header 1</h1>
+                                    <h2>Header 2</h2>
+                                    <h3>Header 3</h3>
+                                    <h4>Header 4</h4>
+                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </table>
+                </div>
+                <!-- end of #tab4 -->
+                <div id="tab5" class="tab_content case_roll">
+                    <table class="tablesorter" cellspacing="0">
+                        <div class="module_content">
+                            <fieldset>
+                                <div class="module_content">
+                                    <h1>Header 1</h1>
+                                    <h2>Header 2</h2>
+                                    <h3>Header 3</h3>
+                                    <h4>Header 4</h4>
+                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                                    <ul>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </table>
+                </div>
+                <!-- end of #tab5 -->
+                <div id="tab6" class="tab_content case_roll">
+                    <table class="tablesorter" cellspacing="0">
+                        <div class="module_content">
+                            <fieldset>
+                                <div class="module_content">
+                                    <h1>Header 1</h1>
+                                    <h2>Header 2</h2>
+                                    <h3>Header 3</h3>
+                                    <h4>Header 4</h4>
+                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                                    <ul>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </table>
+                </div>
+                <!-- end of #tab6-->
+                <div id="tab7" class="tab_content case_roll">
+                    <table class="tablesorter" cellspacing="0">
+                        <div class="module_content">
+                            <fieldset>
+                                <div class="module_content">
+                                    <h1>Header 1</h1>
+                                    <h2>Header 2</h2>
+                                    <h3>Header 3</h3>
+                                    <h4>Header 4</h4>
+                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                                    <ul>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
+                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </table>
+                </div>
+                <!-- end of #tab7 -->
+            </div>
+            <!-- end of .tab_container -->
+        </article>
+        <!-- end of styles article -->
+        <div class="spacer"></div>
+    </section>
     <!-- script -->
     <script src="./escape.js"></script>
     <script src="./panel/panel-js/log.js"></script>
@@ -327,7 +329,6 @@
     <script src="locatorBuilders.js"></script>
     <!-- playback -->
     <script type="text/javascript" src="playback-api.js"></script>
-
 </body>
 
 </html>
