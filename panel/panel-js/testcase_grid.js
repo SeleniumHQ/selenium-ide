@@ -39,8 +39,10 @@ function getSelectedCase() {
 
 function saveOldCase() {
     var old_case = getSelectedCase();
+    console.log("old case:",old_case);
     if (old_case) {
         sideex_testCase[old_case.id].records = document.getElementById("records-grid").innerHTML;
+        console.log("old case id:",old_case.id,"records:",sideex_testCase[old_case.id].records);
     }
 }
 
@@ -157,22 +159,24 @@ function addTestCase(title, id) {
         addTestSuite("Untitled Test Suite", suite_id);
     }
 
-    var div = document.createElement("div");
-    div.innerHTML = escapeHTML(title);
-    div.setAttribute("id", id);
-    div.setAttribute("draggable", true);
-    div.setAttribute("contextmenu", "menu" + id);
+    var text = document.createElement("strong");
+    text.innerHTML = escapeHTML(title);
+    var p = document.createElement("p");
+    p.setAttribute("id", id);
+    p.setAttribute("draggable", true);
+    p.setAttribute("contextmenu", "menu" + id);
+    p.appendChild(text);
 
     var s_case = getSelectedCase();
     if (s_case) {
-        s_case.parentNode.insertBefore(div, s_case.nextSibling);
+        s_case.parentNode.insertBefore(p, s_case.nextSibling);
     } else {
-        getSelectedSuite().appendChild(div);
+        getSelectedSuite().appendChild(p);
     }
 
     cleanSelected();
-    div.setAttribute("class", "selectedCase");
-    div.parentNode.setAttribute("class", "selectedSuite");
+    p.classList.add("selectedCase");
+    p.parentNode.classList.add("selectedSuite");
 
     if (sideex_testCase[id]) { // load file
         clean_panel();
@@ -188,20 +192,21 @@ function addTestCase(title, id) {
             records: "",
             title: title
         };
+        console.log("add new testCase",id,sideex_testCase[id]);
     }
 
     // attach event
-    div.addEventListener("click", function(event) {
+    p.addEventListener("click", function(event) {
         event.stopPropagation();
         saveOldCase();
         // use jquery's API to add and remove class property
         cleanSelected();
-        $("#" + event.target.id).addClass("selectedCase");
-        event.target.parentNode.setAttribute("class", "selectedSuite");
-
-        if (sideex_testCase[event.target.id].records) {
+        this.classList.add("selectedCase");
+        this.parentNode.classList.add("selectedSuite");
+        console.log("click:",this.id,sideex_testCase[this.id].records);
+        if (sideex_testCase[this.id].records) {
             clean_panel();
-            document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[event.target.id].records);
+            document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[this.id].records);
             reAssignId("records-1", "records-" + getRecordsNum());
             attachEvent(1, getRecordsNum());
         } else {
@@ -211,26 +216,26 @@ function addTestCase(title, id) {
         // prevent event trigger on parent from child
         event.stopPropagation();
     }, false);
-    div.addEventListener("dragstart", function(event) {
+    p.addEventListener("dragstart", function(event) {
         event.stopPropagation();
         saveOldCase();
-        event.dataTransfer.setData("testCase", event.target.id);
+        event.dataTransfer.setData("testCase", this.id);
     }, false);
-    div.addEventListener("dragover", function(event) {
+    p.addEventListener("dragover", function(event) {
         event.stopPropagation();
         event.preventDefault();
     }, false);
-    div.addEventListener("drop", function(event) {
+    p.addEventListener("drop", function(event) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
         var start_ID = event.dataTransfer.getData("testCase"),
-            end_ID = event.target.id;
+            end_ID = this.id;
         if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
-            event.target.parentNode.insertBefore(document.getElementById(start_ID), event.target.nextSibling);
+            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
             cleanSelected();
-            $("#" + event.target.nextSibling.id).addClass("selectedCase");
-            event.target.parentNode.setAttribute("class", "selectedSuite");
+            $("#" + this.nextSibling.id).addClass("selectedCase");
+            this.parentNode.classList.add("selectedSuite");
         }
     }, false);
 
@@ -242,11 +247,11 @@ function addTestCase(title, id) {
     document.body.appendChild(menu);
 
     // right click
-    div.addEventListener("contextmenu", function(event) {
+    p.addEventListener("contextmenu", function(event) {
         event.preventDefault();
         event.stopPropagation();
         saveOldCase();
-        setSelectedCase(event.target.id);
+        setSelectedCase(this.id);
         var mid = "#" + "menu" + id;
         console.log($(mid));
         $(".menu").css("left", event.pageX);
@@ -256,12 +261,14 @@ function addTestCase(title, id) {
 }
 
 function addTestSuite(title, id) {
+    var text = document.createElement("p");
+    text.innerHTML = escapeHTML(title);
     var div = document.createElement("div");
-    div.innerHTML = escapeHTML(title);
     div.setAttribute("id", id);
     div.setAttribute("draggable", true);
     div.setAttribute("contextmenu", "menu" + id);
-
+    div.setAttribute("class","message");
+    div.appendChild(text);
 
     var s_suite = getSelectedSuite();
     if (s_suite) {
@@ -271,21 +278,20 @@ function addTestSuite(title, id) {
     }
 
     cleanSelected();
-    div.setAttribute("class", "selectedSuite");
-
+    div.classList.add("selectedSuite");
     // attach event
     div.addEventListener("click", function(event) {
         event.stopPropagation();
         saveOldCase();
         cleanSelected();
-        event.target.setAttribute("class", "selectedSuite");
+        this.classList.add("selectedSuite");
         clean_panel();
         // document.getElementById("records-grid").innerHTML = "";
     }, false);
     div.addEventListener("dragstart", function(event) {
         event.stopPropagation();
         saveOldCase();
-        event.dataTransfer.setData("testSuite", event.target.id);
+        event.dataTransfer.setData("testSuite", this.id);
     }, false);
     div.addEventListener("dragover", function(event) {
         event.stopPropagation();
@@ -296,11 +302,11 @@ function addTestSuite(title, id) {
         event.preventDefault();
         saveOldCase();
         var start_ID = event.dataTransfer.getData("testSuite"),
-            end_ID = event.target.id;
+            end_ID = this.id;
         if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
-            event.target.parentNode.insertBefore(document.getElementById(start_ID), event.target.nextSibling);
+            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
             cleanSelected();
-            document.getElementById(start_ID).setAttribute("class", "selectedSuite");
+            document.getElementById(start_ID).classList.add("selectedSuite");
         }
     }, false);
 
@@ -308,14 +314,14 @@ function addTestSuite(title, id) {
     menu.setAttribute("class", "menu");
     menu.setAttribute("id", "menu" + id);
     appendContextMenu(menu, false);
-    document.body.appendChild(menu);
+    div.appendChild(menu);
 
     // right click
     div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
         event.stopPropagation();
         saveOldCase();
-        setSelectedSuite(event.target.id);
+        setSelectedSuite(this.id);
         var mid = "#" + "menu" + id;
         console.log($(mid));
         $(".menu").css("left", event.pageX);
