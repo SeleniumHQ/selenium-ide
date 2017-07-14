@@ -424,7 +424,7 @@ Selenium.prototype.doStoreTitle = function(value) {
 };
 
 Selenium.prototype.doEcho = function(value) {
-    sideex_log.info("echo: "+storedVars[value]);
+    console.log("echo: "+storedVars[value]);
 };
 
 // xian

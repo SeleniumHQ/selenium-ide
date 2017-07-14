@@ -119,7 +119,6 @@ browser.tabs.onUpdated.addListener( function(tabId, changeInfo, tabInfo){
 });
 
 function handleMessage(message, sender, sendResponse) {
-
     if (isPlaying && message.frameLocation) {
         //console.log(sender.frameId);
         if (!playingFrameLocations[sender.tab.id]) {
@@ -181,9 +180,13 @@ function handleMessage(message, sender, sendResponse) {
                 current.className += ' selected';
             }
         }
+    } else if(message.command === "storeTitle"){
+        message.target = [[prompt("Enter the name of the variable")]];
+    } else if(message.command === "storeText") {
+        message.value = prompt("Enter the name of the variable");
     }
-        
     addCommandAuto(message.command, message.target, message.value);
+    
 }
 
 browser.tabs.onRemoved.addListener(function(tabId, removeInfo){

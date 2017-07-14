@@ -110,33 +110,7 @@ browser.contextMenus.create({
 
 var port;
 browser.contextMenus.onClicked.addListener(function(info, tab) {
-    switch (info.menuItemId) {
-      case "verifyText":
-        console.log("verifyText:");
-        port.postMessage({cmd:"verifyText"});
-        break;
-      case "verifyTitle":
-        console.log("verifyTitle:");
-        port.postMessage({cmd:"verifyTitle"});
-        break;
-      case "assertText":
-        console.log("assertText:");
-        port.postMessage({cmd:"assertText"});
-        break;
-      case "assertTitle":
-        console.log("assertTitle:");
-        port.postMessage({cmd:"assertTitle"});
-        break;
-      case "storeText":
-        console.log("storeText:");
-        port.postMessage({cmd:"storeText"});
-        break;
-      case "storeTitle":
-        console.log("storeTitle:");
-        port.postMessage({cmd:"storeTitle"});
-        break;  
-    default:
-    }
+    port.postMessage({cmd:info.menuItemId});
 });
 //
 browser.runtime.onConnect.addListener(function(m) {
