@@ -492,6 +492,7 @@ function executionLoop() {
             if (!caseFailed) {
                 setColor(currentTestCaseId, "success");
                 document.getElementById("result-runs").innerHTML = parseInt(document.getElementById("result-runs").innerHTML) + 1;
+                declaredVars = {};
                 sideex_log.info("Test case passed");
             } else {
                 caseFailed = false;
@@ -842,7 +843,6 @@ function handleNewWindow(message, sender, sendResponse) {
 };
 
 browser.runtime.onMessage.addListener(handleNewWindow);
-
 
 function handleChangePage(message, sender, response) {
     if (message.changePage) {
