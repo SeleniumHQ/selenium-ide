@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
+    <!-- TODO: Hide the title bar -->
     <title></title>
     <link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="panel/css/font-awesome.min.css">
@@ -69,6 +70,7 @@
 <body>
     <header id="header">
         <hgroup>
+            <!-- TODO: Add the bird logo -->
             <h1 class="site_title"><a href="panel.html">SideeX</a></h1>
         </hgroup>
     </header>
@@ -101,16 +103,20 @@
 
             <button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
             <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlaythisCase</button>
+            <!-- TODO: Play Suite no funtion -->
             <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlaythisSuite</button>
             <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayallSuites</button>
+            <!-- TODO: Make pause & resume same button(switch) -->
             <button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
             <button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
+            <!-- TODO: Add a stop button -->
         </div>
         <article class="width_quarter module_right">
             <div id="middle-container" class="module">
                 <header>
                     <h3>Test case</h3></header>
                 <div id="testCase-container" class="case_list">
+                    <!-- Sug: Add animation when dragdrop -->
                     <div id="testCase-grid" class="module_content">
                         <!--<div class="message"><p>Untitled</p>
                         <p><strong>John Doe</strong></p></div>
@@ -154,7 +160,10 @@
                             </tr>
                         </thead>
                         <tbody id="records-grid">
+                            <!-- TODO: Give a init height and make y scroll -->
                             <input id="records-count" type=hidden value=0></input>
+                            <!-- TODO: Make text appear instead of ... -->
+                            <!-- TODO: Change color when running -->
                             <!-- set input and /tbody in same line to avoid textNode -->
                             <!--<tr> 
                                 <td>time</td> 
@@ -180,10 +189,20 @@
                         </tbody>
                     </table>
                     <fieldset id="command-toolbar" class="action">
+                        <!-- TODO: make (command &) target selectable -->
                         <label>Command</label>
-                        <input id="command-command" type="text" style="width:92%;">
+                        <input id="command-command" list="command-command-list" type="text" style="width:92%;">
+                        <datalist id="command-command-list">
+                            <option value="click"></option>
+                            <option value="type"></option>
+                            <option value="sendKey"></option>
+                            <option value="clickAt"></option>
+                            <option value="open"></option>
+                        </datalist>
                         <label>Target</label>
-                        <input id="command-target" type="text" style="width:92%;">
+                        <input id="command-target" list="command-target-list" type="text" style="width:92%;">
+                        <datalist id="command-target-list">
+                        </datalist>
                         <label>Value</label>
                         <input id="command-value" type="text" style="width:92%;">
                     </fieldset>
@@ -225,12 +244,13 @@
                     <li><a href="#tab7">Rollup</a></li>
                 </ul>
             </header>
+            <!-- TODO: Add a clear log button -->
             <div class="tab_container">
                 <div id="tab4" class="tab_content case_roll">
                     <table class="tablesorter" cellspacing="0">
                         <div class="module_content">
                             <fieldset>
-                                <div class="module_content">
+                                <div id="logcontainer" class="module_content">
                                     <h1>Header 1</h1>
                                     <h2>Header 2</h2>
                                     <h3>Header 3</h3>

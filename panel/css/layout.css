@@ -557,7 +557,13 @@ section#main {
 
 .tablesorter {
     width: 100%;
-    height: 57%;
+    margin: -5px 0 0 0;
+}
+
+.tablesorter td {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px dotted #ccc;
 }
 
 .tablesorter thead tr {
@@ -581,9 +587,7 @@ background-color: red;
 }*/
 
 .tablesorter td {
-    margin: 0;
     padding: 10px;
-    border-bottom: 1px dotted #ccc;
 }
 
 .tablesorter input[type=image] {
@@ -770,7 +774,7 @@ input[type=submit].btn_post_message:hover {
 }
 
 .case_hight {
-    height: 457.4px;
+    height: 459px;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -806,7 +810,7 @@ fieldset {
 fieldset label {
     display: block;
     float: left;
-    width: 200px;
+    width: 160px;
     height: 25px;
     line-height: 25px;
     text-shadow: 0 1px 0 #fff;
@@ -878,7 +882,7 @@ fieldset textarea:focus {
 }
 
 .submit_link {
-    padding: 20px 0px 0px 60px;
+    padding: 20px 0px 0px 40px;
 }
 
 .submit_link select {
