@@ -226,7 +226,7 @@ function executeCommand(index) {
             if (result.result != "success") {
                 sideex_log.error(result.result);
                 setColor(id + 1, "fail");
-                if (result.result != "verify") {
+                if (!result.result.includes("did not match")) {
                     return true;
                 }
             } else {
@@ -652,12 +652,12 @@ function executionLoop() {
                             setColor(currentPlayingCommandIndex + 1, "fail");
                             setColor(currentTestCaseId, "fail");
                             document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
-                            if (!commandName.includes("verify")) {
+                            if (commandName.includes("verify") && result.result.includes("did not match")) {
+                                setColor(currentPlayingCommandIndex + 1, "fail");
+                            } else {
                                 sideex_log.info("Test case failed");
                                 caseFailed = true;
                                 currentPlayingCommandIndex = commands.length;
-                            } else {
-                                setColor(currentPlayingCommandIndex + 1, "fail");
                             }
                         } else setColor(currentPlayingCommandIndex + 1, "success");
                     })
@@ -720,12 +720,12 @@ function executionLoop() {
                             setColor(currentPlayingCommandIndex + 1, "fail");
                             setColor(currentTestCaseId, "fail");
                             document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
-                            if (!commandName.includes("verify")) {
+                            if (commandName.includes("verify") && result.result.includes("did not match")) {
+                                setColor(currentPlayingCommandIndex + 1, "fail");
+                            } else {
                                 sideex_log.info("Test case failed");
                                 caseFailed = true;
                                 currentPlayingCommandIndex = commands.length;
-                            } else {
-                                setColor(currentPlayingCommandIndex + 1, "fail");
                             }
                         } else {
                             setColor(currentPlayingCommandIndex + 1, "success");
