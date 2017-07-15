@@ -396,8 +396,8 @@ Selenium.prototype.doVerifyText = function(locator, value) {
 };
 
 Selenium.prototype.doVerifyTitle = function(value) {
-    if (document.title !== value) {
-        throw new Error("Actual value '" + document.title + "' did not match '" + value + "'");
+    if (this.getTitle() !== value) {
+        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
     }
 };
 
@@ -409,26 +409,26 @@ Selenium.prototype.doAssertText = function(locator, value) {
 };
 
 Selenium.prototype.doAssertTitle = function(value) {
-    if (document.title !== value) {
-        throw new Error("Actual value '" + document.title + "' did not match '" + value + "'");
+    if (this.getTitle() !== value) {
+        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
     }
 };
 
 Selenium.prototype.doStore = function(value, varName) {
-    storedVars[varName]=value;
+    browser.runtime.sendMessage({"storeStr": value,"storeVar":varName});
 };
 
 Selenium.prototype.doStoreText = function(locator, varName) {
     var element = this.browserbot.findElement(locator);
-    storedVars[varName]=element.textContent;
+    browser.runtime.sendMessage({"storeStr": element.textContent,"storeVar":varName});
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
-    storedVars[varName]=value;
+    browser.runtime.sendMessage({"storeStr": value,"storeVar":varName});
 };
 
 Selenium.prototype.doEcho = function(value) {
-    console.log("echo: "+storedVars[value]);
+    browser.runtime.sendMessage({"echoStr": value});
 };
 
 // xian
