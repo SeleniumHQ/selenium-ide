@@ -536,26 +536,10 @@ window.addEventListener('contextmenu',function(event){
     var tmpVal = event.target.textContent;
     var tmpTitle = [[event.target.ownerDocument.title]];
     myPort.onMessage.addListener(function(m) {
-        switch (m.cmd) {
-          case "verifyText":
-            record("verifyText",tmpText,tmpVal);
-            break;
-          case "verifyTitle":
-            record("verifyTitle",[['']],tmpTitle);
-            break;
-          case "assertText":
-            record("assertText",tmpText,tmpVal);
-            break;
-          case "assertTitle":
-            record("assertTitle",[['']],tmpTitle);
-            break;
-          case "storeText":
-            record("storeText",tmpText,'i');
-            break;
-          case "storeTitle":
-            record("storeTitle",'t','');
-            break;  
-          default:
+        if (m.cmd.includes("Text")) {
+            record(m.cmd, tmpText, tmpVal);
+        } else if (m.cmd.includes("Title")) {
+            record(m.cmd, tmpTitle, '');
         }
         this.removeListener();
     });

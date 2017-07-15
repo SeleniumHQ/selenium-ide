@@ -180,9 +180,7 @@ function handleMessage(message, sender, sendResponse) {
                 current.className += ' selected';
             }
         }
-    } else if(message.command === "storeTitle"){
-        message.target = [[prompt("Enter the name of the variable")]];
-    } else if(message.command === "storeText") {
+    } else if(message.command.includes("store")){
         message.value = prompt("Enter the name of the variable");
     }
     addCommandAuto(message.command, message.target, message.value);
