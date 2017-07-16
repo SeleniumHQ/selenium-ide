@@ -133,17 +133,17 @@ function resume() {
 
 function playSuite(i) {
     isPlayingSuite = true;
-    var cases = getSelectedSuite().getElementsByTagName("div");
+    var cases = getSelectedSuite().getElementsByTagName("strong");
     var length = cases.length;
     if (i == 0) {
         sideex_log.info("Playing test suite " + sideex_testSuite[getSelectedSuite().id].title);
         for (var j = 0; j < length; j++) {
-            $("#" + cases[j].id).removeClass('fail success');
+            $("#" + cases[j].parentNode.id).removeClass('fail success');
         }
     }
     if (i < length) {
-        setSelectedCase(cases[i].id);
-        sideex_log.info("Playing test case " + sideex_testCase[cases[i].id].title);
+        setSelectedCase(cases[i].parentNode.id);
+        sideex_log.info("Playing test case " + sideex_testCase[cases[i].parentNode.id].title);
         play();
         nextCase(i);
     } else {
@@ -157,14 +157,13 @@ function nextCase(i) {
 }
 
 function playSuites(i) {
-    var suites = document.getElementById("testCase-grid").getElementsByTagName("div");
+    var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
     var length = suites.length;
-
     if (i == 0) {
         for (var k = 0; k < suites.length; ++k) {
-            var cases = suites[k].getElementsByTagName("div");
+            var cases = suites[k].getElementsByTagName("strong");
             for (var u = 0; u < cases.length; ++u) {
-                $("#" + cases[u].id).removeClass('fail success');
+                $("#" + cases[u].parentNode.id).removeClass('fail success');
             }
         }
     }
@@ -181,7 +180,6 @@ function playSuites(i) {
 }
 
 function nextSuite(i) {
-    console.log(i);
     if (isPlayingSuite) setTimeout(function() { nextSuite(i); }, 2000);
     else playSuites(i + 1);
 }

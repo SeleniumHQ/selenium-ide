@@ -54,23 +54,24 @@ header#header {
 
 header#header h1.site_title,
 header#header h2.section_title {
-    float: left;
-    margin: 0px 0px 0px 30px;
-    font-size: 22px;
-    display: block;
-    width: 23%;
-    height: 55px;
-    font-weight: normal;
-    text-align: left;
-    text-indent: 1.8%;
-    line-height: 55px;
-    color: #fff;
-    text-shadow: 0 -1px 0 #000;
+	float: left;
+	margin: 0px 0px 0px 10px;
+	font-size: 22px;
+	display: block;
+	width: 23%;
+	height: 55px;
+	font-weight: normal;
+	text-align: left;
+	text-indent: 1.8%;
+	line-height: 55px;
+	color: #fff;
+	text-shadow: 0 -1px 0 #000;
 }
 
 header#header h1.site_title a {
     color: #fff;
     text-decoration: none;
+    margin: -20px 0px -10px 0px;
 }
 
 header#header h2.section_title {

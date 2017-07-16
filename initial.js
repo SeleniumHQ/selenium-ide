@@ -15,6 +15,6 @@ function clean_panel() {
     document.getElementById("records-grid").innerHTML = "";
     document.getElementById("command-command").value = "";
     document.getElementById("command-target").value = "";
-    // document.getElementById("command-target-list").innerHTML = "";
+    document.getElementById("command-target-list").innerHTML = "";
     document.getElementById("command-value").value = "";
 }

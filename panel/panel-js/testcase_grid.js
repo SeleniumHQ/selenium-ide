@@ -39,10 +39,8 @@ function getSelectedCase() {
 
 function saveOldCase() {
     var old_case = getSelectedCase();
-    console.log("old case:",old_case);
     if (old_case) {
         sideex_testCase[old_case.id].records = document.getElementById("records-grid").innerHTML;
-        console.log("old case id:",old_case.id,"records:",sideex_testCase[old_case.id].records);
     }
 }
 
@@ -192,7 +190,6 @@ function addTestCase(title, id) {
             records: "",
             title: title
         };
-        console.log("add new testCase",id,sideex_testCase[id]);
     }
 
     // attach event
@@ -203,7 +200,6 @@ function addTestCase(title, id) {
         cleanSelected();
         this.classList.add("selectedCase");
         this.parentNode.classList.add("selectedSuite");
-        console.log("click:",this.id,sideex_testCase[this.id].records);
         if (sideex_testCase[this.id].records) {
             clean_panel();
             document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[this.id].records);
@@ -244,7 +240,7 @@ function addTestCase(title, id) {
     menu.setAttribute("class", "menu");
     menu.setAttribute("id", "menu" + id);
     appendContextMenu(menu, true);
-    document.body.appendChild(menu);
+    p.appendChild(menu);
 
     // right click
     p.addEventListener("contextmenu", function(event) {
