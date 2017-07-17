@@ -18,12 +18,12 @@ function setSelectedCase(id) {
     setSelectedSuite(suite_id);
     $("#" + id).addClass('selectedCase');
     clean_panel();
-    document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records); 
+    document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records);
 }
 
 function getSelectedSuite() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedSuite")) {
-        return document.getElementById("testCase-grid").getElementsByClassName("selectedSuite")[0];    
+        return document.getElementById("testCase-grid").getElementsByClassName("selectedSuite")[0];
     } else {
         return null;
     }
@@ -31,7 +31,7 @@ function getSelectedSuite() {
 
 function getSelectedCase() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedCase")) {
-        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];    
+        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];
     } else {
         return null;
     }
@@ -53,7 +53,7 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Open Test Suites";
     open_suite.appendChild(a);
-    open_suite.addEventListener("click", function(event){
+    open_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('load-testSuite-hidden').click();
     }, false);
@@ -64,7 +64,7 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Save Test Suite As...";
     save_suite.appendChild(a);
-    save_suite.addEventListener("click", function(event){
+    save_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('save-testSuite').click();
     }, false);
@@ -75,7 +75,7 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Add New Test Suite";
     add_suite.appendChild(a);
-    add_suite.addEventListener("click", function(event){
+    add_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById("add-testSuite").click();
     }, false);
@@ -86,22 +86,22 @@ function appendContextMenu(node, isCase) {
     a.setAttribute("href", "#");
     a.innerHTML = "Close Test Suite";
     close_suite.appendChild(a);
-    close_suite.addEventListener("click", function(event){
+    close_suite.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('close-testSuite').click();
     }, false);
-    ul.appendChild(close_suite);              
+    ul.appendChild(close_suite);
 
     var add_case = document.createElement("li");
     a = document.createElement("a");
     a.setAttribute("href", "#");
     a.innerHTML = "Add New Test Case";
     add_case.appendChild(a);
-    add_case.addEventListener("click", function(event){
+    add_case.addEventListener("click", function(event) {
         event.stopPropagation();
         document.getElementById('add-testCase').click();
     }, false);
-    ul.appendChild(add_case);  
+    ul.appendChild(add_case);
 
     if (isCase) {
         var remove_case = document.createElement("li");
@@ -109,33 +109,33 @@ function appendContextMenu(node, isCase) {
         a.setAttribute("href", "#");
         a.innerHTML = "Remove Test Case";
         remove_case.appendChild(a);
-        remove_case.addEventListener("click", function(event){
+        remove_case.addEventListener("click", function(event) {
             event.stopPropagation();
             document.getElementById('delete-testCase').click();
         }, false);
-        ul.appendChild(remove_case); 
+        ul.appendChild(remove_case);
 
         var rename_case = document.createElement("li");
         a = document.createElement("a");
         a.setAttribute("href", "#");
         a.innerHTML = "Rename Test Case's Title";
         rename_case.appendChild(a);
-        rename_case.addEventListener("click", function(event){
+        rename_case.addEventListener("click", function(event) {
             event.stopPropagation();
             var s_case = getSelectedCase();
             var n_title = prompt("Please enter the Test Case's title", sideex_testCase[s_case.id].title);
             // get text node
             s_case.childNodes[0].textContent = n_title;
             sideex_testCase[s_case.id].title = n_title;
-        }, false); 
-        ul.appendChild(rename_case);           
+        }, false);
+        ul.appendChild(rename_case);
     } else {
         var rename_suite = document.createElement("li");
         a = document.createElement("a");
         a.setAttribute("href", "#");
         a.innerHTML = "Rename Test Suite's Title";
         rename_suite.appendChild(a);
-        rename_suite.addEventListener("click", function(event){
+        rename_suite.addEventListener("click", function(event) {
             event.stopPropagation();
             var s_suite = getSelectedSuite();
             var n_title = prompt("Please enter the Test Suite's title", sideex_testSuite[s_suite.id].title);
@@ -143,7 +143,7 @@ function appendContextMenu(node, isCase) {
             s_suite.childNodes[0].textContent = n_title;
             sideex_testSuite[s_suite.id].title = n_title;
         }, false);
-        ul.appendChild(rename_suite); 
+        ul.appendChild(rename_suite);
     }
 
     node.appendChild(ul);
@@ -157,22 +157,24 @@ function addTestCase(title, id) {
         addTestSuite("Untitled Test Suite", suite_id);
     }
 
-    var div = document.createElement("div");
-    div.innerHTML = escapeHTML(title);
-    div.setAttribute("id", id);
-    div.setAttribute("draggable", true);
-    div.setAttribute("contextmenu", "menu" + id);
+    var text = document.createElement("strong");
+    text.innerHTML = escapeHTML(title);
+    var p = document.createElement("p");
+    p.setAttribute("id", id);
+    p.setAttribute("draggable", true);
+    p.setAttribute("contextmenu", "menu" + id);
+    p.appendChild(text);
 
     var s_case = getSelectedCase();
     if (s_case) {
-        s_case.parentNode.insertBefore(div, s_case.nextSibling);
+        s_case.parentNode.insertBefore(p, s_case.nextSibling);
     } else {
-        getSelectedSuite().appendChild(div);
+        getSelectedSuite().appendChild(p);
     }
-    
+
     cleanSelected();
-    div.setAttribute("class", "selectedCase");
-    div.parentNode.setAttribute("class", "selectedSuite");
+    p.classList.add("selectedCase");
+    p.parentNode.classList.add("selectedSuite");
 
     if (sideex_testCase[id]) { // load file
         clean_panel();
@@ -188,20 +190,19 @@ function addTestCase(title, id) {
             records: "",
             title: title
         };
-    }    
+    }
 
     // attach event
-    div.addEventListener("click", function(event){
+    p.addEventListener("click", function(event) {
         event.stopPropagation();
         saveOldCase();
         // use jquery's API to add and remove class property
         cleanSelected();
-        $("#" + event.target.id).addClass("selectedCase");
-        event.target.parentNode.setAttribute("class", "selectedSuite");
-
-        if (sideex_testCase[event.target.id].records) {
+        this.classList.add("selectedCase");
+        this.parentNode.classList.add("selectedSuite");
+        if (sideex_testCase[this.id].records) {
             clean_panel();
-            document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[event.target.id].records);
+            document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[this.id].records);
             reAssignId("records-1", "records-" + getRecordsNum());
             attachEvent(1, getRecordsNum());
         } else {
@@ -211,26 +212,26 @@ function addTestCase(title, id) {
         // prevent event trigger on parent from child
         event.stopPropagation();
     }, false);
-    div.addEventListener("dragstart", function(event){
+    p.addEventListener("dragstart", function(event) {
         event.stopPropagation();
         saveOldCase();
-        event.dataTransfer.setData("testCase", event.target.id);
+        event.dataTransfer.setData("testCase", this.id);
     }, false);
-    div.addEventListener("dragover", function(event){
+    p.addEventListener("dragover", function(event) {
         event.stopPropagation();
         event.preventDefault();
     }, false);
-    div.addEventListener("drop", function(event){
+    p.addEventListener("drop", function(event) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
-        var start_ID = event.dataTransfer.getData("testCase"), 
-            end_ID = event.target.id;
-        if (end_ID !== start_ID && (end_ID.slice(0,1) == start_ID.slice(0,1))) {
-            event.target.parentNode.insertBefore(document.getElementById(start_ID), event.target.nextSibling);
+        var start_ID = event.dataTransfer.getData("testCase"),
+            end_ID = this.id;
+        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
+            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
             cleanSelected();
-            $("#" + event.target.nextSibling.id).addClass("selectedCase");
-            event.target.parentNode.setAttribute("class", "selectedSuite");
+            $("#" + this.nextSibling.id).addClass("selectedCase");
+            this.parentNode.classList.add("selectedSuite");
         }
     }, false);
 
@@ -239,29 +240,31 @@ function addTestCase(title, id) {
     menu.setAttribute("class", "menu");
     menu.setAttribute("id", "menu" + id);
     appendContextMenu(menu, true);
-    document.body.appendChild(menu);
+    p.appendChild(menu);
 
     // right click
-    div.addEventListener("contextmenu", function(event){
+    p.addEventListener("contextmenu", function(event) {
         event.preventDefault();
         event.stopPropagation();
         saveOldCase();
-        setSelectedCase(event.target.id);
+        setSelectedCase(this.id);
         var mid = "#" + "menu" + id;
         console.log($(mid));
-        $(".menu").css("left",event.pageX);
-        $(".menu").css("top",event.pageY);
+        $(".menu").css("left", event.pageX);
+        $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
 }
 
 function addTestSuite(title, id) {
+    var text = document.createElement("p");
+    text.innerHTML = escapeHTML(title);
     var div = document.createElement("div");
-    div.innerHTML = escapeHTML(title);
     div.setAttribute("id", id);
     div.setAttribute("draggable", true);
     div.setAttribute("contextmenu", "menu" + id);
-
+    div.setAttribute("class", "message");
+    div.appendChild(text);
 
     var s_suite = getSelectedSuite();
     if (s_suite) {
@@ -271,36 +274,35 @@ function addTestSuite(title, id) {
     }
 
     cleanSelected();
-    div.setAttribute("class", "selectedSuite");
-
+    div.classList.add("selectedSuite");
     // attach event
-    div.addEventListener("click", function(event){
+    div.addEventListener("click", function(event) {
         event.stopPropagation();
         saveOldCase();
         cleanSelected();
-        event.target.setAttribute("class", "selectedSuite");
+        this.classList.add("selectedSuite");
         clean_panel();
         // document.getElementById("records-grid").innerHTML = "";
     }, false);
-    div.addEventListener("dragstart", function(event){
+    div.addEventListener("dragstart", function(event) {
         event.stopPropagation();
         saveOldCase();
-        event.dataTransfer.setData("testSuite", event.target.id);
+        event.dataTransfer.setData("testSuite", this.id);
     }, false);
-    div.addEventListener("dragover", function(event){
+    div.addEventListener("dragover", function(event) {
         event.stopPropagation();
         event.preventDefault();
     }, false);
-    div.addEventListener("drop", function(event){
+    div.addEventListener("drop", function(event) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
-        var start_ID = event.dataTransfer.getData("testSuite"), 
-            end_ID = event.target.id;
-        if (end_ID !== start_ID && (end_ID.slice(0,1) == start_ID.slice(0,1))) {
-            event.target.parentNode.insertBefore(document.getElementById(start_ID), event.target.nextSibling);
+        var start_ID = event.dataTransfer.getData("testSuite"),
+            end_ID = this.id;
+        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
+            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
             cleanSelected();
-            document.getElementById(start_ID).setAttribute("class", "selectedSuite");
+            document.getElementById(start_ID).classList.add("selectedSuite");
         }
     }, false);
 
@@ -308,23 +310,23 @@ function addTestSuite(title, id) {
     menu.setAttribute("class", "menu");
     menu.setAttribute("id", "menu" + id);
     appendContextMenu(menu, false);
-    document.body.appendChild(menu);
+    div.appendChild(menu);
 
     // right click
-    div.addEventListener("contextmenu", function(event){
+    div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
         event.stopPropagation();
         saveOldCase();
-        setSelectedSuite(event.target.id);
+        setSelectedSuite(this.id);
         var mid = "#" + "menu" + id;
         console.log($(mid));
-        $(".menu").css("left",event.pageX);
-        $(".menu").css("top",event.pageY);
+        $(".menu").css("left", event.pageX);
+        $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
 }
 
-document.getElementById("add-testSuite").addEventListener("click", function(event){
+document.getElementById("add-testSuite").addEventListener("click", function(event) {
     event.stopPropagation();
     var title = prompt("Please enter the Test Suite's title");
     if (!title) {
@@ -336,12 +338,12 @@ document.getElementById("add-testSuite").addEventListener("click", function(even
     addTestSuite(title, id);
 }, false);
 
-document.getElementById("add-testSuite-menu").addEventListener("click", function(event){
+document.getElementById("add-testSuite-menu").addEventListener("click", function(event) {
     event.stopPropagation();
     document.getElementById('add-testSuite').click();
 }, false);
 
-document.getElementById("close-testSuite").addEventListener('click', function (event) {
+document.getElementById("close-testSuite").addEventListener('click', function(event) {
     event.stopPropagation();
     var s_suite = getSelectedSuite();
     if (s_suite) {
@@ -352,7 +354,7 @@ document.getElementById("close-testSuite").addEventListener('click', function (e
     }
 }, false);
 
-document.getElementById("add-testCase").addEventListener("click", function(event){
+document.getElementById("add-testCase").addEventListener("click", function(event) {
     var title = prompt("Please enter the Test Case's title");
     if (!title) {
         title = "Untitled Test Case";
@@ -362,7 +364,7 @@ document.getElementById("add-testCase").addEventListener("click", function(event
     addTestCase(title, id);
 }, false);
 
-document.getElementById("delete-testCase").addEventListener('click', function () {
+document.getElementById("delete-testCase").addEventListener('click', function() {
     var s_case = getSelectedCase();
     if (s_case) {
         sideex_testCase[s_case.id] = null;

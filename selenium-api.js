@@ -415,20 +415,20 @@ Selenium.prototype.doAssertTitle = function(value) {
 };
 
 Selenium.prototype.doStore = function(value, varName) {
-    browser.runtime.sendMessage({"storeStr": value,"storeVar":varName});
+    browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreText = function(locator, varName) {
     var element = this.browserbot.findElement(locator);
-    browser.runtime.sendMessage({"storeStr": element.textContent,"storeVar":varName});
+    browser.runtime.sendMessage({ "storeStr": element.textContent, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
-    browser.runtime.sendMessage({"storeStr": value,"storeVar":varName});
+    browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
 };
 
 Selenium.prototype.doEcho = function(value) {
-    browser.runtime.sendMessage({"echoStr": value});
+    browser.runtime.sendMessage({ "echoStr": value });
 };
 
 // xian

@@ -1,6 +1,6 @@
 function getSelectedCase() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedCase")) {
-        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];    
+        return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];
     } else {
         return null;
     }
@@ -62,7 +62,7 @@ function addCommand(command_name, command_target_array, command_value, auto) {
 
     // create td node
     for (var i = 0; i < 3; ++i) {
-        var td = document.createElement("td");  
+        var td = document.createElement("td");
         var div_show = document.createElement("div");
         var div_hidden = document.createElement("div");
         div_show.style = "overflow:hidden;height:15px;";
@@ -98,7 +98,7 @@ function addCommand(command_name, command_target_array, command_value, auto) {
     document.getElementById("records-count").value = count;
     if (count != 1) {
         // remove green line
-        document.getElementById("records-" + (count - 1)).style = ""; 
+        document.getElementById("records-" + (count - 1)).style = "";
     }
     if (selected_ID) {
         if (auto) {
@@ -138,7 +138,7 @@ function addCommand(command_name, command_target_array, command_value, auto) {
         } else {
             tooLongStr = command_value;
         }
-        var adjust = adjustTooLongStr(tooLongStr, getTdShowValueNode(new_record,k));
+        var adjust = adjustTooLongStr(tooLongStr, getTdShowValueNode(new_record, k));
         getTdShowValueNode(new_record, k).appendChild(document.createTextNode(adjust));
     }
 
@@ -159,7 +159,7 @@ function addCommandAuto(command_name, command_target_array, command_value) {
     addCommand(command_name, command_target_array, command_value, 1);
 }
 
-document.getElementById("command-command").addEventListener("input", function(event){
+document.getElementById("command-command").addEventListener("input", function(event) {
     var temp = getSelectedRecord();
     if (temp) {
         var div = getTdRealValueNode(document.getElementById(temp), 0);
@@ -168,7 +168,7 @@ document.getElementById("command-command").addEventListener("input", function(ev
             div.removeChild(div.childNodes[0]);
         }
         div.appendChild(document.createTextNode(event.target.value));
-        
+
         var command_command = event.target.value;
         div = getTdShowValueNode(document.getElementById(temp), 0);
         var command_command_adjust = adjustTooLongStr(command_command, div);
@@ -185,7 +185,7 @@ document.getElementById("command-command").addEventListener("input", function(ev
     }
 }, false);
 
-document.getElementById("command-target").addEventListener("input", function(event){
+document.getElementById("command-target").addEventListener("input", function(event) {
     var temp = getSelectedRecord();
     if (temp) {
         var div = getTdRealValueNode(document.getElementById(temp), 1);
@@ -194,7 +194,7 @@ document.getElementById("command-target").addEventListener("input", function(eve
             div.removeChild(div.childNodes[0]);
         }
         div.appendChild(document.createTextNode(event.target.value));
-        
+
         var command_target = event.target.value;
         div = getTdShowValueNode(document.getElementById(temp), 1);
         var command_target_adjust = adjustTooLongStr(command_target, div);
@@ -210,7 +210,7 @@ document.getElementById("command-target").addEventListener("input", function(eve
         }
     }
 }, false);
-document.getElementById("command-value").addEventListener("input", function(event){
+document.getElementById("command-value").addEventListener("input", function(event) {
     var temp = getSelectedRecord();
     if (temp) {
         var div = getTdRealValueNode(document.getElementById(temp), 2);
@@ -219,7 +219,7 @@ document.getElementById("command-value").addEventListener("input", function(even
             div.removeChild(div.childNodes[0]);
         }
         div.appendChild(document.createTextNode(event.target.value));
-        
+
         var command_value = event.target.value;
         div = getTdShowValueNode(document.getElementById(temp), 2);
         var command_value_adjust = adjustTooLongStr(command_value, div);
@@ -236,9 +236,11 @@ document.getElementById("command-value").addEventListener("input", function(even
     }
 }, false);
 
-document.getElementById("grid-add").addEventListener("click", function(){   
+document.getElementById("grid-add").addEventListener("click", function() {
     // target is 2-D array
-    addCommandManu("", [[""]], "");
+    addCommandManu("", [
+        [""]
+    ], "");
 }, false);
 
 // "delete" command is different from add and reorder
@@ -250,11 +252,11 @@ function reAssignIdForDelete(delete_ID, count) {
     classifyRecords(delete_ID, count);
 }
 
-document.getElementById("grid-delete").addEventListener("click", function(){        
+document.getElementById("grid-delete").addEventListener("click", function() {
     deleteCommand(getSelectedRecord());
 }, false);
 
-function deleteCommand(selected_ID){
+function deleteCommand(selected_ID) {
     if (selected_ID) {
         var delete_node = document.getElementById(selected_ID);
         // do not forget to remove textNode
@@ -266,7 +268,7 @@ function deleteCommand(selected_ID){
         var count = parseInt(getRecordsNum()) - 1;
         document.getElementById("records-count").value = count;
         selected_ID = parseInt(selected_ID.split("-")[1]);
-        
+
         // delete last one
         if (selected_ID - 1 != count) {
             reAssignIdForDelete(selected_ID, count);
@@ -275,7 +277,7 @@ function deleteCommand(selected_ID){
                 document.getElementById("records-" + count).style.borderBottom = "green solid 2px";
             }
         }
-        
+
         // store command grid to testCase
         var s_case = getSelectedCase();
         if (s_case) {
