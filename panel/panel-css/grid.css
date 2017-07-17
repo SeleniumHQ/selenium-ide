@@ -4,7 +4,8 @@ table {
     table-layout: fixed;
 }
 
-thead, tbody {
+thead,
+tbody {
     width: 100%;
 }
 
@@ -37,13 +38,15 @@ td {
     white-space: nowrap;
 }
 
-.executing{
+.executing {
     background-color: #ffffe6;
 }
-.success{
+
+.success {
     background-color: #e5ffe5;
 }
-.fail{
+
+.fail {
     background-color: #ffe5e5;
 }
 
@@ -61,36 +64,38 @@ td {
 }
 
 .selectedCase {
-    font-weight:bold;
-    text-decoration:underline;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .selectedSuite {
     background-color: #eaecef;
 }
 
-#command-toolbar > div {
+#command-toolbar>div {
     height: 30px;
     border-bottom: 5px solid #b3b3b3;
 }
 
-#command-toolbar > div > div {
+#command-toolbar>div>div {
     float: left;
 }
 
-#command-toolbar > div > div:first-child {
+#command-toolbar>div>div:first-child {
     height: 30px;
     width: 80px;
     line-height: 30px;
 }
 
-#command-toolbar > div > div:nth-child(2) {
+#command-toolbar>div>div:nth-child(2) {
     height: 30px;
     width: calc(100% - 90px);
     line-height: 30px;
 }
 
-#command-command, #command-target, #command-value {
+#command-command,
+#command-target,
+#command-value {
     width: 100%;
 }
 
@@ -98,12 +103,12 @@ td {
     cursor: pointer;
 }
 
-#testCase-grid > div {
+#testCase-grid>div {
     border-bottom: 3px solid #dbdde0;
     font-weight: bold;
 }
 
-#testCase-grid > div > div {
+#testCase-grid>div>div {
     margin-left: 20px;
     font-weight: normal;
 }
