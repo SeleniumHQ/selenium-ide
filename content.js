@@ -236,6 +236,325 @@ window.addEventListener("change", function(event) {
     }
 });
 
+//////////////////////////////BaiMao
+window.addEventListener('mousedown', function(event) {
+    //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
+    var self = this;
+    if (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) {
+        this.mousedown = event;
+        this.mouseup = setTimeout(function() {
+            delete self.mousedown;
+        }.bind(this), 200);
+
+        this.selectMouseup = setTimeout(function() {
+            self.selectMousedown = event;
+        }.bind(this), 200);
+    }
+    this.mouseoverQ = [];
+
+    if (event.target.nodeName) {
+        var tagName = event.target.nodeName.toLowerCase();
+        if ('option' == tagName) {
+            var parent = event.target.parentNode;
+            if (parent.multiple) {
+                var options = parent.options;
+                for (var i = 0; i < options.length; i++) {
+                    options[i]._wasSelected = options[i].selected;
+                }
+            }
+        }
+    }
+},true);
+
+
+//DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/01
+window.addEventListener('mouseup', function(event) {
+    clearTimeout(this.selectMouseup);
+    if (this.selectMousedown) {
+        var x = event.clientX - this.selectMousedown.clientX;
+        var y = event.clientY - this.selectMousedown.clientY;
+
+        function getSelectionText() {
+            var text = "";
+            var activeEl = window.document.activeElement;
+            var activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+            if (activeElTagName == "textarea" || activeElTagName == "input") {
+                text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
+            } else if (window.getSelection) {
+                text = window.getSelection().toString();
+            }
+            return text.trim();
+        }
+
+        if (this.selectMousedown && event.button === 0 && (x + y) && (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) && getSelectionText() === '') {
+            var sourceRelateX = this.selectMousedown.pageX - this.selectMousedown.target.getBoundingClientRect().left - window.scrollX;
+            var sourceRelateY = this.selectMousedown.pageY - this.selectMousedown.target.getBoundingClientRect().top - window.scrollY;
+            var targetRelateX, targetRelateY;
+            if (!!this.mouseoverQ.length && this.mouseoverQ[1].relatedTarget == this.mouseoverQ[0].target && this.mouseoverQ[0].target == event.target) {
+                targetRelateX = event.pageX - this.mouseoverQ[1].target.getBoundingClientRect().left - window.scrollX;
+                targetRelateY = event.pageY - this.mouseoverQ[1].target.getBoundingClientRect().top - window.scrollY;
+                /*
+                browser.runtime.sendMessage({
+                    command: "mouseDownAt",
+                    target: locatorBuilders.buildAll(this.selectMousedown.target),
+                    value: sourceRelateX + ',' + sourceRelateY
+                });
+                browser.runtime.sendMessage({
+                    command: "mouseMoveAt",
+                    target: locatorBuilders.buildAll(this.mouseoverQ[1].target),
+                    value: targetRelateX + ',' + targetRelateY
+                });
+                browser.runtime.sendMessage({
+                    command: "mouseUpAt",
+                    target: locatorBuilders.buildAll(this.mouseoverQ[1].target),
+                    value: targetRelateX + ',' + targetRelateY
+                });*/
+                record("mouseDownAt", locatorBuilders.buildAll(this.selectMousedown.target), sourceRelateX + ',' + sourceRelateY);
+                record("mouseMoveAt", locatorBuilders.buildAll(this.mouseoverQ[1].target), targetRelateX + ',' + targetRelateY);
+                record("mouseUpAt", locatorBuilders.buildAll(this.mouseoverQ[1].target), targetRelateX + ',' + targetRelateY);
+            } else {
+                targetRelateX = event.pageX - event.target.getBoundingClientRect().left - window.scrollX;
+                targetRelateY = event.pageY - event.target.getBoundingClientRect().top - window.scrollY;
+                /*
+                browser.runtime.sendMessage({
+                    command: "mouseDownAt",
+                    target: locatorBuilders.buildAll(this.selectMousedown.target),
+                    value: sourceRelateX + ',' + sourceRelateY
+                });
+                browser.runtime.sendMessage({
+                    command: "mouseMoveAt",
+                    target: locatorBuilders.buildAll(event.target),
+                    value: targetRelateX + ',' + targetRelateY
+                });
+                browser.runtime.sendMessage({
+                    command: "mouseUpAt",
+                    target: locatorBuilders.buildAll(event.target),
+                    value: targetRelateX + ',' + targetRelateY
+                });
+                */
+                record("mouseDownAt", locatorBuilders.buildAll(event.target), targetRelateX + ',' + targetRelateY);
+                record("mouseMoveAt", locatorBuilders.buildAll(event.target), targetRelateX + ',' + targetRelateY);
+                record("mouseUpAt", locatorBuilders.buildAll(event.target), targetRelateX + ',' + targetRelateY);
+            }
+        }
+    } else {
+        delete this.clickLocator;
+        delete this.mouseup;
+        var x = event.clientX - this.mousedown.clientX;
+        var y = event.clientY - this.mousedown.clientY;
+
+        if (this.mousedown && this.mousedown.target !== event.target && !(x + y)) {
+          /*
+            browser.runtime.sendMessage({
+                command: "mouseDown",
+                target: locatorBuilders.buildAll(this.mousedown.target),
+                value: ''
+            });
+            browser.runtime.sendMessage({
+                command: "mouseUp",
+                target: locatorBuilders.buildAll(event.target),
+                value: ''
+            });
+            */
+            record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), '');
+            record("mouseUp", locatorBuilders.buildAll(event.target), '');
+        } else if (this.mousedown && this.mousedown.target === event.target) {
+            var self = this;
+            var target = locatorBuilders.buildAll(this.mousedown.target);
+            // setTimeout(function() {
+            //     if (!self.clickLocator)
+            //         record("click", target, '');
+            // }.bind(this), 100);
+        }
+
+    }
+    delete this.mousedown;
+    delete this.selectMousedown;
+    delete this.mouseoverQ;
+
+},true);
+
+//DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/19
+window.addEventListener('dragstart', function(event) {
+    var self = this;
+    this.dropLocator = setTimeout(function() {
+        self.dragstartLocator = event;
+    }.bind(this), 200);
+},true);
+
+//DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
+window.addEventListener('drop', function(event) {
+    clearTimeout(this.dropLocator);
+    if (this.dragstartLocator && event.button == 0 && this.dragstartLocator.target !== event.target) {
+        //value no option
+        /*
+        browser.runtime.sendMessage({
+            command: "dragAndDropToObject",
+            target: locatorBuilders.buildAll(this.dragstartLocator.target),
+            value: locatorBuilders.build(event.target)
+        });
+        */
+        record("dragAndDropToObject", locatorBuilders.buildAll(this.dragstartLocator.target), locatorBuilders.build(event.target));
+    }
+    delete this.dragstartLocator;
+    delete this.selectMousedown;
+},true);
+
+//InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
+var prevTimeOut = null;
+window.addEventListener('scroll', function(event) {
+    if (pageLoaded === true) {
+        var self = this;
+        this.scrollDetector = event.target;
+        clearTimeout(prevTimeOut);
+        prevTimeOut = setTimeout(function() {
+            delete self.scrollDetector;
+        }.bind(self), 500);
+    }
+},true);
+
+//InfluentialMouseoverExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
+var nowNode = 0;
+var findClickableElement = function(e) {
+    if (!e.tagName) return null;
+    var tagName = e.tagName.toLowerCase();
+    var type = e.type;
+    if (e.hasAttribute("onclick") || e.hasAttribute("href") || tagName == "button" ||
+        (tagName == "input" &&
+            (type == "submit" || type == "button" || type == "image" || type == "radio" || type == "checkbox" || type == "reset"))) {
+        return e;
+    } else {
+        if (e.parentNode != null) {
+            return findClickableElement(e.parentNode);
+        } else {
+            return null;
+        }
+    }
+};
+
+window.addEventListener('mouseover', function(event) {
+    if (window.document.documentElement)
+        nowNode = window.document.documentElement.getElementsByTagName('*').length;
+    var self = this;
+    if (pageLoaded === true) {
+        var clickable = findClickableElement(event.target);
+        if (clickable) {
+            this.nodeInsertedLocator = event.target;
+            setTimeout(function() {
+                delete self.nodeInsertedLocator;
+            }.bind(self), 500);
+
+            this.nodeAttrChange = locatorBuilders.buildAll(event.target);
+            this.nodeAttrChangeTimeout = setTimeout(function() {
+                delete self.nodeAttrChange;
+            }.bind(self), 10);
+        }
+        //drop target overlapping
+        if (this.mouseoverQ) //mouse keep down
+        {
+            if (this.mouseoverQ.length >= 3)
+                this.mouseoverQ.shift();
+            this.mouseoverQ.push(event);
+        }
+    }
+},true);
+
+//InfluentialMouseoverExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
+window.addEventListener('mouseout', function(event) {
+    if (this.mouseoutLocator !== null && event.target === this.mouseoutLocator) {
+        /*
+        browser.runtime.sendMessage({
+            command: "mouseOut",
+            target: locatorBuilders.buildAll(event.target),
+            value: ''
+        });
+        */
+        record("mouseOut", locatorBuilders.buildAll(event.target), '');
+    }
+    delete this.mouseoutLocator;
+},true);
+
+//InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
+window.addEventListener('DOMNodeInserted', function(event) {
+    if (pageLoaded === true && window.document.documentElement.getElementsByTagName('*').length > nowNode) {
+        var self = this;
+        if (this.scrollDetector) {
+            //TODO: fix target
+            /*
+            browser.runtime.sendMessage({
+                command: "runScript",
+                target: [["window.scrollTo(0," + window.scrollY + ")",]],
+                value: ''
+            });
+            */
+            record("runScript", [[["window.scrollTo(0," + window.scrollY + ")",]]], '');
+            pageLoaded = false;
+            setTimeout(function() {
+                pageLoaded = true;
+            }.bind(self), 550);
+            delete this.scrollDetector;
+            delete this.nodeInsertedLocator;
+        }
+        if (this.nodeInsertedLocator) {
+            /*
+            browser.runtime.sendMessage({
+                command: "mouseOver",
+                target: locatorBuilders.buildAll(this.nodeInsertedLocator),
+                value: ''
+            });
+            */
+            record("mouseOver", locatorBuilders.buildAll(this.nodeInsertedLocator), '');
+            this.mouseoutLocator = this.nodeInsertedLocator;
+            delete this.nodeInsertedLocator;
+            delete this.mouseoverLocator;
+        }
+    }
+},true);
+
+//InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
+var readyTimeOut = null;
+var pageLoaded = true;
+window.addEventListener('readystatechange', function(event) {
+    var self = this;
+    if (window.document.readyState === 'loading') {
+        pageLoaded = false;
+    } else {
+        pageLoaded = false;
+        clearTimeout(readyTimeOut);
+        readyTimeOut = setTimeout(function() {
+            pageLoaded = true;
+        }.bind(self), 1500); //setReady after complete 1.5s
+    }
+},true);
+
+window.addEventListener('contextmenu',function(event){
+//     //window.console.log(locatorBuilders.buildAll(event.target));
+//     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
+//     // record("verifyText", locatorBuilders.buildAll(event.target), event.target.textContent);
+    var myPort = browser.runtime.connect();
+    var tmpText = locatorBuilders.buildAll(event.target);
+    var tmpVal = event.target.textContent;
+    var tmpTitle = [[event.target.ownerDocument.title]];
+    myPort.onMessage.addListener(function(m) {
+        switch (m.cmd) {
+          case "verifyText":
+            record("verifyText",tmpText,tmpVal);
+            break;
+          case "verifyTitle":
+            record("verifyTitle",[['']],tmpTitle);
+            break;
+          case "assertText":
+            record("assertText",tmpText,tmpVal);
+            break;
+          case "assertTitle":
+            record("assertTitle",[['']],tmpTitle);
+            break;
+          default:
+        }
+        this.removeListener();
+    });
+},true);
+//
 
 //initial the siddeX tab ID in content
 browser.runtime.onMessage.addListener(function(message) {

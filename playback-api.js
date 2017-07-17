@@ -120,6 +120,7 @@ function pause() {
 
 function resume() {
     if(isPause){
+        isPlaying = true;
         isPause = false;
         executionLoop()
         .then(finalizePlayingProgress)
@@ -148,7 +149,7 @@ function playSuite(i){
 }
 
 function nextCase(i){
-    if(isPlaying)  setTimeout(function() {nextCase(i);}, 500);
+    if(isPlaying || isPause)  setTimeout(function() {nextCase(i);}, 500);
     else  playSuite(i + 1);
 }
 
@@ -235,7 +236,7 @@ function send(cmdName, cmdTarget, cmdValue) {
 function onError(error) {
     console.log("QAQ");
     alert(`Error: ${error}`);
-};
+}
 
 /*
 function onResponse(response) {
@@ -266,6 +267,7 @@ function initializePlayingProgress(isDbclick) {
     playingFrameLocations = {};
     currentPlayingCommandIndex = -1;
 
+    // xian wait
     commandType = "preparation";
     pageCount = ajaxCount = domCount = implicitCount = 0;
     pageTime = ajaxTime = domTime = implicitTime = "";
@@ -409,6 +411,7 @@ function executionLoop() {
                         .then(executionLoop);
     } else if (commandType == "common") {
         console.log("in common");
+        //xian wait
         commandType = "preparation";
         currentPlayingCommandIndex++;
         let commands = getRecordsArray();

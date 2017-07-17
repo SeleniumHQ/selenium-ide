@@ -45,5 +45,5 @@ $(document).bind("contextmenu", function (event) {
 // If the document is clicked somewhere
 $(document).bind("mousedown", function (e) {
     if (!$(e.target).parents(".menu").length > 0) $(".menu").hide();
-    else $(".menu").hide(500);
+    else setTimeout(function(){$(".menu").hide();}, 150);
 });
