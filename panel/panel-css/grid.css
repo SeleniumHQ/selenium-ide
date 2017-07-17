@@ -1,4 +1,4 @@
-table {
+/*table {
     width: 100%;
     empty-cells: show;
     table-layout: fixed;
@@ -18,7 +18,7 @@ th {
     cursor: default;
 }
 
-.command-command {
+/*.command-command {
     width: 25%;
 }
 
@@ -36,7 +36,7 @@ td {
     cursor: default;
     overflow: hidden;
     white-space: nowrap;
-}
+}*/
 
 .executing {
     background-color: #ffffe6;
@@ -50,28 +50,25 @@ td {
     background-color: #ffe5e5;
 }
 
-.even {
+/*.even {
     background-color: #efefef;
 }
 
 .odd {
     background-color: #ffffff;
-}
+}*/
 
 .selectedRecord {
-    background-color: #2578fc;
-    color: #ffffff;
+    background-color: #f8f8f8;
 }
 
 .selectedCase {
-    font-weight: bold;
     text-decoration: underline;
 }
 
-.selectedSuite {
-    background-color: #eaecef;
+.selectedSuite > p{
 }
-
+/*
 #command-toolbar > div {
     height: 30px;
     border-bottom: 5px solid #b3b3b3;
@@ -111,4 +108,4 @@ td {
 #testCase-grid > div > div {
     margin-left: 20px;
     font-weight: normal;
-}
+}*/

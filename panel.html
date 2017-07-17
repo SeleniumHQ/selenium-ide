@@ -19,8 +19,11 @@
     <script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
     <script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
     <script type="text/javascript" src="panel/js/panelSetting.js"></script>
+    <!-- old css -->
+    <link rel="stylesheet" type="text/css" href="./panel/panel-css/grid.css">
 </head>
 <!-- TODO: Make whole panel size smaller -->
+
 <body>
     <header id="header">
         <hgroup>
@@ -52,7 +55,6 @@
             <button id="add-testCase" style="display:none">+Case</button>
             <button id="delete-testCase" style="display:none">-Case</button>
             <a download="info.html" id="downloadlink" style="display: none">Download</a>
-
             <button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
             <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
             <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
@@ -101,23 +103,24 @@
                 </ul>
             </header>
             <div class="tab_container">
-                <div id="command-container" class="tab_content case_hight">
-                    <table id="command-grid" class="tablesorter" cellspacing="0">
-                        <!-- TODO: Give fixed width -->
-                        <thead>
-                            <tr>
-                                <th>Comand</th>
-                                <th>Target</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="records-grid">
-                            <!-- TODO: Give a init height and make y scroll -->
-                            <input id="records-count" type=hidden value=0></input>
-                            <!-- TODO: Make text appear instead of ... -->
-                            <!-- TODO: Change color when running -->
-                            <!-- set input and /tbody in same line to avoid textNode -->
-                            <!--<tr> 
+                <div class="tab_content case_hight">
+                    <div id="command-container">
+                        <table id="command-grid" class="tablesorter" cellspacing="0">
+                            <!-- TODO: Give fixed width -->
+                            <thead>
+                                <tr>
+                                    <th>Comand</th>
+                                    <th>Target</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="records-grid">
+                                <!-- TODO: Give a init height and make y scroll -->
+                                <input id="records-count" type=hidden value=0></input>
+                                <!-- TODO: Make text appear instead of ... -->
+                                <!-- TODO: Change color when running -->
+                                <!-- set input and /tbody in same line to avoid textNode -->
+                                <!--<tr> 
                                 <td>time</td> 
                                 <td>open</td> 
                                 <td></td> 
@@ -138,8 +141,9 @@
                                 <td>open</td> 
                                 <td></td> 
                             </tr>-->
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                     <fieldset id="command-toolbar" class="action">
                         <!-- TODO: make (command &) target selectable -->
                         <label>Command</label>
@@ -197,10 +201,9 @@
                 </ul>
                 <!-- TODO: Make it to a button and same style -->
                 <ul id="clear-log" class="tabs">
-                   <li><a>Clear</a></li>
+                    <li><a>Clear</a></li>
                 </ul>
             </header>
-            
             <div class="tab_container">
                 <div id="tab4" class="tab_content case_roll">
                     <table class="tablesorter" cellspacing="0">

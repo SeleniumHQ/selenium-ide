@@ -133,17 +133,17 @@ function resume() {
 
 function playSuite(i) {
     isPlayingSuite = true;
-    var cases = getSelectedSuite().getElementsByTagName("strong");
+    var cases = getSelectedSuite().getElementsByTagName("p");
     var length = cases.length;
     if (i == 0) {
         sideex_log.info("Playing test suite " + sideex_testSuite[getSelectedSuite().id].title);
         for (var j = 0; j < length; j++) {
-            $("#" + cases[j].parentNode.id).removeClass('fail success');
+            $("#" + cases[j].id).removeClass('fail success');
         }
     }
     if (i < length) {
-        setSelectedCase(cases[i].parentNode.id);
-        sideex_log.info("Playing test case " + sideex_testCase[cases[i].parentNode.id].title);
+        setSelectedCase(cases[i].id);
+        sideex_log.info("Playing test case " + sideex_testCase[cases[i].id].title);
         play();
         nextCase(i);
     } else {
@@ -161,9 +161,9 @@ function playSuites(i) {
     var length = suites.length;
     if (i == 0) {
         for (var k = 0; k < suites.length; ++k) {
-            var cases = suites[k].getElementsByTagName("strong");
+            var cases = suites[k].getElementsByTagName("p");
             for (var u = 0; u < cases.length; ++u) {
-                $("#" + cases[u].parentNode.id).removeClass('fail success');
+                $("#" + cases[u].id).removeClass('fail success');
             }
         }
     }
