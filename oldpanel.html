@@ -8,39 +8,32 @@
     <link rel="stylesheet" type="text/css" href="./panel/panel-css/panel.css">
     <link rel="stylesheet" type="text/css" href="./panel/panel-css/context_menu.css">
     <link rel="stylesheet" type="text/css" href="./panel/panel-css/grid.css">
-
     <!-- jquery -->
     <script src="./panel/lib/jquery.js"></script>
 </head>
 
 <body class="fully-occupy">
-
-
     <div id="suite-grid-menu" class="menu">
         <ul>
-          <li id="load-testSuite-show-menu"><a href="#">Open Test Suites</a></li>
-          <li id="add-testSuite-menu"><a href="#">Add New Test Suite</a></li>
+            <li id="load-testSuite-show-menu"><a href="#">Open Test Suites</a></li>
+            <li id="add-testSuite-menu"><a href="#">Add New Test Suite</a></li>
         </ul>
     </div>
     <div id="command-grid-menu" class="menu">
         <ul>
-          <li id="grid-add"><a href="#">Add Command</a></li>
-          <li id="grid-delete"><a href="#">Delete Command</a></li>
+            <li id="grid-add"><a href="#">Add Command</a></li>
+            <li id="grid-delete"><a href="#">Delete Command</a></li>
         </ul>
     </div>
-
-
     <div id="toolbar-container">
         <!-- hidden, because it has default style -->
         <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display:none"></input>
         <input id="load-testSuite-show" type="button" value="OpenSuite" style="display:none"></input>
-
         <button id="save-testSuite" style="display:none">SaveSuite</button>
-        <button id="close-testSuite" style="display:none">CloseSuite</button> 
+        <button id="close-testSuite" style="display:none">CloseSuite</button>
         <button id="add-testSuite" style="display:none">+Suite</button>
         <button id="add-testCase" style="display:none">+Case</button>
         <button id="delete-testCase" style="display:none">-Case</button>
-        
         <a download="info.html" id="downloadlink" style="display: none">Download</a>
         <!-- ?????? -->
         <input type="button" id="record" value="Record">
@@ -76,8 +69,9 @@
                         </tr>
                     </thead>
                     <tbody id="records-grid">
-                        <input id="records-count" type=hidden value=0></input></tbody>
-                        <!-- set input and /tbody in same line to avoid textNode -->
+                        <input id="records-count" type=hidden value=0></input>
+                    </tbody>
+                    <!-- set input and /tbody in same line to avoid textNode -->
                 </table>
             </div>
             <div id="command-toolbar">
@@ -116,8 +110,6 @@
         <button type="button" id="clear-log">Clear</button>
     </div>
     <div id="logcontainer"></div>
-
-
     <!-- script -->
     <script src="./escape.js"></script>
     <script src="./panel/panel-js/log.js"></script>

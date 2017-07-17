@@ -160,7 +160,7 @@ function replaceChar(str) {
         }
     }
     if (doFlag == 0)
-    //return str.replace(/[&"'<>]/g, (m) => ({ "&": "&amp;", '"': "&quot;", "'": "&#39;", "<": "&lt;", ">": "&gt;" })[m]);
+        //return str.replace(/[&"'<>]/g, (m) => ({ "&": "&amp;", '"': "&quot;", "'": "&#39;", "<": "&lt;", ">": "&gt;" })[m]);
         return doEscape(str);
     else
         return cutStr;

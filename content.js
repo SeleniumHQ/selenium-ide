@@ -50,7 +50,6 @@ function handleChangePageResponse(message) {
     console.log("change contentSideexTabId: " + contentSideexTabID);
 }
 
-
 //Record: ClickAt
 var preventClickTwice = false;
 window.addEventListener("click", function(event) {
@@ -199,7 +198,6 @@ window.addEventListener("keydown", function(event) {
     }
 }, true);
 
-
 //Recoed: Type
 window.addEventListener("change", function(event) {
 
@@ -270,7 +268,6 @@ window.addEventListener('mousedown', function(event) {
         }
     }
 }, true);
-
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/01
 window.addEventListener('mouseup', function(event) {
@@ -547,24 +544,10 @@ window.addEventListener('contextmenu', function(event) {
         [event.target.ownerDocument.title]
     ];
     myPort.onMessage.addListener(function(m) {
-        switch (m.cmd) {
-            case "verifyText":
-                record("verifyText", tmpText, tmpVal);
-                break;
-            case "verifyTitle":
-                record("verifyTitle", [
-                    ['']
-                ], tmpTitle);
-                break;
-            case "assertText":
-                record("assertText", tmpText, tmpVal);
-                break;
-            case "assertTitle":
-                record("assertTitle", [
-                    ['']
-                ], tmpTitle);
-                break;
-            default:
+        if (m.cmd.includes("Text")) {
+            record(m.cmd, tmpText, tmpVal);
+        } else if (m.cmd.includes("Title")) {
+            record(m.cmd, tmpTitle, '');
         }
         this.removeListener();
     });
@@ -619,7 +602,6 @@ function record(command, target, value) {
         commandSideexTabID: contentSideexTabID
     });
 }
-
 
 /* for test */
 /*

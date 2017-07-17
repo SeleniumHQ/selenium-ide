@@ -390,41 +390,45 @@ Selenium.prototype.reset = function() {
 
 Selenium.prototype.doVerifyText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if (element.textContent == value) {
-        console.log(element.textContent);
-    } else {
-        console.error("VerifyText Not Found!!");
+    if (element.textContent !== value) {
+        throw new Error("Actual value '" + element.textContent + "' did not match '" + value + "'");
     }
 };
 
-Selenium.prototype.doVerifyTitle = function(locator, value) {
-    //var element = this.browserbot.findElement(locator);
-    //console.log("????");
-    if (document.title == value) {
-        console.log(document.title);
-    } else {
-        console.error("VerifyTitle Not Found!!");
+Selenium.prototype.doVerifyTitle = function(value) {
+    if (this.getTitle() !== value) {
+        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
     }
 };
 
 Selenium.prototype.doAssertText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if (element.textContent == value) {
-        console.log(element.textContent);
-    } else {
-        console.error("AssertText Not Found!!");
-        throw new Error("error: assert failed!");
+    if (element.textContent !== value) {
+        throw new Error("Actual value '" + element.textContent + "' did not match '" + value + "'");
     }
 };
 
-Selenium.prototype.doAssertTitle = function(locator, value) {
-    //var element = this.browserbot.findElement(locator);
-    if (document.title == value) {
-        console.log(document.title);
-    } else {
-        console.error("AssertTitle Not Found!!");
-        throw new SeleniumError("error: assert failed!");
+Selenium.prototype.doAssertTitle = function(value) {
+    if (this.getTitle() !== value) {
+        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
     }
+};
+
+Selenium.prototype.doStore = function(value, varName) {
+    browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+};
+
+Selenium.prototype.doStoreText = function(locator, varName) {
+    var element = this.browserbot.findElement(locator);
+    browser.runtime.sendMessage({ "storeStr": element.textContent, "storeVar": varName });
+};
+
+Selenium.prototype.doStoreTitle = function(value, varName) {
+    browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+};
+
+Selenium.prototype.doEcho = function(value) {
+    browser.runtime.sendMessage({ "echoStr": value });
 };
 
 // xian
@@ -1639,7 +1643,7 @@ Selenium.prototype.getAlert = function() {
      * page's onload() event handler. In this case a visible dialog WILL be
      * generated and Selenium will hang until someone manually clicks OK.</p>
      * @return string The message of the most recent JavaScript alert
-
+     
      */
     if (!this.browserbot.hasAlerts()) {
         Assert.fail("There were no alerts");

@@ -1088,7 +1088,8 @@ function XPathEngine() {
      * engine. Needs override.
      */
     this.isAvailable = function() {
-        return false; };
+        return false;
+    };
 
     /**
      * Sets the document to be used for evaluation. Always returns the current
@@ -1130,7 +1131,8 @@ function XPathEngine() {
      * returns the current engine object so as to be chainable.
      */
     this.setIgnoreAttributesWithoutValue = function(ignore) {
-        return this; };
+        return this;
+    };
 }
 
 /**
@@ -1229,7 +1231,8 @@ function AjaxsltEngine() {
     // public
     // Override
     this.isAvailable = function() {
-        return true; };
+        return true;
+    };
 
     // Override
     this.selectNodes = function(xpath, contextNode, namespaceResolver) {
@@ -1261,7 +1264,8 @@ function JavascriptXPathEngine() {
     // public
     // Override
     this.isAvailable = function() {
-        return true; };
+        return true;
+    };
 
     // Override
     this.selectNodes = function(xpath, contextNode, namespaceResolver) {

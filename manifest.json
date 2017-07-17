@@ -4,7 +4,8 @@
     "name": "SideeX",
     "version": "1.0",
     "homepage_url": "http://sideex.org/",
-    "icons": {
+    "icons":
+    {
         "48": "icons/icons-48.png",
         "96": "icons/icons-96.png"
     },
@@ -18,18 +19,21 @@
 
     "content_security_policy": "script-src 'self'; object-src 'self'",
 
-    "content_scripts": [{
+    "content_scripts": [
+    {
         "matches": ["<all_urls>"],
         "js": ["atoms.js", "utils.js", "selenium-browserbot.js", "selenium-api.js", "locatorBuilders.js", "content.js", "commands-api.js"],
         "match_about_blank": true,
         "all_frames": true
     }],
 
-    "background": {
+    "background":
+    {
         "scripts": ["background.js"]
     },
 
-    "browser_action": {
+    "browser_action":
+    {
         "default_icon": "icons/icons-48.png",
         "default_title": "SideeX"
     }

@@ -261,7 +261,7 @@ function addTestSuite(title, id) {
     div.setAttribute("id", id);
     div.setAttribute("draggable", true);
     div.setAttribute("contextmenu", "menu" + id);
-    div.setAttribute("class","message");
+    div.setAttribute("class", "message");
     div.appendChild(text);
 
     var s_suite = getSelectedSuite();

@@ -32,11 +32,11 @@ function panelToFile(str) {
         return null;
     }
     str = str.replace(/<div style="overflow[\s\S]+?">[\s\S]*?<\/div>/gi, "")
-             .replace(/<div style="display[\s\S]+?">/gi, "")
-             .replace(/<\/div>/gi, "")
-             .replace(/<input[\s\S]+?>/, "")
-             .replace(/<tr[\s\S]+?>/gi, "<tr>");
-    
+        .replace(/<div style="display[\s\S]+?">/gi, "")
+        .replace(/<\/div>/gi, "")
+        .replace(/<input[\s\S]+?>/, "")
+        .replace(/<tr[\s\S]+?>/gi, "<tr>");
+
     var tr = str.match(/<tr>[\s\S]*?<\/tr>/gi);
     temp_str = str;
     console.log(temp_str);
@@ -50,11 +50,11 @@ function panelToFile(str) {
         }
 
         var option = pattern[5].match(/<option>[\s\S]*?<\/option>/gi);
-        
+
         if (!pattern[4].match(/\n/)) {
             pattern[4] = pattern[4] + "\n";
         }
-        
+
         str = str + "<tr>" + pattern[1] + "<td>" + pattern[2] + "</td>" + pattern[3] + "<td>" + pattern[4] + "        <datalist>\n";
         for (var j = 0; j < option.length; ++j) {
             option[j] = option[j].replace(/<option>/, "").replace(/<\/option>/, "");
@@ -67,16 +67,16 @@ function panelToFile(str) {
 }
 
 var textFile = null,
-makeTextFile = function (text) {
-    var data = new Blob([text], {type: 'text/plain'});
-    // If we are replacing a previously generated file we need to
-    // manually revoke the object URL to avoid memory leaks.
-    if (textFile !== null) {
-      window.URL.revokeObjectURL(textFile);
-    }
-    textFile = window.URL.createObjectURL(data);
-    return textFile;
-};
+    makeTextFile = function(text) {
+        var data = new Blob([text], { type: 'text/plain' });
+        // If we are replacing a previously generated file we need to
+        // manually revoke the object URL to avoid memory leaks.
+        if (textFile !== null) {
+            window.URL.revokeObjectURL(textFile);
+        }
+        textFile = window.URL.createObjectURL(data);
+        return textFile;
+    };
 
 function downloadSuite(s_suite) {
     if (s_suite) {
@@ -84,26 +84,26 @@ function downloadSuite(s_suite) {
         var f_name = sideex_testSuite[s_suite.id].file_name;
         link.setAttribute('download', f_name);
 
-        var cases = s_suite.getElementsByTagName("div"), 
+        var cases = s_suite.getElementsByTagName("div"),
             output = "",
             old_case = getSelectedCase();
         for (var i = 0; i < cases.length; ++i) {
             setSelectedCase(cases[i].id);
             saveNewTarget();
-            output = output 
-                + '<table cellpadding="1" cellspacing="1" border="1">\n<thead>\n<tr><td rowspan="1" colspan="3">'
-                + sideex_testCase[cases[i].id].title
-                + '</td></tr>\n</thead>\n' 
-                + panelToFile(document.getElementById("records-grid").innerHTML)
-                + '</table>\n';
+            output = output +
+                '<table cellpadding="1" cellspacing="1" border="1">\n<thead>\n<tr><td rowspan="1" colspan="3">' +
+                sideex_testCase[cases[i].id].title +
+                '</td></tr>\n</thead>\n' +
+                panelToFile(document.getElementById("records-grid").innerHTML) +
+                '</table>\n';
         }
-        output = '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" '
-            + 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:'
-            + 'lang="en" lang="en">\n<head>\n\t<meta content="text/html; charset=UTF-8" http-equiv="content-type" />\n\t<title>'
-            + sideex_testSuite[s_suite.id].title
-            + '</title>\n</head>\n<body>\n'
-            + output
-            + '</body>\n</html>';
+        output = '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
+            'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:' +
+            'lang="en" lang="en">\n<head>\n\t<meta content="text/html; charset=UTF-8" http-equiv="content-type" />\n\t<title>' +
+            sideex_testSuite[s_suite.id].title +
+            '</title>\n</head>\n<body>\n' +
+            output +
+            '</body>\n</html>';
 
         if (old_case) {
             setSelectedCase(old_case.id);
@@ -115,7 +115,7 @@ function downloadSuite(s_suite) {
         document.body.appendChild(link);
 
         // wait for the link to be added to the document
-        window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function() {
             var event = new MouseEvent('click');
             link.dispatchEvent(event);
             document.body.removeChild(link);
@@ -125,7 +125,7 @@ function downloadSuite(s_suite) {
     }
 }
 
-document.getElementById('save-testSuite').addEventListener('click', function (event) {
+document.getElementById('save-testSuite').addEventListener('click', function(event) {
     event.stopPropagation();
     var s_suite = getSelectedSuite();
     downloadSuite(s_suite);

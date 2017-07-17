@@ -43,7 +43,6 @@ a:hover {
     text-decoration: underline;
 }
 
-
 /* Header */
 
 header#header {
@@ -54,18 +53,18 @@ header#header {
 
 header#header h1.site_title,
 header#header h2.section_title {
-	float: left;
-	margin: 0px 0px 0px 10px;
-	font-size: 22px;
-	display: block;
-	width: 23%;
-	height: 55px;
-	font-weight: normal;
-	text-align: left;
-	text-indent: 1.8%;
-	line-height: 55px;
-	color: #fff;
-	text-shadow: 0 -1px 0 #000;
+    float: left;
+    margin: 0px 0px 0px 10px;
+    font-size: 22px;
+    display: block;
+    width: 23%;
+    height: 55px;
+    font-weight: normal;
+    text-align: left;
+    text-indent: 1.8%;
+    line-height: 55px;
+    color: #fff;
+    text-shadow: 0 -1px 0 #000;
 }
 
 header#header h1.site_title a {
@@ -102,7 +101,6 @@ header#header h2.section_title {
 .btn_view_site a:hover {
     background-position: 0 -27px;
 }
-
 
 /* Secondary Header Bar */
 
@@ -151,7 +149,6 @@ section#secondary_bar .user {
     text-indent: -5000px;
     background: url(../images/icn_logout.png) center no-repeat;
 }
-
 
 /* Breadcrumbs */
 
@@ -212,7 +209,6 @@ article.breadcrumbs {
     margin: 0 5px;
 }
 
-
 /* Sidebar */
 
 aside#sidebar {
@@ -231,7 +227,6 @@ aside#sidebar {
     width: 100%;
     height: 2px;
 }
-
 
 /* Search */
 
@@ -264,7 +259,6 @@ aside#sidebar {
     -moz-box-shadow: inset 0 2px 2px #ccc, 0 0 10px #ADDCE6;
     box-shadow: inset 0 2px 2px #ccc, 0 0 10px #ADDCE6;
 }
-
 
 /* Sidebar Menu */
 
@@ -319,7 +313,6 @@ aside#sidebar {
 #sidebar li a:hover {
     color: #444444;
 }
-
 
 /* Sidebar Icons */
 
@@ -399,7 +392,6 @@ aside#sidebar {
     margin-top: 20%;
 }
 
-
 /* Main Content */
 
 section#main {
@@ -417,7 +409,6 @@ section#main {
     font-size: 13px;
     margin: 8px 20px;
 }
-
 
 /* Modules */
 
@@ -472,7 +463,6 @@ section#main {
     color: #666;
 }
 
-
 /* Module Widths */
 
 .width_full {
@@ -503,7 +493,6 @@ section#main {
     margin-right: 0;
     float: left;
 }
-
 
 /* Stats Module */
 
@@ -575,17 +564,11 @@ section#main {
 }
 
 .tablesorter tbody {
-	cursor: pointer;
-	height: 43px;
-	overflow-x: hidden;
-	overflow-y: auto;
+    cursor: pointer;
+    height: 43px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
-
-/*
-.tablesorter tbody tr {
-height: 30px;
-background-color: red;
-}*/
 
 .tablesorter td {
     padding: 10px;
@@ -798,7 +781,6 @@ input[type=submit].btn_post_message:hover {
     text-align: -webkit-right;
 }
 
-
 /* New/Edit Article Module */
 
 fieldset {
@@ -928,7 +910,6 @@ fieldset textarea:focus {
 #main .module_content li {
     line-height: 150%;
 }
-
 
 /* Alerts */
 
