@@ -620,26 +620,10 @@ ul.tabs li {
 
 ul.tabs li a {
     text-decoration: none;
-    color: #999;
+    color: #333333;
     display: block;
     padding: 0 10px;
     height: 24px;
-}
-
-ul.tabs li a:hover {
-    color: #44474F;
-}
-
-html ul.tabs li.active a {
-    color: #44474F;
-}
-
-html ul.tabs li.active,
-html ul.tabs li.active a:hover {
-    background: #F1F2F4;
-    -webkit-box-shadow: inset 0 2px 3px #818181;
-    -moz-box-shadow: inset 0 2px 3px #818181;
-    box-shadow: inset 0 2px 3px #818181;
 }
 
 html ul.tabs li:first-child,
@@ -654,12 +638,24 @@ html ul.tabs li:first-child a {
 
 html ul.tabs li:last-child,
 html ul.tabs li:last-child a {
+    cursor: pointer;
     -webkit-border-top-right-radius: 5px;
     -webkit-border-bottom-right-radius: 5px;
     -moz-border-radius-topright: 5px;
     -moz-border-radius-bottomright: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+}
+
+html ul.tabs li:last-child:active {
+    background: #F1F2F4;
+    -webkit-box-shadow: inset 0 2px 3px #818181;
+    -moz-box-shadow: inset 0 2px 3px #818181;
+    box-shadow: inset 0 2px 3px #818181;
+}
+
+ul.tabs li:last-child:hover a {
+    color: #000000;
 }
 
 #main .module header h3.tabs_involved {
