@@ -27,7 +27,7 @@
 <body>
     <header id="header">
         <hgroup>
-            <h1 class="site_title"><img href="panel.html" src="./icons/sideex3.png"></img></h1>
+            <h1 class="site_title" href="index.html">SideeX</h1>
         </hgroup>
     </header>
     <!-- end of header bar -->
@@ -60,8 +60,9 @@
             <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
             <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
             <!-- TODO: Make pause & resume same button(switch) -->
-            <button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-            <button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
+            <button id="pause" class="sub_btn btn_pr"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
+            <button id="resume" class="sub_btn btn_pr" style="display
+            : none"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
             <!-- TODO: Add a stop button -->
         </div>
         <article class="width_quarter module_right">
@@ -95,32 +96,31 @@
             </article>
         </article>
         <article class="module width_3_quarter">
-            <header>
+            <!--<header>
                 <h3 class="tabs_involved"></h3>
                 <ul class="tabs">
                     <li><a href="#command-container">Table</a></li>
-                    <!-- <li><a href="#tab2">Source</a></li> -->
-                </ul>
-            </header>
+                    <li><a href="#tab2">Source</a></li> 
+                </ul>       
+            </header>-->
             <div class="tab_container">
-                <div class="tab_content case_hight">
-                    <div id="command-container">
-                        <table id="command-grid" class="tablesorter" cellspacing="0">
-                            <!-- TODO: Give fixed width -->
-                            <thead>
-                                <tr>
-                                    <th>Comand</th>
-                                    <th>Target</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody id="records-grid">
-                                <!-- TODO: Give a init height and make y scroll -->
-                                <input id="records-count" type=hidden value=0></input>
-                                <!-- TODO: Make text appear instead of ... -->
-                                <!-- TODO: Change color when running -->
-                                <!-- set input and /tbody in same line to avoid textNode -->
-                                <!--<tr> 
+                <div id="command-container" class="tab_content case_hight">
+                    <table id="command-grid" class="tablesorter" cellspacing="0">
+                        <!-- TODO: Give fixed width -->
+                        <thead>
+                            <tr>
+                                <th style="width: 23%">Command</th>
+                                <th style="width: 45%">Target</th>
+                                <th style="width: 42%">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-grid">
+                            <!-- TODO: Give a init height and make y scroll -->
+                            <input id="records-count" type="hidden" value="0"></input>
+                            <!-- TODO: Make text appear instead of ... -->
+                            <!-- TODO: Change color when running -->
+                            <!-- set input and /tbody in same line to avoid textNode -->
+                            <!--<tr>
                                 <td>time</td> 
                                 <td>open</td> 
                                 <td></td> 
@@ -141,13 +141,15 @@
                                 <td>open</td> 
                                 <td></td> 
                             </tr>-->
-                            </tbody>
-                        </table>
+                        </tbody>
+                    </table>
                     </div>
-                    <fieldset id="command-toolbar" class="action">
+                    <div id="command-toolbar">
+                    <fieldset class="action">
                         <!-- TODO: make (command &) target selectable -->
+                        
                         <label>Command</label>
-                        <input id="command-command" list="command-command-list" type="text" style="width:92%;">
+                        <input id="command-command" list="command-command-list" type="text" style="display: block; width: 74%; margin-left: 3%;">
                         <datalist id="command-command-list">
                             <option value="click"></option>
                             <option value="type"></option>
@@ -156,11 +158,11 @@
                             <option value="open"></option>
                         </datalist>
                         <label>Target</label>
-                        <input id="command-target" list="command-target-list" type="text" style="width:92%;">
+                        <input id="command-target" list="command-target-list" type="text" style="width: 74%; margin-left: 3%;">
                         <datalist id="command-target-list">
                         </datalist>
                         <label>Value</label>
-                        <input id="command-value" type="text" style="width:92%;">
+                        <input id="command-value" type="text" style="width: 74%; margin-left: 3%;">
                     </fieldset>
                 </div>
                 <!-- end of #command-container -->

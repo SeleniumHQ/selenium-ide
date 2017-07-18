@@ -46,7 +46,7 @@ a:hover {
 /* Header */
 
 header#header {
-    height: 55px;
+    height: 27px;
     width: 100%;
     background: #222222 url(../images/header_bg.png) repeat-x;
 }
@@ -54,11 +54,14 @@ header#header {
 header#header h1.site_title,
 header#header h2.section_title {
     float: left;
-    margin: 0px 0px 0px 10px;
+    margin-top: -14px;
+    margin-right: 0px;
+    margin-left: 10px;
+    margin-bottom: 0px;
     font-size: 22px;
     display: block;
     width: 23%;
-    height: 55px;
+    height: 22px;
     font-weight: normal;
     text-align: left;
     text-indent: 1.8%;
@@ -70,7 +73,10 @@ header#header h2.section_title {
 header#header h1.site_title a {
     color: #fff;
     text-decoration: none;
-    margin: -20px 0px -10px 0px;
+    margin-top: 1px;
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-bottom: -10px;
 }
 
 header#header h2.section_title {
@@ -416,7 +422,7 @@ section#main {
     border: 1px solid #9BA0AF;
     width: 100%;
     margin: 20px 3% 0 3%;
-    margin-top: 20px;
+    margin-top: 12px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -459,15 +465,21 @@ section#main {
 }
 
 .module_content {
-    margin: 10px 20px;
+    margin-top: 0px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 10px;
     color: #666;
 }
 
 /* Module Widths */
 
 .width_full {
-    width: 95%;
+    width: 94%;
     float: left;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-bottom: 0px;
 }
 
 .width_half {
@@ -486,12 +498,14 @@ section#main {
     width: 26%;
     margin-right: 0;
     float: left;
+    margin-left: 14px;
 }
 
 .width_3_quarter {
     width: 66%;
     margin-right: 0;
     float: left;
+    padding-top: 0px;
 }
 
 /* Stats Module */
@@ -547,7 +561,7 @@ section#main {
 
 .tablesorter {
     width: 100%;
-    margin: -5px 0 0 0;
+    height: 38px;
 }
 
 .tablesorter td {
@@ -557,10 +571,11 @@ section#main {
 }
 
 .tablesorter thead tr {
-    height: 34px;
-    background: url(../images/table_sorter_header.png) repeat-x;
+    height: 39px;
+    background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
     text-align: left;
     text-indent: 10px;
+    table-layout: fixed;
 }
 
 .tablesorter tbody {
@@ -752,19 +767,22 @@ input[type=submit].btn_post_message:hover {
 }
 
 .case_list {
-    height: 350px;
+    height: 233px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 .case_hight {
-    height: 459px;
+    height: 249px;
     overflow-x: hidden;
     overflow-y: auto;
+    border-bottom: 1px solid #9BA0AF;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
 .case_roll {
-    height: 220px;
+    height: 182px;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -773,12 +791,16 @@ input[type=submit].btn_post_message:hover {
     color: green;
     font-weight: 600;
     text-align: -webkit-right;
+    float: left;
+    margin-top: 3%;
 }
 
 .failures {
     color: red;
     font-weight: 600;
     text-align: -webkit-right;
+    float: left;
+    margin-top: 4%;
 }
 
 /* New/Edit Article Module */
@@ -788,14 +810,37 @@ fieldset {
     -moz-border-radius: 5px;
     border-radius: 5px;
     border: 0;
+    margin-bottom: -12px;
+    margin-top: 3px;
 }
 
-fieldset label {
+#result-container label {
+    text-align: left;
+    clear: both;
+    float: left;
+    margin-right: 15px;
     display: block;
     float: left;
-    width: 160px;
+    width: 80%;
     height: 25px;
-    line-height: 25px;
+    line-height: 16px;
+    text-shadow: 0 1px 0 #fff;
+    font-weight: bold;
+    padding-left: 10px;
+    margin: 5px 0;
+    text-transform: uppercase;
+}
+
+#command-toolbar label {
+    text-align: left;
+    clear: both;
+    float: left;
+    margin-right: 15px;
+    display: block;
+    float: left;
+    width: 15%;
+    height: 25px;
+    line-height: 16px;
     text-shadow: 0 1px 0 #fff;
     font-weight: bold;
     padding-left: 10px;
@@ -865,7 +910,8 @@ fieldset textarea:focus {
 }
 
 .submit_link {
-    padding: 20px 0px 0px 40px;
+    padding-left: 5%;
+    padding-top: 2%;
 }
 
 .submit_link select {
@@ -999,6 +1045,10 @@ fieldset textarea:focus {
     border: none;
     transition: 0.5s;
     border: 1px solid #30B0C8;
+}
+
+.btn_pr {
+    width: 97px;
 }
 
 .fa {
