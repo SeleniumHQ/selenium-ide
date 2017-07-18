@@ -468,7 +468,7 @@ section#main {
     margin-top: 0px;
     margin-right: 20px;
     margin-left: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
     color: #666;
 }
 
@@ -674,6 +674,17 @@ ul.tabs li:last-child:hover a {
 .message {
     border-bottom: 1px dotted #cccccc;
     cursor: pointer;
+    margin-top: 5px;
+}
+
+.message strong {
+    font-size: 13px;
+}
+
+.message p {
+    font-size: 12px;
+    text-indent: 16px;
+    line-height: 7px;
 }
 
 input[type=submit] {

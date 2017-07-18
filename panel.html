@@ -22,7 +22,7 @@
     <!-- old css -->
     <link rel="stylesheet" type="text/css" href="./panel/panel-css/grid.css">
 </head>
-<!-- TODO: Make whole panel size smaller -->
+<!-- TODO: Make whole panel size flexible -->
 
 <body>
     <header id="header">
@@ -59,7 +59,6 @@
             <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
             <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
             <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
-            <!-- TODO: Make pause & resume same button(switch) -->
             <button id="pause" class="sub_btn btn_pr"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
             <button id="resume" class="sub_btn btn_pr" style="display
             : none"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
@@ -72,16 +71,16 @@
                 <div id="testCase-container" class="case_list">
                     <!-- Sug: Add animation when dragdrop -->
                     <div id="testCase-grid" class="module_content">
-                        <!--<div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>-->
+                        <!--<div class="message"><strong>Suite</strong>
+                        <p>Case</p><p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>-->
                     </div>
                 </div>
             </div>
@@ -106,7 +105,7 @@
             <div class="tab_container">
                 <div id="command-container" class="tab_content case_hight">
                     <table id="command-grid" class="tablesorter" cellspacing="0">
-                        <!-- TODO: Give fixed width -->
+                        <!-- TODO: Make the width flexible -->
                         <thead>
                             <tr>
                                 <th style="width: 23%">Command</th>
@@ -115,10 +114,8 @@
                             </tr>
                         </thead>
                         <tbody id="records-grid">
-                            <!-- TODO: Give a init height and make y scroll -->
+                            <!-- TODO: Make only tbody scoll -->
                             <input id="records-count" type="hidden" value="0"></input>
-                            <!-- TODO: Make text appear instead of ... -->
-                            <!-- TODO: Change color when running -->
                             <!-- set input and /tbody in same line to avoid textNode -->
                             <!--<tr>
                                 <td>time</td> 
@@ -202,10 +199,6 @@
                     <li><a href="#tab6">UI-element</a></li>
                     <li><a href="#tab7">Rollup</a></li> -->
                 </ul>
-                <!-- TODO: Make it to a button and same style -->
-                <!-- <ul id="clear-log" class="tabs"> -->
-                    
-                <!-- </ul> -->
             </header>
             <div class="tab_container">
                 <div id="tab4" class="tab_content case_roll">
