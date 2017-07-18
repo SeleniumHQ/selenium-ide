@@ -472,6 +472,11 @@ section#main {
     color: #666;
 }
 
+.module_content #logcontainer {
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
 /* Module Widths */
 
 .width_full {
@@ -941,13 +946,25 @@ fieldset textarea:focus {
     margin: 8px 0px;
 }
 
-#main .module_content h4 {
+#main .module_content h4.log-info {
     color: #666666;
     text-transform: none;
     text-shadow: 0 1px 0 #fff;
     font-size: 13px;
     margin: 8px 0px;
+    border-bottom: 1px #efefef solid;
 }
+
+#main .module_content h4.log-error {
+    color: #666666;
+    text-transform: none;
+    text-shadow: 0 1px 0 #fff;
+    font-size: 13px;
+    margin: 8px 0px;
+    border-bottom: 1px #efefef solid;
+    color: red;
+}
+
 
 #main .module_content li {
     line-height: 150%;

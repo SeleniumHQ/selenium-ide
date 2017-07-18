@@ -71,14 +71,14 @@ body {
     font-weight: bold;
 }
 */
-#command-container {
+/*#command-container {*/
     /*width: calc(75% - 30px);*/
-    height: 80%;
+    /*height: 80%;*/
     /*float: left;*/
     /*resize: both;*/
     /*border: 10px #b3b3b3 solid;*/
     /*border-right: 20px #b3b3b3 solid;*/
-}
+/*}*/
 
 /*#command-grid {
     width: 100%;
@@ -118,7 +118,7 @@ body {
     border: 15px #b3b3b3 solid;
     border-top: 0px;
     overflow: scroll;
-}*/
+}
 
 .log-info {
     border-bottom: 1px #efefef solid;
@@ -128,4 +128,4 @@ body {
     border-bottom: 1px #efefef solid;
     color: red;
     font-weight: bold;
-}
+}*/
