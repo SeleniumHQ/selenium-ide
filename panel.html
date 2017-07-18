@@ -19,13 +19,15 @@
     <script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
     <script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
     <script type="text/javascript" src="panel/js/panelSetting.js"></script>
+    <!-- old css -->
+    <link rel="stylesheet" type="text/css" href="./panel/panel-css/grid.css">
 </head>
-<!-- TODO: Make whole panel size smaller -->
+<!-- TODO: Make whole panel size flexible -->
 
 <body>
     <header id="header">
         <hgroup>
-            <h1 class="site_title"><img href="panel.html" src="./icons/sideex3.png"></img></h1>
+            <h1 class="site_title" href="index.html">SideeX</h1>
         </hgroup>
     </header>
     <!-- end of header bar -->
@@ -57,9 +59,9 @@
             <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
             <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
             <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
-            <!-- TODO: Make pause & resume same button(switch) -->
-            <button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-            <button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
+            <button id="pause" class="sub_btn btn_pr"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
+            <button id="resume" class="sub_btn btn_pr" style="display
+            : none"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
             <!-- TODO: Add a stop button -->
         </div>
         <article class="width_quarter module_right">
@@ -69,16 +71,16 @@
                 <div id="testCase-container" class="case_list">
                     <!-- Sug: Add animation when dragdrop -->
                     <div id="testCase-grid" class="module_content">
-                        <!--<div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>-->
+                        <!--<div class="message"><strong>Suite</strong>
+                        <p>Case</p><p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>
+                        <div class="message"><strong>Suite</strong>
+                        <p>Case</p></div>-->
                     </div>
                 </div>
             </div>
@@ -93,31 +95,29 @@
             </article>
         </article>
         <article class="module width_3_quarter">
-            <header>
+            <!--<header>
                 <h3 class="tabs_involved"></h3>
                 <ul class="tabs">
                     <li><a href="#command-container">Table</a></li>
-                    <!-- <li><a href="#tab2">Source</a></li> -->
-                </ul>
-            </header>
+                    <li><a href="#tab2">Source</a></li> 
+                </ul>       
+            </header>-->
             <div class="tab_container">
                 <div id="command-container" class="tab_content case_hight">
                     <table id="command-grid" class="tablesorter" cellspacing="0">
-                        <!-- TODO: Give fixed width -->
+                        <!-- TODO: Make the width flexible -->
                         <thead>
                             <tr>
-                                <th>Comand</th>
-                                <th>Target</th>
-                                <th>Value</th>
+                                <th style="width: 23%">Command</th>
+                                <th style="width: 45%">Target</th>
+                                <th style="width: 42%">Value</th>
                             </tr>
                         </thead>
                         <tbody id="records-grid">
-                            <!-- TODO: Give a init height and make y scroll -->
-                            <input id="records-count" type=hidden value=0></input>
-                            <!-- TODO: Make text appear instead of ... -->
-                            <!-- TODO: Change color when running -->
+                            <!-- TODO: Make only tbody scoll -->
+                            <input id="records-count" type="hidden" value="0"></input>
                             <!-- set input and /tbody in same line to avoid textNode -->
-                            <!--<tr> 
+                            <!--<tr>
                                 <td>time</td> 
                                 <td>open</td> 
                                 <td></td> 
@@ -140,10 +140,13 @@
                             </tr>-->
                         </tbody>
                     </table>
-                    <fieldset id="command-toolbar" class="action">
+                    </div>
+                    <div id="command-toolbar">
+                    <fieldset class="action">
                         <!-- TODO: make (command &) target selectable -->
+                        
                         <label>Command</label>
-                        <input id="command-command" list="command-command-list" type="text" style="width:92%;">
+                        <input id="command-command" list="command-command-list" type="text" style="display: block; width: 74%; margin-left: 3%;">
                         <datalist id="command-command-list">
                             <option value="click"></option>
                             <option value="type"></option>
@@ -152,15 +155,15 @@
                             <option value="open"></option>
                         </datalist>
                         <label>Target</label>
-                        <input id="command-target" list="command-target-list" type="text" style="width:92%;">
+                        <input id="command-target" list="command-target-list" type="text" style="width: 74%; margin-left: 3%;">
                         <datalist id="command-target-list">
                         </datalist>
                         <label>Value</label>
-                        <input id="command-value" type="text" style="width:92%;">
+                        <input id="command-value" type="text" style="width: 74%; margin-left: 3%;">
                     </fieldset>
                 </div>
                 <!-- end of #command-container -->
-                <div id="tab2" class="tab_content case_hight">
+                <!--<div id="tab2" class="tab_content case_hight">
                     <table class="tablesorter" cellspacing="0">
                         <div class="module_content">
                             <fieldset>
@@ -180,7 +183,7 @@
                             </fieldset>
                         </div>
                     </table>
-                </div>
+                </div>-->
                 <!-- end of #tab2 -->
             </div>
             <!-- end of .tab_container -->
@@ -190,31 +193,24 @@
         <article class="module width_full">
             <header class="tabs_involved">
                 <ul class="tabs">
-                    <li><a href="#tab4">Log</a></li>
+                    <li><a>Log</a></li>
+                    <li id="clear-log"><a>Clear</a></li>
                     <!-- <li><a href="#tab5">Reference</a></li>
                     <li><a href="#tab6">UI-element</a></li>
                     <li><a href="#tab7">Rollup</a></li> -->
                 </ul>
-                <!-- TODO: Make it to a button and same style -->
-                <ul id="clear-log" class="tabs">
-                    <li><a>Clear</a></li>
-                </ul>
             </header>
             <div class="tab_container">
                 <div id="tab4" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div id="logcontainer" class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                </div>
-                            </fieldset>
+                    <div  class="module_content">
+                        <div  id="logcontainer">
+                            <!--<h1>Header 1</h1>
+                            <h2>Header 2</h2>
+                            <h3>Header 3</h3>
+                            <h4>Header 4</h4>
+                            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>-->
                         </div>
-                    </table>
+                    </div>
                 </div>
                 <!-- end of #tab4 -->
                 <!-- <div id="tab5" class="tab_content case_roll">

@@ -15,8 +15,8 @@ function openPage() {
     var creating = browser.windows.create({
         url: popupURL,
         type: "popup",
-        height: 955,
-        width: 770
+        height: 730,
+        width: 685
     });
 
     Promise.all([windowGet, creating]).then(results => {

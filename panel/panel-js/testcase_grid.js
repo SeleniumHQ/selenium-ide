@@ -157,13 +157,11 @@ function addTestCase(title, id) {
         addTestSuite("Untitled Test Suite", suite_id);
     }
 
-    var text = document.createElement("strong");
-    text.innerHTML = escapeHTML(title);
     var p = document.createElement("p");
+    p.innerHTML = escapeHTML(title);
     p.setAttribute("id", id);
     p.setAttribute("draggable", true);
     p.setAttribute("contextmenu", "menu" + id);
-    p.appendChild(text);
 
     var s_case = getSelectedCase();
     if (s_case) {
@@ -257,7 +255,7 @@ function addTestCase(title, id) {
 }
 
 function addTestSuite(title, id) {
-    var text = document.createElement("p");
+    var text = document.createElement("strong");
     text.innerHTML = escapeHTML(title);
     var div = document.createElement("div");
     div.setAttribute("id", id);

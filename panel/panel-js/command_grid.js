@@ -41,7 +41,7 @@ function setColor(index, state) {
         $("#" + index).addClass(state);
     } else {
         var node = document.getElementById("records-" + index);
-        node.className = state
+        node.className = state;
     }
 }
 
