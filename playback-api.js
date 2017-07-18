@@ -121,13 +121,17 @@ function initializeAfterConnectionFailed() {
 }
 
 function pause() {
-    if (isPlaying) isPause = true;
+    if (isPlaying) {
+        isPause = true;
+        switchPR();
+    }
 }
 
 function resume() {
     if (isPause) {
         isPlaying = true;
         isPause = false;
+        switchPR();
         executionLoop()
             .then(finalizePlayingProgress)
             .catch(catchPlayingError);
@@ -761,6 +765,16 @@ document.addEventListener("dblclick", function(event) {
         } else temp = temp.parentElement;
     }
 });
+
+function switchPR() {
+    if (isPause) {
+        document.getElementById("pause").style.display = "none";
+        document.getElementById("resume").style.display = "";
+    } else {
+        document.getElementById("pause").style.display = "";
+        document.getElementById("resume").style.display = "none";
+    }
+}
 
 browser.runtime.onMessage.addListener(initialOpen);
 
