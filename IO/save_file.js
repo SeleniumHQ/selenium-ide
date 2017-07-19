@@ -84,7 +84,7 @@ function downloadSuite(s_suite) {
         var f_name = sideex_testSuite[s_suite.id].file_name;
         link.setAttribute('download', f_name);
 
-        var cases = s_suite.getElementsByTagName("div"),
+        var cases = s_suite.getElementsByTagName("p"),
             output = "",
             old_case = getSelectedCase();
         for (var i = 0; i < cases.length; ++i) {
