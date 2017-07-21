@@ -108,6 +108,41 @@ header#header h2.section_title {
     background-position: 0 -27px;
 }
 
+/* Right click menu */
+
+.menu ul {
+    list-style: none;
+    margin: 0px;
+    margin-top: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 3px;
+    font-size: 15px;
+    color: #333333;
+}
+
+.menu li {
+    line-height: 20px;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+.menu {
+    display: none;
+    position: fixed;
+    border: 1px solid #B2B2B2;
+    background: #F9F9F9;
+    box-shadow: 3px 3px 2px #E9E9E9;
+}
+
+.menu a {
+    color: #3d3d5c;
+    font-family: Helvetica, Arial, sans-serif;
+    text-decoration: none;
+}
+
 /* Secondary Header Bar */
 
 section#secondary_bar {
@@ -590,6 +625,22 @@ section#main {
     overflow-y: auto;
 }
 
+.tablesorter tbody tr.selectedRecord {
+    background-color: #f8f8f8;
+}
+
+.tablesorter tbody tr.executing {
+    background-color: #ffffe6;
+}
+
+.tablesorter tbody tr.success {
+    background-color: #e5ffe5;
+}
+
+.tablesorter tbody tr.fail {
+    background-color: #ffe5e5;
+}
+
 .tablesorter td {
     padding: 10px;
 }
@@ -675,6 +726,28 @@ ul.tabs li:last-child:hover a {
     border-bottom: 1px dotted #cccccc;
     cursor: pointer;
     margin-top: 5px;
+    line-height: 20px;
+}
+
+.message .selectedCase {
+    text-decoration: underline;
+}
+
+.message .selectedSuite > p{
+}
+
+.message .success {
+    background-repeat: no-repeat;
+    background-position: 0px 3px;
+    background-image: url(../images/icn_alert_success.png);
+    background-size: 13px auto;
+}
+
+.message .fail {
+    background-repeat: no-repeat;
+    background-position: 0px 4px;
+    background-image: url(../images/icn_alert_error.png);
+    background-size: 13px auto;
 }
 
 .message strong {
@@ -684,7 +757,9 @@ ul.tabs li:last-child:hover a {
 .message p {
     font-size: 12px;
     text-indent: 16px;
-    line-height: 7px;
+    line-height: 20px;
+    margin-top: -1px;
+    margin-bottom: 0px;
 }
 
 input[type=submit] {

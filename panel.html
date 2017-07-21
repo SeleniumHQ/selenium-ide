@@ -7,20 +7,17 @@
     <title></title>
     <link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="panel/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="./panel/panel-css/context_menu.css">
     <!-- to hide right button feature -->
     <!--[if lt IE 9]>
     <link rel="stylesheet" href="panel/css/ie.css" type="text/css" media="screen" />
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <script src="panel/js/jquery-1.5.2.min.js" type="text/javascript"></script>
-    <script src="panel/js/hideshow.js" type="text/javascript"></script>
-    <script src="panel/js/jquery.tablesorter.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="panel/js/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="panel/js/hideshow.js"></script>
+    <script type="text/javascript" src="panel/js/jquery.tablesorter.min.js" ></script>
     <script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
     <script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
     <script type="text/javascript" src="panel/js/panelSetting.js"></script>
-    <!-- old css -->
-    <link rel="stylesheet" type="text/css" href="./panel/panel-css/grid.css">
 </head>
 <!-- TODO: Make whole panel size flexible -->
 
@@ -95,13 +92,6 @@
             </article>
         </article>
         <article class="module width_3_quarter">
-            <!--<header>
-                <h3 class="tabs_involved"></h3>
-                <ul class="tabs">
-                    <li><a href="#command-container">Table</a></li>
-                    <li><a href="#tab2">Source</a></li> 
-                </ul>       
-            </header>-->
             <div class="tab_container">
                 <div id="command-container" class="tab_content case_hight">
                     <table id="command-grid" class="tablesorter" cellspacing="0">
@@ -163,28 +153,6 @@
                     </fieldset>
                 </div>
                 <!-- end of #command-container -->
-                <!--<div id="tab2" class="tab_content case_hight">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div>-->
-                <!-- end of #tab2 -->
             </div>
             <!-- end of .tab_container -->
         </article>
@@ -195,90 +163,16 @@
                 <ul class="tabs">
                     <li><a>Log</a></li>
                     <li id="clear-log"><a>Clear</a></li>
-                    <!-- <li><a href="#tab5">Reference</a></li>
-                    <li><a href="#tab6">UI-element</a></li>
-                    <li><a href="#tab7">Rollup</a></li> -->
                 </ul>
             </header>
             <div class="tab_container">
                 <div id="tab4" class="tab_content case_roll">
                     <div  class="module_content">
                         <div  id="logcontainer">
-                            <!--<h1>Header 1</h1>
-                            <h2>Header 2</h2>
-                            <h3>Header 3</h3>
-                            <h4>Header 4</h4>
-                            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>-->
                         </div>
                     </div>
                 </div>
                 <!-- end of #tab4 -->
-                <!-- <div id="tab5" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div> -->
-                <!-- end of #tab5 -->
-                <!-- <div id="tab6" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div> -->
-                <!-- end of #tab6-->
-                <!-- <div id="tab7" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div> -->
-                <!-- end of #tab7 -->
             </div>
             <!-- end of .tab_container -->
         </article>
@@ -286,16 +180,16 @@
         <div class="spacer"></div>
     </section>
     <!-- script -->
-    <script src="./escape.js"></script>
-    <script src="./panel/panel-js/log.js"></script>
-    <script src="./initial.js"></script>
-    <script src="./panel/panel-js/context_menu.js"></script>
-    <script src="./panel/panel-js/command_grid.js"></script>
-    <script src="./panel/panel-js/command_grid_toolbar.js"></script>
-    <script src="./panel/panel-js/testcase_grid.js"></script>
-    <script src="./IO/load_file.js"></script>
-    <script src="./IO/save_file.js"></script>
-    <script src="./IO/suite.js"></script>
+    <script src="IO/load_file.js"></script>
+    <script src="IO/save_file.js"></script>
+    <script src="IO/suite.js"></script>
+    <script src="panel/js/context_menu.js"></script>
+    <script src="panel/js/command_grid.js"></script>
+    <script src="panel/js/command_grid_toolbar.js"></script>
+    <script src="panel/js/testcase_grid.js"></script>
+    <script src="panel/js/log.js"></script>
+    <script src="initial.js"></script>
+    <script src="escape.js"></script>
     <script src="editor.js"></script>
     <script src="locatorBuilders.js"></script>
     <script src="formatCommand.js"></script>
