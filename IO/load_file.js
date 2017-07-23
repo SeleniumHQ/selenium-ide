@@ -64,16 +64,21 @@ function readCase(f) {
 
 function readSuite(f) {
     var reader = new FileReader();
+
     reader.readAsText(f);
     reader.onload = function() {
         var test_suite = reader.result;
+        console.log(reader.result);
         // append on test grid
-        var suite_title = test_suite.match(/(?:<title>)([\s\S]*?)(?:<\/title>)/)[1];
         var id = "suite" + sideex_testSuite.count;
         sideex_testSuite.count++;
-        addTestSuite(suite_title, id);
+        addTestSuite(f.name.substring(0, f.name.lastIndexOf(".")), id);
         // name is used for download
-        sideex_testSuite[id] = { file_name: f.name, title: suite_title };
+        console.log(f.name);
+        sideex_testSuite[id] = {
+            file_name: f.name,
+            title: f.name.substring(0, f.name.lastIndexOf("."))
+        };
 
         test_case = test_suite.match(/<table[\s\S]*?<\/table>/gi);
         if (test_case) {
@@ -85,7 +90,7 @@ function readSuite(f) {
         setSelectedSuite(id);
         clean_panel();
         // document.getElementById("records-grid").innerHTML = "";
-    }
+    };
     reader.onerror = function(e) {
         console.log("Error", e);
     };
