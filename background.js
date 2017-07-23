@@ -16,7 +16,7 @@ function openPage() {
         url: popupURL,
         type: "popup",
         height: 730,
-        width: 685
+        width: 695
     });
 
     Promise.all([windowGet, creating]).then(results => {

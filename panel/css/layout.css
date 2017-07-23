@@ -23,6 +23,9 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
     background: #F8F8F8;
     font-size: 12px;
+    width: 100%;
+    min-width: 679px;
+    min-height: 690px;
 }
 
 .clear {
@@ -46,7 +49,7 @@ a:hover {
 /* Header */
 
 header#header {
-    height: 27px;
+    height: 28px;
     width: 100%;
     background: #222222 url(../images/header_bg.png) repeat-x;
 }
@@ -54,20 +57,19 @@ header#header {
 header#header h1.site_title,
 header#header h2.section_title {
     float: left;
-    margin-top: -14px;
+    margin-top: -13px;
     margin-right: 0px;
     margin-left: 10px;
     margin-bottom: 0px;
     font-size: 22px;
-    display: block;
-    width: 23%;
-    height: 22px;
+    width: 100px;
     font-weight: normal;
     text-align: left;
     text-indent: 1.8%;
     line-height: 55px;
     color: #fff;
     text-shadow: 0 -1px 0 #000;
+    height: 0px;
 }
 
 header#header h1.site_title a {
@@ -437,10 +439,9 @@ aside#sidebar {
 
 section#main {
     width: 100%;
-    min-height: 500px;
     background: url(../images/sidebar_shadow.png) repeat-y left top;
     float: left;
-    margin-top: -2px;
+    height: calc(100% - 30px);
 }
 
 #main h3 {
@@ -456,16 +457,35 @@ section#main {
 .module {
     border: 1px solid #9BA0AF;
     width: 100%;
-    margin: 20px 3% 0 3%;
-    margin-top: 12px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     background: #ffffff;
 }
 
+.module_all {
+    width: calc(100% - 30px);
+    margin-right: 15px;
+    float: left;
+    margin-left: 15px;
+    height: calc(100% - 51px);
+}
+
+#middle-container {
+    margin-bottom: 8px;
+    height: calc(100% - 80px);
+}
+
+#result-container {
+    height: 70px;
+}
+
+#command-toolbar {
+    height: 105px;
+}
+
 .module_right {
-    margin: 0 0 0 2.5%;
+
 }
 
 #main .module header h3 {
@@ -515,11 +535,9 @@ section#main {
 /* Module Widths */
 
 .width_full {
-    width: 94%;
-    float: left;
-    margin-left: 3%;
-    margin-right: 3%;
-    margin-bottom: 0px;
+    width: 100%;
+    margin-top: 13px;
+    height: 33%;
 }
 
 .width_half {
@@ -528,24 +546,16 @@ section#main {
     float: left;
 }
 
-.width_2 {
-    width: 26%;
-    margin-right: 0;
-    float: left;
-}
-
 .width_quarter {
-    width: 26%;
-    margin-right: 0;
+    width: calc(30% - 8px);
     float: left;
-    margin-left: 14px;
+    height: calc(100% - 13px - 35%);
 }
 
 .width_3_quarter {
-    width: 66%;
-    margin-right: 0;
-    float: left;
-    padding-top: 0px;
+    width: calc(70% - 8px);
+    float: right;
+    height: calc(100% - 13px - 35%);
 }
 
 /* Stats Module */
@@ -620,9 +630,6 @@ section#main {
 
 .tablesorter tbody {
     cursor: pointer;
-    height: 43px;
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 
 .tablesorter tbody tr.selectedRecord {
@@ -854,13 +861,13 @@ input[type=submit].btn_post_message:hover {
 }
 
 .case_list {
-    height: 233px;
+    height: calc(100% - 38px);
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 .case_hight {
-    height: 249px;
+    height: calc(100% - 105px);
     overflow-x: hidden;
     overflow-y: auto;
     border-bottom: 1px solid #9BA0AF;
@@ -869,9 +876,10 @@ input[type=submit].btn_post_message:hover {
 }
 
 .case_roll {
-    height: 182px;
     overflow-x: hidden;
     overflow-y: auto;
+    width: 100%;
+    height: calc(100% - 38px);
 }
 
 .runs {
@@ -879,7 +887,7 @@ input[type=submit].btn_post_message:hover {
     font-weight: 600;
     text-align: -webkit-right;
     float: left;
-    margin-top: 3%;
+    margin-top: 7px;
 }
 
 .failures {
@@ -887,7 +895,7 @@ input[type=submit].btn_post_message:hover {
     font-weight: 600;
     text-align: -webkit-right;
     float: left;
-    margin-top: 4%;
+    margin-top: 6px;
 }
 
 /* New/Edit Article Module */
@@ -897,8 +905,6 @@ fieldset {
     -moz-border-radius: 5px;
     border-radius: 5px;
     border: 0;
-    margin-bottom: -12px;
-    margin-top: 3px;
 }
 
 #result-container label {
@@ -997,8 +1003,11 @@ fieldset textarea:focus {
 }
 
 .submit_link {
-    padding-left: 5%;
-    padding-top: 2%;
+    margin-right: 3%;
+    margin-top: 10px;
+    margin-left: 3%;
+    margin-bottom: 10px;
+    height: 33px;
 }
 
 .submit_link select {
@@ -1127,14 +1136,17 @@ fieldset textarea:focus {
 }
 
 .sub_btn {
-    padding: 6px 10PX;
+    padding-right: 2%;
+    padding-left: 2%;
     border-radius: 20px;
-    margin-right: 10px;
     background: #D0D1D4;
     cursor: pointer;
     text-shadow: 0 1px 0 #fff;
     border: 1px solid #9c9c9c;
     font-size: 14px;
+    margin-right: 0.5%;
+    margin-left: 0.6%;
+    height: 33px;
 }
 
 .sub_btn:hover {
@@ -1147,7 +1159,7 @@ fieldset textarea:focus {
 }
 
 .btn_pr {
-    width: 97px;
+
 }
 
 .fa {
