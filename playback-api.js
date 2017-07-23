@@ -34,6 +34,7 @@ window.onload = function() {
     playButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         play();
     });
     pauseButton.addEventListener("click", pause);
@@ -41,11 +42,13 @@ window.onload = function() {
     playSuiteButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         playSuite(0);
     });
     playSuitesButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         playSuites(0);
     });
     /*recordButton.addEventListener("click", startRecord);*/
@@ -67,7 +70,6 @@ function play() {
         .then(executionLoop)
         .then(finalizePlayingProgress)
         .catch(catchPlayingError);
-
 }
 
 function playAfterConnectionFailed() {
@@ -138,15 +140,23 @@ function resume() {
     }
 }
 
+function initAllSuite() {
+    var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
+    var length = suites.length;
+    for (var k = 0; k < suites.length; ++k) {
+        var cases = suites[k].getElementsByTagName("p");
+        for (var u = 0; u < cases.length; ++u) {
+            $("#" + cases[u].id).removeClass('fail success');
+        }
+    }
+}
+
 function playSuite(i) {
     isPlayingSuite = true;
     var cases = getSelectedSuite().getElementsByTagName("p");
     var length = cases.length;
     if (i == 0) {
         sideex_log.info("Playing test suite " + sideex_testSuite[getSelectedSuite().id].title);
-        for (var j = 0; j < length; j++) {
-            $("#" + cases[j].id).removeClass('fail success');
-        }
     }
     if (i < length) {
         setSelectedCase(cases[i].id);
@@ -168,14 +178,6 @@ function nextCase(i) {
 function playSuites(i) {
     var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
     var length = suites.length;
-    if (i == 0) {
-        for (var k = 0; k < suites.length; ++k) {
-            var cases = suites[k].getElementsByTagName("p");
-            for (var u = 0; u < cases.length; ++u) {
-                $("#" + cases[u].id).removeClass('fail success');
-            }
-        }
-    }
 
     if (i < length) {
         if (suites[i].id.includes("suite")) {
@@ -185,7 +187,6 @@ function playSuites(i) {
         console.log("call nextSuite");
         nextSuite(i);
     }
-
 }
 
 function nextSuite(i) {
