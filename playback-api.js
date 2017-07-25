@@ -38,6 +38,7 @@ window.onload = function() {
         play();
     });
     pauseButton.addEventListener("click", pause);
+    pauseButton.disabled = true;
     resumeButton.addEventListener("click", resume);
     playSuiteButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
@@ -56,11 +57,13 @@ window.onload = function() {
 };
 
 function disableClick() {
+    document.getElementById("pause").disabled = false;
     document.getElementById('testCase-grid').style.pointerEvents = 'none';
     document.getElementById('command-container').style.pointerEvents = 'none';
 }
 
 function enableClick() {
+    document.getElementById("pause").disabled = true;
     document.getElementById('testCase-grid').style.pointerEvents = 'auto';
     document.getElementById('command-container').style.pointerEvents = 'auto';
 }
@@ -130,10 +133,13 @@ function pause() {
 }
 
 function resume() {
+    if(currentTestCaseId!=getSelectedCase().id)
+        setSelectedCase(currentTestCaseId);
     if (isPause) {
         isPlaying = true;
         isPause = false;
         switchPR();
+        disableClick();
         executionLoop()
             .then(finalizePlayingProgress)
             .catch(catchPlayingError);
@@ -769,9 +775,15 @@ document.addEventListener("dblclick", function(event) {
 
 function switchPR() {
     if (isPause) {
+        document.getElementById("playback").disabled = true;
+        document.getElementById("playSuite").disabled = true;
+        document.getElementById("playSuites").disabled = true;
         document.getElementById("pause").style.display = "none";
         document.getElementById("resume").style.display = "";
     } else {
+        document.getElementById("playback").disabled = false;
+        document.getElementById("playSuite").disabled = false;
+        document.getElementById("playSuites").disabled = false;
         document.getElementById("pause").style.display = "";
         document.getElementById("resume").style.display = "none";
     }

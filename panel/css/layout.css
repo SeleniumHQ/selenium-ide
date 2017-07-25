@@ -1165,7 +1165,7 @@ fieldset textarea:focus {
     height: 33px;
 }
 
-.sub_btn:hover {
+.sub_btn:not([disabled]):hover {
     background: #30B0C8;
     color: #fff;
     text-shadow: none;
