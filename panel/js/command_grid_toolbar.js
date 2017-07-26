@@ -43,7 +43,7 @@ function adjustTooLongStr(str, node) {
     return str;
 }
 
-function addCommand(command_name, command_target_array, command_value, auto) {
+function addCommand(command_name, command_target_array, command_value, auto, insertCommand) {
     // create default test suite and case if necessary
     var s_suite = getSelectedSuite(),
         s_case = getSelectedCase();
@@ -115,9 +115,13 @@ function addCommand(command_name, command_target_array, command_value, auto) {
             $(selected_ID).addClass('selectedRecord');
         }
     } else {
-        document.getElementById("records-grid").appendChild(new_record);
-        reAssignId("records-" + count, "records-" + count);
-        attachEvent(count, count);
+        if (insertCommand) {
+            document.getElementById("records-grid").insertBefore(new_record, getRecordsArray()[getRecordsNum()-2]);
+        } else {
+            document.getElementById("records-grid").appendChild(new_record);
+        }
+        reAssignId("records-1", "records-" + count);
+        attachEvent(1, count);
 
         // focus on new element
         document.getElementById("records-" + count).scrollIntoView();
@@ -151,12 +155,17 @@ function addCommand(command_name, command_target_array, command_value, auto) {
 
 // add command manually (append downward)
 function addCommandManu(command_name, command_target_array, command_value) {
-    addCommand(command_name, command_target_array, command_value, 0);
+    addCommand(command_name, command_target_array, command_value, 0, false);
+}
+
+// add command before last command (append upward)
+function addCommandInsertBeforeLast(command_name, command_target_array, command_value) {
+    addCommand(command_name, command_target_array, command_value, 0, true);
 }
 
 // add command automatically (append upward)
 function addCommandAuto(command_name, command_target_array, command_value) {
-    addCommand(command_name, command_target_array, command_value, 1);
+    addCommand(command_name, command_target_array, command_value, 1, false);
 }
 
 document.getElementById("command-command").addEventListener("input", function(event) {

@@ -136,8 +136,7 @@ function handleMessage(message, sender, sendResponse) {
         return;
     }
 
-    //console.log(sender.tab.id);
-    //console.log("QAQ");
+
     if (!message.command || !isRecording) return;
     if (message.commandSideexTabID != mySideexTabID) return;
     console.error("sender window ID: " + sender.tab.windowId);
@@ -197,8 +196,13 @@ function handleMessage(message, sender, sendResponse) {
     } else if (message.command.includes("store")) {
         message.value = prompt("Enter the name of the variable");
     }
-    addCommandAuto(message.command, message.target, message.value);
-
+    
+    //handle choose ok/cancel confirm
+    if(message.command == "chooseOkOnNextConfirmation" || message.command == "chooseCancelOnNextConfirmation") {
+        addCommandInsertBeforeLast(message.command, message.target, message.value);
+    } else {    
+        addCommandAuto(message.command, message.target, message.value);
+    }
 }
 
 browser.tabs.onRemoved.addListener(function(tabId, removeInfo) {

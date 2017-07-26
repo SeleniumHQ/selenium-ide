@@ -6,7 +6,6 @@ var locatorBuilders = new LocatorBuilders(window);
 var frameLocation = "";
 
 //set temp_pageSideexTabId on DOM
-console.log("in set attribute 1");
 document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
 
 /*a export function pass contentSideexTabID from content script to page script
@@ -18,36 +17,32 @@ exportFunction(getSideexTabID,window,{defineAs:'getSideexTabID'});
 */
 //the child window will do 
 //console.error("opener id: "+window.opener);
-console.log("window opener: " + window.opener);
-if (window.opener != null) {
-    /* just can use in FireFox
-    contentSideexTabID = window.opener.wrappedJSObject.getSideexTabID();
-    XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabID());
-    console.error("contentSideexTabID: "+contentSideexTabID);
-    */
+try{
+    if (window.opener != null) {
+        /* just can use in FireFox
+        contentSideexTabID = window.opener.wrappedJSObject.getSideexTabID();
+        XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabID());
+        console.error("contentSideexTabID: "+contentSideexTabID);
+        */
 
-    //use set attribute
-    contentSideexTabID = window.opener.document.body.getAttribute("temp_pageSideexTabID");
-    console.log("contentSideexTabID: " + contentSideexTabID);
-    console.log("in set attribute 2");
-    document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-
-    browser.runtime.sendMessage({ newWindow: "true", commandSideexTabID: contentSideexTabID });
-} else {
+        //use set attribute
+        contentSideexTabID = window.opener.document.body.getAttribute("temp_pageSideexTabID");
+        document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
+        browser.runtime.sendMessage({ newWindow: "true", commandSideexTabID: contentSideexTabID });
+    } else {
+        //when change page
+        var changePage2 = browser.runtime.sendMessage({ changePage: true });
+        changePage2.then(handleChangePageResponse).catch(function(reason) { console.log(reason); });
+    }
+} catch (e){
     //when change page
-    console.log("test1");
-    var changePage2 = browser.runtime.sendMessage({ changePage: true });
-    console.log("test2");
-    changePage2.then(handleChangePageResponse).catch(function(reason) { console.log(reason); });
+    var changePage2 = browser.runtime.sendMessage({changePage:true});
+    changePage2.then(handleChangePageResponse);
 }
 
 function handleChangePageResponse(message) {
-    console.log("response sideex id: " + message.mySideexTabID);
     contentSideexTabID = message.mySideexTabID;
-    console.log("contentSideexTabId: " + contentSideexTabID);
-    console.log("in set attribute 3");
     document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-    console.log("change contentSideexTabId: " + contentSideexTabID);
 }
 
 //Record: ClickAt
@@ -238,6 +233,74 @@ window.addEventListener("change", function(event) {
         }
     }
 });
+
+//select / addSelect / removeSelect
+window.addEventListener('focus', function(event) {
+    if (event.target.nodeName) {
+        var tagName = event.target.nodeName.toLowerCase();
+        if ('select' == tagName && event.target.multiple) {
+            var options = event.target.options;
+            for (var i = 0; i < options.length; i++) {
+                if (options[i]._wasSelected == null) {
+                    // is the focus was gained by mousedown event, _wasSelected would be already set
+                    options[i]._wasSelected = options[i].selected;
+                }
+            }
+        }
+    }
+}, true);
+
+window.addEventListener('change', function(event) {
+    if (event.target.tagName) {
+        var tagName = event.target.tagName.toLowerCase();
+        if ('select' == tagName) {
+            if (!event.target.multiple) {
+                var option = event.target.options[event.target.selectedIndex];
+                //this.log.debug('selectedIndex=' + event.target.selectedIndex);
+                record("select", locatorBuilders.buildAll(event.target), getOptionLocator(option));
+            } else {
+                //this.log.debug('change selection on select-multiple');
+                var options = event.target.options;
+                for (var i = 0; i < options.length; i++) {
+                    //this.log.debug('option=' + i + ', ' + options[i].selected);
+                    if (options[i]._wasSelected == null) {
+                        //this.log.warn('_wasSelected was not recorded');
+                    }
+                    if (options[i]._wasSelected != options[i].selected) {
+                        var value = getOptionLocator(options[i]);
+                        if (options[i].selected) {
+                            record("addSelection", locatorBuilders.buildAll(event.target), value);
+                        } else {
+                            record("removeSelection", locatorBuilders.buildAll(event.target), value);
+                        }
+                        options[i]._wasSelected = options[i].selected;
+                    }
+                }
+            }
+        }
+    }
+});
+
+function getOptionLocator(option) {
+    var label = option.text.replace(/^ *(.*?) *$/, "$1");
+    if (label.match(/\xA0/)) { // if the text contains &nbsp;
+        return "label=regexp:" + label.replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
+                return '\\' + str })
+            .replace(/\s+/g, function(str) {
+                if (str.match(/\xA0/)) {
+                    if (str.length > 1) {
+                        return "\\s+";
+                    } else {
+                        return "\\s";
+                    }
+                } else {
+                    return str;
+                }
+            });
+    } else {
+        return "label=" + label;
+    }
+};
 
 //////////////////////////////BaiMao
 window.addEventListener('mousedown', function(event) {

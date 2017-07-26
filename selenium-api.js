@@ -431,6 +431,60 @@ Selenium.prototype.doEcho = function(value) {
     browser.runtime.sendMessage({ "echoStr": value });
 };
 
+Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
+    try{
+        var actualCode = '('+function(){
+            var tempWindowConfirmation = window.confirm;
+            window.confirm = function(message) {
+                window.confirm = tempWindowConfirmation;
+                messageToContent(message,false);
+                return false;
+            }
+            //console.log("finish inject inplaying");
+        }+')();';
+        
+        var injectModifyWindowMethodOnPlay = document.createElement("script");
+        injectModifyWindowMethodOnPlay.textContent = actualCode;
+        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
+        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
+    } catch(reason) {
+        console.error("reason: "+reason);
+    }
+}
+
+Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
+    try{
+        var actualCode = '('+function(){
+            var tempWindowConfirmation = window.confirm;
+            window.confirm = function(message) {
+                window.confirm = tempWindowConfirmation;
+                messageToContent(message,true);
+                return true;
+            }
+            //console.log("finish inject inplaying");
+        }+')();';
+        
+        var injectModifyWindowMethodOnPlay = document.createElement("script");
+        injectModifyWindowMethodOnPlay.textContent = actualCode;
+        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
+        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
+    } catch(reason) {
+        console.error("reason: "+reason);
+    }
+}
+
+Selenium.prototype.doAssertConfirmation = function(locator,value) {
+    if (hasConfirmation) {
+        if (value != confirmationMessage) {
+            console.error("Confirmation Message was wrong!");
+            throw new SeleniumError("error: Confirmation Message was wrong!");      
+        }
+    } else {
+      console.error("Assert Confirmation Not Found!!");
+      throw new SeleniumError("error: Confirmation Not Found!");
+    }
+};
+
 // xian
 Selenium.prototype.doWaitPreparation = function() {
     // function setNewPageValue(e) {
