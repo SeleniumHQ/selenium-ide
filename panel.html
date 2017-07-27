@@ -54,7 +54,7 @@
             <a download="info.html" id="downloadlink" style="display: none">Download</a>
             <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
             <button id="playback" class="sub_btn" style="width: 20%"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
-            <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-stop" aria-hidden="true" ></i> Stop</button>
+            <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-stop" aria-hidden="true"></i> Stop</button>
             <button id="playSuite" class="sub_btn" style="width: 21%"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
             <button id="playSuites" class="sub_btn" style="width: 21%"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
             <button id="pause" class="sub_btn btn_pr" style="width: 15.5%"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
@@ -141,7 +141,7 @@
                     <fieldset class="action">
                         <!-- TODO: make (command &) target selectable -->
                         <label>Command</label>
-                        <input id="command-command" list="command-command-list" type="text" style="display: block; width: 74%; margin-left: 3%;">
+                        <input id="command-command" list="command-command-list" type="text""><i id="-command" class="fa fa-chevron-down" aria-hidden="true"></i>
                         <datalist id="command-command-list">
                             <option value="click"></option>
                             <option value="type"></option>
@@ -150,11 +150,11 @@
                             <option value="open"></option>
                         </datalist>
                         <label>Target</label>
-                        <input id="command-target" list="command-target-list" type="text" style="width: 74%; margin-left: 3%;">
+                        <input id="command-target" list="command-target-list" type="text"><i id="-target" class="fa fa-chevron-down" aria-hidden="true"></i>
                         <datalist id="command-target-list">
                         </datalist>
                         <label>Value</label>
-                        <input id="command-value" type="text" style="width: 74%; margin-left: 3%;">
+                        <input id="command-value" type="text"">
                     </fieldset>
                 </div>
                 <!-- end of #command-container -->

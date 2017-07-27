@@ -482,6 +482,7 @@ section#main {
 
 #command-toolbar {
     height: 105px;
+    width: 100%;
 }
 
 .module_right {
@@ -921,6 +922,7 @@ fieldset {
     -moz-border-radius: 5px;
     border-radius: 5px;
     border: 0;
+    width: 100%;
 }
 
 #result-container label {
@@ -947,7 +949,7 @@ fieldset {
     margin-right: 15px;
     display: block;
     float: left;
-    width: 15%;
+    width: 60px;
     height: 25px;
     line-height: 16px;
     text-shadow: 0 1px 0 #fff;
@@ -955,6 +957,24 @@ fieldset {
     padding-left: 10px;
     margin: 5px 0;
     text-transform: uppercase;
+}
+
+#command-toolbar i {
+    float: left;
+    width: 0px;
+    margin-top: 5px;
+    margin-left: -20px;
+    aria-hidden: true;
+    color: #D0D0D0;
+}
+
+#command-toolbar i:hover {
+    cursor: pointer;
+    color: #828282;
+}
+
+#command-toolbar input::-webkit-calendar-picker-indicator {
+  display: none;
 }
 
 fieldset input[type=text] {
@@ -967,13 +987,15 @@ fieldset input[type=text] {
     -webkit-box-shadow: inset 0 2px 2px #ccc, 0 1px 0 #fff;
     -moz-box-shadow: inset 0 2px 2px #ccc, 0 1px 0 #fff;
     box-shadow: inset 0 2px 2px #ccc, 0 1px 0 #fff;
-    padding-left: 10px;
+    padding-left: 5px;
     background-position: 10px 6px;
-    margin: 0;
+    margin-top: 0;
+    margin-left: 10px;
+    margin-bottom: 0;
     display: block;
     float: left;
-    width: 96%;
-    margin: 0 10px;
+    width: 70%;
+    padding-right: 25px;
 }
 
 fieldset input[type=text]:focus {
