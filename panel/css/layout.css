@@ -485,9 +485,7 @@ section#main {
     width: 100%;
 }
 
-.module_right {
-
-}
+.module_right {}
 
 #main .module header h3 {
     display: block;
@@ -757,8 +755,7 @@ ul.tabs li:last-child:hover a {
     text-decoration: underline;
 }
 
-.message .selectedSuite > p{
-}
+.message .selectedSuite>p {}
 
 .message .success {
     background-repeat: no-repeat;
@@ -974,7 +971,49 @@ fieldset {
 }
 
 #command-toolbar input::-webkit-calendar-picker-indicator {
-  display: none;
+    display: none;
+}
+
+.w3-dropdown-content {
+    cursor: pointer;
+    background-color: #fff;
+    display: none;
+    position: fixed;
+    border: 1px solid #A0A0A0;
+    margin-left: 80px;
+    margin-right: 10px;
+    -webkit-box-shadow: 2px 2px 2px #8E8E8E;
+    box-shadow: 2px 2px 2px #8E8E8E;
+    max-height: 210px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.w3-dropdown-content#command-dropdown {
+    margin-top: 24px;
+}
+
+.w3-dropdown-content#target-dropdown {
+    margin-top: 58px;
+}
+
+.w3-dropdown-content option {
+    width: calc(100% - 5px);
+    padding-top: 4px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    height: 14px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.w3-dropdown-content option:hover {
+    color: white;
+    background-color: #2284E6;
+}
+
+.w3-show {
+    display: block!important
 }
 
 fieldset input[type=text] {
@@ -1196,9 +1235,7 @@ fieldset textarea:focus {
     border: 1px solid #30B0C8;
 }
 
-.btn_pr {
-
-}
+.btn_pr {}
 
 .fa {
     margin: 2px;
