@@ -42,7 +42,7 @@ var dropdown = function(node) {
 var clickWhenDropdownHandler = function(e) {
     var event = $(e.target);
     if ($(".w3-show").is(event.parent())) {
-        $(".w3-show").prev().prev().val(event.val());
+        $(".w3-show").prev().prev().val(event.val()).trigger("input");
     }
     dropdown($(".w3-show"));
 };

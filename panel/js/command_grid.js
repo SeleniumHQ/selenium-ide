@@ -139,6 +139,7 @@ function attachEvent(start, end) {
             // notice that "textNode" also is a node
             document.getElementById("command-command").value = getCommandName(ref);
             document.getElementById("command-target").value = getCommandTarget(ref);
+            document.getElementById("target-dropdown").innerHTML = escapeHTML(ref.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
             document.getElementById("command-target-list").innerHTML = escapeHTML(ref.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
             document.getElementById("command-value").value = getCommandValue(ref);
         }, false);
