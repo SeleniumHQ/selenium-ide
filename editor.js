@@ -10,6 +10,7 @@ var playingFrameLocations = {};
 /* flags */
 var isRecording = true;
 var isPlaying = false;
+var recordEnable = false;
 var windowCreateFlag = false;
 var tabCreateFlag = false;
 
@@ -17,6 +18,10 @@ var newWindowInfo = { tabId: undefined, windowId: undefined };
 
 function onConnectError(error) {
     console.log(`Error : ${error}`);
+}
+
+function setRecordEnable(vlaue){
+    recordEnable = value;
 }
 
 browser.tabs.onActivated.addListener(function(windowInfo) {

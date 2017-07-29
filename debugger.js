@@ -196,8 +196,6 @@ Debugger.prototype.showElement = function (locator) {
 
 Debugger.prototype.selectElement = function () {
   this.init();
-  var button = document.getElementById("selectElementButton");
-  var help = document.getElementById("selectElementTip");
   if (this.targetSelecter) {
     this.targetSelecter.cleanup();
     this.targetSelecter = null;
@@ -208,8 +206,6 @@ Debugger.prototype.selectElement = function () {
   if (isRecording) {
     this.editor.setRecordingEnabled(false);
   }
-  button.label = "Cancel";
-  help.removeAttribute("style");
   this.targetSelecter = new TargetSelecter(function (element, win) {
     if (element && win) {
       var locatorBuilders = new LocatorBuilders(win);
@@ -226,8 +222,6 @@ Debugger.prototype.selectElement = function () {
     }
     self.targetSelecter = null;
   }, function () {
-    button.label = "Select";
-    help.setAttribute("style", "display: none;");
     if (isRecording) {
       self.editor.setRecordingEnabled(true);
     }
