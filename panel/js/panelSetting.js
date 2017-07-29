@@ -1,6 +1,13 @@
 $(document).ready(function() {
     $(".tablesorter").tablesorter();
 
+    $(".site_title").click(function() {
+        browser.tabs.create({
+            url: "http://sideex.org/",
+            windowId: userWinID
+        });
+    });
+
     //init dropdown width
     $("#command-dropdown").css({
         'width': $("#command-command").width() + 29 + "px"
