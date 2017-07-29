@@ -2363,6 +2363,67 @@ BrowserBot.prototype.locateElementByUIElement.is_fuzzy_match = function(node, ta
     }
 };
 
+/* prompt */
+
+BrowserBot.prototype.cancelNextPrompt = function() {
+    return this.setNextPromptResult(null);
+};
+
+BrowserBot.prototype.setNextPromptResult = function(result) {
+    this.promptResponse = false;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "setNextPromptResult",
+        target: result
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.promptResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve();
+                self.promptResponse = false;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+BrowserBot.prototype.getPromptMessage = function() {
+    this.promptResponse = false;
+    this.promptMessage = null;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "getPromptMessage",
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.promptResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve(self.promptMessage);
+                self.promptResponse = false;
+                self.promptMessage = null;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
 /*****************************************************************/
 /* BROWSER-SPECIFIC FUNCTIONS ONLY AFTER THIS LINE */
 

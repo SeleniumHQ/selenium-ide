@@ -25,11 +25,28 @@ function doCommands(request, sender, sendResponse, type) {
             var upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
             if (selenium["do" + upperCase] != null) {
                 try {
-                    var dofunction = selenium["do" + upperCase](request.target, selenium.preprocessParameter(request.value));
-                    sendResponse({ result: "success" });
-                } catch (e) {
-                    console.log(e.message);
-                    sendResponse({ result: e.message });
+                    document.body.setAttribute("SideeXPlayingFlag", true);
+                    let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));                  
+                    if (returnValue instanceof Promise) {
+                        // The command is a asynchronous function
+                        returnValue.then(function(value) {
+                            // Asynchronous command completed successfully
+                            document.body.removeAttribute("SideeXPlayingFlag");
+                            sendResponse({result: "success"});
+                        }).catch(function(reason) {
+                            // Asynchronous command failed
+                            document.body.removeAttribute("SideeXPlayingFlag");
+                            sendResponse({result: reason});
+                        });
+                    } else {
+                        // Synchronous command completed successfully
+                        document.body.removeAttribute("SideeXPlayingFlag");
+                        sendResponse({result: "success"});
+                    }
+                } catch(e) {
+                    // Synchronous command failed
+                    document.body.removeAttribute("SideeXPlayingFlag");
+                    sendResponse({result: e.message});
                 }
             } else {
                 sendResponse({ result: "Unknown command: " + request.commands });

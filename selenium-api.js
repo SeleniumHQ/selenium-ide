@@ -1603,7 +1603,8 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function() {
     this.browserbot.cancelNextConfirmation(true);
 };
 
-Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
+
+//Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
     /**
      * Instructs Selenium to return the specified answer string in response to
      * the next JavaScript prompt [window.prompt()].
@@ -1611,8 +1612,9 @@ Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
      *
      * @param answer the answer to give in response to the prompt pop-up
      */
-    this.browserbot.setNextPromptResult(answer);
-};
+    //this.browserbot.setNextPromptResult(answer);
+//};
+
 
 Selenium.prototype.doGoBack = function() {
     /**
@@ -3682,3 +3684,22 @@ Selenium.prototype.doEditContent = function(locator, value) {
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
     }
 };
+
+/* prompt */
+
+Selenium.prototype.doChooseCancelOnNextPrompt = function() {
+    return this.browserbot.cancelNextPrompt();
+}
+
+Selenium.prototype.doAnswerOnNextPrompt = function (answer) {
+    return this.browserbot.setNextPromptResult(answer);
+}
+
+Selenium.prototype.doAssertPrompt = function (message) {
+    return this.browserbot.getPromptMessage().then(function(actualMessage) {
+               if (message != actualMessage)
+                    return Promise.reject("Prompt message doesn't match actual message");
+               else
+                    return Promise.resolve(true);
+           });
+}
