@@ -29,6 +29,7 @@ window.onload = function() {
     var resumeButton = document.getElementById("resume");
     var playSuiteButton = document.getElementById("playSuite");
     var playSuitesButton = document.getElementById("playSuites");
+    var showElementButton = document.getElementById("showElementButton")
     /*var recordButton = document.getElementById("record");*/
     //element.addEventListener("click",play);
     playButton.addEventListener("click", function() {
@@ -48,6 +49,21 @@ window.onload = function() {
         document.getElementById("result-failures").innerHTML = "0";
         playSuites(0);
     });
+    showElementButton.addEventListener("click", function(){
+        console.log("click");
+        try{
+        var targetValue = document.getElementById("command-target").value;
+            console.log("value: " + targetValue);
+            console.log("currentPlayingTabId: " + currentPlayingTabId);
+            browser.tabs.sendMessage(userWinID, {
+                mySideexTabID:mySideexTabID,
+                showElement:true,
+                targetValue:targetValue
+            })
+        } catch (e) {
+            console.error(e);
+        }
+    })
     /*recordButton.addEventListener("click", startRecord);*/
     //console.error(recordButton);
 };

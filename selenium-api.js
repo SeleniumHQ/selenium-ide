@@ -3628,3 +3628,12 @@ Selenium.prototype.doEditContent = function(locator, value) {
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
     }
 };
+
+
+// show element
+Selenium.prototype.doShowElement = function(locator){
+    var element = this.browserbot.findElement(locator);
+    //element.setAttribute("style","background-color: yellow");
+    element.style.backgroundColor = "yellow";
+    console.log("set yellow");
+}

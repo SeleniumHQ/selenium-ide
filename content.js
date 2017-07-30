@@ -50,6 +50,20 @@ function handleChangePageResponse(message) {
     console.log("change contentSideexTabId: " + contentSideexTabID);
 }
 
+try{
+function startShowElement(message){
+    console.log("receive not do");
+    if (message.mySideexTabID == contentSideexTabID && message.showElement){
+        console.log("receive then do");
+        selenium["doShowElement"](message.targetValue);
+    }
+}
+
+browser.runtime.onMessage.addListener(startShowElement);
+} catch (e) {
+    console.error(e);
+}
+
 //Record: ClickAt
 var preventClickTwice = false;
 window.addEventListener("click", function(event) {
