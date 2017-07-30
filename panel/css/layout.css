@@ -623,9 +623,17 @@ section#main {
 .tablesorter thead tr {
     height: 39px;
     background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
-    text-align: left;
-    text-indent: 10px;
     table-layout: fixed;
+    text-align: left;
+    text-indent: 6px;
+}
+
+.tablesorter .border {
+    position: relative;
+    float: right;
+    width: 3px;
+    height: 13px;
+    border-left: 2px solid #CCCCCC;
 }
 
 .tablesorter tbody {
@@ -665,7 +673,8 @@ section#main {
 }
 
 .tablesorter td {
-    padding: 10px;
+    padding: 6px 0px;
+    text-indent: 12px;
 }
 
 .tablesorter input[type=image] {

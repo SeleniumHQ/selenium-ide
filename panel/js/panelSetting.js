@@ -31,6 +31,8 @@ $(document).ready(function() {
             dropdown($(this));
         });
     });
+
+    $("#command-grid").colResizable({ liveDrag: true, headerOnly: true, minWidth: 75 });
 });
 
 var dropdown = function(node) {

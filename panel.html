@@ -17,6 +17,7 @@
     <script type="text/javascript" src="panel/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
     <script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
+    <script type="text/javascript" src="panel/js/colResizable-1.5.min.js"></script>
     <script type="text/javascript" src="panel/js/panelSetting.js"></script>
 </head>
 <!-- TODO: Make whole panel size flexible -->
@@ -105,87 +106,81 @@
             </article>
             <article class="module width_3_quarter">
                 <div id="command-container" class="tab_content case_hight">
-                    <div class="smallSection">
-                        <table id="command-grid" class="tablesorter" cellspacing="0">
-                            <!-- TODO: Make the width flexible -->
-                            <thead>
-                                <tr>
-                                    <th style="width: 23%">Command
-                                        <div class="border"></div>
-                                    </th>
-                                    <th style="width: 40%">Target
-                                        <div class="border"></div>
-                                    </th>
-                                    <th style="width: 37%">Value</th>
-                                </tr>
-                            </thead>
-                            <tbody id="records-grid">
-                                <!-- TODO: Make only tbody scoll -->
-                                <input id="records-count" type="hidden" value="0"></input>
-                                <!-- set input and /tbody in same line to avoid textNode -->
-                                <!--<tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>
-                                <tr>
-                                    <td>time</td>
-                                    <td>open</td>
-                                    <td>12356</td>
-                                </tr>-->
-                            </tbody>
-                        </table>
-                    </div>
+                    <table id="command-grid" class="tablesorter" cellspacing="0">
+                        <!-- TODO: Make the width flexible -->
+                        <thead>
+                            <tr>
+                                <th style="width: 23%">Command<div class="border"></div></th>
+                                <th style="width: 40%">Target<div class="border"></div></th>
+                                <th style="width: 37%">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-grid">
+                            <!-- TODO: Make only tbody scoll -->
+                            <input id="records-count" type="hidden" value="0"></input>
+                            <!-- set input and /tbody in same line to avoid textNode -->
+                            <!--<tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>
+                            <tr>
+                                <td>time</td>
+                                <td>open</td>
+                                <td>12356</td>
+                            </tr>-->
+                        </tbody>
+                    </table>
                 </div>
                 <div id="command-toolbar">
                     <div class="fieldset">
