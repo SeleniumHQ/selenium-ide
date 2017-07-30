@@ -50,19 +50,16 @@ function handleChangePageResponse(message) {
     console.log("change contentSideexTabId: " + contentSideexTabID);
 }
 
-try{
-function startShowElement(message){
-    console.log("receive not do");
+function startShowElement(message, sender, sendResponse){
     if (message.mySideexTabID == contentSideexTabID && message.showElement){
-        console.log("receive then do");
-        selenium["doShowElement"](message.targetValue);
+        result = selenium["doShowElement"](message.targetValue);
+        //sendResponse({result: selenium["doShowElement"](message.targetValue)});
+        return Promise.resolve({result: result});
     }
+    //return true;
 }
-
 browser.runtime.onMessage.addListener(startShowElement);
-} catch (e) {
-    console.error(e);
-}
+
 
 //Record: ClickAt
 var preventClickTwice = false;

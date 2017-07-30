@@ -54,12 +54,20 @@ window.onload = function() {
         try{
         var targetValue = document.getElementById("command-target").value;
             console.log("value: " + targetValue);
-            console.log("currentPlayingTabId: " + currentPlayingTabId);
-            browser.tabs.sendMessage(userWinID, {
-                mySideexTabID:mySideexTabID,
-                showElement:true,
-                targetValue:targetValue
-            })
+            browser.tabs.query({
+                active: true,
+                windowId: userWinID
+            }, function(tabs) {
+                browser.tabs.sendMessage(tabs[0].id, {
+                    mySideexTabID:mySideexTabID,
+                    showElement:true,
+                    targetValue:targetValue
+                }).then(function(response) {
+                    if (response){
+                        console.log(response.result);
+                    }
+                });
+            });
         } catch (e) {
             console.error(e);
         }
