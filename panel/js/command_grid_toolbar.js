@@ -159,7 +159,7 @@ function addCommandManu(command_name, command_target_array, command_value) {
 }
 
 // add command before last command (append upward)
-function addCommandInsertBeforeLast(command_name, command_target_array, command_value) {
+function addCommandBeforeLastCommand(command_name, command_target_array, command_value) {
     addCommand(command_name, command_target_array, command_value, 0, true);
 }
 

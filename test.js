@@ -8,7 +8,7 @@ window.addEventListener("message", function(event) {
         if (event.data.recordedType) {
             switch (event.data.recordedType) {
                 case "prompt":
-                    if (event.data.recordedResult) {
+                    if (event.data.recordedResult != null) {
                         record("answerOnNextPrompt", [[event.data.recordedResult]], "", true);
                     } else {
                         record("chooseCancelOnNextPrompt", [[""]], "", true);

@@ -656,11 +656,12 @@ console.log("frameLocation : " + frameLocation);
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
 /* record */
-function record(command, target, value) {
+function record(command, target, value, insertBeforeLastCommand) {
     browser.runtime.sendMessage({
         command: command,
         target: target,
         value: value,
+        insertBeforeLastCommand: insertBeforeLastCommand,
         frameLocation: frameLocation,
         commandSideexTabID: contentSideexTabID
     });

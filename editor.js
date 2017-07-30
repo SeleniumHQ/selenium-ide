@@ -198,8 +198,8 @@ function handleMessage(message, sender, sendResponse) {
     }
     
     //handle choose ok/cancel confirm
-    if(message.command == "chooseOkOnNextConfirmation" || message.command == "chooseCancelOnNextConfirmation") {
-        addCommandInsertBeforeLast(message.command, message.target, message.value);
+    if (message.insertBeforeLastCommand) {
+        addCommandBeforeLastCommand(message.command, message.target, message.value);
     } else {    
         addCommandAuto(message.command, message.target, message.value);
     }
