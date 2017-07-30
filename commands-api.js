@@ -40,8 +40,46 @@ function doCommands(request, sender, sendResponse, type) {
         if (contentSideexTabID === -1) {
             contentSideexTabID = request.mySideexTabID;
         }
+        return true;
     }
-    return true;
+    if (request.selectMode) {
+        if (request.selecting) {
+            targetSelecter = new TargetSelecter(function (element, win) {
+                if (element && win) {
+                    //var locatorBuilders = new LocatorBuilders(win);
+                    var target = locatorBuilders.buildAll(element);
+                    locatorBuilders.detach();
+                    if (target != null && target instanceof Array) {
+                        if (target) {
+                            //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
+                            console.log("test");
+                            browser.runtime.sendMessage({
+                                selectTarget: true,
+                                target: [[target]]
+                            })
+                        } else {
+                            console.log("???????");
+                            //alert("LOCATOR_DETECTION_FAILED");
+                        }
+                    }
+
+                }
+                targetSelecter = null;
+            }, function () {
+                browser.runtime.sendMessage({
+                    cancelSelectTarget: true
+                })
+            });
+
+        } else {
+            if (targetSelecter) {
+                targetSelecter.cleanup();
+                targetSelecter = null;
+                return;
+            }
+        }
+    }
+
 }
 
 function doClick2(element) {

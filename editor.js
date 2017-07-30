@@ -131,6 +131,18 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
 });
 
 function handleMessage(message, sender, sendResponse) {
+    if (message.selectTarget) {
+        console.log(message.target);
+        return;
+    }
+    if (message.cancelSelectTarget) {
+        var button = document.getElementById("select");
+        isSelecting = false; 
+        button.value = "Select";
+        browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
+        return;
+    }
+
     if (isPlaying && message.frameLocation) {
         //console.log(sender.frameId);
         if (!playingFrameLocations[sender.tab.id]) {
