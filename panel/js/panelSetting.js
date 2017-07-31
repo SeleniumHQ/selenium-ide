@@ -32,7 +32,60 @@ $(document).ready(function() {
         });
     });
 
-    $("#command-grid").colResizable({ liveDrag: true, headerOnly: true, minWidth: 75 });
+    $("#command-grid").colResizable({ liveDrag: true, minWidth: 75 });
+    $(function() {
+        $.fn.fixMe = function() {
+            return this.each(function() {
+                var $this = $(this),
+                    $t_fixed;
+
+                function init() {
+                    $this.wrap('<div class="container" />');
+                    $t_fixed = $this.clone();
+                    $t_fixed.find("tbody").remove().end().addClass("fixed").insertBefore($this);
+                    $t_fixed.find("th").each(function(index){
+                    	var $self = $(this);
+                    	$this.find("th").eq(index).bind("DOMAttrModified",function(e){
+                    		$self.css("width",$(this).innerWidth()+"px");
+                    	});
+                    });
+                    resizeFixed();
+                }
+
+                function resizeFixed() {
+                    $t_fixed.find("th").each(function(index) {
+                        $(this).css("width", $this.find("th").eq(index).innerWidth() + "px");
+                    });
+                }
+
+                function scrollFixed() {
+                    var offset = $(this).scrollTop(),
+                        tableOffsetTop = $this.offset().top,
+                        tableOffsetBottom = tableOffsetTop + $this.height() - $this.find("thead").height();
+                    if (offset < tableOffsetTop || offset > tableOffsetBottom) {
+                        $t_fixed.hide();
+                    } else if (offset >= tableOffsetTop && offset <= tableOffsetBottom && $t_fixed.is(":hidden")) {
+                        $t_fixed.show();
+                    }
+                    var tboffBottom = (parseInt(tableOffsetBottom));
+                    var tboffTop = (parseInt(tableOffsetTop));
+
+                    if (offset >= tboffBottom && offset <= tableOffsetBottom) {
+                        $t_fixed.find("th").each(function(index) {
+                            $(this).css("width", $this.find("th").eq(index).outerWidth() + "px");
+                        });
+                    }
+                }
+                $(window).resize(resizeFixed);
+                $(window).scroll(scrollFixed);
+                init();
+            });
+        };
+
+        $("table").fixMe();
+    });
+
+    $(".fixed").width($("table:not(.fixed)").width());
 });
 
 var dropdown = function(node) {
