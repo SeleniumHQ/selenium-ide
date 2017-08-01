@@ -1,12 +1,4 @@
 $(document).ready(function() {
-    window.addEventListener("beforeunload", function(e) {
-        var confirmationMessage = "\o/";
-
-        e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-        console.log(e);
-        return confirmationMessage; // Gecko, WebKit, Chrome <34
-    });
-
     $(".tablesorter").tablesorter();
 
     //init dropdown width
