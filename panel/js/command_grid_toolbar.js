@@ -53,6 +53,11 @@ function addCommand(command_name, command_target_array, command_value, auto, ins
         addTestCase("Untitled Test Case", id);
     }
 
+    // mark modified
+    getSelectedCase().classList.add("modified");
+    getSelectedSuite().getElementsByTagName("strong")[0].classList.add("modified");
+    closeConfirm(true);
+    
     // create tr node     
     var new_record = document.createElement("tr");
     new_record.setAttribute("class", "");

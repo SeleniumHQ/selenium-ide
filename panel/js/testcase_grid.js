@@ -142,6 +142,8 @@ function appendContextMenu(node, isCase) {
             // get text node
             s_suite.childNodes[0].textContent = n_title;
             sideex_testSuite[s_suite.id].title = n_title;
+            $(s_suite).find("strong").addClass("modified");
+            closeConfirm(true);
         }, false);
         ul.appendChild(rename_suite);
     }
@@ -191,6 +193,8 @@ function addTestCase(title, id) {
             records: "",
             title: title
         };
+        p.classList.add("modified");
+        p.parentNode.getElementsByTagName("strong")[0].classList.add("modified");
     }
 
     // attach event
@@ -217,6 +221,7 @@ function addTestCase(title, id) {
         event.stopPropagation();
         saveOldCase();
         event.dataTransfer.setData("testCase", this.id);
+        event.dataTransfer.setData("testSuite", this.parentNode.id);
     }, false);
     p.addEventListener("dragover", function(event) {
         event.stopPropagation();
@@ -226,13 +231,17 @@ function addTestCase(title, id) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
-        var start_ID = event.dataTransfer.getData("testCase"),
+        var startSuite = event.dataTransfer.getData("testSuite"),
+            start_ID = event.dataTransfer.getData("testCase"),
             end_ID = this.id;
         if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
             this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
             cleanSelected();
             $("#" + this.nextSibling.id).addClass("selectedCase");
             this.parentNode.classList.add("selectedSuite");
+            $("#"+startSuite).find("strong").addClass("modified");
+            this.parentNode.getElementsByTagName("strong")[0].classList.add("modified");
+            closeConfirm(true);
         }
     }, false);
 
@@ -255,6 +264,8 @@ function addTestCase(title, id) {
         $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
+
+    closeConfirm(true);
 }
 
 function addTestSuite(title, id) {
@@ -278,7 +289,7 @@ function addTestSuite(title, id) {
     div.classList.add("selectedSuite");
     // attach event
     div.addEventListener("click", function(event) {
-        if (this.getElementsByTagName("p")) {
+        if (this.getElementsByTagName("p").length != 0) {
             this.getElementsByTagName("p")[0].click();
         } else {
             event.stopPropagation();
@@ -320,7 +331,7 @@ function addTestSuite(title, id) {
     // right click
     div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
-        if (this.getElementsByTagName("p")) {
+        if (this.getElementsByTagName("p").length != 0) {
             this.getElementsByTagName("p")[0].click();
         } else {
             event.stopPropagation();
@@ -359,6 +370,9 @@ document.getElementById("close-testSuite").addEventListener('click', function(ev
     event.stopPropagation();
     var s_suite = getSelectedSuite();
     if (s_suite) {
+        if (sideex_testSuite[s_suite.id].stat == "modified");
+            if (confirm("Unsave suite, save it first?"))
+                document.getElementById('save-testSuite').click();
         sideex_testSuite[s_suite.id] = null;
         s_suite.parentNode.removeChild(s_suite);
         clean_panel();
