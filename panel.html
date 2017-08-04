@@ -24,7 +24,7 @@
 <body>
     <header id="header">
         <hgroup>
-            <h1 class="site_title" href="index.html">SideeX</h1>
+            <h1 class="site_title">SideeX</h1>
         </hgroup>
     </header>
     <!-- end of header bar -->
@@ -52,15 +52,13 @@
             <button id="add-testCase" style="display: none">+Case</button>
             <button id="delete-testCase" style="display: none">-Case</button>
             <a download="info.html" id="downloadlink" style="display: none">Download</a>
-            <button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
-            <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
-            <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
-            <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
-            <button id="pause" class="sub_btn btn_pr"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-            <button id="resume" class="sub_btn btn_pr" style="display
-            : none"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
-            <button id="selectElementButton">Select</button>
-            <button id="showElementButton">Find</button>
+            <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
+            <button id="playback" class="sub_btn" style="width: 20%"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
+            <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-stop" aria-hidden="true"></i> Stop</button>
+            <button id="playSuite" class="sub_btn" style="width: 21%"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
+            <button id="playSuites" class="sub_btn" style="width: 21%"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
+            <button id="pause" class="sub_btn btn_pr" style="width: 15.5%"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
+            <button id="resume" class="sub_btn btn_pr" style="display: none; width: 15.5%"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
             <!-- TODO: Add a stop button -->
         </div>
         <div class="module_all">
@@ -93,63 +91,115 @@
                 </div>
                 <!-- end of messages article -->
                 <article id="result-container" class="module">
-                    <fieldset class="action">
-                        <label id="result1">Runs</label>
-                        <p id="result-runs" class="runs">0</p>
-                        <label id="result2">Failures</label>
-                        <p id="result-failures" class="failures">0</p>
-                    </fieldset>
+                    <div class="fieldset">
+                        <div class="result-row">
+                            <label id="result1">Runs</label>
+                            <p id="result-runs" class="runs">0</p>
+                        </div>
+                        <div class="result-row">
+                            <label id="result2">Failures</label>
+                            <p id="result-failures" class="failures">0</p>
+                        </div>
+                    </div>
                 </article>
             </article>
             <article class="module width_3_quarter">
                 <div id="command-container" class="tab_content case_hight">
-                    <table id="command-grid" class="tablesorter" cellspacing="0">
-                        <!-- TODO: Make the width flexible -->
-                        <thead>
-                            <tr>
-                                <th style="width: 23%">Command</th>
-                                <th style="width: 45%">Target</th>
-                                <th style="width: 42%">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="records-grid">
-                            <!-- TODO: Make only tbody scoll -->
-                            <input id="records-count" type="hidden" value="0"></input>
-                            <!-- set input and /tbody in same line to avoid textNode -->
-                            <!--<tr>
-                                <td>time</td>
-                                <td>open</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>time</td>
-                                <td>open</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>time</td>
-                                <td>open</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>time</td>
-                                <td>open</td>
-                                <td></td>
-                            </tr>-->
-                        </tbody>
-                    </table>
+                    <div class="smallSection">
+                        <table id="command-grid" class="tablesorter" cellspacing="0">
+                            <!-- TODO: Make the width flexible -->
+                            <thead>
+                                <tr>
+                                    <th style="width: 23%">Command
+                                        <div class="border"></div>
+                                    </th>
+                                    <th style="width: 40%">Target
+                                        <div class="border"></div>
+                                    </th>
+                                    <th style="width: 37%">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="records-grid">
+                                <!-- TODO: Make only tbody scoll -->
+                                <input id="records-count" type="hidden" value="0"></input>
+                                <!-- set input and /tbody in same line to avoid textNode -->
+                                <!--<tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12356</td>
+                                </tr>-->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div id="command-toolbar">
-                    <fieldset class="action">
+                    <div class="fieldset">
                         <!-- TODO: make (command &) target selectable -->
-                        <label>Command</label>
-                        <input id="command-command" list="command-command-list" type="text"><i id="command-" class="fa fa-chevron-down" aria-hidden="true"></i>
-                        <div id="command-dropdown" class="w3-dropdown-content w3-bar-block ">
-                            <option value="click">click</option>
-                            <option value="type">type</option>
-                            <option value="sendKey">sendKey</option>
-                            <option value="clickAt">clickAt</option>
-                            <option value="open">open</option>
+                        <div class="command-row">
+                            <label>Command</label>
+                            <input id="command-command" list="command-command-list" type="text"><i id="command-" class="fa fa-chevron-down" aria-hidden="true"></i>
+                            <div id="command-dropdown" class="w3-dropdown-content w3-bar-block">
+                                <option value="click">click</option>
+                                <option value="type">type</option>
+                                <option value="sendKey">sendKey</option>
+                                <option value="clickAt">clickAt</option>
+                                <option value="open">open</option>
+                            </div>
                         </div>
                         <datalist id="command-command-list">
                             <option value="click"></option>
@@ -158,20 +208,26 @@
                             <option value="clickAt"></option>
                             <option value="open"></option>
                         </datalist>
-                        <label>Target</label>
-                        <input id="command-target" list="command-target-list" type="text"><i id="target-" class="fa fa-chevron-down" aria-hidden="true"></i>
-                        <div id="target-dropdown" class="w3-dropdown-content w3-bar-block">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                        <div class="command-row">
+                            <label>Target</label>
+                            <input id="command-target" list="command-target-list" type="text"><i id="target-" class="fa fa-chevron-down" aria-hidden="true"></i>
+                            <div id="target-dropdown" class="w3-dropdown-content w3-bar-block">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </div>
+                            <button id="selectElementButton" class="btn_sf">Select</button>
+                            <button id="showElementButton" class="btn_sf">Find</button>
                         </div>
                         <datalist id="command-target-list">
                         </datalist>
-                        <label>Value</label>
-                        <input id="command-value" type="text">
-                    </fieldset>
+                        <div class="command-row">
+                            <label>Value</label>
+                            <input id="command-value" type="text">
+                        </div>
+                    </div>
                 </div>
                 <!-- end of #command-container -->
             </article>
@@ -180,7 +236,6 @@
             <article class="module width_full">
                 <header class="tabs_involved">
                     <ul class="tabs">
-                        <li><a>Log</a></li>
                         <li id="clear-log"><a>Clear</a></li>
                     </ul>
                 </header>
