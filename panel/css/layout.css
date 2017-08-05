@@ -782,6 +782,10 @@ ul.tabs li:last-child:hover a {
     background-size: 13px auto;
 }
 
+.modified::after {
+    content: " *";
+}
+
 .message strong {
     font-size: 13px;
 }
