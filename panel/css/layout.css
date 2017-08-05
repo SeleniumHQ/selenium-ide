@@ -1325,3 +1325,19 @@ button.active {
 .fixed td {
     border: 0px solid !important;
 }
+
+/* Overwrite Confirm Dialog */
+
+.ui-dialog {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
+}
+
+.ui-dialog-titlebar .ui-dialog-titlebar-close {
+    display: none;
+}

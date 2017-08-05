@@ -366,16 +366,57 @@ document.getElementById("add-testSuite-menu").addEventListener("click", function
     document.getElementById('add-testSuite').click();
 }, false);
 
+var confirmCloseSuite = function(question) {
+    var defer = $.Deferred();
+    $('<div></div>')
+        .html(question)
+        .dialog({
+            title: "Save?",
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "Yes": function() {
+                    defer.resolve("true");
+                    $(this).dialog("close");
+                },
+                "No": function() {
+                    defer.resolve("false");
+                    $(this).dialog("close");
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $(this).remove();
+            }
+        });
+    return defer.promise();
+};
+
+var remove_testSuite = function() {
+    var s_suite = getSelectedSuite();
+    sideex_testSuite[s_suite.id] = null;
+    s_suite.parentNode.removeChild(s_suite);
+    clean_panel();
+};
+
 document.getElementById("close-testSuite").addEventListener('click', function(event) {
     event.stopPropagation();
     var s_suite = getSelectedSuite();
     if (s_suite) {
-        if (sideex_testSuite[s_suite.id].stat == "modified");
-            if (confirm("Unsave suite, save it first?"))
-                document.getElementById('save-testSuite').click();
-        sideex_testSuite[s_suite.id] = null;
-        s_suite.parentNode.removeChild(s_suite);
-        clean_panel();
+        if ($(s_suite).find(".modified").length) {
+            confirmCloseSuite("Would you like to save this test suite?").then(function(answer) {
+                if (answer === "true")
+                    downloadSuite(s_suite, remove_testSuite);
+                else
+                    remove_testSuite(s_suite);
+            });
+        } else {
+            remove_testSuite(s_suite);
+        }
         // document.getElementById("records-grid").innerHTML = "";
     }
 }, false);
@@ -390,12 +431,27 @@ document.getElementById("add-testCase").addEventListener("click", function(event
     addTestCase(title, id);
 }, false);
 
+var remove_testCase = function() {
+    var s_case = getSelectedCase();
+    sideex_testCase[s_case.id] = null;
+    s_case.parentNode.removeChild(s_case);
+    clean_panel();
+};
+
 document.getElementById("delete-testCase").addEventListener('click', function() {
     var s_case = getSelectedCase();
+    console.log(s_case);
     if (s_case) {
-        sideex_testCase[s_case.id] = null;
-        s_case.parentNode.removeChild(s_case);
-        clean_panel();
+        if ($(s_case).hasClass("modified")) {
+            confirmCloseSuite("Would you like to save this test case?").then(function(answer) {
+                if (answer === "true")
+                    downloadSuite(getSelectedSuite(), remove_testCase);
+                else
+                    remove_testCase();
+            });
+        } else {
+            remove_testCase();
+        }
         // document.getElementById("records-grid").innerHTML = "";
     }
 }, false);

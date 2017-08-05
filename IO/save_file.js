@@ -80,7 +80,7 @@ var textFile = null,
         return textFile;
     };
 
-function downloadSuite(s_suite) {
+function downloadSuite(s_suite,callback) {
     if (s_suite) {
         var cases = s_suite.getElementsByTagName("p"),
             output = "",
@@ -127,6 +127,7 @@ function downloadSuite(s_suite) {
             $(s_suite).find(".modified").removeClass("modified");
             closeConfirm(false);
             s_suite.childNodes[0].textContent = f_name.substring(0, f_name.lastIndexOf("."));
+            callback();
         };
 
         var result = function(id) {
