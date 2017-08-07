@@ -12,6 +12,7 @@ function messageToContent(message,result) {
     window.postMessage({
         direction: "from-page-script",
         message: message,
+        insertBeforeLastCommand:true,
         result: result
     },"*");
 }

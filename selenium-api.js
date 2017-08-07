@@ -3702,6 +3702,27 @@ Selenium.prototype.doAssertPrompt = function (message) {
                else
                     return Promise.resolve(true);
            });
+}
+
+/*
+// confirm
+Selenium.prototype.doChooseCancelOnNextConfirm = function() {
+    return this.browserbot.cancelNextConfirm();
+}
+
+Selenium.prototype.doAnswerOnNextConfirm = function (answer) {
+    return this.browserbot.setNextConfirmResult(answer);
+}
+
+Selenium.prototype.doAssertConfirm = function (message) {
+    return this.browserbot.getConfirmMessage().then(function(actualMessage) {
+               if (message != actualMessage)
+                    return Promise.reject("Confirm message doesn't match actual message");
+               else
+                    return Promise.resolve(true);
+           });
+}
+*/
 
 // show element
 Selenium.prototype.doShowElement = function(locator){
