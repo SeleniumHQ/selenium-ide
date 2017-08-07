@@ -45,6 +45,17 @@ function handleChangePageResponse(message) {
     document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
 }
 
+function startShowElement(message, sender, sendResponse){
+    if (message.mySideexTabID == contentSideexTabID && message.showElement){
+        result = selenium["doShowElement"](message.targetValue);
+        //sendResponse({result: selenium["doShowElement"](message.targetValue)});
+        return Promise.resolve({result: result});
+    }
+    //return true;
+}
+browser.runtime.onMessage.addListener(startShowElement);
+
+
 //Record: ClickAt
 var preventClickTwice = false;
 window.addEventListener("click", function(event) {

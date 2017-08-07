@@ -10,6 +10,8 @@ var currentTestCaseId = "";
 var isPause = false;
 var pauseValue = null;
 var isPlayingSuite = false;
+var selectTabId = null;
+var isSelecting = false;
 
 var commandType = "";
 var pageCount = 0;
@@ -29,6 +31,8 @@ window.onload = function() {
     var resumeButton = document.getElementById("resume");
     var playSuiteButton = document.getElementById("playSuite");
     var playSuitesButton = document.getElementById("playSuites");
+    var showElementButton = document.getElementById("showElementButton")
+    var selectElementButton = document.getElementById("selectElementButton");
     /*var recordButton = document.getElementById("record");*/
     //element.addEventListener("click",play);
     playButton.addEventListener("click", function() {
@@ -47,6 +51,62 @@ window.onload = function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
         playSuites(0);
+    });
+    selectElementButton.addEventListener("click",function(){
+        var button = document.getElementById("selectElementButton");
+        if (isSelecting) {
+            isSelecting = false; 
+            button.value = "Select";
+            browser.tabs.query({
+                active: true,
+                windowId: userWinID
+            }).then(function(tabs) {
+                browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
+            }).catch(function(reason) {
+                console.log(reason);
+            })
+            return;
+        }
+
+        isSelecting = true;
+        if (isRecording)
+            /* TODO: disable record button */
+            isRecording = false;
+        button.value = "Cancel";
+        browser.tabs.query({
+            active: true,
+            windowId: userWinID
+        }).then(function(tabs) {
+            if (tabs.length === 0) {
+                console.log("No match tabs");
+                isSelecting = false; 
+                button.value = "Select";
+            } else
+                browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
+        })
+    });
+    showElementButton.addEventListener("click", function(){
+        console.log("click");
+        try{
+        var targetValue = document.getElementById("command-target").value;
+            console.log("value: " + targetValue);
+            browser.tabs.query({
+                active: true,
+                windowId: userWinID
+            }, function(tabs) {
+                browser.tabs.sendMessage(tabs[0].id, {
+                    mySideexTabID:mySideexTabID,
+                    showElement:true,
+                    targetValue:targetValue
+                }).then(function(response) {
+                    if (response){
+                        console.log(response.result);
+                    }
+                });
+            });
+        } catch (e) {
+            console.error(e);
+        }
     });
     /*recordButton.addEventListener("click", startRecord);*/
     //console.error(recordButton);

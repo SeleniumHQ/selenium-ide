@@ -3702,4 +3702,21 @@ Selenium.prototype.doAssertPrompt = function (message) {
                else
                     return Promise.resolve(true);
            });
+
+// show element
+Selenium.prototype.doShowElement = function(locator){
+    try{
+        var element = this.browserbot.findElement(locator);
+        var origin_backgroundColor = element.style.backgroundColor;
+        //element.setAttribute("style","background-color: yellow");
+        element.style.backgroundColor = "yellow";
+        setTimeout(function() {
+            element.style.backgroundColor = origin_backgroundColor;
+        }, 500);
+        //console.log("set yellow");
+        return "element found"
+    } catch (e) {
+        console.error(e);
+        return "element not found";
+    }
 }

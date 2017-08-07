@@ -10,6 +10,7 @@ var playingFrameLocations = {};
 /* flags */
 var isRecording = true;
 var isPlaying = false;
+var recordEnable = false;
 var windowCreateFlag = false;
 var tabCreateFlag = false;
 
@@ -17,6 +18,10 @@ var newWindowInfo = { tabId: undefined, windowId: undefined };
 
 function onConnectError(error) {
     console.log(`Error : ${error}`);
+}
+
+function setRecordEnable(vlaue){
+    recordEnable = value;
 }
 
 browser.tabs.onActivated.addListener(function(windowInfo) {
@@ -126,6 +131,18 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
 });
 
 function handleMessage(message, sender, sendResponse) {
+    if (message.selectTarget) {
+        console.log(message.target);
+        return;
+    }
+    if (message.cancelSelectTarget) {
+        var button = document.getElementById("select");
+        isSelecting = false; 
+        button.value = "Select";
+        browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
+        return;
+    }
+
     if (isPlaying && message.frameLocation) {
         //console.log(sender.frameId);
         if (!playingFrameLocations[sender.tab.id]) {
