@@ -273,7 +273,6 @@ function addTestSuite(title, id) {
     text.innerHTML = escapeHTML(title);
     var div = document.createElement("div");
     div.setAttribute("id", id);
-    div.setAttribute("draggable", true);
     div.setAttribute("contextmenu", "menu" + id);
     div.setAttribute("class", "message");
     div.appendChild(text);
@@ -298,27 +297,6 @@ function addTestSuite(title, id) {
             this.classList.add("selectedSuite");
             clean_panel();
             // document.getElementById("records-grid").innerHTML = "";
-        }
-    }, false);
-    div.addEventListener("dragstart", function(event) {
-        event.stopPropagation();
-        saveOldCase();
-        event.dataTransfer.setData("testSuite", this.id);
-    }, false);
-    div.addEventListener("dragover", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }, false);
-    div.addEventListener("drop", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        saveOldCase();
-        var start_ID = event.dataTransfer.getData("testSuite"),
-            end_ID = this.id;
-        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
-            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
-            cleanSelected();
-            document.getElementById(start_ID).classList.add("selectedSuite");
         }
     }, false);
 

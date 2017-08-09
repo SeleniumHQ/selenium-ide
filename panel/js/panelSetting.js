@@ -100,6 +100,16 @@ $(document).ready(function() {
             closeConfirm(true);
         }
     });
+
+    $("#testCase-grid").sortable({
+        axis: "y",
+        handle: "strong",
+        items: "> .message",
+        scroll: true,
+        scrollSensitivity: 20,
+        connectWith: "#testCase-grid"
+    });
+
 });
 
 var dropdown = function(node) {
