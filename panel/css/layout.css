@@ -760,6 +760,7 @@ ul.tabs li:last-child:hover a {
     cursor: pointer;
     margin-top: 5px;
     line-height: 20px;
+    min-height: 30px;
 }
 
 .message .selectedCase {
