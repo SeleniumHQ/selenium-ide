@@ -153,7 +153,10 @@ function addTestCase(title, id) {
     if (!getSelectedSuite()) {
         var suite_id = "suite" + sideex_testSuite.count;
         sideex_testSuite.count++;
-        sideex_testSuite[suite_id] = { file_name: "Untitled Test Suite.html", title: "Untitled Test Suite" };
+        sideex_testSuite[suite_id] = {
+            file_name: "Untitled Test Suite.html",
+            title: "Untitled Test Suite"
+        };
         addTestSuite("Untitled Test Suite", suite_id);
     }
 
@@ -275,12 +278,16 @@ function addTestSuite(title, id) {
     div.classList.add("selectedSuite");
     // attach event
     div.addEventListener("click", function(event) {
-        event.stopPropagation();
-        saveOldCase();
-        cleanSelected();
-        this.classList.add("selectedSuite");
-        clean_panel();
-        // document.getElementById("records-grid").innerHTML = "";
+        if (this.getElementsByTagName("p")) {
+            this.getElementsByTagName("p")[0].click();
+        } else {
+            event.stopPropagation();
+            saveOldCase();
+            cleanSelected();
+            this.classList.add("selectedSuite");
+            clean_panel();
+            // document.getElementById("records-grid").innerHTML = "";
+        }
     }, false);
     div.addEventListener("dragstart", function(event) {
         event.stopPropagation();
@@ -313,9 +320,13 @@ function addTestSuite(title, id) {
     // right click
     div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
-        event.stopPropagation();
-        saveOldCase();
-        setSelectedSuite(this.id);
+        if (this.getElementsByTagName("p")) {
+            this.getElementsByTagName("p")[0].click();
+        } else {
+            event.stopPropagation();
+            saveOldCase();
+            setSelectedSuite(this.id);
+        }
         var mid = "#" + "menu" + id;
         console.log($(mid));
         $(".menu").css("left", event.pageX);
@@ -332,7 +343,10 @@ document.getElementById("add-testSuite").addEventListener("click", function(even
     }
     var id = "suite" + sideex_testSuite.count;
     sideex_testSuite.count++;
-    sideex_testSuite[id] = { file_name: title + ".html", title: title };
+    sideex_testSuite[id] = {
+        file_name: title + ".html",
+        title: title
+    };
     addTestSuite(title, id);
 }, false);
 

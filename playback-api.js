@@ -27,6 +27,7 @@ var caseFailed = false;
 
 window.onload = function() {
     var playButton = document.getElementById("playback");
+    var stopButton = document.getElementById("stop");
     var pauseButton = document.getElementById("pause");
     var resumeButton = document.getElementById("resume");
     var playSuiteButton = document.getElementById("playSuite");
@@ -38,18 +39,25 @@ window.onload = function() {
     playButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         play();
     });
+    stopButton.addEventListener("click", function() {
+        stop();
+    });
     pauseButton.addEventListener("click", pause);
+    pauseButton.disabled = true;
     resumeButton.addEventListener("click", resume);
     playSuiteButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         playSuite(0);
     });
     playSuitesButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         playSuites(0);
     });
     selectElementButton.addEventListener("click",function(){
@@ -113,11 +121,13 @@ window.onload = function() {
 };
 
 function disableClick() {
+    document.getElementById("pause").disabled = false;
     document.getElementById('testCase-grid').style.pointerEvents = 'none';
     document.getElementById('command-container').style.pointerEvents = 'none';
 }
 
 function enableClick() {
+    document.getElementById("pause").disabled = true;
     document.getElementById('testCase-grid').style.pointerEvents = 'auto';
     document.getElementById('command-container').style.pointerEvents = 'auto';
 }
@@ -127,7 +137,21 @@ function play() {
         .then(executionLoop)
         .then(finalizePlayingProgress)
         .catch(catchPlayingError);
+}
 
+function stop() {
+    if (isPause){
+        resume();
+    }
+    isPlaying = false;
+    isPlayingSuite = false;
+    isPlayingAll = false;
+    switchPS();
+    sideex_log.info("Stop executing");
+    initAllSuite();
+    document.getElementById("result-runs").innerHTML = "0";
+    document.getElementById("result-failures").innerHTML = "0";
+    finalizePlayingProgress();
 }
 
 function playAfterConnectionFailed() {
@@ -182,19 +206,35 @@ function initializeAfterConnectionFailed() {
 
 function pause() {
     if (isPlaying) {
+        sideex_log.info("Pausing");
         isPause = true;
         switchPR();
     }
 }
 
 function resume() {
+    if(currentTestCaseId!=getSelectedCase().id)
+        setSelectedCase(currentTestCaseId);
     if (isPause) {
+        sideex_log.info("Resuming");
         isPlaying = true;
         isPause = false;
         switchPR();
+        disableClick();
         executionLoop()
             .then(finalizePlayingProgress)
             .catch(catchPlayingError);
+    }
+}
+
+function initAllSuite() {
+    var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
+    var length = suites.length;
+    for (var k = 0; k < suites.length; ++k) {
+        var cases = suites[k].getElementsByTagName("p");
+        for (var u = 0; u < cases.length; ++u) {
+            $("#" + cases[u].id).removeClass('fail success');
+        }
     }
 }
 
@@ -204,9 +244,6 @@ function playSuite(i) {
     var length = cases.length;
     if (i == 0) {
         sideex_log.info("Playing test suite " + sideex_testSuite[getSelectedSuite().id].title);
-        for (var j = 0; j < length; j++) {
-            $("#" + cases[j].id).removeClass('fail success');
-        }
     }
     if (i < length) {
         setSelectedCase(cases[i].id);
@@ -215,6 +252,7 @@ function playSuite(i) {
         nextCase(i);
     } else {
         isPlayingSuite = false;
+        switchPS();
     }
 }
 
@@ -222,38 +260,30 @@ function nextCase(i) {
     if (isPlaying || isPause) setTimeout(function() {
         nextCase(i);
     }, 500);
-    else playSuite(i + 1);
+    else if(isPlayingSuite) playSuite(i + 1);
 }
 
 function playSuites(i) {
+    isPlayingAll = true;
     var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
     var length = suites.length;
-    if (i == 0) {
-        for (var k = 0; k < suites.length; ++k) {
-            var cases = suites[k].getElementsByTagName("p");
-            for (var u = 0; u < cases.length; ++u) {
-                $("#" + cases[u].id).removeClass('fail success');
-            }
-        }
-    }
-
     if (i < length) {
         if (suites[i].id.includes("suite")) {
             setSelectedSuite(suites[i].id);
             playSuite(0);
         }
-        console.log("call nextSuite");
         nextSuite(i);
+    } else {
+        isPlayingAll = false;
+        switchPS();
     }
-
 }
 
 function nextSuite(i) {
-    console.log(i);
     if (isPlayingSuite) setTimeout(function() {
         nextSuite(i);
     }, 2000);
-    else playSuites(i + 1);
+    else if(isPlayingAll) playSuites(i + 1);
 }
 
 function executeCommand(index) {
@@ -337,9 +367,11 @@ function cleanStatus() {
 
 function initializePlayingProgress(isDbclick) {
     disableClick();
-
+    
     isRecording = false;
     isPlaying = true;
+
+    switchPS();
     //var commands = getRecordsArray();
     playingTabNames = new Object();
     playingTabIds = new Object();
@@ -388,6 +420,11 @@ function initializePlayingProgress(isDbclick) {
 }
 
 function executionLoop() {
+    if (!isPlaying) {
+        cleanStatus();
+        return false;
+    }
+
     if (isPause) {
         return true;
     }
@@ -803,13 +840,13 @@ function executionLoop() {
 }
 
 function finalizePlayingProgress() {
-    enableClick();
-
+    enableClick();console.log("here");
     playingWindows = {};
     console.log("success");
     setTimeout(function() {
         isPlaying = false;
         isRecording = true;
+        switchPS();
     }, 500);
 }
 
@@ -826,11 +863,31 @@ document.addEventListener("dblclick", function(event) {
     }
 });
 
+function playDisable(setting) {
+    document.getElementById("playback").disabled = setting;
+    document.getElementById("playSuite").disabled = setting;
+    document.getElementById("playSuites").disabled = setting;
+}
+
+function switchPS() {
+    if ((isPlaying||isPause)||isPlayingSuite||isPlayingAll) {
+        playDisable(true);
+        document.getElementById("playback").style.display = "none";
+        document.getElementById("stop").style.display = "";
+    } else {
+        playDisable(false);
+        document.getElementById("playback").style.display = "";
+        document.getElementById("stop").style.display = "none";
+    }
+}
+
 function switchPR() {
     if (isPause) {
+        // playDisable(true);
         document.getElementById("pause").style.display = "none";
         document.getElementById("resume").style.display = "";
     } else {
+        // playDisable(false);
         document.getElementById("pause").style.display = "";
         document.getElementById("resume").style.display = "none";
     }

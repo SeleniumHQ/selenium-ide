@@ -23,6 +23,9 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
     background: #F8F8F8;
     font-size: 12px;
+    width: 100%;
+    min-width: 679px;
+    min-height: 690px;
 }
 
 .clear {
@@ -46,7 +49,7 @@ a:hover {
 /* Header */
 
 header#header {
-    height: 27px;
+    height: 28px;
     width: 100%;
     background: #222222 url(../images/header_bg.png) repeat-x;
 }
@@ -54,20 +57,19 @@ header#header {
 header#header h1.site_title,
 header#header h2.section_title {
     float: left;
-    margin-top: -14px;
+    margin-top: -13px;
     margin-right: 0px;
     margin-left: 10px;
     margin-bottom: 0px;
     font-size: 22px;
-    display: block;
-    width: 23%;
-    height: 22px;
+    width: 100px;
     font-weight: normal;
     text-align: left;
     text-indent: 1.8%;
     line-height: 55px;
     color: #fff;
     text-shadow: 0 -1px 0 #000;
+    height: 0px;
 }
 
 header#header h1.site_title a {
@@ -437,10 +439,9 @@ aside#sidebar {
 
 section#main {
     width: 100%;
-    min-height: 500px;
     background: url(../images/sidebar_shadow.png) repeat-y left top;
     float: left;
-    margin-top: -2px;
+    height: calc(100% - 30px);
 }
 
 #main h3 {
@@ -456,17 +457,35 @@ section#main {
 .module {
     border: 1px solid #9BA0AF;
     width: 100%;
-    margin: 20px 3% 0 3%;
-    margin-top: 12px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     background: #ffffff;
 }
 
-.module_right {
-    margin: 0 0 0 2.5%;
+.module_all {
+    width: calc(100% - 30px);
+    margin-right: 15px;
+    float: left;
+    margin-left: 15px;
+    height: calc(100% - 51px);
 }
+
+#middle-container {
+    margin-bottom: 8px;
+    height: calc(100% - 80px);
+}
+
+#result-container {
+    height: 70px;
+}
+
+#command-toolbar {
+    height: 105px;
+    width: 100%;
+}
+
+.module_right {}
 
 #main .module header h3 {
     display: block;
@@ -507,25 +526,6 @@ section#main {
     color: #666;
 }
 
-.module_content .selectedCase {
-    text-decoration: underline;
-}
-
-.module_content .selectedSuite > p{
-}
-
-.module_content .executing {
-    background-color: #ffffe6;
-}
-
-.module_content .success {
-    background-color: #e5ffe5;
-}
-
-.module_content .fail {
-    background-color: #ffe5e5;
-}
-
 .module_content #logcontainer {
     margin-left: 8%;
     margin-right: 8%;
@@ -534,11 +534,9 @@ section#main {
 /* Module Widths */
 
 .width_full {
-    width: 94%;
-    float: left;
-    margin-left: 3%;
-    margin-right: 3%;
-    margin-bottom: 0px;
+    width: 100%;
+    margin-top: 13px;
+    height: 33%;
 }
 
 .width_half {
@@ -547,24 +545,16 @@ section#main {
     float: left;
 }
 
-.width_2 {
-    width: 26%;
-    margin-right: 0;
-    float: left;
-}
-
 .width_quarter {
-    width: 26%;
-    margin-right: 0;
+    width: calc(30% - 8px);
     float: left;
-    margin-left: 14px;
+    height: calc(100% - 13px - 35%);
 }
 
 .width_3_quarter {
-    width: 66%;
-    margin-right: 0;
-    float: left;
-    padding-top: 0px;
+    width: calc(70% - 8px);
+    float: right;
+    height: calc(100% - 13px - 35%);
 }
 
 /* Stats Module */
@@ -639,9 +629,22 @@ section#main {
 
 .tablesorter tbody {
     cursor: pointer;
-    height: 43px;
-    overflow-x: hidden;
-    overflow-y: auto;
+}
+
+.tablesorter tbody tr.selectedRecord {
+    background-color: #f8f8f8;
+}
+
+.tablesorter tbody tr.executing {
+    background-color: #ffffe6;
+}
+
+.tablesorter tbody tr.success {
+    background-color: #e5ffe5;
+}
+
+.tablesorter tbody tr.fail {
+    background-color: #ffe5e5;
 }
 
 .tablesorter tbody tr.selectedRecord {
@@ -745,6 +748,27 @@ ul.tabs li:last-child:hover a {
     border-bottom: 1px dotted #cccccc;
     cursor: pointer;
     margin-top: 5px;
+    line-height: 20px;
+}
+
+.message .selectedCase {
+    text-decoration: underline;
+}
+
+.message .selectedSuite>p {}
+
+.message .success {
+    background-repeat: no-repeat;
+    background-position: 0px 3px;
+    background-image: url(../images/icn_alert_success.png);
+    background-size: 13px auto;
+}
+
+.message .fail {
+    background-repeat: no-repeat;
+    background-position: 0px 4px;
+    background-image: url(../images/icn_alert_error.png);
+    background-size: 13px auto;
 }
 
 .message strong {
@@ -754,7 +778,9 @@ ul.tabs li:last-child:hover a {
 .message p {
     font-size: 12px;
     text-indent: 16px;
-    line-height: 7px;
+    line-height: 20px;
+    margin-top: -1px;
+    margin-bottom: 0px;
 }
 
 input[type=submit] {
@@ -849,13 +875,13 @@ input[type=submit].btn_post_message:hover {
 }
 
 .case_list {
-    height: 233px;
+    height: calc(100% - 38px);
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 .case_hight {
-    height: 249px;
+    height: calc(100% - 105px);
     overflow-x: hidden;
     overflow-y: auto;
     border-bottom: 1px solid #9BA0AF;
@@ -864,9 +890,10 @@ input[type=submit].btn_post_message:hover {
 }
 
 .case_roll {
-    height: 182px;
     overflow-x: hidden;
     overflow-y: auto;
+    width: 100%;
+    height: calc(100% - 38px);
 }
 
 .runs {
@@ -874,7 +901,7 @@ input[type=submit].btn_post_message:hover {
     font-weight: 600;
     text-align: -webkit-right;
     float: left;
-    margin-top: 3%;
+    margin-top: 7px;
 }
 
 .failures {
@@ -882,7 +909,7 @@ input[type=submit].btn_post_message:hover {
     font-weight: 600;
     text-align: -webkit-right;
     float: left;
-    margin-top: 4%;
+    margin-top: 6px;
 }
 
 /* New/Edit Article Module */
@@ -892,8 +919,7 @@ fieldset {
     -moz-border-radius: 5px;
     border-radius: 5px;
     border: 0;
-    margin-bottom: -12px;
-    margin-top: 3px;
+    width: 100%;
 }
 
 #result-container label {
@@ -920,7 +946,7 @@ fieldset {
     margin-right: 15px;
     display: block;
     float: left;
-    width: 15%;
+    width: 60px;
     height: 25px;
     line-height: 16px;
     text-shadow: 0 1px 0 #fff;
@@ -928,6 +954,66 @@ fieldset {
     padding-left: 10px;
     margin: 5px 0;
     text-transform: uppercase;
+}
+
+#command-toolbar i {
+    float: left;
+    width: 0px;
+    margin-top: 5px;
+    margin-left: -20px;
+    aria-hidden: true;
+    color: #D0D0D0;
+}
+
+#command-toolbar i:hover {
+    cursor: pointer;
+    color: #828282;
+}
+
+#command-toolbar input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.w3-dropdown-content {
+    cursor: pointer;
+    background-color: #fff;
+    display: none;
+    position: fixed;
+    border: 1px solid #A0A0A0;
+    margin-left: 80px;
+    margin-right: 10px;
+    -webkit-box-shadow: 2px 2px 2px #8E8E8E;
+    box-shadow: 2px 2px 2px #8E8E8E;
+    max-height: 210px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.w3-dropdown-content#command-dropdown {
+    margin-top: 24px;
+}
+
+.w3-dropdown-content#target-dropdown {
+    margin-top: 58px;
+}
+
+.w3-dropdown-content option {
+    width: calc(100% - 5px);
+    padding-top: 4px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    height: 14px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.w3-dropdown-content option:hover {
+    color: white;
+    background-color: #2284E6;
+}
+
+.w3-show {
+    display: block!important
 }
 
 fieldset input[type=text] {
@@ -940,13 +1026,15 @@ fieldset input[type=text] {
     -webkit-box-shadow: inset 0 2px 2px #ccc, 0 1px 0 #fff;
     -moz-box-shadow: inset 0 2px 2px #ccc, 0 1px 0 #fff;
     box-shadow: inset 0 2px 2px #ccc, 0 1px 0 #fff;
-    padding-left: 10px;
+    padding-left: 5px;
     background-position: 10px 6px;
-    margin: 0;
+    margin-top: 0;
+    margin-left: 10px;
+    margin-bottom: 0;
     display: block;
     float: left;
-    width: 96%;
-    margin: 0 10px;
+    width: 70%;
+    padding-right: 25px;
 }
 
 fieldset input[type=text]:focus {
@@ -992,8 +1080,11 @@ fieldset textarea:focus {
 }
 
 .submit_link {
-    padding-left: 5%;
-    padding-top: 2%;
+    margin-right: 3%;
+    margin-top: 10px;
+    margin-left: 3%;
+    margin-bottom: 10px;
+    height: 33px;
 }
 
 .submit_link select {
@@ -1122,17 +1213,20 @@ fieldset textarea:focus {
 }
 
 .sub_btn {
-    padding: 6px 10PX;
+    padding-right: 2%;
+    padding-left: 2%;
     border-radius: 20px;
-    margin-right: 10px;
     background: #D0D1D4;
     cursor: pointer;
     text-shadow: 0 1px 0 #fff;
     border: 1px solid #9c9c9c;
     font-size: 14px;
+    margin-right: 0.5%;
+    margin-left: 0.6%;
+    height: 33px;
 }
 
-.sub_btn:hover {
+.sub_btn:not([disabled]):hover {
     background: #30B0C8;
     color: #fff;
     text-shadow: none;
@@ -1141,9 +1235,7 @@ fieldset textarea:focus {
     border: 1px solid #30B0C8;
 }
 
-.btn_pr {
-    width: 97px;
-}
+.btn_pr {}
 
 .fa {
     margin: 2px;
