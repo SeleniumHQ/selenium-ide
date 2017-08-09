@@ -293,6 +293,8 @@ function addTestSuite(title, id) {
         $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
+
+    makeCaseSortable(div);
 }
 
 document.getElementById("add-testSuite").addEventListener("click", function(event) {
