@@ -38,6 +38,7 @@ $(document).ready(function() {
 
 // make case sortable when addTestSuite
 function makeCaseSortable(suite) {
+    var prevSuite = null;
     $(suite).sortable({
         axis: "y",
         items: "p",
@@ -47,6 +48,13 @@ function makeCaseSortable(suite) {
         connectWith: ".message",
         start: function(event, ui) {
             ui.placeholder.html(ui.item.html()).css({ "visibility": "visible", "opacity": 0.3 });
+            prevSuite = event.target;
+        },
+        update: function(event, ui) {
+            if(prevSuite!==event.target)
+                $(prevSuite).find("strong").addClass("modified");
+            $(event.target).find("strong").addClass("modified");
+            closeConfirm(true);
         }
     });
 }
