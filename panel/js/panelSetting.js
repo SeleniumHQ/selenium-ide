@@ -86,6 +86,8 @@ $(document).ready(function() {
     });
 
     $(".fixed").width($("table:not(.fixed)").width());
+
+    $("#command-dropdown,#command-command-list").html(genCommandDatalist());
 });
 
 var dropdown = function(node) {
@@ -122,4 +124,50 @@ function closeConfirm(bool) {
         if (!$("#testCase-grid").find(".modified").length)
             $(window).unbind("beforeunload");
     }
+}
+
+function genCommandDatalist() {
+    var supportedCommand = [
+        "answerOnNextPrompt",
+        "chooseCancelOnNextPrompt",
+        "chooseCancelOnNextConfirmation",
+        "chooseOkOnNextConfirmation",
+        "clickAt",
+        "doubleClickAt",
+        "dragAndDrop",
+        "dragAndDropToObject",
+        "mouseDownAt",
+        "mouseMoveAt",
+        "mouseOut",
+        "mouseOver",
+        "mouseUpAt",
+        "sendKeys",
+        "type",
+        "editContent",
+        "select",
+        "addSelection",
+        "removeSelection",
+        "pause",
+        "selectFrame",
+        "selectWindow",
+        "open",
+        "storeText",
+        "storeTitle",
+        "store",
+        "runScript",
+        "verifyText",
+        "verifyTitle",
+        "assertAlert",
+        "assertConfirmation",
+        "assertText",
+        "assertTitle",
+        "assertPrompt"
+    ];
+
+    var datalistHTML = "";
+    supportedCommand.forEach(function(command) {
+        datalistHTML += ('<option value="' + command + '">' + command + '</option>\n');
+    });
+    
+    return datalistHTML;
 }
