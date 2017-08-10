@@ -165,7 +165,6 @@ function addTestCase(title, id) {
     var p = document.createElement("p");
     p.innerHTML = escapeHTML(title);
     p.setAttribute("id", id);
-    p.setAttribute("draggable", true);
     p.setAttribute("contextmenu", "menu" + id);
 
     var s_case = getSelectedCase();
@@ -217,34 +216,6 @@ function addTestCase(title, id) {
         // prevent event trigger on parent from child
         event.stopPropagation();
     }, false);
-    p.addEventListener("dragstart", function(event) {
-        event.stopPropagation();
-        saveOldCase();
-        event.dataTransfer.setData("testCase", this.id);
-        event.dataTransfer.setData("testSuite", this.parentNode.id);
-    }, false);
-    p.addEventListener("dragover", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }, false);
-    p.addEventListener("drop", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        saveOldCase();
-        var startSuite = event.dataTransfer.getData("testSuite"),
-            start_ID = event.dataTransfer.getData("testCase"),
-            end_ID = this.id;
-        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
-            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
-            cleanSelected();
-            $("#" + this.nextSibling.id).addClass("selectedCase");
-            this.parentNode.classList.add("selectedSuite");
-            $("#"+startSuite).find("strong").addClass("modified");
-            this.parentNode.getElementsByTagName("strong")[0].classList.add("modified");
-            closeConfirm(true);
-        }
-    }, false);
-
 
     var menu = document.createElement("div");
     menu.setAttribute("class", "menu");
@@ -273,7 +244,6 @@ function addTestSuite(title, id) {
     text.innerHTML = escapeHTML(title);
     var div = document.createElement("div");
     div.setAttribute("id", id);
-    div.setAttribute("draggable", true);
     div.setAttribute("contextmenu", "menu" + id);
     div.setAttribute("class", "message");
     div.appendChild(text);
@@ -300,27 +270,6 @@ function addTestSuite(title, id) {
             // document.getElementById("records-grid").innerHTML = "";
         }
     }, false);
-    div.addEventListener("dragstart", function(event) {
-        event.stopPropagation();
-        saveOldCase();
-        event.dataTransfer.setData("testSuite", this.id);
-    }, false);
-    div.addEventListener("dragover", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }, false);
-    div.addEventListener("drop", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        saveOldCase();
-        var start_ID = event.dataTransfer.getData("testSuite"),
-            end_ID = this.id;
-        if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
-            this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
-            cleanSelected();
-            document.getElementById(start_ID).classList.add("selectedSuite");
-        }
-    }, false);
 
     var menu = document.createElement("div");
     menu.setAttribute("class", "menu");
@@ -344,6 +293,8 @@ function addTestSuite(title, id) {
         $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
+
+    makeCaseSortable(div);
 }
 
 document.getElementById("add-testSuite").addEventListener("click", function(event) {

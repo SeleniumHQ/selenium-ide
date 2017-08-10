@@ -104,7 +104,7 @@ function addCommand(command_name, command_target_array, command_value, auto, ins
     document.getElementById("records-count").value = count;
     if (count != 1) {
         // remove green line
-        document.getElementById("records-" + (count - 1)).style = "";
+        // document.getElementById("records-" + (count - 1)).style = "";
     }
     if (selected_ID) {
         if (auto) {
@@ -288,9 +288,9 @@ function deleteCommand(selected_ID) {
         if (selected_ID - 1 != count) {
             reAssignIdForDelete(selected_ID, count);
         } else {
-            if (count != 0) {
-                document.getElementById("records-" + count).style.borderBottom = "green solid 2px";
-            }
+            // if (count != 0) {
+            //     document.getElementById("records-" + count).style.borderBottom = "green solid 2px";
+            // }
         }
 
         // store command grid to testCase
