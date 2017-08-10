@@ -43,11 +43,11 @@ $(document).ready(function() {
                     $this.wrap('<div class="container" />');
                     $t_fixed = $this.clone();
                     $t_fixed.find("tbody").remove().end().addClass("fixed").insertBefore($this);
-                    $t_fixed.find("th").each(function(index){
-                    	var $self = $(this);
-                    	$this.find("th").eq(index).bind("DOMAttrModified",function(e){
-                    		$self.css("width",$(this).innerWidth()+"px");
-                    	});
+                    $t_fixed.find("th").each(function(index) {
+                        var $self = $(this);
+                        $this.find("th").eq(index).bind("DOMAttrModified", function(e) {
+                            $self.css("width", $(this).innerWidth() + "px");
+                        });
                     });
                     resizeFixed();
                 }
@@ -86,6 +86,20 @@ $(document).ready(function() {
     });
 
     $(".fixed").width($("table:not(.fixed)").width());
+
+    // set sortable
+    $("#records-grid").sortable({
+        axis: "y",
+        items: "> tr",
+        scroll: true,
+        scrollSensitivity: 20,
+        connectWith: "#records-grid",
+        update: function(event, ui) {
+            getSelectedCase().classList.add("modified");
+            getSelectedSuite().getElementsByTagName("strong")[0].classList.add("modified");
+            closeConfirm(true);
+        }
+    });
 });
 
 var dropdown = function(node) {
@@ -110,7 +124,7 @@ var clickWhenDropdownHandler = function(e) {
 };
 
 function closeConfirm(bool) {
-    console.log("closeConfirm",bool);
+    console.log("closeConfirm", bool);
     if (bool) {
         $(window).bind("beforeunload", function(e) {
             var confirmationMessage = "You have a modified suite!";
@@ -118,8 +132,8 @@ function closeConfirm(bool) {
             return confirmationMessage; // Gecko, WebKit, Chrome <34
         });
     } else {
-        console.log($("#testCase-grid").find(".modified").length,!$("#testCase-grid").find(".modified").length);
-        if(!$("#testCase-grid").find(".modified").length)
+        console.log($("#testCase-grid").find(".modified").length, !$("#testCase-grid").find(".modified").length);
+        if (!$("#testCase-grid").find(".modified").length)
             $(window).unbind("beforeunload");
     }
 }
