@@ -40,6 +40,7 @@ window.onload = function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
         initAllSuite();
+        setCaseScrollTop(getSelectedCase());
         play();
     });
     stopButton.addEventListener("click", function() {
@@ -247,6 +248,7 @@ function playSuite(i) {
     }
     if (i < length) {
         setSelectedCase(cases[i].id);
+        setCaseScrollTop(getSelectedCase());
         sideex_log.info("Playing test case " + sideex_testCase[cases[i].id].title);
         play();
         nextCase(i);
