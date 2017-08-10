@@ -108,3 +108,18 @@ var clickWhenDropdownHandler = function(e) {
     }
     dropdown($(".w3-show"));
 };
+
+function closeConfirm(bool) {
+    console.log("closeConfirm",bool);
+    if (bool) {
+        $(window).bind("beforeunload", function(e) {
+            var confirmationMessage = "You have a modified suite!";
+            e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+            return confirmationMessage; // Gecko, WebKit, Chrome <34
+        });
+    } else {
+        console.log($("#testCase-grid").find(".modified").length,!$("#testCase-grid").find(".modified").length);
+        if(!$("#testCase-grid").find(".modified").length)
+            $(window).unbind("beforeunload");
+    }
+}

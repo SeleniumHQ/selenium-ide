@@ -142,6 +142,8 @@ function appendContextMenu(node, isCase) {
             // get text node
             s_suite.childNodes[0].textContent = n_title;
             sideex_testSuite[s_suite.id].title = n_title;
+            $(s_suite).find("strong").addClass("modified");
+            closeConfirm(true);
         }, false);
         ul.appendChild(rename_suite);
     }
@@ -191,6 +193,8 @@ function addTestCase(title, id) {
             records: "",
             title: title
         };
+        p.classList.add("modified");
+        p.parentNode.getElementsByTagName("strong")[0].classList.add("modified");
     }
 
     // attach event
@@ -217,6 +221,7 @@ function addTestCase(title, id) {
         event.stopPropagation();
         saveOldCase();
         event.dataTransfer.setData("testCase", this.id);
+        event.dataTransfer.setData("testSuite", this.parentNode.id);
     }, false);
     p.addEventListener("dragover", function(event) {
         event.stopPropagation();
@@ -226,13 +231,17 @@ function addTestCase(title, id) {
         event.stopPropagation();
         event.preventDefault();
         saveOldCase();
-        var start_ID = event.dataTransfer.getData("testCase"),
+        var startSuite = event.dataTransfer.getData("testSuite"),
+            start_ID = event.dataTransfer.getData("testCase"),
             end_ID = this.id;
         if (end_ID !== start_ID && (end_ID.slice(0, 1) == start_ID.slice(0, 1))) {
             this.parentNode.insertBefore(document.getElementById(start_ID), this.nextSibling);
             cleanSelected();
             $("#" + this.nextSibling.id).addClass("selectedCase");
             this.parentNode.classList.add("selectedSuite");
+            $("#"+startSuite).find("strong").addClass("modified");
+            this.parentNode.getElementsByTagName("strong")[0].classList.add("modified");
+            closeConfirm(true);
         }
     }, false);
 
@@ -255,6 +264,8 @@ function addTestCase(title, id) {
         $(".menu").css("top", event.pageY);
         $(mid).show();
     }, false);
+
+    closeConfirm(true);
 }
 
 function addTestSuite(title, id) {
@@ -278,7 +289,7 @@ function addTestSuite(title, id) {
     div.classList.add("selectedSuite");
     // attach event
     div.addEventListener("click", function(event) {
-        if (this.getElementsByTagName("p")) {
+        if (this.getElementsByTagName("p").length != 0) {
             this.getElementsByTagName("p")[0].click();
         } else {
             event.stopPropagation();
@@ -320,7 +331,7 @@ function addTestSuite(title, id) {
     // right click
     div.addEventListener("contextmenu", function(event) {
         event.preventDefault();
-        if (this.getElementsByTagName("p")) {
+        if (this.getElementsByTagName("p").length != 0) {
             this.getElementsByTagName("p")[0].click();
         } else {
             event.stopPropagation();
@@ -355,13 +366,57 @@ document.getElementById("add-testSuite-menu").addEventListener("click", function
     document.getElementById('add-testSuite').click();
 }, false);
 
+var confirmCloseSuite = function(question) {
+    var defer = $.Deferred();
+    $('<div></div>')
+        .html(question)
+        .dialog({
+            title: "Save?",
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "Yes": function() {
+                    defer.resolve("true");
+                    $(this).dialog("close");
+                },
+                "No": function() {
+                    defer.resolve("false");
+                    $(this).dialog("close");
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $(this).remove();
+            }
+        });
+    return defer.promise();
+};
+
+var remove_testSuite = function() {
+    var s_suite = getSelectedSuite();
+    sideex_testSuite[s_suite.id] = null;
+    s_suite.parentNode.removeChild(s_suite);
+    clean_panel();
+};
+
 document.getElementById("close-testSuite").addEventListener('click', function(event) {
     event.stopPropagation();
     var s_suite = getSelectedSuite();
     if (s_suite) {
-        sideex_testSuite[s_suite.id] = null;
-        s_suite.parentNode.removeChild(s_suite);
-        clean_panel();
+        if ($(s_suite).find(".modified").length) {
+            confirmCloseSuite("Would you like to save this test suite?").then(function(answer) {
+                if (answer === "true")
+                    downloadSuite(s_suite, remove_testSuite);
+                else
+                    remove_testSuite(s_suite);
+            });
+        } else {
+            remove_testSuite(s_suite);
+        }
         // document.getElementById("records-grid").innerHTML = "";
     }
 }, false);
@@ -376,12 +431,27 @@ document.getElementById("add-testCase").addEventListener("click", function(event
     addTestCase(title, id);
 }, false);
 
+var remove_testCase = function() {
+    var s_case = getSelectedCase();
+    sideex_testCase[s_case.id] = null;
+    s_case.parentNode.removeChild(s_case);
+    clean_panel();
+};
+
 document.getElementById("delete-testCase").addEventListener('click', function() {
     var s_case = getSelectedCase();
+    console.log(s_case);
     if (s_case) {
-        sideex_testCase[s_case.id] = null;
-        s_case.parentNode.removeChild(s_case);
-        clean_panel();
+        if ($(s_case).hasClass("modified")) {
+            confirmCloseSuite("Would you like to save this test case?").then(function(answer) {
+                if (answer === "true")
+                    downloadSuite(getSelectedSuite(), remove_testCase);
+                else
+                    remove_testCase();
+            });
+        } else {
+            remove_testCase();
+        }
         // document.getElementById("records-grid").innerHTML = "";
     }
 }, false);
