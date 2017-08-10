@@ -623,9 +623,18 @@ section#main {
 .tablesorter thead tr {
     height: 39px;
     background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
-    text-align: left;
-    text-indent: 10px;
     table-layout: fixed;
+    text-align: left;
+    text-indent: 6px;
+}
+
+.tablesorter .border {
+    position: relative;
+    float: right;
+    width: 3px;
+    height: 13px;
+    border-left: 2px solid #CCCCCC;
+    z-index: 1;
 }
 
 .tablesorter tbody {
@@ -665,7 +674,8 @@ section#main {
 }
 
 .tablesorter td {
-    padding: 10px;
+    padding: 6px 0px;
+    text-indent: 12px;
 }
 
 .tablesorter input[type=image] {
@@ -883,8 +893,6 @@ input[type=submit].btn_post_message:hover {
 
 .case_hight {
     height: calc(100% - 105px);
-    overflow-x: hidden;
-    overflow-y: auto;
     border-bottom: 1px solid #9BA0AF;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
@@ -1287,4 +1295,29 @@ button.active {
     border: none;
     transition: 0.5s;
     border: 1px solid #30B0C8;
+}
+
+/* Freeze Table Header */
+
+.smallSection {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.fixed {
+    top: 82px;
+    position: fixed;
+    width: auto;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    z-index: 2;
+    margin-left: 1px;
+}
+
+.fixed td {
+    border: 0px solid !important;
 }
