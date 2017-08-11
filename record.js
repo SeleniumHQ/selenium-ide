@@ -200,8 +200,7 @@ window.addEventListener('change', function(event) {
             } else {
                 var options = event.target.options;
                 for (var i = 0; i < options.length; i++) {
-                    if (options[i]._wasSelected == null) {
-                    }
+                    if (options[i]._wasSelected == null) {}
                     if (options[i]._wasSelected != options[i].selected) {
                         var value = getOptionLocator(options[i]);
                         if (options[i].selected) {
@@ -221,7 +220,8 @@ function getOptionLocator(option) {
     var label = option.text.replace(/^ *(.*?) *$/, "$1");
     if (label.match(/\xA0/)) { // if the text contains &nbsp;
         return "label=regexp:" + label.replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
-                return '\\' + str })
+                return '\\' + str
+            })
             .replace(/\s+/g, function(str) {
                 if (str.match(/\xA0/)) {
                     if (str.length > 1) {

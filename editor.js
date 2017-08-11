@@ -4,7 +4,11 @@ var currentRecordingWindowId = -1;
 var currentRecordingFrameLocation = "root";
 var openedTabNames = new Object();
 var openedTabIds = new Object();
-var openedTabNamesCount = 1;
+var openedWindowIds = new Object();
+var openedTabCount = 1;
+var selfTabId = -1;
+var contentWindowId;
+
 /* playing */
 var playingFrameLocations = {};
 /* flags */
@@ -24,88 +28,72 @@ function setRecordEnable(vlaue){
     recordEnable = value;
 }
 
-browser.tabs.onActivated.addListener(function(windowInfo) {
-    if (!isRecording) return;
-    setTimeout(function(windowInfo) {
+browser.tabs.onActivated.addListener(function(activeInfo) {
 
-        console.log("window id = " + windowInfo.windowId + " tab id = " + windowInfo.tabId);
-        if (currentRecordingTabId === windowInfo.tabId && currentRecordingWindowId === windowInfo.windowId)
+    if (!isRecording) return;
+    // TODO: block of setTimeout() should only enclose addCommand
+    setTimeout(function(activeInfo) {
+        console.log("window id = " + activeInfo.windowId + " tab id = " + activeInfo.tabId);
+        if (currentRecordingTabId === activeInfo.tabId && currentRecordingWindowId === activeInfo.windowId)
             return;
-        currentRecordingTabId = windowInfo.tabId;
-        currentRecordingWindowId = windowInfo.windowId;
-        currentRecordingFrameLocation = "root";
+        // If no command has been recorded, ignore selectWindow command
+        // until the user has select a starting page to record the commands
         if (getRecordsArray().length === 0)
             return;
-        /* Tab has existed */
-        if (openedTabIds[windowInfo.tabId]) {
-            /* check if the stored information is one-to-one mapping */
-            /* the target openedTabIds stored may not be correct and need to check before using */
-            if (windowInfo.tabId === openedTabNames[openedTabIds[windowInfo.tabId]]) {
-                addCommandAuto("selectWindow", [
-                    [openedTabIds[windowInfo.tabId]]
-                ], "");
-                return;
-            } else {
-                /* reset the value */
-                openedTabIds[windowInfo.tabId] = undefined;
-            }
-        }
-        openedTabNames["win_ser_" + openedTabNamesCount] = windowInfo.tabId;
-        openedTabIds[windowInfo.tabId] = "win_ser_" + openedTabNamesCount;
-
-        addCommandAuto("selectWindow", [
-            ["win_ser_" + openedTabNamesCount]
-        ], "");
-        openedTabNamesCount++;
-    }, 150, windowInfo);
+        // Ignore all unknown tabs, the activated tab may not derived from
+        // other opened tabs, or it may managed by other SideeX panels
+        if (!openedTabIds[activeInfo.tabId])
+            return;
+        // Tab information has existed, add selectWindow command
+        currentRecordingTabId = activeInfo.tabId;
+        currentRecordingWindowId = activeInfo.windowId;
+        currentRecordingFrameLocation = "root";
+        addCommandAuto("selectWindow", [[openedTabIds[activeInfo.tabId]]], "");
+    }, 150, activeInfo);
 })
 
-browser.windows.onFocusChanged.addListener(function(windowId) {
+browser.windows.onFocusChanged.addListener( function(windowId) {
+
     if (!isRecording) return;
 
     if (windowId === browser.windows.WINDOW_ID_NONE) {
-        /* 
-         *  In Linux, WINDOW_ID_NONE will be sent before switching
-         *  See MDN reference for more information
-         */
+        // In some Linux window managers, WINDOW_ID_NONE will be listened before switching
+        // See MDN reference :
+        // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/windows/onFocusChanged
         console.log("Windows onFocusChanged: No window focused");
         return;
     }
     console.log("windows onFocusChanged: currentWindowId: " + windowId);
+    // If the activated window is the same as the last, just do nothing
+    // selectWindow command will be handled by tabs.onActivated listener
+    // if there also has a event of switching a activated tab
     if (currentRecordingWindowId === windowId)
         return;
-    browser.tabs.query({ windowId: windowId, active: true /*, url:"<all_urls>"*/ }, function(tabs) {
-
-        if (tabs.length === 0 || tabs[0].url.substr(0, 13) == 'moz-extension') {
+    browser.tabs.query({windowId: windowId, active: true})
+    .then(function(tabs) {
+        if(tabs.length === 0 || tabs[0].url.substr(0, 13) == 'moz-extension'
+            || tabs[0].url.substr(0, 16) == 'chrome-extension') {
             console.log("windows onFocusChanged: No matched tabs");
             return;
         }
-        if (tabs[0].id !== currentRecordingTabId || tabs[0].windowId !== currentRecordingWindowId) {
+        console.log(tabs[0].id);
+        console.log(tabs[0].url);
+        // The activated tab is not the same as the last
+        if (tabs[0].id !== currentRecordingTabId) {
+            
+            // If no command has been recorded, ignore selectWindow command
+            // until the user has select a starting page to record commands
+            if (getRecordsArray().length === 0)
+                return;
+            // Ignore all unknown tabs, the activated tab may not derived from
+            // other opened tabs, or it may managed by other SideeX panels
+            if (!openedTabIds[tabs[0].id])
+                return;
+            // Tab information has existed, add selectWindow command
             currentRecordingWindowId = windowId;
             currentRecordingTabId = tabs[0].id;
             currentRecordingFrameLocation = "root";
-            if (getRecordsArray().length === 0)
-                return;
-            /* Tab has existed */
-            if (openedTabIds[tabs[0].id]) {
-                /* check if the stored information is one-to-one mapping */
-                /* the target openedTabIds stored may not be correct and need to check before using */
-                if (tabs[0].id === openedTabNames[openedTabIds[tabs[0].id]]) {
-                    addCommandAuto("selectWindow", [
-                        [openedTabIds[tabs[0].id]]
-                    ], "");
-                    return;
-                } else {
-                    /* reset the value */
-                    openedTabIds[tabs[0].id] = undefined;
-                }
-            }
-            openedTabNames["win_ser_" + openedTabNamesCount] = tabs[0].id;
-            openedTabIds[tabs[0].id] = "win_ser_" + openedTabNamesCount;
-            addCommandAuto("selectWindow", [
-                ["win_ser_" + openedTabNamesCount]
-            ], "");
-            openedTabNamesCount++;
+            addCommandAuto("selectWindow", [[openedTabIds[tabs[0].id]]], "");
         }
     });
 });
@@ -149,16 +137,22 @@ function handleMessage(message, sender, sendResponse) {
 
 
     if (!message.command || !isRecording) return;
-    if (message.commandSideexTabId != mySideexTabId) return;
-    console.error("sender window Id: " + sender.tab.windowId);
+    if (!openedWindowIds[sender.tab.windowId])
+        return;
 
     if (getRecordsArray().length === 0) {
+        currentRecordingTabId = sender.tab.id;
+        currentRecordingWindowId = sender.tab.windowId;
         openedTabNames["win_ser_local"] = sender.tab.id;
         openedTabIds[sender.tab.id] = "win_ser_local";
         addCommandAuto("open", [
             [sender.url]
         ], "");
     }
+
+    if (!openedTabIds[sender.tab.id])
+        return;
+
     if (message.frameLocation !== currentRecordingFrameLocation) {
         console.log("Frame location: changed!");
         let newFrameLevels = message.frameLocation.split(':');
@@ -243,19 +237,28 @@ browser.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 
 browser.runtime.onMessage.addListener(handleMessage);
 
-
-/* store new window or tab of information when playing */
-
-browser.tabs.onCreated.addListener(function(tab) {
-    if (isRecording) return;
-
-    if (isPlaying)
-        tabCreateFlag = true;
+browser.webNavigation.onCreatedNavigationTarget.addListener(function(details) {
+    if (isRecording && openedTabIds[details.sourceTabId]) {
+        openedTabNames["win_ser_" + openedTabCount] = details.tabId;
+        openedTabIds[details.tabId] = "win_ser_" + openedTabCount;
+        openedWindowIds[details.windowId] = true;
+        openedTabCount++;
+    }
+    if (isPlaying && playingTabIds[details.sourceTabId]) {
+        console.log("select a new window!!");
+        playingTabNames["win_ser_" + playingTabCount] = details.tabId;
+        playingTabIds[details.tabId] = "win_ser_" + playingTabCount;
+        playingTabCount++;
+    }
 });
 
-browser.windows.onCreated.addListener(function(window) {
-    if (isRecording) return;
-
-    if (isPlaying)
-        windowCreateFlag = true;
-});
+browser.runtime.onMessage.addListener(function contentWindowIdListener(message) {
+    if (message.selfTabId != undefined && message.commWindowId != undefined) {
+        selfTabId = message.selfTabId;
+        contentWindowId = message.commWindowId;
+        console.log(selfTabId);
+        console.log(contentWindowId);
+        openedWindowIds[contentWindowId] = true;
+        browser.runtime.onMessage.removeListener(contentWindowIdListener);
+    }
+})

@@ -10,19 +10,50 @@ function onError(error) {
 }
 
 function openPage() {
-    var windowGet = browser.windows.getLastFocused({});
-    var popupURL = browser.extension.getURL("panel.html");
-    var creating = browser.windows.create({
-        url: popupURL,
+    var getContentWindowInfo = browser.windows.getLastFocused();
+    var getSideexWindowInfo = browser.windows.create({
+        url: browser.extension.getURL("panel.html"),
         type: "popup",
         height: 730,
         width: 695
     });
 
-    Promise.all([windowGet, creating]).then(results => {
-        setTimeout(passingWindowId, 2000, results[0].id, results[1].id);
-    }).catch((e) => {
-        console.log(`Error: ${error}`);
+    Promise.all([getContentWindowInfo, getSideexWindowInfo])
+    .then(function(windowInfo) {
+        console.log("get the window info")
+        let contentWindowInfo = windowInfo[0];
+        let sideexWindowInfo = windowInfo[1];
+        return new Promise(function(resolve, reject) {
+            let count = 0;
+            let interval = setInterval(function() {
+                if (count > 100) {
+                    reject("SideeX editor has no response");
+                    clearInterval(interval);
+                }
+
+                browser.tabs.query({
+                    active: true,
+                    windowId: sideexWindowInfo.id
+                }).then(function(tabs) {
+                    if (tabs.length != 1) {
+                        count++;
+                        return;
+                    }
+                    let sideexTabInfo = tabs[0];
+                    if (sideexTabInfo.status == "loading") {
+                        count++;
+                        return;
+                    } else {
+                        console.log("SideeX has been fully loaded")
+                        resolve(windowInfo);
+                        clearInterval(interval);
+                    }
+                })
+            }, 200);
+        });
+    }).then(passWindowId)
+    .catch(function(e) {
+        console.log(e);
     });
 
     browser.contextMenus.create({
@@ -77,30 +108,30 @@ browser.windows.onRemoved.addListener(function(windowId) {
     browser.contextMenus.removeAll();
 });
 
-function passingWindowId(window_id, sideex_id) {
-    console.log(window_id + " " + sideex_id);
+function passWindowId(windowInfo){
+    let contentWindowInfo = windowInfo[0];
+    let sideexWindowInfo = windowInfo[1];
+    let contentWindowId = contentWindowInfo.id;
+    let sideexTabId = sideexWindowInfo.tabs[0].id;
 
-    var catchSideexTab = browser.tabs.query({ windowId: sideex_id, active: true }, function(sideexTabs) {
-        console.log("sideexTab:" + sideexTabs[0].id);
-        console.log("url2:" + sideexTabs[0].url);
+    // Seems like we don't need to pass information to content scripts
+    /*
+    browser.tabs.query({
+        windowId: contentWindowId,
+        url: "<all_urls>"
+    }).then(function(tabs) {
+        for (let tab of tabs) {
+            browser.tabs.sendMessage(tab.id, {
+                selfTabId: tab.id,
+                commWindowId: sideexWindowId
+            }).catch(onError);
+        }
+    }).catch(onError);
+    */
 
-        //passing userWinId to sideex
-        browser.tabs.query({ windowId: sideex_id, active: true }, function(tabs) {
-            for (let tab of tabs) {
-                browser.tabs.sendMessage(
-                    tab.id, { passWinId: window_id, sideexId: sideexTabs[0].id }
-                ).catch(onError);
-            }
-        });
-
-        //passing sideexId to userWin
-        browser.tabs.query({ windowId: window_id, active: true }, function(tabs) {
-            for (let tab of tabs) {
-                browser.tabs.sendMessage(
-                    tab.id, { passWinId: window_id, sideexId: sideexTabs[0].id }
-                ).catch(onError);
-            }
-        });
+    return browser.tabs.sendMessage(sideexTabId, {
+        selfTabId: sideexTabId,
+        commWindowId: contentWindowId
     });
 };
 
