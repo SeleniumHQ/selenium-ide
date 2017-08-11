@@ -2769,7 +2769,7 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
     }, false);
 
     //console.log("fire event1-2");
-    this._modifyElementTarget(element);
+    //this._modifyElementTarget(element);
 
     //console.log("fire event1-3");
     // Trigger the event.
@@ -2783,6 +2783,7 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
     // Perform the link action if preventDefault was set.
     // In chrome URL, the link action is already executed by triggerMouseEvent.
     //if (!browserVersion.isChrome && savedEvent != null && savedEvent.getPreventDefault && !savedEvent.getPreventDefault()) {
+    /*
     if (!browserVersion.isChrome && savedEvent != null && savedEvent.defaultPrevented && !savedEvent.defaultPrevented()) {
         var targetWindow = this.browserbot._getTargetWindow(element);
         if (element.href) {
@@ -2791,6 +2792,7 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
             this.browserbot._handleClickingImagesInsideLinks(targetWindow, element);
         }
     }
+    */
     //console.log("fire event3");
 
 };
