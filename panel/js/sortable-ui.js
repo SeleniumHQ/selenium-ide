@@ -27,6 +27,7 @@ $(document).ready(function() {
 
             // show in command-toolbar
             $('#records-grid .selectedRecord').removeClass('selectedRecord'); 
+            $(".record-bottom").removeClass("active");
             ui.item.addClass('selectedRecord');
             // do not forget that textNode is also a node 
             document.getElementById("command-command").value = getCommandName(ui.item[0]);

@@ -150,6 +150,7 @@ function attachEvent(start, end) {
         node.addEventListener("click", function(event) {
             // use jquery's API to add and remove class property
             $('#records-grid .selectedRecord').removeClass('selectedRecord');
+            $(".record-bottom").removeClass("active");
             $(this).addClass('selectedRecord');
 
             // show on grid toolbar
@@ -170,6 +171,7 @@ function attachEvent(start, end) {
         node.addEventListener("contextmenu", function(event) {
             // use jquery's API to add and remove class property
             $('#records-grid .selectedRecord').removeClass('selectedRecord');
+            $(".record-bottom").removeClass("active");
             $(this).addClass('selectedRecord');
 
             // show on grid toolbar
