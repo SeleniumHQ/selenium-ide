@@ -1,6 +1,5 @@
 // set testsuite and record-grid sortable
 $(document).ready(function() {
-    console.log("set sortable");
     $("#records-grid").sortable({
         axis: "y",
         items: "tr",
@@ -20,6 +19,25 @@ $(document).ready(function() {
             getSelectedCase().classList.add("modified");
             getSelectedSuite().getElementsByTagName("strong")[0].classList.add("modified");
             closeConfirm(true);
+
+            // re-assign id
+            var start_ID = ui.item.attr("id"),
+                end_ID = ui.item.prev().attr("id");
+            reAssignId(start_ID, (end_ID.includes("count")?"records-0":(end_ID)));
+
+            // show in command-toolbar
+            $('#records-grid .selectedRecord').removeClass('selectedRecord'); 
+            ui.item.addClass('selectedRecord');
+            // do not forget that textNode is also a node 
+            document.getElementById("command-command").value = getCommandName(ui.item[0]);
+            document.getElementById("command-target").value = getCommandTarget(ui.item[0]);
+            document.getElementById("command-value").value = getCommandValue(ui.item[0]);
+
+            // store command grid to testCase 
+            var s_case = getSelectedCase();
+            if (s_case) {
+                sideex_testCase[s_case.id].records = document.getElementById("records-grid").innerHTML;
+            }
         }
     });
 
@@ -51,7 +69,7 @@ function makeCaseSortable(suite) {
             prevSuite = event.target;
         },
         update: function(event, ui) {
-            if(prevSuite!==event.target)
+            if (prevSuite !== event.target)
                 $(prevSuite).find("strong").addClass("modified");
             $(event.target).find("strong").addClass("modified");
             closeConfirm(true);

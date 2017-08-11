@@ -62,7 +62,6 @@ function addCommand(command_name, command_target_array, command_value, auto, ins
     var new_record = document.createElement("tr");
     new_record.setAttribute("class", "");
     new_record.setAttribute("style", "");
-    new_record.setAttribute("draggable", "true");
     new_record.appendChild(document.createTextNode("\n    "));
 
     // create td node
