@@ -10518,23 +10518,14 @@ core.LocatorStrategies.stored = core.LocatorStrategies.stored_;
 core.LocatorStrategies.xpath = core.LocatorStrategies.xpath_;
 core.locators = {};
 core.locators.parseLocator_ = function(a) {
-    //Chi-En Huang, SELAB, CSIE, NCKU, 2016/12/28
-    if (a.startsWith("tac=")) {
-        var b;
-        b = { string: "", type: "" };
-        b.string = a.substring(4);
-        b.type = "tac";
-        return b;
-    } else {
-        var b = a.match(/^([A-Za-z]+)=.+/);
-        if (b) {
-            return b = b[1].toLowerCase(), a = a.substring(b.length + 1), { type: b, string: a };
-        }
-        b = { string: "", type: "" };
-        b.string = a;
-        goog.string.startsWith(a, "//") ? b.type = "xpath" : goog.string.startsWith(a, "document.") ? b.type = "dom" : b.type = "identifier";
-        return b;
+    var b = a.match(/^([A-Za-z]+)=.+/);
+    if (b) {
+        return b = b[1].toLowerCase(), a = a.substring(b.length + 1), { type: b, string: a };
     }
+    b = { string: "", type: "" };
+    b.string = a;
+    goog.string.startsWith(a, "//") ? b.type = "xpath" : goog.string.startsWith(a, "document.") ? b.type = "dom" : b.type = "identifier";
+    return b;
 };
 core.locators.addStrategy = function(a, b) {
     core.LocatorStrategies[a] = b;
