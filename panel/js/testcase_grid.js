@@ -19,6 +19,7 @@ function setSelectedCase(id) {
     $("#" + id).addClass('selectedCase');
     clean_panel();
     document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records);
+    attachEvent(1,getRecordsNum());
 }
 
 function getSelectedSuite() {
