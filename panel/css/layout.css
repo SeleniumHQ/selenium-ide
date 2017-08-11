@@ -528,8 +528,7 @@ section#main {
 }
 
 .module_content #logcontainer {
-    margin-left: 8%;
-    margin-right: 8%;
+    
 }
 
 /* Module Widths */
@@ -1146,7 +1145,7 @@ input[type=submit].btn_post_message:hover {
     margin: 8px 0px;
 }
 
-#main .module_content h4.log-info {
+#main .module_content h4 {
     color: #666666;
     text-transform: none;
     text-shadow: 0 1px 0 #fff;
@@ -1156,12 +1155,6 @@ input[type=submit].btn_post_message:hover {
 }
 
 #main .module_content h4.log-error {
-    color: #666666;
-    text-transform: none;
-    text-shadow: 0 1px 0 #fff;
-    font-size: 13px;
-    margin: 8px 0px;
-    border-bottom: 1px #efefef solid;
     color: red;
 }
 

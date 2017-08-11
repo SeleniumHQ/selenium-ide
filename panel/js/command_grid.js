@@ -50,22 +50,22 @@ function setRecordScrollTop(record) {
     if ($(".smallSection").scrollTop() > record.offsetTop - 65)
         $(".smallSection").animate({
             scrollTop: record.offsetTop - 65
-        },200);
+        }, 200);
     else if ($(".smallSection").height() + $(".smallSection").scrollTop() - 55 < record.offsetTop)
         $(".smallSection").animate({
             scrollTop: record.offsetTop - ($(".smallSection").height() - 55)
-        },200);
+        }, 200);
 }
 
 function setCaseScrollTop(testCase) {
     if ($(".case_list").scrollTop() > testCase.offsetTop - 143)
         $(".case_list").animate({
             scrollTop: testCase.offsetTop - 143
-        },200);
+        }, 200);
     else if ($(".case_list").height() + $(".case_list").scrollTop() - 60 < testCase.offsetTop - $(".case_list").offset().top)
         $(".case_list").animate({
             scrollTop: testCase.offsetTop - $(".case_list").offset().top - ($(".case_list").height() - 60)
-        },600);
+        }, 600);
 }
 
 // according to "ID" to set odd/even class

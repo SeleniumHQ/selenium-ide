@@ -6,7 +6,9 @@ sideex_log.info = function(str) {
     str = "[info] " + str;
     div.innerHTML = escapeHTML(str);
     document.getElementById("logcontainer").appendChild(div);
-    $("#tab4").scrollTop($("#logcontainer")[0].scrollHeight);
+    $("#tab4").animate({
+        scrollTop: ($("#logcontainer")[0].scrollHeight)
+    }, 200);
 };
 
 sideex_log.error = function(str) {
@@ -15,7 +17,9 @@ sideex_log.error = function(str) {
     str = "[error] " + str;
     div.innerHTML = escapeHTML(str);
     document.getElementById("logcontainer").appendChild(div);
-    $("#tab4").scrollTop($("#logcontainer")[0].scrollHeight);
+    $("#tab4").animate({
+        scrollTop: ($("#logcontainer")[0].scrollHeight)
+    }, 200);
 };
 
 document.getElementById("clear-log").addEventListener("click", function() {
