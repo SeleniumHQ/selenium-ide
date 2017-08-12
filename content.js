@@ -626,7 +626,32 @@ window.addEventListener('contextmenu', function(event) {
         this.removeListener();
     });
 }, true);
-//
+
+//EditContentExt
+var getEle;
+var checkFocus = 0;
+window.addEventListener('focus', function(event) {
+    var editable = event.target.contentEditable;
+    if (editable == 'true') {
+        getEle = event.target;
+        contentTest = getEle.innerHTML;
+        checkFocus = 1;
+    }
+}, true);
+
+window.addEventListener('blur', function(event) {
+    if (checkFocus == 1) {
+        if (event.target == getEle) {
+            if (getEle.innerHTML != contentTest) {
+                record("editContent", locatorBuilders.buildAll(event.target), getEle.innerHTML);
+            }
+            checkFocus = 0;
+        }
+    }
+}, true);
+
+
+/*delow is API==============================================================*/
 
 //initial the siddeX tab ID in content
 browser.runtime.onMessage.addListener(function(message) {
