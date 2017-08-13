@@ -87,18 +87,12 @@ var BrowserBot = function(topLevelApplicationWindow) {
     this._registerAllLocatorFunctions();
 
     this.recordPageLoad = function(elementOrWindow) {
-        //LOG.debug("Page load detected");
         try {
             if (elementOrWindow.location && elementOrWindow.location.href) {
-                //LOG.debug("Page load location=" + elementOrWindow.location.href);
             } else if (elementOrWindow.contentWindow && elementOrWindow.contentWindow.location && elementOrWindow.contentWindow.location.href) {
-                //LOG.debug("Page load location=" + elementOrWindow.contentWindow.location.href);
             } else {
-                //LOG.debug("Page load location unknown, current window location=" + self.getCurrentWindow(true).location);
             }
         } catch (e) {
-            //LOG.error("Caught an exception attempting to log location; this should get noticed soon!");
-            //LOG.exception(e);
             self.pageLoadError = e;
             return;
         }
@@ -109,9 +103,7 @@ var BrowserBot = function(topLevelApplicationWindow) {
         var e;
 
         if (this.pageLoadError) {
-            //LOG.error("isNewPageLoaded found an old pageLoadError: " + this.pageLoadError);
             if (this.pageLoadError.stack) {
-                //LOG.warn("Stack is: " + this.pageLoadError.stack);
             }
             e = this.pageLoadError;
             this.pageLoadError = null;
@@ -124,7 +116,6 @@ var BrowserBot = function(topLevelApplicationWindow) {
             if (self.isXhrSent && self.isXhrDone) {
                 if (!((self.xhrResponseCode >= 200 && self.xhrResponseCode <= 399) || self.xhrResponseCode == 0)) {
                     // TODO: for IE status like: 12002, 12007, ... provide corresponding statusText messages also.
-                    //LOG.error("XHR failed with message " + self.xhrStatusText);
                     e = "XHR ERROR: URL = " + self.xhrOpenLocation + " Response_Code = " + self.xhrResponseCode + " Error_Message = " + self.xhrStatusText;
                     self.abortXhr = false;
                     self.isXhrSent = false;
@@ -160,9 +151,6 @@ var PageBot = function() {};
 
 BrowserBot.createForWindow = function(window, proxyInjectionMode) {
     var browserbot;
-    //LOG.debug('createForWindow');
-    //LOG.debug("browserName: " + browserVersion.name);
-    //LOG.debug("userAgent: " + navigator.userAgent);
     if (browserVersion.isIE) {
         browserbot = new IEBrowserBot(window);
     } else if (browserVersion.isKonqueror) {
@@ -737,20 +725,15 @@ BrowserBot.prototype.openLocation = function(target) {
 
 BrowserBot.prototype.openWindow = function(url, windowID) {
     if (url != "") {
-        //url = absolutify(url, this.baseUrl);
         url = "https://www.google.com";
     }
     if (browserVersion.isHTA) {
         // in HTA mode, calling .open on the window interprets the url relative to that window
         // we need to absolute-ize the URL to make it consistent
-        //console.log("isHTA");
         var child = this.getCurrentWindow().open(url, windowID, 'resizable=yes');
         selenium.browserbot.openedWindows[windowID] = child;
-        //console.log("finish isHTA");
     } else {
-        //console.log("not HTA");
         this.getCurrentWindow().open(url, windowID, 'resizable=yes');
-        //console.log("finish not HTA");
     }
 };
 
@@ -2046,26 +2029,19 @@ BrowserBot.prototype.contextMenuOnElement = function(element, clientX, clientY) 
 BrowserBot.prototype._modifyElementTarget = function(e) {
     var element = this.findClickableElement(e) || e;
     if (element.target) {
-        //console.log("in modify");
         if (element.target == "_blank" || /^selenium_blank/.test(element.target)) {
             var tagName = getTagName(element);
-            //console.log("tagName: "+tagName);
             if (tagName == "a" || tagName == "form") {
                 var newTarget = "win_ser_" + this.count;
                 this.count += 1;
-                //console.log("finish tagName1");
                 this.browserbot.openWindow('', newTarget);
-                //console.log("finish tagName2");
                 element.target = newTarget;
-                //console.log("finish tagName");
             }
 
         } else {
             var newTarget = element.target;
-            //console.log("newTarget: "+newTarget);
             this.browserbot.openWindow('', newTarget);
             element.target = newTarget;
-            //console.log("finish newTarget");
         }
     }
 };

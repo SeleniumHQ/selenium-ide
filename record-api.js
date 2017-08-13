@@ -1,33 +1,33 @@
 /* coding: utf-8 */
 
-var contentSideexTabID = -1;
+var contentSideexTabId = -1;
 var frameLocation = "";
 
 /* set sideex window id ====================*/
 //set temp_pageSideexTabId on DOM
-document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
+document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
 
-/* a export function pass contentSideexTabID from content script to page script
-function getSideexTabID(){
-    var pageSideexTabID = contentSideexTabID;
-    return pageSideexTabID;
+/* a export function pass contentSideexTabId from content script to page script
+function getSideexTabId(){
+    var pageSideexTabId = contentSideexTabId;
+    return pageSideexTabId;
 }
-exportFunction(getSideexTabID,window,{defineAs:'getSideexTabID'});
+exportFunction(getSideexTabId,window,{defineAs:'getSideexTabId'});
 */
 
 // the child window will do 
 try{
     if (window.opener != null) {
         /* just can use in FireFox
-        contentSideexTabID = window.opener.wrappedJSObject.getSideexTabID();
-        XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabID());
-        console.error("contentSideexTabID: "+contentSideexTabID);
+        contentSideexTabId = window.opener.wrappedJSObject.getSideexTabId();
+        XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabId());
+        console.error("contentSideexTabId: "+contentSideexTabId);
         */
 
         //use set attribute
-        contentSideexTabID = window.opener.document.body.getAttribute("temp_pageSideexTabID");
-        document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-        browser.runtime.sendMessage({ newWindow: "true", commandSideexTabID: contentSideexTabID });
+        contentSideexTabId = window.opener.document.body.getAttribute("temp_pageSideexTabId");
+        document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
+        browser.runtime.sendMessage({ newWindow: "true", commandSideexTabId: contentSideexTabId });
     } else {
         //when change page
         var changePage2 = browser.runtime.sendMessage({ changePage: true });
@@ -39,29 +39,29 @@ try{
     changePage2.then(handleChangePageResponse);
 }
 function handleChangePageResponse(message) {
-    contentSideexTabID = message.mySideexTabID;
-    document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
+    contentSideexTabId = message.mySideexTabId;
+    document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
 }
 /* ================================================= */
 
 // show element
 function startShowElement(message, sender, sendResponse){
-    if (message.mySideexTabID == contentSideexTabID && message.showElement){
+    if (message.mySideexTabId == contentSideexTabId && message.showElement){
         result = selenium["doShowElement"](message.targetValue);
         return Promise.resolve({result: result});
     }
 }
 browser.runtime.onMessage.addListener(startShowElement);
 
-// initial the siddeX tab ID in content
+// initial the siddeX tab Id in content
 browser.runtime.onMessage.addListener(function(message) {
-    if (message.sideexID) {
-        contentSideexTabID = message.sideexID;
-        console.log("sideeX id:" + contentSideexTabID);
+    if (message.sideexId) {
+        contentSideexTabId = message.sideexId;
+        console.log("sideeX id:" + contentSideexTabId);
 
-        //open sideex update sideexTabID
-        document.body.setAttribute("temp_pageSideexTabID", message.sideexID);
-        console.log("temp_pageSideexTabID: " + document.body.getAttribute("temp_pageSideexTabID"));
+        //open sideex update sideexTabId
+        document.body.setAttribute("temp_pageSideexTabId", message.sideexId);
+        console.log("temp_pageSideexTabId: " + document.body.getAttribute("temp_pageSideexTabId"));
     }
 });
 
@@ -94,7 +94,7 @@ function record(command, target, value, insertBeforeLastCommand) {
         value: value,
         insertBeforeLastCommand: insertBeforeLastCommand,
         frameLocation: frameLocation,
-        commandSideexTabID: contentSideexTabID
+        commandSideexTabId: contentSideexTabId
     });
 }
 
