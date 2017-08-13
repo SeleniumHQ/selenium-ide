@@ -191,7 +191,7 @@ BrowserBot.prototype.cancelNextConfirmation = function(result) {
 };
 
 BrowserBot.prototype.setNextPromptResult = function(result) {
-    this.nextPromptResult = result;
+    this.nextResult = result;
 };
 
 BrowserBot.prototype.hasAlerts = function() {
@@ -2364,7 +2364,6 @@ BrowserBot.prototype.locateElementByUIElement.is_fuzzy_match = function(node, ta
 };
 
 /* prompt */
-
 BrowserBot.prototype.cancelNextPrompt = function() {
     return this.setNextPromptResult(null);
 };
@@ -2423,6 +2422,66 @@ BrowserBot.prototype.getPromptMessage = function() {
     })
     return response;
 }
+
+// confirm
+BrowserBot.prototype.setNextConfirmationResult = function(result) {
+    this.ConfirmationResponse = false;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "setNextConfirmtaionResult",
+        target: result
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.confirmationResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve();
+                self.confirmationResponse = false;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+BrowserBot.prototype.getConfirmationMessage = function() {
+    this.confirmationResponse = false;
+    this.confirmationMessage = null;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "getConfirmationMessage",
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.confirmationResponse) {
+                console.error(self.confirmationResponse,count);
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                console.error(self.confirmationResponse);
+                resolve(self.confirmationMessage);
+                self.confirmationResponse = false;
+                self.confirmationMessage = null;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+
 
 /*****************************************************************/
 /* BROWSER-SPECIFIC FUNCTIONS ONLY AFTER THIS LINE */

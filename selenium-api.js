@@ -431,59 +431,6 @@ Selenium.prototype.doEcho = function(value) {
     browser.runtime.sendMessage({ "echoStr": value });
 };
 
-Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
-    try{
-        var actualCode = '('+function(){
-            var tempWindowConfirmation = window.confirm;
-            window.confirm = function(message) {
-                window.confirm = tempWindowConfirmation;
-                messageToContent(message,false);
-                return false;
-            }
-            //console.log("finish inject inplaying");
-        }+')();';
-        
-        var injectModifyWindowMethodOnPlay = document.createElement("script");
-        injectModifyWindowMethodOnPlay.textContent = actualCode;
-        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
-        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
-    } catch(reason) {
-        console.error("reason: "+reason);
-    }
-}
-
-Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
-    try{
-        var actualCode = '('+function(){
-            var tempWindowConfirmation = window.confirm;
-            window.confirm = function(message) {
-                window.confirm = tempWindowConfirmation;
-                messageToContent(message,true);
-                return true;
-            }
-            //console.log("finish inject inplaying");
-        }+')();';
-        
-        var injectModifyWindowMethodOnPlay = document.createElement("script");
-        injectModifyWindowMethodOnPlay.textContent = actualCode;
-        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
-        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
-    } catch(reason) {
-        console.error("reason: "+reason);
-    }
-}
-
-Selenium.prototype.doAssertConfirmation = function(locator,value) {
-    if (hasConfirmation) {
-        if (value != confirmationMessage) {
-            console.error("Confirmation Message was wrong!");
-            throw new SeleniumError("error: Confirmation Message was wrong!");      
-        }
-    } else {
-      console.error("Assert Confirmation Not Found!!");
-      throw new SeleniumError("error: Confirmation Not Found!");
-    }
-};
 
 // xian
 Selenium.prototype.doWaitPreparation = function() {
@@ -1561,7 +1508,8 @@ Selenium.prototype.doWaitForPopUp = function(windowID, timeout) {
 
 Selenium.prototype.doWaitForPopUp.dontCheckAlertsAndConfirms = true;
 
-Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
+
+//Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
     /**
      * <p>
      * By default, Selenium's overridden window.confirm() function will
@@ -1578,10 +1526,10 @@ Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
      * the next selenium operation will fail.
      * </p>
      */
-    this.browserbot.cancelNextConfirmation(false);
-};
+    //this.browserbot.cancelNextConfirmation(false);
+//};
 
-Selenium.prototype.doChooseOkOnNextConfirmation = function() {
+//Selenium.prototype.doChooseOkOnNextConfirmation = function() {
     /**
      * <p>
      * Undo the effect of calling chooseCancelOnNextConfirmation.  Note
@@ -1600,8 +1548,8 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function() {
      * </p>
      *
      */
-    this.browserbot.cancelNextConfirmation(true);
-};
+    //this.browserbot.cancelNextConfirmation(true);
+//};
 
 
 //Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
@@ -3676,11 +3624,8 @@ Selenium.prototype.doEditContent = function(locator, value) {
     var editable = element.contentEditable;
 
     if (editable == "true") {
-        ////LOG.info("if statement!");
         element.innerHTML = value;
     } else {
-        ////LOG.info("else statement!");
-        //LOG.error("The value of contentEditable attribute of this element is not true.");
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
     }
 };
@@ -3704,23 +3649,75 @@ Selenium.prototype.doAssertPrompt = function (message) {
            });
 }
 
-/*
+
 // confirm
-Selenium.prototype.doChooseCancelOnNextConfirm = function() {
-    return this.browserbot.cancelNextConfirm();
+Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
+    this.browserbot.setNextConfirmationResult(false);
 }
 
-Selenium.prototype.doAnswerOnNextConfirm = function (answer) {
-    return this.browserbot.setNextConfirmResult(answer);
+Selenium.prototype.doChooseOkOnNextConfirmation = function (answer) {
+    this.browserbot.setNextConfirmationResult(true);
 }
 
-Selenium.prototype.doAssertConfirm = function (message) {
+Selenium.prototype.doAssertConfirmation = function(value) {
+    return this.browserbot.getConfirmationMessage().then(function(actualMessage) {
+               if (value != actualMessage)
+                    return Promise.reject("Confirmation message doesn't match actual message");
+               else
+                    return Promise.resolve(true);
+           });
+};
+/*
+Selenium.prototype.doAssertConfirmation = function (message) {
     return this.browserbot.getConfirmMessage().then(function(actualMessage) {
                if (message != actualMessage)
                     return Promise.reject("Confirm message doesn't match actual message");
                else
                     return Promise.resolve(true);
            });
+}
+*/
+/*
+Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
+    try{
+        var actualCode = '('+function(){
+            var tempWindowConfirmation = window.confirm;
+            window.confirm = function(message) {
+                window.confirm = tempWindowConfirmation;
+                messageToContent(message,false);
+                return false;
+            }
+            //console.log("finish inject inplaying");
+        }+')();';
+        
+        var injectModifyWindowMethodOnPlay = document.createElement("script");
+        injectModifyWindowMethodOnPlay.textContent = actualCode;
+        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
+        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
+    } catch(reason) {
+        console.error("reason: "+reason);
+    }
+}
+
+Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
+    try{
+        var actualCode = '('+function(){
+            var tempWindowConfirmation = window.confirm;
+            window.confirm = function(message) {
+                window.confirm = tempWindowConfirmation;
+                messageToContent(message,true);
+                return true;
+            }
+            //console.log("finish inject inplaying");
+        }+')();';
+        
+        var injectModifyWindowMethodOnPlay = document.createElement("script");
+        injectModifyWindowMethodOnPlay.textContent = actualCode;
+        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
+        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
+    } catch(reason) {
+        console.error("reason: "+reason);
+    }
 }
 */
 

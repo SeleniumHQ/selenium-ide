@@ -15,14 +15,30 @@ window.addEventListener("message", function(event) {
                     }
                     record("assertPrompt", [[event.data.recordedMessage]], "");
                     break;
+                case "confirm":
+                    if (event.data.recordedResult == true) {
+                        record("chooseOkOnNextConfirmation", [[""]], "", true);
+                    } else {
+                        record("chooseCancelOnNextConfirmation", [[""]], "", true);
+                    }
+                    record("assertConfirmation", [[event.data.recordedMessage]], "", false);
+                    break;
             }
         }
         if (event.data.response) {
             switch (event.data.response) {
                 case "prompt":
+                console.error("tuggle");
                     selenium.browserbot.promptResponse = true;
                     if (event.data.value)
                         selenium.browserbot.promptMessage = event.data.value;
+                    break;
+                case "confirm":
+                console.error("tuggle");
+                    selenium.browserbot.confirmationResponse = true;
+                    console.error("tuggle2", selenium.browserbot.confirmationResponse);
+                    if (event.data.value)
+                        selenium.browserbot.confirmationMessage = event.data.value;
                     break;
             }
         }

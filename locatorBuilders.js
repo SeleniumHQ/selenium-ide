@@ -540,7 +540,7 @@ LocatorBuilders.add('xpath:position', function(e, opt_contextNode) {
     }
     return null;
 });
-
+/*
 //Chi-En Huang, SELAB, CSIE, NCKU, 2016/01/06
 LocatorBuilders.add('tac', function(e) {
     //this.log.debug("tac: e=" + e);
@@ -620,6 +620,7 @@ LocatorBuilders.add('tac', function(e) {
 
     return null;
 });
+*/
 // Samit: Warning: The old method of setting the order using LocatorBuilders.order is now deprecated
 // You can change the priority of builders by setting LocatorBuilders.order.
 //LocatorBuilders.order = ['ui', 'id', 'link', 'name', 'css', 'dom:name', 'xpath:link', 'xpath:img', 'xpath:attributes', 'xpath:idRelative', 'xpath:href', 'dom:index', 'xpath:position'];
