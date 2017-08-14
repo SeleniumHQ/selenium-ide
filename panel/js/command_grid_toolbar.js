@@ -29,11 +29,6 @@ function getStringLengthInPx(str) {
 function adjustTooLongStr(str, node) {
     var l = str.length;
 
-    // tac is too long, need to process first, or script will shut down
-    if (l > 50) {
-        str = str.slice(0, 50);
-    }
-
     while (getStringLengthInPx(str) + 12 > node.clientWidth) {
         str = str.slice(0, -1);
     }
@@ -43,7 +38,7 @@ function adjustTooLongStr(str, node) {
     return str;
 }
 
-function addCommand(command_name, command_target_array, command_value, auto) {
+function addCommand(command_name, command_target_array, command_value, auto, insertCommand) {
     // create default test suite and case if necessary
     var s_suite = getSelectedSuite(),
         s_case = getSelectedCase();
@@ -53,11 +48,15 @@ function addCommand(command_name, command_target_array, command_value, auto) {
         addTestCase("Untitled Test Case", id);
     }
 
+    // mark modified
+    getSelectedCase().classList.add("modified");
+    getSelectedSuite().getElementsByTagName("strong")[0].classList.add("modified");
+    closeConfirm(true);
+    
     // create tr node     
     var new_record = document.createElement("tr");
     new_record.setAttribute("class", "");
     new_record.setAttribute("style", "");
-    new_record.setAttribute("draggable", "true");
     new_record.appendChild(document.createTextNode("\n    "));
 
     // create td node
@@ -89,6 +88,7 @@ function addCommand(command_name, command_target_array, command_value, auto) {
         var option = document.createElement("option");
         // use textNode to avoid tac's tag problem (textNode's content will be pure text, does not be parsed as html)
         option.appendChild(document.createTextNode(command_target_array[m][0]));
+        option.innerText=command_target_array[m][0];
         targets.appendChild(option);
     }
     new_record.getElementsByTagName("td")[1].appendChild(targets);
@@ -98,7 +98,7 @@ function addCommand(command_name, command_target_array, command_value, auto) {
     document.getElementById("records-count").value = count;
     if (count != 1) {
         // remove green line
-        document.getElementById("records-" + (count - 1)).style = "";
+        // document.getElementById("records-" + (count - 1)).style = "";
     }
     if (selected_ID) {
         if (auto) {
@@ -115,9 +115,13 @@ function addCommand(command_name, command_target_array, command_value, auto) {
             $(selected_ID).addClass('selectedRecord');
         }
     } else {
-        document.getElementById("records-grid").appendChild(new_record);
-        reAssignId("records-" + count, "records-" + count);
-        attachEvent(count, count);
+        if (insertCommand) {
+            document.getElementById("records-grid").insertBefore(new_record, getRecordsArray()[getRecordsNum()-2]);
+        } else {
+            document.getElementById("records-grid").appendChild(new_record);
+        }
+        reAssignId("records-1", "records-" + count);
+        attachEvent(1, count);
 
         // focus on new element
         document.getElementById("records-" + count).scrollIntoView();
@@ -151,15 +155,20 @@ function addCommand(command_name, command_target_array, command_value, auto) {
 
 // add command manually (append downward)
 function addCommandManu(command_name, command_target_array, command_value) {
-    addCommand(command_name, command_target_array, command_value, 0);
+    addCommand(command_name, command_target_array, command_value, 0, false);
+}
+
+// add command before last command (append upward)
+function addCommandBeforeLastCommand(command_name, command_target_array, command_value) {
+    addCommand(command_name, command_target_array, command_value, 0, true);
 }
 
 // add command automatically (append upward)
 function addCommandAuto(command_name, command_target_array, command_value) {
-    addCommand(command_name, command_target_array, command_value, 1);
+    addCommand(command_name, command_target_array, command_value, 1, false);
 }
 
-document.getElementById("command-command").addEventListener("input", function(event) {
+$("#command-command").on("input", function(event) {
     var temp = getSelectedRecord();
     if (temp) {
         var div = getTdRealValueNode(document.getElementById(temp), 0);
@@ -183,9 +192,9 @@ document.getElementById("command-command").addEventListener("input", function(ev
             sideex_testCase[s_case.id].records = document.getElementById("records-grid").innerHTML;
         }
     }
-}, false);
+});
 
-document.getElementById("command-target").addEventListener("input", function(event) {
+$("#command-target").on("input", function(event) {
     var temp = getSelectedRecord();
     if (temp) {
         var div = getTdRealValueNode(document.getElementById(temp), 1);
@@ -209,8 +218,8 @@ document.getElementById("command-target").addEventListener("input", function(eve
             sideex_testCase[s_case.id].records = document.getElementById("records-grid").innerHTML;
         }
     }
-}, false);
-document.getElementById("command-value").addEventListener("input", function(event) {
+});
+$("#command-value").on("input", function(event) {
     var temp = getSelectedRecord();
     if (temp) {
         var div = getTdRealValueNode(document.getElementById(temp), 2);
@@ -234,7 +243,7 @@ document.getElementById("command-value").addEventListener("input", function(even
             sideex_testCase[s_case.id].records = document.getElementById("records-grid").innerHTML;
         }
     }
-}, false);
+});
 
 document.getElementById("grid-add").addEventListener("click", function() {
     // target is 2-D array
@@ -273,9 +282,9 @@ function deleteCommand(selected_ID) {
         if (selected_ID - 1 != count) {
             reAssignIdForDelete(selected_ID, count);
         } else {
-            if (count != 0) {
-                document.getElementById("records-" + count).style.borderBottom = "green solid 2px";
-            }
+            // if (count != 0) {
+            //     document.getElementById("records-" + count).style.borderBottom = "green solid 2px";
+            // }
         }
 
         // store command grid to testCase

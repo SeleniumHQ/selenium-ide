@@ -1,8 +1,6 @@
-var userWinID = 0;
-var mySideexTabID = 0;
-var windowIdArray = {};
 var playingTabIds = {};
 var playingTabNames = {};
+var playingTabCount = 1;
 var currentPlayingFrameLocation = "root";
 var currentPlayingCommandIndex = -1;
 
@@ -10,6 +8,9 @@ var currentTestCaseId = "";
 var isPause = false;
 var pauseValue = null;
 var isPlayingSuite = false;
+var isPlayingAll = false;
+var selectTabId = null;
+var isSelecting = false;
 
 var commandType = "";
 var pageCount = 0;
@@ -25,39 +26,108 @@ var caseFailed = false;
 
 window.onload = function() {
     var playButton = document.getElementById("playback");
+    var stopButton = document.getElementById("stop");
     var pauseButton = document.getElementById("pause");
     var resumeButton = document.getElementById("resume");
     var playSuiteButton = document.getElementById("playSuite");
     var playSuitesButton = document.getElementById("playSuites");
+    var showElementButton = document.getElementById("showElementButton")
+    var selectElementButton = document.getElementById("selectElementButton");
     /*var recordButton = document.getElementById("record");*/
     //element.addEventListener("click",play);
     playButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
+        setCaseScrollTop(getSelectedCase());
         play();
     });
+    stopButton.addEventListener("click", function() {
+        stop();
+    });
     pauseButton.addEventListener("click", pause);
+    pauseButton.disabled = true;
     resumeButton.addEventListener("click", resume);
     playSuiteButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         playSuite(0);
     });
     playSuitesButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
+        initAllSuite();
         playSuites(0);
+    });
+    selectElementButton.addEventListener("click",function(){
+        var button = document.getElementById("selectElementButton");
+        if (isSelecting) {
+            isSelecting = false; 
+            button.value = "Select";
+            browser.tabs.query({
+                active: true,
+                windowId: contentWindowId
+            }).then(function(tabs) {
+                browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
+            }).catch(function(reason) {
+                console.log(reason);
+            })
+            return;
+        }
+
+        isSelecting = true;
+        if (isRecording)
+            /* TODO: disable record button */
+            isRecording = false;
+        button.value = "Cancel";
+        browser.tabs.query({
+            active: true,
+            windowId: contentWindowId
+        }).then(function(tabs) {
+            if (tabs.length === 0) {
+                console.log("No match tabs");
+                isSelecting = false; 
+                button.value = "Select";
+            } else
+                browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
+        })
+    });
+    showElementButton.addEventListener("click", function(){
+        console.log("click");
+        try{
+        var targetValue = document.getElementById("command-target").value;
+            console.log("value: " + targetValue);
+            browser.tabs.query({
+                active: true,
+                windowId: contentWindowId
+            }, function(tabs) {
+                browser.tabs.sendMessage(tabs[0].id, {
+                    mySideexTabId:mySideexTabId,
+                    showElement:true,
+                    targetValue:targetValue
+                }).then(function(response) {
+                    if (response){
+                        console.log(response.result);
+                    }
+                });
+            });
+        } catch (e) {
+            console.error(e);
+        }
     });
     /*recordButton.addEventListener("click", startRecord);*/
     //console.error(recordButton);
 };
 
 function disableClick() {
+    document.getElementById("pause").disabled = false;
     document.getElementById('testCase-grid').style.pointerEvents = 'none';
     document.getElementById('command-container').style.pointerEvents = 'none';
 }
 
 function enableClick() {
+    document.getElementById("pause").disabled = true;
     document.getElementById('testCase-grid').style.pointerEvents = 'auto';
     document.getElementById('command-container').style.pointerEvents = 'auto';
 }
@@ -67,7 +137,21 @@ function play() {
         .then(executionLoop)
         .then(finalizePlayingProgress)
         .catch(catchPlayingError);
+}
 
+function stop() {
+    if (isPause){
+        resume();
+    }
+    isPlaying = false;
+    isPlayingSuite = false;
+    isPlayingAll = false;
+    switchPS();
+    sideex_log.info("Stop executing");
+    initAllSuite();
+    document.getElementById("result-runs").innerHTML = "0";
+    document.getElementById("result-failures").innerHTML = "0";
+    finalizePlayingProgress();
 }
 
 function playAfterConnectionFailed() {
@@ -82,13 +166,6 @@ function initializeAfterConnectionFailed() {
 
     isRecording = false;
     isPlaying = true;
-    playingTabNames = new Object();
-    playingTabIds = new Object();
-    //windowIdArray = new Object();
-    //windowIdArray[userWinID] = true;
-    currentPlayingWindowId = userWinID;
-    currentPlayingFrameLocation = "root";
-    playingFrameLocations = {};
 
     commandType = "preparation";
     pageCount = ajaxCount = domCount = implicitCount = 0;
@@ -99,58 +176,59 @@ function initializeAfterConnectionFailed() {
     currentTestCaseId = getSelectedCase().id;
     var commands = getRecordsArray();
 
-    return browser.tabs.query({
-            windowId: currentPlayingWindowId,
-            active: true
-        })
-        .then(function(tabs) {
-            if (tabs.length === 0) {
-                throw new Error("Can't find the window");
-                // ...Or we can create a new window for user
-                // and binding to a new userWinId.
-            }
-            currentPlayingTabId = tabs[0].id;
-            playingTabNames["win_ser_local"] = currentPlayingTabId;
-            playingTabIds[currentPlayingTabId] = "win_ser_local";
-            playingFrameLocations[currentPlayingTabId] = {};
-            playingFrameLocations[currentPlayingTabId]["root"] = 0;
-            /* we assume that there is no open command */
-            /* select Frame directly will cause failed */
-            playingFrameLocations[currentPlayingTabId]["status"] = true;
-        })
+    return Promise.resolve(true);
 }
 
 function pause() {
-    if (isPlaying) isPause = true;
+    if (isPlaying) {
+        sideex_log.info("Pausing");
+        isPause = true;
+        switchPR();
+    }
 }
 
 function resume() {
+    if(currentTestCaseId!=getSelectedCase().id)
+        setSelectedCase(currentTestCaseId);
     if (isPause) {
+        sideex_log.info("Resuming");
         isPlaying = true;
         isPause = false;
+        switchPR();
+        disableClick();
         executionLoop()
             .then(finalizePlayingProgress)
             .catch(catchPlayingError);
     }
 }
 
+function initAllSuite() {
+    var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
+    var length = suites.length;
+    for (var k = 0; k < suites.length; ++k) {
+        var cases = suites[k].getElementsByTagName("p");
+        for (var u = 0; u < cases.length; ++u) {
+            $("#" + cases[u].id).removeClass('fail success');
+        }
+    }
+}
+
 function playSuite(i) {
     isPlayingSuite = true;
-    var cases = getSelectedSuite().getElementsByTagName("strong");
+    var cases = getSelectedSuite().getElementsByTagName("p");
     var length = cases.length;
     if (i == 0) {
         sideex_log.info("Playing test suite " + sideex_testSuite[getSelectedSuite().id].title);
-        for (var j = 0; j < length; j++) {
-            $("#" + cases[j].parentNode.id).removeClass('fail success');
-        }
     }
     if (i < length) {
-        setSelectedCase(cases[i].parentNode.id);
-        sideex_log.info("Playing test case " + sideex_testCase[cases[i].parentNode.id].title);
+        setSelectedCase(cases[i].id);
+        setCaseScrollTop(getSelectedCase());
+        sideex_log.info("Playing test case " + sideex_testCase[cases[i].id].title);
         play();
         nextCase(i);
     } else {
         isPlayingSuite = false;
+        switchPS();
     }
 }
 
@@ -158,38 +236,30 @@ function nextCase(i) {
     if (isPlaying || isPause) setTimeout(function() {
         nextCase(i);
     }, 500);
-    else playSuite(i + 1);
+    else if(isPlayingSuite) playSuite(i + 1);
 }
 
 function playSuites(i) {
+    isPlayingAll = true;
     var suites = document.getElementById("testCase-grid").getElementsByClassName("message");
     var length = suites.length;
-    if (i == 0) {
-        for (var k = 0; k < suites.length; ++k) {
-            var cases = suites[k].getElementsByTagName("strong");
-            for (var u = 0; u < cases.length; ++u) {
-                $("#" + cases[u].parentNode.id).removeClass('fail success');
-            }
-        }
-    }
-
     if (i < length) {
         if (suites[i].id.includes("suite")) {
             setSelectedSuite(suites[i].id);
             playSuite(0);
         }
-        console.log("call nextSuite");
         nextSuite(i);
+    } else {
+        isPlayingAll = false;
+        switchPS();
     }
-
 }
 
 function nextSuite(i) {
-    console.log(i);
     if (isPlayingSuite) setTimeout(function() {
         nextSuite(i);
     }, 2000);
-    else playSuites(i + 1);
+    else if(isPlayingAll) playSuites(i + 1);
 }
 
 function executeCommand(index) {
@@ -206,7 +276,7 @@ function executeCommand(index) {
     setColor(id + 1, "executing");
 
     browser.tabs.query({
-            windowId: userWinID,
+            windowId: contentWindowId,
             active: true
         })
         .then(function(tabs) {
@@ -216,7 +286,7 @@ function executeCommand(index) {
                 commands: commandName,
                 target: commandTarget,
                 value: commandValue,
-                mySideexTabID: mySideexTabID
+                mySideexTabId: mySideexTabId
             }, {
                 frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
             })
@@ -273,15 +343,15 @@ function cleanStatus() {
 
 function initializePlayingProgress(isDbclick) {
     disableClick();
-
+    
     isRecording = false;
     isPlaying = true;
-    //var commands = getRecordsArray();
+
+    switchPS();
+
     playingTabNames = new Object();
     playingTabIds = new Object();
-    //windowIdArray = new Object();
-    //windowIdArray[userWinID] = true;
-    currentPlayingWindowId = userWinID;
+    currentPlayingWindowId = contentWindowId;
     currentPlayingFrameLocation = "root";
     playingFrameLocations = {};
     currentPlayingCommandIndex = -1;
@@ -310,39 +380,35 @@ function initializePlayingProgress(isDbclick) {
             if (tabs.length === 0) {
                 throw new Error("Can't find the window");
                 // ...Or we can create a new window for user
-                // and binding to a new userWinId.
+                // and binding to a new contentWindowId.
             }
             currentPlayingTabId = tabs[0].id;
             playingTabNames["win_ser_local"] = currentPlayingTabId;
             playingTabIds[currentPlayingTabId] = "win_ser_local";
             playingFrameLocations[currentPlayingTabId] = {};
             playingFrameLocations[currentPlayingTabId]["root"] = 0;
-            /* we assume that there is no open command */
-            /* select Frame directly will cause failed */
+            // we assume that there has an "open" command
+            // select Frame directly will cause failed
             playingFrameLocations[currentPlayingTabId]["status"] = true;
         });
 }
 
 function executionLoop() {
+    if (!isPlaying) {
+        cleanStatus();
+        return false;
+    }
+
     if (isPause) {
         return true;
     }
 
     if (commandType == "preparation") {
         console.log("in preparation");
-        return browser.tabs.query({
-                windowId: userWinID,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "waitPreparation",
-                    target: "",
-                    value: "",
-                    mySideexTabID: mySideexTabID
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                });
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "waitPreparation", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function() {
                 commandType = "prePageWait";
@@ -350,19 +416,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "prePageWait") {
         console.log("in prePageWait");
-        return browser.tabs.query({
-                windowId: userWinID,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "prePageWait",
-                    target: "",
-                    value: "",
-                    mySideexTabID: mySideexTabID
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                });
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "prePageWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (response && response.new_page) {
@@ -375,19 +432,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "pageWait") {
         console.log("in pageWait");
-        return browser.tabs.query({
-                windowId: userWinID,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "pageWait",
-                    target: "",
-                    value: "",
-                    mySideexTabID: mySideexTabID
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                })
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "pageWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (pageTime && (Date.now() - pageTime) > 30000) {
@@ -411,19 +459,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "ajaxWait") {
         console.log("in ajaxWait");
-        return browser.tabs.query({
-                windowId: userWinID,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "ajaxWait",
-                    target: "",
-                    value: "",
-                    mySideexTabID: mySideexTabID
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                })
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "ajaxWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
@@ -447,19 +486,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "domWait") {
         console.log("in domWait");
-        return browser.tabs.query({
-                windowId: userWinID,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "domWait",
-                    target: "",
-                    value: "",
-                    mySideexTabID: mySideexTabID
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                })
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "domWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (domTime && (Date.now() - domTime) > 30000) {
@@ -531,62 +561,49 @@ function executionLoop() {
                 currentPlayingFrameLocation += ":" + str;
             console.log(currentPlayingFrameLocation);
 
-            return new Promise(executionLoop);
-            /*
             return new Promise(function(resolve, reject){
-                        let count = 0;
-                        let interval = setInterval( function(){
-                            console.log("test")
-                            if (count > 30) {
-                                reject("Not Found");
-                                clearInterval(interval);
-                            }
-                            if (!playingFrameLocations[currentPlayingTabId] ||
-                                !playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation])
-                                count++;
-                            else {
-                                resolve();
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                }).then(executionLoop)
-            */
-        } else if (commandName == 'selectWindow') {
-            currentPlayingFrameLocation = "root";
-            if (playingTabNames[commandTarget]) {
-                console.log("window has found, directly update");
-                currentPlayingTabId = playingTabNames[commandTarget];
-                //browser.windows.update(playingWindows[commandTarget].windowId, {focused: true});
-                console.log("currentPlaying: " + currentPlayingTabId);
-                console.log("currentPlaying: " + currentPlayingTabId);
-                return browser.tabs.update(currentPlayingTabId, {
-                        active: true
-                    })
-                    .then(executionLoop);
-            } else if (newWindowInfo.tabId !== undefined && newWindowInfo.windowId !== undefined) {
-                console.log("Found a new window, store the information and select to");
-                playingTabNames[commandTarget] = newWindowInfo.tabId;
-                newWindowInfo.tabId = undefined;
-                newWindowInfo.windowId = undefined;
-                currentPlayingTabId = playingTabNames[commandTarget];
-                return browser.tabs.update(currentPlayingTabId, {
-                        active: true
-                    })
-                    .then(executionLoop);
-            } else {
-                console.log("Error! Can't detect window");
-                sideex_log.error("Can't detect window");
-                //console.log("newWindowInfo.tabId: "+newWindowInfo.tabId);
-                return new Promise(function(resolve, reject) {
-                    setTimeout(function() {
-                        if (newWindowInfo.tabId == undefined)
-                            reject(new Error("Can't Find New Window"));
-                        else
+                    let count = 0;
+                    let interval = setInterval(function() {
+                        if (count > 30) {
+                            reject("Not Found");
+                            clearInterval(interval);
+                        }
+                        if (!playingFrameLocations[currentPlayingTabId] ||
+                            playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation] == null) {
+                            console.log(currentPlayingTabId);
+                            console.log(playingFrameLocations[currentPlayingTabId]);
+                            console.log(playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]);
+                            count++;
+                        } else {
                             resolve();
-                        currentPlayingCommandIndex--;
-                    }, 5000);
-                }).then(executionLoop);
-            }
+                            clearInterval(interval);
+                        }
+                    }, 500);
+                })
+                .then(executionLoop)
+        } else if (commandName == 'selectWindow') {
+            //TODO: set color
+            return new Promise(function(resolve, reject) {
+                    let count = 0;
+                    let interval = setInterval(function() {
+                        if (!playingTabNames[commandTarget]) {
+                            count++;
+                            if (count > 30) {
+                                reject("Can't Find New Window");
+                                clearInterval(interval);
+                            }
+                        } else {
+                            currentPlayingTabId = playingTabNames[commandTarget];
+                            console.log("window has found");
+                            resolve();
+                            clearInterval(interval);
+                        }
+                    }, 500);
+                })
+                .then(function() {
+                    return browser.tabs.update(currentPlayingTabId, {active: true});
+                })
+                .then(executionLoop)
         } else if (commandName == 'close') {
             let removedTabId = currentPlayingTabId;
             currentPlayingTabId = -1;
@@ -610,7 +627,7 @@ function executionLoop() {
             if (currentPlayingTabId === -1) {
 
                 return browser.tabs.query({
-                        windowId: userWinID,
+                        windowId: contentWindowId,
                         active: true
                     })
                     .then(function(tabs) {
@@ -620,7 +637,7 @@ function executionLoop() {
                             commands: commandName,
                             target: commandTarget,
                             value: commandValue,
-                            mySideexTabID: mySideexTabID
+                            mySideexTabId: mySideexTabId
                         }, {
                             frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                         })
@@ -739,13 +756,13 @@ function executionLoop() {
 }
 
 function finalizePlayingProgress() {
-    enableClick();
-
+    enableClick();console.log("here");
     playingWindows = {};
     console.log("success");
     setTimeout(function() {
         isPlaying = false;
         isRecording = true;
+        switchPS();
     }, 500);
 }
 
@@ -762,17 +779,47 @@ document.addEventListener("dblclick", function(event) {
     }
 });
 
+function playDisable(setting) {
+    document.getElementById("playback").disabled = setting;
+    document.getElementById("playSuite").disabled = setting;
+    document.getElementById("playSuites").disabled = setting;
+}
+
+function switchPS() {
+    if ((isPlaying||isPause)||isPlayingSuite||isPlayingAll) {
+        playDisable(true);
+        document.getElementById("playback").style.display = "none";
+        document.getElementById("stop").style.display = "";
+    } else {
+        playDisable(false);
+        document.getElementById("playback").style.display = "";
+        document.getElementById("stop").style.display = "none";
+    }
+}
+
+function switchPR() {
+    if (isPause) {
+        // playDisable(true);
+        document.getElementById("pause").style.display = "none";
+        document.getElementById("resume").style.display = "";
+    } else {
+        // playDisable(false);
+        document.getElementById("pause").style.display = "";
+        document.getElementById("resume").style.display = "none";
+    }
+}
+
 browser.runtime.onMessage.addListener(initialOpen);
 
 function initialOpen(message) {
     if (message.passWinID) {
         console.log("passWinID:" + message.passWinID);
-        userWinID = message.passWinID;
-        windowIdArray[userWinID] = true;
+        contentWindowId = message.passWinID;
+        windowIdArray[contentWindowId] = true;
     }
-    if (message.sideexID) {
-        console.log("mySideexTabID:" + message.sideexID);
-        mySideexTabID = message.sideexID;
+    if (message.sideexId) {
+        console.log("mySideexTabId:" + message.sideexId);
+        mySideexTabId = message.sideexId;
     }
 }
 
@@ -814,8 +861,8 @@ function catchPlayingError(reason) {
 function handleNewWindow(message, sender, sendResponse) {
     if (message.newWindow) {
 
-        console.error("new window ID: " + message.commandSideexTabID);
-        if (message.commandSideexTabID != mySideexTabID) {
+        console.error("new window Id: " + message.commandSideexTabId);
+        if (message.commandSideexTabId != mySideexTabId) {
             windowCreateFlag = false;
             tabCreateFlag = false;
             return;
@@ -843,11 +890,11 @@ browser.runtime.onMessage.addListener(handleNewWindow);
 
 function handleChangePage(message, sender, response) {
     if (message.changePage) {
-        console.log("page window ID:" + sender.tab.windowId);
+        console.log("page window Id:" + sender.tab.windowId);
         console.log("handle change page: " + windowIdArray[sender.tab.windowId]);
         if (windowIdArray[sender.tab.windowId] == true)
             response({
-                mySideexTabID: mySideexTabID
+                mySideexTabId: mySideexTabId
             });
     }
 }

@@ -1059,19 +1059,13 @@ function getAncestorOrSelfWithJavascriptHref(element) {
  * @param locator  the locator to parse
  */
 function parse_locator(locator) {
-    //Chi-En Huang, SELAB, CSIE, NCKU, 2016/12/28
-    if (locator.startsWith("tac=")) {
-        var actualLocator = locator.substring(4);
-        return { type: 'tac', string: actualLocator };
-    } else {
-        var result = locator.match(/^([A-Za-z]+)=.+/);
-        if (result) {
-            var type = result[1].toLowerCase();
-            var actualLocator = locator.substring(type.length + 1);
-            return { type: type, string: actualLocator };
-        }
-        return { type: 'implicit', string: locator };
+    var result = locator.match(/^([A-Za-z]+)=.+/);
+    if (result) {
+        var type = result[1].toLowerCase();
+        var actualLocator = locator.substring(type.length + 1);
+        return { type: type, string: actualLocator };
     }
+    return { type: 'implicit', string: locator };
 }
 
 /**

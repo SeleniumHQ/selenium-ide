@@ -87,18 +87,12 @@ var BrowserBot = function(topLevelApplicationWindow) {
     this._registerAllLocatorFunctions();
 
     this.recordPageLoad = function(elementOrWindow) {
-        //LOG.debug("Page load detected");
         try {
             if (elementOrWindow.location && elementOrWindow.location.href) {
-                //LOG.debug("Page load location=" + elementOrWindow.location.href);
             } else if (elementOrWindow.contentWindow && elementOrWindow.contentWindow.location && elementOrWindow.contentWindow.location.href) {
-                //LOG.debug("Page load location=" + elementOrWindow.contentWindow.location.href);
             } else {
-                //LOG.debug("Page load location unknown, current window location=" + self.getCurrentWindow(true).location);
             }
         } catch (e) {
-            //LOG.error("Caught an exception attempting to log location; this should get noticed soon!");
-            //LOG.exception(e);
             self.pageLoadError = e;
             return;
         }
@@ -109,9 +103,7 @@ var BrowserBot = function(topLevelApplicationWindow) {
         var e;
 
         if (this.pageLoadError) {
-            //LOG.error("isNewPageLoaded found an old pageLoadError: " + this.pageLoadError);
             if (this.pageLoadError.stack) {
-                //LOG.warn("Stack is: " + this.pageLoadError.stack);
             }
             e = this.pageLoadError;
             this.pageLoadError = null;
@@ -124,7 +116,6 @@ var BrowserBot = function(topLevelApplicationWindow) {
             if (self.isXhrSent && self.isXhrDone) {
                 if (!((self.xhrResponseCode >= 200 && self.xhrResponseCode <= 399) || self.xhrResponseCode == 0)) {
                     // TODO: for IE status like: 12002, 12007, ... provide corresponding statusText messages also.
-                    //LOG.error("XHR failed with message " + self.xhrStatusText);
                     e = "XHR ERROR: URL = " + self.xhrOpenLocation + " Response_Code = " + self.xhrResponseCode + " Error_Message = " + self.xhrStatusText;
                     self.abortXhr = false;
                     self.isXhrSent = false;
@@ -160,9 +151,6 @@ var PageBot = function() {};
 
 BrowserBot.createForWindow = function(window, proxyInjectionMode) {
     var browserbot;
-    //LOG.debug('createForWindow');
-    //LOG.debug("browserName: " + browserVersion.name);
-    //LOG.debug("userAgent: " + navigator.userAgent);
     if (browserVersion.isIE) {
         browserbot = new IEBrowserBot(window);
     } else if (browserVersion.isKonqueror) {
@@ -191,7 +179,7 @@ BrowserBot.prototype.cancelNextConfirmation = function(result) {
 };
 
 BrowserBot.prototype.setNextPromptResult = function(result) {
-    this.nextPromptResult = result;
+    this.nextResult = result;
 };
 
 BrowserBot.prototype.hasAlerts = function() {
@@ -737,20 +725,15 @@ BrowserBot.prototype.openLocation = function(target) {
 
 BrowserBot.prototype.openWindow = function(url, windowID) {
     if (url != "") {
-        //url = absolutify(url, this.baseUrl);
         url = "https://www.google.com";
     }
     if (browserVersion.isHTA) {
         // in HTA mode, calling .open on the window interprets the url relative to that window
         // we need to absolute-ize the URL to make it consistent
-        //console.log("isHTA");
         var child = this.getCurrentWindow().open(url, windowID, 'resizable=yes');
         selenium.browserbot.openedWindows[windowID] = child;
-        //console.log("finish isHTA");
     } else {
-        //console.log("not HTA");
         this.getCurrentWindow().open(url, windowID, 'resizable=yes');
-        //console.log("finish not HTA");
     }
 };
 
@@ -1418,11 +1401,6 @@ BrowserBot.prototype._registerAllLocatorFunctions = function() {
         }
         return this.locateElementByIdentifier(locator, inDocument, inWindow);
     };
-
-    //Chi-En Huang, SELAB, CSIE, NCKU, 2016/12/28
-    this.locationStrategies['tac'] = function(locator, inDocument, inWindow) {
-        return this.locateElementBySideex(locator, inDocument, inWindow);
-    };
 };
 
 BrowserBot.prototype.getDocument = function() {
@@ -1841,56 +1819,6 @@ BrowserBot.prototype.locateElementByLinkText = function(linkText, inDocument, in
 
 BrowserBot.prototype.locateElementByLinkText.prefix = "link";
 
-//Chi-En Huang, SELAB, CSIE, NCKU, 2016/01/06
-BrowserBot.prototype.locateElementBySideex = function(locator, inDocument, inWindow) {
-    var f = locator.split('::[tac]::');
-    var ox = f[0];
-    var od = f[1];
-
-    var d;
-    for (d = inWindow.document.documentElement; d.parentElement != null; d = d.parentElement) {}
-
-    var h = d.ownerDocument.getElementsByTagName("HTML");
-    var hs = h.length;
-
-    for (var i = 0; i < hs; i++) {
-        if (h[i] == null) {
-            continue;
-        }
-
-        var hc = h[i].children;
-        var hcs = hc.length;
-        for (var j = 0; j < hcs; j++) {
-            if (hc[j] == null) {
-                continue;
-            }
-            if (hc[j].tagName == "DIV") {
-                h[i].removeChild(hc[j]);
-            }
-        }
-    }
-
-    var nse = d.ownerDocument.getElementsByTagName("NOSCRIPT");
-    var nses = nse.length;
-
-    for (var i = 0; i < nses; i++) {
-        nse[i].innerHTML = "";
-    }
-
-    var nd = d.outerHTML;
-
-    try {
-        var tm = new Sideex(ox, od, nd);
-    } catch (e) {}
-
-    var nx = tm.l();
-    //LOG.info("[SideeX] Located element by TAC: " + nx);
-    var ne = this.xpathEvaluator.selectSingleNode(inDocument, nx, null,
-        inDocument.createNSResolver ? inDocument.createNSResolver(inDocument.documentElement) : this._namespaceResolver);
-
-    return ne;
-}
-
 /**
  * Returns an attribute based on an attribute locator. This is made up of an element locator
  * suffixed with @attribute-name.
@@ -2046,26 +1974,19 @@ BrowserBot.prototype.contextMenuOnElement = function(element, clientX, clientY) 
 BrowserBot.prototype._modifyElementTarget = function(e) {
     var element = this.findClickableElement(e) || e;
     if (element.target) {
-        //console.log("in modify");
         if (element.target == "_blank" || /^selenium_blank/.test(element.target)) {
             var tagName = getTagName(element);
-            //console.log("tagName: "+tagName);
             if (tagName == "a" || tagName == "form") {
                 var newTarget = "win_ser_" + this.count;
                 this.count += 1;
-                //console.log("finish tagName1");
                 this.browserbot.openWindow('', newTarget);
-                //console.log("finish tagName2");
                 element.target = newTarget;
-                //console.log("finish tagName");
             }
 
         } else {
             var newTarget = element.target;
-            //console.log("newTarget: "+newTarget);
             this.browserbot.openWindow('', newTarget);
             element.target = newTarget;
-            //console.log("finish newTarget");
         }
     }
 };
@@ -2362,6 +2283,126 @@ BrowserBot.prototype.locateElementByUIElement.is_fuzzy_match = function(node, ta
         return false;
     }
 };
+
+/* prompt */
+BrowserBot.prototype.cancelNextPrompt = function() {
+    return this.setNextPromptResult(null);
+};
+
+BrowserBot.prototype.setNextPromptResult = function(result) {
+    this.promptResponse = false;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "setNextPromptResult",
+        target: result
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.promptResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve();
+                self.promptResponse = false;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+BrowserBot.prototype.getPromptMessage = function() {
+    this.promptResponse = false;
+    this.promptMessage = null;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "getPromptMessage",
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.promptResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve(self.promptMessage);
+                self.promptResponse = false;
+                self.promptMessage = null;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+// confirm
+BrowserBot.prototype.setNextConfirmationResult = function(result) {
+    this.ConfirmationResponse = false;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "setNextConfirmtaionResult",
+        target: result
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.confirmationResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve();
+                self.confirmationResponse = false;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+BrowserBot.prototype.getConfirmationMessage = function() {
+    this.confirmationResponse = false;
+    this.confirmationMessage = null;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "getConfirmationMessage",
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.confirmationResponse) {
+                console.error(self.confirmationResponse,count);
+                count++;
+                if (count > 60) {
+                    reject("No response");
+                    clearInterval(interval);
+                }
+            } else {
+                console.error(self.confirmationResponse);
+                resolve(self.confirmationMessage);
+                self.confirmationResponse = false;
+                self.confirmationMessage = null;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
+
+
 
 /*****************************************************************/
 /* BROWSER-SPECIFIC FUNCTIONS ONLY AFTER THIS LINE */
@@ -2673,7 +2714,7 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
     }, false);
 
     //console.log("fire event1-2");
-    this._modifyElementTarget(element);
+    //this._modifyElementTarget(element);
 
     //console.log("fire event1-3");
     // Trigger the event.
@@ -2687,6 +2728,7 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
     // Perform the link action if preventDefault was set.
     // In chrome URL, the link action is already executed by triggerMouseEvent.
     //if (!browserVersion.isChrome && savedEvent != null && savedEvent.getPreventDefault && !savedEvent.getPreventDefault()) {
+    /*
     if (!browserVersion.isChrome && savedEvent != null && savedEvent.defaultPrevented && !savedEvent.defaultPrevented()) {
         var targetWindow = this.browserbot._getTargetWindow(element);
         if (element.href) {
@@ -2695,6 +2737,7 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
             this.browserbot._handleClickingImagesInsideLinks(targetWindow, element);
         }
     }
+    */
     //console.log("fire event3");
 
 };

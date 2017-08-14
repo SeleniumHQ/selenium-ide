@@ -1,59 +1,8 @@
-/*var contentRecord = -1;*/
-var contentRecord = 1;
-var contentSideexTabID = -1;
 var locatorBuilders = new LocatorBuilders(window);
-
-var frameLocation = "";
-
-//set temp_pageSideexTabId on DOM
-console.log("in set attribute 1");
-document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-
-/*a export function pass contentSideexTabID from content script to page script
-function getSideexTabID(){
-    var pageSideexTabID = contentSideexTabID;
-    return pageSideexTabID;
-}
-exportFunction(getSideexTabID,window,{defineAs:'getSideexTabID'});
-*/
-//the child window will do 
-//console.error("opener id: "+window.opener);
-console.log("window opener: " + window.opener);
-if (window.opener != null) {
-    /* just can use in FireFox
-    contentSideexTabID = window.opener.wrappedJSObject.getSideexTabID();
-    XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabID());
-    console.error("contentSideexTabID: "+contentSideexTabID);
-    */
-
-    //use set attribute
-    contentSideexTabID = window.opener.document.body.getAttribute("temp_pageSideexTabID");
-    console.log("contentSideexTabID: " + contentSideexTabID);
-    console.log("in set attribute 2");
-    document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-
-    browser.runtime.sendMessage({ newWindow: "true", commandSideexTabID: contentSideexTabID });
-} else {
-    //when change page
-    console.log("test1");
-    var changePage2 = browser.runtime.sendMessage({ changePage: true });
-    console.log("test2");
-    changePage2.then(handleChangePageResponse).catch(function(reason) { console.log(reason); });
-}
-
-function handleChangePageResponse(message) {
-    console.log("response sideex id: " + message.mySideexTabID);
-    contentSideexTabID = message.mySideexTabID;
-    console.log("contentSideexTabId: " + contentSideexTabID);
-    console.log("in set attribute 3");
-    document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-    console.log("change contentSideexTabId: " + contentSideexTabID);
-}
 
 //Record: ClickAt
 var preventClickTwice = false;
 window.addEventListener("click", function(event) {
-
     if (event.button == 0 && !preventClick && event.isTrusted) {
         if (!preventClickTwice) {
             var top = event.pageY,
@@ -65,14 +14,9 @@ window.addEventListener("click", function(event) {
                 element = element.offsetParent;
             } while (element);
             var target = event.target;
-            //console.log("here id:"+contentSideexTabID);
-            //browser.runtime.sendMessage(.....);
             record("clickAt", locatorBuilders.buildAll(event.target), left + ',' + top);
-            //console.log("2here id:"+contentSideexTabID);
             var arrayTest = locatorBuilders.buildAll(event.target);
-            //console.error(arrayTest[0][0]+"-"+arrayTest[0][1]+"-"+arrayTest[1][0]+"-"+arrayTest[1][1]);
             preventClickTwice = true;
-
         }
         setTimeout(function() { preventClickTwice = false; }, 30);
     }
@@ -94,12 +38,10 @@ window.addEventListener("dblclick", function(event) {
 
 //Record: SendKeys
 var inputTypes = ["text", "password", "file", "datetime", "datetime-local", "date", "month", "time", "week", "number", "range", "email", "url", "search", "tel", "color"];
-
 var focusTarget = null;
 var focusValue = null;
 var tempValue = null;
 var preventType = false;
-
 var inp = document.getElementsByTagName("input");
 for (var i = 0; i < inp.length; i++) {
     if (inputTypes.indexOf(inp[i].type) >= 0) {
@@ -170,7 +112,6 @@ window.addEventListener("keydown", function(event) {
                     tempbool = true;
                     tempValue = focusTarget.value;
                 }
-                //this.callIfMeaningfulEvent(function() {
                 if (tempbool) {
                     record("type", locatorBuilders.buildAll(event.target), tempValue);
                 }
@@ -181,17 +122,12 @@ window.addEventListener("keydown", function(event) {
 
                 if (key == 38) record("sendKeys", locatorBuilders.buildAll(event.target), "${KEY_UP}");
                 else record("sendKeys", locatorBuilders.buildAll(event.target), "${KEY_DOWN}");
-
                 tabCheck = event.target;
-                //});
             }
             if (key == 9) {
                 if (tabCheck == event.target) {
-                    //this.callIfMeaningfulEvent(function() {
                     record("sendKeys", locatorBuilders.buildAll(event.target), "${KEY_TAB}");
-
                     preventType = true;
-                    //});
                 }
             }
         }
@@ -200,7 +136,6 @@ window.addEventListener("keydown", function(event) {
 
 //Recoed: Type
 window.addEventListener("change", function(event) {
-
     if (event.target.tagName && !preventType) {
         var tagName = event.target.tagName.toLowerCase();
         var type = event.target.type;
@@ -239,9 +174,73 @@ window.addEventListener("change", function(event) {
     }
 });
 
-//////////////////////////////BaiMao
+//select / addSelect / removeSelect
+window.addEventListener('focus', function(event) {
+    if (event.target.nodeName) {
+        var tagName = event.target.nodeName.toLowerCase();
+        if ('select' == tagName && event.target.multiple) {
+            var options = event.target.options;
+            for (var i = 0; i < options.length; i++) {
+                if (options[i]._wasSelected == null) {
+                    // is the focus was gained by mousedown event, _wasSelected would be already set
+                    options[i]._wasSelected = options[i].selected;
+                }
+            }
+        }
+    }
+}, true);
+
+window.addEventListener('change', function(event) {
+    if (event.target.tagName) {
+        var tagName = event.target.tagName.toLowerCase();
+        if ('select' == tagName) {
+            if (!event.target.multiple) {
+                var option = event.target.options[event.target.selectedIndex];
+                record("select", locatorBuilders.buildAll(event.target), getOptionLocator(option));
+            } else {
+                var options = event.target.options;
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i]._wasSelected == null) {}
+                    if (options[i]._wasSelected != options[i].selected) {
+                        var value = getOptionLocator(options[i]);
+                        if (options[i].selected) {
+                            record("addSelection", locatorBuilders.buildAll(event.target), value);
+                        } else {
+                            record("removeSelection", locatorBuilders.buildAll(event.target), value);
+                        }
+                        options[i]._wasSelected = options[i].selected;
+                    }
+                }
+            }
+        }
+    }
+});
+
+function getOptionLocator(option) {
+    var label = option.text.replace(/^ *(.*?) *$/, "$1");
+    if (label.match(/\xA0/)) { // if the text contains &nbsp;
+        return "label=regexp:" + label.replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
+                return '\\' + str
+            })
+            .replace(/\s+/g, function(str) {
+                if (str.match(/\xA0/)) {
+                    if (str.length > 1) {
+                        return "\\s+";
+                    } else {
+                        return "\\s";
+                    }
+                } else {
+                    return str;
+                }
+            });
+    } else {
+        return "label=" + label;
+    }
+};
+
+//BaiMao 
+//DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
 window.addEventListener('mousedown', function(event) {
-    //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
     var self = this;
     if (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) {
         this.mousedown = event;
@@ -476,7 +475,7 @@ window.addEventListener('mouseout', function(event) {
     delete this.mouseoutLocator;
 }, true);
 
-//InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
+// InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
 window.addEventListener('DOMNodeInserted', function(event) {
     if (pageLoaded === true && window.document.documentElement.getElementsByTagName('*').length > nowNode) {
         var self = this;
@@ -517,7 +516,7 @@ window.addEventListener('DOMNodeInserted', function(event) {
     }
 }, true);
 
-//InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
+// InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 var readyTimeOut = null;
 var pageLoaded = true;
 window.addEventListener('readystatechange', function(event) {
@@ -533,6 +532,7 @@ window.addEventListener('readystatechange', function(event) {
     }
 }, true);
 
+// verify/assert text and title
 window.addEventListener('contextmenu', function(event) {
     //     //window.console.log(locatorBuilders.buildAll(event.target));
     //     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
@@ -552,66 +552,26 @@ window.addEventListener('contextmenu', function(event) {
         this.removeListener();
     });
 }, true);
-//
 
-//initial the siddeX tab ID in content
-browser.runtime.onMessage.addListener(function(message) {
-    if (message.sideexID) {
-        contentSideexTabID = message.sideexID;
-        console.log("sideeX id:" + contentSideexTabID);
-
-        //open sideex update sideexTabID
-        console.log("in set attribute 4");
-        document.body.setAttribute("temp_pageSideexTabID", message.sideexID);
-        console.log("temp_pageSideexTabID: " + document.body.getAttribute("temp_pageSideexTabID"));
+//EditContentExt
+var getEle;
+var checkFocus = 0;
+window.addEventListener('focus', function(event) {
+    var editable = event.target.contentEditable;
+    if (editable == 'true') {
+        getEle = event.target;
+        contentTest = getEle.innerHTML;
+        checkFocus = 1;
     }
-});
+}, true);
 
-function onError(error) {
-    alert(`Error: ${error}`);
-};
-
-//console.log("frameLocation : " + frameLocation);
-
-(function getframeLocation() {
-    let currentWindow = window;
-    let currentParentWindow;
-    while (currentWindow !== window.top) {
-        currentParentWindow = currentWindow.parent;
-        for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-            if (currentParentWindow.frames[idx] === currentWindow) {
-                frameLocation = ":" + idx + frameLocation;
-                currentWindow = currentParentWindow;
-                break;
+window.addEventListener('blur', function(event) {
+    if (checkFocus == 1) {
+        if (event.target == getEle) {
+            if (getEle.innerHTML != contentTest) {
+                record("editContent", locatorBuilders.buildAll(event.target), getEle.innerHTML);
             }
+            checkFocus = 0;
+        }
     }
-    frameLocation = "root" + frameLocation;
-})();
-
-console.log("frameLocation : " + frameLocation);
-/* playback */
-browser.runtime.sendMessage({ frameLocation: frameLocation });
-
-/* record */
-function record(command, target, value) {
-    browser.runtime.sendMessage({
-        command: command,
-        target: target,
-        value: value,
-        frameLocation: frameLocation,
-        commandSideexTabID: contentSideexTabID
-    });
-}
-
-/* for test */
-/*
-if(window.frameElement){
-    if(window.frameElement.getAttribute("name"))
-        console.log("Name: " + window.frameElement.getAttribute("name"));
-    if(window.frameElement.getAttribute("id"))
-        console.log("Id: " + window.frameElement.getAttribute("id"));
-}
-*/
-
-/* for test */
-//console.log("complete at " + new Date());
+}, true);

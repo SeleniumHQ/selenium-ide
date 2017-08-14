@@ -431,6 +431,7 @@ Selenium.prototype.doEcho = function(value) {
     browser.runtime.sendMessage({ "echoStr": value });
 };
 
+
 // xian
 Selenium.prototype.doWaitPreparation = function() {
     // function setNewPageValue(e) {
@@ -1507,7 +1508,8 @@ Selenium.prototype.doWaitForPopUp = function(windowID, timeout) {
 
 Selenium.prototype.doWaitForPopUp.dontCheckAlertsAndConfirms = true;
 
-Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
+
+//Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
     /**
      * <p>
      * By default, Selenium's overridden window.confirm() function will
@@ -1524,10 +1526,10 @@ Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
      * the next selenium operation will fail.
      * </p>
      */
-    this.browserbot.cancelNextConfirmation(false);
-};
+    //this.browserbot.cancelNextConfirmation(false);
+//};
 
-Selenium.prototype.doChooseOkOnNextConfirmation = function() {
+//Selenium.prototype.doChooseOkOnNextConfirmation = function() {
     /**
      * <p>
      * Undo the effect of calling chooseCancelOnNextConfirmation.  Note
@@ -1546,10 +1548,11 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function() {
      * </p>
      *
      */
-    this.browserbot.cancelNextConfirmation(true);
-};
+    //this.browserbot.cancelNextConfirmation(true);
+//};
 
-Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
+
+//Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
     /**
      * Instructs Selenium to return the specified answer string in response to
      * the next JavaScript prompt [window.prompt()].
@@ -1557,8 +1560,9 @@ Selenium.prototype.doAnswerOnNextPrompt = function(answer) {
      *
      * @param answer the answer to give in response to the prompt pop-up
      */
-    this.browserbot.setNextPromptResult(answer);
-};
+    //this.browserbot.setNextPromptResult(answer);
+//};
+
 
 Selenium.prototype.doGoBack = function() {
     /**
@@ -3620,11 +3624,117 @@ Selenium.prototype.doEditContent = function(locator, value) {
     var editable = element.contentEditable;
 
     if (editable == "true") {
-        ////LOG.info("if statement!");
         element.innerHTML = value;
     } else {
-        ////LOG.info("else statement!");
-        //LOG.error("The value of contentEditable attribute of this element is not true.");
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
     }
 };
+
+/* prompt */
+
+Selenium.prototype.doChooseCancelOnNextPrompt = function() {
+    return this.browserbot.cancelNextPrompt();
+}
+
+Selenium.prototype.doAnswerOnNextPrompt = function (answer) {
+    return this.browserbot.setNextPromptResult(answer);
+}
+
+Selenium.prototype.doAssertPrompt = function (message) {
+    return this.browserbot.getPromptMessage().then(function(actualMessage) {
+               if (message != actualMessage)
+                    return Promise.reject("Prompt message doesn't match actual message");
+               else
+                    return Promise.resolve(true);
+           });
+}
+
+
+// confirm
+Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
+    this.browserbot.setNextConfirmationResult(false);
+}
+
+Selenium.prototype.doChooseOkOnNextConfirmation = function (answer) {
+    this.browserbot.setNextConfirmationResult(true);
+}
+
+Selenium.prototype.doAssertConfirmation = function(value) {
+    return this.browserbot.getConfirmationMessage().then(function(actualMessage) {
+               if (value != actualMessage)
+                    return Promise.reject("Confirmation message doesn't match actual message");
+               else
+                    return Promise.resolve(true);
+           });
+};
+/*
+Selenium.prototype.doAssertConfirmation = function (message) {
+    return this.browserbot.getConfirmMessage().then(function(actualMessage) {
+               if (message != actualMessage)
+                    return Promise.reject("Confirm message doesn't match actual message");
+               else
+                    return Promise.resolve(true);
+           });
+}
+*/
+/*
+Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
+    try{
+        var actualCode = '('+function(){
+            var tempWindowConfirmation = window.confirm;
+            window.confirm = function(message) {
+                window.confirm = tempWindowConfirmation;
+                messageToContent(message,false);
+                return false;
+            }
+            //console.log("finish inject inplaying");
+        }+')();';
+        
+        var injectModifyWindowMethodOnPlay = document.createElement("script");
+        injectModifyWindowMethodOnPlay.textContent = actualCode;
+        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
+        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
+    } catch(reason) {
+        console.error("reason: "+reason);
+    }
+}
+
+Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
+    try{
+        var actualCode = '('+function(){
+            var tempWindowConfirmation = window.confirm;
+            window.confirm = function(message) {
+                window.confirm = tempWindowConfirmation;
+                messageToContent(message,true);
+                return true;
+            }
+            //console.log("finish inject inplaying");
+        }+')();';
+        
+        var injectModifyWindowMethodOnPlay = document.createElement("script");
+        injectModifyWindowMethodOnPlay.textContent = actualCode;
+        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
+        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
+    } catch(reason) {
+        console.error("reason: "+reason);
+    }
+}
+*/
+
+// show element
+Selenium.prototype.doShowElement = function(locator){
+    try{
+        var element = this.browserbot.findElement(locator);
+        var origin_backgroundColor = element.style.backgroundColor;
+        //element.setAttribute("style","background-color: yellow");
+        element.style.backgroundColor = "yellow";
+        setTimeout(function() {
+            element.style.backgroundColor = origin_backgroundColor;
+        }, 500);
+        //console.log("set yellow");
+        return "element found"
+    } catch (e) {
+        console.error(e);
+        return "element not found";
+    }
+}

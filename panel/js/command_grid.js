@@ -41,8 +41,31 @@ function setColor(index, state) {
         $("#" + index).addClass(state);
     } else {
         var node = document.getElementById("records-" + index);
-        node.className = state
+        node.className = state;
+        setRecordScrollTop(node);
     }
+}
+
+function setRecordScrollTop(record) {
+    if ($(".smallSection").scrollTop() > record.offsetTop - 65)
+        $(".smallSection").animate({
+            scrollTop: record.offsetTop - 65
+        }, 200);
+    else if ($(".smallSection").height() + $(".smallSection").scrollTop() - 55 < record.offsetTop)
+        $(".smallSection").animate({
+            scrollTop: record.offsetTop - ($(".smallSection").height() - 55)
+        }, 200);
+}
+
+function setCaseScrollTop(testCase) {
+    if ($(".case_list").scrollTop() > testCase.offsetTop - 143)
+        $(".case_list").animate({
+            scrollTop: testCase.offsetTop - 143
+        }, 200);
+    else if ($(".case_list").height() + $(".case_list").scrollTop() - 60 < testCase.offsetTop - $(".case_list").offset().top)
+        $(".case_list").animate({
+            scrollTop: testCase.offsetTop - $(".case_list").offset().top - ($(".case_list").height() - 60)
+        }, 600);
 }
 
 // according to "ID" to set odd/even class
@@ -79,7 +102,7 @@ function classifyRecords(start, end) {
         }
     } catch (e) {}
 
-    document.getElementById("records-" + getRecordsNum()).style.borderBottom = "green solid 2px";
+    // document.getElementById("records-" + getRecordsNum()).style.borderBottom = "green solid 2px";
 }
 
 // according to <tr> array's "order" to reassign id
@@ -121,13 +144,13 @@ function getSelectedCase() {
 function attachEvent(start, end) {
     for (var i = start; i <= end; ++i) {
         var node = document.getElementById("records-" + i);
-        node.draggable = "true";
 
         // sometimes target will be <td> or <tr>        
         // click
         node.addEventListener("click", function(event) {
             // use jquery's API to add and remove class property
             $('#records-grid .selectedRecord').removeClass('selectedRecord');
+            $(".record-bottom").removeClass("active");
             $(this).addClass('selectedRecord');
 
             // show on grid toolbar
@@ -139,6 +162,7 @@ function attachEvent(start, end) {
             // notice that "textNode" also is a node
             document.getElementById("command-command").value = getCommandName(ref);
             document.getElementById("command-target").value = getCommandTarget(ref);
+            document.getElementById("target-dropdown").innerHTML = escapeHTML(ref.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
             document.getElementById("command-target-list").innerHTML = escapeHTML(ref.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
             document.getElementById("command-value").value = getCommandValue(ref);
         }, false);
@@ -147,6 +171,7 @@ function attachEvent(start, end) {
         node.addEventListener("contextmenu", function(event) {
             // use jquery's API to add and remove class property
             $('#records-grid .selectedRecord').removeClass('selectedRecord');
+            $(".record-bottom").removeClass("active");
             $(this).addClass('selectedRecord');
 
             // show on grid toolbar
@@ -160,63 +185,6 @@ function attachEvent(start, end) {
             document.getElementById("command-target").value = getCommandTarget(ref);
             document.getElementById("command-target-list").innerHTML = escapeHTML(ref.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
             document.getElementById("command-value").value = getCommandValue(ref);
-        }, false);
-
-        // drag n drop
-        node.addEventListener("dragstart", function(event) {
-            event.dataTransfer.setData("recordID", event.target.id);
-        }, false);
-        node.addEventListener("dragover", function(event) {
-            event.preventDefault();
-        }, false);
-        // node.addEventListener("dragenter", function(event){
-        //     var ref = event.target.parentNode;
-        //     if (ref.tagName != "TR") {
-        //         ref = ref.parentNode;
-        //     }
-        //     ref.style.borderBottom = "dashed 2px black";
-        // }, false);
-        node.addEventListener("dragleave", function(event) {
-            var ref = event.target.parentNode;
-            if (ref.tagName != "TR") {
-                ref = ref.parentNode;
-            }
-            // ref.style.borderBottom = "";
-            document.getElementById("records-" + getRecordsNum()).style.borderBottom = "green solid 2px";
-        }, false);
-        node.addEventListener("drop", function(event) {
-            event.preventDefault();
-            var ref = event.target.parentNode;
-            if (ref.tagName != "TR") {
-                ref = ref.parentNode;
-            }
-            var end_ID = ref.id,
-                start_ID = event.dataTransfer.getData("recordID");
-            // ref.style.borderBottom = "";
-
-            if (start_ID != end_ID) {
-                document.getElementById("records-" + getRecordsNum()).style.borderBottom = "";
-                // remove textNode, and last record do not have textNode
-                if (document.getElementById(start_ID).nextSibling) {
-                    ref.parentNode.removeChild(document.getElementById(start_ID).nextSibling);
-                }
-                ref.parentNode.insertBefore(document.getElementById(start_ID), ref.nextSibling);
-                ref.parentNode.insertBefore(document.createTextNode("\n"), ref.nextSibling);
-                reAssignId(start_ID, end_ID);
-
-                $('#records-grid .selectedRecord').removeClass('selectedRecord');
-                $('#' + ref.nextSibling.nextSibling.id).addClass('selectedRecord');
-                // do not forget that textNode is also a node
-                document.getElementById("command-command").value = getCommandName(ref.nextSibling.nextSibling);
-                document.getElementById("command-target").value = getCommandTarget(ref.nextSibling.nextSibling);
-                document.getElementById("command-value").value = getCommandValue(ref.nextSibling.nextSibling);
-
-                // store command grid to testCase
-                var s_case = getSelectedCase();
-                if (s_case) {
-                    sideex_testCase[s_case.id].records = document.getElementById("records-grid").innerHTML;
-                }
-            }
         }, false);
     }
 }

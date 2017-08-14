@@ -4,28 +4,31 @@
 <head>
     <meta charset="utf-8" />
     <!-- TODO: Change the title bar text -->
-    <title></title>
+    <title>SideeX 2.0.0</title>
+    <link rel="stylesheet" href="panel/css/jquery-ui.min.css">
     <link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="panel/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="./panel/panel-css/context_menu.css">
     <!-- to hide right button feature -->
     <!--[if lt IE 9]>
     <link rel="stylesheet" href="panel/css/ie.css" type="text/css" media="screen" />
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <script src="panel/js/jquery-1.5.2.min.js" type="text/javascript"></script>
-    <script src="panel/js/hideshow.js" type="text/javascript"></script>
-    <script src="panel/js/jquery.tablesorter.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="panel/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="panel/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="panel/js/hideshow.js"></script>
+    <script type="text/javascript" src="panel/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="panel/js/jquery.equalHeight.js"></script>
     <script type="text/javascript" src="panel/js/jquery.tabletab.js"></script>
+    <script type="text/javascript" src="panel/js/colResizable-1.5.min.js"></script>
     <script type="text/javascript" src="panel/js/panelSetting.js"></script>
+    <script type="text/javascript" src="panel/js/sortable-ui.js"></script>
 </head>
-<!-- TODO: Make whole panel size smaller -->
+<!-- TODO: Make whole panel size flexible -->
 
 <body>
     <header id="header">
         <hgroup>
-            <h1 class="site_title"><img href="panel.html" src="./icons/sideex3.png"></img></h1>
+            <h1 class="site_title">SideeX</h1>
         </hgroup>
     </header>
     <!-- end of header bar -->
@@ -45,261 +48,206 @@
     <section id="main" class="column">
         <div id="toolbar-container" class="submit_link">
             <!-- hidden, because it has default style -->
-            <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display:none"></input>
-            <input id="load-testSuite-show" type="button" value="OpenSuite" style="display:none"></input>
-            <button id="save-testSuite" style="display:none">SaveSuite</button>
-            <button id="close-testSuite" style="display:none">CloseSuite</button>
-            <button id="add-testSuite" style="display:none">+Suite</button>
-            <button id="add-testCase" style="display:none">+Case</button>
-            <button id="delete-testCase" style="display:none">-Case</button>
+            <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display: none"></input>
+            <input id="load-testSuite-show" type="button" value="OpenSuite" style="display: none"></input>
+            <button id="save-testSuite" style="display: none">SaveSuite</button>
+            <button id="close-testSuite" style="display: none">CloseSuite</button>
+            <button id="add-testSuite" style="display: none">+Suite</button>
+            <button id="add-testCase" style="display: none">+Case</button>
+            <button id="delete-testCase" style="display: none">-Case</button>
             <a download="info.html" id="downloadlink" style="display: none">Download</a>
-            <button id="record" class="sub_btn"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
-            <button id="playback" class="sub_btn"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
-            <button id="playSuite" class="sub_btn"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
-            <button id="playSuites" class="sub_btn"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
-            <!-- TODO: Make pause & resume same button(switch) -->
-            <button id="pause" class="sub_btn"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-            <button id="resume" class="sub_btn"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
+            <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
+            <button id="playback" class="sub_btn" style="width: 20%"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
+            <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-stop" aria-hidden="true"></i> Stop</button>
+            <button id="playSuite" class="sub_btn" style="width: 21%"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
+            <button id="playSuites" class="sub_btn" style="width: 21%"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
+            <button id="pause" class="sub_btn btn_pr" style="width: 15.5%"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
+            <button id="resume" class="sub_btn btn_pr" style="display: none; width: 15.5%"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
             <!-- TODO: Add a stop button -->
         </div>
-        <article class="width_quarter module_right">
-            <div id="middle-container" class="module">
-                <header>
-                    <h3>Test case</h3></header>
-                <div id="testCase-container" class="case_list">
-                    <!-- Sug: Add animation when dragdrop -->
-                    <div id="testCase-grid" class="module_content">
-                        <!--<div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>
-                        <div class="message"><p>Untitled</p>
-                        <p><strong>John Doe</strong></p></div>-->
+        <div class="module_all">
+            <article class="width_quarter module_right">
+                <div id="middle-container" class="module">
+                    <header>
+                        <h3>Test case</h3>
+                    </header>
+                    <div id="testCase-container" class="case_list">
+                        <!-- Sug: Add animation when dragdrop -->
+                        <div id="testCase-grid" class="module_content">
+                            <!--<div class="message"><strong>Suite</strong>
+                                <p>Case</p>
+                                <p class="modified">Case</p>
+                            </div>
+                            <div class="message"><strong>Suite</strong>
+                                <p>Case</p>
+                            </div>
+                            <div class="message"><strong>Suite</strong>
+                                <p>Case</p>
+                            </div>
+                            <div class="message"><strong>Suite</strong>
+                                <p>Case</p>
+                            </div>
+                            <div class="message"><strong>Suite</strong>
+                                <p>Case</p>
+                            </div>-->
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- end of messages article -->
-            <article class="module">
-                <fieldset id="result-container" class="action">
-                    <label id="result1">Runs</label>
-                    <p id="result-runs" class="runs">0</p>
-                    <label id="result2">Failures</label>
-                    <p id="result-failures" class="failures">0</p>
-                </fieldset>
+                <!-- end of messages article -->
+                <article id="result-container" class="module">
+                    <div class="fieldset">
+                        <div class="result-row">
+                            <label id="result1">Runs</label>
+                            <p id="result-runs" class="runs">0</p>
+                        </div>
+                        <div class="result-row">
+                            <label id="result2">Failures</label>
+                            <p id="result-failures" class="failures">0</p>
+                        </div>
+                    </div>
+                </article>
             </article>
-        </article>
-        <article class="module width_3_quarter">
-            <header>
-                <h3 class="tabs_involved"></h3>
-                <ul class="tabs">
-                    <li><a href="#command-container">Table</a></li>
-                    <!-- <li><a href="#tab2">Source</a></li> -->
-                </ul>
-            </header>
-            <div class="tab_container">
+            <article class="module width_3_quarter">
                 <div id="command-container" class="tab_content case_hight">
-                    <table id="command-grid" class="tablesorter" cellspacing="0">
-                        <!-- TODO: Give fixed width -->
-                        <thead>
-                            <tr>
-                                <th>Comand</th>
-                                <th>Target</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="records-grid">
-                            <!-- TODO: Give a init height and make y scroll -->
-                            <input id="records-count" type=hidden value=0></input>
-                            <!-- TODO: Make text appear instead of ... -->
-                            <!-- TODO: Change color when running -->
-                            <!-- set input and /tbody in same line to avoid textNode -->
-                            <!--<tr> 
-                                <td>time</td> 
-                                <td>open</td> 
-                                <td></td> 
-                
-                            </tr> 
-                            <tr> 
-                                <td>time</td> 
-                                <td>open</td> 
-                                <td></td> 
-                            </tr>
-                            <tr> 
-                                <td>time</td> 
-                                <td>open</td> 
-                                <td></td> 
-                            </tr>
-                            <tr> 
-                                <td>time</td> 
-                                <td>open</td> 
-                                <td></td> 
-                            </tr>-->
-                        </tbody>
-                    </table>
-                    <fieldset id="command-toolbar" class="action">
+                    <div class="smallSection">
+                        <table id="command-grid" class="tablesorter" cellspacing="0">
+                            <!-- TODO: Make the width flexible -->
+                            <thead>
+                                <tr>
+                                    <th style="width: 23%">Command<div class="border"></div></th>
+                                    <th style="width: 40%">Target<div class="border"></div></th>
+                                    <th style="width: 37%">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="records-grid">
+                                <!-- TODO: Make only tbody scoll -->
+                                <input id="records-count" type="hidden" value="0"></input>
+                                <!-- set input and /tbody in same line to avoid textNode -->
+                                <!--<tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>7</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>10</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>11</td>
+                                </tr>
+                                <tr>
+                                    <td>time</td>
+                                    <td>open</td>
+                                    <td>12</td>
+                                </tr>-->
+                            </tbody>
+                        </table>
+                        <div class="record-bottom"></div>
+                    </div>
+                </div>
+                <div id="command-toolbar">
+                    <div class="fieldset">
                         <!-- TODO: make (command &) target selectable -->
-                        <label>Command</label>
-                        <input id="command-command" list="command-command-list" type="text" style="width:92%;">
+                        <div class="command-row">
+                            <label>Command</label>
+                            <input id="command-command" list="command-command-list" type="text"><i id="command-" class="fa fa-chevron-down" aria-hidden="true"></i>
+                            <div id="command-dropdown" class="w3-dropdown-content w3-bar-block">
+                            </div>
+                        </div>
                         <datalist id="command-command-list">
-                            <option value="click"></option>
-                            <option value="type"></option>
-                            <option value="sendKey"></option>
-                            <option value="clickAt"></option>
-                            <option value="open"></option>
                         </datalist>
-                        <label>Target</label>
-                        <input id="command-target" list="command-target-list" type="text" style="width:92%;">
+                        <div class="command-row">
+                            <label>Target</label>
+                            <input id="command-target" list="command-target-list" type="text"><i id="target-" class="fa fa-chevron-down" aria-hidden="true"></i>
+                            <div id="target-dropdown" class="w3-dropdown-content w3-bar-block">
+                            </div>
+                            <button id="selectElementButton" class="btn_sf">Select</button>
+                            <button id="showElementButton" class="btn_sf">Find</button>
+                        </div>
                         <datalist id="command-target-list">
                         </datalist>
-                        <label>Value</label>
-                        <input id="command-value" type="text" style="width:92%;">
-                    </fieldset>
+                        <div class="command-row">
+                            <label>Value</label>
+                            <input id="command-value" type="text">
+                        </div>
+                    </div>
                 </div>
                 <!-- end of #command-container -->
-                <div id="tab2" class="tab_content case_hight">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div>
-                <!-- end of #tab2 -->
-            </div>
-            <!-- end of .tab_container -->
-        </article>
-        <!-- end of content manager article -->
-        <div class="clear"></div>
-        <article class="module width_full">
-            <header class="tabs_involved">
-                <ul class="tabs">
-                    <li><a href="#tab4">Log</a></li>
-                    <!-- <li><a href="#tab5">Reference</a></li>
-                    <li><a href="#tab6">UI-element</a></li>
-                    <li><a href="#tab7">Rollup</a></li> -->
-                </ul>
-                <!-- TODO: Make it to a button and same style -->
-                <ul id="clear-log" class="tabs">
-                    <li><a>Clear</a></li>
-                </ul>
-            </header>
-            <div class="tab_container">
+            </article>
+            <!-- end of content manager article -->
+            <div class="clear"></div>
+            <article class="module width_full">
+                <header class="tabs_involved">
+                    <ul class="tabs">
+                        <li id="clear-log"><a>Clear</a></li>
+                    </ul>
+                </header>
                 <div id="tab4" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div id="logcontainer" class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                </div>
-                            </fieldset>
+                    <div class="module_content">
+                        <div id="logcontainer">
                         </div>
-                    </table>
+                    </div>
                 </div>
                 <!-- end of #tab4 -->
-                <!-- <div id="tab5" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div> -->
-                <!-- end of #tab5 -->
-                <!-- <div id="tab6" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div> -->
-                <!-- end of #tab6-->
-                <!-- <div id="tab7" class="tab_content case_roll">
-                    <table class="tablesorter" cellspacing="0">
-                        <div class="module_content">
-                            <fieldset>
-                                <div class="module_content">
-                                    <h1>Header 1</h1>
-                                    <h2>Header 2</h2>
-                                    <h3>Header 3</h3>
-                                    <h4>Header 4</h4>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-                                    <ul>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                        <li>Donec ullamcorper nulla non metus auctor fringilla. </li>
-                                        <li>Cras mattis consectetur purus sit amet fermentum.</li>
-                                    </ul>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </table>
-                </div> -->
-                <!-- end of #tab7 -->
-            </div>
-            <!-- end of .tab_container -->
-        </article>
-        <!-- end of styles article -->
-        <div class="spacer"></div>
+            </article>
+            <!-- end of styles article -->
+        </div>
+        <!--<div class="spacer"></div>-->
     </section>
     <!-- script -->
-    <script src="./escape.js"></script>
-    <script src="./panel/panel-js/log.js"></script>
-    <script src="./initial.js"></script>
-    <script src="./panel/panel-js/context_menu.js"></script>
-    <script src="./panel/panel-js/command_grid.js"></script>
-    <script src="./panel/panel-js/command_grid_toolbar.js"></script>
-    <script src="./panel/panel-js/testcase_grid.js"></script>
-    <script src="./IO/load_file.js"></script>
-    <script src="./IO/save_file.js"></script>
-    <script src="./IO/suite.js"></script>
+    <script src="IO/load_file.js"></script>
+    <script src="IO/save_file.js"></script>
+    <script src="IO/suite.js"></script>
+    <script src="panel/js/context_menu.js"></script>
+    <script src="panel/js/command_grid.js"></script>
+    <script src="panel/js/command_grid_toolbar.js"></script>
+    <script src="panel/js/testcase_grid.js"></script>
+    <script src="panel/js/log.js"></script>
+    <script src="initial.js"></script>
+    <script src="escape.js"></script>
     <script src="editor.js"></script>
     <script src="locatorBuilders.js"></script>
     <script src="formatCommand.js"></script>

@@ -41,6 +41,7 @@ function panelToFile(str) {
     temp_str = str;
     console.log(temp_str);
     str = "\n";
+    if(tr)
     for (var i = 0; i < tr.length; ++i) {
         var pattern = tr[i].match(/([\s]*?)(?:<td>)([\s\S]*?)(?:<\/td>)([\s]*?)(?:<td>)([\s\S]*?)(?:<datalist>)([\s\S]*?)(?:<\/datalist><\/td>)([\s]*?)(?:<td>)([\s\S]*?)(?:<\/td>)/);
 
@@ -68,7 +69,9 @@ function panelToFile(str) {
 
 var textFile = null,
     makeTextFile = function(text) {
-        var data = new Blob([text], { type: 'text/plain' });
+        var data = new Blob([text], {
+            type: 'text/plain'
+        });
         // If we are replacing a previously generated file we need to
         // manually revoke the object URL to avoid memory leaks.
         if (textFile !== null) {
@@ -78,12 +81,8 @@ var textFile = null,
         return textFile;
     };
 
-function downloadSuite(s_suite) {
+function downloadSuite(s_suite,callback) {
     if (s_suite) {
-        var link = document.createElement('a');
-        var f_name = sideex_testSuite[s_suite.id].file_name;
-        link.setAttribute('download', f_name);
-
         var cases = s_suite.getElementsByTagName("p"),
             output = "",
             old_case = getSelectedCase();
@@ -111,15 +110,41 @@ function downloadSuite(s_suite) {
             setSelectedSuite(s_suite.id);
         }
 
-        link.href = makeTextFile(output);
-        document.body.appendChild(link);
-
-        // wait for the link to be added to the document
-        window.requestAnimationFrame(function() {
-            var event = new MouseEvent('click');
-            link.dispatchEvent(event);
-            document.body.removeChild(link);
+        var f_name = sideex_testSuite[s_suite.id].file_name,
+            link = makeTextFile(output);
+            
+        var downloading = browser.downloads.download({
+            filename: f_name,
+            url: link,
+            saveAs: true,
+            conflictAction: 'overwrite'
         });
+
+        var downloaded = function(download) {
+            download = download[0];
+            // console.log(download);
+            f_name = download.filename.split("\\").pop();
+            sideex_testSuite[s_suite.id].file_name = f_name;
+            $(s_suite).find(".modified").removeClass("modified");
+            closeConfirm(false);
+            s_suite.childNodes[0].textContent = f_name.substring(0, f_name.lastIndexOf("."));
+            if(callback)
+                callback();
+        };
+
+        var result = function(id) {
+            var check = browser.downloads.search({
+                id: id
+            });
+            check.then(downloaded, onError);
+            console.log(id);
+        };
+
+        var onError = function(error) {
+            console.log(error);
+        };
+
+        downloading.then(result, onError);
     } else {
         alert("Choose a test suite to download!");
     }
