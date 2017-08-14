@@ -84,8 +84,6 @@ browser.runtime.onMessage.addListener(function(message) {
 console.log("frameLocation : " + frameLocation);
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
-
-
 /* record */
 function record(command, target, value, insertBeforeLastCommand) {
     browser.runtime.sendMessage({

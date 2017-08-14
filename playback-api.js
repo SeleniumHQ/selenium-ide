@@ -1,8 +1,6 @@
-var userWinId = 0;
-var mySideexTabId = 0;
-var windowIdArray = {};
 var playingTabIds = {};
 var playingTabNames = {};
+var playingTabCount = 1;
 var currentPlayingFrameLocation = "root";
 var currentPlayingCommandIndex = -1;
 
@@ -68,7 +66,7 @@ window.onload = function() {
             button.value = "Select";
             browser.tabs.query({
                 active: true,
-                windowId: userWinId
+                windowId: contentWindowId
             }).then(function(tabs) {
                 browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
             }).catch(function(reason) {
@@ -84,7 +82,7 @@ window.onload = function() {
         button.value = "Cancel";
         browser.tabs.query({
             active: true,
-            windowId: userWinId
+            windowId: contentWindowId
         }).then(function(tabs) {
             if (tabs.length === 0) {
                 console.log("No match tabs");
@@ -101,7 +99,7 @@ window.onload = function() {
             console.log("value: " + targetValue);
             browser.tabs.query({
                 active: true,
-                windowId: userWinId
+                windowId: contentWindowId
             }, function(tabs) {
                 browser.tabs.sendMessage(tabs[0].id, {
                     mySideexTabId:mySideexTabId,
@@ -167,13 +165,6 @@ function initializeAfterConnectionFailed() {
 
     isRecording = false;
     isPlaying = true;
-    playingTabNames = new Object();
-    playingTabIds = new Object();
-    //windowIdArray = new Object();
-    //windowIdArray[userWinId] = true;
-    currentPlayingWindowId = userWinId;
-    currentPlayingFrameLocation = "root";
-    playingFrameLocations = {};
 
     commandType = "preparation";
     pageCount = ajaxCount = domCount = implicitCount = 0;
@@ -184,25 +175,7 @@ function initializeAfterConnectionFailed() {
     currentTestCaseId = getSelectedCase().id;
     var commands = getRecordsArray();
 
-    return browser.tabs.query({
-            windowId: currentPlayingWindowId,
-            active: true
-        })
-        .then(function(tabs) {
-            if (tabs.length === 0) {
-                throw new Error("Can't find the window");
-                // ...Or we can create a new window for user
-                // and binding to a new userWinId.
-            }
-            currentPlayingTabId = tabs[0].id;
-            playingTabNames["win_ser_local"] = currentPlayingTabId;
-            playingTabIds[currentPlayingTabId] = "win_ser_local";
-            playingFrameLocations[currentPlayingTabId] = {};
-            playingFrameLocations[currentPlayingTabId]["root"] = 0;
-            /* we assume that there is no open command */
-            /* select Frame directly will cause failed */
-            playingFrameLocations[currentPlayingTabId]["status"] = true;
-        })
+    return Promise.resolve(true);
 }
 
 function pause() {
@@ -302,7 +275,7 @@ function executeCommand(index) {
     setColor(id + 1, "executing");
 
     browser.tabs.query({
-            windowId: userWinId,
+            windowId: contentWindowId,
             active: true
         })
         .then(function(tabs) {
@@ -374,12 +347,10 @@ function initializePlayingProgress(isDbclick) {
     isPlaying = true;
 
     switchPS();
-    //var commands = getRecordsArray();
+
     playingTabNames = new Object();
     playingTabIds = new Object();
-    //windowIdArray = new Object();
-    //windowIdArray[userWinId] = true;
-    currentPlayingWindowId = userWinId;
+    currentPlayingWindowId = contentWindowId;
     currentPlayingFrameLocation = "root";
     playingFrameLocations = {};
     currentPlayingCommandIndex = -1;
@@ -408,15 +379,15 @@ function initializePlayingProgress(isDbclick) {
             if (tabs.length === 0) {
                 throw new Error("Can't find the window");
                 // ...Or we can create a new window for user
-                // and binding to a new userWinId.
+                // and binding to a new contentWindowId.
             }
             currentPlayingTabId = tabs[0].id;
             playingTabNames["win_ser_local"] = currentPlayingTabId;
             playingTabIds[currentPlayingTabId] = "win_ser_local";
             playingFrameLocations[currentPlayingTabId] = {};
             playingFrameLocations[currentPlayingTabId]["root"] = 0;
-            /* we assume that there is no open command */
-            /* select Frame directly will cause failed */
+            // we assume that there has an "open" command
+            // select Frame directly will cause failed
             playingFrameLocations[currentPlayingTabId]["status"] = true;
         });
 }
@@ -433,19 +404,10 @@ function executionLoop() {
 
     if (commandType == "preparation") {
         console.log("in preparation");
-        return browser.tabs.query({
-                windowId: userWinId,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "waitPreparation",
-                    target: "",
-                    value: "",
-                    mySideexTabId: mySideexTabId
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                });
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "waitPreparation", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function() {
                 commandType = "prePageWait";
@@ -453,19 +415,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "prePageWait") {
         console.log("in prePageWait");
-        return browser.tabs.query({
-                windowId: userWinId,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "prePageWait",
-                    target: "",
-                    value: "",
-                    mySideexTabId: mySideexTabId
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                });
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "prePageWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (response && response.new_page) {
@@ -478,19 +431,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "pageWait") {
         console.log("in pageWait");
-        return browser.tabs.query({
-                windowId: userWinId,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "pageWait",
-                    target: "",
-                    value: "",
-                    mySideexTabId: mySideexTabId
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                })
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "pageWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (pageTime && (Date.now() - pageTime) > 30000) {
@@ -514,19 +458,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "ajaxWait") {
         console.log("in ajaxWait");
-        return browser.tabs.query({
-                windowId: userWinId,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "ajaxWait",
-                    target: "",
-                    value: "",
-                    mySideexTabId: mySideexTabId
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                })
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "ajaxWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
@@ -550,19 +485,10 @@ function executionLoop() {
             .then(executionLoop);
     } else if (commandType == "domWait") {
         console.log("in domWait");
-        return browser.tabs.query({
-                windowId: userWinId,
-                active: true
-            })
-            .then(function(tabs) {
-                return browser.tabs.sendMessage(tabs[0].id, {
-                    commands: "domWait",
-                    target: "",
-                    value: "",
-                    mySideexTabId: mySideexTabId
-                }, {
-                    frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                })
+        return browser.tabs.sendMessage(currentPlayingTabId, {
+                commands: "domWait", target: "", value:""
+            }, {
+                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
             })
             .then(function(response) {
                 if (domTime && (Date.now() - domTime) > 30000) {
@@ -634,62 +560,49 @@ function executionLoop() {
                 currentPlayingFrameLocation += ":" + str;
             console.log(currentPlayingFrameLocation);
 
-            return new Promise(executionLoop);
-            /*
             return new Promise(function(resolve, reject){
-                        let count = 0;
-                        let interval = setInterval( function(){
-                            console.log("test")
-                            if (count > 30) {
-                                reject("Not Found");
-                                clearInterval(interval);
-                            }
-                            if (!playingFrameLocations[currentPlayingTabId] ||
-                                !playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation])
-                                count++;
-                            else {
-                                resolve();
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                }).then(executionLoop)
-            */
-        } else if (commandName == 'selectWindow') {
-            currentPlayingFrameLocation = "root";
-            if (playingTabNames[commandTarget]) {
-                console.log("window has found, directly update");
-                currentPlayingTabId = playingTabNames[commandTarget];
-                //browser.windows.update(playingWindows[commandTarget].windowId, {focused: true});
-                console.log("currentPlaying: " + currentPlayingTabId);
-                console.log("currentPlaying: " + currentPlayingTabId);
-                return browser.tabs.update(currentPlayingTabId, {
-                        active: true
-                    })
-                    .then(executionLoop);
-            } else if (newWindowInfo.tabId !== undefined && newWindowInfo.windowId !== undefined) {
-                console.log("Found a new window, store the information and select to");
-                playingTabNames[commandTarget] = newWindowInfo.tabId;
-                newWindowInfo.tabId = undefined;
-                newWindowInfo.windowId = undefined;
-                currentPlayingTabId = playingTabNames[commandTarget];
-                return browser.tabs.update(currentPlayingTabId, {
-                        active: true
-                    })
-                    .then(executionLoop);
-            } else {
-                console.log("Error! Can't detect window");
-                sideex_log.error("Can't detect window");
-                //console.log("newWindowInfo.tabId: "+newWindowInfo.tabId);
-                return new Promise(function(resolve, reject) {
-                    setTimeout(function() {
-                        if (newWindowInfo.tabId == undefined)
-                            reject(new Error("Can't Find New Window"));
-                        else
+                    let count = 0;
+                    let interval = setInterval(function() {
+                        if (count > 30) {
+                            reject("Not Found");
+                            clearInterval(interval);
+                        }
+                        if (!playingFrameLocations[currentPlayingTabId] ||
+                            playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation] == null) {
+                            console.log(currentPlayingTabId);
+                            console.log(playingFrameLocations[currentPlayingTabId]);
+                            console.log(playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]);
+                            count++;
+                        } else {
                             resolve();
-                        currentPlayingCommandIndex--;
-                    }, 5000);
-                }).then(executionLoop);
-            }
+                            clearInterval(interval);
+                        }
+                    }, 500);
+                })
+                .then(executionLoop)
+        } else if (commandName == 'selectWindow') {
+            //TODO: set color
+            return new Promise(function(resolve, reject) {
+                    let count = 0;
+                    let interval = setInterval(function() {
+                        if (!playingTabNames[commandTarget]) {
+                            count++;
+                            if (count > 30) {
+                                reject("Can't Find New Window");
+                                clearInterval(interval);
+                            }
+                        } else {
+                            currentPlayingTabId = playingTabNames[commandTarget];
+                            console.log("window has found");
+                            resolve();
+                            clearInterval(interval);
+                        }
+                    }, 500);
+                })
+                .then(function() {
+                    return browser.tabs.update(currentPlayingTabId, {active: true});
+                })
+                .then(executionLoop)
         } else if (commandName == 'close') {
             let removedTabId = currentPlayingTabId;
             currentPlayingTabId = -1;
@@ -713,7 +626,7 @@ function executionLoop() {
             if (currentPlayingTabId === -1) {
 
                 return browser.tabs.query({
-                        windowId: userWinId,
+                        windowId: contentWindowId,
                         active: true
                     })
                     .then(function(tabs) {
@@ -898,10 +811,10 @@ function switchPR() {
 browser.runtime.onMessage.addListener(initialOpen);
 
 function initialOpen(message) {
-    if (message.passWinId) {
-        console.log("passWinId:" + message.passWinId);
-        userWinId = message.passWinId;
-        windowIdArray[userWinId] = true;
+    if (message.passWinID) {
+        console.log("passWinID:" + message.passWinID);
+        contentWindowId = message.passWinID;
+        windowIdArray[contentWindowId] = true;
     }
     if (message.sideexId) {
         console.log("mySideexTabId:" + message.sideexId);
