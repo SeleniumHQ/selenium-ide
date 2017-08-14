@@ -88,6 +88,11 @@ $(document).ready(function() {
     $(".fixed").width($("table:not(.fixed)").width());
 
     $("#command-dropdown,#command-command-list").html(genCommandDatalist());
+
+    $(".record-bottom").click(function() { 
+        $(this).addClass("active");
+        $('#records-grid .selectedRecord').removeClass('selectedRecord'); 
+    });
 });
 
 var dropdown = function(node) {
@@ -168,6 +173,6 @@ function genCommandDatalist() {
     supportedCommand.forEach(function(command) {
         datalistHTML += ('<option value="' + command + '">' + command + '</option>\n');
     });
-    
+
     return datalistHTML;
 }

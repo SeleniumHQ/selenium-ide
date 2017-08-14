@@ -8,6 +8,7 @@ var currentTestCaseId = "";
 var isPause = false;
 var pauseValue = null;
 var isPlayingSuite = false;
+var isPlayingAll = false;
 var selectTabId = null;
 var isSelecting = false;
 

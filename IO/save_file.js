@@ -41,6 +41,7 @@ function panelToFile(str) {
     temp_str = str;
     console.log(temp_str);
     str = "\n";
+    if(tr)
     for (var i = 0; i < tr.length; ++i) {
         var pattern = tr[i].match(/([\s]*?)(?:<td>)([\s\S]*?)(?:<\/td>)([\s]*?)(?:<td>)([\s\S]*?)(?:<datalist>)([\s\S]*?)(?:<\/datalist><\/td>)([\s]*?)(?:<td>)([\s\S]*?)(?:<\/td>)/);
 
@@ -127,7 +128,8 @@ function downloadSuite(s_suite,callback) {
             $(s_suite).find(".modified").removeClass("modified");
             closeConfirm(false);
             s_suite.childNodes[0].textContent = f_name.substring(0, f_name.lastIndexOf("."));
-            callback();
+            if(callback)
+                callback();
         };
 
         var result = function(id) {

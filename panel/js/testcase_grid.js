@@ -19,6 +19,7 @@ function setSelectedCase(id) {
     $("#" + id).addClass('selectedCase');
     clean_panel();
     document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records);
+    attachEvent(1, getRecordsNum());
 }
 
 function getSelectedSuite() {
@@ -192,7 +193,7 @@ function addTestCase(title, id) {
     if (sideex_testCase[id]) { // load file
         clean_panel();
         document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[id].records);
-        if (sideex_testCase[id].records) {
+        if (getRecordsNum() !== '0') {
             reAssignId("records-1", "records-" + getRecordsNum());
             attachEvent(1, getRecordsNum());
         }
@@ -218,8 +219,10 @@ function addTestCase(title, id) {
         if (sideex_testCase[this.id].records) {
             clean_panel();
             document.getElementById("records-grid").innerHTML = escapeHTML(sideex_testCase[this.id].records);
-            reAssignId("records-1", "records-" + getRecordsNum());
-            attachEvent(1, getRecordsNum());
+            if (getRecordsNum() !== '0') {
+                reAssignId("records-1", "records-" + getRecordsNum());
+                attachEvent(1, getRecordsNum());
+            }
         } else {
             clean_panel();
             document.getElementById("records-grid").innerHTML = escapeHTML('<input id="records-count" type=hidden value=0></input>');

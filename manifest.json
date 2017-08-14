@@ -15,6 +15,7 @@
         "activeTab",
         "webRequest",
         "contextMenus",
+        "downloads",
         "webNavigation"
     ],
 

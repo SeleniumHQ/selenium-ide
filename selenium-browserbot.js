@@ -1401,11 +1401,6 @@ BrowserBot.prototype._registerAllLocatorFunctions = function() {
         }
         return this.locateElementByIdentifier(locator, inDocument, inWindow);
     };
-
-    //Chi-En Huang, SELAB, CSIE, NCKU, 2016/12/28
-    this.locationStrategies['tac'] = function(locator, inDocument, inWindow) {
-        return this.locateElementBySideex(locator, inDocument, inWindow);
-    };
 };
 
 BrowserBot.prototype.getDocument = function() {
@@ -1823,56 +1818,6 @@ BrowserBot.prototype.locateElementByLinkText = function(linkText, inDocument, in
 };
 
 BrowserBot.prototype.locateElementByLinkText.prefix = "link";
-
-//Chi-En Huang, SELAB, CSIE, NCKU, 2016/01/06
-BrowserBot.prototype.locateElementBySideex = function(locator, inDocument, inWindow) {
-    var f = locator.split('::[tac]::');
-    var ox = f[0];
-    var od = f[1];
-
-    var d;
-    for (d = inWindow.document.documentElement; d.parentElement != null; d = d.parentElement) {}
-
-    var h = d.ownerDocument.getElementsByTagName("HTML");
-    var hs = h.length;
-
-    for (var i = 0; i < hs; i++) {
-        if (h[i] == null) {
-            continue;
-        }
-
-        var hc = h[i].children;
-        var hcs = hc.length;
-        for (var j = 0; j < hcs; j++) {
-            if (hc[j] == null) {
-                continue;
-            }
-            if (hc[j].tagName == "DIV") {
-                h[i].removeChild(hc[j]);
-            }
-        }
-    }
-
-    var nse = d.ownerDocument.getElementsByTagName("NOSCRIPT");
-    var nses = nse.length;
-
-    for (var i = 0; i < nses; i++) {
-        nse[i].innerHTML = "";
-    }
-
-    var nd = d.outerHTML;
-
-    try {
-        var tm = new Sideex(ox, od, nd);
-    } catch (e) {}
-
-    var nx = tm.l();
-    //LOG.info("[SideeX] Located element by TAC: " + nx);
-    var ne = this.xpathEvaluator.selectSingleNode(inDocument, nx, null,
-        inDocument.createNSResolver ? inDocument.createNSResolver(inDocument.documentElement) : this._namespaceResolver);
-
-    return ne;
-}
 
 /**
  * Returns an attribute based on an attribute locator. This is made up of an element locator

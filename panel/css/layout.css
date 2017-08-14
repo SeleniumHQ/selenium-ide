@@ -528,8 +528,7 @@ section#main {
 }
 
 .module_content #logcontainer {
-    margin-left: 8%;
-    margin-right: 8%;
+    
 }
 
 /* Module Widths */
@@ -614,12 +613,6 @@ section#main {
     height: 38px;
 }
 
-.tablesorter td {
-    margin: 0;
-    padding: 0;
-    border-bottom: 1px dotted #ccc;
-}
-
 .tablesorter thead tr {
     height: 39px;
     background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
@@ -645,20 +638,9 @@ section#main {
     background-color: #f8f8f8;
 }
 
-.tablesorter tbody tr.executing {
-    background-color: #ffffe6;
-}
-
-.tablesorter tbody tr.success {
-    background-color: #e5ffe5;
-}
-
-.tablesorter tbody tr.fail {
-    background-color: #ffe5e5;
-}
-
-.tablesorter tbody tr.selectedRecord {
-    background-color: #f8f8f8;
+.tablesorter tbody tr.selectedRecord td {
+    padding-top: 6px;
+    border-top: 1px solid #ccc;;
 }
 
 .tablesorter tbody tr.executing {
@@ -674,12 +656,25 @@ section#main {
 }
 
 .tablesorter td {
-    padding: 6px 0px;
+    padding-top: 7px;
+    padding-bottom: 6px;
     text-indent: 12px;
+    border-bottom: 1px dotted #ccc;
 }
 
 .tablesorter input[type=image] {
     margin-right: 10px;
+}
+
+.record-bottom {
+    width: 100%;
+    height: 28px;
+    cursor: pointer;
+}
+
+.record-bottom.active {
+    border-top: 1px solid #ccc;;
+    background-color: #f8f8f8;
 }
 
 ul.tabs {
@@ -1146,7 +1141,7 @@ input[type=submit].btn_post_message:hover {
     margin: 8px 0px;
 }
 
-#main .module_content h4.log-info {
+#main .module_content h4 {
     color: #666666;
     text-transform: none;
     text-shadow: 0 1px 0 #fff;
@@ -1156,12 +1151,6 @@ input[type=submit].btn_post_message:hover {
 }
 
 #main .module_content h4.log-error {
-    color: #666666;
-    text-transform: none;
-    text-shadow: 0 1px 0 #fff;
-    font-size: 13px;
-    margin: 8px 0px;
-    border-bottom: 1px #efefef solid;
     color: red;
 }
 
