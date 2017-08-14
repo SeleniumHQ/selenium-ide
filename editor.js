@@ -112,13 +112,8 @@ browser.windows.onFocusChanged.addListener(function(windowId) {
 
 browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
     if (isRecording && changeInfo.url) {
-        //console.log("tabs updated : reset frame location");
         currentRecordingFrameLocation = "root";
     }
-    // for test
-    //if (isRecording && changeInfo.status == "complete") {
-    //console.log(tabId + " has complete at" + new Date());
-    //}
     if (isPlaying && changeInfo.status == "loading") {
         playingFrameLocations[tabId] = {}; //clear the object
         playingFrameLocations[tabId]["root"] = 0;
@@ -144,7 +139,6 @@ function handleMessage(message, sender, sendResponse) {
     }
 
     if (isPlaying && message.frameLocation) {
-        //console.log(sender.frameId);
         if (!playingFrameLocations[sender.tab.id]) {
             playingFrameLocations[sender.tab.id] = {};
             playingFrameLocations[sender.tab.id]["root"] = 0;
@@ -155,10 +149,8 @@ function handleMessage(message, sender, sendResponse) {
 
 
     if (!message.command || !isRecording) return;
-    if (message.commandSideexTabID != mySideexTabID) return;
-    console.error("sender window ID: " + sender.tab.windowId);
-    //browser.tabs.query({ currentWindow:true,active:true }, function(tabs){console.log("on command id:"+tabs[0].id);});
-    //console.log(message.command);
+    if (message.commandSideexTabId != mySideexTabId) return;
+    console.error("sender window Id: " + sender.tab.windowId);
 
     if (getRecordsArray().length === 0) {
         openedTabNames["win_ser_local"] = sender.tab.id;
@@ -225,9 +217,6 @@ function handleMessage(message, sender, sendResponse) {
 browser.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     if (!isRecording) return;
 
-    //if(windowIdArray[removeInfo.windowId] == false)
-    //windowIdArray[removeInfo.windowId]=false;
-
     if (openedTabIds[tabId] && tabId === openedTabNames[openedTabIds[tabId]]) {
         if (currentRecordingTabId !== tabId) {
             addCommandAuto("selectWindow", [
@@ -261,7 +250,6 @@ browser.tabs.onCreated.addListener(function(tab) {
     if (isRecording) return;
 
     if (isPlaying)
-        //console.log("new tab");
         tabCreateFlag = true;
 });
 

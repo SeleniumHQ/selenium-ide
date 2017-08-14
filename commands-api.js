@@ -54,8 +54,8 @@ function doCommands(request, sender, sendResponse, type) {
         }
 
         //do every command need giving sideex id
-        if (contentSideexTabID === -1) {
-            contentSideexTabID = request.mySideexTabID;
+        if (contentSideexTabId === -1) {
+            contentSideexTabId = request.mySideexTabId;
         }
         return true;
     }
@@ -69,13 +69,11 @@ function doCommands(request, sender, sendResponse, type) {
                     if (target != null && target instanceof Array) {
                         if (target) {
                             //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
-                            console.log("test");
                             browser.runtime.sendMessage({
                                 selectTarget: true,
                                 target: [[target]]
                             })
                         } else {
-                            console.log("???????");
                             //alert("LOCATOR_DETECTION_FAILED");
                         }
                     }

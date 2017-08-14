@@ -110,7 +110,6 @@ function checkType(cutStr, replaceStr, mode) {
 
 //avoid &amp; to escape &amp;amp;
 function replaceChar(str) {
-    //console.log("in replace");
     //escape the character
     var pos = -1;
     var cutStr = "";

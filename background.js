@@ -20,7 +20,7 @@ function openPage() {
     });
 
     Promise.all([windowGet, creating]).then(results => {
-        setTimeout(passingWindowID, 2000, results[0].id, results[1].id);
+        setTimeout(passingWindowId, 2000, results[0].id, results[1].id);
     }).catch((e) => {
         console.log(`Error: ${error}`);
     });
@@ -48,27 +48,27 @@ browser.windows.onRemoved.addListener(function(windowId) {
     }
 });
 
-function passingWindowID(window_id, sideex_id) {
+function passingWindowId(window_id, sideex_id) {
     console.log(window_id + " " + sideex_id);
 
     var catchSideexTab = browser.tabs.query({ windowId: sideex_id, active: true }, function(sideexTabs) {
         console.log("sideexTab:" + sideexTabs[0].id);
         console.log("url2:" + sideexTabs[0].url);
 
-        //passing userWinID to sideex
+        //passing userWinId to sideex
         browser.tabs.query({ windowId: sideex_id, active: true }, function(tabs) {
             for (let tab of tabs) {
                 browser.tabs.sendMessage(
-                    tab.id, { passWinID: window_id, sideexID: sideexTabs[0].id }
+                    tab.id, { passWinId: window_id, sideexId: sideexTabs[0].id }
                 ).catch(onError);
             }
         });
 
-        //passing sideexID to userWin
+        //passing sideexId to userWin
         browser.tabs.query({ windowId: window_id, active: true }, function(tabs) {
             for (let tab of tabs) {
                 browser.tabs.sendMessage(
-                    tab.id, { passWinID: window_id, sideexID: sideexTabs[0].id }
+                    tab.id, { passWinId: window_id, sideexId: sideexTabs[0].id }
                 ).catch(onError);
             }
         });

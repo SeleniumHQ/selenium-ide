@@ -1,5 +1,5 @@
-var userWinID = 0;
-var mySideexTabID = 0;
+var userWinId = 0;
+var mySideexTabId = 0;
 var windowIdArray = {};
 var playingTabIds = {};
 var playingTabNames = {};
@@ -68,7 +68,7 @@ window.onload = function() {
             button.value = "Select";
             browser.tabs.query({
                 active: true,
-                windowId: userWinID
+                windowId: userWinId
             }).then(function(tabs) {
                 browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
             }).catch(function(reason) {
@@ -84,7 +84,7 @@ window.onload = function() {
         button.value = "Cancel";
         browser.tabs.query({
             active: true,
-            windowId: userWinID
+            windowId: userWinId
         }).then(function(tabs) {
             if (tabs.length === 0) {
                 console.log("No match tabs");
@@ -101,10 +101,10 @@ window.onload = function() {
             console.log("value: " + targetValue);
             browser.tabs.query({
                 active: true,
-                windowId: userWinID
+                windowId: userWinId
             }, function(tabs) {
                 browser.tabs.sendMessage(tabs[0].id, {
-                    mySideexTabID:mySideexTabID,
+                    mySideexTabId:mySideexTabId,
                     showElement:true,
                     targetValue:targetValue
                 }).then(function(response) {
@@ -170,8 +170,8 @@ function initializeAfterConnectionFailed() {
     playingTabNames = new Object();
     playingTabIds = new Object();
     //windowIdArray = new Object();
-    //windowIdArray[userWinID] = true;
-    currentPlayingWindowId = userWinID;
+    //windowIdArray[userWinId] = true;
+    currentPlayingWindowId = userWinId;
     currentPlayingFrameLocation = "root";
     playingFrameLocations = {};
 
@@ -302,7 +302,7 @@ function executeCommand(index) {
     setColor(id + 1, "executing");
 
     browser.tabs.query({
-            windowId: userWinID,
+            windowId: userWinId,
             active: true
         })
         .then(function(tabs) {
@@ -312,7 +312,7 @@ function executeCommand(index) {
                 commands: commandName,
                 target: commandTarget,
                 value: commandValue,
-                mySideexTabID: mySideexTabID
+                mySideexTabId: mySideexTabId
             }, {
                 frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
             })
@@ -378,8 +378,8 @@ function initializePlayingProgress(isDbclick) {
     playingTabNames = new Object();
     playingTabIds = new Object();
     //windowIdArray = new Object();
-    //windowIdArray[userWinID] = true;
-    currentPlayingWindowId = userWinID;
+    //windowIdArray[userWinId] = true;
+    currentPlayingWindowId = userWinId;
     currentPlayingFrameLocation = "root";
     playingFrameLocations = {};
     currentPlayingCommandIndex = -1;
@@ -434,7 +434,7 @@ function executionLoop() {
     if (commandType == "preparation") {
         console.log("in preparation");
         return browser.tabs.query({
-                windowId: userWinID,
+                windowId: userWinId,
                 active: true
             })
             .then(function(tabs) {
@@ -442,7 +442,7 @@ function executionLoop() {
                     commands: "waitPreparation",
                     target: "",
                     value: "",
-                    mySideexTabID: mySideexTabID
+                    mySideexTabId: mySideexTabId
                 }, {
                     frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                 });
@@ -454,7 +454,7 @@ function executionLoop() {
     } else if (commandType == "prePageWait") {
         console.log("in prePageWait");
         return browser.tabs.query({
-                windowId: userWinID,
+                windowId: userWinId,
                 active: true
             })
             .then(function(tabs) {
@@ -462,7 +462,7 @@ function executionLoop() {
                     commands: "prePageWait",
                     target: "",
                     value: "",
-                    mySideexTabID: mySideexTabID
+                    mySideexTabId: mySideexTabId
                 }, {
                     frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                 });
@@ -479,7 +479,7 @@ function executionLoop() {
     } else if (commandType == "pageWait") {
         console.log("in pageWait");
         return browser.tabs.query({
-                windowId: userWinID,
+                windowId: userWinId,
                 active: true
             })
             .then(function(tabs) {
@@ -487,7 +487,7 @@ function executionLoop() {
                     commands: "pageWait",
                     target: "",
                     value: "",
-                    mySideexTabID: mySideexTabID
+                    mySideexTabId: mySideexTabId
                 }, {
                     frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                 })
@@ -515,7 +515,7 @@ function executionLoop() {
     } else if (commandType == "ajaxWait") {
         console.log("in ajaxWait");
         return browser.tabs.query({
-                windowId: userWinID,
+                windowId: userWinId,
                 active: true
             })
             .then(function(tabs) {
@@ -523,7 +523,7 @@ function executionLoop() {
                     commands: "ajaxWait",
                     target: "",
                     value: "",
-                    mySideexTabID: mySideexTabID
+                    mySideexTabId: mySideexTabId
                 }, {
                     frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                 })
@@ -551,7 +551,7 @@ function executionLoop() {
     } else if (commandType == "domWait") {
         console.log("in domWait");
         return browser.tabs.query({
-                windowId: userWinID,
+                windowId: userWinId,
                 active: true
             })
             .then(function(tabs) {
@@ -559,7 +559,7 @@ function executionLoop() {
                     commands: "domWait",
                     target: "",
                     value: "",
-                    mySideexTabID: mySideexTabID
+                    mySideexTabId: mySideexTabId
                 }, {
                     frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                 })
@@ -713,7 +713,7 @@ function executionLoop() {
             if (currentPlayingTabId === -1) {
 
                 return browser.tabs.query({
-                        windowId: userWinID,
+                        windowId: userWinId,
                         active: true
                     })
                     .then(function(tabs) {
@@ -723,7 +723,7 @@ function executionLoop() {
                             commands: commandName,
                             target: commandTarget,
                             value: commandValue,
-                            mySideexTabID: mySideexTabID
+                            mySideexTabId: mySideexTabId
                         }, {
                             frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
                         })
@@ -898,14 +898,14 @@ function switchPR() {
 browser.runtime.onMessage.addListener(initialOpen);
 
 function initialOpen(message) {
-    if (message.passWinID) {
-        console.log("passWinID:" + message.passWinID);
-        userWinID = message.passWinID;
-        windowIdArray[userWinID] = true;
+    if (message.passWinId) {
+        console.log("passWinId:" + message.passWinId);
+        userWinId = message.passWinId;
+        windowIdArray[userWinId] = true;
     }
-    if (message.sideexID) {
-        console.log("mySideexTabID:" + message.sideexID);
-        mySideexTabID = message.sideexID;
+    if (message.sideexId) {
+        console.log("mySideexTabId:" + message.sideexId);
+        mySideexTabId = message.sideexId;
     }
 }
 
@@ -947,8 +947,8 @@ function catchPlayingError(reason) {
 function handleNewWindow(message, sender, sendResponse) {
     if (message.newWindow) {
 
-        console.error("new window ID: " + message.commandSideexTabID);
-        if (message.commandSideexTabID != mySideexTabID) {
+        console.error("new window Id: " + message.commandSideexTabId);
+        if (message.commandSideexTabId != mySideexTabId) {
             windowCreateFlag = false;
             tabCreateFlag = false;
             return;
@@ -976,11 +976,11 @@ browser.runtime.onMessage.addListener(handleNewWindow);
 
 function handleChangePage(message, sender, response) {
     if (message.changePage) {
-        console.log("page window ID:" + sender.tab.windowId);
+        console.log("page window Id:" + sender.tab.windowId);
         console.log("handle change page: " + windowIdArray[sender.tab.windowId]);
         if (windowIdArray[sender.tab.windowId] == true)
             response({
-                mySideexTabID: mySideexTabID
+                mySideexTabId: mySideexTabId
             });
     }
 }

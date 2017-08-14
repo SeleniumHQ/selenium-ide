@@ -1,65 +1,8 @@
-/*var contentRecord = -1;*/
-var contentRecord = 1;
-var contentSideexTabID = -1;
 var locatorBuilders = new LocatorBuilders(window);
-
-var frameLocation = "";
-
-//set temp_pageSideexTabId on DOM
-document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-
-/*a export function pass contentSideexTabID from content script to page script
-function getSideexTabID(){
-    var pageSideexTabID = contentSideexTabID;
-    return pageSideexTabID;
-}
-exportFunction(getSideexTabID,window,{defineAs:'getSideexTabID'});
-*/
-//the child window will do 
-//console.error("opener id: "+window.opener);
-try{
-    if (window.opener != null) {
-        /* just can use in FireFox
-        contentSideexTabID = window.opener.wrappedJSObject.getSideexTabID();
-        XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabID());
-        console.error("contentSideexTabID: "+contentSideexTabID);
-        */
-
-        //use set attribute
-        contentSideexTabID = window.opener.document.body.getAttribute("temp_pageSideexTabID");
-        document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-        browser.runtime.sendMessage({ newWindow: "true", commandSideexTabID: contentSideexTabID });
-    } else {
-        //when change page
-        var changePage2 = browser.runtime.sendMessage({ changePage: true });
-        changePage2.then(handleChangePageResponse).catch(function(reason) { console.log(reason); });
-    }
-} catch (e){
-    //when change page
-    var changePage2 = browser.runtime.sendMessage({changePage:true});
-    changePage2.then(handleChangePageResponse);
-}
-
-function handleChangePageResponse(message) {
-    contentSideexTabID = message.mySideexTabID;
-    document.body.setAttribute("temp_pageSideexTabID", contentSideexTabID);
-}
-
-function startShowElement(message, sender, sendResponse){
-    if (message.mySideexTabID == contentSideexTabID && message.showElement){
-        result = selenium["doShowElement"](message.targetValue);
-        //sendResponse({result: selenium["doShowElement"](message.targetValue)});
-        return Promise.resolve({result: result});
-    }
-    //return true;
-}
-browser.runtime.onMessage.addListener(startShowElement);
-
 
 //Record: ClickAt
 var preventClickTwice = false;
 window.addEventListener("click", function(event) {
-
     if (event.button == 0 && !preventClick && event.isTrusted) {
         if (!preventClickTwice) {
             var top = event.pageY,
@@ -71,14 +14,9 @@ window.addEventListener("click", function(event) {
                 element = element.offsetParent;
             } while (element);
             var target = event.target;
-            //console.log("here id:"+contentSideexTabID);
-            //browser.runtime.sendMessage(.....);
             record("clickAt", locatorBuilders.buildAll(event.target), left + ',' + top);
-            //console.log("2here id:"+contentSideexTabID);
             var arrayTest = locatorBuilders.buildAll(event.target);
-            //console.error(arrayTest[0][0]+"-"+arrayTest[0][1]+"-"+arrayTest[1][0]+"-"+arrayTest[1][1]);
             preventClickTwice = true;
-
         }
         setTimeout(function() { preventClickTwice = false; }, 30);
     }
@@ -100,12 +38,10 @@ window.addEventListener("dblclick", function(event) {
 
 //Record: SendKeys
 var inputTypes = ["text", "password", "file", "datetime", "datetime-local", "date", "month", "time", "week", "number", "range", "email", "url", "search", "tel", "color"];
-
 var focusTarget = null;
 var focusValue = null;
 var tempValue = null;
 var preventType = false;
-
 var inp = document.getElementsByTagName("input");
 for (var i = 0; i < inp.length; i++) {
     if (inputTypes.indexOf(inp[i].type) >= 0) {
@@ -176,7 +112,6 @@ window.addEventListener("keydown", function(event) {
                     tempbool = true;
                     tempValue = focusTarget.value;
                 }
-                //this.callIfMeaningfulEvent(function() {
                 if (tempbool) {
                     record("type", locatorBuilders.buildAll(event.target), tempValue);
                 }
@@ -187,17 +122,12 @@ window.addEventListener("keydown", function(event) {
 
                 if (key == 38) record("sendKeys", locatorBuilders.buildAll(event.target), "${KEY_UP}");
                 else record("sendKeys", locatorBuilders.buildAll(event.target), "${KEY_DOWN}");
-
                 tabCheck = event.target;
-                //});
             }
             if (key == 9) {
                 if (tabCheck == event.target) {
-                    //this.callIfMeaningfulEvent(function() {
                     record("sendKeys", locatorBuilders.buildAll(event.target), "${KEY_TAB}");
-
                     preventType = true;
-                    //});
                 }
             }
         }
@@ -206,7 +136,6 @@ window.addEventListener("keydown", function(event) {
 
 //Recoed: Type
 window.addEventListener("change", function(event) {
-
     if (event.target.tagName && !preventType) {
         var tagName = event.target.tagName.toLowerCase();
         var type = event.target.type;
@@ -267,15 +196,11 @@ window.addEventListener('change', function(event) {
         if ('select' == tagName) {
             if (!event.target.multiple) {
                 var option = event.target.options[event.target.selectedIndex];
-                //this.log.debug('selectedIndex=' + event.target.selectedIndex);
                 record("select", locatorBuilders.buildAll(event.target), getOptionLocator(option));
             } else {
-                //this.log.debug('change selection on select-multiple');
                 var options = event.target.options;
                 for (var i = 0; i < options.length; i++) {
-                    //this.log.debug('option=' + i + ', ' + options[i].selected);
                     if (options[i]._wasSelected == null) {
-                        //this.log.warn('_wasSelected was not recorded');
                     }
                     if (options[i]._wasSelected != options[i].selected) {
                         var value = getOptionLocator(options[i]);
@@ -313,9 +238,9 @@ function getOptionLocator(option) {
     }
 };
 
-//////////////////////////////BaiMao
+//BaiMao 
+//DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
 window.addEventListener('mousedown', function(event) {
-    //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
     var self = this;
     if (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) {
         this.mousedown = event;
@@ -550,7 +475,7 @@ window.addEventListener('mouseout', function(event) {
     delete this.mouseoutLocator;
 }, true);
 
-//InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
+// InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
 window.addEventListener('DOMNodeInserted', function(event) {
     if (pageLoaded === true && window.document.documentElement.getElementsByTagName('*').length > nowNode) {
         var self = this;
@@ -591,7 +516,7 @@ window.addEventListener('DOMNodeInserted', function(event) {
     }
 }, true);
 
-//InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
+// InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 var readyTimeOut = null;
 var pageLoaded = true;
 window.addEventListener('readystatechange', function(event) {
@@ -607,6 +532,7 @@ window.addEventListener('readystatechange', function(event) {
     }
 }, true);
 
+// verify/assert text and title
 window.addEventListener('contextmenu', function(event) {
     //     //window.console.log(locatorBuilders.buildAll(event.target));
     //     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
@@ -649,69 +575,3 @@ window.addEventListener('blur', function(event) {
         }
     }
 }, true);
-
-
-/*delow is API==============================================================*/
-
-//initial the siddeX tab ID in content
-browser.runtime.onMessage.addListener(function(message) {
-    if (message.sideexID) {
-        contentSideexTabID = message.sideexID;
-        console.log("sideeX id:" + contentSideexTabID);
-
-        //open sideex update sideexTabID
-        console.log("in set attribute 4");
-        document.body.setAttribute("temp_pageSideexTabID", message.sideexID);
-        console.log("temp_pageSideexTabID: " + document.body.getAttribute("temp_pageSideexTabID"));
-    }
-});
-
-function onError(error) {
-    alert(`Error: ${error}`);
-};
-
-//console.log("frameLocation : " + frameLocation);
-
-(function getframeLocation() {
-    let currentWindow = window;
-    let currentParentWindow;
-    while (currentWindow !== window.top) {
-        currentParentWindow = currentWindow.parent;
-        for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-            if (currentParentWindow.frames[idx] === currentWindow) {
-                frameLocation = ":" + idx + frameLocation;
-                currentWindow = currentParentWindow;
-                break;
-            }
-    }
-    frameLocation = "root" + frameLocation;
-})();
-
-console.log("frameLocation : " + frameLocation);
-/* playback */
-browser.runtime.sendMessage({ frameLocation: frameLocation });
-
-/* record */
-function record(command, target, value, insertBeforeLastCommand) {
-    browser.runtime.sendMessage({
-        command: command,
-        target: target,
-        value: value,
-        insertBeforeLastCommand: insertBeforeLastCommand,
-        frameLocation: frameLocation,
-        commandSideexTabID: contentSideexTabID
-    });
-}
-
-/* for test */
-/*
-if(window.frameElement){
-    if(window.frameElement.getAttribute("name"))
-        console.log("Name: " + window.frameElement.getAttribute("name"));
-    if(window.frameElement.getAttribute("id"))
-        console.log("Id: " + window.frameElement.getAttribute("id"));
-}
-*/
-
-/* for test */
-//console.log("complete at " + new Date());
