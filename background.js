@@ -25,6 +25,33 @@ function openPage() {
         console.log(`Error: ${error}`);
     });
 
+    browser.contextMenus.create({
+    id: "verifyText",
+    title: "verifyText"
+	});
+	browser.contextMenus.create({
+	    id: "verifyTitle",
+	    title: "verifyTitle"
+	});
+	browser.contextMenus.create({
+	    id: "assertText",
+	    title: "assertText"
+	});
+	browser.contextMenus.create({
+	    id: "assertTitle",
+	    title: "assertTitle"
+	});
+	browser.contextMenus.create({
+	    id: "storeText",
+	    title: "storeText"
+	    //contexts: ["all"]
+	});
+	browser.contextMenus.create({
+	    id: "storeTitle",
+	    title: "storeTitle"
+	    //contexts: ["all"]
+	});
+
 }
 
 browser.browserAction.onClicked.addListener(openPage);
@@ -46,6 +73,8 @@ browser.windows.onRemoved.addListener(function(windowId) {
         querying.then(disconnectAllTabs, queryError);
         panelId = undefined;
     }
+
+    browser.contextMenus.removeAll();
 });
 
 function passingWindowId(window_id, sideex_id) {
@@ -74,33 +103,6 @@ function passingWindowId(window_id, sideex_id) {
         });
     });
 };
-
-browser.contextMenus.create({
-    id: "verifyText",
-    title: "verifyText"
-});
-browser.contextMenus.create({
-    id: "verifyTitle",
-    title: "verifyTitle"
-});
-browser.contextMenus.create({
-    id: "assertText",
-    title: "assertText"
-});
-browser.contextMenus.create({
-    id: "assertTitle",
-    title: "assertTitle"
-});
-browser.contextMenus.create({
-    id: "storeText",
-    title: "storeText"
-    //contexts: ["all"]
-});
-browser.contextMenus.create({
-    id: "storeTitle",
-    title: "storeTitle"
-    //contexts: ["all"]
-});
 
 var port;
 browser.contextMenus.onClicked.addListener(function(info, tab) {
