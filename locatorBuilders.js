@@ -105,7 +105,10 @@ LocatorBuilders.prototype.buildAll = function(el) {
                 //Samit: The following is a quickfix for above commented code to stop exceptions on almost every locator builder
                 //TODO: the builderName should NOT be used as a strategy name, create a feature to allow locatorBuilders to specify this kind of behaviour
                 //TODO: Useful if a builder wants to capture a different element like a parent. Use the this.elementEquals
-                locators.push([locator, finderName]);
+                var fe = this.findElement(locator);
+                if ((e == fe) || (coreLocatorStrategies[finderName] && coreLocatorStrategies[finderName].is_fuzzy_match && coreLocatorStrategies[finderName].is_fuzzy_match(fe, e))) {
+                    locators.push([locator, finderName]);
+                }
             }
         } catch (e) {
             // TODO ignore the buggy locator builder for now
@@ -532,7 +535,87 @@ LocatorBuilders.add('xpath:position', function(e, opt_contextNode) {
     }
     return null;
 });
+/*
+//Chi-En Huang, SELAB, CSIE, NCKU, 2016/01/06
+LocatorBuilders.add('tac', function(e) {
+    //this.log.debug("tac: e=" + e);
+    var l;
+    var c;
+    var od;
 
+    var d;
+    for (d = e; d.parentElement != null; d = d.parentElement) {}
+
+    var h = d.ownerDocument.getElementsByTagName("HTML");
+    var hs = h.length;
+
+    for (var i = 0; i < hs; i++) {
+        if (h[i] == null) {
+            continue;
+        }
+
+        var hc = h[i].children;
+        var hcs = hc.length;
+        for (var j = 0; j < hcs; j++) {
+            if (hc[j] == null) {
+                continue;
+            }
+            if (hc[j].tagName == "DIV") {
+                h[i].removeChild(hc[j]);
+            }
+        }
+    }
+
+    var nse = d.ownerDocument.getElementsByTagName("NOSCRIPT");
+    var nses = nse.length;
+
+    for (var i = 0; i < nses; i++) {
+        nse[i].innerHTML = "";
+    }
+
+    l = "";
+    c = e;
+    od = d.outerHTML;
+
+    while (c != null) {
+        if (c.parentElement != null) {
+            var se = c.parentElement.children;
+            var tc = 0;
+            var ttc = 0;
+            var ifd = false;
+
+            for (var i = 0; i < se.length; i++) {
+                if (se[i].tagName == c.tagName && !ifd) {
+                    tc++;
+                    ttc++;
+                } else if (se[i].tagName == c.tagName) {
+                    ttc++;
+                }
+                if (se[i] == c) {
+                    ifd = true;
+                }
+            }
+            if (ttc > 1) {
+                l = "/" + c.tagName.toLowerCase() + "[" + tc + "]" + l;
+            } else {
+                l = "/" + c.tagName.toLowerCase() + l;
+            }
+
+        } else {
+            l = "/" + c.tagName.toLowerCase() + l;
+            if (true) {
+                var sideex = "tac=" + l + "::[tac]::" + od;
+
+                return sideex;
+            }
+        }
+
+        c = c.parentElement;
+    }
+
+    return null;
+});
+*/
 // Samit: Warning: The old method of setting the order using LocatorBuilders.order is now deprecated
 // You can change the priority of builders by setting LocatorBuilders.order.
 //LocatorBuilders.order = ['ui', 'id', 'link', 'name', 'css', 'dom:name', 'xpath:link', 'xpath:img', 'xpath:attributes', 'xpath:idRelative', 'xpath:href', 'dom:index', 'xpath:position'];
