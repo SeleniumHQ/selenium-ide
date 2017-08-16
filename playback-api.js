@@ -850,6 +850,7 @@ function catchPlayingError(reason) {
         setTimeout(function() {
             isPlaying = false;
             isRecording = true;
+            switchPS();
         }, 500);
     }
 }
