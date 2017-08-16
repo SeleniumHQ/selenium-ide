@@ -555,6 +555,12 @@ section#main {
     width: calc(70% - 8px);
     float: right;
     height: calc(100% - 13px - 35%);
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
+    -moz-border-top-left-radius: 0px;
+    -moz-border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }
 
 /* Stats Module */
@@ -1294,23 +1300,16 @@ button.active {
 /* Freeze Table Header */
 
 .smallSection {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .fixed {
     top: 82px;
     position: fixed;
     width: auto;
-    -webkit-border-top-left-radius: 5px;
-    -webkit-border-top-right-radius: 5px;
-    -moz-border-radius-topleft: 5px;
-    -moz-border-radius-topright: 5px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     z-index: 2;
-    margin-left: 1px;
 }
 
 .fixed td {

@@ -46,7 +46,7 @@ $(document).ready(function() {
                     $t_fixed.find("th").each(function(index) {
                         var $self = $(this);
                         $this.find("th").eq(index).bind("DOMAttrModified", function(e) {
-                            $self.css("width", $(this).innerWidth() + "px");
+                            $self.css("width", $(this).outerWidth() + "px");
                         });
                     });
                     resizeFixed();
@@ -54,7 +54,7 @@ $(document).ready(function() {
 
                 function resizeFixed() {
                     $t_fixed.find("th").each(function(index) {
-                        $(this).css("width", $this.find("th").eq(index).innerWidth() + "px");
+                        $(this).css("width", $this.find("th").eq(index).outerWidth() + "px");
                     });
                 }
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
             });
         };
 
-        $("table").fixMe();
+        $("#command-grid").fixMe();
     });
 
     $(".fixed").width($("table:not(.fixed)").width());
