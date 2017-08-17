@@ -1063,7 +1063,7 @@ input[type=submit].btn_post_message:hover {
 }
 
 .fieldset input[type=text]#command-target {
-    width: calc(100% - 250px);
+    width: calc(100% - 239px);
 }
 
 .fieldset input[type=text]:focus {
@@ -1263,10 +1263,10 @@ input[type=submit].btn_post_message:hover {
 .btn_sf {
     border-radius: 5px;
     background: white;
-    padding-right: 12px;
-    padding-left: 12px;
+    padding-right: 10px;
+    padding-left: 10px;
     float: left;
-    margin-left: 11px;
+    margin-left: 9px;
     border: 1px solid #DBDBDB;
     -webkit-box-shadow: 1px 1px #ABABAB;
     box-shadow: 1px 1px #ABABAB;
