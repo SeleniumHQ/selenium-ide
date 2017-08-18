@@ -285,8 +285,7 @@ function executeCommand(index) {
             return browser.tabs.sendMessage(tabs[0].id, {
                 commands: commandName,
                 target: commandTarget,
-                value: commandValue,
-                mySideexTabId: mySideexTabId
+                value: commandValue
             }, {
                 frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
             })
