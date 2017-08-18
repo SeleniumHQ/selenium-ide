@@ -354,6 +354,7 @@ function initializePlayingProgress(isDbclick) {
     currentPlayingFrameLocation = "root";
     playingFrameLocations = {};
     currentPlayingCommandIndex = -1;
+    playingTabCount = 1;
 
     // xian wait
     commandType = "preparation";
@@ -756,7 +757,9 @@ function executionLoop() {
 
 function finalizePlayingProgress() {
     enableClick();console.log("here");
-    playingWindows = {};
+    playingTabIds = {};
+    playingTabNames = {};
+    playingTabCount = 1;
     console.log("success");
     setTimeout(function() {
         isPlaying = false;
@@ -844,8 +847,13 @@ function catchPlayingError(reason) {
         document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
         sideex_log.info("Test case failed");
 
+        playingTabIds = {};
+        playingTabNames = {};
+        playingTabCount = 1;
+
         /* Clear the flag, reset to recording phase */
         /* A small delay for preventing recording events triggered in playing phase*/
+
         setTimeout(function() {
             isPlaying = false;
             isRecording = true;
