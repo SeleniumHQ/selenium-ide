@@ -2346,7 +2346,7 @@ BrowserBot.prototype.getPromptMessage = function() {
 
 // confirm
 BrowserBot.prototype.setNextConfirmationResult = function(result) {
-    this.ConfirmationResponse = false;
+    this.confirmationResponse = false;
     let self = this;
     window.postMessage({
         direction: "from-content-script",
