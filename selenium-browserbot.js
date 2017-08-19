@@ -2350,7 +2350,7 @@ BrowserBot.prototype.setNextConfirmationResult = function(result) {
     let self = this;
     window.postMessage({
         direction: "from-content-script",
-        command: "setNextConfirmtaionResult",
+        command: "setNextConfirmationResult",
         target: result
     }, "*");
     let response = new Promise(function(resolve, reject) {

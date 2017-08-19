@@ -3652,11 +3652,11 @@ Selenium.prototype.doAssertPrompt = function (message) {
 
 // confirm
 Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
-    this.browserbot.setNextConfirmationResult(false);
+    return this.browserbot.setNextConfirmationResult(false);
 }
 
 Selenium.prototype.doChooseOkOnNextConfirmation = function (answer) {
-    this.browserbot.setNextConfirmationResult(true);
+    return this.browserbot.setNextConfirmationResult(true);
 }
 
 Selenium.prototype.doAssertConfirmation = function(value) {
