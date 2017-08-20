@@ -160,12 +160,13 @@ function handleMessage(message, sender, sendResponse) {
         document.getElementById("command-target").value = unescapeHtml(locatorString);
         document.getElementById("target-dropdown").innerHTML = unescapeHtml(locatorList.innerHTML);
         document.getElementById("command-target-list").innerHTML = escapeHTML(locatorList.innerHTML);
+
         return;
     }
     if (message.cancelSelectTarget) {
-        var button = document.getElementById("select");
+        var button = document.getElementById("selectElementButton");
         isSelecting = false; 
-        button.value = "Select";
+        button.textContent = "Select";
         browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
         return;
     }
