@@ -153,6 +153,9 @@ function handleMessage(message, sender, sendResponse) {
             document.getElementById("command-target").value = getCommandTarget(selectedRecord);
             document.getElementById("target-dropdown").innerHTML = escapeHTML(selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
             document.getElementById("command-target-list").innerHTML = escapeHTML(selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
+        } else if (document.getElementsByClassName("record-bottom active").length) {
+            // If selecting a blank command;
+            addCommandAuto("", target, "");
         }
         return;
     }
