@@ -115,48 +115,51 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
 
 function handleMessage(message, sender, sendResponse) {
     if (message.selectTarget) {
+
         var target = message.target;
+        // show first locator by default
+        var locatorString = target[0][0];
+
+        var locatorList = document.createElement("datalist");
+        for (var m = 0; m < message.target.length; ++m) {
+            var option = document.createElement("option");
+            option.appendChild(document.createTextNode(message.target[m][0]));
+            option.innerText = message.target[m][0];
+            locatorList.appendChild(option);
+        }
+
         var selectedRecordId = getSelectedRecord();
+
         // If selecting a command, change the target inside.
         if (selectedRecordId != "") {
             var selectedRecord = document.getElementById(selectedRecordId);
-            var datalist = selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0];
+            var originalLocatorlist = selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0];
 
-            // Remove all old locators
-            while(datalist.firstChild)
-                datalist.removeChild(datalist.firstChild);
-
-            // Add all new locators
-            for (var m = 0; m < message.target.length; ++m) {
-                var option = document.createElement("option");
-                option.appendChild(document.createTextNode(message.target[m][0]));
-                option.innerText = message.target[m][0];
-                datalist.appendChild(option);
-            }
+            // Update locator data list
+            originalLocatorlist.innerHTML = escapeHTML(locatorList.innerHTML);
 
             // Update target view, show first locator by default
-            var targetString = message.target[0][0];
-            var adjustedString = adjustTooLongStr(targetString, getTdShowValueNode(selectedRecord, 1));
+            var adjustedString = adjustTooLongStr(locatorString, getTdShowValueNode(selectedRecord, 1));
             var node = getTdShowValueNode(selectedRecord, 1);
-            if (node.childNodes && node.childNodes[0]) {
+            if (node.childNodes && node.childNodes[0])
                 node.removeChild(node.childNodes[0]);
-            }
             node.appendChild(document.createTextNode(adjustedString));
 
             // Update hidden actual locator value
             node = getTdRealValueNode(selectedRecord, 1);
             if (node.childNodes && node.childNodes[0])
                 node.removeChild(node.childNodes[0]);
-            node.appendChild(document.createTextNode(targetString));
+            node.appendChild(document.createTextNode(locatorString));
 
-            // Update toolbar
-            document.getElementById("command-target").value = getCommandTarget(selectedRecord);
-            document.getElementById("target-dropdown").innerHTML = escapeHTML(selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
-            document.getElementById("command-target-list").innerHTML = escapeHTML(selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0].innerHTML);
-        } else if (document.getElementsByClassName("record-bottom active").length) {
+        } else if (document.getElementsByClassName("record-bottom active").length > 0) {
             // If selecting a blank command;
             addCommandAuto("", target, "");
         }
+
+        // Update toolbar
+        document.getElementById("command-target").value = unescapeHtml(locatorString);
+        document.getElementById("target-dropdown").innerHTML = unescapeHtml(locatorList.innerHTML);
+        document.getElementById("command-target-list").innerHTML = escapeHTML(locatorList.innerHTML);
         return;
     }
     if (message.cancelSelectTarget) {
