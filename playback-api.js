@@ -556,7 +556,7 @@ function executionLoop() {
             /* TODO: string error handling & wait for information been stored */
             let str = commandTarget.substr(commandTarget.lastIndexOf('=') + 1);
             if (str == "parent")
-                currentPlayingFrameLocation.length = currentPlayingFrameLocation.lastIndexOf(':');
+                currentPlayingFrameLocation = currentPlayingFrameLocation.slice(0, currentPlayingFrameLocation.lastIndexOf(':'));
             else
                 currentPlayingFrameLocation += ":" + str;
             console.log(currentPlayingFrameLocation);
