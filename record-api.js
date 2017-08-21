@@ -3,47 +3,6 @@
 var contentSideexTabId = -1;
 var frameLocation = "";
 
-/* set sideex window id ====================*/
-//set temp_pageSideexTabId on DOM
-document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
-
-/* a export function pass contentSideexTabId from content script to page script
-function getSideexTabId(){
-    var pageSideexTabId = contentSideexTabId;
-    return pageSideexTabId;
-}
-exportFunction(getSideexTabId,window,{defineAs:'getSideexTabId'});
-*/
-
-// the child window will do 
-try{
-    if (window.opener != null) {
-        /* just can use in FireFox
-        contentSideexTabId = window.opener.wrappedJSObject.getSideexTabId();
-        XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabId());
-        console.error("contentSideexTabId: "+contentSideexTabId);
-        */
-
-        //use set attribute
-        contentSideexTabId = window.opener.document.body.getAttribute("temp_pageSideexTabId");
-        document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
-        browser.runtime.sendMessage({ newWindow: "true", commandSideexTabId: contentSideexTabId });
-    } else {
-        //when change page
-        var changePage2 = browser.runtime.sendMessage({ changePage: true });
-        changePage2.then(handleChangePageResponse).catch(function(reason) { console.log(reason); });
-    }
-} catch (e){
-    //when change page
-    var changePage2 = browser.runtime.sendMessage({changePage:true});
-    changePage2.then(handleChangePageResponse);
-}
-function handleChangePageResponse(message) {
-    contentSideexTabId = message.mySideexTabId;
-    document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
-}
-/* ================================================= */
-
 // show element
 function startShowElement(message, sender, sendResponse){
     if (message.mySideexTabId == contentSideexTabId && message.showElement){

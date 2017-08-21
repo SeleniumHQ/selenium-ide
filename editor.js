@@ -191,7 +191,7 @@ function handleMessage(message, sender, sendResponse) {
         openedTabNames["win_ser_local"] = sender.tab.id;
         openedTabIds[sender.tab.id] = "win_ser_local";
         addCommandAuto("open", [
-            [sender.url]
+            [sender.tab.url]
         ], "");
     }
 

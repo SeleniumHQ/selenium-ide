@@ -3624,7 +3624,7 @@ Selenium.prototype.doEditContent = function(locator, value) {
     var editable = element.contentEditable;
 
     if (editable == "true") {
-        element.innerHTML = value;
+        element.innerHTML = escapeHTML(value);
     } else {
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
     }

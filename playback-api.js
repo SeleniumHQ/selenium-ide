@@ -539,7 +539,7 @@ function executionLoop() {
 
         setColor(currentPlayingCommandIndex + 1, "executing");
 
-        if (commandName == 'delay') {
+        if (commandName == 'pause') {
             return new Promise(function(resolve, reject) {
                 setTimeout(function() {
                     /* do nothing */
@@ -620,7 +620,6 @@ function executionLoop() {
             let removedTabId = currentPlayingTabId;
             currentPlayingTabId = -1;
             delete playingFrameLocations[removedTabId];
-            //windowIdArray[removeInfo.windowId]=false;
             return browser.tabs.remove(removedTabId)
                 .then(function(){
                     setColor(currentPlayingCommandIndex + 1, "success");
@@ -826,20 +825,6 @@ function switchPR() {
     }
 }
 
-browser.runtime.onMessage.addListener(initialOpen);
-
-function initialOpen(message) {
-    if (message.passWinID) {
-        console.log("passWinID:" + message.passWinID);
-        contentWindowId = message.passWinID;
-        windowIdArray[contentWindowId] = true;
-    }
-    if (message.sideexId) {
-        console.log("mySideexTabId:" + message.sideexId);
-        mySideexTabId = message.sideexId;
-    }
-}
-
 function catchPlayingError(reason) {
     // doCommands is depend on test website, so if make a new page,
     // doCommands funciton will fail, so keep retrying to get connection
@@ -876,49 +861,3 @@ function catchPlayingError(reason) {
         }, 500);
     }
 }
-
-/*to handle new window pupup
-  and update the windowIdArray from getting message
-  if a new window is belong to this sideex,setting 
-  its value become true. */
-function handleNewWindow(message, sender, sendResponse) {
-    if (message.newWindow) {
-
-        console.error("new window Id: " + message.commandSideexTabId);
-        if (message.commandSideexTabId != mySideexTabId) {
-            windowCreateFlag = false;
-            tabCreateFlag = false;
-            return;
-        }
-
-        console.error("tab flag: " + tabCreateFlag + " window flag: " + windowCreateFlag);
-        if (windowCreateFlag) {
-            console.log("change window id");
-            windowIdArray[sender.tab.windowId] = true;
-            newWindowInfo.tabId = sender.tab.id;
-            newWindowInfo.windowId = sender.tab.windowId;
-            windowCreateFlag = false;
-            tabCreateFlag = false;
-        }
-
-        if (tabCreateFlag && !windowCreateFlag) {
-            newWindowInfo.tabId = tab.id;
-            newWindowInfo.windowId = tab.windowId;
-            tabCreateFlag = false;
-        }
-    }
-};
-
-browser.runtime.onMessage.addListener(handleNewWindow);
-
-function handleChangePage(message, sender, response) {
-    if (message.changePage) {
-        console.log("page window Id:" + sender.tab.windowId);
-        console.log("handle change page: " + windowIdArray[sender.tab.windowId]);
-        if (windowIdArray[sender.tab.windowId] == true)
-            response({
-                mySideexTabId: mySideexTabId
-            });
-    }
-}
-browser.runtime.onMessage.addListener(handleChangePage);
