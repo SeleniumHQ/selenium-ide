@@ -810,8 +810,6 @@ function switchPR() {
     }
 }
 
-browser.runtime.onMessage.addListener(initialOpen);
-
 function catchPlayingError(reason) {
     // doCommands is depend on test website, so if make a new page,
     // doCommands funciton will fail, so keep retrying to get connection
