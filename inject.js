@@ -43,6 +43,22 @@ window.confirm = function(text) {
         return result;
     }
 };
+//before record alert
+window.alert=function(text){
+    if(document.body.hasAttribute("SideeXPlayingFlag")){
+        recordedAlert=text;
+        return nextAlertResult;
+    }else{
+        let result=originalAlert(text);
+        window.postMessage({
+            direction:"from-page-script",
+            recordedType: "alert",
+            recordedMessage: text,
+            recordedResult:result,
+        },"*");
+        return result;
+    }
+};
 
 //play window methods
 window.addEventListener("message", function(event) {
@@ -87,6 +103,24 @@ window.addEventListener("message", function(event) {
                     console.error(e);
                 }
                 break;
+
+            case "setNextAlertResult":
+                nextAlertResult=event.data.target;
+                window.postMessage({
+                    direction: "from-page-script",
+                    response: "alert"
+                },"*");
+                break;
+            case "getAlertMessage":
+                let result1=recordedAlert;
+                recordedAlert=null;
+                window.postMessage({
+                    direction: "from-page-script",
+                    response: "alert",
+                    value: result1
+                },"*");
+                break;
+        
         }
     }
 });

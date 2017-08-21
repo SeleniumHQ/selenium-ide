@@ -3648,7 +3648,12 @@ Selenium.prototype.doAssertPrompt = function (message) {
                     return Promise.resolve(true);
            });
 }
-
+//alert
+Selenium.prototype.doAssertAlert=function(message){
+    return this.browserbot.getAlertMessage().then(function(actualMessage) {
+                    return Promise.resolve(true);
+           });
+}
 
 // confirm
 Selenium.prototype.doChooseCancelOnNextConfirmation = function() {

@@ -2402,7 +2402,33 @@ BrowserBot.prototype.getConfirmationMessage = function() {
     return response;
 }
 
-
+BrowserBot.prototype.getAlertMessage = function() {
+    this.alertResponse = false;
+    this.alertMessage = null;
+    let self = this;
+    window.postMessage({
+        direction: "from-content-script",
+        command: "getAlertMessage",
+    }, "*");
+    let response = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (!self.alertResponse) {
+                count++;
+                if (count > 60) {
+                    reject("No response!!!!");
+                    clearInterval(interval);
+                }
+            } else {
+                resolve(self.alertMessage);
+                self.alertResponse = false;
+                self.alertMessage = null;
+                clearInterval(interval);
+            }
+        }, 500);
+    })
+    return response;
+}
 
 /*****************************************************************/
 /* BROWSER-SPECIFIC FUNCTIONS ONLY AFTER THIS LINE */
