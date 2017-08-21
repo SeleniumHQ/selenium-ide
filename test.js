@@ -23,6 +23,10 @@ window.addEventListener("message", function(event) {
                     }
                     record("assertConfirmation", [[event.data.recordedMessage]], "", false);
                     break;
+                case "alert":
+                    //record("answerOnNextAlert",[[event.data.recordedResult]],"",true);
+                    record("assertAlert",[[event.data.recordedMessage]],"");
+                    break;
             }
         }
         if (event.data.response) {
@@ -39,6 +43,11 @@ window.addEventListener("message", function(event) {
                     console.error("tuggle2", selenium.browserbot.confirmationResponse);
                     if (event.data.value)
                         selenium.browserbot.confirmationMessage = event.data.value;
+                    break;
+                case "alert":
+                    selenium.browserbot.alertResponse=true;
+                    if(event.data.value)
+                        selenium.browserbot.promptMessage=event.data.value;
                     break;
             }
         }
