@@ -64,7 +64,7 @@ window.onload = function() {
         var button = document.getElementById("selectElementButton");
         if (isSelecting) {
             isSelecting = false; 
-            button.value = "Select";
+            button.textContent = "Select";
             browser.tabs.query({
                 active: true,
                 windowId: contentWindowId
@@ -80,7 +80,7 @@ window.onload = function() {
         if (isRecording)
             /* TODO: disable record button */
             isRecording = false;
-        button.value = "Cancel";
+        button.textContent = "Cancel";
         browser.tabs.query({
             active: true,
             windowId: contentWindowId
@@ -88,7 +88,7 @@ window.onload = function() {
             if (tabs.length === 0) {
                 console.log("No match tabs");
                 isSelecting = false; 
-                button.value = "Select";
+                button.textContent = "Select";
             } else
                 browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
         })

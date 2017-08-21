@@ -71,7 +71,7 @@ function doCommands(request, sender, sendResponse, type) {
                             //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
                             browser.runtime.sendMessage({
                                 selectTarget: true,
-                                target: [[target]]
+                                target: target
                             })
                         } else {
                             //alert("LOCATOR_DETECTION_FAILED");
