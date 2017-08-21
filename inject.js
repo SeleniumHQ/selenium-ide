@@ -27,7 +27,7 @@ window.prompt = function(text, defaultText) {
     }
 };
 
-//befor record confirm
+//before record confirm
 window.confirm = function(text) {
     if (document.body.hasAttribute("SideeXPlayingFlag")) {
         recordedConfirmation = text;
@@ -78,11 +78,11 @@ window.addEventListener("message", function(event) {
                 recordedConfirmation = null;
                 try{
                     console.error("no");
-                window.postMessage({
-                    direction: "from-page-script",
-                    response: "confirm",
-                    value: result
-                }, "*");
+                    window.postMessage({
+                        direction: "from-page-script",
+                        response: "confirm",
+                        value: result
+                    }, "*");
                 } catch (e) {
                     console.error(e);
                 }
