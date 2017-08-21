@@ -540,7 +540,7 @@ function executionLoop() {
         if (currentPlayingCommandIndex == 1) setColor(currentPlayingCommandIndex, "success");
         setColor(currentPlayingCommandIndex + 1, "executing");
 
-        if (commandName == 'delay') {
+        if (commandName == 'pause') {
             return new Promise(function(resolve, reject) {
                 setTimeout(function() {
                     /* do nothing */
