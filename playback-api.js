@@ -537,7 +537,6 @@ function executionLoop() {
             sideex_log.info("Executing: | " + commandName + " | " + commandTarget + " | " + commandValue + " |");
         }
 
-        if (currentPlayingCommandIndex == 1) setColor(currentPlayingCommandIndex, "success");
         setColor(currentPlayingCommandIndex + 1, "executing");
 
         if (commandName == 'delay') {
@@ -546,10 +545,17 @@ function executionLoop() {
                     /* do nothing */
                     resolve();
                 }, commandValue);
-            }).then(executionLoop);
+            })
+            .then(function(){
+                setColor(currentPlayingCommandIndex + 1, "success");
+            })
+            .then(executionLoop);
         } else if (commandName == 'open') {
             return browser.tabs.update(currentPlayingTabId, {
                     url: commandTarget
+                })
+                .then(function(){
+                    setColor(currentPlayingCommandIndex + 1, "success");
                 })
                 .then(executionLoop);
         } else if (commandName == 'selectFrame') {
@@ -580,7 +586,10 @@ function executionLoop() {
                         }
                     }, 500);
                 })
-                .then(executionLoop)
+                .then(function(){
+                    setColor(currentPlayingCommandIndex + 1, "success");
+                })
+                .then(executionLoop);
         } else if (commandName == 'selectWindow') {
             //TODO: set color
             return new Promise(function(resolve, reject) {
@@ -603,13 +612,19 @@ function executionLoop() {
                 .then(function() {
                     return browser.tabs.update(currentPlayingTabId, {active: true});
                 })
-                .then(executionLoop)
+                .then(function(){
+                    setColor(currentPlayingCommandIndex + 1, "success");
+                })
+                .then(executionLoop);
         } else if (commandName == 'close') {
             let removedTabId = currentPlayingTabId;
             currentPlayingTabId = -1;
             delete playingFrameLocations[removedTabId];
             //windowIdArray[removeInfo.windowId]=false;
             return browser.tabs.remove(removedTabId)
+                .then(function(){
+                    setColor(currentPlayingCommandIndex + 1, "success");
+                })
                 .then(executionLoop);
         } else {
             /*
