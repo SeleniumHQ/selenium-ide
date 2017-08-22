@@ -1,0 +1,19 @@
+{
+
+	"manifest_version": 2,
+	"name": "SeleniumIDE",
+	"version": "1.0",
+
+	"description": "SeleniunIDE firefox web extension",
+	
+	  "icons": {
+		"48": "icons/selenium-ide.ico"
+	  },
+	
+	  "content_scripts": [
+		{
+		  "js": ["main.js"]
+		}
+	  ]
+	
+	}
