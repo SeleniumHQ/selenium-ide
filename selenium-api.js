@@ -390,8 +390,8 @@ Selenium.prototype.reset = function() {
 
 Selenium.prototype.doVerifyText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if (element.textContent !== value) {
-        throw new Error("Actual value '" + element.textContent + "' did not match '" + value + "'");
+    if (getText(element) !== value) {
+        throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
     }
 };
 
@@ -403,8 +403,8 @@ Selenium.prototype.doVerifyTitle = function(value) {
 
 Selenium.prototype.doAssertText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if (element.textContent !== value) {
-        throw new Error("Actual value '" + element.textContent + "' did not match '" + value + "'");
+    if (getText(element) !== value) {
+        throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
     }
 };
 

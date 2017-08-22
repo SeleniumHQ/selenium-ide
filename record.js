@@ -539,7 +539,7 @@ window.addEventListener('contextmenu', function(event) {
     //     // record("verifyText", locatorBuilders.buildAll(event.target), event.target.textContent);
     var myPort = browser.runtime.connect();
     var tmpText = locatorBuilders.buildAll(event.target);
-    var tmpVal = event.target.textContent;
+    var tmpVal = getText(event.target);
     var tmpTitle = [
         [event.target.ownerDocument.title]
     ];
