@@ -166,7 +166,8 @@ function genCommandDatalist() {
         "assertConfirmation",
         "assertText",
         "assertTitle",
-        "assertPrompt"
+        "assertPrompt",
+        "echo"
     ];
 
     var datalistHTML = "";
