@@ -25,6 +25,7 @@ var implicitTime = "";
 var caseFailed = false;
 
 window.onload = function() {
+    var recordButton = document.getElementById("record");
     var playButton = document.getElementById("playback");
     var stopButton = document.getElementById("stop");
     var pauseButton = document.getElementById("pause");
@@ -35,6 +36,13 @@ window.onload = function() {
     var selectElementButton = document.getElementById("selectElementButton");
     /*var recordButton = document.getElementById("record");*/
     //element.addEventListener("click",play);
+    recordButton.addEventListener("click", function(){
+        isRecording = !isRecording;
+        if (isRecording)
+            recordButton.childNodes[1].textContent = "Recording";
+        else
+            recordButton.childNodes[1].textContent = "Record";
+    })
     playButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
@@ -789,7 +797,7 @@ function finalizePlayingProgress() {
     console.log("success");
     setTimeout(function() {
         isPlaying = false;
-        isRecording = true;
+        //isRecording = true;
         switchPS();
     }, 500);
 }
@@ -808,6 +816,9 @@ document.addEventListener("dblclick", function(event) {
 });
 
 function playDisable(setting) {
+    if (setting)
+        document.getElementById("record").childNodes[1].textContent = "Record";
+    document.getElementById("record").disabled = setting;
     document.getElementById("playback").disabled = setting;
     document.getElementById("playSuite").disabled = setting;
     document.getElementById("playSuites").disabled = setting;
@@ -872,7 +883,7 @@ function catchPlayingError(reason) {
 
         setTimeout(function() {
             isPlaying = false;
-            isRecording = true;
+            //isRecording = true;
             switchPS();
         }, 500);
     }

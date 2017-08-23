@@ -12,7 +12,7 @@ var contentWindowId;
 /* playing */
 var playingFrameLocations = {};
 /* flags */
-var isRecording = true;
+var isRecording = false;
 var isPlaying = false;
 var recordEnable = false;
 var windowCreateFlag = false;
