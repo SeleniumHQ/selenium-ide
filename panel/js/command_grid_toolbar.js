@@ -261,6 +261,13 @@ function reAssignIdForDelete(delete_ID, count) {
     classifyRecords(delete_ID, count);
 }
 
+document.getElementById("grid-deleteAll").addEventListener("click", function() {
+    var selectedNode = document.getElementById("records-grid").getElementsByTagName("TR");
+    for(var i=selectedNode.length;i>0;i--){
+        deleteCommand("records-" + i);
+    }
+}, false);
+
 document.getElementById("grid-delete").addEventListener("click", function() {
     deleteCommand(getSelectedRecord());
 }, false);
