@@ -828,7 +828,11 @@ function switchPR() {
 function catchPlayingError(reason) {
     // doCommands is depend on test website, so if make a new page,
     // doCommands funciton will fail, so keep retrying to get connection
-    if (reason == "TypeError: response is undefined" || reason == "Error: Could not establish connection. Receiving end does not exist.") {
+    if (reason == "TypeError: response is undefined" ||
+        reason == "Error: Could not establish connection. Receiving end does not exist." ||
+        reason.message == "Could not establish connection. Receiving end does not exist." ||
+        reason.message == "The message port closed before a reponse was received.") {
+        
         commandType = "preparation";
         setTimeout(function() {
             playAfterConnectionFailed();
