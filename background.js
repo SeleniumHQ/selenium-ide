@@ -23,6 +23,8 @@ function openPage() {
         console.log("get the window info")
         let contentWindowInfo = windowInfo[0];
         let sideexWindowInfo = windowInfo[1];
+        console.log("ContentWindowInfo Id:" + contentWindowInfo.id);
+        console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
         return new Promise(function(resolve, reject) {
             let count = 0;
             let interval = setInterval(function() {
@@ -57,29 +59,35 @@ function openPage() {
     });
 
     browser.contextMenus.create({
-    id: "verifyText",
-    title: "verifyText"
+	    id: "verifyText",
+	    title: "verifyText",
+	    documentUrlPatterns: ["<all_urls>"]
 	});
 	browser.contextMenus.create({
 	    id: "verifyTitle",
-	    title: "verifyTitle"
+	    title: "verifyTitle",
+    	documentUrlPatterns: ["<all_urls>"]
 	});
 	browser.contextMenus.create({
 	    id: "assertText",
-	    title: "assertText"
+	    title: "assertText",
+	    documentUrlPatterns: ["<all_urls>"]
 	});
 	browser.contextMenus.create({
 	    id: "assertTitle",
-	    title: "assertTitle"
+	    title: "assertTitle",
+	    documentUrlPatterns: ["<all_urls>"]
 	});
 	browser.contextMenus.create({
 	    id: "storeText",
-	    title: "storeText"
+	    title: "storeText",
+	    documentUrlPatterns: ["<all_urls>"]
 	    //contexts: ["all"]
 	});
 	browser.contextMenus.create({
 	    id: "storeTitle",
-	    title: "storeTitle"
+	    title: "storeTitle",
+	    documentUrlPatterns: ["<all_urls>"]
 	    //contexts: ["all"]
 	});
 
