@@ -647,6 +647,12 @@ function executionLoop() {
                     .then(function(tabs) {
                         //commandReceiverTabId = tabs[0].id;
                         console.log("send: " + tabs[0].id);
+                        if(commandValue.substr(0,2) === "${" && commandValue.substr(commandValue.length-1) === "}"){
+                            commandValue = xlateArgument(commandValue);
+                        }
+                        if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
+                            commandTarget = xlateArgument(commandTarget);
+                        }
                         return browser.tabs.sendMessage(tabs[0].id, {
                             commands: commandName,
                             target: commandTarget,
@@ -716,6 +722,12 @@ function executionLoop() {
                     }, 500);
                 });
                 return p.then(function() {
+                        if(commandValue.substr(0,2) === "${" && commandValue.substr(commandValue.length-1) === "}"){
+                            commandValue = xlateArgument(commandValue);
+                        }
+                        if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
+                            commandTarget = xlateArgument(commandTarget);
+                        }
                         return browser.tabs.sendMessage(currentPlayingTabId, {
                             commands: commandName,
                             target: commandTarget,

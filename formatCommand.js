@@ -55,7 +55,7 @@ function handleFormatCommand(message, sender, response) {
     if (message.storeStr) {
         declaredVars[message.storeVar] = message.storeStr;
     } else if (message.echoStr)
-        sideex_log.info("echo: " + xlateArgument(message.echoStr));
+        sideex_log.info("echo: " + message.echoStr);
 }
 
 browser.runtime.onMessage.addListener(handleFormatCommand);
