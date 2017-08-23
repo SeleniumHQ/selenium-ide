@@ -1,0 +1,26 @@
+{
+  "description": "Selenium Record and Playback tool for ease of getting acquinted with Selenium WebDriver.",
+  "manifest_version": 2,
+  "name": "Selenium IDE",
+  "version": "1.0",
+  "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
+
+  "icons": {
+    "48": "icons/icon.png"
+  },
+  
+  "browser_action": {
+    "default_icon": "icons/icon.png",
+    "default_title": "Selenium IDE",
+    "default_popup": "src/panel/launch.html"
+  },
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "web_accessible_resources": [
+    "icons/icon.png",
+    "src/autobus/sampleExtraScript.js"
+  ]
+}
