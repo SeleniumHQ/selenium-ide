@@ -4,7 +4,7 @@ $(document).ready(function() {
     $(".site_title").click(function() {
         browser.tabs.create({
             url: "http://sideex.org/",
-            windowId: userWinId
+            windowId: contentWindowId
         });
     });
 
