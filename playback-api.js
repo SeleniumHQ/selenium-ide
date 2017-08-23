@@ -39,7 +39,7 @@ window.onload = function() {
     recordButton.addEventListener("click", function(){
         isRecording = !isRecording;
         if (isRecording)
-            recordButton.childNodes[1].textContent = "Recording";
+            recordButton.childNodes[1].textContent = "Stop";
         else
             recordButton.childNodes[1].textContent = "Record";
     })
