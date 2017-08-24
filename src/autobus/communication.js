@@ -16,7 +16,7 @@ function onMessageReceived(request, sender, sendResponse) {
             sendResponse(e);
         }
     } else {
-        throw messageId + " is not mapped to any handler.";
+        throw `${messageId} is not mapped to any handler.`;
     }
 };
 
