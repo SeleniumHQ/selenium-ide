@@ -272,6 +272,21 @@ document.getElementById("grid-delete").addEventListener("click", function() {
     deleteCommand(getSelectedRecord());
 }, false);
 
+document.addEventListener("keydown", function(e) {
+    var keynum;
+    if(window.event) // IE
+    {
+        keynum = e.keyCode
+    }
+    else if(e.which) // Netscape/Firefox/Opera
+    {
+        keynum = e.which
+    }
+    if(keynum === 46){
+        deleteCommand(getSelectedRecord());
+    }
+}, false);
+
 function deleteCommand(selected_ID) {
     if (selected_ID) {
         var delete_node = document.getElementById(selected_ID);
