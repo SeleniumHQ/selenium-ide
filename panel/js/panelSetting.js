@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $(".tablesorter").tablesorter();
 
-    $(".site_title").click(function() {
+    $(".QA_img").click(function() {
         browser.tabs.create({
             url: "http://sideex.org/",
             windowId: contentWindowId
