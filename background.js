@@ -1,4 +1,5 @@
 var panelId = undefined;
+var windowOpenSideex = new Object();
 
 function onCreated(windowInfo) {
     console.log(`Create editor successfully: id = ${windowInfo.id}`);
@@ -9,13 +10,48 @@ function onError(error) {
     console.log(`Error: ${error}`);
 }
 
+/*
+function getContentWindowInfo() {
+    let contentWindowInfo = browser.windows.getLastFocused();
+    //contentWindowInfo.then(function(info) {console.log("contentWindowInfo1: ", Info.tabs);});
+    return contentWindowInfo;
+}
+//*/
+function checkOpenOneSideex(contentWindowInfo) {
+    console.log("contentWindowInfo1-2: ", contentWindowInfo);
+    if (windowOpenSideex[contentWindowInfo.id] !== undefined && windowOpenSideex[contentWindowInfo.id] == true) {
+        console.log("Sideex has been opened.");
+        console.log("windowOpenSideex: ", windowOpenSideex);
+        return Promise.reject("Sideex has been opened.");
+    }
+    windowOpenSideex[contentWindowInfo.id] = true;
+    console.log("Open one sideex.")
+    console.log("contentWindowInfo2: ", contentWindowInfo);
+    return contentWindowInfo;
+}
+
+function openSideexWindow(contentWindowInfo) {
+    let sideexWindowInfo = browser.windows.create({
+        url: browser.extension.getURL("panel.html"),
+        type: "popup",
+        height: 730,
+        width: 700
+    });
+    console.log("contentWindowInfo3: ", contentWindowInfo);
+    console.log("sideexWindowInfo: ", sideexWindowInfo);
+    //return [contentWindowInfo, Promise.resolve(sideexWindowInfo)];
+    return sideexWindowInfo;
+}
+
 function openPage() {
+
+    ///*
     var getContentWindowInfo = browser.windows.getLastFocused();
     var getSideexWindowInfo = browser.windows.create({
         url: browser.extension.getURL("panel.html"),
         type: "popup",
         height: 730,
-        width: 695
+        width: 700
     });
 
     Promise.all([getContentWindowInfo, getSideexWindowInfo])
@@ -23,7 +59,53 @@ function openPage() {
         console.log("get the window info")
         let contentWindowInfo = windowInfo[0];
         let sideexWindowInfo = windowInfo[1];
-        console.log("ContentWindowInfo Id:" + contentWindowInfo.id);
+        console.log("contentWindowInfo Id:" + contentWindowInfo.id);
+        console.log("contentWindowInfo:", contentWindowInfo);
+        console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
+        console.log("sideexWindowInfo:", sideexWindowInfo);
+        return new Promise(function(resolve, reject) {
+            let count = 0;
+            let interval = setInterval(function() {
+                if (count > 100) {
+                    reject("SideeX editor has no response");
+                    clearInterval(interval);
+                }
+
+                browser.tabs.query({
+                    active: true,
+                    windowId: sideexWindowInfo.id
+                }).then(function(tabs) {
+                    if (tabs.length != 1) {
+                        count++;
+                        return;
+                    }
+                    let sideexTabInfo = tabs[0];
+                    if (sideexTabInfo.status == "loading") {
+                        count++;
+                        return;
+                    } else {
+                        console.log("SideeX has been fully loaded")
+                        resolve(windowInfo);
+                        clearInterval(interval);
+                    }
+                })
+            }, 200);
+        });
+    }).then(passWindowId)
+    .catch(function(e) {
+        console.log(e);
+    });
+    //*/
+
+    /*
+    getContentWindowInfo().then(function(info) {
+        console.log("info: ", info);
+    });
+    getContentWindowInfo().then(checkOpenOneSideex).then(openSideexWindow).then(function(windowInfo) {
+        console.log("get the window info", windowInfo);
+        let contentWindowInfo = windowInfo[0];
+        let sideexWindowInfo = windowInfo[1];
+        console.log("contentWindowInfo Id:" + contentWindowInfo.id);
         console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
         return new Promise(function(resolve, reject) {
             let count = 0;
@@ -57,6 +139,7 @@ function openPage() {
     .catch(function(e) {
         console.log(e);
     });
+    //*/
 
     browser.contextMenus.create({
 	    id: "verifyText",

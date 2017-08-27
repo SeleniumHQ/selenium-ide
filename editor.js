@@ -8,6 +8,7 @@ var openedWindowIds = new Object();
 var openedTabCount = 1;
 var selfTabId = -1;
 var contentWindowId;
+var notificationCount = 0;
 
 /* playing */
 var playingFrameLocations = {};
@@ -248,7 +249,8 @@ function handleMessage(message, sender, sendResponse) {
     //handle choose ok/cancel confirm
     if (message.insertBeforeLastCommand) {
         addCommandBeforeLastCommand(message.command, message.target, message.value);
-    } else {    
+    } else {
+        notification(message.command, message.target, message.value);
         addCommandAuto(message.command, message.target, message.value);
     }
 }
@@ -307,3 +309,17 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
         browser.runtime.onMessage.removeListener(contentWindowIdListener);
     }
 })
+
+function notification(command, target, value) {
+    let tempCount = String(notificationCount);
+    notificationCount++;
+    browser.notifications.create(tempCount, {
+        "type": "basic",
+        "title": "Record command!",
+        "message": "command: " + String(command) + "\ntarget: " + String(target[0][0]) + "\nvalue: " + String(value) 
+    });
+
+    setTimeout(function() {
+        browser.notifications.clear(tempCount);
+    }, 1500);
+}

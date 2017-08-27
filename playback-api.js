@@ -38,10 +38,35 @@ window.onload = function() {
     //element.addEventListener("click",play);
     recordButton.addEventListener("click", function(){
         isRecording = !isRecording;
-        if (isRecording)
+        if (isRecording) {
+            notificationCount = 0;
+            let keys = Object.keys(openedWindowIds);
+            for (let i=0 ; i<keys.length ; i++) {
+                browser.tabs.query({windowId: parseInt(keys[i])})
+                    .then(function(tabs) {
+                        for(let j=0 ; j<tabs.length ; j++) {
+                            browser.pageAction.show(tabs[j].id);
+                        }
+                    }).catch(function(e) {
+                        console.error("error:", e);
+                    });
+            }
             recordButton.childNodes[1].textContent = "Stop";
-        else
+        }
+        else {
+            let keys = Object.keys(openedWindowIds);
+            for (let i=0 ; i<keys.length ; i++) {
+                browser.tabs.query({windowId: parseInt(keys[i])})
+                    .then(function(tabs) {
+                        for(let j=0 ; j<tabs.length ; j++) {
+                            browser.pageAction.hide(tabs[j].id);
+                        }
+                    }).catch(function(e) {
+                        console.error("error:", e);
+                    });
+            }
             recordButton.childNodes[1].textContent = "Record";
+        }
     })
     playButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
@@ -109,16 +134,19 @@ window.onload = function() {
             browser.tabs.query({
                 active: true,
                 windowId: contentWindowId
-            }, function(tabs) {
-                browser.tabs.sendMessage(tabs[0].id, {
-                    mySideexTabId:mySideexTabId,
-                    showElement:true,
-                    targetValue:targetValue
-                }).then(function(response) {
-                    if (response){
-                        console.log(response.result);
-                    }
-                });
+            }).then(function(tabs) {
+                if (tabs.length === 0) {
+                    console.log("No match tabs");
+                } else {
+                    browser.tabs.sendMessage(tabs[0].id, {
+                        showElement: true,
+                        targetValue: targetValue
+                    }).then(function(response) {
+                        if (response){
+                            console.log(response.result);
+                        }
+                    });
+                }
             });
         } catch (e) {
             console.error(e);
