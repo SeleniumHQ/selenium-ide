@@ -134,7 +134,8 @@ LocatorBuilders.prototype.findElement = function(locator) {
 LocatorBuilders.order = [];
 LocatorBuilders.builderMap = {};
 LocatorBuilders._preferredOrder = [];
-classObservable(LocatorBuilders);
+// NOTE: for some reasons we does not use this part
+// classObservable(LocatorBuilders);
 
 LocatorBuilders.add = function(name, finder) {
     this.order.push(name);
@@ -149,7 +150,8 @@ LocatorBuilders._orderChanged = function() {
     var changed = this._ensureAllPresent(this.order, this._preferredOrder);
     this._sortByRefOrder(this.order, this._preferredOrder);
     if (changed) {
-        this.notify('preferredOrderChanged', this._preferredOrder);
+        // NOTE: for some reasons we does not use this part 
+        // this.notify('preferredOrderChanged', this._preferredOrder);
     }
 };
 
