@@ -121,13 +121,11 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
         currentRecordingFrameLocation = "root";
     }
     if (isPlaying && changeInfo.status == "loading") {
-        playingFrameLocations[tabId] = {}; //clear the object
-        playingFrameLocations[tabId]["root"] = 0;
-        playingFrameLocations[tabId]["status"] = false;
+        extCommand.setLoading(tabId);
     }
 
     if (isPlaying && changeInfo.status == "complete") {
-        playingFrameLocations[tabId]["status"] = true;
+        extCommand.setComplete(tabId);
     }
 });
 
@@ -190,11 +188,7 @@ function handleMessage(message, sender, sendResponse) {
     }
 
     if (isPlaying && message.frameLocation) {
-        if (!playingFrameLocations[sender.tab.id]) {
-            playingFrameLocations[sender.tab.id] = {};
-            playingFrameLocations[sender.tab.id]["root"] = 0;
-        }
-        playingFrameLocations[sender.tab.id][message.frameLocation] = sender.frameId;
+        extCommand.setFrame(sender.tab.id, message.frameLocation, sender.frameId);
         return;
     }
 
@@ -324,12 +318,8 @@ browser.webNavigation.onCreatedNavigationTarget.addListener(function(details) {
         openedWindowIds[details.windowId] = true;
         openedTabCount++;
     }
-    if (isPlaying && playingTabIds[details.sourceTabId]) {
-        console.log("select a new window!!");
-        playingTabNames["win_ser_" + playingTabCount] = details.tabId;
-        playingTabIds[details.tabId] = "win_ser_" + playingTabCount;
-        playingTabCount++;
-    }
+    if (isPlaying && extCommand.hasTab(details.sourceTabId))
+        extCommand.setNewTab(details.tabId);
 });
 
 browser.runtime.onMessage.addListener(function contentWindowIdListener(message) {
@@ -338,7 +328,7 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
         contentWindowId = message.commWindowId;
         console.log(selfWindowId);
         console.log(contentWindowId);
-        openedWindowIds[contentWindowId] = true;
+        openedWindowIds[message.commWindowId] = true;
         browser.runtime.onMessage.removeListener(contentWindowIdListener);
     }
 })
