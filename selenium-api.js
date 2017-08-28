@@ -3630,8 +3630,7 @@ Selenium.prototype.doEditContent = function(locator, value) {
     }
 };
 
-/* prompt */
-
+// Modified prompt by SideeX comitters (Copyright 2017)
 Selenium.prototype.doChooseCancelOnNextPrompt = function() {
     return this.browserbot.cancelNextPrompt();
 }
@@ -3648,14 +3647,15 @@ Selenium.prototype.doAssertPrompt = function (message) {
                     return Promise.resolve(true);
            });
 }
-//alert
+
+// Modified alert by SideeX comitters (Copyright 2017)
 Selenium.prototype.doAssertAlert=function(message){
     return this.browserbot.getAlertMessage().then(function(actualMessage) {
                     return Promise.resolve(true);
            });
 }
 
-// confirm
+// Modified confirm by SideeX comitters (Copyright 2017)
 Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
     return this.browserbot.setNextConfirmationResult(false);
 }
@@ -3726,7 +3726,7 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
 }
 */
 
-// show element
+// Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
     try{
         var element = this.browserbot.findElement(locator);

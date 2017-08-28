@@ -1,3 +1,5 @@
+// Modified in remoteControl.js from selenium-IDE
+
 var declaredVars = {};
 
 function xlateArgument(value) {
