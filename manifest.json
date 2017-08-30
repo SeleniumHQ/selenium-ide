@@ -54,5 +54,5 @@
         "default_icon": "icons/url_record.png"
     },
 
-    "web_accessible_resources": ["inject.js"]
+    "web_accessible_resources": ["prompt.js"]
 }
