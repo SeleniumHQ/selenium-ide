@@ -42,7 +42,8 @@ ExtCommand.prototype.init = function() {
                // we assume that there has an "open" command
                // select Frame directly will cause failed
                self.playingFrameLocations[self.currentPlayingTabId]["status"] = true;
-           }).catch(function createNewWindow(){
+           }).catch(function createNewWindow(e){
+               console.log(e);
                // : TODO: create a new window if not exist
            });
 }
@@ -104,15 +105,22 @@ ExtCommand.prototype.wait = function(...properties) {
     let self = this;
     let ref = this;
     let inspecting = properties[properties.length - 1];
+    //console.log("Inspecting: " + inspecting);
     for (let i = 0; i < properties.length - 1; i++) {
+        //console.log("properties[" + i + "] : " + properties[i]);
         if (!ref[properties[i]] | !(ref[properties[i]] instanceof Array | ref[properties[i]] instanceof Object))
             return Promise.reject("Invalid Argument");
         ref = ref[properties[i]];
+        //console.log("ref : " + properties[i]);
+        //console.log(ref);
     }
     return new Promise(function(resolve, reject) {
         let counter = 0;
         let interval = setInterval(function() {
             if (!ref[inspecting]) {
+                //console.log("In counter");
+                //ref = ref;
+                //console.log(ref);
                 counter++;
                 if (counter > self.waitTimes) {
                     reject("Timeout");
@@ -163,26 +171,35 @@ function isExtCommand(command) {
 }
 
 ExtCommand.prototype.setLoading = function(tabId) {
+    console.log("setLoading");
     // Does clearing the object will cause some problem(e.g. missing the frameId)?
-    this.initTabInfo(tabId, true);
+    // Ans: Yes, but I don't know why
+    this.initTabInfo(tabId);
+    // this.initTabInfo(tabId, true); (failed)
     this.playingFrameLocations[tabId]["status"] = false;
 }
 
 ExtCommand.prototype.setComplete = function(tabId) {
+    //console.log("setComplete");
     this.initTabInfo(tabId);
     this.playingFrameLocations[tabId]["status"] = true;
 }
 
 ExtCommand.prototype.initTabInfo = function(tabId, forced) {
+    //console.log("initTabInfo");
     if (!this.playingFrameLocations[tabId] | forced) {
+        //console.log("init");
         this.playingFrameLocations[tabId] = {};
         this.playingFrameLocations[tabId]["root"] = 0;
     }
 }
 
 ExtCommand.prototype.setFrame = function(tabId, frameLocation, frameId) {
-    this.initTabInfo(tabId);
+    ////this.initTabInfo(tabId);
+    //console.log("setFrame: tabId=" + tabId + " frameLocation=" + frameLocation + " frameId=" + frameId);
     this.playingFrameLocations[tabId][frameLocation] = frameId;
+    //console.log("set Frame finished")
+    //console.log(this.playingFrameLocations[tabId]);
 }
 
 ExtCommand.prototype.hasTab = function(tabId) {

@@ -328,6 +328,7 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
         contentWindowId = message.commWindowId;
         console.log(selfWindowId);
         console.log(contentWindowId);
+        extCommand.setContentWindowId(contentWindowId);
         openedWindowIds[message.commWindowId] = true;
         browser.runtime.onMessage.removeListener(contentWindowIdListener);
     }
