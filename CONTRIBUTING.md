@@ -14,7 +14,7 @@ As Selenium IDE is in it's very early stages, response time to pull requests mig
 
 ### Getting Help
 
-** As this is an early stage, the selenium IRC channel will do **
+**As this is an early stage, the selenium IRC channel will do**
 
 ### Patience is Appreciated
 
