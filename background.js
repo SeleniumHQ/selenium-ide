@@ -221,6 +221,7 @@ function passWindowId(windowInfo){
     let sideexWindowInfo = windowInfo[1];
     let contentWindowId = contentWindowInfo.id;
     let sideexTabId = sideexWindowInfo.tabs[0].id;
+    let sideexWindowId = sideexWindowInfo.id;
 
     // Seems like we don't need to pass information to content scripts
     /*
@@ -238,7 +239,7 @@ function passWindowId(windowInfo){
     */
 
     return browser.tabs.sendMessage(sideexTabId, {
-        selfTabId: sideexTabId,
+        selfWindowId: sideexWindowId,
         commWindowId: contentWindowId
     });
 };

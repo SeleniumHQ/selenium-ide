@@ -23,7 +23,7 @@ var openedTabNames = new Object();
 var openedTabIds = new Object();
 var openedWindowIds = new Object();
 var openedTabCount = 1;
-var selfTabId = -1;
+var selfWindowId = -1;
 var contentWindowId;
 var notificationCount = 0;
 
@@ -260,7 +260,23 @@ function handleMessage(message, sender, sendResponse) {
             }
         }
     } else if (message.command.includes("store")) {
-        message.value = prompt("Enter the name of the variable");
+        // In Google Chrome, window.prompt() must be triggered in
+        // an actived tabs of front window, so we let panel window been focused
+        browser.windows.update(selfWindowId, {focused: true})
+        .then(function() {
+            // Even if window has been focused, window.prompt() still failed.
+            // Delay a little time to ensure that status has been updated 
+            setTimeout(function() {
+                message.value = prompt("Enter the name of the variable");
+                if (message.insertBeforeLastCommand) {
+                    addCommandBeforeLastCommand(message.command, message.target, message.value);
+                } else {
+                    notification(message.command, message.target, message.value);
+                    addCommandAuto(message.command, message.target, message.value);
+                }
+            }, 100);
+        })
+        return;
     }
     
     //handle choose ok/cancel confirm
@@ -317,10 +333,10 @@ browser.webNavigation.onCreatedNavigationTarget.addListener(function(details) {
 });
 
 browser.runtime.onMessage.addListener(function contentWindowIdListener(message) {
-    if (message.selfTabId != undefined && message.commWindowId != undefined) {
-        selfTabId = message.selfTabId;
+    if (message.selfWindowId != undefined && message.commWindowId != undefined) {
+        selfWindowId = message.selfWindowId;
         contentWindowId = message.commWindowId;
-        console.log(selfTabId);
+        console.log(selfWindowId);
         console.log(contentWindowId);
         openedWindowIds[contentWindowId] = true;
         browser.runtime.onMessage.removeListener(contentWindowIdListener);
