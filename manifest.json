@@ -49,10 +49,5 @@
         "default_title": "SideeX"
     },
 
-    "page_action": {
-        "browser_style": true,
-        "default_icon": "icons/url_record.png"
-    },
-
     "web_accessible_resources": ["prompt.js"]
 }

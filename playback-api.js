@@ -57,48 +57,16 @@ window.onload = function() {
         isRecording = !isRecording;
         if (isRecording) {
             notificationCount = 0;
-            let keys = Object.keys(openedWindowIds);
-            for (let i=0 ; i<keys.length ; i++) {
-                browser.tabs.query({windowId: parseInt(keys[i])})
-                    .then(function(tabs) {
-                        for(let j=0 ; j<tabs.length ; j++) {
-                            browser.pageAction.show(tabs[j].id);
-                        }
-                    }).catch(function(e) {
-                        console.error("error:", e);
-                    });
-            }
             recordButton.childNodes[1].textContent = "Stop";
         }
         else {
             let keys = Object.keys(openedWindowIds);
-            for (let i=0 ; i<keys.length ; i++) {
-                browser.tabs.query({windowId: parseInt(keys[i])})
-                    .then(function(tabs) {
-                        for(let j=0 ; j<tabs.length ; j++) {
-                            browser.pageAction.hide(tabs[j].id);
-                        }
-                    }).catch(function(e) {
-                        console.error("error:", e);
-                    });
-            }
             recordButton.childNodes[1].textContent = "Record";
         }
     })
     playButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
-        let keys = Object.keys(openedWindowIds);
-        for (let i=0 ; i<keys.length ; i++) {
-            browser.tabs.query({windowId: parseInt(keys[i])})
-                .then(function(tabs) {
-                    for(let j=0 ; j<tabs.length ; j++) {
-                        browser.pageAction.hide(tabs[j].id);
-                    }
-                }).catch(function(e) {
-                    console.error("error:", e);
-                });
-        }
         initAllSuite();
         setCaseScrollTop(getSelectedCase());
         play();
@@ -113,17 +81,6 @@ window.onload = function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
         console.error("playSuite");
-        let keys = Object.keys(openedWindowIds);
-        for (let i=0 ; i<keys.length ; i++) {
-            browser.tabs.query({windowId: parseInt(keys[i])})
-                .then(function(tabs) {
-                    for(let j=0 ; j<tabs.length ; j++) {
-                        browser.pageAction.hide(tabs[j].id);
-                    }
-                }).catch(function(e) {
-                    console.error("error:", e);
-                });
-        }
         initAllSuite();
         playSuite(0);
     });
@@ -131,17 +88,6 @@ window.onload = function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
         console.error("playSuites");
-        let keys = Object.keys(openedWindowIds);
-        for (let i=0 ; i<keys.length ; i++) {
-            browser.tabs.query({windowId: parseInt(keys[i])})
-                .then(function(tabs) {
-                    for(let j=0 ; j<tabs.length ; j++) {
-                        browser.pageAction.hide(tabs[j].id);
-                    }
-                }).catch(function(e) {
-                    console.error("error:", e);
-                });
-        }
         initAllSuite();
         playSuites(0);
     });
