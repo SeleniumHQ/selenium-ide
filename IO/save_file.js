@@ -129,7 +129,7 @@ function downloadSuite(s_suite,callback) {
 
         var f_name = sideex_testSuite[s_suite.id].file_name,
             link = makeTextFile(output);
-            
+
         var downloading = browser.downloads.download({
             filename: f_name,
             url: link,
@@ -137,24 +137,28 @@ function downloadSuite(s_suite,callback) {
             conflictAction: 'overwrite'
         });
 
-        var downloaded = function(download) {
-            download = download[0];
-            // console.log(download);
-            f_name = download.filename.split("\\").pop();
-            sideex_testSuite[s_suite.id].file_name = f_name;
-            $(s_suite).find(".modified").removeClass("modified");
-            closeConfirm(false);
-            s_suite.childNodes[0].textContent = f_name.substring(0, f_name.lastIndexOf("."));
-            if(callback)
-                callback();
-        };
-
         var result = function(id) {
-            var check = browser.downloads.search({
-                id: id
-            });
-            check.then(downloaded, onError);
-            console.log(id);
+            browser.downloads.onChanged.addListener(function downloadCompleted(downloadDelta) {
+                if (downloadDelta.id == id && downloadDelta.state &&
+                    downloadDelta.state.current == "complete") {
+                    browser.downloads.search({
+                        id: downloadDelta.id
+                    }).then(function(download){
+                        download = download[0];
+                        f_name = download.filename.split(/\\|\//).pop();
+                        sideex_testSuite[s_suite.id].file_name = f_name;
+                        $(s_suite).find(".modified").removeClass("modified");
+                        closeConfirm(false);
+                        s_suite.childNodes[0].textContent = f_name.substring(0, f_name.lastIndexOf("."));
+                        if (callback) {
+                            callback();
+                        }
+                        browser.downloads.onChanged.removeListener(downloadCompleted);
+                    })
+                } else if (downloadDelta.id == id && downloadDelta.error) {
+                    browser.downloads.onChanged.removeListener(downloadCompleted);
+                }
+            })
         };
 
         var onError = function(error) {
