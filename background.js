@@ -52,7 +52,7 @@ function openSideexWindow(contentWindowInfo) {
         url: browser.extension.getURL("panel.html"),
         type: "popup",
         height: 730,
-        width: 700
+        width: 750
     });
     console.log("contentWindowInfo3: ", contentWindowInfo);
     console.log("sideexWindowInfo: ", sideexWindowInfo);
@@ -68,7 +68,7 @@ function openPage() {
         url: browser.extension.getURL("panel.html"),
         type: "popup",
         height: 730,
-        width: 700
+        width: 750
     });
 
     Promise.all([getContentWindowInfo, getSideexWindowInfo])
@@ -161,34 +161,38 @@ function openPage() {
     browser.contextMenus.create({
 	    id: "verifyText",
 	    title: "verifyText",
-	    documentUrlPatterns: ["<all_urls>"]
+	    documentUrlPatterns: ["<all_urls>"],
+	    contexts: ["all"]
 	});
 	browser.contextMenus.create({
 	    id: "verifyTitle",
 	    title: "verifyTitle",
-    	documentUrlPatterns: ["<all_urls>"]
+    	documentUrlPatterns: ["<all_urls>"],
+    	contexts: ["all"]
 	});
 	browser.contextMenus.create({
 	    id: "assertText",
 	    title: "assertText",
-	    documentUrlPatterns: ["<all_urls>"]
+	    documentUrlPatterns: ["<all_urls>"],
+	    contexts: ["all"]
 	});
 	browser.contextMenus.create({
 	    id: "assertTitle",
 	    title: "assertTitle",
-	    documentUrlPatterns: ["<all_urls>"]
+	    documentUrlPatterns: ["<all_urls>"],
+	    contexts: ["all"]
 	});
 	browser.contextMenus.create({
 	    id: "storeText",
 	    title: "storeText",
-	    documentUrlPatterns: ["<all_urls>"]
-	    //contexts: ["all"]
+	    documentUrlPatterns: ["<all_urls>"],
+	    contexts: ["all"]
 	});
 	browser.contextMenus.create({
 	    id: "storeTitle",
 	    title: "storeTitle",
-	    documentUrlPatterns: ["<all_urls>"]
-	    //contexts: ["all"]
+	    documentUrlPatterns: ["<all_urls>"],
+	    contexts: ["all"]
 	});
 
 }
