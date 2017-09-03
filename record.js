@@ -541,7 +541,7 @@ window.addEventListener('contextmenu', function(event) {
     var tmpText = locatorBuilders.buildAll(event.target);
     var tmpVal = getText(event.target);
     var tmpTitle = [
-        [event.target.ownerDocument.title]
+        [normalizeSpaces(event.target.ownerDocument.title)]
     ];
     myPort.onMessage.addListener(function(m) {
         if (m.cmd.includes("Text")) {
@@ -549,7 +549,7 @@ window.addEventListener('contextmenu', function(event) {
         } else if (m.cmd.includes("Title")) {
             record(m.cmd, tmpTitle, '');
         }
-        this.removeListener();
+        myPort.onMessage.removeListener(this);
     });
 }, true);
 

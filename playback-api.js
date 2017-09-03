@@ -61,7 +61,6 @@ window.onload = function() {
             recordButton.childNodes[1].textContent = "Stop";
         }
         else {
-            let keys = Object.keys(openedWindowIds);
             recordButton.childNodes[1].textContent = "Record";
         }
     })
