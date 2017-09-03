@@ -129,7 +129,6 @@ function downloadSuite(s_suite,callback) {
 
         var f_name = sideex_testSuite[s_suite.id].file_name,
             link = makeTextFile(output);
-
         var downloading = browser.downloads.download({
             filename: f_name,
             url: link,

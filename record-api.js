@@ -18,6 +18,61 @@
 var contentSideexTabId = -1;
 var frameLocation = "";
 
+function Recorder(window) {
+    this.window = window;
+    this.attach();
+}
+
+Recorder.eventHandlers = {};
+Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
+    handler.handlerName = handlerName;
+    if (!options) options = false;
+    let key = options ? ('C_' + eventName) : eventName;
+    if (!this.eventHandlers[key]) {
+        this.eventHandlers[key] = [];
+    }
+    this.eventHandlers[key].push(handler);
+}
+
+Recorder.prototype.parseEventKey = function(eventKey) {
+	if (eventKey.match(/^C_/)) {
+		return { eventName: eventKey.substring(2), capture: true };
+	} else {
+		return { eventName: eventKey, capture: false };
+	}
+}
+
+Recorder.prototype.attach = function() {
+    this.eventListeners = {};
+    for (eventKey in Recorder.eventHandlers) {
+        var eventInfo = this.parseEventKey(eventKey);
+        var eventName = eventInfo.eventName;
+        var capture = eventInfo.capture;
+
+        var handlers = Recorder.eventHandlers[eventKey];
+        this.eventListeners[eventKey] = [];
+        for (let i=0 ; i<handlers.length ; i++) {
+            this.window.document.addEventListener(eventName, handlers[i], capture);
+            this.eventListeners[eventKey].push(handlers[i]);
+        }
+    }
+}
+
+Recorder.prototype.detach = function() {
+    for (eventKey in this.eventListeners) {
+        var eventInfo = this.parseEventKey(eventKey);
+        var eventName = eventInfo.eventName;
+        var capture = eventInfo.capture;
+        for (let i=0 ; i<this.eventListeners[eventKey] ; i++) {
+            this.window.document.removeEventListener(eventName, this.eventListeners[eventKey][i], capture)
+        }
+    }
+    delete this.eventListeners;
+}
+
+var recorder = new Recorder(window);
+
+
 // show element
 function startShowElement(message, sender, sendResponse){
     if (message.showElement) {

@@ -109,16 +109,11 @@ window.addEventListener("message", function(event) {
             case "getConfirmationMessage":
                 result = recordedConfirmation;
                 recordedConfirmation = null;
-                try{
-                    console.error("no");
-                    window.postMessage({
-                        direction: "from-page-script",
-                        response: "confirm",
-                        value: result
-                    }, "*");
-                } catch (e) {
-                    console.error(e);
-                }
+                window.postMessage({
+                    direction: "from-page-script",
+                    response: "confirm",
+                    value: result
+                }, "*");
                 break;
 
             case "setNextAlertResult":

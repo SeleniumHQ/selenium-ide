@@ -1956,7 +1956,6 @@ BrowserBot.prototype.submit = function(formElement) {
 };
 
 BrowserBot.prototype.clickElement = function(element, clientX, clientY) {
-    console.log("clickElement");
     this._fireEventOnElement("click", element, clientX, clientY);
 };
 
@@ -2384,14 +2383,12 @@ BrowserBot.prototype.getConfirmationMessage = function() {
         let count = 0;
         let interval = setInterval(function() {
             if (!self.confirmationResponse) {
-                console.error(self.confirmationResponse,count);
                 count++;
                 if (count > 60) {
                     reject("No response");
                     clearInterval(interval);
                 }
             } else {
-                console.error(self.confirmationResponse);
                 resolve(self.confirmationMessage);
                 self.confirmationResponse = false;
                 self.confirmationMessage = null;
@@ -2733,16 +2730,12 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
     // before making a decision on whether we should force the href
     var savedEvent = null;
 
-    //console.log("fire event1");
     element.addEventListener(eventType, function(evt) {
         savedEvent = evt;
-        //console.log("fire event1-1");
     }, false);
 
-    //console.log("fire event1-2");
     //this._modifyElementTarget(element);
 
-    //console.log("fire event1-3");
     // Trigger the event.
     this.browserbot.triggerMouseEvent(element, eventType, true, clientX, clientY);
 
@@ -2750,7 +2743,6 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
         return;
     }
 
-    //console.log("fire event2");
     // Perform the link action if preventDefault was set.
     // In chrome URL, the link action is already executed by triggerMouseEvent.
     //if (!browserVersion.isChrome && savedEvent != null && savedEvent.getPreventDefault && !savedEvent.getPreventDefault()) {
@@ -2764,8 +2756,6 @@ MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, c
         }
     }
     */
-    //console.log("fire event3");
-
 };
 
 
