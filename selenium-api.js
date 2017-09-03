@@ -396,8 +396,8 @@ Selenium.prototype.doVerifyText = function(locator, value) {
 };
 
 Selenium.prototype.doVerifyTitle = function(value) {
-    if (this.getTitle() !== value) {
-        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
+    if (normalizeSpaces(this.getTitle()) !== value) {
+        throw new Error("Actual value '" + normalizeSapces(this.getTitle()) + "' did not match '" + value + "'");
     }
 };
 
@@ -409,8 +409,8 @@ Selenium.prototype.doAssertText = function(locator, value) {
 };
 
 Selenium.prototype.doAssertTitle = function(value) {
-    if (this.getTitle() !== value) {
-        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
+    if (normalizeSpaces(this.getTitle()) !== value) {
+        throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
     }
 };
 
@@ -1062,7 +1062,7 @@ Selenium.prototype.doSendKeys = function(locator, value) {
             }
             return key;
         });
-
+        console.log("value: " + keysRa);
         bot.action.type(element, keysRa);
     } else {
         bot.action.type(element, value);
