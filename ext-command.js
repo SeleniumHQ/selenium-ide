@@ -117,7 +117,7 @@ ExtCommand.prototype.wait = function(...properties) {
     return new Promise(function(resolve, reject) {
         let counter = 0;
         let interval = setInterval(function() {
-            if (!ref[inspecting]) {
+            if (ref[inspecting] == undefined) {
                 //console.log("In counter");
                 //ref = ref;
                 //console.log(ref);
