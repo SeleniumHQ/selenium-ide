@@ -40,6 +40,7 @@ var implicitCount = 0;
 var implicitTime = "";
 
 var caseFailed = false;
+var extCommand = new ExtCommand();
 
 window.onload = function() {
     var recordButton = document.getElementById("record");
@@ -310,7 +311,7 @@ function executeCommand(index) {
     setColor(id + 1, "executing");
 
     browser.tabs.query({
-            windowId: contentWindowId,
+            windowId: extCommand.getContentWindowId(),
             active: true
         })
         .then(function(tabs) {
@@ -321,7 +322,7 @@ function executeCommand(index) {
                 target: commandTarget,
                 value: commandValue
             }, {
-                frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
+                frameId: extCommand.getFrame(tabs[0].id)
             })
         })
         .then(function(result) {
@@ -382,16 +383,9 @@ function initializePlayingProgress(isDbclick) {
 
     switchPS();
 
-    playingTabNames = new Object();
-    playingTabIds = new Object();
-    currentPlayingWindowId = contentWindowId;
-    currentPlayingFrameLocation = "root";
-    playingFrameLocations = {};
     currentPlayingCommandIndex = -1;
-    playingTabCount = 1;
 
     // xian wait
-    commandType = "preparation";
     pageCount = ajaxCount = domCount = implicitCount = 0;
     pageTime = ajaxTime = domTime = implicitTime = "";
 
@@ -406,25 +400,7 @@ function initializePlayingProgress(isDbclick) {
 
     cleanStatus();
 
-    return browser.tabs.query({
-            windowId: currentPlayingWindowId,
-            active: true
-        })
-        .then(function(tabs) {
-            if (tabs.length === 0) {
-                throw new Error("Can't find the window");
-                // ...Or we can create a new window for user
-                // and binding to a new contentWindowId.
-            }
-            currentPlayingTabId = tabs[0].id;
-            playingTabNames["win_ser_local"] = currentPlayingTabId;
-            playingTabIds[currentPlayingTabId] = "win_ser_local";
-            playingFrameLocations[currentPlayingTabId] = {};
-            playingFrameLocations[currentPlayingTabId]["root"] = 0;
-            // we assume that there has an "open" command
-            // select Frame directly will cause failed
-            playingFrameLocations[currentPlayingTabId]["status"] = true;
-        });
+    return extCommand.init();
 }
 
 function executionLoop() {
@@ -437,381 +413,47 @@ function executionLoop() {
         return true;
     }
 
-    if (commandType == "preparation") {
-        console.log("in preparation");
-        return browser.tabs.sendMessage(currentPlayingTabId, {
-                commands: "waitPreparation", target: "", value:""
-            }, {
-                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
-            })
-            .then(function() {
-                commandType = "prePageWait";
-            })
-            .then(executionLoop);
-    } else if (commandType == "prePageWait") {
-        console.log("in prePageWait");
-        return browser.tabs.sendMessage(currentPlayingTabId, {
-                commands: "prePageWait", target: "", value:""
-            }, {
-                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
-            })
-            .then(function(response) {
-                if (response && response.new_page) {
-                    console.log("prePageWaiting");
-                    commandType = "prePageWait";
-                } else {
-                    commandType = "pageWait";
-                }
-            })
-            .then(executionLoop);
-    } else if (commandType == "pageWait") {
-        console.log("in pageWait");
-        return browser.tabs.sendMessage(currentPlayingTabId, {
-                commands: "pageWait", target: "", value:""
-            }, {
-                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
-            })
-            .then(function(response) {
-                if (pageTime && (Date.now() - pageTime) > 30000) {
-                    sideex_log.error("Page Wait timed out after 30000ms");
-                    pageCount = 0;
-                    pageTime = "";
-                    commandType = "ajaxWait";
-                } else if (response && response.page_done) {
-                    pageCount = 0;
-                    pageTime = "";
-                    commandType = "ajaxWait";
-                } else {
-                    pageCount++;
-                    if (pageCount == 1) {
-                        pageTime = Date.now();
-                        sideex_log.info("Wait for the new page to be fully loaded");
-                    }
-                    commandType = "pageWait";
-                }
-            })
-            .then(executionLoop);
-    } else if (commandType == "ajaxWait") {
-        console.log("in ajaxWait");
-        return browser.tabs.sendMessage(currentPlayingTabId, {
-                commands: "ajaxWait", target: "", value:""
-            }, {
-                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
-            })
-            .then(function(response) {
-                if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
-                    sideex_log.error("Ajax Wait timed out after 30000ms");
-                    ajaxCount = 0;
-                    ajaxTime = "";
-                    commandType = "domWait";
-                } else if (response && response.ajax_done) {
-                    ajaxCount = 0;
-                    ajaxTime = "";
-                    commandType = "domWait";
-                } else {
-                    ajaxCount++;
-                    if (ajaxCount == 1) {
-                        ajaxTime = Date.now();
-                        sideex_log.info("Wait for all ajax requests to be done");
-                    }
-                    commandType = "ajaxWait";
-                }
-            })
-            .then(executionLoop);
-    } else if (commandType == "domWait") {
-        console.log("in domWait");
-        return browser.tabs.sendMessage(currentPlayingTabId, {
-                commands: "domWait", target: "", value:""
-            }, {
-                frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
-            })
-            .then(function(response) {
-                if (domTime && (Date.now() - domTime) > 30000) {
-                    sideex_log.error("DOM Wait timed out after 30000ms");
-                    domCount = 0;
-                    domTime = "";
-                    commandType = "common";
-                } else if (response && (Date.now() - response.dom_time) < 400) {
-                    domCount++;
-                    if (domCount == 1) {
-                        domTime = Date.now();
-                        sideex_log.info("Wait for the DOM tree modification");
-                    }
-                    commandType = "domWait";
-                } else {
-                    domCount = 0;
-                    domTime = "";
-                    commandType = "common";
-                }
-            })
-            .then(executionLoop);
-    } else if (commandType == "common") {
-        console.log("in common");
-        //xian wait
-        commandType = "preparation";
-        currentPlayingCommandIndex++;
-        let commands = getRecordsArray();
-        if (currentPlayingCommandIndex >= commands.length) {
-            if (!caseFailed) {
-                setColor(currentTestCaseId, "success");
-                document.getElementById("result-runs").innerHTML = parseInt(document.getElementById("result-runs").innerHTML) + 1;
-                declaredVars = {};
-                sideex_log.info("Test case passed");
-            } else {
-                caseFailed = false;
-            }
-            return true;
-        }
-
-        let commandName = getCommandName(commands[currentPlayingCommandIndex]);
-        let commandTarget = getCommandTarget(commands[currentPlayingCommandIndex]);
-        let commandValue = getCommandValue(commands[currentPlayingCommandIndex]);
-
-        if (implicitCount == 0) {
-            sideex_log.info("Executing: | " + commandName + " | " + commandTarget + " | " + commandValue + " |");
-        }
-
-        setColor(currentPlayingCommandIndex + 1, "executing");
-
-        if (commandName == 'pause') {
-            return new Promise(function(resolve, reject) {
-                setTimeout(function() {
-                    /* do nothing */
-                    resolve();
-                }, commandValue);
-            })
-            .then(function(){
-                setColor(currentPlayingCommandIndex + 1, "success");
-            })
-            .then(executionLoop);
-        } else if (commandName == 'open') {
-            return browser.tabs.update(currentPlayingTabId, {
-                    url: commandTarget
-                })
-                .then(function(){
-                    setColor(currentPlayingCommandIndex + 1, "success");
-                })
-                .then(executionLoop);
-        } else if (commandName == 'selectFrame') {
-            /* TODO: string error handling & wait for information been stored */
-            let str = commandTarget.substr(commandTarget.lastIndexOf('=') + 1);
-            if (str == "parent")
-                currentPlayingFrameLocation = currentPlayingFrameLocation.slice(0, currentPlayingFrameLocation.lastIndexOf(':'));
-            else
-                currentPlayingFrameLocation += ":" + str;
-            console.log(currentPlayingFrameLocation);
-
-            return new Promise(function(resolve, reject){
-                    let count = 0;
-                    let interval = setInterval(function() {
-                        if (count > 30) {
-                            reject("Not Found");
-                            clearInterval(interval);
-                        }
-                        if (!playingFrameLocations[currentPlayingTabId] ||
-                            playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation] == null) {
-                            console.log(currentPlayingTabId);
-                            console.log(playingFrameLocations[currentPlayingTabId]);
-                            console.log(playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]);
-                            count++;
-                        } else {
-                            resolve();
-                            clearInterval(interval);
-                        }
-                    }, 500);
-                })
-                .then(function(){
-                    setColor(currentPlayingCommandIndex + 1, "success");
-                })
-                .then(executionLoop);
-        } else if (commandName == 'selectWindow') {
-            //TODO: set color
-            return new Promise(function(resolve, reject) {
-                    let count = 0;
-                    let interval = setInterval(function() {
-                        if (!playingTabNames[commandTarget]) {
-                            count++;
-                            if (count > 30) {
-                                reject("Can't Find New Window");
-                                clearInterval(interval);
-                            }
-                        } else {
-                            currentPlayingTabId = playingTabNames[commandTarget];
-                            console.log("window has found");
-                            resolve();
-                            clearInterval(interval);
-                        }
-                    }, 500);
-                })
-                .then(function() {
-                    return browser.tabs.update(currentPlayingTabId, {active: true});
-                })
-                .then(function(){
-                    setColor(currentPlayingCommandIndex + 1, "success");
-                })
-                .then(executionLoop);
-        } else if (commandName == 'close') {
-            let removedTabId = currentPlayingTabId;
-            currentPlayingTabId = -1;
-            delete playingFrameLocations[removedTabId];
-            return browser.tabs.remove(removedTabId)
-                .then(function(){
-                    setColor(currentPlayingCommandIndex + 1, "success");
-                })
-                .then(executionLoop);
+    currentPlayingCommandIndex++;
+    let commands = getRecordsArray();
+    if (currentPlayingCommandIndex >= commands.length) {
+        if (!caseFailed) {
+            setColor(currentTestCaseId, "success");
+            document.getElementById("result-runs").innerHTML = parseInt(document.getElementById("result-runs").innerHTML) + 1;
+            declaredVars = {};
+            sideex_log.info("Test case passed");
         } else {
-            /*
-            return browser.tabs.query({windowId: currentPlayingWindowId, active: true })
-                   .then( function(tabs){
-                        return browser.tabs.sendMessage(tabs[0].id, { commands: commandName, target: commandTarget, value:commandValue },
-                                    {frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]})})
-                .then(executionLoop);
-            */
-            /*
-            return browser.tabs.sendMessage(currentPlayingTabId, { commands: commandName, target: commandTarget, value:commandValue },
-                            {frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]})
-                .then(executionLoop);
-            */
-            if (currentPlayingTabId === -1) {
-
-                return browser.tabs.query({
-                        windowId: contentWindowId,
-                        active: true
-                    })
-                    .then(function(tabs) {
-                        //commandReceiverTabId = tabs[0].id;
-                        console.log("send: " + tabs[0].id);
-                        if(commandValue.substr(0,2) === "${" && commandValue.substr(commandValue.length-1) === "}"){
-                            commandValue = xlateArgument(commandValue);
-                        }
-                        if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
-                            commandTarget = xlateArgument(commandTarget);
-                        }
-                        return browser.tabs.sendMessage(tabs[0].id, {
-                            commands: commandName,
-                            target: commandTarget,
-                            value: commandValue,
-                            mySideexTabId: mySideexTabId
-                        }, {
-                            frameId: playingFrameLocations[tabs[0].id][currentPlayingFrameLocation]
-                        })
-                    })
-                    .then(function(result) {
-                        if (result.result != "success") {
-
-                            // implicit
-                            if (result.result.match(/Element[\s\S]*?not found/)) {
-                                if (implicitTime && (Date.now() - implicitTime > 30000)) {
-                                    sideex_log.error("Implicit Wait timed out after 30000ms");
-                                    implicitCount = 0;
-                                    implicitTime = "";
-                                } else {
-                                    implicitCount++;
-                                    if (implicitCount == 1) {
-                                        sideex_log.info("Wait until the element is found");
-                                        implicitTime = Date.now();
-                                    }
-                                    currentPlayingCommandIndex--;
-                                    commandType = "common";
-                                    return true;
-                                }
-                            }
-
-                            implicitCount = 0;
-                            implicitTime = "";
-                            sideex_log.error(result.result);
-                            setColor(currentPlayingCommandIndex + 1, "fail");
-                            setColor(currentTestCaseId, "fail");
-                            document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
-                            if (commandName.includes("verify") && result.result.includes("did not match")) {
-                                setColor(currentPlayingCommandIndex + 1, "fail");
-                            } else {
-                                sideex_log.info("Test case failed");
-                                caseFailed = true;
-                                currentPlayingCommandIndex = commands.length;
-                            }
-                        } else setColor(currentPlayingCommandIndex + 1, "success");
-                    })
-                    .then(executionLoop);
-            } else {
-                let p = new Promise(function(resolve, reject) {
-                    let count = 0;
-                    let interval = setInterval(function() {
-                        if (count > 60) {
-                            sideex_log.error("Timed out after 30000ms");
-                            reject("Window not Found");
-                            clearInterval(interval);
-                        }
-                        if (!playingFrameLocations[currentPlayingTabId]["status"]) {
-                            if (count == 0) {
-                                sideex_log.info("Wait for the new page to be fully loaded");
-                            }
-                            count++;
-                        } else {
-                            //console.log("status: "+playingFrameLocations[currentPlayingTabId]["status"]);
-                            console.log("page load complete.");
-                            resolve();
-                            clearInterval(interval);
-                        }
-                    }, 500);
-                });
-                return p.then(function() {
-                        if(commandValue.substr(0,2) === "${" && commandValue.substr(commandValue.length-1) === "}"){
-                            commandValue = xlateArgument(commandValue);
-                        }
-                        if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
-                            commandTarget = xlateArgument(commandTarget);
-                        }
-                        return browser.tabs.sendMessage(currentPlayingTabId, {
-                            commands: commandName,
-                            target: commandTarget,
-                            value: commandValue
-                        }, {
-                            frameId: playingFrameLocations[currentPlayingTabId][currentPlayingFrameLocation]
-                        })
-                    })
-                    .then(function(result) {
-                        if (result.result != "success") {
-
-                            // implicit
-                            if (result.result.match(/Element[\s\S]*?not found/)) {
-                                if (implicitTime && (Date.now() - implicitTime > 30000)) {
-                                    sideex_log.error("Implicit Wait timed out after 30000ms");
-                                    implicitCount = 0;
-                                    implicitTime = "";
-                                } else {
-                                    implicitCount++;
-                                    if (implicitCount == 1) {
-                                        sideex_log.info("Wait until the element is found");
-                                        implicitTime = Date.now();
-                                    }
-                                    currentPlayingCommandIndex--;
-                                    commandType = "common";
-                                    return true;
-                                }
-                            }
-
-                            implicitCount = 0;
-                            implicitTime = "";
-                            sideex_log.error(result.result);
-                            setColor(currentPlayingCommandIndex + 1, "fail");
-                            setColor(currentTestCaseId, "fail");
-                            document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
-                            if (commandName.includes("verify") && result.result.includes("did not match")) {
-                                setColor(currentPlayingCommandIndex + 1, "fail");
-                            } else {
-                                sideex_log.info("Test case failed");
-                                caseFailed = true;
-                                currentPlayingCommandIndex = commands.length;
-                            }
-                        } else {
-                            setColor(currentPlayingCommandIndex + 1, "success");
-                        }
-                    })
-                    .then(executionLoop);
-
-            }
+            caseFailed = false;
         }
+        return true;
+    }
+
+    let commandName = getCommandName(commands[currentPlayingCommandIndex]);
+    let commandTarget = getCommandTarget(commands[currentPlayingCommandIndex]);
+    let commandValue = getCommandValue(commands[currentPlayingCommandIndex]);
+
+
+    setColor(currentPlayingCommandIndex + 1, "executing");
+
+    if (isExtCommand(commandName)) {
+        sideex_log.info("Executing: | " + commandName + " | " + commandTarget + " | " + commandValue + " |");
+        let upperCase = commandName.charAt(0).toUpperCase() + commandName.slice(1);
+        return (extCommand["do" + upperCase](commandTarget, commandValue))
+           .then(function() {
+               try {
+                    console.log("In set color")
+                    setColor(currentPlayingCommandIndex + 1, "success");
+               } catch (e) {
+                   console.log(e);
+               }
+           }).then(executionLoop); 
+    } else {
+        return doPreparation()
+           .then(doPrePageWait)
+           .then(doPageWait)
+           .then(doAjaxWait)
+           .then(doDomWait)
+           .then(doCommand)
+           .then(executionLoop)
     }
 }
 
@@ -877,13 +519,10 @@ function switchPR() {
 function catchPlayingError(reason) {
     // doCommands is depend on test website, so if make a new page,
     // doCommands funciton will fail, so keep retrying to get connection
-    if (reason == "TypeError: response is undefined" ||
-        reason == "Error: Could not establish connection. Receiving end does not exist." ||
-        reason.message == "Could not establish connection. Receiving end does not exist." ||
-        reason.message == "The message port closed before a reponse was received.") {
-        
+    if (isReceivingEndError(reason)) {
         commandType = "preparation";
         setTimeout(function() {
+            currentPlayingCommandIndex--;
             playAfterConnectionFailed();
         }, 100);
     } else {
@@ -913,4 +552,190 @@ function catchPlayingError(reason) {
             switchPS();
         }, 500);
     }
+}
+
+function doPreparation() {
+    console.log("in preparation");
+    return extCommand.sendMessage("waitPreparation", "", "")
+        .then(function() {
+            return true;
+        })
+}
+
+
+function doPrePageWait() {
+    console.log("in prePageWait");
+    return extCommand.sendMessage("prePageWait", "", "")
+       .then(function(response) {
+           if (response && response.new_page) {
+               console.log("prePageWaiting");
+               return doPrePageWait();
+           } else {
+               return true;
+           }
+       })
+}
+
+function doPageWait() {
+    console.log("in pageWait");
+    return extCommand.sendMessage("pageWait", "", "")
+        .then(function(response) {
+            if (pageTime && (Date.now() - pageTime) > 30000) {
+                sideex_log.error("Page Wait timed out after 30000ms");
+                pageCount = 0;
+                pageTime = "";
+                return true;
+            } else if (response && response.page_done) {
+                pageCount = 0;
+                pageTime = "";
+                return true;
+            } else {
+                pageCount++;
+                if (pageCount == 1) {
+                    pageTime = Date.now();
+                    sideex_log.info("Wait for the new page to be fully loaded");
+                }
+                return doPageWait();
+            }
+        })
+}
+
+function doAjaxWait() {
+    console.log("in ajaxWait");
+    return extCommand.sendMessage("ajaxWait", "", "")
+        .then(function(response) {
+            if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
+                sideex_log.error("Ajax Wait timed out after 30000ms");
+                ajaxCount = 0;
+                ajaxTime = "";
+                return true;
+            } else if (response && response.ajax_done) {
+                ajaxCount = 0;
+                ajaxTime = "";
+                return true;
+            } else {
+                ajaxCount++;
+                if (ajaxCount == 1) {
+                    ajaxTime = Date.now();
+                    sideex_log.info("Wait for all ajax requests to be done");
+                }
+                return doAjaxWait();
+            }
+        })
+}
+
+function doDomWait() {
+    console.log("in domWait");
+    return extCommand.sendMessage("domWait", "", "")
+        .then(function(response) {
+            if (domTime && (Date.now() - domTime) > 30000) {
+                sideex_log.error("DOM Wait timed out after 30000ms");
+                domCount = 0;
+                domTime = "";
+                return true;
+            } else if (response && (Date.now() - response.dom_time) < 400) {
+                domCount++;
+                if (domCount == 1) {
+                    domTime = Date.now();
+                    sideex_log.info("Wait for the DOM tree modification");
+                }
+                return doDomWait();
+            } else {
+                domCount = 0;
+                domTime = "";
+                return true;
+            }
+        })
+}
+
+function doCommand() {
+    let commands = getRecordsArray();
+    let commandName = getCommandName(commands[currentPlayingCommandIndex]);
+    let commandTarget = getCommandTarget(commands[currentPlayingCommandIndex]);
+    let commandValue = getCommandValue(commands[currentPlayingCommandIndex]);
+    console.log("in common");
+    //xian wait
+    //commandType = "preparation";
+
+    if (implicitCount == 0) {
+        sideex_log.info("Executing: | " + commandName + " | " + commandTarget + " | " + commandValue + " |");
+    }
+
+    let p = new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+            if (count > 60) {
+                sideex_log.error("Timed out after 30000ms");
+                reject("Window not Found");
+                clearInterval(interval);
+            }
+            if (!extCommand.getPageStatus()) {
+                if (count == 0) {
+                    sideex_log.info("Wait for the new page to be fully loaded");
+                }
+                count++;
+            } else {
+                //console.log("status: "+playingFrameLocations[extCommand.getCurrentPlayingTabId()]["status"]);
+                console.log("page load complete.");
+                resolve();
+                clearInterval(interval);
+            }
+        }, 500);
+    });
+    return p.then(function() {
+            if(commandValue.substr(0,2) === "${" && commandValue.substr(commandValue.length-1) === "}"){
+                commandValue = xlateArgument(commandValue);
+            }
+            if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
+                commandTarget = xlateArgument(commandTarget);
+            }
+            return extCommand.sendMessage(commandName, commandTarget, commandValue);
+        })
+        .then(function(result) {
+            if (result.result != "success") {
+                // implicit
+                if (result.result.match(/Element[\s\S]*?not found/)) {
+                    if (implicitTime && (Date.now() - implicitTime > 30000)) {
+                        sideex_log.error("Implicit Wait timed out after 30000ms");
+                        implicitCount = 0;
+                        implicitTime = "";
+                    } else {
+                        implicitCount++;
+                        if (implicitCount == 1) {
+                            sideex_log.info("Wait until the element is found");
+                            implicitTime = Date.now();
+                        }
+                        return doCommand();
+                    }
+                }
+
+                implicitCount = 0;
+                implicitTime = "";
+                sideex_log.error(result.result);
+                setColor(currentPlayingCommandIndex + 1, "fail");
+                setColor(currentTestCaseId, "fail");
+                document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
+                if (commandName.includes("verify") && result.result.includes("did not match")) {
+                    setColor(currentPlayingCommandIndex + 1, "fail");
+                } else {
+                    sideex_log.info("Test case failed");
+                    caseFailed = true;
+                    currentPlayingCommandIndex = commands.length;
+                }
+            } else {
+                setColor(currentPlayingCommandIndex + 1, "success");
+            }
+        })
+}
+
+function isReceivingEndError(reason) {
+    if (reason == "TypeError: response is undefined" ||
+        reason == "Error: Could not establish connection. Receiving end does not exist." ||
+        // Below is Google chrome error message
+        reason.message == "Could not establish connection. Receiving end does not exist." ||
+        // Google chrome misspelling "response"
+        reason.message == "The message port closed before a reponse was received." ||
+        reason.message == "The message port closed before a response was received." )
+        return true;
+    return false;
 }
