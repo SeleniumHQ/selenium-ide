@@ -346,8 +346,10 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
 function notification(command, target, value) {
     let tempCount = String(notificationCount);
     notificationCount++;
+    // In Chrome, notification.create must have "iconUrl" key in notificationOptions
     browser.notifications.create(tempCount, {
         "type": "basic",
+        "iconUrl": "/icons/icons-48.png",
         "title": "Record command!",
         "message": "command: " + String(command) + "\ntarget: " + String(target[0][0]) + "\nvalue: " + String(value) 
     });
