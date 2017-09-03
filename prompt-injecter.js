@@ -49,15 +49,12 @@ window.addEventListener("message", function(event) {
         if (event.data.response) {
             switch (event.data.response) {
                 case "prompt":
-                console.error("tuggle");
                     selenium.browserbot.promptResponse = true;
                     if (event.data.value)
                         selenium.browserbot.promptMessage = event.data.value;
                     break;
                 case "confirm":
-                console.error("tuggle");
                     selenium.browserbot.confirmationResponse = true;
-                    console.error("tuggle2", selenium.browserbot.confirmationResponse);
                     if (event.data.value)
                         selenium.browserbot.confirmationMessage = event.data.value;
                     break;

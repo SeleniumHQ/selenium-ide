@@ -17,8 +17,6 @@
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
-//console.log("success to insert selenium-api");
-
 var storedVars = new Object();
 
 var unicodeToKeys = {};
@@ -540,15 +538,10 @@ Selenium.prototype.doClick = function(locator) {
      * @param locator an element locator
      *
      */
-    // console.log("hereA");
     var element = this.browserbot.findElement(locator);
-    // console.log(element+"1");
     var elementWithHref = getAncestorOrSelfWithJavascriptHref(element);
-    // console.log(element);
-
 
     this.browserbot.clickElement(element);
-    // console.log("hereC");
     //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
     this.browserbot.triggerMouseEvent(element, 'mousedown', true);
     this.browserbot.triggerMouseEvent(element, 'mouseup', true);
@@ -601,11 +594,9 @@ Selenium.prototype.doClickAt = function(locator, coordString) {
     //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
     //this.doMouseMove(locator);
     //this.doMouseDown(locator);
-    console.log("in doClickAt");
     this.browserbot.clickElement(element, clientXY[0], clientXY[1]);
     this.browserbot.triggerMouseEvent(element, 'mousedown', true, clientXY[0], clientXY[1]);
     this.browserbot.triggerMouseEvent(element, 'mouseup', true, clientXY[0], clientXY[1]);
-    console.log("finish doClickAt");
     //this.doMouseUp(locator);
 };
 
@@ -3692,7 +3683,6 @@ Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
                 messageToContent(message,false);
                 return false;
             }
-            //console.log("finish inject inplaying");
         }+')();';
         
         var injectModifyWindowMethodOnPlay = document.createElement("script");
@@ -3713,7 +3703,6 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
                 messageToContent(message,true);
                 return true;
             }
-            //console.log("finish inject inplaying");
         }+')();';
         
         var injectModifyWindowMethodOnPlay = document.createElement("script");
@@ -3737,7 +3726,6 @@ Selenium.prototype.doShowElement = function(locator){
         }, 500);
         return "element found"
     } catch (e) {
-        //console.error(e);
         return "element not found";
     }
 }
