@@ -18,6 +18,27 @@
 var contentSideexTabId = -1;
 var frameLocation = "";
 
+function Recorder(window) {
+    this.window = window;
+    this.attach();
+    this.dettach();
+}
+
+Recorder.eventHandlers = {};
+Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
+    handler.handlerName = handlerName;
+    if (!options) options = false;
+    let key = options ? ('C_' + eventName) : eventName;
+    if (!this.eventHandlers[key]) {
+        this.eventHandlers[key] = [];
+    }
+    this.eventHandlers[key].push(handler);
+}
+
+Recorder.prototype.attach = function() {
+
+}
+
 // show element
 function startShowElement(message, sender, sendResponse){
     if (message.showElement) {
