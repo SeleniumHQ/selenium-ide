@@ -47,7 +47,7 @@ window.addEventListener("click", function(event) {
 }, true);
 //*/
 //Record: doubleClickAt
-Recorder.addEventHandler('doubleClickAt', 'dbclick', function(event) {
+Recorder.addEventHandler('doubleClickAt', 'dblclick', function(event) {
     var top = event.pageY,
         left = event.pageX;
     var element = event.target;
