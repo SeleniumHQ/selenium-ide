@@ -657,7 +657,7 @@ function doCommand() {
             if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
                 commandTarget = xlateArgument(commandTarget);
             }
-            if (commandName == "answerOnNextPrompt" || commandName == "chooseCancelOnNextPrompt" || commandName == "assertPrompt")
+            if (isWindowMethodCommand(commandName))
             {
                 return extCommand.sendMessage(commandName, commandTarget, commandValue, true);
             }
@@ -708,6 +708,18 @@ function isReceivingEndError(reason) {
         // Google Chrome misspells "response"
         reason.message == "The message port closed before a reponse was received." ||
         reason.message == "The message port closed before a response was received." )
+        return true;
+    return false;
+}
+
+function isWindowMethodCommand(command) {
+    if (command == "answerOnNextPrompt"
+        || command == "chooseCancelOnNextPrompt"
+        || command == "assertPrompt"
+        || command == "chooseOkOnNextConfirmation"
+        || command == "chooseCancelOnNextConfirmation"
+        || command == "assertConfirmation"
+        || command == "assertAlert")
         return true;
     return false;
 }

@@ -37,15 +37,15 @@ if (window === window.top) {
                         break;
                     case "confirm":
                         if (event.data.recordedResult == true) {
-                            record("chooseOkOnNextConfirmation", [[""]], "", true);
+                            record("chooseOkOnNextConfirmation", [[""]], "", true, event.data.frameLocation);
                         } else {
-                            record("chooseCancelOnNextConfirmation", [[""]], "", true);
+                            record("chooseCancelOnNextConfirmation", [[""]], "", true, event.data.frameLocation);
                         }
-                        record("assertConfirmation", [[event.data.recordedMessage]], "", false);
+                        record("assertConfirmation", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
                         break;
                     case "alert":
                         //record("answerOnNextAlert",[[event.data.recordedResult]],"",true);
-                        record("assertAlert",[[event.data.recordedMessage]],"");
+                        record("assertAlert", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
                         break;
                 }
             }
@@ -65,9 +65,9 @@ if (window === window.top) {
                             selenium.browserbot.confirmationMessage = event.data.value;
                         break;
                     case "alert":
-                        selenium.browserbot.alertResponse=true;
+                        selenium.browserbot.alertResponse = true;
                         if(event.data.value)
-                            selenium.browserbot.promptMessage=event.data.value;
+                            selenium.browserbot.promptMessage = event.data.value;
                         break;
                 }
             }

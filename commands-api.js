@@ -19,7 +19,7 @@ var selenium = new Selenium(BrowserBot.createForWindow(window));
 
 function doCommands(request, sender, sendResponse, type) {
     if (request.commands) {
-        console.log("indoCommands: " + request.commands);
+        //console.log("indoCommands: " + request.commands);
         if (request.commands == "waitPreparation") {
             selenium["doWaitPreparation"]("", selenium.preprocessParameter(""));
             sendResponse({});

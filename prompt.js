@@ -28,30 +28,34 @@ var originalAlert = originalAlert ? originalAlert : window.alert;
 var nextAlertResult = false;
 var recordedAlert = null;
 
+function getFrameLocation() {
+    let frameLocation = "";
+    let currentWindow = window;
+    let currentParentWindow;
+    while (currentWindow !== window.top) {
+        currentParentWindow = currentWindow.parent;
+        for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
+            if (currentParentWindow.frames[idx] === currentWindow) {
+                frameLocation = ":" + idx + frameLocation;
+                currentWindow = currentParentWindow;
+                break;
+            }
+    }
+    frameLocation = "root" + frameLocation;
+    return frameLocation;
+}
+
+
 //before record prompt
-if (window != window.top) {
+
+// Not a top window
+if (window !== window.top) {
     window.prompt = function(text, defaultText) {
         if (document.body.hasAttribute("SideeXPlayingFlag")) {
-            //recordedPrompt = text;
-            console.log("frame is playing prompt");
             return window.top.prompt(text, defaultText);
         } else {
             let result = originalPrompt(text, defaultText);
-            let frameLocation = "";
-            (function getframeLocation() {
-                let currentWindow = window;
-                let currentParentWindow;
-                while (currentWindow !== window.top) {
-                    currentParentWindow = currentWindow.parent;
-                    for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-                        if (currentParentWindow.frames[idx] === currentWindow) {
-                            frameLocation = ":" + idx + frameLocation;
-                            currentWindow = currentParentWindow;
-                            break;
-                        }
-                }
-                frameLocation = "root" + frameLocation;
-            })();
+            let frameLocation = getFrameLocation();
             window.top.postMessage({
                 direction: "from-page-script",
                 recordedType: "prompt",
@@ -62,36 +66,90 @@ if (window != window.top) {
             return result;
         }
     };
-} else {
+
+    window.confirm = function(text) {
+        if (document.body.hasAttribute("SideeXPlayingFlag")) {
+            return window.top.confirm(text);
+        } else {
+            let result = originalConfirmation(text);
+            let frameLocation = getFrameLocation();
+            window.top.postMessage({
+                direction: "from-page-script",
+                recordedType: "confirm",
+                recordedMessage: text,
+                recordedResult: result,
+                frameLocation: frameLocation
+            }, "*");
+            return result;
+        }
+    };
+
+    window.alert = function(text) {
+        if(document.body.hasAttribute("SideeXPlayingFlag")){
+            return window.top.alert(text);
+        } else {
+            let result = originalAlert(text);
+            let frameLocation = getFrameLocation();
+            window.top.postMessage({
+                direction:"from-page-script",
+                recordedType: "alert",
+                recordedMessage: text,
+                recordedResult: result,
+                frameLocation: frameLocation
+            }, "*");
+            return result;
+        }
+    };
+} else { // top window
     window.prompt = function(text, defaultText) {
-        console.log("parent window.prompt triggered");
-        console.log(document.body.hasAttribute("setPrompt"));
         if (document.body.hasAttribute("setPrompt")) {
+            console.log("In setPrompt")
+            console.log(nextPromptResult);
             recordedPrompt = text;
-            console.log("Type: playing");;
             document.body.removeAttribute("setPrompt");
             return nextPromptResult;
         } else {
-            console.log("Type: recording");
             let result = originalPrompt(text, defaultText);
-            let frameLocation = "";
-            (function getframeLocation() {
-                let currentWindow = window;
-                let currentParentWindow;
-                while (currentWindow !== window.top) {
-                    currentParentWindow = currentWindow.parent;
-                    for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-                        if (currentParentWindow.frames[idx] === currentWindow) {
-                            frameLocation = ":" + idx + frameLocation;
-                            currentWindow = currentParentWindow;
-                            break;
-                        }
-                }
-                frameLocation = "root" + frameLocation;
-            })();
+            let frameLocation = getFrameLocation();
             window.top.postMessage({
                 direction: "from-page-script",
                 recordedType: "prompt",
+                recordedMessage: text,
+                recordedResult: result,
+                frameLocation: frameLocation
+            }, "*");
+            return result;
+        }
+    };
+    window.confirm = function(text) {
+        if (document.body.hasAttribute("setConfirm")) {
+            recordedConfirmation = text;
+            document.body.removeAttribute("setConfirm");
+            return nextConfirmationResult;
+        } else {
+            let result = originalConfirmation(text);
+            let frameLocation = getFrameLocation();
+            window.top.postMessage({
+                direction: "from-page-script",
+                recordedType: "confirm",
+                recordedMessage: text,
+                recordedResult: result,
+                frameLocation: frameLocation
+            }, "*");
+            return result;
+        }
+    };
+    window.alert = function(text) {
+        if(document.body.hasAttribute("setAlert")){
+            recordedAlert = text;
+            document.body.removeAttribute("setAlert");
+            return nextAlertResult;
+        } else {
+            let result = originalAlert(text);
+            let frameLocation = getFrameLocation();
+            window.top.postMessage({
+                direction:"from-page-script",
+                recordedType: "alert",
                 recordedMessage: text,
                 recordedResult: result,
                 frameLocation: frameLocation
@@ -102,6 +160,7 @@ if (window != window.top) {
 }
 
 //before record confirm
+/*
 window.confirm = function(text) {
     if (document.body.hasAttribute("SideeXPlayingFlag")) {
         recordedConfirmation = text;
@@ -117,7 +176,9 @@ window.confirm = function(text) {
         return result;
     }
 };
+*/
 //before record alert
+/*
 window.alert=function(text){
     if(document.body.hasAttribute("SideeXPlayingFlag")){
         recordedAlert=text;
@@ -133,6 +194,7 @@ window.alert=function(text){
         return result;
     }
 };
+*/
 
 //play window methods
 if (window == window.top) {
@@ -151,6 +213,7 @@ if (window == window.top) {
                     }, "*");
                     break;
                 case "getPromptMessage":
+                    console.log("prompt result:" + result);
                     result = recordedPrompt;
                     recordedPrompt = null;
                     window.postMessage({
@@ -161,6 +224,7 @@ if (window == window.top) {
                     break;
                 case "setNextConfirmationResult":
                     nextConfirmationResult = event.data.target;
+                    document.body.setAttribute("setConfirm", true);
                     window.postMessage({
                         direction: "from-page-script",
                         response: "confirm"
@@ -182,22 +246,22 @@ if (window == window.top) {
                     break;
 
                 case "setNextAlertResult":
-                    nextAlertResult=event.data.target;
+                    nextAlertResult = event.data.target;
+                    document.body.setAttribute("setAlert", true);
                     window.postMessage({
                         direction: "from-page-script",
                         response: "alert"
-                    },"*");
+                    }, "*");
                     break;
                 case "getAlertMessage":
-                    let result1=recordedAlert;
-                    recordedAlert=null;
+                    let result1 = recordedAlert;
+                    recordedAlert = null;
                     window.postMessage({
                         direction: "from-page-script",
                         response: "alert",
                         value: result1
-                    },"*");
+                    }, "*");
                     break;
-            
             }
         }
     });
