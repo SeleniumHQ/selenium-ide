@@ -2291,7 +2291,6 @@ BrowserBot.prototype.cancelNextPrompt = function() {
 BrowserBot.prototype.setNextPromptResult = function(result) {
     this.promptResponse = false;
     let self = this;
-    console.log("In setNextPromptResult");
 
     window.postMessage({
         direction: "from-content-script",
@@ -2304,13 +2303,11 @@ BrowserBot.prototype.setNextPromptResult = function(result) {
         let interval = setInterval(function() {
             if (!self.promptResponse) {
                 count++;
-                console.log("waiting.....");
                 if (count > 60) {
                     reject("No response");
                     clearInterval(interval);
                 }
             } else {
-                console.log("resolve");
                 resolve();
                 self.promptResponse = false;
                 clearInterval(interval);
@@ -2405,13 +2402,7 @@ BrowserBot.prototype.getConfirmationMessage = function() {
 }
 
 BrowserBot.prototype.getAlertMessage = function() {
-    this.alertResponse = false;
-    this.alertMessage = null;
     let self = this;
-    window.postMessage({
-        direction: "from-content-script",
-        command: "getAlertMessage",
-    }, "*");
     let response = new Promise(function(resolve, reject) {
         let count = 0;
         let interval = setInterval(function() {

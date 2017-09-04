@@ -50,6 +50,7 @@ function getFrameLocation() {
 
 // Not a top window
 if (window !== window.top) {
+
     window.prompt = function(text, defaultText) {
         if (document.body.hasAttribute("SideeXPlayingFlag")) {
             return window.top.prompt(text, defaultText);
@@ -86,7 +87,14 @@ if (window !== window.top) {
 
     window.alert = function(text) {
         if(document.body.hasAttribute("SideeXPlayingFlag")){
-            return window.top.alert(text);
+            recordedAlert = text;
+            // Response directly
+            window.top.postMessage({
+                direction: "from-page-script",
+                response: "alert",
+                value: recordedAlert
+            }, "*");
+            return;
         } else {
             let result = originalAlert(text);
             let frameLocation = getFrameLocation();
@@ -100,11 +108,11 @@ if (window !== window.top) {
             return result;
         }
     };
+
 } else { // top window
+
     window.prompt = function(text, defaultText) {
         if (document.body.hasAttribute("setPrompt")) {
-            console.log("In setPrompt")
-            console.log(nextPromptResult);
             recordedPrompt = text;
             document.body.removeAttribute("setPrompt");
             return nextPromptResult;
@@ -140,10 +148,15 @@ if (window !== window.top) {
         }
     };
     window.alert = function(text) {
-        if(document.body.hasAttribute("setAlert")){
+        if(document.body.hasAttribute("SideeXPlayingFlag")){
             recordedAlert = text;
-            document.body.removeAttribute("setAlert");
-            return nextAlertResult;
+            // Response directly
+            window.top.postMessage({
+                direction: "from-page-script",
+                response: "alert",
+                value: recordedAlert
+            }, "*");
+            return;
         } else {
             let result = originalAlert(text);
             let frameLocation = getFrameLocation();
@@ -199,7 +212,6 @@ window.alert=function(text){
 //play window methods
 if (window == window.top) {
     window.addEventListener("message", function(event) {
-        //console.log(event);
         if (event.source == window && event.data &&
             event.data.direction == "from-content-script") {
             let result = undefined;
@@ -213,7 +225,6 @@ if (window == window.top) {
                     }, "*");
                     break;
                 case "getPromptMessage":
-                    console.log("prompt result:" + result);
                     result = recordedPrompt;
                     recordedPrompt = null;
                     window.postMessage({
@@ -253,15 +264,16 @@ if (window == window.top) {
                         response: "alert"
                     }, "*");
                     break;
-                case "getAlertMessage":
-                    let result1 = recordedAlert;
-                    recordedAlert = null;
-                    window.postMessage({
-                        direction: "from-page-script",
-                        response: "alert",
-                        value: result1
-                    }, "*");
-                    break;
+                // Has been send to content scripts, do not need to require value again
+                //case "getAlertMessage":
+                    //let result1 = recordedAlert;
+                    //recordedAlert = null;
+                    //window.postMessage({
+                        //direction: "from-page-script",
+                        //response: "alert",
+                        //value: result1
+                    //}, "*");
+                    //break;
             }
         }
     });

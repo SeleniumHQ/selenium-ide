@@ -3632,8 +3632,6 @@ Selenium.prototype.doAnswerOnNextPrompt = function (answer) {
 
 Selenium.prototype.doAssertPrompt = function (message) {
     return this.browserbot.getPromptMessage().then(function(actualMessage) {
-                console.log("message: " + message);
-                console.log("actualMessage: " + actualMessage);
                if (message != actualMessage)
                     return Promise.reject("Prompt message doesn't match actual message");
                else
@@ -3644,7 +3642,10 @@ Selenium.prototype.doAssertPrompt = function (message) {
 // Modified alert by SideeX comitters (Copyright 2017)
 Selenium.prototype.doAssertAlert = function(message) {
     return this.browserbot.getAlertMessage().then(function(actualMessage) {
-                    return Promise.resolve(true);
+               if (message != actualMessage)
+                   return Promise.reject("Alert message doesn't match actual message");
+               else
+                   return Promise.resolve(true);
            });
 }
 
