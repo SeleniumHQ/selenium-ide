@@ -1,3 +1,20 @@
+/*
+ * Copyright 2017 SideeX committers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 function ExtCommand(contentWindowId) {
     this.playingTabNames = {};
     this.playingTabIds = {};
@@ -105,22 +122,15 @@ ExtCommand.prototype.wait = function(...properties) {
     let self = this;
     let ref = this;
     let inspecting = properties[properties.length - 1];
-    //console.log("Inspecting: " + inspecting);
     for (let i = 0; i < properties.length - 1; i++) {
-        //console.log("properties[" + i + "] : " + properties[i]);
         if (!ref[properties[i]] | !(ref[properties[i]] instanceof Array | ref[properties[i]] instanceof Object))
             return Promise.reject("Invalid Argument");
         ref = ref[properties[i]];
-        //console.log("ref : " + properties[i]);
-        //console.log(ref);
     }
     return new Promise(function(resolve, reject) {
         let counter = 0;
         let interval = setInterval(function() {
             if (ref[inspecting] == undefined) {
-                //console.log("In counter");
-                //ref = ref;
-                //console.log(ref);
                 counter++;
                 if (counter > self.waitTimes) {
                     reject("Timeout");
@@ -171,7 +181,6 @@ function isExtCommand(command) {
 }
 
 ExtCommand.prototype.setLoading = function(tabId) {
-    console.log("setLoading");
     // Does clearing the object will cause some problem(e.g. missing the frameId)?
     // Ans: Yes, but I don't know why
     this.initTabInfo(tabId);
@@ -180,26 +189,19 @@ ExtCommand.prototype.setLoading = function(tabId) {
 }
 
 ExtCommand.prototype.setComplete = function(tabId) {
-    //console.log("setComplete");
     this.initTabInfo(tabId);
     this.playingFrameLocations[tabId]["status"] = true;
 }
 
 ExtCommand.prototype.initTabInfo = function(tabId, forced) {
-    //console.log("initTabInfo");
     if (!this.playingFrameLocations[tabId] | forced) {
-        //console.log("init");
         this.playingFrameLocations[tabId] = {};
         this.playingFrameLocations[tabId]["root"] = 0;
     }
 }
 
 ExtCommand.prototype.setFrame = function(tabId, frameLocation, frameId) {
-    ////this.initTabInfo(tabId);
-    //console.log("setFrame: tabId=" + tabId + " frameLocation=" + frameLocation + " frameId=" + frameId);
     this.playingFrameLocations[tabId][frameLocation] = frameId;
-    //console.log("set Frame finished")
-    //console.log(this.playingFrameLocations[tabId]);
 }
 
 ExtCommand.prototype.hasTab = function(tabId) {

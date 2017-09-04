@@ -51,7 +51,6 @@ browser.tabs.onActivated.addListener(function(activeInfo) {
     if (!isRecording) return;
     // TODO: block of setTimeout() should only enclose addCommand
     setTimeout(function(activeInfo) {
-        console.log("window id = " + activeInfo.windowId + " tab id = " + activeInfo.tabId);
         if (currentRecordingTabId === activeInfo.tabId && currentRecordingWindowId === activeInfo.windowId)
             return;
         // If no command has been recorded, ignore selectWindow command
@@ -78,10 +77,8 @@ browser.windows.onFocusChanged.addListener( function(windowId) {
         // In some Linux window managers, WINDOW_ID_NONE will be listened before switching
         // See MDN reference :
         // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/windows/onFocusChanged
-        console.log("Windows onFocusChanged: No window focused");
         return;
     }
-    console.log("windows onFocusChanged: currentWindowId: " + windowId);
     // If the activated window is the same as the last, just do nothing
     // selectWindow command will be handled by tabs.onActivated listener
     // if there also has a event of switching a activated tab
@@ -91,11 +88,8 @@ browser.windows.onFocusChanged.addListener( function(windowId) {
     .then(function(tabs) {
         if(tabs.length === 0 || tabs[0].url.substr(0, 13) == 'moz-extension'
             || tabs[0].url.substr(0, 16) == 'chrome-extension') {
-            console.log("windows onFocusChanged: No matched tabs");
             return;
         }
-        console.log(tabs[0].id);
-        console.log(tabs[0].url);
         // The activated tab is not the same as the last
         if (tabs[0].id !== currentRecordingTabId) {
             
@@ -211,7 +205,6 @@ function handleMessage(message, sender, sendResponse) {
         return;
 
     if (message.frameLocation !== currentRecordingFrameLocation) {
-        console.log("Frame location: changed!");
         let newFrameLevels = message.frameLocation.split(':');
         let oldFrameLevels = currentRecordingFrameLocation.split(':');
         while (oldFrameLevels.length > newFrameLevels.length) {
@@ -233,8 +226,6 @@ function handleMessage(message, sender, sendResponse) {
             oldFrameLevels.push(newFrameLevels[oldFrameLevels.length]);
         }
         currentRecordingFrameLocation = message.frameLocation;
-    } else {
-        console.log("Frame location: No changed!");
     }
 
     //Record: doubleClickAt
@@ -326,8 +317,6 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
     if (message.selfWindowId != undefined && message.commWindowId != undefined) {
         selfWindowId = message.selfWindowId;
         contentWindowId = message.commWindowId;
-        console.log(selfWindowId);
-        console.log(contentWindowId);
         extCommand.setContentWindowId(contentWindowId);
         openedWindowIds[message.commWindowId] = true;
         browser.runtime.onMessage.removeListener(contentWindowIdListener);

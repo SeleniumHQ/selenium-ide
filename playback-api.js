@@ -314,8 +314,6 @@ function executeCommand(index) {
             active: true
         })
         .then(function(tabs) {
-            //commandReceiverTabId = tabs[0].id;
-            console.log("send: " + tabs[0].id);
             return browser.tabs.sendMessage(tabs[0].id, {
                 commands: commandName,
                 target: commandTarget,
@@ -339,32 +337,10 @@ function executeCommand(index) {
     finalizePlayingProgress();
 }
 
-/*
-function send(cmdName, cmdTarget, cmdValue) {
-    //console.error(cmdName+" "+cmdValue);
-    browser.tabs.query({ url: "<all_urls>", active: true }, function(tabs) {
-        console.log(tabs.length);
-        //console.log(tabs[0].url);
-        for (let tab of tabs) {
-            browser.tabs.sendMessage(
-                tab.id, { commands: cmdName, target: cmdTarget, value:cmdValue },
-                onResponse
-            ).catch(onError);
-        }
-    });
-}
-*/
-
 function onError(error) {
     console.log("QAQ");
     alert(`Error: ${error}`);
 }
-
-/*
-function onResponse(response) {
-    window.alert(response.status);
-};
-*/
 
 function cleanStatus() {
     var commands = getRecordsArray();
@@ -438,12 +414,7 @@ function executionLoop() {
         let upperCase = commandName.charAt(0).toUpperCase() + commandName.slice(1);
         return (extCommand["do" + upperCase](commandTarget, commandValue))
            .then(function() {
-               try {
-                    console.log("In set color")
-                    setColor(currentPlayingCommandIndex + 1, "success");
-               } catch (e) {
-                   console.log(e);
-               }
+               setColor(currentPlayingCommandIndex + 1, "success");
            }).then(executionLoop); 
     } else {
         return doPreparation()
@@ -457,11 +428,11 @@ function executionLoop() {
 }
 
 function finalizePlayingProgress() {
-    enableClick();console.log("here");
+    enableClick();
     playingTabIds = {};
     playingTabNames = {};
     playingTabCount = 1;
-    console.log("success");
+    //console.log("success");
     setTimeout(function() {
         isPlaying = false;
         //isRecording = true;
@@ -674,8 +645,6 @@ function doCommand() {
                 }
                 count++;
             } else {
-                //console.log("status: "+playingFrameLocations[extCommand.getCurrentPlayingTabId()]["status"]);
-                console.log("page load complete.");
                 resolve();
                 clearInterval(interval);
             }
@@ -730,9 +699,9 @@ function doCommand() {
 function isReceivingEndError(reason) {
     if (reason == "TypeError: response is undefined" ||
         reason == "Error: Could not establish connection. Receiving end does not exist." ||
-        // Below is Google chrome error message
+        // Below message is for Google Chrome
         reason.message == "Could not establish connection. Receiving end does not exist." ||
-        // Google chrome misspelling "response"
+        // Google Chrome misspells "response"
         reason.message == "The message port closed before a reponse was received." ||
         reason.message == "The message port closed before a response was received." )
         return true;

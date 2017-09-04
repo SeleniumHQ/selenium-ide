@@ -97,7 +97,7 @@ browser.runtime.onMessage.addListener(startShowElement);
     }
     frameLocation = "root" + frameLocation;
 })();
-console.log("frameLocation : " + frameLocation);
+
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
 /* record */
