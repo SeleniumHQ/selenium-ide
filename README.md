@@ -1,5 +1,5 @@
 <img src="icons/icon.png" alt="logo" height="120" align="right" />
-
+[![Join the chat at https://gitter.im/SeleniumHQ/selenium-ide](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SeleniumHQ/selenium-ide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 # Selenium IDE
 
 _[WIP] An integrated development environment for Selenium scripts_
