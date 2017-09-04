@@ -178,9 +178,9 @@ BrowserBot.prototype.cancelNextConfirmation = function(result) {
     this.nextConfirmResult = result;
 };
 
-BrowserBot.prototype.setNextPromptResult = function(result) {
-    this.nextResult = result;
-};
+//BrowserBot.prototype.setNextPromptResult = function(result) {
+    //this.nextResult = result;
+//};
 
 BrowserBot.prototype.hasAlerts = function() {
     return (this.recordedAlerts.length > 0);
@@ -2291,21 +2291,26 @@ BrowserBot.prototype.cancelNextPrompt = function() {
 BrowserBot.prototype.setNextPromptResult = function(result) {
     this.promptResponse = false;
     let self = this;
+    console.log("In setNextPromptResult");
+
     window.postMessage({
         direction: "from-content-script",
         command: "setNextPromptResult",
         target: result
     }, "*");
+
     let response = new Promise(function(resolve, reject) {
         let count = 0;
         let interval = setInterval(function() {
             if (!self.promptResponse) {
                 count++;
+                console.log("waiting.....");
                 if (count > 60) {
                     reject("No response");
                     clearInterval(interval);
                 }
             } else {
+                console.log("resolve");
                 resolve();
                 self.promptResponse = false;
                 clearInterval(interval);

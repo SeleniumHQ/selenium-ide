@@ -101,13 +101,13 @@ browser.runtime.onMessage.addListener(startShowElement);
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
 /* record */
-function record(command, target, value, insertBeforeLastCommand) {
+function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
     browser.runtime.sendMessage({
         command: command,
         target: target,
         value: value,
         insertBeforeLastCommand: insertBeforeLastCommand,
-        frameLocation: frameLocation,
+        frameLocation: (actualFrameLocation != undefined ) ? actualFrameLocation : frameLocation,
         commandSideexTabId: contentSideexTabId
     });
 }

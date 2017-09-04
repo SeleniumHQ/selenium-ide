@@ -829,6 +829,7 @@
 
             return true;
           } else if (result !== undefined) {
+            //sendResponse(result);
             return result;
           }
         };

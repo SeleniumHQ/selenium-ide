@@ -157,14 +157,14 @@ ExtCommand.prototype.queryActiveTab = function (windowId) {
        });
 }
 
-ExtCommand.prototype.sendMessage = function(command, target, value) {
+ExtCommand.prototype.sendMessage = function(command, target, value, top) {
     let tabId = this.getCurrentPlayingTabId();
     let frameId = this.getFrame();
     return browser.tabs.sendMessage(tabId, {
         commands: command,
         target: target,
         value: value
-    }, { frameId: frameId });
+    }, { frameId: top ? 0 : frameId });
 }
 
 function isExtCommand(command) {

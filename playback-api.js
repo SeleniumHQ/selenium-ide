@@ -497,7 +497,7 @@ function catchPlayingError(reason) {
         }, 100);
     } else {
         enableClick();
-
+        console.log("REASON: ")
         console.log(reason);
         sideex_log.error(reason);
 
@@ -656,6 +656,10 @@ function doCommand() {
             }
             if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
                 commandTarget = xlateArgument(commandTarget);
+            }
+            if (commandName == "answerOnNextPrompt" || commandName == "chooseCancelOnNextPrompt" || commandName == "assertPrompt")
+            {
+                return extCommand.sendMessage(commandName, commandTarget, commandValue, true);
             }
             return extCommand.sendMessage(commandName, commandTarget, commandValue);
         })
