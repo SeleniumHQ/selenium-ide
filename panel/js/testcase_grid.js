@@ -261,7 +261,6 @@ function addTestCase(title, id) {
         saveOldCase();
         setSelectedCase(this.id);
         var mid = "#" + "menu" + id;
-        console.log($(mid));
         $(".menu").css("left", event.pageX);
         $(".menu").css("top", event.pageY);
         $(mid).show();
@@ -315,7 +314,6 @@ function addTestSuite(title, id) {
         saveOldCase();
         setSelectedSuite(this.id);
         var mid = "#" + "menu" + id;
-        console.log($(mid));
         $(".menu").css("left", event.pageX);
         $(".menu").css("top", event.pageY);
         $(mid).show();
@@ -416,7 +414,6 @@ var remove_testCase = function() {
 
 document.getElementById("delete-testCase").addEventListener('click', function() {
     var s_case = getSelectedCase();
-    console.log(s_case);
     if (s_case) {
         if ($(s_case).hasClass("modified")) {
             confirmCloseSuite("Would you like to save this test case?").then(function(answer) {

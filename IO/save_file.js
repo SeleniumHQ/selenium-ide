@@ -56,7 +56,6 @@ function panelToFile(str) {
 
     var tr = str.match(/<tr>[\s\S]*?<\/tr>/gi);
     temp_str = str;
-    console.log(temp_str);
     str = "\n";
     if(tr)
     for (var i = 0; i < tr.length; ++i) {

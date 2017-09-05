@@ -80,14 +80,12 @@ window.onload = function() {
     playSuiteButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
-        console.error("playSuite");
         initAllSuite();
         playSuite(0);
     });
     playSuitesButton.addEventListener("click", function() {
         document.getElementById("result-runs").innerHTML = "0";
         document.getElementById("result-failures").innerHTML = "0";
-        console.error("playSuites");
         initAllSuite();
         playSuites(0);
     });
@@ -125,10 +123,8 @@ window.onload = function() {
         })
     });
     showElementButton.addEventListener("click", function(){
-        console.log("click");
         try{
-        var targetValue = document.getElementById("command-target").value;
-            console.log("value: " + targetValue);
+            var targetValue = document.getElementById("command-target").value;
             browser.tabs.query({
                 active: true,
                 windowId: contentWindowId
@@ -338,8 +334,7 @@ function executeCommand(index) {
 }
 
 function onError(error) {
-    console.log("QAQ");
-    alert(`Error: ${error}`);
+    console.log(error);
 }
 
 function cleanStatus() {
@@ -497,8 +492,6 @@ function catchPlayingError(reason) {
         }, 100);
     } else {
         enableClick();
-        console.log("REASON: ")
-        console.log(reason);
         sideex_log.error(reason);
 
         if (currentPlayingCommandIndex == -1) {
@@ -525,7 +518,7 @@ function catchPlayingError(reason) {
 }
 
 function doPreparation() {
-    console.log("in preparation");
+    //console.log("in preparation");
     return extCommand.sendMessage("waitPreparation", "", "")
         .then(function() {
             return true;
@@ -534,11 +527,11 @@ function doPreparation() {
 
 
 function doPrePageWait() {
-    console.log("in prePageWait");
+    //console.log("in prePageWait");
     return extCommand.sendMessage("prePageWait", "", "")
        .then(function(response) {
            if (response && response.new_page) {
-               console.log("prePageWaiting");
+               //console.log("prePageWaiting");
                return doPrePageWait();
            } else {
                return true;
@@ -547,7 +540,7 @@ function doPrePageWait() {
 }
 
 function doPageWait() {
-    console.log("in pageWait");
+    //console.log("in pageWait");
     return extCommand.sendMessage("pageWait", "", "")
         .then(function(response) {
             if (pageTime && (Date.now() - pageTime) > 30000) {
@@ -571,7 +564,7 @@ function doPageWait() {
 }
 
 function doAjaxWait() {
-    console.log("in ajaxWait");
+    //console.log("in ajaxWait");
     return extCommand.sendMessage("ajaxWait", "", "")
         .then(function(response) {
             if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
@@ -595,7 +588,7 @@ function doAjaxWait() {
 }
 
 function doDomWait() {
-    console.log("in domWait");
+    //console.log("in domWait");
     return extCommand.sendMessage("domWait", "", "")
         .then(function(response) {
             if (domTime && (Date.now() - domTime) > 30000) {
@@ -623,9 +616,7 @@ function doCommand() {
     let commandName = getCommandName(commands[currentPlayingCommandIndex]);
     let commandTarget = getCommandTarget(commands[currentPlayingCommandIndex]);
     let commandValue = getCommandValue(commands[currentPlayingCommandIndex]);
-    console.log("in common");
-    //xian wait
-    //commandType = "preparation";
+    //console.log("in common");
 
     if (implicitCount == 0) {
         sideex_log.info("Executing: | " + commandName + " | " + commandTarget + " | " + commandValue + " |");

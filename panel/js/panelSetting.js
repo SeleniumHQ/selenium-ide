@@ -134,7 +134,6 @@ var clickWhenDropdownHandler = function(e) {
 };
 
 function closeConfirm(bool) {
-    console.log("closeConfirm", bool);
     if (bool) {
         $(window).bind("beforeunload", function(e) {
             var confirmationMessage = "You have a modified suite!";
@@ -142,7 +141,6 @@ function closeConfirm(bool) {
             return confirmationMessage; // Gecko, WebKit, Chrome <34
         });
     } else {
-        console.log($("#testCase-grid").find(".modified").length, !$("#testCase-grid").find(".modified").length);
         if (!$("#testCase-grid").find(".modified").length)
             $(window).unbind("beforeunload");
     }
