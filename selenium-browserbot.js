@@ -385,8 +385,14 @@ BrowserBot.prototype.triggerDragEvent = function(element, target) {
     }                                                          \
     simulateDragDrop(document.evaluate('" + getXpathOfElement(element) + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, document.evaluate('" + getXpathOfElement(target) + "', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue);\
     ";
-    this.browserbot.getCurrentWindow().eval(script);
+    var win = this.browserbot.getCurrentWindow();
+    var doc = win.document;
+    var scriptTag = doc.createElement("script");
+    scriptTag.type = "text/javascript";
+    scriptTag.text = script;
+    doc.body.appendChild(scriptTag);
 };
+
 BrowserBot.prototype._windowClosed = function(win) {
     try {
         var c = win.closed;
