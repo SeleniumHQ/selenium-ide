@@ -1,7 +1,5 @@
 <img src="icons/icon.png" alt="logo" height="120" align="right" />
 
-[![Join the chat at https://gitter.im/SeleniumHQ/selenium-ide](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SeleniumHQ/selenium-ide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 # Selenium IDE
 
 _[WIP] An integrated development environment for Selenium scripts_
@@ -25,3 +23,9 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 * Intelligent editing
 * Export to selenium code in different languages
 * Playback in a way that's consistent with web drivers
+
+## Want to chat?
+
+We coordinate work on the [#selenium](irc://freenode.net/selenium) IRC
+channel, which is also available on
+[Slack](https://seleniumhq.herokuapp.com).
