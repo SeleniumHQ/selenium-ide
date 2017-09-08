@@ -1,7 +1,7 @@
 {
-    "description": "An Extended Version of Selenium IDE.",
+    "description": "SideeX: An Extended Version of Selenium IDE",
     "manifest_version": 2,
-    "name": "SideeX",
+    "name": "SideeX: An Extended Version of Selenium IDE",
     "version": "2.2.0",
     "homepage_url": "http://sideex.org/",
     "icons":
