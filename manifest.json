@@ -1,8 +1,8 @@
 {
-    "description": "SideeX: An Extended Version of Selenium IDE",
+    "description": "SideeX (An Extended Version of Selenium IDE): An Open Source Record-Playback-Style Web Application Testing Tool",
     "manifest_version": 2,
     "name": "SideeX: An Extended Version of Selenium IDE",
-    "version": "2.2.0",
+    "version": "2.2.3",
     "homepage_url": "http://sideex.org/",
     "icons":
     {
