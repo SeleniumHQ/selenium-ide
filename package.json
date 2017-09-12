@@ -3,5 +3,9 @@
   "version": "0.0.0",
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.6.1"
+  }
 }
