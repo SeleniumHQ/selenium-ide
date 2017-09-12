@@ -6,6 +6,9 @@
   "private": true,
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "eslint": "^4.6.1"
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.6.1",
+    "rollup": "^0.49.3",
+    "rollup-plugin-babel": "^3.0.2"
   }
 }
