@@ -13,6 +13,12 @@ However, by using the Web Extensions standard it's expected to run on other brow
 
 As this is an early stage and many things aren't clear, it's quite challenging to collaborate and coordinate the efforts - so please be patient.
 
+## Building
+
+From outside the project directory  
+`$ selenium-ide/build.sh slenium-ide <path-to-pem>`  
+If you don't have a private key, one will be generated
+
 ## What now?
 
 Here's a draft of the general tasks ahead. Feel free to pitch in and announce which you wish to take upon yourself:
