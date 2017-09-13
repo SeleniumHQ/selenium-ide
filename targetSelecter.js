@@ -1,8 +1,14 @@
+// Modified in tools.js from selenium-IDE
+
 function TargetSelecter(callback, cleanupCallback) {
     this.callback = callback;
     this.cleanupCallback = cleanupCallback;
+
+    // This is for XPCOM/XUL addon and can't be used
     //var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
     //this.win = wm.getMostRecentWindow('navigator:browser').getBrowser().contentWindow;
+    
+    // Instead, we simply assign global content window to this.win
     this.win = window;
     var doc = this.win.document;
     var div = doc.createElement("div");

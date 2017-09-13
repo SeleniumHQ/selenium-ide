@@ -1,10 +1,29 @@
+<!--
+/*
+* Copyright 2017 SideeX committers
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+*
+*/
+-->
+
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <!-- TODO: Change the title bar text -->
-    <title>SideeX 2.0.0</title>
+    <title>SideeX</title>
     <link rel="stylesheet" href="panel/css/jquery-ui.min.css">
     <link rel="stylesheet" href="panel/css/layout.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="panel/css/font-awesome.min.css">
@@ -28,7 +47,10 @@
 <body>
     <header id="header">
         <hgroup>
-            <h1 class="site_title">SideeX</h1>
+            <img class="logo_img" src="./icons/logo.png"></img>
+            <a href="#">
+                <img class="QA_img" src="./icons/QA.png"></img>
+            </a>
         </hgroup>
     </header>
     <!-- end of header bar -->
@@ -43,6 +65,7 @@
         <ul>
             <li id="grid-add"><a href="#">Add Command</a></li>
             <li id="grid-delete"><a href="#">Delete Command</a></li>
+            <li id="grid-deleteAll"><a href="#">Delete All Commands</a></li>
         </ul>
     </div>
     <section id="main" class="column">
@@ -204,8 +227,8 @@
                             <input id="command-target" list="command-target-list" type="text"><i id="target-" class="fa fa-chevron-down" aria-hidden="true"></i>
                             <div id="target-dropdown" class="w3-dropdown-content w3-bar-block">
                             </div>
-                            <button id="selectElementButton" class="btn_sf">Select</button>
-                            <button id="showElementButton" class="btn_sf">Find</button>
+                            <button id="selectElementButton" class="btn_sf" style="width: 60px">Select</button>
+                            <button id="showElementButton" class="btn_sf" style="width: 50px">Find</button>
                         </div>
                         <datalist id="command-target-list">
                         </datalist>
@@ -241,12 +264,12 @@
     <script src="browser-polyfill.js"></script>
     <script src="IO/load_file.js"></script>
     <script src="IO/save_file.js"></script>
-    <script src="IO/suite.js"></script>
     <script src="panel/js/context_menu.js"></script>
     <script src="panel/js/command_grid.js"></script>
     <script src="panel/js/command_grid_toolbar.js"></script>
     <script src="panel/js/testcase_grid.js"></script>
     <script src="panel/js/log.js"></script>
+    <script src="ext-command.js"></script>
     <script src="initial.js"></script>
     <script src="escape.js"></script>
     <script src="editor.js"></script>

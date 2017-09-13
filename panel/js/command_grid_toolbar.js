@@ -1,3 +1,20 @@
+/*
+ * Copyright 2017 SideeX committers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 function getSelectedCase() {
     if (document.getElementById("testCase-grid").getElementsByClassName("selectedCase")) {
         return document.getElementById("testCase-grid").getElementsByClassName("selectedCase")[0];
@@ -261,8 +278,30 @@ function reAssignIdForDelete(delete_ID, count) {
     classifyRecords(delete_ID, count);
 }
 
+document.getElementById("grid-deleteAll").addEventListener("click", function() {
+    var selectedNode = document.getElementById("records-grid").getElementsByTagName("TR");
+    for(var i=selectedNode.length;i>0;i--){
+        deleteCommand("records-" + i);
+    }
+}, false);
+
 document.getElementById("grid-delete").addEventListener("click", function() {
     deleteCommand(getSelectedRecord());
+}, false);
+
+document.addEventListener("keydown", function(e) {
+    var keynum;
+    if(window.event) // IE
+    {
+        keynum = e.keyCode
+    }
+    else if(e.which) // Netscape/Firefox/Opera
+    {
+        keynum = e.which
+    }
+    if(keynum === 46){
+        deleteCommand(getSelectedRecord());
+    }
 }, false);
 
 function deleteCommand(selected_ID) {

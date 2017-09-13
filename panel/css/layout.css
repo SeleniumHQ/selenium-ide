@@ -49,7 +49,7 @@ a:hover {
 /* Header */
 
 header#header {
-    height: 28px;
+    height: 45px;
     width: 100%;
     background: #222222 url(../images/header_bg.png) repeat-x;
 }
@@ -555,6 +555,12 @@ section#main {
     width: calc(70% - 8px);
     float: right;
     height: calc(100% - 13px - 35%);
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
+    -moz-border-top-left-radius: 0px;
+    -moz-border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }
 
 /* Stats Module */
@@ -1057,7 +1063,7 @@ input[type=submit].btn_post_message:hover {
 }
 
 .fieldset input[type=text]#command-target {
-    width: calc(100% - 250px);
+    width: calc(100% - 239px);
 }
 
 .fieldset input[type=text]:focus {
@@ -1257,10 +1263,10 @@ input[type=submit].btn_post_message:hover {
 .btn_sf {
     border-radius: 5px;
     background: white;
-    padding-right: 12px;
-    padding-left: 12px;
+    padding-right: 10px;
+    padding-left: 10px;
     float: left;
-    margin-left: 11px;
+    margin-left: 9px;
     border: 1px solid #DBDBDB;
     -webkit-box-shadow: 1px 1px #ABABAB;
     box-shadow: 1px 1px #ABABAB;
@@ -1294,23 +1300,16 @@ button.active {
 /* Freeze Table Header */
 
 .smallSection {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .fixed {
-    top: 82px;
+    top: 110px;
     position: fixed;
     width: auto;
-    -webkit-border-top-left-radius: 5px;
-    -webkit-border-top-right-radius: 5px;
-    -moz-border-radius-topleft: 5px;
-    -moz-border-radius-topright: 5px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     z-index: 2;
-    margin-left: 1px;
 }
 
 .fixed td {
@@ -1331,4 +1330,13 @@ button.active {
 
 .ui-dialog-titlebar .ui-dialog-titlebar-close {
     display: none;
+}
+
+.logo_img {
+    margin-left: 20px;
+}
+
+.QA_img {
+    float: right;
+    margin-right: 30px;
 }

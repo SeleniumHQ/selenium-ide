@@ -17,8 +17,6 @@
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
-//console.log("success to insert selenium-api");
-
 var storedVars = new Object();
 
 var unicodeToKeys = {};
@@ -390,27 +388,27 @@ Selenium.prototype.reset = function() {
 
 Selenium.prototype.doVerifyText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if (element.textContent !== value) {
-        throw new Error("Actual value '" + element.textContent + "' did not match '" + value + "'");
+    if (getText(element) !== value) {
+        throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
     }
 };
 
 Selenium.prototype.doVerifyTitle = function(value) {
-    if (this.getTitle() !== value) {
-        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
+    if (normalizeSpaces(this.getTitle()) !== value) {
+        throw new Error("Actual value '" + normalizeSapces(this.getTitle()) + "' did not match '" + value + "'");
     }
 };
 
 Selenium.prototype.doAssertText = function(locator, value) {
     var element = this.browserbot.findElement(locator);
-    if (element.textContent !== value) {
-        throw new Error("Actual value '" + element.textContent + "' did not match '" + value + "'");
+    if (getText(element) !== value) {
+        throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
     }
 };
 
 Selenium.prototype.doAssertTitle = function(value) {
-    if (this.getTitle() !== value) {
-        throw new Error("Actual value '" + this.getTitle() + "' did not match '" + value + "'");
+    if (normalizeSpaces(this.getTitle()) !== value) {
+        throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
     }
 };
 
@@ -540,15 +538,10 @@ Selenium.prototype.doClick = function(locator) {
      * @param locator an element locator
      *
      */
-    // console.log("hereA");
     var element = this.browserbot.findElement(locator);
-    // console.log(element+"1");
     var elementWithHref = getAncestorOrSelfWithJavascriptHref(element);
-    // console.log(element);
-
 
     this.browserbot.clickElement(element);
-    // console.log("hereC");
     //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
     this.browserbot.triggerMouseEvent(element, 'mousedown', true);
     this.browserbot.triggerMouseEvent(element, 'mouseup', true);
@@ -601,11 +594,9 @@ Selenium.prototype.doClickAt = function(locator, coordString) {
     //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
     //this.doMouseMove(locator);
     //this.doMouseDown(locator);
-    console.log("in doClickAt");
     this.browserbot.clickElement(element, clientXY[0], clientXY[1]);
     this.browserbot.triggerMouseEvent(element, 'mousedown', true, clientXY[0], clientXY[1]);
     this.browserbot.triggerMouseEvent(element, 'mouseup', true, clientXY[0], clientXY[1]);
-    console.log("finish doClickAt");
     //this.doMouseUp(locator);
 };
 
@@ -1062,7 +1053,7 @@ Selenium.prototype.doSendKeys = function(locator, value) {
             }
             return key;
         });
-
+        console.log("value: " + keysRa);
         bot.action.type(element, keysRa);
     } else {
         bot.action.type(element, value);
@@ -3624,14 +3615,13 @@ Selenium.prototype.doEditContent = function(locator, value) {
     var editable = element.contentEditable;
 
     if (editable == "true") {
-        element.innerHTML = value;
+        element.innerHTML = escapeHTML(value);
     } else {
         throw new SeleniumError("The value of contentEditable attribute of this element is not true.");
     }
 };
 
-/* prompt */
-
+// Modified prompt by SideeX comitters (Copyright 2017)
 Selenium.prototype.doChooseCancelOnNextPrompt = function() {
     return this.browserbot.cancelNextPrompt();
 }
@@ -3649,14 +3639,23 @@ Selenium.prototype.doAssertPrompt = function (message) {
            });
 }
 
+// Modified alert by SideeX comitters (Copyright 2017)
+Selenium.prototype.doAssertAlert = function(message) {
+    return this.browserbot.getAlertMessage().then(function(actualMessage) {
+               if (message != actualMessage)
+                   return Promise.reject("Alert message doesn't match actual message");
+               else
+                   return Promise.resolve(true);
+           });
+}
 
-// confirm
+// Modified confirm by SideeX comitters (Copyright 2017)
 Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
-    this.browserbot.setNextConfirmationResult(false);
+    return this.browserbot.setNextConfirmationResult(false);
 }
 
 Selenium.prototype.doChooseOkOnNextConfirmation = function (answer) {
-    this.browserbot.setNextConfirmationResult(true);
+    return this.browserbot.setNextConfirmationResult(true);
 }
 
 Selenium.prototype.doAssertConfirmation = function(value) {
@@ -3687,7 +3686,6 @@ Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
                 messageToContent(message,false);
                 return false;
             }
-            //console.log("finish inject inplaying");
         }+')();';
         
         var injectModifyWindowMethodOnPlay = document.createElement("script");
@@ -3708,7 +3706,6 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
                 messageToContent(message,true);
                 return true;
             }
-            //console.log("finish inject inplaying");
         }+')();';
         
         var injectModifyWindowMethodOnPlay = document.createElement("script");
@@ -3721,20 +3718,17 @@ Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
 }
 */
 
-// show element
+// Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
     try{
         var element = this.browserbot.findElement(locator);
         var origin_backgroundColor = element.style.backgroundColor;
-        //element.setAttribute("style","background-color: yellow");
         element.style.backgroundColor = "yellow";
         setTimeout(function() {
             element.style.backgroundColor = origin_backgroundColor;
         }, 500);
-        //console.log("set yellow");
         return "element found"
     } catch (e) {
-        console.error(e);
         return "element not found";
     }
 }

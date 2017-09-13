@@ -300,28 +300,6 @@
             "maxArgs": 2
           }
         },
-        "pageAction": {
-          "getPopup": {
-            "minArgs": 1,
-            "maxArgs": 1
-          },
-          "getTitle": {
-            "minArgs": 1,
-            "maxArgs": 1
-          },
-          "hide": {
-            "minArgs": 0,
-            "maxArgs": 0
-          },
-          "setIcon": {
-            "minArgs": 1,
-            "maxArgs": 1
-          },
-          "show": {
-            "minArgs": 0,
-            "maxArgs": 0
-          }
-        },
         "runtime": {
           "getBackgroundPage": {
             "minArgs": 0,
@@ -851,7 +829,8 @@
 
             return true;
           } else if (result !== undefined) {
-            sendResponse(result);
+            //sendResponse(result);
+            return result;
           }
         };
       });

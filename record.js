@@ -1,5 +1,29 @@
 var locatorBuilders = new LocatorBuilders(window);
 
+
+var preventClickTwice = false;
+Recorder.addEventHandler('clickAt', 'click', function(event) {
+    if (event.button == 0 && !preventClick && event.isTrusted) {
+        if (!preventClickTwice) {
+            var top = event.pageY,
+                left = event.pageX;
+            var element = event.target;
+            do {
+                top -= element.offsetTop;
+                left -= element.offsetLeft;
+                element = element.offsetParent;
+            } while (element);
+            var target = event.target;
+            record("clickAt", locatorBuilders.buildAll(event.target), left + ',' + top);
+            var arrayTest = locatorBuilders.buildAll(event.target);
+            preventClickTwice = true;
+        }
+        setTimeout(function() { preventClickTwice = false; }, 30);
+    }
+}, true);
+
+
+/*
 //Record: ClickAt
 var preventClickTwice = false;
 window.addEventListener("click", function(event) {
@@ -21,10 +45,9 @@ window.addEventListener("click", function(event) {
         setTimeout(function() { preventClickTwice = false; }, 30);
     }
 }, true);
-
+//*/
 //Record: doubleClickAt
-window.addEventListener("dblclick", function(event) {
-
+Recorder.addEventHandler('doubleClickAt', 'dblclick', function(event) {
     var top = event.pageY,
         left = event.pageX;
     var element = event.target;
@@ -46,14 +69,12 @@ var inp = document.getElementsByTagName("input");
 for (var i = 0; i < inp.length; i++) {
     if (inputTypes.indexOf(inp[i].type) >= 0) {
         inp[i].addEventListener("focus", function(event) {
-            console.log("aa");
             focusTarget = event.target;
             focusValue = focusTarget.value;
             tempValue = focusValue;
             preventType = false;
         });
         inp[i].addEventListener("blur", function(event) {
-            console.log("bb");
             focusTarget = null;
             focusValue = null;
             tempValue = null;
@@ -65,8 +86,7 @@ var preventClick = false;
 var enterTarget = null;
 var enterValue = null;
 var tabCheck = null;
-window.addEventListener("keydown", function(event) {
-
+Recorder.addEventHandler('sendKeys', 'keydown', function(event) {
     if (event.target.tagName) {
         var key = event.keyCode;
         var tagName = event.target.tagName.toLowerCase();
@@ -135,7 +155,7 @@ window.addEventListener("keydown", function(event) {
 }, true);
 
 //Recoed: Type
-window.addEventListener("change", function(event) {
+Recorder.addEventHandler('Type', 'change', function(event) {
     if (event.target.tagName && !preventType) {
         var tagName = event.target.tagName.toLowerCase();
         var type = event.target.type;
@@ -175,7 +195,7 @@ window.addEventListener("change", function(event) {
 });
 
 //select / addSelect / removeSelect
-window.addEventListener('focus', function(event) {
+Recorder.addEventHandler('select', 'focus', function(event) {
     if (event.target.nodeName) {
         var tagName = event.target.nodeName.toLowerCase();
         if ('select' == tagName && event.target.multiple) {
@@ -190,7 +210,7 @@ window.addEventListener('focus', function(event) {
     }
 }, true);
 
-window.addEventListener('change', function(event) {
+Recorder.addEventHandler('select', 'change', function(event) {
     if (event.target.tagName) {
         var tagName = event.target.tagName.toLowerCase();
         if ('select' == tagName) {
@@ -240,7 +260,7 @@ function getOptionLocator(option) {
 
 //BaiMao 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
-window.addEventListener('mousedown', function(event) {
+Recorder.addEventHandler('dragAndDrop', 'mousedown', function(event) {
     var self = this;
     if (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) {
         this.mousedown = event;
@@ -269,7 +289,7 @@ window.addEventListener('mousedown', function(event) {
 }, true);
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/01
-window.addEventListener('mouseup', function(event) {
+Recorder.addEventHandler('dragAndDrop', 'mouseup', function(event) {
     clearTimeout(this.selectMouseup);
     if (this.selectMousedown) {
         var x = event.clientX - this.selectMousedown.clientX;
@@ -376,7 +396,8 @@ window.addEventListener('mouseup', function(event) {
 }, true);
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/19
-window.addEventListener('dragstart', function(event) {
+// Record: dragAndDropToObject
+Recorder.addEventHandler('dragAndDropToObject', 'dragstart', function(event) {
     var self = this;
     this.dropLocator = setTimeout(function() {
         self.dragstartLocator = event;
@@ -384,7 +405,7 @@ window.addEventListener('dragstart', function(event) {
 }, true);
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
-window.addEventListener('drop', function(event) {
+Recorder.addEventHandler('dragAndDropToObject', 'drop', function(event) {
     clearTimeout(this.dropLocator);
     if (this.dragstartLocator && event.button == 0 && this.dragstartLocator.target !== event.target) {
         //value no option
@@ -403,7 +424,7 @@ window.addEventListener('drop', function(event) {
 
 //InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 var prevTimeOut = null;
-window.addEventListener('scroll', function(event) {
+Recorder.addEventHandler('runScript', 'scroll', function(event) {
     if (pageLoaded === true) {
         var self = this;
         this.scrollDetector = event.target;
@@ -433,7 +454,8 @@ var findClickableElement = function(e) {
     }
 };
 
-window.addEventListener('mouseover', function(event) {
+//Record: mouseOver
+Recorder.addEventHandler('mouseOver', 'mouseover', function(event) {
     if (window.document.documentElement)
         nowNode = window.document.documentElement.getElementsByTagName('*').length;
     var self = this;
@@ -461,7 +483,8 @@ window.addEventListener('mouseover', function(event) {
 }, true);
 
 //InfluentialMouseoverExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
-window.addEventListener('mouseout', function(event) {
+// Record: mouseOut
+Recorder.addEventHandler('mouseOut', 'mouseout', function(event) {
     if (this.mouseoutLocator !== null && event.target === this.mouseoutLocator) {
         /*
         browser.runtime.sendMessage({
@@ -476,7 +499,8 @@ window.addEventListener('mouseout', function(event) {
 }, true);
 
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
-window.addEventListener('DOMNodeInserted', function(event) {
+// Record: mouseOver
+Recorder.addEventHandler('mouseOver', 'DOMNodeInserted', function(event) {
     if (pageLoaded === true && window.document.documentElement.getElementsByTagName('*').length > nowNode) {
         var self = this;
         if (this.scrollDetector) {
@@ -519,7 +543,7 @@ window.addEventListener('DOMNodeInserted', function(event) {
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 var readyTimeOut = null;
 var pageLoaded = true;
-window.addEventListener('readystatechange', function(event) {
+Recorder.addEventHandler('checkPageLoaded', 'readystatechange', function(event) {
     var self = this;
     if (window.document.readyState === 'loading') {
         pageLoaded = false;
@@ -532,16 +556,16 @@ window.addEventListener('readystatechange', function(event) {
     }
 }, true);
 
-// verify/assert text and title
-window.addEventListener('contextmenu', function(event) {
+// Record: verify/assert text and title
+Recorder.addEventHandler('contextMenu', 'contextmenu', function(event) {
     //     //window.console.log(locatorBuilders.buildAll(event.target));
     //     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
     //     // record("verifyText", locatorBuilders.buildAll(event.target), event.target.textContent);
     var myPort = browser.runtime.connect();
     var tmpText = locatorBuilders.buildAll(event.target);
-    var tmpVal = event.target.textContent;
+    var tmpVal = getText(event.target);
     var tmpTitle = [
-        [event.target.ownerDocument.title]
+        [normalizeSpaces(event.target.ownerDocument.title)]
     ];
     myPort.onMessage.addListener(function(m) {
         if (m.cmd.includes("Text")) {
@@ -549,14 +573,14 @@ window.addEventListener('contextmenu', function(event) {
         } else if (m.cmd.includes("Title")) {
             record(m.cmd, tmpTitle, '');
         }
-        this.removeListener();
+        myPort.onMessage.removeListener(this);
     });
 }, true);
 
-//EditContentExt
+// Record: EditContent
 var getEle;
 var checkFocus = 0;
-window.addEventListener('focus', function(event) {
+Recorder.addEventHandler('editContent', 'focus', function(event) {
     var editable = event.target.contentEditable;
     if (editable == 'true') {
         getEle = event.target;
@@ -565,7 +589,7 @@ window.addEventListener('focus', function(event) {
     }
 }, true);
 
-window.addEventListener('blur', function(event) {
+Recorder.addEventHandler('editContent', 'blur', function(event) {
     if (checkFocus == 1) {
         if (event.target == getEle) {
             if (getEle.innerHTML != contentTest) {
@@ -575,3 +599,6 @@ window.addEventListener('blur', function(event) {
         }
     }
 }, true);
+
+
+recorder.attach();

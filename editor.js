@@ -1,3 +1,20 @@
+/*
+ * Copyright 2017 SideeX committers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 /* recording */
 var currentRecordingTabId = -1;
 var currentRecordingWindowId = -1;
@@ -6,13 +23,14 @@ var openedTabNames = new Object();
 var openedTabIds = new Object();
 var openedWindowIds = new Object();
 var openedTabCount = 1;
-var selfTabId = -1;
+var selfWindowId = -1;
 var contentWindowId;
+var notificationCount = 0;
 
 /* playing */
 var playingFrameLocations = {};
 /* flags */
-var isRecording = true;
+var isRecording = false;
 var isPlaying = false;
 var recordEnable = false;
 var windowCreateFlag = false;
@@ -33,7 +51,6 @@ browser.tabs.onActivated.addListener(function(activeInfo) {
     if (!isRecording) return;
     // TODO: block of setTimeout() should only enclose addCommand
     setTimeout(function(activeInfo) {
-        console.log("window id = " + activeInfo.windowId + " tab id = " + activeInfo.tabId);
         if (currentRecordingTabId === activeInfo.tabId && currentRecordingWindowId === activeInfo.windowId)
             return;
         // If no command has been recorded, ignore selectWindow command
@@ -60,10 +77,8 @@ browser.windows.onFocusChanged.addListener( function(windowId) {
         // In some Linux window managers, WINDOW_ID_NONE will be listened before switching
         // See MDN reference :
         // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/windows/onFocusChanged
-        console.log("Windows onFocusChanged: No window focused");
         return;
     }
-    console.log("windows onFocusChanged: currentWindowId: " + windowId);
     // If the activated window is the same as the last, just do nothing
     // selectWindow command will be handled by tabs.onActivated listener
     // if there also has a event of switching a activated tab
@@ -73,11 +88,8 @@ browser.windows.onFocusChanged.addListener( function(windowId) {
     .then(function(tabs) {
         if(tabs.length === 0 || tabs[0].url.substr(0, 13) == 'moz-extension'
             || tabs[0].url.substr(0, 16) == 'chrome-extension') {
-            console.log("windows onFocusChanged: No matched tabs");
             return;
         }
-        console.log(tabs[0].id);
-        console.log(tabs[0].url);
         // The activated tab is not the same as the last
         if (tabs[0].id !== currentRecordingTabId) {
             
@@ -103,35 +115,74 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
         currentRecordingFrameLocation = "root";
     }
     if (isPlaying && changeInfo.status == "loading") {
-        playingFrameLocations[tabId] = {}; //clear the object
-        playingFrameLocations[tabId]["root"] = 0;
-        playingFrameLocations[tabId]["status"] = false;
+        extCommand.setLoading(tabId);
     }
 
     if (isPlaying && changeInfo.status == "complete") {
-        playingFrameLocations[tabId]["status"] = true;
+        extCommand.setComplete(tabId);
     }
 });
 
 function handleMessage(message, sender, sendResponse) {
     if (message.selectTarget) {
-        console.log(message.target);
+
+        var target = message.target;
+        // show first locator by default
+        var locatorString = target[0][0];
+
+        var locatorList = document.createElement("datalist");
+        for (var m = 0; m < message.target.length; ++m) {
+            var option = document.createElement("option");
+            option.appendChild(document.createTextNode(message.target[m][0]));
+            option.innerText = message.target[m][0];
+            locatorList.appendChild(option);
+        }
+
+        var selectedRecordId = getSelectedRecord();
+
+        // If selecting a command, change the target inside.
+        if (selectedRecordId != "") {
+            var selectedRecord = document.getElementById(selectedRecordId);
+            var originalLocatorlist = selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0];
+
+            // Update locator data list
+            originalLocatorlist.innerHTML = escapeHTML(locatorList.innerHTML);
+
+            // Update target view, show first locator by default
+            var adjustedString = adjustTooLongStr(locatorString, getTdShowValueNode(selectedRecord, 1));
+            var node = getTdShowValueNode(selectedRecord, 1);
+            if (node.childNodes && node.childNodes[0])
+                node.removeChild(node.childNodes[0]);
+            node.appendChild(document.createTextNode(adjustedString));
+
+            // Update hidden actual locator value
+            node = getTdRealValueNode(selectedRecord, 1);
+            if (node.childNodes && node.childNodes[0])
+                node.removeChild(node.childNodes[0]);
+            node.appendChild(document.createTextNode(locatorString));
+
+        } else if (document.getElementsByClassName("record-bottom active").length > 0) {
+            // If selecting a blank command;
+            addCommandAuto("", target, "");
+        }
+
+        // Update toolbar
+        document.getElementById("command-target").value = unescapeHtml(locatorString);
+        document.getElementById("target-dropdown").innerHTML = unescapeHtml(locatorList.innerHTML);
+        document.getElementById("command-target-list").innerHTML = escapeHTML(locatorList.innerHTML);
+
         return;
     }
     if (message.cancelSelectTarget) {
-        var button = document.getElementById("select");
+        var button = document.getElementById("selectElementButton");
         isSelecting = false; 
-        button.value = "Select";
+        button.textContent = "Select";
         browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
         return;
     }
 
     if (isPlaying && message.frameLocation) {
-        if (!playingFrameLocations[sender.tab.id]) {
-            playingFrameLocations[sender.tab.id] = {};
-            playingFrameLocations[sender.tab.id]["root"] = 0;
-        }
-        playingFrameLocations[sender.tab.id][message.frameLocation] = sender.frameId;
+        extCommand.setFrame(sender.tab.id, message.frameLocation, sender.frameId);
         return;
     }
 
@@ -146,7 +197,7 @@ function handleMessage(message, sender, sendResponse) {
         openedTabNames["win_ser_local"] = sender.tab.id;
         openedTabIds[sender.tab.id] = "win_ser_local";
         addCommandAuto("open", [
-            [sender.url]
+            [sender.tab.url]
         ], "");
     }
 
@@ -154,7 +205,6 @@ function handleMessage(message, sender, sendResponse) {
         return;
 
     if (message.frameLocation !== currentRecordingFrameLocation) {
-        console.log("Frame location: changed!");
         let newFrameLevels = message.frameLocation.split(':');
         let oldFrameLevels = currentRecordingFrameLocation.split(':');
         while (oldFrameLevels.length > newFrameLevels.length) {
@@ -176,8 +226,6 @@ function handleMessage(message, sender, sendResponse) {
             oldFrameLevels.push(newFrameLevels[oldFrameLevels.length]);
         }
         currentRecordingFrameLocation = message.frameLocation;
-    } else {
-        console.log("Frame location: No changed!");
     }
 
     //Record: doubleClickAt
@@ -197,13 +245,30 @@ function handleMessage(message, sender, sendResponse) {
             }
         }
     } else if (message.command.includes("store")) {
-        message.value = prompt("Enter the name of the variable");
+        // In Google Chrome, window.prompt() must be triggered in
+        // an actived tabs of front window, so we let panel window been focused
+        browser.windows.update(selfWindowId, {focused: true})
+        .then(function() {
+            // Even if window has been focused, window.prompt() still failed.
+            // Delay a little time to ensure that status has been updated 
+            setTimeout(function() {
+                message.value = prompt("Enter the name of the variable");
+                if (message.insertBeforeLastCommand) {
+                    addCommandBeforeLastCommand(message.command, message.target, message.value);
+                } else {
+                    notification(message.command, message.target, message.value);
+                    addCommandAuto(message.command, message.target, message.value);
+                }
+            }, 100);
+        })
+        return;
     }
     
     //handle choose ok/cancel confirm
     if (message.insertBeforeLastCommand) {
         addCommandBeforeLastCommand(message.command, message.target, message.value);
-    } else {    
+    } else {
+        notification(message.command, message.target, message.value);
         addCommandAuto(message.command, message.target, message.value);
     }
 }
@@ -244,21 +309,32 @@ browser.webNavigation.onCreatedNavigationTarget.addListener(function(details) {
         openedWindowIds[details.windowId] = true;
         openedTabCount++;
     }
-    if (isPlaying && playingTabIds[details.sourceTabId]) {
-        console.log("select a new window!!");
-        playingTabNames["win_ser_" + playingTabCount] = details.tabId;
-        playingTabIds[details.tabId] = "win_ser_" + playingTabCount;
-        playingTabCount++;
-    }
+    if (isPlaying && extCommand.hasTab(details.sourceTabId))
+        extCommand.setNewTab(details.tabId);
 });
 
 browser.runtime.onMessage.addListener(function contentWindowIdListener(message) {
-    if (message.selfTabId != undefined && message.commWindowId != undefined) {
-        selfTabId = message.selfTabId;
+    if (message.selfWindowId != undefined && message.commWindowId != undefined) {
+        selfWindowId = message.selfWindowId;
         contentWindowId = message.commWindowId;
-        console.log(selfTabId);
-        console.log(contentWindowId);
-        openedWindowIds[contentWindowId] = true;
+        extCommand.setContentWindowId(contentWindowId);
+        openedWindowIds[message.commWindowId] = true;
         browser.runtime.onMessage.removeListener(contentWindowIdListener);
     }
 })
+
+function notification(command, target, value) {
+    let tempCount = String(notificationCount);
+    notificationCount++;
+    // In Chrome, notification.create must have "iconUrl" key in notificationOptions
+    browser.notifications.create(tempCount, {
+        "type": "basic",
+        "iconUrl": "/icons/icons-48.png",
+        "title": "Record command!",
+        "message": "command: " + String(command) + "\ntarget: " + String(target[0][0]) + "\nvalue: " + String(value) 
+    });
+
+    setTimeout(function() {
+        browser.notifications.clear(tempCount);
+    }, 1500);
+}
