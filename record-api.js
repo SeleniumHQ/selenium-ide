@@ -1,70 +1,86 @@
-/* coding: utf-8 */
+/*
+ * Copyright 2017 SideeX committers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 
 var contentSideexTabId = -1;
 var frameLocation = "";
 
-/* set sideex window id ====================*/
-//set temp_pageSideexTabId on DOM
-document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
-
-/* a export function pass contentSideexTabId from content script to page script
-function getSideexTabId(){
-    var pageSideexTabId = contentSideexTabId;
-    return pageSideexTabId;
+function Recorder(window) {
+    this.window = window;
+    this.attach();
 }
-exportFunction(getSideexTabId,window,{defineAs:'getSideexTabId'});
-*/
 
-// the child window will do 
-try{
-    if (window.opener != null) {
-        /* just can use in FireFox
-        contentSideexTabId = window.opener.wrappedJSObject.getSideexTabId();
-        XPCNativeWrapper(window.opener.wrappedJSObject.getSideexTabId());
-        console.error("contentSideexTabId: "+contentSideexTabId);
-        */
-
-        //use set attribute
-        contentSideexTabId = window.opener.document.body.getAttribute("temp_pageSideexTabId");
-        document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
-        browser.runtime.sendMessage({ newWindow: "true", commandSideexTabId: contentSideexTabId });
-    } else {
-        //when change page
-        var changePage2 = browser.runtime.sendMessage({ changePage: true });
-        changePage2.then(handleChangePageResponse).catch(function(reason) { console.log(reason); });
+Recorder.eventHandlers = {};
+Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
+    handler.handlerName = handlerName;
+    if (!options) options = false;
+    let key = options ? ('C_' + eventName) : eventName;
+    if (!this.eventHandlers[key]) {
+        this.eventHandlers[key] = [];
     }
-} catch (e){
-    //when change page
-    var changePage2 = browser.runtime.sendMessage({changePage:true});
-    changePage2.then(handleChangePageResponse);
+    this.eventHandlers[key].push(handler);
 }
-function handleChangePageResponse(message) {
-    contentSideexTabId = message.mySideexTabId;
-    document.body.setAttribute("temp_pageSideexTabId", contentSideexTabId);
+
+Recorder.prototype.parseEventKey = function(eventKey) {
+	if (eventKey.match(/^C_/)) {
+		return { eventName: eventKey.substring(2), capture: true };
+	} else {
+		return { eventName: eventKey, capture: false };
+	}
 }
-/* ================================================= */
+
+Recorder.prototype.attach = function() {
+    this.eventListeners = {};
+    for (eventKey in Recorder.eventHandlers) {
+        var eventInfo = this.parseEventKey(eventKey);
+        var eventName = eventInfo.eventName;
+        var capture = eventInfo.capture;
+
+        var handlers = Recorder.eventHandlers[eventKey];
+        this.eventListeners[eventKey] = [];
+        for (let i=0 ; i<handlers.length ; i++) {
+            this.window.document.addEventListener(eventName, handlers[i], capture);
+            this.eventListeners[eventKey].push(handlers[i]);
+        }
+    }
+}
+
+Recorder.prototype.detach = function() {
+    for (eventKey in this.eventListeners) {
+        var eventInfo = this.parseEventKey(eventKey);
+        var eventName = eventInfo.eventName;
+        var capture = eventInfo.capture;
+        for (let i=0 ; i<this.eventListeners[eventKey] ; i++) {
+            this.window.document.removeEventListener(eventName, this.eventListeners[eventKey][i], capture)
+        }
+    }
+    delete this.eventListeners;
+}
+
+var recorder = new Recorder(window);
+
 
 // show element
 function startShowElement(message, sender, sendResponse){
-    if (message.mySideexTabId == contentSideexTabId && message.showElement){
+    if (message.showElement) {
         result = selenium["doShowElement"](message.targetValue);
         return Promise.resolve({result: result});
     }
 }
 browser.runtime.onMessage.addListener(startShowElement);
-
-// initial the siddeX tab Id in content
-browser.runtime.onMessage.addListener(function(message) {
-    if (message.sideexId) {
-        contentSideexTabId = message.sideexId;
-        console.log("sideeX id:" + contentSideexTabId);
-
-        //open sideex update sideexTabId
-        document.body.setAttribute("temp_pageSideexTabId", message.sideexId);
-        console.log("temp_pageSideexTabId: " + document.body.getAttribute("temp_pageSideexTabId"));
-    }
-});
-
 
 // set frame id
 (function getframeLocation() {
@@ -81,17 +97,17 @@ browser.runtime.onMessage.addListener(function(message) {
     }
     frameLocation = "root" + frameLocation;
 })();
-console.log("frameLocation : " + frameLocation);
+
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
 /* record */
-function record(command, target, value, insertBeforeLastCommand) {
+function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
     browser.runtime.sendMessage({
         command: command,
         target: target,
         value: value,
         insertBeforeLastCommand: insertBeforeLastCommand,
-        frameLocation: frameLocation,
+        frameLocation: (actualFrameLocation != undefined ) ? actualFrameLocation : frameLocation,
         commandSideexTabId: contentSideexTabId
     });
 }

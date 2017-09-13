@@ -1,3 +1,20 @@
+/*
+ * Copyright 2017 SideeX committers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 function cleanSelected() {
     // use jquery's API to add and remove class property
     $('#testCase-grid .selectedCase').removeClass('selectedCase');
@@ -244,7 +261,6 @@ function addTestCase(title, id) {
         saveOldCase();
         setSelectedCase(this.id);
         var mid = "#" + "menu" + id;
-        console.log($(mid));
         $(".menu").css("left", event.pageX);
         $(".menu").css("top", event.pageY);
         $(mid).show();
@@ -298,7 +314,6 @@ function addTestSuite(title, id) {
         saveOldCase();
         setSelectedSuite(this.id);
         var mid = "#" + "menu" + id;
-        console.log($(mid));
         $(".menu").css("left", event.pageX);
         $(".menu").css("top", event.pageY);
         $(mid).show();
@@ -399,7 +414,6 @@ var remove_testCase = function() {
 
 document.getElementById("delete-testCase").addEventListener('click', function() {
     var s_case = getSelectedCase();
-    console.log(s_case);
     if (s_case) {
         if ($(s_case).hasClass("modified")) {
             confirmCloseSuite("Would you like to save this test case?").then(function(answer) {

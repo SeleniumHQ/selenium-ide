@@ -1,10 +1,27 @@
+/*
+ * Copyright 2017 SideeX committers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 $(document).ready(function() {
     $(".tablesorter").tablesorter();
 
-    $(".site_title").click(function() {
+    $(".QA_img").click(function() {
         browser.tabs.create({
             url: "http://sideex.org/",
-            windowId: userWinId
+            windowId: contentWindowId
         });
     });
 
@@ -46,7 +63,7 @@ $(document).ready(function() {
                     $t_fixed.find("th").each(function(index) {
                         var $self = $(this);
                         $this.find("th").eq(index).bind("DOMAttrModified", function(e) {
-                            $self.css("width", $(this).innerWidth() + "px");
+                            $self.css("width", $(this).outerWidth() + "px");
                         });
                     });
                     resizeFixed();
@@ -54,7 +71,7 @@ $(document).ready(function() {
 
                 function resizeFixed() {
                     $t_fixed.find("th").each(function(index) {
-                        $(this).css("width", $this.find("th").eq(index).innerWidth() + "px");
+                        $(this).css("width", $this.find("th").eq(index).outerWidth() + "px");
                     });
                 }
 
@@ -82,7 +99,7 @@ $(document).ready(function() {
             });
         };
 
-        $("table").fixMe();
+        $("#command-grid").fixMe();
     });
 
     $(".fixed").width($("table:not(.fixed)").width());
@@ -117,7 +134,6 @@ var clickWhenDropdownHandler = function(e) {
 };
 
 function closeConfirm(bool) {
-    console.log("closeConfirm", bool);
     if (bool) {
         $(window).bind("beforeunload", function(e) {
             var confirmationMessage = "You have a modified suite!";
@@ -125,7 +141,6 @@ function closeConfirm(bool) {
             return confirmationMessage; // Gecko, WebKit, Chrome <34
         });
     } else {
-        console.log($("#testCase-grid").find(".modified").length, !$("#testCase-grid").find(".modified").length);
         if (!$("#testCase-grid").find(".modified").length)
             $(window).unbind("beforeunload");
     }
@@ -133,40 +148,40 @@ function closeConfirm(bool) {
 
 function genCommandDatalist() {
     var supportedCommand = [
+        "addSelection",
         "answerOnNextPrompt",
-        "chooseCancelOnNextPrompt",
+        "assertAlert",
+        "assertConfirmation",
+        "assertPrompt",
+        "assertText",
+        "assertTitle",
         "chooseCancelOnNextConfirmation",
+        "chooseCancelOnNextPrompt",
         "chooseOkOnNextConfirmation",
         "clickAt",
         "doubleClickAt",
-        "dragAndDrop",
         "dragAndDropToObject",
+        "echo",
+        "editContent",
         "mouseDownAt",
         "mouseMoveAt",
         "mouseOut",
         "mouseOver",
         "mouseUpAt",
-        "sendKeys",
-        "type",
-        "editContent",
-        "select",
-        "addSelection",
-        "removeSelection",
+        "open",
         "pause",
+        "removeSelection",
+        "runScript",
+        "select",
         "selectFrame",
         "selectWindow",
-        "open",
+        "sendKeys",
+        "store",
         "storeText",
         "storeTitle",
-        "store",
-        "runScript",
+        "type",
         "verifyText",
-        "verifyTitle",
-        "assertAlert",
-        "assertConfirmation",
-        "assertText",
-        "assertTitle",
-        "assertPrompt"
+        "verifyTitle"
     ];
 
     var datalistHTML = "";

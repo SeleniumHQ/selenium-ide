@@ -1,8 +1,8 @@
 {
-    "description": "This is Selenium IDE Extended.",
+    "description": "SideeX (An Extended Version of Selenium IDE): An Open Source Record-Playback-Style Web Application Testing Tool",
     "manifest_version": 2,
-    "name": "SideeX",
-    "version": "1.0",
+    "name": "SideeX: An Extended Version of Selenium IDE",
+    "version": "2.2.3",
     "homepage_url": "http://sideex.org/",
     "icons":
     {
@@ -16,7 +16,8 @@
         "webRequest",
         "contextMenus",
         "downloads",
-        "webNavigation"
+        "webNavigation",
+        "notifications"
     ],
 
     "content_security_policy": "script-src 'self'; object-src 'self'",
@@ -24,13 +25,13 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["atoms.js", "utils.js", "selenium-browserbot.js", "selenium-api.js", "locatorBuilders.js", "record-api.js", "record.js", "commands-api.js", "debugger.js", "targetSelecter.js"],
+            "js": ["atoms.js", "utils.js", "selenium-browserbot.js", "escape.js", "selenium-api.js", "locatorBuilders.js", "record-api.js", "record.js", "commands-api.js", "targetSelecter.js"],
             "match_about_blank": true,
             "all_frames": true
         },
         {
             "matches": ["<all_urls>"],
-            "js": ["test.js"],
+            "js": ["browser-polyfill.js", "prompt-injecter.js"],
             "match_about_blank": true,
             "all_frames": true,
             "run_at": "document_start"
@@ -39,7 +40,7 @@
 
     "background":
     {
-        "scripts": ["background.js"]
+        "scripts": ["browser-polyfill.js", "background.js"]
     },
 
     "browser_action":
@@ -48,5 +49,5 @@
         "default_title": "SideeX"
     },
 
-    "web_accessible_resources": ["inject.js"]
+    "web_accessible_resources": ["prompt.js"]
 }
