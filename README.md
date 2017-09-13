@@ -1,4 +1,4 @@
-<img src="icons/icon.png" alt="logo" height="120" align="right" />
+<img src="src/icons/icon.png" alt="logo" height="120" align="right" />
 
 # Selenium IDE
 
