@@ -4,6 +4,9 @@
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
   "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-eslint": "^7.2.3",
@@ -18,10 +21,9 @@
     "jest": "^21.0.2",
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.6",
-    "rollup": "^0.49.3",
-    "rollup-plugin-babel": "^3.0.2",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
+    "webextension-polyfill": "^0.1.1",
     "webpack": "^3.5.6"
   }
 }

@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 export default {
   devtool: isProduction ? "source-map" : false,
-  entry: "src/setup.js",
+  entry: ["webextension-polyfill"],
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
@@ -16,7 +16,7 @@ export default {
     libraryTarget: "window"
   },
   resolve: {
-    extensions: ["", ".js", ".jsx", ".json"]
+    extensions: [".js", ".jsx", ".json"]
   },
   module: {
     rules: [
@@ -122,7 +122,7 @@ export default {
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
-      template: path.resolve(__dirname, "src/panel/main.html"),
+      template: path.resolve(__dirname, "src/panel.html"),
       minify: {
         removeComments: true,
         collapseWhitespace: true,
