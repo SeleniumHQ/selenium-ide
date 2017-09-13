@@ -11,8 +11,7 @@
 
   "browser_action": {
     "default_icon": "icons/icon.png",
-    "default_title": "Selenium IDE",
-    "default_popup": "src/panel/launch.html"
+    "default_title": "Selenium IDE"
   },
 
   "permissions": [
@@ -49,10 +48,5 @@
   "background":
   {
     "scripts": ["browser-polyfill.js", "background.js"]
-  },
-  "browser_action":
-  {
-    "default_icon": "icons/icons-48.png",
-    "default_title": "SideeX"
   }
 }
