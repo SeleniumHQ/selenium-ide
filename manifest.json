@@ -8,7 +8,7 @@
   "icons": {
     "48": "icons/icon.png"
   },
-  
+
   "browser_action": {
     "default_icon": "icons/icon.png",
     "default_title": "Selenium IDE",
@@ -16,11 +16,43 @@
   },
 
   "permissions": [
-    "activeTab"
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "contextMenus",
+    "downloads",
+    "webNavigation",
+    "notifications"
   ],
 
   "web_accessible_resources": [
     "icons/icon.png",
-    "src/autobus/sampleExtraScript.js"
-  ]
+    "src/autobus/sampleExtraScript.js",
+    "prompt.js"
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["atoms.js", "utils.js", "selenium-browserbot.js", "escape.js", "selenium-api.js", "locatorBuilders.js", "record-api.js", "record.js", "commands-api.js", "targetSelecter.js"],
+      "match_about_blank": true,
+      "all_frames": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["browser-polyfill.js", "prompt-injecter.js"],
+      "match_about_blank": true,
+      "all_frames": true,
+      "run_at": "document_start"
+    }
+  ],
+  "background":
+  {
+    "scripts": ["browser-polyfill.js", "background.js"]
+  },
+  "browser_action":
+  {
+    "default_icon": "icons/icons-48.png",
+    "default_title": "SideeX"
+  }
 }
