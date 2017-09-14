@@ -127,6 +127,7 @@ export default {
   plugins: [
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
+      filename: "panel.html",
       inject: true,
       template: path.resolve(__dirname, "src/panel.html"),
       minify: {

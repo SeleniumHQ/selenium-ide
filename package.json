@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "webpack"
+    "build": "cp -r src/manifest.json src/icons build/ && webpack"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
