@@ -7,11 +7,17 @@ import autoprefixer from "autoprefixer";
 const isProduction = process.env.NODE_ENV === "production";
 
 export default {
+  context: path.resolve(__dirname, "src"),
   devtool: isProduction ? "source-map" : false,
-  entry: ["webextension-polyfill"],
+  entry: {
+    polyfills: ["./setup"],
+    start: ["./prompt-injecter"],
+    background: ["./background"],
+    content: ["./atoms", "./utils", "./selenium-browserbot", "./escape", "./selenium-api", "./locatorBuilders", "./record-api", "./record", "./commands-api", "./targetSelecter"]
+  },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: "bundle.js",
+    filename: "[name].js",
     publicPath: "/assets/",
     libraryTarget: "window"
   },
@@ -146,7 +152,7 @@ export default {
       }
     }),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
+    /*new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
         // Disabled because of an issue with Uglify breaking seemingly valid code:
@@ -162,7 +168,7 @@ export default {
         ascii_only: true
       },
       sourceMap: isProduction
-    }),
+    }),*/
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: "css/[name].[hash:8].css"

@@ -12,6 +12,7 @@
     "babel-eslint": "^7.2.3",
     "babel-jest": "^21.0.2",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.7",
     "eslint": "^4.6.1",

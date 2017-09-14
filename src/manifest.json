@@ -26,7 +26,6 @@
 
   "web_accessible_resources": [
     "icons/icon.png",
-    "src/autobus/sampleExtraScript.js",
     "prompt.js"
   ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
@@ -39,7 +38,7 @@
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["browser-polyfill.js", "prompt-injecter.js"],
+      "js": ["prompt-injecter.js"],
       "match_about_blank": true,
       "all_frames": true,
       "run_at": "document_start"
