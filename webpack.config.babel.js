@@ -11,12 +11,13 @@ export default {
   devtool: isProduction ? "source-map" : false,
   entry: {
     polyfills: ["./setup"],
+    panel: ["./setupPanel"],
     start: ["./prompt-injecter"],
     background: ["./background"],
     content: ["./atoms", "./utils", "./selenium-browserbot", "./escape", "./selenium-api", "./locatorBuilders", "./record-api", "./record", "./commands-api", "./targetSelecter"]
   },
   output: {
-    path: path.resolve(__dirname, "build"),
+    path: path.resolve(__dirname, "build/assets"),
     filename: "[name].js",
     publicPath: "/assets/",
     libraryTarget: "window"
@@ -128,8 +129,9 @@ export default {
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       filename: "panel.html",
-      inject: true,
+      inject: "head",
       template: path.resolve(__dirname, "src/panel.html"),
+      chunks: [],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
