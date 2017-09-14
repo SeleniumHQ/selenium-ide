@@ -15,6 +15,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "colresizable": "1.5",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
     "eslint": "^4.6.1",
     "extract-text-webpack-plugin": "^3.0.0",

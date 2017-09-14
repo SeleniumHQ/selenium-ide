@@ -2,6 +2,7 @@ import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 import autoprefixer from "autoprefixer";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -126,6 +127,10 @@ export default {
     ]
   },
   plugins: [
+    // Copy non-umd assets to vendor
+    new CopyWebpackPlugin([
+      { from: "", to: "vendor" }
+    ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       filename: "panel.html",
