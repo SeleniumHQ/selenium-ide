@@ -32,13 +32,13 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "js": ["vendor/atoms.js", "vendor/utils.js", "vendor/selenium-browserbot.js", "vendor/escape.js", "vendor/selenium-api.js", "vendor/locatorBuilders.js", "vendor/record-api.js", "vendor/record.js", "vendor/commands-api.js", "vendor/targetSelecter.js"],
       "match_about_blank": true,
       "all_frames": true
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["polyfills.js", "start.js"],
+      "js": ["vendor/browser-polyfill.js", "vendor/prompt-injecter.js"],
       "match_about_blank": true,
       "all_frames": true,
       "run_at": "document_start"
@@ -46,6 +46,6 @@
   ],
   "background":
   {
-    "scripts": ["polyfills.js", "background.js"]
+    "scripts": ["vendor/browser-polyfill.js", "vendor/background.js"]
   }
 }
