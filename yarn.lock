@@ -1116,6 +1116,12 @@ colors@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.1.2.tgz#168a4701756b6a7f51a12ce0c97bfa28c084ed63"
 
+colresizable@1.5:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/colresizable/-/colresizable-1.5.2.tgz#52e7067116c6ea7d3f052b399cba249aaccbf208"
+  dependencies:
+    jquery "1 - 2"
+
 combined-stream@^1.0.5, combined-stream@~1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.5.tgz#938370a57b4a51dea2c77c15d5c5fdf895164009"
@@ -2770,6 +2776,18 @@ jest@^21.0.2:
   resolved "https://registry.yarnpkg.com/jest/-/jest-21.0.2.tgz#a5c9bdc9d4322ae672fe8cb3eaf25c268c5f04b2"
   dependencies:
     jest-cli "^21.0.2"
+
+jquery-ui@1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
+
+"jquery@1 - 2":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
+
+jquery@3.2.1, jquery@>=1.2.6:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
 js-base64@^2.1.9:
   version "2.3.2"
@@ -4426,6 +4444,12 @@ table@^4.0.1:
     lodash "^4.0.0"
     slice-ansi "0.0.4"
     string-width "^2.0.0"
+
+tablesorter@^2.28.15:
+  version "2.28.15"
+  resolved "https://registry.yarnpkg.com/tablesorter/-/tablesorter-2.28.15.tgz#bfd67e8059b935cbf09c709f58661c0b48357890"
+  dependencies:
+    jquery ">=1.2.6"
 
 tapable@^0.2.7:
   version "0.2.8"
