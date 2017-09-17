@@ -1,1 +1,5 @@
 web-ext-artifacts
+node_modules
+_MACOSX/
+.DS_Store
+build

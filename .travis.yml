@@ -1,9 +1,0 @@
-language: node_js
-node_js: stable
-sudo: false
-before_install:
-  - npm install web-ext
-
-script:
-  - web-ext lint
-  - web-ext build
