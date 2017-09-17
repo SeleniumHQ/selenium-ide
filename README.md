@@ -19,7 +19,9 @@ As this is an early stage and many things aren't clear, it's quite challenging t
 ```yarn```
 - Build the extension  
 ```yarn build```
-- Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
+- Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
+
+Manifest located in `<Project Directory>/build/manifest.json`
 
 ## What now?
 
