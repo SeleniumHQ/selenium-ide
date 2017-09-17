@@ -26,7 +26,7 @@
 
   "web_accessible_resources": [
     "icons/icon.png",
-    "prompt.js"
+    "assets/vendor/prompt.js"
   ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "content_scripts": [
@@ -38,7 +38,7 @@
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/vendor/browser-polyfill.js", "assets/vendor/prompt-injecter.js"],
+      "js": ["assets/polyfills.js", "assets/vendor/prompt-injecter.js"],
       "match_about_blank": true,
       "all_frames": true,
       "run_at": "document_start"
@@ -46,6 +46,6 @@
   ],
   "background":
   {
-    "scripts": ["assets/vendor/browser-polyfill.js", "assets/vendor/background.js"]
+    "scripts": ["assets/polyfills.js", "assets/vendor/background.js"]
   }
 }
