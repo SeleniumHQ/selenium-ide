@@ -2,21 +2,29 @@ import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 import autoprefixer from "autoprefixer";
 
 const isProduction = process.env.NODE_ENV === "production";
 
 export default {
+  context: path.resolve(__dirname, "src"),
   devtool: isProduction ? "source-map" : false,
-  entry: "src/setup.js",
+  entry: {
+    polyfills: ["./setup"],
+    panel: ["./setupPanel"],
+    start: ["./prompt-injecter"],
+    background: ["./background"],
+    content: ["./atoms", "./utils", "./selenium-browserbot", "./escape", "./selenium-api", "./locatorBuilders", "./record-api", "./record", "./commands-api", "./targetSelecter"]
+  },
   output: {
-    path: path.resolve(__dirname, "build"),
-    filename: "bundle.js",
+    path: path.resolve(__dirname, "build/assets"),
+    filename: "[name].js",
     publicPath: "/assets/",
     libraryTarget: "window"
   },
   resolve: {
-    extensions: ["", ".js", ".jsx", ".json"]
+    extensions: [".js", ".jsx", ".json"]
   },
   module: {
     rules: [
@@ -119,10 +127,16 @@ export default {
     ]
   },
   plugins: [
+    // Copy non-umd assets to vendor
+    new CopyWebpackPlugin([
+      { from: "", to: "vendor" }
+    ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
-      inject: true,
-      template: path.resolve(__dirname, "src/panel/main.html"),
+      filename: "panel.html",
+      inject: "head",
+      template: path.resolve(__dirname, "src/panel.html"),
+      chunks: [],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -146,7 +160,7 @@ export default {
       }
     }),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
+    /*new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
         // Disabled because of an issue with Uglify breaking seemingly valid code:
@@ -162,7 +176,7 @@ export default {
         ascii_only: true
       },
       sourceMap: isProduction
-    }),
+    }),*/
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: "css/[name].[hash:8].css"

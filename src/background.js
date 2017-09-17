@@ -49,7 +49,7 @@ function checkOpenOneSideex(contentWindowInfo) {
 
 function openSideexWindow(contentWindowInfo) {
     let sideexWindowInfo = browser.windows.create({
-        url: browser.extension.getURL("panel.html"),
+      url: browser.extension.getURL("assets/panel.html"),
         type: "popup",
         height: 730,
         width: 750
@@ -65,7 +65,7 @@ function openPage() {
     ///*
     var getContentWindowInfo = browser.windows.getLastFocused();
     var getSideexWindowInfo = browser.windows.create({
-        url: browser.extension.getURL("panel.html"),
+      url: browser.extension.getURL("assets/panel.html"),
         type: "popup",
         height: 730,
         width: 750

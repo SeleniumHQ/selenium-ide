@@ -3217,7 +3217,7 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
             // Apparently octal permissions are deprecated, but the suggested alternative is broken in Firefox (and not backwards-compatible from FF 4.0): https://bugzilla.mozilla.org/show_bug.cgi?id=433295
             fileOutputStream.init(nsFile,
                 writeFlag | createFlag | truncateFlag,
-                0664,
+                0o0664,
                 null);
             return fileOutputStream;
         },

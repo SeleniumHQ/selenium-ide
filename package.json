@@ -4,24 +4,32 @@
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
   "private": true,
+  "scripts": {
+    "build": "cp -r src/manifest.json src/icons build/ && webpack"
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^21.0.2",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
+    "colresizable": "1.5",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
     "eslint": "^4.6.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
     "jest": "^21.0.2",
+    "jquery": "3.2.1",
+    "jquery-ui": "1.12.1",
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.6",
-    "rollup": "^0.49.3",
-    "rollup-plugin-babel": "^3.0.2",
     "style-loader": "^0.18.2",
+    "tablesorter": "^2.28.15",
     "url-loader": "^0.5.9",
+    "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5",
     "webpack": "^3.5.6"
   }
 }
