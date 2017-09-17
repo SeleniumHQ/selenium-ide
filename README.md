@@ -15,9 +15,11 @@ As this is an early stage and many things aren't clear, it's quite challenging t
 
 ## Building
 
-From outside the project directory  
-`$ selenium-ide/build.sh slenium-ide <path-to-pem>`  
-If you don't have a private key, one will be generated
+- Install the dependencies  
+```yarn```
+- Build the extension  
+```yarn build```
+- Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
 
 ## What now?
 
