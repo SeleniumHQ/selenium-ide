@@ -12,7 +12,7 @@ In this project, the IDE is developed as a modern browser extension, supporting 
 
 As this is an early stage and many things aren't clear, it's quite challenging to collaborate and coordinate the efforts - so please be patient.
 
-We are using [SideEx](http://sideex.org/) as a start point. The SideEx team was kind enough to let us use their work.
+We are using [Sideex](http://sideex.org/) as a start point. The Sideex team was kind enough to let us use their work.
 
 ## Building
 
