@@ -15,103 +15,108 @@
  *
  */
 
-var contentSideexTabId = -1;
-var frameLocation = "";
+import browser from "webextension-polyfill";
+import selenium from "./commands-api";
+
+let contentSideexTabId = -1;
+let frameLocation = "";
 
 function Recorder(window) {
-    this.window = window;
-    this.attach();
+  this.window = window;
+  this.attach();
 }
 
 Recorder.eventHandlers = {};
 Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
-    handler.handlerName = handlerName;
-    if (!options) options = false;
-    let key = options ? ('C_' + eventName) : eventName;
-    if (!this.eventHandlers[key]) {
-        this.eventHandlers[key] = [];
-    }
-    this.eventHandlers[key].push(handler);
-}
+  handler.handlerName = handlerName;
+  if (!options) options = false;
+  let key = options ? ("C_" + eventName) : eventName;
+  if (!this.eventHandlers[key]) {
+    this.eventHandlers[key] = [];
+  }
+  this.eventHandlers[key].push(handler);
+};
 
 Recorder.prototype.parseEventKey = function(eventKey) {
-	if (eventKey.match(/^C_/)) {
-		return { eventName: eventKey.substring(2), capture: true };
-	} else {
-		return { eventName: eventKey, capture: false };
-	}
-}
+  if (eventKey.match(/^C_/)) {
+    return { eventName: eventKey.substring(2), capture: true };
+  } else {
+    return { eventName: eventKey, capture: false };
+  }
+};
 
 Recorder.prototype.attach = function() {
-    this.eventListeners = {};
-    for (eventKey in Recorder.eventHandlers) {
-        var eventInfo = this.parseEventKey(eventKey);
-        var eventName = eventInfo.eventName;
-        var capture = eventInfo.capture;
+  this.eventListeners = {};
+  for (let eventKey in Recorder.eventHandlers) {
+    const eventInfo = this.parseEventKey(eventKey);
+    const eventName = eventInfo.eventName;
+    const capture = eventInfo.capture;
 
-        var handlers = Recorder.eventHandlers[eventKey];
-        this.eventListeners[eventKey] = [];
-        for (let i=0 ; i<handlers.length ; i++) {
-            this.window.document.addEventListener(eventName, handlers[i], capture);
-            this.eventListeners[eventKey].push(handlers[i]);
-        }
+    const handlers = Recorder.eventHandlers[eventKey];
+    this.eventListeners[eventKey] = [];
+    for (let i=0 ; i<handlers.length ; i++) {
+      this.window.document.addEventListener(eventName, handlers[i], capture);
+      this.eventListeners[eventKey].push(handlers[i]);
     }
-}
+  }
+};
 
 Recorder.prototype.detach = function() {
-    for (eventKey in this.eventListeners) {
-        var eventInfo = this.parseEventKey(eventKey);
-        var eventName = eventInfo.eventName;
-        var capture = eventInfo.capture;
-        for (let i=0 ; i<this.eventListeners[eventKey] ; i++) {
-            this.window.document.removeEventListener(eventName, this.eventListeners[eventKey][i], capture)
-        }
+  for (let eventKey in this.eventListeners) {
+    const eventInfo = this.parseEventKey(eventKey);
+    const eventName = eventInfo.eventName;
+    const capture = eventInfo.capture;
+    for (let i=0 ; i<this.eventListeners[eventKey] ; i++) {
+      this.window.document.removeEventListener(eventName, this.eventListeners[eventKey][i], capture);
     }
-    delete this.eventListeners;
-}
-
-var recorder = new Recorder(window);
-
+  }
+  delete this.eventListeners;
+};
 
 // show element
-function startShowElement(message, sender, sendResponse){
-    if (message.showElement) {
-        result = selenium["doShowElement"](message.targetValue);
-        return Promise.resolve({result: result});
-    }
+function startShowElement(message){
+  if (message.showElement) {
+    const result = selenium["doShowElement"](message.targetValue);
+    return Promise.resolve({result: result});
+  }
 }
 browser.runtime.onMessage.addListener(startShowElement);
 
 // set frame id
 (function getframeLocation() {
-    let currentWindow = window;
-    let currentParentWindow;
-    while (currentWindow !== window.top) {
-        currentParentWindow = currentWindow.parent;
-        for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-            if (currentParentWindow.frames[idx] === currentWindow) {
-                frameLocation = ":" + idx + frameLocation;
-                currentWindow = currentParentWindow;
-                break;
-            }
-    }
-    frameLocation = "root" + frameLocation;
+  let currentWindow = window;
+  let currentParentWindow;
+  while (currentWindow !== window.top) {
+    currentParentWindow = currentWindow.parent;
+    for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
+      if (currentParentWindow.frames[idx] === currentWindow) {
+        frameLocation = ":" + idx + frameLocation;
+        currentWindow = currentParentWindow;
+        break;
+      }
+  }
+  frameLocation = "root" + frameLocation;
 })();
 
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
+const recorder = new Recorder(window);
+window.recorder = recorder;
+window.contentSideexTabId = contentSideexTabId;
+window.Recorder = Recorder;
+
 /* record */
-function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
-    browser.runtime.sendMessage({
-        command: command,
-        target: target,
-        value: value,
-        insertBeforeLastCommand: insertBeforeLastCommand,
-        frameLocation: (actualFrameLocation != undefined ) ? actualFrameLocation : frameLocation,
-        commandSideexTabId: contentSideexTabId
-    });
+export function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
+  browser.runtime.sendMessage({
+    command: command,
+    target: target,
+    value: value,
+    insertBeforeLastCommand: insertBeforeLastCommand,
+    frameLocation: (actualFrameLocation != undefined ) ? actualFrameLocation : frameLocation,
+    commandSideexTabId: contentSideexTabId
+  });
 }
 
-function onError(error) {
-    alert(`Error: ${error}`);
-};
+window.record = record;
+
+export { Recorder, recorder };

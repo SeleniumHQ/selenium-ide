@@ -32,16 +32,9 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/vendor/selenium-browserbot.js", "assets/vendor/escape.js", "assets/vendor/selenium-api.js", "assets/vendor/locatorBuilders.js", "assets/vendor/record-api.js", "assets/vendor/record.js", "assets/vendor/commands-api.js", "assets/vendor/targetSelecter.js"],
+      "js": ["assets/polyfills.js", "assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/vendor/selenium-browserbot.js", "assets/vendor/escape.js", "assets/vendor/selenium-api.js", "assets/injector.js", "assets/vendor/locatorBuilders.js", "assets/vendor/record.js"],
       "match_about_blank": true,
       "all_frames": true
-    },
-    {
-      "matches": ["<all_urls>"],
-      "js": ["assets/polyfills.js", "assets/vendor/prompt-injecter.js"],
-      "match_about_blank": true,
-      "all_frames": true,
-      "run_at": "document_start"
     }
   ],
   "background":
