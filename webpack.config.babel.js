@@ -15,6 +15,7 @@ export default {
     panel: ["./setupPanel"],
     start: ["./prompt-injecter"],
     background: ["./background"],
+    prompt: ["./prompt"],
     content: ["./atoms", "./utils", "./selenium-browserbot", "./escape", "./selenium-api", "./locatorBuilders", "./record-api", "./record", "./commands-api", "./targetSelecter"]
   },
   output: {
