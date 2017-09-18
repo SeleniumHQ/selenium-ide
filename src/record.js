@@ -1,7 +1,7 @@
 var locatorBuilders = new LocatorBuilders(window);
 
 var preventClickTwice = false;
-Recorder.addEventHandler('clickAt', 'click', function(event) {
+Recorder.addEventHandler("clickAt", "click", function(event) {
   if (event.button == 0 && !preventClick && event.isTrusted) {
     if (!preventClickTwice) {
       var top = event.pageY,
@@ -13,7 +13,7 @@ Recorder.addEventHandler('clickAt', 'click', function(event) {
         element = element.offsetParent;
       } while (element);
       var target = event.target;
-      record("clickAt", locatorBuilders.buildAll(event.target), left + ',' + top);
+      record("clickAt", locatorBuilders.buildAll(event.target), left + "," + top);
       var arrayTest = locatorBuilders.buildAll(event.target);
       preventClickTwice = true;
     }
@@ -22,7 +22,7 @@ Recorder.addEventHandler('clickAt', 'click', function(event) {
 }, true);
 
 //Record: doubleClickAt
-Recorder.addEventHandler('doubleClickAt', 'dblclick', function(event) {
+Recorder.addEventHandler("doubleClickAt", "dblclick", function(event) {
   var top = event.pageY,
     left = event.pageX;
   var element = event.target;
@@ -31,7 +31,7 @@ Recorder.addEventHandler('doubleClickAt', 'dblclick', function(event) {
     left -= element.offsetLeft;
     element = element.offsetParent;
   } while (element);
-  record("doubleClickAt", locatorBuilders.buildAll(event.target), left + ',' + top);
+  record("doubleClickAt", locatorBuilders.buildAll(event.target), left + "," + top);
 }, true);
 
 //Record: SendKeys
@@ -61,12 +61,12 @@ var preventClick = false;
 var enterTarget = null;
 var enterValue = null;
 var tabCheck = null;
-Recorder.addEventHandler('sendKeys', 'keydown', function(event) {
+Recorder.addEventHandler("sendKeys", "keydown", function(event) {
   if (event.target.tagName) {
     var key = event.keyCode;
     var tagName = event.target.tagName.toLowerCase();
     var type = event.target.type;
-    if (tagName == 'input' && inputTypes.indexOf(type) >= 0) {
+    if (tagName == "input" && inputTypes.indexOf(type) >= 0) {
       if (key == 13) {
         enterTarget = event.target;
         enterValue = enterTarget.value;
@@ -78,11 +78,11 @@ Recorder.addEventHandler('sendKeys', 'keydown', function(event) {
           enterTarget = null;
           preventType = true;
         } else if (focusValue == enterTarget.value) {
-          while (formChk != 'form' && formChk != 'body') {
+          while (formChk != "form" && formChk != "body") {
             tempTarget = tempTarget.parentElement;
             formChk = tempTarget.tagName.toLowerCase();
           }
-          if (formChk == 'form' && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
+          if (formChk == "form" && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
             if (tempTarget.hasAttribute("id"))
               record("submit", "id=" + tempTarget.id, "");
             else if (tempTarget.hasAttribute("name"))
@@ -102,7 +102,7 @@ Recorder.addEventHandler('sendKeys', 'keydown', function(event) {
 
       //SuggestionDropDownExt, Chen-Chieh Ping, SELAB, CSIE, NCKU, 2016/11/10
       var tempbool = false;
-      if ((key == 38 || key == 40) && event.target.value != '') {
+      if ((key == 38 || key == 40) && event.target.value != "") {
         if (focusTarget != null && focusTarget.value != tempValue) {
           tempbool = true;
           tempValue = focusTarget.value;
@@ -130,11 +130,11 @@ Recorder.addEventHandler('sendKeys', 'keydown', function(event) {
 }, true);
 
 //Recoed: Type
-Recorder.addEventHandler('Type', 'change', function(event) {
+Recorder.addEventHandler("Type", "change", function(event) {
   if (event.target.tagName && !preventType) {
     var tagName = event.target.tagName.toLowerCase();
     var type = event.target.type;
-    if ('input' == tagName && inputTypes.indexOf(type) >= 0) {
+    if ("input" == tagName && inputTypes.indexOf(type) >= 0) {
       if (event.target.value.length > 0) {
         record("type", locatorBuilders.buildAll(event.target), event.target.value);
 
@@ -143,11 +143,11 @@ Recorder.addEventHandler('Type', 'change', function(event) {
           //FormSubmitByEnterKeyExt & UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/10/18
           var tempTarget = event.target.parentElement;
           var formChk = tempTarget.tagName.toLowerCase();
-          while (formChk != 'form' && formChk != 'body') {
+          while (formChk != "form" && formChk != "body") {
             tempTarget = tempTarget.parentElement;
             formChk = tempTarget.tagName.toLowerCase();
           }
-          if (formChk == 'form' && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
+          if (formChk == "form" && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
             if (tempTarget.hasAttribute("id"))
               record("submit", [
                 ["id=" + tempTarget.id, "id"]
@@ -163,17 +163,17 @@ Recorder.addEventHandler('Type', 'change', function(event) {
       } else {
         record("type", locatorBuilders.buildAll(event.target), event.target.value);
       }
-    } else if ('textarea' == tagName) {
+    } else if ("textarea" == tagName) {
       record("type", locatorBuilders.buildAll(event.target), event.target.value);
     }
   }
 });
 
 //select / addSelect / removeSelect
-Recorder.addEventHandler('select', 'focus', function(event) {
+Recorder.addEventHandler("select", "focus", function(event) {
   if (event.target.nodeName) {
     var tagName = event.target.nodeName.toLowerCase();
-    if ('select' == tagName && event.target.multiple) {
+    if ("select" == tagName && event.target.multiple) {
       var options = event.target.options;
       for (var i = 0; i < options.length; i++) {
         if (options[i]._wasSelected == null) {
@@ -185,10 +185,10 @@ Recorder.addEventHandler('select', 'focus', function(event) {
   }
 }, true);
 
-Recorder.addEventHandler('select', 'change', function(event) {
+Recorder.addEventHandler("select", "change", function(event) {
   if (event.target.tagName) {
     var tagName = event.target.tagName.toLowerCase();
-    if ('select' == tagName) {
+    if ("select" == tagName) {
       if (!event.target.multiple) {
         var option = event.target.options[event.target.selectedIndex];
         record("select", locatorBuilders.buildAll(event.target), getOptionLocator(option));
@@ -215,7 +215,7 @@ function getOptionLocator(option) {
   var label = option.text.replace(/^ *(.*?) *$/, "$1");
   if (label.match(/\xA0/)) { // if the text contains &nbsp;
     return "label=regexp:" + label.replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
-      return '\\' + str
+      return "\\" + str
     })
       .replace(/\s+/g, function(str) {
         if (str.match(/\xA0/)) {
@@ -235,7 +235,7 @@ function getOptionLocator(option) {
 
 //BaiMao 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
-Recorder.addEventHandler('dragAndDrop', 'mousedown', function(event) {
+Recorder.addEventHandler("dragAndDrop", "mousedown", function(event) {
   var self = this;
   if (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) {
     this.mousedown = event;
@@ -251,7 +251,7 @@ Recorder.addEventHandler('dragAndDrop', 'mousedown', function(event) {
 
   if (event.target.nodeName) {
     var tagName = event.target.nodeName.toLowerCase();
-    if ('option' == tagName) {
+    if ("option" == tagName) {
       var parent = event.target.parentNode;
       if (parent.multiple) {
         var options = parent.options;
@@ -264,7 +264,7 @@ Recorder.addEventHandler('dragAndDrop', 'mousedown', function(event) {
 }, true);
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/01
-Recorder.addEventHandler('dragAndDrop', 'mouseup', function(event) {
+Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
   clearTimeout(this.selectMouseup);
   if (this.selectMousedown) {
     var x = event.clientX - this.selectMousedown.clientX;
@@ -282,7 +282,7 @@ Recorder.addEventHandler('dragAndDrop', 'mouseup', function(event) {
       return text.trim();
     }
 
-    if (this.selectMousedown && event.button === 0 && (x + y) && (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) && getSelectionText() === '') {
+    if (this.selectMousedown && event.button === 0 && (x + y) && (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) && getSelectionText() === "") {
       var sourceRelateX = this.selectMousedown.pageX - this.selectMousedown.target.getBoundingClientRect().left - window.scrollX;
       var sourceRelateY = this.selectMousedown.pageY - this.selectMousedown.target.getBoundingClientRect().top - window.scrollY;
       var targetRelateX, targetRelateY;
@@ -290,16 +290,16 @@ Recorder.addEventHandler('dragAndDrop', 'mouseup', function(event) {
         targetRelateX = event.pageX - this.mouseoverQ[1].target.getBoundingClientRect().left - window.scrollX;
         targetRelateY = event.pageY - this.mouseoverQ[1].target.getBoundingClientRect().top - window.scrollY;
 
-        record("mouseDownAt", locatorBuilders.buildAll(this.selectMousedown.target), sourceRelateX + ',' + sourceRelateY);
-        record("mouseMoveAt", locatorBuilders.buildAll(this.mouseoverQ[1].target), targetRelateX + ',' + targetRelateY);
-        record("mouseUpAt", locatorBuilders.buildAll(this.mouseoverQ[1].target), targetRelateX + ',' + targetRelateY);
+        record("mouseDownAt", locatorBuilders.buildAll(this.selectMousedown.target), sourceRelateX + "," + sourceRelateY);
+        record("mouseMoveAt", locatorBuilders.buildAll(this.mouseoverQ[1].target), targetRelateX + "," + targetRelateY);
+        record("mouseUpAt", locatorBuilders.buildAll(this.mouseoverQ[1].target), targetRelateX + "," + targetRelateY);
       } else {
         targetRelateX = event.pageX - event.target.getBoundingClientRect().left - window.scrollX;
         targetRelateY = event.pageY - event.target.getBoundingClientRect().top - window.scrollY;
 
-        record("mouseDownAt", locatorBuilders.buildAll(event.target), targetRelateX + ',' + targetRelateY);
-        record("mouseMoveAt", locatorBuilders.buildAll(event.target), targetRelateX + ',' + targetRelateY);
-        record("mouseUpAt", locatorBuilders.buildAll(event.target), targetRelateX + ',' + targetRelateY);
+        record("mouseDownAt", locatorBuilders.buildAll(event.target), targetRelateX + "," + targetRelateY);
+        record("mouseMoveAt", locatorBuilders.buildAll(event.target), targetRelateX + "," + targetRelateY);
+        record("mouseUpAt", locatorBuilders.buildAll(event.target), targetRelateX + "," + targetRelateY);
       }
     }
   } else {
@@ -309,14 +309,14 @@ Recorder.addEventHandler('dragAndDrop', 'mouseup', function(event) {
     var y = event.clientY - this.mousedown.clientY;
 
     if (this.mousedown && this.mousedown.target !== event.target && !(x + y)) {
-      record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), '');
-      record("mouseUp", locatorBuilders.buildAll(event.target), '');
+      record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), "");
+      record("mouseUp", locatorBuilders.buildAll(event.target), "");
     } else if (this.mousedown && this.mousedown.target === event.target) {
       var self = this;
       var target = locatorBuilders.buildAll(this.mousedown.target);
       // setTimeout(function() {
       //     if (!self.clickLocator)
-      //         record("click", target, '');
+      //         record("click", target, "");
       // }.bind(this), 100);
     }
 
@@ -329,7 +329,7 @@ Recorder.addEventHandler('dragAndDrop', 'mouseup', function(event) {
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/19
 // Record: dragAndDropToObject
-Recorder.addEventHandler('dragAndDropToObject', 'dragstart', function(event) {
+Recorder.addEventHandler("dragAndDropToObject", "dragstart", function(event) {
   var self = this;
   this.dropLocator = setTimeout(function() {
     self.dragstartLocator = event;
@@ -337,7 +337,7 @@ Recorder.addEventHandler('dragAndDropToObject', 'dragstart', function(event) {
 }, true);
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
-Recorder.addEventHandler('dragAndDropToObject', 'drop', function(event) {
+Recorder.addEventHandler("dragAndDropToObject", "drop", function(event) {
   clearTimeout(this.dropLocator);
   if (this.dragstartLocator && event.button == 0 && this.dragstartLocator.target !== event.target) {
     //value no option
@@ -349,7 +349,7 @@ Recorder.addEventHandler('dragAndDropToObject', 'drop', function(event) {
 
 //InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 var prevTimeOut = null;
-Recorder.addEventHandler('runScript', 'scroll', function(event) {
+Recorder.addEventHandler("runScript", "scroll", function(event) {
   if (pageLoaded === true) {
     var self = this;
     this.scrollDetector = event.target;
@@ -380,9 +380,9 @@ var findClickableElement = function(e) {
 };
 
 //Record: mouseOver
-Recorder.addEventHandler('mouseOver', 'mouseover', function(event) {
+Recorder.addEventHandler("mouseOver", "mouseover", function(event) {
   if (window.document.documentElement)
-    nowNode = window.document.documentElement.getElementsByTagName('*').length;
+    nowNode = window.document.documentElement.getElementsByTagName("*").length;
   var self = this;
   if (pageLoaded === true) {
     var clickable = findClickableElement(event.target);
@@ -409,17 +409,17 @@ Recorder.addEventHandler('mouseOver', 'mouseover', function(event) {
 
 //InfluentialMouseoverExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
 // Record: mouseOut
-Recorder.addEventHandler('mouseOut', 'mouseout', function(event) {
+Recorder.addEventHandler("mouseOut", "mouseout", function(event) {
   if (this.mouseoutLocator !== null && event.target === this.mouseoutLocator) {
-    record("mouseOut", locatorBuilders.buildAll(event.target), '');
+    record("mouseOut", locatorBuilders.buildAll(event.target), "");
   }
   delete this.mouseoutLocator;
 }, true);
 
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
 // Record: mouseOver
-Recorder.addEventHandler('mouseOver', 'DOMNodeInserted', function(event) {
-  if (pageLoaded === true && window.document.documentElement.getElementsByTagName('*').length > nowNode) {
+Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
+  if (pageLoaded === true && window.document.documentElement.getElementsByTagName("*").length > nowNode) {
     var self = this;
     if (this.scrollDetector) {
       //TODO: fix target
@@ -427,7 +427,7 @@ Recorder.addEventHandler('mouseOver', 'DOMNodeInserted', function(event) {
         [
           ["window.scrollTo(0," + window.scrollY + ")", ]
         ]
-      ], '');
+      ], "");
       pageLoaded = false;
       setTimeout(function() {
         pageLoaded = true;
@@ -436,7 +436,7 @@ Recorder.addEventHandler('mouseOver', 'DOMNodeInserted', function(event) {
       delete this.nodeInsertedLocator;
     }
     if (this.nodeInsertedLocator) {
-      record("mouseOver", locatorBuilders.buildAll(this.nodeInsertedLocator), '');
+      record("mouseOver", locatorBuilders.buildAll(this.nodeInsertedLocator), "");
       this.mouseoutLocator = this.nodeInsertedLocator;
       delete this.nodeInsertedLocator;
       delete this.mouseoverLocator;
@@ -447,9 +447,9 @@ Recorder.addEventHandler('mouseOver', 'DOMNodeInserted', function(event) {
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 var readyTimeOut = null;
 var pageLoaded = true;
-Recorder.addEventHandler('checkPageLoaded', 'readystatechange', function(event) {
+Recorder.addEventHandler("checkPageLoaded", "readystatechange", function(event) {
   var self = this;
-  if (window.document.readyState === 'loading') {
+  if (window.document.readyState === "loading") {
     pageLoaded = false;
   } else {
     pageLoaded = false;
@@ -461,7 +461,7 @@ Recorder.addEventHandler('checkPageLoaded', 'readystatechange', function(event) 
 }, true);
 
 // Record: verify/assert text and title
-Recorder.addEventHandler('contextMenu', 'contextmenu', function(event) {
+Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
   //     //window.console.log(locatorBuilders.buildAll(event.target));
   //     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
   //     // record("verifyText", locatorBuilders.buildAll(event.target), event.target.textContent);
@@ -475,7 +475,7 @@ Recorder.addEventHandler('contextMenu', 'contextmenu', function(event) {
     if (m.cmd.includes("Text")) {
       record(m.cmd, tmpText, tmpVal);
     } else if (m.cmd.includes("Title")) {
-      record(m.cmd, tmpTitle, '');
+      record(m.cmd, tmpTitle, "");
     }
     myPort.onMessage.removeListener(this);
   });
@@ -484,16 +484,16 @@ Recorder.addEventHandler('contextMenu', 'contextmenu', function(event) {
 // Record: EditContent
 var getEle;
 var checkFocus = 0;
-Recorder.addEventHandler('editContent', 'focus', function(event) {
+Recorder.addEventHandler("editContent", "focus", function(event) {
   var editable = event.target.contentEditable;
-  if (editable == 'true') {
+  if (editable == "true") {
     getEle = event.target;
     contentTest = getEle.innerHTML;
     checkFocus = 1;
   }
 }, true);
 
-Recorder.addEventHandler('editContent', 'blur', function(event) {
+Recorder.addEventHandler("editContent", "blur", function(event) {
   if (checkFocus == 1) {
     if (event.target == getEle) {
       if (getEle.innerHTML != contentTest) {
