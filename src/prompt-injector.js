@@ -15,7 +15,7 @@
  *
  */
 
-var elementForInjectingScript = document.createElement("script");
+const elementForInjectingScript = document.createElement("script");
 elementForInjectingScript.src = browser.runtime.getURL("/assets/prompt.js");
 (document.head || document.documentElement).appendChild(elementForInjectingScript);
 
