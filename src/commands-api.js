@@ -15,9 +15,9 @@
  *
  */
 import browser from "webextension-polyfill";
+import TargetSelector from "./targetSelector";
 const Selenium = window.Selenium;
 const BrowserBot = window.BrowserBot;
-const TargetSelecter = window.TargetSelecter;
 const locatorBuilders = window.locatorBuilders;
 
 const selenium = new Selenium(BrowserBot.createForWindow(window));
@@ -81,7 +81,7 @@ function doCommands(request, sender, sendResponse) {
   let targetSelector;
   if (request.selectMode) {
     if (request.selecting) {
-      targetSelector = new TargetSelecter(function (element, win) {
+      targetSelector = new TargetSelector(function (element, win) {
         if (element && win) {
           const target = locatorBuilders.buildAll(element);
           locatorBuilders.detach();

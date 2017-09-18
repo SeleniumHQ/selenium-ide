@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/vendor/selenium-browserbot.js", "assets/vendor/escape.js", "assets/vendor/selenium-api.js", "assets/injector.js", "assets/vendor/locatorBuilders.js", "assets/vendor/record.js", "assets/vendor/targetSelecter.js"],
+      "js": ["assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/vendor/selenium-browserbot.js", "assets/vendor/escape.js", "assets/vendor/selenium-api.js", "assets/injector.js", "assets/vendor/locatorBuilders.js", "assets/vendor/record.js"],
       "match_about_blank": true,
       "all_frames": true
     }
