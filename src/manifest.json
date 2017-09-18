@@ -38,7 +38,7 @@
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/polyfills.js", "assets/vendor/prompt-injecter.js"],
+      "js": ["assets/polyfills.js", "assets/vendor/prompt-injector.js"],
       "match_about_blank": true,
       "all_frames": true,
       "run_at": "document_start"

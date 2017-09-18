@@ -13,7 +13,7 @@ export default {
   entry: {
     polyfills: ["./setup"],
     panel: ["./setupPanel"],
-    start: ["./prompt-injecter"],
+    injector: ["./prompt-injector"],
     background: ["./background"],
     prompt: ["./prompt"],
     content: ["./atoms", "./utils", "./selenium-browserbot", "./escape", "./selenium-api", "./locatorBuilders", "./record-api", "./record", "./commands-api", "./targetSelecter"]
