@@ -17,8 +17,8 @@
 
 import browser from "webextension-polyfill";
 
-var panelId = undefined;
-var windowOpenSideex = new Object();
+let panelId = undefined;
+const windowOpenSideex = {};
 
 function onCreated(windowInfo) {
   console.log(`Create editor successfully: id = ${windowInfo.id}`);
@@ -56,8 +56,8 @@ function openSideexWindow(contentWindowInfo) {
 
 function openPage() {
 
-  var getContentWindowInfo = browser.windows.getLastFocused();
-  var getSideexWindowInfo = browser.windows.create({
+  const getContentWindowInfo = browser.windows.getLastFocused();
+  const getSideexWindowInfo = browser.windows.create({
     url: browser.extension.getURL("assets/panel.html"),
     type: "popup",
     height: 730,
@@ -160,7 +160,7 @@ function queryError(error) {
 browser.windows.onRemoved.addListener(function(windowId) {
   if (windowId === panelId) {
     console.log("Editor has closed");
-    var querying = browser.tabs.query({ url: "<all_urls>" });
+    const querying = browser.tabs.query({ url: "<all_urls>" });
     querying.then(disconnectAllTabs, queryError);
     panelId = undefined;
   }
@@ -181,8 +181,8 @@ function passWindowId(windowInfo){
   });
 }
 
-var port;
-browser.contextMenus.onClicked.addListener(function(info, tab) {
+let port;
+browser.contextMenus.onClicked.addListener(function(info) {
   port.postMessage({ cmd: info.menuItemId });
 });
 
