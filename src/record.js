@@ -1,3 +1,10 @@
+import browser from "webextension-polyfill";
+import { Recorder, recorder, record } from "./record-api";
+
+const getText = window.getText;
+const normalizeSpaces = window.normalizeSpaces;
+const LocatorBuilders = window.LocatorBuilders;
+
 const locatorBuilders = new LocatorBuilders(window);
 
 let preventClickTwice = false;
@@ -192,7 +199,6 @@ Recorder.addEventHandler("select", "change", function(event) {
       } else {
         let options = event.target.options;
         for (let i = 0; i < options.length; i++) {
-          if (options[i]._wasSelected == null) {}
           if (options[i]._wasSelected != options[i].selected) {
             let value = getOptionLocator(options[i]);
             if (options[i].selected) {
@@ -211,7 +217,7 @@ Recorder.addEventHandler("select", "change", function(event) {
 function getOptionLocator(option) {
   let label = option.text.replace(/^ *(.*?) *$/, "$1");
   if (label.match(/\xA0/)) { // if the text contains &nbsp;
-    return "label=regexp:" + label.replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
+    return "label=regexp:" + label.replace(/[(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) { // eslint-disable-line no-useless-escape
       return "\\" + str;
     })
       .replace(/\s+/g, function(str) {
@@ -263,21 +269,21 @@ Recorder.addEventHandler("dragAndDrop", "mousedown", function(event) {
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/01
 Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
   clearTimeout(this.selectMouseup);
-  if (this.selectMousedown) {
-    var x = event.clientX - this.selectMousedown.clientX;
-    var y = event.clientY - this.selectMousedown.clientY;
-
-    function getSelectionText() {
-      let text = "";
-      let activeEl = window.document.activeElement;
-      let activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
-      if (activeElTagName == "textarea" || activeElTagName == "input") {
-        text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
-      } else if (window.getSelection) {
-        text = window.getSelection().toString();
-      }
-      return text.trim();
+  function getSelectionText() {
+    let text = "";
+    let activeEl = window.document.activeElement;
+    let activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+    if (activeElTagName == "textarea" || activeElTagName == "input") {
+      text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
+    } else if (window.getSelection) {
+      text = window.getSelection().toString();
     }
+    return text.trim();
+  }
+
+  if (this.selectMousedown) {
+    const x = event.clientX - this.selectMousedown.clientX;
+    const y = event.clientY - this.selectMousedown.clientY;
 
     if (this.selectMousedown && event.button === 0 && (x + y) && (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) && getSelectionText() === "") {
       let sourceRelateX = this.selectMousedown.pageX - this.selectMousedown.target.getBoundingClientRect().left - window.scrollX;
@@ -302,26 +308,17 @@ Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
   } else {
     delete this.clickLocator;
     delete this.mouseup;
-    var x = event.clientX - this.mousedown.clientX;
-    var y = event.clientY - this.mousedown.clientY;
+    const x = event.clientX - this.mousedown.clientX;
+    const y = event.clientY - this.mousedown.clientY;
 
     if (this.mousedown && this.mousedown.target !== event.target && !(x + y)) {
       record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), "");
       record("mouseUp", locatorBuilders.buildAll(event.target), "");
-    } else if (this.mousedown && this.mousedown.target === event.target) {
-      let self = this;
-      let target = locatorBuilders.buildAll(this.mousedown.target);
-      // setTimeout(function() {
-      //     if (!self.clickLocator)
-      //         record("click", target, "");
-      // }.bind(this), 100);
     }
-
   }
   delete this.mousedown;
   delete this.selectMousedown;
   delete this.mouseoverQ;
-
 }, true);
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/19
@@ -359,7 +356,7 @@ Recorder.addEventHandler("runScript", "scroll", function(event) {
 
 //InfluentialMouseoverExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
 let nowNode = 0;
-var findClickableElement = function(e) {
+const findClickableElement = function(e) {
   if (!e.tagName) return null;
   let tagName = e.tagName.toLowerCase();
   let type = e.type;
@@ -415,7 +412,7 @@ Recorder.addEventHandler("mouseOut", "mouseout", function(event) {
 
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
 // Record: mouseOver
-Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
+Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function() {
   if (pageLoaded === true && window.document.documentElement.getElementsByTagName("*").length > nowNode) {
     let self = this;
     if (this.scrollDetector) {
@@ -443,8 +440,8 @@ Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
 
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
 let readyTimeOut = null;
-var pageLoaded = true;
-Recorder.addEventHandler("checkPageLoaded", "readystatechange", function(event) {
+let pageLoaded = true;
+Recorder.addEventHandler("checkPageLoaded", "readystatechange", function() {
   let self = this;
   if (window.document.readyState === "loading") {
     pageLoaded = false;
@@ -459,9 +456,6 @@ Recorder.addEventHandler("checkPageLoaded", "readystatechange", function(event) 
 
 // Record: verify/assert text and title
 Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
-  //     //window.console.log(locatorBuilders.buildAll(event.target));
-  //     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
-  //     // record("verifyText", locatorBuilders.buildAll(event.target), event.target.textContent);
   let myPort = browser.runtime.connect();
   let tmpText = locatorBuilders.buildAll(event.target);
   let tmpVal = getText(event.target);
@@ -481,6 +475,7 @@ Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
 // Record: EditContent
 let getEle;
 let checkFocus = 0;
+let contentTest;
 Recorder.addEventHandler("editContent", "focus", function(event) {
   let editable = event.target.contentEditable;
   if (editable == "true") {
@@ -500,6 +495,5 @@ Recorder.addEventHandler("editContent", "blur", function(event) {
     }
   }
 }, true);
-
 
 recorder.attach();
