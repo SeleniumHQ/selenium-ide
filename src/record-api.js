@@ -15,6 +15,9 @@
  *
  */
 
+import browser from "webextension-polyfill";
+import selenium from "./commands-api";
+
 let contentSideexTabId = -1;
 let frameLocation = "";
 
@@ -70,9 +73,6 @@ Recorder.prototype.detach = function() {
   delete this.eventListeners;
 };
 
-const recorder = new Recorder(window);
-
-
 // show element
 function startShowElement(message){
   if (message.showElement) {
@@ -100,8 +100,10 @@ browser.runtime.onMessage.addListener(startShowElement);
 
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
+window.contentSideexTabId = contentSideexTabId;
+
 /* record */
-function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
+export function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
   browser.runtime.sendMessage({
     command: command,
     target: target,
@@ -111,3 +113,5 @@ function record(command, target, value, insertBeforeLastCommand, actualFrameLoca
     commandSideexTabId: contentSideexTabId
   });
 }
+
+export const recorder = new Recorder(window);
