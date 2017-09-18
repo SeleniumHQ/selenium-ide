@@ -26,7 +26,7 @@
 
   "web_accessible_resources": [
     "icons/icon.png",
-    "assets/vendor/prompt.js"
+    "assets/prompt.js"
   ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "content_scripts": [
