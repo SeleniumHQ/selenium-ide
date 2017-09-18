@@ -15,8 +15,12 @@
  *
  */
 import browser from "webextension-polyfill";
+const Selenium = window.Selenium;
+const BrowserBot = window.BrowserBot;
+const TargetSelecter = window.TargetSelecter;
+const locatorBuilders = window.locatorBuilders;
 
-var selenium = new Selenium(BrowserBot.createForWindow(window));
+const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;
 
 function doCommands(request, sender, sendResponse) {
