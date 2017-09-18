@@ -15,8 +15,7 @@ export default {
     panel: ["./setupPanel"],
     injector: ["./prompt-injector"],
     background: ["./background"],
-    prompt: ["./prompt"],
-    content: ["./atoms", "./utils", "./selenium-browserbot", "./escape", "./selenium-api", "./locatorBuilders", "./record-api", "./record", "./commands-api", "./targetSelecter"]
+    prompt: ["./prompt"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
