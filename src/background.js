@@ -18,44 +18,8 @@
 import browser from "webextension-polyfill";
 
 let panelId = undefined;
-const windowOpenSideex = {};
-
-function onCreated(windowInfo) {
-  console.log(`Create editor successfully: id = ${windowInfo.id}`);
-  panelId = windowInfo.id;
-}
-
-function onError(error) {
-  console.log(`Error: ${error}`);
-}
-
-function checkOpenOneSideex(contentWindowInfo) {
-  console.log("contentWindowInfo1-2: ", contentWindowInfo);
-  if (windowOpenSideex[contentWindowInfo.id] !== undefined && windowOpenSideex[contentWindowInfo.id] == true) {
-    console.log("Sideex has been opened.");
-    console.log("windowOpenSideex: ", windowOpenSideex);
-    return Promise.reject("Sideex has been opened.");
-  }
-  windowOpenSideex[contentWindowInfo.id] = true;
-  console.log("Open one sideex.");
-  console.log("contentWindowInfo2: ", contentWindowInfo);
-  return contentWindowInfo;
-}
-
-function openSideexWindow(contentWindowInfo) {
-  let sideexWindowInfo = browser.windows.create({
-    url: browser.extension.getURL("assets/panel.html"),
-    type: "popup",
-    height: 730,
-    width: 750
-  });
-  console.log("contentWindowInfo3: ", contentWindowInfo);
-  console.log("sideexWindowInfo: ", sideexWindowInfo);
-  return sideexWindowInfo;
-}
 
 function openPage() {
-
   const getContentWindowInfo = browser.windows.getLastFocused();
   const getSideexWindowInfo = browser.windows.create({
     url: browser.extension.getURL("assets/panel.html"),
