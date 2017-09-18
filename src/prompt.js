@@ -15,17 +15,16 @@
  *
  */
 
-var originalPrompt = originalPrompt ? originalPrompt : window.prompt;
-var nextPromptResult = false;
-var recordedPrompt = null;
+const originalPrompt = originalPrompt ? originalPrompt : window.prompt;
+let nextPromptResult = false;
+let recordedPrompt = null;
 
-var originalConfirmation = originalConfirmation ? originalConfirmation : window.confirm;
-var nextConfirmationResult = false;
-var recordedConfirmation = null;
+const originalConfirmation = originalConfirmation ? originalConfirmation : window.confirm;
+let nextConfirmationResult = false;
+let recordedConfirmation = null;
 
-var originalAlert = originalAlert ? originalAlert : window.alert;
-var nextAlertResult = false;
-var recordedAlert = null;
+const originalAlert = originalAlert ? originalAlert : window.alert;
+let recordedAlert = null;
 
 function getFrameLocation() {
   let frameLocation = "";
@@ -219,7 +218,6 @@ if (window == window.top) {
           break;
 
         case "setNextAlertResult":
-          nextAlertResult = event.data.target;
           document.body.setAttribute("setAlert", true);
           window.postMessage({
             direction: "from-page-script",
