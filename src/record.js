@@ -1,20 +1,18 @@
-var locatorBuilders = new LocatorBuilders(window);
+const locatorBuilders = new LocatorBuilders(window);
 
-var preventClickTwice = false;
+let preventClickTwice = false;
 Recorder.addEventHandler("clickAt", "click", function(event) {
   if (event.button == 0 && !preventClick && event.isTrusted) {
     if (!preventClickTwice) {
-      var top = event.pageY,
+      let top = event.pageY,
         left = event.pageX;
-      var element = event.target;
+      let element = event.target;
       do {
         top -= element.offsetTop;
         left -= element.offsetLeft;
         element = element.offsetParent;
       } while (element);
-      var target = event.target;
       record("clickAt", locatorBuilders.buildAll(event.target), left + "," + top);
-      var arrayTest = locatorBuilders.buildAll(event.target);
       preventClickTwice = true;
     }
     setTimeout(function() { preventClickTwice = false; }, 30);
@@ -23,9 +21,9 @@ Recorder.addEventHandler("clickAt", "click", function(event) {
 
 //Record: doubleClickAt
 Recorder.addEventHandler("doubleClickAt", "dblclick", function(event) {
-  var top = event.pageY,
+  let top = event.pageY,
     left = event.pageX;
-  var element = event.target;
+  let element = event.target;
   do {
     top -= element.offsetTop;
     left -= element.offsetLeft;
@@ -35,13 +33,13 @@ Recorder.addEventHandler("doubleClickAt", "dblclick", function(event) {
 }, true);
 
 //Record: SendKeys
-var inputTypes = ["text", "password", "file", "datetime", "datetime-local", "date", "month", "time", "week", "number", "range", "email", "url", "search", "tel", "color"];
-var focusTarget = null;
-var focusValue = null;
-var tempValue = null;
-var preventType = false;
-var inp = document.getElementsByTagName("input");
-for (var i = 0; i < inp.length; i++) {
+const inputTypes = ["text", "password", "file", "datetime", "datetime-local", "date", "month", "time", "week", "number", "range", "email", "url", "search", "tel", "color"];
+let focusTarget = null;
+let focusValue = null;
+let tempValue = null;
+let preventType = false;
+const inp = document.getElementsByTagName("input");
+for (let i = 0; i < inp.length; i++) {
   if (inputTypes.indexOf(inp[i].type) >= 0) {
     inp[i].addEventListener("focus", function(event) {
       focusTarget = event.target;
@@ -49,7 +47,7 @@ for (var i = 0; i < inp.length; i++) {
       tempValue = focusValue;
       preventType = false;
     });
-    inp[i].addEventListener("blur", function(event) {
+    inp[i].addEventListener("blur", function() {
       focusTarget = null;
       focusValue = null;
       tempValue = null;
@@ -57,22 +55,21 @@ for (var i = 0; i < inp.length; i++) {
   }
 }
 
-var preventClick = false;
-var enterTarget = null;
-var enterValue = null;
-var tabCheck = null;
+let preventClick = false;
+let enterTarget = null;
+let enterValue = null;
+let tabCheck = null;
 Recorder.addEventHandler("sendKeys", "keydown", function(event) {
   if (event.target.tagName) {
-    var key = event.keyCode;
-    var tagName = event.target.tagName.toLowerCase();
-    var type = event.target.type;
+    const key = event.keyCode;
+    const tagName = event.target.tagName.toLowerCase();
+    const type = event.target.type;
     if (tagName == "input" && inputTypes.indexOf(type) >= 0) {
       if (key == 13) {
         enterTarget = event.target;
         enterValue = enterTarget.value;
-        var tempTarget = event.target.parentElement;
-        var formChk = tempTarget.tagName.toLowerCase();
-        //console.log(tempValue + " " + enterTarget.value + " " + tabCheck + " " + enterTarget + " " + focusValue);
+        let tempTarget = event.target.parentElement;
+        let formChk = tempTarget.tagName.toLowerCase();
         if (tempValue == enterTarget.value && tabCheck == enterTarget) {
           record("sendKeys", locatorBuilders.buildAll(enterTarget), "${KEY_ENTER}");
           enterTarget = null;
@@ -101,7 +98,7 @@ Recorder.addEventHandler("sendKeys", "keydown", function(event) {
       }
 
       //SuggestionDropDownExt, Chen-Chieh Ping, SELAB, CSIE, NCKU, 2016/11/10
-      var tempbool = false;
+      let tempbool = false;
       if ((key == 38 || key == 40) && event.target.value != "") {
         if (focusTarget != null && focusTarget.value != tempValue) {
           tempbool = true;
@@ -132,8 +129,8 @@ Recorder.addEventHandler("sendKeys", "keydown", function(event) {
 //Recoed: Type
 Recorder.addEventHandler("Type", "change", function(event) {
   if (event.target.tagName && !preventType) {
-    var tagName = event.target.tagName.toLowerCase();
-    var type = event.target.type;
+    const tagName = event.target.tagName.toLowerCase();
+    const type = event.target.type;
     if ("input" == tagName && inputTypes.indexOf(type) >= 0) {
       if (event.target.value.length > 0) {
         record("type", locatorBuilders.buildAll(event.target), event.target.value);
@@ -141,8 +138,8 @@ Recorder.addEventHandler("Type", "change", function(event) {
         //FormSubmitByEnterKeyExt, Chen-Chieh Ping, SELAB, CSIE, NCKU, 2016/10/07
         if (enterTarget != null) {
           //FormSubmitByEnterKeyExt & UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/10/18
-          var tempTarget = event.target.parentElement;
-          var formChk = tempTarget.tagName.toLowerCase();
+          let tempTarget = event.target.parentElement;
+          let formChk = tempTarget.tagName.toLowerCase();
           while (formChk != "form" && formChk != "body") {
             tempTarget = tempTarget.parentElement;
             formChk = tempTarget.tagName.toLowerCase();
@@ -172,10 +169,10 @@ Recorder.addEventHandler("Type", "change", function(event) {
 //select / addSelect / removeSelect
 Recorder.addEventHandler("select", "focus", function(event) {
   if (event.target.nodeName) {
-    var tagName = event.target.nodeName.toLowerCase();
+    let tagName = event.target.nodeName.toLowerCase();
     if ("select" == tagName && event.target.multiple) {
-      var options = event.target.options;
-      for (var i = 0; i < options.length; i++) {
+      let options = event.target.options;
+      for (let i = 0; i < options.length; i++) {
         if (options[i]._wasSelected == null) {
           // is the focus was gained by mousedown event, _wasSelected would be already set
           options[i]._wasSelected = options[i].selected;
@@ -187,17 +184,17 @@ Recorder.addEventHandler("select", "focus", function(event) {
 
 Recorder.addEventHandler("select", "change", function(event) {
   if (event.target.tagName) {
-    var tagName = event.target.tagName.toLowerCase();
+    let tagName = event.target.tagName.toLowerCase();
     if ("select" == tagName) {
       if (!event.target.multiple) {
-        var option = event.target.options[event.target.selectedIndex];
+        let option = event.target.options[event.target.selectedIndex];
         record("select", locatorBuilders.buildAll(event.target), getOptionLocator(option));
       } else {
-        var options = event.target.options;
-        for (var i = 0; i < options.length; i++) {
+        let options = event.target.options;
+        for (let i = 0; i < options.length; i++) {
           if (options[i]._wasSelected == null) {}
           if (options[i]._wasSelected != options[i].selected) {
-            var value = getOptionLocator(options[i]);
+            let value = getOptionLocator(options[i]);
             if (options[i].selected) {
               record("addSelection", locatorBuilders.buildAll(event.target), value);
             } else {
@@ -212,10 +209,10 @@ Recorder.addEventHandler("select", "change", function(event) {
 });
 
 function getOptionLocator(option) {
-  var label = option.text.replace(/^ *(.*?) *$/, "$1");
+  let label = option.text.replace(/^ *(.*?) *$/, "$1");
   if (label.match(/\xA0/)) { // if the text contains &nbsp;
     return "label=regexp:" + label.replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
-      return "\\" + str
+      return "\\" + str;
     })
       .replace(/\s+/g, function(str) {
         if (str.match(/\xA0/)) {
@@ -231,12 +228,12 @@ function getOptionLocator(option) {
   } else {
     return "label=" + label;
   }
-};
+}
 
 //BaiMao 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/22
 Recorder.addEventHandler("dragAndDrop", "mousedown", function(event) {
-  var self = this;
+  let self = this;
   if (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) {
     this.mousedown = event;
     this.mouseup = setTimeout(function() {
@@ -250,12 +247,12 @@ Recorder.addEventHandler("dragAndDrop", "mousedown", function(event) {
   this.mouseoverQ = [];
 
   if (event.target.nodeName) {
-    var tagName = event.target.nodeName.toLowerCase();
+    let tagName = event.target.nodeName.toLowerCase();
     if ("option" == tagName) {
-      var parent = event.target.parentNode;
+      let parent = event.target.parentNode;
       if (parent.multiple) {
-        var options = parent.options;
-        for (var i = 0; i < options.length; i++) {
+        let options = parent.options;
+        for (let i = 0; i < options.length; i++) {
           options[i]._wasSelected = options[i].selected;
         }
       }
@@ -271,9 +268,9 @@ Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
     var y = event.clientY - this.selectMousedown.clientY;
 
     function getSelectionText() {
-      var text = "";
-      var activeEl = window.document.activeElement;
-      var activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+      let text = "";
+      let activeEl = window.document.activeElement;
+      let activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
       if (activeElTagName == "textarea" || activeElTagName == "input") {
         text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
       } else if (window.getSelection) {
@@ -283,9 +280,9 @@ Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
     }
 
     if (this.selectMousedown && event.button === 0 && (x + y) && (event.clientX < window.document.documentElement.clientWidth && event.clientY < window.document.documentElement.clientHeight) && getSelectionText() === "") {
-      var sourceRelateX = this.selectMousedown.pageX - this.selectMousedown.target.getBoundingClientRect().left - window.scrollX;
-      var sourceRelateY = this.selectMousedown.pageY - this.selectMousedown.target.getBoundingClientRect().top - window.scrollY;
-      var targetRelateX, targetRelateY;
+      let sourceRelateX = this.selectMousedown.pageX - this.selectMousedown.target.getBoundingClientRect().left - window.scrollX;
+      let sourceRelateY = this.selectMousedown.pageY - this.selectMousedown.target.getBoundingClientRect().top - window.scrollY;
+      let targetRelateX, targetRelateY;
       if (!!this.mouseoverQ.length && this.mouseoverQ[1].relatedTarget == this.mouseoverQ[0].target && this.mouseoverQ[0].target == event.target) {
         targetRelateX = event.pageX - this.mouseoverQ[1].target.getBoundingClientRect().left - window.scrollX;
         targetRelateY = event.pageY - this.mouseoverQ[1].target.getBoundingClientRect().top - window.scrollY;
@@ -312,8 +309,8 @@ Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
       record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), "");
       record("mouseUp", locatorBuilders.buildAll(event.target), "");
     } else if (this.mousedown && this.mousedown.target === event.target) {
-      var self = this;
-      var target = locatorBuilders.buildAll(this.mousedown.target);
+      let self = this;
+      let target = locatorBuilders.buildAll(this.mousedown.target);
       // setTimeout(function() {
       //     if (!self.clickLocator)
       //         record("click", target, "");
@@ -330,7 +327,7 @@ Recorder.addEventHandler("dragAndDrop", "mouseup", function(event) {
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/07/19
 // Record: dragAndDropToObject
 Recorder.addEventHandler("dragAndDropToObject", "dragstart", function(event) {
-  var self = this;
+  let self = this;
   this.dropLocator = setTimeout(function() {
     self.dragstartLocator = event;
   }.bind(this), 200);
@@ -348,10 +345,10 @@ Recorder.addEventHandler("dragAndDropToObject", "drop", function(event) {
 }, true);
 
 //InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
-var prevTimeOut = null;
+let prevTimeOut = null;
 Recorder.addEventHandler("runScript", "scroll", function(event) {
   if (pageLoaded === true) {
-    var self = this;
+    let self = this;
     this.scrollDetector = event.target;
     clearTimeout(prevTimeOut);
     prevTimeOut = setTimeout(function() {
@@ -361,11 +358,11 @@ Recorder.addEventHandler("runScript", "scroll", function(event) {
 }, true);
 
 //InfluentialMouseoverExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
-var nowNode = 0;
+let nowNode = 0;
 var findClickableElement = function(e) {
   if (!e.tagName) return null;
-  var tagName = e.tagName.toLowerCase();
-  var type = e.type;
+  let tagName = e.tagName.toLowerCase();
+  let type = e.type;
   if (e.hasAttribute("onclick") || e.hasAttribute("href") || tagName == "button" ||
     (tagName == "input" &&
       (type == "submit" || type == "button" || type == "image" || type == "radio" || type == "checkbox" || type == "reset"))) {
@@ -383,9 +380,9 @@ var findClickableElement = function(e) {
 Recorder.addEventHandler("mouseOver", "mouseover", function(event) {
   if (window.document.documentElement)
     nowNode = window.document.documentElement.getElementsByTagName("*").length;
-  var self = this;
+  let self = this;
   if (pageLoaded === true) {
-    var clickable = findClickableElement(event.target);
+    let clickable = findClickableElement(event.target);
     if (clickable) {
       this.nodeInsertedLocator = event.target;
       setTimeout(function() {
@@ -420,12 +417,12 @@ Recorder.addEventHandler("mouseOut", "mouseout", function(event) {
 // Record: mouseOver
 Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
   if (pageLoaded === true && window.document.documentElement.getElementsByTagName("*").length > nowNode) {
-    var self = this;
+    let self = this;
     if (this.scrollDetector) {
       //TODO: fix target
       record("runScript", [
         [
-          ["window.scrollTo(0," + window.scrollY + ")", ]
+          ["window.scrollTo(0," + window.scrollY + ")" ]
         ]
       ], "");
       pageLoaded = false;
@@ -445,10 +442,10 @@ Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
 }, true);
 
 // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
-var readyTimeOut = null;
+let readyTimeOut = null;
 var pageLoaded = true;
 Recorder.addEventHandler("checkPageLoaded", "readystatechange", function(event) {
-  var self = this;
+  let self = this;
   if (window.document.readyState === "loading") {
     pageLoaded = false;
   } else {
@@ -465,10 +462,10 @@ Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
   //     //window.console.log(locatorBuilders.buildAll(event.target));
   //     //browser.runtime.connect().postMessage({T:locatorBuilders.buildAll(event.target),V:event.target.textContent});
   //     // record("verifyText", locatorBuilders.buildAll(event.target), event.target.textContent);
-  var myPort = browser.runtime.connect();
-  var tmpText = locatorBuilders.buildAll(event.target);
-  var tmpVal = getText(event.target);
-  var tmpTitle = [
+  let myPort = browser.runtime.connect();
+  let tmpText = locatorBuilders.buildAll(event.target);
+  let tmpVal = getText(event.target);
+  let tmpTitle = [
     [normalizeSpaces(event.target.ownerDocument.title)]
   ];
   myPort.onMessage.addListener(function(m) {
@@ -482,10 +479,10 @@ Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
 }, true);
 
 // Record: EditContent
-var getEle;
-var checkFocus = 0;
+let getEle;
+let checkFocus = 0;
 Recorder.addEventHandler("editContent", "focus", function(event) {
-  var editable = event.target.contentEditable;
+  let editable = event.target.contentEditable;
   if (editable == "true") {
     getEle = event.target;
     contentTest = getEle.innerHTML;
