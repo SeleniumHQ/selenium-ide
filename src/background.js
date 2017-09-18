@@ -15,6 +15,8 @@
  *
  */
 
+import browser from "webextension-polyfill";
+
 var panelId = undefined;
 var windowOpenSideex = new Object();
 

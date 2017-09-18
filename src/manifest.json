@@ -46,6 +46,6 @@
   ],
   "background":
   {
-    "scripts": ["assets/polyfills.js", "assets/background.js"]
+    "scripts": ["assets/background.js"]
   }
 }
