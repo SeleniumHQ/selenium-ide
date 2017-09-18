@@ -74,10 +74,10 @@ function doCommands(request, sender, sendResponse) {
     }
     return true;
   }
-  let targetSelecter;
+  let targetSelector;
   if (request.selectMode) {
     if (request.selecting) {
-      targetSelecter = new TargetSelecter(function (element, win) {
+      targetSelector = new TargetSelecter(function (element, win) {
         if (element && win) {
           const target = locatorBuilders.buildAll(element);
           locatorBuilders.detach();
@@ -91,7 +91,7 @@ function doCommands(request, sender, sendResponse) {
             }
           }
         }
-        targetSelecter = null;
+        targetSelector = null;
       }, function () {
         browser.runtime.sendMessage({
           cancelSelectTarget: true
@@ -99,9 +99,9 @@ function doCommands(request, sender, sendResponse) {
       });
 
     } else {
-      if (targetSelecter) {
-        targetSelecter.cleanup();
-        targetSelecter = null;
+      if (targetSelector) {
+        targetSelector.cleanup();
+        targetSelector = null;
         return;
       }
     }
