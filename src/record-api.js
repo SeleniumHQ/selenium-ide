@@ -100,7 +100,10 @@ browser.runtime.onMessage.addListener(startShowElement);
 
 browser.runtime.sendMessage({ frameLocation: frameLocation });
 
+const recorder = new Recorder(window);
+window.recorder = recorder;
 window.contentSideexTabId = contentSideexTabId;
+window.Recorder = Recorder;
 
 /* record */
 export function record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
@@ -114,4 +117,6 @@ export function record(command, target, value, insertBeforeLastCommand, actualFr
   });
 }
 
-export const recorder = new Recorder(window);
+window.record = record;
+
+export { Recorder, recorder };
