@@ -67,7 +67,7 @@ function openPage() {
       });
     }).then(passWindowId)
     .catch(function(e) {
-      console.log(e);
+      console.error(e);
     });
 
   browser.contextMenus.create({
@@ -118,7 +118,7 @@ function disconnectAllTabs(tabs) {
 }
 
 function queryError(error) {
-  console.log(`Error: ${error}`);
+  console.error(`Error: ${error}`);
 }
 
 browser.windows.onRemoved.addListener(function(windowId) {
