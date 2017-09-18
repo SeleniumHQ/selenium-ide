@@ -90,3 +90,5 @@ TargetSelector.prototype.highlightElement = function (element) {
     this.div.setAttribute("style", "display: none;");
   }
 };
+
+export default TargetSelector;
