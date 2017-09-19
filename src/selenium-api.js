@@ -3623,57 +3623,6 @@ Selenium.prototype.doAssertConfirmation = function(value) {
       return Promise.resolve(true);
   });
 };
-/*
-Selenium.prototype.doAssertConfirmation = function (message) {
-    return this.browserbot.getConfirmMessage().then(function(actualMessage) {
-               if (message != actualMessage)
-                    return Promise.reject("Confirm message doesn't match actual message");
-               else
-                    return Promise.resolve(true);
-           });
-}
-*/
-/*
-Selenium.prototype.doChooseCancelOnNextConfirmation = function(locator,value) {
-    try{
-        var actualCode = '('+function(){
-            var tempWindowConfirmation = window.confirm;
-            window.confirm = function(message) {
-                window.confirm = tempWindowConfirmation;
-                messageToContent(message,false);
-                return false;
-            }
-        }+')();';
-        
-        var injectModifyWindowMethodOnPlay = document.createElement("script");
-        injectModifyWindowMethodOnPlay.textContent = actualCode;
-        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
-        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
-    } catch(reason) {
-        console.error("reason: "+reason);
-    }
-}
-
-Selenium.prototype.doChooseOkOnNextConfirmation = function(locator,value) {
-    try{
-        var actualCode = '('+function(){
-            var tempWindowConfirmation = window.confirm;
-            window.confirm = function(message) {
-                window.confirm = tempWindowConfirmation;
-                messageToContent(message,true);
-                return true;
-            }
-        }+')();';
-        
-        var injectModifyWindowMethodOnPlay = document.createElement("script");
-        injectModifyWindowMethodOnPlay.textContent = actualCode;
-        //injectModifyWindowMethodOnPlay.src = browser.extension.getURL("testInject.js");
-        (document.head || document.documentElement).appendChild(injectModifyWindowMethodOnPlay);
-    } catch(reason) {
-        console.error("reason: "+reason);
-    }
-}
-*/
 
 // Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
