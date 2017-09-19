@@ -15,6 +15,33 @@
  *
  */
 
+import browser from "webextension-polyfill";
+import { selenium } from "./commands-api";
+const bot = window.bot;
+const BrowserBot = window.BrowserBot;
+const goog = window.goog;
+const core = window.core;
+const escapeHTML = window.escapeHTML;
+
+// TODO: utils
+const eval_css = window.eval_css;
+const getTimeoutTime = window.getTimeoutTime;
+const SeleniumError = window.SeleniumError;
+const normalizeSpaces = window.normalizeSpaces;
+const getText = window.getText;
+const createEventObject = window.createEventObject;
+const triggerKeyEvent = window.triggerKeyEvent;
+const fnBind = window.fnBind;
+const browserVersion = window.browserVersion;
+const getInputValue = window.getInputValue;
+const extractExceptionMessage = window.extractExceptionMessage;
+const PatternMatcher = window.PatternMatcher;
+const parse_kwargs = window.parse_kwargs;
+const getTagName = window.getTagName;
+
+// TODO: unknown
+const Components = window.Components;
+const RollupManager = window.RollupManager;
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
@@ -332,7 +359,7 @@ Selenium.prototype.doVerifyText = function(locator, value) {
 
 Selenium.prototype.doVerifyTitle = function(value) {
   if (normalizeSpaces(this.getTitle()) !== value) {
-    throw new Error("Actual value '" + normalizeSapces(this.getTitle()) + "' did not match '" + value + "'");
+    throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
   }
 };
 
@@ -476,7 +503,6 @@ Selenium.prototype.doClick = function(locator) {
      *
      */
   let element = this.browserbot.findElement(locator);
-  let elementWithHref = getAncestorOrSelfWithJavascriptHref(element);
 
   this.browserbot.clickElement(element);
   //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
@@ -587,7 +613,6 @@ Selenium.prototype.doFireEvent = function(locator, eventName) {
      */
   let element = this.browserbot.findElement(locator);
   let doc = goog.dom.getOwnerDocument(element);
-  let view = goog.dom.getWindow(doc);
 
   if (element.fireEvent && element.ownerDocument && element.ownerDocument.createEventObject) { // IE
     let ieEvent = createEventObject(element, false, false, false, false);
@@ -998,7 +1023,7 @@ Selenium.prototype.doSendKeys = function(locator, value) {
 };
 
 
-Selenium.prototype.doSetSpeed = function(value) {
+Selenium.prototype.doSetSpeed = function() {
   /**
      * Set execution speed (i.e., set the millisecond length of a delay which will follow each selenium operation).  By default, there is no such delay, i.e.,
      * the delay is 0 milliseconds.
@@ -1023,7 +1048,7 @@ Selenium.prototype.getSpeed = function() {
 Selenium.prototype.findToggleButton = function(locator) {
   let element = this.browserbot.findElement(locator);
   if (element.checked == null) {
-    Assert.fail("Element " + locator + " is not a toggle-button.");
+    Assert.fail("Element " + locator + " is not a toggle-button."); // eslint-disable-line no-undef
   }
   return element;
 };
@@ -1119,8 +1144,8 @@ Selenium.prototype.doAddSelection = function(locator, optionLocator) {
   if (!("options" in element)) {
     throw new SeleniumError("Specified element is not a Select (has no options)");
   }
-  var locator = this.optionLocatorFactory.fromLocatorString(optionLocator);
-  let option = locator.findOption(element);
+  let currLocator = this.optionLocatorFactory.fromLocatorString(optionLocator);
+  let option = currLocator.findOption(element);
   this.browserbot.addSelection(element, option);
 };
 
@@ -1138,8 +1163,8 @@ Selenium.prototype.doRemoveSelection = function(locator, optionLocator) {
   if (!("options" in element)) {
     throw new SeleniumError("Specified element is not a Select (has no options)");
   }
-  var locator = this.optionLocatorFactory.fromLocatorString(optionLocator);
-  let option = locator.findOption(element);
+  let currLocator = this.optionLocatorFactory.fromLocatorString(optionLocator);
+  let option = currLocator.findOption(element);
   this.browserbot.removeSelection(element, option);
 };
 
@@ -1578,7 +1603,7 @@ Selenium.prototype.getAlert = function() {
      
      */
   if (!this.browserbot.hasAlerts()) {
-    Assert.fail("There were no alerts");
+    Assert.fail("There were no alerts");// eslint-disable-line no-undef
   }
   return this.browserbot.getNextAlert();
 };
@@ -1614,7 +1639,7 @@ Selenium.prototype.getConfirmation = function() {
      * @return string the message of the most recent JavaScript confirmation dialog
      */
   if (!this.browserbot.hasConfirmations()) {
-    Assert.fail("There were no confirmations");
+    Assert.fail("There were no confirmations");// eslint-disable-line no-undef
   }
   return this.browserbot.getNextConfirmation();
 };
@@ -1638,7 +1663,7 @@ Selenium.prototype.getPrompt = function() {
      * @return string the message of the most recent JavaScript question prompt
      */
   if (!this.browserbot.hasPrompts()) {
-    Assert.fail("There were no prompts");
+    Assert.fail("There were no prompts");// eslint-disable-line no-undef
   }
   return this.browserbot.getNextPrompt();
 };
@@ -1723,7 +1748,6 @@ Selenium.prototype.getEval = function(script) {
      */
   try {
     //LOG.info('script is: ' + script);
-    let window = this.browserbot.getCurrentWindow();
     let result = eval(script);
     // Selenium RC doesn't allow returning null
     if (null == result) return "null";
@@ -1756,25 +1780,25 @@ Selenium.prototype.getTable = function(tableCellAddress) {
      */
   // This regular expression matches "tableName.row.column"
   // For example, "mytable.3.4"
-  pattern = /(.*)\.(\d+)\.(\d+)/;
+  let pattern = /(.*)\.(\d+)\.(\d+)/;
 
   if (!pattern.test(tableCellAddress)) {
     throw new SeleniumError("Invalid target format. Correct format is tableName.rowNum.columnNum");
   }
 
-  pieces = tableCellAddress.match(pattern);
+  let pieces = tableCellAddress.match(pattern);
 
-  tableName = pieces[1];
-  row = pieces[2];
-  col = pieces[3];
+  let tableName = pieces[1];
+  let row = pieces[2];
+  let col = pieces[3];
 
   let table = this.browserbot.findElement(tableName);
   if (row > table.rows.length) {
-    Assert.fail("Cannot access row " + row + " - table has " + table.rows.length + " rows");
+    Assert.fail("Cannot access row " + row + " - table has " + table.rows.length + " rows");// eslint-disable-line no-undef
   } else if (col > table.rows[row].cells.length) {
-    Assert.fail("Cannot access column " + col + " - table row has " + table.rows[row].cells.length + " columns");
+    Assert.fail("Cannot access column " + col + " - table row has " + table.rows[row].cells.length + " columns");// eslint-disable-line no-undef
   } else {
-    actualContent = getText(table.rows[row].cells[col]);
+    let actualContent = getText(table.rows[row].cells[col]);
     return actualContent.trim();
   }
   return null;
@@ -1863,8 +1887,6 @@ Selenium.prototype.isSomethingSelected = function(selectLocator) {
     throw new SeleniumError("Specified element is not a Select (has no options)");
   }
 
-  let selectedOptions = [];
-
   for (let i = 0; i < element.options.length; i++) {
     if (element.options[i].selected) {
       return true;
@@ -1887,14 +1909,14 @@ Selenium.prototype.findSelectedOptionProperties = function(locator, property) {
       selectedOptions.push(propVal);
     }
   }
-  if (selectedOptions.length == 0) Assert.fail("No option selected");
+  if (selectedOptions.length == 0) Assert.fail("No option selected");// eslint-disable-line no-undef
   return selectedOptions;
 };
 
 Selenium.prototype.findSelectedOptionProperty = function(locator, property) {
   let selectedOptions = this.findSelectedOptionProperties(locator, property);
   if (selectedOptions.length > 1) {
-    Assert.fail("More than one selected option!");
+    Assert.fail("More than one selected option!");// eslint-disable-line no-undef
   }
   return selectedOptions[0];
 };
@@ -2051,7 +2073,7 @@ Selenium.prototype.isEditable = function(locator) {
      */
   let element = this.browserbot.findElement(locator);
   if (element.value == undefined) {
-    Assert.fail("Element " + locator + " is not an input.");
+    Assert.fail("Element " + locator + " is not an input.");// eslint-disable-line no-undef
   }
   if (element.disabled) {
     return false;
@@ -2127,7 +2149,9 @@ Selenium.prototype.getAttributeFromAllWindows = function(attributeName) {
       if (!selenium.browserbot._windowClosed(win)) {
         attributes.push(eval("win." + attributeName));
       }
-    } catch (e) {} // DGF If we miss one... meh. It's probably closed or inaccessible anyway.
+    } catch (e) {
+      console.error(e);
+    } // DGF If we miss one... meh. It's probably closed or inaccessible anyway.
   }
   return attributes;
 };
@@ -2154,7 +2178,7 @@ Selenium.prototype.findWindow = function(soughtAfterWindowPropertyValue) {
   if (PatternMatcher.matches(soughtAfterWindowPropertyValue, eval("this.browserbot.topWindow." + targetPropertyName))) {
     return this.browserbot.topWindow;
   }
-  for (windowName in selenium.browserbot.openedWindows) {
+  for (let windowName in selenium.browserbot.openedWindows) {
     let openedWindow = selenium.browserbot.openedWindows[windowName];
     if (PatternMatcher.matches(soughtAfterWindowPropertyValue, eval("openedWindow." + targetPropertyName))) {
       return openedWindow;
@@ -2332,7 +2356,7 @@ Selenium.prototype.doSetCursorPosition = function(locator, position) {
      */
   let element = this.browserbot.findElement(locator);
   if (element.value == undefined) {
-    Assert.fail("Element " + locator + " is not an input.");
+    Assert.fail("Element " + locator + " is not an input.");// eslint-disable-line no-undef
   }
   if (position == -1) {
     position = element.value.length;
@@ -2526,24 +2550,23 @@ Selenium.prototype.getCursorPosition = function(locator) {
   let element = this.browserbot.findElement(locator);
   let doc = this.browserbot.getDocument();
   let win = this.browserbot.getCurrentWindow();
+  let elementRange;
   if (doc.selection && !browserVersion.isOpera) {
     try {
       let selectRange = doc.selection.createRange().duplicate();
-      var elementRange = element.createTextRange();
+      elementRange = element.createTextRange();
       selectRange.move("character", 0);
       elementRange.move("character", 0);
-      let inRange1 = selectRange.inRange(elementRange);
-      let inRange2 = elementRange.inRange(selectRange);
       elementRange.setEndPoint("EndToEnd", selectRange);
     } catch (e) {
-      Assert.fail("There is no cursor on this page!");
+      Assert.fail("There is no cursor on this page!");// eslint-disable-line no-undef
     }
     let answer = String(elementRange.text).replace(/\r/g, "").length;
     return answer;
   } else {
     if (typeof(element.selectionStart) != "undefined") {
       if (win.getSelection && typeof(win.getSelection().rangeCount) != undefined && win.getSelection().rangeCount == 0) {
-        Assert.fail("There is no cursor on this page!");
+        Assert.fail("There is no cursor on this page!");// eslint-disable-line no-undef
       }
       return element.selectionStart;
     }
@@ -2654,7 +2677,6 @@ Selenium.prototype.doWaitForCondition = function(script, timeout) {
      */
 
   return Selenium.decorateFunctionWithTimeout(function() {
-    let window = selenium.browserbot.getCurrentWindow();
     return eval(script);
   }, timeout);
 };
@@ -2808,7 +2830,7 @@ Selenium.prototype.doCreateCookie = function(nameValuePair, optionsString) {
      *      of the value of 'max_age' is second.  Note that specifying a domain that isn't a subset of the current domain will
      *      usually fail.
      */
-  let results = /[^\s=\[\]\(\),"\/\?@:;]+=[^\s=\[\]\(\),"\/\?@:;]*/.test(nameValuePair);
+  let results = /[^\s=\[\]\(\),"\/\?@:;]+=[^\s=\[\]\(\),"\/\?@:;]*/.test(nameValuePair);// eslint-disable-line no-useless-escape
   if (!results) {
     throw new SeleniumError("Invalid parameter.");
   }
@@ -2862,7 +2884,7 @@ Selenium.prototype.doDeleteCookie = function(name, optionsString) {
   let domain = "";
   let recurse = false;
   let matched = false;
-  results = /path=([^\s,]+)[,]?/.exec(optionsString);
+  let results = /path=([^\s,]+)[,]?/.exec(optionsString);
   if (results) {
     matched = true;
     path = results[1];
@@ -3025,35 +3047,33 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
      *                     (possibly obscuring black text).</dd>
      *                  </dl>
      */
-  if (!browserVersion.isChrome &&
-        !(browserVersion.isIE && !browserVersion.isHTA)) {
-    throw new SeleniumError("captureEntirePageScreenshot is only " + "implemented for Firefox (\"firefox\" or \"chrome\", NOT " + "\"firefoxproxy\") and IE non-HTA (\"iexploreproxy\", NOT \"iexplore\" " + "or \"iehta\"). The current browser isn't one of them!");
+  function getFailureMessage(exceptionMessage) {
+    let msg = "Snapsie failed: ";
+    if (exceptionMessage) {
+      if (exceptionMessage ==
+        "Automation server can't create object") {
+        msg += "Is it installed? Does it have permission to run " + "as an add-on? See http://snapsie.sourceforge.net/";
+      } else {
+        msg += exceptionMessage;
+      }
+    } else {
+      msg += "Undocumented error";
+    }
+    return msg;
   }
 
+  if (!browserVersion.isChrome &&
+    !(browserVersion.isIE && !browserVersion.isHTA)) {
+    throw new SeleniumError("captureEntirePageScreenshot is only " + "implemented for Firefox (\"firefox\" or \"chrome\", NOT " + "\"firefoxproxy\") and IE non-HTA (\"iexploreproxy\", NOT \"iexplore\" " + "or \"iehta\"). The current browser isn't one of them!");
+  }
   // do or do not ... there is no try
-
   if (browserVersion.isIE) {
     // targeting snapsIE >= 0.2
-    function getFailureMessage(exceptionMessage) {
-      let msg = "Snapsie failed: ";
-      if (exceptionMessage) {
-        if (exceptionMessage ==
-                    "Automation server can't create object") {
-          msg += "Is it installed? Does it have permission to run " + "as an add-on? See http://snapsie.sourceforge.net/";
-        } else {
-          msg += exceptionMessage;
-        }
-      } else {
-        msg += "Undocumented error";
-      }
-      return msg;
-    }
-
     if (typeof(runOptions) != "undefined" &&
-            runOptions.isMultiWindowMode() == false) {
+      runOptions.isMultiWindowMode() == false) {// eslint-disable-line no-undef
       // framed mode
       try {
-        new Snapsie().saveSnapshot(filename, "selenium_myiframe");
+        new Snapsie().saveSnapshot(filename, "selenium_myiframe");// eslint-disable-line no-undef
       } catch (e) {
         throw new SeleniumError(getFailureMessage(e.message));
       }
@@ -3068,7 +3088,7 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
         let snapsieUrl = (this.browserbot.buttonWindow.location.href)
           .replace(/(Test|Remote)Runner\.html/, "lib/snapsie.js");
         let self = this;
-        new Ajax.Request(snapsieUrl, {
+        new Ajax.Request(snapsieUrl, {// eslint-disable-line no-undef
           method: "get",
           onSuccess: function(transport) {
             self.snapsieSrc = transport.responseText;
@@ -3083,7 +3103,7 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
 
       // this is sort of hackish. We insert a script into the document,
       // and remove it before anyone notices.
-      var doc = selenium.browserbot.getDocument();
+      let doc = selenium.browserbot.getDocument();
       let script = doc.createElement("script");
       let scriptContent = this.snapsieSrc + "try {" + "    new Snapsie().saveSnapshot(\"" + filename + "\");" + "}" + "catch (e) {" + "    document.getElementById(\"takeScreenshot\").failure =" + "        e.message;" + "}";
       script.id = "takeScreenshot";
@@ -3168,7 +3188,7 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
 
     // compute dimensions
   let window = this.browserbot.getCurrentWindow();
-  var doc = window.document.documentElement;
+  let doc = window.document.documentElement;
   let body = window.document.body;
   let box = {
     x: 0,
@@ -3255,7 +3275,7 @@ Selenium.prototype.doRollup = function(rollupName, kwargs) {
   // commandComplete(), and commandError() methods of the TestLoop object.
   // When the expanded rollup commands are done executing (or an error has
   // occurred), we'll restore them to their original values.
-  let loop = currentTest || htmlTestRunner.currentTest;
+  let loop = currentTest || htmlTestRunner.currentTest;// eslint-disable-line no-undef
   let backupManager = {
     backup: function() {
       for (let item in this.data) {
@@ -3473,7 +3493,7 @@ OptionLocatorFactory.prototype.OptionLocatorByLabel = function(label) {
 
   this.assertSelected = function(element) {
     let selectedLabel = element.options[element.selectedIndex].text;
-    Assert.matches(this.label, selectedLabel);
+    Assert.matches(this.label, selectedLabel);// eslint-disable-line no-undef
   };
 };
 
@@ -3494,7 +3514,7 @@ OptionLocatorFactory.prototype.OptionLocatorByValue = function(value) {
 
   this.assertSelected = function(element) {
     let selectedValue = element.options[element.selectedIndex].value;
-    Assert.matches(this.value, selectedValue);
+    Assert.matches(this.value, selectedValue);// eslint-disable-line no-undef
   };
 };
 
@@ -3515,7 +3535,7 @@ OptionLocatorFactory.prototype.OptionLocatorByIndex = function(index) {
   };
 
   this.assertSelected = function(element) {
-    Assert.equals(this.index, element.selectedIndex);
+    Assert.equals(this.index, element.selectedIndex);// eslint-disable-line no-undef
   };
 };
 
@@ -3536,7 +3556,7 @@ OptionLocatorFactory.prototype.OptionLocatorById = function(id) {
 
   this.assertSelected = function(element) {
     let selectedId = element.options[element.selectedIndex].id;
-    Assert.matches(this.id, selectedId);
+    Assert.matches(this.id, selectedId);// eslint-disable-line no-undef
   };
 };
 
@@ -3591,7 +3611,7 @@ Selenium.prototype.doChooseCancelOnNextConfirmation = function() {
   return this.browserbot.setNextConfirmationResult(false);
 };
 
-Selenium.prototype.doChooseOkOnNextConfirmation = function (answer) {
+Selenium.prototype.doChooseOkOnNextConfirmation = function () {
   return this.browserbot.setNextConfirmationResult(true);
 };
 
