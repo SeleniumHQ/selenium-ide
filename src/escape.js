@@ -39,7 +39,7 @@ function escapeAttr(str) {
     spaceE = str.indexOf(" ", spaceS + 1);
 
     if (spaceE >= 0) {
-      while (str.charAt(spaceE - 1) != "\'" && str.charAt(spaceE - 1) != "\"") {
+      while (str.charAt(spaceE - 1) != "'" && str.charAt(spaceE - 1) != "\"") {
         spaceE = str.indexOf(" ", spaceE + 1);
         if (spaceE < 0)
           break;
@@ -67,15 +67,15 @@ function escapeAttr(str) {
     flag = true;
     let equal = tempAttr.indexOf("=");
 
-    if (tempAttr.charAt(equal + 1) == "\'") {
+    if (tempAttr.charAt(equal + 1) == "'") {
       //divide the single quote
-      if (tempAttr.indexOf("\'") != -1) {
-        let quotS = tempAttr.indexOf("\'");
-        let quotE = tempAttr.lastIndexOf("\'");
+      if (tempAttr.indexOf("'") != -1) {
+        let quotS = tempAttr.indexOf("'");
+        let quotE = tempAttr.lastIndexOf("'");
         tempValue = tempAttr.substring(quotS + 1, quotE);
         tempAttr = tempAttr.substring(0, quotS + 1);
         tempValue = replaceChar(tempValue);
-        tempAttr += tempValue + "\'";
+        tempAttr += tempValue + "'";
       }
     }
     if (tempAttr.charAt(equal + 1) == "\"") {
