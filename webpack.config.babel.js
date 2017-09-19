@@ -15,7 +15,8 @@ export default {
     panel: ["./setupPanel"],
     injector: ["./prompt-injector"],
     background: ["./background"],
-    prompt: ["./prompt"]
+    prompt: ["./prompt"],
+    record: ["./record"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
