@@ -33,6 +33,7 @@ function escapeAttr(str) {
   let tempValue = "";
   let processedTag = "";
   let flag = false;
+  let finishedProcessing = false;
 
   do {
     spaceS = str.indexOf(" ");
@@ -61,6 +62,7 @@ function escapeAttr(str) {
         processedTag += ">";
       else
         processedTag = str;
+      finishedProcessing = true;
       break;
     }
 
@@ -91,7 +93,7 @@ function escapeAttr(str) {
     }
     //merge the splited string
     processedTag += tempStr + tempAttr;
-  } while (true);
+  } while (!finishedProcessing);
 
   return processedTag;
 }
@@ -127,8 +129,9 @@ function replaceChar(str) {
   let replaceStr = "";
   let doFlag = 0;
   let charType;
+  let ampersandExists = true;
 
-  while (true) {
+  while (ampersandExists) {
     pos = str.indexOf("&", pos + 1);
     charType = 0;
     if (pos != -1) {
@@ -162,7 +165,7 @@ function replaceChar(str) {
       }
     } else {
       cutStr += str;
-      break;
+      ampersandExists = false;
     }
   }
   if (doFlag == 0)
@@ -179,8 +182,9 @@ function escapeHTML(str) {
   let tempTag = "";
   let processed = "";
   let tempSmallIndex = 0;
+  let tagsExists = true;
 
-  while (true) {
+  while (tagsExists) {
     //find the less target
     if (smallIndex >= 0) {
       //find the greater target
@@ -207,10 +211,12 @@ function escapeHTML(str) {
         processed += replaceChar(tempStr) + tempTag;
       } else {
         replaceChar(str);
+        tagsExists = false;
         break;
       }
     } else {
       replaceChar(str);
+      tagsExists = false;
       break;
     }
     //going to do next tag
