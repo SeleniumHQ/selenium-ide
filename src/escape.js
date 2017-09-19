@@ -16,7 +16,7 @@
  */
 
 // change HTML entities to sign
-function unescapeHtml(str) {
+export function unescapeHtml(str) {
   return str
     .replace(/&amp;/gi, "&")
     .replace(/&quot;/gi, "\"")
@@ -175,7 +175,7 @@ function replaceChar(str) {
 }
 
 //check the HTML value
-function escapeHTML(str) {
+export function escapeHTML(str) {
   let smallIndex = str.indexOf("<");
   let greatIndex = str.indexOf(">");
   let tempStr = "";
@@ -233,3 +233,6 @@ function escapeHTML(str) {
 
   return processed;
 }
+
+window.unescapeHtml = unescapeHtml;
+window.escapeHTML = escapeHTML;
