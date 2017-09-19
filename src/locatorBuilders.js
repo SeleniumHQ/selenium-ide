@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-function LocatorBuilders(window) {
+const MozillaBrowserBot = window.MozillaBrowserBot;
+const core = window.core;
+const UIMap = window.UIMap;
+const exactMatchPattern = window.exactMatchPattern;
+
+export default function LocatorBuilders(window) {
   this.window = window;
 }
+
+window.LocatorBuilders = LocatorBuilders;
 
 LocatorBuilders.prototype.detach = function() {
   if (this.window._locator_pageBot) {
