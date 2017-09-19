@@ -106,22 +106,16 @@ function checkType(cutStr, replaceStr, mode) {
   switch (mode) {
     case 1:
       return cutStr += replaceStr + "&amp;";
-      break;
     case 2:
       return cutStr += replaceStr + "&quot;";
-      break;
     case 3:
       return cutStr += replaceStr + "&#39;";
-      break;
     case 4:
       return cutStr += replaceStr + "&lt;";
-      break;
     case 5:
       return cutStr += replaceStr + "&gt;";
-      break;
     default:
       return cutStr;
-      break;
   }
 }
 
@@ -161,12 +155,8 @@ function replaceChar(str) {
       }
 
       if (charType != 0) {
-        //replaceStr = str.substring(0,pos);
-        //str = str.substring(pos+5);
         pos = -1;
-        //replaceStr = replaceStr.replace(/[&"'<>]/g, (m) => ({ "&": "&amp;", '"': "&quot;", "'": "&#39;", "<": "&lt;", ">": "&gt;" })[m]);
         replaceStr = doEscape(replaceStr);
-        //cutStr += replaceStr + "&amp;";
         cutStr = checkType(cutStr, replaceStr, charType);
         doFlag = 1;
       }
@@ -176,7 +166,6 @@ function replaceChar(str) {
     }
   }
   if (doFlag == 0)
-  //return str.replace(/[&"'<>]/g, (m) => ({ "&": "&amp;", '"': "&quot;", "'": "&#39;", "<": "&lt;", ">": "&gt;" })[m]);
     return doEscape(str);
   else
     return cutStr;
