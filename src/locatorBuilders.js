@@ -184,14 +184,17 @@ LocatorBuilders.prototype.attributeValue = function(value) {
   } else {
     let result = "concat(";
     let part = "";
-    while (true) {
+    let didReachEndOfValue = false;
+    while (!didReachEndOfValue) {
       let apos = value.indexOf("'");
       let quot = value.indexOf("\"");
       if (apos < 0) {
         result += "'" + value + "'";
+        didReachEndOfValue = true;
         break;
       } else if (quot < 0) {
         result += "\"" + value + "\"";
+        didReachEndOfValue = true;
         break;
       } else if (quot < apos) {
         part = value.substring(0, apos);
