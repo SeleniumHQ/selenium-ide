@@ -16,7 +16,8 @@ export default {
     injector: ["./prompt-injector"],
     background: ["./background"],
     prompt: ["./prompt"],
-    record: ["./record"]
+    record: ["./record"],
+    escape: ["./escape"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
