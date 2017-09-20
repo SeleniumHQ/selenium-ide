@@ -129,7 +129,7 @@ function add_sendkeys_key(key, unicodeChar, alias, botKey) {
 
 build_sendkeys_maps();
 
-function Selenium(browserbot) {
+export default class Selenium {
   /**
      * Defines an object that runs Selenium commands.
      *
@@ -282,35 +282,37 @@ function Selenium(browserbot) {
      * pattern.
      * </p>
      */
-  this.browserbot = browserbot;
-  this.optionLocatorFactory = new OptionLocatorFactory();
-  // DGF for backwards compatibility
-  this.page = function() {
-    return browserbot;
-  };
-  this.defaultTimeout = Selenium.DEFAULT_TIMEOUT;
-  this.mouseSpeed = Selenium.DEFAULT_MOUSE_SPEED;
+  constructor(browserbot) {
+    this.browserbot = browserbot;
+    this.optionLocatorFactory = new OptionLocatorFactory();
+    // DGF for backwards compatibility
+    this.page = function() {
+      return browserbot;
+    };
+    this.defaultTimeout = Selenium.DEFAULT_TIMEOUT;
+    this.mouseSpeed = Selenium.DEFAULT_MOUSE_SPEED;
 
 
-  // TODO(simon): This guard should not be necessary. Remove it,
-  if (bot && bot.locators && bot.locators.add) {
-    bot.locators.add("xpath", {
-      single: function(target, opt_root) {
-        return browserbot.locateElementByXPath(target, opt_root);
-      },
-      many: function(target, opt_root) {
-        return browserbot.locateElementsByXPath(target, opt_root);
-      }
-    });
+    // TODO(simon): This guard should not be necessary. Remove it,
+    if (bot && bot.locators && bot.locators.add) {
+      bot.locators.add("xpath", {
+        single: function(target, opt_root) {
+          return browserbot.locateElementByXPath(target, opt_root);
+        },
+        many: function(target, opt_root) {
+          return browserbot.locateElementsByXPath(target, opt_root);
+        }
+      });
 
-    bot.locators.add("css", {
-      single: function(target, opt_root) {
-        return browserbot.locateElementByCss(target, opt_root);
-      },
-      many: function(target, opt_root) {
-        return eval_css(target, opt_root);
-      }
-    });
+      bot.locators.add("css", {
+        single: function(target, opt_root) {
+          return browserbot.locateElementByCss(target, opt_root);
+        },
+        many: function(target, opt_root) {
+          return eval_css(target, opt_root);
+        }
+      });
+    }
   }
 }
 
@@ -340,7 +342,7 @@ Selenium.createForWindow = function(window, proxyInjectionMode) {
   if (!window.location) {
     throw "error: not a window!";
   }
-  return new Selenium(BrowserBot.createForWindow(window, proxyInjectionMode));
+  return Selenium(BrowserBot.createForWindow(window, proxyInjectionMode));
 };
 
 Selenium.prototype.reset = function() {
