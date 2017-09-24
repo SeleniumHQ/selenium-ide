@@ -94,8 +94,6 @@ let BrowserBot = function(topLevelApplicationWindow) {
     let e;
 
     if (this.pageLoadError) {
-      if (this.pageLoadError.stack) {
-      }
       e = this.pageLoadError;
       this.pageLoadError = null;
       throw e;
