@@ -24,18 +24,37 @@
  *          events in different modes.
  */
 
+import Selenium from "./selenium-api";
 import { selenium } from "./commands-api";
 const bot = window.bot;
 const goog = window.goog;
 const core = window.core;
+const XPCNativeWrapper = window.XPCNativeWrapper;
 
 // TODO: utils
 const objectExtend = window.objectExtend;
 const SeleniumError = window.SeleniumError;
 const browserVersion = window.browserVersion;
+const createEventObject = window.createEventObject;
+const absolutify = window.absolutify;
+const addLoadListener = window.addLoadListener;
+const highlight = window.highlight;
+const parse_locator = window.parse_locator;
+const eval_xpath = window.eval_xpath;
+const eval_css = window.eval_css;
+const PatternMatcher = window.PatternMatcher;
+const getText = window.getText;
+const getTagName = window.getTagName;
+const elementFindFirstMatchingChild = window.elementFindFirstMatchingChild;
+const eval_locator = window.eval_locator;
+const is_ancestor = window.is_ancestor;
+const canonicalize = window.canonicalize;
+const parseUrl = window.parseUrl;
+const reassembleLocation = window.reassembleLocation;
 
 // TODO: unknown
 const Components = window.Components;
+const UIMap = window.UIMap;
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.
@@ -2548,7 +2567,7 @@ IEBrowserBot.prototype.modifyWindowToRecordPopUpDialogs = function(windowToModif
   BrowserBot.prototype.modifyWindowToRecordPopUpDialogs(windowToModify, browserBot);
 
   // we will call the previous version of this method from within our own interception
-  oldShowModalDialog = windowToModify.showModalDialog;
+  let oldShowModalDialog = windowToModify.showModalDialog;
 
   windowToModify.showModalDialog = function(url, args, features) {
     // Get relative directory to where TestRunner.html lives
@@ -2560,7 +2579,7 @@ IEBrowserBot.prototype.modifyWindowToRecordPopUpDialogs = function(windowToModif
 
     // Only set run interval if options is defined
     if (typeof(window.runOptions) != "undefined") {
-      runInterval = "&runInterval=" + runOptions.runInterval;
+      runInterval = "&runInterval=" + runOptions.runInterval; // eslint-disable-line no-undef
     }
 
     let testRunnerURL = "TestRunner.html?auto=true&singletest=" + escape(browserBot.modalDialogTest) + "&autoURL=" + escape(url) + runInterval;
@@ -2569,13 +2588,6 @@ IEBrowserBot.prototype.modifyWindowToRecordPopUpDialogs = function(windowToModif
 
     // If using proxy injection mode
     if (this.proxyInjectionMode) {
-      let sessionId = runOptions.getSessionId();
-      if (sessionId == undefined) {
-        sessionId = injectedSessionId;
-      }
-      if (sessionId != undefined) {
-        //LOG.debug("Invoking showModalDialog and injecting URL " + fullURL);
-      }
       fullURL = url;
     }
     let returnValue = oldShowModalDialog(fullURL, args, features);
