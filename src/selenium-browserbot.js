@@ -86,16 +86,7 @@ let BrowserBot = function(topLevelApplicationWindow) {
   objectExtend(this, PageBot.prototype);
   this._registerAllLocatorFunctions();
 
-  this.recordPageLoad = function(elementOrWindow) {
-    try {
-      if (elementOrWindow.location && elementOrWindow.location.href) {
-      } else if (elementOrWindow.contentWindow && elementOrWindow.contentWindow.location && elementOrWindow.contentWindow.location.href) {
-      } else {
-      }
-    } catch (e) {
-      self.pageLoadError = e;
-      return;
-    }
+  this.recordPageLoad = function() {
     self.newPageLoaded = true;
   };
 
