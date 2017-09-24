@@ -13,6 +13,7 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
+    "transform-class-properties",
     "react"
   ],
   "rules": {
