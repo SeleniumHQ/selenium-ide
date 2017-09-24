@@ -17,11 +17,11 @@
 
 import browser from "webextension-polyfill";
 import { selenium } from "./commands-api";
+import { escapeHTML } from "./escape";
 const bot = window.bot;
 const BrowserBot = window.BrowserBot;
 const goog = window.goog;
 const core = window.core;
-const escapeHTML = window.escapeHTML;
 
 // TODO: utils
 const eval_css = window.eval_css;
