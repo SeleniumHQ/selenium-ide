@@ -16,5 +16,8 @@ const render = Component => {
 render(Panel);
 
 if (module.hot) {
-  module.hot.accept("../Panel", () => { render(Panel); });
+  module.hot.accept("../Panel/index.jsx", () => {
+    const NextRootContainer = require("../Panel").default;
+    render(NextRootContainer);
+  });
 }

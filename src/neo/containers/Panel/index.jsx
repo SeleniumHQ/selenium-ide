@@ -1,9 +1,11 @@
 import React from "react";
+import TestCaseNavigation from "../../components/TestCaseNavigation";
+import "../../styles/app.css";
 
 export default class Panel extends React.Component {
   render() {
     return (
-      <h1>Hello World!</h1>
+      <TestCaseNavigation />
     );
   }
 }
