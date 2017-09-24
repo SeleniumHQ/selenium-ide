@@ -51,6 +51,7 @@ const is_ancestor = window.is_ancestor;
 const canonicalize = window.canonicalize;
 const parseUrl = window.parseUrl;
 const reassembleLocation = window.reassembleLocation;
+const serializeObject = window.serializeObject;
 
 // TODO: unknown
 const Components = window.Components;
@@ -228,7 +229,7 @@ BrowserBot.prototype.relayToRC = function(name) {
   let object = Components.utils.evalInSandbox(name, mySandbox);
   //var object = eval(name);
   let s = "state:" + serializeObject(name, object) + "\n";
-  sendToRC(s, "state=true");
+  sendToRC(s, "state=true"); // eslint-disable-line no-undef
 };
 
 BrowserBot.prototype.resetPopups = function() {
