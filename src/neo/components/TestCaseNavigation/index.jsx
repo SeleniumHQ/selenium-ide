@@ -1,9 +1,13 @@
 import React from "react";
+import TestCaseProjectList from "../TestCaseProjectList";
 
 export default class TestCaseNavigation extends React.Component {
   render() {
     return (
-      <h3>Test Case</h3>
+      <aside>
+        <h3>Test Case</h3>
+        <TestCaseProjectList />
+      </aside>
     );
   }
 }
