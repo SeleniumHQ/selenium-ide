@@ -24,6 +24,19 @@
  *          events in different modes.
  */
 
+import { selenium } from "./commands-api";
+const bot = window.bot;
+const goog = window.goog;
+const core = window.core;
+
+// TODO: utils
+const objectExtend = window.objectExtend;
+const SeleniumError = window.SeleniumError;
+const browserVersion = window.browserVersion;
+
+// TODO: unknown
+const Components = window.Components;
+
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.
 let BrowserBot = function(topLevelApplicationWindow) {
