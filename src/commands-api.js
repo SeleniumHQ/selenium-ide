@@ -17,7 +17,7 @@
 import browser from "webextension-polyfill";
 import TargetSelector from "./targetSelector";
 import Selenium from "./selenium-api";
-const BrowserBot = window.BrowserBot;
+import BrowserBot from "./selenium-browserbot";
 const locatorBuilders = window.locatorBuilders;
 
 const selenium = new Selenium(BrowserBot.createForWindow(window));

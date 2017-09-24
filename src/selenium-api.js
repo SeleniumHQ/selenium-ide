@@ -18,8 +18,8 @@
 import browser from "webextension-polyfill";
 import { selenium } from "./commands-api";
 import { escapeHTML } from "./escape";
+import BrowserBot from "./selenium-browserbot";
 const bot = window.bot;
-const BrowserBot = window.BrowserBot;
 const goog = window.goog;
 const core = window.core;
 
