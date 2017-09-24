@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/polyfills.js", "assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/vendor/selenium-browserbot.js", "assets/escape.js", "assets/vendor/selenium-api.js", "assets/injector.js", "assets/record.js"],
+      "js": ["assets/polyfills.js", "assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/vendor/selenium-browserbot.js", "assets/escape.js", "assets/injector.js", "assets/record.js"],
       "match_about_blank": true,
       "all_frames": true
     }

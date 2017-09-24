@@ -23,7 +23,7 @@ export default {
     path: path.resolve(__dirname, "build/assets"),
     filename: "[name].js",
     publicPath: "/assets/",
-    libraryTarget: "window"
+    libraryTarget: "umd"
   },
   resolve: {
     extensions: [".js", ".jsx", ".json"]
