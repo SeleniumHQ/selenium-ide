@@ -59,114 +59,116 @@ const UIMap = window.UIMap;
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.
-let BrowserBot = function(topLevelApplicationWindow) {
-  this.topWindow = topLevelApplicationWindow;
-  this.topFrame = this.topWindow;
-  this.baseUrl = window.location.href;
+export default class BrowserBot {
+  constructor(topLevelApplicationWindow) {
+    this.topWindow = topLevelApplicationWindow;
+    this.topFrame = this.topWindow;
+    this.baseUrl = window.location.href;
 
-  //UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/05/26
-  this.count = 1;
+    //UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/05/26
+    this.count = 1;
 
-  // the buttonWindow is the Selenium window
-  // it contains the Run/Pause buttons... this should *not* be the AUT window
-  this.buttonWindow = window;
-  this.currentWindow = this.topWindow;
-  this.currentWindowName = null;
-  this.allowNativeXpath = true;
-  this.xpathEvaluator = new XPathEvaluator("ajaxslt"); // change to "javascript-xpath" for the newer, faster engine
+    // the buttonWindow is the Selenium window
+    // it contains the Run/Pause buttons... this should *not* be the AUT window
+    this.buttonWindow = window;
+    this.currentWindow = this.topWindow;
+    this.currentWindowName = null;
+    this.allowNativeXpath = true;
+    this.xpathEvaluator = new XPathEvaluator("ajaxslt"); // change to "javascript-xpath" for the newer, faster engine
 
-  // We need to know this in advance, in case the frame closes unexpectedly
-  this.isSubFrameSelected = false;
+    // We need to know this in advance, in case the frame closes unexpectedly
+    this.isSubFrameSelected = false;
 
-  this.altKeyDown = false;
-  this.controlKeyDown = false;
-  this.shiftKeyDown = false;
-  this.metaKeyDown = false;
+    this.altKeyDown = false;
+    this.controlKeyDown = false;
+    this.shiftKeyDown = false;
+    this.metaKeyDown = false;
 
-  this.modalDialogTest = null;
-  this.recordedAlerts = new Array();
-  this.recordedConfirmations = new Array();
-  this.recordedPrompts = new Array();
-  this.openedWindows = {};
-  //UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/05/26
-  this.openedWindows["win_ser_local"] = this.topWindow;
+    this.modalDialogTest = null;
+    this.recordedAlerts = new Array();
+    this.recordedConfirmations = new Array();
+    this.recordedPrompts = new Array();
+    this.openedWindows = {};
+    //UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/05/26
+    this.openedWindows["win_ser_local"] = this.topWindow;
 
-  this.nextConfirmResult = true;
-  this.nextPromptResult = "";
-  this.newPageLoaded = false;
-  this.pageLoadError = null;
+    this.nextConfirmResult = true;
+    this.nextPromptResult = "";
+    this.newPageLoaded = false;
+    this.pageLoadError = null;
 
-  this.ignoreResponseCode = false;
-  this.xhr = null;
-  this.abortXhr = false;
-  this.isXhrSent = false;
-  this.isXhrDone = false;
-  this.xhrOpenLocation = null;
-  this.xhrResponseCode = null;
-  this.xhrStatusText = null;
+    this.ignoreResponseCode = false;
+    this.xhr = null;
+    this.abortXhr = false;
+    this.isXhrSent = false;
+    this.isXhrDone = false;
+    this.xhrOpenLocation = null;
+    this.xhrResponseCode = null;
+    this.xhrStatusText = null;
 
-  this.shouldHighlightLocatedElement = false;
+    this.shouldHighlightLocatedElement = false;
 
-  this.uniqueId = "seleniumMarker" + new Date().getTime();
-  this.pollingForLoad = new Object();
-  this.permDeniedCount = new Object();
-  this.windowPollers = new Array();
-  // DGF for backwards compatibility
-  this.browserbot = this;
+    this.uniqueId = "seleniumMarker" + new Date().getTime();
+    this.pollingForLoad = new Object();
+    this.permDeniedCount = new Object();
+    this.windowPollers = new Array();
+    // DGF for backwards compatibility
+    this.browserbot = this;
 
-  let self = this;
+    let self = this;
 
-  objectExtend(this, PageBot.prototype);
-  this._registerAllLocatorFunctions();
+    objectExtend(this, PageBot.prototype);
+    this._registerAllLocatorFunctions();
 
-  this.recordPageLoad = function() {
-    self.newPageLoaded = true;
-  };
+    this.recordPageLoad = function() {
+      self.newPageLoaded = true;
+    };
 
-  this.isNewPageLoaded = function() {
-    let e;
+    this.isNewPageLoaded = function() {
+      let e;
 
-    if (this.pageLoadError) {
-      e = this.pageLoadError;
-      this.pageLoadError = null;
-      throw e;
-    }
-
-    if (self.ignoreResponseCode) {
-      return self.newPageLoaded;
-    } else {
-      if (self.isXhrSent && self.isXhrDone) {
-        if (!((self.xhrResponseCode >= 200 && self.xhrResponseCode <= 399) || self.xhrResponseCode == 0)) {
-          // TODO: for IE status like: 12002, 12007, ... provide corresponding statusText messages also.
-          e = "XHR ERROR: URL = " + self.xhrOpenLocation + " Response_Code = " + self.xhrResponseCode + " Error_Message = " + self.xhrStatusText;
-          self.abortXhr = false;
-          self.isXhrSent = false;
-          self.isXhrDone = false;
-          self.xhrResponseCode = null;
-          self.xhrStatusText = null;
-          throw new SeleniumError(e);
-        }
+      if (this.pageLoadError) {
+        e = this.pageLoadError;
+        this.pageLoadError = null;
+        throw e;
       }
-      return self.newPageLoaded && (self.isXhrSent ? (self.abortXhr || self.isXhrDone) : true);
-    }
-  };
 
-  this.setAllowNativeXPath = function(allow) {
-    this.xpathEvaluator.setAllowNativeXPath(allow);
-  };
+      if (self.ignoreResponseCode) {
+        return self.newPageLoaded;
+      } else {
+        if (self.isXhrSent && self.isXhrDone) {
+          if (!((self.xhrResponseCode >= 200 && self.xhrResponseCode <= 399) || self.xhrResponseCode == 0)) {
+            // TODO: for IE status like: 12002, 12007, ... provide corresponding statusText messages also.
+            e = "XHR ERROR: URL = " + self.xhrOpenLocation + " Response_Code = " + self.xhrResponseCode + " Error_Message = " + self.xhrStatusText;
+            self.abortXhr = false;
+            self.isXhrSent = false;
+            self.isXhrDone = false;
+            self.xhrResponseCode = null;
+            self.xhrStatusText = null;
+            throw new SeleniumError(e);
+          }
+        }
+        return self.newPageLoaded && (self.isXhrSent ? (self.abortXhr || self.isXhrDone) : true);
+      }
+    };
 
-  this.setIgnoreAttributesWithoutValue = function(ignore) {
-    this.xpathEvaluator.setIgnoreAttributesWithoutValue(ignore);
-  };
+    this.setAllowNativeXPath = function(allow) {
+      this.xpathEvaluator.setAllowNativeXPath(allow);
+    };
 
-  this.setXPathEngine = function(engineName) {
-    this.xpathEvaluator.setCurrentEngine(engineName);
-  };
+    this.setIgnoreAttributesWithoutValue = function(ignore) {
+      this.xpathEvaluator.setIgnoreAttributesWithoutValue(ignore);
+    };
 
-  this.getXPathEngine = function() {
-    return this.xpathEvaluator.getCurrentEngine();
-  };
-};
+    this.setXPathEngine = function(engineName) {
+      this.xpathEvaluator.setCurrentEngine(engineName);
+    };
+
+    this.getXPathEngine = function() {
+      return this.xpathEvaluator.getCurrentEngine();
+    };
+  }
+}
 
 // DGF PageBot exists for backwards compatibility with old user-extensions
 const PageBot = function() {};
@@ -1134,8 +1136,8 @@ BrowserBot.prototype.getReadyState = function(windowObject, currentDocument) {
   let rs = currentDocument.readyState;
   if (rs == null) {
     if ((this.buttonWindow != null && this.buttonWindow.document.readyState == null) // not proxy injection mode (and therefore buttonWindow isn't null)
-            ||
-            (top.document.readyState == null)) { // proxy injection mode (and therefore everything's in the top window, but buttonWindow doesn't exist)
+      ||
+      (top.document.readyState == null)) { // proxy injection mode (and therefore everything's in the top window, but buttonWindow doesn't exist)
       // uh oh!  we're probably on Firefox with no readyState extension installed!
       // We'll have to just take a guess as to when the document is loaded; this guess
       // will never be perfect. :-(
@@ -1287,7 +1289,7 @@ BrowserBot.prototype.getWindowNameByTitle = function(windowTitle) {
     try {
       // TODO implement Pattern Matching here
       if (!this._windowClosed(targetWindow) &&
-                targetWindow.document.title == windowTitle) {
+        targetWindow.document.title == windowTitle) {
         return windowName;
       }
     } catch (e) {
@@ -1412,8 +1414,8 @@ BrowserBot.prototype._registerAllLocatorFunctions = function() {
   }
 
   /**
-     * Find a locator based on a prefix.
-     */
+   * Find a locator based on a prefix.
+   */
   this.findElementBy = function(locatorType, locator, inDocument, inWindow) {
     let locatorFunction = this.locationStrategies[locatorType];
     if (!locatorFunction) {
@@ -1423,8 +1425,8 @@ BrowserBot.prototype._registerAllLocatorFunctions = function() {
   };
 
   /**
-     * The implicit locator, that is used when no prefix is supplied.
-     */
+   * The implicit locator, that is used when no prefix is supplied.
+   */
   this.locationStrategies["implicit"] = function(locator, inDocument, inWindow) {
     if (locator.startsWith("//")) {
       return this.locateElementByXPath(locator, inDocument, inWindow);
@@ -1713,7 +1715,7 @@ BrowserBot.prototype.locateElementByName = function(locator, document) {
             var filter = filters.shift();
             elements = this.selectElements(filter, elements, 'value');
         }
-    */
+        */
   let filter = "name=" + locator;
   elements = this.selectElements(filter, elements, "value");
 
@@ -1811,7 +1813,7 @@ BrowserBot.prototype.evaluateXPathCount = function(selector, inDocument) {
   let locator = parse_locator(selector);
   let opts = {};
   opts["namespaceResolver"] =
-        inDocument.createNSResolver ? inDocument.createNSResolver(inDocument.documentElement) : this._namespaceResolver;
+    inDocument.createNSResolver ? inDocument.createNSResolver(inDocument.documentElement) : this._namespaceResolver;
   if (locator.type == "xpath" || locator.type == "implicit") {
     return eval_xpath(locator.string, inDocument, opts).length;
   } else {
@@ -1960,13 +1962,13 @@ BrowserBot.prototype.submit = function(formElement) {
       let marker = "marker" + now;
       win[marker] = formElement;
       win.setTimeout("var actuallySubmit = " + marker + ".onsubmit();" +
-                "if (actuallySubmit) { " +
-                marker + ".submit(); " +
-                "if (" + marker + ".target && !/^_/.test(" + marker + ".target)) {" +
-                "window.open('', " + marker + ".target);" +
-                "}" +
-                "};" +
-                marker + "=null", 0);
+        "if (actuallySubmit) { " +
+        marker + ".submit(); " +
+        "if (" + marker + ".target && !/^_/.test(" + marker + ".target)) {" +
+        "window.open('', " + marker + ".target);" +
+        "}" +
+        "};" +
+        marker + "=null", 0);
       // pause for up to 2s while this command runs
       let terminationCondition = function() {
         return !win[marker];
@@ -2027,8 +2029,8 @@ BrowserBot.prototype.findClickableElement = function(e) {
   let tagName = e.tagName.toLowerCase();
   let type = e.type;
   if (e.hasAttribute("onclick") || e.hasAttribute("href") || e.hasAttribute("url") || tagName == "button" ||
-        (tagName == "input" &&
-            (type == "submit" || type == "button" || type == "image" || type == "radio" || type == "checkbox" || type == "reset"))) {
+    (tagName == "input" &&
+      (type == "submit" || type == "button" || type == "image" || type == "radio" || type == "checkbox" || type == "reset"))) {
     return e;
   } else {
     if (e.parentNode != null) {
@@ -2306,7 +2308,7 @@ BrowserBot.prototype.locateElementByUIElement.is_fuzzy_match = function(node, ta
   try {
     let isMatch = (
       (node == target) ||
-            ((node.nodeName == "A" || node.onclick) && is_ancestor(node, target))
+      ((node.nodeName == "A" || node.onclick) && is_ancestor(node, target))
     );
     return isMatch;
   } catch (e) {
@@ -2457,15 +2459,17 @@ BrowserBot.prototype.getAlertMessage = function() {
 /*****************************************************************/
 /* BROWSER-SPECIFIC FUNCTIONS ONLY AFTER THIS LINE */
 
-function MozillaBrowserBot(frame) {
-  BrowserBot.call(this, frame);
+export class MozillaBrowserBot extends BrowserBot {
+  constructor(frame) {
+    super(frame);
+  }
 }
-objectExtend(MozillaBrowserBot.prototype, BrowserBot.prototype);
 
-function KonquerorBrowserBot(frame) {
-  BrowserBot.call(this, frame);
+export class KonquerorBrowserBot extends BrowserBot {
+  constructor(frame) {
+    super(frame);
+  }
 }
-objectExtend(KonquerorBrowserBot.prototype, BrowserBot.prototype);
 
 KonquerorBrowserBot.prototype.setIFrameLocation = function(iframe, location) {
   // Window doesn't fire onload event when setting src to the current value,
@@ -2513,19 +2517,21 @@ KonquerorBrowserBot.prototype._isSameDocument = function(originalDocument, curre
   }
 };
 
-function SafariBrowserBot(frame) {
-  BrowserBot.call(this, frame);
+export class SafariBrowserBot extends BrowserBot {
+  constructor(frame) {
+    super(frame);
+  }
 }
-objectExtend(SafariBrowserBot.prototype, BrowserBot.prototype);
 
 SafariBrowserBot.prototype.setIFrameLocation = KonquerorBrowserBot.prototype.setIFrameLocation;
 SafariBrowserBot.prototype.setOpenLocation = KonquerorBrowserBot.prototype.setOpenLocation;
 
-
-function OperaBrowserBot(frame) {
-  BrowserBot.call(this, frame);
+export class OperaBrowserBot extends BrowserBot {
+  constructor(frame) {
+    super(frame);
+  }
 }
-objectExtend(OperaBrowserBot.prototype, BrowserBot.prototype);
+
 OperaBrowserBot.prototype.setIFrameLocation = function(iframe, location) {
   if (iframe.src == location) {
     iframe.src = location + "?reload";
@@ -2534,10 +2540,11 @@ OperaBrowserBot.prototype.setIFrameLocation = function(iframe, location) {
   }
 };
 
-function IEBrowserBot(frame) {
-  BrowserBot.call(this, frame);
+export class IEBrowserBot extends BrowserBot {
+  constructor(frame) {
+    super(frame);
+  }
 }
-objectExtend(IEBrowserBot.prototype, BrowserBot.prototype);
 
 IEBrowserBot.prototype._handleClosedSubFrame = function(testWindow, doNotModify) {
   if (this.proxyInjectionMode) {
@@ -2708,10 +2715,10 @@ SafariBrowserBot.prototype.modifyWindowToRecordPopUpDialogs = function(windowToM
 
   let originalOpen = windowToModify.open;
   /*
-     * Safari seems to be broken, so that when we manually trigger the onclick method
-     * of a button/href, any window.open calls aren't resolved relative to the app location.
-     * So here we replace the open() method with one that does resolve the url correctly.
-     */
+   * Safari seems to be broken, so that when we manually trigger the onclick method
+   * of a button/href, any window.open calls aren't resolved relative to the app location.
+   * So here we replace the open() method with one that does resolve the url correctly.
+   */
   windowToModify.open = function(url, windowName, windowFeatures, replaceFlag) {
 
     if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")) {
