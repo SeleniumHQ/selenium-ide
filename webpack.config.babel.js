@@ -17,7 +17,8 @@ export default {
     background: ["./background"],
     prompt: ["./prompt"],
     record: ["./record"],
-    escape: ["./escape"]
+    escape: ["./escape"],
+    neo: ["react-hot-loader/patch", "./neo/containers/Root"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -133,6 +134,25 @@ export default {
     new CopyWebpackPlugin([
       { from: "", to: "vendor" }
     ]),
+    // Generates an `index.html` file with the <script> injected.
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      inject: true,
+      template: path.resolve(__dirname, "src/neo/index.html"),
+      chunks: ["neo"],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      }
+    }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       filename: "panel.html",
