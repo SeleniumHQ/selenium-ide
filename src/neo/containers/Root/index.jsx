@@ -9,12 +9,12 @@ const render = Component => {
     <AppContainer>
       <Component />
     </AppContainer>,
-    document.getElementById('root')
+    document.getElementById("root")
   );
-}
+};
 
 render(Panel);
 
 if (module.hot) {
-  module.hot.accept('../Panel', () => { render(Panel) });
+  module.hot.accept("../Panel", () => { render(Panel); });
 }
