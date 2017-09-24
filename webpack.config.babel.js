@@ -71,7 +71,7 @@ export default {
           // in the main CSS file.
           {
             test: /\.css$/,
-            loader: ExtractTextPlugin.extract(
+            loader: isProduction ? ExtractTextPlugin.extract(
               {
                 fallback: "style-loader",
                 use: [
@@ -105,7 +105,35 @@ export default {
                   }
                 ]
               }
-            )
+            ) : [
+              require.resolve("style-loader"),
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  importLoaders: 1
+                }
+              },
+              {
+                loader: require.resolve("postcss-loader"),
+                options: {
+                  // Necessary for external CSS imports to work
+                  // https://github.com/facebookincubator/create-react-app/issues/2677
+                  ident: "postcss",
+                  plugins: () => [
+                    require("postcss-flexbugs-fixes"),
+                    autoprefixer({
+                      browsers: [
+                        ">1%",
+                        "last 4 versions",
+                        "Firefox ESR",
+                        "not ie < 9" // React doesn't support IE8 anyway
+                      ],
+                      flexbox: "no-2009"
+                    })
+                  ]
+                }
+              }
+            ]
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           // "file" loader makes sure assets end up in the `build` folder.
@@ -130,6 +158,7 @@ export default {
     ]
   },
   plugins: [
+    new webpack.NamedModulesPlugin(),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "", to: "vendor" }
