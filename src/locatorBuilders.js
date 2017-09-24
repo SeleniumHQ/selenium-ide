@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const MozillaBrowserBot = window.MozillaBrowserBot;
+import { MozillaBrowserBot } from "./selenium-browserbot";
 const core = window.core;
 const UIMap = window.UIMap;
 const exactMatchPattern = window.exactMatchPattern;
