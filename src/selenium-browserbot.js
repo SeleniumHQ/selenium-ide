@@ -669,7 +669,7 @@ BrowserBot.prototype.onXhrStateChange = function(method) {
         //LOG.info("onXhrStateChange(): HEAD ajax returned 501 or 405, retrying with GET");
         // handle 501 response code from servers that do not support 'HEAD' method.
         // send GET ajax request with range 0-1.
-        this.xhr = XmlHttp();
+        this.xhr = new XMLHttpRequest();
         this.xhr.onreadystatechange = this.onXhrStateChange.bind(this, "GET");
         this.xhr.open("GET", this.xhrOpenLocation, true);
         this.xhr.setRequestHeader("Range", "bytes:0-1");
@@ -697,7 +697,7 @@ BrowserBot.prototype.checkedOpen = function(target) {
   this.xhrResponseCode = null;
   this.xhrOpenLocation = url;
   try {
-    this.xhr = XmlHttp.create();
+    this.xhr = new XMLHttpRequest();
   } catch (ex) {
     //LOG.error("Your browser doesnt support Xml Http Request");
     return;
