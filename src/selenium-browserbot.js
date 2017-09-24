@@ -136,7 +136,7 @@ let BrowserBot = function(topLevelApplicationWindow) {
 };
 
 // DGF PageBot exists for backwards compatibility with old user-extensions
-var PageBot = function() {};
+const PageBot = function() {};
 
 BrowserBot.createForWindow = function(window, proxyInjectionMode) {
   let browserbot;
@@ -304,7 +304,7 @@ BrowserBot.prototype.triggerMouseEvent = function(element, eventType, canBubble,
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
 BrowserBot.prototype.triggerDragEvent = function(element, target) {
-  var getXpathOfElement = function(element) {
+  const getXpathOfElement = function(element) {
     if (element == null) {
       return "null";
     }
@@ -426,7 +426,8 @@ BrowserBot.prototype._modifyWindow = function(win) {
     for (let i = 0; i < win.frames.length; i++) {
       try {
         this._modifyWindow(win.frames[i]);
-      } catch (e) {} // we're just trying to be opportunistic; don't worry if this doesn't work out
+      } catch (e) {} // eslint-disable-line no-empty
+      // we're just trying to be opportunistic; don't worry if this doesn't work out
     }
   }
   return win;
@@ -442,8 +443,8 @@ BrowserBot.prototype.selectWindow = function(target) {
     this._selectWindowByWindowId(target);
     return;
   }
-  locatorType = result[1];
-  locatorValue = result[2];
+  let locatorType = result[1];
+  let locatorValue = result[2];
   if (locatorType == "title") {
     this._selectWindowByTitle(locatorValue);
   }
@@ -592,7 +593,7 @@ BrowserBot.prototype.doesThisFrameMatchFrameExpression = function(currentFrameSt
   try {
     t = Components.utils.evalInSandbox(currentFrameString + "." + target, mySandbox);
     //eval("t=" + currentFrameString + "." + target);
-  } catch (e) {}
+  } catch (e) {}// eslint-disable-line no-empty
   let autWindow = this.browserbot.getCurrentWindow();
   if (t != null) {
     try {
@@ -634,7 +635,7 @@ BrowserBot.prototype.doesThisFrameMatchFrameExpression = function(currentFrameSt
       if (element.contentWindow == autWindow) {
         return true;
       }
-    } catch (e) {}
+    } catch (e) {} // eslint-disable-line no-empty
   }
   return false;
 };
@@ -668,7 +669,7 @@ BrowserBot.prototype.onXhrStateChange = function(method) {
         //LOG.info("onXhrStateChange(): HEAD ajax returned 501 or 405, retrying with GET");
         // handle 501 response code from servers that do not support 'HEAD' method.
         // send GET ajax request with range 0-1.
-        this.xhr = XmlHttp.create();
+        this.xhr = XmlHttp();
         this.xhr.onreadystatechange = this.onXhrStateChange.bind(this, "GET");
         this.xhr.open("GET", this.xhrOpenLocation, true);
         this.xhr.setRequestHeader("Range", "bytes:0-1");
