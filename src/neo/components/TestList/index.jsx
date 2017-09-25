@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import Test from "../Test";
 import "./style.css";
 
 export default class TestList extends React.Component {
@@ -12,7 +13,9 @@ export default class TestList extends React.Component {
     return (
       <ul className={classNames("tests", {"active": !this.props.collapsed})}>
         {this.props.tests.map(test => (
-          <li key={test}>{test}</li>
+          <li key={test}>
+            <Test name={test} />
+          </li>
         ))}
       </ul>
     );

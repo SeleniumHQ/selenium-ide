@@ -2,6 +2,7 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 200ms linear;
+  list-style: none;
 }
 
 .tests.active {
