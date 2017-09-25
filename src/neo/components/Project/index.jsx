@@ -28,7 +28,8 @@ export default class Project extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
+    tests: PropTypes.array.isRequired
   };
   handleClick() {
     this.setState({
@@ -37,12 +38,14 @@ export default class Project extends React.Component {
   }
   render() {
     return (
-      <a href="#" className="project" onClick={this.handleClick}>
-        <ArrowProject isActive={this.state.isActive}>
-          <img src={folder} alt="project" />
-          <span className="title">{this.props.name}</span>
-        </ArrowProject>
-      </a>
+      <div>
+        <a href="#" className="project" onClick={this.handleClick}>
+          <ArrowProject isActive={this.state.isActive}>
+            <img src={folder} alt="project" />
+            <span className="title">{this.props.name}</span>
+          </ArrowProject>
+        </a>
+      </div>
     );
   }
 }
