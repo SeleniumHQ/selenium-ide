@@ -1,3 +1,12 @@
+.test {
+  display: block;
+  padding: 5px 8px;
+}
+
 .test > * {
   vertical-align: middle;
+}
+
+.test.selected {
+  background-color: #E3F2FF;
 }
