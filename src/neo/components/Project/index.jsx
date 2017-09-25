@@ -14,6 +14,7 @@ const ArrowProject = styled.span`
     display: inline-block;
     transform: ${props => props.isActive ? "rotate(0deg)" : "rotate(-90deg)"};
     transition: all 100ms linear;
+    vertical-align: sub;
   }
 `;
 
@@ -35,7 +36,7 @@ export default class Project extends React.Component {
   }
   render() {
     return (
-      <a href="#" onClick={this.handleClick}>
+      <a href="#" className="project" onClick={this.handleClick}>
         <ArrowProject isActive={this.state.isActive}>
           <span>{this.props.name}</span>
         </ArrowProject>
