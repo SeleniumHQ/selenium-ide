@@ -6,7 +6,7 @@ export default class Navigation extends React.Component {
     return (
       <aside>
         <h3>Test Case</h3>
-        <ProjectList />
+        <ProjectList projects = {[ "Project One", "Project Two", "Project Three", "Project Four" ]} />
       </aside>
     );
   }

@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Project from "../Project";
 
 export default class ProjectList extends React.Component {
   static propTypes = {
@@ -8,6 +9,11 @@ export default class ProjectList extends React.Component {
   render() {
     return (
       <ul>
+        {this.props.projects.map(project => (
+          <li>
+            <Project name = {project} />
+          </li>
+        ))}
       </ul>
     );
   }
