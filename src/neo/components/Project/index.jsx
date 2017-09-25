@@ -46,7 +46,7 @@ export default class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList tests={this.props.tests} />
+        <TestList collapsed={!this.state.isActive} tests={this.props.tests} />
       </div>
     );
   }
