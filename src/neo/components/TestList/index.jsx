@@ -8,6 +8,9 @@ export default class TestList extends React.Component {
   render() {
     return (
       <ul>
+        {this.props.tests.map(test => (
+          <li>{test}</li>
+        ))}
       </ul>
     );
   }

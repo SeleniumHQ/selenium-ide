@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import TestList from "../TestList";
 import arrow from "../../images/ic_arrow_down.svg";
 import folder from "../../images/ic_folder.svg";
 import "./style.css";
@@ -45,6 +46,7 @@ export default class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
+        <TestList tests={this.props.tests} />
       </div>
     );
   }
