@@ -11,7 +11,7 @@ export default class ProjectList extends React.Component {
       <ul>
         {this.props.projects.map(project => (
           <li>
-            <Project name = {project} />
+            <Project key = {project} name = {project} />
           </li>
         ))}
       </ul>
