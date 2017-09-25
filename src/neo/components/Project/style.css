@@ -6,3 +6,13 @@
 .project:visited {
   color: #505050;
 }
+
+.project .title {
+  padding: 0 12px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.project img {
+  vertical-align: middle;
+}

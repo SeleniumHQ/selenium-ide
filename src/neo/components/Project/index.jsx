@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import arrow from "../../images/ic_arrow_down.svg";
+import folder from "../../images/ic_folder.svg";
 import "./style.css";
 
 const ArrowProject = styled.span`
@@ -14,7 +15,7 @@ const ArrowProject = styled.span`
     display: inline-block;
     transform: ${props => props.isActive ? "rotate(0deg)" : "rotate(-90deg)"};
     transition: all 100ms linear;
-    vertical-align: sub;
+    vertical-align: middle;
   }
 `;
 
@@ -38,7 +39,8 @@ export default class Project extends React.Component {
     return (
       <a href="#" className="project" onClick={this.handleClick}>
         <ArrowProject isActive={this.state.isActive}>
-          <span>{this.props.name}</span>
+          <img src={folder} alt="project" />
+          <span className="title">{this.props.name}</span>
         </ArrowProject>
       </a>
     );
