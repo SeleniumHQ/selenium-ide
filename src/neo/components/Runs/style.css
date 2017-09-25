@@ -1,0 +1,15 @@
+.runs {
+  max-width: 160px;
+}
+
+.runs .right {
+  float: right;
+}
+
+.runs .left {
+  float: left;
+}
+
+.runs .failures {
+  color: #A62C26;
+}

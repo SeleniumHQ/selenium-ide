@@ -1,5 +1,6 @@
 import React from "react";
 import ProjectList from "../ProjectList";
+import Runs from "../Runs";
 
 const tests = [ "Test One", "Test Two", "Test Three", "Test Four" ];
 
@@ -24,6 +25,7 @@ export default class Navigation extends React.Component {
           name: "Project Four",
           tests: [...tests]
         }]} />
+        <Runs />
       </aside>
     );
   }
