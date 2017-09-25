@@ -9,7 +9,7 @@ export default class TestList extends React.Component {
     return (
       <ul>
         {this.props.tests.map(test => (
-          <li>{test}</li>
+          <li key={test}>{test}</li>
         ))}
       </ul>
     );
