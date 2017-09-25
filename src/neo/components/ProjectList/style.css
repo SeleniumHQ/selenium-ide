@@ -1,3 +1,8 @@
 .projects {
   list-style: none;
+  padding: 0;
+}
+
+.projects li {
+  margin: 20px 0;
 }
