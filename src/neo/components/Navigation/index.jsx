@@ -1,12 +1,12 @@
 import React from "react";
-import TestCaseProjectList from "../TestCaseProjectList";
+import ProjectList from "../ProjectList";
 
-export default class TestCaseNavigation extends React.Component {
+export default class Navigation extends React.Component {
   render() {
     return (
       <aside>
         <h3>Test Case</h3>
-        <TestCaseProjectList />
+        <ProjectList />
       </aside>
     );
   }
