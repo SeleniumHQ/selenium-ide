@@ -13,7 +13,7 @@ const ArrowProject = styled.span`
     background-color: ${props => props.isActive ? "#40A6FF" : "#505050"};
     display: inline-block;
     transform: ${props => props.isActive ? "rotate(0deg)" : "rotate(-90deg)"};
-    transition: transform 100ms linear;
+    transition: all 100ms linear;
   }
 `;
 
