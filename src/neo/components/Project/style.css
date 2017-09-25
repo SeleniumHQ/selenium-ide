@@ -1,12 +1,6 @@
 .project {
   display: block;
-  color: #505050;
-  text-decoration: none;
   padding: 7px 0;
-}
-
-.project:visited {
-  color: #505050;
 }
 
 .project .title {

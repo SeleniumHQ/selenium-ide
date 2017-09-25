@@ -2,3 +2,12 @@ body {
   font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial sans-serif !important;
   color: #505050;
 }
+
+a {
+  color: #505050;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #505050;
+}
