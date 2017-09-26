@@ -3,6 +3,7 @@
   overflow: hidden;
   transition: max-height 300ms linear;
   list-style: none;
+  padding: 0 0 0 35px;
 }
 
 .tests.active {
