@@ -1,11 +1,11 @@
 .tests {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 200ms linear;
+  transition: max-height 300ms linear;
   list-style: none;
 }
 
 .tests.active {
-  max-height: 1000px;
+  max-height: 500px;
   transition: max-height 400ms linear;
 }
