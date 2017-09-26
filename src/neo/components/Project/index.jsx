@@ -2,19 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import TestList from "../TestList";
-import arrow from "../../images/ic_arrow_down.svg";
+import tick from "../../images/ic_tick.svg";
 import folder from "../../images/ic_folder.svg";
 import "./style.css";
 
 const ArrowProject = styled.span`
   &:before {
-    mask-image: url(${arrow});
+    mask-image: url(${tick});
     content: " ";
-    width: 24px;
-    height: 24px;
+    width: 9px;
+    height: 9px;
     background-color: ${props => props.isActive ? "#40A6FF" : "#505050"};
     display: inline-block;
-    transform: ${props => props.isActive ? "rotate(0deg)" : "rotate(-90deg)"};
+    transform: ${props => props.isActive ? "rotate(90deg)" : "rotate(0deg)"};
     transition: all 100ms linear;
     vertical-align: middle;
   }
