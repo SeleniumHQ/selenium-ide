@@ -30,7 +30,9 @@ export default class Project extends React.Component {
   }
   static propTypes = {
     name: PropTypes.string.isRequired,
-    tests: PropTypes.array.isRequired
+    tests: PropTypes.array.isRequired,
+    selectedTest: PropTypes.string,
+    selectTest: PropTypes.func.isRequired
   };
   handleClick() {
     this.setState({
@@ -46,7 +48,7 @@ export default class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} tests={this.props.tests} />
+        <TestList collapsed={!this.state.isActive} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
       </div>
     );
   }
