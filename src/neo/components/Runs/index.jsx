@@ -10,6 +10,7 @@ export default class Runs extends React.Component {
         <div>
           <span className="left">Runs: 18</span>
           <span className="right">Failures: <span className="failures">2</span></span>
+          <div className="clear"></div>
         </div>
       </div>
     );

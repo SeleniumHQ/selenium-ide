@@ -12,3 +12,7 @@ a {
 a:visited {
   color: #505050;
 }
+
+.clear {
+  clear: both;
+}
