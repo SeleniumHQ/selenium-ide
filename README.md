@@ -17,6 +17,7 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 ## Building
 
 - Install the dependencies  
+```peru sync```  
 ```yarn```
 - Build the extension  
 ```yarn build```
