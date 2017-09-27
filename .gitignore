@@ -4,4 +4,6 @@ _MACOSX/
 .DS_Store
 build
 src/selenium
+src/atoms
+src/webdriver
 .peru
