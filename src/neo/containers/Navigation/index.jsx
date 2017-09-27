@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ProjectList from "../ProjectList";
-import Runs from "../Runs";
+import ProjectList from "../../components/ProjectList";
+import Runs from "../../components/Runs";
 import "./style.css";
 
 export default class Navigation extends React.Component {
