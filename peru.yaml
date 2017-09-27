@@ -1,0 +1,5 @@
+imports:
+  selenium: src/selenium
+
+git module selenium:
+  url: https://github.com/SeleniumHQ/selenium

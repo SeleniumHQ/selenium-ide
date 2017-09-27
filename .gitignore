@@ -3,3 +3,5 @@ node_modules
 _MACOSX/
 .DS_Store
 build
+src/selenium
+.peru
