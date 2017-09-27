@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ProjectList from "../ProjectList";
 import Runs from "../Runs";
+import "./style.css";
 
 export default class Navigation extends React.Component {
   static propTypes = {
@@ -11,7 +12,9 @@ export default class Navigation extends React.Component {
   };
   render() {
     return (
-      <aside>
+      <aside className="test-cases" style={{
+        maxWidth: "200px"
+      }}>
         <h3>Test Case</h3>
         <ProjectList projects={this.props.projects} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
         <Runs />
