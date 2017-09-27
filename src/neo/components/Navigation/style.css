@@ -2,3 +2,13 @@ aside.test-cases {
   padding-right: 2px;
   border-right: 1px solid #CECECE;
 }
+
+aside.test-cases h3 {
+  padding: 15px;
+  margin: 0;
+}
+
+aside.test-cases ul {
+  padding-left: 10px;
+  margin: 0;
+}
