@@ -19,7 +19,7 @@ export default {
     prompt: ["./prompt"],
     record: ["./record"],
     escape: ["./escape"],*/
-    atoms: ["./selenium/javascript/atoms/bot", "./selenium/javascript/atoms/error", "./selenium/javascript/atoms/response"]
+    atoms: ["./atoms/bot", "./atoms/error", "./atoms/response"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
