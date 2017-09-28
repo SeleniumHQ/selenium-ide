@@ -17,9 +17,9 @@ export default {
     injector: ["./prompt-injector"],
     background: ["./background"],
     prompt: ["./prompt"],
-    record: ["./record"],*/
-    escape: ["./escape"],
-    atoms: ["./selenium/javascript/atoms/response"]
+    record: ["./record"],
+    escape: ["./escape"],*/
+    atoms: ["./selenium/javascript/atoms/bot", "./selenium/javascript/atoms/error", "./selenium/javascript/atoms/response"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -59,7 +59,15 @@ export default {
                 compact: true
               }
             },
-              "closure-compiler-web-loader"]
+            {
+              loader: "closure-compiler-loader",
+              options: {
+                languageIn: "ECMASCRIPT6",
+                languageOut: "ECMASCRIPT5",
+                compilationLevel: "SIMPLE",
+                warningLevel: "VERBOSE"
+              }
+            }]
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.

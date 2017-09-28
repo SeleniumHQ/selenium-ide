@@ -1090,9 +1090,9 @@ cloneable-readable@^1.0.0:
     process-nextick-args "^1.0.6"
     through2 "^2.0.1"
 
-closure-compiler-web-loader@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/closure-compiler-web-loader/-/closure-compiler-web-loader-0.0.2.tgz#1d1bf945e6df63d7f08b8b3575afa8c9c6738aaf"
+closure-compiler-loader@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/closure-compiler-loader/-/closure-compiler-loader-0.0.1.tgz#5fc16478347f8027a085b68911e80874e4ddbab5"
 
 co@^4.6.0:
   version "4.6.0"
