@@ -14,6 +14,14 @@ As this is an early stage and many things aren't clear, it's quite challenging t
 
 We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was kind enough to let us use their work.
 
+## Prerequisites
+
+- `git` has to be in `$PATH` for the installation to pass
+
+- [yarn](https://yarnpkg.com/en/docs/install) `npm` might work as well (untested)
+
+- [peru](https://github.com/buildinspace/peru#installation)
+
 ## Building
 
 - Install the dependencies  
