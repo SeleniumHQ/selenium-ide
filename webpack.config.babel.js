@@ -1,5 +1,6 @@
 import path from "path";
 import webpack from "webpack";
+import { webpack as ClosureCompiler } from "google-closure-compiler-js";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
@@ -11,13 +12,14 @@ export default {
   context: path.resolve(__dirname, "src"),
   devtool: isProduction ? "source-map" : false,
   entry: {
-    polyfills: ["./setup"],
+    /*    polyfills: ["./setup"],
     panel: ["./setupPanel"],
     injector: ["./prompt-injector"],
     background: ["./background"],
     prompt: ["./prompt"],
-    record: ["./record"],
-    escape: ["./escape"]
+    record: ["./record"],*/
+    escape: ["./escape"],
+    atoms: ["./selenium/javascript/atoms/response"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -51,10 +53,13 @@ export default {
             include: [
               path.resolve(__dirname, "src")
             ],
-            loader: "babel-loader",
-            options: {
-              compact: true
-            }
+            use: [{ 
+              loader: "babel-loader",
+              options: {
+                compact: true
+              }
+            },
+              "closure-compiler-web-loader"]
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
@@ -129,9 +134,19 @@ export default {
     ]
   },
   plugins: [
+    // Compile whatever possible using Closure Compiler
+    /*new ClosureCompiler({
+      options: {
+        languageIn: "ECMASCRIPT6",
+        languageOut: "ECMASCRIPT5",
+        compilationLevel: "ADVANCED",
+        processCommonJsModules: true,
+        warningLevel: "VERBOSE"
+      }
+    }),*/
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
-      { from: "", to: "vendor" }
+      { from: "", to: "vendor", ignore: ["selenium/*"] }
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
