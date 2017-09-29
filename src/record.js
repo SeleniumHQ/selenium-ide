@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { Recorder, recorder, record } from "./record-api";
-import LocatorBuilders from "./LocatorBuilders";
+import LocatorBuilders from "./locatorBuilders";
 
 const getText = window.getText;
 const normalizeSpaces = window.normalizeSpaces;
