@@ -26,18 +26,18 @@ export default class Panel extends React.Component {
         name: "Project One",
         tests: [...tests]
       },
-        {
-          name: "Project Two",
-          tests: [...tests]
-        },
-        {
-          name: "Project Three",
-          tests: [...tests]
-        },
-        {
-          name: "Project Four",
-          tests: [...tests]
-        }]
+      {
+        name: "Project Two",
+        tests: [...tests]
+      },
+      {
+        name: "Project Three",
+        tests: [...tests]
+      },
+      {
+        name: "Project Four",
+        tests: [...tests]
+      }]
     };
     this.selectTest = this.selectTest.bind(this);
   }
