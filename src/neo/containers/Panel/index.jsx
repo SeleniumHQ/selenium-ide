@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Navigation from "../Navigation";
+import Editor from "../Editor";
 import "../../styles/app.css";
 
 const tests = [
@@ -45,7 +46,17 @@ export default class Panel extends React.Component {
   }
   render() {
     return (
-      <Navigation projects={this.state.projects} selectedTest={this.state.selectedTest} selectTest={this.selectTest} />
+      <div>
+        <div style={{
+          float: "left"
+        }}>
+          <Navigation projects={this.state.projects} selectedTest={this.state.selectedTest} selectTest={this.selectTest} />
+        </div>
+        <Editor />
+        <div style={{
+          clear: "left"
+        }}></div>
+      </div>
     );
   }
 }
