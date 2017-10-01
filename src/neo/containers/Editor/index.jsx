@@ -1,9 +1,10 @@
 import React from "react";
+import ToolBar from "../../components/ToolBar";
 
 export default class Editor extends React.Component {
   render() {
     return (
-      <h1>I am an Editor</h1>
+      <ToolBar />
     );
   }
 }
