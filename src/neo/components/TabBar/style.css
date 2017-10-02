@@ -1,0 +1,22 @@
+.tabbar {
+  background-color: #F3F3F3;
+}
+
+.tabbar > * {
+  display: inline-block;
+}
+
+.tabbar a {
+  display: block;
+  padding: 10px 10px 8px 10px;
+  border-bottom: 2px #F3F3F3 solid;
+}
+
+.tabbar a:hover {
+  background-color: #E5E5E5;
+  border-bottom: 2px #E5E5E5 solid;
+}
+
+.tabbar a.active {
+  border-bottom: 2px #40A6FF solid;
+}
