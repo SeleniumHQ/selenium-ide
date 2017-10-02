@@ -1,0 +1,12 @@
+.omnibar {
+  height: 42px;
+  line-height: 42px;
+  background-color: #F3F3F3;
+  border-top: 1px solid #979797;
+  border-bottom: 1px solid #CECECE;
+}
+
+.omnibar > span {
+  vertical-align: middle;
+  padding-left: 15px;
+}

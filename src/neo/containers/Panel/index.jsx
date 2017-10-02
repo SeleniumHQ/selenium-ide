@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import OmniBar from "../../components/OmniBar";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
 import "../../styles/app.css";
@@ -47,6 +47,7 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div>
+        <OmniBar />
         <div style={{
           float: "left"
         }}>

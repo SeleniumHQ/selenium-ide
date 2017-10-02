@@ -1,0 +1,12 @@
+import React from "react";
+import "./style.css";
+
+export default class OmniBar extends React.Component {
+  render() {
+    return (
+      <nav className="omnibar">
+        <span>Base URL</span>
+      </nav>
+    );
+  }
+}
