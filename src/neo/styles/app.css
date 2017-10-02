@@ -2,6 +2,7 @@ body {
   font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial sans-serif !important;
   color: #505050;
   margin: 0;
+  max-width: 480px;
 }
 
 h1, h2, h3 {
