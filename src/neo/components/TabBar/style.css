@@ -1,5 +1,6 @@
 .tabbar {
   background-color: #F3F3F3;
+  padding: 0 5px;
 }
 
 .tabbar > * {
