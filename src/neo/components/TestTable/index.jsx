@@ -12,6 +12,8 @@ export default class TestTable extends React.Component {
             <th>Value</th>
           </tr>
         </thead>
+        <tbody>
+        </tbody>
       </table>
     );
   }

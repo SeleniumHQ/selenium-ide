@@ -2,6 +2,7 @@
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
+  border-bottom: 1px #CECECE solid;
 }
 
 .test-table th {
@@ -21,4 +22,9 @@
   margin: auto;
   bottom: 0;
   top: 0;
+}
+
+.test-table tbody {
+  display: block;
+  min-height: 400px;
 }
