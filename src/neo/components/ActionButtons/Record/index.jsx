@@ -7,9 +7,10 @@ const RecordButton = ActionButton.extend`
   margin: 10px;
   background-color: #EE4841;
   border-style: none;
-  border-radius: 50%;
+  border-radius: ${props => props.isActive ? "25%" : "50%"};
   position: relative;
   overflow: hidden;
+  transition: border-radius 250ms ease-out;
 
   &:hover {
     background-color: #F56660;
