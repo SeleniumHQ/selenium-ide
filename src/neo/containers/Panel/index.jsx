@@ -2,7 +2,9 @@ import React from "react";
 import OmniBar from "../../components/OmniBar";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
+import Console from "../Console";
 import "../../styles/app.css";
+import "../../styles/heights.css";
 
 const tests = [
   { id: "1",
@@ -57,6 +59,7 @@ export default class Panel extends React.Component {
         <div style={{
           clear: "left"
         }}></div>
+        <Console />
       </div>
     );
   }

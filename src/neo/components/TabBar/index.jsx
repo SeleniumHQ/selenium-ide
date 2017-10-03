@@ -35,7 +35,7 @@ export default class TabBar extends React.Component {
           ))}
         </ul>
         <div className="underline" style={{
-          transform: `translateX(${this.state.activeTab.index * 80}px)`
+          transform: `translateX(${this.state.activeTab.index * 110}px)`
         }}></div>
       </div>
     );
