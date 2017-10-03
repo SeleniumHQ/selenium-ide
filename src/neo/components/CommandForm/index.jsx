@@ -1,16 +1,15 @@
 import React from "react";
+import Input from "../FormInput";
+import "./style.css";
 
 export default class CommandForm extends React.Component {
   render() {
     return (
-      <div>
+      <div className="command-form">
         <form>
-          <label htmlFor="command">Command</label>
-          <input type="text" id="command" name="command" />
-          <label htmlFor="target">Target</label>
-          <input type="text" id="target" name="target" />
-          <label htmlFor="value">Value</label>
-          <input type="text" id="value" name="value" />
+          <Input id="command" name="command" label="Command" />
+          <Input id="target" name="target" label="Target" />
+          <Input id="value" name="value" label="Value" />
         </form>
       </div>
     );
