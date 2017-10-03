@@ -24,8 +24,8 @@ function openPage() {
   const getSideexWindowInfo = browser.windows.create({
     url: browser.extension.getURL("assets/index.html"),
     type: "popup",
-    height: 730,
-    width: 480
+    height: 930,
+    width: 600
   });
 
   Promise.all([getContentWindowInfo, getSideexWindowInfo])
