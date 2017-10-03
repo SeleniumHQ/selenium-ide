@@ -1,19 +1,8 @@
 .url input {
-  border: 1px #BEBEBE solid;
-  border-radius: 4px;
-  font-size: 14px;
-  line-height: 17px;
-  padding: 5px 15px;
   vertical-align: middle;
   margin-left: 10px;
   width: calc(100% - 155px);
 }
-
-.url input:focus {
-  border-color: #40A6FF;
-  outline: 0;
-}
-
 
 .url label {
   vertical-align: middle;
