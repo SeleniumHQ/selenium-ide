@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import "./style.css";
 
 export default class FormInput extends React.Component {
   static propTypes = {
@@ -11,7 +12,7 @@ export default class FormInput extends React.Component {
   };
   render() {
     return (
-      <div>
+      <div className="form-input">
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input {...this.props} />
       </div>
