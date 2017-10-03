@@ -1,0 +1,24 @@
+.test-table {
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+}
+
+.test-table th {
+  position: relative;
+  border-bottom: 1px #CECECE solid;
+  border-collapse: separate;
+  padding: 10px 0;
+}
+
+.test-table th:not(:last-child):after {
+  content: "";
+  height: 10px;
+  width: 1px;
+  background-color: #CECECE;
+  position: absolute;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+  top: 0;
+}
