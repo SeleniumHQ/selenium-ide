@@ -8,3 +8,8 @@ input.url {
   margin-left: 10px;
   width: calc(100% - 155px);
 }
+
+input.url:focus {
+  border-color: #40A6FF;
+  outline: 0;
+}
