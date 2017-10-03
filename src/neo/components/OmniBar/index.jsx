@@ -1,4 +1,5 @@
 import React from "react";
+import UrlBar from "../UrlBar";
 import "./style.css";
 
 export default class OmniBar extends React.Component {
@@ -6,6 +7,7 @@ export default class OmniBar extends React.Component {
     return (
       <nav className="omnibar">
         <span>Base URL</span>
+        <UrlBar />
       </nav>
     );
   }
