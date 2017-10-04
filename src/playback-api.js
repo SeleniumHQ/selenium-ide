@@ -59,9 +59,11 @@ window.onload = function() {
         if (isRecording) {
             notificationCount = 0;
             recordButton.childNodes[1].textContent = "Stop";
+            recordButton.childNodes[0].classList.add("recording");
         }
         else {
             recordButton.childNodes[1].textContent = "Record";
+            recordButton.childNodes[0].classList.remove("recording");
         }
     })
     playButton.addEventListener("click", function() {

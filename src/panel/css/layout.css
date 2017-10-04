@@ -1257,6 +1257,28 @@ input[type=submit].btn_post_message:hover {
     font-size: 0;
 }
 
+.sub_btn#playSuites {
+    visibility: hidden!important;
+    width: 0!important;
+    height: 0!important;
+}
+
+.sub_btn#resume .si-pause:before {
+    color: #00c5b4;
+}
+
+.sub_btn#record {
+    color: red;
+}
+
+.sub_btn .recording {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
+
 .btn_pr {}
 
 .btn_sf {
