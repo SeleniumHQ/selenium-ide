@@ -1253,6 +1253,10 @@ input[type=submit].btn_post_message:hover {
     transition: 0.1s;
 }
 
+.sub_btn span.hidden-text {
+    font-size: 0;
+}
+
 .btn_pr {}
 
 .btn_sf {
