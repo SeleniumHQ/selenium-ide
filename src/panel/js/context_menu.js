@@ -19,7 +19,7 @@
 $(document).bind("contextmenu", function(event) {
 
     $(".menu").css("left", event.pageX);
-    $(".menu").css("top", event.pageY);
+    $(".menu").css("top", event.pageY + 25);
 
     if (event.target.id == "testCase-container") {
         event.preventDefault();

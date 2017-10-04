@@ -1238,11 +1238,10 @@ input[type=submit].btn_post_message:hover {
 .sub_btn {
     padding-right: 2%;
     padding-left: 2%;
-    border-radius: 20px;
-    background: #D0D1D4;
     cursor: pointer;
-    text-shadow: 0 1px 0 #fff;
-    border: 1px solid #9c9c9c;
+    border: none;
+    background: none;
+    outline: 0;
     font-size: 14px;
     margin-right: 0.5%;
     margin-left: 0.6%;
@@ -1250,12 +1249,8 @@ input[type=submit].btn_post_message:hover {
 }
 
 .sub_btn:not([disabled]):hover {
-    background: #30B0C8;
-    color: #fff;
-    text-shadow: none;
-    border: none;
-    transition: 0.5s;
-    border: 1px solid #30B0C8;
+    color: #00c5b4;
+    transition: 0.1s;
 }
 
 .btn_pr {}
@@ -1306,7 +1301,7 @@ button.active {
 }
 
 .fixed {
-    top: 110px;
+    top: 54px;
     position: fixed;
     width: auto;
     z-index: 2;
