@@ -968,14 +968,18 @@ input[type=submit].btn_post_message:hover {
     display: block;
     float: left;
     width: 75px;
-    line-height: 16px;
-    text-shadow: 0 1px 0 #fff;
-    font-weight: bold;
+    line-height: 18px;
+    font-weight: normal;
     margin-top: 5px;
     margin-right: 0;
     margin-left: 0;
     margin-bottom: 5px;
-    text-transform: uppercase;
+    color: #606060;
+}
+
+#command-toolbar input:focus {
+    outline: none !important;
+    border:1px solid #00c5b4;
 }
 
 #command-toolbar input::-webkit-calendar-picker-indicator {
@@ -1229,7 +1233,7 @@ input[type=submit].btn_post_message:hover {
     outline: 0;
 }
 
-.sub_btn:not([disabled]):hover {
+.sub_btn:not([disabled]):hover .si:before {
     color: #00c5b4;
     transition: 0.1s;
 }
