@@ -42,20 +42,6 @@
   height: calc(100% - 72px);
 }
 
-/* DROPDOWN */
-.w3-dropdown-content#command-dropdown, .w3-dropdown-content#target-dropdown {
-  margin-top: 4px;
-  border-radius: 3px;
-}
-
-#command-.fa.fa-chevron-down {
-  margin: 9px 5px;
-}
-
-#target-.fa.fa-chevron-down {
-  margin-left: 4px;
-}
-
 /* TEXT */
 #main h3 {
   color: #505050;
@@ -115,6 +101,7 @@ input {
 }
 
 .command-row {
+  position: relative;
   margin-top: 10px;
 }
 
@@ -125,6 +112,25 @@ input {
 input:focus {
   border-color: #40A6FF;
   outline: 0;
+}
+
+/* DROPDOWN */
+.w3-dropdown-content#command-dropdown, .w3-dropdown-content#target-dropdown {
+  margin-top: 30px;
+  border-radius: 3px;
+  z-index: 1000;
+}
+
+#command-.fa.fa-chevron-down {
+  position: absolute;
+  left: 325px;
+  margin: 9px 5px;
+}
+
+#target-.fa.fa-chevron-down {
+  position: absolute;
+  margin: 9px 5px;
+  left: 240px;
 }
 
 /* RECORD BUTTON */
