@@ -16,7 +16,7 @@
  */
 
 import browser from "webextension-polyfill";
-import selenium from "./commands-api";
+import { selenium } from "./commands-api";
 
 let contentSideexTabId = -1;
 let frameLocation = "";

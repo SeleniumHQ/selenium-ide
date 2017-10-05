@@ -20,7 +20,7 @@ import Selenium from "./selenium-api";
 import BrowserBot from "./selenium-browserbot";
 import { locatorBuilders } from "./record";
 
-const selenium = new Selenium(BrowserBot.createForWindow(window));
+export const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;
 
 function doCommands(request, sender, sendResponse) {
