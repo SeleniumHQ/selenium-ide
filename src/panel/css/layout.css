@@ -479,6 +479,7 @@ section#main {
 
 #result-container {
     height: 70px;
+    border-top-color: white;
 }
 
 #command-toolbar {
@@ -621,12 +622,14 @@ section#main {
 
 .tablesorter thead tr {
     height: 39px;
-    background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
     table-layout: fixed;
     text-align: left;
     text-indent: 6px;
 }
 
+.tablesorter thead tr th {
+    border-bottom: 1px solid silver;
+}
 .tablesorter .border {
     position: relative;
     float: right;
@@ -1111,6 +1114,7 @@ input[type=submit].btn_post_message:hover {
 .submit_link {
     margin: 0;
     height: 33px;
+    border-bottom: 1px silver solid;
 }
 
 .submit_link select {
