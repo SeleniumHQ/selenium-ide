@@ -1262,13 +1262,6 @@ input[type=submit].btn_post_message:hover {
 .sub_btn .fa {
     font-size: 18px;
 }
-.sub_btn#record {
-    color: red;
-}
-
-.sub_btn .recording {
-    animation: blinker 1s linear infinite;
-}
 
 @keyframes blinker {
     50% { opacity: 0; }

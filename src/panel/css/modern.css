@@ -116,9 +116,18 @@ input:focus {
 /* RECORD BUTTON */
 .sub_btn#record {
   float: right;
-  margin-top: 5px;
+  margin-top: 7px;
+  color: red;
 }
 
+.sub_btn .recording {
+  animation: blinker 1s linear infinite;
+}
+
+/* hack to align buttons */
+.sub_btn#playSuite, .sub_btn#playback, .sub_btn#pause, .sub_btn#resume {
+  vertical-align: sub;
+}
 /* CLEAR BUTTON */
 ul.tabs {
   border-width: 0;
