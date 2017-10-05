@@ -479,6 +479,7 @@ section#main {
 
 #result-container {
     height: 70px;
+    border-top-color: white;
 }
 
 #command-toolbar {
