@@ -23,11 +23,13 @@
 }
 
 .module_right {
+  height: calc(100% - 13px - 25%);
   width: 30%;
   box-sizing: border-box;
 }
 
 .module.width_3_quarter {
+  height: calc(100% - 13px - 25%);
   width: 70%;
   box-sizing: border-box;
   border-bottom-width: 0;
@@ -67,6 +69,7 @@ label {
 
 /* TABLE */
 .case_hight {
+  height: calc(100% - 155px);
   border-bottom-color: #CECECE;
 }
 
