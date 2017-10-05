@@ -621,7 +621,7 @@ section#main {
 }
 
 .tablesorter thead tr {
-    height: 39px;
+    height: 33px;
     table-layout: fixed;
     text-align: left;
     text-indent: 6px;
@@ -1366,4 +1366,9 @@ input#command-command, input#command-value {
 
 input#command-target {
     width: 159px;
+}
+
+#testCase-grid i.si {
+    font-size: 19px;
+    vertical-align: sub;
 }

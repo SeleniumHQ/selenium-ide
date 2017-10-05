@@ -270,13 +270,16 @@ function addTestCase(title, id) {
 }
 
 function addTestSuite(title, id) {
+    var iconEl = document.createElement("span");
+    iconEl.innerHTML = "<i class=\"si si-folder\"></i>";
     var text = document.createElement("strong");
     text.innerHTML = escapeHTML(title);
+    iconEl.appendChild(text);
     var div = document.createElement("div");
     div.setAttribute("id", id);
     div.setAttribute("contextmenu", "menu" + id);
     div.setAttribute("class", "message");
-    div.appendChild(text);
+    div.appendChild(iconEl);
 
     var s_suite = getSelectedSuite();
     if (s_suite) {
