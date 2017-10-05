@@ -623,7 +623,7 @@ section#main {
 .tablesorter thead tr {
     height: 33px;
     table-layout: fixed;
-    text-align: left;
+    text-align: center;
     text-indent: 6px;
 }
 
