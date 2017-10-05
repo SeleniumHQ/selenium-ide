@@ -1359,3 +1359,11 @@ button.active {
     float: right;
     margin-right: 30px;
 }
+
+input#command-command, input#command-value {
+    width: 250px;
+}
+
+input#command-target {
+    width: 159px;
+}
