@@ -81,6 +81,10 @@ label {
 }
 
 /* TABLE */
+.header {
+  text-align: center;
+}
+
 .case_hight {
   height: calc(100% - 155px);
   border-bottom-color: #CECECE;
@@ -106,6 +110,12 @@ input {
 input:focus {
   border-color: #40A6FF;
   outline: 0;
+}
+
+/* RECORD BUTTON */
+.sub_btn#record {
+  float: right;
+  margin-top: 5px;
 }
 
 /* CLEAR BUTTON */
