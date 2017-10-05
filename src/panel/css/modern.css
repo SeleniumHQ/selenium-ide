@@ -19,7 +19,8 @@
 
 .module.width_full {
   margin-top: 0;
-  height: 40%;
+  height: 25%;
+  margin-left: 5px;
 }
 
 .module_right {

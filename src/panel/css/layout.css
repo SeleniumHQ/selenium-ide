@@ -442,7 +442,7 @@ section#main {
     width: 100%;
     background: url(../images/sidebar_shadow.png) repeat-y left top;
     float: left;
-    height: calc(100% - 30px);
+    height: 100%;
 }
 
 #main h3 {
@@ -469,7 +469,7 @@ section#main {
     margin-right: 15px;
     float: left;
     margin-left: 15px;
-    height: calc(100% - 51px);
+    height: 100%;
 }
 
 #middle-container {
@@ -535,7 +535,7 @@ section#main {
 /* Module Widths */
 
 .width_full {
-    width: 100%;
+    width: calc(100% - 10px);
     margin-top: 13px;
     height: 33%;
 }
