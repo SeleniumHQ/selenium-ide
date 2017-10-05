@@ -18,7 +18,7 @@ import browser from "webextension-polyfill";
 import TargetSelector from "./targetSelector";
 import Selenium from "./selenium-api";
 import BrowserBot from "./selenium-browserbot";
-const locatorBuilders = window.locatorBuilders;
+import { locatorBuilders } from "./record";
 
 const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;

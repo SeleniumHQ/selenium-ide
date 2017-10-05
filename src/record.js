@@ -5,7 +5,7 @@ import LocatorBuilders from "./locatorBuilders";
 const getText = window.getText;
 const normalizeSpaces = window.normalizeSpaces;
 
-const locatorBuilders = new LocatorBuilders(window);
+export const locatorBuilders = new LocatorBuilders(window);
 
 let preventClickTwice = false;
 Recorder.addEventHandler("clickAt", "click", function(event) {
