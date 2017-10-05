@@ -62,25 +62,6 @@
         </ul>
     </div>
     <section id="main" class="column">
-        <div id="toolbar-container" class="submit_link">
-            <!-- hidden, because it has default style -->
-            <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display: none"></input>
-            <input id="load-testSuite-show" type="button" value="OpenSuite" style="display: none"></input>
-            <button id="save-testSuite" style="display: none">SaveSuite</button>
-            <button id="close-testSuite" style="display: none">CloseSuite</button>
-            <button id="add-testSuite" style="display: none">+Suite</button>
-            <button id="add-testCase" style="display: none">+Case</button>
-            <button id="delete-testCase" style="display: none">-Case</button>
-            <a download="info.html" id="downloadlink" style="display: none">Download</a>
-            <button id="playSuites" class="sub_btn" style="width: 21%"><i class="si si-play-all" aria-hidden="true"></i><span class="hidden-text"> PlayAllSuites</span></button>
-            <button id="playSuite" class="sub_btn" style="width: 21%"><i class="si si-play-all" aria-hidden="true"></i><span class="hidden-text"> PlayThisSuite</span></button>
-            <button id="playback" class="sub_btn" style="width: 20%"><i class="si si-play-single" aria-hidden="true"></i><span class="hidden-text"> PlayThisCase</span></button>
-            <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-square-o" aria-hidden="true"></i><span class="hidden-text"> Stop</span></button>
-            <button id="pause" class="sub_btn btn_pr" style="width: 15.5%"><i class="si si-pause" aria-hidden="true"></i><span class="hidden-text"> Pause</span></button>
-            <button id="resume" class="sub_btn btn_pr" style="display: none; width: 15.5%"><i class="si si-pause" aria-hidden="true"></i><span class="hidden-text"> Resume</span></button>
-            <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-circle" aria-hidden="true"></i><span class="hidden-text"> Record</span></button>
-            <!-- TODO: Add a stop button -->
-        </div>
         <div class="module_all">
             <article class="width_quarter module_right">
                 <div id="middle-container" class="module">
@@ -124,6 +105,25 @@
                 </article>
             </article>
             <article class="module width_3_quarter">
+                <div id="toolbar-container" class="submit_link">
+                    <!-- hidden, because it has default style -->
+                    <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display: none"></input>
+                    <input id="load-testSuite-show" type="button" value="OpenSuite" style="display: none"></input>
+                    <button id="save-testSuite" style="display: none">SaveSuite</button>
+                    <button id="close-testSuite" style="display: none">CloseSuite</button>
+                    <button id="add-testSuite" style="display: none">+Suite</button>
+                    <button id="add-testCase" style="display: none">+Case</button>
+                    <button id="delete-testCase" style="display: none">-Case</button>
+                    <a download="info.html" id="downloadlink" style="display: none">Download</a>
+                    <button id="playSuites" class="sub_btn" style="width: 21%"><i class="si si-play-all" aria-hidden="true"></i><span class="hidden-text"> PlayAllSuites</span></button>
+                    <button id="playSuite" class="sub_btn" style="width: 21%"><i class="si si-play-all" aria-hidden="true"></i><span class="hidden-text"> PlayThisSuite</span></button>
+                    <button id="playback" class="sub_btn" style="width: 20%"><i class="si si-play-single" aria-hidden="true"></i><span class="hidden-text"> PlayThisCase</span></button>
+                    <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-square-o" aria-hidden="true"></i><span class="hidden-text"> Stop</span></button>
+                    <button id="pause" class="sub_btn btn_pr" style="width: 15.5%"><i class="si si-pause" aria-hidden="true"></i><span class="hidden-text"> Pause</span></button>
+                    <button id="resume" class="sub_btn btn_pr" style="display: none; width: 15.5%"><i class="si si-pause" aria-hidden="true"></i><span class="hidden-text"> Resume</span></button>
+                    <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-circle" aria-hidden="true"></i><span class="hidden-text"> Record</span></button>
+                    <!-- TODO: Add a stop button -->
+                </div>
                 <div id="command-container" class="tab_content case_hight">
                     <div class="smallSection">
                         <table id="command-grid" class="tablesorter" cellspacing="0">
