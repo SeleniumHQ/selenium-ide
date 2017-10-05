@@ -42,6 +42,12 @@
   height: calc(100% - 72px);
 }
 
+/* DROPDOWN */
+.w3-dropdown-content#command-dropdown, .w3-dropdown-content#target-dropdown {
+  margin-top: 4px;
+  border-radius: 3px;
+}
+
 /* TEXT */
 #main h3 {
   color: #505050;
