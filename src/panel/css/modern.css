@@ -48,6 +48,14 @@
   border-radius: 3px;
 }
 
+#command-.fa.fa-chevron-down {
+  margin: 9px 5px;
+}
+
+#target-.fa.fa-chevron-down {
+  margin-left: 4px;
+}
+
 /* TEXT */
 #main h3 {
   color: #505050;
