@@ -67,6 +67,19 @@ label {
   text-transform: capitalize!important;
 }
 
+/* TEST CASES */
+.message {
+  border-bottom-width: 0;
+}
+
+.message .selectedCase {
+  border-radius: 2px;
+}
+
+.tablesorter td {
+  border-width: 0;
+}
+
 /* TABLE */
 .case_hight {
   height: calc(100% - 155px);
