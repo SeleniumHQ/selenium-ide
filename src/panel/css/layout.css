@@ -978,20 +978,6 @@ input[type=submit].btn_post_message:hover {
     text-transform: uppercase;
 }
 
-#command-toolbar i {
-    float: left;
-    width: 0px;
-    margin-top: 5px;
-    margin-left: -20px;
-    aria-hidden: true;
-    color: #D0D0D0;
-}
-
-#command-toolbar i:hover {
-    cursor: pointer;
-    color: #828282;
-}
-
 #command-toolbar input::-webkit-calendar-picker-indicator {
     display: none;
 }
@@ -1285,27 +1271,36 @@ input[type=submit].btn_post_message:hover {
 }
 
 .btn_sf {
-    border-radius: 5px;
-    background: white;
-    padding-right: 10px;
-    padding-left: 10px;
-    float: left;
-    margin-left: 9px;
-    border: 1px solid #DBDBDB;
-    -webkit-box-shadow: 1px 1px #ABABAB;
-    box-shadow: 1px 1px #ABABAB;
-    height: 93%;
+    cursor: pointer;
+    background: none;
+    border: none;
     vertical-align: middle;
+    outline: 0;
+    padding: 0;
+    height: 29px;
+    margin-left: 5px;
 }
 
-.btn_sf:hover {
-    background-color: #EBEBEB;
-    transition: 0.2s;
+.btn_sf i {
+    border: 1px solid silver;
+    border-radius: 3px;
+    padding: 2px 5px;
+    text-align: center;
+    font-size: 21px;
 }
 
-.btn_sf:active {
-    -webkit-box-shadow: inset 2px 2px #ABABAB;
-    box-shadow: inset 2px 2px #ABABAB;
+.btn_sf:hover .si:before {
+    color: #00c5b4;
+    transition: 0.1s;
+}
+
+.btn_sf:hover .si {
+    border-color: #00c5b4;
+    transition: 0.1s;
+}
+
+.btn_sf.pressed .si:before {
+    color: #00c5b4;
 }
 
 button.active {

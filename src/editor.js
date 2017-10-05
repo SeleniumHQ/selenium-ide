@@ -176,7 +176,7 @@ function handleMessage(message, sender, sendResponse) {
     if (message.cancelSelectTarget) {
         var button = document.getElementById("selectElementButton");
         isSelecting = false; 
-        button.textContent = "Select";
+        button.classList.remove("pressed");
         browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
         return;
     }
