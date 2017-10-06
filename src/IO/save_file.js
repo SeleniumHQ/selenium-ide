@@ -147,7 +147,7 @@ function downloadSuite(s_suite,callback) {
                         sideex_testSuite[s_suite.id].file_name = f_name;
                         $(s_suite).find(".modified").removeClass("modified");
                         closeConfirm(false);
-                        s_suite.childNodes[0].textContent = f_name.substring(0, f_name.lastIndexOf("."));
+                        s_suite.childNodes[0].childNodes[1].textContent = f_name.substring(0, f_name.lastIndexOf("."));
                         if (callback) {
                             callback();
                         }

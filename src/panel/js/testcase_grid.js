@@ -169,7 +169,7 @@ function appendContextMenu(node, isCase) {
             var s_suite = getSelectedSuite();
             var n_title = prompt("Please enter the Test Suite's title", sideex_testSuite[s_suite.id].title);
             // get text node
-            s_suite.childNodes[0].textContent = n_title;
+            s_suite.childNodes[0].childNodes[1].textContent = n_title;
             sideex_testSuite[s_suite.id].title = n_title;
             $(s_suite).find("strong").addClass("modified");
             closeConfirm(true);
