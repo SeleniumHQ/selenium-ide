@@ -1,3 +1,7 @@
+body {
+  overflow: hidden;
+}
+
 .container table:first-child {
   display: none;
 }
