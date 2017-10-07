@@ -149,6 +149,7 @@ input:focus {
   border: 1px solid #DCDCDC;
   background-color: #FFFFFF;
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+  z-index: 1000;
 }
 
 .menu ul {
