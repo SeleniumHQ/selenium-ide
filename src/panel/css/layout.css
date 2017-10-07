@@ -24,7 +24,7 @@ body {
     background: #F8F8F8;
     font-size: 12px;
     width: 100%;
-    min-width: 679px;
+    min-width: 580px;
     min-height: 690px;
 }
 
@@ -534,12 +534,6 @@ section#main {
 
 /* Module Widths */
 
-.width_full {
-    width: calc(100% - 10px);
-    margin-top: 13px;
-    height: 33%;
-}
-
 .width_half {
     width: 46%;
     margin-right: 0;
@@ -616,7 +610,7 @@ section#main {
 /* Content Manager */
 
 .tablesorter {
-    width: 100%;
+    width: calc(100% - 6px);
     height: 38px;
 }
 
