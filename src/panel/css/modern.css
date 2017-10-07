@@ -144,6 +144,29 @@ input:focus {
   animation: blinker 1s linear infinite;
 }
 
+/* CONTEXT MENUS */
+.menu {
+  border: 1px solid #DCDCDC;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+}
+
+.menu ul {
+  padding: 0;
+  margin: 0;
+}
+
+.menu a {
+  display: block;
+  color: #505050;
+  padding: 15px 20px;
+}
+
+.menu a:hover {
+  text-decoration: none;
+  background-color: #E3F2FF;
+}
+
 /* hack to align buttons */
 .sub_btn#playSuite, .sub_btn#playback, .sub_btn#pause, .sub_btn#resume {
   vertical-align: sub;
