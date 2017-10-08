@@ -2,6 +2,10 @@
   padding: 0 10px;
 }
 
+.runs > div {
+  padding: 15px 0;
+}
+
 .runs .right {
   float: right;
 }

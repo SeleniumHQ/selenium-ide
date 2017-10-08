@@ -22,10 +22,10 @@ let panelId = undefined;
 function openPage() {
   const getContentWindowInfo = browser.windows.getLastFocused();
   const getSideexWindowInfo = browser.windows.create({
-    url: browser.extension.getURL("assets/panel.html"),
+    url: browser.extension.getURL("assets/index.html"),
     type: "popup",
-    height: 730,
-    width: 750
+    height: 930,
+    width: 600
   });
 
   Promise.all([getContentWindowInfo, getSideexWindowInfo])

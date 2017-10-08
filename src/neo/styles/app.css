@@ -4,6 +4,16 @@ body {
   margin: 0;
 }
 
+h1, h2, h3 {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 a {
   color: #505050;
   text-decoration: none;
@@ -11,6 +21,19 @@ a {
 
 a:visited {
   color: #505050;
+}
+
+input {
+  border: 1px #BEBEBE solid;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 17px;
+  padding: 5px 15px;
+}
+
+input:focus {
+  border-color: #40A6FF;
+  outline: 0;
 }
 
 .clear {

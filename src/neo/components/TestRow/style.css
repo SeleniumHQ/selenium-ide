@@ -1,0 +1,24 @@
+.test-table tr {
+  padding: 10px 15px;
+}
+
+.test-table tr.pending {
+  background-color: #EDFCFF;
+}
+
+.test-table tr.passed {
+  background-color: #EDFFEF;
+}
+
+.test-table tr.failed {
+  background-color: #FFEDEF;
+}
+
+.test-table td {
+  font-size: 12px;
+  padding: 5px 15px;
+}
+
+.test-table td:nth-child(1) {
+  color: #8B8B8B;
+}

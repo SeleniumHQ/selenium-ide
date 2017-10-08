@@ -1,0 +1,10 @@
+.url input {
+  vertical-align: middle;
+  margin-left: 10px;
+  width: calc(100% - 155px);
+}
+
+.url label {
+  vertical-align: middle;
+  padding-left: 15px;
+}

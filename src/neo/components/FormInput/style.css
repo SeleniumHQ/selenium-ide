@@ -1,0 +1,5 @@
+.form-input > label {
+  width: 90px;
+  display: inline-block;
+  margin: 10px 0;
+}
