@@ -15,9 +15,9 @@ export default class TestTable extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <TestRow />
-            <TestRow />
-            <TestRow />
+            <TestRow command="open" target="/" state="passed" />
+            <TestRow command="click and wait" target="link=store" state="passed" />
+            <TestRow command="assert text present" value="The item is available" state="failed" />
           </tbody>
         </table>
       </div>
