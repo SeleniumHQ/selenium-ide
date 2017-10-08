@@ -4,6 +4,7 @@ import classNames from "classnames";
 import "./style.css";
 
 export const RowState = {
+  Pending: "pending",
   Passed: "passed",
   Failed: "failed"
 };

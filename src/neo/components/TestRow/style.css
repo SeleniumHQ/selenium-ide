@@ -2,6 +2,10 @@
   padding: 10px 15px;
 }
 
+.test-table tr.pending {
+  background-color: #EDFCFF;
+}
+
 .test-table tr.passed {
   background-color: #EDFFEF;
 }
