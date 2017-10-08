@@ -16,7 +16,7 @@ export default class TestList extends React.Component {
       <ul className={classNames("tests", {"active": !this.props.collapsed})}>
         {this.props.tests.map(({id, name}) => (
           <li key={id}>
-            <Test id={id} name={name} selected={id === this.props.selectedTest} selectTest={this.props.selectTest} />
+            <Test id={id} name={name} project={this.props.project} selected={id === this.props.selectedTest} selectTest={this.props.selectTest} />
           </li>
         ))}
       </ul>

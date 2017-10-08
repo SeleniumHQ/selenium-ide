@@ -17,7 +17,7 @@ export default class ProjectList extends React.Component {
         <ul className="projects">
           {this.props.projects.map(({name, tests}) => (
             <li key={name}>
-              <Project name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+              <Project name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
             </li>
           ))}
         </ul>

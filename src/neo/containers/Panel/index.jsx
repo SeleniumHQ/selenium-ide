@@ -46,9 +46,19 @@ export default class Panel extends React.Component {
       }]
     };
     this.selectTest = this.selectTest.bind(this);
+    this.moveTest = this.moveTest.bind(this);
   }
   selectTest(testId) {
     this.setState({ selectedTest: testId });
+  }
+  moveTest(testItem, toProject) {
+    const destination = this.state.projects.find((project) => (project.name === toProject));
+    const origin = this.state.projects.find((project) => (project.name === testItem.project));
+    const test = origin.tests.find(test => (test.id === testItem.id));
+
+    destination.tests.push(test);
+    origin.tests.splice(origin.tests.indexOf(test), 1);
+    this.forceUpdate();
   }
   render() {
     return (
@@ -57,7 +67,7 @@ export default class Panel extends React.Component {
         <div style={{
           float: "left"
         }}>
-          <Navigation projects={this.state.projects} selectedTest={this.state.selectedTest} selectTest={this.selectTest} />
+          <Navigation projects={this.state.projects} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{

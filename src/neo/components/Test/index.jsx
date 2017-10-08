@@ -8,7 +8,10 @@ import "./style.css";
 export const Type = "test";
 const testSource = {
   beginDrag(props) {
-    return { id: props.id };
+    return {
+      id: props.id,
+      project: props.project
+    };
   },
   endDrag(props, monitor, component) {
     if (!monitor.didDrop()) {

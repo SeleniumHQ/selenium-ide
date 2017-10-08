@@ -17,6 +17,13 @@ const testTarget = {
   canDrop(props, monitor) {
     const test = monitor.getItem();
     return !containsTest(props.tests, test);
+  },
+  drop(props, monitor, component) {
+    if (monitor.didDrop()) {
+      return;
+    }
+
+    props.moveTest(monitor.getItem(), props.name);
   }
 };
 
@@ -70,7 +77,7 @@ class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+        <TestList collapsed={!this.state.isActive} project={this.props.name} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
       </div>
     );
   }
