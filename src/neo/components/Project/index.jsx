@@ -1,10 +1,32 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { DropTarget } from "react-dnd";
+import classNames from "classnames";
 import styled from "styled-components";
 import TestList from "../TestList";
+import { Type } from "../Test";
 import tick from "../../images/ic_tick.svg";
 import folder from "../../images/ic_folder.svg";
 import "./style.css";
+
+function containsTest(tests, test) {
+  return tests.find((currTest) => (currTest.id === test.id));
+}
+
+const testTarget = {
+  canDrop(props, monitor) {
+    const test = monitor.getItem();
+    return !containsTest(props.tests, test);
+  }
+};
+
+function collect(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
+  };
+}
 
 const ArrowProject = styled.span`
   &:before {
@@ -20,7 +42,7 @@ const ArrowProject = styled.span`
   }
 `;
 
-export default class Project extends React.Component {
+class Project extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,9 +62,9 @@ export default class Project extends React.Component {
     });
   }
   render() {
-    return (
-      <div>
-        <a href="#" className="project" onClick={this.handleClick}>
+    return this.props.connectDropTarget(
+      <div className={classNames("project", {"hover": (this.props.isOver && this.props.canDrop)})}>
+        <a href="#" onClick={this.handleClick}>
           <ArrowProject isActive={this.state.isActive}>
             <img src={folder} alt="project" />
             <span className="title">{this.props.name}</span>
@@ -53,3 +75,5 @@ export default class Project extends React.Component {
     );
   }
 }
+
+export default DropTarget(Type, testTarget, collect)(Project);

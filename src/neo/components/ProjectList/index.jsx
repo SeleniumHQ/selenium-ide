@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import HTML5Backend from "react-dnd-html5-backend";
+import { DragDropContextProvider } from "react-dnd";
 import Project from "../Project";
 import "./style.css";
 
@@ -11,13 +13,15 @@ export default class ProjectList extends React.Component {
   };
   render() {
     return (
-      <ul className="projects">
-        {this.props.projects.map(({name, tests}) => (
-          <li key={name}>
-            <Project name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
-          </li>
-        ))}
-      </ul>
+      <DragDropContextProvider backend={HTML5Backend}>
+        <ul className="projects">
+          {this.props.projects.map(({name, tests}) => (
+            <li key={name}>
+              <Project name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+            </li>
+          ))}
+        </ul>
+      </DragDropContextProvider>
     );
   }
 }

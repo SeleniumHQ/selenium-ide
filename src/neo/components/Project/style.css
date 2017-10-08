@@ -1,14 +1,18 @@
-.project {
+.project.hover {
+  background-color: red;
+}
+
+.project a {
   display: block;
   padding: 7px 0;
 }
 
-.project .title {
+.project a .title {
   padding: 0 12px;
   font-size: 16px;
   vertical-align: middle;
 }
 
-.project img {
+.project a img {
   vertical-align: middle;
 }
