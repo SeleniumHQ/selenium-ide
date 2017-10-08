@@ -1,6 +1,8 @@
 .test {
   display: block;
   padding: 5px 8px;
+  border-radius: 2px;
+  background-color: #FFF;
 }
 
 .test > * {
@@ -9,5 +11,4 @@
 
 .test.selected {
   background-color: #E3F2FF;
-  border-radius: 2px;
 }
