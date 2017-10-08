@@ -2,6 +2,14 @@
   padding: 10px 15px;
 }
 
+.test-table tr.passed {
+  background-color: #EDFFEF;
+}
+
+.test-table tr.failed {
+  background-color: #FFEDEF;
+}
+
 .test-table td {
   font-size: 12px;
   padding: 5px 15px;
