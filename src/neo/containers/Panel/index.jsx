@@ -24,6 +24,18 @@ function tests() {
   ];
 }
 
+function sortTests(tests) {
+  return tests.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1;
+    } else if (b.name > a.name) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+}
+
 export default class Panel extends React.Component {
   constructor(props) {
     super(props);
@@ -57,6 +69,7 @@ export default class Panel extends React.Component {
     const test = origin.tests.find(test => (test.id === testItem.id));
 
     destination.tests.push(test);
+    sortTests(destination.tests);
     origin.tests.splice(origin.tests.indexOf(test), 1);
     this.forceUpdate();
   }
