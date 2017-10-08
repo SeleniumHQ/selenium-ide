@@ -1,5 +1,6 @@
 import React from "react";
 import uuidv4 from "uuid/v4";
+import generate from "project-name-generator";
 import OmniBar from "../../components/OmniBar";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -8,20 +9,20 @@ import "../../styles/app.css";
 import "../../styles/heights.css";
 
 function tests() {
-  return [
+  return sortTests([
     { id: uuidv4(),
-      name: "Test One"
+      name: generate({words: 2}).spaced
     },
     { id: uuidv4(),
-      name: "Test Two"
+      name: generate({words: 2}).spaced
     },
     { id: uuidv4(),
-      name: "Test Three"
+      name: generate({words: 2}).spaced
     },
     { id: uuidv4(),
-      name: "Test Four"
+      name: generate({words: 2}).spaced
     }
-  ];
+  ]);
 }
 
 function sortTests(tests) {
