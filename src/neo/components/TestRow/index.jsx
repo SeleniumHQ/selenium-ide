@@ -10,14 +10,17 @@ export const RowState = {
 
 export default class TestRow extends React.Component {
   static propTypes = {
+    command: PropTypes.string.isRequired,
+    target: PropTypes.string,
+    value: PropTypes.string,
     state: PropTypes.oneOf(Object.keys(RowState))
   };
   render() {
     return (
       <tr className={classNames({[this.props.state]: this.props.state})}>
-        <td>open</td>
-        <td>/</td>
-        <td></td>
+        <td>{this.props.command}</td>
+        <td>{this.props.target}</td>
+        <td>{this.props.value}</td>
       </tr>
     );
   }
