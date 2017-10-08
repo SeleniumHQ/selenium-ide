@@ -1,8 +1,12 @@
 .test-table {
+  border-bottom: 1px #CECECE solid;
+  overflow-y: auto;
+}
+
+.test-table table {
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
-  border-bottom: 1px #CECECE solid;
 }
 
 .test-table th {
@@ -25,6 +29,4 @@
 }
 
 .test-table tbody {
-  display: block;
-  min-height: 400px;
 }
