@@ -91,6 +91,14 @@ label {
   border-bottom-color: #CECECE;
 }
 
+.tablesorter tbody tr.selectedRecord {
+  background-color: #e3f2ff!important;
+}
+
+.tablesorter tbody tr.selectedRecord td {
+  border-top-width: 0;
+}
+
 /* INPUTS */
 input {
   border: 1px #BEBEBE solid;

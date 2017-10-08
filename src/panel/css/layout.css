@@ -973,7 +973,6 @@ input[type=submit].btn_post_message:hover {
 
 #command-toolbar input:focus {
     outline: none !important;
-    border:1px solid #00c5b4;
 }
 
 #command-toolbar input::-webkit-calendar-picker-indicator {
@@ -1228,7 +1227,7 @@ input[type=submit].btn_post_message:hover {
 }
 
 .sub_btn:not([disabled]):hover .si:before {
-    color: #00c5b4;
+    color: #40A6FF;
     transition: 0.1s;
 }
 
@@ -1243,7 +1242,7 @@ input[type=submit].btn_post_message:hover {
 }
 
 .sub_btn#resume .si-pause:before {
-    color: #00c5b4;
+    color: #40A6FF;
 }
 
 .sub_btn:disabled .si:before {
@@ -1281,17 +1280,17 @@ input[type=submit].btn_post_message:hover {
 }
 
 .btn_sf:hover .si:before {
-    color: #00c5b4;
+    color: #40A6FF;
     transition: 0.1s;
 }
 
 .btn_sf:hover .si {
-    border-color: #00c5b4;
+    border-color: #40A6FF;
     transition: 0.1s;
 }
 
 .btn_sf.pressed .si:before {
-    color: #00c5b4;
+    color: #40A6FF;
 }
 
 button.active {
