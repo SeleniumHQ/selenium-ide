@@ -1,5 +1,10 @@
+.project {
+  border: 1px transparent solid;
+}
+
 .project.hover {
-  background-color: red;
+  border: 1px #40A6FF solid;
+  border-radius: 3px;
 }
 
 .project a {
