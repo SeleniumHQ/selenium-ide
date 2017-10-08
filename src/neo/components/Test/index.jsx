@@ -12,14 +12,6 @@ const testSource = {
       id: props.id,
       project: props.project
     };
-  },
-  endDrag(props, monitor, component) {
-    if (!monitor.didDrop()) {
-      return;
-    }
-
-    console.log(monitor.getItem());
-    console.log(monitor.getDropResult());
   }
 };
 function collect(connect, monitor) {
