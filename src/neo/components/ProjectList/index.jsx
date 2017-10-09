@@ -9,7 +9,8 @@ export default class ProjectList extends React.Component {
   static propTypes = {
     projects: PropTypes.array.isRequired,
     selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired
+    selectTest: PropTypes.func.isRequired,
+    moveTest: PropTypes.func.isRequired
   };
   render() {
     return (

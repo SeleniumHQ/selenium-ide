@@ -18,7 +18,7 @@ const testTarget = {
     const test = monitor.getItem();
     return !containsTest(props.tests, test);
   },
-  drop(props, monitor, component) {
+  drop(props, monitor) {
     if (monitor.didDrop()) {
       return;
     }
@@ -61,7 +61,11 @@ class Project extends React.Component {
     name: PropTypes.string.isRequired,
     tests: PropTypes.array.isRequired,
     selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired
+    selectTest: PropTypes.func.isRequired,
+    connectDropTarget: PropTypes.func.isRequired,
+    moveTest: PropTypes.func.isRequired,
+    isOver: PropTypes.bool,
+    canDrop: PropTypes.bool
   };
   handleClick() {
     this.setState({

@@ -9,7 +9,8 @@ export default class TestList extends React.Component {
     tests: PropTypes.array.isRequired,
     collapsed: PropTypes.bool.isRequired,
     selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired
+    selectTest: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired
   };
   render() {
     return (

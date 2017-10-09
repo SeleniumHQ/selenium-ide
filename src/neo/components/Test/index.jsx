@@ -25,8 +25,10 @@ class Test extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    project: PropTypes.string.isRequired,
     selected: PropTypes.bool,
-    selectTest: PropTypes.func.isRequired
+    selectTest: PropTypes.func.isRequired,
+    connectDragSource: PropTypes.func.isRequired
   };
   handleClick(testId) {
     this.props.selectTest(testId);
