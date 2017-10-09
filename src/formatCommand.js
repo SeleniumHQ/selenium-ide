@@ -11,7 +11,7 @@ function xlateArgument(value) {
     if ((r = /\$\{/.exec(value))) {
         var regexp = /\$\{(.*?)\}/g;
         var lastIndex = 0;
-        while (r2 = regexp.exec(value)) {
+        while ( (r2 = regexp.exec(value)) ) {
             if (declaredVars[r2[1]]) {
                 if (r2.index - lastIndex > 0) {
                     parts.push(string(value.substring(lastIndex, r2.index)));

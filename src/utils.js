@@ -725,7 +725,7 @@ PatternMatcher.regexpFromGlob = function(glob) {
     return "^" + PatternMatcher.convertGlobMetaCharsToRegexpMetaChars(glob) + "$";
 };
 
-if (!this["Assert"]) Assert = {};
+if (!this["Assert"]) this.Assert = {};
 
 
 Assert.fail = function(message) {
@@ -3607,7 +3607,9 @@ parseUri.options = {
                 thisCache[name] = data;
             }
 
-            return typeof name === "string" ? thisCache[name] : thisCache;
+            return typeof name === "string"
+                ? (typeof thisCache[name]!=="undefined" ? thisCache[name] : undefined)
+                : thisCache;
         },
 
         removeData: function(elem, name) {
@@ -6209,7 +6211,7 @@ parseUri.options = {
 
         return;
 
-        window.Sizzle = Sizzle;
+        window.Sizzle = Sizzle; //@TODO debug whether calls to eval_css() ever happen. If so, this line needs to be before 'return'. See matches for regex [.'"]Sizzle|[.'" ]Sizzle[ \t]*=
 
     })();
     var runtil = /Until$/,
@@ -8775,8 +8777,8 @@ jQuery.noConflict(true); // extreme - bye bye window.jQuery
 /*  find_matching_child  */
 
 //Used by atom browserbot
-ELEMENT_NODE_TYPE = 1;
-elementFindFirstMatchingChild = function(element, selector) {
+var ELEMENT_NODE_TYPE = 1;
+var elementFindFirstMatchingChild = function(element, selector) {
 
     var childCount = element.childNodes.length;
     for (var i = 0; i < childCount; i++) {
