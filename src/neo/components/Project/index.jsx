@@ -6,7 +6,6 @@ import styled from "styled-components";
 import TestList from "../TestList";
 import { Type } from "../Test";
 import tick from "../../images/ic_tick.svg";
-import folder from "../../images/ic_folder.svg";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -74,10 +73,9 @@ class Project extends React.Component {
   }
   render() {
     return this.props.connectDropTarget(
-      <div className={classNames("project", {"hover": (this.props.isOver && this.props.canDrop)})}>
-        <a href="#" onClick={this.handleClick}>
+      <div className="project">
+        <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
           <ArrowProject isActive={this.state.isActive}>
-            <img src={folder} alt="project" />
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>

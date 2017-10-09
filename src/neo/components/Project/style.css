@@ -1,25 +1,24 @@
 .project {
-  border: 1px transparent solid;
   padding-left: 7px;
   margin-left: 2px;
 }
 
-.project.hover {
-  border: 1px #40A6FF solid;
-  border-radius: 3px;
-}
-
-.project a {
+.project > a {
   display: block;
   padding: 7px 0;
+  border-bottom: 1px transparent solid;
 }
 
-.project a .title {
+.project > a.hover {
+  border-bottom: 1px #40A6FF solid;
+}
+
+.project > a .title {
   padding: 0 12px;
   font-size: 16px;
   vertical-align: middle;
 }
 
-.project a img {
+.project > a img {
   vertical-align: middle;
 }

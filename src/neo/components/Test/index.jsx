@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { DragSource } from "react-dnd";
 import classNames from "classnames";
-import test from "../../images/ic_test.svg";
 import "./style.css";
 
 export const Type = "test";
@@ -37,7 +36,6 @@ class Test extends React.Component {
   render() {
     return (this.props.connectDragSource(
       <a href="#" className={classNames("test", {"selected": this.props.selected}, {"dragging": this.props.isDragging})} onClick={this.handleClick.bind(this, this.props.id)}>
-        <img src={test} alt="test" />
         <span>{this.props.name}</span>
       </a>
     ));
