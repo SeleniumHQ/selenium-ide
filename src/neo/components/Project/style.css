@@ -1,5 +1,7 @@
 .project {
   border: 1px transparent solid;
+  padding-left: 7px;
+  margin-left: 2px;
 }
 
 .project.hover {
