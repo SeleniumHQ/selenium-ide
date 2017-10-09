@@ -12,3 +12,7 @@
 .test.selected {
   background-color: #E3F2FF;
 }
+
+.test.dragging {
+  display: none;
+}

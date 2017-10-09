@@ -27,6 +27,7 @@ class Test extends React.Component {
     name: PropTypes.string.isRequired,
     project: PropTypes.string.isRequired,
     selected: PropTypes.bool,
+    isDragging: PropTypes.bool,
     selectTest: PropTypes.func.isRequired,
     connectDragSource: PropTypes.func.isRequired
   };
@@ -35,7 +36,7 @@ class Test extends React.Component {
   }
   render() {
     return (this.props.connectDragSource(
-      <a href="#" className={classNames("test", {"selected": this.props.selected})} onClick={this.handleClick.bind(this, this.props.id)}>
+      <a href="#" className={classNames("test", {"selected": this.props.selected}, {"dragging": this.props.isDragging})} onClick={this.handleClick.bind(this, this.props.id)}>
         <img src={test} alt="test" />
         <span>{this.props.name}</span>
       </a>
