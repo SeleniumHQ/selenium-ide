@@ -2,6 +2,7 @@ import React from "react";
 import uuidv4 from "uuid/v4";
 import generate from "project-name-generator";
 import OmniBar from "../../components/OmniBar";
+import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
 import Console from "../Console";
@@ -78,6 +79,7 @@ export default class Panel extends React.Component {
     return (
       <div>
         <OmniBar />
+        <ProjectHeader />
         <div style={{
           float: "left"
         }}>
