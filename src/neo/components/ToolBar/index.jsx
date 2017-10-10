@@ -20,6 +20,10 @@ export default class ToolBar extends React.Component {
         }}>
           <Record />
         </span>
+        <div style={{
+          clear: "right",
+          borderBottom: "1px #CECECE solid"
+        }}></div>
       </span>
     );
   }
