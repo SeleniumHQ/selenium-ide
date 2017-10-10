@@ -37,6 +37,7 @@
     "react": "^16.0.0",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
+    "react-document-title": "^2.0.3",
     "react-dom": "^16.0.0",
     "react-hot-loader": "^3.0.0-beta.7",
     "style-loader": "^0.18.2",
