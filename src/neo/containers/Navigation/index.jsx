@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
+import SearchBar from "../../components/SearchBar";
 import ProjectList from "../../components/ProjectList";
 import Runs from "../../components/Runs";
 import "./style.css";
@@ -18,6 +19,7 @@ export default class Navigation extends React.Component {
         maxWidth: "200px"
       }}>
         <TabBar tabs={["Tests", "Suites"]} />
+        <SearchBar />
         <ProjectList projects={this.props.projects} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
         <Runs />
       </aside>
