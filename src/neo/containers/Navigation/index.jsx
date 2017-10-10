@@ -8,7 +8,8 @@ export default class Navigation extends React.Component {
   static propTypes = {
     projects: PropTypes.array.isRequired,
     selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired
+    selectTest: PropTypes.func.isRequired,
+    moveTest: PropTypes.func.isRequired
   };
   render() {
     return (
@@ -16,7 +17,7 @@ export default class Navigation extends React.Component {
         maxWidth: "200px"
       }}>
         <h3>Test Case</h3>
-        <ProjectList projects={this.props.projects} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+        <ProjectList projects={this.props.projects} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
         <Runs />
       </aside>
     );

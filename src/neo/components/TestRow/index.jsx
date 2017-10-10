@@ -18,7 +18,7 @@ export default class TestRow extends React.Component {
   };
   render() {
     return (
-      <tr className={classNames({[this.props.state]: this.props.state})}>
+      <tr className={classNames({[RowState[this.props.state]]: this.props.state})}>
         <td>{this.props.command}</td>
         <td>{this.props.target}</td>
         <td>{this.props.value}</td>
