@@ -6,7 +6,7 @@ export default class Console extends React.Component {
   render() {
     return (
       <footer className="console">
-        <TabBar tabs={["Log", "Reference", "UI-Element", "Rollup"]} />
+        <TabBar tabs={["Log", "Reference", "UI-Element", "Rollup"]} tabWidth={110} />
       </footer>
     );
   }
