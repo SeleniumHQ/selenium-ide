@@ -25,3 +25,11 @@
   cursor: initial;
   outline: 0;
 }
+
+.header .title:after {
+  content: "*";
+}
+
+.header .title:focus:after {
+  content: " ";
+}
