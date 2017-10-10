@@ -17,7 +17,11 @@ export default class TabBar extends React.Component {
   }
   static propTypes = {
     tabs: PropTypes.array.isRequired,
-    defaultTab: PropTypes.string
+    defaultTab: PropTypes.string,
+    tabWidth: PropTypes.number
+  };
+  static defaultProps = {
+    tabWidth: 80
   };
   handleClick(tab, index) {
     this.setState({
@@ -29,13 +33,16 @@ export default class TabBar extends React.Component {
       <div className="tabbar">
         <ul>
           {this.props.tabs.map((tab, index) => (
-            <li key={tab}>
+            <li key={tab} style={{
+              width: `${this.props.tabWidth}px`
+            }}>
               <a href="#" onClick={this.handleClick.bind(this, tab, index)}>{tab}</a>
             </li>
           ))}
         </ul>
         <div className="underline" style={{
-          transform: `translateX(${this.state.activeTab.index * 110}px)`
+          transform: `translateX(${this.state.activeTab.index * this.props.tabWidth}px)`,
+          width: `${this.props.tabWidth}px`
         }}></div>
       </div>
     );

@@ -6,7 +6,6 @@
 
 .tabbar li {
   display: inline-block;
-  width: 110px;
 }
 
 .tabbar a {
@@ -22,7 +21,6 @@
 .tabbar .underline {
   height: 2px;
   background-color: #40A6FF;
-  width: 110px;
   transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
   position: absolute;
   bottom: 0;
