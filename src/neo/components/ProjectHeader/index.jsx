@@ -13,7 +13,7 @@ export default class ProjectHeader extends React.Component {
     return (
       <div className="header">
         <Title title={`Selenium IDE - ${this.state.title}`} />
-        <input type="text" defaultValue={this.state.title} placeholder="Project Name" />
+        <span className="title" contentEditable={true}>{this.state.title}</span>
       </div>
     );
   }
