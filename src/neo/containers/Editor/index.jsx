@@ -11,7 +11,6 @@ export default class Editor extends React.Component {
         display: "flow-root"
       }}>
         <ToolBar />
-        <TabBar tabs={["Table", "Source"]} />
         <TestTable />
         <CommandForm />
       </main>
