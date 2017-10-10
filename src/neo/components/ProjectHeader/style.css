@@ -1,10 +1,20 @@
 .header {
   border-bottom: 1px solid #CECECE;
+  padding: 5px;
 }
 
 .header input {
-  border-width: 0;
+  border-color: transparent;
   font-weight: 500;
   font-size: 16px;
-  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.header input:hover {
+  border-color: #F3F3F3;
+}
+
+.header input:focus {
+  border-color: #CECECE;
+  cursor: initial;
 }
