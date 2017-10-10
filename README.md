@@ -28,7 +28,7 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 ```peru sync```  
 ```yarn```
 - Build the extension  
-```yarn build```
+```yarn build``` <br>(That runs `build` command from [`package.json`](./package.json). See documentation of [yarn run](https://yarnpkg.com/en/docs/cli/run) and [package.json > scripts](https://yarnpkg.com/en/docs/package-json#toc-scripts).)
 - Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
 
 Manifest located in `<Project Directory>/build/manifest.json`
