@@ -1334,6 +1334,8 @@ button.active {
 
 .logo_img {
     margin-left: 20px;
+    height: 32px;
+    width: 32px;
 }
 
 .QA_img {
