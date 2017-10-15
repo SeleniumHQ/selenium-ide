@@ -1,0 +1,14 @@
+.search {
+  border-color: #F3F3F3;
+  width: 95%;
+  margin: 5px auto;
+  display: block;
+}
+
+.search::placeholder {
+  color: #A0A0A0;
+}
+
+.search:focus {
+  border-color: #CECECE;
+}
