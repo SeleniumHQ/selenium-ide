@@ -17,6 +17,10 @@
   background-color: #E3F2FF;
 }
 
+.test.changed:after {
+  content: "*";
+}
+
 .test.dragging {
   display: none;
 }
