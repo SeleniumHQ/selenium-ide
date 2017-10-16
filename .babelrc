@@ -3,9 +3,10 @@
     "react"
   ],
   "plugins": [
-    ["transform-class-properties",
+    "transform-class-properties",
+    "transform-decorators",
     "react-hot-loader/babel",
-    "babel-plugin-transform-runtime", {
+    ["babel-plugin-transform-runtime", {
       "helpers": false,
       "polyfill": false,
       "regenerator": true
