@@ -12,7 +12,7 @@
   },
   "jest": {
     "testMatch": [
-      "**/__tests__/**/*.js?(x)"
+      "**/__test?(s)__/**/*.js?(x)"
     ]
   },
   "devDependencies": {
