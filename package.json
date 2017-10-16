@@ -10,6 +10,11 @@
     "test": "jest",
     "test-dev": "jest --watch"
   },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*.js?(x)"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-core": "^6.26.0",
