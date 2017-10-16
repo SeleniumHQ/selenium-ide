@@ -26,7 +26,7 @@
   outline: 0;
 }
 
-.header .title:after {
+.header .title.changed:after {
   content: "*";
 }
 
