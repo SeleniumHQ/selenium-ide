@@ -6,13 +6,15 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --hot",
-    "build": "cp -r src/manifest.json src/icons build/ && webpack"
+    "build": "cp -r src/manifest.json src/icons build/ && webpack",
+    "test": "jest",
+    "test-dev": "jest --watch"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^21.0.2",
+    "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators": "^6.24.1",
@@ -25,11 +27,12 @@
     "css-loader": "^0.28.7",
     "eslint": "^4.6.1",
     "eslint-plugin-class-property": "^1.0.6",
+    "eslint-plugin-jest": "^21.2.0",
     "eslint-plugin-react": "^7.3.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
-    "jest": "^21.0.2",
+    "jest": "^21.2.1",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "mobx": "^3.3.1",
