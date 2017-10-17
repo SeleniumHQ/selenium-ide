@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 import Test from "../../models/Test";
+import Suite from "../../models/Suite";
 
 export default class ProjectStore {
   @observable name = "";
@@ -9,6 +10,13 @@ export default class ProjectStore {
   constructor(name) {
     this.name = name;
     this.addTest = this.addTest.bind(this);
+  }
+
+  createSuite(...argv) {
+    const suite = new Suite(undefined, ...argv);
+    this.suites.push(suite);
+
+    return suite;
   }
 
   createTest(...argv) {
