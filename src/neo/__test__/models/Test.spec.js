@@ -1,6 +1,8 @@
 /* eslint-disable */
-import { observe } from "mobx";
+import { useStrict, observe } from "mobx";
 import Test from "../../models/Test";
+
+useStrict(true);
 
 describe("Test model", () => {
   it("new test should be named 'Untitled Test'", () => {

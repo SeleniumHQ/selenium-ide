@@ -1,8 +1,10 @@
 /* eslint-disable */
-import { observe } from "mobx";
+import { useStrict, observe } from "mobx";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import Suite from "../../models/Suite";
 import Test from "../../models/Test";
+
+useStrict(true);
 
 describe("Suite model", () => {
   it("new suite should be named 'Utitled Suite'", () => {
