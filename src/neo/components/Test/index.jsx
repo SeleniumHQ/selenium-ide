@@ -9,7 +9,7 @@ const testSource = {
   beginDrag(props) {
     return {
       id: props.id,
-      project: props.project
+      suite: props.suite
     };
   }
 };
@@ -24,7 +24,7 @@ class Test extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    project: PropTypes.string.isRequired,
+    suite: PropTypes.string.isRequired,
     selected: PropTypes.bool,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,

@@ -48,7 +48,7 @@ const ArrowProject = styled.span`
   }
 `;
 
-class Project extends React.Component {
+class Suite extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,10 +80,10 @@ class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} project={this.props.id} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
       </div>
     );
   }
 }
 
-export default DropTarget(Type, testTarget, collect)(Project);
+export default DropTarget(Type, testTarget, collect)(Suite);

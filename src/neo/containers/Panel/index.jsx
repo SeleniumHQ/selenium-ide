@@ -37,9 +37,9 @@ export default class Panel extends React.Component {
   selectTest(testId) {
     this.setState({ selectedTest: testId });
   }
-  moveTest(testItem, toProject) {
-    const destination = this.state.store.suites.find((project) => (project.id === toProject));
-    const origin = this.state.store.suites.find((project) => (project.id === testItem.project));
+  moveTest(testItem, toSuite) {
+    const destination = this.state.store.suites.find((suite) => (suite.id === toSuite));
+    const origin = this.state.store.suites.find((suite) => (suite.id === testItem.suite));
     const test = origin.tests.find(test => (test.id === testItem.id));
 
     destination.addTestCase(test);
@@ -54,7 +54,7 @@ export default class Panel extends React.Component {
         <div style={{
           float: "left"
         }}>
-          <Navigation projects={this.state.store.suites} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
+          <Navigation suites={this.state.store.suites} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{
