@@ -28,7 +28,7 @@ describe("Suite model", () => {
   });
   it("should add a new Test", () => {
     const store = new ProjectStore();
-    const suite = new Suite(store);
+    const suite = new Suite();
     const test = new Test();
     store.addTest(test);
     expect(suite.tests.length).toBe(0);
@@ -45,7 +45,7 @@ describe("Suite model", () => {
   });
   it("should remove a Test", () => {
     const store = new ProjectStore();
-    const suite = new Suite(store);
+    const suite = new Suite();
     const test = new Test();
     store.addTest(test);
     suite.addTest(test);
@@ -55,7 +55,7 @@ describe("Suite model", () => {
   });
   it("should do nothing if removed a non-existent test", () => {
     const store = new ProjectStore();
-    const suite = new Suite(store);
+    const suite = new Suite();
     const test = new Test();
     store.addTest(test)
     suite.addTest(test);
