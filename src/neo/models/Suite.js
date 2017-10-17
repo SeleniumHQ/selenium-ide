@@ -17,6 +17,8 @@ export default class Suite {
   addTest(test) {
     if (!test || test.constructor.name !== "Test") {
       throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
+    } else if (!this.store.tests.includes(test)) {
+      throw new Error("The given Test does not exists in the tests pool");
     } else {
       this.tests.push(test);
     }
