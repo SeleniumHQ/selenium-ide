@@ -1,4 +1,5 @@
 import { observable } from "mobx";
+import Test from "../../models/Test";
 
 export default class ProjectStore {
   @observable name = "";
@@ -8,6 +9,13 @@ export default class ProjectStore {
   constructor(name) {
     this.name = name;
     this.addTest = this.addTest.bind(this);
+  }
+
+  createTest(...argv) {
+    const test = new Test(undefined, ...argv);
+    this.addTest(test);
+
+    return test;
   }
 
   addTest(test) {
