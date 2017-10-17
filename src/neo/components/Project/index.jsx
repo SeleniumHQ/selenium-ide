@@ -80,7 +80,7 @@ class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} project={this.props.name} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+        <TestList collapsed={!this.state.isActive} project={this.props.id} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
       </div>
     );
   }
