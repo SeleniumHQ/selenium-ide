@@ -43,11 +43,6 @@ describe("Suite model", () => {
     const suite = new Suite();
     expect(() => suite.addTest(1)).toThrowError("Expected to receive Test instead received Number");
   });
-  it("should throw if a test that does not appear in the store is added", () => {
-    const store = new ProjectStore();
-    const suite = new Suite(store);
-    expect(() => suite.addTest(new Test())).toThrowError("The given Test does not exists in the tests pool");
-  });
   it("should remove a Test", () => {
     const store = new ProjectStore();
     const suite = new Suite(store);
