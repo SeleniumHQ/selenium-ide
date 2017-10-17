@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { observe } from "mobx";
 import ProjectStore from "../../../stores/domain/ProjectStore";
+import Suite from "../../../models/Suite";
 import Test from "../../../models/Test";
 
 describe("Project Store", () => {
