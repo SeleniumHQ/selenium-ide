@@ -3,7 +3,7 @@ import { observe } from "mobx";
 import Test from "../../models/Test";
 
 describe("Test model", () => {
-  it("new test should be named 'Utitled Test'", () => {
+  it("new test should be named 'Untitled Test'", () => {
     expect((new Test()).name).toBe("Untitled Test");
   });
   it("should observe name changes", () => {
