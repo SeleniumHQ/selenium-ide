@@ -3,14 +3,14 @@ import uuidv4 from "uuid/v4";
 
 export default class Suite {
   id = null;
-  @observable name = "Untitled Suite";
+  @observable name = null;
   @observable tests = [];
 
   store = null;
 
-  constructor(store, id = uuidv4()) {
-    this.store = store;
+  constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
+    this.name = name;
     this.addTest = this.addTest.bind(this);
     this.removeTest = this.removeTest.bind(this);
   }
@@ -18,8 +18,6 @@ export default class Suite {
   addTest(test) {
     if (!test || test.constructor.name !== "Test") {
       throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
-    } else if (!this.store.tests.includes(test)) {
-      throw new Error("The given Test does not exists in the tests pool");
     } else {
       this.tests.push(test);
     }
