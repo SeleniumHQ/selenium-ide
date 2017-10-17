@@ -3,7 +3,7 @@ import uuidv4 from "uuid/v4";
 
 export default class Suite {
   id = null;
-  @observable name = "";
+  @observable name = "Untitled Suite";
   @observable tests = [];
 
   store = null;
