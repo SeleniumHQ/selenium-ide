@@ -2,7 +2,7 @@
 import { useStrict, observe } from "mobx";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import Suite from "../../models/Suite";
-import Test from "../../models/Test";
+import TestCase from "../../models/TestCase";
 
 useStrict(true);
 
@@ -18,55 +18,51 @@ describe("Suite model", () => {
     suite.name = "changed";
     disposer();
   });
-  it("Tests should have randomly generated identifiers", () => {
+  it("Suites should have randomly generated identifiers", () => {
     expect((new Suite()).id).not.toBe((new Suite()).id);
   });
-  it("should observe when a new Test is added", () => {
+  it("should observe when a new Test Case is added", () => {
     const suite = new Suite();
     const disposer = observe(suite, "tests", (change) => {
       expect(change.newValue.length).toBe(1);
     });
-    suite.tests.push(new Test());
+    suite.tests.push(new TestCase());
   });
-  it("should add a new Test", () => {
+  it("should add a new Test Case", () => {
     const store = new ProjectStore();
     const suite = new Suite();
-    const test = new Test();
-    store.addTest(test);
+    const test = new TestCase();
+    store.addTestCase(test);
     expect(suite.tests.length).toBe(0);
-    suite.addTest(test);
+    suite.addTestCase(test);
     expect(suite.tests.length).toBe(1);
   });
-  it("should throw if no Test was given", () => {
+  it("should throw if no Test Case was given", () => {
     const suite = new Suite();
-    expect(() => suite.addTest()).toThrowError("Expected to receive Test instead received undefined");
+    expect(() => suite.addTestCase()).toThrowError("Expected to receive TestCase instead received undefined");
   });
   it("should throw if a different type was given", () => {
     const suite = new Suite();
-    expect(() => suite.addTest(1)).toThrowError("Expected to receive Test instead received Number");
+    expect(() => suite.addTestCase(1)).toThrowError("Expected to receive TestCase instead received Number");
   });
-  it("should remove a Test from the suite", () => {
+  it("should remove a Test Case from the suite", () => {
     const store = new ProjectStore();
     const suite = new Suite();
-    const test = new Test();
-    store.addTest(test);
-    suite.addTest(test);
+    const test = new TestCase();
+    store.addTestCase(test);
+    suite.addTestCase(test);
     expect(suite.tests.length).toBe(1);
-    suite.removeTest(test);
+    suite.removeTestCase(test);
     expect(suite.tests.length).toBe(0);
   });
   it("should do nothing if removed a non-existent test", () => {
     const store = new ProjectStore();
     const suite = new Suite();
-    const test = new Test();
-    store.addTest(test);
-    suite.addTest(test);
+    const test = new TestCase();
+    store.addTestCase(test);
+    suite.addTestCase(test);
     expect(suite.tests.length).toBe(1);
-    suite.removeTest(new Test());
+    suite.removeTestCase(new TestCase());
     expect(suite.tests.length).toBe(1);
-  });
-  it("should throw if a different type was given", () => {
-    const suite = new Suite();
-    expect(() => suite.removeTest(1)).toThrowError("Expected to receive Test instead received Number");
   });
 });

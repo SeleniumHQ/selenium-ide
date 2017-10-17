@@ -1,22 +1,22 @@
 /* eslint-disable */
 import { useStrict, observe } from "mobx";
-import Test from "../../models/Test";
+import TestCase from "../../models/TestCase";
 
 useStrict(true);
 
-describe("Test model", () => {
+describe("TestCase model", () => {
   it("new test should be named 'Untitled Test'", () => {
-    expect((new Test()).name).toBe("Untitled Test");
+    expect((new TestCase()).name).toBe("Untitled Test");
   });
   it("should observe name changes", () => {
-    const test = new Test();
+    const test = new TestCase();
     const disposer = observe(test, "name", (change) => {
       expect(change.newValue).toBe("changed");
     });
     test.name = "changed";
     disposer();
   });
-  it("Tests should have randomly generated identifiers", () => {
-    expect((new Test()).id).not.toBe((new Test()).id);
+  it("Test Cases should have randomly generated identifiers", () => {
+    expect((new TestCase()).id).not.toBe((new TestCase()).id);
   });
 });

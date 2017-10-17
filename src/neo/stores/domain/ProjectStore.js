@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import Test from "../../models/Test";
+import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
 export default class ProjectStore {
@@ -9,7 +9,7 @@ export default class ProjectStore {
 
   constructor(name) {
     this.name = name;
-    this.addTest = this.addTest.bind(this);
+    this.addTestCase = this.addTestCase.bind(this);
   }
 
   createSuite(...argv) {
@@ -19,27 +19,27 @@ export default class ProjectStore {
     return suite;
   }
 
-  createTest(...argv) {
-    const test = new Test(undefined, ...argv);
-    this.addTest(test);
+  createTestCase(...argv) {
+    const test = new TestCase(undefined, ...argv);
+    this.addTestCase(test);
 
     return test;
   }
 
-  addTest(test) {
-    if (!test || test.constructor.name !== "Test") {
-      throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
+  addTestCase(test) {
+    if (!test || test.constructor.name !== "TestCase") {
+      throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
     }
   }
 
-  deleteTest(test) {
-    if (!test || test.constructor.name !== "Test") {
-      throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
+  deleteTestCase(test) {
+    if (!test || test.constructor.name !== "TestCase") {
+      throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.suites.forEach(suite => {
-        suite.removeTest(test);
+        suite.removeTestCase(test);
       });
       this.tests.remove(test);
     }

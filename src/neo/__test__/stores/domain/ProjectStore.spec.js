@@ -2,7 +2,7 @@
 import { useStrict, observe } from "mobx";
 import ProjectStore from "../../../stores/domain/ProjectStore";
 import Suite from "../../../models/Suite";
-import Test from "../../../models/Test";
+import TestCase from "../../../models/TestCase";
 
 useStrict(true);
 
@@ -19,45 +19,45 @@ describe("Project Store", () => {
     store.name = "changed";
     disposer();
   });
-  it("should observe adding addition test to the store", () => {
+  it("should observe adding addition test case to the store", () => {
     const store = new ProjectStore();
     const disposer = observe(store, "tests", (change) => {
       expect(change.newValue.length).toBe(1);
     });
-    store.tests.push(new Test());
+    store.tests.push(new TestCase());
     disposer();
   });
-  it("should add a new Test", () => {
+  it("should add a new TestCase", () => {
     const store = new ProjectStore();
     expect(store.tests.length).toBe(0);
-    store.addTest(new Test());
+    store.addTestCase(new TestCase());
     expect(store.tests.length).toBe(1);
   });
-  it("should throw if no Test was given", () => {
+  it("should throw if no TestCase was given", () => {
     const store = new ProjectStore();
-    expect(() => store.addTest()).toThrowError("Expected to receive Test instead received undefined");
+    expect(() => store.addTestCase()).toThrowError("Expected to receive TestCase instead received undefined");
   });
   it("should throw if a different type was given", () => {
     const store = new ProjectStore();
-    expect(() => store.addTest(1)).toThrowError("Expected to receive Test instead received Number");
+    expect(() => store.addTestCase(1)).toThrowError("Expected to receive TestCase instead received Number");
   });
-  it("should delete a test", () => {
+  it("should delete a test case", () => {
     const store = new ProjectStore();
-    const test = new Test();
-    store.addTest(test);
+    const test = new TestCase();
+    store.addTestCase(test);
     expect(store.tests.length).toBe(1);
-    store.deleteTest(test);
+    store.deleteTestCase(test);
     expect(store.tests.length).toBe(0);
   });
-  it("should create a test", () => {
+  it("should create a test case", () => {
     const store = new ProjectStore();
     expect(store.tests.length).toBe(0);
-    store.createTest();
+    store.createTestCase();
     expect(store.tests.length).toBe(1);
   });
   it("should pass ctor args to test when created", () => {
     const store = new ProjectStore();
-    const test = store.createTest("my test");
+    const test = store.createTestCase("my test");
     expect(test.name).toBe("my test");
   });
   it("should create a suite", () => {
@@ -76,16 +76,16 @@ describe("Project Store", () => {
     const firstSuite = store.createSuite();
     const secondSuite = store.createSuite();
     const controlSuite = store.createSuite();
-    const toBeDeleted = store.createTest();
-    const control = store.createTest();
-    firstSuite.addTest(toBeDeleted);
-    secondSuite.addTest(toBeDeleted);
-    secondSuite.addTest(control);
-    controlSuite.addTest(control);
+    const toBeDeleted = store.createTestCase();
+    const control = store.createTestCase();
+    firstSuite.addTestCase(toBeDeleted);
+    secondSuite.addTestCase(toBeDeleted);
+    secondSuite.addTestCase(control);
+    controlSuite.addTestCase(control);
     expect(firstSuite.tests.length).toBe(1);
     expect(secondSuite.tests.length).toBe(2);
     expect(controlSuite.tests.length).toBe(1);
-    store.deleteTest(toBeDeleted);
+    store.deleteTestCase(toBeDeleted);
     expect(firstSuite.tests.length).toBe(0);
     expect(secondSuite.tests.length).toBe(1);
     expect(controlSuite.tests.length).toBe(1);

@@ -9,21 +9,21 @@ export default class Suite {
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;
-    this.addTest = this.addTest.bind(this);
-    this.removeTest = this.removeTest.bind(this);
+    this.addTestCase = this.addTestCase.bind(this);
+    this.removeTestCase = this.removeTestCase.bind(this);
   }
 
-  addTest(test) {
-    if (!test || test.constructor.name !== "Test") {
-      throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
+  addTestCase(test) {
+    if (!test || test.constructor.name !== "TestCase") {
+      throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
     }
   }
 
-  removeTest(test) {
-    if (!test || test.constructor.name !== "Test") {
-      throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
+  removeTestCase(test) {
+    if (!test || test.constructor.name !== "TestCase") {
+      throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.remove(test);
     }
