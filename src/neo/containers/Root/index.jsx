@@ -1,8 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
-
+import { useStrict } from "mobx";
 import Panel from "../Panel";
+
+useStrict(true);
 
 const render = Component => {
   ReactDOM.render(
