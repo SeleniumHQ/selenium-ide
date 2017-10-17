@@ -38,13 +38,12 @@ export default class Panel extends React.Component {
     this.setState({ selectedTest: testId });
   }
   moveTest(testItem, toProject) {
-    const destination = this.state.projects.find((project) => (project.name === toProject));
-    const origin = this.state.projects.find((project) => (project.name === testItem.project));
+    const destination = this.state.store.suites.find((project) => (project.id === toProject));
+    const origin = this.state.store.suites.find((project) => (project.id === testItem.project));
     const test = origin.tests.find(test => (test.id === testItem.id));
 
-    destination.tests.push(test);
-    sortTests(destination.tests);
-    origin.tests.splice(origin.tests.indexOf(test), 1);
+    destination.addTestCase(test);
+    origin.removeTestCase(test);
     this.forceUpdate();
   }
   render() {
