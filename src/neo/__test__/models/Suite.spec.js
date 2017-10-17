@@ -43,7 +43,7 @@ describe("Suite model", () => {
     const suite = new Suite();
     expect(() => suite.addTest(1)).toThrowError("Expected to receive Test instead received Number");
   });
-  it("should remove a Test", () => {
+  it("should remove a Test from the suite", () => {
     const store = new ProjectStore();
     const suite = new Suite();
     const test = new Test();
@@ -57,7 +57,7 @@ describe("Suite model", () => {
     const store = new ProjectStore();
     const suite = new Suite();
     const test = new Test();
-    store.addTest(test)
+    store.addTest(test);
     suite.addTest(test);
     expect(suite.tests.length).toBe(1);
     suite.removeTest(new Test());
