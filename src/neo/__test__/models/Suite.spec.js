@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { observe } from "mobx";
 import Suite from "../../models/Suite";
+import Test from "../../models/Test";
 
 describe("Suite model", () => {
   it("new suite should be named 'Utitled Suite'", () => {
@@ -16,5 +17,12 @@ describe("Suite model", () => {
   });
   it("Tests should have randomly generated identifiers", () => {
     expect((new Suite()).id).not.toBe((new Suite()).id);
+  });
+  it("should observe when a new Test is added", () => {
+    const suite = new Suite();
+    const disposer = observe(suite, "tests", (change) => {
+      expect(change.newValue.length).toBe(1);
+    });
+    suite.tests.push(new Test());
   });
 });
