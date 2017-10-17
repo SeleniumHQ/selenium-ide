@@ -71,11 +71,11 @@ describe("Project Store", () => {
   });
   it("should remove the deleted test from it's suites", () => {
     const store = new ProjectStore();
-    const firstSuite = new Suite(store);
-    const secondSuite = new Suite(store);
-    const controlSuite = new Suite(store);
-    const toBeDeleted = new Test();
-    const control = new Test();
+    const firstSuite = store.createSuite();
+    const secondSuite = store.createSuite();
+    const controlSuite = store.createSuite();
+    const toBeDeleted = store.createTest();
+    const control = store.createTest();
     store.addTest(toBeDeleted);
     store.addTest(control);
     firstSuite.addTest(toBeDeleted);
