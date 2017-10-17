@@ -47,6 +47,28 @@ describe("Project Store", () => {
     store.deleteTest(test);
     expect(store.tests.length).toBe(0);
   });
+  it("should create a test", () => {
+    const store = new ProjectStore();
+    expect(store.tests.length).toBe(0);
+    store.createTest();
+    expect(store.tests.length).toBe(1);
+  });
+  it("should pass ctor args to test when created", () => {
+    const store = new ProjectStore();
+    const test = store.createTest("my test");
+    expect(test.name).toBe("my test");
+  });
+  it("should create a suite", () => {
+    const store = new ProjectStore();
+    expect(store.suites.length).toBe(0);
+    store.createSuite();
+    expect(store.suites.length).toBe(1);
+  });
+  it("should pass ctor args to suite when created", () => {
+    const store = new ProjectStore();
+    const suite = store.createSuite("my suite");
+    expect(suite.name).toBe("my suite");
+  });
   it("should remove the deleted test from it's suites", () => {
     const store = new ProjectStore();
     const firstSuite = new Suite(store);
