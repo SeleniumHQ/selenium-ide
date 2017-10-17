@@ -49,16 +49,21 @@ describe("Suite model", () => {
     expect(() => suite.addTest(new Test())).toThrowError("The given Test does not exists in the tests pool");
   });
   it("should remove a Test", () => {
-    const suite = new Suite();
+    const store = new ProjectStore();
+    const suite = new Suite(store);
     const test = new Test();
+    store.addTest(test);
     suite.addTest(test);
     expect(suite.tests.length).toBe(1);
     suite.removeTest(test);
     expect(suite.tests.length).toBe(0);
   });
   it("should do nothing if removed a non-existent test", () => {
-    const suite = new Suite();
-    suite.addTest(new Test());
+    const store = new ProjectStore();
+    const suite = new Suite(store);
+    const test = new Test();
+    store.addTest(test)
+    suite.addTest(test);
     expect(suite.tests.length).toBe(1);
     suite.removeTest(new Test());
     expect(suite.tests.length).toBe(1);
