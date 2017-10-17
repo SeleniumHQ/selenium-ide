@@ -25,4 +25,18 @@ describe("Suite model", () => {
     });
     suite.tests.push(new Test());
   });
+  it("should add a new Test", () => {
+    const suite = new Suite();
+    expect(suite.tests.length).toBe(0);
+    suite.addTest(new Test());
+    expect(suite.tests.length).toBe(1);
+  });
+  it("should remove a Test", () => {
+    const suite = new Suite();
+    const test = new Test();
+    suite.addTest(test);
+    expect(suite.tests.length).toBe(1);
+    suite.removeTest(test);
+    expect(suite.tests.length).toBe(0);
+  });
 });
