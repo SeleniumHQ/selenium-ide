@@ -3,7 +3,7 @@ import uuidv4 from "uuid/v4";
 
 export default class Test {
   id = null;
-  @observable name = "";
+  @observable name = "Untitled Test";
 
   store = null;
 
