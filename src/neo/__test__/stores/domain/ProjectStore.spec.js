@@ -19,6 +19,9 @@ describe("Project Store", () => {
   it("should add test to the store", () => {
     const store = new ProjectStore();
     store.tests.push(new Test());
-    expect(store.tests.length).toBe(1);
+    const disposer = autorun(function() {
+      expect(store.tests.length).toBe(1);
+    });
+    disposer();
   });
 });
