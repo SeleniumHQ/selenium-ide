@@ -3,12 +3,12 @@ import uuidv4 from "uuid/v4";
 
 export default class Test {
   id = null;
-  @observable name = "Untitled Test";
+  @observable name = null;
 
   store = null;
 
-  constructor(store, id = uuidv4()) {
-    this.store = store;
+  constructor(id = uuidv4(), name = "Untitled Test") {
     this.id = id;
+    this.name = name;
   }
 }
