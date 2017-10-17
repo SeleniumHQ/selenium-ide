@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { observe } from "mobx";
+import ProjectStore from "../../stores/domain/ProjectStore";
 import Suite from "../../models/Suite";
 import Test from "../../models/Test";
 
@@ -38,6 +39,11 @@ describe("Suite model", () => {
   it("should throw if a different type was given", () => {
     const suite = new Suite();
     expect(() => suite.addTest(1)).toThrowError("Expected to receive Test instead received Number");
+  });
+  it("should throw if a test that does not appear in the store is added", () => {
+    const store = new ProjectStore();
+    const suite = new Suite(store);
+    expect(() => suite.addTest(new Test())).toThrowError("The given Test does not exists in the tests pool");
   });
   it("should remove a Test", () => {
     const suite = new Suite();
