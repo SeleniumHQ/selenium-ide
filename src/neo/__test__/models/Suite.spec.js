@@ -27,9 +27,12 @@ describe("Suite model", () => {
     suite.tests.push(new Test());
   });
   it("should add a new Test", () => {
-    const suite = new Suite();
+    const store = new ProjectStore();
+    const suite = new Suite(store);
+    const test = new Test();
+    store.addTest(test);
     expect(suite.tests.length).toBe(0);
-    suite.addTest(new Test());
+    suite.addTest(test);
     expect(suite.tests.length).toBe(1);
   });
   it("should throw if no Test was given", () => {
