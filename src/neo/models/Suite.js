@@ -12,6 +12,7 @@ export default class Suite {
     this.store = store;
     this.id = id;
     this.addTest = this.addTest.bind(this);
+    this.removeTest = this.removeTest.bind(this);
   }
 
   addTest(test) {
