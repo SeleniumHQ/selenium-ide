@@ -16,9 +16,9 @@ export default class ProjectList extends React.Component {
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <ul className="projects">
-          {this.props.projects.map(({name, tests}) => (
-            <li key={name}>
-              <Project name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
+          {this.props.projects.map(({id, name, tests}) => (
+            <li key={id}>
+              <Project id={id} name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
             </li>
           ))}
         </ul>

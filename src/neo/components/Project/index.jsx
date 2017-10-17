@@ -22,7 +22,7 @@ const testTarget = {
       return;
     }
 
-    props.moveTest(monitor.getItem(), props.name);
+    props.moveTest(monitor.getItem(), props.id);
   }
 };
 
@@ -57,6 +57,7 @@ class Project extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     tests: PropTypes.array.isRequired,
     selectedTest: PropTypes.string,
