@@ -21,4 +21,12 @@ export default class Suite {
       this.tests.push(test);
     }
   }
+
+  removeTest(test) {
+    if (!test || test.constructor.name !== "Test") {
+      throw new Error(`Expected to receive Test instead received ${test ? test.constructor.name : test}`);
+    } else {
+      this.tests.remove(test);
+    }
+  }
 }
