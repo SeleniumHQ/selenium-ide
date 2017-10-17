@@ -25,17 +25,17 @@ describe("Project Store", () => {
     disposer();
   });
   it("should add a new Test", () => {
-    const store = new Store();
+    const store = new ProjectStore();
     expect(store.tests.length).toBe(0);
     store.addTest(new Test());
     expect(store.tests.length).toBe(1);
   });
   it("should throw if no Test was given", () => {
-    const store = new Store();
+    const store = new ProjectStore();
     expect(() => store.addTest()).toThrowError("Expected to receive Test instead received undefined");
   });
   it("should throw if a different type was given", () => {
-    const store = new Store();
+    const store = new ProjectStore();
     expect(() => store.addTest(1)).toThrowError("Expected to receive Test instead received Number");
   });
 });
