@@ -31,6 +31,14 @@ describe("Suite model", () => {
     suite.addTest(new Test());
     expect(suite.tests.length).toBe(1);
   });
+  it("should throw if no Test was given", () => {
+    const suite = new Suite();
+    expect(() => suite.addTest()).toThrowError("Expected to receive Test instead received undefined");
+  });
+  it("should throw if a different type was given", () => {
+    const suite = new Suite();
+    expect(() => suite.addTest(1)).toThrowError("Expected to receive Test instead received Number");
+  });
   it("should remove a Test", () => {
     const suite = new Suite();
     const test = new Test();
@@ -38,5 +46,16 @@ describe("Suite model", () => {
     expect(suite.tests.length).toBe(1);
     suite.removeTest(test);
     expect(suite.tests.length).toBe(0);
+  });
+  it("should do nothing if removed a non-existent test", () => {
+    const suite = new Suite();
+    suite.addTest(new Test());
+    expect(suite.tests.length).toBe(1);
+    suite.removeTest(new Test());
+    expect(suite.tests.length).toBe(1);
+  });
+  it("should throw if a different type was given", () => {
+    const suite = new Suite();
+    expect(() => suite.removeTest(1)).toThrowError("Expected to receive Test instead received Number");
   });
 });
