@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { autorun } from "mobx";
+import { observe } from "mobx";
 import ProjectStore from "../../../stores/domain/ProjectStore";
 import Test from "../../../models/Test";
 
@@ -10,18 +10,18 @@ describe("Project Store", () => {
   });
   it("should observe the name change", () => {
     const store = new ProjectStore("myStore");
-    store.name = "changed";
-    const disposer = autorun(function() {
-      expect(store.name).toBe("changed");
+    const disposer = observe(store, "name", (change) => {
+      expect(change.newValue).toBe("changed");
     });
+    store.name = "changed";
     disposer();
   });
   it("should add test to the store", () => {
     const store = new ProjectStore();
-    store.tests.push(new Test());
-    const disposer = autorun(function() {
-      expect(store.tests.length).toBe(1);
+    const disposer = observe(store, "tests", (change) => {
+      expect(change.newValue.length).toBe(1);
     });
+    store.tests.push(new Test());
     disposer();
   });
 });
