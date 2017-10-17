@@ -6,8 +6,6 @@ export default class Suite {
   @observable name = null;
   @observable tests = [];
 
-  store = null;
-
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;

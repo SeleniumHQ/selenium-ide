@@ -5,8 +5,6 @@ export default class Test {
   id = null;
   @observable name = null;
 
-  store = null;
-
   constructor(id = uuidv4(), name = "Untitled Test") {
     this.id = id;
     this.name = name;
