@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
@@ -12,21 +12,21 @@ export default class ProjectStore {
     this.addTestCase = this.addTestCase.bind(this);
   }
 
-  createSuite(...argv) {
+  @action createSuite(...argv) {
     const suite = new Suite(undefined, ...argv);
     this.suites.push(suite);
 
     return suite;
   }
 
-  createTestCase(...argv) {
+  @action createTestCase(...argv) {
     const test = new TestCase(undefined, ...argv);
     this.addTestCase(test);
 
     return test;
   }
 
-  addTestCase(test) {
+  @action addTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
@@ -34,7 +34,7 @@ export default class ProjectStore {
     }
   }
 
-  deleteTestCase(test) {
+  @action deleteTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {

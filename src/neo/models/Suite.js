@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Suite {
@@ -13,7 +13,7 @@ export default class Suite {
     this.removeTestCase = this.removeTestCase.bind(this);
   }
 
-  addTestCase(test) {
+  @action addTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
@@ -21,7 +21,7 @@ export default class Suite {
     }
   }
 
-  removeTestCase(test) {
+  @action removeTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
