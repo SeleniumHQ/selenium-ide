@@ -76,8 +76,6 @@ describe("Project Store", () => {
     const controlSuite = store.createSuite();
     const toBeDeleted = store.createTest();
     const control = store.createTest();
-    store.addTest(toBeDeleted);
-    store.addTest(control);
     firstSuite.addTest(toBeDeleted);
     secondSuite.addTest(toBeDeleted);
     secondSuite.addTest(control);
