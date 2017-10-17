@@ -1,6 +1,6 @@
 import React from "react";
-import uuidv4 from "uuid/v4";
-import generate from "project-name-generator";
+import ProjectStore from "../../stores/domain/ProjectStore";
+import seed from "../../stores/seed";
 import OmniBar from "../../components/OmniBar";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
@@ -8,23 +8,6 @@ import Editor from "../Editor";
 import Console from "../Console";
 import "../../styles/app.css";
 import "../../styles/heights.css";
-
-function tests() {
-  return sortTests([
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    },
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    },
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    },
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    }
-  ]);
-}
 
 function sortTests(tests) {
   return tests.sort((a, b) => {
@@ -38,27 +21,16 @@ function sortTests(tests) {
   });
 }
 
+const store = new ProjectStore();
+
+if (process.env.NODE_ENV !== "production") {
+  seed(store);
+}
+
 export default class Panel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      projects: [{
-        name: "Project One",
-        tests: tests()
-      },
-      {
-        name: "Project Two",
-        tests: tests()
-      },
-      {
-        name: "Project Three",
-        tests: tests()
-      },
-      {
-        name: "Project Four",
-        tests: tests()
-      }]
-    };
+    this.state = { store };
     this.selectTest = this.selectTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
   }
@@ -83,7 +55,7 @@ export default class Panel extends React.Component {
         <div style={{
           float: "left"
         }}>
-          <Navigation projects={this.state.projects} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
+          <Navigation projects={this.state.store.suites} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{
