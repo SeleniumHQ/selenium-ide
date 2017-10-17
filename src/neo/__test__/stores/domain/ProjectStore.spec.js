@@ -16,7 +16,7 @@ describe("Project Store", () => {
     store.name = "changed";
     disposer();
   });
-  it("should add test to the store", () => {
+  it("should observe adding addition test to the store", () => {
     const store = new ProjectStore();
     const disposer = observe(store, "tests", (change) => {
       expect(change.newValue.length).toBe(1);
