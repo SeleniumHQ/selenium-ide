@@ -1,8 +1,12 @@
 import React from "react";
+import { PropTypes as MobxPropTypes } from "mobx-react";
 import TestRow from "../TestRow";
 import "./style.css";
 
 export default class TestTable extends React.Component {
+  static propTypes = {
+    commands: MobxPropTypes.arrayOrObservableArray
+  };
   render() {
     return (
       <div className="test-table">
@@ -15,9 +19,9 @@ export default class TestTable extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <TestRow command="open" target="/" state="Passed" />
-            <TestRow command="clickAt" target="link=store" state="Passed" />
-            <TestRow command="assertText" value="The item is available" state="Failed" />
+            { this.props.commands ? this.props.commands.map(({ id, command, target, value }) => (
+              <TestRow key={id} command={command} target={target} value={value} />
+            )) : null }
           </tbody>
         </table>
       </div>
