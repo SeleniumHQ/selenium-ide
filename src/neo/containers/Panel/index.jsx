@@ -38,7 +38,7 @@ if (process.env.NODE_ENV !== "production") {
         <div style={{
           float: "left"
         }}>
-          <Navigation suites={this.state.project.suites} moveTest={this.moveTest} />
+          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{
