@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { PropTypes as MobxPropTypes } from "mobx-react";
+import UiState from "../../stores/view/UiState";
 import TabBar from "../../components/TabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
@@ -32,7 +33,7 @@ export default class Navigation extends React.Component {
         maxWidth: "200px"
       }}>
         <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab} />
-        <SearchBar />
+        <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
           ? <TestList tests={this.props.tests} />
           : <SuiteList suites={this.props.suites} moveTest={this.props.moveTest} /> }
