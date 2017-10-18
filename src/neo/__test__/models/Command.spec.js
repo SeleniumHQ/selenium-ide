@@ -1,6 +1,17 @@
 /* eslint-disable */
 import Command, { Commands } from "../../models/Command";
 
+describe("Command", () => {
+  it("should set a command", () => {
+    const command = new Command();
+    command.setCommand(Commands.open);
+    expect(command.command).toBe(Commands.open);
+  });
+  it("should throw if the command is now part of the enum", () => {
+    const command = new Command();
+    expect(() => { command.setCommand("throw"); }).toThrowError("Invalid Command Type was given");
+  });
+});
 describe("Commands enum", () => {
   it("should contains only strings as values", () => {
     Object.keys(Commands).forEach(command => {
