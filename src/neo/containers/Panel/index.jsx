@@ -1,4 +1,5 @@
 import React from "react";
+import { observer } from "mobx-react";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import OmniBar from "../../components/OmniBar";
@@ -15,7 +16,7 @@ if (process.env.NODE_ENV !== "production") {
   seed(project);
 }
 
-export default class Panel extends React.Component {
+@observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = { project };
@@ -28,13 +29,12 @@ export default class Panel extends React.Component {
 
     destination.addTestCase(test);
     origin.removeTestCase(test);
-    this.forceUpdate();
   }
   render() {
     return (
       <div>
         <OmniBar />
-        <ProjectHeader />
+        <ProjectHeader title={this.state.project.name} changeName={this.state.project.changeName} />
         <div style={{
           float: "left"
         }}>

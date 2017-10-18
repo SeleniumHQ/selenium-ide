@@ -11,6 +11,15 @@ describe("Project Store", () => {
     const store = new ProjectStore("myStore");
     expect(store.name).toBe("myStore");
   });
+  it("should set a default name", () => {
+    const store = new ProjectStore();
+    expect(store.name).toBe("Untitled Project");
+  });
+  it("should set the name", () => {
+    const store = new ProjectStore("test");
+    store.changeName("changed");
+    expect(store.name).toBe("changed");
+  });
   it("should observe the name change", () => {
     const store = new ProjectStore("myStore");
     const disposer = observe(store, "name", (change) => {

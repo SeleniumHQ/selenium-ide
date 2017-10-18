@@ -8,22 +8,21 @@ import "./style.css";
 export default class ProjectHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: "Untitled Project"
-    };
     this.handleChange = this.handleChange.bind(this);
   }
   static propTypes = {
-    changed: PropTypes.bool
+    title: PropTypes.string.isRequired,
+    changed: PropTypes.bool,
+    changeName: PropTypes.func.isRequired
   };
   handleChange(e) {
-    this.setState({ title: e.target.value });
+    this.props.changeName(e.target.value);
   }
   render() {
     return (
       <div className="header">
-        <Title title={`Selenium IDE - ${this.state.title}`} />
-        <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.state.title} />
+        <Title title={`Selenium IDE - ${this.props.title}`} />
+        <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} />
       </div>
     );
   }

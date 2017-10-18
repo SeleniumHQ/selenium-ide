@@ -8,9 +8,14 @@ export default class ProjectStore {
   @observable tests = [];
   @observable suites = [];
 
-  constructor(name) {
+  constructor(name = "Untitled Project") {
     this.name = name;
     this.addTestCase = this.addTestCase.bind(this);
+    this.changeName = this.changeName.bind(this);
+  }
+
+  @action changeName(name) {
+    this.name = name;
   }
 
   @action createSuite(...argv) {
