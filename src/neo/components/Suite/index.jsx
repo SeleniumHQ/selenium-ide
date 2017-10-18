@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { PropTypes as MobxPropTypes } from "mobx-react";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -59,7 +60,7 @@ class Suite extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    tests: PropTypes.array.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,

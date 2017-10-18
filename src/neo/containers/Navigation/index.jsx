@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { PropTypes as MobxPropTypes } from "mobx-react";
 import TabBar from "../../components/TabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
@@ -16,8 +17,8 @@ export default class Navigation extends React.Component {
     this.handleChangedTab = this.handleChangedTab.bind(this);
   }
   static propTypes = {
-    suites: PropTypes.array.isRequired,
-    tests: PropTypes.array.isRequired,
+    suites: MobxPropTypes.arrayOrObservableArray.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {

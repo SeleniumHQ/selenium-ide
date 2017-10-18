@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { PropTypes as MobxPropTypes } from "mobx-react";
 import { observer } from "mobx-react";
 import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
@@ -8,7 +9,7 @@ import "./style.css";
 
 @observer export default class TestList extends React.Component {
   static propTypes = {
-    tests: PropTypes.array.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     collapsed: PropTypes.bool,
     suite: PropTypes.string
   };
