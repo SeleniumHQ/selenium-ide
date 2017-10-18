@@ -11,7 +11,18 @@ describe("Command", () => {
     const command = new Command();
     expect(() => { command.setCommand("throw"); }).toThrowError("Invalid Command Type was given");
   });
+  it("should set the target", () => {
+    const command = new Command();
+    command.setTarget("a");
+    expect(command.target).toBe("a");
+  });
+  it("should set the value", () => {
+    const command = new Command();
+    command.setValue("123456");
+    expect(command.value).toBe("123456");
+  });
 });
+
 describe("Commands enum", () => {
   it("should contains only strings as values", () => {
     Object.keys(Commands).forEach(command => {

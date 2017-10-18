@@ -9,6 +9,9 @@ export default class Command {
 
   constructor(id = uuidv4()) {
     this.id = id;
+    this.setTarget = this.setTarget.bind(this);
+    this.setTarget = this.setTarget.bind(this);
+    this.setValue = this.setValue.bind(this);
   }
 
   @action setCommand(command) {
@@ -17,6 +20,14 @@ export default class Command {
     } else {
       this.command = command;
     }
+  }
+
+  @action setTarget(target) {
+    this.target = target;
+  }
+
+  @action setValue(value) {
+    this.value = value;
   }
 }
 
