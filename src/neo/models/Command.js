@@ -31,7 +31,7 @@ export default class Command {
   }
 }
 
-const CommandsArray = [
+export const CommandsArray = Object.freeze([
   "addSelection",
   "answerOnNextPrompt",
   "assertAlert",
@@ -66,7 +66,7 @@ const CommandsArray = [
   "type",
   "verifyText",
   "verifyTitle"
-];
+]);
 
 export const Commands = Object.freeze(CommandsArray.reduce((commands, command) => {
   commands[command] = command;
