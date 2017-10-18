@@ -2,6 +2,9 @@
 import Command, { Commands } from "../../models/Command";
 
 describe("Command", () => {
+  it("should generate and id", () => {
+    expect((new Command()).id).toBeDefined();
+  });
   it("should set a command", () => {
     const command = new Command();
     command.setCommand(Commands.open);
