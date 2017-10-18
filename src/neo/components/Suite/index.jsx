@@ -60,8 +60,6 @@ class Suite extends React.Component {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     tests: PropTypes.array.isRequired,
-    selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
@@ -80,7 +78,7 @@ class Suite extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} />
       </div>
     );
   }

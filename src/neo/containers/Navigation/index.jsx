@@ -9,8 +9,6 @@ import "./style.css";
 export default class Navigation extends React.Component {
   static propTypes = {
     suites: PropTypes.array.isRequired,
-    selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
   render() {
@@ -20,7 +18,7 @@ export default class Navigation extends React.Component {
       }}>
         <TabBar tabs={["Tests", "Suites"]} />
         <SearchBar />
-        <SuiteList suites={this.props.suites} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
+        <SuiteList suites={this.props.suites} moveTest={this.props.moveTest} />
         <Runs />
       </aside>
     );

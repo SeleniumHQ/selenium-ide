@@ -8,8 +8,6 @@ import "./style.css";
 export default class SuiteList extends React.Component {
   static propTypes = {
     suites: PropTypes.array.isRequired,
-    selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
   render() {
@@ -18,7 +16,7 @@ export default class SuiteList extends React.Component {
         <ul className="projects">
           {this.props.suites.map(({id, name, tests}) => (
             <li key={id}>
-              <Suite id={id} name={name} tests={tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
+              <Suite id={id} name={name} tests={tests} moveTest={this.props.moveTest} />
             </li>
           ))}
         </ul>

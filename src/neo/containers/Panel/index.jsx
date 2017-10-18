@@ -31,11 +31,7 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = { project };
-    this.selectTest = this.selectTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
-  }
-  selectTest(testId) {
-    this.setState({ selectedTest: testId });
   }
   moveTest(testItem, toSuite) {
     const destination = this.state.project.suites.find((suite) => (suite.id === toSuite));
@@ -54,7 +50,7 @@ export default class Panel extends React.Component {
         <div style={{
           float: "left"
         }}>
-          <Navigation suites={this.state.project.suites} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
+          <Navigation suites={this.state.project.suites} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{

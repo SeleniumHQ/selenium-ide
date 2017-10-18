@@ -10,8 +10,6 @@ import "./style.css";
   static propTypes = {
     tests: PropTypes.array.isRequired,
     collapsed: PropTypes.bool.isRequired,
-    selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired,
     suite: PropTypes.string.isRequired
   };
   render() {
