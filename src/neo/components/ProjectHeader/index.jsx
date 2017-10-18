@@ -2,26 +2,27 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Title from "react-document-title";
+import ContentEditable from "react-contenteditable";
 import "./style.css";
 
 export default class ProjectHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: "Untitled Project"
-    };
+    this.handleChange = this.handleChange.bind(this);
   }
   static propTypes = {
-    changed: PropTypes.bool
+    title: PropTypes.string.isRequired,
+    changed: PropTypes.bool,
+    changeName: PropTypes.func.isRequired
   };
-  componentDidMount() {
-    this.projectTitle.setAttribute("contentEditable", true);
+  handleChange(e) {
+    this.props.changeName(e.target.value);
   }
   render() {
     return (
       <div className="header">
-        <Title title={`Selenium IDE - ${this.state.title}`} />
-        <span className={classNames("title", {"changed": this.props.changed})} ref={(r) => { this.projectTitle = r; }}>{this.state.title}</span>
+        <Title title={`Selenium IDE - ${this.props.title}`} />
+        <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} />
       </div>
     );
   }

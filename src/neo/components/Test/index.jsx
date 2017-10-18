@@ -9,7 +9,7 @@ const testSource = {
   beginDrag(props) {
     return {
       id: props.id,
-      project: props.project
+      suite: props.suite
     };
   }
 };
@@ -20,27 +20,26 @@ function collect(connect, monitor) {
   };
 }
 
-class Test extends React.Component {
+export default class Test extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    project: PropTypes.string.isRequired,
+    suite: PropTypes.string,
     selected: PropTypes.bool,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
     selectTest: PropTypes.func.isRequired,
-    connectDragSource: PropTypes.func.isRequired
+    connectDragSource: PropTypes.func
   };
   handleClick(testId) {
     this.props.selectTest(testId);
   }
   render() {
-    return (this.props.connectDragSource(
-      <a href="#" className={classNames("test", {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.isDragging})} onClick={this.handleClick.bind(this, this.props.id)}>
-        <span>{this.props.name}</span>
-      </a>
-    ));
+    const rendered = <a href="#" className={classNames("test", {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.isDragging})} onClick={this.handleClick.bind(this, this.props.id)}>
+      <span>{this.props.name}</span>
+    </a>;
+    return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
 }
 
-export default DragSource(Type, testSource, collect)(Test);
+export const DraggableTest = DragSource(Type, testSource, collect)(Test);

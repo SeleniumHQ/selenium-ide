@@ -1,6 +1,7 @@
 import React from "react";
-import uuidv4 from "uuid/v4";
-import generate from "project-name-generator";
+import { observer } from "mobx-react";
+import ProjectStore from "../../stores/domain/ProjectStore";
+import seed from "../../stores/seed";
 import OmniBar from "../../components/OmniBar";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
@@ -9,81 +10,35 @@ import Console from "../Console";
 import "../../styles/app.css";
 import "../../styles/heights.css";
 
-function tests() {
-  return sortTests([
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    },
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    },
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    },
-    { id: uuidv4(),
-      name: generate({words: 2}).spaced
-    }
-  ]);
+const project = new ProjectStore();
+
+if (process.env.NODE_ENV !== "production") {
+  seed(project);
 }
 
-function sortTests(tests) {
-  return tests.sort((a, b) => {
-    if (a.name > b.name) {
-      return 1;
-    } else if (b.name > a.name) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
-}
-
-export default class Panel extends React.Component {
+@observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      projects: [{
-        name: "Project One",
-        tests: tests()
-      },
-      {
-        name: "Project Two",
-        tests: tests()
-      },
-      {
-        name: "Project Three",
-        tests: tests()
-      },
-      {
-        name: "Project Four",
-        tests: tests()
-      }]
-    };
-    this.selectTest = this.selectTest.bind(this);
+    this.state = { project };
     this.moveTest = this.moveTest.bind(this);
   }
-  selectTest(testId) {
-    this.setState({ selectedTest: testId });
-  }
-  moveTest(testItem, toProject) {
-    const destination = this.state.projects.find((project) => (project.name === toProject));
-    const origin = this.state.projects.find((project) => (project.name === testItem.project));
+  moveTest(testItem, toSuite) {
+    const destination = this.state.project.suites.find((suite) => (suite.id === toSuite));
+    const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
     const test = origin.tests.find(test => (test.id === testItem.id));
 
-    destination.tests.push(test);
-    sortTests(destination.tests);
-    origin.tests.splice(origin.tests.indexOf(test), 1);
-    this.forceUpdate();
+    destination.addTestCase(test);
+    origin.removeTestCase(test);
   }
   render() {
     return (
       <div>
         <OmniBar />
-        <ProjectHeader />
+        <ProjectHeader title={this.state.project.name} changeName={this.state.project.changeName} />
         <div style={{
           float: "left"
         }}>
-          <Navigation projects={this.state.projects} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
+          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{

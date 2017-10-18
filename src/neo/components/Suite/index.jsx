@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { PropTypes as MobxPropTypes } from "mobx-react";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -22,7 +23,7 @@ const testTarget = {
       return;
     }
 
-    props.moveTest(monitor.getItem(), props.name);
+    props.moveTest(monitor.getItem(), props.id);
   }
 };
 
@@ -48,7 +49,7 @@ const ArrowProject = styled.span`
   }
 `;
 
-class Project extends React.Component {
+class Suite extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,10 +58,9 @@ class Project extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    tests: PropTypes.array.isRequired,
-    selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
@@ -79,10 +79,10 @@ class Project extends React.Component {
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} project={this.props.name} tests={this.props.tests} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} />
+        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} />
       </div>
     );
   }
 }
 
-export default DropTarget(Type, testTarget, collect)(Project);
+export default DropTarget(Type, testTarget, collect)(Suite);

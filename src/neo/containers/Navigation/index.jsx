@@ -1,26 +1,42 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { PropTypes as MobxPropTypes } from "mobx-react";
+import UiState from "../../stores/view/UiState";
 import TabBar from "../../components/TabBar";
 import SearchBar from "../../components/SearchBar";
-import ProjectList from "../../components/ProjectList";
+import TestList from "../../components/TestList";
+import SuiteList from "../../components/SuiteList";
 import Runs from "../../components/Runs";
 import "./style.css";
 
 export default class Navigation extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTests: true
+    };
+    this.handleChangedTab = this.handleChangedTab.bind(this);
+  }
   static propTypes = {
-    projects: PropTypes.array.isRequired,
-    selectedTest: PropTypes.string,
-    selectTest: PropTypes.func.isRequired,
+    suites: MobxPropTypes.arrayOrObservableArray.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     moveTest: PropTypes.func.isRequired
   };
+  handleChangedTab(tab) {
+    this.setState({
+      showTests: tab === "Tests"
+    });
+  }
   render() {
     return (
       <aside className="test-cases" style={{
         maxWidth: "200px"
       }}>
-        <TabBar tabs={["Tests", "Suites"]} />
-        <SearchBar />
-        <ProjectList projects={this.props.projects} selectedTest={this.props.selectedTest} selectTest={this.props.selectTest} moveTest={this.props.moveTest} />
+        <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab} />
+        <SearchBar filter={UiState.changeFilter} />
+        { this.state.showTests
+          ? <TestList tests={this.props.tests} />
+          : <SuiteList suites={this.props.suites} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
     );
