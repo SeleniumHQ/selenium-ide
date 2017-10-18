@@ -4,4 +4,6 @@ class UiState {
   @observable selectedTest = null;
 }
 
-export default new UiState();
+if (!window._state) window._state = new UiState();
+
+export default window._state;
