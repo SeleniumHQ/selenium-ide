@@ -1,5 +1,6 @@
 aside.test-cases {
   border-right: 1px solid #CECECE;
+  position: relative;
 }
 
 aside.test-cases h3 {

@@ -10,3 +10,7 @@
   max-height: 500px;
   transition: max-height 400ms linear;
 }
+
+.tests li {
+  margin: 7px 0;
+}
