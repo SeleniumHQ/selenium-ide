@@ -3,3 +3,4 @@ node_modules
 _MACOSX/
 .DS_Store
 build
+.tern-port
