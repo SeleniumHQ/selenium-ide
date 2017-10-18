@@ -21,16 +21,16 @@ function sortTests(tests) {
   });
 }
 
-const store = new ProjectStore();
+const project = new ProjectStore();
 
 if (process.env.NODE_ENV !== "production") {
-  seed(store);
+  seed(project);
 }
 
 export default class Panel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { store };
+    this.state = { project };
     this.selectTest = this.selectTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
   }
@@ -38,8 +38,8 @@ export default class Panel extends React.Component {
     this.setState({ selectedTest: testId });
   }
   moveTest(testItem, toSuite) {
-    const destination = this.state.store.suites.find((suite) => (suite.id === toSuite));
-    const origin = this.state.store.suites.find((suite) => (suite.id === testItem.suite));
+    const destination = this.state.project.suites.find((suite) => (suite.id === toSuite));
+    const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
     const test = origin.tests.find(test => (test.id === testItem.id));
 
     destination.addTestCase(test);
@@ -54,7 +54,7 @@ export default class Panel extends React.Component {
         <div style={{
           float: "left"
         }}>
-          <Navigation suites={this.state.store.suites} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
+          <Navigation suites={this.state.project.suites} selectedTest={this.state.selectedTest} selectTest={this.selectTest} moveTest={this.moveTest} />
         </div>
         <Editor />
         <div style={{
