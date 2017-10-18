@@ -31,8 +31,44 @@ export default class Command {
   }
 }
 
-export const Commands = Object.freeze({
-  open: "open"
-});
+const CommandsArray = [
+  "addSelection",
+  "answerOnNextPrompt",
+  "assertAlert",
+  "assertConfirmation",
+  "assertPrompt",
+  "assertText",
+  "assertTitle",
+  "chooseCancelOnNextConfirmation",
+  "chooseCancelOnNextPrompt",
+  "chooseOkOnNextConfirmation",
+  "clickAt",
+  "doubleClickAt",
+  "dragAndDropToObject",
+  "echo",
+  "editContent",
+  "mouseDownAt",
+  "mouseMoveAt",
+  "mouseOut",
+  "mouseOver",
+  "mouseUpAt",
+  "open",
+  "pause",
+  "removeSelection",
+  "runScript",
+  "select",
+  "selectFrame",
+  "selectWindow",
+  "sendKeys",
+  "store",
+  "storeText",
+  "storeTitle",
+  "type",
+  "verifyText",
+  "verifyTitle"
+];
 
-const CommandsArray = Object.keys(Commands).map(k => (Commands[k]));
+export const Commands = Object.freeze(CommandsArray.reduce((commands, command) => {
+  commands[command] = command;
+  return commands;
+}, {}));
