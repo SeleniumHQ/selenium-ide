@@ -1,4 +1,5 @@
 import { action, observable } from "mobx";
+import SortBy from "sort-array";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
@@ -15,6 +16,7 @@ export default class ProjectStore {
   @action createSuite(...argv) {
     const suite = new Suite(undefined, ...argv);
     this.suites.push(suite);
+    this.suites.replace(SortBy(this.suites, "name"));
 
     return suite;
   }
@@ -31,6 +33,7 @@ export default class ProjectStore {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
+      this.tests.replace(SortBy(this.tests, "name"));
     }
   }
 

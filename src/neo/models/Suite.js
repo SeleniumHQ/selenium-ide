@@ -1,5 +1,6 @@
 import { action, observable } from "mobx";
 import uuidv4 from "uuid/v4";
+import SortBy from "sort-array";
 
 export default class Suite {
   id = null;
@@ -18,6 +19,7 @@ export default class Suite {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
+      this.tests.replace(SortBy(this.tests.peek(), "name"));
     }
   }
 
