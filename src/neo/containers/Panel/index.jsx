@@ -7,6 +7,7 @@ import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
 import Console from "../Console";
+import UiState from "../../stores/view/UiState";
 import "../../styles/app.css";
 import "../../styles/heights.css";
 
@@ -40,7 +41,7 @@ if (process.env.NODE_ENV !== "production") {
         }}>
           <Navigation tests={this.state.project.tests} suites={this.state.project.suites} moveTest={this.moveTest} />
         </div>
-        <Editor />
+        <Editor test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest)) : null} />
         <div style={{
           clear: "left"
         }}></div>
