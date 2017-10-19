@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Autocomplete from "react-autocomplete";
 import Input from "../FormInput";
+import CommandName from "../CommandName";
 import { Commands, CommandsArray } from "../../models/Command";
 
 export default class CommandInput extends React.Component {
@@ -25,7 +26,7 @@ export default class CommandInput extends React.Component {
               background: isHighlighted ? "#f4f4f4" : "white",
               padding: "8px"
             }}>
-              {Commands[item]}
+              <CommandName>{item}</CommandName>
             </div>
           }
           menuStyle={{
