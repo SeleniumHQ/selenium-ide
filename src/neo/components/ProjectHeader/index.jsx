@@ -21,7 +21,7 @@ export default class ProjectHeader extends React.Component {
   render() {
     return (
       <div className="header">
-        <Title title={`Selenium IDE - ${this.props.title}`} />
+        <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
         <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} />
       </div>
     );

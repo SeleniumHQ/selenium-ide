@@ -1,7 +1,9 @@
 import React from "react";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
+import modify from "../../side-effects/modify";
 import OmniBar from "../../components/OmniBar";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
@@ -11,11 +13,13 @@ import UiState from "../../stores/view/UiState";
 import "../../styles/app.css";
 import "../../styles/heights.css";
 
-const project = new ProjectStore();
+const project = observable(new ProjectStore());
 
 if (process.env.NODE_ENV !== "production") {
   seed(project);
 }
+
+modify(project);
 
 @observer export default class Panel extends React.Component {
   constructor(props) {
@@ -35,7 +39,7 @@ if (process.env.NODE_ENV !== "production") {
     return (
       <div>
         <OmniBar />
-        <ProjectHeader title={this.state.project.name} changeName={this.state.project.changeName} />
+        <ProjectHeader title={this.state.project.name} changed={this.state.project.modified} changeName={this.state.project.changeName} />
         <div style={{
           float: "left"
         }}>

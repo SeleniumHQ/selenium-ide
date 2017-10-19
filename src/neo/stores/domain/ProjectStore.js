@@ -4,6 +4,7 @@ import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
 export default class ProjectStore {
+  @observable modified = false;
   @observable name = "";
   @observable tests = [];
   @observable suites = [];
@@ -16,6 +17,10 @@ export default class ProjectStore {
 
   @action changeName(name) {
     this.name = name;
+  }
+
+  @action setModified() {
+    this.modified = true;
   }
 
   @action createSuite(...argv) {
