@@ -16,7 +16,6 @@ class UiState {
   }
 
   @action selectCommand(command) {
-    console.log(command);
     this.selectedCommand = command;
   }
 

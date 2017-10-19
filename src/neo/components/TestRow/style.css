@@ -2,6 +2,10 @@
   padding: 10px 15px;
 }
 
+.test-table tbody tr {
+  cursor: pointer;
+}
+
 .test-table tr.pending {
   background-color: #EDFCFF;
 }

@@ -7,7 +7,8 @@ import "./style.css";
 export const RowState = {
   Pending: "pending",
   Passed: "passed",
-  Failed: "failed"
+  Failed: "failed",
+  Selected: "pending"
 };
 
 export default class TestRow extends React.Component {

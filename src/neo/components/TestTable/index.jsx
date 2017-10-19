@@ -7,6 +7,7 @@ import "./style.css";
 export default class TestTable extends React.Component {
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
+    selectedCommand: PropTypes.string,
     selectCommand: PropTypes.func
   };
   render() {
@@ -22,7 +23,14 @@ export default class TestTable extends React.Component {
           </thead>
           <tbody>
             { this.props.commands ? this.props.commands.map((command) => (
-              <TestRow key={command.id} command={command.command} target={command.target} value={command.value} onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null} />
+              <TestRow
+                key={command.id}
+                command={command.command}
+                target={command.target}
+                value={command.value}
+                state={ this.props.selectedCommand === command.id ? "Selected" : null }
+                onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
+              />
             )) : null }
           </tbody>
         </table>
