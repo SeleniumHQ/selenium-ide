@@ -1813,6 +1813,10 @@ dom-converter@~0.1:
   dependencies:
     utila "~0.3"
 
+dom-scroll-into-view@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/dom-scroll-into-view/-/dom-scroll-into-view-1.0.1.tgz#32abb92f0d8feca6215162aef43e4b449ab8d99c"
+
 dom-serializer@0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-0.1.0.tgz#073c697546ce0780ce23be4a28e293e40bc30c82"
@@ -4873,6 +4877,13 @@ rc@^1.1.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-autocomplete@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/react-autocomplete/-/react-autocomplete-1.7.2.tgz#c55a0a4b8a9f4cba911dfccb74ef74f2161c46e0"
+  dependencies:
+    dom-scroll-into-view "1.0.1"
+    prop-types "^15.5.10"
 
 react-contenteditable@^2.0.5:
   version "2.0.5"
