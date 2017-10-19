@@ -23,7 +23,7 @@ export default class CommandInput extends React.Component {
           shouldItemRender={(item, value) => (Commands[item].indexOf(value) !== -1)}
           renderItem={(item, isHighlighted) =>
             <div key={item} style={{
-              background: isHighlighted ? "#f4f4f4" : "white",
+              background: isHighlighted ? "#f3f3f3" : "white",
               padding: "8px"
             }}>
               <CommandName>{item}</CommandName>
@@ -32,7 +32,8 @@ export default class CommandInput extends React.Component {
           menuStyle={{
             zIndex: 1,
             borderRadius: "3px",
-            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #DEDEDE",
+            boxShadow: "0 0 3px 0 rgba(0,0,0,0.3)",
             background: "rgba(255, 255, 255, 0.9)",
             padding: "2px 0",
             fontSize: "90%",
