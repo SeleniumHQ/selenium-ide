@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import TestRow from "../TestRow";
 import "./style.css";
 
-export default class TestTable extends React.Component {
+@observer export default class TestTable extends React.Component {
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
     selectedCommand: PropTypes.string,

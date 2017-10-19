@@ -6,18 +6,20 @@ export default class FormInput extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    children: PropTypes.element
+    children: PropTypes.element,
+    onChange: PropTypes.func
   };
   static defaultProps = {
     type: "text"
   };
   render() {
+    const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}});
     return (
       <div className="form-input">
         <label htmlFor={this.props.name}>{this.props.label}</label>
         { this.props.children
           ?  this.props.children
-          : <input {...this.props} /> }
+          : <input {...props} /> }
       </div>
     );
   }
