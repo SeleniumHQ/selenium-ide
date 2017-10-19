@@ -9,7 +9,7 @@ export default class Command {
 
   constructor(id = uuidv4()) {
     this.id = id;
-    this.setTarget = this.setTarget.bind(this);
+    this.setCommand = this.setCommand.bind(this);
     this.setTarget = this.setTarget.bind(this);
     this.setValue = this.setValue.bind(this);
   }
