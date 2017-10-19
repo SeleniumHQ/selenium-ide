@@ -1,5 +1,5 @@
 /* eslint-disable */
-import Command, { Commands } from "../../models/Command";
+import Command, { Commands, CommandsValues } from "../../models/Command";
 
 describe("Command", () => {
   it("should generate and id", () => {
@@ -37,5 +37,8 @@ describe("Commands enum", () => {
     Object.keys(Commands).forEach(command => {
       expect(Commands[command].constructor.name).toBe("String");
     });
+  });
+  it("it should traverse through the reverse dictionary", () => {
+    expect(Commands[0]).toBe(Commands[CommandsValues[Commands[0]]]);
   });
 });
