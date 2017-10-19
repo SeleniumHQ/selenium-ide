@@ -14,7 +14,7 @@ export default class Editor extends React.Component {
         display: "flow-root"
       }}>
         <ToolBar />
-        <TestTable />
+        <TestTable commands={this.props.test ? this.props.test.commands : null} />
         <CommandForm />
       </main>
     );
