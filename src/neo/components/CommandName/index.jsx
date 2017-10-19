@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { CommandsArray } from "../../models/Command";
 
-const CommandsDictionary = {
+export const CommandsDictionary = {
   addSelection: "add selection",
   answerOnNextPrompt: "answer on next prompt",
   assertAlert: "assert alert",
