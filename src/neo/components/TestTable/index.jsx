@@ -1,11 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import TestRow from "../TestRow";
 import "./style.css";
 
 export default class TestTable extends React.Component {
   static propTypes = {
-    commands: MobxPropTypes.arrayOrObservableArray
+    commands: MobxPropTypes.arrayOrObservableArray,
+    selectCommand: PropTypes.func
   };
   render() {
     return (
@@ -19,8 +21,8 @@ export default class TestTable extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { this.props.commands ? this.props.commands.map(({ id, command, target, value }) => (
-              <TestRow key={id} command={command} target={target} value={value} />
+            { this.props.commands ? this.props.commands.map((command) => (
+              <TestRow key={command.id} command={command.command} target={command.target} value={command.value} onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null} />
             )) : null }
           </tbody>
         </table>

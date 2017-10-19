@@ -15,11 +15,12 @@ export default class TestRow extends React.Component {
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
     value: PropTypes.string,
-    state: PropTypes.oneOf(Object.keys(RowState))
+    state: PropTypes.oneOf(Object.keys(RowState)),
+    onClick: PropTypes.func
   };
   render() {
     return (
-      <tr className={classNames({[RowState[this.props.state]]: this.props.state})}>
+      <tr className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick}>
         <td><CommandName>{this.props.command}</CommandName></td>
         <td>{this.props.target}</td>
         <td>{this.props.value}</td>
