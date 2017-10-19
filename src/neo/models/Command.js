@@ -71,6 +71,6 @@ export const Commands = Object.freeze({
 export const CommandsArray = Object.freeze(Object.keys(Commands));
 
 export const CommandsValues = Object.freeze(CommandsArray.reduce((commands, command) => {
-  commands[command] = Commands[command];
+  commands[Commands[command]] = command;
   return commands;
 }, {}));
