@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Autocomplete from "react-autocomplete";
 import Input from "../FormInput";
-import { CommandsDictionary } from "../CommandName";
+import { Commands, CommandsArray } from "../../models/Command";
 
 export default class CommandInput extends React.Component {
   static propTypes = {
@@ -16,16 +16,16 @@ export default class CommandInput extends React.Component {
       <Input name={this.props.name} label={this.props.label}>
         <Autocomplete
           getItemValue={(item) => (
-            CommandsDictionary[item]
+            Commands[item]
           )}
-          items={Object.keys(CommandsDictionary)}
-          shouldItemRender={(item, value) => (CommandsDictionary[item].indexOf(value) !== -1)}
+          items={CommandsArray}
+          shouldItemRender={(item, value) => (Commands[item].indexOf(value) !== -1)}
           renderItem={(item, isHighlighted) =>
             <div key={item} style={{
               background: isHighlighted ? "#f4f4f4" : "white",
               padding: "8px"
             }}>
-              {CommandsDictionary[item]}
+              {Commands[item]}
             </div>
           }
           menuStyle={{

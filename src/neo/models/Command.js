@@ -31,44 +31,46 @@ export default class Command {
   }
 }
 
-export const CommandsArray = Object.freeze([
-  "addSelection",
-  "answerOnNextPrompt",
-  "assertAlert",
-  "assertConfirmation",
-  "assertPrompt",
-  "assertText",
-  "assertTitle",
-  "chooseCancelOnNextConfirmation",
-  "chooseCancelOnNextPrompt",
-  "chooseOkOnNextConfirmation",
-  "clickAt",
-  "doubleClickAt",
-  "dragAndDropToObject",
-  "echo",
-  "editContent",
-  "mouseDownAt",
-  "mouseMoveAt",
-  "mouseOut",
-  "mouseOver",
-  "mouseUpAt",
-  "open",
-  "pause",
-  "removeSelection",
-  "runScript",
-  "select",
-  "selectFrame",
-  "selectWindow",
-  "sendKeys",
-  "store",
-  "storeText",
-  "storeTitle",
-  "type",
-  "verifyText",
-  "verifyTitle"
-]);
+export const Commands = Object.freeze({
+  addSelection: "add selection",
+  answerOnNextPrompt: "answer on next prompt",
+  assertAlert: "assert alert",
+  assertConfirmation: "assert confirmation",
+  assertPrompt: "assert prompt",
+  assertText: "assert text",
+  assertTitle: "assert title",
+  chooseCancelOnNextConfirmation: "choose cancel on next confirmation",
+  chooseCancelOnNextPrompt: "choose cancel on next prompt",
+  chooseOkOnNextConfirmation: "choose ok on next confirmation",
+  clickAt: "click at",
+  doubleClickAt: "double click at",
+  dragAndDropToObject: "drag and drop to object",
+  echo: "echo",
+  editContent: "edit content",
+  mouseDownAt: "mouse down at",
+  mouseMoveAt: "mouse move at",
+  mouseOut: "mouse out",
+  mouseOver: "mouse over",
+  mouseUpAt: "mouse up at",
+  open: "open",
+  pause: "pause",
+  removeSelection: "remove selection",
+  runScript: "run script",
+  select: "select",
+  selectFrame: "select frame",
+  selectWindow: "select window",
+  sendKeys: "send keys",
+  store: "store",
+  storeText: "store text",
+  storeTitle: "store title",
+  type: "type",
+  verifyText: "verify text",
+  verifyTitle: "verify title"
+});
 
-export const Commands = Object.freeze(CommandsArray.reduce((commands, command) => {
-  commands[command] = command;
+export const CommandsArray = Object.freeze(Object.keys(Commands));
+
+export const CommandsValues = Object.freeze(CommandsArray.reduce((commands, command) => {
+  commands[command] = Commands[command];
   return commands;
 }, {}));
