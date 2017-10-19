@@ -10,9 +10,15 @@ describe("Command", () => {
     command.setCommand(Commands.open);
     expect(command.command).toBe(Commands.open);
   });
-  it("should throw if the command is now part of the enum", () => {
+  it("should be a valid command", () => {
     const command = new Command();
-    expect(() => { command.setCommand("throw"); }).toThrowError("Invalid Command Type was given");
+    command.setCommand("open");
+    expect(command.isValid).toBeTruthy();
+  });
+  it("should be an invalid command", () => {
+    const command = new Command();
+    command.setCommand("test invalid");
+    expect(command.isValid).toBeFalsy();
   });
   it("should set the target", () => {
     const command = new Command();

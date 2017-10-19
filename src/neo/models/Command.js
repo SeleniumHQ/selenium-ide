@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Command {
@@ -15,11 +15,11 @@ export default class Command {
   }
 
   @action setCommand(command) {
-    if (!CommandsArray.includes(command)) {
-      throw new Error("Invalid Command Type was given");
-    } else {
-      this.command = command;
-    }
+    this.command = command;
+  }
+
+  @computed get isValid() {
+    return CommandsArray.includes(this.command);
   }
 
   @action setTarget(target) {
