@@ -10,7 +10,7 @@ export default class CommandInput extends React.Component {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     value: PropTypes.string,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func
   };
   render() {
     return (
@@ -42,8 +42,8 @@ export default class CommandInput extends React.Component {
             maxHeight: "30%"
           }}
           value={this.props.value}
-          onChange={(e) => { this.props.onChange(e.target.value); }}
-          onSelect={(value) => { this.props.onChange(value); }}
+          onChange={(e) => { if (this.props.onChange) this.props.onChange(e.target.value); }}
+          onSelect={(value) => { if (this.props.onChange) this.props.onChange(value); }}
         />
       </Input>
     );

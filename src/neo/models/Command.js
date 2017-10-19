@@ -15,7 +15,11 @@ export default class Command {
   }
 
   @action setCommand(command) {
-    this.command = command;
+    if (CommandsValues[command]) {
+      this.command = CommandsValues[command];
+    } else {
+      this.command = command;
+    }
   }
 
   @computed get isValid() {

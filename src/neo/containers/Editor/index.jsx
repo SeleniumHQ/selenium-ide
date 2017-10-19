@@ -10,11 +10,6 @@ import CommandForm from "../../components/CommandForm";
   static propTypes = {
     test: PropTypes.object
   };
-  handleCommandChange(command) {
-    try {
-      UiState.selectedCommand.setCommand(command);
-    } finally {} // eslint-disable-line no-empty
-  }
   render() {
     return (
       <main style={{
