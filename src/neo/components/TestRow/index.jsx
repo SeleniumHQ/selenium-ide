@@ -13,6 +13,13 @@ export const RowState = {
 };
 
 export default class TestRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isMenuOpen: false
+    };
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
   static propTypes = {
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
@@ -20,6 +27,9 @@ export default class TestRow extends React.Component {
     state: PropTypes.oneOf(Object.keys(RowState)),
     onClick: PropTypes.func
   };
+  toggleMenu(e) {
+    e.stopPropagation();
+  }
   render() {
     return (
       <tr className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick}>
@@ -28,7 +38,7 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            <MoreButton />
+            <MoreButton onClick={this.toggleMenu} />
           </div>
         </td>
       </tr>
