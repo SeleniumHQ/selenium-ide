@@ -26,7 +26,7 @@ export default class TestRow extends React.Component {
     value: PropTypes.string,
     state: PropTypes.oneOf(Object.keys(RowState)),
     onClick: PropTypes.func,
-    remove: PropTypes.remove
+    remove: PropTypes.func
   };
   toggleMenu(e) {
     e.stopPropagation();
