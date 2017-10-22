@@ -42,7 +42,7 @@ describe("TestCase model", () => {
     const command = new Command();
     expect(() => test.insertCommandAt(command)).toThrowError("Expected to receive Number instead received undefined");
   });
-  it("should throw if the given command is different type", () => {
+  it("should throw if the given index is different type", () => {
     const test = new TestCase();
     const command = new Command();
     expect(() => test.insertCommandAt(command, "5")).toThrowError("Expected to receive Number instead received String");
