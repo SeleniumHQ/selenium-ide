@@ -25,7 +25,8 @@ export default class TestRow extends React.Component {
     target: PropTypes.string,
     value: PropTypes.string,
     state: PropTypes.oneOf(Object.keys(RowState)),
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    remove: PropTypes.remove
   };
   toggleMenu(e) {
     e.stopPropagation();
@@ -38,7 +39,7 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            <MoreButton onClick={this.toggleMenu} />
+            <MoreButton onClick={(e) => { e.stopPropagation(); this.props.remove(); }} />
           </div>
         </td>
       </tr>

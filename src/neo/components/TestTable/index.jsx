@@ -9,7 +9,8 @@ import "./style.css";
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
     selectedCommand: PropTypes.string,
-    selectCommand: PropTypes.func
+    selectCommand: PropTypes.func,
+    removeCommand: PropTypes.func
   };
   render() {
     return (
@@ -31,6 +32,7 @@ import "./style.css";
                 value={command.value}
                 state={ this.props.selectedCommand === command.id ? "Selected" : null }
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
+                remove={this.props.removeCommand ? () => { this.props.removeCommand(command); } : null}
               />
             )) : null }
           </tbody>

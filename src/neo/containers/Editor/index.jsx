@@ -7,6 +7,10 @@ import TestTable from "../../components/TestTable";
 import CommandForm from "../../components/CommandForm";
 
 @observer export default class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.removeCommand = this.removeCommand.bind(this);
+  }
   static propTypes = {
     test: PropTypes.object
   };
@@ -14,7 +18,7 @@ import CommandForm from "../../components/CommandForm";
     if (UiState.selectedCommand === command) {
       UiState.selectCommand(null);
     }
-    this.props.test.commands.remove(command);
+    this.props.test.removeCommand(command);
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.test && this.props.test !== nextProps.test) {
@@ -31,6 +35,7 @@ import CommandForm from "../../components/CommandForm";
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectCommand={UiState.selectCommand}
+          removeCommand={this.removeCommand}
         />
         <CommandForm command={UiState.selectedCommand}
           setCommand={this.handleCommandChange}
