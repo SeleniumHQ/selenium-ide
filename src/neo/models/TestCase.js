@@ -30,6 +30,11 @@ export default class TestCase {
     }
   }
 
+  @action swapCommands(from, to) {
+    const command = this.commands.splice(from, 1)[0];
+    this.insertCommandAt(command, to);
+  }
+
   @action removeCommand(command) {
     this.commands.remove(command);
   }
