@@ -8,7 +8,7 @@ export const RowState = {
   Pending: "pending",
   Passed: "passed",
   Failed: "failed",
-  Selected: "pending"
+  Selected: "selected"
 };
 
 export default class TestRow extends React.Component {

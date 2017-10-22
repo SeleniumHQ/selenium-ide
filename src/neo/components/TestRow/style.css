@@ -6,6 +6,10 @@
   cursor: pointer;
 }
 
+.test-table tr.selected {
+  background-color: #E3F2FF;
+}
+
 .test-table tr.pending {
   background-color: #EDFCFF;
 }
