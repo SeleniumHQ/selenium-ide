@@ -12,6 +12,8 @@ export default class TestCase {
     this.name = name;
     this.createCommand = this.createCommand.bind(this);
     this.removeCommand = this.removeCommand.bind(this);
+    this.insertCommandAt = this.insertCommandAt.bind(this);
+    this.swapCommands = this.swapCommands.bind(this);
   }
 
   @action createCommand() {
@@ -23,8 +25,8 @@ export default class TestCase {
   @action insertCommandAt(command, index) {
     if (!command || command.constructor.name !== "Command") {
       throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);
-    } else if (!index || index.constructor.name !== "Number") {
-      throw new Error(`Expected to receive Number instead received ${index ? index.constructor.name : index}`);
+    } else if (index === undefined || index.constructor.name !== "Number") {
+      throw new Error(`Expected to receive Number instead received ${index !== undefined ? index.constructor.name : index}`);
     } else {
       this.commands.splice(index, 0, command);
     }
