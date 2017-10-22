@@ -55,6 +55,16 @@ describe("TestCase model", () => {
     test.insertCommandAt(command, 1);
     expect(test.commands[1]).toBe(command);
   });
+  it("should swap the commands", () => {
+    const test = new TestCase();
+    test.createCommand();
+    test.createCommand();
+    const command1 = test.commands[0];
+    const command2 = test.commands[1];
+    test.swapCommands(0, 1);
+    expect(command1).toBe(test.commands[1]);
+    expect(command2).toBe(test.commands[0]);
+  });
   it("Should remove a command", () => {
     const test = new TestCase();
     const command = test.createCommand();
