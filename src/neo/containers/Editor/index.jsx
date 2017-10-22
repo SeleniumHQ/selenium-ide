@@ -10,6 +10,17 @@ import CommandForm from "../../components/CommandForm";
   static propTypes = {
     test: PropTypes.object
   };
+  removeCommand(command) {
+    if (UiState.selectedCommand === command) {
+      UiState.selectCommand(null);
+    }
+    this.props.test.commands.remove(command);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.test && this.props.test !== nextProps.test) {
+      UiState.selectCommand(null);
+    }
+  }
   render() {
     return (
       <main style={{
