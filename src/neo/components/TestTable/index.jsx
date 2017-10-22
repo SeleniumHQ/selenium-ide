@@ -19,7 +19,7 @@ import "./style.css";
             <tr>
               <th>Command</th>
               <th>Target</th>
-              <th>Value</th>
+              <th colSpan="2">Value</th>
             </tr>
           </thead>
           <tbody>

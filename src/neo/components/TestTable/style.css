@@ -5,7 +5,6 @@
 
 .test-table table {
   width: 100%;
-  table-layout: fixed;
   border-spacing: 0;
 }
 
@@ -14,6 +13,7 @@
   border-bottom: 1px #CECECE solid;
   border-collapse: separate;
   padding: 10px 0;
+  width: 33%;
 }
 
 .test-table th:not(:last-child):after {

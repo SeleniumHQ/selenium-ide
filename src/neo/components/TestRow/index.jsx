@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import CommandName from "../CommandName";
+import move from "../../images/ic_more.svg";
 import "./style.css";
 
 export const RowState = {
@@ -25,6 +26,11 @@ export default class TestRow extends React.Component {
         <td><CommandName>{this.props.command}</CommandName></td>
         <td>{this.props.target}</td>
         <td>{this.props.value}</td>
+        <td className="buttons">
+          <div>
+            <img src={move} />
+          </div>
+        </td>
       </tr>
     );
   }
