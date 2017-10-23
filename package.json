@@ -55,6 +55,7 @@
     "react-document-title": "^2.0.3",
     "react-dom": "^16.0.0",
     "react-hot-loader": "^3.0.0-beta.7",
+    "react-modal": "^3.0.4",
     "sort-array": "^2.0.0",
     "style-loader": "^0.18.2",
     "styled-components": "^2.1.2",
