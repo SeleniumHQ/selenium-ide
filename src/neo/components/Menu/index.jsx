@@ -57,14 +57,6 @@ class Menu extends React.Component {
           }
         }}
       >
-        <ul className="buttons">
-          <li>
-            <a>Add new command</a>
-          </li>
-          <li>
-            <a>Remove command</a>
-          </li>
-        </ul>
         {this.props.children}
       </ReactModal>
     );

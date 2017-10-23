@@ -16,13 +16,3 @@
   opacity: 0;
   transform: scale(0, 0);
 }
-
-.menu.content .buttons li a {
-  display: block;
-  cursor: pointer;
-  padding: 10px 20px;
-}
-
-.menu.content .buttons li a:hover {
-  background-color: #F3F3F3;
-}
