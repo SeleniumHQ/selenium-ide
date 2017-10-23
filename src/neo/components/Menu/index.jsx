@@ -12,8 +12,11 @@ export default class Menu extends React.Component {
     };
     this.handleClosing = this.handleClosing.bind(this);
   }
+  static width = 200;
+  static padding = 5;
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
+    node: PropTypes.instanceOf(HTMLElement),
     requestClose: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
@@ -26,6 +29,7 @@ export default class Menu extends React.Component {
     this.props.requestClose();
   }
   render() {
+    const boundingRect = this.props.node ? this.props.node.getBoundingClientRect() : undefined;
     return (
       <ReactModal
         className={classNames("menu", "content", { "closed": this.state.isClosing })}
@@ -39,8 +43,10 @@ export default class Menu extends React.Component {
             backgroundColor: "transparent"
           },
           content: {
-            top: "40px",
-            left: "40px"
+            transformOrigin: `${Menu.width}px 0px 0px`,
+            width: `${Menu.width}px`,
+            top: `${boundingRect ? boundingRect.top - Menu.padding : "40"}px`,
+            left: `${boundingRect ? boundingRect.left - Menu.width - Menu.padding : "40"}px`
           }
         }}
       >
