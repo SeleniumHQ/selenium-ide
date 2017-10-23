@@ -1,0 +1,22 @@
+.menu.content {
+  position: absolute;
+  right: auto;
+  left: auto;
+	border: 1px solid #DEDEDE;
+  border-radius: 2px;
+	background-color: #FFFFFF;
+	box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+  overflow: auto;
+  outline: none;
+  padding: 20px 0;
+}
+
+.menu.content .buttons li a {
+  display: block;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.menu.content .buttons li a:hover {
+  background-color: #F3F3F3;
+}
