@@ -24,7 +24,7 @@ import "./style.css";
             <tr>
               <th>Command</th>
               <th>Target</th>
-              <th colSpan="2">Value</th>
+              <th colSpan={this.props.commands && this.props.commands.length ? "2" : "1"}>Value</th>
             </tr>
           </thead>
           <tbody>
