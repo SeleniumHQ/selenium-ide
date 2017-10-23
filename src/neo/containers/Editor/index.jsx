@@ -9,11 +9,17 @@ import CommandForm from "../../components/CommandForm";
 @observer export default class Editor extends React.Component {
   constructor(props) {
     super(props);
+    this.addCommand = this.addCommand.bind(this);
     this.removeCommand = this.removeCommand.bind(this);
   }
   static propTypes = {
     test: PropTypes.object
   };
+  addCommand(index) {
+    const command = this.props.test.createCommand(index + 1);
+    command.setCommand("open");
+    UiState.selectCommand(command);
+  }
   removeCommand(command) {
     if (UiState.selectedCommand === command) {
       UiState.selectCommand(null);
@@ -35,6 +41,7 @@ import CommandForm from "../../components/CommandForm";
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectCommand={UiState.selectCommand}
+          addCommand={this.addCommand}
           removeCommand={this.removeCommand}
           swapCommands={this.props.test ? this.props.test.swapCommands : null}
         />

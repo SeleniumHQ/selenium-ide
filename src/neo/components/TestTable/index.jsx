@@ -13,6 +13,7 @@ import "./style.css";
     commands: MobxPropTypes.arrayOrObservableArray,
     selectedCommand: PropTypes.string,
     selectCommand: PropTypes.func,
+    addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func
   };
@@ -38,6 +39,7 @@ import "./style.css";
                 value={command.value}
                 state={ this.props.selectedCommand === command.id ? "Selected" : null }
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
+                addCommand={this.props.addCommand ? () => { this.props.addCommand(index); } : null}
                 remove={this.props.removeCommand ? () => { this.props.removeCommand(command); } : null}
                 swapCommands={this.props.swapCommands}
               />

@@ -84,6 +84,7 @@ export default class TestRow extends React.Component {
     value: PropTypes.string,
     state: PropTypes.oneOf(Object.keys(RowState)),
     onClick: PropTypes.func,
+    addCommand: PropTypes.func,
     remove: PropTypes.func,
     swapCommands: PropTypes.func,
     isDragging: PropTypes.bool,
@@ -100,12 +101,10 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            
-
             <ListMenu opener={
               <MoreButton />
             }>
-              <ListMenuItem>Add command</ListMenuItem>
+              <ListMenuItem onClick={this.props.addCommand}>Add command</ListMenuItem>
               <ListMenuItem onClick={this.props.remove}>Remove command</ListMenuItem>
             </ListMenu>
           </div>
