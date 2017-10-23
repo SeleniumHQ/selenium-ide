@@ -13,8 +13,8 @@ export default class Menu extends React.Component {
     this.handleClosing = this.handleClosing.bind(this);
   }
   static propTypes = {
-    isOpen: PropTypes.bool,
-    requestClose: PropTypes.func
+    isOpen: PropTypes.bool.isRequired,
+    requestClose: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
     if (this.state.isClosing && nextProps.isOpen) {
