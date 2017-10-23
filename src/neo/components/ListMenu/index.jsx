@@ -5,20 +5,30 @@ import "./style.css";
 
 export default class ListMenu extends React.Component {
   static propTypes = {
+    children: PropTypes.node,
     opener: PropTypes.element
   };
   render() {
     return (
       <Menu opener={this.props.opener}>
         <ul className="buttons">
-          <li>
-            <a>Add new command</a>
-          </li>
-          <li>
-            <a>Remove command</a>
-          </li>
+          {this.props.children}
         </ul>
       </Menu>
+    );
+  }
+}
+
+export class ListMenuItem extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    onClick: PropTypes.func
+  };
+  render() {
+    return (
+      <li>
+        <a onClick={this.props.onClick}>{this.props.children}</a>
+      </li>
     );
   }
 }
