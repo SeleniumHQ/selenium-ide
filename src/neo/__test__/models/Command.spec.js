@@ -30,6 +30,12 @@ describe("Command", () => {
     command.setValue("123456");
     expect(command.value).toBe("123456");
   });
+  it("should initialize the primitives with empty strings", () => {
+    const command = new Command();
+    expect(command.command).toBe("");
+    expect(command.target).toBe("");
+    expect(command.value).toBe("");
+  });
 });
 
 describe("Commands enum", () => {
