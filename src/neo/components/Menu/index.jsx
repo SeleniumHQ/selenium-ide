@@ -19,9 +19,13 @@ class Menu extends React.Component {
     isOpen: PropTypes.bool.isRequired,
     children: PropTypes.node,
     node: PropTypes.any,
+    onClick: PropTypes.func,
     requestClose: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
+    if (this.props.isOpen && !nextProps.isOpen) {
+      this.setState({ isClosing: !this.state.isClosing });
+    }
     if (this.state.isClosing && nextProps.isOpen) {
       setTimeout(() => {this.setState({ isClosing: false });}, 0);
     }
@@ -29,8 +33,6 @@ class Menu extends React.Component {
       const boundingRect = nextProps.node ? findDOMNode(nextProps.node).getBoundingClientRect() : undefined; // eslint-disable-line react/no-find-dom-node
       this.setState({ boundingRect });
     }
-  }
-  componentDidMount() {
   }
   handleClosing() {
     this.setState({ isClosing: true });
@@ -57,7 +59,9 @@ class Menu extends React.Component {
           }
         }}
       >
-        {this.props.children}
+        <div onClick={this.props.onClick}>
+          {this.props.children}
+        </div>
       </ReactModal>
     );
   }
@@ -89,7 +93,7 @@ export default class MenuContainer extends React.Component {
   render() {
     return ([
       React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }),
-      <Menu key="menu" isOpen={this.state.isOpen} node={this.node} requestClose={this.close}>{this.props.children}</Menu>
+      <Menu key="menu" isOpen={this.state.isOpen} node={this.node} onClick={this.close} requestClose={this.close}>{this.props.children}</Menu>
     ]);
   }
 }
