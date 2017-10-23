@@ -16,10 +16,14 @@ export default class TestCase {
     this.swapCommands = this.swapCommands.bind(this);
   }
 
-  @action createCommand() {
-    const command = new Command();
-    this.commands.push(command);
-    return command;
+  @action createCommand(index) {
+    if (index !== undefined && index.constructor.name !== "Number") {
+      throw new Error(`Expected to receive Number instead received ${index !== undefined ? index.constructor.name : index}`);
+    } else {
+      const command = new Command();
+      index !== undefined ? this.commands.splice(index, 0, command) : this.commands.push(command);
+      return command;
+    }
   }
 
   @action insertCommandAt(command, index) {
