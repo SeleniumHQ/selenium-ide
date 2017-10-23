@@ -25,7 +25,6 @@ class Menu extends React.Component {
       setTimeout(() => {this.setState({ isClosing: false });}, 0);
     }
     if (this.props.node !== nextProps.node) {
-      console.log(nextProps.node);
       const boundingRect = nextProps.node ? findDOMNode(nextProps.node).getBoundingClientRect() : undefined; // eslint-disable-line react/no-find-dom-node
       this.setState({ boundingRect });
     }
