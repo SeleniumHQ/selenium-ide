@@ -29,6 +29,18 @@ describe("TestCase model", () => {
     test.createCommand();
     expect(test.commands.length).toBe(1);
   });
+  it("should create a command at the desired index", () => {
+    const test = new TestCase();
+    test.createCommand();
+    const control = test.commands[0];
+    test.createCommand(0);
+    expect(test.commands[0]).not.toBe(control);
+    expect(test.commands[1]).toBe(control);
+  });
+  it("should throw if the given index is not a number", () => {
+    const test = new TestCase();
+    expect(() => test.createCommand("2")).toThrowError("Expected to receive Number instead received String");
+  });
   it("should throw if the given command is undefined", () => {
     const test = new TestCase();
     expect(() => test.insertCommandAt()).toThrowError("Expected to receive Command instead received undefined");
