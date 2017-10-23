@@ -1,4 +1,5 @@
 import React from "react";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import ReactModal from "react-modal";
 import classNames from "classnames";
@@ -16,20 +17,25 @@ export default class Menu extends React.Component {
   static padding = 5;
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
-    node: PropTypes.instanceOf(HTMLElement),
+    node: PropTypes.any,
     requestClose: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
     if (this.state.isClosing && nextProps.isOpen) {
       setTimeout(() => {this.setState({ isClosing: false });}, 0);
     }
+    if (this.props.node !== nextProps.node) {
+      const boundingRect = nextProps.node ? findDOMNode(nextProps.node).getBoundingClientRect() : undefined; // eslint-disable-line react/no-find-dom-node
+      this.setState({ boundingRect });
+    }
+  }
+  componentDidMount() {
   }
   handleClosing() {
     this.setState({ isClosing: true });
     this.props.requestClose();
   }
   render() {
-    const boundingRect = this.props.node ? this.props.node.getBoundingClientRect() : undefined;
     return (
       <ReactModal
         className={classNames("menu", "content", { "closed": this.state.isClosing })}
@@ -45,8 +51,8 @@ export default class Menu extends React.Component {
           content: {
             transformOrigin: `${Menu.width}px 0px 0px`,
             width: `${Menu.width}px`,
-            top: `${boundingRect ? boundingRect.top - Menu.padding : "40"}px`,
-            left: `${boundingRect ? boundingRect.left - Menu.width - Menu.padding : "40"}px`
+            top: `${this.state.boundingRect ? this.state.boundingRect.top - Menu.padding : "40"}px`,
+            left: `${this.state.boundingRect ? this.state.boundingRect.left - Menu.width - Menu.padding : "40"}px`
           }
         }}
       >
