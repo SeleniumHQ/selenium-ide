@@ -17,6 +17,7 @@ class Menu extends React.Component {
   static padding = 5;
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
+    children: PropTypes.node,
     node: PropTypes.any,
     requestClose: PropTypes.func.isRequired
   };
