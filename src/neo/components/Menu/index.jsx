@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ReactModal from "react-modal";
 import classNames from "classnames";
 import "./style.css";
@@ -11,6 +12,10 @@ export default class Menu extends React.Component {
     };
     this.handleClosing = this.handleClosing.bind(this);
   }
+  static propTypes = {
+    isOpen: PropTypes.bool,
+    requestClose: PropTypes.func
+  };
   componentWillReceiveProps(nextProps) {
     if (this.state.isClosing && nextProps.isOpen) {
       setTimeout(() => {this.setState({ isClosing: false });}, 0);
