@@ -1,9 +1,64 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { DragSource, DropTarget } from "react-dnd";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import "./style.css";
+
+export const Type = "command";
+
+const commandSource = {
+  beginDrag(props) {
+    return {
+      id: props.id,
+      index: props.index
+    };
+  }
+};
+
+const commandTarget = {
+  hover(props, monitor, component) {
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Determine rectangle on screen
+    const hoverBoundingRect = component.decoratedComponentInstance.node.getBoundingClientRect();
+
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
+
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    props.swapCommands(dragIndex, hoverIndex);
+
+    // save time on index lookups
+    monitor.getItem().index = hoverIndex;
+  }
+};
 
 export const RowState = {
   Pending: "pending",
@@ -12,6 +67,13 @@ export const RowState = {
   Selected: "selected"
 };
 
+@DropTarget(Type, commandTarget, connect => ({
+  connectDropTarget: connect.dropTarget()
+}))
+@DragSource(Type, commandSource, (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging: monitor.isDragging()
+}))
 export default class TestRow extends React.Component {
   constructor(props) {
     super(props);
@@ -21,19 +83,27 @@ export default class TestRow extends React.Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
   static propTypes = {
+    id: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired,
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
     value: PropTypes.string,
     state: PropTypes.oneOf(Object.keys(RowState)),
     onClick: PropTypes.func,
-    remove: PropTypes.func
+    remove: PropTypes.func,
+    swapCommands: PropTypes.func,
+    isDragging: PropTypes.bool,
+    connectDragSource: PropTypes.func,
+    connectDropTarget: PropTypes.func
   };
   toggleMenu(e) {
     e.stopPropagation();
   }
   render() {
-    return (
-      <tr className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick}>
+    return (this.props.connectDragSource(this.props.connectDropTarget(
+      <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick} style={{
+        opacity: this.props.isDragging ? "0" : "1"
+      }}>
         <td><CommandName>{this.props.command}</CommandName></td>
         <td>{this.props.target}</td>
         <td>{this.props.value}</td>
@@ -43,6 +113,6 @@ export default class TestRow extends React.Component {
           </div>
         </td>
       </tr>
-    );
+    )));
   }
 }

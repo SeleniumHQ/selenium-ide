@@ -36,6 +36,7 @@ import CommandForm from "../../components/CommandForm";
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectCommand={UiState.selectCommand}
           removeCommand={this.removeCommand}
+          swapCommands={this.props.test ? this.props.test.swapCommands : null}
         />
         <CommandForm command={UiState.selectedCommand}
           setCommand={this.handleCommandChange}
