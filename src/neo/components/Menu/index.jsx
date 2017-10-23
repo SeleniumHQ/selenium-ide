@@ -5,7 +5,7 @@ import ReactModal from "react-modal";
 import classNames from "classnames";
 import "./style.css";
 
-export default class Menu extends React.Component {
+class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +25,7 @@ export default class Menu extends React.Component {
       setTimeout(() => {this.setState({ isClosing: false });}, 0);
     }
     if (this.props.node !== nextProps.node) {
+      console.log(nextProps.node);
       const boundingRect = nextProps.node ? findDOMNode(nextProps.node).getBoundingClientRect() : undefined; // eslint-disable-line react/no-find-dom-node
       this.setState({ boundingRect });
     }
@@ -64,7 +65,39 @@ export default class Menu extends React.Component {
             <a>Remove command</a>
           </li>
         </ul>
+        {this.props.children}
       </ReactModal>
     );
+  }
+}
+
+export default class MenuContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: false
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.close = this.close.bind(this);
+  }
+  static propTypes = {
+    opener: PropTypes.element,
+    children: PropTypes.node
+  }
+  handleClick() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+  close() {
+    this.setState({
+      isOpen: false
+    });
+  }
+  render() {
+    return ([
+      React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }),
+      <Menu key="menu" isOpen={this.state.isOpen} node={this.node} requestClose={this.close}>{this.props.children}</Menu>
+    ]);
   }
 }
