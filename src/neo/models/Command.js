@@ -3,9 +3,9 @@ import uuidv4 from "uuid/v4";
 
 export default class Command {
   id = null;
-  @observable command = null;
-  @observable target = null;
-  @observable value = null;
+  @observable command = "";
+  @observable target = "";
+  @observable value = "";
 
   constructor(id = uuidv4()) {
     this.id = id;
