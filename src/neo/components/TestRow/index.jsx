@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
+import ListMenu, { ListMenuItem } from "../ListMenu";
 import "./style.css";
 
 export const Type = "command";
@@ -75,13 +76,6 @@ export const RowState = {
   isDragging: monitor.isDragging()
 }))
 export default class TestRow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isMenuOpen: false
-    };
-    this.toggleMenu = this.toggleMenu.bind(this);
-  }
   static propTypes = {
     id: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
@@ -96,9 +90,6 @@ export default class TestRow extends React.Component {
     connectDragSource: PropTypes.func,
     connectDropTarget: PropTypes.func
   };
-  toggleMenu(e) {
-    e.stopPropagation();
-  }
   render() {
     return (this.props.connectDragSource(this.props.connectDropTarget(
       <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick} style={{
@@ -109,7 +100,14 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            <MoreButton onClick={(e) => { e.stopPropagation(); this.props.remove(); }} />
+            
+
+            <ListMenu opener={
+              <MoreButton />
+            }>
+              <ListMenuItem>Add command</ListMenuItem>
+              <ListMenuItem onClick={this.props.remove}>Remove command</ListMenuItem>
+            </ListMenu>
           </div>
         </td>
       </tr>
