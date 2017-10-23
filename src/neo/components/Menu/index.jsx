@@ -1,16 +1,34 @@
 import React from "react";
 import ReactModal from "react-modal";
+import classNames from "classnames";
 import "./style.css";
 
 export default class Menu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isClosing: true
+    };
+    this.handleClosing = this.handleClosing.bind(this);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.state.isClosing && nextProps.isOpen) {
+      setTimeout(() => {this.setState({ isClosing: false });}, 0);
+    }
+  }
+  handleClosing() {
+    this.setState({ isClosing: true });
+    this.props.requestClose();
+  }
   render() {
     return (
       <ReactModal
-        className="menu content"
+        className={classNames("menu", "content", { "closed": this.state.isClosing })}
         isOpen={this.props.isOpen}
         ariaHideApp={false}
         shouldCloseOnOverlayClick={true}
-        onRequestClose={this.props.requestClose}
+        closeTimeoutMS={300}
+        onRequestClose={this.handleClosing}
         style={{
           overlay: {
             backgroundColor: "transparent"
