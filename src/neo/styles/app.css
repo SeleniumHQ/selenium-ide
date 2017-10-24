@@ -39,3 +39,8 @@ input:focus {
 .clear {
   clear: both;
 }
+
+.dragging {
+  cursor: move!important;
+  cursor: grabbing!important;
+}
