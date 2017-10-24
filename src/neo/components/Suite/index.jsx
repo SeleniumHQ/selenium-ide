@@ -65,6 +65,7 @@ class Suite extends React.Component {
     name: PropTypes.string.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
     canDrop: PropTypes.bool
