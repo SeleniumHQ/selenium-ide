@@ -1,14 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { DragDropContext } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import UiState from "../../stores/view/UiState";
 import TestRow from "../TestRow";
 import "./style.css";
 
-@DragDropContext(HTML5Backend)
 @observer export default class TestTable extends React.Component {
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,

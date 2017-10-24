@@ -1,6 +1,8 @@
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
+import { DragDropContext } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import modify from "../../side-effects/modify";
@@ -21,6 +23,7 @@ if (process.env.NODE_ENV !== "production") {
 
 modify(project);
 
+@DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
