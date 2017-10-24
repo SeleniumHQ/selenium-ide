@@ -6,6 +6,8 @@ import classNames from "classnames";
 import styled from "styled-components";
 import TestList from "../TestList";
 import { Type } from "../Test";
+import ListMenu, { ListMenuItem } from "../ListMenu";
+import MoreButton from "../ActionButtons/More";
 import tick from "../../images/ic_tick.svg";
 import "./style.css";
 
@@ -36,6 +38,7 @@ function collect(connect, monitor) {
 }
 
 const ArrowProject = styled.span`
+  display: flex;
   &:before {
     mask-image: url(${tick});
     content: " ";
@@ -45,7 +48,7 @@ const ArrowProject = styled.span`
     display: inline-block;
     transform: ${props => props.isActive ? "rotate(90deg)" : "rotate(0deg)"};
     transition: all 100ms linear;
-    vertical-align: middle;
+    align-self: center;
   }
 `;
 
@@ -73,14 +76,22 @@ class Suite extends React.Component {
   }
   render() {
     return this.props.connectDropTarget(
+      <div>
       <div className="project">
         <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
           <ArrowProject isActive={this.state.isActive}>
             <span className="title">{this.props.name}</span>
           </ArrowProject>
         </a>
-        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} />
+        <ListMenu opener={
+          <MoreButton />
+        }>
+          <ListMenuItem>Add tests</ListMenuItem>
+          <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
+        </ListMenu>
       </div>
+        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} />
+    </div>
     );
   }
 }

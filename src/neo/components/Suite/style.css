@@ -1,12 +1,14 @@
 .project {
   padding-left: 7px;
   margin-left: 2px;
+  display: flex;
 }
 
 .project > a {
   display: block;
   padding: 7px 0;
   border-bottom: 1px transparent solid;
+  flex-grow: 1;
 }
 
 .project > a.hover {
@@ -16,9 +18,14 @@
 .project > a .title {
   padding: 0 12px;
   font-size: 16px;
-  vertical-align: middle;
+  align-self: center;
 }
 
-.project > a img {
-  vertical-align: middle;
+.project button {
+  opacity: 0;
+  align-self: center;
+}
+
+.project:hover button {
+  opacity: 1;
 }
