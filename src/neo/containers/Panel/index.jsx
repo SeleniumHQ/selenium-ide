@@ -46,7 +46,7 @@ modify(project);
         <div style={{
           float: "left"
         }}>
-          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} moveTest={this.moveTest} />
+          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} removeSuite={this.state.project.deleteSuite} moveTest={this.moveTest} />
         </div>
         <Editor test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest)) : null} />
         <div style={{

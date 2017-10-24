@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import UiState from "../../stores/view/UiState";
 import TabBar from "../../components/TabBar";
@@ -9,7 +10,7 @@ import SuiteList from "../../components/SuiteList";
 import Runs from "../../components/Runs";
 import "./style.css";
 
-export default class Navigation extends React.Component {
+@observer export default class Navigation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,6 +21,7 @@ export default class Navigation extends React.Component {
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
@@ -36,7 +38,7 @@ export default class Navigation extends React.Component {
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
           ? <TestList tests={this.props.tests} />
-          : <SuiteList suites={this.props.suites} moveTest={this.props.moveTest} /> }
+          : <SuiteList suites={this.props.suites} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
     );
