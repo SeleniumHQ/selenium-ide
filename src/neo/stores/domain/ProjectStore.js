@@ -11,8 +11,13 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
-    this.addTestCase = this.addTestCase.bind(this);
     this.changeName = this.changeName.bind(this);
+    this.setModified = this.setModified.bind(this);
+    this.createSuite = this.createSuite.bind(this);
+    this.deleteSuite = this.deleteSuite.bind(this);
+    this.createTestCase = this.createTestCase.bind(this);
+    this.addTestCase = this.addTestCase.bind(this);
+    this.deleteTestCase = this.deleteTestCase.bind(this);
   }
 
   @action changeName(name) {
