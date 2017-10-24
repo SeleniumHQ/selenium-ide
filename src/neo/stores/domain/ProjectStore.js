@@ -31,6 +31,10 @@ export default class ProjectStore {
     return suite;
   }
 
+  @action deleteSuite(suite) {
+    this.suites.remove(suite);
+  }
+
   @action createTestCase(...argv) {
     const test = new TestCase(undefined, ...argv);
     this.addTestCase(test);
