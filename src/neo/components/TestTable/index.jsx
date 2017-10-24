@@ -4,6 +4,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
+import UiState from "../../stores/view/UiState";
 import TestRow from "../TestRow";
 import "./style.css";
 
@@ -38,10 +39,12 @@ import "./style.css";
                 target={command.target}
                 value={command.value}
                 state={ this.props.selectedCommand === command.id ? "Selected" : null }
+                dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
                 addCommand={this.props.addCommand ? () => { this.props.addCommand(index); } : null}
                 remove={this.props.removeCommand ? () => { this.props.removeCommand(command); } : null}
                 swapCommands={this.props.swapCommands}
+                setDrag={UiState.setDrag}
               />
             )) : null }
           </tbody>

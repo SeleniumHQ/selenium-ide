@@ -11,10 +11,14 @@ export const Type = "command";
 
 const commandSource = {
   beginDrag(props) {
+    props.setDrag(true);
     return {
       id: props.id,
       index: props.index
     };
+  },
+  endDrag(props) {
+    props.setDrag(false);
   }
 };
 
@@ -89,7 +93,9 @@ export default class TestRow extends React.Component {
     swapCommands: PropTypes.func,
     isDragging: PropTypes.bool,
     connectDragSource: PropTypes.func,
-    connectDropTarget: PropTypes.func
+    connectDropTarget: PropTypes.func,
+    dragInProgress: PropTypes.bool,
+    setDrag: PropTypes.func
   };
   handleClick(e) {
     if (this.node === e.target.parentElement) {
@@ -99,7 +105,8 @@ export default class TestRow extends React.Component {
   render() {
     return (this.props.connectDragSource(this.props.connectDropTarget(
       <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.handleClick.bind(this)} style={{
-        opacity: this.props.isDragging ? "0" : "1"
+        opacity: this.props.isDragging ? "0" : "1",
+        cursor: this.props.dragInProgress ? "move" : "pointer"
       }}>
         <td><CommandName>{this.props.command}</CommandName></td>
         <td>{this.props.target}</td>
