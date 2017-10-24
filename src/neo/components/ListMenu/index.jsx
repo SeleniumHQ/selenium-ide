@@ -6,11 +6,13 @@ import "./style.css";
 export default class ListMenu extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    opener: PropTypes.element
+    opener: PropTypes.element,
+    width: PropTypes.number,
+    padding: PropTypes.number
   };
   render() {
     return (
-      <Menu opener={this.props.opener}>
+      <Menu opener={this.props.opener} width={this.props.width} padding={this.props.padding}>
         <ul className="buttons">
           {this.props.children}
         </ul>

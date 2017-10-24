@@ -77,21 +77,21 @@ class Suite extends React.Component {
   render() {
     return this.props.connectDropTarget(
       <div>
-      <div className="project">
-        <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
-          <ArrowProject isActive={this.state.isActive}>
-            <span className="title">{this.props.name}</span>
-          </ArrowProject>
-        </a>
-        <ListMenu opener={
-          <MoreButton />
-        }>
-          <ListMenuItem>Add tests</ListMenuItem>
-          <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
-        </ListMenu>
-      </div>
+        <div className="project">
+          <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
+            <ArrowProject isActive={this.state.isActive}>
+              <span className="title">{this.props.name}</span>
+            </ArrowProject>
+          </a>
+          <ListMenu width={130} opener={
+            <MoreButton />
+          }>
+            <ListMenuItem>Add tests</ListMenuItem>
+            <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
+          </ListMenu>
+        </div>
         <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} />
-    </div>
+      </div>
     );
   }
 }
