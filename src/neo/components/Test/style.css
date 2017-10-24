@@ -20,7 +20,3 @@
 .test.changed:after {
   content: "*";
 }
-
-.test.dragging {
-  display: none;
-}

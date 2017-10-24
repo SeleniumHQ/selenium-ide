@@ -19,7 +19,7 @@ import "./style.css";
         {this.props.tests.filter(({name}) => (name.indexOf(UiState.filterTerm) !== -1)).map(({id, name}) => (
           <li key={id}>
             {this.props.suite
-              ? <DraggableTest id={id} name={name} suite={this.props.suite} selected={id === UiState.selectedTest} selectTest={UiState.selectTest} />
+              ? <DraggableTest id={id} name={name} suite={this.props.suite} selected={id === UiState.selectedTest} selectTest={UiState.selectTest} dragInProgress={UiState.dragInProgress} setDrag={UiState.setDrag} />
               : <Test id={id} name={name} selected={id === UiState.selectedTest} selectTest={UiState.selectTest} /> }
           </li>
         ))}
