@@ -47,7 +47,7 @@ export default class Test extends React.Component {
       display: this.props.isDragging ? "none" : "flex"
     }}>
       <span>{this.props.name}</span>
-      <RemoveButton onClick={this.props.removeTest} />
+      <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }

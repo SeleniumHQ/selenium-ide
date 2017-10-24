@@ -66,6 +66,7 @@ class Suite extends React.Component {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
+    removeTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
     canDrop: PropTypes.bool
@@ -91,7 +92,7 @@ class Suite extends React.Component {
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>
-        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} />
+        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} removeTest={this.props.removeTest} />
       </div>
     );
   }

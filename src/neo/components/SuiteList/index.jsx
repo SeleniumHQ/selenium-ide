@@ -16,7 +16,7 @@ import "./style.css";
       <ul className="projects">
         {this.props.suites.map(suite => (
           <li key={suite.id}>
-            <Suite id={suite.id} name={suite.name} tests={suite.tests} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} />
+            <Suite id={suite.id} name={suite.name} tests={suite.tests} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} removeTest={suite.removeTestCase} />
           </li>
         ))}
       </ul>
