@@ -91,9 +91,14 @@ export default class TestRow extends React.Component {
     connectDragSource: PropTypes.func,
     connectDropTarget: PropTypes.func
   };
+  handleClick(e) {
+    if (this.node === e.target.parentElement) {
+      this.props.onClick(e);
+    }
+  }
   render() {
     return (this.props.connectDragSource(this.props.connectDropTarget(
-      <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick} style={{
+      <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.handleClick.bind(this)} style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
         <td><CommandName>{this.props.command}</CommandName></td>
