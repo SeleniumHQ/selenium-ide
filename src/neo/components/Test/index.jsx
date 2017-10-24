@@ -34,7 +34,7 @@ export default class Test extends React.Component {
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
     selectTest: PropTypes.func.isRequired,
-    deleteTest: PropTypes.func.isRequired,
+    removeTest: PropTypes.func.isRequired,
     connectDragSource: PropTypes.func,
     dragInProgress: PropTypes.bool,
     setDrag: PropTypes.func
@@ -47,7 +47,7 @@ export default class Test extends React.Component {
       display: this.props.isDragging ? "none" : "flex"
     }}>
       <span>{this.props.name}</span>
-      <RemoveButton onClick={this.props.deleteTest} />
+      <RemoveButton onClick={this.props.removeTest} />
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
