@@ -80,6 +80,15 @@ describe("Project Store", () => {
     const suite = store.createSuite("my suite");
     expect(suite.name).toBe("my suite");
   });
+  it("should delete a suite", () => {
+    const store = new ProjectStore();
+    const control = store.createSuite("control");
+    const toBeDeleted = store.createSuite("deleted");
+    expect(store.suites.length).toBe(2);
+    store.deleteSuite(toBeDeleted);
+    expect(store.suites.length).toBe(1);
+    expect(store.suites[0]).toBe(control);
+  });
   it("should remove the deleted test from it's suites", () => {
     const store = new ProjectStore();
     const firstSuite = store.createSuite();
