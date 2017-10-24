@@ -4,11 +4,13 @@ class UiState {
   @observable selectedTest = null;
   @observable selectedCommand = null;
   @observable filterTerm = "";
+  @observable dragInProgress = false;
 
   constructor() {
     this.selectTest = this.selectTest.bind(this);
     this.selectCommand = this.selectCommand.bind(this);
     this.changeFilter = this.changeFilter.bind(this);
+    this.setDrag = this.setDrag.bind(this);
   }
 
   @action selectTest(testId) {
@@ -21,6 +23,10 @@ class UiState {
 
   @action changeFilter(term) {
     this.filterTerm = term;
+  }
+
+  @action setDrag(dragProgress) {
+    this.dragInProgress = dragProgress;
   }
 }
 

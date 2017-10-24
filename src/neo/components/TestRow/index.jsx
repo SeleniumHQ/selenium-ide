@@ -4,16 +4,21 @@ import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
+import ListMenu, { ListMenuItem } from "../ListMenu";
 import "./style.css";
 
 export const Type = "command";
 
 const commandSource = {
   beginDrag(props) {
+    props.setDrag(true);
     return {
       id: props.id,
       index: props.index
     };
+  },
+  endDrag(props) {
+    props.setDrag(false);
   }
 };
 
@@ -75,13 +80,6 @@ export const RowState = {
   isDragging: monitor.isDragging()
 }))
 export default class TestRow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isMenuOpen: false
-    };
-    this.toggleMenu = this.toggleMenu.bind(this);
-  }
   static propTypes = {
     id: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
@@ -90,18 +88,23 @@ export default class TestRow extends React.Component {
     value: PropTypes.string,
     state: PropTypes.oneOf(Object.keys(RowState)),
     onClick: PropTypes.func,
+    addCommand: PropTypes.func,
     remove: PropTypes.func,
     swapCommands: PropTypes.func,
     isDragging: PropTypes.bool,
     connectDragSource: PropTypes.func,
-    connectDropTarget: PropTypes.func
+    connectDropTarget: PropTypes.func,
+    dragInProgress: PropTypes.bool,
+    setDrag: PropTypes.func
   };
-  toggleMenu(e) {
-    e.stopPropagation();
+  handleClick(e) {
+    if (this.node === e.target.parentElement) {
+      this.props.onClick(e);
+    }
   }
   render() {
     return (this.props.connectDragSource(this.props.connectDropTarget(
-      <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state})} onClick={this.props.onClick} style={{
+      <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state}, {"dragging": this.props.dragInProgress})} onClick={this.handleClick.bind(this)} style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
         <td><CommandName>{this.props.command}</CommandName></td>
@@ -109,7 +112,12 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            <MoreButton onClick={(e) => { e.stopPropagation(); this.props.remove(); }} />
+            <ListMenu opener={
+              <MoreButton />
+            }>
+              <ListMenuItem onClick={this.props.addCommand}>Add command</ListMenuItem>
+              <ListMenuItem onClick={this.props.remove}>Remove command</ListMenuItem>
+            </ListMenu>
           </div>
         </td>
       </tr>

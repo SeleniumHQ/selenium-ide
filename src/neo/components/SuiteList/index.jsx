@@ -1,27 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
-import HTML5Backend from "react-dnd-html5-backend";
-import { DragDropContextProvider } from "react-dnd";
 import Suite from "../Suite";
 import "./style.css";
 
-export default class SuiteList extends React.Component {
+@observer export default class SuiteList extends React.Component {
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
+    removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
   render() {
     return (
-      <DragDropContextProvider backend={HTML5Backend}>
-        <ul className="projects">
-          {this.props.suites.map(({id, name, tests}) => (
-            <li key={id}>
-              <Suite id={id} name={name} tests={tests} moveTest={this.props.moveTest} />
-            </li>
-          ))}
-        </ul>
-      </DragDropContextProvider>
+      <ul className="projects">
+        {this.props.suites.map(suite => (
+          <li key={suite.id}>
+            <Suite id={suite.id} name={suite.name} tests={suite.tests} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} removeTest={suite.removeTestCase} />
+          </li>
+        ))}
+      </ul>
     );
   }
 }
