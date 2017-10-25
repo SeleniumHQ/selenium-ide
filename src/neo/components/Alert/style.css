@@ -1,0 +1,26 @@
+.alert-content {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  outline: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.alert {
+  position: relative;
+  left: -50%;
+  background: white;
+  border: 1px solid #DEDEDE;
+  border-radius: 4px;
+  box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+  padding: 20px;
+}
+
+.alert h2,p {
+  text-align: center;
+}
+
+.alert .buttons {
+  float: right;
+}
