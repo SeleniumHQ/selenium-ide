@@ -40,8 +40,9 @@ export default class Alert extends React.Component {
         <div className="alert">
           <h2>Night Run</h2>
           <p>This will permanently delete `Night Run`</p>
+          <hr />
           <span className="buttons">
-            <FlatButton onClick={this.close.bind(this, true)}>cancel</FlatButton>
+            <FlatButton onClick={this.close.bind(this, false)}>cancel</FlatButton>
             <FlatButton className="danger" onClick={this.close.bind(this, true)}>delete</FlatButton>
           </span>
           <div className="clear"></div>
