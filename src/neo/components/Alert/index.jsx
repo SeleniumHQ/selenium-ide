@@ -52,7 +52,7 @@ export default class Alert extends React.Component {
   }
   render() {
     return (
-      <Transition in={!!this.state.isOpen} timeout={duration}>
+      <Transition in={this.state.isOpen} timeout={duration}>
         {(status) => (
           <ReactModal
             className="alert-content"
