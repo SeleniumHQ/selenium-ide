@@ -1,12 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactModal from "react-modal";
+import FlatButton from "../FlatButton";
+import "./style.css";
 
 export default class Alert extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: true
     };
     this.show = this.show.bind(this);
     this.props.show(this.show);
@@ -29,13 +31,21 @@ export default class Alert extends React.Component {
   render() {
     return (
       <ReactModal
+        className="alert-content"
         isOpen={this.state.isOpen}
         ariaHideApp={false}
         shouldCloseOnOverlayClick={true}
         onRequestClose={this.close.bind(this, false)}
       >
-        <h1>alert</h1>
-        <button onClick={this.close.bind(this, true)}>true</button>
+        <div className="alert">
+          <h2>Night Run</h2>
+          <p>This will permanently delete `Night Run`</p>
+          <span className="buttons">
+            <FlatButton onClick={this.close.bind(this, true)}>cancel</FlatButton>
+            <FlatButton className="danger" onClick={this.close.bind(this, true)}>delete</FlatButton>
+          </span>
+          <div className="clear"></div>
+        </div>
       </ReactModal>
     );
   }
