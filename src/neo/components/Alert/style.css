@@ -3,7 +3,6 @@
   top: 20%;
   left: 50%;
   outline: 0;
-  overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
