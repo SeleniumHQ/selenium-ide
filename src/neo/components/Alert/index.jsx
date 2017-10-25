@@ -30,7 +30,8 @@ export default class Alert extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      options: {}
     };
     this.show = this.show.bind(this);
     this.props.show(this.show);
@@ -38,9 +39,10 @@ export default class Alert extends React.Component {
   static propTypes = {
     show: PropTypes.func.isRequired
   };
-  show(cb) {
+  show(options, cb) {
     this.setState({
       isOpen: true,
+      options,
       cb
     });
   }
@@ -63,12 +65,12 @@ export default class Alert extends React.Component {
             onRequestClose={this.close.bind(this, false)}
           >
             <div className="alert" style={transitionStyles[status]}>
-              <h2>Night Run</h2>
-              <p>This will permanently delete `Night Run`</p>
+              <h2>{this.state.options.title}</h2>
+              <p>{this.state.options.description}</p>
               <hr />
               <span className="buttons">
-                <FlatButton onClick={this.close.bind(this, false)}>cancel</FlatButton>
-                <FlatButton className="danger" onClick={this.close.bind(this, true)}>delete</FlatButton>
+                <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton>
+                <FlatButton className="danger" onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
               </span>
               <div className="clear"></div>
             </div>

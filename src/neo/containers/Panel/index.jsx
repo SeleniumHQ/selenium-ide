@@ -42,7 +42,12 @@ modify(project);
     origin.removeTestCase(test);
   }
   deleteTest(testCase) {
-    this.show((choseDelete) => {
+    this.show({
+      title: testCase.name,
+      description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
+      cancelLabel: "cancel",
+      confirmLabel: "delete"
+    }, (choseDelete) => {
       if (choseDelete) {
         this.state.project.deleteTestCase(testCase);
       }
