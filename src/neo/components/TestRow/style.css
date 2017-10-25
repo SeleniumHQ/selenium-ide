@@ -10,6 +10,10 @@
   background-color: white;
 }
 
+.test-table tr:hover {
+  background-color: #F3F3F3;
+}
+
 .test-table tr.selected {
   background-color: #E3F2FF;
 }
