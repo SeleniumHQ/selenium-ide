@@ -22,14 +22,14 @@
 
 .btn.danger {
   color: #FFF;
-  background-color: #f1444c;
+  background-color: #ff6b6b;
 }
 
 .btn.danger:hover {
-  background-color: #e82730;
+  background-color: #e2373f;
 }
 
 .btn.danger:active {
-  background-color: #f92f38;
-  box-shadow: inset -1px 1px 1px 0 #8e2034;
+  background-color: #f3535a;
+  box-shadow: inset -1px 1px 1px 0 #a72d43;
 }
