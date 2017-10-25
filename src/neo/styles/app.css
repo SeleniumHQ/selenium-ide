@@ -36,6 +36,12 @@ input:focus {
   outline: 0;
 }
 
+hr {
+  background-color: #E5E5E5;
+  border: 0;
+  height: 1px;
+}
+
 .clear {
   clear: both;
 }

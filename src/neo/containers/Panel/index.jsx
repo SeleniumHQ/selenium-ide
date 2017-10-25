@@ -15,6 +15,8 @@ import UiState from "../../stores/view/UiState";
 import "../../styles/app.css";
 import "../../styles/heights.css";
 
+import Alert from "../../components/Alert";
+
 const project = observable(new ProjectStore());
 
 if (process.env.NODE_ENV !== "production") {
@@ -29,6 +31,7 @@ modify(project);
     super(props);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
+    this.deleteTest = this.deleteTest.bind(this);
   }
   moveTest(testItem, toSuite) {
     const destination = this.state.project.suites.find((suite) => (suite.id === toSuite));
@@ -38,6 +41,18 @@ modify(project);
     destination.addTestCase(test);
     origin.removeTestCase(test);
   }
+  deleteTest(testCase) {
+    this.show({
+      title: testCase.name,
+      description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
+      cancelLabel: "cancel",
+      confirmLabel: "delete"
+    }, (choseDelete) => {
+      if (choseDelete) {
+        this.state.project.deleteTestCase(testCase);
+      }
+    });
+  }
   render() {
     return (
       <div>
@@ -46,13 +61,14 @@ modify(project);
         <div style={{
           float: "left"
         }}>
-          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} removeSuite={this.state.project.deleteSuite} moveTest={this.moveTest} deleteTest={this.state.project.deleteTestCase} />
+          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} removeSuite={this.state.project.deleteSuite} moveTest={this.moveTest} deleteTest={this.deleteTest} />
         </div>
         <Editor test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest)) : null} />
         <div style={{
           clear: "left"
         }}></div>
         <Console />
+        <Alert show={show => this.show = show} />
       </div>
     );
   }
