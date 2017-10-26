@@ -12,9 +12,11 @@ export default class TestSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTests: {}
+      selectedTests: {},
+      filterTerm: ""
     };
     this.selectTest = this.selectTest.bind(this);
+    this.filter = this.filter.bind(this);
   }
   static propTypes = {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired
@@ -24,6 +26,9 @@ export default class TestSelector extends React.Component {
       selectedTests: { ...this.state.selectedTests, [test.id]: isSelected ? test : undefined}
     });
   }
+  filter(filterTerm) {
+    this.setState({ filterTerm });
+  }
   render() {
     return (
       <Modal className="test-selector" isOpen={true}>
@@ -31,8 +36,8 @@ export default class TestSelector extends React.Component {
           <h2>Select Tests</h2>
           <RemoveButton />
         </span>
-        <SearchBar />
-        <TestSelectorList tests={this.props.tests} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
+        <SearchBar filter={this.filter} />
+        <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
         <hr />
         <span className="right">
           <FlatButton>Cancel</FlatButton>
@@ -49,6 +54,7 @@ export default class TestSelector extends React.Component {
 class TestSelectorList extends React.Component {
   static propTypes = {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    filterTerm: PropTypes.string.isRequired,
     selectedTests: PropTypes.object.isRequired,
     selectTest: PropTypes.func.isRequired
   };
@@ -58,7 +64,7 @@ class TestSelectorList extends React.Component {
   render() {
     return (
       <ul className="tests">
-        {this.props.tests.map(test => (
+        {this.props.tests.filter(({name}) => (name.indexOf(this.props.filterTerm) !== -1)).map(test => (
           <li key={test.id}>
             <Checkbox id={test.id} label={test.name} checked={!!this.props.selectedTests[test.id]} onChange={this.handleChange.bind(this, test)} />
           </li>
