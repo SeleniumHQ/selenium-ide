@@ -57,7 +57,7 @@ class TestSelectorList extends React.Component {
   }
   render() {
     return (
-      <ul>
+      <ul className="tests">
         {this.props.tests.map(test => (
           <li key={test.id}>
             <Checkbox id={test.id} label={test.name} checked={!!this.props.selectedTests[test.id]} onChange={this.handleChange.bind(this, test)} />

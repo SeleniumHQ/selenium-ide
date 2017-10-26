@@ -25,4 +25,6 @@
 .test-selector .tests {
   height: 250px;
   overflow: auto;
+  max-height: initial;
+  padding: 0;
 }

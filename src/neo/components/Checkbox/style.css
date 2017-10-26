@@ -3,7 +3,9 @@ input[type="checkbox"].checkbox {
 }
 
 input[type="checkbox"].checkbox + label {
+  display: block;
   cursor: pointer;
+  padding: 5px 0;
 }
 
 input[type="checkbox"].checkbox + label span {
