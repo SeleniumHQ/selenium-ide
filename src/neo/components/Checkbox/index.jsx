@@ -17,7 +17,7 @@ export default class Checkbox extends React.Component {
   render() {
     const checked = (this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false));
     return (
-      <div>
+      <div className="control">
         <input
           key="checkbox"
           type="checkbox"
