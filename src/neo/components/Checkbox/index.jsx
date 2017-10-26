@@ -7,7 +7,7 @@ export default class Checkbox extends React.Component {
     name: PropTypes.string,
     label: PropTypes.string,
     checked: PropTypes.bool,
-    handleChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   };
   render() {
     return (
@@ -18,7 +18,7 @@ export default class Checkbox extends React.Component {
           id={this.props.id}
           name={this.props.name}
           checked={(this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false))}
-          onChange={this.props.handleChange}
+          onChange={this.props.onChange}
         />
         <label key="label" htmlFor={this.props.id}>{this.props.label}</label>
       </div>
