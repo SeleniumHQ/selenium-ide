@@ -5,6 +5,7 @@ export default styled.button`
   height: 24px;
   background-color: #656565;
   margin: 5px 8px;
+  outline: 0;
 
   &:hover {
     background-color: #333333;
