@@ -39,7 +39,7 @@ import "./style.css";
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
           ? <TestList tests={this.props.tests} removeTest={this.props.deleteTest} />
-          : <SuiteList suites={this.props.suites} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+          : <SuiteList suites={this.props.suites} selectTests={UiState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
     );

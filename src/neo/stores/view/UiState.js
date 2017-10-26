@@ -5,12 +5,14 @@ class UiState {
   @observable selectedCommand = null;
   @observable filterTerm = "";
   @observable dragInProgress = false;
+  @observable editedSuite = null;
 
   constructor() {
     this.selectTest = this.selectTest.bind(this);
     this.selectCommand = this.selectCommand.bind(this);
     this.changeFilter = this.changeFilter.bind(this);
     this.setDrag = this.setDrag.bind(this);
+    this.editSuite = this.editSuite.bind(this);
   }
 
   @action selectTest(testId) {
@@ -27,6 +29,10 @@ class UiState {
 
   @action setDrag(dragProgress) {
     this.dragInProgress = dragProgress;
+  }
+
+  @action editSuite(suite) {
+    this.editedSuite = suite;
   }
 }
 

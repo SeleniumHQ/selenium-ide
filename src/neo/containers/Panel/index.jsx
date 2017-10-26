@@ -54,6 +54,10 @@ modify(project);
       }
     });
   }
+  selectTestsForSuite(suite, tests) {
+    suite.replaceTestCases(tests);
+    UiState.editSuite(null);
+  }
   render() {
     return (
       <div>
@@ -70,7 +74,7 @@ modify(project);
         }}></div>
         <Console />
         <Alert show={show => this.show = show} />
-        <TestSelector />
+        {UiState.editedSuite ? <TestSelector tests={this.state.project.tests} completeSelection={tests => this.selectTestsForSuite.bind(this, UiState.editedSuite, tests)} /> : null}
       </div>
     );
   }

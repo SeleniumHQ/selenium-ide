@@ -65,6 +65,7 @@ class Suite extends React.Component {
     name: PropTypes.string.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
+    selectTests: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     removeTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
@@ -88,7 +89,7 @@ class Suite extends React.Component {
           <ListMenu width={130} opener={
             <MoreButton />
           }>
-            <ListMenuItem>Add tests</ListMenuItem>
+            <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>

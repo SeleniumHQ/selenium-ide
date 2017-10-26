@@ -8,6 +8,7 @@ import "./style.css";
 @observer export default class SuiteList extends React.Component {
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
+    selectTests: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
@@ -16,7 +17,7 @@ import "./style.css";
       <ul className="projects">
         {this.props.suites.map(suite => (
           <li key={suite.id}>
-            <Suite id={suite.id} name={suite.name} tests={suite.tests} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} removeTest={suite.removeTestCase} />
+            <Suite id={suite.id} name={suite.name} tests={suite.tests} selectTests={() => {this.props.selectTests(suite);}} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} removeTest={suite.removeTestCase} />
           </li>
         ))}
       </ul>
