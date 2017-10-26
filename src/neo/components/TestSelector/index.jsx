@@ -12,14 +12,15 @@ export default class TestSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTests: {},
+      selectedTests: props.selectedTests ? props.selectedTests.reduce((selections, selection) => { selections[selection.id] = selection; return selections; }, {}) : {},
       filterTerm: ""
     };
     this.selectTest = this.selectTest.bind(this);
     this.filter = this.filter.bind(this);
   }
   static propTypes = {
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    selectedTests: PropTypes.array
   };
   selectTest(isSelected, test) {
     this.setState({
