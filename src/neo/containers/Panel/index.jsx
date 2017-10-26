@@ -16,6 +16,7 @@ import "../../styles/app.css";
 import "../../styles/heights.css";
 
 import Alert from "../../components/Alert";
+import TestSelector from "../../components/TestSelector";
 
 const project = observable(new ProjectStore());
 
@@ -69,6 +70,7 @@ modify(project);
         }}></div>
         <Console />
         <Alert show={show => this.show = show} />
+        <TestSelector />
       </div>
     );
   }

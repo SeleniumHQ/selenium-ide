@@ -5,7 +5,3 @@
 .alert h2 {
   text-transform: capitalize;
 }
-
-.alert .buttons {
-  float: right;
-}

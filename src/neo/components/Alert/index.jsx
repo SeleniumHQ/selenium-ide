@@ -57,7 +57,7 @@ export default class Alert extends React.Component {
         <h2>{this.state.options.title}</h2>
         <p>{this.state.options.description}</p>
         <hr />
-        <span className="buttons">
+        <span className="right">
           <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton>
           <FlatButton className="danger" onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
         </span>

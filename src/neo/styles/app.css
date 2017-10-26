@@ -42,6 +42,10 @@ hr {
   height: 1px;
 }
 
+.right {
+  float: right;
+}
+
 .clear {
   clear: both;
 }

@@ -1,0 +1,7 @@
+.test-selector {
+  width: 260px;
+}
+
+.test-selector .header {
+  display: flex;
+}
