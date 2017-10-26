@@ -20,7 +20,9 @@ export default class TestSelector extends React.Component {
   }
   static propTypes = {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    selectedTests: PropTypes.array
+    selectedTests: PropTypes.array,
+    cancelSelection: PropTypes.func.isRequired,
+    completeSelection: PropTypes.func.isRequired
   };
   selectTest(isSelected, test) {
     this.setState({
@@ -35,14 +37,14 @@ export default class TestSelector extends React.Component {
       <Modal className="test-selector" isOpen={true}>
         <span className="header">
           <h2>Select Tests</h2>
-          <RemoveButton />
+          <RemoveButton onClick={this.props.cancelSelection} />
         </span>
         <SearchBar filter={this.filter} />
         <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
         <hr />
         <span className="right">
-          <FlatButton>Cancel</FlatButton>
-          <FlatButton className="primary" style={{
+          <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
+          <FlatButton className="primary" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests));}} style={{
             marginRight: "0"
           }}>Add</FlatButton>
         </span>

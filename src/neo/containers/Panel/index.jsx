@@ -74,7 +74,12 @@ modify(project);
         }}></div>
         <Console />
         <Alert show={show => this.show = show} />
-        {UiState.editedSuite ? <TestSelector tests={this.state.project.tests} selectedTests={UiState.editedSuite.tests.peek()} completeSelection={tests => this.selectTestsForSuite.bind(this, UiState.editedSuite, tests)} /> : null}
+        {UiState.editedSuite ? <TestSelector
+          tests={this.state.project.tests}
+          selectedTests={UiState.editedSuite.tests.peek()}
+          cancelSelection={() => {UiState.editSuite(null);}}
+          completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}
+        /> : null}
       </div>
     );
   }
