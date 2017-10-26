@@ -65,4 +65,14 @@ describe("Suite model", () => {
     suite.removeTestCase(new TestCase());
     expect(suite.tests.length).toBe(1);
   });
+  it("should replace the tests in the suite", () => {
+    const store = new ProjectStore();
+    const suite = new Suite();
+    store.createTestCase();
+    store.createTestCase();
+    store.createTestCase();
+    expect(suite.tests.length).toBe(0);
+    suite.replaceTests(store.tests.peek());
+    expect(suite.tests.length).toBe(3);
+  });
 });
