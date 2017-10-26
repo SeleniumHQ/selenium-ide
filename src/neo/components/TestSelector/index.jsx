@@ -13,10 +13,13 @@ export default class TestSelector extends React.Component {
           <RemoveButton />
         </span>
         <hr />
-        <span className="buttons">
+        <span className="right">
           <FlatButton>Cancel</FlatButton>
-          <FlatButton className="primary">Add</FlatButton>
+          <FlatButton className="primary" style={{
+            marginRight: "0"
+          }}>Add</FlatButton>
         </span>
+        <div className="clear"></div>
       </Modal>
     );
   }
