@@ -10,7 +10,7 @@
   background-color: white;
 }
 
-.test-table tr:hover {
+.test-table tbody tr:hover {
   background-color: #F3F3F3;
 }
 
