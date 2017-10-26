@@ -7,6 +7,18 @@ import Checkbox from "../Checkbox";
 import "./style.css";
 
 export default class TestSelector extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTests: {}
+    };
+    this.selectTest = this.selectTest.bind(this);
+  }
+  selectTest(isSelected, test) {
+    this.setState({
+      selectedTests: { ...this.state.selectedTests, [test.id]: isSelected ? test : undefined}
+    });
+  }
   render() {
     return (
       <Modal className="test-selector" isOpen={true}>
@@ -15,7 +27,7 @@ export default class TestSelector extends React.Component {
           <RemoveButton />
         </span>
         <SearchBar />
-        <TestSelectorList tests={this.props.tests} />
+        <TestSelectorList tests={this.props.tests} selectedTest={this.state.selectedTests} selectTest={this.selectTest} />
         <hr />
         <span className="right">
           <FlatButton>Cancel</FlatButton>
@@ -30,12 +42,15 @@ export default class TestSelector extends React.Component {
 }
 
 class TestSelectorList extends React.Component {
+  handleChange(test, e) {
+    this.props.selectTest(e.target.checked, test);
+  }
   render() {
     return (
       <ul>
         {this.props.tests.map(test => (
           <li key={test.id}>
-            <Checkbox id={test.id} label={test.name} />
+            <Checkbox id={test.id} label={test.name} checked={!!this.props.selectedTest[test.id]} onChange={this.handleChange.bind(this, test)} />
           </li>
         ))}
       </ul>
