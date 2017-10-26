@@ -14,8 +14,12 @@ export default class Suite {
     this.removeTestCase = this.removeTestCase.bind(this);
   }
 
+  isTest(test) {
+    return (test && test.constructor.name === "TestCase");
+  }
+
   @action addTestCase(test) {
-    if (!test || test.constructor.name !== "TestCase") {
+    if (!this.isTest(test)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
@@ -24,10 +28,18 @@ export default class Suite {
   }
 
   @action removeTestCase(test) {
-    if (!test || test.constructor.name !== "TestCase") {
+    if (!this.isTest(test)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.remove(test);
+    }
+  }
+
+  @action replaceTestCases(tests) {
+    if (tests.filter(test => !this.isTest(test)).length) {
+      throw new Error("Expected to receive array of TestCase");
+    } else {
+      this.tests.replace(SortBy([...tests], "name"));
     }
   }
 }
