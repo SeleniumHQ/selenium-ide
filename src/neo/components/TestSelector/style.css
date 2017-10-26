@@ -16,3 +16,8 @@
   margin: 0;
   padding: 0;
 }
+
+.test-selector .search {
+  margin: 10px 0;
+  width: 100%;
+}
