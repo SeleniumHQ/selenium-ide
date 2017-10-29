@@ -1,0 +1,13 @@
+.rename-dialog {
+  width: 260px;
+}
+
+.rename-dialog h2 {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.rename-dialog input {
+  display: block;
+  margin: 0 auto;
+}

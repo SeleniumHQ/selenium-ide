@@ -32,8 +32,37 @@ modify(project);
   constructor(props) {
     super(props);
     this.state = { project };
+    this.cancelRenaming = this.cancelRenaming.bind(this);
+    this.createTest = this.createTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
     this.deleteTest = this.deleteTest.bind(this);
+  }
+  cancelRenaming() {
+    this.setState({ rename: undefined });
+  }
+
+  createSuite() {
+    const self = this;
+    this.setState({
+      rename: {
+        done: (name) => {
+          if (name) self.state.project.createSuite(name);
+          self.cancelRenaming();
+        }
+      }
+    });
+  }
+
+  createTest() {
+    const self = this;
+    this.setState({
+      rename: {
+        done: (name) => {
+          if (name) self.state.project.createTestCase(name);
+          self.cancelRenaming();
+        }
+      }
+    });
   }
   moveTest(testItem, toSuite) {
     const destination = this.state.project.suites.find((suite) => (suite.id === toSuite));
@@ -67,7 +96,14 @@ modify(project);
         <div style={{
           float: "left"
         }}>
-          <Navigation tests={this.state.project.tests} suites={this.state.project.suites} removeSuite={this.state.project.deleteSuite} moveTest={this.moveTest} deleteTest={this.deleteTest} />
+          <Navigation
+            tests={this.state.project.tests}
+            suites={this.state.project.suites}
+            removeSuite={this.state.project.deleteSuite}
+            createTest={this.createTest}
+            moveTest={this.moveTest}
+            deleteTest={this.deleteTest}
+          />
         </div>
         <Editor test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest)) : null} />
         <div style={{
@@ -75,13 +111,16 @@ modify(project);
         }}></div>
         <Console />
         <Alert show={show => this.show = show} />
-        <TestSelector
+        {UiState.editedSuite ? <TestSelector
           isEditing={!!UiState.editedSuite}
           tests={this.state.project.tests}
           selectedTests={UiState.editedSuite ? UiState.editedSuite.tests.peek() : null}
           cancelSelection={() => {UiState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}
-        />
+        /> : null}
+        {this.state.rename
+          ? <RenameDialog isEditing={!!this.state.rename} setValue={this.state.rename ? this.state.rename.done : null} cancel={this.cancelRenaming} />
+          : null}
       </div>
     );
   }
