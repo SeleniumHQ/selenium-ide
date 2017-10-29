@@ -10,12 +10,17 @@ export default class Suite {
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;
+    this.setName = this.setName.bind(this);
     this.addTestCase = this.addTestCase.bind(this);
     this.removeTestCase = this.removeTestCase.bind(this);
   }
 
   isTest(test) {
     return (test && test.constructor.name === "TestCase");
+  }
+
+  @action setName(name) {
+    this.name = name;
   }
 
   @action addTestCase(test) {
