@@ -23,7 +23,7 @@ export default class RenameDialog extends React.Component {
   render() {
     return (
       <Modal className="rename-dialog" isOpen={this.props.isEditing}>
-        <h2>{this.state.isRenaming ? `Rename ${this.props.value}` : "Create New"}</h2>
+        <h2>{this.state.isRenaming ? `Rename '${this.props.value}'` : "Create New"}</h2>
         <input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} />
         <hr />
         <span className="right">
