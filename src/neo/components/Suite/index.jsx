@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { PropTypes as MobxPropTypes } from "mobx-react";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
