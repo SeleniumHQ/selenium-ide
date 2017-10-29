@@ -12,6 +12,7 @@ import "./style.css";
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     collapsed: PropTypes.bool,
     suite: PropTypes.string,
+    rename: PropTypes.func,
     removeTest: PropTypes.func.isRequired
   };
   render() {
@@ -20,8 +21,8 @@ import "./style.css";
         {this.props.tests.filter(({name}) => (name.indexOf(UiState.filterTerm) !== -1)).map((test) => (
           <li key={test.id}>
             {this.props.suite
-              ? <DraggableTest id={test.id} name={test.name} suite={this.props.suite} selected={test.id === UiState.selectedTest} selectTest={UiState.selectTest} dragInProgress={UiState.dragInProgress} setDrag={UiState.setDrag} removeTest={() => { this.props.removeTest(test); }} />
-              : <Test id={test.id} name={test.name} selected={test.id === UiState.selectedTest} selectTest={UiState.selectTest} removeTest={() => { this.props.removeTest(test); }} /> }
+              ? <DraggableTest test={test} suite={this.props.suite} selected={test.id === UiState.selectedTest} selectTest={UiState.selectTest} dragInProgress={UiState.dragInProgress} setDrag={UiState.setDrag} removeTest={() => { this.props.removeTest(test); }} />
+              : <Test test={test} selected={test.id === UiState.selectedTest} selectTest={UiState.selectTest} renameTest={this.props.rename} removeTest={() => { this.props.removeTest(test); }} /> }
           </li>
         ))}
       </ul>
