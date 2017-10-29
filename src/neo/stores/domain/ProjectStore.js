@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, reaction, observable } from "mobx";
 import SortBy from "sort-array";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
@@ -18,6 +18,10 @@ export default class ProjectStore {
     this.createTestCase = this.createTestCase.bind(this);
     this.addTestCase = this.addTestCase.bind(this);
     this.deleteTestCase = this.deleteTestCase.bind(this);
+    this.sortSuites = this.sortSuites.bind(this);
+    this.sortTests = this.sortTests.bind(this);
+    this.sortSuitesReaction = reaction(() => this.suites.map(suite => suite.name), this.sortSuites);
+    this.sortTestsReaction = reaction(() => this.tests.map(test => test.name), this.sortTests);
   }
 
   @action changeName(name) {
@@ -31,13 +35,22 @@ export default class ProjectStore {
   @action createSuite(...argv) {
     const suite = new Suite(undefined, ...argv);
     this.suites.push(suite);
-    this.suites.replace(SortBy(this.suites, "name"));
 
     return suite;
   }
 
   @action deleteSuite(suite) {
     this.suites.remove(suite);
+  }
+
+  @action sortSuites() {
+    const sorted = SortBy(this.suites, "name");
+    if(JSON.stringify(sorted) !== JSON.stringify(this.suites.peek())) this.suites.replace(sorted);
+  }
+
+  @action sortTests() {
+    const sorted = SortBy(this.tests, "name");
+    if(JSON.stringify(sorted) !== JSON.stringify(this.tests.peek())) this.tests.replace(sorted);
   }
 
   @action createTestCase(...argv) {
@@ -52,7 +65,6 @@ export default class ProjectStore {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
-      this.tests.replace(SortBy(this.tests, "name"));
     }
   }
 

@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, reaction, observable } from "mobx";
 import uuidv4 from "uuid/v4";
 import SortBy from "sort-array";
 
@@ -13,6 +13,8 @@ export default class Suite {
     this.setName = this.setName.bind(this);
     this.addTestCase = this.addTestCase.bind(this);
     this.removeTestCase = this.removeTestCase.bind(this);
+    this.sortTests = this.sortTests.bind(this);
+    this.sortTestsReaction = reaction(() => this.tests.map(test => test.name), this.sortTests);
   }
 
   isTest(test) {
@@ -28,7 +30,6 @@ export default class Suite {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.tests.push(test);
-      this.tests.replace(SortBy(this.tests.peek(), "name"));
     }
   }
 
@@ -44,7 +45,12 @@ export default class Suite {
     if (tests.filter(test => !this.isTest(test)).length) {
       throw new Error("Expected to receive array of TestCase");
     } else {
-      this.tests.replace(SortBy([...tests], "name"));
+      this.tests.replace(tests);
     }
+  }
+
+  @action sortTests() {
+    const sorted = SortBy(this.tests, "name");
+    if(JSON.stringify(sorted) !== JSON.stringify(this.tests.peek())) this.tests.replace(sorted);
   }
 }
