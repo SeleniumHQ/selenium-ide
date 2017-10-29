@@ -17,6 +17,7 @@ import "../../styles/heights.css";
 
 import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
+import RenameDialog from "../../components/RenameDialog";
 
 const project = observable(new ProjectStore());
 
@@ -74,12 +75,13 @@ modify(project);
         }}></div>
         <Console />
         <Alert show={show => this.show = show} />
-        {UiState.editedSuite ? <TestSelector
+        <TestSelector
+          isEditing={!!UiState.editedSuite}
           tests={this.state.project.tests}
-          selectedTests={UiState.editedSuite.tests.peek()}
+          selectedTests={UiState.editedSuite ? UiState.editedSuite.tests.peek() : null}
           cancelSelection={() => {UiState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}
-        /> : null}
+        />
       </div>
     );
   }

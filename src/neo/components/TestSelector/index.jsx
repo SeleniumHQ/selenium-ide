@@ -19,6 +19,7 @@ export default class TestSelector extends React.Component {
     this.filter = this.filter.bind(this);
   }
   static propTypes = {
+    isEditing: PropTypes.bool.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     selectedTests: PropTypes.array,
     cancelSelection: PropTypes.func.isRequired,
@@ -34,7 +35,7 @@ export default class TestSelector extends React.Component {
   }
   render() {
     return (
-      <Modal className="test-selector" isOpen={true}>
+      <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
         <span className="header">
           <h2>Select Tests</h2>
           <RemoveButton onClick={this.props.cancelSelection} />
