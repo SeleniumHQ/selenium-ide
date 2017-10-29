@@ -4,8 +4,12 @@
   position: relative;
 }
 
-.tabbar li {
+.tabbar ul li {
   display: inline-block;
+}
+
+.tabbar ul li.buttons {
+  float: right;
 }
 
 .tabbar a {

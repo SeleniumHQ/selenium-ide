@@ -16,6 +16,7 @@ export default class TabBar extends React.Component {
     };
   }
   static propTypes = {
+    children: PropTypes.node,
     tabs: PropTypes.array.isRequired,
     defaultTab: PropTypes.string,
     tabWidth: PropTypes.number,
@@ -41,6 +42,7 @@ export default class TabBar extends React.Component {
               <a href="#" onClick={this.handleClick.bind(this, tab, index)}>{tab}</a>
             </li>
           ))}
+          {this.props.children ? <li className="buttons">{this.props.children}</li> : null}
         </ul>
         <div className="underline" style={{
           transform: `translateX(${this.state.activeTab.index * this.props.tabWidth}px)`,
