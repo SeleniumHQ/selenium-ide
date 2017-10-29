@@ -9,14 +9,6 @@ describe("TestCase model", () => {
   it("new test should be named 'Untitled Test'", () => {
     expect((new TestCase()).name).toBe("Untitled Test");
   });
-  it("should observe name changes", () => {
-    const test = new TestCase();
-    const disposer = observe(test, "name", (change) => {
-      expect(change.newValue).toBe("changed");
-    });
-    test.name = "changed";
-    disposer();
-  });
   it("should change name", () => {
     const test = new TestCase();
     test.setName("test");
