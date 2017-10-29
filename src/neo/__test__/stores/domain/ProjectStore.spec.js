@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useStrict, observe } from "mobx";
+import { useStrict } from "mobx";
 import ProjectStore from "../../../stores/domain/ProjectStore";
 import Suite from "../../../models/Suite";
 import TestCase from "../../../models/TestCase";
@@ -19,22 +19,6 @@ describe("Project Store", () => {
     const store = new ProjectStore("test");
     store.changeName("changed");
     expect(store.name).toBe("changed");
-  });
-  it("should observe the name change", () => {
-    const store = new ProjectStore("myStore");
-    const disposer = observe(store, "name", (change) => {
-      expect(change.newValue).toBe("changed");
-    });
-    store.name = "changed";
-    disposer();
-  });
-  it("should observe adding addition test case to the store", () => {
-    const store = new ProjectStore();
-    const disposer = observe(store, "tests", (change) => {
-      expect(change.newValue.length).toBe(1);
-    });
-    store.tests.push(new TestCase());
-    disposer();
   });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useStrict, observe } from "mobx";
+import { useStrict } from "mobx";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import Suite from "../../models/Suite";
 import TestCase from "../../models/TestCase";
@@ -10,14 +10,6 @@ describe("Suite model", () => {
   it("new suite should be named 'Utitled Suite'", () => {
     expect((new Suite()).name).toBe("Untitled Suite");
   });
-  it("should observe name changes", () => {
-    const suite = new Suite();
-    const disposer = observe(suite, "name", (change) => {
-      expect(change.newValue).toBe("changed");
-    });
-    suite.name = "changed";
-    disposer();
-  });
   it("Suites should have randomly generated identifiers", () => {
     expect((new Suite()).id).not.toBe((new Suite()).id);
   });
@@ -25,13 +17,6 @@ describe("Suite model", () => {
     const suite = new Suite();
     suite.setName("test");
     expect(suite.name).toBe("test");
-  });
-  it("should observe when a new Test Case is added", () => {
-    const suite = new Suite();
-    const disposer = observe(suite, "tests", (change) => {
-      expect(change.newValue.length).toBe(1);
-    });
-    suite.tests.push(new TestCase());
   });
   it("should add a new Test Case", () => {
     const store = new ProjectStore();
