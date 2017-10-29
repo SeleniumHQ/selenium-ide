@@ -8,6 +8,7 @@ import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
 import SuiteList from "../../components/SuiteList";
 import Runs from "../../components/Runs";
+import AddButton from "../../components/ActionButtons/Add";
 import "./style.css";
 
 @observer export default class Navigation extends React.Component {
@@ -21,7 +22,9 @@ import "./style.css";
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    createSuite: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
+    createTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     deleteTest: PropTypes.func.isRequired
   };
@@ -32,10 +35,10 @@ import "./style.css";
   }
   render() {
     return (
-      <aside className="test-cases" style={{
-        maxWidth: "200px"
-      }}>
-        <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab} />
+      <aside className="test-cases">
+        <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab}>
+          <AddButton onClick={this.state.showTests ? this.props.createTest : this.props.createSuite} />
+        </TabBar>
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
           ? <TestList tests={this.props.tests} removeTest={this.props.deleteTest} />

@@ -33,6 +33,7 @@ modify(project);
     super(props);
     this.state = { project };
     this.cancelRenaming = this.cancelRenaming.bind(this);
+    this.createSuite = this.createSuite.bind(this);
     this.createTest = this.createTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
     this.deleteTest = this.deleteTest.bind(this);
@@ -99,6 +100,7 @@ modify(project);
           <Navigation
             tests={this.state.project.tests}
             suites={this.state.project.suites}
+            createSuite={this.createSuite}
             removeSuite={this.state.project.deleteSuite}
             createTest={this.createTest}
             moveTest={this.moveTest}
