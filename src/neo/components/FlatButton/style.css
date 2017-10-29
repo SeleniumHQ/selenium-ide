@@ -20,6 +20,10 @@
   box-shadow: inset -1px 1px 1px 0 #CACACA;
 }
 
+.btn:disabled {
+  cursor: not-allowed;
+}
+
 .btn.primary {
   color: #FFF;
   background-color: #6fc8ea;
@@ -32,6 +36,10 @@
 .btn.primary:active {
   background-color: #67c9ef;
   box-shadow: inset -1px 1px 1px 0 #53a4c3;
+}
+
+.btn.primary:disabled {
+  background-color: #92d9f5;
 }
 
 .btn.danger {
