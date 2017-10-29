@@ -33,6 +33,7 @@ modify(project);
     super(props);
     this.state = { project };
     this.cancelRenaming = this.cancelRenaming.bind(this);
+    this.rename = this.rename.bind(this);
     this.createSuite = this.createSuite.bind(this);
     this.createTest = this.createTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
@@ -41,28 +42,26 @@ modify(project);
   cancelRenaming() {
     this.setState({ rename: undefined });
   }
-
-  createSuite() {
-    const self = this;
+  rename(value, cb) {
     this.setState({
       rename: {
-        done: (name) => {
-          if (name) self.state.project.createSuite(name);
-          self.cancelRenaming();
-        }
+        value,
+        done: cb
       }
     });
   }
-
+  createSuite() {
+    const self = this;
+    this.rename(null, (name) => {
+      if (name) self.state.project.createSuite(name);
+      self.cancelRenaming();
+    });
+  }
   createTest() {
     const self = this;
-    this.setState({
-      rename: {
-        done: (name) => {
-          if (name) self.state.project.createTestCase(name);
-          self.cancelRenaming();
-        }
-      }
+    this.rename(null, (name) => {
+      if (name) self.state.project.createTestCase(name);
+      self.cancelRenaming();
     });
   }
   moveTest(testItem, toSuite) {
