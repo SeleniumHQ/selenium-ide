@@ -10,10 +10,15 @@ export default class TestCase {
   constructor(id = uuidv4(), name = "Untitled Test") {
     this.id = id;
     this.name = name;
+    this.setName = this.setName.bind(this);
     this.createCommand = this.createCommand.bind(this);
     this.removeCommand = this.removeCommand.bind(this);
     this.insertCommandAt = this.insertCommandAt.bind(this);
     this.swapCommands = this.swapCommands.bind(this);
+  }
+
+  @action setName(name) {
+    this.name = name;
   }
 
   @action createCommand(index) {
