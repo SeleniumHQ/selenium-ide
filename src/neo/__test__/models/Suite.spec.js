@@ -21,6 +21,11 @@ describe("Suite model", () => {
   it("Suites should have randomly generated identifiers", () => {
     expect((new Suite()).id).not.toBe((new Suite()).id);
   });
+  it("should rename the suite", () => {
+    const suite = new Suite();
+    suite.setName("test");
+    expect(suite.name).toBe("test");
+  });
   it("should observe when a new Test Case is added", () => {
     const suite = new Suite();
     const disposer = observe(suite, "tests", (change) => {
