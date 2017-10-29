@@ -22,6 +22,7 @@ import "./style.css";
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    rename: PropTypes.func.isRequired,
     createSuite: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
     createTest: PropTypes.func.isRequired,
@@ -41,8 +42,8 @@ import "./style.css";
         </TabBar>
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
-          ? <TestList tests={this.props.tests} removeTest={this.props.deleteTest} />
-          : <SuiteList suites={this.props.suites} selectTests={UiState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+          ? <TestList tests={this.props.tests} rename={this.props.rename} removeTest={this.props.deleteTest} />
+          : <SuiteList suites={this.props.suites} rename={this.props.rename} selectTests={UiState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
     );

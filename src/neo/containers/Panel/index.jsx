@@ -43,10 +43,14 @@ modify(project);
     this.setState({ rename: undefined });
   }
   rename(value, cb) {
+    const self = this;
     this.setState({
       rename: {
         value,
-        done: cb
+        done: (...argv) => {
+          cb(...argv);
+          self.cancelRenaming();
+        }
       }
     });
   }
@@ -54,14 +58,12 @@ modify(project);
     const self = this;
     this.rename(null, (name) => {
       if (name) self.state.project.createSuite(name);
-      self.cancelRenaming();
     });
   }
   createTest() {
     const self = this;
     this.rename(null, (name) => {
       if (name) self.state.project.createTestCase(name);
-      self.cancelRenaming();
     });
   }
   moveTest(testItem, toSuite) {
@@ -99,6 +101,7 @@ modify(project);
           <Navigation
             tests={this.state.project.tests}
             suites={this.state.project.suites}
+            rename={this.rename}
             createSuite={this.createSuite}
             removeSuite={this.state.project.deleteSuite}
             createTest={this.createTest}
@@ -120,7 +123,7 @@ modify(project);
           completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}
         /> : null}
         {this.state.rename
-          ? <RenameDialog isEditing={!!this.state.rename} setValue={this.state.rename ? this.state.rename.done : null} cancel={this.cancelRenaming} />
+          ? <RenameDialog isEditing={!!this.state.rename} value={this.state.rename.value} setValue={this.state.rename ? this.state.rename.done : null} cancel={this.cancelRenaming} />
           : null}
       </div>
     );

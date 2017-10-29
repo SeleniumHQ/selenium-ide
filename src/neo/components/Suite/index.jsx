@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
+import { observer } from "mobx-react";
 import TestList from "../TestList";
 import { Type } from "../Test";
 import ListMenu, { ListMenuItem } from "../ListMenu";
@@ -51,7 +52,7 @@ const ArrowProject = styled.span`
   }
 `;
 
-class Suite extends React.Component {
+@observer class Suite extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,6 +64,7 @@ class Suite extends React.Component {
     suite: PropTypes.object.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     selectTests: PropTypes.func.isRequired,
+    rename: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
@@ -86,7 +88,7 @@ class Suite extends React.Component {
             <MoreButton />
           }>
             <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
-            <ListMenuItem onClick={this.props.rename}>Rename</ListMenuItem>
+            <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>
