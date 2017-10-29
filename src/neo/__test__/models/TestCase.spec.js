@@ -17,6 +17,11 @@ describe("TestCase model", () => {
     test.name = "changed";
     disposer();
   });
+  it("should change name", () => {
+    const test = new TestCase();
+    test.setName("test");
+    expect(test.name).toBe("test");
+  });
   it("Test Cases should have randomly generated identifiers", () => {
     expect((new TestCase()).id).not.toBe((new TestCase()).id);
   });
