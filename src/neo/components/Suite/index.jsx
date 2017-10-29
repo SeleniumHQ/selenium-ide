@@ -61,13 +61,10 @@ class Suite extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    suite: PropTypes.object.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
     selectTests: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
-    removeTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
     canDrop: PropTypes.bool
@@ -83,17 +80,18 @@ class Suite extends React.Component {
         <div className="project">
           <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
             <ArrowProject isActive={this.state.isActive}>
-              <span className="title">{this.props.name}</span>
+              <span className="title">{this.props.suite.name}</span>
             </ArrowProject>
           </a>
           <ListMenu width={130} opener={
             <MoreButton />
           }>
             <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
+            <ListMenuItem onClick={this.props.rename}>Rename</ListMenuItem>
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>
-        <TestList collapsed={!this.state.isActive} suite={this.props.id} tests={this.props.tests} removeTest={this.props.removeTest} />
+        <TestList collapsed={!this.state.isActive} suite={this.props.suite.id} tests={this.props.suite.tests} removeTest={this.props.suite.removeTestCase} />
       </div>
     );
   }
