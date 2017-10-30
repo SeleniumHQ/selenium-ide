@@ -40,6 +40,12 @@ input:focus {
   outline: 0;
 }
 
+input:disabled {
+  background-color: whitesmoke;
+  border-color: whitesmoke;
+  cursor: not-allowed;
+}
+
 hr {
   background-color: #E5E5E5;
   border: 0;
