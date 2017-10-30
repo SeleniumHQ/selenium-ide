@@ -14,7 +14,9 @@ import CommandForm from "../../components/CommandForm";
     this.removeCommand = this.removeCommand.bind(this);
   }
   static propTypes = {
-    test: PropTypes.object
+    test: PropTypes.object,
+    url: PropTypes.string.isRequired,
+    setUrl: PropTypes.func.isRequired
   };
   addCommand(index) {
     const command = this.props.test.createCommand(index + 1);
@@ -38,7 +40,7 @@ import CommandForm from "../../components/CommandForm";
         display: "flow-root"
       }}>
         <ToolBar />
-        <UrlBar />
+        <UrlBar url={this.props.url} setUrl={this.props.setUrl} />
         <TestTable
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
