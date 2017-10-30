@@ -45,16 +45,51 @@ export default {
               name: "media/[name].[hash:8].[ext]"
             }
           },
+          {
+            test: /google-closure-library\/closure\/goog\/base/,
+            use: [
+              "imports-loader?this=>{goog:{}}&goog=>this.goog",
+              "exports-loader?goog"
+            ]
+          },
+          {
+            test: /google-closure-library\/closure\/goog\/.*\.js/,
+            loader: "closure-loader",
+            options: {
+              paths: [
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+              ],
+              es6mode: true
+            },
+            exclude: [/google-closure-library\/closure\/goog\/base\.js$/]
+          },
+          {
+            test: /atoms\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [path.resolve(__dirname, "src/atoms")]
+              }
+            }
+          },
           // Process JS with Babel.
           {
             test: /\.(jsx?)$/,
             include: [
               path.resolve(__dirname, "src")
             ],
-            loader: "babel-loader",
-            options: {
-              compact: true
-            }
+            use: [
+              { 
+                loader: "babel-loader",
+                options: {
+                  compact: true
+                }
+              }
+            ]
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
@@ -129,9 +164,13 @@ export default {
     ]
   },
   plugins: [
+    // globally add google closure library
+    new webpack.ProvidePlugin({
+      goog: "google-closure-library/closure/goog/base"
+    }),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
-      { from: "", to: "vendor" }
+      { from: "", to: "vendor", ignore: ["selenium/*"] }
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
