@@ -17,9 +17,27 @@ import "./style.css";
     return (
       <div className="command-form">
         <form>
-          <CommandInput id="command" name="command" label="Command" value={this.props.command ? this.parseCommandName(this.props.command.command) : ""} disabled={!this.props.command} onChange={this.props.command ? this.props.command.setCommand : null} />
-          <Input id="target" name="target" label="Target" value={this.props.command ? this.props.command.target : ""} disabled={!this.props.command} onChange={this.props.command ? this.props.command.setTarget : null} />
-          <Input id="value" name="value" label="Value" value={this.props.command ? this.props.command.value : ""} disabled={!this.props.command} onChange={this.props.command ? this.props.command.setValue : null} />
+          <CommandInput
+            id="command"
+            name="command"
+            label="Command"
+            value={this.props.command ? this.parseCommandName(this.props.command.command) : ""}
+            disabled={!this.props.command}
+            onChange={this.props.command ? this.props.command.setCommand : null} />
+          <Input
+            id="target"
+            name="target"
+            label="Target"
+            value={this.props.command ? this.props.command.target : ""}
+            disabled={!this.props.command}
+            onChange={this.props.command ? this.props.command.setTarget : null} />
+          <Input
+            id="value"
+            name="value"
+            label="Value"
+            value={this.props.command ? this.props.command.value : ""}
+            disabled={!this.props.command}
+            onChange={this.props.command ? this.props.command.setValue : null} />
         </form>
       </div>
     );
