@@ -22,7 +22,7 @@ describe("Project Store", () => {
   });
   it("should have a base url", () => {
     const store = new ProjectStore();
-    expect(store.url).toHaveProperty("url");
+    expect(store).toHaveProperty("url");
   });
   it("should set the url", () => {
     const store = new ProjectStore();
