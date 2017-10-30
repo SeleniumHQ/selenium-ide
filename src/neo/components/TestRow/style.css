@@ -28,15 +28,15 @@
 }
 
 .test-table tbody tr.pending {
-  background-color: #EDFCFF;
+  background-color: #FFFCC5;
 }
 
-.test-table tbody tr.passed {
-  background-color: #EDFFEF;
+.test-table tbody tr.passed td {
+  color: #276D3A;
 }
 
-.test-table tbody tr.failed {
-  background-color: #FFEDEF;
+.test-table tbody tr.failed td {
+  color: #E80600;
 }
 
 .test-table td {
