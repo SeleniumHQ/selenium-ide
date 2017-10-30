@@ -2,9 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
+import styled from "styled-components";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem } from "../ListMenu";
+import tick from "../../images/ic_tick.svg";
 import "./style.css";
 
 export const Type = "command";
@@ -72,6 +74,18 @@ export const RowState = {
   Selected: "selected"
 };
 
+
+const PendingIcon = styled.td`
+  &:before {
+    mask-image: url(${tick});
+    background-color: black;
+    content: " ";
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+  }
+`;
+
 @DropTarget(Type, commandTarget, connect => ({
   connectDropTarget: connect.dropTarget()
 }))
@@ -107,7 +121,7 @@ export default class TestRow extends React.Component {
       <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state}, {"dragging": this.props.dragInProgress})} onClick={this.handleClick.bind(this)} style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
-        <td><CommandName>{this.props.command}</CommandName></td>
+        <td><span></span><CommandName>{this.props.command}</CommandName></td>
         <td>{this.props.target}</td>
         <td>{this.props.value}</td>
         <td className="buttons">

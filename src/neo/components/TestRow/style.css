@@ -15,6 +15,10 @@
   border-collapse: separate;
 }
 
+.test-table tbody tr.pending {
+  background-color: #FFFCC5;
+}
+
 .test-table tbody tr:hover {
   background-color: #F3F3F3;
 }
@@ -27,8 +31,21 @@
   border-top: 1px solid #75BFFF;
 }
 
-.test-table tbody tr.pending {
-  background-color: #FFFCC5;
+.test-table tbody tr td:first-child {
+  position: relative;
+}
+
+.test-table tbody tr.pending td:first-child span{
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid #505050;
 }
 
 .test-table tbody tr.passed td {
