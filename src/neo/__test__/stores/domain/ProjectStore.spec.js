@@ -20,6 +20,16 @@ describe("Project Store", () => {
     store.changeName("changed");
     expect(store.name).toBe("changed");
   });
+  it("should have a base url", () => {
+    const store = new ProjectStore();
+    expect(store.url).toHaveProperty("url");
+  });
+  it("should set the url", () => {
+    const store = new ProjectStore();
+    const url = "http://www.seleniumhq.org/";
+    store.setUrl(url);
+    expect(store.url).toBe(url);
+  });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();
     expect(store.tests.length).toBe(0);
