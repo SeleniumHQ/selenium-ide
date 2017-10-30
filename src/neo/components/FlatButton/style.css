@@ -24,6 +24,12 @@
   cursor: not-allowed;
 }
 
+.btn.icon {
+  border: 1px solid #DCDCDC;
+  background-color: white;
+  padding: 5px 8px;
+}
+
 .btn.primary {
   color: #FFF;
   background-color: #6fc8ea;
