@@ -118,7 +118,7 @@ modify(project);
         {UiState.editedSuite ? <TestSelector
           isEditing={!!UiState.editedSuite}
           tests={this.state.project.tests}
-          selectedTests={UiState.editedSuite ? UiState.editedSuite.tests.peek() : null}
+          selectedTests={UiState.editedSuite ? UiState.editedSuite.tests : null}
           cancelSelection={() => {UiState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}
         /> : null}

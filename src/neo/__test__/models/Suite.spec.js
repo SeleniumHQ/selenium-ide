@@ -62,7 +62,7 @@ describe("Suite model", () => {
     store.createTestCase();
     store.createTestCase();
     expect(suite.tests.length).toBe(0);
-    suite.replaceTestCases(store.tests.peek());
+    suite.replaceTestCases(store.tests);
     expect(suite.tests.length).toBe(3);
   });
 });
