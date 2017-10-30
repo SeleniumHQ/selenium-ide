@@ -1,4 +1,4 @@
-import { action, reaction, observable, computed } from "mobx";
+import { action, observable, computed } from "mobx";
 import SortBy from "sort-array";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
@@ -6,11 +6,13 @@ import Suite from "../../models/Suite";
 export default class ProjectStore {
   @observable modified = false;
   @observable name = "";
+  @observable url = "";
   @observable _tests = [];
   @observable _suites = [];
 
   constructor(name = "Untitled Project") {
     this.name = name;
+    this.setUrl = this.setUrl.bind(this);
     this.changeName = this.changeName.bind(this);
     this.setModified = this.setModified.bind(this);
     this.createSuite = this.createSuite.bind(this);
@@ -26,6 +28,10 @@ export default class ProjectStore {
 
   @computed get tests() {
     return SortBy(this._tests, "name");
+  }
+
+  @action setUrl(url) {
+    this.url = url;
   }
 
   @action changeName(name) {
