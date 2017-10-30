@@ -6,7 +6,6 @@ import HTML5Backend from "react-dnd-html5-backend";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import modify from "../../side-effects/modify";
-import OmniBar from "../../components/OmniBar";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -93,7 +92,6 @@ modify(project);
   render() {
     return (
       <div>
-        <OmniBar />
         <ProjectHeader title={this.state.project.name} changed={this.state.project.modified} changeName={this.state.project.changeName} />
         <div style={{
           float: "left"
