@@ -16,6 +16,7 @@ import CommandForm from "../../components/CommandForm";
   static propTypes = {
     test: PropTypes.object,
     url: PropTypes.string.isRequired,
+    urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired
   };
   addCommand(index) {
@@ -40,7 +41,7 @@ import CommandForm from "../../components/CommandForm";
         display: "flow-root"
       }}>
         <ToolBar />
-        <UrlBar url={this.props.url} setUrl={this.props.setUrl} />
+        <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
         <TestTable
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
