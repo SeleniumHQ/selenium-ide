@@ -10,6 +10,7 @@ export default class AutoComplete extends React.Component {
   render() {
     return (
       <Autocomplete
+        getItemValue={(item) => (item)}
         renderInput={(props) => (
           <span style={{
             position: "relative"
