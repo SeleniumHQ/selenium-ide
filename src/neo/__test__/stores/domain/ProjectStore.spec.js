@@ -30,6 +30,16 @@ describe("Project Store", () => {
     store.setUrl(url);
     expect(store.url).toBe(url);
   });
+  it("should contain list of previous base urls", () => {
+    const store = new ProjectStore();
+    expect(store.urls).toBeDefined();
+  });
+  it("should add to the list of previous used base urls", () => {
+    const store = new ProjectStore();
+    const url = "http://www.seleniumhq.org/";
+    store.addUrl(url);
+    expect(store.urls.length).toBe(1);
+  });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();
     expect(store.tests.length).toBe(0);

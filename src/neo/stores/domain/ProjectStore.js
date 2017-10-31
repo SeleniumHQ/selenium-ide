@@ -9,10 +9,12 @@ export default class ProjectStore {
   @observable url = "";
   @observable _tests = [];
   @observable _suites = [];
+  @observable _urls = [];
 
   constructor(name = "Untitled Project") {
     this.name = name;
     this.setUrl = this.setUrl.bind(this);
+    this.addUrl = this.addUrl.bind(this);
     this.changeName = this.changeName.bind(this);
     this.setModified = this.setModified.bind(this);
     this.createSuite = this.createSuite.bind(this);
@@ -30,8 +32,16 @@ export default class ProjectStore {
     return SortBy(this._tests, "name");
   }
 
+  @computed get urls() {
+    return this._urls.sort();
+  }
+
   @action setUrl(url) {
     this.url = url;
+  }
+
+  @action addUrl(url) {
+    this._urls.push(url);
   }
 
   @action changeName(name) {
