@@ -7,3 +7,7 @@
 .menu.content .buttons li a:hover {
   background-color: #F3F3F3;
 }
+
+.menu.content .buttons li hr {
+  margin-left: 20px;
+}

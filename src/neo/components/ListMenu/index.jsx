@@ -34,3 +34,5 @@ export class ListMenuItem extends React.Component {
     );
   }
 }
+
+export const ListMenuSeparator = () => (<li><hr /></li>);
