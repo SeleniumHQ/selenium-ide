@@ -176,7 +176,7 @@ function handleMessage(message, sender, sendResponse) {
     if (message.cancelSelectTarget) {
         var button = document.getElementById("selectElementButton");
         isSelecting = false; 
-        button.textContent = "Select";
+        button.classList.remove("pressed");
         browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
         return;
     }
@@ -329,7 +329,7 @@ function notification(command, target, value) {
     // In Chrome, notification.create must have "iconUrl" key in notificationOptions
     browser.notifications.create(tempCount, {
         "type": "basic",
-        "iconUrl": "/icons/icons-48.png",
+        "iconUrl": "/icons/icon.png",
         "title": "Record command!",
         "message": "command: " + String(command) + "\ntarget: " + String(target[0][0]) + "\nvalue: " + String(value) 
     });

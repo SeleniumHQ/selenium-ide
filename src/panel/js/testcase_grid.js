@@ -169,7 +169,7 @@ function appendContextMenu(node, isCase) {
             var s_suite = getSelectedSuite();
             var n_title = prompt("Please enter the Test Suite's title", sideex_testSuite[s_suite.id].title);
             // get text node
-            s_suite.childNodes[0].textContent = n_title;
+            s_suite.childNodes[0].childNodes[1].textContent = n_title;
             sideex_testSuite[s_suite.id].title = n_title;
             $(s_suite).find("strong").addClass("modified");
             closeConfirm(true);
@@ -270,13 +270,16 @@ function addTestCase(title, id) {
 }
 
 function addTestSuite(title, id) {
+    var iconEl = document.createElement("span");
+    iconEl.innerHTML = "<i class=\"si si-folder\"></i>";
     var text = document.createElement("strong");
     text.innerHTML = escapeHTML(title);
+    iconEl.appendChild(text);
     var div = document.createElement("div");
     div.setAttribute("id", id);
     div.setAttribute("contextmenu", "menu" + id);
     div.setAttribute("class", "message");
-    div.appendChild(text);
+    div.appendChild(iconEl);
 
     var s_suite = getSelectedSuite();
     if (s_suite) {

@@ -25,8 +25,10 @@
     <!-- TODO: Change the title bar text -->
     <title>Selenium IDE</title>
     <link rel="stylesheet" href="/assets/vendor/panel/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/assets/vendor/panel/css/se-font-style.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/assets/vendor/panel/css/layout.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/assets/vendor/panel/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/vendor/panel/css/modern.css">
     <!-- to hide right button feature -->
     <!--[if lt IE 9]>
     <link rel="stylesheet" href="panel/css/ie.css" type="text/css" media="screen" />
@@ -45,15 +47,6 @@
 <!-- TODO: Make whole panel size flexible -->
 
 <body>
-    <header id="header">
-        <hgroup>
-            <img class="logo_img" src="../icons/icon.png"></img>
-            <a href="#">
-                <img class="QA_img" src="../icons/QA.png"></img>
-            </a>
-        </hgroup>
-    </header>
-    <!-- end of header bar -->
     <!-- right button feature -->
     <div id="suite-grid-menu" class="menu">
         <ul>
@@ -69,31 +62,10 @@
         </ul>
     </div>
     <section id="main" class="column">
-        <div id="toolbar-container" class="submit_link">
-            <!-- hidden, because it has default style -->
-            <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display: none"></input>
-            <input id="load-testSuite-show" type="button" value="OpenSuite" style="display: none"></input>
-            <button id="save-testSuite" style="display: none">SaveSuite</button>
-            <button id="close-testSuite" style="display: none">CloseSuite</button>
-            <button id="add-testSuite" style="display: none">+Suite</button>
-            <button id="add-testCase" style="display: none">+Case</button>
-            <button id="delete-testCase" style="display: none">-Case</button>
-            <a download="info.html" id="downloadlink" style="display: none">Download</a>
-            <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-video-camera" aria-hidden="true"></i> Record</button>
-            <button id="playback" class="sub_btn" style="width: 20%"><i class="fa fa-play" aria-hidden="true"></i> PlayThisCase</button>
-            <button id="stop" class="sub_btn" style="display: none; width: 20%"><i class="fa fa-stop" aria-hidden="true"></i> Stop</button>
-            <button id="playSuite" class="sub_btn" style="width: 21%"><i class="fa fa-cube" aria-hidden="true"></i> PlayThisSuite</button>
-            <button id="playSuites" class="sub_btn" style="width: 21%"><i class="fa fa-cubes" aria-hidden="true"></i> PlayAllSuites</button>
-            <button id="pause" class="sub_btn btn_pr" style="width: 15.5%"><i class="fa fa-pause-circle" aria-hidden="true"></i> Pause</button>
-            <button id="resume" class="sub_btn btn_pr" style="display: none; width: 15.5%"><i class="fa fa-reply" aria-hidden="true"></i> Resume</button>
-            <!-- TODO: Add a stop button -->
-        </div>
         <div class="module_all">
             <article class="width_quarter module_right">
                 <div id="middle-container" class="module">
-                    <header>
-                        <h3>Test case</h3>
-                    </header>
+                    <h3>Test case</h3>
                     <div id="testCase-container" class="case_list">
                         <!-- Sug: Add animation when dragdrop -->
                         <div id="testCase-grid" class="module_content">
@@ -131,6 +103,25 @@
                 </article>
             </article>
             <article class="module width_3_quarter">
+                <div id="toolbar-container" class="submit_link">
+                    <!-- hidden, because it has default style -->
+                    <input id="load-testSuite-hidden" type="file" multiple accept="text/*" style="display: none"></input>
+                    <input id="load-testSuite-show" type="button" value="OpenSuite" style="display: none"></input>
+                    <button id="save-testSuite" style="display: none">SaveSuite</button>
+                    <button id="close-testSuite" style="display: none">CloseSuite</button>
+                    <button id="add-testSuite" style="display: none">+Suite</button>
+                    <button id="add-testCase" style="display: none">+Case</button>
+                    <button id="delete-testCase" style="display: none">-Case</button>
+                    <a download="info.html" id="downloadlink" style="display: none">Download</a>
+                    <button id="playSuites" class="sub_btn" style="width: 45px"><i class="si si-play-all" aria-hidden="true"></i><span class="hidden-text"> PlayAllSuites</span></button>
+                    <button id="playSuite" class="sub_btn" style="width: 45px"><i class="si si-play-all" aria-hidden="true"></i><span class="hidden-text"> PlayThisSuite</span></button>
+                    <button id="playback" class="sub_btn" style="width: 50px"><i class="si si-play-single" aria-hidden="true"></i><span class="hidden-text"> PlayThisCase</span></button>
+                    <button id="stop" class="sub_btn" style="display: none; width: 45px"><i class="fa fa-square-o" aria-hidden="true"></i><span class="hidden-text"> Stop</span></button>
+                    <button id="pause" class="sub_btn btn_pr" style="width: 45px"><i class="si si-pause" aria-hidden="true"></i><span class="hidden-text"> Pause</span></button>
+                    <button id="resume" class="sub_btn btn_pr" style="display: none; width: 45px"><i class="si si-pause" aria-hidden="true"></i><span class="hidden-text"> Resume</span></button>
+                    <button id="record" class="sub_btn" style="width: 15%"><i class="fa fa-circle" aria-hidden="true"></i><span class="hidden-text"> Record</span></button>
+                    <!-- TODO: Add a stop button -->
+                </div>
                 <div id="command-container" class="tab_content case_hight">
                     <div class="smallSection">
                         <table id="command-grid" class="tablesorter" cellspacing="0">
@@ -227,8 +218,8 @@
                             <input id="command-target" list="command-target-list" type="text"><i id="target-" class="fa fa-chevron-down" aria-hidden="true"></i>
                             <div id="target-dropdown" class="w3-dropdown-content w3-bar-block">
                             </div>
-                            <button id="selectElementButton" class="btn_sf" style="width: 60px">Select</button>
-                            <button id="showElementButton" class="btn_sf" style="width: 50px">Find</button>
+                            <button id="selectElementButton" class="btn_sf"><i class="si si-inspect" aria-hidden="true"></i></button>
+                            <button id="showElementButton" class="btn_sf"><i class="si si-find" aria-hidden="true"></i></button>
                         </div>
                         <datalist id="command-target-list">
                         </datalist>

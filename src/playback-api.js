@@ -59,9 +59,11 @@ window.onload = function() {
         if (isRecording) {
             notificationCount = 0;
             recordButton.childNodes[1].textContent = "Stop";
+            recordButton.childNodes[0].classList.add("recording");
         }
         else {
             recordButton.childNodes[1].textContent = "Record";
+            recordButton.childNodes[0].classList.remove("recording");
         }
     })
     playButton.addEventListener("click", function() {
@@ -93,7 +95,7 @@ window.onload = function() {
         var button = document.getElementById("selectElementButton");
         if (isSelecting) {
             isSelecting = false; 
-            button.textContent = "Select";
+            button.classList.remove("pressed");
             browser.tabs.query({
                 active: true,
                 windowId: contentWindowId
@@ -109,15 +111,15 @@ window.onload = function() {
         if (isRecording)
             /* TODO: disable record button */
             isRecording = false;
-        button.textContent = "Cancel";
+        button.classList.add("pressed");
         browser.tabs.query({
             active: true,
             windowId: contentWindowId
         }).then(function(tabs) {
             if (tabs.length === 0) {
                 console.log("No match tabs");
-                isSelecting = false; 
-                button.textContent = "Select";
+                isSelecting = false;
+                button.classList.remove("pressed");
             } else
                 browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
         })

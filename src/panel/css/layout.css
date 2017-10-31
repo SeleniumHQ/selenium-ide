@@ -24,7 +24,7 @@ body {
     background: #F8F8F8;
     font-size: 12px;
     width: 100%;
-    min-width: 679px;
+    min-width: 580px;
     min-height: 690px;
 }
 
@@ -442,7 +442,7 @@ section#main {
     width: 100%;
     background: url(../images/sidebar_shadow.png) repeat-y left top;
     float: left;
-    height: calc(100% - 30px);
+    height: 100%;
 }
 
 #main h3 {
@@ -469,7 +469,7 @@ section#main {
     margin-right: 15px;
     float: left;
     margin-left: 15px;
-    height: calc(100% - 51px);
+    height: 100%;
 }
 
 #middle-container {
@@ -479,6 +479,7 @@ section#main {
 
 #result-container {
     height: 70px;
+    border-top-color: white;
 }
 
 #command-toolbar {
@@ -532,12 +533,6 @@ section#main {
 }
 
 /* Module Widths */
-
-.width_full {
-    width: 100%;
-    margin-top: 13px;
-    height: 33%;
-}
 
 .width_half {
     width: 46%;
@@ -615,18 +610,20 @@ section#main {
 /* Content Manager */
 
 .tablesorter {
-    width: 100%;
+    width: calc(100% - 6px);
     height: 38px;
 }
 
 .tablesorter thead tr {
-    height: 39px;
-    background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
+    height: 33px;
     table-layout: fixed;
-    text-align: left;
+    text-align: center;
     text-indent: 6px;
 }
 
+.tablesorter thead tr th {
+    border-bottom: 1px solid silver;
+}
 .tablesorter .border {
     position: relative;
     float: right;
@@ -641,7 +638,7 @@ section#main {
 }
 
 .tablesorter tbody tr.selectedRecord {
-    background-color: #f8f8f8;
+    background-color: #e3f2ff;
 }
 
 .tablesorter tbody tr.selectedRecord td {
@@ -765,7 +762,7 @@ ul.tabs li:last-child:hover a {
 }
 
 .message .selectedCase {
-    text-decoration: underline;
+    background-color: #E3F2FF;
 }
 
 .message .selectedSuite>p {}
@@ -965,28 +962,17 @@ input[type=submit].btn_post_message:hover {
     display: block;
     float: left;
     width: 75px;
-    line-height: 16px;
-    text-shadow: 0 1px 0 #fff;
-    font-weight: bold;
+    line-height: 18px;
+    font-weight: normal;
     margin-top: 5px;
     margin-right: 0;
     margin-left: 0;
     margin-bottom: 5px;
-    text-transform: uppercase;
+    color: #606060;
 }
 
-#command-toolbar i {
-    float: left;
-    width: 0px;
-    margin-top: 5px;
-    margin-left: -20px;
-    aria-hidden: true;
-    color: #D0D0D0;
-}
-
-#command-toolbar i:hover {
-    cursor: pointer;
-    color: #828282;
+#command-toolbar input:focus {
+    outline: none !important;
 }
 
 #command-toolbar input::-webkit-calendar-picker-indicator {
@@ -1109,11 +1095,9 @@ input[type=submit].btn_post_message:hover {
 }
 
 .submit_link {
-    margin-right: 3%;
-    margin-top: 10px;
-    margin-left: 3%;
-    margin-bottom: 10px;
+    margin: 0;
     height: 33px;
+    border-bottom: 1px silver solid;
 }
 
 .submit_link select {
@@ -1236,56 +1220,77 @@ input[type=submit].btn_post_message:hover {
 }
 
 .sub_btn {
-    padding-right: 2%;
-    padding-left: 2%;
-    border-radius: 20px;
-    background: #D0D1D4;
     cursor: pointer;
-    text-shadow: 0 1px 0 #fff;
-    border: 1px solid #9c9c9c;
-    font-size: 14px;
-    margin-right: 0.5%;
-    margin-left: 0.6%;
-    height: 33px;
-}
-
-.sub_btn:not([disabled]):hover {
-    background: #30B0C8;
-    color: #fff;
-    text-shadow: none;
     border: none;
-    transition: 0.5s;
-    border: 1px solid #30B0C8;
+    background: none;
+    outline: 0;
 }
 
-.btn_pr {}
+.sub_btn:not([disabled]):hover .si:before {
+    color: #40A6FF;
+    transition: 0.1s;
+}
+
+.sub_btn span.hidden-text {
+    font-size: 0;
+}
+
+.sub_btn#playSuites {
+    visibility: hidden!important;
+    width: 0!important;
+    height: 0!important;
+}
+
+.sub_btn#resume .si-pause:before {
+    color: #40A6FF;
+}
+
+.sub_btn:disabled .si:before {
+    color: #c1c1c1;
+}
+
+.sub_btn .si {
+    font-size: 24px;
+}
+.sub_btn .fa {
+    font-size: 18px;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
 
 .btn_sf {
-    border-radius: 5px;
-    background: white;
-    padding-right: 10px;
-    padding-left: 10px;
-    float: left;
-    margin-left: 9px;
-    border: 1px solid #DBDBDB;
-    -webkit-box-shadow: 1px 1px #ABABAB;
-    box-shadow: 1px 1px #ABABAB;
-    height: 93%;
+    cursor: pointer;
+    background: none;
+    border: none;
     vertical-align: middle;
+    outline: 0;
+    padding: 0;
+    height: 29px;
+    margin-left: 5px;
 }
 
-.btn_sf:hover {
-    background-color: #EBEBEB;
-    transition: 0.2s;
+.btn_sf i {
+    border: 1px solid silver;
+    border-radius: 3px;
+    padding: 2px 5px;
+    text-align: center;
+    font-size: 21px;
 }
 
-.btn_sf:active {
-    -webkit-box-shadow: inset 2px 2px #ABABAB;
-    box-shadow: inset 2px 2px #ABABAB;
+.btn_sf:hover .si:before {
+    color: #40A6FF;
+    transition: 0.1s;
 }
 
-.fa {
-    margin: 2px;
+.btn_sf:hover .si {
+    border-color: #40A6FF;
+    transition: 0.1s;
+}
+
+.btn_sf.pressed .si:before {
+    color: #40A6FF;
 }
 
 button.active {
@@ -1306,7 +1311,7 @@ button.active {
 }
 
 .fixed {
-    top: 110px;
+    top: 54px;
     position: fixed;
     width: auto;
     z-index: 2;
@@ -1341,4 +1346,17 @@ button.active {
 .QA_img {
     float: right;
     margin-right: 30px;
+}
+
+input#command-command, input#command-value {
+    width: 250px;
+}
+
+input#command-target {
+    width: 170px;
+}
+
+#testCase-grid i.si {
+    font-size: 19px;
+    vertical-align: sub;
 }

@@ -19,7 +19,7 @@
 $(document).bind("contextmenu", function(event) {
 
     $(".menu").css("left", event.pageX);
-    $(".menu").css("top", event.pageY);
+    $(".menu").css("top", event.pageY + 5);
 
     if (event.target.id == "testCase-container") {
         event.preventDefault();
@@ -47,7 +47,7 @@ $(document).bind("contextmenu", function(event) {
 
             document.getElementById("command-grid-menu").childNodes[1].appendChild(exe);
         }
-        if (temp.id == "command-grid") {
+        if (temp.id == "command-container") {
             inCommandGrid = true;
             break;
         } else temp = temp.parentElement;
