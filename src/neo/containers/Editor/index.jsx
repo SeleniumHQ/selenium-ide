@@ -19,10 +19,14 @@ import CommandForm from "../../components/CommandForm";
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired
   };
-  addCommand(index) {
-    const command = this.props.test.createCommand(index + 1);
-    command.setCommand("open");
-    UiState.selectCommand(command);
+  addCommand(index, command) {
+    if (command) {
+      const newCommand = command.clone();
+      this.props.test.insertCommandAt(newCommand, index);
+    } else {
+      const newCommand = this.props.test.createCommand(index);
+      newCommand.setCommand("open");
+    }
   }
   removeCommand(command) {
     if (UiState.selectedCommand === command) {

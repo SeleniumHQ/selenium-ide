@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
+import { parse } from "modifier-keys";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
@@ -95,11 +96,18 @@ export default class TestRow extends React.Component {
     connectDragSource: PropTypes.func,
     connectDropTarget: PropTypes.func,
     dragInProgress: PropTypes.bool,
-    setDrag: PropTypes.func
+    setDrag: PropTypes.func,
+    clipboard: PropTypes.any,
+    copyToClipboard: PropTypes.func
   };
   handleClick(e) {
     if (this.node === e.target.parentElement) {
       this.props.onClick(e);
+    }
+  }
+  paste() {
+    if (this.props.clipboard && this.props.clipboard.constructor.name === "Command") {
+      this.props.addCommand(this.props.clipboard);
     }
   }
   render() {
@@ -115,9 +123,14 @@ export default class TestRow extends React.Component {
             <ListMenu width={300} opener={
               <MoreButton />
             }>
+              <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
+              <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
+              <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste.bind(this)}>Paste</ListMenuItem>
               <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem onClick={this.props.addCommand}>Insert New Command</ListMenuItem>
+              <ListMenuItem onClick={() => { this.props.addCommand(); }}>Insert New Command</ListMenuItem>
+              <ListMenuSeparator />
+              <ListMenuItem>Clear All</ListMenuItem>
             </ListMenu>
           </div>
         </td>
