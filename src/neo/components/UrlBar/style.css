@@ -2,7 +2,7 @@
   display: flex;
 }
 
-.url input {
+.url > * {
   flex-grow: 1;
   margin: 6px 9px;
 }
