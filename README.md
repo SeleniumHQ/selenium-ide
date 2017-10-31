@@ -1,6 +1,6 @@
 <img src="src/icons/icon.png" alt="logo" height="120" align="right" />
 
-# Selenium IDE
+# Selenium IDE &middot; [![Build Status](https://travis-ci.org/applitools/modifier-keys.svg?branch=master)]
 
 _[WIP] An integrated development environment for Selenium scripts_
 
