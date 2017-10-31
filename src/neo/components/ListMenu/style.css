@@ -8,6 +8,11 @@
   background-color: #F3F3F3;
 }
 
+.menu.content .buttons li a .label {
+  float: right;
+  color: #929292;
+}
+
 .menu.content .buttons li hr {
   margin-left: 20px;
 }

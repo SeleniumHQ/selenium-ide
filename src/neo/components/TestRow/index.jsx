@@ -2,11 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
-import styled from "styled-components";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
-import ListMenu, { ListMenuItem } from "../ListMenu";
-import tick from "../../images/ic_tick.svg";
+import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import "./style.css";
 
 export const Type = "command";
@@ -74,18 +72,6 @@ export const RowState = {
   Selected: "selected"
 };
 
-
-const PendingIcon = styled.td`
-  &:before {
-    mask-image: url(${tick});
-    background-color: black;
-    content: " ";
-    width: 9px;
-    height: 9px;
-    display: inline-block;
-  }
-`;
-
 @DropTarget(Type, commandTarget, connect => ({
   connectDropTarget: connect.dropTarget()
 }))
@@ -126,11 +112,12 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            <ListMenu opener={
+            <ListMenu width={300} opener={
               <MoreButton />
             }>
-              <ListMenuItem onClick={this.props.addCommand}>Add command</ListMenuItem>
-              <ListMenuItem onClick={this.props.remove}>Remove command</ListMenuItem>
+              <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
+              <ListMenuSeparator />
+              <ListMenuItem onClick={this.props.addCommand}>Insert New Command</ListMenuItem>
             </ListMenu>
           </div>
         </td>
