@@ -15,6 +15,7 @@ export default class TestCase {
     this.removeCommand = this.removeCommand.bind(this);
     this.insertCommandAt = this.insertCommandAt.bind(this);
     this.swapCommands = this.swapCommands.bind(this);
+    this.clearAllCommands = this.clearAllCommands.bind(this);
   }
 
   @action setName(name) {
