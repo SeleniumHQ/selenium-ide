@@ -6,13 +6,19 @@ class UiState {
   @observable filterTerm = "";
   @observable dragInProgress = false;
   @observable editedSuite = null;
+  @observable clipboard = null;
 
   constructor() {
+    this.copyToClipboard = this.copyToClipboard.bind(this);
     this.selectTest = this.selectTest.bind(this);
     this.selectCommand = this.selectCommand.bind(this);
     this.changeFilter = this.changeFilter.bind(this);
     this.setDrag = this.setDrag.bind(this);
     this.editSuite = this.editSuite.bind(this);
+  }
+
+  @action copyToClipboard(item) {
+    this.clipboard = item;
   }
 
   @action selectTest(testId) {
