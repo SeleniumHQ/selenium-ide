@@ -1,0 +1,23 @@
+.runs {
+  padding: 0 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.runs > div {
+  padding: 15px 0;
+}
+
+.runs .right {
+  float: right;
+}
+
+.runs .left {
+  float: left;
+}
+
+.runs .failures {
+  color: #A62C26;
+}

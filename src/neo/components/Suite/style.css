@@ -1,0 +1,31 @@
+.project {
+  padding-left: 7px;
+  margin-left: 2px;
+  display: flex;
+}
+
+.project > a {
+  display: block;
+  padding: 7px 0;
+  border-bottom: 1px transparent solid;
+  flex-grow: 1;
+}
+
+.project > a.hover {
+  border-bottom: 1px #40A6FF solid;
+}
+
+.project > a .title {
+  padding: 0 12px;
+  font-size: 16px;
+  align-self: center;
+}
+
+.project button {
+  opacity: 0;
+  align-self: center;
+}
+
+.project:hover button {
+  opacity: 1;
+}

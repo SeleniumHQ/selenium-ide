@@ -1,0 +1,14 @@
+.form-input {
+  display: flex;
+}
+
+.form-input > label {
+  width: 110px;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+.form-input > *:last-child {
+  flex-grow: 1;
+  margin: 5px 0;
+}

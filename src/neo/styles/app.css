@@ -1,0 +1,78 @@
+html {
+  overflow: hidden;
+}
+
+body {
+  font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial sans-serif !important;
+  color: #505050;
+  margin: 0;
+}
+
+h1, h2, h3 {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: #505050;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #505050;
+}
+
+input {
+  border: 1px #BEBEBE solid;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 17px;
+  padding: 5px 15px;
+}
+
+input:focus {
+  border-color: #40A6FF;
+  outline: 0;
+}
+
+input:disabled {
+  background-color: whitesmoke;
+  border-color: whitesmoke;
+  cursor: not-allowed;
+}
+
+input::placeholder {
+  color: #A0A0A0;
+}
+
+input[type="search"], input[type="url"] {
+  border-color: #F3F3F3;
+}
+
+input[type="search"]:focus, input[type="url"]:focus {
+  border-color: #CECECE;
+}
+
+hr {
+  background-color: #E5E5E5;
+  border: 0;
+  height: 1px;
+}
+
+.right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+.dragging {
+  cursor: move!important;
+  cursor: grabbing!important;
+}

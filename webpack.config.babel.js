@@ -17,7 +17,8 @@ export default {
     background: ["./background"],
     prompt: ["./prompt"],
     record: ["./record"],
-    escape: ["./escape"]
+    escape: ["./escape"],
+    neo: ["react-hot-loader/patch", "./neo/containers/Root"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -105,7 +106,7 @@ export default {
           // in the main CSS file.
           {
             test: /\.css$/,
-            loader: ExtractTextPlugin.extract(
+            loader: isProduction ? ExtractTextPlugin.extract(
               {
                 fallback: "style-loader",
                 use: [
@@ -139,7 +140,35 @@ export default {
                   }
                 ]
               }
-            )
+            ) : [
+              require.resolve("style-loader"),
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  importLoaders: 1
+                }
+              },
+              {
+                loader: require.resolve("postcss-loader"),
+                options: {
+                  // Necessary for external CSS imports to work
+                  // https://github.com/facebookincubator/create-react-app/issues/2677
+                  ident: "postcss",
+                  plugins: () => [
+                    require("postcss-flexbugs-fixes"),
+                    autoprefixer({
+                      browsers: [
+                        ">1%",
+                        "last 4 versions",
+                        "Firefox ESR",
+                        "not ie < 9" // React doesn't support IE8 anyway
+                      ],
+                      flexbox: "no-2009"
+                    })
+                  ]
+                }
+              }
+            ]
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           // "file" loader makes sure assets end up in the `build` folder.
@@ -168,10 +197,30 @@ export default {
     new webpack.ProvidePlugin({
       goog: "google-closure-library/closure/goog/base"
     }),
+    new webpack.NamedModulesPlugin(),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "", to: "vendor", ignore: ["selenium/*"] }
     ]),
+    // Generates an `index.html` file with the <script> injected.
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      inject: true,
+      template: path.resolve(__dirname, "src/neo/index.html"),
+      chunks: ["neo"],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      }
+    }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       filename: "panel.html",

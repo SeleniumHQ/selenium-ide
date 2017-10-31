@@ -1,0 +1,7 @@
+.alert h2,p {
+  text-align: center;
+}
+
+.alert h2 {
+  text-transform: capitalize;
+}

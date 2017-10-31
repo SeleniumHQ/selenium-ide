@@ -4,10 +4,19 @@ module.exports = {
     "node": true,
     "es6": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parser": "babel-eslint",
   "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
     "sourceType": "module"
   },
+  "plugins": [
+    "class-property",
+    "react"
+  ],
   "rules": {
     "comma-dangle": [
       "error",

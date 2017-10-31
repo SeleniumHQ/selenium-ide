@@ -1,0 +1,31 @@
+.tabbar {
+  background-color: #F3F3F3;
+  padding: 0 5px;
+  position: relative;
+}
+
+.tabbar ul li {
+  display: inline-block;
+}
+
+.tabbar ul li.buttons {
+  float: right;
+}
+
+.tabbar a {
+  display: block;
+  padding: 10px 10px 8px 10px;
+  text-align: center;
+}
+
+.tabbar a:hover {
+  background-color: #E5E5E5;
+}
+
+.tabbar .underline {
+  height: 2px;
+  background-color: #40A6FF;
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+  position: absolute;
+  bottom: 0;
+}

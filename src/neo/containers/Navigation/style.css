@@ -1,0 +1,10 @@
+aside.test-cases {
+  width: 220px;
+  border-right: 1px solid #CECECE;
+  position: relative;
+}
+
+aside.test-cases h3 {
+  padding: 15px;
+  margin: 0;
+}

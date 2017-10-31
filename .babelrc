@@ -1,13 +1,13 @@
 {
-  "presets": [
-    ["env", {
-      "targets": {
-        "browsers": ["last 2 versions", "safari >= 7"]
-      },
-      "include": ["transform-es2015-arrow-functions", "es6.map"]
-    }]
+  "presets": ["env",
+    "react"
   ],
   "plugins": [
+    "transform-decorators-legacy",
+    "transform-decorators",
+    "transform-object-rest-spread",
+    ["transform-class-properties", { "loose": true }],
+    "react-hot-loader/babel",
     ["babel-plugin-transform-runtime", {
       "helpers": false,
       "polyfill": false,

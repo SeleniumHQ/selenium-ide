@@ -1,0 +1,83 @@
+.test-table tr {
+  padding: 10px 15px;
+}
+
+.test-table tbody tr {
+  cursor: pointer;
+}
+
+.test-table tr {
+  background-color: white;
+}
+
+.test-table tbody tr td {
+  border-top: 1px solid transparent;
+  border-collapse: separate;
+}
+
+.test-table tbody tr.pending {
+  background-color: #FFFCC5;
+}
+
+.test-table tbody tr:hover {
+  background-color: #F3F3F3;
+}
+
+.test-table tbody tr.selected {
+  background-color: #E3F2FF;
+}
+
+.test-table tbody tr.selected td {
+  border-top: 1px solid #75BFFF;
+}
+
+.test-table tbody tr td:first-child {
+  position: relative;
+}
+
+.test-table tbody tr.pending td:first-child span{
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid #505050;
+}
+
+.test-table tbody tr.passed td {
+  color: #276D3A;
+}
+
+.test-table tbody tr.failed td {
+  color: #E80600;
+}
+
+.test-table td {
+  font-size: 12px;
+  padding: 5px 15px;
+}
+
+.test-table td:nth-child(1) {
+  color: #8B8B8B;
+}
+
+.test-table td:nth-child(3) {
+  width: 33%;
+}
+
+.test-table tr .buttons {
+  padding: 0;
+  margin: 0;
+}
+
+.test-table tr .buttons > * {
+  opacity: 0;
+}
+
+.test-table tr:hover .buttons > * {
+  opacity: 1;
+}

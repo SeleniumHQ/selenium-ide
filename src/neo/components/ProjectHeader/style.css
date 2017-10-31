@@ -1,0 +1,35 @@
+.header {
+  border-bottom: 1px solid #CECECE;
+  padding: 5px;
+}
+
+.header .title {
+  display: inline-block;
+  border: 1px transparent solid;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 17px;
+  padding: 5px 15px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.header:hover .title {
+  border-color: #F3F3F3;
+}
+
+.header .title:focus {
+  border-color: #CECECE;
+  cursor: initial;
+  outline: 0;
+}
+
+.header .title.changed:after {
+  content: "*";
+}
+
+.header .title:focus:after {
+  content: " ";
+}

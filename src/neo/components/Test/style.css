@@ -1,0 +1,31 @@
+.test {
+  display: flex;
+  padding: 5px 8px;
+  border-radius: 2px;
+  background-color: #FFF;
+  align-items: center;
+}
+
+.test > span {
+  flex-grow: 1;
+}
+
+.test > button {
+  opacity: 0;
+}
+
+.test:hover {
+  background-color: #F3F3F3
+}
+
+.test:hover > button {
+  opacity: 1;
+}
+
+.test.selected {
+  background-color: #E3F2FF;
+}
+
+.test.changed:after {
+  content: "*";
+}

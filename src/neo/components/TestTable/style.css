@@ -1,0 +1,29 @@
+.test-table {
+  border-bottom: 1px #CECECE solid;
+  overflow-y: auto;
+}
+
+.test-table table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.test-table th {
+  position: relative;
+  border-bottom: 1px #CECECE solid;
+  border-collapse: separate;
+  padding: 10px 0;
+  width: 33%;
+}
+
+.test-table th:not(:last-child):after {
+  content: "";
+  height: 10px;
+  width: 1px;
+  background-color: #CECECE;
+  position: absolute;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+  top: 0;
+}
