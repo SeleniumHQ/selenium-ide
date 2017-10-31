@@ -49,4 +49,8 @@ export default class TestCase {
   @action removeCommand(command) {
     this.commands.remove(command);
   }
+
+  @action clearAllCommands() {
+    this.commands.clear();
+  }
 }

@@ -81,4 +81,13 @@ describe("TestCase model", () => {
     test.removeCommand(command);
     expect(test.commands.length).toBe(0);
   });
+  it("should remove all the commands", () => {
+    const test = new TestCase();
+    test.createCommand();
+    test.createCommand();
+    test.createCommand();
+    expect(test.commands.length).toBe(3);
+    test.clearAllCommands();
+    expect(test.commands.length).toBe(0);
+  });
 });
