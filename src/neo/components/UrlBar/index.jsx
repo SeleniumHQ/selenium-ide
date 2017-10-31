@@ -10,7 +10,7 @@ export default class UrlBar extends React.Component {
   render() {
     return (
       <div className="url">
-        <input id="url" name="url" type="url" placeholder="http://www.seleniumhq.org" onChange={(e) => {this.props.setUrl(e.target.value);}} />
+        <input id="url" name="url" type="url" placeholder="Playback base URL" onChange={(e) => {this.props.setUrl(e.target.value);}} />
       </div>
     );
   }
