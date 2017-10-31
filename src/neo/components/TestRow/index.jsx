@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
-import { parse } from "modifier-keys";
+import Modifier, { parse } from "modifier-keys";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
@@ -81,6 +81,10 @@ export const RowState = {
   isDragging: monitor.isDragging()
 }))
 export default class TestRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.paste = this.paste.bind(this);
+  }
   static propTypes = {
     id: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
@@ -105,6 +109,22 @@ export default class TestRow extends React.Component {
       this.props.onClick(e);
     }
   }
+  handleKeyDown(e) {
+    const key = e.key.toUpperCase();
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+    const onlyPrimary = (e.primaryKey && !e.secondaryKey);
+
+    if (noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
+      this.props.remove();
+    } else if (onlyPrimary && key === "X") {
+      this.props.copyToClipboard();
+      this.props.remove();
+    } else if (onlyPrimary && key === "C") {
+      this.props.copyToClipboard();
+    } else if (onlyPrimary && key === "V") {
+      this.paste();
+    }
+  }
   paste() {
     if (this.props.clipboard && this.props.clipboard.constructor.name === "Command") {
       this.props.addCommand(this.props.clipboard);
@@ -112,9 +132,15 @@ export default class TestRow extends React.Component {
   }
   render() {
     return (this.props.connectDragSource(this.props.connectDropTarget(
-      <tr ref={node => {return(this.node = node || this.node);}} className={classNames({[RowState[this.props.state]]: this.props.state}, {"dragging": this.props.dragInProgress})} onClick={this.handleClick.bind(this)} style={{
-        opacity: this.props.isDragging ? "0" : "1"
-      }}>
+      <tr
+        ref={node => {return(this.node = node || this.node);}}
+        className={classNames({[RowState[this.props.state]]: this.props.state}, {"dragging": this.props.dragInProgress})}
+        tabIndex="0"
+        onClick={this.handleClick.bind(this)}
+        onKeyDown={Modifier(this.handleKeyDown.bind(this))}
+        style={{
+          opacity: this.props.isDragging ? "0" : "1"
+        }}>
         <td><span></span><CommandName>{this.props.command}</CommandName></td>
         <td>{this.props.target}</td>
         <td>{this.props.value}</td>
@@ -125,7 +151,7 @@ export default class TestRow extends React.Component {
             }>
               <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
               <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
-              <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste.bind(this)}>Paste</ListMenuItem>
+              <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
               <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
               <ListMenuSeparator />
               <ListMenuItem onClick={() => { this.props.addCommand(); }}>Insert New Command</ListMenuItem>
