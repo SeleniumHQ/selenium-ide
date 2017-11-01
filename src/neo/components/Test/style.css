@@ -1,7 +1,6 @@
 .test {
   display: flex;
-  padding: 5px 8px;
-  border-radius: 2px;
+  padding: 5px 0 5px 15px;
   background-color: #FFF;
   align-items: center;
 }
@@ -12,6 +11,8 @@
 
 .test > button {
   opacity: 0;
+  margin: 0;
+  padding-left: 20px;
 }
 
 .test:hover {
