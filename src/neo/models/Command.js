@@ -9,12 +9,13 @@ export default class Command {
 
   constructor(id = uuidv4()) {
     this.id = id;
-    this.setCommand = this.setCommand.bind(this);
-    this.setTarget = this.setTarget.bind(this);
-    this.setValue = this.setValue.bind(this);
   }
 
-  @action clone() {
+  @computed get isValid() {
+    return CommandsArray.includes(this.command);
+  }
+
+  @action.bound clone() {
     const clone = new Command();
     clone.setCommand(this.command);
     clone.setTarget(this.target);
@@ -22,7 +23,7 @@ export default class Command {
     return clone;
   }
 
-  @action setCommand(command) {
+  @action.bound setCommand(command) {
     if (CommandsValues[command]) {
       this.command = CommandsValues[command];
     } else {
@@ -30,15 +31,11 @@ export default class Command {
     }
   }
 
-  @computed get isValid() {
-    return CommandsArray.includes(this.command);
-  }
-
-  @action setTarget(target) {
+  @action.bound setTarget(target) {
     this.target = target;
   }
 
-  @action setValue(value) {
+  @action.bound setValue(value) {
     this.value = value;
   }
 }

@@ -31,37 +31,37 @@ export default class ProjectStore {
     this.url = url;
   }
 
-  @action addUrl(url) {
+  @action.bound addUrl(url) {
     this._urls.push(url);
   }
 
-  @action changeName(name) {
+  @action.bound changeName(name) {
     this.name = name;
   }
 
-  @action setModified() {
+  @action.bound setModified() {
     this.modified = true;
   }
 
-  @action createSuite(...argv) {
+  @action.bound createSuite(...argv) {
     const suite = new Suite(undefined, ...argv);
     this._suites.push(suite);
 
     return suite;
   }
 
-  @action deleteSuite(suite) {
+  @action.bound deleteSuite(suite) {
     this._suites.remove(suite);
   }
 
-  @action createTestCase(...argv) {
+  @action.bound createTestCase(...argv) {
     const test = new TestCase(undefined, ...argv);
     this.addTestCase(test);
 
     return test;
   }
 
-  @action addTestCase(test) {
+  @action.bound addTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
@@ -69,7 +69,7 @@ export default class ProjectStore {
     }
   }
 
-  @action deleteTestCase(test) {
+  @action.bound deleteTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
