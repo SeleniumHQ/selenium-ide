@@ -25,7 +25,7 @@ const testTarget = {
       return;
     }
 
-    props.moveTest(monitor.getItem(), props.id);
+    props.moveTest(monitor.getItem(), props.suite);
   }
 };
 
