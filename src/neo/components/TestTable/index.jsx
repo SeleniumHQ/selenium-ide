@@ -13,7 +13,8 @@ import "./style.css";
     selectCommand: PropTypes.func,
     addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
-    swapCommands: PropTypes.func
+    swapCommands: PropTypes.func,
+    clearAllCommands: PropTypes.func
   };
   render() {
     return (
@@ -44,6 +45,7 @@ import "./style.css";
                 setDrag={UiState.setDrag}
                 clipboard={UiState.clipboard}
                 copyToClipboard={() => { UiState.copyToClipboard(command); }}
+                clearAllCommands={this.props.clearAllCommands}
               />
             )) : null }
           </tbody>

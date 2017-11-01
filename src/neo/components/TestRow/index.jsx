@@ -102,7 +102,8 @@ export default class TestRow extends React.Component {
     dragInProgress: PropTypes.bool,
     setDrag: PropTypes.func,
     clipboard: PropTypes.any,
-    copyToClipboard: PropTypes.func
+    copyToClipboard: PropTypes.func,
+    clearAllCommands: PropTypes.func
   };
   handleClick(e) {
     if (this.node === e.target.parentElement) {
@@ -156,7 +157,7 @@ export default class TestRow extends React.Component {
               <ListMenuSeparator />
               <ListMenuItem onClick={() => { this.props.addCommand(); }}>Insert New Command</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem>Clear All</ListMenuItem>
+              <ListMenuItem onClick={this.props.clearAllCommands}>Clear All</ListMenuItem>
             </ListMenu>
           </div>
         </td>
