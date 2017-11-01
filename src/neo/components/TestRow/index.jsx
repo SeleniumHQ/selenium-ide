@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
-import Modifier, { parse } from "modifier-keys";
+import { modifier, parse } from "modifier-keys";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
@@ -110,7 +110,9 @@ export default class TestRow extends React.Component {
       this.props.onClick(e);
     }
   }
-  handleKeyDown(e) {
+  handleKeyDown(event) {
+    const e = event.nativeEvent;
+    modifier(e);
     const key = e.key.toUpperCase();
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
@@ -138,7 +140,7 @@ export default class TestRow extends React.Component {
         className={classNames({[RowState[this.props.state]]: this.props.state}, {"dragging": this.props.dragInProgress})}
         tabIndex="0"
         onClick={this.handleClick.bind(this)}
-        onKeyDown={Modifier(this.handleKeyDown.bind(this))}
+        onKeyDown={this.handleKeyDown.bind(this)}
         style={{
           opacity: this.props.isDragging ? "0" : "1"
         }}>
