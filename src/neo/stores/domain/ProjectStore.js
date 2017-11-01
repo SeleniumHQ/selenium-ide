@@ -13,15 +13,6 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
-    this.setUrl = this.setUrl.bind(this);
-    this.addUrl = this.addUrl.bind(this);
-    this.changeName = this.changeName.bind(this);
-    this.setModified = this.setModified.bind(this);
-    this.createSuite = this.createSuite.bind(this);
-    this.deleteSuite = this.deleteSuite.bind(this);
-    this.createTestCase = this.createTestCase.bind(this);
-    this.addTestCase = this.addTestCase.bind(this);
-    this.deleteTestCase = this.deleteTestCase.bind(this);
   }
 
   @computed get suites() {
@@ -36,7 +27,7 @@ export default class ProjectStore {
     return this._urls.sort();
   }
 
-  @action setUrl(url) {
+  @action.bound setUrl(url) {
     this.url = url;
   }
 
