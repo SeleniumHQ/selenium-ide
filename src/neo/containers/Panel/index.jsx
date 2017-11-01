@@ -24,6 +24,8 @@ if (process.env.NODE_ENV !== "production") {
   seed(project);
 }
 
+UiState._tests = project.tests;
+
 modify(project);
 
 @DragDropContext(HTML5Backend)
@@ -96,7 +98,7 @@ modify(project);
           float: "left"
         }}>
           <Navigation
-            tests={this.state.project.tests}
+            tests={UiState.filteredTests}
             suites={this.state.project.suites}
             rename={this.rename}
             createSuite={this.createSuite}

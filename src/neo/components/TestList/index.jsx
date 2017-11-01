@@ -12,7 +12,7 @@ export default class TestList extends Component {
   render() {
     return (
       <ul className={classNames("tests", {"active": !this.props.collapsed})}>
-        {this.props.tests.filter(({name}) => (name.indexOf(UiState.filterTerm) !== -1)).map((test) => (
+        {this.props.tests.map((test) => (
           <li key={test.id}>
             {this.props.suite ?
               <DraggableTest

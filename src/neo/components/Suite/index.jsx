@@ -8,6 +8,7 @@ import TestList from "../TestList";
 import { Type } from "../Test";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
+import UiState from "../../stores/view/UiState";
 import tick from "../../images/ic_tick.svg";
 import "./style.css";
 
@@ -58,6 +59,9 @@ const ArrowProject = styled.span`
     this.state = {
       isActive: false
     };
+    if (!UiState.filteredSuiteTests[props.suite.id]) {
+      UiState.addFilterForSuite(props.suite.id, props.suite.tests);
+    }
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
@@ -92,7 +96,7 @@ const ArrowProject = styled.span`
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>
-        <TestList collapsed={!this.state.isActive} suite={this.props.suite.id} tests={this.props.suite.tests} removeTest={this.props.suite.removeTestCase} />
+        <TestList collapsed={!this.state.isActive} suite={this.props.suite.id} tests={UiState.filteredSuiteTests[this.props.suite.id].get()} removeTest={this.props.suite.removeTestCase} />
       </div>
     );
   }
