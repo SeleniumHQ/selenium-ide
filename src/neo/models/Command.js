@@ -14,6 +14,14 @@ export default class Command {
     this.setValue = this.setValue.bind(this);
   }
 
+  @action clone() {
+    const clone = new Command();
+    clone.setCommand(this.command);
+    clone.setTarget(this.target);
+    clone.setValue(this.value);
+    return clone;
+  }
+
   @action setCommand(command) {
     if (CommandsValues[command]) {
       this.command = CommandsValues[command];

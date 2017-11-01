@@ -19,10 +19,14 @@ import CommandForm from "../../components/CommandForm";
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired
   };
-  addCommand(index) {
-    const command = this.props.test.createCommand(index + 1);
-    command.setCommand("open");
-    UiState.selectCommand(command);
+  addCommand(index, command) {
+    if (command) {
+      const newCommand = command.clone();
+      this.props.test.insertCommandAt(newCommand, index);
+    } else {
+      const newCommand = this.props.test.createCommand(index);
+      newCommand.setCommand("open");
+    }
   }
   removeCommand(command) {
     if (UiState.selectedCommand === command) {
@@ -48,6 +52,7 @@ import CommandForm from "../../components/CommandForm";
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}
+          clearAllCommands={this.props.test ? this.props.test.clearAllCommands : null}
           swapCommands={this.props.test ? this.props.test.swapCommands : null}
         />
         <CommandForm command={UiState.selectedCommand}

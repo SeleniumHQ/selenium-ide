@@ -24,13 +24,19 @@ export default class ListMenu extends React.Component {
 export class ListMenuItem extends React.Component {
   static propTypes = {
     children: PropTypes.node,
+    label: PropTypes.string,
     onClick: PropTypes.func
   };
   render() {
     return (
       <li>
-        <a onClick={this.props.onClick}>{this.props.children}</a>
+        <a onClick={this.props.onClick}>
+          {this.props.children}
+          {this.props.label ? <span className="label">{this.props.label}</span> : null}
+        </a>
       </li>
     );
   }
 }
+
+export const ListMenuSeparator = () => (<li><hr /></li>);

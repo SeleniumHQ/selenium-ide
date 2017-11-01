@@ -13,7 +13,8 @@ import "./style.css";
     selectCommand: PropTypes.func,
     addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
-    swapCommands: PropTypes.func
+    swapCommands: PropTypes.func,
+    clearAllCommands: PropTypes.func
   };
   render() {
     return (
@@ -38,10 +39,13 @@ import "./style.css";
                 state={ this.props.selectedCommand === command.id ? "Selected" : null }
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
-                addCommand={this.props.addCommand ? () => { this.props.addCommand(index); } : null}
+                addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
                 remove={this.props.removeCommand ? () => { this.props.removeCommand(command); } : null}
                 swapCommands={this.props.swapCommands}
                 setDrag={UiState.setDrag}
+                clipboard={UiState.clipboard}
+                copyToClipboard={() => { UiState.copyToClipboard(command); }}
+                clearAllCommands={this.props.clearAllCommands}
               />
             )) : null }
           </tbody>

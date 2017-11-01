@@ -7,3 +7,7 @@
 .projects li {
   margin: 5px 0;
 }
+
+.projects .tests li > a {
+  padding-left: 40px;
+}

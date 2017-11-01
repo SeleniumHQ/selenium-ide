@@ -12,7 +12,7 @@ const testSource = {
   beginDrag(props) {
     props.setDrag(true);
     return {
-      id: props.id,
+      id: props.test.id,
       suite: props.suite
     };
   },

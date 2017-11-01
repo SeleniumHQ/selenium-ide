@@ -65,8 +65,7 @@ modify(project);
       if (name) self.state.project.createTestCase(name);
     });
   }
-  moveTest(testItem, toSuite) {
-    const destination = this.state.project.suites.find((suite) => (suite.id === toSuite));
+  moveTest(testItem, destination) {
     const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
     const test = origin.tests.find(test => (test.id === testItem.id));
 
