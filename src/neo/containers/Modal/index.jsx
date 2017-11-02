@@ -19,7 +19,7 @@ export default class Modal extends Component {
   render() {
     return (
       <div>
-        <Alert show={show => this.show = show} />
+        <Alert show={show => ModalState.showAlert = show} />
         {ModalState.editedSuite ? <TestSelector
           isEditing={!!ModalState.editedSuite}
           tests={this.props.project.tests}

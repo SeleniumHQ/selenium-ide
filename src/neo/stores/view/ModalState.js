@@ -31,6 +31,18 @@ class ModalState {
       if (name) this._project.createTestCase(name);
     });
   }
+  @action.bound deleteTest(testCase) {
+    this.showAlert({
+      title: testCase.name,
+      description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
+      cancelLabel: "cancel",
+      confirmLabel: "delete"
+    }, (choseDelete) => {
+      if (choseDelete) {
+        this._project.deleteTestCase(testCase);
+      }
+    });
+  }
 }
 
 if (!window._modalState) window._modalState = new ModalState();

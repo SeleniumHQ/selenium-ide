@@ -29,7 +29,6 @@ modify(project);
     super(props);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
-    this.deleteTest = this.deleteTest.bind(this);
   }
   moveTest(testItem, destination) {
     const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
@@ -37,18 +36,6 @@ modify(project);
 
     destination.addTestCase(test);
     origin.removeTestCase(test);
-  }
-  deleteTest(testCase) {
-    this.show({
-      title: testCase.name,
-      description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
-      cancelLabel: "cancel",
-      confirmLabel: "delete"
-    }, (choseDelete) => {
-      if (choseDelete) {
-        this.state.project.deleteTestCase(testCase);
-      }
-    });
   }
   render() {
     return (

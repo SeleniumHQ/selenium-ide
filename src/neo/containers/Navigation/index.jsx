@@ -24,8 +24,7 @@ import "./style.css";
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     removeSuite: PropTypes.func.isRequired,
-    moveTest: PropTypes.func.isRequired,
-    deleteTest: PropTypes.func.isRequired
+    moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
     this.setState({
@@ -40,7 +39,7 @@ import "./style.css";
         </TabBar>
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
-          ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={this.props.deleteTest} />
+          ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={ModalState.deleteTest} />
           : <SuiteList suites={this.props.suites} rename={ModalState.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
