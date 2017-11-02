@@ -12,9 +12,6 @@ export default class RenameDialog extends React.Component {
       value: props.value ? props.value : ""
     };
   }
-  static propTypes = {
-    value: PropTypes.string
-  };
   handleChange(e) {
     this.setState({
       value: e.target.value
@@ -36,4 +33,10 @@ export default class RenameDialog extends React.Component {
       </Modal>
     );
   }
+  static propTypes = {
+    isEditing: PropTypes.bool,
+    value: PropTypes.string,
+    cancel: PropTypes.func,
+    setValue: PropTypes.func
+  };
 }
