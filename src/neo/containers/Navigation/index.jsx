@@ -23,9 +23,7 @@ import "./style.css";
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    createSuite: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
-    createTest: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     deleteTest: PropTypes.func.isRequired
   };

@@ -1,7 +1,7 @@
 import { action, observable } from "mobx";
 
 class UiState {
-  @observable selectedTest = null;
+  @observable selectedTest = {};
   @observable selectedCommand = null;
   @observable filterTerm = "";
   @observable dragInProgress = false;
@@ -19,8 +19,8 @@ class UiState {
     this.clipboard = item;
   }
 
-  @action selectTest(testId) {
-    this.selectedTest = testId;
+  @action selectTest(testId, suiteId) {
+    this.selectedTest = { testId, suiteId };
   }
 
   @action selectCommand(command) {

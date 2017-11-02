@@ -68,7 +68,12 @@ modify(project);
             deleteTest={this.deleteTest}
           />
         </div>
-        <Editor url={this.state.project.url} urls={this.state.project.urls} setUrl={this.state.project.setUrl} test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest)) : null} />
+        <Editor
+          url={this.state.project.url}
+          urls={this.state.project.urls}
+          setUrl={this.state.project.setUrl}
+          test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest.testId)) : null}
+        />
         <div style={{
           clear: "left"
         }}></div>

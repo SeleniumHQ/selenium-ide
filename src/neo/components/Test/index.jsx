@@ -41,13 +41,17 @@ export default class Test extends React.Component {
     dragInProgress: PropTypes.bool,
     setDrag: PropTypes.func
   };
-  handleClick(testId) {
-    this.props.selectTest(testId);
+  handleClick(testId, suiteId) {
+    this.props.selectTest(testId, suiteId);
   }
   render() {
-    const rendered = <a href="#" className={classNames("test", {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})} onClick={this.handleClick.bind(this, this.props.test.id)} style={{
-      display: this.props.isDragging ? "none" : "flex"
-    }}>
+    const rendered = <a
+      href="#"
+      className={classNames("test", {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
+      onClick={this.handleClick.bind(this, this.props.test.id, this.props.suite)}
+      style={{
+        display: this.props.isDragging ? "none" : "flex"
+      }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
         <ListMenu width={130} opener={
