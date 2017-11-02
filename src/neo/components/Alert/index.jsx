@@ -4,27 +4,6 @@ import Modal from "../Modal";
 import FlatButton from "../FlatButton";
 import "./style.css";
 
-const duration = 100;
-
-const transitionStyles = {
-  entering: {
-    opacity: 0,
-    transform: "scale(0, 0)"
-  },
-  entered: {
-    opacity: 1,
-    transform: "scale(1, 1)"
-  },
-  exiting: {
-    opacity: 0,
-    transform: "scale(0, 0)"
-  },
-  exited: {
-    opacity: 0,
-    transform: "scale(0, 0)"
-  }
-};
-
 export default class Alert extends React.Component {
   constructor(props) {
     super(props);
