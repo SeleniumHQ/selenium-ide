@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import UiState from "../../stores/view/UiState";
+import ModalState from "../../stores/view/ModalState";
 import TabBar from "../../components/TabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
@@ -22,12 +23,8 @@ import "./style.css";
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    rename: PropTypes.func.isRequired,
-    createSuite: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
-    createTest: PropTypes.func.isRequired,
-    moveTest: PropTypes.func.isRequired,
-    deleteTest: PropTypes.func.isRequired
+    moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
     this.setState({
@@ -38,12 +35,12 @@ import "./style.css";
     return (
       <aside className="test-cases">
         <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab}>
-          <AddButton onClick={this.state.showTests ? this.props.createTest : this.props.createSuite} />
+          <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
-          ? <TestList tests={this.props.tests} rename={this.props.rename} removeTest={this.props.deleteTest} />
-          : <SuiteList suites={this.props.suites} rename={this.props.rename} selectTests={UiState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+          ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={ModalState.deleteTest} />
+          : <SuiteList suites={this.props.suites} rename={ModalState.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
     );

@@ -18,7 +18,7 @@ export default class TestList extends Component {
               <DraggableTest
                 test={test}
                 suite={this.props.suite}
-                selected={test.id === UiState.selectedTest}
+                selected={test.id === UiState.selectedTest.testId && this.props.suite === UiState.selectedTest.suiteId}
                 selectTest={UiState.selectTest}
                 dragInProgress={UiState.dragInProgress}
                 setDrag={UiState.setDrag}
@@ -26,7 +26,7 @@ export default class TestList extends Component {
               /> :
               <Test
                 test={test}
-                selected={test.id === UiState.selectedTest}
+                selected={test.id === UiState.selectedTest.testId}
                 selectTest={UiState.selectTest}
                 renameTest={this.props.rename}
                 removeTest={() => { this.props.removeTest(test); }}
