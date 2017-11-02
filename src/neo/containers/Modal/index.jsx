@@ -4,6 +4,7 @@ import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
 import UiState from "../../stores/view/UiState";
+import ModalState from "../../stores/view/ModalState";
 
 @observer
 export default class Modal extends Component {
@@ -31,18 +32,18 @@ export default class Modal extends Component {
   }
   selectTestsForSuite(suite, tests) {
     suite.replaceTestCases(tests);
-    UiState.editSuite(null);
+    ModalState.editSuite(null);
   }
   render() {
     return (
       <div>
         <Alert show={show => this.show = show} />
-        {UiState.editedSuite ? <TestSelector
-          isEditing={!!UiState.editedSuite}
+        {ModalState.editedSuite ? <TestSelector
+          isEditing={!!ModalState.editedSuite}
           tests={this.props.tests}
-          selectedTests={UiState.editedSuite ? UiState.editedSuite.tests : null}
-          cancelSelection={() => {UiState.editSuite(null);}}
-          completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}
+          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : null}
+          cancelSelection={() => {ModalState.editSuite(null);}}
+          completeSelection={tests => this.selectTestsForSuite(ModalState.editedSuite, tests)}
         /> : null}
         {this.state.rename
           ? <RenameDialog isEditing={!!this.state.rename} value={this.state.rename.value} setValue={this.state.rename ? this.state.rename.done : null} cancel={this.cancelRenaming} />
