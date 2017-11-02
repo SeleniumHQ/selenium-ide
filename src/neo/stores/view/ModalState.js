@@ -21,6 +21,16 @@ class ModalState {
       }
     };
   }
+  @action.bound createSuite() {
+    this.rename(null, (name) => {
+      if (name) this._project.createSuite(name);
+    });
+  }
+  @action.bound createTest() {
+    this.rename(null, (name) => {
+      if (name) this._project.createTestCase(name);
+    });
+  }
 }
 
 if (!window._modalState) window._modalState = new ModalState();

@@ -29,22 +29,8 @@ modify(project);
   constructor(props) {
     super(props);
     this.state = { project };
-    this.createSuite = this.createSuite.bind(this);
-    this.createTest = this.createTest.bind(this);
     this.moveTest = this.moveTest.bind(this);
     this.deleteTest = this.deleteTest.bind(this);
-  }
-  createSuite() {
-    const self = this;
-    this.state.rename(null, (name) => {
-      if (name) self.state.project.createSuite(name);
-    });
-  }
-  createTest() {
-    const self = this;
-    this.state.rename(null, (name) => {
-      if (name) self.state.project.createTestCase(name);
-    });
   }
   moveTest(testItem, destination) {
     const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
@@ -75,7 +61,6 @@ modify(project);
           <Navigation
             tests={this.state.project.tests}
             suites={this.state.project.suites}
-            rename={ModalState.rename}
             createSuite={this.createSuite}
             removeSuite={this.state.project.deleteSuite}
             createTest={this.createTest}
@@ -88,7 +73,7 @@ modify(project);
           clear: "left"
         }}></div>
         <Console />
-        <Modal tests={this.state.project.tests} />
+        <Modal project={this.state.project} />
       </div>
     );
   }

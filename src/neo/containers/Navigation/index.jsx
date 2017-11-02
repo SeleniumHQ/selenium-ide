@@ -23,7 +23,6 @@ import "./style.css";
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    rename: PropTypes.func,
     createSuite: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
     createTest: PropTypes.func.isRequired,
@@ -39,12 +38,12 @@ import "./style.css";
     return (
       <aside className="test-cases">
         <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab}>
-          <AddButton onClick={this.state.showTests ? this.props.createTest : this.props.createSuite} />
+          <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
         <SearchBar filter={UiState.changeFilter} />
         { this.state.showTests
-          ? <TestList tests={this.props.tests} rename={this.props.rename} removeTest={this.props.deleteTest} />
-          : <SuiteList suites={this.props.suites} rename={this.props.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+          ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={this.props.deleteTest} />
+          : <SuiteList suites={this.props.suites} rename={ModalState.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
         <Runs />
       </aside>
     );
