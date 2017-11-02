@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import { observer } from "mobx-react";
 import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
 import UiState from "../../stores/view/UiState";
 
+@observer
 export default class Modal extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +18,6 @@ export default class Modal extends Component {
     this.setState({ rename: undefined });
   }
   rename(value, cb) {
-    console.log("kaki");
     const self = this;
     this.setState({
       rename: {
@@ -28,13 +29,17 @@ export default class Modal extends Component {
       }
     });
   }
+  selectTestsForSuite(suite, tests) {
+    suite.replaceTestCases(tests);
+    UiState.editSuite(null);
+  }
   render() {
     return (
       <div>
         <Alert show={show => this.show = show} />
         {UiState.editedSuite ? <TestSelector
           isEditing={!!UiState.editedSuite}
-          tests={this.state.project.tests}
+          tests={this.props.tests}
           selectedTests={UiState.editedSuite ? UiState.editedSuite.tests : null}
           cancelSelection={() => {UiState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(UiState.editedSuite, tests)}

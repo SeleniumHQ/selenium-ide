@@ -64,10 +64,6 @@ modify(project);
       }
     });
   }
-  selectTestsForSuite(suite, tests) {
-    suite.replaceTestCases(tests);
-    UiState.editSuite(null);
-  }
   render() {
     return (
       <div>
@@ -91,7 +87,7 @@ modify(project);
           clear: "left"
         }}></div>
         <Console />
-        <Modal rename={(rename) => { this.setState({ rename }); }} />
+        <Modal tests={this.state.project.tests} rename={(rename) => { this.setState({ rename }); }} />
       </div>
     );
   }
