@@ -53,15 +53,14 @@ const ArrowProject = styled.span`
   }
 `;
 
-@observer class Suite extends React.Component {
+@observer
+class Suite extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isActive: false
-    };
-    if (!UiState.filteredSuiteTests[props.suite.id]) {
-      UiState.addFilterForSuite(props.suite.id, props.suite.tests);
+    if (!UiState.suiteStates[props.suite.id]) {
+      UiState.addStateForSuite(props.suite);
     }
+    this.store = UiState.suiteStates[this.props.suite.id];
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
@@ -75,16 +74,14 @@ const ArrowProject = styled.span`
     canDrop: PropTypes.bool
   };
   handleClick() {
-    this.setState({
-      isActive: !this.state.isActive
-    });
+    this.store.setOpen(!this.store.isOpen);
   }
   render() {
     return this.props.connectDropTarget(
       <div>
         <div className="project">
           <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
-            <ArrowProject isActive={this.state.isActive}>
+            <ArrowProject isActive={this.store.isOpen}>
               <span className="title">{this.props.suite.name}</span>
             </ArrowProject>
           </a>
@@ -96,7 +93,7 @@ const ArrowProject = styled.span`
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>
-        <TestList collapsed={!this.state.isActive} suite={this.props.suite.id} tests={UiState.filteredSuiteTests[this.props.suite.id].get()} removeTest={this.props.suite.removeTestCase} />
+        <TestList collapsed={!this.store.isOpen} suite={this.props.suite.id} tests={this.store.filteredTests.get()} removeTest={this.props.suite.removeTestCase} />
       </div>
     );
   }

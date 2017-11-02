@@ -1,4 +1,5 @@
 import { action, computed, observable } from "mobx";
+import SuiteState from "./SuiteState";
 
 class UiState {
   @observable selectedTest = null;
@@ -7,12 +8,11 @@ class UiState {
   @observable dragInProgress = false;
   @observable editedSuite = null;
   @observable clipboard = null;
-  @observable _tests = [];
 
   constructor() {
-    this.filteredSuiteTests = {};
+    this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
-    this.addFilterForSuite = this.addFilterForSuite.bind(this);
+    this.addStateForSuite = this.addStateForSuite.bind(this);
     this.copyToClipboard = this.copyToClipboard.bind(this);
     this.selectTest = this.selectTest.bind(this);
     this.selectCommand = this.selectCommand.bind(this);
@@ -22,7 +22,7 @@ class UiState {
   }
 
   @computed get filteredTests() {
-    return this._tests.filter(this.filterFunction);
+    return this._project.tests.filter(this.filterFunction);
   }
 
   @action copyToClipboard(item) {
@@ -49,10 +49,8 @@ class UiState {
     this.editedSuite = suite;
   }
 
-  addFilterForSuite(suiteId, tests) {
-    this.filteredSuiteTests[suiteId] = computed(() =>
-      tests.filter(this.filterFunction)
-    );
+  addStateForSuite(suite) {
+    this.suiteStates[suite.id] = new SuiteState(this, suite);
   }
 
   filterFunction({name}) {
