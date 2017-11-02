@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
-import UiState from "../../stores/view/UiState";
 import ModalState from "../../stores/view/ModalState";
 
 @observer
