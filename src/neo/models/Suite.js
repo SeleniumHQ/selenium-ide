@@ -10,9 +10,6 @@ export default class Suite {
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;
-    this.setName = this.setName.bind(this);
-    this.addTestCase = this.addTestCase.bind(this);
-    this.removeTestCase = this.removeTestCase.bind(this);
   }
 
   @computed get tests() {
@@ -23,11 +20,11 @@ export default class Suite {
     return (test && test.constructor.name === "TestCase");
   }
 
-  @action setName(name) {
+  @action.bound setName(name) {
     this.name = name;
   }
 
-  @action addTestCase(test) {
+  @action.bound addTestCase(test) {
     if (!this.isTest(test)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
@@ -35,7 +32,7 @@ export default class Suite {
     }
   }
 
-  @action removeTestCase(test) {
+  @action.bound removeTestCase(test) {
     if (!this.isTest(test)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
@@ -43,7 +40,7 @@ export default class Suite {
     }
   }
 
-  @action replaceTestCases(tests) {
+  @action.bound replaceTestCases(tests) {
     if (tests.filter(test => !this.isTest(test)).length) {
       throw new Error("Expected to receive array of TestCase");
     } else {

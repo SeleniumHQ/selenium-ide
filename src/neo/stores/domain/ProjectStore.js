@@ -13,15 +13,6 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
-    this.setUrl = this.setUrl.bind(this);
-    this.addUrl = this.addUrl.bind(this);
-    this.changeName = this.changeName.bind(this);
-    this.setModified = this.setModified.bind(this);
-    this.createSuite = this.createSuite.bind(this);
-    this.deleteSuite = this.deleteSuite.bind(this);
-    this.createTestCase = this.createTestCase.bind(this);
-    this.addTestCase = this.addTestCase.bind(this);
-    this.deleteTestCase = this.deleteTestCase.bind(this);
   }
 
   @computed get suites() {
@@ -36,41 +27,41 @@ export default class ProjectStore {
     return this._urls.sort();
   }
 
-  @action setUrl(url) {
+  @action.bound setUrl(url) {
     this.url = url;
   }
 
-  @action addUrl(url) {
+  @action.bound addUrl(url) {
     this._urls.push(url);
   }
 
-  @action changeName(name) {
+  @action.bound changeName(name) {
     this.name = name;
   }
 
-  @action setModified() {
+  @action.bound setModified() {
     this.modified = true;
   }
 
-  @action createSuite(...argv) {
+  @action.bound createSuite(...argv) {
     const suite = new Suite(undefined, ...argv);
     this._suites.push(suite);
 
     return suite;
   }
 
-  @action deleteSuite(suite) {
+  @action.bound deleteSuite(suite) {
     this._suites.remove(suite);
   }
 
-  @action createTestCase(...argv) {
+  @action.bound createTestCase(...argv) {
     const test = new TestCase(undefined, ...argv);
     this.addTestCase(test);
 
     return test;
   }
 
-  @action addTestCase(test) {
+  @action.bound addTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
@@ -78,7 +69,7 @@ export default class ProjectStore {
     }
   }
 
-  @action deleteTestCase(test) {
+  @action.bound deleteTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
