@@ -8,28 +8,6 @@ import ModalState from "../../stores/view/ModalState";
 
 @observer
 export default class Modal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.cancelRenaming = this.cancelRenaming.bind(this);
-    this.rename = this.rename.bind(this);
-    props.rename(this.rename);
-  }
-  cancelRenaming() {
-    this.setState({ rename: undefined });
-  }
-  rename(value, cb) {
-    const self = this;
-    this.setState({
-      rename: {
-        value,
-        done: (...argv) => {
-          cb(...argv);
-          self.cancelRenaming();
-        }
-      }
-    });
-  }
   selectTestsForSuite(suite, tests) {
     suite.replaceTestCases(tests);
     ModalState.editSuite(null);
@@ -45,8 +23,12 @@ export default class Modal extends Component {
           cancelSelection={() => {ModalState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(ModalState.editedSuite, tests)}
         /> : null}
-        {this.state.rename
-          ? <RenameDialog isEditing={!!this.state.rename} value={this.state.rename.value} setValue={this.state.rename ? this.state.rename.done : null} cancel={this.cancelRenaming} />
+        {ModalState.renameState
+          ? <RenameDialog
+            isEditing={!!ModalState.renameState}
+            value={ModalState.renameState.value}
+            setValue={ModalState.renameState ? ModalState.renameState.done : null}
+            cancel={ModalState.cancelRenaming} />
           : null}
       </div>
     );

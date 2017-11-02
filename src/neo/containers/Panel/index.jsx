@@ -12,6 +12,7 @@ import Editor from "../Editor";
 import Console from "../Console";
 import Modal from "../Modal";
 import UiState from "../../stores/view/UiState";
+import ModalState from "../../stores/view/ModalState";
 import "../../styles/app.css";
 import "../../styles/heights.css";
 
@@ -74,7 +75,7 @@ modify(project);
           <Navigation
             tests={this.state.project.tests}
             suites={this.state.project.suites}
-            rename={this.state.rename}
+            rename={ModalState.rename}
             createSuite={this.createSuite}
             removeSuite={this.state.project.deleteSuite}
             createTest={this.createTest}
@@ -87,7 +88,7 @@ modify(project);
           clear: "left"
         }}></div>
         <Console />
-        <Modal tests={this.state.project.tests} rename={(rename) => { this.setState({ rename }); }} />
+        <Modal tests={this.state.project.tests} />
       </div>
     );
   }

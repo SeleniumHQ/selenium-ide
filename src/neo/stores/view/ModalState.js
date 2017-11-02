@@ -8,8 +8,18 @@ class ModalState {
     this.editedSuite = suite;
   }
 
+  @action.bound cancelRenaming() {
+    this.renameState = null;
+  }
+
   @action.bound rename(value, cb) {
-    this.renameState = { value, cb };
+    this.renameState = {
+      value,
+      done: (...argv) => {
+        cb(...argv);
+        this.cancelRenaming();
+      }
+    };
   }
 }
 
