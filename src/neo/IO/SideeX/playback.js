@@ -25,7 +25,7 @@ function executionLoop() {
       .then(doAjaxWait)
       .then(doDomWait)
       .then(doCommand)
-      .then(executionLoop)
+      .then(executionLoop);
   }
 }
 
@@ -133,27 +133,23 @@ function doDomWait(domTime = Date.now(), domCount = 0) {
 }
 
 function doCommand() {
-  let commands = getRecordsArray();
-  let commandName = getCommandName(commands[currentPlayingCommandIndex]);
-  let commandTarget = getCommandTarget(commands[currentPlayingCommandIndex]);
-  let commandValue = getCommandValue(commands[currentPlayingCommandIndex]);
-  //console.log("in common");
+  const { command, target, value } = UiState.selectedTest.test.command[PlaybackState.currentPlayingIndex];
 
   if (implicitCount == 0) {
-    sideex_log.info("Executing: | " + commandName + " | " + commandTarget + " | " + commandValue + " |");
+    console.log("Executing: | " + command + " | " + target + " | " + value + " |");
   }
 
   let p = new Promise(function(resolve, reject) {
     let count = 0;
     let interval = setInterval(function() {
       if (count > 60) {
-        sideex_log.error("Timed out after 30000ms");
+        console.error("Timed out after 30000ms");
         reject("Window not Found");
         clearInterval(interval);
       }
       if (!extCommand.getPageStatus()) {
         if (count == 0) {
-          sideex_log.info("Wait for the new page to be fully loaded");
+          console.log("Wait for the new page to be fully loaded");
         }
         count++;
       } else {
@@ -162,19 +158,9 @@ function doCommand() {
       }
     }, 500);
   });
-  return p.then(function() {
-    if(commandValue.substr(0,2) === "${" && commandValue.substr(commandValue.length-1) === "}"){
-      commandValue = xlateArgument(commandValue);
-    }
-    if(commandTarget.substr(0,2) === "${" && commandTarget.substr(commandTarget.length-1) === "}"){
-      commandTarget = xlateArgument(commandTarget);
-    }
-    if (isWindowMethodCommand(commandName))
-    {
-      return extCommand.sendMessage(commandName, commandTarget, commandValue, true);
-    }
-    return extCommand.sendMessage(commandName, commandTarget, commandValue);
-  })
+  return p.then(() => (
+    extCommand.sendMessage(command, command, command, isWindowMethodCommand(command))
+  ))
     .then(function(result) {
       if (result.result != "success") {
         // implicit
@@ -210,4 +196,24 @@ function doCommand() {
         setColor(currentPlayingCommandIndex + 1, "success");
       }
     })
+}
+
+function isReceivingEndError(reason) {
+  return (reason == "TypeError: response is undefined" ||
+    reason == "Error: Could not establish connection. Receiving end does not exist." ||
+    // Below message is for Google Chrome
+    reason.message == "Could not establish connection. Receiving end does not exist." ||
+    // Google Chrome misspells "response"
+    reason.message == "The message port closed before a reponse was received." ||
+    reason.message == "The message port closed before a response was received." );
+}
+
+function isWindowMethodCommand(command) {
+  return (command == "answerOnNextPrompt"
+    || command == "chooseCancelOnNextPrompt"
+    || command == "assertPrompt"
+    || command == "chooseOkOnNextConfirmation"
+    || command == "chooseCancelOnNextConfirmation"
+    || command == "assertConfirmation"
+    || command == "assertAlert");
 }
