@@ -15,6 +15,8 @@ import UiState from "../../stores/view/UiState";
 import "../../styles/app.css";
 import "../../styles/heights.css";
 
+import "../../IO/SideeX/record";
+
 const project = observable(new ProjectStore());
 
 if (process.env.NODE_ENV !== "production") {
@@ -60,7 +62,7 @@ modify(project);
           url={this.state.project.url}
           urls={this.state.project.urls}
           setUrl={this.state.project.setUrl}
-          test={UiState.selectedTest ? this.state.project.tests.find(test => (test.id === UiState.selectedTest.testId)) : null}
+          test={UiState.selectedTest.test}
         />
         <div style={{
           clear: "left"

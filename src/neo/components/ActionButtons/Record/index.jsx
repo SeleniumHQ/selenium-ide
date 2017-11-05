@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ActionButton from "../ActionButton";
 
 const RecordButton = ActionButton.extend`
@@ -58,21 +59,13 @@ const RecordButton = ActionButton.extend`
 
 
 export default class Record extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isActive: false
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick() {
-    this.setState({
-      isActive: !this.state.isActive
-    });
-  }
+  static propTypes = {
+    isRecording: PropTypes.bool,
+    onClick: PropTypes.func
+  };
   render() {
     return (
-      <RecordButton isActive={this.state.isActive} onClick={this.handleClick}></RecordButton>
+      <RecordButton isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
     );
   }
 }

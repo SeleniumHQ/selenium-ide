@@ -7,6 +7,7 @@ class UiState {
   @observable filterTerm = "";
   @observable dragInProgress = false;
   @observable clipboard = null;
+  @observable isRecording = false;
 
   constructor() {
     this.suiteStates = {};
@@ -21,8 +22,8 @@ class UiState {
     this.clipboard = item;
   }
 
-  @action.bound selectTest(testId, suiteId) {
-    this.selectedTest = { testId, suiteId };
+  @action.bound selectTest(test, suiteId) {
+    this.selectedTest = { test, suiteId };
   }
 
   @action.bound selectCommand(command) {
@@ -35,6 +36,10 @@ class UiState {
 
   @action.bound setDrag(dragProgress) {
     this.dragInProgress = dragProgress;
+  }
+
+  @action.bound toggleRecord() {
+    this.isRecording = !this.isRecording;
   }
 
   addStateForSuite(suite) {

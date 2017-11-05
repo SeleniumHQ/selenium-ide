@@ -41,14 +41,14 @@ export default class Test extends React.Component {
     dragInProgress: PropTypes.bool,
     setDrag: PropTypes.func
   };
-  handleClick(testId, suiteId) {
-    this.props.selectTest(testId, suiteId);
+  handleClick(test, suiteId) {
+    this.props.selectTest(test, suiteId);
   }
   render() {
     const rendered = <a
       href="#"
       className={classNames("test", {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
-      onClick={this.handleClick.bind(this, this.props.test.id, this.props.suite)}
+      onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>

@@ -1,11 +1,14 @@
 import React from "react";
+import { observer } from "mobx-react";
 import PlayAll from "../../components/ActionButtons/PlayAll";
 import PlayCurrent from "../../components/ActionButtons/PlayCurrent";
 import Pause from "../../components/ActionButtons/Pause";
 import StepInto from "../../components/ActionButtons/StepInto";
 import SpeedGauge from "../../components/ActionButtons/SpeedGauge";
 import Record from "../../components/ActionButtons/Record";
+import UiState from "../../stores/view/UiState";
 
+@observer
 export default class ToolBar extends React.Component {
   render() {
     return (
@@ -18,7 +21,7 @@ export default class ToolBar extends React.Component {
         <span style={{
           float: "right"
         }}>
-          <Record />
+          <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} />
         </span>
         <div style={{
           clear: "right",
