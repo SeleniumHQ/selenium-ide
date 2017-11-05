@@ -1,5 +1,6 @@
 import generate from "project-name-generator";
 import { CommandsArray } from "../models/Command";
+import UiState from "./view/UiState";
 
 export default function seed(store) {
   function generateSuite() {
@@ -31,6 +32,19 @@ export default function seed(store) {
       suite.addTestCase(testCase);
     }
   }
+
+  const playbackTest = store.createTestCase("aa playback");
+  const open = playbackTest.createCommand();
+  open.setCommand("open");
+  open.setTarget("https://en.wikipedia.org/wiki/Legislation");
+  const firstClick = playbackTest.createCommand();
+  firstClick.setCommand("clickAt");
+  firstClick.setTarget("link=enacted");
+  const secondClick = playbackTest.createCommand();
+  secondClick.setCommand("clickAt");
+  secondClick.setTarget("link=parliamentary systems");
+
+  UiState.selectTest(playbackTest);
 
   return store;
 }
