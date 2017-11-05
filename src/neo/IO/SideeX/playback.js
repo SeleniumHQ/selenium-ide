@@ -123,7 +123,7 @@ function doDomWait(domTime = Date.now(), domCount = 0) {
           domTime = Date.now();
           console.log("Wait for the DOM tree modification");
         }
-        return doDomWait();
+        return doDomWait(domTime, domCount);
       } else {
         domCount = 0;
         domTime = "";
@@ -132,7 +132,7 @@ function doDomWait(domTime = Date.now(), domCount = 0) {
     });
 }
 
-function doCommand() {
+function doCommand(implicitTime = Date.now(), implicitCount = 0) {
   const { command, target, value } = UiState.selectedTest.test.command[PlaybackState.currentPlayingIndex];
 
   if (implicitCount == 0) {
@@ -166,36 +166,26 @@ function doCommand() {
         // implicit
         if (result.result.match(/Element[\s\S]*?not found/)) {
           if (implicitTime && (Date.now() - implicitTime > 30000)) {
-            sideex_log.error("Implicit Wait timed out after 30000ms");
+            console.error("Implicit Wait timed out after 30000ms");
             implicitCount = 0;
             implicitTime = "";
           } else {
             implicitCount++;
             if (implicitCount == 1) {
-              sideex_log.info("Wait until the element is found");
+              console.log("Wait until the element is found");
               implicitTime = Date.now();
             }
-            return doCommand();
+            return doCommand(implicitTime, implicitCount);
           }
         }
 
         implicitCount = 0;
         implicitTime = "";
-        sideex_log.error(result.result);
-        setColor(currentPlayingCommandIndex + 1, "fail");
-        setColor(currentTestCaseId, "fail");
-        document.getElementById("result-failures").innerHTML = parseInt(document.getElementById("result-failures").innerHTML) + 1;
-        if (commandName.includes("verify") && result.result.includes("did not match")) {
-          setColor(currentPlayingCommandIndex + 1, "fail");
-        } else {
-          sideex_log.info("Test case failed");
-          caseFailed = true;
-          currentPlayingCommandIndex = commands.length;
-        }
+        console.error(result.result);
       } else {
-        setColor(currentPlayingCommandIndex + 1, "success");
+        console.log(result.result);
       }
-    })
+    });
 }
 
 function isReceivingEndError(reason) {
