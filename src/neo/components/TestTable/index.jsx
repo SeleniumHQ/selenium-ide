@@ -20,7 +20,6 @@ export default class TestTable extends React.Component {
     clearAllCommands: PropTypes.func
   };
   render() {
-    console.log("render");
     return (
       <div className="test-table">
         <table>
