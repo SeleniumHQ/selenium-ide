@@ -19,7 +19,7 @@ window.addCommandAuto = function(command, targets, value) {
   if (isEmpty(test.commands, command) || command !== "open") {
     const newCommand = test.createCommand();
     newCommand.setCommand(command);
-    newCommand.setTarget(targets[0]);
+    newCommand.setTarget(targets[0][0]);
     newCommand.setValue(value);
   }
 };
