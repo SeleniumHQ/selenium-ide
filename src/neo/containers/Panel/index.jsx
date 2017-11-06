@@ -16,6 +16,7 @@ import "../../styles/app.css";
 import "../../styles/heights.css";
 
 import "../../IO/SideeX/record";
+import "../../IO/SideeX/playback";
 
 const project = observable(new ProjectStore());
 

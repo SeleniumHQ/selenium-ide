@@ -12,8 +12,18 @@ function play() {
     .catch(catchPlayingError);
 }
 
+function playAfterConnectionFailed() {
+  prepareToPlayAfterConnectionFailed()
+    .then(executionLoop)
+    .then(finishPlaying)
+    .catch(catchPlayingError);
+}
+
 function executionLoop() {
-  const { command, target, value } = UiState.selectedTest.test.command[PlaybackState.currentPlayingIndex];
+  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
+  if (PlaybackState.currentPlayingIndex >= UiState.selectedTest.test.commands.length && PlaybackState.isPlaying) PlaybackState.togglePlaying();
+  if (!PlaybackState.isPlaying) return false;
+  const { command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return (extCommand["do" + upperCase](target, value))
@@ -30,10 +40,27 @@ function executionLoop() {
 }
 
 function prepareToPlay() {
-  extCommand.init();
+  PlaybackState.setPlayingIndex(-1);
+  return extCommand.init();
+}
+
+function prepareToPlayAfterConnectionFailed() {
+  return Promise.resolve(true);
 }
 
 function finishPlaying() {
+}
+
+function catchPlayingError(message) {
+  console.log("hi");
+  if (isReceivingEndError(message)) {
+    setTimeout(function() {
+      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
+      playAfterConnectionFailed();
+    }, 100);
+  } else {
+    console.error("playing error");
+  }
 }
 
 reaction(
@@ -41,16 +68,12 @@ reaction(
   isPlaying => { isPlaying ? play() : new Function(); }
 );
 
-const catchPlayingError = console.error;
-
-
 function doPreparation() {
   return extCommand.sendMessage("waitPreparation", "", "")
     .then(function() {
       return true;
     });
 }
-
 
 function doPrePageWait() {
   return extCommand.sendMessage("prePageWait", "", "")
@@ -63,7 +86,7 @@ function doPrePageWait() {
     });
 }
 
-function doPageWait(pageTime = Date.now(), pageCount = 0) {
+function doPageWait(pageTime, pageCount = 0) {
   return extCommand.sendMessage("pageWait", "", "")
     .then(function(response) {
       if (pageTime && (Date.now() - pageTime) > 30000) {
@@ -86,7 +109,7 @@ function doPageWait(pageTime = Date.now(), pageCount = 0) {
     });
 }
 
-function doAjaxWait(ajaxTime = Date.now(), ajaxCount = 0) {
+function doAjaxWait(ajaxTime, ajaxCount = 0) {
   return extCommand.sendMessage("ajaxWait", "", "")
     .then(function(response) {
       if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
@@ -109,7 +132,7 @@ function doAjaxWait(ajaxTime = Date.now(), ajaxCount = 0) {
     });
 }
 
-function doDomWait(domTime = Date.now(), domCount = 0) {
+function doDomWait(domTime, domCount = 0) {
   return extCommand.sendMessage("domWait", "", "")
     .then(function(response) {
       if (domTime && (Date.now() - domTime) > 30000) {
@@ -133,7 +156,7 @@ function doDomWait(domTime = Date.now(), domCount = 0) {
 }
 
 function doCommand(implicitTime = Date.now(), implicitCount = 0) {
-  const { command, target, value } = UiState.selectedTest.test.command[PlaybackState.currentPlayingIndex];
+  const { command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
 
   if (implicitCount == 0) {
     console.log("Executing: | " + command + " | " + target + " | " + value + " |");
@@ -159,7 +182,7 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
     }, 500);
   });
   return p.then(() => (
-    extCommand.sendMessage(command, command, command, isWindowMethodCommand(command))
+    extCommand.sendMessage(command, target, value, isWindowMethodCommand(command))
   ))
     .then(function(result) {
       if (result.result != "success") {
