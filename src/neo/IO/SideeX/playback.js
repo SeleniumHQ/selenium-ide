@@ -1,5 +1,5 @@
 import { reaction } from "mobx";
-import PlaybackState from "../../stores/view/PlaybackState";
+import PlaybackState, { CommandStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 const { ExtCommand, isExtCommand } = window;
 
@@ -24,7 +24,7 @@ function executionLoop() {
   if (PlaybackState.currentPlayingIndex >= UiState.selectedTest.test.commands.length && PlaybackState.isPlaying) PlaybackState.togglePlaying();
   if (!PlaybackState.isPlaying) return false;
   const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
-  PlaybackState.setCommandState(id, "pending");
+  PlaybackState.setCommandState(id, CommandStates.Pending);
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return (extCommand["do" + upperCase](target, value))
@@ -206,10 +206,10 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
         implicitCount = 0;
         implicitTime = "";
-        PlaybackState.setCommandState(id, "failed");
+        PlaybackState.setCommandState(id, CommandStates.Failed);
         console.error(result.result);
       } else {
-        PlaybackState.setCommandState(id, "passed");
+        PlaybackState.setCommandState(id, CommandStates.Passed);
         console.log(result.result);
       }
     });
