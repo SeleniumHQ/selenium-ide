@@ -42,6 +42,7 @@ function executionLoop() {
 
 function prepareToPlay() {
   PlaybackState.setPlayingIndex(-1);
+  PlaybackState.clearCommandStates();
   return extCommand.init();
 }
 
@@ -67,11 +68,6 @@ function catchPlayingError(message) {
 reaction(
   () => PlaybackState.isPlaying,
   isPlaying => { isPlaying ? play() : null; }
-);
-
-reaction(
-  () => PlaybackState.commandState,
-  () => { console.log("kaki"); }
 );
 
 function doPreparation() {

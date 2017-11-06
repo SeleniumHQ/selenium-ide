@@ -16,6 +16,10 @@ class PlaybackState {
   @action.bound setCommandState(commandId, state) {
     this.commandState.set(commandId, state);
   }
+
+  @action.bound clearCommandStates() {
+    this.commandState.clear();
+  }
 }
 
 if (!window._playbackState) window._playbackState = new PlaybackState();
