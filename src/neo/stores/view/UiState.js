@@ -18,6 +18,10 @@ class UiState {
     return this._project.tests.filter(this.filterFunction);
   }
 
+  @computed get baseUrl() {
+    return this._project.url;
+  }
+
   @action.bound copyToClipboard(item) {
     this.clipboard = item;
   }
@@ -48,6 +52,11 @@ class UiState {
 
   filterFunction({name}) {
     return (name.indexOf(this.filterTerm) !== -1);
+  }
+
+  setUrl(url, addToCache) {
+    this._project.setUrl(url);
+    if (addToCache) this._project.addUrl(url);
   }
 }
 

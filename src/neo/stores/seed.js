@@ -33,10 +33,13 @@ export default function seed(store) {
     }
   }
 
+  const url = "https://en.wikipedia.org";
+  store.setUrl(url);
+  store.addUrl(url);
   const playbackTest = store.createTestCase("aa playback");
   const open = playbackTest.createCommand();
   open.setCommand("open");
-  open.setTarget("https://en.wikipedia.org/wiki/Legislation");
+  open.setTarget("/wiki/Legislation");
   const firstClick = playbackTest.createCommand();
   firstClick.setCommand("clickAt");
   firstClick.setTarget("link=enacted");

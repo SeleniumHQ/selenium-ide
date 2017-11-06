@@ -4,8 +4,10 @@ import UiState from "../../stores/view/UiState";
 const { ExtCommand, isExtCommand } = window;
 
 const extCommand = new ExtCommand();
+let baseUrl = "";
 
-function play() {
+function play(currUrl) {
+  baseUrl = currUrl;
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
@@ -61,13 +63,13 @@ function catchPlayingError(message) {
       playAfterConnectionFailed();
     }, 100);
   } else {
-    console.error("playing error");
+    console.error(message);
   }
 }
 
 reaction(
   () => PlaybackState.isPlaying,
-  isPlaying => { isPlaying ? play() : null; }
+  isPlaying => { isPlaying ? play(UiState.baseUrl) : null; }
 );
 
 function doPreparation() {
@@ -183,8 +185,10 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
       }
     }, 500);
   });
+
+  const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
-    extCommand.sendMessage(command, target, value, isWindowMethodCommand(command))
+    extCommand.sendMessage(command, parsedTarget, value, isWindowMethodCommand(command))
   ))
     .then(function(result) {
       if (result.result !== "success") {
