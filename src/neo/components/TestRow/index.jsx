@@ -66,13 +66,6 @@ const commandTarget = {
   }
 };
 
-export const RowState = {
-  Pending: "pending",
-  Passed: "passed",
-  Failed: "failed",
-  Selected: "selected"
-};
-
 @DropTarget(Type, commandTarget, connect => ({
   connectDropTarget: connect.dropTarget()
 }))
@@ -88,10 +81,10 @@ export default class TestRow extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
+    className: PropTypes.string,
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
     value: PropTypes.string,
-    state: PropTypes.oneOf(Object.keys(RowState)),
     onClick: PropTypes.func,
     addCommand: PropTypes.func,
     remove: PropTypes.func,
