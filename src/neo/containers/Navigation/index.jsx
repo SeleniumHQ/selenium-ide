@@ -47,7 +47,7 @@ import "./style.css";
           failures={PlaybackState.failures}
           hasFailures={PlaybackState.hasFailed}
           progress={PlaybackState.finishedCommandsCount}
-          totalProgress={UiState.selectedTest.test.commands.length}
+          totalProgress={PlaybackState.commandsCount}
         />
       </aside>
     );

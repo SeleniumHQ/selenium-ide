@@ -1,12 +1,18 @@
 import { action, computed, observable } from "mobx";
+import UiState from "./UiState";
 
 class PlaybackState {
   @observable isPlaying = false;
   @observable currentPlayingIndex = 0;
+  @observable commandsCount = 0;
   @observable commandState = new Map();
   @observable runs = 0;
   @observable failures = 0;
   @observable hasFailed = false;
+
+  constructor() {
+    this._currentRunningTest = null;
+  }
 
   @computed get finishedCommandsCount() {
     let counter = 0;
@@ -21,8 +27,16 @@ class PlaybackState {
   }
 
   @action.bound togglePlaying() {
-    this.runs++;
     this.isPlaying = !this.isPlaying;
+    const { test } = UiState.selectedTest;
+    if (this.isPlaying) {
+      if (this._currentRunningTest !== test.id) {
+        this.resetState();
+        this._currentRunningTest = test.id;
+      }
+      this.runs++;
+      this.commandsCount = test.commands.length;
+    }
   }
 
   @action.bound setPlayingIndex(index) {
@@ -35,6 +49,14 @@ class PlaybackState {
 
   @action.bound clearCommandStates() {
     this.commandState.clear();
+  }
+
+  @action.bound resetState() {
+    this.clearCommandStates();
+    this.currentPlayingIndex = 0;
+    this.runs = 0;
+    this.failures = 0;
+    this.hasFailed = false;
   }
 }
 
