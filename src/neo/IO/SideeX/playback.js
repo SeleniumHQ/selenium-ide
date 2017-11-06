@@ -23,7 +23,8 @@ function executionLoop() {
   PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   if (PlaybackState.currentPlayingIndex >= UiState.selectedTest.test.commands.length && PlaybackState.isPlaying) PlaybackState.togglePlaying();
   if (!PlaybackState.isPlaying) return false;
-  const { command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  PlaybackState.setCommandState(id, "pending");
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return (extCommand["do" + upperCase](target, value))
@@ -66,6 +67,11 @@ function catchPlayingError(message) {
 reaction(
   () => PlaybackState.isPlaying,
   isPlaying => { isPlaying ? play() : null; }
+);
+
+reaction(
+  () => PlaybackState.commandState,
+  () => { console.log("kaki"); }
 );
 
 function doPreparation() {
@@ -156,7 +162,7 @@ function doDomWait(domTime, domCount = 0) {
 }
 
 function doCommand(implicitTime = Date.now(), implicitCount = 0) {
-  const { command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
 
   if (implicitCount == 0) {
     console.log("Executing: | " + command + " | " + target + " | " + value + " |");
@@ -185,7 +191,7 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
     extCommand.sendMessage(command, target, value, isWindowMethodCommand(command))
   ))
     .then(function(result) {
-      if (result.result != "success") {
+      if (result.result !== "success") {
         // implicit
         if (result.result.match(/Element[\s\S]*?not found/)) {
           if (implicitTime && (Date.now() - implicitTime > 30000)) {
@@ -204,8 +210,10 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
         implicitCount = 0;
         implicitTime = "";
+        PlaybackState.setCommandState(id, "failed");
         console.error(result.result);
       } else {
+        PlaybackState.setCommandState(id, "passed");
         console.log(result.result);
       }
     });

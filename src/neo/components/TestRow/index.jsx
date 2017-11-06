@@ -137,7 +137,7 @@ export default class TestRow extends React.Component {
     return (this.props.connectDragSource(this.props.connectDropTarget(
       <tr
         ref={node => {return(this.node = node || this.node);}}
-        className={classNames({[RowState[this.props.state]]: this.props.state}, {"dragging": this.props.dragInProgress})}
+        className={classNames(this.props.className, {"dragging": this.props.dragInProgress})}
         tabIndex="0"
         onClick={this.handleClick.bind(this)}
         onKeyDown={this.handleKeyDown.bind(this)}
