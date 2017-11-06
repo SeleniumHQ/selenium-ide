@@ -65,7 +65,7 @@ function catchPlayingError(message) {
 
 reaction(
   () => PlaybackState.isPlaying,
-  isPlaying => { isPlaying ? play() : new Function(); }
+  isPlaying => { isPlaying ? play() : null; }
 );
 
 function doPreparation() {
