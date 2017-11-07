@@ -111,7 +111,6 @@ function doPageWait(pageTime, pageCount = 0) {
         pageCount++;
         if (pageCount == 1) {
           pageTime = Date.now();
-          console.log("Wait for the new page to be fully loaded");
         }
         return doPageWait(pageTime, pageCount);
       }
@@ -134,7 +133,6 @@ function doAjaxWait(ajaxTime, ajaxCount = 0) {
         ajaxCount++;
         if (ajaxCount == 1) {
           ajaxTime = Date.now();
-          console.log("Wait for all ajax requests to be done");
         }
         return doAjaxWait(ajaxTime, ajaxCount);
       }
@@ -153,7 +151,6 @@ function doDomWait(domTime, domCount = 0) {
         domCount++;
         if (domCount == 1) {
           domTime = Date.now();
-          console.log("Wait for the DOM tree modification");
         }
         return doDomWait(domTime, domCount);
       } else {
@@ -176,9 +173,6 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
         clearInterval(interval);
       }
       if (!extCommand.getPageStatus()) {
-        if (count == 0) {
-          console.log("Wait for the new page to be fully loaded");
-        }
         count++;
       } else {
         resolve();
@@ -202,7 +196,6 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
           } else {
             implicitCount++;
             if (implicitCount == 1) {
-              console.log("Wait until the element is found");
               implicitTime = Date.now();
             }
             return doCommand(implicitTime, implicitCount);
