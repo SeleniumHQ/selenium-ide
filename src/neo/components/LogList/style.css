@@ -1,5 +1,6 @@
 .logs {
   color: #5B5B5B;
+  overflow-y: auto;
 }
 
 .logs ul {

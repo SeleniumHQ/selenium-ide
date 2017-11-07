@@ -9,3 +9,7 @@
 .test-table {
   height: 460px;
 }
+
+.logs {
+  max-height: 200px;
+}
