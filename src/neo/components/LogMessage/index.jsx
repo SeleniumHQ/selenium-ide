@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./style.css";
 
 export default class LogMessage extends React.Component {
@@ -7,4 +8,8 @@ export default class LogMessage extends React.Component {
       <li className={this.props.status}>{this.props.children}</li>
     );
   }
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+    status: PropTypes.string
+  };
 }
