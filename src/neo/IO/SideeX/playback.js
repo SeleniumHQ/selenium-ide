@@ -210,7 +210,7 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
         implicitCount = 0;
         implicitTime = "";
-        PlaybackState.setCommandState(id, CommandStates.Failed);
+        PlaybackState.setCommandState(id, CommandStates.Failed, result.result);
         console.error(result.result);
       } else {
         PlaybackState.setCommandState(id, CommandStates.Passed);
