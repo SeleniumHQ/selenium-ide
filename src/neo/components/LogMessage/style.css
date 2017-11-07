@@ -10,6 +10,6 @@
   color: #23843D;
 }
 
-.logs ul li.failure {
+.logs ul li.error {
   color: #E80600;
 }
