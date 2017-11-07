@@ -53,10 +53,10 @@ function prepareToPlayAfterConnectionFailed() {
 }
 
 function finishPlaying() {
+  PlaybackState.finishPlaying();
 }
 
 function catchPlayingError(message) {
-  console.log("hi");
   if (isReceivingEndError(message)) {
     setTimeout(function() {
       PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
@@ -162,10 +162,6 @@ function doDomWait(domTime, domCount = 0) {
 function doCommand(implicitTime = Date.now(), implicitCount = 0) {
   const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
 
-  if (implicitCount == 0) {
-    console.log("Executing: | " + command + " | " + target + " | " + value + " |");
-  }
-
   let p = new Promise(function(resolve, reject) {
     let count = 0;
     let interval = setInterval(function() {
@@ -211,10 +207,8 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
         implicitCount = 0;
         implicitTime = "";
         PlaybackState.setCommandState(id, CommandStates.Failed, result.result);
-        console.error(result.result);
       } else {
         PlaybackState.setCommandState(id, CommandStates.Passed);
-        console.log(result.result);
       }
     });
 }
