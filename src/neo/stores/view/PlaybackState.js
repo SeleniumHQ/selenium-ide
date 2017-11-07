@@ -56,6 +56,10 @@ class PlaybackState {
     this.commandState.clear();
   }
 
+  @action.bound finishPlaying() {
+    this.isPlaying = false;
+  }
+
   @action.bound resetState() {
     this.clearCommandStates();
     this.currentPlayingIndex = 0;

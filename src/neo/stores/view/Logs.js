@@ -7,9 +7,13 @@ export default class LogStore {
   @observable logs = [];
 
   constructor() {
-    this.disposer = observe(PlaybackState.commandState, (change) => {
+    this.playbackDisposer = observe(PlaybackState, "isPlaying", (isPlaying) => {
+      this.logPlayingState(isPlaying.newValue);
+    });
+    this.commandStateDisposer = observe(PlaybackState.commandState, (change) => {
       this.parseCommandStateChange(change.name, change.newValue, this.logCommandState);
     });
+    this.logPlayingState = this.logPlayingState.bind(this);
     this.parseCommandStateChange = this.parseCommandStateChange.bind(this);
     this.logCommandState = this.logCommandState.bind(this);
     this.dispose = this.dispose.bind(this);
@@ -25,6 +29,14 @@ export default class LogStore {
 
   @action.bound clearLogs() {
     this.logs.clear();
+  }
+
+  logPlayingState(isPlaying) {
+    if (isPlaying) {
+      this.addLog(`Started playback of '${UiState.selectedTest.test.name}'`, LogTypes.Notice);
+    } else {
+      this.addLog(`Finished playback of '${UiState.selectedTest.test.name}'${PlaybackState.hasFailed ? " with errors" : " successfully"}`, LogTypes.Notice);
+    }
   }
 
   parseCommandStateChange(commandId, status, cb) {
@@ -49,7 +61,8 @@ export default class LogStore {
   }
 
   dispose() {
-    this.disposer();
+    this.playbackDisposer();
+    this.commandStateDisposer();
   }
 }
 
