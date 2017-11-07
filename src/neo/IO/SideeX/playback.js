@@ -63,8 +63,13 @@ function catchPlayingError(message) {
       playAfterConnectionFailed();
     }, 100);
   } else {
-    console.error(message);
+    reportError(message);
   }
+}
+
+function reportError(message) {
+  const { id } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  PlaybackState.setCommandState(id, CommandStates.Failed, message);
 }
 
 reaction(
@@ -94,7 +99,7 @@ function doPageWait(pageTime, pageCount = 0) {
   return extCommand.sendMessage("pageWait", "", "")
     .then(function(response) {
       if (pageTime && (Date.now() - pageTime) > 30000) {
-        console.error("Page Wait timed out after 30000ms");
+        reportError("Page Wait timed out after 30000ms");
         pageCount = 0;
         pageTime = "";
         return true;
@@ -117,7 +122,7 @@ function doAjaxWait(ajaxTime, ajaxCount = 0) {
   return extCommand.sendMessage("ajaxWait", "", "")
     .then(function(response) {
       if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
-        console.error("Ajax Wait timed out after 30000ms");
+        reportError("Ajax Wait timed out after 30000ms");
         ajaxCount = 0;
         ajaxTime = "";
         return true;
@@ -140,7 +145,7 @@ function doDomWait(domTime, domCount = 0) {
   return extCommand.sendMessage("domWait", "", "")
     .then(function(response) {
       if (domTime && (Date.now() - domTime) > 30000) {
-        console.error("DOM Wait timed out after 30000ms");
+        reportError("DOM Wait timed out after 30000ms");
         domCount = 0;
         domTime = "";
         return true;
@@ -166,7 +171,7 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
     let count = 0;
     let interval = setInterval(function() {
       if (count > 60) {
-        console.error("Timed out after 30000ms");
+        reportError("Timed out after 30000ms");
         reject("Window not Found");
         clearInterval(interval);
       }
@@ -191,7 +196,7 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
         // implicit
         if (result.result.match(/Element[\s\S]*?not found/)) {
           if (implicitTime && (Date.now() - implicitTime > 30000)) {
-            console.error("Implicit Wait timed out after 30000ms");
+            reportError("Implicit Wait timed out after 30000ms");
             implicitCount = 0;
             implicitTime = "";
           } else {
