@@ -23,6 +23,10 @@ export default class LogStore {
     });
   }
 
+  @action.bound clearLogs() {
+    this.logs.clear();
+  }
+
   parseCommandStateChange(commandId, status, cb) {
     const command = UiState.selectedTest.test.commands.find(({id}) => (id === commandId));
     cb(command, status);
