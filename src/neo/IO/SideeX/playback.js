@@ -95,67 +95,55 @@ function doPrePageWait() {
     });
 }
 
-function doPageWait(pageTime, pageCount = 0) {
+function doPageWait(res, pageTime, pageCount = 0) {
   return extCommand.sendMessage("pageWait", "", "")
     .then(function(response) {
       if (pageTime && (Date.now() - pageTime) > 30000) {
         reportError("Page Wait timed out after 30000ms");
-        pageCount = 0;
-        pageTime = "";
         return true;
       } else if (response && response.page_done) {
-        pageCount = 0;
-        pageTime = "";
         return true;
       } else {
         pageCount++;
         if (pageCount == 1) {
           pageTime = Date.now();
         }
-        return doPageWait(pageTime, pageCount);
+        return doPageWait(false, pageTime, pageCount);
       }
     });
 }
 
-function doAjaxWait(ajaxTime, ajaxCount = 0) {
+function doAjaxWait(res, ajaxTime, ajaxCount = 0) {
   return extCommand.sendMessage("ajaxWait", "", "")
     .then(function(response) {
       if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
         reportError("Ajax Wait timed out after 30000ms");
-        ajaxCount = 0;
-        ajaxTime = "";
         return true;
       } else if (response && response.ajax_done) {
-        ajaxCount = 0;
-        ajaxTime = "";
         return true;
       } else {
         ajaxCount++;
         if (ajaxCount == 1) {
           ajaxTime = Date.now();
         }
-        return doAjaxWait(ajaxTime, ajaxCount);
+        return doAjaxWait(false, ajaxTime, ajaxCount);
       }
     });
 }
 
-function doDomWait(domTime, domCount = 0) {
+function doDomWait(res, domTime, domCount = 0) {
   return extCommand.sendMessage("domWait", "", "")
     .then(function(response) {
       if (domTime && (Date.now() - domTime) > 30000) {
         reportError("DOM Wait timed out after 30000ms");
-        domCount = 0;
-        domTime = "";
         return true;
       } else if (response && (Date.now() - response.dom_time) < 400) {
         domCount++;
         if (domCount == 1) {
           domTime = Date.now();
         }
-        return doDomWait(domTime, domCount);
+        return doDomWait(false, domTime, domCount);
       } else {
-        domCount = 0;
-        domTime = "";
         return true;
       }
     });
