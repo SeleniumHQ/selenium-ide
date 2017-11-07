@@ -1,0 +1,9 @@
+.logs {
+  color: #5B5B5B;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.logs ul {
+  margin: 5px 8px;
+}

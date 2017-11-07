@@ -53,18 +53,23 @@ function prepareToPlayAfterConnectionFailed() {
 }
 
 function finishPlaying() {
+  PlaybackState.finishPlaying();
 }
 
 function catchPlayingError(message) {
-  console.log("hi");
   if (isReceivingEndError(message)) {
     setTimeout(function() {
       PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
       playAfterConnectionFailed();
     }, 100);
   } else {
-    console.error(message);
+    reportError(message);
   }
+}
+
+function reportError(message) {
+  const { id } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  PlaybackState.setCommandState(id, CommandStates.Failed, message);
 }
 
 reaction(
@@ -90,70 +95,55 @@ function doPrePageWait() {
     });
 }
 
-function doPageWait(pageTime, pageCount = 0) {
+function doPageWait(res, pageTime, pageCount = 0) {
   return extCommand.sendMessage("pageWait", "", "")
     .then(function(response) {
       if (pageTime && (Date.now() - pageTime) > 30000) {
-        console.error("Page Wait timed out after 30000ms");
-        pageCount = 0;
-        pageTime = "";
+        reportError("Page Wait timed out after 30000ms");
         return true;
       } else if (response && response.page_done) {
-        pageCount = 0;
-        pageTime = "";
         return true;
       } else {
         pageCount++;
         if (pageCount == 1) {
           pageTime = Date.now();
-          console.log("Wait for the new page to be fully loaded");
         }
-        return doPageWait(pageTime, pageCount);
+        return doPageWait(false, pageTime, pageCount);
       }
     });
 }
 
-function doAjaxWait(ajaxTime, ajaxCount = 0) {
+function doAjaxWait(res, ajaxTime, ajaxCount = 0) {
   return extCommand.sendMessage("ajaxWait", "", "")
     .then(function(response) {
       if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
-        console.error("Ajax Wait timed out after 30000ms");
-        ajaxCount = 0;
-        ajaxTime = "";
+        reportError("Ajax Wait timed out after 30000ms");
         return true;
       } else if (response && response.ajax_done) {
-        ajaxCount = 0;
-        ajaxTime = "";
         return true;
       } else {
         ajaxCount++;
         if (ajaxCount == 1) {
           ajaxTime = Date.now();
-          console.log("Wait for all ajax requests to be done");
         }
-        return doAjaxWait(ajaxTime, ajaxCount);
+        return doAjaxWait(false, ajaxTime, ajaxCount);
       }
     });
 }
 
-function doDomWait(domTime, domCount = 0) {
+function doDomWait(res, domTime, domCount = 0) {
   return extCommand.sendMessage("domWait", "", "")
     .then(function(response) {
       if (domTime && (Date.now() - domTime) > 30000) {
-        console.error("DOM Wait timed out after 30000ms");
-        domCount = 0;
-        domTime = "";
+        reportError("DOM Wait timed out after 30000ms");
         return true;
       } else if (response && (Date.now() - response.dom_time) < 400) {
         domCount++;
         if (domCount == 1) {
           domTime = Date.now();
-          console.log("Wait for the DOM tree modification");
         }
-        return doDomWait(domTime, domCount);
+        return doDomWait(false, domTime, domCount);
       } else {
-        domCount = 0;
-        domTime = "";
         return true;
       }
     });
@@ -162,22 +152,15 @@ function doDomWait(domTime, domCount = 0) {
 function doCommand(implicitTime = Date.now(), implicitCount = 0) {
   const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
 
-  if (implicitCount == 0) {
-    console.log("Executing: | " + command + " | " + target + " | " + value + " |");
-  }
-
   let p = new Promise(function(resolve, reject) {
     let count = 0;
     let interval = setInterval(function() {
       if (count > 60) {
-        console.error("Timed out after 30000ms");
+        reportError("Timed out after 30000ms");
         reject("Window not Found");
         clearInterval(interval);
       }
       if (!extCommand.getPageStatus()) {
-        if (count == 0) {
-          console.log("Wait for the new page to be fully loaded");
-        }
         count++;
       } else {
         resolve();
@@ -195,13 +178,12 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
         // implicit
         if (result.result.match(/Element[\s\S]*?not found/)) {
           if (implicitTime && (Date.now() - implicitTime > 30000)) {
-            console.error("Implicit Wait timed out after 30000ms");
+            reportError("Implicit Wait timed out after 30000ms");
             implicitCount = 0;
             implicitTime = "";
           } else {
             implicitCount++;
             if (implicitCount == 1) {
-              console.log("Wait until the element is found");
               implicitTime = Date.now();
             }
             return doCommand(implicitTime, implicitCount);
@@ -210,11 +192,9 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
         implicitCount = 0;
         implicitTime = "";
-        PlaybackState.setCommandState(id, CommandStates.Failed);
-        console.error(result.result);
+        PlaybackState.setCommandState(id, CommandStates.Failed, result.result);
       } else {
         PlaybackState.setCommandState(id, CommandStates.Passed);
-        console.log(result.result);
       }
     });
 }

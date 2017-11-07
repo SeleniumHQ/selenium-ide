@@ -17,7 +17,7 @@ class PlaybackState {
   @computed get finishedCommandsCount() {
     let counter = 0;
 
-    this.commandState.forEach(state => {
+    this.commandState.forEach(({ state }) => {
       if (state !== CommandStates.Pending) {
         counter++;
       }
@@ -44,16 +44,20 @@ class PlaybackState {
     this.currentPlayingIndex = index;
   }
 
-  @action.bound setCommandState(commandId, state) {
+  @action.bound setCommandState(commandId, state, message) {
     if (state === CommandStates.Failed) {
       this.hasFailed = true;
       this.failures++;
     }
-    this.commandState.set(commandId, state);
+    this.commandState.set(commandId, { state, message });
   }
 
   @action.bound clearCommandStates() {
     this.commandState.clear();
+  }
+
+  @action.bound finishPlaying() {
+    this.isPlaying = false;
   }
 
   @action.bound resetState() {
