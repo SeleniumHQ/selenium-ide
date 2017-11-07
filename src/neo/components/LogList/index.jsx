@@ -10,6 +10,9 @@ export default class LogList extends React.Component {
     super(props);
     this.store = new LogStore();
   }
+  componentWillUnmount() {
+    this.store.dispose();
+  }
   render() {
     return (
       <div className="logs">
