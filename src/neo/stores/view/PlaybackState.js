@@ -35,6 +35,7 @@ class PlaybackState {
         this._currentRunningTest = test.id;
       }
       this.runs++;
+      this.hasFailed = false;
       this.commandsCount = test.commands.length;
     }
   }
@@ -44,6 +45,10 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state) {
+    if (state === CommandStates.Failed) {
+      this.hasFailed = true;
+      this.failures++;
+    }
     this.commandState.set(commandId, state);
   }
 

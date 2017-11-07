@@ -45,7 +45,7 @@ import "./style.css";
         <Runs
           runs={PlaybackState.runs}
           failures={PlaybackState.failures}
-          hasFailures={PlaybackState.hasFailed}
+          hasError={PlaybackState.hasFailed}
           progress={PlaybackState.finishedCommandsCount}
           totalProgress={PlaybackState.commandsCount}
         />
