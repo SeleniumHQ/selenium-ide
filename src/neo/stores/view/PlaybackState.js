@@ -26,18 +26,19 @@ class PlaybackState {
     return counter;
   }
 
-  @action.bound togglePlaying() {
-    this.isPlaying = !this.isPlaying;
+  @action.bound stopPlaying() {
+    this.isPlaying = false;
+  }
+  @action.bound startPlaying() {
+    this.isPlaying = true;
     const { test } = UiState.selectedTest;
-    if (this.isPlaying) {
-      if (this._currentRunningTest !== test.id) {
-        this.resetState();
-        this._currentRunningTest = test.id;
-      }
-      this.runs++;
-      this.hasFailed = false;
-      this.commandsCount = test.commands.length;
+    if (this._currentRunningTest !== test.id) {
+      this.resetState();
+      this._currentRunningTest = test.id;
     }
+    this.runs++;
+    this.hasFailed = false;
+    this.commandsCount = test.commands.length;
   }
 
   @action.bound setPlayingIndex(index) {
@@ -54,10 +55,6 @@ class PlaybackState {
 
   @action.bound clearCommandStates() {
     this.commandState.clear();
-  }
-
-  @action.bound finishPlaying() {
-    this.isPlaying = false;
   }
 
   @action.bound resetState() {

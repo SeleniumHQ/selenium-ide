@@ -23,7 +23,7 @@ function playAfterConnectionFailed() {
 
 function executionLoop() {
   PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if (PlaybackState.currentPlayingIndex >= UiState.selectedTest.test.commands.length && PlaybackState.isPlaying) PlaybackState.togglePlaying();
+  if (PlaybackState.currentPlayingIndex >= UiState.selectedTest.test.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
   if (!PlaybackState.isPlaying) return false;
   const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, CommandStates.Pending);
@@ -53,7 +53,7 @@ function prepareToPlayAfterConnectionFailed() {
 }
 
 function finishPlaying() {
-  PlaybackState.finishPlaying();
+  PlaybackState.stopPlaying();
 }
 
 function catchPlayingError(message) {
@@ -64,6 +64,7 @@ function catchPlayingError(message) {
     }, 100);
   } else {
     reportError(message);
+    finishPlaying();
   }
 }
 

@@ -13,7 +13,7 @@ export default class ToolBar extends React.Component {
   render() {
     return (
       <span>
-        <PlayAll onClick={PlaybackState.togglePlaying} />
+        <PlayAll onClick={PlaybackState.startPlaying} />
         <Pause />
         <StepInto />
         <SpeedGauge />
