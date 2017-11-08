@@ -1,6 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import PlayAll from "../../components/ActionButtons/PlayAll";
+import PlayCurrent from "../../components/ActionButtons/PlayCurrent";
 import Pause from "../../components/ActionButtons/Pause";
 import StepInto from "../../components/ActionButtons/StepInto";
 import SpeedGauge from "../../components/ActionButtons/SpeedGauge";
@@ -13,7 +14,8 @@ export default class ToolBar extends React.Component {
   render() {
     return (
       <span>
-        <PlayAll onClick={PlaybackState.startPlaying} />
+        <PlayAll onClick={PlaybackState.startPlayingSuite} />
+        <PlayCurrent onClick={PlaybackState.startPlaying} />
         <Pause />
         <StepInto />
         <SpeedGauge />
