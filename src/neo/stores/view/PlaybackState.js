@@ -4,6 +4,7 @@ import UiState from "./UiState";
 class PlaybackState {
   @observable isPlaying = false;
   @observable currentPlayingIndex = 0;
+  @observable currentRunningTest = null;
   @observable commandsCount = 0;
   @observable commandState = new Map();
   @observable runs = 0;
@@ -11,7 +12,8 @@ class PlaybackState {
   @observable hasFailed = false;
 
   constructor() {
-    this._currentRunningTest = null;
+    this._currentRunningSuite = null;
+    this._testsToRun = [];
   }
 
   @computed get finishedCommandsCount() {
@@ -26,19 +28,49 @@ class PlaybackState {
     return counter;
   }
 
-  @action.bound stopPlaying() {
-    this.isPlaying = false;
-  }
-  @action.bound startPlaying() {
-    this.isPlaying = true;
-    const { test } = UiState.selectedTest;
-    if (this._currentRunningTest !== test.id) {
+  @action.bound startPlayingSuite() {
+    const { suite } = UiState.selectedTest;
+    if (this._currentRunningSuite !== suite) {
       this.resetState();
-      this._currentRunningTest = test.id;
+      this._currentRunningSuite = suite.id;
+    }
+    this._testsToRun = [...suite.tests];
+    this.playNext();
+  }
+
+  @action.bound startPlaying() {
+    const { test } = UiState.selectedTest;
+    if (this._currentRunningSuite || !this.currentRunningTest || this.currentRunningTest.id !== test.id) {
+      this.resetState();
+      this.currentRunningTest = test;
     }
     this.runs++;
     this.hasFailed = false;
     this.commandsCount = test.commands.length;
+    this.isPlaying = true;
+  }
+
+  @action.bound playNext() {
+    this.currentRunningTest = this._testsToRun.shift();
+    this.runs++;
+    this.hasFailed = false;
+    this.isPlaying = true;
+  }
+
+  @action.bound stopPlaying() {
+    this.isPlaying = false;
+  }
+
+  @action.bound abortPlaying() {
+    this.isPlaying = false;
+    this._testsToRun = [];
+  }
+
+  @action.bound finishPlaying() {
+    this.isPlaying = false;
+    if (this._testsToRun.length) {
+      this.playNext();
+    }
   }
 
   @action.bound setPlayingIndex(index) {

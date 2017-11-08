@@ -1,6 +1,5 @@
 import { action, observe, observable } from "mobx";
 import uuidv4 from "uuid/v4";
-import UiState from "./UiState";
 import PlaybackState, { CommandStates } from "./PlaybackState";
 
 export default class LogStore {
@@ -33,14 +32,14 @@ export default class LogStore {
 
   logPlayingState(isPlaying) {
     if (isPlaying) {
-      this.addLog(`Started playback of '${UiState.selectedTest.test.name}'`, LogTypes.Notice);
+      this.addLog(`Started playback of '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
     } else {
-      this.addLog(`Finished playback of '${UiState.selectedTest.test.name}'${PlaybackState.hasFailed ? " with errors" : " successfully"}`, LogTypes.Notice);
+      this.addLog(`Finished playback of '${PlaybackState.currentRunningTest.name}'${PlaybackState.hasFailed ? " with errors" : " successfully"}`, LogTypes.Notice);
     }
   }
 
   parseCommandStateChange(commandId, status, cb) {
-    const command = UiState.selectedTest.test.commands.find(({id}) => (id === commandId));
+    const command = PlaybackState.currentRunningTest.commands.find(({id}) => (id === commandId));
     cb(command, status);
   }
 

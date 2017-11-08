@@ -26,8 +26,8 @@ class UiState {
     this.clipboard = item;
   }
 
-  @action.bound selectTest(test, suiteId) {
-    this.selectedTest = { test, suiteId };
+  @action.bound selectTest(test, suite) {
+    this.selectedTest = { test, suite };
   }
 
   @action.bound selectCommand(command) {

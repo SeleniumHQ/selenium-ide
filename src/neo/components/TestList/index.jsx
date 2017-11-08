@@ -18,7 +18,7 @@ export default class TestList extends Component {
               <DraggableTest
                 test={test}
                 suite={this.props.suite}
-                selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite === UiState.selectedTest.suiteId}
+                selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite === UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined}
                 selectTest={UiState.selectTest}
                 dragInProgress={UiState.dragInProgress}
                 setDrag={UiState.setDrag}

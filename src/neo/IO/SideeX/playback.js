@@ -23,9 +23,9 @@ function playAfterConnectionFailed() {
 
 function executionLoop() {
   PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if (PlaybackState.currentPlayingIndex >= UiState.selectedTest.test.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
+  if (PlaybackState.currentPlayingIndex >= PlaybackState.currentRunningTest.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
   if (!PlaybackState.isPlaying) return false;
-  const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, CommandStates.Pending);
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
@@ -53,7 +53,7 @@ function prepareToPlayAfterConnectionFailed() {
 }
 
 function finishPlaying() {
-  PlaybackState.stopPlaying();
+  PlaybackState.finishPlaying();
 }
 
 function catchPlayingError(message) {
@@ -69,7 +69,7 @@ function catchPlayingError(message) {
 }
 
 function reportError(message) {
-  const { id } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  const { id } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, CommandStates.Failed, message);
 }
 
@@ -151,7 +151,7 @@ function doDomWait(res, domTime, domCount = 0) {
 }
 
 function doCommand(implicitTime = Date.now(), implicitCount = 0) {
-  const { id, command, target, value } = UiState.selectedTest.test.commands[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
 
   let p = new Promise(function(resolve, reject) {
     let count = 0;
