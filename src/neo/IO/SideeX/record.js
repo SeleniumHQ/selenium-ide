@@ -16,14 +16,17 @@ window.getRecordsArray = function() {
 
 window.addCommandAuto = function(command, targets, value) {
   const { test } = UiState.selectedTest;
-  const newCommand = test.createCommand();
-  newCommand.setTarget(targets[0][0]);
-  newCommand.setValue(value);
-  if (isEmpty(test.commands, command) && command === "open") {
-    const url = new URL(command);
-    UiState.setUrl(url.origin, true);
-    newCommand.setCommand(url.pathname);
-  } else if (command !== "open") {
+  if (isEmpty(test.commands, command)) {
+    const newCommand = test.createCommand();
     newCommand.setCommand(command);
+    newCommand.setValue(value);
+    const url = new URL(targets);
+    UiState.setUrl(url.origin, true);
+    newCommand.setTarget(url.pathname);
+  } else if (command !== "open") {
+    const newCommand = test.createCommand();
+    newCommand.setCommand(command);
+    newCommand.setValue(value);
+    newCommand.setTarget(targets[0][0]);
   }
 };
