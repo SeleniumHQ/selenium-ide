@@ -93,7 +93,7 @@ class Suite extends React.Component {
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
         </div>
-        <TestList collapsed={!this.store.isOpen} suite={this.props.suite.id} tests={this.store.filteredTests.get()} removeTest={this.props.suite.removeTestCase} />
+        <TestList collapsed={!this.store.isOpen} suite={this.props.suite} tests={this.store.filteredTests.get()} removeTest={this.props.suite.removeTestCase} />
       </div>
     );
   }

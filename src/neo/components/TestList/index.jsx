@@ -39,7 +39,7 @@ export default class TestList extends Component {
   static propTypes = {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     collapsed: PropTypes.bool,
-    suite: PropTypes.string,
+    suite: PropTypes.object,
     rename: PropTypes.func,
     removeTest: PropTypes.func.isRequired
   };

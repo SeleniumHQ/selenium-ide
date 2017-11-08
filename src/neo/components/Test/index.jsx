@@ -13,7 +13,7 @@ const testSource = {
     props.setDrag(true);
     return {
       id: props.test.id,
-      suite: props.suite
+      suite: props.suite.id
     };
   },
   endDrag(props) {
@@ -30,7 +30,7 @@ function collect(connect, monitor) {
 export default class Test extends React.Component {
   static propTypes = {
     test: PropTypes.object.isRequired,
-    suite: PropTypes.string,
+    suite: PropTypes.object,
     selected: PropTypes.bool,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
@@ -41,8 +41,8 @@ export default class Test extends React.Component {
     dragInProgress: PropTypes.bool,
     setDrag: PropTypes.func
   };
-  handleClick(test, suiteId) {
-    this.props.selectTest(test, suiteId);
+  handleClick(test, suite) {
+    this.props.selectTest(test, suite);
   }
   render() {
     const rendered = <a
