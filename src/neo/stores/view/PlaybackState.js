@@ -53,7 +53,6 @@ class PlaybackState {
   @action.bound playNext() {
     this.currentRunningTest = this._testsToRun.shift();
     this.runs++;
-    this.hasFailed = false;
     this.isPlaying = true;
   }
 
