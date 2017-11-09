@@ -76,3 +76,11 @@ hr {
   cursor: move!important;
   cursor: grabbing!important;
 }
+
+.passed {
+  color: #276D3A;
+}
+
+.failed {
+  color: #E80600;
+}

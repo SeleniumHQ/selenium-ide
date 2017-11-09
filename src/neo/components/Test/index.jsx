@@ -29,6 +29,7 @@ function collect(connect, monitor) {
 
 export default class Test extends React.Component {
   static propTypes = {
+    className: PropTypes.string,
     test: PropTypes.object.isRequired,
     suite: PropTypes.object,
     selected: PropTypes.bool,
@@ -47,7 +48,7 @@ export default class Test extends React.Component {
   render() {
     const rendered = <a
       href="#"
-      className={classNames("test", {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
+      className={classNames("test", this.props.className, {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
       style={{
         display: this.props.isDragging ? "none" : "flex"

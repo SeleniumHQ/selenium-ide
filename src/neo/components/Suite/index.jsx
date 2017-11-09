@@ -9,6 +9,7 @@ import { Type } from "../Test";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
+import PlaybackState from "../../stores/view/PlaybackState";
 import tick from "../../images/ic_tick.svg";
 import "./style.css";
 
@@ -80,7 +81,7 @@ class Suite extends React.Component {
     return this.props.connectDropTarget(
       <div>
         <div className="project">
-          <a href="#" className={classNames({"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
+          <a href="#" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
             <ArrowProject isActive={this.store.isOpen}>
               <span className="title">{this.props.suite.name}</span>
             </ArrowProject>

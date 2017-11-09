@@ -5,6 +5,7 @@ class PlaybackState {
   @observable isPlaying = false;
   @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
+  @observable currentRunningSuite = null;
   @observable commandsCount = 0;
   @observable commandState = new Map();
   @observable testState = new Map();
@@ -14,7 +15,6 @@ class PlaybackState {
   @observable hasFailed = false;
 
   constructor() {
-    this._currentRunningSuite = null;
     this._testsToRun = [];
   }
 
@@ -30,11 +30,17 @@ class PlaybackState {
     return counter;
   }
 
+  @computed get hasFinishedSuccessfully() {
+    return this.currentRunningTest.commands.filter(({id}) => (
+      this.commandState.get(id).state === PlaybackStates.Passed
+    )).length === this.currentRunningTest.commands.length;
+  }
+
   @action.bound startPlayingSuite() {
     const { suite } = UiState.selectedTest;
-    if (this._currentRunningSuite !== (suite ? suite.id : undefined)) {
+    if (this.currentRunningSuite !== (suite ? suite.id : undefined)) {
       this.resetState();
-      this._currentRunningSuite = suite.id;
+      this.currentRunningSuite = suite.id;
     }
     this.clearCommandStates();
     this.hasFailed = false;
@@ -46,9 +52,9 @@ class PlaybackState {
 
   @action.bound startPlaying() {
     const { test } = UiState.selectedTest;
-    if (this._currentRunningSuite || !this.currentRunningTest || this.currentRunningTest.id !== test.id) {
+    if (this.currentRunningSuite || !this.currentRunningTest || this.currentRunningTest.id !== test.id) {
       this.resetState();
-      this._currentRunningSuite = undefined;
+      this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
     }
     this.clearCommandStates();
@@ -60,6 +66,7 @@ class PlaybackState {
 
   @action.bound playNext() {
     this.currentRunningTest = this._testsToRun.shift();
+    UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.isPlaying = true;
   }
 
@@ -74,8 +81,11 @@ class PlaybackState {
 
   @action.bound finishPlaying() {
     this.isPlaying = false;
+    this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (this._testsToRun.length) {
       this.playNext();
+    } else {
+      this.suiteState.set(this.currentRunningSuite, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
     }
   }
 
