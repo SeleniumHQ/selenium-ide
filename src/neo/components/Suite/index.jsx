@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
-import styled from "styled-components";
 import { observer } from "mobx-react";
 import TestList from "../TestList";
 import { Type } from "../Test";
@@ -10,7 +9,6 @@ import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import tick from "../../images/ic_tick.svg";
 import "./style.css";
 
 function containsTest(tests, test) {
