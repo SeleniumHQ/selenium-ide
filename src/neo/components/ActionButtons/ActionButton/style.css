@@ -1,0 +1,22 @@
+.btn-action {
+  color: #656565;
+  margin: 5px 8px;
+  padding: 0;
+  outline: 0;
+  mask-repeat: no-repeat;
+  border-style: none;
+  font-size: 24px;
+  background-color: transparent;
+}
+
+.btn-action:hover {
+  color: #333333;
+}
+
+.btn-action:active {
+  color: #656565;
+}
+
+.btn-action.active {
+  background-color: #E3F2FF;
+}

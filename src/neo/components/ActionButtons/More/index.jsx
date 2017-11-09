@@ -1,6 +1,11 @@
+import React from "react";
 import ActionButton from "../ActionButton";
-import more from "../../../images/ic_more.svg";
+import classNames from "classnames";
 
-export default ActionButton.extend`
-  mask-image: url(${more});
-`;
+export default class MoreButton extends React.Component {
+  render() {
+    return (
+      <ActionButton {...this.props} className={classNames("si-more", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
+}

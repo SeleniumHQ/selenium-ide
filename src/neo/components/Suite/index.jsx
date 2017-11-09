@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
-import styled from "styled-components";
 import { observer } from "mobx-react";
 import TestList from "../TestList";
 import { Type } from "../Test";
@@ -10,7 +9,6 @@ import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import tick from "../../images/ic_tick.svg";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -39,21 +37,6 @@ function collect(connect, monitor) {
   };
 }
 
-const ArrowProject = styled.span`
-  display: flex;
-  &:before {
-    mask-image: url(${tick});
-    content: " ";
-    width: 9px;
-    height: 9px;
-    background-color: ${props => props.isActive ? "#40A6FF" : "#505050"};
-    display: inline-block;
-    transform: ${props => props.isActive ? "rotate(90deg)" : "rotate(0deg)"};
-    transition: all 100ms linear;
-    align-self: center;
-  }
-`;
-
 @observer
 class Suite extends React.Component {
   constructor(props) {
@@ -81,10 +64,9 @@ class Suite extends React.Component {
     return this.props.connectDropTarget(
       <div>
         <div className="project">
-          <a href="#" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)})} onClick={this.handleClick}>
-            <ArrowProject isActive={this.store.isOpen}>
-              <span className="title">{this.props.suite.name}</span>
-            </ArrowProject>
+          <a href="#" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick}>
+            <span className="si-caret"></span>
+            <span className="title">{this.props.suite.name}</span>
           </a>
           <ListMenu width={130} opener={
             <MoreButton />

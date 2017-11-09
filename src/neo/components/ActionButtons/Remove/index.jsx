@@ -1,6 +1,11 @@
+import React from "react";
 import ActionButton from "../ActionButton";
-import remove from "../../../images/ic_remove.svg";
+import classNames from "classnames";
 
-export default ActionButton.extend`
-  mask-image: url(${remove});
-`;
+export default class RemoveButton extends React.Component {
+  render() {
+    return (
+      <ActionButton {...this.props} className={classNames("si-remove", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
+}

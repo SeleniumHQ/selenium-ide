@@ -1,6 +1,11 @@
+import React from "react";
 import ActionButton from "../ActionButton";
-import clear from "../../../images/ic_clear.svg";
+import classNames from "classnames";
 
-export default ActionButton.extend`
-  mask-image: url(${clear});
-`;
+export default class ClearButton extends React.Component {
+  render() {
+    return (
+      <ActionButton {...this.props} className={classNames("si-clear", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
+}

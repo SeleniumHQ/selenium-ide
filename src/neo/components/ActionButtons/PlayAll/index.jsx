@@ -1,6 +1,11 @@
+import React from "react";
 import ActionButton from "../ActionButton";
-import playall from "../../../images/ic_play_all.svg";
+import classNames from "classnames";
 
-export default ActionButton.extend`
-  mask-image: url(${playall});
-`;
+export default class PlayAllButton extends React.Component {
+  render() {
+    return (
+      <ActionButton {...this.props} className={classNames("si-play-all", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
+}

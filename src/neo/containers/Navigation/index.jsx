@@ -35,7 +35,7 @@ import "./style.css";
   render() {
     return (
       <aside className="test-cases">
-        <TabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab}>
+        <TabBar tabs={["Tests", "Suites"]} tabWidth={70} tabChanged={this.handleChangedTab}>
           <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
         <SearchBar filter={UiState.changeFilter} />

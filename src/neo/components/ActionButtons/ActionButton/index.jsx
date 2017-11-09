@@ -1,18 +1,17 @@
-import styled from "styled-components";
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import "./style.css";
 
-export default styled.button`
-  width: 24px;
-  height: 24px;
-  background-color: #656565;
-  margin: 5px 8px;
-  outline: 0;
-  mask-repeat: no-repeat;
-
-  &:hover {
-    background-color: #333333;
+export default class ActionButton extends React.Component {
+  render() {
+    return (
+      <button {...this.props} className={classNames("btn-action", {"active": this.props.isActive}, this.props.className)} />
+    );
   }
 
-  &:active {
-    background-color: #656565;
-  }
-`;
+  static propTypes = {
+    className: PropTypes.string.isRequired,
+    isActive: PropTypes.bool
+  };
+}
