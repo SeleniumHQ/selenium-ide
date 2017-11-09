@@ -1,0 +1,78 @@
+@font-face {
+  font-family: 'selenium-ide';
+  src:  url('../assets/fonts/selenium-ide.eot?9wckob');
+  src:  url('../assets/fonts/selenium-ide.eot?9wckob#iefix') format('embedded-opentype'),
+    url('../assets/fonts/selenium-ide.ttf?9wckob') format('truetype'),
+    url('../assets/fonts/selenium-ide.woff?9wckob') format('woff'),
+    url('../assets/fonts/selenium-ide.svg?9wckob#selenium-ide') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="si-"], [class*=" si-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'selenium-ide' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.si-caret:before {
+  content: "\e900";
+  color: #505050;
+}
+.si-check:before {
+  content: "\e910";
+}
+.si-add:before {
+  content: "\e901";
+}
+.si-clear:before {
+  content: "\e902";
+}
+.si-step-into:before {
+  content: "\e903";
+}
+.si-info:before {
+  content: "\e904";
+}
+.si-open:before {
+  content: "\e905";
+}
+.si-play-all:before {
+  content: "\e906";
+}
+.si-play:before {
+  content: "\e907";
+}
+.si-pause:before {
+  content: "\e908";
+}
+.si-remove:before {
+  content: "\e909";
+}
+.si-code:before {
+  content: "\e90a";
+}
+.si-save:before {
+  content: "\e90b";
+}
+.si-search:before {
+  content: "\e90c";
+}
+.si-select:before {
+  content: "\e90d";
+}
+.si-gauge:before {
+  content: "\e90e";
+}
+.si-stop:before {
+  content: "\e90f";
+}
