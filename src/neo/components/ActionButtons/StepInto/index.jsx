@@ -2,6 +2,10 @@ import React from "react";
 import ActionButton from "../ActionButton";
 import classNames from "classnames";
 
-export default function StepIntoButton(props) {
-  return <ActionButton {...props} className={classNames("si-step-into", props.className)} />;// eslint-disable-line react/prop-types
+export default class StepIntoButton extends React.Component {
+  render() {
+    return (
+      <ActionButton {...this.props} className={classNames("si-step-into", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
 }
