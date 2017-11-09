@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ActionButton from "../ActionButton";
+import styled from "styled-components";
 
-const RecordButton = ActionButton.extend`
+const RecordButton = styled.button`
   height: 14px;
   width: 14px;
   margin: 10px;
@@ -11,6 +11,7 @@ const RecordButton = ActionButton.extend`
   border-radius: ${props => props.isActive ? "25%" : "50%"};
   position: relative;
   overflow: hidden;
+  outline: 0;
   transition: border-radius 250ms ease-out;
 
   &:hover {
