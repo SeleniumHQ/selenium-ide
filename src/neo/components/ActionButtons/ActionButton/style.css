@@ -1,6 +1,7 @@
 .btn-action {
   color: #656565;
   margin: 5px 8px;
+  padding: 0;
   outline: 0;
   mask-repeat: no-repeat;
   border-style: none;
@@ -14,4 +15,8 @@
 
 .btn-action:active {
   color: #656565;
+}
+
+.btn-action.active {
+  background-color: #E3F2FF;
 }
