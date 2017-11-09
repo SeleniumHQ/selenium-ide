@@ -1,6 +1,7 @@
+import React from "react";
 import ActionButton from "../ActionButton";
-import playcurrent from "../../../images/ic_play_current.svg";
+import classNames from "classnames";
 
-export default ActionButton.extend`
-  mask-image: url(${playcurrent});
-`;
+export default function PlayCurrentButton(props) {
+  return <ActionButton {...props} className={classNames("si-play", props.className)} />;// eslint-disable-line react/prop-types
+}
