@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import "./style.css";
 
 export default class ActionButton extends React.Component {
   render() {
