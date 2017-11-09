@@ -44,7 +44,6 @@ function executionLoop() {
 
 function prepareToPlay() {
   PlaybackState.setPlayingIndex(-1);
-  PlaybackState.clearCommandStates();
   return extCommand.init();
 }
 

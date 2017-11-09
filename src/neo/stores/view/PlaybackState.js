@@ -30,11 +30,17 @@ class PlaybackState {
 
   @action.bound startPlayingSuite() {
     const { suite } = UiState.selectedTest;
-    if (this._currentRunningSuite !== suite) {
+    console.log(this._currentRunningSuite);
+    console.log(suite);
+    if (this._currentRunningSuite !== (suite ? suite.id : undefined)) {
       this.resetState();
       this._currentRunningSuite = suite.id;
     }
+    this.clearCommandStates();
+    this.hasFailed = false;
+    this.runs++;
     this._testsToRun = [...suite.tests];
+    this.commandsCount = this._testsToRun.reduce((counter, test) => (counter + test.commands.length), 0);
     this.playNext();
   }
 
@@ -44,6 +50,7 @@ class PlaybackState {
       this.resetState();
       this.currentRunningTest = test;
     }
+    this.clearCommandStates();
     this.runs++;
     this.hasFailed = false;
     this.commandsCount = test.commands.length;
@@ -52,7 +59,6 @@ class PlaybackState {
 
   @action.bound playNext() {
     this.currentRunningTest = this._testsToRun.shift();
-    this.runs++;
     this.isPlaying = true;
   }
 
