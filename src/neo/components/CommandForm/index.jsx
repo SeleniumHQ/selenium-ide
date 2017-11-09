@@ -5,8 +5,6 @@ import { Commands } from "../../models/Command";
 import Input from "../FormInput";
 import CommandInput from "../CommandInput";
 import FlatButton from "../FlatButton";
-import find from "../../images/ic_find.svg";
-import select from "../../images/ic_select.svg";
 import "./style.css";
 
 @observer export default class CommandForm extends React.Component {
