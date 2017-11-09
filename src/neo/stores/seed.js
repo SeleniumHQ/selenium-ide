@@ -1,5 +1,6 @@
 import generate from "project-name-generator";
 import { CommandsArray } from "../models/Command";
+import UiState from "./view/UiState";
 
 export default function seed(store) {
   function generateSuite() {
@@ -31,6 +32,40 @@ export default function seed(store) {
       suite.addTestCase(testCase);
     }
   }
+
+  const url = "https://en.wikipedia.org";
+  store.setUrl(url);
+  store.addUrl(url);
+  const playbackTest = store.createTestCase("aa playback");
+  const open = playbackTest.createCommand();
+  open.setCommand("open");
+  open.setTarget("/wiki/Legislation");
+  const firstClick = playbackTest.createCommand();
+  firstClick.setCommand("clickAt");
+  firstClick.setTarget("link=enacted");
+  const secondClick = playbackTest.createCommand();
+  secondClick.setCommand("clickAt");
+  secondClick.setTarget("link=parliamentary systems");
+
+  const playbackTest2 = store.createTestCase("aab playback");
+  const open2 = playbackTest2.createCommand();
+  open2.setCommand("open");
+  open2.setTarget("/wiki/River_Chater");
+  const firstClick2 = playbackTest2.createCommand();
+  firstClick2.setCommand("clickAt");
+  firstClick2.setTarget("link=River Welland");
+  const secondClick2 = playbackTest2.createCommand();
+  secondClick2.setCommand("clickAt");
+  secondClick2.setTarget("link=floods of 1947");
+  const thirdClick2 = playbackTest2.createCommand();
+  thirdClick2.setCommand("clickAt");
+  thirdClick2.setTarget("link=scapegoat");
+
+  const suite = store.createSuite("aaa suite");
+  suite.addTestCase(playbackTest);
+  suite.addTestCase(playbackTest2);
+
+  UiState.selectTest(playbackTest);
 
   return store;
 }

@@ -1,0 +1,15 @@
+.logs ul li {
+  margin: 7px 0;
+}
+
+.logs ul li.notice {
+  font-weight: bold;
+}
+
+.logs ul li.success {
+  color: #23843D;
+}
+
+.logs ul li.error {
+  color: #E80600;
+}

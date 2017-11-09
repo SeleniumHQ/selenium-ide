@@ -27,7 +27,11 @@
   background-color: #E3F2FF;
 }
 
-.test-table tbody tr.selected td {
+.test-table tbody tr:focus {
+  outline: 0;
+}
+
+.test-table tbody tr:focus td {
   border-top: 1px solid #75BFFF;
 }
 

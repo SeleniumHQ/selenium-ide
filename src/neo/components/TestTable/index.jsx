@@ -2,11 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
+import classNames from "classnames";
 import UiState from "../../stores/view/UiState";
+import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
 import "./style.css";
 
-@observer export default class TestTable extends React.Component {
+@observer
+export default class TestTable extends React.Component {
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
     selectedCommand: PropTypes.string,
@@ -32,11 +35,11 @@ import "./style.css";
               <TestRow
                 key={command.id}
                 id={command.id}
+                className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "", {"selected": this.props.selectedCommand === command.id})}
                 index={index}
                 command={command.command}
                 target={command.target}
                 value={command.value}
-                state={ this.props.selectedCommand === command.id ? "Selected" : null }
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}

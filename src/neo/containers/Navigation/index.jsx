@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import UiState from "../../stores/view/UiState";
 import ModalState from "../../stores/view/ModalState";
+import PlaybackState from "../../stores/view/PlaybackState";
 import TabBar from "../../components/TabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
@@ -41,7 +42,13 @@ import "./style.css";
         { this.state.showTests
           ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={ModalState.deleteTest} />
           : <SuiteList suites={this.props.suites} rename={ModalState.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
-        <Runs />
+        <Runs
+          runs={PlaybackState.runs}
+          failures={PlaybackState.failures}
+          hasError={PlaybackState.hasFailed}
+          progress={PlaybackState.finishedCommandsCount}
+          totalProgress={PlaybackState.commandsCount}
+        />
       </aside>
     );
   }
