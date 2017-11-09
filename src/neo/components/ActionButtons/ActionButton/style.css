@@ -1,16 +1,17 @@
 .btn-action {
-  width: 24px;
-  height: 24px;
-  background-color: #656565;
+  color: #656565;
   margin: 5px 8px;
   outline: 0;
   mask-repeat: no-repeat;
+  border-style: none;
+  font-size: 24px;
+  background-color: transparent;
 }
 
 .btn-action:hover {
-  background-color: #333333;
+  color: #333333;
 }
 
 .btn-action:active {
-  background-color: #656565;
+  color: #656565;
 }
