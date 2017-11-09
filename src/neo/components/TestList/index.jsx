@@ -17,7 +17,7 @@ export default class TestList extends Component {
           <li key={test.id}>
             {this.props.suite ?
               <DraggableTest
-                className={PlaybackState.currentRunningSuite === this.props.suite.id ? PlaybackState.testState.get(test.id) : ""}
+                className={PlaybackState.testState.get(test.id)}
                 test={test}
                 suite={this.props.suite}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
@@ -27,7 +27,7 @@ export default class TestList extends Component {
                 removeTest={() => { this.props.removeTest(test); }}
               /> :
               <Test
-                className={!PlaybackState.currentRunningSuite && PlaybackState.testState.get(test.id)}
+                className={PlaybackState.testState.get(test.id)}
                 test={test}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
                 selectTest={UiState.selectTest}
