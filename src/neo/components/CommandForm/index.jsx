@@ -35,8 +35,8 @@ import "./style.css";
               value={this.props.command ? this.props.command.target : ""}
               disabled={!this.props.command}
               onChange={this.props.command ? this.props.command.setTarget : null} />
-            <FlatButton className="icon"><img src={select} /></FlatButton>
-            <FlatButton className="icon"><img src={find} /></FlatButton>
+            <FlatButton className="icon si-select" />
+            <FlatButton className="icon si-search" />
           </div>
           <Input
             id="value"

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'selenium-ide';
-  src:  url('../assets/fonts/selenium-ide.eot?9wckob');
-  src:  url('../assets/fonts/selenium-ide.eot?9wckob#iefix') format('embedded-opentype'),
-    url('../assets/fonts/selenium-ide.ttf?9wckob') format('truetype'),
-    url('../assets/fonts/selenium-ide.woff?9wckob') format('woff'),
-    url('../assets/fonts/selenium-ide.svg?9wckob#selenium-ide') format('svg');
+  src:  url('../assets/fonts/selenium-ide.eot?nzf9n');
+  src:  url('../assets/fonts/selenium-ide.eot?nzf9n#iefix') format('embedded-opentype'),
+    url('../assets/fonts/selenium-ide.ttf?nzf9n') format('truetype'),
+    url('../assets/fonts/selenium-ide.woff?nzf9n') format('woff'),
+    url('../assets/fonts/selenium-ide.svg?nzf9n#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -42,6 +42,9 @@
 }
 .si-info:before {
   content: "\e904";
+}
+.si-more:before {
+  content: "\e911";
 }
 .si-open:before {
   content: "\e905";
