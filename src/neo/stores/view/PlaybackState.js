@@ -30,8 +30,6 @@ class PlaybackState {
 
   @action.bound startPlayingSuite() {
     const { suite } = UiState.selectedTest;
-    console.log(this._currentRunningSuite);
-    console.log(suite);
     if (this._currentRunningSuite !== (suite ? suite.id : undefined)) {
       this.resetState();
       this._currentRunningSuite = suite.id;
@@ -48,6 +46,7 @@ class PlaybackState {
     const { test } = UiState.selectedTest;
     if (this._currentRunningSuite || !this.currentRunningTest || this.currentRunningTest.id !== test.id) {
       this.resetState();
+      this._currentRunningSuite = undefined;
       this.currentRunningTest = test;
     }
     this.clearCommandStates();
