@@ -21,6 +21,21 @@
   align-self: center;
 }
 
+.project > a .si-caret {
+  font-size: 10px;
+  color: #505050;
+  display: inline-block;
+  transform: rotate(0deg);
+  transition: all 100ms linear;
+  align-self: center;
+}
+
+.project > a.active .si-caret {
+  color: #40A6FF;
+  transform: rotate(90deg);
+}
+
+
 .project button {
   opacity: 0;
   align-self: center;
