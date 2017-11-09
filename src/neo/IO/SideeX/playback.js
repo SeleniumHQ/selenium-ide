@@ -1,5 +1,5 @@
 import { reaction } from "mobx";
-import PlaybackState, { CommandStates } from "../../stores/view/PlaybackState";
+import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 const { ExtCommand, isExtCommand } = window;
 
@@ -26,7 +26,7 @@ function executionLoop() {
   if (PlaybackState.currentPlayingIndex >= PlaybackState.currentRunningTest.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
   if (!PlaybackState.isPlaying) return false;
   const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
-  PlaybackState.setCommandState(id, CommandStates.Pending);
+  PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return (extCommand["do" + upperCase](target, value))
@@ -69,7 +69,7 @@ function catchPlayingError(message) {
 
 function reportError(message) {
   const { id } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
-  PlaybackState.setCommandState(id, CommandStates.Failed, message);
+  PlaybackState.setCommandState(id, PlaybackStates.Failed, message);
 }
 
 reaction(
@@ -192,9 +192,9 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
         implicitCount = 0;
         implicitTime = "";
-        PlaybackState.setCommandState(id, CommandStates.Failed, result.result);
+        PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
       } else {
-        PlaybackState.setCommandState(id, CommandStates.Passed);
+        PlaybackState.setCommandState(id, PlaybackStates.Passed);
       }
     });
 }

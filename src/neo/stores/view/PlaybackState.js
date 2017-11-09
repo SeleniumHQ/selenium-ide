@@ -7,6 +7,8 @@ class PlaybackState {
   @observable currentRunningTest = null;
   @observable commandsCount = 0;
   @observable commandState = new Map();
+  @observable testState = new Map();
+  @observable suiteState = new Map();
   @observable runs = 0;
   @observable failures = 0;
   @observable hasFailed = false;
@@ -20,7 +22,7 @@ class PlaybackState {
     let counter = 0;
 
     this.commandState.forEach(({ state }) => {
-      if (state !== CommandStates.Pending) {
+      if (state !== PlaybackStates.Pending) {
         counter++;
       }
     });
@@ -82,7 +84,7 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state, message) {
-    if (state === CommandStates.Failed) {
+    if (state === PlaybackStates.Failed) {
       this.hasFailed = true;
       this.failures++;
     }
@@ -102,7 +104,7 @@ class PlaybackState {
   }
 }
 
-export const CommandStates = {
+export const PlaybackStates = {
   Passed: "passed",
   Failed: "failed",
   Pending: "pending"

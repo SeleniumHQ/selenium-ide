@@ -1,6 +1,6 @@
 import { action, observe, observable } from "mobx";
 import uuidv4 from "uuid/v4";
-import PlaybackState, { CommandStates } from "./PlaybackState";
+import PlaybackState, { PlaybackStates } from "./PlaybackState";
 
 export default class LogStore {
   @observable logs = [];
@@ -46,13 +46,13 @@ export default class LogStore {
   logCommandState(command, status) {
     if (status) {
       switch(status.state) {
-        case CommandStates.Pending:
+        case PlaybackStates.Pending:
           this.addLog(`Executing: ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}`);
           break;
-        case CommandStates.Failed:
+        case PlaybackStates.Failed:
           this.addLog(`Execution failed: ${status.message}`, LogTypes.Error);
           break;
-        case CommandStates.Passed:
+        case PlaybackStates.Passed:
           this.addLog("Success", LogTypes.Success);
           break;
       }
