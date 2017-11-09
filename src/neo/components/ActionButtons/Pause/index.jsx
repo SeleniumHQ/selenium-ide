@@ -1,6 +1,7 @@
+import React from "react";
 import ActionButton from "../ActionButton";
-import pause from "../../../images/ic_pause.svg";
+import classNames from "classnames";
 
-export default ActionButton.extend`
-  mask-image: url(${pause});
-`;
+export default function PauseButton(props) {
+  return <ActionButton {...props} className={classNames("si-pause", props.className)} />;// eslint-disable-line react/prop-types
+}
