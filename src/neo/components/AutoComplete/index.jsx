@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Autocomplete from "react-autocomplete";
-import tick from "../../images/ic_tick.svg";
 
 export default class AutoComplete extends React.Component {
   static propTypes = {
@@ -19,14 +18,17 @@ export default class AutoComplete extends React.Component {
               width: "100%",
               boxSizing: "border-box"
             }}/>
-            <img src={tick} style={{
+            <span className="si-caret" style={{
               position: "absolute",
               top: "0",
               bottom: "0",
               right: "8px",
               margin: "auto 0",
+              fontSize: "10px",
+              height: "10px",
+              color: "#a3a3a3",
               transform: "rotate(90deg)"
-            }} />
+            }}></span>
           </span>
         )}
         renderItem={(item, isHighlighted) =>
