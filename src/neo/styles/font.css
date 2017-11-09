@@ -26,7 +26,6 @@
 
 .si-caret:before {
   content: "\e900";
-  color: #505050;
 }
 .si-check:before {
   content: "\e910";
