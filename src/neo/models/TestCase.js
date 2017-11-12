@@ -48,4 +48,11 @@ export default class TestCase {
   @action.bound clearAllCommands() {
     this.commands.clear();
   }
+
+  static fromJS = function(jsRep) {
+    const test = new TestCase(jsRep.id);
+    test.setName(jsRep.name);
+
+    return test;
+  };
 }
