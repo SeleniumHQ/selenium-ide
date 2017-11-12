@@ -22,6 +22,7 @@ import { locatorBuilders } from "./record";
 
 export const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;
+let targetSelector;
 
 function doCommands(request, sender, sendResponse) {
   if (request.commands) {
@@ -78,7 +79,6 @@ function doCommands(request, sender, sendResponse) {
     }
     return true;
   }
-  let targetSelector;
   if (request.selectMode) {
     if (request.selecting) {
       targetSelector = new TargetSelector(function (element, win) {
