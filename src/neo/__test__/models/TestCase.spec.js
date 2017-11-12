@@ -93,7 +93,8 @@ describe("TestCase model", () => {
   it("should load from JS", () => {
     const jsRep = {
       id: "1",
-      name: "test testcase"
+      name: "test testcase",
+      commands: []
     };
     const test = TestCase.fromJS(jsRep);
     expect(test.id).toBe(jsRep.id);
@@ -121,5 +122,6 @@ describe("TestCase model", () => {
     };
     const test = TestCase.fromJS(jsRep);
     expect(test.commands.length).toBe(2);
+    expect(test.commands[0] instanceof Command).toBeTruthy();
   });
 });
