@@ -125,60 +125,10 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tabInfo) {
 
 function handleMessage(message, sender, sendResponse) {
     if (message.selectTarget) {
-
-        var target = message.target;
-        // show first locator by default
-        var locatorString = target[0][0];
-
-        var locatorList = document.createElement("datalist");
-        for (var m = 0; m < message.target.length; ++m) {
-            var option = document.createElement("option");
-            option.appendChild(document.createTextNode(message.target[m][0]));
-            option.innerText = message.target[m][0];
-            locatorList.appendChild(option);
-        }
-
-        var selectedRecordId = getSelectedRecord();
-
-        // If selecting a command, change the target inside.
-        if (selectedRecordId != "") {
-            var selectedRecord = document.getElementById(selectedRecordId);
-            var originalLocatorlist = selectedRecord.getElementsByTagName("td")[1].getElementsByTagName("datalist")[0];
-
-            // Update locator data list
-            originalLocatorlist.innerHTML = escapeHTML(locatorList.innerHTML);
-
-            // Update target view, show first locator by default
-            var adjustedString = adjustTooLongStr(locatorString, getTdShowValueNode(selectedRecord, 1));
-            var node = getTdShowValueNode(selectedRecord, 1);
-            if (node.childNodes && node.childNodes[0])
-                node.removeChild(node.childNodes[0]);
-            node.appendChild(document.createTextNode(adjustedString));
-
-            // Update hidden actual locator value
-            node = getTdRealValueNode(selectedRecord, 1);
-            if (node.childNodes && node.childNodes[0])
-                node.removeChild(node.childNodes[0]);
-            node.appendChild(document.createTextNode(locatorString));
-
-        } else if (document.getElementsByClassName("record-bottom active").length > 0) {
-            // If selecting a blank command;
-            addCommandAuto("", target, "");
-        }
-
-        // Update toolbar
-        document.getElementById("command-target").value = unescapeHtml(locatorString);
-        document.getElementById("target-dropdown").innerHTML = unescapeHtml(locatorList.innerHTML);
-        document.getElementById("command-target-list").innerHTML = escapeHTML(locatorList.innerHTML);
-
-        return;
+        window.selectTarget(message.target);
     }
     if (message.cancelSelectTarget) {
-        var button = document.getElementById("selectElementButton");
-        isSelecting = false; 
-        button.classList.remove("pressed");
-        browser.tabs.sendMessage(sender.tab.id, {selectMode: true, selecting: false});
-        return;
+        window.endSelection(sender.tab.id);
     }
 
     if (isPlaying && message.frameLocation) {
