@@ -1,7 +1,6 @@
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 const browser = window.browser;
-let isSelecting = false;
 
 export function find(target) {
   try{
@@ -28,8 +27,8 @@ export function find(target) {
 }
 
 export function select() {
-  isSelecting = !isSelecting;
-  if (!isSelecting) {
+  UiState.setSelectingTarget(!UiState.isSelectingTarget);
+  if (!UiState.isSelectingTarget) {
     browser.tabs.query({
       active: true,
       windowId: window.contentWindowId
@@ -46,7 +45,7 @@ export function select() {
     }).then(function(tabs) {
       if (tabs.length === 0) {
         console.log("No match tabs");
-        isSelecting = false;
+        UiState.setSelectingTarget(false);
       } else
         browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
     });
@@ -54,7 +53,7 @@ export function select() {
 }
 
 window.selectTarget = function(target) {
-  isSelecting = false;
+  UiState.setSelectingTarget(false);
   if (UiState.selectedCommand) {
     UiState.selectedCommand.setTarget(target[0][0]);
   } else if (UiState.selectedTest.test) {
@@ -64,6 +63,6 @@ window.selectTarget = function(target) {
 };
 
 window.endSelection = function(tabId) {
-  isSelecting = false;
+  UiState.setSelectingTarget(false);
   browser.tabs.sendMessage(tabId, {selectMode: true, selecting: false});
 };
