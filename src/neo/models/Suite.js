@@ -1,6 +1,7 @@
 import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
 import SortBy from "sort-array";
+import TestCase from "./TestCase";
 
 export default class Suite {
   id = null;
@@ -57,9 +58,13 @@ export default class Suite {
     };
   }
 
-  static fromJS = function(jsRep) {
+  @action
+  static fromJS = function(jsRep, projectTests) {
     const suite = new Suite(jsRep.id);
     suite.setName(jsRep.name);
+    suite._tests.replace(jsRep.tests.map((testId) => (TestCase.fromJS(
+      projectTests.find(({id}) => id === testId)
+    ))));
 
     return suite;
   }
