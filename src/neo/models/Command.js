@@ -38,6 +38,15 @@ export default class Command {
   @action.bound setValue(value) {
     this.value = value;
   }
+
+  static fromJS = function(jsRep) {
+    const command = new Command(jsRep.id);
+    command.setCommand(jsRep.command);
+    command.setTarget(jsRep.target);
+    command.setValue(jsRep.value);
+
+    return command;
+  }
 }
 
 export const Commands = Object.freeze({
