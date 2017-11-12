@@ -86,7 +86,7 @@ export default class ProjectStore {
       name: this.name,
       url: this.url,
       tests: this._tests,
-      suites: this._suites,
+      suites: this._suites.map(s => s.exportSuite()),
       urls: this._urls
     });
   }

@@ -10,6 +10,7 @@ export default class Suite {
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;
+    this.exportSuite = this.exportSuite.bind(this);
   }
 
   @computed get tests() {
@@ -46,5 +47,13 @@ export default class Suite {
     } else {
       this._tests.replace(tests);
     }
+  }
+
+  exportSuite() {
+    return {
+      id: this.id,
+      name: this.name,
+      tests: this._tests.map(t => t.id)
+    };
   }
 }
