@@ -6,7 +6,7 @@ import "./style.css";
 export default class ActionButton extends React.Component {
   render() {
     return (
-      <button {...this.props} className={classNames("btn-action", {"active": this.props.isActive}, this.props.className)} />
+      <button type="button" {...this.props} className={classNames("btn-action", {"active": this.props.isActive}, this.props.className)} />
     );
   }
 
