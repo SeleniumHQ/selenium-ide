@@ -100,4 +100,26 @@ describe("TestCase model", () => {
     expect(test.name).toBe(jsRep.name);
     expect(test instanceof TestCase).toBeTruthy();
   });
+  it("should load the array of commands from JS", () => {
+    const jsRep = {
+      id: "1",
+      name: "test testcase",
+      commands: [
+        {
+          id: "1",
+          command: "open",
+          target: "/",
+          value: "test"
+        },
+        {
+          id: "2",
+          command: "open",
+          target: "/",
+          value: "test"
+        }
+      ]
+    };
+    const test = TestCase.fromJS(jsRep);
+    expect(test.commands.length).toBe(2);
+  });
 });
