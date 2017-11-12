@@ -55,8 +55,10 @@ import CommandForm from "../../components/CommandForm";
           clearAllCommands={this.props.test ? this.props.test.clearAllCommands : null}
           swapCommands={this.props.test ? this.props.test.swapCommands : null}
         />
-        <CommandForm command={UiState.selectedCommand}
+        <CommandForm
+          command={UiState.selectedCommand}
           setCommand={this.handleCommandChange}
+          isSelecting={UiState.isSelectingTarget}
         />
       </main>
     );

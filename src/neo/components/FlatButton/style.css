@@ -32,6 +32,15 @@
   padding: 5px 8px;
 }
 
+.btn.icon:hover {
+  color: #40A6FF;
+}
+
+.btn.icon.active {
+  color: #40A6FF;
+  border-color: #40A6FF;
+}
+
 .btn.primary {
   color: #FFF;
   background-color: #6fc8ea;

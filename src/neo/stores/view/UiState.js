@@ -8,6 +8,7 @@ class UiState {
   @observable dragInProgress = false;
   @observable clipboard = null;
   @observable isRecording = false;
+  @observable isSelectingTarget = false;
 
   constructor() {
     this.suiteStates = {};
@@ -44,6 +45,10 @@ class UiState {
 
   @action.bound toggleRecord() {
     this.isRecording = !this.isRecording;
+  }
+
+  @action.bound setSelectingTarget(isSelecting) {
+    this.isSelectingTarget = isSelecting;
   }
 
   addStateForSuite(suite) {
