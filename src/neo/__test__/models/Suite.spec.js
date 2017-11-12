@@ -65,4 +65,15 @@ describe("Suite model", () => {
     suite.replaceTestCases(store.tests);
     expect(suite.tests.length).toBe(3);
   });
+  it("should load from JS", () => {
+    const jsRep = {
+      id: "1",
+      name: "test suite",
+      tests: []
+    };
+    const suite = Suite.fromJS(jsRep);
+    expect(suite.id).toBe(jsRep.id);
+    expect(suite.name).toBe(jsRep.name);
+    expect(suite instanceof Suite).toBeTruthy();
+  });
 });

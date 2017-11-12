@@ -56,4 +56,11 @@ export default class Suite {
       tests: this._tests.map(t => t.id)
     };
   }
+
+  static fromJS = function(jsRep) {
+    const suite = new Suite(jsRep.id);
+    suite.setName(jsRep.name);
+
+    return suite;
+  }
 }
