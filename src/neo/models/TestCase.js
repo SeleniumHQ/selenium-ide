@@ -49,9 +49,11 @@ export default class TestCase {
     this.commands.clear();
   }
 
+  @action
   static fromJS = function(jsRep) {
     const test = new TestCase(jsRep.id);
     test.setName(jsRep.name);
+    test.commands.replace(jsRep.commands.map(Command.fromJS));
 
     return test;
   };
