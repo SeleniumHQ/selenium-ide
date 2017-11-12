@@ -13,6 +13,7 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
+    this.toJSON = this.toJSON.bind(this);
   }
 
   @computed get suites() {
@@ -78,5 +79,15 @@ export default class ProjectStore {
       });
       this._tests.remove(test);
     }
+  }
+
+  toJSON() {
+    return JSON.stringify({
+      name: this.name,
+      url: this.url,
+      tests: this._tests,
+      suites: this._suites,
+      urls: this._urls
+    });
   }
 }
