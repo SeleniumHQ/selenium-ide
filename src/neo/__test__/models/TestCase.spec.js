@@ -90,4 +90,14 @@ describe("TestCase model", () => {
     test.clearAllCommands();
     expect(test.commands.length).toBe(0);
   });
+  it("should load from JS", () => {
+    const jsRep = {
+      id: "1",
+      name: "test testcase"
+    };
+    const test = TestCase.fromJS(jsRep);
+    expect(test.id).toBe(jsRep.id);
+    expect(test.name).toBe(jsRep.name);
+    expect(test instanceof TestCase).toBeTruthy();
+  });
 });
