@@ -1,6 +1,7 @@
 const browser = window.browser;
 
 export function saveProject(project) {
+  project.version = "1.0";
   downloadProject(project);
 }
 
