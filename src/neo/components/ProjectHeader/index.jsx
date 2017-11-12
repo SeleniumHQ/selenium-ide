@@ -15,7 +15,8 @@ export default class ProjectHeader extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     changed: PropTypes.bool,
-    changeName: PropTypes.func.isRequired
+    changeName: PropTypes.func.isRequired,
+    save: PropTypes.func
   };
   handleChange(e) {
     this.props.changeName(e.target.value);
@@ -27,7 +28,7 @@ export default class ProjectHeader extends React.Component {
         <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} />
         <span className="buttons right">
           <OpenButton />
-          <SaveButton />
+          <SaveButton onClick={this.props.save} />
         </span>
       </div>
     );
