@@ -27,3 +27,18 @@ function createBlob(mimeType, data) {
   previousFile = window.URL.createObjectURL(blob);
   return previousFile;
 }
+
+export function loadProject(project, file) {
+  const fileReader = new FileReader();
+  fileReader.onload = (e) => {
+    if (file.type === "application/json") {
+      loadJSONProject(project, e.target.result);
+    }
+  };
+
+  fileReader.readAsText(file);
+}
+
+function loadJSONProject(project, data) {
+  project.fromJS(JSON.parse(data));
+}
