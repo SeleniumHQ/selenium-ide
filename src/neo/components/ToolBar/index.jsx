@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import PlayAll from "../../components/ActionButtons/PlayAll";
 import PlayCurrent from "../../components/ActionButtons/PlayCurrent";
 import Pause from "../../components/ActionButtons/Pause";
+import Stop from "../../components/ActionButtons/Stop";
 import StepInto from "../../components/ActionButtons/StepInto";
 import SpeedGauge from "../../components/ActionButtons/SpeedGauge";
 import Record from "../../components/ActionButtons/Record";
@@ -14,15 +15,16 @@ export default class ToolBar extends React.Component {
   render() {
     return (
       <span>
-        <PlayAll onClick={PlaybackState.startPlayingSuite} />
-        <PlayCurrent onClick={PlaybackState.startPlaying} />
-        <Pause />
-        <StepInto />
+        { UiState.selectedTest.suite ? <PlayAll onClick={PlaybackState.startPlayingSuite} /> : null }
+        { UiState.selectedTest.test ? <PlayCurrent onClick={PlaybackState.startPlaying} /> : null }
+        { PlaybackState.isPlaying ? <Stop /> : null }
+        { PlaybackState.isPlaying ? <Pause /> : null }
+        { !PlaybackState.isPlaying && UiState.selectedCommand ? <StepInto /> : null }
         <SpeedGauge />
         <span style={{
           float: "right"
         }}>
-          <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} />
+          { !PlaybackState.isPlaying && UiState.selectedTest.test ? <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} /> : null }
         </span>
         <div style={{
           clear: "right",
