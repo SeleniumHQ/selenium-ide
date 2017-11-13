@@ -95,6 +95,7 @@ export default class ProjectStore {
 
   toJSON() {
     return JSON.stringify({
+      id: this.id,
       name: this.name,
       url: this.url,
       tests: this._tests,
