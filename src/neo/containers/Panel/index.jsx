@@ -16,7 +16,7 @@ import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/heights.css";
 
-import { saveProject } from "../../IO/filesystem";
+import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/SideeX/record";
 import "../../IO/SideeX/playback";
 
@@ -47,7 +47,13 @@ modify(project);
   render() {
     return (
       <div>
-        <ProjectHeader title={this.state.project.name} changed={this.state.project.modified} changeName={this.state.project.changeName} save={() => saveProject(project)} />
+        <ProjectHeader
+          title={this.state.project.name}
+          changed={this.state.project.modified}
+          changeName={this.state.project.changeName}
+          load={loadProject.bind(undefined, project)}
+          save={() => saveProject(project)}
+        />
         <div style={{
           float: "left"
         }}>

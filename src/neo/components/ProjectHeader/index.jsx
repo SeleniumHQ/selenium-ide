@@ -16,6 +16,7 @@ export default class ProjectHeader extends React.Component {
     title: PropTypes.string.isRequired,
     changed: PropTypes.bool,
     changeName: PropTypes.func.isRequired,
+    load: PropTypes.func,
     save: PropTypes.func
   };
   handleChange(e) {
@@ -27,7 +28,7 @@ export default class ProjectHeader extends React.Component {
         <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
         <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} />
         <span className="buttons right">
-          <OpenButton />
+          <OpenButton onFileSelected={this.props.load} />
           <SaveButton onClick={this.props.save} />
         </span>
       </div>
