@@ -75,8 +75,9 @@ class PlaybackState {
   }
 
   @action.bound abortPlaying() {
-    this.isPlaying = false;
     this._testsToRun = [];
+    this.commandState.set(this.currentRunningTest.commands[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
+    this.isPlaying = false;
   }
 
   @action.bound finishPlaying() {
@@ -84,7 +85,7 @@ class PlaybackState {
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (this._testsToRun.length) {
       this.playNext();
-    } else {
+    } else if (this.currentRunningSuite) {
       this.suiteState.set(this.currentRunningSuite, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
     }
   }
