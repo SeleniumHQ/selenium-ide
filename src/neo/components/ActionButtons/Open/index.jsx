@@ -1,11 +1,18 @@
 import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
+import uuidv4 from "uuid/v4";
+import "./style.css";
 
 export default class OpenButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id = uuidv4();
+  }
   render() {
     return (
-      <ActionButton {...this.props} className={classNames("si-open", this.props.className)} />// eslint-disable-line react/prop-types
+      <span className="file-input">
+        <input id={this.id} type="file" accept="application/json, text/html" />
+        <label htmlFor={this.id}><i className="btn-action si-open" /></label>
+      </span>
     );
   }
 }
