@@ -65,4 +65,29 @@ describe("Suite model", () => {
     suite.replaceTestCases(store.tests);
     expect(suite.tests.length).toBe(3);
   });
+  it("should load from JS", () => {
+    const jsRep = {
+      id: "1",
+      name: "test suite",
+      tests: []
+    };
+    const suite = Suite.fromJS(jsRep);
+    expect(suite.id).toBe(jsRep.id);
+    expect(suite.name).toBe(jsRep.name);
+    expect(suite instanceof Suite).toBeTruthy();
+  });
+  it("should load tests from JS", () => {
+    const store = new ProjectStore();
+    store.addTestCase(new TestCase("1"));
+    store.addTestCase(new TestCase("2"));
+    store.addTestCase(new TestCase("3"));
+    const jsRep = {
+      id: "1",
+      name: "test suite",
+      tests: ["2", "3"]
+    };
+    const suite = Suite.fromJS(jsRep, store.tests);
+    expect(suite.tests.length).toBe(2);
+    expect(suite.tests[0]).toBeInstanceOf(TestCase);
+  });
 });

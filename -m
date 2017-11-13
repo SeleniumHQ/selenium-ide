@@ -1,11 +1,9 @@
 import { action, observable, computed } from "mobx";
 import SortBy from "sort-array";
-import uuidv4 from "uuid/v4";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
 export default class ProjectStore {
-  @observable id = uuidv4();
   @observable modified = false;
   @observable name = "";
   @observable url = "";
@@ -83,24 +81,24 @@ export default class ProjectStore {
     }
   }
 
-  @action.bound fromJS(jsRep) {
-    this.id = jsRep.id;
-    this.name = jsRep.name;
-    this.setUrl(jsRep.url);
-    this._tests.replace(jsRep.tests.map(TestCase.fromJS));
-    this._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, this.tests)));
-    this._urls.replace(jsRep.urls);
-    this.modified = false;
-  }
-
   toJSON() {
     return JSON.stringify({
-      id: this.id,
       name: this.name,
       url: this.url,
       tests: this._tests,
       suites: this._suites.map(s => s.exportSuite()),
       urls: this._urls
     });
+  }
+
+  @action
+  static fromJS = function(jsRep) {
+    const project = new ProjectStore(jsRep.name);
+    project.setUrl(jsRep.url);
+    project._tests.replace(jsRep.tests.map(TestCase.fromJS));
+    project._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, project.tests)));
+    project._urls.replace(jsRep.urls);
+
+    return project;
   }
 }

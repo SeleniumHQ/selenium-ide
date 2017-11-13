@@ -7,6 +7,10 @@ import TestCase from "../../../models/TestCase";
 useStrict(true);
 
 describe("Project Store", () => {
+  it("should have an id", () => {
+    const store = new ProjectStore();
+    expect(store.id).toBeDefined();
+  });
   it("should have a name", () => {
     const store = new ProjectStore("myStore");
     expect(store.name).toBe("myStore");
@@ -111,5 +115,62 @@ describe("Project Store", () => {
     expect(firstSuite.tests.length).toBe(0);
     expect(secondSuite.tests.length).toBe(1);
     expect(controlSuite.tests.length).toBe(1);
+  });
+  it("should load from JS", () => {
+    const projectRep = {
+      id: "1",
+      name: "my project",
+      url: "https://en.wikipedia.org",
+      tests: [
+        {
+          id: "1",
+          name: "testcase",
+          commands: []
+        },
+        {
+          id: "2",
+          name: "first test",
+          commands: []
+        },
+        {
+          id: "3",
+          name: "second test",
+          commands: []
+        },
+        {
+          id: "4",
+          name: "third test",
+          commands: []
+        }
+      ],
+      suites: [
+        {
+          id: "1",
+          name: "test suite",
+          tests: ["2", "3"]
+        },
+        {
+          id: "2",
+          name: "second suite",
+          tests: ["1", "2", "4"]
+        }
+      ],
+      urls: [
+        "https://en.wikipedia.org",
+        "http://www.seleniumhq.org"
+      ].sort()
+    };
+
+    const project = new ProjectStore();
+    project.fromJS(projectRep);
+    expect(project.id).toBe(projectRep.id);
+    expect(project.name).toBe(projectRep.name);
+    expect(project.url).toBe(projectRep.url);
+    expect(project.tests.length).toBe(4);
+    expect(project.tests[0] instanceof TestCase).toBeTruthy();
+    expect(project.suites.length).toBe(2);
+    expect(project.suites[0] instanceof Suite).toBeTruthy();
+    expect(project.urls.length).toBe(2);
+    expect(project.urls[0]).toBe(projectRep.urls[0]);
   });
 });

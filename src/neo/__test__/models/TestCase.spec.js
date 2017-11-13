@@ -90,4 +90,38 @@ describe("TestCase model", () => {
     test.clearAllCommands();
     expect(test.commands.length).toBe(0);
   });
+  it("should load from JS", () => {
+    const jsRep = {
+      id: "1",
+      name: "test testcase",
+      commands: []
+    };
+    const test = TestCase.fromJS(jsRep);
+    expect(test.id).toBe(jsRep.id);
+    expect(test.name).toBe(jsRep.name);
+    expect(test instanceof TestCase).toBeTruthy();
+  });
+  it("should load the array of commands from JS", () => {
+    const jsRep = {
+      id: "1",
+      name: "test testcase",
+      commands: [
+        {
+          id: "1",
+          command: "open",
+          target: "/",
+          value: "test"
+        },
+        {
+          id: "2",
+          command: "open",
+          target: "/",
+          value: "test"
+        }
+      ]
+    };
+    const test = TestCase.fromJS(jsRep);
+    expect(test.commands.length).toBe(2);
+    expect(test.commands[0] instanceof Command).toBeTruthy();
+  });
 });

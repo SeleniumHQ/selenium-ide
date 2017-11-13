@@ -48,6 +48,21 @@ describe("Command", () => {
     expect(clone.target).toBe(command.target);
     expect(clone.value).toBe(command.value);
   });
+
+  it("should load from JS", () => {
+    const jsRepresentation = {
+      id: "1",
+      command: "open",
+      target: "/",
+      value: "test"
+    };
+    const command = Command.fromJS(jsRepresentation);
+    expect(command.id).toBe(jsRepresentation.id);
+    expect(command.command).toBe(jsRepresentation.command);
+    expect(command.target).toBe(jsRepresentation.target);
+    expect(command.value).toBe(jsRepresentation.value);
+    expect(command instanceof Command).toBeTruthy();
+  });
 });
 
 describe("Commands enum", () => {

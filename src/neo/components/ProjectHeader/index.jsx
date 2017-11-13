@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Title from "react-document-title";
 import ContentEditable from "react-contenteditable";
+import OpenButton from "../ActionButtons/Open";
+import SaveButton from "../ActionButtons/Save";
 import "./style.css";
 
 export default class ProjectHeader extends React.Component {
@@ -13,7 +15,9 @@ export default class ProjectHeader extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     changed: PropTypes.bool,
-    changeName: PropTypes.func.isRequired
+    changeName: PropTypes.func.isRequired,
+    load: PropTypes.func,
+    save: PropTypes.func
   };
   handleChange(e) {
     this.props.changeName(e.target.value);
@@ -23,6 +27,10 @@ export default class ProjectHeader extends React.Component {
       <div className="header">
         <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
         <ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} />
+        <span className="buttons right">
+          <OpenButton onFileSelected={this.props.load} />
+          <SaveButton onClick={this.props.save} />
+        </span>
       </div>
     );
   }
