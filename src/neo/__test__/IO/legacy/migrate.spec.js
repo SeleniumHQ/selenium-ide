@@ -30,6 +30,6 @@ describe("selenium html migrate", () => {
   it("should join line breaks to <br /> in the target field", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html"));
     const project = migrateProject(file);
-    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />                                followers')]");
+    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />                                followers')]");
   });
 });
