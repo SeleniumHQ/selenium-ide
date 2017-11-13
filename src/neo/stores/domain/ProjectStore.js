@@ -81,6 +81,15 @@ export default class ProjectStore {
     }
   }
 
+  @action.bound fromJS(jsRep) {
+    this.name = jsRep.name;
+    this.setUrl(jsRep.url);
+    this._tests.replace(jsRep.tests.map(TestCase.fromJS));
+    this._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, this.tests)));
+    this._urls.replace(jsRep.urls);
+    this.modified = false;
+  }
+
   toJSON() {
     return JSON.stringify({
       name: this.name,
@@ -89,16 +98,5 @@ export default class ProjectStore {
       suites: this._suites.map(s => s.exportSuite()),
       urls: this._urls
     });
-  }
-
-  @action
-  static fromJS = function(jsRep) {
-    const project = new ProjectStore(jsRep.name);
-    project.setUrl(jsRep.url);
-    project._tests.replace(jsRep.tests.map(TestCase.fromJS));
-    project._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, project.tests)));
-    project._urls.replace(jsRep.urls);
-
-    return project;
   }
 }
