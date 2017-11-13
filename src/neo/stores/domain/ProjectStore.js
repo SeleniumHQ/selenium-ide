@@ -1,9 +1,11 @@
 import { action, observable, computed } from "mobx";
 import SortBy from "sort-array";
+import uuidv4 from "uuid/v4";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
 export default class ProjectStore {
+  @observable id = uuidv4();
   @observable modified = false;
   @observable name = "";
   @observable url = "";
@@ -82,6 +84,7 @@ export default class ProjectStore {
   }
 
   @action.bound fromJS(jsRep) {
+    this.id = jsRep.id;
     this.name = jsRep.name;
     this.setUrl(jsRep.url);
     this._tests.replace(jsRep.tests.map(TestCase.fromJS));
@@ -92,6 +95,7 @@ export default class ProjectStore {
 
   toJSON() {
     return JSON.stringify({
+      id: this.id,
       name: this.name,
       url: this.url,
       tests: this._tests,
