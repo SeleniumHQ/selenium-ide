@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, observe } from "mobx";
 import SuiteState from "./SuiteState";
 
 class UiState {
@@ -13,6 +13,11 @@ class UiState {
   constructor() {
     this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
+  }
+
+  @action.bound setProject(project) {
+    this._project = project;
+    observe(this._project, "id", this.projectChanged);
   }
 
   @computed get filteredTests() {
@@ -62,6 +67,16 @@ class UiState {
   setUrl(url, addToCache) {
     this._project.setUrl(url);
     if (addToCache) this._project.addUrl(url);
+  }
+
+  @action.bound projectChanged() {
+    this.selectedTest = {};
+    this.selectedCommand = null;
+    this.filterTerm = "";
+    this.dragInProgress = false;
+    this.clipboard = null;
+    this.isRecording = false;
+    this.suiteStates = {};
   }
 }
 

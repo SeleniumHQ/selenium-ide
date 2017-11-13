@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== "production") {
   seed(project);
 }
 
-UiState._project = project;
+UiState.setProject(project);
 
 modify(project);
 
