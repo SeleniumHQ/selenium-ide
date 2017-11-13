@@ -12,7 +12,7 @@ export default function migrateProject(data) {
         commands: result.html.body.table.tbody.tr.map(row => (
           {
             command: row.td[0]._text || "",
-            target: row.td[1]._text || "",
+            target: parseTarget(row.td[1]),
             value: row.td[2]._text || ""
           }
         ))
@@ -22,4 +22,16 @@ export default function migrateProject(data) {
   };
 
   return project;
+}
+
+function parseTarget(targetCell) {
+  if (targetCell._text) {
+    if (targetCell._text instanceof Array) {
+      return targetCell._text.join("<br />");
+    } else {
+      return targetCell._text;
+    }
+  } else {
+    return "";
+  }
 }
