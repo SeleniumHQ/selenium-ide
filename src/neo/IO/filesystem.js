@@ -1,3 +1,4 @@
+import migrateProject from "./legacy/migrate";
 const browser = window.browser;
 
 export function saveProject(project) {
@@ -33,6 +34,8 @@ export function loadProject(project, file) {
   fileReader.onload = (e) => {
     if (file.type === "application/json") {
       loadJSONProject(project, e.target.result);
+    } else if (file.type === "text/html") {
+      project.fromJS(migrateProject(e.target.result));
     }
   };
 
