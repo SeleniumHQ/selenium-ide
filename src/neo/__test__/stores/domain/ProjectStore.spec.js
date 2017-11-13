@@ -156,7 +156,8 @@ describe("Project Store", () => {
       ].sort()
     };
 
-    const project = ProjectStore.fromJS(projectRep);
+    const project = new ProjectStore();
+    project.fromJS(projectRep);
     expect(project.name).toBe(projectRep.name);
     expect(project.url).toBe(projectRep.url);
     expect(project.tests.length).toBe(4);
