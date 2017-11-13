@@ -38,7 +38,7 @@ import "./style.css";
         <TabBar tabs={["Tests", "Suites"]} tabWidth={70} tabChanged={this.handleChangedTab}>
           <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
-        <SearchBar filter={UiState.changeFilter} />
+        <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
         { this.state.showTests
           ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={ModalState.deleteTest} />
           : <SuiteList suites={this.props.suites} rename={ModalState.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }

@@ -8,6 +8,7 @@ export default class SearchBar extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   static propTypes = {
+    value: PropTypes.string,
     filter: PropTypes.func
   };
   handleChange(e) {
@@ -16,7 +17,7 @@ export default class SearchBar extends React.Component {
   render() {
     return (
       <div>
-        <input className="search" type="search" placeholder="Search tests..." onChange={this.handleChange} />
+        <input className="search" type="search" placeholder="Search tests..." value={this.props.value} onChange={this.handleChange} />
       </div>
     );
   }
