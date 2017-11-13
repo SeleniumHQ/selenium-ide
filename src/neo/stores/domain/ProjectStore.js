@@ -84,7 +84,7 @@ export default class ProjectStore {
   }
 
   @action.bound fromJS(jsRep) {
-    this.id = jsRep.id;
+    this.id = jsRep.id || uuidv4();
     this.name = jsRep.name;
     this.setUrl(jsRep.url);
     this._tests.replace(jsRep.tests.map(TestCase.fromJS));
