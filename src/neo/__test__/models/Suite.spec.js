@@ -77,25 +77,17 @@ describe("Suite model", () => {
     expect(suite instanceof Suite).toBeTruthy();
   });
   it("should load tests from JS", () => {
-    const projectTests = [
-      {
-        id: "2",
-        name: "first test",
-        commands: []
-      },
-      {
-        id: "3",
-        name: "second test",
-        commands: []
-      }
-    ];
+    const store = new ProjectStore();
+    store.addTestCase(new TestCase("1"));
+    store.addTestCase(new TestCase("2"));
+    store.addTestCase(new TestCase("3"));
     const jsRep = {
       id: "1",
       name: "test suite",
       tests: ["2", "3"]
     };
-    const suite = Suite.fromJS(jsRep, projectTests);
+    const suite = Suite.fromJS(jsRep, store.tests);
     expect(suite.tests.length).toBe(2);
-    expect(suite.tests[0] instanceof TestCase).toBeTruthy();
+    expect(suite.tests[0]).toBeInstanceOf(TestCase);
   });
 });
