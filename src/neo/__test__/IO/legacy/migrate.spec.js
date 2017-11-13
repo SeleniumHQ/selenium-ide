@@ -13,5 +13,12 @@ describe("selenium html migrate", () => {
     expect(project.name).toBe("My Test");
     expect(project.url).toBe("https://www.google.com/");
     expect(project.urls.length).toBe(1);
+    expect(project.tests.length).toBe(1);
+    const test = project.tests[0];
+    expect(test.commands.length).toBe(4);
+    const command = test.commands[0];
+    expect(command.command).toBe("open");
+    expect(command.target).toBe("/?gfe_rd=cr&dcr=0&ei=9vz6Way_KdPPXqjmsbgI&gws_rd=ssl");
+    expect(command.value).toBe("");
   });
 });
