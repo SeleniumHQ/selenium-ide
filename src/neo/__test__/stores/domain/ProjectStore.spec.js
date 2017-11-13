@@ -153,7 +153,7 @@ describe("Project Store", () => {
       urls: [
         "https://en.wikipedia.org",
         "http://www.seleniumhq.org"
-      ]
+      ].sort()
     };
 
     const project = ProjectStore.fromJS(projectRep);
