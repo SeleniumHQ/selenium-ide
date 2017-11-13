@@ -1,6 +1,6 @@
 import { action, observable, computed } from "mobx";
-import SortBy from "sort-array";
 import uuidv4 from "uuid/v4";
+import SortBy from "sort-array";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
@@ -95,7 +95,6 @@ export default class ProjectStore {
 
   toJSON() {
     return JSON.stringify({
-      id: this.id,
       name: this.name,
       url: this.url,
       tests: this._tests,
