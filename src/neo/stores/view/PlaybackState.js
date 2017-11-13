@@ -95,11 +95,13 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state, message) {
-    if (state === PlaybackStates.Failed) {
-      this.hasFailed = true;
-      this.failures++;
+    if (this.isPlaying) {
+      if (state === PlaybackStates.Failed) {
+        this.hasFailed = true;
+        this.failures++;
+      }
+      this.commandState.set(commandId, { state, message });
     }
-    this.commandState.set(commandId, { state, message });
   }
 
   @action.bound clearCommandStates() {
