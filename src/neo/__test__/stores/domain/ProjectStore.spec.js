@@ -7,6 +7,10 @@ import TestCase from "../../../models/TestCase";
 useStrict(true);
 
 describe("Project Store", () => {
+  it("should have an id", () => {
+    const store = new ProjectStore();
+    expect(store.id).toBeDefined();
+  });
   it("should have a name", () => {
     const store = new ProjectStore("myStore");
     expect(store.name).toBe("myStore");
@@ -114,6 +118,7 @@ describe("Project Store", () => {
   });
   it("should load from JS", () => {
     const projectRep = {
+      id: "1",
       name: "my project",
       url: "https://en.wikipedia.org",
       tests: [
@@ -158,6 +163,7 @@ describe("Project Store", () => {
 
     const project = new ProjectStore();
     project.fromJS(projectRep);
+    expect(project.id).toBe(projectRep.id);
     expect(project.name).toBe(projectRep.name);
     expect(project.url).toBe(projectRep.url);
     expect(project.tests.length).toBe(4);
