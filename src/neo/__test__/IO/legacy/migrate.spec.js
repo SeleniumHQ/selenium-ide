@@ -27,4 +27,9 @@ describe("selenium html migrate", () => {
     const project = migrateProject(file);
     expect(project.tests[0].commands.length).toBe(26);
   });
+  it("should join line breaks to <br /> in the target field", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html"));
+    const project = migrateProject(file);
+    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />                                followers')]");
+  });
 });
