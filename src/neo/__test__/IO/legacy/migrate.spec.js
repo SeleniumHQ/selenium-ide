@@ -13,6 +13,7 @@ describe("selenium html migrate", () => {
     expect(project.name).toBe("My Test");
     expect(project.url).toBe("https://www.google.com/");
     expect(project.urls.length).toBe(1);
+    expect(project.suites).toBeInstanceOf(Array);
     expect(project.tests.length).toBe(1);
     const test = project.tests[0];
     expect(test.commands.length).toBe(4);
