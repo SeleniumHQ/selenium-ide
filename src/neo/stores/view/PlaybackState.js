@@ -32,7 +32,7 @@ class PlaybackState {
 
   @computed get hasFinishedSuccessfully() {
     return this.currentRunningTest.commands.filter(({id}) => (
-      this.commandState.get(id).state === PlaybackStates.Passed
+      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Passed : false
     )).length === this.currentRunningTest.commands.length;
   }
 
