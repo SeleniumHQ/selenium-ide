@@ -22,4 +22,9 @@ describe("selenium html migrate", () => {
     expect(command.target).toBe("/?gfe_rd=cr&dcr=0&ei=9vz6Way_KdPPXqjmsbgI&gws_rd=ssl");
     expect(command.value).toBe("");
   });
+  it("should migrate the second example", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html"));
+    const project = migrateProject(file);
+    expect(project.tests[0].commands.length).toBe(26);
+  });
 });
