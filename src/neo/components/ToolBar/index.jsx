@@ -29,7 +29,7 @@ export default class ToolBar extends React.Component {
         />
         { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
         { PlaybackState.isPlaying ? <Pause isActive={PlaybackState.paused} onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
-        { !PlaybackState.isPlaying && UiState.selectedCommand ? <StepInto /> : null }
+        { !PlaybackState.isPlaying ? <StepInto disabled={!UiState.selectedCommand} onClick={() => PlaybackState.startPlaying(UiState.selectedCommand)} /> : null }
         <SpeedGauge />
         <span style={{
           float: "right"

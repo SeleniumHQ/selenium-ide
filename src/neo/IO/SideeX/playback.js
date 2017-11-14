@@ -22,7 +22,7 @@ function playAfterConnectionFailed() {
 }
 
 function executionLoop() {
-  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
+  (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   if (PlaybackState.currentPlayingIndex >= PlaybackState.currentRunningTest.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
   if (!PlaybackState.isPlaying || PlaybackState.paused) return false;
   const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
@@ -43,7 +43,7 @@ function executionLoop() {
 }
 
 function prepareToPlay() {
-  PlaybackState.setPlayingIndex(-1);
+  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
   return extCommand.init();
 }
 

@@ -52,7 +52,7 @@ class PlaybackState {
     this.playNext();
   }
 
-  @action.bound startPlaying() {
+  @action.bound startPlaying(command) {
     const { test } = UiState.selectedTest;
     if (this.currentRunningSuite || !this.currentRunningTest || this.currentRunningTest.id !== test.id) {
       this.resetState();
@@ -60,6 +60,7 @@ class PlaybackState {
       this.currentRunningTest = test;
     }
     this.clearCommandStates();
+    if (command) this.currentPlayingIndex = test.commands.indexOf(command);
     this.runs++;
     this.hasFailed = false;
     this.commandsCount = test.commands.length;
