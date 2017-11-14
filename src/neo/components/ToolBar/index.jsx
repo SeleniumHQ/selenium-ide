@@ -10,6 +10,7 @@ import Record from "../../components/ActionButtons/Record";
 import GaugeMenu from "../GaugeMenu";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import "./style.css";
 
 @observer
 export default class ToolBar extends React.Component {
@@ -17,7 +18,7 @@ export default class ToolBar extends React.Component {
     const isPlayingSuite = PlaybackState.isPlaying && PlaybackState.currentRunningSuite;
     const isPlayingTest = PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite;
     return (
-      <span>
+      <div className="toolbar">
         <PlayAll
           isActive={!PlaybackState.paused && isPlayingSuite}
           disabled={!UiState.selectedTest.suite || isPlayingTest}
@@ -38,10 +39,9 @@ export default class ToolBar extends React.Component {
           { !PlaybackState.isPlaying && UiState.selectedTest.test ? <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} /> : null }
         </span>
         <div style={{
-          clear: "right",
-          borderBottom: "1px #CECECE solid"
+          clear: "right"
         }}></div>
-      </span>
+      </div>
     );
   }
 }
