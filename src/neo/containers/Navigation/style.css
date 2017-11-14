@@ -2,9 +2,16 @@ aside.test-cases {
   width: 220px;
   border-right: 1px solid #CECECE;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 aside.test-cases h3 {
   padding: 15px;
   margin: 0;
+}
+
+aside.test-cases .tabbar ~ ul {
+  max-height: initial;
+  flex-grow: 1;
 }
