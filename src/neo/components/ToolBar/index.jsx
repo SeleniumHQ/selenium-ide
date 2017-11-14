@@ -15,8 +15,14 @@ export default class ToolBar extends React.Component {
   render() {
     return (
       <span>
-        { UiState.selectedTest.suite ? <PlayAll onClick={PlaybackState.startPlayingSuite} /> : null }
-        { UiState.selectedTest.test ? <PlayCurrent onClick={PlaybackState.startPlaying} /> : null }
+        { UiState.selectedTest.suite ? <PlayAll
+          isActive={PlaybackState.isPlaying && PlaybackState.currentRunningSuite}
+          onClick={PlaybackState.startPlayingSuite}
+        /> : null }
+        { UiState.selectedTest.test ? <PlayCurrent
+          isActive={PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite}
+          onClick={PlaybackState.startPlaying}
+        /> : null }
         { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
         { PlaybackState.isPlaying ? <Pause /> : null }
         { !PlaybackState.isPlaying && UiState.selectedCommand ? <StepInto /> : null }
