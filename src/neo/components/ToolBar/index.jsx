@@ -17,7 +17,7 @@ export default class ToolBar extends React.Component {
       <span>
         { UiState.selectedTest.suite ? <PlayAll onClick={PlaybackState.startPlayingSuite} /> : null }
         { UiState.selectedTest.test ? <PlayCurrent onClick={PlaybackState.startPlaying} /> : null }
-        { PlaybackState.isPlaying ? <Stop /> : null }
+        { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
         { PlaybackState.isPlaying ? <Pause /> : null }
         { !PlaybackState.isPlaying && UiState.selectedCommand ? <StepInto /> : null }
         <SpeedGauge />
