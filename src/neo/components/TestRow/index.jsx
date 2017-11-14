@@ -142,7 +142,7 @@ export default class TestRow extends React.Component {
         <td>{this.props.value}</td>
         <td className="buttons">
           <div>
-            <ListMenu width={300} opener={
+            <ListMenu width={300} padding={-5} opener={
               <MoreButton />
             }>
               <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>

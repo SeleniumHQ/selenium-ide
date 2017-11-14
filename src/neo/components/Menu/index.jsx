@@ -66,7 +66,7 @@ class Menu extends React.Component {
     let directionStyles = {};
     if (this.props.direction === MenuDirections.Left) {
       directionStyles = {
-        top: `${this.state.boundingRect ? this.state.boundingRect.top - this.props.padding : "40"}px`,
+        top: `${this.state.boundingRect ? this.state.boundingRect.top : "40"}px`,
         left: `${this.state.boundingRect ? this.state.boundingRect.left - this.props.width - this.props.padding : "40"}px`,
         transformOrigin: `${this.props.width}px 0px 0px`
       };
