@@ -5,6 +5,10 @@
   overflow-x: hidden;
 }
 
+.speed-gauge span {
+  font-size: 11px;
+}
+
 .rc-slider {
   margin: 5px 0;
   height: 150px;
