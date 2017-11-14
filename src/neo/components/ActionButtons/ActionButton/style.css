@@ -17,6 +17,10 @@
   color: #656565;
 }
 
+.btn-action:disabled {
+  color: #A9A9A9;
+}
+
 .btn-action.active {
   background-color: #E3F2FF;
 }
