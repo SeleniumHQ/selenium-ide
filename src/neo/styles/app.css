@@ -4,6 +4,7 @@ html {
 
 body {
   font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial sans-serif !important;
+  font-size: 14px;
   color: #505050;
   margin: 0;
 }
