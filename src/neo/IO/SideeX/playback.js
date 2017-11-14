@@ -22,9 +22,9 @@ function playAfterConnectionFailed() {
 }
 
 function executionLoop() {
-  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
+  (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   if (PlaybackState.currentPlayingIndex >= PlaybackState.currentRunningTest.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
-  if (!PlaybackState.isPlaying) return false;
+  if (!PlaybackState.isPlaying || PlaybackState.paused) return false;
   const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (isExtCommand(command)) {
@@ -38,12 +38,13 @@ function executionLoop() {
       .then(doAjaxWait)
       .then(doDomWait)
       .then(doCommand)
+      .then(doDelay)
       .then(executionLoop);
   }
 }
 
 function prepareToPlay() {
-  PlaybackState.setPlayingIndex(-1);
+  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
   return extCommand.init();
 }
 
@@ -52,7 +53,7 @@ function prepareToPlayAfterConnectionFailed() {
 }
 
 function finishPlaying() {
-  PlaybackState.finishPlaying();
+  if (!PlaybackState.paused) PlaybackState.finishPlaying();
 }
 
 function catchPlayingError(message) {
@@ -75,6 +76,16 @@ function reportError(message) {
 reaction(
   () => PlaybackState.isPlaying,
   isPlaying => { isPlaying ? play(UiState.baseUrl) : null; }
+);
+
+reaction(
+  () => PlaybackState.paused,
+  paused => {
+    if (!paused) {
+      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
+      playAfterConnectionFailed();
+    }
+  }
 );
 
 function doPreparation() {
@@ -197,6 +208,18 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
       }
     });
+}
+
+function doDelay() {
+  return new Promise((res) => {
+    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.currentRunningTest.commands.length) {
+      return res(true);
+    } else {
+      setTimeout(() => {
+        return res(true);
+      }, PlaybackState.delay);
+    }
+  });
 }
 
 function isReceivingEndError(reason) {

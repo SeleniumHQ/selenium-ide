@@ -33,6 +33,8 @@ export default class LogStore {
   logPlayingState(isPlaying) {
     if (isPlaying) {
       this.addLog(`Started playback of '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
+    } else if (PlaybackState.aborted) {
+      this.addLog(`Playback of '${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Notice);
     } else {
       this.addLog(`Finished playback of '${PlaybackState.currentRunningTest.name}'${PlaybackState.hasFailed ? " with errors" : " successfully"}`, LogTypes.Notice);
     }
