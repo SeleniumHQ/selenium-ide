@@ -77,6 +77,7 @@ class PlaybackState {
 
   @action.bound abortPlaying() {
     this.aborted = true;
+    this.hasFailed = true;
     this._testsToRun = [];
     this.commandState.set(this.currentRunningTest.commands[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
     this.isPlaying = false;
