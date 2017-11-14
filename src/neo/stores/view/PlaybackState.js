@@ -13,6 +13,7 @@ class PlaybackState {
   @observable runs = 0;
   @observable failures = 0;
   @observable hasFailed = false;
+  @observable aborted = false;
 
   constructor() {
     this._testsToRun = [];
@@ -75,6 +76,7 @@ class PlaybackState {
   }
 
   @action.bound abortPlaying() {
+    this.aborted = true;
     this._testsToRun = [];
     this.commandState.set(this.currentRunningTest.commands[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
     this.isPlaying = false;
@@ -114,6 +116,7 @@ class PlaybackState {
     this.runs = 0;
     this.failures = 0;
     this.hasFailed = false;
+    this.aborted = false;
   }
 }
 
