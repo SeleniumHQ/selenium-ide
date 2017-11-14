@@ -1,8 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Autocomplete from "react-autocomplete";
+import uuidv4 from "uuid/v4";
 
 export default class AutoComplete extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id = uuidv4();
+  }
   static propTypes = {
     renderDefaultStyledItem: PropTypes.func
   };
@@ -14,11 +19,11 @@ export default class AutoComplete extends React.Component {
           <span style={{
             position: "relative"
           }}>
-            <input {...props} style={{
+            <input id={this.id} {...props} style={{
               width: "100%",
               boxSizing: "border-box"
             }}/>
-            <span className="si-caret" style={{
+            <label htmlFor={this.id} className="si-caret" style={{
               position: "absolute",
               top: "0",
               bottom: "0",
@@ -28,7 +33,7 @@ export default class AutoComplete extends React.Component {
               height: "10px",
               color: "#a3a3a3",
               transform: "rotate(90deg)"
-            }}></span>
+            }}></label>
           </span>
         )}
         renderItem={(item, isHighlighted) =>
