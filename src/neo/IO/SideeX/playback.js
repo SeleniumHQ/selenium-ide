@@ -212,9 +212,13 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
 function doDelay() {
   return new Promise((res) => {
-    setTimeout(() => {
+    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.currentRunningTest.commands.length) {
       return res(true);
-    }, PlaybackState.delay);
+    } else {
+      setTimeout(() => {
+        return res(true);
+      }, PlaybackState.delay);
+    }
   });
 }
 
