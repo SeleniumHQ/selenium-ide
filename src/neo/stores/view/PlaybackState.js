@@ -14,6 +14,7 @@ class PlaybackState {
   @observable failures = 0;
   @observable hasFailed = false;
   @observable aborted = false;
+  @observable paused = false;
 
   constructor() {
     this._testsToRun = [];
@@ -83,6 +84,14 @@ class PlaybackState {
     this.isPlaying = false;
   }
 
+  @action.bound pause() {
+    this.paused = true;
+  }
+
+  @action.bound resume() {
+    this.paused = false;
+  }
+
   @action.bound finishPlaying() {
     this.isPlaying = false;
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
@@ -118,6 +127,7 @@ class PlaybackState {
     this.failures = 0;
     this.hasFailed = false;
     this.aborted = false;
+    this.paused = false;
   }
 }
 

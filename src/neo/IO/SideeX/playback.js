@@ -24,7 +24,7 @@ function playAfterConnectionFailed() {
 function executionLoop() {
   PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   if (PlaybackState.currentPlayingIndex >= PlaybackState.currentRunningTest.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
-  if (!PlaybackState.isPlaying) return false;
+  if (!PlaybackState.isPlaying || PlaybackState.paused) return false;
   const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (isExtCommand(command)) {
@@ -52,7 +52,7 @@ function prepareToPlayAfterConnectionFailed() {
 }
 
 function finishPlaying() {
-  PlaybackState.finishPlaying();
+  if (!PlaybackState.paused) PlaybackState.finishPlaying();
 }
 
 function catchPlayingError(message) {
@@ -75,6 +75,16 @@ function reportError(message) {
 reaction(
   () => PlaybackState.isPlaying,
   isPlaying => { isPlaying ? play(UiState.baseUrl) : null; }
+);
+
+reaction(
+  () => PlaybackState.paused,
+  paused => {
+    if (!paused) {
+      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
+      playAfterConnectionFailed();
+    }
+  }
 );
 
 function doPreparation() {
