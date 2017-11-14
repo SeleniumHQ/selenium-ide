@@ -5,7 +5,21 @@
   overflow-x: hidden;
 }
 
-.speed-gauge input {
-  writing-mode: bt-lr;
-  appearance: slider-vertical;
+.rc-slider {
+  margin: 5px 0;
+  height: 150px;
+}
+
+.rc-slider-rail {
+  background-color: #D8D8D8;
+}
+
+.rc-slider-handle {
+  background: #fff;
+  border: 1px solid #979797;
+  box-shadow: 0 0 8px 0 rgba(0,0,0,0.17);
+}
+
+.rc-slider-handle:focus {
+  box-shadow: 0 0 5px #57c5f7;
 }
