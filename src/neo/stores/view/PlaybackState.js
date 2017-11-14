@@ -18,6 +18,7 @@ class PlaybackState {
   @observable delay = 0;
 
   constructor() {
+    this.maxDelay = 3000;
     this._testsToRun = [];
   }
 
