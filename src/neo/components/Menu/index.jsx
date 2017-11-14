@@ -101,8 +101,12 @@ export default class MenuContainer extends React.Component {
     opener: PropTypes.element,
     children: PropTypes.node,
     width: PropTypes.number,
-    padding: PropTypes.number
-  }
+    padding: PropTypes.number,
+    closeOnClick: PropTypes.bool
+  };
+  static defaultProps = {
+    closeOnClick: true
+  };
   handleClick() {
     this.setState({
       isOpen: !this.state.isOpen
@@ -116,7 +120,16 @@ export default class MenuContainer extends React.Component {
   render() {
     return ([
       React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }),
-      <Menu key="menu" isOpen={this.state.isOpen} node={this.node} onClick={this.close} requestClose={this.close} width={this.props.width} padding={this.props.padding}>{this.props.children}</Menu>
+      <Menu
+        key="menu"
+        isOpen={this.state.isOpen}
+        node={this.node}
+        onClick={this.props.closeOnClick ? this.close : null}
+        requestClose={this.close}
+        width={this.props.width}
+        padding={this.props.padding}>
+        {this.props.children}
+      </Menu>
     ]);
   }
 }
