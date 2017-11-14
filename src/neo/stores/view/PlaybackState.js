@@ -15,6 +15,7 @@ class PlaybackState {
   @observable hasFailed = false;
   @observable aborted = false;
   @observable paused = false;
+  @observable delay = 0;
 
   constructor() {
     this._testsToRun = [];
@@ -119,6 +120,10 @@ class PlaybackState {
 
   @action.bound clearCommandStates() {
     this.commandState.clear();
+  }
+
+  @action.bound setDelay(delay) {
+    this.delay = delay;
   }
 
   @action.bound resetState() {

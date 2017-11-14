@@ -38,6 +38,7 @@ function executionLoop() {
       .then(doAjaxWait)
       .then(doDomWait)
       .then(doCommand)
+      .then(doDelay)
       .then(executionLoop);
   }
 }
@@ -207,6 +208,14 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
       }
     });
+}
+
+function doDelay() {
+  return new Promise((res) => {
+    setTimeout(() => {
+      return res(true);
+    }, PlaybackState.delay);
+  });
 }
 
 function isReceivingEndError(reason) {
