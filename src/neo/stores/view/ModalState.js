@@ -1,4 +1,5 @@
 import { action, observable } from "mobx";
+import UiState from "./UiState";
 
 class ModalState {
   @observable editedSuite = null;
@@ -28,7 +29,10 @@ class ModalState {
   }
   @action.bound createTest() {
     this.rename(null, (name) => {
-      if (name) this._project.createTestCase(name);
+      if (name) {
+        const test = this._project.createTestCase(name);
+        UiState.selectTest(test);
+      }
     });
   }
   @action.bound deleteTest(testCase) {
