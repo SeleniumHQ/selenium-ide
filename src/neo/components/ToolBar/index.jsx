@@ -7,6 +7,7 @@ import Stop from "../../components/ActionButtons/Stop";
 import StepInto from "../../components/ActionButtons/StepInto";
 import SpeedGauge from "../../components/ActionButtons/SpeedGauge";
 import Record from "../../components/ActionButtons/Record";
+import GaugeMenu from "../GaugeMenu";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 
@@ -30,7 +31,7 @@ export default class ToolBar extends React.Component {
         { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
         { PlaybackState.isPlaying ? <Pause isActive={PlaybackState.paused} onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
         { !PlaybackState.isPlaying ? <StepInto disabled={!UiState.selectedCommand} onClick={() => PlaybackState.startPlaying(UiState.selectedCommand)} /> : null }
-        <SpeedGauge />
+        <GaugeMenu opener={<SpeedGauge />} />
         <span style={{
           float: "right"
         }}>
