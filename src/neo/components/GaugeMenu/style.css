@@ -1,0 +1,11 @@
+.speed-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.speed-gauge input {
+  writing-mode: bt-lr;
+  appearance: slider-vertical;
+}
