@@ -13,18 +13,22 @@ import PlaybackState from "../../stores/view/PlaybackState";
 @observer
 export default class ToolBar extends React.Component {
   render() {
+    const isPlayingSuite = PlaybackState.isPlaying && PlaybackState.currentRunningSuite;
+    const isPlayingTest = PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite;
     return (
       <span>
-        { UiState.selectedTest.suite ? <PlayAll
-          isActive={PlaybackState.isPlaying && PlaybackState.currentRunningSuite}
-          onClick={PlaybackState.startPlayingSuite}
-        /> : null }
-        { UiState.selectedTest.test ? <PlayCurrent
-          isActive={PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite}
-          onClick={PlaybackState.startPlaying}
-        /> : null }
+        <PlayAll
+          isActive={!PlaybackState.paused && isPlayingSuite}
+          disabled={!UiState.selectedTest.suite || isPlayingTest}
+          onClick={!PlaybackState.paused ? PlaybackState.startPlayingSuite : PlaybackState.resume}
+        />
+        <PlayCurrent
+          isActive={!PlaybackState.paused && isPlayingTest}
+          disabled={!UiState.selectedTest.test || isPlayingSuite}
+          onClick={!PlaybackState.paused ? PlaybackState.startPlaying : PlaybackState.resume}
+        />
         { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
-        { PlaybackState.isPlaying ? <Pause /> : null }
+        { PlaybackState.isPlaying ? <Pause isActive={PlaybackState.paused} onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
         { !PlaybackState.isPlaying && UiState.selectedCommand ? <StepInto /> : null }
         <SpeedGauge />
         <span style={{
