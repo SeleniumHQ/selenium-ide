@@ -33,7 +33,7 @@ input {
   border-radius: 4px;
   font-size: 14px;
   line-height: 17px;
-  padding: 5px 15px;
+  padding: 5px;
 }
 
 input:focus {
