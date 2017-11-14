@@ -54,6 +54,7 @@
     "postcss-loader": "^2.0.6",
     "project-name-generator": "^2.1.4",
     "prop-types": "^15.5.10",
+    "rc-slider": "^8.4.0",
     "react": "^16.0.0",
     "react-autocomplete": "^1.7.2",
     "react-contenteditable": "^2.0.5",
