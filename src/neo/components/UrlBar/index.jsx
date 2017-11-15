@@ -12,17 +12,19 @@ export default class UrlBar extends React.Component {
   render() {
     return (
       <div className="url">
-        <AutoComplete
-          items={this.props.urls ? this.props.urls : []}
-          value={this.props.url}
-          inputProps={{
-            type: "url",
-            placeholder: "Playback base URL"
-          }}
-          shouldItemRender={(item, value) => (item.indexOf(value) !== -1)}
-          onChange={(e) => {this.props.setUrl(e.target.value);}}
-          onSelect={this.props.setUrl}
-        />
+        <div>
+          <AutoComplete
+            items={this.props.urls ? this.props.urls : []}
+            value={this.props.url}
+            inputProps={{
+              type: "url",
+              placeholder: "Playback base URL"
+            }}
+            shouldItemRender={(item, value) => (item.indexOf(value) !== -1)}
+            onChange={(e) => {this.props.setUrl(e.target.value);}}
+            onSelect={this.props.setUrl}
+          />
+        </div>
       </div>
     );
   }
