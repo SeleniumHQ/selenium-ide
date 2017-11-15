@@ -66,12 +66,33 @@
   padding: 5px 15px;
 }
 
+.test-table th:nth-child(1) {
+  width: 30%;
+}
+
+.test-table th:nth-child(2) {
+  width: 30%;
+}
+
+.test-table th:nth-child(3) {
+  width: 40%;
+}
+
 .test-table td:nth-child(1) {
+  width: 30%;
   color: #8B8B8B;
 }
 
+.test-table td:nth-child(2) {
+  width: 30%;
+}
+
 .test-table td:nth-child(3) {
-  width: 33%;
+  width: 32%;
+}
+
+.test-table td:nth-child(4) {
+  width: 8%;
 }
 
 .test-table tr .buttons {

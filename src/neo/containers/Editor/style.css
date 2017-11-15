@@ -3,6 +3,6 @@
   flex-direction: column;
 }
 
-.editor .test-table {
+.editor .test-table-body {
   flex-grow: 1;
 }
