@@ -6,6 +6,7 @@ import { modifier, parse } from "modifier-keys";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
+import MultilineEllipsis from "../MultilineEllipsis";
 import "./style.css";
 
 export const Type = "command";
@@ -79,8 +80,8 @@ export default class TestRow extends React.Component {
     this.paste = this.paste.bind(this);
   }
   static propTypes = {
-    id: PropTypes.string.isRequired,
-    index: PropTypes.number.isRequired,
+    id: PropTypes.string,
+    index: PropTypes.number,
     className: PropTypes.string,
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
@@ -98,11 +99,6 @@ export default class TestRow extends React.Component {
     copyToClipboard: PropTypes.func,
     clearAllCommands: PropTypes.func
   };
-  handleClick(e) {
-    if (this.node === e.target.parentElement) {
-      this.props.onClick(e);
-    }
-  }
   handleKeyDown(event) {
     const e = event.nativeEvent;
     modifier(e);
@@ -127,22 +123,22 @@ export default class TestRow extends React.Component {
     }
   }
   render() {
-    return (this.props.connectDragSource(this.props.connectDropTarget(
-      <tr
-        ref={node => {return(this.node = node || this.node);}}
-        className={classNames(this.props.className, {"dragging": this.props.dragInProgress})}
-        tabIndex="0"
-        onClick={this.handleClick.bind(this)}
-        onKeyDown={this.handleKeyDown.bind(this)}
-        style={{
-          opacity: this.props.isDragging ? "0" : "1"
-        }}>
-        <td><span></span><CommandName>{this.props.command}</CommandName></td>
-        <td>{this.props.target}</td>
-        <td>{this.props.value}</td>
-        <td className="buttons">
-          <div>
-            <ListMenu width={300} opener={
+    const rendered = <tr
+      ref={node => {return(this.node = node || this.node);}}
+      className={classNames(this.props.className, {"dragging": this.props.dragInProgress})}
+      tabIndex={this.props.swapCommands ? "0" : null}
+      onClick={this.props.onClick}
+      onKeyDown={this.handleKeyDown.bind(this)}
+      style={{
+        opacity: this.props.isDragging ? "0" : "1"
+      }}>
+      <td><span></span><CommandName>{this.props.command}</CommandName></td>
+      <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
+      <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
+      <td className="buttons">
+        <div>
+          { this.props.swapCommands ? 
+            <ListMenu width={300} padding={-5} opener={
               <MoreButton />
             }>
               <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
@@ -153,10 +149,10 @@ export default class TestRow extends React.Component {
               <ListMenuItem onClick={() => { this.props.addCommand(); }}>Insert New Command</ListMenuItem>
               <ListMenuSeparator />
               <ListMenuItem onClick={this.props.clearAllCommands}>Clear All</ListMenuItem>
-            </ListMenu>
-          </div>
-        </td>
-      </tr>
-    )));
+            </ListMenu> : null }
+        </div>
+      </td>
+    </tr>;
+    return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }

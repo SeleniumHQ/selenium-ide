@@ -1,13 +1,5 @@
-.test-cases {
-  height: 685px;
-}
-
-.test-cases .tabbar ~ ul {
-  max-height: 500px;
-}
-
-.test-table {
-  height: 460px;
+.test-cases, .editor {
+  height: 650px;
 }
 
 .logs {

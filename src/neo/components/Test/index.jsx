@@ -55,7 +55,7 @@ export default class Test extends React.Component {
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
-        <ListMenu width={130} opener={
+        <ListMenu width={130} padding={-5} opener={
           <MoreButton />
         }>
           <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>

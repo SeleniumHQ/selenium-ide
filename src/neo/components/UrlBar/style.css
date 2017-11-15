@@ -1,8 +1,8 @@
-.url {
+.url > div {
   display: flex;
 }
 
-.url > * {
+.url > div > * {
   flex-grow: 1;
   margin: 6px 9px;
 }

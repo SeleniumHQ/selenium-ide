@@ -6,6 +6,7 @@ import ToolBar from "../../components/ToolBar";
 import UrlBar from "../../components/UrlBar";
 import TestTable from "../../components/TestTable";
 import CommandForm from "../../components/CommandForm";
+import "./style.css";
 
 @observer export default class Editor extends React.Component {
   constructor(props) {
@@ -23,9 +24,11 @@ import CommandForm from "../../components/CommandForm";
     if (command) {
       const newCommand = command.clone();
       this.props.test.insertCommandAt(newCommand, index);
+      return newCommand;
     } else {
       const newCommand = this.props.test.createCommand(index);
       newCommand.setCommand("open");
+      return newCommand;
     }
   }
   removeCommand(command) {
@@ -41,9 +44,7 @@ import CommandForm from "../../components/CommandForm";
   }
   render() {
     return (
-      <main style={{
-        display: "flow-root"
-      }}>
+      <main className="editor">
         <ToolBar />
         <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
         <TestTable

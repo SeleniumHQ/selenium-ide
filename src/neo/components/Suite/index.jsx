@@ -68,7 +68,7 @@ class Suite extends React.Component {
             <span className="si-caret"></span>
             <span className="title">{this.props.suite.name}</span>
           </a>
-          <ListMenu width={130} opener={
+          <ListMenu width={130} padding={-5} opener={
             <MoreButton />
           }>
             <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>

@@ -20,16 +20,20 @@ export default class TestTable extends React.Component {
     clearAllCommands: PropTypes.func
   };
   render() {
-    return (
-      <div className="test-table">
+    return ([
+      <div key="header" className="test-table test-table-header">
         <table>
           <thead>
             <tr>
               <th>Command</th>
               <th>Target</th>
-              <th colSpan={this.props.commands && this.props.commands.length ? "2" : "1"}>Value</th>
+              <th>Value</th>
             </tr>
           </thead>
+        </table>
+      </div>,
+      <div key="body" className="test-table test-table-body">
+        <table>
           <tbody>
             { this.props.commands ? this.props.commands.map((command, index) => (
               <TestRow
@@ -51,9 +55,14 @@ export default class TestTable extends React.Component {
                 clearAllCommands={this.props.clearAllCommands}
               />
             )) : null }
+            { this.props.commands ?
+              <TestRow
+                command="new command"
+                onClick={() => (this.props.selectCommand(this.props.addCommand()))}
+              /> : null }
           </tbody>
         </table>
       </div>
-    );
+    ]);
   }
 }

@@ -1,0 +1,8 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor .test-table-body {
+  flex-grow: 1;
+}
