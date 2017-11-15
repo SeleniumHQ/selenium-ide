@@ -7,6 +7,7 @@
 
 .test > span {
   flex-grow: 1;
+  word-break: break-all;
 }
 
 .test > button {
