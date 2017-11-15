@@ -80,6 +80,7 @@
 }
 
 .test-table tr .buttons > * {
+  min-height: 35px;
   opacity: 0;
 }
 

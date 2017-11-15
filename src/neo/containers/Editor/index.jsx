@@ -24,9 +24,11 @@ import "./style.css";
     if (command) {
       const newCommand = command.clone();
       this.props.test.insertCommandAt(newCommand, index);
+      return newCommand;
     } else {
       const newCommand = this.props.test.createCommand(index);
       newCommand.setCommand("open");
+      return newCommand;
     }
   }
   removeCommand(command) {

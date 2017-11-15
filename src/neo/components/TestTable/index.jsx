@@ -51,6 +51,10 @@ export default class TestTable extends React.Component {
                 clearAllCommands={this.props.clearAllCommands}
               />
             )) : null }
+            <TestRow
+              command="new command"
+              onClick={() => (this.props.selectCommand(this.props.addCommand()))}
+            />
           </tbody>
         </table>
       </div>
