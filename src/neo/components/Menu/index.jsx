@@ -6,6 +6,11 @@ import classNames from "classnames";
 import { Transition } from "react-transition-group";
 import "./style.css";
 
+export const MenuDirections = {
+  Left: "left",
+  Bottom: "bottom"
+};
+
 const duration = 100;
 
 const transitionStyles = {
@@ -38,13 +43,15 @@ class Menu extends React.Component {
     children: PropTypes.node,
     node: PropTypes.any,
     width: PropTypes.number,
+    direction: PropTypes.string,
     padding: PropTypes.number,
     onClick: PropTypes.func,
     requestClose: PropTypes.func.isRequired
   };
   static defaultProps = {
     width: 200,
-    padding: 5
+    padding: 5,
+    direction: MenuDirections.Left
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.node) {
@@ -56,6 +63,20 @@ class Menu extends React.Component {
     this.props.requestClose();
   }
   render() {
+    let directionStyles = {};
+    if (this.props.direction === MenuDirections.Left) {
+      directionStyles = {
+        top: `${this.state.boundingRect ? this.state.boundingRect.top - this.props.padding : "40"}px`,
+        left: `${this.state.boundingRect ? this.state.boundingRect.left - this.props.width - this.props.padding : "40"}px`,
+        transformOrigin: `${this.props.width}px 0px 0px`
+      };
+    } else if (this.props.direction === MenuDirections.Bottom) {
+      directionStyles = {
+        top: `${this.state.boundingRect ? this.state.boundingRect.bottom + this.props.padding : "40"}px`,
+        left: `${this.state.boundingRect ? this.state.boundingRect.right - this.props.width + Math.abs((this.props.width - this.state.boundingRect.width) / 2) : "40"}px`,
+        transformOrigin: `${this.props.width / 2}px 0px 0px`
+      };
+    }
     return (
       <Transition in={this.props.isOpen} timeout={duration}>
         {(status) => (
@@ -71,11 +92,8 @@ class Menu extends React.Component {
                 backgroundColor: "transparent"
               },
               content: Object.assign({
-                transformOrigin: `${this.props.width}px 0px 0px`,
-                width: `${this.props.width}px`,
-                top: `${this.state.boundingRect ? this.state.boundingRect.top - this.props.padding : "40"}px`,
-                left: `${this.state.boundingRect ? this.state.boundingRect.left - this.props.width - this.props.padding : "40"}px`
-              }, transitionStyles[status])
+                width: `${this.props.width}px`
+              }, directionStyles, transitionStyles[status])
             }}
           >
             <div onClick={this.props.onClick}>
@@ -101,8 +119,13 @@ export default class MenuContainer extends React.Component {
     opener: PropTypes.element,
     children: PropTypes.node,
     width: PropTypes.number,
-    padding: PropTypes.number
-  }
+    direction: PropTypes.string,
+    padding: PropTypes.number,
+    closeOnClick: PropTypes.bool
+  };
+  static defaultProps = {
+    closeOnClick: true
+  };
   handleClick() {
     this.setState({
       isOpen: !this.state.isOpen
@@ -116,7 +139,17 @@ export default class MenuContainer extends React.Component {
   render() {
     return ([
       React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }),
-      <Menu key="menu" isOpen={this.state.isOpen} node={this.node} onClick={this.close} requestClose={this.close} width={this.props.width} padding={this.props.padding}>{this.props.children}</Menu>
+      <Menu
+        key="menu"
+        isOpen={this.state.isOpen}
+        node={this.node}
+        onClick={this.props.closeOnClick ? this.close : null}
+        requestClose={this.close}
+        width={this.props.width}
+        direction={this.props.direction}
+        padding={this.props.padding}>
+        {this.props.children}
+      </Menu>
     ]);
   }
 }
