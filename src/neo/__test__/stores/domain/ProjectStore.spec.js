@@ -173,4 +173,17 @@ describe("Project Store", () => {
     expect(project.urls.length).toBe(2);
     expect(project.urls[0]).toBe(projectRep.urls[0]);
   });
+  it("should generate an ID for loaded project if none provided", () => {
+    const projectRep = {
+      name: "my project",
+      url: "",
+      tests: [],
+      suites: [],
+      urls: []
+    };
+
+    const project = new ProjectStore();
+    project.fromJS(projectRep);
+    expect(project.id).toBeDefined();
+  });
 });
