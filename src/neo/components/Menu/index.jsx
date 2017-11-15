@@ -59,8 +59,8 @@ class Menu extends React.Component {
       this.setState({ boundingRect });
     }
   }
-  handleClosing() {
-    this.props.requestClose();
+  handleClosing(e) {
+    this.props.requestClose(e);
   }
   render() {
     let directionStyles = {};
@@ -126,12 +126,16 @@ export default class MenuContainer extends React.Component {
   static defaultProps = {
     closeOnClick: true
   };
-  handleClick() {
+  handleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
-  close() {
+  close(e) {
+    e.preventDefault();
+    e.stopPropagation();
     this.setState({
       isOpen: false
     });
