@@ -21,7 +21,7 @@ export default class TestTable extends React.Component {
   };
   render() {
     return ([
-      <div className="test-table test-table-header">
+      <div key="header" className="test-table test-table-header">
         <table>
           <thead>
             <tr>
@@ -32,7 +32,7 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-      <div className="test-table test-table-body">
+      <div key="body" className="test-table test-table-body">
         <table>
           <tbody>
             { this.props.commands ? this.props.commands.map((command, index) => (
