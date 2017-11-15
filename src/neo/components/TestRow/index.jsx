@@ -6,6 +6,7 @@ import { modifier, parse } from "modifier-keys";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
+import MultilineEllipsis from "../MultilineEllipsis";
 import "./style.css";
 
 export const Type = "command";
@@ -98,11 +99,6 @@ export default class TestRow extends React.Component {
     copyToClipboard: PropTypes.func,
     clearAllCommands: PropTypes.func
   };
-  handleClick(e) {
-    if (this.node === e.target.parentElement) {
-      this.props.onClick(e);
-    }
-  }
   handleKeyDown(event) {
     const e = event.nativeEvent;
     modifier(e);
@@ -132,14 +128,14 @@ export default class TestRow extends React.Component {
         ref={node => {return(this.node = node || this.node);}}
         className={classNames(this.props.className, {"dragging": this.props.dragInProgress})}
         tabIndex="0"
-        onClick={this.handleClick.bind(this)}
+        onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown.bind(this)}
         style={{
           opacity: this.props.isDragging ? "0" : "1"
         }}>
         <td><span></span><CommandName>{this.props.command}</CommandName></td>
-        <td>{this.props.target}</td>
-        <td>{this.props.value}</td>
+        <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
+        <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
         <td className="buttons">
           <div>
             <ListMenu width={300} padding={-5} opener={
