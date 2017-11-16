@@ -69,6 +69,7 @@
     "style-loader": "^0.18.2",
     "styled-components": "^2.1.2",
     "tablesorter": "^2.28.15",
+    "ua-parser-js": "^0.7.17",
     "url-loader": "^0.5.9",
     "uuid": "^3.1.0",
     "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5",
