@@ -52,9 +52,7 @@ modify(project);
   }
   render() {
     return (
-      <div className="container" style={{
-        height: "700px"
-      }}>
+      <div className="container">
         <ProjectHeader
           title={this.state.project.name}
           changed={this.state.project.modified}
