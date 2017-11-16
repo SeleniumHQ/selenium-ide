@@ -309,12 +309,14 @@ if (Recorder) {
     } else {
       delete this.clickLocator;
       delete this.mouseup;
-      const x = event.clientX - this.mousedown.clientX;
-      const y = event.clientY - this.mousedown.clientY;
+      if (this.mousedown) {
+        const x = event.clientX - this.mousedown.clientX;
+        const y = event.clientY - this.mousedown.clientY;
 
-      if (this.mousedown && this.mousedown.target !== event.target && !(x + y)) {
-        record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), "");
-        record("mouseUp", locatorBuilders.buildAll(event.target), "");
+        if (this.mousedown.target !== event.target && !(x + y)) {
+          record("mouseDown", locatorBuilders.buildAll(this.mousedown.target), "");
+          record("mouseUp", locatorBuilders.buildAll(event.target), "");
+        }
       }
     }
     delete this.mousedown;
