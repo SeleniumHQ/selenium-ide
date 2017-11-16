@@ -3,6 +3,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import parser from "ua-parser-js";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import modify from "../../side-effects/modify";
@@ -19,6 +20,10 @@ import "../../styles/heights.css";
 import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/SideeX/record";
 import "../../IO/SideeX/playback";
+
+if (parser(window.navigator.userAgent).os.name === "Windows") {
+  require("../../styles/scrollbar.css");
+}
 
 const project = observable(new ProjectStore());
 
