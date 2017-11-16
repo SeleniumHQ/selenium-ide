@@ -4,6 +4,7 @@ import UiState from "../../stores/view/UiState";
 const { ExtCommand, isExtCommand } = window;
 
 const extCommand = new ExtCommand();
+window.extCommand = extCommand;
 let baseUrl = "";
 
 function play(currUrl) {

@@ -15,15 +15,15 @@
  *
  */
 
-const originalPrompt = originalPrompt ? originalPrompt : window.prompt;
+const originalPrompt = window.prompt;
 let nextPromptResult = false;
 let recordedPrompt = null;
 
-const originalConfirmation = originalConfirmation ? originalConfirmation : window.confirm;
+const originalConfirmation = window.confirm;
 let nextConfirmationResult = false;
 let recordedConfirmation = null;
 
-const originalAlert = originalAlert ? originalAlert : window.alert;
+const originalAlert = window.alert;
 let recordedAlert = null;
 
 function getFrameLocation() {
