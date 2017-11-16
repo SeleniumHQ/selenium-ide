@@ -1,7 +1,3 @@
-.test-cases, .editor {
-  height: 650px;
-}
-
-.logs {
-  max-height: 180px;
+footer {
+  min-height: 200px;
 }

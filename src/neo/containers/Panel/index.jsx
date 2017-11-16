@@ -16,6 +16,7 @@ import UiState from "../../stores/view/UiState";
 import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/heights.css";
+import "../../styles/layout.css";
 
 import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/SideeX/record";
@@ -51,7 +52,9 @@ modify(project);
   }
   render() {
     return (
-      <div>
+      <div className="container" style={{
+        height: "700px"
+      }}>
         <ProjectHeader
           title={this.state.project.name}
           changed={this.state.project.modified}
@@ -59,9 +62,7 @@ modify(project);
           load={loadProject.bind(undefined, project)}
           save={() => saveProject(project)}
         />
-        <div style={{
-          float: "left"
-        }}>
+        <div className="content">
           <Navigation
             tests={UiState.filteredTests}
             suites={this.state.project.suites}
@@ -71,16 +72,13 @@ modify(project);
             moveTest={this.moveTest}
             deleteTest={this.deleteTest}
           />
+          <Editor
+            url={this.state.project.url}
+            urls={this.state.project.urls}
+            setUrl={this.state.project.setUrl}
+            test={UiState.selectedTest.test}
+          />
         </div>
-        <Editor
-          url={this.state.project.url}
-          urls={this.state.project.urls}
-          setUrl={this.state.project.setUrl}
-          test={UiState.selectedTest.test}
-        />
-        <div style={{
-          clear: "left"
-        }}></div>
         <Console />
         <Modal project={this.state.project} />
       </div>
