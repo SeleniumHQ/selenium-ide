@@ -4,7 +4,17 @@
   height: stretch;
 }
 
-.container > .content {
+.container .wrapper, .container footer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container footer .tabbar ~ div {
+  flex-grow: 1;
+}
+
+.container .content {
   flex-grow: 1;
   display: flex;
 }
