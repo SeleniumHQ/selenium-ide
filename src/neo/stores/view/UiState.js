@@ -71,14 +71,17 @@ class UiState {
   }
 
   @action.bound resizeConsole(height) {
-    this.consoleHeight = height;
+    this.consoleHeight = height > 0 ? height : 0;
     storage.set({
-      consoleSize: height 
+      consoleSize: this.consoleHeight 
     });
   }
 
   @action.bound setWindowHeight(height) {
     this.windowHeight = height;
+    if (this.windowHeight - this.consoleHeight < this.minContentHeight) {
+      this.resizeConsole(this.windowHeight - this.minContentHeight);
+    }
   }
 
   addStateForSuite(suite) {
