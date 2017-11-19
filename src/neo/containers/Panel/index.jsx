@@ -5,7 +5,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
-import browser from "webextension-polyfill";
+import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import modify from "../../side-effects/modify";
@@ -55,7 +55,8 @@ modify(project);
     origin.removeTestCase(test);
   }
   handleResize(currWindow) {
-    browser.storage.local.set({
+    UiState.setWindowHeight(currWindow.innerHeight);
+    storage.set({
       size: {
         height: currWindow.outerHeight,
         width: currWindow.outerWidth
@@ -71,8 +72,8 @@ modify(project);
         <SplitPane
           split="horizontal"
           minSize={UiState.minContentHeight}
-          maxSize={window.innerHeight - UiState.minConsoleHeight}
-          size={window.innerHeight - UiState.consoleHeight}
+          maxSize={UiState.windowHeight - UiState.minConsoleHeight}
+          size={UiState.windowHeight - UiState.consoleHeight}
           onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
           <div className="wrapper">
             <ProjectHeader
