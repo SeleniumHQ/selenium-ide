@@ -21,59 +21,49 @@ let panelId = undefined;
 
 function openPage() {
   const getContentWindowInfo = browser.windows.getLastFocused();
-  browser.storage.local.get().then(storage => {
-    const size = Object.assign({
-      height: 960,
-      width: 610
-    }, storage.size);
+  const getSideexWindowInfo = openWindowFromStorageResolution();
 
-    const getSideexWindowInfo = browser.windows.create(Object.assign({
-      url: browser.extension.getURL("assets/index.html"),
-      type: "popup"
-    }, size));
+  Promise.all([getContentWindowInfo, getSideexWindowInfo])
+    .then(function(windowInfo) {
+      console.log("get the window info");
+      let contentWindowInfo = windowInfo[0];
+      let sideexWindowInfo = windowInfo[1];
+      console.log("contentWindowInfo Id:" + contentWindowInfo.id);
+      console.log("contentWindowInfo:", contentWindowInfo);
+      console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
+      console.log("sideexWindowInfo:", sideexWindowInfo);
+      return new Promise(function(resolve, reject) {
+        let count = 0;
+        let interval = setInterval(function() {
+          if (count > 100) {
+            reject("SideeX editor has no response");
+            clearInterval(interval);
+          }
 
-    Promise.all([getContentWindowInfo, getSideexWindowInfo])
-      .then(function(windowInfo) {
-        console.log("get the window info");
-        let contentWindowInfo = windowInfo[0];
-        let sideexWindowInfo = windowInfo[1];
-        console.log("contentWindowInfo Id:" + contentWindowInfo.id);
-        console.log("contentWindowInfo:", contentWindowInfo);
-        console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
-        console.log("sideexWindowInfo:", sideexWindowInfo);
-        return new Promise(function(resolve, reject) {
-          let count = 0;
-          let interval = setInterval(function() {
-            if (count > 100) {
-              reject("SideeX editor has no response");
+          browser.tabs.query({
+            active: true,
+            windowId: sideexWindowInfo.id
+          }).then(function(tabs) {
+            if (tabs.length != 1) {
+              count++;
+              return;
+            }
+            let sideexTabInfo = tabs[0];
+            if (sideexTabInfo.status == "loading") {
+              count++;
+              return;
+            } else {
+              console.log("SideeX has been fully loaded");
+              resolve(windowInfo);
               clearInterval(interval);
             }
-
-            browser.tabs.query({
-              active: true,
-              windowId: sideexWindowInfo.id
-            }).then(function(tabs) {
-              if (tabs.length != 1) {
-                count++;
-                return;
-              }
-              let sideexTabInfo = tabs[0];
-              if (sideexTabInfo.status == "loading") {
-                count++;
-                return;
-              } else {
-                console.log("SideeX has been fully loaded");
-                resolve(windowInfo);
-                clearInterval(interval);
-              }
-            });
-          }, 200);
-        });
-      }).then(passWindowId)
-      .catch(function(e) {
-        console.error(e);
+          });
+        }, 200);
       });
-  });
+    }).then(passWindowId)
+    .catch(function(e) {
+      console.error(e);
+    });
 
   browser.contextMenus.create({
     id: "verifyText",
@@ -111,7 +101,37 @@ function openPage() {
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
+}
 
+function openWindowFromStorageResolution() {
+  let size = {
+    height: 960,
+    width: 610
+  };
+  return browser.storage.local.get().then(storage => {
+    if (sizeIsValid(storage.size)) {
+      size.height = storage.size.height;
+      size.width = storage.size.width;
+    }
+    return browser.windows.create(Object.assign({
+      url: browser.extension.getURL("assets/index.html"),
+      type: "popup"
+    }, size));
+  }).catch(e => {
+    console.error(e);
+    return browser.windows.create(Object.assign({
+      url: browser.extension.getURL("assets/index.html"),
+      type: "popup"
+    }, size));
+  });
+}
+
+function sizeIsValid(size) {
+  return (size && sideIsValid(size.height) && sideIsValid(size.width));
+}
+
+function sideIsValid(number) {
+  return number && number.constructor.name === "Number" && number > 50;
 }
 
 browser.browserAction.onClicked.addListener(openPage);
