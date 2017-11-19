@@ -199,7 +199,11 @@ export default {
     new webpack.NamedModulesPlugin(),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
-      { from: "", to: "vendor", ignore: ["selenium/*"] }
+      { from: "atoms.js", to: "vendor" },
+      { from: "utils.js", to: "vendor" },
+      { from: "ext-command.js", to: "vendor" },
+      { from: "editor.js", to: "vendor" },
+      { from: "formatCommand.js", to: "vendor" }
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
