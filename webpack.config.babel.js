@@ -12,7 +12,6 @@ export default {
   devtool: isProduction ? "source-map" : false,
   entry: {
     polyfills: ["./setup"],
-    panel: ["./setupPanel"],
     injector: ["./prompt-injector"],
     background: ["./background"],
     prompt: ["./prompt"],
@@ -208,25 +207,6 @@ export default {
       inject: true,
       template: path.resolve(__dirname, "src/neo/index.html"),
       chunks: ["neo"],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true
-      }
-    }),
-    // Generates an `index.html` file with the <script> injected.
-    new HtmlWebpackPlugin({
-      filename: "panel.html",
-      inject: "head",
-      template: path.resolve(__dirname, "src/panel.html"),
-      chunks: [],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
