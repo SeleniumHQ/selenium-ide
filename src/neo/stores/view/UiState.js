@@ -1,5 +1,5 @@
 import { action, computed, observable, observe } from "mobx";
-import browser from "webextension-polyfill";
+import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 
 class UiState {
@@ -10,16 +10,17 @@ class UiState {
   @observable clipboard = null;
   @observable isRecording = false;
   @observable isSelectingTarget = false;
+  @observable windowHeight = window.innerHeight;
   @observable consoleHeight = 200;
-  @observable minConsoleHeight = 200;
+  @observable minConsoleHeight = 0;
   @observable minContentHeight = 460;
 
   constructor() {
     this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
-    browser.storage.local.get().then(storage => {
-      if (storage.consoleSize && storage.consoleSize >= this.minConsoleHeight) {
-        this.resizeConsole(storage.consoleSize);
+    storage.get().then(data => {
+      if (data.consoleSize !== undefined && data.consoleSize >= this.minConsoleHeight) {
+        this.resizeConsole(data.consoleSize);
       }
     });
   }
@@ -67,9 +68,13 @@ class UiState {
 
   @action.bound resizeConsole(height) {
     this.consoleHeight = height;
-    browser.storage.local.set({
+    storage.set({
       consoleSize: height 
     });
+  }
+
+  @action.bound setWindowHeight(height) {
+    this.windowHeight = height;
   }
 
   addStateForSuite(suite) {
