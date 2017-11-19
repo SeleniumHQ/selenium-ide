@@ -1,6 +1,7 @@
 .runs {
   padding: 15px 10px 0 10px;
   border-top: 1px solid #CECECE;
+  background-color: #fff;
 }
 
 .runs > div {
