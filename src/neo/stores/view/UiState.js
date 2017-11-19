@@ -38,6 +38,10 @@ class UiState {
     return this._project.url;
   }
 
+  @computed get maxContentHeight() {
+    return this.windowHeight - this.minConsoleHeight;
+  }
+
   @action.bound copyToClipboard(item) {
     this.clipboard = item;
   }

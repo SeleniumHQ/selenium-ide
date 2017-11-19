@@ -72,7 +72,7 @@ modify(project);
         <SplitPane
           split="horizontal"
           minSize={UiState.minContentHeight}
-          maxSize={UiState.windowHeight - UiState.minConsoleHeight}
+          maxSize={UiState.maxContentHeight}
           size={UiState.windowHeight - UiState.consoleHeight}
           onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
           <div className="wrapper">
