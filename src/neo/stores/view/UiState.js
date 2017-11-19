@@ -1,4 +1,5 @@
 import { action, computed, observable, observe } from "mobx";
+import browser from "webextension-polyfill";
 import SuiteState from "./SuiteState";
 
 class UiState {
@@ -16,6 +17,11 @@ class UiState {
   constructor() {
     this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
+    browser.storage.local.get().then(storage => {
+      if (storage.consoleSize && storage.consoleSize >= this.minConsoleHeight) {
+        this.resizeConsole(storage.consoleSize);
+      }
+    });
   }
 
   @action.bound setProject(project) {
@@ -60,8 +66,10 @@ class UiState {
   }
 
   @action.bound resizeConsole(height) {
-    console.log(height);
     this.consoleHeight = height;
+    browser.storage.local.set({
+      consoleSize: height 
+    });
   }
 
   addStateForSuite(suite) {
