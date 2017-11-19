@@ -68,7 +68,12 @@ modify(project);
   render() {
     return (
       <div className="container">
-        <SplitPane split="horizontal" minSize={460} maxSize={window.innerHeight - 200} defaultSize={window.innerHeight - 200}>
+        <SplitPane
+          split="horizontal"
+          minSize={UiState.minContentHeight}
+          maxSize={window.innerHeight - UiState.minConsoleHeight}
+          size={window.innerHeight - UiState.consoleHeight}
+          onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
           <div className="wrapper">
             <ProjectHeader
               title={this.state.project.name}

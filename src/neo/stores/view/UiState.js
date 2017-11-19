@@ -9,6 +9,9 @@ class UiState {
   @observable clipboard = null;
   @observable isRecording = false;
   @observable isSelectingTarget = false;
+  @observable consoleHeight = 200;
+  @observable minConsoleHeight = 200;
+  @observable minContentHeight = 460;
 
   constructor() {
     this.suiteStates = {};
@@ -54,6 +57,11 @@ class UiState {
 
   @action.bound setSelectingTarget(isSelecting) {
     this.isSelectingTarget = isSelecting;
+  }
+
+  @action.bound resizeConsole(height) {
+    console.log(height);
+    this.consoleHeight = height;
   }
 
   addStateForSuite(suite) {
