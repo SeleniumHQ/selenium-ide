@@ -17,7 +17,6 @@ import Modal from "../Modal";
 import UiState from "../../stores/view/UiState";
 import "../../styles/app.css";
 import "../../styles/font.css";
-import "../../styles/heights.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
 
