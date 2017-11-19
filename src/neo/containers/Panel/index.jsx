@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import parser from "ua-parser-js";
+import browser from "webextension-polyfill";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import modify from "../../side-effects/modify";
@@ -42,6 +43,7 @@ modify(project);
     super(props);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
+    this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
   }
   moveTest(testItem, destination) {
     const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
@@ -49,6 +51,17 @@ modify(project);
 
     destination.addTestCase(test);
     origin.removeTestCase(test);
+  }
+  handleResize(currWindow) {
+    browser.storage.local.set({
+      size: {
+        height: currWindow.outerHeight,
+        width: currWindow.outerWidth
+      }
+    });
+  }
+  componentWillUnmount() {
+    window.removeEventListener(this.resizeHandler);
   }
   render() {
     return (
