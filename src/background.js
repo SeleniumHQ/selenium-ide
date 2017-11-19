@@ -21,54 +21,59 @@ let panelId = undefined;
 
 function openPage() {
   const getContentWindowInfo = browser.windows.getLastFocused();
-  const getSideexWindowInfo = browser.windows.create({
-    url: browser.extension.getURL("assets/index.html"),
-    type: "popup",
-    height: 960,
-    width: 610
-  });
+  browser.storage.local.get().then(storage => {
+    const size = Object.assign({
+      height: 960,
+      width: 610
+    }, storage.size);
 
-  Promise.all([getContentWindowInfo, getSideexWindowInfo])
-    .then(function(windowInfo) {
-      console.log("get the window info");
-      let contentWindowInfo = windowInfo[0];
-      let sideexWindowInfo = windowInfo[1];
-      console.log("contentWindowInfo Id:" + contentWindowInfo.id);
-      console.log("contentWindowInfo:", contentWindowInfo);
-      console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
-      console.log("sideexWindowInfo:", sideexWindowInfo);
-      return new Promise(function(resolve, reject) {
-        let count = 0;
-        let interval = setInterval(function() {
-          if (count > 100) {
-            reject("SideeX editor has no response");
-            clearInterval(interval);
-          }
+    const getSideexWindowInfo = browser.windows.create(Object.assign({
+      url: browser.extension.getURL("assets/index.html"),
+      type: "popup"
+    }, size));
 
-          browser.tabs.query({
-            active: true,
-            windowId: sideexWindowInfo.id
-          }).then(function(tabs) {
-            if (tabs.length != 1) {
-              count++;
-              return;
-            }
-            let sideexTabInfo = tabs[0];
-            if (sideexTabInfo.status == "loading") {
-              count++;
-              return;
-            } else {
-              console.log("SideeX has been fully loaded");
-              resolve(windowInfo);
+    Promise.all([getContentWindowInfo, getSideexWindowInfo])
+      .then(function(windowInfo) {
+        console.log("get the window info");
+        let contentWindowInfo = windowInfo[0];
+        let sideexWindowInfo = windowInfo[1];
+        console.log("contentWindowInfo Id:" + contentWindowInfo.id);
+        console.log("contentWindowInfo:", contentWindowInfo);
+        console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
+        console.log("sideexWindowInfo:", sideexWindowInfo);
+        return new Promise(function(resolve, reject) {
+          let count = 0;
+          let interval = setInterval(function() {
+            if (count > 100) {
+              reject("SideeX editor has no response");
               clearInterval(interval);
             }
-          });
-        }, 200);
+
+            browser.tabs.query({
+              active: true,
+              windowId: sideexWindowInfo.id
+            }).then(function(tabs) {
+              if (tabs.length != 1) {
+                count++;
+                return;
+              }
+              let sideexTabInfo = tabs[0];
+              if (sideexTabInfo.status == "loading") {
+                count++;
+                return;
+              } else {
+                console.log("SideeX has been fully loaded");
+                resolve(windowInfo);
+                clearInterval(interval);
+              }
+            });
+          }, 200);
+        });
+      }).then(passWindowId)
+      .catch(function(e) {
+        console.error(e);
       });
-    }).then(passWindowId)
-    .catch(function(e) {
-      console.error(e);
-    });
+  });
 
   browser.contextMenus.create({
     id: "verifyText",
