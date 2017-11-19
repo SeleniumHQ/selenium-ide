@@ -3,6 +3,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
 import browser from "webextension-polyfill";
 import ProjectStore from "../../stores/domain/ProjectStore";
@@ -18,6 +19,7 @@ import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/heights.css";
 import "../../styles/layout.css";
+import "../../styles/resizer.css";
 
 import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/SideeX/record";
@@ -66,31 +68,35 @@ modify(project);
   render() {
     return (
       <div className="container">
-        <ProjectHeader
-          title={this.state.project.name}
-          changed={this.state.project.modified}
-          changeName={this.state.project.changeName}
-          load={loadProject.bind(undefined, project)}
-          save={() => saveProject(project)}
-        />
-        <div className="content">
-          <Navigation
-            tests={UiState.filteredTests}
-            suites={this.state.project.suites}
-            createSuite={this.createSuite}
-            removeSuite={this.state.project.deleteSuite}
-            createTest={this.createTest}
-            moveTest={this.moveTest}
-            deleteTest={this.deleteTest}
-          />
-          <Editor
-            url={this.state.project.url}
-            urls={this.state.project.urls}
-            setUrl={this.state.project.setUrl}
-            test={UiState.selectedTest.test}
-          />
-        </div>
-        <Console />
+        <SplitPane split="horizontal" minSize={460} maxSize={window.innerHeight - 200} defaultSize={window.innerHeight - 200}>
+          <div className="wrapper">
+            <ProjectHeader
+              title={this.state.project.name}
+              changed={this.state.project.modified}
+              changeName={this.state.project.changeName}
+              load={loadProject.bind(undefined, project)}
+              save={() => saveProject(project)}
+            />
+            <div className="content">
+              <Navigation
+                tests={UiState.filteredTests}
+                suites={this.state.project.suites}
+                createSuite={this.createSuite}
+                removeSuite={this.state.project.deleteSuite}
+                createTest={this.createTest}
+                moveTest={this.moveTest}
+                deleteTest={this.deleteTest}
+              />
+              <Editor
+                url={this.state.project.url}
+                urls={this.state.project.urls}
+                setUrl={this.state.project.setUrl}
+                test={UiState.selectedTest.test}
+              />
+            </div>
+          </div>
+          <Console />
+        </SplitPane>
         <Modal project={this.state.project} />
       </div>
     );
