@@ -6,6 +6,7 @@
 
 .modal-header h2 {
   flex-grow: 1;
+  text-transform: capitalize;
 }
 
 .modal-header button {
