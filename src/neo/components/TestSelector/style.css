@@ -2,21 +2,6 @@
   width: 260px;
 }
 
-.test-selector .header {
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-}
-
-.test-selector .header h2 {
-  flex-grow: 1;
-}
-
-.test-selector .header button {
-  margin: 0;
-  padding: 0;
-}
-
 .test-selector .search {
   margin: 10px 0;
   width: 100%;

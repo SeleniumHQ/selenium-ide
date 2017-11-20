@@ -20,20 +20,19 @@ export default class Modal extends Component {
     return (
       <div>
         <Alert show={show => ModalState.showAlert = show} />
-        {ModalState.editedSuite ? <TestSelector
+        <TestSelector
           isEditing={!!ModalState.editedSuite}
           tests={this.props.project.tests}
-          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : null}
+          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : []}
           cancelSelection={() => {ModalState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(ModalState.editedSuite, tests)}
-        /> : null}
-        {ModalState.renameState
-          ? <RenameDialog
-            isEditing={!!ModalState.renameState}
-            value={ModalState.renameState.value}
-            setValue={ModalState.renameState ? ModalState.renameState.done : null}
-            cancel={ModalState.cancelRenaming} />
-          : null}
+        />
+        <RenameDialog
+          isEditing={!!ModalState.renameState.type}
+          type={ModalState.renameState.type}
+          value={ModalState.renameState.value}
+          setValue={ModalState.renameState ? ModalState.renameState.done : null}
+          cancel={ModalState.cancelRenaming} />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { observer } from "mobx-react";
+import { observer, Provider } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import UiState from "../../stores/view/UiState";
 import ModalState from "../../stores/view/ModalState";
@@ -39,9 +39,11 @@ import "./style.css";
           <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
         <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
-        { this.state.showTests
-          ? <TestList tests={this.props.tests} rename={ModalState.rename} removeTest={ModalState.deleteTest} />
-          : <SuiteList suites={this.props.suites} rename={ModalState.rename} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+        <Provider renameTest={ModalState.renameTest}>
+          { this.state.showTests
+            ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
+            : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+        </Provider>
         <Runs
           runs={PlaybackState.runs}
           failures={PlaybackState.failures}

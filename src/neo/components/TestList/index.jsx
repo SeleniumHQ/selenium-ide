@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { PropTypes as MobxPropTypes } from "mobx-react";
+import { PropTypes as MobxPropTypes, inject } from "mobx-react";
 import { observer } from "mobx-react";
 import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
@@ -8,7 +8,7 @@ import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import "./style.css";
 
-@observer 
+@inject("renameTest") @observer
 export default class TestList extends Component {
   render() {
     return (
@@ -31,7 +31,7 @@ export default class TestList extends Component {
                 test={test}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
                 selectTest={UiState.selectTest}
-                renameTest={this.props.rename}
+                renameTest={this.props.renameTest}
                 removeTest={() => { this.props.removeTest(test); }}
               />}
           </li>
@@ -43,7 +43,7 @@ export default class TestList extends Component {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     collapsed: PropTypes.bool,
     suite: PropTypes.object,
-    rename: PropTypes.func,
+    renameTest: PropTypes.func,
     removeTest: PropTypes.func.isRequired
   };
 }

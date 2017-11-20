@@ -1,0 +1,16 @@
+.modal-header {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  color: #727272;
+}
+
+.modal-header h2 {
+  flex-grow: 1;
+  text-transform: capitalize;
+}
+
+.modal-header button {
+  margin: 0;
+  padding: 0;
+}

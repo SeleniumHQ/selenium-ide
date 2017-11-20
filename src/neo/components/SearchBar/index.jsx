@@ -9,7 +9,8 @@ export default class SearchBar extends React.Component {
   }
   static propTypes = {
     value: PropTypes.string,
-    filter: PropTypes.func
+    filter: PropTypes.func,
+    inputRef: PropTypes.func
   };
   handleChange(e) {
     if (this.props.filter) this.props.filter(e.target.value);
@@ -17,7 +18,7 @@ export default class SearchBar extends React.Component {
   render() {
     return (
       <div>
-        <input className="search" type="search" placeholder="Search tests..." value={this.props.value} onChange={this.handleChange} />
+        <input ref={this.props.inputRef} className="search" type="search" placeholder="Search tests..." value={this.props.value} onChange={this.handleChange} />
       </div>
     );
   }

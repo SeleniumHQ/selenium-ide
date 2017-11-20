@@ -1,14 +1,5 @@
-.rename-dialog {
-  min-width: 260px;
-}
-
-.rename-dialog h2 {
-  text-align: center;
-  text-transform: capitalize;
-  padding: 10px 0;
-}
-
 .rename-dialog input {
   display: block;
-  margin: 0 auto;
+  margin: 15px auto;
+  width: 300px;
 }

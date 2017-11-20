@@ -3,41 +3,51 @@ import UiState from "./UiState";
 
 class ModalState {
   @observable editedSuite = null;
-  @observable renameState = null;
+  @observable renameState = {};
 
-  @action.bound editSuite(suite) {
-    this.editedSuite = suite;
+  constructor() {
+    this.renameTest = this.rename.bind(this, "Test Case");
+    this.renameSuite = this.rename.bind(this, "Suite");
+    this.rename = this.rename.bind(this);
   }
 
-  @action.bound cancelRenaming() {
-    this.renameState = null;
-  }
-
-  @action.bound rename(value, cb) {
+  @action rename(type, value, cb) {
     this.renameState = {
       value,
+      type,
       done: (...argv) => {
         cb(...argv);
         this.cancelRenaming();
       }
     };
   }
+
+  @action.bound editSuite(suite) {
+    this.editedSuite = suite;
+  }
+
+  @action.bound cancelRenaming() {
+    this.renameState = {};
+  }
+
   @action.bound createSuite() {
-    this.rename(null, (name) => {
+    this.rename("Suite", null, (name) => {
       if (name) this._project.createSuite(name);
     });
   }
+
   @action.bound createTest() {
-    this.rename(null, (name) => {
+    this.rename("Test Case", null, (name) => {
       if (name) {
         const test = this._project.createTestCase(name);
         UiState.selectTest(test);
       }
     });
   }
+
   @action.bound deleteTest(testCase) {
     this.showAlert({
-      title: testCase.name,
+      title: "Delete Test Case",
       description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
       cancelLabel: "cancel",
       confirmLabel: "delete"
