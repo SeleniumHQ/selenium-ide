@@ -9,7 +9,8 @@ export default class SearchBar extends React.Component {
   }
   static propTypes = {
     value: PropTypes.string,
-    filter: PropTypes.func
+    filter: PropTypes.func,
+    inputRef: PropTypes.func
   };
   handleChange(e) {
     if (this.props.filter) this.props.filter(e.target.value);
