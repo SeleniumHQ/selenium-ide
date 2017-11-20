@@ -7,15 +7,28 @@
 }
 
 .modal {
+  color: #4d4d4d;
   position: relative;
   left: -50%;
   background: white;
   border: 1px solid #DEDEDE;
   border-radius: 4px;
-  box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 0 18px rgba(0,0,0,.7);
   padding: 20px;
   opacity: 0;
   transform: scale(0, 0);
   transition: opacity 287ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 191ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
+.modal input {
+  color: #4d4d4d;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px; 
+  background: rgba(0,0,0,0.65);
+}

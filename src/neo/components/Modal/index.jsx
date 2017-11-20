@@ -48,6 +48,7 @@ export default class Modal extends React.Component {
             shouldCloseOnOverlayClick={true}
             closeTimeoutMS={this.props.duration}
             onRequestClose={this.props.onRequestClose}
+            overlayClassName="modal-overlay"
           >
             <div className={classNames("modal", this.props.className)} style={this.props.transitionStyles[status]}>
               {this.props.children}
