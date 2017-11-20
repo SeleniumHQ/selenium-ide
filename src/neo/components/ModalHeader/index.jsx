@@ -5,8 +5,8 @@ import "./style.css";
 
 export default class ModalHeader extends React.Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
-    close: PropTypes.func.isRequired
+    title: PropTypes.string,
+    close: PropTypes.func
   };
   render() {
     return (
