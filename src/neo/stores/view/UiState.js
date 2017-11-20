@@ -41,6 +41,11 @@ class UiState {
 
   @action.bound selectTest(test, suite) {
     this.selectedTest = { test, suite };
+    if (test && test.commands.length) {
+      this.selectCommand(test.commands[0]);
+    } else {
+      this.selectCommand(undefined);
+    }
   }
 
   @action.bound selectCommand(command) {

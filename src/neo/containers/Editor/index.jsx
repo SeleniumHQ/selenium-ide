@@ -37,11 +37,6 @@ import "./style.css";
     }
     this.props.test.removeCommand(command);
   }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.test && this.props.test !== nextProps.test) {
-      UiState.selectCommand(null);
-    }
-  }
   render() {
     return (
       <main className="editor">
