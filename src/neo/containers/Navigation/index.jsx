@@ -24,7 +24,6 @@ import "./style.css";
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
@@ -42,7 +41,7 @@ import "./style.css";
         <Provider renameTest={ModalState.renameTest}>
           { this.state.showTests
             ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
-            : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={this.props.removeSuite} moveTest={this.props.moveTest} /> }
+            : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={ModalState.deleteSuite} moveTest={this.props.moveTest} /> }
         </Provider>
         <Runs
           runs={PlaybackState.runs}

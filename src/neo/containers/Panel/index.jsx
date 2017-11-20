@@ -68,7 +68,6 @@ modify(project);
             tests={UiState.filteredTests}
             suites={this.state.project.suites}
             createSuite={this.createSuite}
-            removeSuite={this.state.project.deleteSuite}
             createTest={this.createTest}
             moveTest={this.moveTest}
             deleteTest={this.deleteTest}
