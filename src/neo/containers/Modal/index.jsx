@@ -6,6 +6,7 @@ import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
 import ModalState from "../../stores/view/ModalState";
 
+const EMPTY_ARRAY = [];
 @observer
 export default class Modal extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ export default class Modal extends Component {
         <TestSelector
           isEditing={!!ModalState.editedSuite}
           tests={this.props.project.tests}
-          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : null}
+          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : []}
           cancelSelection={() => {ModalState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(ModalState.editedSuite, tests)}
         />
