@@ -18,13 +18,6 @@ export default class TestSelector extends React.Component {
     this.selectTest = this.selectTest.bind(this);
     this.filter = this.filter.bind(this);
   }
-  static propTypes = {
-    isEditing: PropTypes.bool.isRequired,
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    selectedTests: PropTypes.array,
-    cancelSelection: PropTypes.func.isRequired,
-    completeSelection: PropTypes.func.isRequired
-  };
   selectTest(isSelected, test) {
     this.setState({
       selectedTests: { ...this.state.selectedTests, [test.id]: isSelected ? test : undefined}
@@ -50,6 +43,13 @@ export default class TestSelector extends React.Component {
       </Modal>
     );
   }
+  static propTypes = {
+    isEditing: PropTypes.bool.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    selectedTests: PropTypes.array,
+    cancelSelection: PropTypes.func.isRequired,
+    completeSelection: PropTypes.func.isRequired
+  };
 }
 
 class TestSelectorList extends React.Component {
