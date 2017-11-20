@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Modal from "../Modal";
+import ModalHeader from "../ModalHeader";
 import FlatButton from "../FlatButton";
 import "./style.css";
 
@@ -20,9 +21,8 @@ export default class RenameDialog extends React.Component {
   render() {
     return (
       <Modal className="rename-dialog" isOpen={this.props.isEditing}>
-        <h2>{this.state.isRenaming ? `Rename '${this.props.value}'` : "Create New"}</h2>
+        <ModalHeader title={`${this.state.isRenaming ? "Rename" : "Create New"} ${this.props.type}`} close={this.props.cancel} />
         <input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} />
-        <hr />
         <span className="right">
           <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
           <FlatButton className="primary" disabled={!this.state.value} onClick={() => {this.props.setValue(this.state.value);}} style={{
