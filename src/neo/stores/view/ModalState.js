@@ -45,6 +45,19 @@ class ModalState {
     });
   }
 
+  @action.bound deleteSuite(suite) {
+    this.showAlert({
+      title: "Delete Suite",
+      description: `This will permanently delete '${suite.name}'`,
+      cancelLabel: "cancel",
+      confirmLabel: "delete"
+    }, (choseDelete) => {
+      if (choseDelete) {
+        this._project.deleteSuite(suite);
+      }
+    });
+  }
+
   @action.bound deleteTest(testCase) {
     this.showAlert({
       title: "Delete Test Case",
