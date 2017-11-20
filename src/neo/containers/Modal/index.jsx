@@ -6,7 +6,6 @@ import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
 import ModalState from "../../stores/view/ModalState";
 
-const EMPTY_ARRAY = [];
 @observer
 export default class Modal extends Component {
   constructor(props) {
