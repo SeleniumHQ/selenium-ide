@@ -17,6 +17,7 @@ export default class ToolBar extends React.Component {
   render() {
     const isPlayingSuite = PlaybackState.isPlaying && PlaybackState.currentRunningSuite;
     const isPlayingTest = PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite;
+    const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
     return (
       <div className="toolbar">
         <PlayAll
@@ -26,7 +27,7 @@ export default class ToolBar extends React.Component {
         />
         <PlayCurrent
           isActive={!PlaybackState.paused && isPlayingTest}
-          disabled={!UiState.selectedTest.test || isPlayingSuite}
+          disabled={isTestEmpty || isPlayingSuite}
           onClick={!PlaybackState.paused ? PlaybackState.startPlaying : PlaybackState.resume}
         />
         { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
