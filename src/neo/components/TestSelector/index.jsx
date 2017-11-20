@@ -11,12 +11,25 @@ import "./style.css";
 export default class TestSelector extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.initialState(props);
+    this.selectTest = this.selectTest.bind(this);
+    this.filter = this.filter.bind(this);
+  }
+  initialState(props) {
+    return {
       selectedTests: props.selectedTests ? props.selectedTests.reduce((selections, selection) => { selections[selection.id] = selection; return selections; }, {}) : {},
       filterTerm: ""
     };
-    this.selectTest = this.selectTest.bind(this);
-    this.filter = this.filter.bind(this);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.tests) {
+      this.setState(this.initialState(nextProps));
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.isEditing && !prevProps.isEditing) {
+      this.input.focus();
+    }
   }
   selectTest(isSelected, test) {
     this.setState({
@@ -30,7 +43,7 @@ export default class TestSelector extends React.Component {
     return (
       <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
         <ModalHeader title="Select Tests" close={this.props.cancelSelection} />
-        <SearchBar filter={this.filter} />
+        <SearchBar inputRef={(input) => { this.input = input; }} filter={this.filter} />
         <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
         <hr />
         <span className="right">
