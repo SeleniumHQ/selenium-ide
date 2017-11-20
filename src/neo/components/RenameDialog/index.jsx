@@ -35,6 +35,7 @@ export default class RenameDialog extends React.Component {
   }
   static propTypes = {
     isEditing: PropTypes.bool,
+    type: PropTypes.string,
     value: PropTypes.string,
     cancel: PropTypes.func,
     setValue: PropTypes.func
