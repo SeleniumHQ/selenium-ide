@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import Modal from "../Modal";
-import RemoveButton from "../ActionButtons/Remove";
+import ModalHeader from "../ModalHeader";
 import FlatButton from "../FlatButton";
 import SearchBar from "../SearchBar";
 import Checkbox from "../Checkbox";
@@ -36,10 +36,7 @@ export default class TestSelector extends React.Component {
   render() {
     return (
       <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
-        <span className="header">
-          <h2>Select Tests</h2>
-          <RemoveButton onClick={this.props.cancelSelection} />
-        </span>
+        <ModalHeader title="Select Tests" close={this.props.cancelSelection} />
         <SearchBar filter={this.filter} />
         <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
         <hr />
