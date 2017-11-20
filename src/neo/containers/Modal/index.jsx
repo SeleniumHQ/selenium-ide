@@ -28,11 +28,11 @@ export default class Modal extends Component {
           completeSelection={tests => this.selectTestsForSuite(ModalState.editedSuite, tests)}
         /> : null}
         <RenameDialog
-            isEditing={!!ModalState.renameState.type}
-            type={ModalState.renameState.type}
-            value={ModalState.renameState.value}
-            setValue={ModalState.renameState ? ModalState.renameState.done : null}
-            cancel={ModalState.cancelRenaming} />
+          isEditing={!!ModalState.renameState.type}
+          type={ModalState.renameState.type}
+          value={ModalState.renameState.value}
+          setValue={ModalState.renameState ? ModalState.renameState.done : null}
+          cancel={ModalState.cancelRenaming} />
       </div>
     );
   }
