@@ -1,9 +1,9 @@
-.btn-action.si-gauge {
+.btn-action[class*="si-gauge-"] {
   position: relative;
   padding-right: 8px;
 }
 
-.btn-action.si-gauge i {
+.btn-action[class*="si-gauge-"] i {
   transform: rotate(90deg);
   position: absolute;
   font-size: 8px;
