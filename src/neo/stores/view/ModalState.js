@@ -47,7 +47,7 @@ class ModalState {
 
   @action.bound deleteTest(testCase) {
     this.showAlert({
-      title: testCase.name,
+      title: "Delete Test Case",
       description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
       cancelLabel: "cancel",
       confirmLabel: "delete"
