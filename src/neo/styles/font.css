@@ -1,10 +1,9 @@
 @font-face {
   font-family: 'selenium-ide';
-  src:  url('../assets/fonts/selenium-ide.eot?nzf9n');
-  src:  url('../assets/fonts/selenium-ide.eot?nzf9n#iefix') format('embedded-opentype'),
-    url('../assets/fonts/selenium-ide.ttf?nzf9n') format('truetype'),
-    url('../assets/fonts/selenium-ide.woff?nzf9n') format('woff'),
-    url('../assets/fonts/selenium-ide.svg?nzf9n#selenium-ide') format('svg');
+  src:
+    url('../assets/fonts/selenium-ide.ttf?j39i1g') format('truetype'),
+    url('../assets/fonts/selenium-ide.woff?j39i1g') format('woff'),
+    url('../assets/fonts/selenium-ide.svg?j39i1g#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +23,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-gauge-6:before {
+  content: "\e90c";
+}
+.si-gauge-5:before {
+  content: "\e90e";
+}
+.si-gauge-4:before {
+  content: "\e912";
+}
+.si-gauge-3:before {
+  content: "\e913";
+}
+.si-gauge-2:before {
+  content: "\e914";
+}
+.si-gauge-1:before {
+  content: "\e915";
+}
+.si-search:before {
+  content: "\e916";
+}
 .si-caret:before {
   content: "\e900";
 }
@@ -66,14 +86,8 @@
 .si-save:before {
   content: "\e90b";
 }
-.si-search:before {
-  content: "\e90c";
-}
 .si-select:before {
   content: "\e90d";
-}
-.si-gauge:before {
-  content: "\e90e";
 }
 .si-stop:before {
   content: "\e90f";

@@ -1,6 +1,7 @@
 import { action, computed, observable, observe } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
+import PlaybackState from "./PlaybackState";
 
 class UiState {
   @observable selectedTest = {};
@@ -40,6 +41,12 @@ class UiState {
 
   @computed get maxContentHeight() {
     return this.windowHeight - this.minConsoleHeight;
+  }
+
+  @computed get gaugeSpeed() {
+    const value = PlaybackState.maxDelay - PlaybackState.delay;
+    const speed = Math.ceil(value / PlaybackState.maxDelay * 6);
+    return speed ? speed : 1;
   }
 
   @action.bound copyToClipboard(item) {
