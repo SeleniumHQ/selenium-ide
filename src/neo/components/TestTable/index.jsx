@@ -47,7 +47,7 @@ export default class TestTable extends React.Component {
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
-                remove={this.props.removeCommand ? () => { this.props.removeCommand(command); } : null}
+                remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
                 swapCommands={this.props.swapCommands}
                 setDrag={UiState.setDrag}
                 clipboard={UiState.clipboard}

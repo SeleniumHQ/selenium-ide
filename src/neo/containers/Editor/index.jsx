@@ -31,11 +31,18 @@ import "./style.css";
       return newCommand;
     }
   }
-  removeCommand(command) {
+  removeCommand(index, command) {
+    const { test } = this.props;
+    test.removeCommand(command);
     if (UiState.selectedCommand === command) {
-      UiState.selectCommand(null);
+      if (test.commands.length > index) {
+        UiState.selectCommand(test.commands[index]);
+      } else if (test.commands.length) {
+        UiState.selectCommand(test.commands[test.commands.length - 1]);
+      } else {
+        UiState.selectCommand(null);
+      }
     }
-    this.props.test.removeCommand(command);
   }
   render() {
     return (
