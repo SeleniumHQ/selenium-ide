@@ -82,6 +82,7 @@ export default class TestRow extends React.Component {
   static propTypes = {
     id: PropTypes.string,
     index: PropTypes.number,
+    selected: PropTypes.bool,
     className: PropTypes.string,
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
@@ -97,8 +98,20 @@ export default class TestRow extends React.Component {
     setDrag: PropTypes.func,
     clipboard: PropTypes.any,
     copyToClipboard: PropTypes.func,
-    clearAllCommands: PropTypes.func
+    clearAllCommands: PropTypes.func,
+    moveSelectionUp: PropTypes.func,
+    moveSelectionDown: PropTypes.func
   };
+  componentDidMount() {
+    if (this.props.selected) {
+      this.node.focus();
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.selected && !prevProps.selected) {
+      this.node.focus();
+    }
+  }
   handleKeyDown(event) {
     const e = event.nativeEvent;
     modifier(e);
@@ -108,6 +121,10 @@ export default class TestRow extends React.Component {
 
     if (noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
       this.props.remove();
+    } else if (noModifiers && e.key === "ArrowUp") {
+      this.props.moveSelectionUp();
+    } else if (noModifiers && e.key === "ArrowDown") {
+      this.props.moveSelectionDown();
     } else if (onlyPrimary && key === "X") {
       this.props.copyToClipboard();
       this.props.remove();
@@ -125,7 +142,7 @@ export default class TestRow extends React.Component {
   render() {
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
-      className={classNames(this.props.className, {"dragging": this.props.dragInProgress})}
+      className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.swapCommands ? "0" : null}
       onClick={this.props.onClick}
       onKeyDown={this.handleKeyDown.bind(this)}

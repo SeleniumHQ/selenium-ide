@@ -11,6 +11,7 @@ import "./style.css";
 @observer export default class Editor extends React.Component {
   constructor(props) {
     super(props);
+    this.selectCommandByIndex = this.selectCommandByIndex.bind(this);
     this.addCommand = this.addCommand.bind(this);
     this.removeCommand = this.removeCommand.bind(this);
   }
@@ -20,6 +21,12 @@ import "./style.css";
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired
   };
+  selectCommandByIndex(index) {
+    const { test } = this.props;
+    if (index >= 0 && index < test.commands.length) {
+      UiState.selectCommand(test.commands[index]);
+    }
+  }
   addCommand(index, command) {
     if (command) {
       const newCommand = command.clone();
@@ -53,6 +60,7 @@ import "./style.css";
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectCommand={UiState.selectCommand}
+          selectCommandByIndex={this.selectCommandByIndex}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}
           clearAllCommands={this.props.test ? this.props.test.clearAllCommands : null}

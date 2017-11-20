@@ -17,7 +17,8 @@ export default class TestTable extends React.Component {
     addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
-    clearAllCommands: PropTypes.func
+    clearAllCommands: PropTypes.func,
+    selectCommandByIndex: PropTypes.func
   };
   render() {
     return ([
@@ -39,13 +40,16 @@ export default class TestTable extends React.Component {
               <TestRow
                 key={command.id}
                 id={command.id}
-                className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "", {"selected": this.props.selectedCommand === command.id})}
+                className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
+                selected={this.props.selectedCommand === command.id}
                 index={index}
                 command={command.command}
                 target={command.target}
                 value={command.value}
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
+                moveSelectionUp={() => { this.props.selectCommandByIndex(index - 1); }}
+                moveSelectionDown={() => { this.props.selectCommandByIndex(index + 1); }}
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
                 remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
                 swapCommands={this.props.swapCommands}
