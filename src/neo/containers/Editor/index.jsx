@@ -34,7 +34,6 @@ import "./style.css";
       return newCommand;
     } else {
       const newCommand = this.props.test.createCommand(index);
-      newCommand.setCommand("open");
       return newCommand;
     }
   }
