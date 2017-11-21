@@ -15,8 +15,8 @@ export default class OpenButton extends React.Component {
   render() {
     return (
       <span className="file-input">
-        <input id={this.id} type="file" accept="application/json, text/html" onChange={this.handleChange} />
-        <label htmlFor={this.id}><i className="btn-action si-open" /></label>
+        <input id={this.id} ref={(input) => { this.input = input; }} type="file" accept="application/json, text/html" onChange={this.handleChange} />
+        <label htmlFor={this.id} tabIndex="0" onFocus={() => {this.input.focus();}}><i className="btn-action si-open" /></label>
       </span>
     );
   }

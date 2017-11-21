@@ -33,3 +33,7 @@
 .header .title:focus:after {
   content: " ";
 }
+
+.header .buttons {
+  display: flex;
+}
