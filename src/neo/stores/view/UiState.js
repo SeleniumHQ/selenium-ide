@@ -1,6 +1,7 @@
 import { action, computed, observable, observe } from "mobx";
 import SuiteState from "./SuiteState";
 import PlaybackState from "./PlaybackState";
+import Command from "../../models/Command";
 
 class UiState {
   @observable selectedTest = {};
@@ -50,6 +51,15 @@ class UiState {
 
   @action.bound selectCommand(command) {
     this.selectedCommand = command;
+  }
+
+  @action.bound selectCommandByIndex(index) {
+    const { test } = this.selectedTest; 
+    if (index >= 0 && index < test.commands.length) {
+      this.selectCommand(test.commands[index]);
+    } else if (index === test.commands.length) {
+      this.selectCommand(this.pristineCommand);
+    }
   }
 
   @action.bound changeFilter(term) {
