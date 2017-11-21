@@ -103,11 +103,6 @@ export default class TestRow extends React.Component {
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func
   };
-  componentDidMount() {
-    if (this.props.selected) {
-      this.node.focus();
-    }
-  }
   componentDidUpdate(prevProps) {
     if (this.props.selected && !prevProps.selected) {
       this.node.focus();
