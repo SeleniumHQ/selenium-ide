@@ -52,8 +52,12 @@ class UiState {
   }
   
   @action.bound selectTestByIndex(index, suite) {
-    if (!suite && index >= 0 && index < this.filteredTests.length) {
-      this.selectTest(this.filteredTests[index]);
+    const selectTestInArray = (index, tests) => (
+      (index >= 0 && index < tests.length) ? tests[index] : undefined
+    );
+    if (!suite) {
+      const test = selectTestInArray(index, this.filteredTests);
+      if (test) this.selectTest(test);
     }
   }
 
