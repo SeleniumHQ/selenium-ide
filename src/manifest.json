@@ -6,7 +6,7 @@
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
 
   "icons": {
-    "48": "icons/icon.png"
+    "48": "icons/icon-big.png"
   },
 
   "browser_action": {
