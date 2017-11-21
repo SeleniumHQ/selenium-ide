@@ -20,6 +20,20 @@ describe("TestCase model", () => {
   it("Should have array of commands", () => {
     expect((new TestCase()).commands).toBeDefined();
   });
+  it("should add a command to the command list", () => {
+    const test = new TestCase();
+    const command = new Command();
+    test.addCommand(command);
+    expect(test.length).toBe(1);
+  });
+  it("should throw if the given command is undefined", () => {
+    const test = new TestCase();
+    expect(() => test.addCommand()).toThrowError("Expected to receive Command instead received undefined");
+  });
+  it("should throw if the given command is different type", () => {
+    const test = new TestCase();
+    expect(() => test.addCommand(5)).toThrowError("Expected to receive Command instead received Number");
+  });
   it("Should create a command", () => {
     const test = new TestCase();
     expect(test.commands.length).toBe(0);
