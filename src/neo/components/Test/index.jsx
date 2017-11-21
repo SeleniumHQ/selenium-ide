@@ -50,6 +50,7 @@ export default class Test extends React.Component {
       href="#"
       className={classNames("test", this.props.className, {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
+      tabIndex="-1"
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
