@@ -11,10 +11,12 @@ class UiState {
   @observable clipboard = null;
   @observable isRecording = false;
   @observable isSelectingTarget = false;
+  @observable pristineCommand = new Command();
 
   constructor() {
     this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
+    this.observePristine();
   }
 
   @action.bound setProject(project) {
@@ -76,6 +78,15 @@ class UiState {
 
   @action.bound setSelectingTarget(isSelecting) {
     this.isSelectingTarget = isSelecting;
+  }
+
+  @action.bound observePristine() {
+    this.pristineDisposer = observe(this.pristineCommand, (change) => {
+      this.pristineDisposer();
+      this.selectedTest.test.addCommand(this.pristineCommand);
+      this.pristineCommand = new Command();
+      this.observePristine();
+    });
   }
 
   addStateForSuite(suite) {
