@@ -54,15 +54,17 @@ export default class Test extends React.Component {
     this.props.selectTest(test, suite);
   }
   handleKeyDown(event) {
-    event.preventDefault();
-    event.stopPropagation();
     const e = event.nativeEvent;
     modifier(e);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
     if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
       this.props.moveSelectionUp();
     } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
+      event.preventDefault();
+      event.stopPropagation();
       this.props.moveSelectionDown();
     }
   }
