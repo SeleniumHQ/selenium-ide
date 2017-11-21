@@ -36,4 +36,5 @@
 
 .header .buttons {
   display: flex;
+  align-items: center;
 }

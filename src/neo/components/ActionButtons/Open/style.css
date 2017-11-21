@@ -1,3 +1,7 @@
+.file-input {
+  height: 32px;
+}
+
 .file-input > input {
   position: absolute;
   width: 0;
