@@ -18,7 +18,6 @@ export default class TestTable extends React.Component {
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func,
-    selectCommandByIndex: PropTypes.func
   };
   render() {
     return ([
@@ -48,8 +47,8 @@ export default class TestTable extends React.Component {
                 value={command.value}
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
-                moveSelectionUp={() => { this.props.selectCommandByIndex(index - 1); }}
-                moveSelectionDown={() => { this.props.selectCommandByIndex(index + 1); }}
+                moveSelectionUp={() => { UiState.selectCommandByIndex(index - 1); }}
+                moveSelectionDown={() => { UiState.selectCommandByIndex(index + 1); }}
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
                 insertCommand={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command)); } : null}
                 remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
@@ -62,8 +61,15 @@ export default class TestTable extends React.Component {
             )) : null }
             { this.props.commands ?
               <TestRow
-                command=""
-                onClick={() => (this.props.selectCommand(this.props.addCommand()))}
+                id={UiState.pristineCommand.id}
+                selected={this.props.selectedCommand === UiState.pristineCommand.id}
+                command={UiState.pristineCommand.command}
+                target={UiState.pristineCommand.target}
+                value={UiState.pristineCommand.value}
+                onClick={() => (this.props.selectCommand(UiState.pristineCommand))}
+                addCommand={this.props.addCommand ? (command) => { this.props.addCommand(this.props.commands.length, command); } : null}
+                moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
+                clipboard={UiState.clipboard}
               /> : null }
           </tbody>
         </table>

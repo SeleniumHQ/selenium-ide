@@ -120,16 +120,16 @@ export default class TestRow extends React.Component {
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
 
-    if (noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
+    if (this.props.remove && noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
       this.props.remove();
-    } else if (noModifiers && e.key === "ArrowUp") {
+    } else if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
       this.props.moveSelectionUp();
-    } else if (noModifiers && e.key === "ArrowDown") {
+    } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
       this.props.moveSelectionDown();
-    } else if (onlyPrimary && key === "X") {
+    } else if (this.props.copyToClipboard && onlyPrimary && key === "X") {
       this.props.copyToClipboard();
       this.props.remove();
-    } else if (onlyPrimary && key === "C") {
+    } else if (this.props.copyToClipboard && onlyPrimary && key === "C") {
       this.props.copyToClipboard();
     } else if (onlyPrimary && key === "V") {
       this.paste();
@@ -144,7 +144,7 @@ export default class TestRow extends React.Component {
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
-      tabIndex={this.props.swapCommands ? "0" : null}
+      tabIndex="0"
       onClick={this.props.onClick}
       onKeyDown={this.handleKeyDown.bind(this)}
       style={{
