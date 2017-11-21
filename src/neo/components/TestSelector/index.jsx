@@ -48,10 +48,10 @@ export default class TestSelector extends React.Component {
           <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
           <hr />
           <span className="right">
-            <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
-            <FlatButton className="primary" type="submit" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests));}} style={{
+            <FlatButton type="submit" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests));}} style={{
               marginRight: "0"
             }}>Add</FlatButton>
+            <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
           </span>
           <div className="clear"></div>
         </form>

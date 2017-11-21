@@ -36,8 +36,8 @@ export default class Alert extends React.Component {
         <ModalHeader title={this.state.options.title} close={this.close.bind(this, false)} />
         <p>{this.state.options.description}</p>
         <span className="right">
+          <FlatButton onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
           <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton>
-          <FlatButton className="danger" onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
         </span>
         <div className="clear"></div>
       </Modal>
