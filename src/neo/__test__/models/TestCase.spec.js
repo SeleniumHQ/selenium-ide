@@ -24,7 +24,7 @@ describe("TestCase model", () => {
     const test = new TestCase();
     const command = new Command();
     test.addCommand(command);
-    expect(test.length).toBe(1);
+    expect(test.commands.length).toBe(1);
   });
   it("should throw if the given command is undefined", () => {
     const test = new TestCase();
