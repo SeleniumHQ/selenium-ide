@@ -11,10 +11,6 @@
   flex-grow: 1;
 }
 
-.project > a:focus {
-  outline: 0;
-}
-
 .project > a.hover {
   border-bottom: 1px #40A6FF solid;
 }
