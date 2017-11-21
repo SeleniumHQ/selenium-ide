@@ -142,6 +142,7 @@ export default class TestRow extends React.Component {
       tabIndex="0"
       onClick={this.props.onClick}
       onKeyDown={this.handleKeyDown.bind(this)}
+      onFocus={this.props.onClick}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
