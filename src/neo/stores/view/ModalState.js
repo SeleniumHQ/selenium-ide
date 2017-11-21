@@ -6,8 +6,8 @@ class ModalState {
   @observable renameState = {};
 
   constructor() {
-    this.renameTest = this.rename.bind(this, "Test Case");
-    this.renameSuite = this.rename.bind(this, "Suite");
+    this.renameTest = this.rename.bind(this, "test case");
+    this.renameSuite = this.rename.bind(this, "suite");
     this.rename = this.rename.bind(this);
   }
 
@@ -31,13 +31,13 @@ class ModalState {
   }
 
   @action.bound createSuite() {
-    this.rename("Suite", null, (name) => {
+    this.rename("suite", null, (name) => {
       if (name) this._project.createSuite(name);
     });
   }
 
   @action.bound createTest() {
-    this.rename("Test Case", null, (name) => {
+    this.rename("test case", null, (name) => {
       if (name) {
         const test = this._project.createTestCase(name);
         UiState.selectTest(test);
@@ -47,7 +47,7 @@ class ModalState {
 
   @action.bound deleteSuite(suite) {
     this.showAlert({
-      title: "Delete Suite",
+      title: "Delete suite",
       description: `This will permanently delete '${suite.name}'`,
       cancelLabel: "cancel",
       confirmLabel: "delete"
@@ -60,7 +60,7 @@ class ModalState {
 
   @action.bound deleteTest(testCase) {
     this.showAlert({
-      title: "Delete Test Case",
+      title: "Delete test case",
       description: `This will permanently delete '${testCase.name}', and remove it from all it's suites`,
       cancelLabel: "cancel",
       confirmLabel: "delete"
