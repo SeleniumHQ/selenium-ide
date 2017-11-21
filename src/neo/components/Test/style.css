@@ -3,6 +3,8 @@
   padding: 5px 0 5px 15px;
   background-color: #FFF;
   align-items: center;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 
 .test > span {
@@ -21,6 +23,11 @@
 
 .test:hover > button {
   opacity: 1;
+}
+
+.test:focus {
+  border-top: 1px solid #75BFFF;
+  border-bottom: 1px solid #75BFFF;
 }
 
 .test.selected {
