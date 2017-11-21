@@ -139,7 +139,7 @@ export default class TestRow extends React.Component {
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
-      tabIndex="0"
+      tabIndex={this.props.selected ? "0" : "-1"}
       onClick={this.props.onClick}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.props.onClick}
