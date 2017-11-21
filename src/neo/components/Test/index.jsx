@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { DragSource } from "react-dnd";
 import classNames from "classnames";
+import { modifier } from "modifier-keys";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
@@ -40,16 +41,39 @@ export default class Test extends React.Component {
     removeTest: PropTypes.func.isRequired,
     connectDragSource: PropTypes.func,
     dragInProgress: PropTypes.bool,
-    setDrag: PropTypes.func
+    setDrag: PropTypes.func,
+    moveSelectionUp: PropTypes.func,
+    moveSelectionDown: PropTypes.func
   };
+  componentDidUpdate(prevProps) {
+    if (this.props.selected && !prevProps.selected) {
+      this.node.focus();
+    }
+  }
   handleClick(test, suite) {
     this.props.selectTest(test, suite);
+  }
+  handleKeyDown(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const e = event.nativeEvent;
+    modifier(e);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+
+    if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
+      this.props.moveSelectionUp();
+    } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
+      this.props.moveSelectionDown();
+    }
   }
   render() {
     const rendered = <a
       href="#"
+      ref={(node) => { this.node = node; }}
       className={classNames("test", this.props.className, {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
+      onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
+      onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
       style={{
         display: this.props.isDragging ? "none" : "flex"

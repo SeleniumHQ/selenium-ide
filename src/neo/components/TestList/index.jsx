@@ -13,7 +13,7 @@ export default class TestList extends Component {
   render() {
     return (
       <ul className={classNames("tests", {"active": !this.props.collapsed})}>
-        {this.props.tests.map((test) => (
+        {this.props.tests.map((test, index) => (
           <li key={test.id}>
             {this.props.suite ?
               <DraggableTest
@@ -33,6 +33,8 @@ export default class TestList extends Component {
                 selectTest={UiState.selectTest}
                 renameTest={this.props.renameTest}
                 removeTest={() => { this.props.removeTest(test); }}
+                moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
+                moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
               />}
           </li>
         ))}

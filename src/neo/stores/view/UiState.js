@@ -50,6 +50,12 @@ class UiState {
       this.selectCommand(undefined);
     }
   }
+  
+  @action.bound selectTestByIndex(index, suite) {
+    if (!suite && index >= 0 && index < this.filteredTests.length) {
+      this.selectTest(this.filteredTests[index]);
+    }
+  }
 
   @action.bound selectCommand(command) {
     this.selectedCommand = command;
