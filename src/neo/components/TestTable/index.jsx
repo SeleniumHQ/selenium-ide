@@ -51,6 +51,7 @@ export default class TestTable extends React.Component {
                 moveSelectionUp={() => { this.props.selectCommandByIndex(index - 1); }}
                 moveSelectionDown={() => { this.props.selectCommandByIndex(index + 1); }}
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
+                insertCommand={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command)); } : null}
                 remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
                 swapCommands={this.props.swapCommands}
                 setDrag={UiState.setDrag}
@@ -61,7 +62,7 @@ export default class TestTable extends React.Component {
             )) : null }
             { this.props.commands ?
               <TestRow
-                command="new command"
+                command=""
                 onClick={() => (this.props.selectCommand(this.props.addCommand()))}
               /> : null }
           </tbody>

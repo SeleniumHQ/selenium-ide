@@ -89,6 +89,7 @@ export default class TestRow extends React.Component {
     value: PropTypes.string,
     onClick: PropTypes.func,
     addCommand: PropTypes.func,
+    insertCommand: PropTypes.func,
     remove: PropTypes.func,
     swapCommands: PropTypes.func,
     isDragging: PropTypes.bool,
@@ -163,7 +164,7 @@ export default class TestRow extends React.Component {
               <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
               <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem onClick={() => { this.props.addCommand(); }}>Insert New Command</ListMenuItem>
+              <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert New Command</ListMenuItem>
               <ListMenuSeparator />
               <ListMenuItem onClick={this.props.clearAllCommands}>Clear All</ListMenuItem>
             </ListMenu> : null }
