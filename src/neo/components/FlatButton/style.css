@@ -36,6 +36,10 @@
   padding: 5px 8px;
 }
 
+.btn.icon:focus {
+  border-color: #40A6FF;
+}
+
 .btn.icon:active {
   box-shadow: inset -1px 1px 1px 0 #ececec;
 }
