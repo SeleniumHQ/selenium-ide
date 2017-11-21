@@ -1,6 +1,8 @@
 .btn-action[class*="si-gauge-"] {
   position: relative;
-  padding-right: 8px;
+  width: 40px;
+  text-align: left;
+  padding-left: 4px;
 }
 
 .btn-action[class*="si-gauge-"] i {
