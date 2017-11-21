@@ -25,6 +25,8 @@ export default class TestList extends Component {
                 dragInProgress={UiState.dragInProgress}
                 setDrag={UiState.setDrag}
                 removeTest={() => { this.props.removeTest(test); }}
+                moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
+                moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
               /> :
               <Test
                 className={PlaybackState.testState.get(test.id)}

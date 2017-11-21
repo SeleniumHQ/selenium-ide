@@ -41,10 +41,7 @@ function collect(connect, monitor) {
 class Suite extends React.Component {
   constructor(props) {
     super(props);
-    if (!UiState.suiteStates[props.suite.id]) {
-      UiState.addStateForSuite(props.suite);
-    }
-    this.store = UiState.suiteStates[this.props.suite.id];
+    this.store = UiState.getSuiteState(props.suite);
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {

@@ -58,6 +58,21 @@ class UiState {
     if (!suite) {
       const test = selectTestInArray(index, this.filteredTests);
       if (test) this.selectTest(test);
+    } else {
+      const suiteState = this.getSuiteState(suite);
+      const tests = suiteState.filteredTests.get();
+      const test = selectTestInArray(index, tests);
+      const suiteIndex = this._project.suites.indexOf(suite);
+      if (test) {
+        suiteState.setOpen(true);
+        this.selectTest(test, suite);
+      } else if (suiteIndex > 0 && index < 0) {
+        const previousSuite = this._project.suites[suiteIndex - 1];
+        this.selectTestByIndex(this.getSuiteState(previousSuite).filteredTests.get().length - 1, previousSuite);
+      } else if (suiteIndex + 1 < this._project.suites.length && index >= tests.length) {
+        const nextSuite = this._project.suites[suiteIndex + 1];
+        this.selectTestByIndex(0, nextSuite);
+      }
     }
   }
 
@@ -99,8 +114,12 @@ class UiState {
     });
   }
 
-  addStateForSuite(suite) {
-    this.suiteStates[suite.id] = new SuiteState(this, suite);
+  getSuiteState(suite) {
+    if (!this.suiteStates[suite.id]) {
+      this.suiteStates[suite.id] = new SuiteState(this, suite);
+    }
+
+    return this.suiteStates[suite.id];
   }
 
   filterFunction({name}) {
