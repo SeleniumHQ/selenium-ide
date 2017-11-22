@@ -203,7 +203,9 @@ export default {
       { from: "utils.js", to: "vendor" },
       { from: "ext-command.js", to: "vendor" },
       { from: "editor.js", to: "vendor" },
-      { from: "formatCommand.js", to: "vendor" }
+      { from: "formatCommand.js", to: "vendor" },
+      { from: "manifest.json", to: "../" },
+      { from: "icons", to: "../icons" }
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
