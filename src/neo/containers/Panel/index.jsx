@@ -102,7 +102,7 @@ modify(project);
               />
             </div>
           </div>
-          <Console />
+          <Console height={UiState.consoleHeight} />
         </SplitPane>
         <Modal project={this.state.project} />
       </div>

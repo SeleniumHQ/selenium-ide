@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import ClearButton from "../../components/ActionButtons/Clear";
@@ -15,7 +16,9 @@ export default class Console extends React.Component {
   }
   render() {
     return (
-      <footer className="console">
+      <footer className="console" style={{
+        height: this.props.height ? `${this.props.height}px` : "initial"
+      }}>
         <TabBar tabs={["Log"]} tabWidth={70}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
@@ -23,4 +26,7 @@ export default class Console extends React.Component {
       </footer>
     );
   }
+  static propTypes = {
+    height: PropTypes.number
+  };
 }
