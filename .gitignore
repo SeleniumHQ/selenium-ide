@@ -9,3 +9,6 @@ src/webdriver
 .peru
 .idea
 .tern-port
+selenium-ide.pem
+selenium-ide.crx
+yarn-error.log
