@@ -40,7 +40,7 @@ import "./style.css";
       } else if (test.commands.length) {
         UiState.selectCommand(test.commands[test.commands.length - 1]);
       } else {
-        UiState.selectCommand(null);
+        UiState.selectCommand(UiState.pristineCommand);
       }
     }
   }
