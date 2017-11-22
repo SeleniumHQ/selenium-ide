@@ -49,7 +49,7 @@ import "./style.css";
     modifier(e);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
-    if (noModifiers && e.key === "ArrowLeft") {
+    if (e.target.localName !== "input" && noModifiers && e.key === "ArrowLeft") {
       event.preventDefault();
       event.stopPropagation();
       UiState.focusNavigation();

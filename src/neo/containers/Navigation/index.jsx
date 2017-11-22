@@ -37,7 +37,7 @@ import "./style.css";
     modifier(e);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
-    if (noModifiers && e.key === "ArrowRight") {
+    if (e.target.localName !== "input" && noModifiers && e.key === "ArrowRight") {
       event.preventDefault();
       event.stopPropagation();
       UiState.focusEditor();
