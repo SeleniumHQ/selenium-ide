@@ -44,12 +44,16 @@ class UiState {
   }
 
   @action.bound selectTest(test, suite) {
-    this.selectedTest = { test, suite };
-    if (test && test.commands.length) {
-      this.selectCommand(test.commands[0]);
-    } else {
-      this.selectCommand(undefined);
+    if (test !== this.selectedTest.test) {
+      if (test && test.commands.length) {
+        this.selectCommand(test.commands[0]);
+      } else if (test && !test.commands.length) {
+        this.selectCommand(this.pristineCommand);
+      } else {
+        this.selectCommand(undefined);
+      }
     }
+    this.selectedTest = { test, suite };
   }
   
   @action.bound selectTestByIndex(index, suite) {
