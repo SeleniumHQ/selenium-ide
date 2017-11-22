@@ -89,3 +89,7 @@ hr {
 .failed {
   color: #E80600;
 }
+
+::-moz-focus-inner {
+  border: 0;
+}
