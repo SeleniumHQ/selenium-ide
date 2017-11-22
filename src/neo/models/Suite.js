@@ -1,7 +1,6 @@
 import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
 import SortBy from "sort-array";
-import TestCase from "./TestCase";
 
 export default class Suite {
   id = null;
