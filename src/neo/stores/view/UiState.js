@@ -94,6 +94,10 @@ class UiState {
     }
   }
 
+  @action.bound selectNextCommand() {
+    this.selectCommandByIndex(this.selectedTest.test.commands.indexOf(this.selectedCommand) + 1);
+  }
+
   @action.bound changeFilter(term) {
     this.filterTerm = term;
   }

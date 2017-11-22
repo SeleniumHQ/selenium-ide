@@ -73,6 +73,7 @@ import "./style.css";
           command={UiState.selectedCommand}
           setCommand={this.handleCommandChange}
           isSelecting={UiState.isSelectingTarget}
+          onSubmit={UiState.selectNextCommand}
         />
       </main>
     );
