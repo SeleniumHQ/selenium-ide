@@ -9,7 +9,7 @@
     "build": "cp -r src/manifest.json src/icons build/ && webpack",
     "test": "jest",
     "test-dev": "jest --watch",
-    "lint": "eslint src/neo/ --ext .jsx"
+    "lint": "eslint src/neo/ --ext .js --ext .jsx"
   },
   "jest": {
     "testMatch": [

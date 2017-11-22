@@ -30,11 +30,13 @@ if (parser(window.navigator.userAgent).os.name === "Windows") {
 
 const project = observable(new ProjectStore());
 
-if (process.env.NODE_ENV !== "production") {
+UiState.setProject(project);
+
+if (process.env.NODE_ENV === "production") {
+  UiState.selectTest(project.createTestCase("Untitled"));
+} else {
   seed(project);
 }
-
-UiState.setProject(project);
 
 modify(project);
 

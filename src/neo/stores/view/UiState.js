@@ -2,6 +2,7 @@ import { action, computed, observable, observe } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import PlaybackState from "./PlaybackState";
+import Command from "../../models/Command";
 
 class UiState {
   @observable selectedTest = {};
@@ -15,10 +16,13 @@ class UiState {
   @observable consoleHeight = 200;
   @observable minConsoleHeight = 0;
   @observable minContentHeight = 460;
+  @observable pristineCommand = new Command();
+  @observable lastFocus = {};
 
   constructor() {
     this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
+    this.observePristine();
     storage.get().then(data => {
       if (data.consoleSize !== undefined && data.consoleSize >= this.minConsoleHeight) {
         this.resizeConsole(data.consoleSize);
@@ -54,11 +58,58 @@ class UiState {
   }
 
   @action.bound selectTest(test, suite) {
+    if (test !== this.selectedTest.test) {
+      if (test && test.commands.length) {
+        this.selectCommand(test.commands[0]);
+      } else if (test && !test.commands.length) {
+        this.selectCommand(this.pristineCommand);
+      } else {
+        this.selectCommand(undefined);
+      }
+    }
     this.selectedTest = { test, suite };
+  }
+  
+  @action.bound selectTestByIndex(index, suite) {
+    const selectTestInArray = (index, tests) => (
+      (index >= 0 && index < tests.length) ? tests[index] : undefined
+    );
+    if (!suite) {
+      const test = selectTestInArray(index, this.filteredTests);
+      if (test) this.selectTest(test);
+    } else {
+      const suiteState = this.getSuiteState(suite);
+      const tests = suiteState.filteredTests.get();
+      const test = selectTestInArray(index, tests);
+      const suiteIndex = this._project.suites.indexOf(suite);
+      if (test) {
+        suiteState.setOpen(true);
+        this.selectTest(test, suite);
+      } else if (suiteIndex > 0 && index < 0) {
+        const previousSuite = this._project.suites[suiteIndex - 1];
+        this.selectTestByIndex(this.getSuiteState(previousSuite).filteredTests.get().length - 1, previousSuite);
+      } else if (suiteIndex + 1 < this._project.suites.length && index >= tests.length) {
+        const nextSuite = this._project.suites[suiteIndex + 1];
+        this.selectTestByIndex(0, nextSuite);
+      }
+    }
   }
 
   @action.bound selectCommand(command) {
     this.selectedCommand = command;
+  }
+
+  @action.bound selectCommandByIndex(index) {
+    const { test } = this.selectedTest; 
+    if (index >= 0 && index < test.commands.length) {
+      this.selectCommand(test.commands[index]);
+    } else if (index === test.commands.length) {
+      this.selectCommand(this.pristineCommand);
+    }
+  }
+
+  @action.bound selectNextCommand() {
+    this.selectCommandByIndex(this.selectedTest.test.commands.indexOf(this.selectedCommand) + 1);
   }
 
   @action.bound changeFilter(term) {
@@ -91,8 +142,37 @@ class UiState {
     }
   }
 
-  addStateForSuite(suite) {
-    this.suiteStates[suite.id] = new SuiteState(this, suite);
+  @action.bound observePristine() {
+    this.pristineDisposer = observe(this.pristineCommand, () => {
+      this.pristineDisposer();
+      this.selectedTest.test.addCommand(this.pristineCommand);
+      this.pristineCommand = new Command();
+      this.observePristine();
+    });
+  }
+
+  @action.bound focusNavigation() {
+    if (this.lastFocus.navigation) {
+      this.lastFocus.navigation();
+    }
+  }
+
+  @action.bound focusEditor() {
+    if (this.lastFocus.editor) {
+      this.lastFocus.editor();
+    }
+  }
+
+  @action.bound setSectionFocus(section, cb) {
+    this.lastFocus[section] = cb;
+  }
+
+  getSuiteState(suite) {
+    if (!this.suiteStates[suite.id]) {
+      this.suiteStates[suite.id] = new SuiteState(this, suite);
+    }
+
+    return this.suiteStates[suite.id];
   }
 
   filterFunction({name}) {

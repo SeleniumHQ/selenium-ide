@@ -22,6 +22,11 @@
   background-color: #E5E5E5;
 }
 
+.tabbar a:focus {
+  background-color: #E5E5E5;
+  outline: 0;
+}
+
 .tabbar .underline {
   height: 2px;
   background-color: #40A6FF;

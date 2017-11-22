@@ -26,6 +26,14 @@ export default class TestCase {
     }
   }
 
+  @action.bound addCommand(command) {
+    if (!command || command.constructor.name !== "Command") {
+      throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);
+    } else {
+      this.commands.push(command);
+    }
+  }
+
   @action.bound insertCommandAt(command, index) {
     if (!command || command.constructor.name !== "Command") {
       throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);

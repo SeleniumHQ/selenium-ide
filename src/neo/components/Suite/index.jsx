@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import { observer } from "mobx-react";
+import { modifier } from "modifier-keys";
 import TestList from "../TestList";
 import { Type } from "../Test";
 import ListMenu, { ListMenuItem } from "../ListMenu";
@@ -41,10 +42,7 @@ function collect(connect, monitor) {
 class Suite extends React.Component {
   constructor(props) {
     super(props);
-    if (!UiState.suiteStates[props.suite.id]) {
-      UiState.addStateForSuite(props.suite);
-    }
-    this.store = UiState.suiteStates[this.props.suite.id];
+    this.store = UiState.getSuiteState(props.suite);
     this.handleClick = this.handleClick.bind(this);
   }
   static propTypes = {
@@ -60,11 +58,23 @@ class Suite extends React.Component {
   handleClick() {
     this.store.setOpen(!this.store.isOpen);
   }
+  handleKeyDown(event) {
+    const e = event.nativeEvent;
+    modifier(e);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+
+    if (noModifiers && e.key === "ArrowLeft") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.store.setOpen(false);
+      UiState.selectTestByIndex(-1, this.props.suite);
+    }
+  }
   render() {
     return this.props.connectDropTarget(
-      <div>
+      <div onKeyDown={this.handleKeyDown.bind(this)}>
         <div className="project">
-          <a href="#" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick}>
+          <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick}>
             <span className="si-caret"></span>
             <span className="title">{this.props.suite.name}</span>
           </a>

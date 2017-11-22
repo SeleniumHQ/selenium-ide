@@ -12,7 +12,8 @@ import "./style.css";
 @observer export default class CommandForm extends React.Component {
   static propTypes = {
     command: PropTypes.object,
-    isSelecting: PropTypes.bool
+    isSelecting: PropTypes.bool,
+    onSubmit: PropTypes.func
   };
   parseCommandName(command) {
     return Commands[command] ? Commands[command] : command;
@@ -20,7 +21,7 @@ import "./style.css";
   render() {
     return (
       <div className="command-form">
-        <form>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
           <CommandInput
             id="command"
             name="command"
@@ -46,6 +47,7 @@ import "./style.css";
             value={this.props.command ? this.props.command.value : ""}
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setValue : null} />
+          <input type="submit" onClick={this.props.onSubmit} />
         </form>
       </div>
     );

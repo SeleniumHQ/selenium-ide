@@ -43,15 +43,15 @@ export default class TestSelector extends React.Component {
     return (
       <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
         <form>
-          <ModalHeader title="Select Tests" close={this.props.cancelSelection} />
+          <ModalHeader title="Select tests" close={this.props.cancelSelection} />
           <SearchBar inputRef={(input) => { this.input = input; }} filter={this.filter} />
           <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
           <hr />
           <span className="right">
-            <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
-            <FlatButton className="primary" type="submit" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests));}} style={{
+            <FlatButton type="submit" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests));}} style={{
               marginRight: "0"
             }}>Add</FlatButton>
+            <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
           </span>
           <div className="clear"></div>
         </form>

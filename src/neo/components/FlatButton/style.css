@@ -1,9 +1,9 @@
 .btn {
-  color: rgba(0, 0, 0, 0.87);
+  color: #656565;
   background-color: #F5F5F5;
   padding: 10px 20px;
   margin: 5px 8px;
-  border-width: 0;
+  border: 1px solid transparent;
   border-radius: 4px;
   outline: 0;
   text-transform: capitalize;
@@ -12,7 +12,11 @@
 }
 
 .btn:hover {
-  background-color: #E0E0E0;
+  color: #333;
+}
+
+.btn:focus {
+  border-color: rgba(0,0,0,.25);
 }
 
 .btn:active {
@@ -21,25 +25,34 @@
 }
 
 .btn:disabled {
+  color: #A9A9A9;
   cursor: not-allowed;
 }
 
 .btn.icon {
   font-size: 22px;
-  color: #505050;
   border: 1px solid #DCDCDC;
   background-color: white;
   padding: 5px 8px;
 }
 
-.btn.icon:hover {
-  color: #40A6FF;
+.btn.icon:focus {
+  border-color: #40A6FF;
+}
+
+.btn.icon:active {
+  box-shadow: inset -1px 1px 1px 0 #ececec;
 }
 
 .btn.icon.active {
-  color: #40A6FF;
   border-color: #40A6FF;
+  background-color: #E3F2FF;
 }
+
+.btn.icon.active:active {
+  box-shadow: inset -1px 1px 1px 0 #CACACA;
+}
+
 
 .btn.primary {
   color: #FFF;
@@ -57,6 +70,10 @@
 
 .btn.primary:disabled {
   background-color: #92d9f5;
+}
+
+.btn.secondary:hover {
+  background-color: #E0E0E0;
 }
 
 .btn.danger {

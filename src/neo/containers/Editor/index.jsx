@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import { modifier } from "modifier-keys";
 import UiState from "../../stores/view/UiState";
 import ToolBar from "../../components/ToolBar";
 import UrlBar from "../../components/UrlBar";
@@ -27,24 +28,36 @@ import "./style.css";
       return newCommand;
     } else {
       const newCommand = this.props.test.createCommand(index);
-      newCommand.setCommand("open");
       return newCommand;
     }
   }
-  removeCommand(command) {
+  removeCommand(index, command) {
+    const { test } = this.props;
+    test.removeCommand(command);
     if (UiState.selectedCommand === command) {
-      UiState.selectCommand(null);
+      if (test.commands.length > index) {
+        UiState.selectCommand(test.commands[index]);
+      } else if (test.commands.length) {
+        UiState.selectCommand(test.commands[test.commands.length - 1]);
+      } else {
+        UiState.selectCommand(UiState.pristineCommand);
+      }
     }
-    this.props.test.removeCommand(command);
   }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.test && this.props.test !== nextProps.test) {
-      UiState.selectCommand(null);
+  handleKeyDown(event) {
+    const e = event.nativeEvent;
+    modifier(e);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+
+    if (e.target.localName !== "input" && noModifiers && e.key === "ArrowLeft") {
+      event.preventDefault();
+      event.stopPropagation();
+      UiState.focusNavigation();
     }
   }
   render() {
     return (
-      <main className="editor">
+      <main className="editor" onKeyDown={this.handleKeyDown.bind(this)}>
         <ToolBar />
         <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
         <TestTable
@@ -60,6 +73,7 @@ import "./style.css";
           command={UiState.selectedCommand}
           setCommand={this.handleCommandChange}
           isSelecting={UiState.isSelectingTarget}
+          onSubmit={UiState.selectNextCommand}
         />
       </main>
     );
