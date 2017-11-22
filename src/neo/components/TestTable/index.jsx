@@ -59,10 +59,10 @@ export default class TestTable extends React.Component {
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
               />
-            )) : null }
-            { this.props.commands ?
+            )).concat(
               <TestRow
                 id={UiState.pristineCommand.id}
+                key={UiState.selectedTest.test.id}
                 selected={this.props.selectedCommand === UiState.pristineCommand.id}
                 command={UiState.pristineCommand.command}
                 target={UiState.pristineCommand.target}
@@ -72,7 +72,7 @@ export default class TestTable extends React.Component {
                 moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
                 clipboard={UiState.clipboard}
                 setSectionFocus={UiState.setSectionFocus}
-              /> : null }
+              />) : null }
           </tbody>
         </table>
       </div>
