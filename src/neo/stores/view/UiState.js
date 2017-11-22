@@ -12,6 +12,7 @@ class UiState {
   @observable isRecording = false;
   @observable isSelectingTarget = false;
   @observable pristineCommand = new Command();
+  @observable focusedSection = "navigation";
 
   constructor() {
     this.suiteStates = {};
@@ -106,7 +107,7 @@ class UiState {
   }
 
   @action.bound observePristine() {
-    this.pristineDisposer = observe(this.pristineCommand, (change) => {
+    this.pristineDisposer = observe(this.pristineCommand, () => {
       this.pristineDisposer();
       this.selectedTest.test.addCommand(this.pristineCommand);
       this.pristineCommand = new Command();
