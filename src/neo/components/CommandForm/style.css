@@ -14,6 +14,10 @@
   flex-grow: 1;
 }
 
+.command-form input {
+  width: 100px;
+}
+
 .command-form .target {
   display: flex;
   align-items: center;

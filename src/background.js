@@ -21,12 +21,7 @@ let panelId = undefined;
 
 function openPage() {
   const getContentWindowInfo = browser.windows.getLastFocused();
-  const getSideexWindowInfo = browser.windows.create({
-    url: browser.extension.getURL("assets/index.html"),
-    type: "popup",
-    height: 960,
-    width: 610
-  });
+  const getSideexWindowInfo = openWindowFromStorageResolution();
 
   Promise.all([getContentWindowInfo, getSideexWindowInfo])
     .then(function(windowInfo) {
@@ -106,7 +101,37 @@ function openPage() {
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
+}
 
+function openWindowFromStorageResolution() {
+  let size = {
+    height: 960,
+    width: 610
+  };
+  return browser.storage.local.get().then(storage => {
+    if (sizeIsValid(storage.size)) {
+      size.height = storage.size.height;
+      size.width = storage.size.width;
+    }
+    return browser.windows.create(Object.assign({
+      url: browser.extension.getURL("assets/index.html"),
+      type: "popup"
+    }, size));
+  }).catch(e => {
+    console.error(e);
+    return browser.windows.create(Object.assign({
+      url: browser.extension.getURL("assets/index.html"),
+      type: "popup"
+    }, size));
+  });
+}
+
+function sizeIsValid(size) {
+  return (size && sideIsValid(size.height) && sideIsValid(size.width));
+}
+
+function sideIsValid(number) {
+  return number && number.constructor.name === "Number" && number > 50;
 }
 
 browser.browserAction.onClicked.addListener(openPage);

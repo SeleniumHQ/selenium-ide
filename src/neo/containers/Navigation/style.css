@@ -1,5 +1,5 @@
 aside.test-cases {
-  width: 220px;
+  min-width: 200px;
   border-right: 1px solid #CECECE;
   position: relative;
   display: flex;

@@ -1,4 +1,5 @@
 import { action, computed, observable, observe } from "mobx";
+import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import PlaybackState from "./PlaybackState";
 
@@ -10,10 +11,19 @@ class UiState {
   @observable clipboard = null;
   @observable isRecording = false;
   @observable isSelectingTarget = false;
+  @observable windowHeight = window.innerHeight;
+  @observable consoleHeight = 200;
+  @observable minConsoleHeight = 0;
+  @observable minContentHeight = 460;
 
   constructor() {
     this.suiteStates = {};
     this.filterFunction = this.filterFunction.bind(this);
+    storage.get().then(data => {
+      if (data.consoleSize !== undefined && data.consoleSize >= this.minConsoleHeight) {
+        this.resizeConsole(data.consoleSize);
+      }
+    });
   }
 
   @action.bound setProject(project) {
@@ -27,6 +37,10 @@ class UiState {
 
   @computed get baseUrl() {
     return this._project.url;
+  }
+
+  @computed get maxContentHeight() {
+    return this.windowHeight - this.minConsoleHeight;
   }
 
   @computed get gaugeSpeed() {
@@ -61,6 +75,20 @@ class UiState {
 
   @action.bound setSelectingTarget(isSelecting) {
     this.isSelectingTarget = isSelecting;
+  }
+
+  @action.bound resizeConsole(height) {
+    this.consoleHeight = height > 0 ? height : 0;
+    storage.set({
+      consoleSize: this.consoleHeight 
+    });
+  }
+
+  @action.bound setWindowHeight(height) {
+    this.windowHeight = height;
+    if (this.windowHeight - this.consoleHeight < this.minContentHeight) {
+      this.resizeConsole(this.windowHeight - this.minContentHeight);
+    }
   }
 
   addStateForSuite(suite) {
