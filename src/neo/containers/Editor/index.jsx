@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import { modifier } from "modifier-keys";
 import UiState from "../../stores/view/UiState";
 import ToolBar from "../../components/ToolBar";
 import UrlBar from "../../components/UrlBar";
@@ -43,9 +44,20 @@ import "./style.css";
       }
     }
   }
+  handleKeyDown(event) {
+    const e = event.nativeEvent;
+    modifier(e);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+
+    if (noModifiers && e.key === "ArrowLeft") {
+      event.preventDefault();
+      event.stopPropagation();
+      UiState.focusNavigation();
+    }
+  }
   render() {
     return (
-      <main className="editor">
+      <main className="editor" onKeyDown={this.handleKeyDown.bind(this)}>
         <ToolBar />
         <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
         <TestTable

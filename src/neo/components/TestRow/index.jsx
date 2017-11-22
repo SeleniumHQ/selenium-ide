@@ -101,11 +101,27 @@ export default class TestRow extends React.Component {
     copyToClipboard: PropTypes.func,
     clearAllCommands: PropTypes.func,
     moveSelectionUp: PropTypes.func,
-    moveSelectionDown: PropTypes.func
+    moveSelectionDown: PropTypes.func,
+    setSectionFocus: PropTypes.func
   };
+  componentDidMount() {
+    if (this.props.selected) {
+      this.props.setSectionFocus("editor", () => {
+        this.node.focus();
+      });
+    }
+  }
   componentDidUpdate(prevProps) {
     if (this.props.selected && !prevProps.selected) {
       this.node.focus();
+      this.props.setSectionFocus("editor", () => {
+        this.node.focus();
+      });
+    }
+  }
+  componentWillUnmount() {
+    if (this.props.selected) {
+      this.props.setSectionFocus("editor", undefined);
     }
   }
   handleKeyDown(event) {

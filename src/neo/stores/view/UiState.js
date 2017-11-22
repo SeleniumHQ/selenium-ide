@@ -12,7 +12,7 @@ class UiState {
   @observable isRecording = false;
   @observable isSelectingTarget = false;
   @observable pristineCommand = new Command();
-  @observable focusedSection = "navigation";
+  @observable lastFocus = {};
 
   constructor() {
     this.suiteStates = {};
@@ -113,6 +113,22 @@ class UiState {
       this.pristineCommand = new Command();
       this.observePristine();
     });
+  }
+
+  @action.bound focusNavigation() {
+    if (this.lastFocus.navigation) {
+      this.lastFocus.navigation();
+    }
+  }
+
+  @action.bound focusEditor() {
+    if (this.lastFocus.editor) {
+      this.lastFocus.editor();
+    }
+  }
+
+  @action.bound setSectionFocus(section, cb) {
+    this.lastFocus[section] = cb;
   }
 
   getSuiteState(suite) {

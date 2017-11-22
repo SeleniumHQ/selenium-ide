@@ -43,11 +43,27 @@ export default class Test extends React.Component {
     dragInProgress: PropTypes.bool,
     setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
-    moveSelectionDown: PropTypes.func
+    moveSelectionDown: PropTypes.func,
+    setSectionFocus: PropTypes.func
   };
+  componentDidMount() {
+    if (this.props.selected) {
+      this.props.setSectionFocus("navigation", () => {
+        this.node.focus();
+      });
+    }
+  }
   componentDidUpdate(prevProps) {
     if (this.props.selected && !prevProps.selected) {
       this.node.focus();
+      this.props.setSectionFocus("navigation", () => {
+        this.node.focus();
+      });
+    }
+  }
+  componentWillUnmount() {
+    if (this.props.selected) {
+      this.props.setSectionFocus("navigation", undefined);
     }
   }
   handleClick(test, suite) {

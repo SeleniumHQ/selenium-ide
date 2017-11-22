@@ -57,6 +57,7 @@ export default class TestTable extends React.Component {
                 clipboard={UiState.clipboard}
                 copyToClipboard={() => { UiState.copyToClipboard(command); }}
                 clearAllCommands={this.props.clearAllCommands}
+                setSectionFocus={UiState.setSectionFocus}
               />
             )) : null }
             { this.props.commands ?
@@ -70,6 +71,7 @@ export default class TestTable extends React.Component {
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(this.props.commands.length, command); } : null}
                 moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
                 clipboard={UiState.clipboard}
+                setSectionFocus={UiState.setSectionFocus}
               /> : null }
           </tbody>
         </table>

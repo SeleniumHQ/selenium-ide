@@ -27,6 +27,7 @@ export default class TestList extends Component {
                 removeTest={() => { this.props.removeTest(test); }}
                 moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
                 moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
+                setSectionFocus={UiState.setSectionFocus}
               /> :
               <Test
                 className={PlaybackState.testState.get(test.id)}
@@ -37,6 +38,7 @@ export default class TestList extends Component {
                 removeTest={() => { this.props.removeTest(test); }}
                 moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
                 moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
+                setSectionFocus={UiState.setSectionFocus}
               />}
           </li>
         ))}

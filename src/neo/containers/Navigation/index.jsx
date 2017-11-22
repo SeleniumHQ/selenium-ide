@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer, Provider } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
+import { modifier } from "modifier-keys";
 import UiState from "../../stores/view/UiState";
 import ModalState from "../../stores/view/ModalState";
 import PlaybackState from "../../stores/view/PlaybackState";
@@ -31,9 +32,20 @@ import "./style.css";
       showTests: tab === "Tests"
     });
   }
+  handleKeyDown(event) {
+    const e = event.nativeEvent;
+    modifier(e);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+
+    if (noModifiers && e.key === "ArrowRight") {
+      event.preventDefault();
+      event.stopPropagation();
+      UiState.focusEditor();
+    }
+  }
   render() {
     return (
-      <aside className="test-cases">
+      <aside className="test-cases" onKeyDown={this.handleKeyDown.bind(this)}>
         <TabBar tabs={["Tests", "Suites"]} tabWidth={70} tabChanged={this.handleChangedTab}>
           <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
