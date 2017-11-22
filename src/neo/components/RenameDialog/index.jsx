@@ -36,7 +36,7 @@ export default class RenameDialog extends React.Component {
   render() {
     return (
       <Modal className="rename-dialog" isOpen={this.props.isEditing}>
-        <form>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title={`${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`} close={this.props.cancel} />
           <input ref={(input) => { this.input = input; }} type="text" value={this.state.value} onChange={this.handleChange.bind(this)} />
           <span className="right">
