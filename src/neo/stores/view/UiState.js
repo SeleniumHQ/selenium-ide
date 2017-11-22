@@ -14,7 +14,7 @@ class UiState {
   @observable isSelectingTarget = false;
   @observable windowHeight = window.innerHeight;
   @observable consoleHeight = 200;
-  @observable minConsoleHeight = 0;
+  @observable minConsoleHeight = 35;
   @observable minContentHeight = 460;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
