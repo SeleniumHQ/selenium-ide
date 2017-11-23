@@ -13,6 +13,7 @@ const RecordButton = styled.button`
   overflow: hidden;
   outline: 0;
   transition: border-radius 250ms ease-out;
+  padding: 0 7px;
 
   &:hover {
     background-color: #F56660;
