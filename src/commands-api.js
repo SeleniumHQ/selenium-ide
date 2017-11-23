@@ -112,4 +112,7 @@ function doCommands(request, sender, sendResponse) {
   }
 }
 
-browser.runtime.onMessage.addListener(doCommands);
+if (!window._listener) {
+  window._listener = doCommands;
+  browser.runtime.onMessage.addListener(doCommands);
+}
