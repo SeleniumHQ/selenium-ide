@@ -67,37 +67,37 @@ function openPage() {
 
   browser.contextMenus.create({
     id: "verifyText",
-    title: "verifyText",
+    title: "Verify Text",
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
   browser.contextMenus.create({
     id: "verifyTitle",
-    title: "verifyTitle",
+    title: "Verify Title",
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
   browser.contextMenus.create({
     id: "assertText",
-    title: "assertText",
+    title: "Assert Text",
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
   browser.contextMenus.create({
     id: "assertTitle",
-    title: "assertTitle",
+    title: "Assert Title",
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
   browser.contextMenus.create({
     id: "storeText",
-    title: "storeText",
+    title: "Store Text",
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
   browser.contextMenus.create({
     id: "storeTitle",
-    title: "storeTitle",
+    title: "Store Title",
     documentUrlPatterns: ["<all_urls>"],
     contexts: ["all"]
   });
