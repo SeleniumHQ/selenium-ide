@@ -199,6 +199,7 @@ export default {
     new webpack.NamedModulesPlugin(),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
+      { from: "global.js", to: "vendor" },
       { from: "atoms.js", to: "vendor" },
       { from: "utils.js", to: "vendor" },
       { from: "ext-command.js", to: "vendor" },

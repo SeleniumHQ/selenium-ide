@@ -15,9 +15,9 @@
  */
 
 import { MozillaBrowserBot } from "./selenium-browserbot";
-const core = window.core;
-const UIMap = window.UIMap;
-const exactMatchPattern = window.exactMatchPattern;
+const core = window.global.core;
+//const UIMap = window.UIMap;
+const exactMatchPattern = window.global.exactMatchPattern;
 
 export default function LocatorBuilders(window) {
   this.window = window;

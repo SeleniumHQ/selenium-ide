@@ -26,36 +26,36 @@
 
 import Selenium from "./selenium-api";
 import { selenium } from "./commands-api";
-const bot = window.bot;
-const goog = window.goog;
-const core = window.core;
-const XPCNativeWrapper = window.XPCNativeWrapper;
+const bot = window.global.bot;
+const goog = window.global.goog;
+const core = window.global.core;
+const XPCNativeWrapper = window.global.XPCNativeWrapper;
 
 // TODO: utils
-const objectExtend = window.objectExtend;
-const SeleniumError = window.SeleniumError;
-const browserVersion = window.browserVersion;
-const createEventObject = window.createEventObject;
-const absolutify = window.absolutify;
-const addLoadListener = window.addLoadListener;
-const highlight = window.highlight;
-const parse_locator = window.parse_locator;
-const eval_xpath = window.eval_xpath;
-const eval_css = window.eval_css;
-const PatternMatcher = window.PatternMatcher;
-const getText = window.getText;
-const getTagName = window.getTagName;
-const elementFindFirstMatchingChild = window.elementFindFirstMatchingChild;
-const eval_locator = window.eval_locator;
-const is_ancestor = window.is_ancestor;
-const canonicalize = window.canonicalize;
-const parseUrl = window.parseUrl;
-const reassembleLocation = window.reassembleLocation;
-const serializeObject = window.serializeObject;
+const objectExtend = window.global.objectExtend;
+const SeleniumError = window.global.SeleniumError;
+const browserVersion = window.global.browserVersion;
+const createEventObject = window.global.createEventObject;
+const absolutify = window.global.absolutify;
+const addLoadListener = window.global.addLoadListener;
+const highlight = window.global.highlight;
+const parse_locator = window.global.parse_locator;
+const eval_xpath = window.global.eval_xpath;
+const eval_css = window.global.eval_css;
+const PatternMatcher = window.global.PatternMatcher;
+const getText = window.global.getText;
+const getTagName = window.global.getTagName;
+const elementFindFirstMatchingChild = window.global.elementFindFirstMatchingChild;
+const eval_locator = window.global.eval_locator;
+const is_ancestor = window.global.is_ancestor;
+const canonicalize = window.global.canonicalize;
+const parseUrl = window.global.parseUrl;
+const reassembleLocation = window.global.reassembleLocation;
+const serializeObject = window.global.serializeObject;
 
 // TODO: unknown
-const Components = window.Components;
-const UIMap = window.UIMap;
+/*const Components = window.Components;
+const UIMap = window.UIMap;*/
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.
@@ -448,7 +448,11 @@ BrowserBot.prototype._modifyWindow = function(win) {
   // find it later. This is slightly different from uniqueId.
   win.seleniumKey = BrowserBot.uniqueKey++;
 
-  this.modifyWindowToRecordPopUpDialogs(win, this);
+  try {
+    this.modifyWindowToRecordPopUpDialogs(win, this);
+  } catch (ex) {
+    console.error(ex);
+  }
 
   //Commenting out for issue 1854
   //win[this.uniqueId] = 1;
