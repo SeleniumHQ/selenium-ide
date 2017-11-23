@@ -19,29 +19,29 @@ import browser from "webextension-polyfill";
 import { selenium } from "./commands-api";
 import { escapeHTML } from "./escape";
 import BrowserBot from "./selenium-browserbot";
-const bot = window.bot;
-const goog = window.goog;
-const core = window.core;
+const bot = window.global.bot;
+const goog = window.global.goog;
+const core = window.global.core;
 
 // TODO: utils
-const eval_css = window.eval_css;
-const getTimeoutTime = window.getTimeoutTime;
-const SeleniumError = window.SeleniumError;
-const normalizeSpaces = window.normalizeSpaces;
-const getText = window.getText;
-const createEventObject = window.createEventObject;
-const triggerKeyEvent = window.triggerKeyEvent;
-const fnBind = window.fnBind;
-const browserVersion = window.browserVersion;
-const getInputValue = window.getInputValue;
-const extractExceptionMessage = window.extractExceptionMessage;
-const PatternMatcher = window.PatternMatcher;
-const parse_kwargs = window.parse_kwargs;
-const getTagName = window.getTagName;
+const eval_css = window.global.eval_css;
+const getTimeoutTime = window.global.getTimeoutTime;
+const SeleniumError = window.global.SeleniumError;
+const normalizeSpaces = window.global.normalizeSpaces;
+const getText = window.global.getText;
+const createEventObject = window.global.createEventObject;
+const triggerKeyEvent = window.global.triggerKeyEvent;
+const fnBind = window.global.fnBind;
+const browserVersion = window.global.browserVersion;
+const getInputValue = window.global.getInputValue;
+const extractExceptionMessage = window.global.extractExceptionMessage;
+const PatternMatcher = window.global.PatternMatcher;
+const parse_kwargs = window.global.parse_kwargs;
+const getTagName = window.global.getTagName;
 
 // TODO: unknown
-const Components = window.Components;
-const RollupManager = window.RollupManager;
+//const Components = window.Components;
+//const RollupManager = window.RollupManager;
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
