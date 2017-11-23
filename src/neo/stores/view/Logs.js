@@ -49,7 +49,7 @@ export default class LogStore {
     if (status) {
       switch(status.state) {
         case PlaybackStates.Pending:
-          this.addLog(`Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
+          this.addLog(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
           break;
         case PlaybackStates.Failed:
           this.addLog(`Execution failed: ${status.message}`, LogTypes.Error);
