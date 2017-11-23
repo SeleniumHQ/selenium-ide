@@ -5,6 +5,7 @@
   height: 8px;
   border-radius: 10px;
   background-color: #E8E8E8;
+  border: 0;
 }
 
 .progress::-webkit-progress-bar {
