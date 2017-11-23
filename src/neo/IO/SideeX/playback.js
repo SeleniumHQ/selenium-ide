@@ -69,8 +69,12 @@ function catchPlayingError(message) {
   }
 }
 
-function reportError(message) {
+function reportError(error) {
   const { id } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
+  let message = error;
+  if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
+    message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
+  }
   PlaybackState.setCommandState(id, PlaybackStates.Failed, message);
 }
 
