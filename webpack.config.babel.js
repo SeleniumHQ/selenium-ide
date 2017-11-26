@@ -57,11 +57,29 @@ export default {
             loader: "closure-loader",
             options: {
               paths: [
-                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug")
               ],
               es6mode: true
             },
             exclude: [/google-closure-library\/closure\/goog\/base\.js$/]
+          },
+          {
+            test: /selenium-atoms\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
+                  path.resolve(__dirname, "src/selenium-atoms")
+                ]
+              }
+            }
           },
           {
             test: /atoms\/.*\.js$/,
@@ -73,6 +91,22 @@ export default {
               options: {
                 es6mode: true,
                 paths: [path.resolve(__dirname, "src/atoms")]
+              }
+            }
+          },
+          {
+            test: /closure-polyfill\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "src/selenium-atoms")
+                ]
               }
             }
           },
