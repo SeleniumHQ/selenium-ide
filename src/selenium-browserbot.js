@@ -26,12 +26,7 @@
 
 import Selenium from "./selenium-api";
 import { selenium } from "./commands-api";
-import bot from "./atoms/bot";
-import goog, { core } from "./closure-polyfill";
-console.log(goog);
-//const bot = window.global.bot;
-//const goog = window.global.goog;
-//const core = window.global.core;
+import goog, { bot, core } from "./closure-polyfill";
 const XPCNativeWrapper = window.global.XPCNativeWrapper;
 
 // TODO: utils
