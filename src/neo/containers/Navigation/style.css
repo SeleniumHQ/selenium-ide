@@ -4,6 +4,7 @@ aside.test-cases {
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: min-width 80ms ease-in-out;
 }
 
 aside.test-cases h3 {
