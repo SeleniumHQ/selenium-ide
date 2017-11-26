@@ -19,9 +19,11 @@ import browser from "webextension-polyfill";
 import { selenium } from "./commands-api";
 import { escapeHTML } from "./escape";
 import BrowserBot from "./selenium-browserbot";
-const bot = window.global.bot;
-const goog = window.global.goog;
-const core = window.global.core;
+import bot from "./atoms/bot";
+import goog, { core } from "./closure-polyfill";
+//const bot = window.global.bot;
+//const goog = window.global.goog;
+//const core = window.global.core;
 
 // TODO: utils
 const eval_css = window.global.eval_css;
