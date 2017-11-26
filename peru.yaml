@@ -1,11 +1,17 @@
 imports:
   atoms: src/atoms
+  selenium-atoms: src/selenium-atoms
   webdriver: src/webdriver
 
 git module atoms:
   url: https://github.com/SeleniumHQ/selenium
   rev: selenium-3.6.0
   export: "javascript/atoms"
+
+git module selenium-atoms:
+  url: https://github.com/SeleniumHQ/selenium
+  rev: selenium-3.6.0
+  export: "javascript/selenium-atoms"
 
 git module webdriver:
   url: https://github.com/SeleniumHQ/selenium

@@ -6,6 +6,7 @@ build
 src/selenium
 src/atoms
 src/webdriver
+src/selenium-atoms
 .peru
 .idea
 .tern-port
