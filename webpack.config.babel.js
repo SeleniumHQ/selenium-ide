@@ -82,6 +82,21 @@ export default {
             }
           },
           {
+            test: /third_party\/wgxpath\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+                ]
+              }
+            }
+          },
+          {
             test: /atoms\/.*\.js$/,
             include: [
               path.resolve(__dirname, "src")
@@ -90,7 +105,12 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
-                paths: [path.resolve(__dirname, "src/atoms")]
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
+                  path.resolve(__dirname, "src/third_party/wgxpath"),
+                  path.resolve(__dirname, "src/atoms")
+                ]
               }
             }
           },
@@ -105,6 +125,7 @@ export default {
                 es6mode: true,
                 paths: [
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "src/atoms"),
                   path.resolve(__dirname, "src/selenium-atoms")
                 ]
               }
