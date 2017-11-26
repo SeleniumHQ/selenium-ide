@@ -105,8 +105,8 @@ function openPage() {
 
 function openWindowFromStorageResolution() {
   let size = {
-    height: 960,
-    width: 610
+    height: 690,
+    width: 550
   };
   return browser.storage.local.get().then(storage => {
     if (sizeIsValid(storage.size)) {
