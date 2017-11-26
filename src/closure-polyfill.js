@@ -1,7 +1,12 @@
-goog.require('goog.dom');
+/*eslint-disable no-undef*/
+
+goog.require("goog.dom");
+
+export let bot = {};
+goog.require("bot");
+goog.require("bot.Keyboard");
 
 export let core = {};
 goog.require("core.firefox");
 
-window.kaki = goog;
 export default goog;
