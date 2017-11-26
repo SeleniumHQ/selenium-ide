@@ -27,7 +27,6 @@
 import Selenium from "./selenium-api";
 import { selenium } from "./commands-api";
 import goog, { bot, core } from "./closure-polyfill";
-const XPCNativeWrapper = window.global.XPCNativeWrapper;
 
 // TODO: utils
 const objectExtend = window.global.objectExtend;
