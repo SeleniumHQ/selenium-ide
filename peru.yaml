@@ -2,6 +2,7 @@ imports:
   atoms: src/atoms
   selenium-atoms: src/selenium-atoms
   webdriver: src/webdriver
+  third_party: src/third_party
 
 git module atoms:
   url: https://github.com/SeleniumHQ/selenium
@@ -17,3 +18,8 @@ git module webdriver:
   url: https://github.com/SeleniumHQ/selenium
   rev: selenium-3.6.0
   export: "javascript/webdriver/atoms"
+
+git module third_party:
+  url: https://github.com/SeleniumHQ/selenium
+  rev: selenium-3.6.0
+  export: "third_party/js"
