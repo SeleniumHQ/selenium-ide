@@ -54,7 +54,8 @@ export default class AutoComplete extends React.Component {
           fontSize: "90%",
           position: "fixed",
           overflow: "auto",
-          maxHeight: "30%"
+          maxHeight: "30%",
+          boxSizing: "border-box"
         }}
         {...this.props}
       />
