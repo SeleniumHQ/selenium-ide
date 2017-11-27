@@ -88,11 +88,11 @@
 }
 
 .test-table td:nth-child(3) {
-  width: 32%;
+  width: 39%;
 }
 
 .test-table td:nth-child(4) {
-  width: 8%;
+  width: 1%;
 }
 
 .test-table tr .buttons {
@@ -101,8 +101,14 @@
 }
 
 .test-table tr .buttons > * {
-  min-height: 35px;
+  min-height: 24px;
   opacity: 0;
+}
+
+.test-table tr .buttons button {
+  width: 22px;
+  height: 22px;
+  font-size: 20px;
 }
 
 .test-table tr:hover .buttons > * {
