@@ -14,7 +14,7 @@ export default class SpeedGaugeButton extends React.Component {
   };
   render() {
     return (
-      <ActionButton {...this.props} className={classNames(`si-gauge-${this.props.speed}`, this.props.className)}>
+      <ActionButton data-tooltip="Speed gauge" {...this.props} className={classNames(`si-gauge-${this.props.speed}`, this.props.className)}>
         <i className="si-caret" />
       </ActionButton>
     );

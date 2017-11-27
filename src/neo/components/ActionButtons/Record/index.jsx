@@ -27,7 +27,7 @@ const RecordButton = styled.button`
     outline: 0;
   }
 
-  &:after {
+  &:before {
     content: '';
     position: absolute;
     top: calc(50% - 1px);
@@ -67,7 +67,7 @@ export default class Record extends React.Component {
   };
   render() {
     return (
-      <RecordButton isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
+      <RecordButton isActive={this.props.isRecording} data-tooltip="Start recording" onClick={this.props.onClick}></RecordButton>
     );
   }
 }
