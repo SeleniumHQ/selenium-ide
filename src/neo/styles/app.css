@@ -35,9 +35,9 @@ a:focus {
 input {
   border: 1px #BEBEBE solid;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 17px;
-  padding: 5px;
+  padding: 2px 5px;
 }
 
 input:focus {
