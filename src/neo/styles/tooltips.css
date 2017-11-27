@@ -1,0 +1,35 @@
+[data-tooltip] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+[data-tooltip]:after {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0, 0);
+}
+
+[data-tooltip]:after {
+  font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+  position: absolute;
+  margin-bottom: 5px;
+  margin-left: -80px;
+  padding: 7px;
+  width: 160px;
+	border: 1px solid #DEDEDE;
+  border-radius: 2px;
+  background-color: #fff;
+	box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+  color: #505050;
+  content: attr(data-tooltip);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+  transition: opacity 287ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 191ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+[data-tooltip]:hover:after {
+  opacity: 1;
+  transform: scale(1, 1);
+}
