@@ -1,11 +1,11 @@
 [data-tooltip] {
   position: relative;
-  z-index: 2;
   cursor: pointer;
 }
 
 [data-tooltip]:after {
   opacity: 0;
+  z-index: 2;
   pointer-events: none;
 }
 
