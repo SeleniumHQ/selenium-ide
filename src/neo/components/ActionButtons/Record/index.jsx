@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const RecordButton = styled.button`
-  height: 14px;
-  width: 14px;
+  height: 18px;
+  width: 18px;
   margin: 10px;
   background-color: #EE4841;
   border-style: none;
-  border-radius: ${props => props.isActive ? "25%" : "50%"};
+  border-radius: ${props => props.isActive ? "10%" : "50%"};
   position: relative;
   overflow: hidden;
   outline: 0;
@@ -36,8 +36,8 @@ const RecordButton = styled.button`
     height: 2px;
     background: rgba(255, 255, 255, .5);
     opacity: 0;
-    border-radius: 100%;
-    transform: scale(14, 14);
+    border-radius: 20%;
+    transform: scale(18, 18);
     transform-origin: 50% 50%;
     animation: ${props => props.isActive ? "ripple 1s ease-out infinite" : "none"};
   }
@@ -54,7 +54,7 @@ const RecordButton = styled.button`
     }
     100% {
       opacity: 0;
-      transform: scale(14, 14);
+      transform: scale(18, 18);
     }
   }
 `;
