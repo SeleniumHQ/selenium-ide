@@ -20,10 +20,12 @@ export default class TabBar extends React.Component {
     tabs: PropTypes.array.isRequired,
     defaultTab: PropTypes.string,
     tabWidth: PropTypes.number,
+    buttonsMargin: PropTypes.number,
     tabChanged: PropTypes.func
   };
   static defaultProps = {
-    tabWidth: 80
+    tabWidth: 80,
+    buttonsMargin: 5
   };
   handleClick(tab, index) {
     this.setState({
@@ -42,7 +44,9 @@ export default class TabBar extends React.Component {
               <a href="#" onClick={this.handleClick.bind(this, tab, index)}>{tab}</a>
             </li>
           ))}
-          {this.props.children ? <li className="buttons">{this.props.children}</li> : null}
+          {this.props.children ? <li className="buttons" style={{
+            marginRight: `${this.props.buttonsMargin}px`
+          }}>{this.props.children}</li> : null}
         </ul>
         <div className="underline" style={{
           transform: `translateX(${this.state.activeTab.index * this.props.tabWidth}px)`,
