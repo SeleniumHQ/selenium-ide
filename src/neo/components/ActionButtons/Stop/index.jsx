@@ -5,7 +5,7 @@ import classNames from "classnames";
 export default class PlayCurrentButton extends React.Component {
   render() {
     return (
-      <ActionButton {...this.props} className={classNames("si-stop", this.props.className)} />// eslint-disable-line react/prop-types
+      <ActionButton data-tooltip="Stop playing" {...this.props} className={classNames("si-stop", this.props.className)} />// eslint-disable-line react/prop-types
     );
   }
 }
