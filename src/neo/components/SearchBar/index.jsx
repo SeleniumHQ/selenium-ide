@@ -21,7 +21,9 @@ export default class SearchBar extends React.Component {
         position: "relative"
       }}>
         <input ref={this.props.inputRef} className="search" type="search" placeholder="Search tests..." value={this.props.value} onChange={this.handleChange} />
-        <label htmlFor={this.id} className="si-search"></label>
+        <label htmlFor={this.id} className="si-search" style={{
+          display: !this.props.value ? "block" : "none"
+        }}></label>
       </div>
     );
   }
