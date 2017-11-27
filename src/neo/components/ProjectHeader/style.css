@@ -1,6 +1,8 @@
 .header {
   border-bottom: 1px solid #CECECE;
   padding: 2px;
+  display: flex;
+  align-items: center;
 }
 
 .header .title {
@@ -14,6 +16,7 @@
   font-size: 16px;
   cursor: pointer;
   min-width: 150px;
+  flex-grow: 1;
 }
 
 .header:hover .title {
