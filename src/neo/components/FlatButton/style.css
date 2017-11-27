@@ -34,6 +34,7 @@
   border: 1px solid #DCDCDC;
   background-color: white;
   padding: 5px 8px;
+  border-radius: 2px;
 }
 
 .btn.icon:focus {
