@@ -50,10 +50,6 @@ const parseUrl = window.global.parseUrl;
 const reassembleLocation = window.global.reassembleLocation;
 const serializeObject = window.global.serializeObject;
 
-// TODO: unknown
-/*const Components = window.Components;
-const UIMap = window.UIMap;*/
-
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.
 export default class BrowserBot {

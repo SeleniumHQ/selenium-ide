@@ -37,10 +37,6 @@ const PatternMatcher = window.global.PatternMatcher;
 const parse_kwargs = window.global.parse_kwargs;
 const getTagName = window.global.getTagName;
 
-// TODO: unknown
-//const Components = window.Components;
-//const RollupManager = window.RollupManager;
-
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
 let storedVars = new Object();
