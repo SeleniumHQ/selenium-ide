@@ -1,6 +1,6 @@
 .header {
   border-bottom: 1px solid #CECECE;
-  padding: 2px;
+  padding: 2px 7px;
   display: flex;
   align-items: center;
 }
@@ -44,4 +44,8 @@
 .header .buttons {
   display: flex;
   align-items: center;
+}
+
+.header .buttons > * {
+  margin: 0 5px;
 }
