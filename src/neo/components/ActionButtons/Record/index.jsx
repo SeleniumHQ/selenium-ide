@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const RecordButton = styled.button`
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 16px;
   margin: 5px;
   background-color: #EE4841;
   border-style: none;
@@ -37,7 +37,7 @@ const RecordButton = styled.button`
     background: rgba(255, 255, 255, .5);
     opacity: 0;
     border-radius: 20%;
-    transform: scale(18, 18);
+    transform: scale(16, 16);
     transform-origin: 50% 50%;
     animation: ${props => props.isActive ? "ripple 1s ease-out infinite" : "none"};
   }
@@ -54,7 +54,7 @@ const RecordButton = styled.button`
     }
     100% {
       opacity: 0;
-      transform: scale(18, 18);
+      transform: scale(16, 16);
     }
   }
 `;
