@@ -28,11 +28,9 @@
   left: 50%;
   transform: scale(0, 0) translate(-50%, 10px);
   transform-origin: 0% 50%;
-  transition-delay: 0ms;
 }
 
 [data-tooltip]:hover:after {
   opacity: 1;
   transform: scale(1, 1) translate(-50%, 10px);
-  transition-delay: 500ms;
 }
