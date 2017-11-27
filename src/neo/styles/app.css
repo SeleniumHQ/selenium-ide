@@ -34,6 +34,7 @@ a:focus {
 
 input {
   border: 1px #DCDCDC solid;
+  color: #3F3F3F;
   border-radius: 2px;
   font-size: 12px;
   line-height: 17px;
