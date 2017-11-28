@@ -63,6 +63,7 @@
     "react-hot-loader": "^3.0.0-beta.7",
     "react-modal": "^3.0.4",
     "react-split-pane": "^0.1.71",
+    "react-tooltip": "^3.4.0",
     "react-transition-group": "^2.2.1",
     "sort-array": "^2.0.0",
     "style-loader": "^0.18.2",
