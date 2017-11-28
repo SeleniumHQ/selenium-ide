@@ -67,7 +67,7 @@ class PlaybackState {
     this.runs++;
     this.hasFailed = false;
     this.runningQueue = test.commands.peek();
-    this.commandsCount = test.commands.length;
+    this.commandsCount = test.commands.length - this.currentPlayingIndex;
     this.isPlaying = true;
   }
 
