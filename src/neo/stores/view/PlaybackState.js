@@ -63,19 +63,23 @@ class PlaybackState {
       this.currentRunningTest = test;
     }
     this.clearCommandStates();
-    if (command) this.currentPlayingIndex = test.commands.indexOf(command);
+    this.commandsCount = test.commands.length;
+    this.currentPlayingIndex = 0;
+    if (command && command.constructor.name === "Command") {
+      this.currentPlayingIndex = test.commands.indexOf(command);
+      this.commandsCount = test.commands.length - this.currentPlayingIndex;
+    }
     this.runs++;
     this.hasFailed = false;
     this.runningQueue = test.commands.peek();
-    this.commandsCount = test.commands.length - this.currentPlayingIndex;
     this.isPlaying = true;
   }
 
   @action.bound playCommand(command) {
-    this.resetState();
+    this.paused = false;
+    this.currentPlayingIndex = 0;
     this.currentRunningTest = UiState.selectedTest.test;
     this.runningQueue = [command];
-    this.commandsCount = 1;
     this.isPlaying = true;
   }
 
