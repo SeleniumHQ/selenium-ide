@@ -88,6 +88,7 @@ export default class TestRow extends React.Component {
     target: PropTypes.string,
     value: PropTypes.string,
     onClick: PropTypes.func,
+    onDoubleClick: PropTypes.func,
     addCommand: PropTypes.func,
     insertCommand: PropTypes.func,
     remove: PropTypes.func,
@@ -157,6 +158,7 @@ export default class TestRow extends React.Component {
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
       onClick={this.props.onClick}
+      onDoubleClick={this.props.onDoubleClick}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.props.onClick}
       style={{
