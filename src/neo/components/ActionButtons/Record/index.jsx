@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import "./style.css";
 
 const RecordButton = styled.button`
   height: 16px;
@@ -67,7 +68,9 @@ export default class Record extends React.Component {
   };
   render() {
     return (
-      <RecordButton isActive={this.props.isRecording} data-tooltip="Start recording" onClick={this.props.onClick}></RecordButton>
+      <span className="record" data-tooltip={this.props.isRecording ? "Stop recording" : "Start recording"}>
+        <RecordButton isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
+      </span>
     );
   }
 }
