@@ -88,7 +88,8 @@ export default class TestRow extends React.Component {
     target: PropTypes.string,
     value: PropTypes.string,
     onClick: PropTypes.func,
-    onDoubleClick: PropTypes.func,
+    startPlayingHere: PropTypes.func,
+    executeCommand: PropTypes.func,
     addCommand: PropTypes.func,
     insertCommand: PropTypes.func,
     remove: PropTypes.func,
@@ -134,6 +135,10 @@ export default class TestRow extends React.Component {
 
     if (this.props.remove && noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
       this.props.remove();
+    } else if (this.props.moveSelectionUp && noModifiers && key === "S") {
+      this.props.startPlayingHere();
+    } else if (this.props.moveSelectionUp && noModifiers && key === "X") {
+      this.props.executeCommand();
     } else if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
       this.props.moveSelectionUp();
     } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
@@ -158,7 +163,7 @@ export default class TestRow extends React.Component {
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
       onClick={this.props.onClick}
-      onDoubleClick={this.props.onDoubleClick}
+      onDoubleClick={this.props.executeCommand}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.props.onClick}
       style={{
@@ -181,6 +186,9 @@ export default class TestRow extends React.Component {
               <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
               <ListMenuSeparator />
               <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+              <ListMenuSeparator />
+              <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
+              <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
             </ListMenu> : null }
         </div>
       </td>

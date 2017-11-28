@@ -47,7 +47,8 @@ export default class TestTable extends React.Component {
                 value={command.value}
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
-                onDoubleClick={() => { PlaybackState.playCommand(command); }}
+                startPlayingHere={() => { PlaybackState.startPlaying(command); }}
+                executeCommand={() => { PlaybackState.playCommand(command); }}
                 moveSelectionUp={() => { UiState.selectCommandByIndex(index - 1); }}
                 moveSelectionDown={() => { UiState.selectCommandByIndex(index + 1); }}
                 addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
