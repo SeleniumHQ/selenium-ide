@@ -11,6 +11,7 @@ class PlaybackState {
   @observable testState = new Map();
   @observable suiteState = new Map();
   @observable runs = 0;
+  @observable finishedCommandsCount = 0;
   @observable failures = 0;
   @observable hasFailed = false;
   @observable aborted = false;
@@ -21,18 +22,6 @@ class PlaybackState {
     this.maxDelay = 3000;
     this._testsToRun = [];
     this.runningQueue = [];
-  }
-
-  @computed get finishedCommandsCount() {
-    let counter = 0;
-
-    this.commandState.forEach(({ state }) => {
-      if (state !== PlaybackStates.Pending) {
-        counter++;
-      }
-    });
-
-    return counter;
   }
 
   @computed get hasFinishedSuccessfully() {
@@ -76,6 +65,7 @@ class PlaybackState {
   }
 
   @action.bound playCommand(command) {
+    this.noStatisticsEffects = true;
     this.paused = false;
     this.currentPlayingIndex = 0;
     this.currentRunningTest = UiState.selectedTest.test;
@@ -92,6 +82,7 @@ class PlaybackState {
   }
 
   @action.bound stopPlaying() {
+    this.noStatisticsEffects = false;
     this.isPlaying = false;
   }
 
@@ -100,7 +91,7 @@ class PlaybackState {
     this.hasFailed = true;
     this._testsToRun = [];
     this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
-    this.isPlaying = false;
+    this.stopPlaying();
   }
 
   @action.bound pause() {
@@ -112,7 +103,7 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    this.isPlaying = false;
+    this.stopPlaying();
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (this._testsToRun.length) {
       this.playNext();
@@ -127,15 +118,21 @@ class PlaybackState {
 
   @action.bound setCommandState(commandId, state, message) {
     if (this.isPlaying) {
-      if (state === PlaybackStates.Failed) {
-        this.hasFailed = true;
-        this.failures++;
+      if (!this.noStatisticsEffects) {
+        if (state === PlaybackStates.Failed) {
+          this.hasFailed = true;
+          this.failures++;
+        }
+        if (state !== PlaybackStates.Pending) {
+          this.finishedCommandsCount++;
+        }
       }
       this.commandState.set(commandId, { state, message });
     }
   }
 
   @action.bound clearCommandStates() {
+    this.finishedCommandsCount = 0;
     this.commandState.clear();
   }
 
