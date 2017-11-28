@@ -73,6 +73,7 @@ class PlaybackState {
 
   @action.bound playCommand(command) {
     this.resetState();
+    this.currentRunningTest = UiState.selectedTest.test;
     this.runningQueue = [command];
     this.commandsCount = 1;
     this.isPlaying = true;
