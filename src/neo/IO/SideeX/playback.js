@@ -24,9 +24,9 @@ function playAfterConnectionFailed() {
 
 function executionLoop() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if (PlaybackState.currentPlayingIndex >= PlaybackState.currentRunningTest.commands.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
+  if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
   if (!PlaybackState.isPlaying || PlaybackState.paused) return false;
-  const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
@@ -70,7 +70,7 @@ function catchPlayingError(message) {
 }
 
 function reportError(error) {
-  const { id } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
+  const { id } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
@@ -166,7 +166,7 @@ function doDomWait(res, domTime, domCount = 0) {
 }
 
 function doCommand(implicitTime = Date.now(), implicitCount = 0) {
-  const { id, command, target, value } = PlaybackState.currentRunningTest.commands[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
 
   let p = new Promise(function(resolve, reject) {
     let count = 0;
@@ -217,7 +217,7 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
 
 function doDelay() {
   return new Promise((res) => {
-    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.currentRunningTest.commands.length) {
+    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.runningQueue.length) {
       return res(true);
     } else {
       setTimeout(() => {

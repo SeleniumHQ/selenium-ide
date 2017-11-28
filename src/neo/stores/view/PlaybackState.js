@@ -20,6 +20,7 @@ class PlaybackState {
   constructor() {
     this.maxDelay = 3000;
     this._testsToRun = [];
+    this.runningQueue = [];
   }
 
   @computed get finishedCommandsCount() {
@@ -35,9 +36,9 @@ class PlaybackState {
   }
 
   @computed get hasFinishedSuccessfully() {
-    return this.currentRunningTest.commands.filter(({id}) => (
+    return this.runningQueue.filter(({id}) => (
       this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Passed : false
-    )).length === this.currentRunningTest.commands.length;
+    )).length === this.runningQueue.length;
   }
 
   @action.bound startPlayingSuite() {
@@ -65,6 +66,7 @@ class PlaybackState {
     if (command) this.currentPlayingIndex = test.commands.indexOf(command);
     this.runs++;
     this.hasFailed = false;
+    this.runningQueue = test.commands.peek();
     this.commandsCount = test.commands.length;
     this.isPlaying = true;
   }
@@ -72,6 +74,8 @@ class PlaybackState {
   @action.bound playNext() {
     this.currentRunningTest = this._testsToRun.shift();
     UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
+    this.runningQueue = this.currentRunningTest.commands.peek();
+    this.currentPlayingIndex = 0;
     this.isPlaying = true;
   }
 
@@ -83,7 +87,7 @@ class PlaybackState {
     this.aborted = true;
     this.hasFailed = true;
     this._testsToRun = [];
-    this.commandState.set(this.currentRunningTest.commands[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
+    this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
     this.isPlaying = false;
   }
 
