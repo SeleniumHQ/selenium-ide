@@ -176,9 +176,9 @@ export default class TestRow extends React.Component {
               <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
               <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert New Command</ListMenuItem>
+              <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem onClick={this.props.clearAllCommands}>Clear All</ListMenuItem>
+              <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
             </ListMenu> : null }
         </div>
       </td>
