@@ -19,11 +19,13 @@ export default class LogStore {
   }
 
   @action.bound addLog(log, type) {
-    this.logs.push({
-      id: uuidv4(),
-      status: type,
-      message: log
-    });
+    if (!this.logs.length || this.logs[this.logs.length - 1].message !== log) {
+      this.logs.push({
+        id: uuidv4(),
+        status: type,
+        message: log
+      });
+    }
   }
 
   @action.bound clearLogs() {
