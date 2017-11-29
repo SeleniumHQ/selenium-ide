@@ -2,3 +2,7 @@
   padding-left: 2px;
   border-bottom: 1px solid #F3F3F3;
 }
+
+.toolbar > button {
+  margin: 2px 7px;
+}

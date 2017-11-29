@@ -37,8 +37,8 @@ import "./style.css";
               value={this.props.command ? this.props.command.target : ""}
               disabled={!this.props.command}
               onChange={this.props.command ? this.props.command.setTarget : null} />
-            <FlatButton className={classNames("icon", "si-select", {"active": this.props.isSelecting})} onClick={select} />
-            <FlatButton className="icon si-search" onClick={() => {find(this.props.command.target);}} />
+            <FlatButton data-tip="<p>Select target in page</p>" className={classNames("icon", "si-select", {"active": this.props.isSelecting})} onClick={select} />
+            <FlatButton data-tip="<p>Find target in page</p>" className="icon si-search" onClick={() => {find(this.props.command.target);}} />
           </div>
           <Input
             id="value"

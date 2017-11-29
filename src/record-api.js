@@ -80,7 +80,11 @@ function startShowElement(message){
     return Promise.resolve({result: result});
   }
 }
-browser.runtime.onMessage.addListener(startShowElement);
+
+if (!window._recordListener) {
+  window._recordListener = startShowElement;
+  browser.runtime.onMessage.addListener(startShowElement);
+}
 
 // set frame id
 (function getframeLocation() {

@@ -3629,12 +3629,30 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 // Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
   try{
+    const highlightElement = document.getElementById("selenium-highlight");
     let element = this.browserbot.findElement(locator);
-    let origin_backgroundColor = element.style.backgroundColor;
-    element.style.backgroundColor = "yellow";
+    const elementRects = element.getClientRects()[0];
+    const bodyRects = document.body.getClientRects()[0];
+    highlightElement.style.position = "absolute";
+    highlightElement.style.zIndex = "100";
+    highlightElement.style.background = "rgb(78, 171, 230)";
+    highlightElement.style.opacity = "0.4";
+    highlightElement.style.visibility = "visible";
+    highlightElement.style.padding = "2px";
+    highlightElement.style.pointerEvents = "none";
+    highlightElement.style.transition = "opacity 300ms ease-in-out";
+    highlightElement.style.top = parseInt(elementRects.top - bodyRects.top - 2) + "px";
+    highlightElement.style.left = parseInt(elementRects.left - bodyRects.left - 2) + "px";
+    highlightElement.style.width = parseInt(elementRects.width) + "px";
+    highlightElement.style.height = parseInt(elementRects.height) + "px";
+    highlightElement.scrollIntoView();
+    const blink = setInterval(() => {
+      highlightElement.style.opacity = parseFloat(highlightElement.style.opacity) ? "0" : "0.8";
+    }, 600);
     setTimeout(function() {
-      element.style.backgroundColor = origin_backgroundColor;
-    }, 500);
+      highlightElement.style.visibility = "hidden";
+      clearInterval(blink);
+    }, 2000);
     return "element found";
   } catch (e) {
     return "element not found";

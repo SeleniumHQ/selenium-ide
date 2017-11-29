@@ -5,6 +5,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
+import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
@@ -105,6 +106,7 @@ modify(project);
           <Console height={UiState.consoleHeight} />
         </SplitPane>
         <Modal project={this.state.project} />
+        <Tooltip />
       </div>
     );
   }

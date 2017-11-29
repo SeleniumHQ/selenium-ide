@@ -33,11 +33,12 @@ a:focus {
 }
 
 input {
-  border: 1px #BEBEBE solid;
-  border-radius: 4px;
-  font-size: 14px;
+  border: 1px #DCDCDC solid;
+  color: #3F3F3F;
+  border-radius: 2px;
+  font-size: 12px;
   line-height: 17px;
-  padding: 5px;
+  padding: 2px 5px;
 }
 
 input:focus {
@@ -87,7 +88,7 @@ hr {
 }
 
 .failed {
-  color: #E80600;
+  color: #DF0006;
 }
 
 ::-moz-focus-inner {

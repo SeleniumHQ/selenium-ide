@@ -1,5 +1,17 @@
 .search {
-  width: 95%;
-  margin: 5px auto;
+  flex-grow: 1;
+  margin: 5px;
   display: block;
+  font-size: 11px;
+}
+
+.search ~ label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 8px;
+  margin: auto 0;
+  font-size: 18px;
+  height: 18px;
+  color: #656565;
 }

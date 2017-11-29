@@ -47,7 +47,7 @@ import "./style.css";
     return (
       <aside className="test-cases" onKeyDown={this.handleKeyDown.bind(this)}>
         <TabBar tabs={["Tests", "Suites"]} tabWidth={70} tabChanged={this.handleChangedTab}>
-          <AddButton onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
+          <AddButton data-tip={this.state.showTests ? "<p>Add test case</p>" : "<p>Add suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </TabBar>
         <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
         <Provider renameTest={ModalState.renameTest}>
@@ -56,11 +56,11 @@ import "./style.css";
             : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={ModalState.deleteSuite} moveTest={this.props.moveTest} /> }
         </Provider>
         <Runs
-          runs={PlaybackState.runs}
+          runs={PlaybackState.finishedTestsCount}
           failures={PlaybackState.failures}
           hasError={PlaybackState.hasFailed}
-          progress={PlaybackState.finishedCommandsCount}
-          totalProgress={PlaybackState.commandsCount}
+          progress={PlaybackState.finishedTestsCount}
+          totalProgress={PlaybackState.testsCount}
         />
       </aside>
     );

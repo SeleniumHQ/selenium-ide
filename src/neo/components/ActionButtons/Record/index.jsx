@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const RecordButton = styled.button`
-  height: 14px;
-  width: 14px;
-  margin: 10px;
+  height: 16px;
+  width: 16px;
+  margin: 5px 10px 5px 5px;
   background-color: #EE4841;
   border-style: none;
-  border-radius: ${props => props.isActive ? "25%" : "50%"};
+  border-radius: ${props => props.isActive ? "10%" : "50%"};
   position: relative;
   overflow: hidden;
   outline: 0;
@@ -27,7 +27,7 @@ const RecordButton = styled.button`
     outline: 0;
   }
 
-  &:after {
+  &:before {
     content: '';
     position: absolute;
     top: calc(50% - 1px);
@@ -36,8 +36,8 @@ const RecordButton = styled.button`
     height: 2px;
     background: rgba(255, 255, 255, .5);
     opacity: 0;
-    border-radius: 100%;
-    transform: scale(14, 14);
+    border-radius: 20%;
+    transform: scale(16, 16);
     transform-origin: 50% 50%;
     animation: ${props => props.isActive ? "ripple 1s ease-out infinite" : "none"};
   }
@@ -54,7 +54,7 @@ const RecordButton = styled.button`
     }
     100% {
       opacity: 0;
-      transform: scale(14, 14);
+      transform: scale(16, 16);
     }
   }
 `;
@@ -67,7 +67,9 @@ export default class Record extends React.Component {
   };
   render() {
     return (
-      <RecordButton isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
+      <span className="record" data-tip={this.props.isRecording ? "<p>Stop recording</p>" : "<p>Start recording</p>"}>
+        <RecordButton isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
+      </span>
     );
   }
 }

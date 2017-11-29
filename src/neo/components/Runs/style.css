@@ -1,11 +1,14 @@
 .runs {
   padding: 15px 10px 0 10px;
-  border-top: 1px solid #CECECE;
   background-color: #fff;
 }
 
-.runs > div {
-  padding: 15px 0;
+.runs .status {
+  padding: 10px 0 15px 0;
+}
+
+.runs .status > span {
+  margin: 0 8px;
 }
 
 .runs .right {
@@ -14,8 +17,4 @@
 
 .runs .left {
   float: left;
-}
-
-.runs .failures {
-  color: #A62C26;
 }

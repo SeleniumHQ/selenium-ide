@@ -17,6 +17,7 @@ export default class AutoComplete extends React.Component {
         getItemValue={(item) => (item)}
         renderInput={(props) => (
           <span style={{
+            display: "block",
             position: "relative"
           }}>
             <input id={this.id} {...props} style={{
