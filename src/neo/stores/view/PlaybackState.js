@@ -24,9 +24,9 @@ class PlaybackState {
   }
 
   @computed get hasFinishedSuccessfully() {
-    return this.runningQueue.filter(({id}) => (
-      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Passed : false
-    )).length === this.runningQueue.length;
+    return !this.runningQueue.find(({id}) => (
+      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed : false
+    ));
   }
 
   @action.bound startPlayingSuite() {
