@@ -3634,6 +3634,7 @@ Selenium.prototype.doShowElement = function(locator){
     const elementRects = element.getClientRects()[0];
     const bodyRects = document.body.getClientRects()[0];
     highlightElement.style.position = "absolute";
+    highlightElement.style.zIndex = "100";
     highlightElement.style.background = "rgb(86, 184, 247)";
     highlightElement.style.opacity = "0.6";
     highlightElement.style.visibility = "visible";
