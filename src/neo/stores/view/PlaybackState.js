@@ -6,12 +6,11 @@ class PlaybackState {
   @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
-  @observable commandsCount = 0;
   @observable commandState = new Map();
   @observable testState = new Map();
   @observable suiteState = new Map();
-  @observable runs = 0;
-  @observable finishedCommandsCount = 0;
+  @observable finishedTestsCount = 0;
+  @observable testsCount = 0;
   @observable failures = 0;
   @observable hasFailed = false;
   @observable aborted = false;
@@ -32,34 +31,23 @@ class PlaybackState {
 
   @action.bound startPlayingSuite() {
     const { suite } = UiState.selectedTest;
-    if (this.currentRunningSuite !== (suite ? suite.id : undefined)) {
-      this.resetState();
-      this.currentRunningSuite = suite.id;
-    }
-    this.clearCommandStates();
-    this.hasFailed = false;
-    this.runs++;
+    this.resetState();
+    this.currentRunningSuite = suite.id;
     this._testsToRun = [...suite.tests];
-    this.commandsCount = this._testsToRun.reduce((counter, test) => (counter + test.commands.length), 0);
+    this.testsCount = this._testsToRun.length;
     this.playNext();
   }
 
   @action.bound startPlaying(command) {
     const { test } = UiState.selectedTest;
-    if (this.currentRunningSuite || !this.currentRunningTest || this.currentRunningTest.id !== test.id) {
-      this.resetState();
-      this.currentRunningSuite = undefined;
-      this.currentRunningTest = test;
-    }
-    this.clearCommandStates();
-    this.commandsCount = test.commands.length;
+    this.resetState();
+    this.currentRunningSuite = undefined;
+    this.currentRunningTest = test;
+    this.testsCount = 1;
     this.currentPlayingIndex = 0;
     if (command && command.constructor.name === "Command") {
       this.currentPlayingIndex = test.commands.indexOf(command);
-      this.commandsCount = test.commands.length - this.currentPlayingIndex;
     }
-    this.runs++;
-    this.hasFailed = false;
     this.runningQueue = test.commands.peek();
     this.isPlaying = true;
   }
@@ -82,7 +70,6 @@ class PlaybackState {
   }
 
   @action.bound stopPlaying() {
-    this.noStatisticsEffects = false;
     this.isPlaying = false;
   }
 
@@ -105,6 +92,13 @@ class PlaybackState {
   @action.bound finishPlaying() {
     this.stopPlaying();
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
+    if (!this.noStatisticsEffects) {
+      this.finishedTestsCount++;
+      if (!this.hasFinishedSuccessfully) {
+        this.hasFailed = true;
+        this.failures++;
+      }
+    }
     if (this._testsToRun.length) {
       this.playNext();
     } else if (this.currentRunningSuite) {
@@ -118,21 +112,11 @@ class PlaybackState {
 
   @action.bound setCommandState(commandId, state, message) {
     if (this.isPlaying) {
-      if (!this.noStatisticsEffects) {
-        if (state === PlaybackStates.Failed) {
-          this.hasFailed = true;
-          this.failures++;
-        }
-        if (state !== PlaybackStates.Pending) {
-          this.finishedCommandsCount++;
-        }
-      }
       this.commandState.set(commandId, { state, message });
     }
   }
 
   @action.bound clearCommandStates() {
-    this.finishedCommandsCount = 0;
     this.commandState.clear();
   }
 
@@ -143,7 +127,8 @@ class PlaybackState {
   @action.bound resetState() {
     this.clearCommandStates();
     this.currentPlayingIndex = 0;
-    this.runs = 0;
+    this.finishedTestsCount = 0;
+    this.noStatisticsEffects = false;
     this.failures = 0;
     this.hasFailed = false;
     this.aborted = false;

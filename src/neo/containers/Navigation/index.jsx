@@ -56,11 +56,11 @@ import "./style.css";
             : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={ModalState.deleteSuite} moveTest={this.props.moveTest} /> }
         </Provider>
         <Runs
-          runs={PlaybackState.runs}
+          runs={PlaybackState.finishedTestsCount}
           failures={PlaybackState.failures}
           hasError={PlaybackState.hasFailed}
-          progress={PlaybackState.finishedCommandsCount}
-          totalProgress={PlaybackState.commandsCount}
+          progress={PlaybackState.finishedTestsCount}
+          totalProgress={PlaybackState.testsCount}
         />
       </aside>
     );
