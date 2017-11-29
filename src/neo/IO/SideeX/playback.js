@@ -165,7 +165,7 @@ function doDomWait(res, domTime, domCount = 0) {
     });
 }
 
-function doCommand(implicitTime = Date.now(), implicitCount = 0) {
+function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
 
   let p = new Promise(function(resolve, reject) {
@@ -202,12 +202,10 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
             if (implicitCount == 1) {
               implicitTime = Date.now();
             }
-            return doCommand(implicitTime, implicitCount);
+            return doCommand(false, implicitTime, implicitCount);
           }
         }
 
-        implicitCount = 0;
-        implicitTime = "";
         PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
       } else {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
