@@ -5,7 +5,7 @@ import styled from "styled-components";
 const RecordButton = styled.button`
   height: 16px;
   width: 16px;
-  margin: 5px;
+  margin: 5px 10px 5px 5px;
   background-color: #EE4841;
   border-style: none;
   border-radius: ${props => props.isActive ? "10%" : "50%"};
