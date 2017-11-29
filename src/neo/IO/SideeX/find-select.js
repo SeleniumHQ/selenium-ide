@@ -1,5 +1,6 @@
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ModalState from "../../stores/view/ModalState";
 const browser = window.browser;
 
 export function find(target) {
@@ -15,8 +16,12 @@ export function find(target) {
           showElement: true,
           targetValue: target
         }).then((response) => {
-          if (response){
-            console.log(response.result);
+          if (response && response.result === "element not found") {
+            ModalState.showAlert({
+              title: "Element not found",
+              description: `Could not find ${target} on the page`,
+              confirmLabel: "Close"
+            });
           }
         });
       }
