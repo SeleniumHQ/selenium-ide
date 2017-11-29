@@ -197,11 +197,13 @@ function doCommand(implicitTime = Date.now(), implicitCount = 0) {
             reportError("Implicit Wait timed out after 30000ms");
             implicitCount = 0;
             implicitTime = "";
+            PlaybackState.setCommandState(id, PlaybackStates.Failed, `Could not find ${parsedTarget}`);
           } else {
             implicitCount++;
             if (implicitCount == 1) {
               implicitTime = Date.now();
             }
+            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
             return doCommand(implicitTime, implicitCount);
           }
         }
