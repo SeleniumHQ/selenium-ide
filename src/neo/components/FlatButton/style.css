@@ -37,6 +37,10 @@
   border-radius: 2px;
 }
 
+.btn.icon:hover {
+  color: #0c0c0c;
+}
+
 .btn.icon:focus {
   border-color: #40A6FF;
 }
