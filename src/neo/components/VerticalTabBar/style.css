@@ -1,0 +1,55 @@
+.tabbar.vertical {
+  margin-bottom: 29px;
+}
+
+.tabbar.vertical > div {
+  display: flex;
+  max-height: 29px;
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  background-color: #F3F3F3;
+  overflow-y: auto;
+  transition: max-height 80ms linear;
+}
+
+.tabbar.vertical:hover > div {
+  max-height: 60px;
+}
+
+.tabbar.vertical ul {
+  flex-grow: 1;
+}
+
+.tabbar.vertical ul li {
+  display: block;
+}
+
+.tabbar.vertical a {
+  display: flex;
+  text-align: left;
+}
+
+.tabbar.vertical a:hover {
+  color: #0c0c0c;
+  background-color: #F3F3F3;
+}
+
+.tabbar.vertical a:focus {
+  background-color: #F3F3F3;
+}
+
+.tabbar.vertical li:first-child a:after {
+  font-family: 'selenium-ide' !important;
+  color: rgb(163, 163, 163);
+  transform: rotate(90deg);
+  font-size: 8px;
+  margin: auto 10px;
+  height: 10px;
+  content: "\e900";
+}
+
+.tabbar.vertical li:first-child a:hover:after {
+  color: #0c0c0c;
+}
