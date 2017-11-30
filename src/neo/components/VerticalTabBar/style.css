@@ -14,10 +14,6 @@
   transition: max-height 80ms linear;
 }
 
-.tabbar.vertical:hover > div {
-  max-height: 60px;
-}
-
 .tabbar.vertical ul {
   flex-grow: 1;
 }
