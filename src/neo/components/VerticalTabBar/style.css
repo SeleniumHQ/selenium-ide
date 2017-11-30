@@ -8,14 +8,9 @@
   position: absolute;
   right: 0;
   left: 0;
-  z-index: 2;
   background-color: #F3F3F3;
   overflow-y: hidden;
   transition: max-height 80ms linear;
-}
-
-.tabbar.vertical ul {
-  flex-grow: 1;
 }
 
 .tabbar.vertical ul li {
@@ -23,6 +18,8 @@
 }
 
 .tabbar.vertical a {
+  color: #505050;
+  flex-grow: 1;
   display: flex;
   text-align: left;
 }
@@ -32,7 +29,7 @@
   background-color: #F3F3F3;
 }
 
-.tabbar.vertical li:first-child a:after {
+.tabbar.vertical a:after {
   font-family: 'selenium-ide' !important;
   color: rgb(163, 163, 163);
   transform: rotate(90deg);
@@ -42,6 +39,6 @@
   content: "\e900";
 }
 
-.tabbar.vertical li:first-child a:hover:after, .tabbar.vertical li:first-child a:focus:after {
+.tabbar.vertical a:hover:after, .tabbar.vertical a:focus:after {
   color: #0c0c0c;
 }

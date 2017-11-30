@@ -1,12 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import ListMenu, { ListMenuItem } from "../ListMenu";
+import { MenuDirections } from "../Menu";
 import "./style.css";
 
 export default class VerticalTabBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: false,
       activeTab: props.defaultTab ? {
         tab: props.defaultTab
       } : {
@@ -24,38 +25,25 @@ export default class VerticalTabBar extends React.Component {
   static defaultProps = {
     buttonsMargin: 5
   };
-  setActive(state) {
-    this.setState({
-      active: state
-    });
-  }
   handleClick(tab) {
     this.setState({
-      active: false,
       activeTab: { tab }
     });
     if (this.props.tabChanged) this.props.tabChanged(tab);
   }
   render() {
     return (
-      <div className="tabbar vertical" onMouseLeave={this.setActive.bind(this, false)}>
-        <div style={{
-          maxHeight: this.state.active ? `${29 * this.props.tabs.length}px` : "29px"
-        }}>
-          <ul>
-            <li>
-              <VerticalTabBarItem focusable={true} onClick={this.setActive.bind(this, !this.state.active)}>
-                {this.state.activeTab.tab}
-              </VerticalTabBarItem>
-            </li>
-            {this.props.tabs.filter(tab => (tab !== this.state.activeTab.tab)).map((tab) => (
-              <li key={tab}>
-                <VerticalTabBarItem focusable={this.state.active} onClick={this.handleClick.bind(this, tab)}>
-                  {tab}
-                </VerticalTabBarItem>
-              </li>
+      <div className="tabbar vertical">
+        <div>
+          <ListMenu direction={MenuDirections.Bottom} width={130} padding={5} opener={
+            <VerticalTabBarItem focusable={true}>
+              {this.state.activeTab.tab}
+            </VerticalTabBarItem>
+          }>
+            {this.props.tabs.map(tab => (
+              <ListMenuItem key={tab} onClick={this.handleClick.bind(this, tab)}>{tab}</ListMenuItem>
             ))}
-          </ul>
+          </ListMenu>
           {this.props.children ? <span className="buttons" style={{
             marginRight: `${this.props.buttonsMargin}px`
           }}>{this.props.children}</span> : null}
