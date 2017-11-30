@@ -6,6 +6,7 @@ export default class VerticalTabbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      active: false,
       activeTab: props.defaultTab ? {
         tab: props.defaultTab
       } : {
@@ -23,19 +24,27 @@ export default class VerticalTabbar extends React.Component {
   static defaultProps = {
     buttonsMargin: 5
   };
+  setActive(state) {
+    this.setState({
+      active: state
+    });
+  }
   handleClick(tab) {
     this.setState({
+      active: false,
       activeTab: { tab }
     });
     if (this.props.tabChanged) this.props.tabChanged(tab);
   }
   render() {
     return (
-      <div className="tabbar vertical">
-        <div>
+      <div className="tabbar vertical" onMouseLeave={this.setActive.bind(this, false)}>
+        <div style={{
+          maxHeight: this.state.active ? `${29 * this.props.tabs.length}px` : "29px"
+        }}>
           <ul>
             <li>
-              <a href="#">{this.state.activeTab.tab}</a>
+              <a href="#" onClick={this.setActive.bind(this, true)}>{this.state.activeTab.tab}</a>
             </li>
             {this.props.tabs.filter(tab => (tab !== this.state.activeTab.tab)).map((tab) => (
               <li key={tab}>
