@@ -6,9 +6,12 @@ import "./style.css";
 
 @observer
 export default class LogList extends React.Component {
+  componentDidUpdate() {
+    this.container.scrollTo(0, 10000);
+  }
   render() {
     return (
-      <div className="logs">
+      <div className="logs" ref={container => {this.container = container;}}>
         <ul>
           {this.props.store.logs.map(({id, message, status}) => (
             <LogMessage key={id} status={status}>{message}</LogMessage>
