@@ -6,7 +6,7 @@ import { modifier } from "modifier-keys";
 import UiState from "../../stores/view/UiState";
 import ModalState from "../../stores/view/ModalState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import TabBar from "../../components/TabBar";
+import VerticalTabBar from "../../components/VerticalTabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
 import SuiteList from "../../components/SuiteList";
@@ -46,9 +46,9 @@ import "./style.css";
   render() {
     return (
       <aside className="test-cases" onKeyDown={this.handleKeyDown.bind(this)}>
-        <TabBar tabs={["Tests", "Suites"]} tabWidth={70} tabChanged={this.handleChangedTab}>
+        <VerticalTabBar tabs={["Tests", "Suites"]} tabChanged={this.handleChangedTab}>
           <AddButton data-tip={this.state.showTests ? "<p>Add test case</p>" : "<p>Add suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
-        </TabBar>
+        </VerticalTabBar>
         <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
         <Provider renameTest={ModalState.renameTest}>
           { this.state.showTests
