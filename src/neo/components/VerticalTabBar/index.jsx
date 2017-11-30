@@ -34,7 +34,10 @@ export default class VerticalTabbar extends React.Component {
       <div className="tabbar vertical">
         <div>
           <ul>
-            {this.props.tabs.map((tab) => (
+            <li>
+              <a href="#">{this.state.activeTab.tab}</a>
+            </li>
+            {this.props.tabs.filter(tab => (tab !== this.state.activeTab.tab)).map((tab) => (
               <li key={tab}>
                 <a href="#" onClick={this.handleClick.bind(this, tab)}>{tab}</a>
               </li>
