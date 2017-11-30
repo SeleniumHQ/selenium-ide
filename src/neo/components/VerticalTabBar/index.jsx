@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./style.css";
 
-export default class VerticalTabbar extends React.Component {
+export default class VerticalTabBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,11 +44,15 @@ export default class VerticalTabbar extends React.Component {
         }}>
           <ul>
             <li>
-              <a href="#" onClick={this.setActive.bind(this, !this.state.active)}>{this.state.activeTab.tab}</a>
+              <VerticalTabBarItem focusable={true} onClick={this.setActive.bind(this, !this.state.active)}>
+                {this.state.activeTab.tab}
+              </VerticalTabBarItem>
             </li>
             {this.props.tabs.filter(tab => (tab !== this.state.activeTab.tab)).map((tab) => (
               <li key={tab}>
-                <a href="#" tabIndex={this.state.active ? "0" : "-1"} onClick={this.handleClick.bind(this, tab)}>{tab}</a>
+                <VerticalTabBarItem focusable={this.state.active} onClick={this.handleClick.bind(this, tab)}>
+                  {tab}
+                </VerticalTabBarItem>
               </li>
             ))}
           </ul>
@@ -57,6 +61,20 @@ export default class VerticalTabbar extends React.Component {
           }}>{this.props.children}</span> : null}
         </div>
       </div>
+    );
+  }
+}
+
+export class VerticalTabBarItem extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    focusable: PropTypes.bool,
+    onClick: PropTypes.func,
+    onKeyDown: PropTypes.func
+  };
+  render() {
+    return (
+      <a href="#" tabIndex={this.props.focusable ? "0" : "-1"} onClick={this.props.onClick}>{this.props.children}</a>
     );
   }
 }
