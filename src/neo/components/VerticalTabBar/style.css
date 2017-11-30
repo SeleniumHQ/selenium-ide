@@ -10,7 +10,7 @@
   left: 0;
   z-index: 2;
   background-color: #F3F3F3;
-  overflow-y: auto;
+  overflow-y: hidden;
   transition: max-height 80ms linear;
 }
 
@@ -27,12 +27,8 @@
   text-align: left;
 }
 
-.tabbar.vertical a:hover {
+.tabbar.vertical a:hover, .tabbar.vertical a:focus {
   color: #0c0c0c;
-  background-color: #F3F3F3;
-}
-
-.tabbar.vertical a:focus {
   background-color: #F3F3F3;
 }
 
@@ -46,6 +42,6 @@
   content: "\e900";
 }
 
-.tabbar.vertical li:first-child a:hover:after {
+.tabbar.vertical li:first-child a:hover:after, .tabbar.vertical li:first-child a:focus:after {
   color: #0c0c0c;
 }
