@@ -19,8 +19,8 @@ extension/
 ### Chrome
 Chrome does not forbid in it's [policy](https://developer.chrome.com/webstore/program_policies#security) execution of remote code.
 ### Firefox
-According to Mozilla's [policy](https://developer.mozilla.org/en-US/Add-ons/AMO/Policy/Reviews#policy-security) execution of remote code is forbidden in listed extensions, unless it's same-origin, meaning the user hosts it on his website.
-Executing background scripts is strictly forbidden.
-Extensions are also forbidden from having it's own update mechanism, which means we can't automatically update Selenium IDE extensions.
-Greasemonkey uses [tabs.executeScript](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/executeScript) to execute user defined scripts in the document's permission levels, our use-case requires higher elevations, since the background scripts need to be manipulated as well.
+According to Mozilla's [policy](https://developer.mozilla.org/en-US/Add-ons/AMO/Policy/Reviews#policy-security) execution of remote code is forbidden in listed extensions, unless it's same-origin, meaning the user hosts it on his website.  
+Executing background scripts is strictly forbidden.  
+Extensions are also forbidden from having it's own update mechanism, which means we can't automatically update Selenium IDE extensions.  
+Greasemonkey uses [tabs.executeScript](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/executeScript) to execute user defined scripts in the document's permission levels, our use-case requires higher elevations, since the background scripts need to be manipulated as well.  
 Also sources must be submitted to Mozilla for review unobfuscated.
