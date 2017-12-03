@@ -1,12 +1,12 @@
-#Extensions Manifest
+# Extensions Manifest
 
-##Background
+## Background
 Selenium IDE extensions need to be able to change the behavior of the extension at 3 key points
  - Content scripts (tab under test)
  - Popup (GUI)
  - Domain data manipulations (save, load, export, etc...)
 
-##Structure
+## Structure
 Since the content scripts and the popup have different execution context and elevation, they need to be separated
 ```
 extension/
@@ -15,10 +15,10 @@ extension/
   background.js //popup changes (add buttons), playback changes (playback functionality)
 ```
 
-##Distribution
-###Chrome
+## Distribution
+### Chrome
 Chrome does not forbid in it's [policy](https://developer.chrome.com/webstore/program_policies#security) execution of remote code.
-###Firefox
+### Firefox
 According to Mozilla's [policy](https://developer.mozilla.org/en-US/Add-ons/AMO/Policy/Reviews#policy-security) execution of remote code is forbidden in listed extensions, unless it's same-origin, meaning the user hosts it on his website.
 Executing background scripts is strictly forbidden.
 Extensions are also forbidden from having it's own update mechanism, which means we can't automatically update Selenium IDE extensions.
