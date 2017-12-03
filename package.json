@@ -71,6 +71,7 @@
     "ua-parser-js": "^0.7.17",
     "url-loader": "^0.5.9",
     "uuid": "^3.1.0",
+    "web-ext": "^2.2.2",
     "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5",
     "webpack": "^3.5.6",
     "webpack-dev-server": "^2.8.2",
