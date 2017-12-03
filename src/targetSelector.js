@@ -83,7 +83,7 @@ TargetSelector.prototype.highlightElement = function (element) {
       return;
     }
     this.r = r;
-    const style = "pointer-events: none; position: absolute; box-shadow: 0 0 0 1px black; outline: 1px dashed white; outline-offset: -1px; background-color: rgba(250,250,128,0.4); z-index: 100;";
+    const style = "pointer-events: none; position: absolute; background-color: rgb(78, 171, 230); opacity: 0.4; border: 1px solid #0e0e0e; z-index: 100;";
     const pos = "top:" + (r.top + this.win.scrollY) + "px; left:" + (r.left + this.win.scrollX) + "px; width:" + r.width + "px; height:" + r.height + "px;";
     this.div.setAttribute("style", style + pos);
   } else if (or) {

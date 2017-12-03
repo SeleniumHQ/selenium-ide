@@ -20,7 +20,7 @@
 }
 
 .progress.has-error::-webkit-progress-value {
-  background-color: #A62C26;
+  background-color: #DF0006;
 }
 
 .progress::-moz-progress-bar {
@@ -30,5 +30,5 @@
 }
 
 .progress.has-error::-moz-progress-bar {
-    background-color: #A62C26;
+    background-color: #DF0006;
 }

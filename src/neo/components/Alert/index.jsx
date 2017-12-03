@@ -22,24 +22,28 @@ export default class Alert extends React.Component {
       isOpen: true,
       options,
       cb
+    }, () => {
+      this.submit.focus();
     });
   }
   close(status) {
     this.setState({
       isOpen: false
     });
-    this.state.cb(status);
+    if (this.state.cb) this.state.cb(status);
   }
   render() {
     return (
       <Modal className="alert" isOpen={this.state.isOpen} onRequestClose={this.close.bind(this, false)}>
-        <ModalHeader title={this.state.options.title} close={this.close.bind(this, false)} />
-        <p>{this.state.options.description}</p>
-        <span className="right">
-          <FlatButton onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
-          <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton>
-        </span>
-        <div className="clear"></div>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
+          <ModalHeader title={this.state.options.title} close={this.close.bind(this, false)} />
+          <p>{this.state.options.description}</p>
+          <span className="right">
+            <FlatButton type="submit" buttonRef={(submit) => { this.submit = submit; }} onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
+            {this.state.options.cancelLabel ? <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton> : null}
+          </span>
+          <div className="clear"></div>
+        </form>
       </Modal>
     );
   }

@@ -34,6 +34,11 @@
   border: 1px solid #DCDCDC;
   background-color: white;
   padding: 5px 8px;
+  border-radius: 2px;
+}
+
+.btn.icon:hover {
+  color: #0c0c0c;
 }
 
 .btn.icon:focus {

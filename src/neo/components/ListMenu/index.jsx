@@ -8,11 +8,12 @@ export default class ListMenu extends React.Component {
     children: PropTypes.node,
     opener: PropTypes.element,
     width: PropTypes.number,
-    padding: PropTypes.number
+    padding: PropTypes.number,
+    direction: PropTypes.string
   };
   render() {
     return (
-      <Menu opener={this.props.opener} width={this.props.width} padding={this.props.padding}>
+      <Menu opener={this.props.opener} width={this.props.width} padding={this.props.padding} direction={this.props.direction}>
         <ul className="buttons">
           {this.props.children}
         </ul>

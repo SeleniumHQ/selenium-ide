@@ -5,10 +5,12 @@
 }
 
 .project > a {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 7px 0;
   border-bottom: 1px transparent solid;
   flex-grow: 1;
+  min-width: 0;
 }
 
 .project > a.hover {
@@ -16,9 +18,11 @@
 }
 
 .project > a .title {
-  padding: 0 12px;
-  font-size: 16px;
-  align-self: center;
+  padding: 0 6px;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .project > a .si-caret {
@@ -27,7 +31,6 @@
   display: inline-block;
   transform: rotate(0deg);
   transition: all 100ms linear;
-  align-self: center;
 }
 
 .project > a.active .si-caret {

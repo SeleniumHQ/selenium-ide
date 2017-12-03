@@ -1,7 +1,3 @@
-.test-table tr {
-  padding: 10px 15px;
-}
-
 .test-table tbody tr {
   cursor: pointer;
 }
@@ -40,7 +36,7 @@
   position: relative;
 }
 
-.test-table tbody tr.pending td:first-child span{
+.test-table tbody tr.pending td:first-child span:first-child {
   position: absolute;
   left: 0;
   top: 0;
@@ -53,8 +49,12 @@
   border-left: 6px solid #505050;
 }
 
+.test-table tbody tr td:first-child span:nth-child(2) {
+  margin-right: 5px;
+}
+
 .test-table tbody tr.passed td {
-  color: #276D3A;
+  color: #008425;
 }
 
 .test-table tbody tr.failed td {
@@ -63,11 +63,12 @@
 
 .test-table td {
   font-size: 12px;
-  padding: 5px 15px;
+  padding: 5px 10px 5px 17px;
 }
 
 .test-table th:nth-child(1) {
   width: 30%;
+  padding-left: 22px;
 }
 
 .test-table th:nth-child(2) {
@@ -79,20 +80,21 @@
 }
 
 .test-table td:nth-child(1) {
-  width: 30%;
+  width: 31%;
   color: #8B8B8B;
+  padding: 5px 10px;
 }
 
 .test-table td:nth-child(2) {
-  width: 30%;
+  width: 31%;
 }
 
 .test-table td:nth-child(3) {
-  width: 32%;
+  width: 39%;
 }
 
 .test-table td:nth-child(4) {
-  width: 8%;
+  width: 22px;
 }
 
 .test-table tr .buttons {
@@ -101,8 +103,14 @@
 }
 
 .test-table tr .buttons > * {
-  min-height: 35px;
+  min-height: 24px;
   opacity: 0;
+}
+
+.test-table tr .buttons button {
+  width: 22px;
+  height: 22px;
+  font-size: 20px;
 }
 
 .test-table tr:hover .buttons > * {

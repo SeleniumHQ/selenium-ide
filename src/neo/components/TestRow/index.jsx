@@ -88,6 +88,8 @@ export default class TestRow extends React.Component {
     target: PropTypes.string,
     value: PropTypes.string,
     onClick: PropTypes.func,
+    startPlayingHere: PropTypes.func,
+    executeCommand: PropTypes.func,
     addCommand: PropTypes.func,
     insertCommand: PropTypes.func,
     remove: PropTypes.func,
@@ -133,6 +135,10 @@ export default class TestRow extends React.Component {
 
     if (this.props.remove && noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
       this.props.remove();
+    } else if (this.props.moveSelectionUp && noModifiers && key === "S") {
+      this.props.startPlayingHere();
+    } else if (this.props.moveSelectionUp && noModifiers && key === "X") {
+      this.props.executeCommand();
     } else if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
       this.props.moveSelectionUp();
     } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
@@ -157,12 +163,16 @@ export default class TestRow extends React.Component {
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
       onClick={this.props.onClick}
+      onDoubleClick={this.props.executeCommand}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.props.onClick}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
-      <td><span></span><CommandName>{this.props.command}</CommandName></td>
+      <td><span></span>
+        {this.props.index >= 0 ? <span>{this.props.index + 1}.</span> : null}
+        <CommandName>{this.props.command}</CommandName>
+      </td>
       <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
       <td className="buttons">
@@ -176,9 +186,12 @@ export default class TestRow extends React.Component {
               <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
               <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert New Command</ListMenuItem>
+              <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
               <ListMenuSeparator />
-              <ListMenuItem onClick={this.props.clearAllCommands}>Clear All</ListMenuItem>
+              <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+              <ListMenuSeparator />
+              <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
+              <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
             </ListMenu> : null }
         </div>
       </td>

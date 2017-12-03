@@ -21,7 +21,9 @@ import { selenium } from "./commands-api";
 const elementForInjectingScript = document.createElement("script");
 elementForInjectingScript.src = browser.runtime.getURL("/assets/prompt.js");
 (document.head || document.documentElement).appendChild(elementForInjectingScript);
-
+const highlightElement = document.createElement("div");
+highlightElement.id = "selenium-highlight";
+document.body.appendChild(highlightElement);
 
 if (window === window.top) {
   window.addEventListener("message", function(event) {

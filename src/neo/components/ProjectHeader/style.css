@@ -1,6 +1,12 @@
 .header {
   border-bottom: 1px solid #CECECE;
-  padding: 5px;
+  padding: 2px 7px;
+  display: flex;
+  align-items: center;
+}
+
+.header > div:first-child {
+  flex-grow: 1;
 }
 
 .header .title {
@@ -9,11 +15,12 @@
   border-radius: 4px;
   font-size: 14px;
   line-height: 17px;
-  padding: 5px 15px;
-  font-weight: 500;
+  padding: 5px;
+  font-weight: bold;
   font-size: 16px;
   cursor: pointer;
   min-width: 150px;
+  margin: 0 5px;
 }
 
 .header:hover .title {
@@ -37,4 +44,8 @@
 .header .buttons {
   display: flex;
   align-items: center;
+}
+
+.header .buttons > * {
+  margin-left: 10px;
 }

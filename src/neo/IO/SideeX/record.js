@@ -24,7 +24,9 @@ window.addCommandAuto = function(command, targets, value) {
     UiState.setUrl(url.origin, true);
     newCommand.setTarget(url.pathname);
   } else if (command !== "open") {
-    const newCommand = test.createCommand();
+    const newCommand = UiState.selectedCommand !== UiState.pristineCommand
+      ? test.createCommand(UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand))
+      : test.createCommand();
     newCommand.setCommand(command);
     newCommand.setValue(value);
     newCommand.setTarget(targets[0][0]);
