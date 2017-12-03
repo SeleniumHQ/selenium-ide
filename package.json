@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server --hot",
     "build": "webpack",
-    "build-chrome": "rm -rf build && env NODE_ENV=production yarn build && ./build.sh build ./selenium-ide.pem && mv build.crx selenium-ide.crx",
+    "build-chrome": "rm -rf build && env NODE_ENV=production yarn build && ./build.sh build ./selenium-ide.pem && mkdir -p dist && mv build.crx dist/selenium-ide.crx",
     "test": "jest",
     "test-dev": "jest --watch",
     "lint": "eslint src/neo/ --ext .js --ext .jsx"
