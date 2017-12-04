@@ -48,6 +48,12 @@ modify(project);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
+    this.quitHandler = window.addEventListener("beforeunload", (e) => {
+      const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
+
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    });
   }
   moveTest(testItem, destination) {
     const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
@@ -67,6 +73,7 @@ modify(project);
   }
   componentWillUnmount() {
     window.removeEventListener(this.resizeHandler);
+    window.removeEventListener(this.quitHandler);
   }
   render() {
     return (
