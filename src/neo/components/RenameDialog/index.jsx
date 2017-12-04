@@ -26,6 +26,7 @@ export default class RenameDialog extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value) {
       this.input.focus();
+      this.input.select();
     }
   }
   handleChange(e) {
