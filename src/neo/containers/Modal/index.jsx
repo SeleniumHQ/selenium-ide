@@ -31,6 +31,7 @@ export default class Modal extends Component {
           isEditing={!!ModalState.renameState.type}
           type={ModalState.renameState.type}
           value={ModalState.renameState.value}
+          verify={ModalState.renameState.verify}
           setValue={ModalState.renameState ? ModalState.renameState.done : null}
           cancel={ModalState.cancelRenaming} />
       </div>

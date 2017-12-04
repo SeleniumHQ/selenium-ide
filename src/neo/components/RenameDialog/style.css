@@ -1,5 +1,18 @@
 .rename-dialog input {
   display: block;
-  margin: 15px auto;
+  margin: 15px auto 10px auto;
   width: 300px;
+}
+
+.rename-dialog .message {
+  font-size: 12px;
+  color: #8B8B8B;
+}
+
+.rename-dialog .message:before {
+  content: "*";
+}
+
+.rename-dialog .right {
+  margin-top: 5px;
 }

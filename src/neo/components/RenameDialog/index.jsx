@@ -11,6 +11,7 @@ export default class RenameDialog extends React.Component {
     this.state = {
       isRenaming: !!props.value,
       value: props.value ? props.value : "",
+      valid: true,
       type: props.type
     };
   }
@@ -19,6 +20,7 @@ export default class RenameDialog extends React.Component {
       this.setState({
         isRenaming: !!nextProps.value,
         value: nextProps.value ? nextProps.value : "",
+        valid: true,
         type: nextProps.type
       });
     }
@@ -31,7 +33,8 @@ export default class RenameDialog extends React.Component {
   }
   handleChange(e) {
     this.setState({
-      value: e.target.value
+      value: e.target.value,
+      valid: this.props.verify(e.target.value)
     });
   }
   render() {
@@ -40,8 +43,9 @@ export default class RenameDialog extends React.Component {
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title={`${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`} close={this.props.cancel} />
           <input ref={(input) => { this.input = input; }} type="text" value={this.state.value} onChange={this.handleChange.bind(this)} />
+          { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
           <span className="right">
-            <FlatButton type="submit" disabled={!this.state.value} onClick={() => {this.props.setValue(this.state.value);}} style={{
+            <FlatButton type="submit" disabled={!this.state.value || !this.state.valid} onClick={() => {this.props.setValue(this.state.value);}} style={{
               marginRight: "0"
             }}>{this.state.isRenaming ? "Rename" : "Add"}</FlatButton>
             <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
@@ -55,6 +59,7 @@ export default class RenameDialog extends React.Component {
     isEditing: PropTypes.bool,
     type: PropTypes.string,
     value: PropTypes.string,
+    verify: PropTypes.func,
     cancel: PropTypes.func,
     setValue: PropTypes.func
   };

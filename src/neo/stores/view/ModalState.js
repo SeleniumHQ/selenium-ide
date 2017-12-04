@@ -12,14 +12,19 @@ class ModalState {
   }
 
   @action rename(type, value, cb) {
+    const verifyName = (name) => {
+      let names;
+      if (type === Types.test) names = UiState._project.tests;
+      else if (type === Types.suite) names = UiState._project.suites;
+
+      return name === value || this.nameIsUnique(name, names);
+    };
     this.renameState = {
       value,
       type,
+      verify: verifyName,
       done: (name) => {
-        let names;
-        if (type === Types.test) names = UiState._project.tests;
-        else if (type === Types.suite) names = UiState._project.suites;
-        if (name === value || this.nameIsUnique(name, names)) {
+        if (verifyName(name)) {
           cb(name);
           this.cancelRenaming();
         }
@@ -36,13 +41,13 @@ class ModalState {
   }
 
   @action.bound createSuite() {
-    this.rename("suite", null, (name) => {
+    this.rename(Types.suite, null, (name) => {
       if (name) this._project.createSuite(name);
     });
   }
 
   @action.bound createTest() {
-    this.rename("test case", null, (name) => {
+    this.rename(Types.test, null, (name) => {
       if (name) {
         const test = this._project.createTestCase(name);
         UiState.selectTest(test);
