@@ -1,6 +1,7 @@
 import { action, computed, observable, observe } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
+import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
 import Command from "../../models/Command";
 
@@ -21,6 +22,7 @@ class UiState {
 
   constructor() {
     this.suiteStates = {};
+    this.testStates = {};
     this.filterFunction = this.filterFunction.bind(this);
     this.observePristine();
     storage.get().then(data => {
@@ -175,6 +177,14 @@ class UiState {
     return this.suiteStates[suite.id];
   }
 
+  getTestState(test) {
+    if (!this.testStates[test.id]) {
+      this.testStates[test.id] = new TestState(test);
+    }
+
+    return this.testStates[test.id];
+  }
+
   filterFunction({name}) {
     return (name.indexOf(this.filterTerm) !== -1);
   }
@@ -192,6 +202,18 @@ class UiState {
     this.clipboard = null;
     this.isRecording = false;
     this.suiteStates = {};
+    this.clearTestStates();
+  }
+
+  @action.bound clearTestStates() {
+    Object.values(this.testStates).forEach(state => state.dispose());
+    this.testStates = {};
+  }
+
+  @action.bound saved() {
+    Object.values(this.testStates).forEach(state => {
+      state.modified = false;
+    });
   }
 }
 

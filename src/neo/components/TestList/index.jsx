@@ -21,6 +21,7 @@ export default class TestList extends Component {
                 test={test}
                 suite={this.props.suite}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
+                changed={UiState.getTestState(test).modified}
                 selectTest={UiState.selectTest}
                 dragInProgress={UiState.dragInProgress}
                 setDrag={UiState.setDrag}
@@ -33,6 +34,7 @@ export default class TestList extends Component {
                 className={PlaybackState.testState.get(test.id)}
                 test={test}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
+                changed={UiState.getTestState(test).modified}
                 selectTest={UiState.selectTest}
                 renameTest={this.props.renameTest}
                 removeTest={() => { this.props.removeTest(test); }}

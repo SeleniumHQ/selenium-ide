@@ -42,6 +42,6 @@
   background-color: #E3F2FF;
 }
 
-.test.changed:after {
+.test.changed > span:after {
   content: "*";
 }

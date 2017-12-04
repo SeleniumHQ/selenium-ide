@@ -1,4 +1,5 @@
 import migrateProject from "./legacy/migrate";
+import UiState from "../stores/view/UiState";
 const browser = window.browser;
 
 export const supportedFileFormats = ".side, text/html";
@@ -6,6 +7,7 @@ export const supportedFileFormats = ".side, text/html";
 export function saveProject(project) {
   project.version = "1.0";
   downloadProject(project);
+  UiState.saved();
 }
 
 function downloadProject(project) {
