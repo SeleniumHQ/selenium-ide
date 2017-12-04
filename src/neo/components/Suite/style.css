@@ -47,3 +47,7 @@
 .project:hover button {
   opacity: 1;
 }
+
+.projects .test > button {
+  font-size: 18px;
+}
