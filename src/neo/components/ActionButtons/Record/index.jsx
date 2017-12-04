@@ -13,8 +13,9 @@ const RecordButton = styled.button`
   position: relative;
   overflow: hidden;
   outline: 0;
-  transition: border-radius 250ms ease-out;
+  transition: border-radius 250ms ease-out, transform 150ms ease-out;
   padding: 0 7px;
+  transform: ${props => props.isActive ? "scale(0.95, 0.95)" : "scale(1, 1)"};
 
   &:hover {
     background-color: #F56660;
