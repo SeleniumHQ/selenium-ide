@@ -34,30 +34,38 @@ export default class LogStore {
   }
 
   logPlayingState(isPlaying) {
+    let log;
     if (isPlaying) {
-      this.addLog(new Log(`Running '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice));
+      log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
     } else if (PlaybackState.aborted) {
-      this.addLog(new Log(`Playback of '${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Notice));
+      log = new Log(`Playback of '${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Notice);
     } else {
-      this.addLog(new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, LogTypes.Notice));
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, LogTypes.Notice);
     }
+    this.addLog(log);
   }
 
   logCommandState(command, status) {
     const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
+    const log = new Log();
+    log.setIndex(index);
+    log.setCommandId(command.id);
     if (status) {
       switch(status.state) {
         case PlaybackStates.Pending:
-          this.addLog(new Log(status.message ? status.message : `${index}. Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`));
+          log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
           break;
         case PlaybackStates.Failed:
-          this.addLog(new Log(`#${index} Execution failed: ${status.message}`, LogTypes.Error));
+          log.setMessage(`Execution failed: ${status.message}`);
+          log.setStatus(LogTypes.Error);
           break;
         case PlaybackStates.Passed:
-          this.addLog(new Log(`${index}. Executed: ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""} successfully`, LogTypes.Success));
+          log.setMessage(`Executed: ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""} successfully`);
+          log.setStatus(LogTypes.Success);
           break;
       }
     }
+    this.addLog(log);
   }
 
   dispose() {

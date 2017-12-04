@@ -20,6 +20,14 @@ export default class Log {
   @action.bound setCommandId(commandId) {
     this.commandId = commandId;
   }
+
+  @action.bound setMessage(message) {
+    this.message = message;
+  }
+
+  @action.bound setStatus(status) {
+    this.status = status;
+  }
 }
 
 export const LogTypes = {
