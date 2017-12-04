@@ -29,7 +29,7 @@ export default class ProjectHeader extends React.Component {
         <div><ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} /></div>
         <span className="buttons">
           <OpenButton onFileSelected={this.props.load} />
-          <SaveButton data-place="left" onClick={this.props.save} />
+          <SaveButton data-place="left" unsaved={this.props.changed} onClick={this.props.save} />
         </span>
       </div>
     );

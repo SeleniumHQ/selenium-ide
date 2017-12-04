@@ -1,0 +1,25 @@
+.btn-action.pulse {
+  animation-name: pulse;
+  animation-duration: 4s;
+  transform-origin: 50% 50%;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  3% {
+    transform: scale(1.2);
+  }
+  6% {
+    transform: scale(1);
+  }
+  9% {
+    transform: scale(1.2);
+  }
+  12% {
+    transform: scale(1);
+  }
+}
