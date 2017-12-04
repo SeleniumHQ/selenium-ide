@@ -7,7 +7,7 @@ export default class LogStore {
 
   constructor() {
     this.playbackDisposer = observe(PlaybackState, "isPlaying", (isPlaying) => {
-      this.logPlayingState(isPlaying.newValue);
+      setTimeout(() => this.logPlayingState(isPlaying.newValue), 0);
     });
     this.commandStateDisposer = observe(PlaybackState.commandState, (change) => {
       this.parseCommandStateChange(change.name, change.newValue, this.logCommandState);
@@ -34,11 +34,11 @@ export default class LogStore {
 
   logPlayingState(isPlaying) {
     if (isPlaying) {
-      this.addLog(`Started playback of '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
+      this.addLog(`Running '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
     } else if (PlaybackState.aborted) {
       this.addLog(`Playback of '${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Notice);
     } else {
-      this.addLog(`Finished playback of '${PlaybackState.currentRunningTest.name}'${PlaybackState.hasFailed ? " with errors" : " successfully"}`, LogTypes.Notice);
+      this.addLog(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, LogTypes.Notice);
     }
   }
 
