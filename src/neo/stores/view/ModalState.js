@@ -6,8 +6,8 @@ class ModalState {
   @observable renameState = {};
 
   constructor() {
-    this.renameTest = this.rename.bind(this, "test case");
-    this.renameSuite = this.rename.bind(this, "suite");
+    this.renameTest = this.rename.bind(this, Types.test);
+    this.renameSuite = this.rename.bind(this, Types.suite);
     this.rename = this.rename.bind(this);
   }
 
@@ -15,9 +15,14 @@ class ModalState {
     this.renameState = {
       value,
       type,
-      done: (...argv) => {
-        cb(...argv);
-        this.cancelRenaming();
+      done: (name) => {
+        let names;
+        if (type === Types.test) names = UiState._project.tests;
+        else if (type === Types.suite) names = UiState._project.suites;
+        if (name === value || this.nameIsUnique(name, names)) {
+          cb(name);
+          this.cancelRenaming();
+        }
       }
     };
   }
@@ -70,7 +75,16 @@ class ModalState {
       }
     });
   }
+
+  nameIsUnique(value, list) {
+    return !list.find(({ name }) => name === value);
+  }
 }
+
+const Types = {
+  test: "test case",
+  suite: "suite"
+};
 
 if (!window._modalState) window._modalState = new ModalState();
 
