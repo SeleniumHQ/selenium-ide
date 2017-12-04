@@ -71,6 +71,7 @@ class PlaybackState {
 
   @action.bound stopPlaying() {
     this.isPlaying = false;
+    this.paused = false;
   }
 
   @action.bound abortPlaying() {
