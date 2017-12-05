@@ -24,16 +24,15 @@ export default class AutoComplete extends React.Component {
               width: "100%",
               boxSizing: "border-box"
             }}/>
-            <label htmlFor={this.id} className="si-caret" style={{
+            <label htmlFor={this.id} className="si-caret-wide" style={{
               position: "absolute",
               top: "0",
               bottom: "0",
               right: "8px",
               margin: "auto 0",
-              fontSize: "10px",
-              height: "10px",
-              color: "#a3a3a3",
-              transform: "rotate(90deg)"
+              fontSize: "16px",
+              height: "16px",
+              color: "#a3a3a3"
             }}></label>
           </span>
         )}
