@@ -33,7 +33,7 @@
   outline: 0;
 }
 
-.header .title.changed:after {
+.header.changed .title:after {
   content: "*";
 }
 
