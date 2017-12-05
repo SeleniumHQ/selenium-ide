@@ -1,15 +1,22 @@
-.logs ul li {
+.log {
   margin: 7px 0;
 }
 
-.logs ul li.notice {
+.log span:first-child {
+  text-align: right;
+  padding-right: 5px;
+  display: inline-block;
+  width: 20px;
+}
+
+.log.notice {
   font-weight: bold;
 }
 
-.logs ul li.success {
+.log.success {
   color: #23843D;
 }
 
-.logs ul li.error {
+.log.error {
   color: #E80600;
 }
