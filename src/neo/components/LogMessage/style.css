@@ -2,7 +2,7 @@
   margin: 7px 0;
 }
 
-.log span:first-child {
+.log .index {
   text-align: right;
   padding-right: 5px;
   display: inline-block;
@@ -13,10 +13,21 @@
   font-weight: bold;
 }
 
-.log.success {
+.log .message:after {
+  padding: 0 5px;
+}
+
+.log.success .message:after {
+  content: "Success";
   color: #23843D;
 }
 
-.log.error {
+.log.error .message:after {
+  content: "Failed:";
+  color: #E80600;
+}
+
+.log .error-message {
+  padding-right: 25px;
   color: #E80600;
 }
