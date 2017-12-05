@@ -6,6 +6,7 @@ export default class Log {
   @observable index = null;
   @observable commandId = null;
   @observable message = null;
+  @observable error = null;
   @observable status = null;
 
   constructor(message, status) {
@@ -23,6 +24,10 @@ export default class Log {
 
   @action.bound setMessage(message) {
     this.message = message;
+  }
+
+  @action.bound setError(error) {
+    this.error = error;
   }
 
   @action.bound setStatus(status) {
