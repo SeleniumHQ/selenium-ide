@@ -4,13 +4,19 @@
   "name": "Selenium IDE",
   "version": "1.0",
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
-
   "icons": {
-    "48": "icons/icon-big.png"
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png"
   },
-
   "browser_action": {
-    "default_icon": "icons/icon.png",
+    "default_icon": {
+      "16": "icons/icon_menu16.png",
+      "32": "icons/icon_menu32.png",
+      "64": "icons/icon_menu64.png"
+    },
     "default_title": "Selenium IDE"
   },
 
