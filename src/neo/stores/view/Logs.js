@@ -46,16 +46,16 @@ export default class LogStore {
   }
 
   logCommandState(command, status) {
-    const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
-    let log;
-    if (this.logs.length && this.logs[this.logs.length - 1].commandId === command.id) {
-      log = this.logs[this.logs.length - 1];
-    } else {
-      log = new Log();
-      log.setIndex(index);
-      log.setCommandId(command.id);
-    }
     if (status) {
+      const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
+      let log;
+      if (this.logs.length && this.logs[this.logs.length - 1].commandId === command.id) {
+        log = this.logs[this.logs.length - 1];
+      } else {
+        log = new Log();
+        log.setIndex(index);
+        log.setCommandId(command.id);
+      }
       switch(status.state) {
         case PlaybackStates.Pending:
           log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
@@ -68,8 +68,8 @@ export default class LogStore {
           log.setStatus(LogTypes.Success);
           break;
       }
+      this.addLog(log);
     }
-    this.addLog(log);
   }
 
   dispose() {

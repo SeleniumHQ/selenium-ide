@@ -91,7 +91,6 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    this.stopPlaying();
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
@@ -100,6 +99,7 @@ class PlaybackState {
         this.failures++;
       }
     }
+    this.stopPlaying();
     if (this._testsToRun.length) {
       this.playNext();
     } else if (this.currentRunningSuite) {
