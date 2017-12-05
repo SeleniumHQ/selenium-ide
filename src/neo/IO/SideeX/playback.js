@@ -24,8 +24,7 @@ function playAfterConnectionFailed() {
 
 function executionLoop() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) PlaybackState.stopPlaying();
-  if (!PlaybackState.isPlaying || PlaybackState.paused) return false;
+  if ((PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) || (!PlaybackState.isPlaying || PlaybackState.paused)) return false;
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (isExtCommand(command)) {
