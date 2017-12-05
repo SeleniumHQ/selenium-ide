@@ -49,10 +49,12 @@ modify(project);
     this.moveTest = this.moveTest.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
     this.quitHandler = window.addEventListener("beforeunload", (e) => {
-      const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
+      if (project.modified) {
+        const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
 
-      e.returnValue = confirmationMessage;
-      return confirmationMessage;
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+      }
     });
   }
   moveTest(testItem, destination) {
