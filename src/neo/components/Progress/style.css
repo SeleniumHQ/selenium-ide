@@ -6,6 +6,7 @@
   border-radius: 10px;
   background-color: #E8E8E8;
   border: 0;
+  max-width: 160px;
 }
 
 .progress::-webkit-progress-bar {

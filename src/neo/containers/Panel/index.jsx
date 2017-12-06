@@ -5,6 +5,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
+import classNames from "classnames";
 import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
@@ -73,6 +74,15 @@ modify(project);
       }
     });
   }
+  navigationDragStart() {
+    UiState.setNavigationDragging(true);
+    UiState.resizeNavigation(UiState.navigationWidth);
+    UiState.setNavigationHover(true);
+  }
+  navigationDragEnd() {
+    UiState.setNavigationDragging(false);
+    UiState.setNavigationHover(false);
+  }
   componentWillUnmount() {
     window.removeEventListener(this.resizeHandler);
     window.removeEventListener(this.quitHandler);
@@ -94,13 +104,15 @@ modify(project);
               load={loadProject.bind(undefined, project)}
               save={() => saveProject(project)}
             />
-            <div className="content">
+            <div className={classNames("content", {dragging: UiState.navigationDragging})}>
               <SplitPane
                 split="vertical"
                 minSize={UiState.minNavigationWidth}
                 maxSize={UiState.maxNavigationWidth}
                 size={UiState.navigationWidth}
-                onChange={UiState.resizeNavigation}>
+                onChange={UiState.resizeNavigation}
+                onDragStarted={this.navigationDragStart}
+                onDragFinished={this.navigationDragEnd}>
                 <Navigation
                   tests={UiState.filteredTests}
                   suites={this.state.project.suites}

@@ -20,6 +20,8 @@ class UiState {
   @observable minNavigationWidth = 180;
   @observable maxNavigationWidth = 300;
   @observable _navigationWidth = 180;
+  @observable navigationHover = false;
+  @observable navigationDragging = false;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
 
@@ -62,7 +64,7 @@ class UiState {
   }
 
   @computed get navigationWidth() {
-    return this._navigationWidth;
+    return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
   @action.bound copyToClipboard(item) {
@@ -159,6 +161,21 @@ class UiState {
     storage.set({
       navigationSize: this._navigationWidth
     });
+  }
+
+  @action.bound setNavigationHover(hover) {
+    clearTimeout(this._hoverTimeout);
+    if (!hover) {
+      this._hoverTimeout = setTimeout(() => {
+        action(() => {this.navigationHover = false;})();
+      }, 600);
+    } else {
+      this.navigationHover = true;
+    }
+  }
+
+  @action.bound setNavigationDragging(isDragging) {
+    this.navigationDragging = isDragging;
   }
 
   @action.bound observePristine() {

@@ -18,6 +18,11 @@
 
 .container .wrapper .Pane.vertical {
   display: flex;
+  transition: width 100ms ease-in-out;
+}
+
+.container .wrapper .dragging .Pane.vertical {
+  transition: none;
 }
 
 .container footer .tabbar ~ div {

@@ -89,7 +89,8 @@ class Menu extends React.Component {
             onRequestClose={this.handleClosing}
             style={{
               overlay: {
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
+                zIndex: "1000"
               },
               content: Object.assign({
                 width: `${this.props.width}px`

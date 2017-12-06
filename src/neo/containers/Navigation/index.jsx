@@ -45,7 +45,11 @@ import "./style.css";
   }
   render() {
     return (
-      <aside className="test-cases" onKeyDown={this.handleKeyDown.bind(this)}>
+      <aside
+        className="test-cases"
+        onKeyDown={this.handleKeyDown.bind(this)}
+        onMouseEnter={() => UiState.setNavigationHover(true)}
+        onMouseLeave={() => UiState.setNavigationHover(false)}>
         <VerticalTabBar tabs={["Tests", "Test suites"]} tabChanged={this.handleChangedTab}>
           <AddButton data-tip={this.state.showTests ? "<p>Add new test</p>" : "<p>Add new test suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </VerticalTabBar>
