@@ -8,6 +8,7 @@ export default class Log {
   @observable message = null;
   @observable error = null;
   @observable status = null;
+  @observable isNotice = false;
 
   constructor(message, status) {
     this.message = message;
@@ -33,10 +34,13 @@ export default class Log {
   @action.bound setStatus(status) {
     this.status = status;
   }
+
+  @action.bound setNotice() {
+    this.isNotice = true;
+  }
 }
 
 export const LogTypes = {
-  Notice: "notice",
   Success: "success",
   Error: "error"
 };

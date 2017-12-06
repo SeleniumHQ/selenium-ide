@@ -8,7 +8,7 @@ import "./style.css";
 export default class LogMessage extends React.Component {
   render() {
     return (
-      <li className={classNames("log", this.props.log.status)}>
+      <li className={classNames("log", this.props.log.status, {notice: this.props.log.isNotice})}>
         {this.props.log.index && <span className="index">{this.props.log.index}.</span>}
         <span className="message">{this.props.log.message}</span>
         {this.props.log.error && <div className="error-message">{this.props.log.error}</div>}

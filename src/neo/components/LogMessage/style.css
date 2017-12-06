@@ -15,12 +15,20 @@
   padding: 0 5px;
 }
 
-.log.success .message:after {
+.log.success.notice {
+  color: #23843D;
+}
+
+.log.error.notice {
+  color: #E80600;
+}
+
+.log.success:not(.notice) .message:after {
   content: "Success";
   color: #23843D;
 }
 
-.log.error .message:after {
+.log.error:not(.notice) .message:after {
   content: "Failed:";
   color: #E80600;
 }

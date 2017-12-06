@@ -36,11 +36,14 @@ export default class LogStore {
   logPlayingState(isPlaying) {
     let log;
     if (isPlaying) {
-      log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
+      log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`);
+      log.setNotice();
     } else if (PlaybackState.aborted) {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Notice);
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Error);
+      log.setNotice();
     } else {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, LogTypes.Notice);
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, PlaybackState.hasFailed ? LogTypes.Error : LogTypes.Success);
+      log.setNotice();
     }
     this.addLog(log);
   }
