@@ -19,6 +19,7 @@ class UiState {
   @observable minContentHeight = 460;
   @observable minNavigationWidth = 180;
   @observable maxNavigationWidth = 300;
+  @observable _navigationWidth = 180;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
 
@@ -30,6 +31,9 @@ class UiState {
     storage.get().then(data => {
       if (data.consoleSize !== undefined && data.consoleSize >= this.minConsoleHeight) {
         this.resizeConsole(data.consoleSize);
+      }
+      if (data.navigationSize !== undefined && data.navigationSize >= this.minNavigationWidth) {
+        this.resizeNavigation(data.navigationSize);
       }
     });
   }
@@ -55,6 +59,10 @@ class UiState {
     const value = PlaybackState.maxDelay - PlaybackState.delay;
     const speed = Math.ceil(value / PlaybackState.maxDelay * 6);
     return speed ? speed : 1;
+  }
+
+  @computed get navigationWidth() {
+    return this._navigationWidth;
   }
 
   @action.bound copyToClipboard(item) {
@@ -144,6 +152,13 @@ class UiState {
     if (this.windowHeight - this.consoleHeight < this.minContentHeight) {
       this.resizeConsole(this.windowHeight - this.minContentHeight);
     }
+  }
+
+  @action.bound resizeNavigation(width) {
+    this._navigationWidth = width;
+    storage.set({
+      navigationSize: this._navigationWidth
+    });
   }
 
   @action.bound observePristine() {

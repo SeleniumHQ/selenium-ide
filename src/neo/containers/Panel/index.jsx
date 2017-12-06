@@ -98,7 +98,9 @@ modify(project);
               <SplitPane
                 split="vertical"
                 minSize={UiState.minNavigationWidth}
-                maxSize={UiState.maxNavigationWidth}>
+                maxSize={UiState.maxNavigationWidth}
+                size={UiState.navigationWidth}
+                onChange={UiState.resizeNavigation}>
                 <Navigation
                   tests={UiState.filteredTests}
                   suites={this.state.project.suites}
