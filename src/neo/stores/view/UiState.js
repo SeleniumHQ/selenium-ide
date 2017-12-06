@@ -17,6 +17,8 @@ class UiState {
   @observable consoleHeight = 200;
   @observable minConsoleHeight = 30;
   @observable minContentHeight = 460;
+  @observable minNavigationWidth = 180;
+  @observable maxNavigationWidth = 300;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
 

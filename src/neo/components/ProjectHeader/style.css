@@ -3,6 +3,7 @@
   padding: 2px 7px 2px 2px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .header > div:first-child {

@@ -19,7 +19,8 @@ export default class SearchBar extends React.Component {
     return (
       <div style={{
         position: "relative",
-        display: "flex"
+        display: "flex",
+        flexShrink: "0"
       }}>
         <input ref={this.props.inputRef} className="search" type="search" placeholder="Search tests..." value={this.props.value} onChange={this.handleChange} />
         <label htmlFor={this.id} className="si-search" style={{

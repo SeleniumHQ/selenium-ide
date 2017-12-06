@@ -95,21 +95,26 @@ modify(project);
               save={() => saveProject(project)}
             />
             <div className="content">
-              <Navigation
-                tests={UiState.filteredTests}
-                suites={this.state.project.suites}
-                createSuite={this.createSuite}
-                removeSuite={this.state.project.deleteSuite}
-                createTest={this.createTest}
-                moveTest={this.moveTest}
-                deleteTest={this.deleteTest}
-              />
-              <Editor
-                url={this.state.project.url}
-                urls={this.state.project.urls}
-                setUrl={this.state.project.setUrl}
-                test={UiState.selectedTest.test}
-              />
+              <SplitPane
+                split="vertical"
+                minSize={UiState.minNavigationWidth}
+                maxSize={UiState.maxNavigationWidth}>
+                <Navigation
+                  tests={UiState.filteredTests}
+                  suites={this.state.project.suites}
+                  createSuite={this.createSuite}
+                  removeSuite={this.state.project.deleteSuite}
+                  createTest={this.createTest}
+                  moveTest={this.moveTest}
+                  deleteTest={this.deleteTest}
+                />
+                <Editor
+                  url={this.state.project.url}
+                  urls={this.state.project.urls}
+                  setUrl={this.state.project.setUrl}
+                  test={UiState.selectedTest.test}
+                />
+              </SplitPane>
             </div>
           </div>
           <Console height={UiState.consoleHeight} />
