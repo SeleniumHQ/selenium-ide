@@ -18,7 +18,7 @@ class UiState {
   @observable minConsoleHeight = 30;
   @observable minContentHeight = 460;
   @observable minNavigationWidth = 180;
-  @observable maxNavigationWidth = 300;
+  @observable maxNavigationWidth = 250;
   @observable _navigationWidth = 180;
   @observable navigationHover = false;
   @observable navigationDragging = false;
