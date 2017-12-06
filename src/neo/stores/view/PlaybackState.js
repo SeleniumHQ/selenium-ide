@@ -52,8 +52,9 @@ class PlaybackState {
     this.isPlaying = true;
   }
 
-  @action.bound playCommand(command) {
+  @action.bound playCommand(command, jumpToNext) {
     this.noStatisticsEffects = true;
+    this.jumpToNextCommand = jumpToNext;
     this.paused = false;
     this.currentPlayingIndex = 0;
     this.currentRunningTest = UiState.selectedTest.test;
@@ -100,6 +101,9 @@ class PlaybackState {
       }
     }
     this.stopPlaying();
+    if (this.jumpToNextCommand) {
+      UiState.selectNextCommand();
+    }
     if (this._testsToRun.length) {
       this.playNext();
     } else if (this.currentRunningSuite) {

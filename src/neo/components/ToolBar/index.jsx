@@ -36,7 +36,7 @@ export default class ToolBar extends React.Component {
           <Pause isActive={PlaybackState.paused}
             data-tip={!PlaybackState.paused ? "<p>Pause test execution</p>" : "<p>Resume test execution</p>"}
             onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
-        { !PlaybackState.isPlaying ? <StepInto disabled={!isCommandValid} onClick={() => PlaybackState.playCommand(UiState.selectedCommand)} /> : null }
+        { !PlaybackState.isPlaying ? <StepInto disabled={!isCommandValid} onClick={() => PlaybackState.playCommand(UiState.selectedCommand, true)} /> : null }
         <GaugeMenu opener={
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
