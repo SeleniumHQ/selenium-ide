@@ -67,6 +67,7 @@
     "react-split-pane": "^0.1.71",
     "react-tooltip": "^3.4.0",
     "react-transition-group": "^2.2.1",
+    "scroll-into-view-if-needed": "^1.4.0",
     "sort-array": "^2.0.0",
     "style-loader": "^0.18.2",
     "styled-components": "^2.1.2",
