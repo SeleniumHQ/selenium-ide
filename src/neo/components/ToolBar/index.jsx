@@ -41,7 +41,8 @@ export default class ToolBar extends React.Component {
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
         <span style={{
-          float: "right"
+          float: "right",
+          marginRight: "3px"
         }}>
           { !PlaybackState.isPlaying && UiState.selectedTest.test ? <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} /> : null }
         </span>
