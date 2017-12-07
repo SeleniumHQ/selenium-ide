@@ -1,3 +1,7 @@
+#selenium-highlight {
+  display: none;
+}
+
 #selenium-highlight:before, #selenium-highlight:after {
   content: " ";
   position: absolute;

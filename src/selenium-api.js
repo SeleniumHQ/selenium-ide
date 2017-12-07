@@ -3636,7 +3636,7 @@ Selenium.prototype.doShowElement = function(locator){
     const bodyRects = document.body.getClientRects()[0];
     highlightElement.style.position = "absolute";
     highlightElement.style.zIndex = "100";
-    highlightElement.style.visibility = "visible";
+    highlightElement.style.display = "block";
     highlightElement.style.pointerEvents = "none";
     highlightElement.style.top = parseInt(elementRects.top - bodyRects.top) + "px";
     highlightElement.style.left = parseInt(elementRects.left - bodyRects.left) + "px";
@@ -3646,7 +3646,7 @@ Selenium.prototype.doShowElement = function(locator){
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
       highlightElement.className = "";
-      highlightElement.style.visibility = "hidden";
+      highlightElement.style.display = "none";
     }, 500);
     return "element found";
   } catch (e) {
