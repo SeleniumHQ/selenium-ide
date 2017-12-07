@@ -28,6 +28,7 @@ import "../../IO/SideeX/playback";
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/scrollbar.css");
+  require("../../styles/button-direction.css");
 }
 
 const project = observable(new ProjectStore());
