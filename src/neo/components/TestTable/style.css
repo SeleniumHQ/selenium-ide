@@ -11,12 +11,23 @@
   border-spacing: 0;
 }
 
+.test-table td, th {
+  padding: 5px 10px;
+}
+
 .test-table th {
   position: relative;
-  padding: 5px 0 5px 15px;
   font-size: 13px;
   text-align: left;
-  width: 33%;
+  flex: 0% 1 1;
+}
+
+.test-table th:first-child > * {
+  padding-left: 12px;
+}
+
+.test-table th:nth-child(3) {
+  flex: 22px 1 1;
 }
 
 .test-table th:not(:last-child):after {
