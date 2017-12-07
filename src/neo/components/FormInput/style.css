@@ -3,6 +3,7 @@
 }
 
 .form-input > label {
+  font-size: 13px;
   width: 85px;
   display: inline-block;
   margin: 10px 0;
