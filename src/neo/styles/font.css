@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'selenium-ide';
   src:
-    url('../assets/fonts/selenium-ide.ttf?op523z') format('truetype'),
-    url('../assets/fonts/selenium-ide.woff?op523z') format('woff'),
-    url('../assets/fonts/selenium-ide.svg?op523z#selenium-ide') format('svg');
+    url('../assets/fonts/selenium-ide.ttf?t90jy9') format('truetype'),
+    url('../assets/fonts/selenium-ide.woff?t90jy9') format('woff'),
+    url('../assets/fonts/selenium-ide.svg?t90jy9#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-open:before {
+  content: "\e905";
+}
 .si-pencil:before {
   content: "\e919";
 }
@@ -73,9 +76,6 @@
 }
 .si-more:before {
   content: "\e911";
-}
-.si-open:before {
-  content: "\e905";
 }
 .si-play-all:before {
   content: "\e906";
