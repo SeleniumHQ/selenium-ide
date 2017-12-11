@@ -20,9 +20,7 @@ import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 import { selenium } from "./commands-api";
 import { escapeHTML } from "./escape";
 import BrowserBot from "./selenium-browserbot";
-const bot = window.global.bot;
-const goog = window.global.goog;
-const core = window.global.core;
+import goog, { bot, core } from "./closure-polyfill";
 
 // TODO: utils
 const eval_css = window.global.eval_css;
@@ -39,10 +37,6 @@ const extractExceptionMessage = window.global.extractExceptionMessage;
 const PatternMatcher = window.global.PatternMatcher;
 const parse_kwargs = window.global.parse_kwargs;
 const getTagName = window.global.getTagName;
-
-// TODO: unknown
-//const Components = window.Components;
-//const RollupManager = window.RollupManager;
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 

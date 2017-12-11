@@ -15,8 +15,7 @@
  */
 
 import { MozillaBrowserBot } from "./selenium-browserbot";
-const core = window.global.core;
-//const UIMap = window.UIMap;
+import { core } from "./closure-polyfill";
 const exactMatchPattern = window.global.exactMatchPattern;
 
 export default function LocatorBuilders(window) {

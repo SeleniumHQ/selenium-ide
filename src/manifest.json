@@ -39,7 +39,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/vendor/global.js", "assets/polyfills.js", "assets/vendor/atoms.js", "assets/vendor/utils.js", "assets/escape.js", "assets/injector.js", "assets/record.js"],
+      "js": ["assets/vendor/global.js", "assets/polyfills.js", "assets/vendor/utils.js", "assets/escape.js", "assets/injector.js", "assets/record.js"],
       "match_about_blank": true,
       "all_frames": true
     }

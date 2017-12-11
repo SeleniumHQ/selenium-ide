@@ -57,11 +57,44 @@ export default {
             loader: "closure-loader",
             options: {
               paths: [
-                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug")
               ],
               es6mode: true
             },
             exclude: [/google-closure-library\/closure\/goog\/base\.js$/]
+          },
+          {
+            test: /selenium-atoms\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
+                  path.resolve(__dirname, "src/selenium-atoms")
+                ]
+              }
+            }
+          },
+          {
+            test: /third_party\/wgxpath\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+                ]
+              }
+            }
           },
           {
             test: /atoms\/.*\.js$/,
@@ -72,7 +105,29 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
-                paths: [path.resolve(__dirname, "src/atoms")]
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
+                  path.resolve(__dirname, "src/third_party/wgxpath"),
+                  path.resolve(__dirname, "src/atoms")
+                ]
+              }
+            }
+          },
+          {
+            test: /closure-polyfill\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "src/atoms"),
+                  path.resolve(__dirname, "src/selenium-atoms")
+                ]
               }
             }
           },
@@ -155,7 +210,6 @@ export default {
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "global.js", to: "vendor" },
-      { from: "atoms.js", to: "vendor" },
       { from: "utils.js", to: "vendor" },
       { from: "ext-command.js", to: "vendor" },
       { from: "editor.js", to: "vendor" },

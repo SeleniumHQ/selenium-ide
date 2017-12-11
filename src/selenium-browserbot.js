@@ -26,10 +26,7 @@
 
 import Selenium from "./selenium-api";
 import { selenium } from "./commands-api";
-const bot = window.global.bot;
-const goog = window.global.goog;
-const core = window.global.core;
-const XPCNativeWrapper = window.global.XPCNativeWrapper;
+import goog, { bot, core } from "./closure-polyfill";
 
 // TODO: utils
 const objectExtend = window.global.objectExtend;
@@ -52,10 +49,6 @@ const canonicalize = window.global.canonicalize;
 const parseUrl = window.global.parseUrl;
 const reassembleLocation = window.global.reassembleLocation;
 const serializeObject = window.global.serializeObject;
-
-// TODO: unknown
-/*const Components = window.Components;
-const UIMap = window.UIMap;*/
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.
