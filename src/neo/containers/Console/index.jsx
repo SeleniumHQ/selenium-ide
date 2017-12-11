@@ -19,7 +19,7 @@ export default class Console extends React.Component {
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={10}>
+        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
         <LogList store={this.store} />

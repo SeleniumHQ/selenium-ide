@@ -1,12 +1,15 @@
 .header {
   border-bottom: 1px solid #CECECE;
-  padding: 2px 7px;
+  padding: 7px 7px 7px 2px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .header > div:first-child {
   flex-grow: 1;
+  display: flex;
+  align-items: center;
 }
 
 .header .title {
@@ -15,12 +18,17 @@
   border-radius: 4px;
   font-size: 14px;
   line-height: 17px;
-  padding: 5px;
+  padding: 3px 26px 3px 6px;
   font-weight: bold;
-  font-size: 16px;
   cursor: pointer;
-  min-width: 150px;
-  margin: 0 5px;
+  min-width: 143px;
+}
+
+.header .title~i {
+	font-weight: bold;
+	font-size: 16px;
+	margin-left: -20px;
+  visibility: hidden;
 }
 
 .header:hover .title {
@@ -33,7 +41,15 @@
   outline: 0;
 }
 
-.header .title.changed:after {
+.header:hover .title~i {
+  visibility: visible;
+}
+
+.header:focus-within .title~i {
+  visibility: hidden;
+}
+
+.header.changed .title:after {
   content: "*";
 }
 

@@ -9,7 +9,7 @@
 .test-table tbody tr td {
   border-top: 1px solid transparent;
   border-collapse: separate;
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .test-table tbody tr.pending {
@@ -61,32 +61,35 @@
   color: #E80600;
 }
 
+.test-table tr {
+  display: flex;
+}
+
+.test-table tr td:not(:last-child) {
+  flex: 0% 1 1;
+}
+
 .test-table td {
   font-size: 12px;
-  padding: 5px 10px 5px 17px;
 }
 
-.test-table th:nth-child(1) {
-  width: 30%;
-  padding-left: 22px;
+.test-table td .index {
+  display: inline-block;
 }
 
-.test-table th:nth-child(2) {
-  width: 30%;
-}
-
-.test-table th:nth-child(3) {
-  width: 40%;
+.test-table td .command {
+  display: inline-block;
 }
 
 .test-table td:nth-child(1) {
-  width: 31%;
   color: #8B8B8B;
   padding: 5px 10px;
+  display: flex;
+  align-items: start;
 }
 
 .test-table td:nth-child(2) {
-  width: 31%;
+  width: 30%;
 }
 
 .test-table td:nth-child(3) {
@@ -105,12 +108,15 @@
 .test-table tr .buttons > * {
   min-height: 24px;
   opacity: 0;
+  height: 100%;
 }
 
 .test-table tr .buttons button {
   width: 22px;
   height: 22px;
   font-size: 20px;
+  height: 100%;
+  margin: auto 0;
 }
 
 .test-table tr:hover .buttons > * {

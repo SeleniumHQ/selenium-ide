@@ -1,14 +1,18 @@
 import migrateProject from "./legacy/migrate";
+import UiState from "../stores/view/UiState";
 const browser = window.browser;
+
+export const supportedFileFormats = ".side, text/html";
 
 export function saveProject(project) {
   project.version = "1.0";
   downloadProject(project);
+  UiState.saved();
 }
 
 function downloadProject(project) {
   browser.downloads.download({
-    filename: project.name + ".json",
+    filename: project.name + ".side",
     url: createBlob("application/json", project.toJSON()),
     saveAs: true,
     conflictAction: "overwrite"
@@ -32,7 +36,7 @@ function createBlob(mimeType, data) {
 export function loadProject(project, file) {
   const fileReader = new FileReader();
   fileReader.onload = (e) => {
-    if (file.type === "application/json") {
+    if (/\.side$/.test(file.name)) {
       loadJSONProject(project, e.target.result);
     } else if (file.type === "text/html") {
       project.fromJS(migrateProject(e.target.result));

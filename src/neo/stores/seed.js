@@ -24,9 +24,9 @@ export default function seed(store) {
   const numberOfSuites = 5;
   for (let i = 0; i < numberOfSuites; i++) {
     let suite = generateSuite();
-    for (let j = 0; j < randomBetween(1, 5); j++) {
+    for (let j = 0; j < randomBetween(3, 6); j++) {
       const testCase = generateTestCase();
-      for (let k = 0; k < randomBetween(3, 6); k++) {
+      for (let k = 0; k < randomBetween(9, 16); k++) {
         generateCommand(testCase);
       }
       suite.addTestCase(testCase);

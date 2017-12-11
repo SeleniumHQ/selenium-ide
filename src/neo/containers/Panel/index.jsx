@@ -5,6 +5,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
+import classNames from "classnames";
 import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
@@ -26,7 +27,8 @@ import "../../IO/SideeX/record";
 import "../../IO/SideeX/playback";
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
-  require("../../styles/scrollbar.css");
+  require("../../styles/conditional/scrollbar.css");
+  require("../../styles/conditional/button-direction.css");
 }
 
 const project = observable(new ProjectStore());
@@ -48,6 +50,14 @@ modify(project);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
+    this.quitHandler = window.addEventListener("beforeunload", (e) => {
+      if (project.modified) {
+        const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
+
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+      }
+    });
   }
   moveTest(testItem, destination) {
     const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
@@ -65,8 +75,18 @@ modify(project);
       }
     });
   }
+  navigationDragStart() {
+    UiState.setNavigationDragging(true);
+    UiState.resizeNavigation(UiState.navigationWidth);
+    UiState.setNavigationHover(true);
+  }
+  navigationDragEnd() {
+    UiState.setNavigationDragging(false);
+    UiState.setNavigationHover(false);
+  }
   componentWillUnmount() {
     window.removeEventListener(this.resizeHandler);
+    window.removeEventListener(this.quitHandler);
   }
   render() {
     return (
@@ -85,22 +105,31 @@ modify(project);
               load={loadProject.bind(undefined, project)}
               save={() => saveProject(project)}
             />
-            <div className="content">
-              <Navigation
-                tests={UiState.filteredTests}
-                suites={this.state.project.suites}
-                createSuite={this.createSuite}
-                removeSuite={this.state.project.deleteSuite}
-                createTest={this.createTest}
-                moveTest={this.moveTest}
-                deleteTest={this.deleteTest}
-              />
-              <Editor
-                url={this.state.project.url}
-                urls={this.state.project.urls}
-                setUrl={this.state.project.setUrl}
-                test={UiState.selectedTest.test}
-              />
+            <div className={classNames("content", {dragging: UiState.navigationDragging})}>
+              <SplitPane
+                split="vertical"
+                minSize={UiState.minNavigationWidth}
+                maxSize={UiState.maxNavigationWidth}
+                size={UiState.navigationWidth}
+                onChange={UiState.resizeNavigation}
+                onDragStarted={this.navigationDragStart}
+                onDragFinished={this.navigationDragEnd}>
+                <Navigation
+                  tests={UiState.filteredTests}
+                  suites={this.state.project.suites}
+                  createSuite={this.createSuite}
+                  removeSuite={this.state.project.deleteSuite}
+                  createTest={this.createTest}
+                  moveTest={this.moveTest}
+                  deleteTest={this.deleteTest}
+                />
+                <Editor
+                  url={this.state.project.url}
+                  urls={this.state.project.urls}
+                  setUrl={this.state.project.setUrl}
+                  test={UiState.selectedTest.test}
+                />
+              </SplitPane>
             </div>
           </div>
           <Console height={UiState.consoleHeight} />

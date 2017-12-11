@@ -1,5 +1,5 @@
 import { action, observe, observable } from "mobx";
-import uuidv4 from "uuid/v4";
+import Log, { LogTypes } from "../../ui-models/Log";
 import PlaybackState, { PlaybackStates } from "./PlaybackState";
 
 export default class LogStore {
@@ -18,27 +18,9 @@ export default class LogStore {
     this.dispose = this.dispose.bind(this);
   }
 
-  @action.bound addLog(log, type) {
-    if (!this.logs.length || this.logs[this.logs.length - 1].message !== log) {
-      this.logs.push({
-        id: uuidv4(),
-        status: type,
-        message: log
-      });
-    }
-  }
-
-  @action.bound clearLogs() {
-    this.logs.clear();
-  }
-
-  logPlayingState(isPlaying) {
-    if (isPlaying) {
-      this.addLog(`Started playback of '${PlaybackState.currentRunningTest.name}'`, LogTypes.Notice);
-    } else if (PlaybackState.aborted) {
-      this.addLog(`Playback of '${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Notice);
-    } else {
-      this.addLog(`Finished playback of '${PlaybackState.currentRunningTest.name}'${PlaybackState.hasFailed ? " with errors" : " successfully"}`, LogTypes.Notice);
+  @action.bound addLog(log) {
+    if (!this.logs.length || this.logs[this.logs.length - 1].message !== log.message) {
+      this.logs.push(log);
     }
   }
 
@@ -47,20 +29,49 @@ export default class LogStore {
     cb(command, status);
   }
 
+  @action.bound clearLogs() {
+    this.logs.clear();
+  }
+
+  logPlayingState(isPlaying) {
+    let log;
+    if (isPlaying) {
+      log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`);
+      log.setNotice();
+    } else if (PlaybackState.aborted) {
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Error);
+      log.setNotice();
+    } else {
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, PlaybackState.hasFailed ? LogTypes.Error : LogTypes.Success);
+      log.setNotice();
+    }
+    this.addLog(log);
+  }
+
   logCommandState(command, status) {
-    const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
     if (status) {
+      const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
+      let log;
+      if (this.logs.length && this.logs[this.logs.length - 1].commandId === command.id) {
+        log = this.logs[this.logs.length - 1];
+      } else {
+        log = new Log();
+        log.setIndex(index);
+        log.setCommandId(command.id);
+      }
       switch(status.state) {
         case PlaybackStates.Pending:
-          this.addLog(status.message ? status.message : `#${index} Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
+          log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
           break;
         case PlaybackStates.Failed:
-          this.addLog(`#${index} Execution failed: ${status.message}`, LogTypes.Error);
+          log.setError(status.message);
+          log.setStatus(LogTypes.Error);
           break;
         case PlaybackStates.Passed:
-          this.addLog(`#${index} Executed: ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""} successfully`, LogTypes.Success);
+          log.setStatus(LogTypes.Success);
           break;
       }
+      this.addLog(log);
     }
   }
 
@@ -69,9 +80,3 @@ export default class LogStore {
     this.commandStateDisposer();
   }
 }
-
-export const LogTypes = {
-  Notice: "notice",
-  Success: "success",
-  Error: "error"
-};

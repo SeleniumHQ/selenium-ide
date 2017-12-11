@@ -1,10 +1,10 @@
 aside.test-cases {
   min-width: 170px;
-  border-right: 1px solid #CECECE;
   position: relative;
   display: flex;
   flex-direction: column;
   transition: min-width 80ms ease-in-out;
+  flex-grow: 1;
 }
 
 aside.test-cases h3 {

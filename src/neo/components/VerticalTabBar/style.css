@@ -49,11 +49,10 @@
 .tabbar.vertical a > span:after {
   font-family: 'selenium-ide' !important;
   color: rgb(163, 163, 163);
-  transform: rotate(90deg);
-  font-size: 8px;
+  font-size: 14px;
   margin: auto 3px auto 5px;
-  height: 10px;
-  content: "\e900";
+  height: 14px;
+  content: "\e918";
 }
 
 .tabbar.vertical a:hover > span:after {

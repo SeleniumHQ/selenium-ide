@@ -16,6 +16,7 @@
  */
 
 import browser from "webextension-polyfill";
+import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 import { selenium } from "./commands-api";
 import { escapeHTML } from "./escape";
 import BrowserBot from "./selenium-browserbot";
@@ -3625,28 +3626,22 @@ Selenium.prototype.doShowElement = function(locator){
   try{
     const highlightElement = document.getElementById("selenium-highlight");
     let element = this.browserbot.findElement(locator);
-    const elementRects = element.getClientRects()[0];
-    const bodyRects = document.body.getClientRects()[0];
+    const elementRects = element.getBoundingClientRect();
+    const bodyRects = document.documentElement.getBoundingClientRect();
     highlightElement.style.position = "absolute";
     highlightElement.style.zIndex = "100";
-    highlightElement.style.background = "rgb(78, 171, 230)";
-    highlightElement.style.opacity = "0.4";
-    highlightElement.style.visibility = "visible";
-    highlightElement.style.padding = "2px";
+    highlightElement.style.display = "block";
     highlightElement.style.pointerEvents = "none";
-    highlightElement.style.transition = "opacity 300ms ease-in-out";
-    highlightElement.style.top = parseInt(elementRects.top - bodyRects.top - 2) + "px";
-    highlightElement.style.left = parseInt(elementRects.left - bodyRects.left - 2) + "px";
+    highlightElement.style.top = parseInt(elementRects.top - bodyRects.top) + "px";
+    highlightElement.style.left = parseInt(elementRects.left - bodyRects.left) + "px";
     highlightElement.style.width = parseInt(elementRects.width) + "px";
     highlightElement.style.height = parseInt(elementRects.height) + "px";
-    highlightElement.scrollIntoView();
-    const blink = setInterval(() => {
-      highlightElement.style.opacity = parseFloat(highlightElement.style.opacity) ? "0" : "0.8";
-    }, 600);
-    setTimeout(function() {
-      highlightElement.style.visibility = "hidden";
-      clearInterval(blink);
-    }, 2000);
+    scrollIntoViewIfNeeded(highlightElement, { centerIfNeeded: true });
+    highlightElement.className = "active-selenium-highlight";
+    setTimeout(() => {
+      highlightElement.className = "";
+      highlightElement.style.display = "none";
+    }, 500);
     return "element found";
   } catch (e) {
     return "element not found";

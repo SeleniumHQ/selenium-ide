@@ -73,7 +73,7 @@ class Menu extends React.Component {
     } else if (this.props.direction === MenuDirections.Bottom) {
       directionStyles = {
         top: `${this.state.boundingRect ? this.state.boundingRect.bottom + this.props.padding : "40"}px`,
-        left: `${this.state.boundingRect ? this.state.boundingRect.right - this.props.width + Math.abs((this.props.width - this.state.boundingRect.width) / 2) : "40"}px`,
+        left: `${this.state.boundingRect ? this.state.boundingRect.left + (this.state.boundingRect.width - this.props.width) / 2 : "40"}px`,
         transformOrigin: `${this.props.width / 2}px 0px 0px`
       };
     }
@@ -89,7 +89,8 @@ class Menu extends React.Component {
             onRequestClose={this.handleClosing}
             style={{
               overlay: {
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
+                zIndex: "1000"
               },
               content: Object.assign({
                 width: `${this.props.width}px`

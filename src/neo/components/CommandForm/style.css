@@ -1,5 +1,5 @@
 .command-form {
-  margin: 15px 10px;
+  margin: 15px 8px;
 }
 
 .command-form form > * {
@@ -15,7 +15,7 @@
 }
 
 .command-form input {
-  font-size: 14px;
+  font-size: 13px;
   padding: 4px 5px;
   width: 100px;
 }

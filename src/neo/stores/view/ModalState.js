@@ -6,18 +6,28 @@ class ModalState {
   @observable renameState = {};
 
   constructor() {
-    this.renameTest = this.rename.bind(this, "test case");
-    this.renameSuite = this.rename.bind(this, "suite");
+    this.renameTest = this.rename.bind(this, Types.test);
+    this.renameSuite = this.rename.bind(this, Types.suite);
     this.rename = this.rename.bind(this);
   }
 
   @action rename(type, value, cb) {
+    const verifyName = (name) => {
+      let names;
+      if (type === Types.test) names = UiState._project.tests;
+      else if (type === Types.suite) names = UiState._project.suites;
+
+      return name === value || this.nameIsUnique(name, names);
+    };
     this.renameState = {
       value,
       type,
-      done: (...argv) => {
-        cb(...argv);
-        this.cancelRenaming();
+      verify: verifyName,
+      done: (name) => {
+        if (verifyName(name)) {
+          cb(name);
+          this.cancelRenaming();
+        }
       }
     };
   }
@@ -31,13 +41,13 @@ class ModalState {
   }
 
   @action.bound createSuite() {
-    this.rename("suite", null, (name) => {
+    this.rename(Types.suite, null, (name) => {
       if (name) this._project.createSuite(name);
     });
   }
 
   @action.bound createTest() {
-    this.rename("test case", null, (name) => {
+    this.rename(Types.test, null, (name) => {
       if (name) {
         const test = this._project.createTestCase(name);
         UiState.selectTest(test);
@@ -70,7 +80,16 @@ class ModalState {
       }
     });
   }
+
+  nameIsUnique(value, list) {
+    return !list.find(({ name }) => name === value);
+  }
 }
+
+const Types = {
+  test: "test case",
+  suite: "suite"
+};
 
 if (!window._modalState) window._modalState = new ModalState();
 

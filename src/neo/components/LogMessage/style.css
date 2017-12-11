@@ -1,15 +1,39 @@
-.logs ul li {
+.log {
   margin: 7px 0;
 }
 
-.logs ul li.notice {
+.log .index {
+  display: inline-block;
+  width: 20px;
+}
+
+.log.notice {
   font-weight: bold;
 }
 
-.logs ul li.success {
+.log .message:after {
+  padding: 0 5px;
+}
+
+.log.success.notice {
   color: #23843D;
 }
 
-.logs ul li.error {
+.log.error.notice {
+  color: #E80600;
+}
+
+.log.success:not(.notice) .message:after {
+  content: "Success";
+  color: #23843D;
+}
+
+.log.error:not(.notice) .message:after {
+  content: "Failed:";
+  color: #E80600;
+}
+
+.log .error-message {
+  padding-left: 20px;
   color: #E80600;
 }

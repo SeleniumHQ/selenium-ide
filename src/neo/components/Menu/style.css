@@ -4,7 +4,7 @@
   border-radius: 2px;
 	background-color: #FFFFFF;
 	box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
-  overflow: auto;
+  overflow: hidden;
   outline: none;
   padding: 10px 0;
   opacity: 1;

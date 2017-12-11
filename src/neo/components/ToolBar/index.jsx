@@ -18,6 +18,7 @@ export default class ToolBar extends React.Component {
     const isPlayingSuite = PlaybackState.isPlaying && PlaybackState.currentRunningSuite;
     const isPlayingTest = PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite;
     const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
+    const isCommandValid = UiState.selectedCommand && UiState.selectedCommand.isValid;
     return (
       <div className="toolbar">
         <PlayAll
@@ -31,13 +32,17 @@ export default class ToolBar extends React.Component {
           onClick={!PlaybackState.paused ? PlaybackState.startPlaying : PlaybackState.resume}
         />
         { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
-        { PlaybackState.isPlaying ? <Pause isActive={PlaybackState.paused} onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
-        { !PlaybackState.isPlaying ? <StepInto disabled={!UiState.selectedCommand} onClick={() => PlaybackState.playCommand(UiState.selectedCommand)} /> : null }
+        { PlaybackState.isPlaying ?
+          <Pause isActive={PlaybackState.paused}
+            data-tip={!PlaybackState.paused ? "<p>Pause test execution</p>" : "<p>Resume test execution</p>"}
+            onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
+        { !PlaybackState.isPlaying ? <StepInto disabled={!isCommandValid} onClick={() => PlaybackState.playCommand(UiState.selectedCommand, true)} /> : null }
         <GaugeMenu opener={
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
         <span style={{
-          float: "right"
+          float: "right",
+          marginRight: "3px"
         }}>
           { !PlaybackState.isPlaying && UiState.selectedTest.test ? <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} /> : null }
         </span>

@@ -170,8 +170,8 @@ export default class TestRow extends React.Component {
         opacity: this.props.isDragging ? "0" : "1"
       }}>
       <td><span></span>
-        {this.props.index >= 0 ? <span>{this.props.index + 1}.</span> : null}
-        <CommandName>{this.props.command}</CommandName>
+        {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+        <span className="command"><CommandName>{this.props.command}</CommandName></span>
       </td>
       <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>

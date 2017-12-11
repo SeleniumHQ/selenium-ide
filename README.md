@@ -1,6 +1,6 @@
-<img src="src/icons/icon.png" alt="logo" height="120" align="right" />
+<img src="src/icons/icon128.png" alt="logo" height="128" align="right" />
 
-# Selenium IDE &middot; [![Build Status](https://travis-ci.org/applitools/modifier-keys.svg?branch=master)](https://travis-ci.org/SeleniumHQ/selenium-ide)
+# Selenium IDE &middot; [![Build Status](https://travis-ci.org/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.org/SeleniumHQ/selenium-ide)
 
 _[WIP] An integrated development environment for Selenium scripts_
 
@@ -13,6 +13,13 @@ In this project, the IDE is developed as a modern browser extension, supporting 
 As this is an early stage and many things aren't clear, it's quite challenging to collaborate and coordinate the efforts - so please be patient.
 
 We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was kind enough to let us use their work.
+
+## Installation
+
+### Pre-packaged
+- [Chrome extension](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
+
+Firefox users for the time being can download the latest `xpi` from the [releases](https://github.com/SeleniumHQ/selenium-ide/releases) page.
 
 ## Prerequisites
 

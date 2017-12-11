@@ -10,6 +10,7 @@ import "./style.css";
 export default class ProjectHeader extends React.Component {
   constructor(props) {
     super(props);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
   static propTypes = {
@@ -19,17 +20,23 @@ export default class ProjectHeader extends React.Component {
     load: PropTypes.func,
     save: PropTypes.func
   };
+  handleKeyDown(e) {
+    if (e.key === "Enter") e.preventDefault();
+  }
   handleChange(e) {
     this.props.changeName(e.target.value);
   }
   render() {
     return (
-      <div className="header">
+      <div className={classNames("header", {"changed": this.props.changed})}>
         <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
-        <div><ContentEditable className={classNames("title", {"changed": this.props.changed})} onChange={this.handleChange} html={this.props.title} /></div>
+        <div>
+          <ContentEditable className="title" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.title} />
+          <i className="si-pencil"></i>
+        </div>
         <span className="buttons">
           <OpenButton onFileSelected={this.props.load} />
-          <SaveButton data-place="left" onClick={this.props.save} />
+          <SaveButton data-place="left" unsaved={this.props.changed} onClick={this.props.save} />
         </span>
       </div>
     );

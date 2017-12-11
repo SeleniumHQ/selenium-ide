@@ -25,7 +25,7 @@ export default class TestTable extends React.Component {
         <table>
           <thead>
             <tr>
-              <th>Command</th>
+              <th><span>Command</span></th>
               <th>Target</th>
               <th>Value</th>
             </tr>

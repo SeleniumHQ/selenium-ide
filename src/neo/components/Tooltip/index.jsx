@@ -7,7 +7,7 @@ import "./style.css";
 export default class Tooltip extends React.Component {
   componentDidMount() {
     this.disposeObserveToolbar = reaction(
-      () => PlaybackState.isPlaying,
+      () => (PlaybackState.isPlaying | PlaybackState.paused),
       () => {
         setTimeout(ReactTooltip.rebuild, 0);
       }

@@ -4,9 +4,9 @@ import styled from "styled-components";
 import "./style.css";
 
 const RecordButton = styled.button`
-  height: 16px;
-  width: 16px;
-  margin: 3px 4px;
+  height: 14px;
+  width: 14px;
+  margin: 4px 5px;
   background-color: #EE4841;
   border-style: none;
   border-radius: ${props => props.isActive ? "10%" : "50%"};
@@ -14,7 +14,7 @@ const RecordButton = styled.button`
   overflow: hidden;
   outline: 0;
   transition: border-radius 250ms ease-out;
-  padding: 0 7px;
+  padding: 0 6px;
 
   &:hover {
     background-color: #F56660;
