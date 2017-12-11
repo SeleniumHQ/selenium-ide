@@ -14,6 +14,13 @@ As this is an early stage and many things aren't clear, it's quite challenging t
 
 We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was kind enough to let us use their work.
 
+## Installation
+
+### Pre-packaged
+- [Chrome extension](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
+
+Firefox users for the time being can download the latest `xpi` from the [releases](https://github.com/SeleniumHQ/selenium-ide/releases) page.
+
 ## Prerequisites
 
 - `git` has to be in `$PATH` for the installation to pass
