@@ -27,8 +27,8 @@ import "../../IO/SideeX/record";
 import "../../IO/SideeX/playback";
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
-  require("../../styles/scrollbar.css");
-  require("../../styles/button-direction.css");
+  require("../../styles/conditional/scrollbar.css");
+  require("../../styles/conditional/button-direction.css");
 }
 
 const project = observable(new ProjectStore());
