@@ -3632,8 +3632,8 @@ Selenium.prototype.doShowElement = function(locator){
   try{
     const highlightElement = document.getElementById("selenium-highlight");
     let element = this.browserbot.findElement(locator);
-    const elementRects = element.getClientRects()[0];
-    const bodyRects = document.body.getClientRects()[0];
+    const elementRects = element.getBoundingClientRect();
+    const bodyRects = document.documentElement.getBoundingClientRect();
     highlightElement.style.position = "absolute";
     highlightElement.style.zIndex = "100";
     highlightElement.style.display = "block";
