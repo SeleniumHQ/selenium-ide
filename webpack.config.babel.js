@@ -60,6 +60,7 @@ export default {
                 path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
                 path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug")
               ],
+              watch: false,
               es6mode: true
             },
             exclude: [/google-closure-library\/closure\/goog\/base\.js$/]
@@ -73,6 +74,7 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
+                watch: false,
                 paths: [
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
@@ -90,6 +92,7 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
+                watch: false,
                 paths: [
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
                 ]
@@ -105,6 +108,7 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
+                watch: false,
                 paths: [
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
@@ -123,6 +127,7 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
+                watch: false,
                 paths: [
                   path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
                   path.resolve(__dirname, "src/atoms"),
