@@ -31,7 +31,6 @@ import goog, { bot, core } from "./closure-polyfill";
 // TODO: utils
 const objectExtend = window.global.objectExtend;
 const SeleniumError = window.global.SeleniumError;
-const browserVersion = window.global.browserVersion;
 const createEventObject = window.global.createEventObject;
 const absolutify = window.global.absolutify;
 const addLoadListener = window.global.addLoadListener;
@@ -49,6 +48,8 @@ const canonicalize = window.global.canonicalize;
 const parseUrl = window.global.parseUrl;
 const reassembleLocation = window.global.reassembleLocation;
 const serializeObject = window.global.serializeObject;
+
+window.global.browserVersion = new window.global.BrowserVersion();
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.

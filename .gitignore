@@ -8,6 +8,7 @@ src/atoms
 src/webdriver
 src/selenium-atoms
 src/third_party
+src/selenium-core-scripts
 .peru
 .idea
 .tern-port
