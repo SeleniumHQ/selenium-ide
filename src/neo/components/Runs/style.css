@@ -1,6 +1,7 @@
 .runs {
   padding: 15px 10px 0 10px;
   background-color: #fff;
+  font-size: 12px;
 }
 
 .runs .status {

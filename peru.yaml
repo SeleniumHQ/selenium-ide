@@ -1,13 +1,31 @@
 imports:
   atoms: src/atoms
+  selenium-atoms: src/selenium-atoms
+  selenium-core: src/selenium-core-scripts
   webdriver: src/webdriver
+  third_party: src/third_party
 
 git module atoms:
   url: https://github.com/SeleniumHQ/selenium
-  rev: selenium-3.6.0
+  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
   export: "javascript/atoms"
+
+git module selenium-atoms:
+  url: https://github.com/SeleniumHQ/selenium
+  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  export: "javascript/selenium-atoms"
+
+git module selenium-core:
+  url: https://github.com/SeleniumHQ/selenium
+  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  export: "javascript/selenium-core/scripts"
 
 git module webdriver:
   url: https://github.com/SeleniumHQ/selenium
-  rev: selenium-3.6.0
+  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
   export: "javascript/webdriver/atoms"
+
+git module third_party:
+  url: https://github.com/SeleniumHQ/selenium
+  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  export: "third_party/js"

@@ -1,0 +1,52 @@
+#selenium-highlight {
+  display: none;
+}
+
+#selenium-highlight:before, #selenium-highlight:after {
+  content: " ";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  right: -30px;
+  bottom: -30px;
+  border-radius: 3px;
+  animation: none;
+  animation-iteration-count: 1;
+  border: 30px solid rgba(255, 255, 255, .5);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#selenium-highlight.active-selenium-highlight:before, #selenium-highlight.active-selenium-highlight:after {
+  animation: selenium-highlight-border-ripple 0.5s ease-in;
+}
+
+#selenium-highlight:before {
+  animation-delay: .1s;
+}
+
+#selenium-highlight:after {
+  border-color: rgba(0, 0, 0, .3);
+}
+
+@keyframes selenium-highlight-border-ripple {
+  0% {
+    top: -30px;
+    left: -30px;
+    right: -30px;
+    bottom: -30px;
+    border-width: 30px;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-width: 0;
+    opacity: 0;
+  }
+}

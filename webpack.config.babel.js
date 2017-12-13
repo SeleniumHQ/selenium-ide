@@ -1,3 +1,20 @@
+// Licensed to the Software Freedom Conservancy (SFC) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The SFC licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -57,11 +74,47 @@ export default {
             loader: "closure-loader",
             options: {
               paths: [
-                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug")
               ],
+              watch: false,
               es6mode: true
             },
             exclude: [/google-closure-library\/closure\/goog\/base\.js$/]
+          },
+          {
+            test: /selenium-atoms\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                watch: false,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
+                  path.resolve(__dirname, "src/selenium-atoms")
+                ]
+              }
+            }
+          },
+          {
+            test: /third_party\/wgxpath\/.*\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                watch: false,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog")
+                ]
+              }
+            }
           },
           {
             test: /atoms\/.*\.js$/,
@@ -72,7 +125,31 @@ export default {
               loader: "closure-loader",
               options: {
                 es6mode: true,
-                paths: [path.resolve(__dirname, "src/atoms")]
+                watch: false,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog/debug"),
+                  path.resolve(__dirname, "src/third_party/wgxpath"),
+                  path.resolve(__dirname, "src/atoms")
+                ]
+              }
+            }
+          },
+          {
+            test: /closure-polyfill\.js$/,
+            include: [
+              path.resolve(__dirname, "src")
+            ],
+            use: {
+              loader: "closure-loader",
+              options: {
+                es6mode: true,
+                watch: false,
+                paths: [
+                  path.resolve(__dirname, "node_modules/google-closure-library/closure/goog"),
+                  path.resolve(__dirname, "src/atoms"),
+                  path.resolve(__dirname, "src/selenium-atoms")
+                ]
               }
             }
           },
@@ -91,55 +168,10 @@ export default {
               }
             ]
           },
-          // The notation here is somewhat confusing.
-          // "postcss" loader applies autoprefixer to our CSS.
-          // "css" loader resolves paths in CSS and adds assets as dependencies.
-          // "style" loader normally turns CSS into JS modules injecting <style>,
-          // but unlike in development configuration, we do something different.
-          // `ExtractTextPlugin` first applies the "postcss" and "css" loaders
-          // (second argument), then grabs the result CSS and puts it into a
-          // separate file in our build process. This way we actually ship
-          // a single CSS file in production instead of JS code injecting <style>
-          // tags. If you use code splitting, however, any async bundles will still
-          // use the "style" loader inside the async code so CSS from them won't be
-          // in the main CSS file.
+          // Process css
           {
             test: /\.css$/,
-            loader: isProduction ? ExtractTextPlugin.extract(
-              {
-                fallback: "style-loader",
-                use: [
-                  {
-                    loader: "css-loader",
-                    options: {
-                      importLoaders: 1,
-                      minimize: true,
-                      sourceMap: isProduction
-                    }
-                  },
-                  {
-                    loader: "postcss-loader",
-                    options: {
-                      // Necessary for external CSS imports to work
-                      // https://github.com/facebookincubator/create-react-app/issues/2677
-                      ident: "postcss",
-                      plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        autoprefixer({
-                          browsers: [
-                            ">1%",
-                            "last 4 versions",
-                            "Firefox ESR",
-                            "not ie < 9" // React doesn't support IE8 anyway
-                          ],
-                          flexbox: "no-2009"
-                        })
-                      ]
-                    }
-                  }
-                ]
-              }
-            ) : [
+            loader: [
               require.resolve("style-loader"),
               {
                 loader: require.resolve("css-loader"),
@@ -200,8 +232,8 @@ export default {
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "global.js", to: "vendor" },
-      { from: "atoms.js", to: "vendor" },
-      { from: "utils.js", to: "vendor" },
+      { from: "selenium-core-scripts/htmlutils.js", to: "vendor" },
+      { from: "selenium-core-scripts/selenium-browserdetect.js", to: "vendor" },
       { from: "ext-command.js", to: "vendor" },
       { from: "editor.js", to: "vendor" },
       { from: "formatCommand.js", to: "vendor" },
@@ -236,24 +268,6 @@ export default {
         "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
       }
     }),
-    // Minify the code.
-    /*new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        // Disabled because of an issue with Uglify breaking seemingly valid code:
-        // https://github.com/facebookincubator/create-react-app/issues/2376
-        // Pending further investigation:
-        // https://github.com/mishoo/UglifyJS2/issues/2011
-        comparisons: false
-      },
-      output: {
-        comments: false,
-        // Turned on because emoji and regex is not minified properly using default
-        // https://github.com/facebookincubator/create-react-app/issues/2488
-        ascii_only: true
-      },
-      sourceMap: isProduction
-    }),*/
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: "css/[name].[hash:8].css"

@@ -1,3 +1,20 @@
+// Licensed to the Software Freedom Conservancy (SFC) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The SFC licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import React from "react";
 import PropTypes from "prop-types";
 import Modal from "../Modal";
@@ -39,8 +56,8 @@ export default class Alert extends React.Component {
           <ModalHeader title={this.state.options.title} close={this.close.bind(this, false)} />
           <p>{this.state.options.description}</p>
           <span className="right">
-            <FlatButton type="submit" buttonRef={(submit) => { this.submit = submit; }} onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
             {this.state.options.cancelLabel ? <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton> : null}
+            <FlatButton type="submit" buttonRef={(submit) => { this.submit = submit; }} onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
           </span>
           <div className="clear"></div>
         </form>

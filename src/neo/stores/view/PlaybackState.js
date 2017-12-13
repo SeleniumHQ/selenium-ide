@@ -1,3 +1,20 @@
+// Licensed to the Software Freedom Conservancy (SFC) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The SFC licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 
@@ -52,8 +69,9 @@ class PlaybackState {
     this.isPlaying = true;
   }
 
-  @action.bound playCommand(command) {
+  @action.bound playCommand(command, jumpToNext) {
     this.noStatisticsEffects = true;
+    this.jumpToNextCommand = jumpToNext;
     this.paused = false;
     this.currentPlayingIndex = 0;
     this.currentRunningTest = UiState.selectedTest.test;
@@ -71,6 +89,7 @@ class PlaybackState {
 
   @action.bound stopPlaying() {
     this.isPlaying = false;
+    this.paused = false;
   }
 
   @action.bound abortPlaying() {
@@ -90,7 +109,6 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    this.stopPlaying();
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
@@ -98,6 +116,10 @@ class PlaybackState {
         this.hasFailed = true;
         this.failures++;
       }
+    }
+    this.stopPlaying();
+    if (this.jumpToNextCommand) {
+      UiState.selectNextCommand();
     }
     if (this._testsToRun.length) {
       this.playNext();

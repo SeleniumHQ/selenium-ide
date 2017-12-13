@@ -24,6 +24,10 @@
   color: #4d4d4d;
 }
 
+.modal .right .btn {
+  margin-right: 0;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0px;

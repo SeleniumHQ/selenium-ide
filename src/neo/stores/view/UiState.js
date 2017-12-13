@@ -1,6 +1,24 @@
+// Licensed to the Software Freedom Conservancy (SFC) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The SFC licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import { action, computed, observable, observe } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
+import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
 import Command from "../../models/Command";
 
@@ -16,16 +34,25 @@ class UiState {
   @observable consoleHeight = 200;
   @observable minConsoleHeight = 30;
   @observable minContentHeight = 460;
+  @observable minNavigationWidth = 180;
+  @observable maxNavigationWidth = 250;
+  @observable _navigationWidth = 180;
+  @observable navigationHover = false;
+  @observable navigationDragging = false;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
 
   constructor() {
     this.suiteStates = {};
+    this.testStates = {};
     this.filterFunction = this.filterFunction.bind(this);
     this.observePristine();
     storage.get().then(data => {
       if (data.consoleSize !== undefined && data.consoleSize >= this.minConsoleHeight) {
         this.resizeConsole(data.consoleSize);
+      }
+      if (data.navigationSize !== undefined && data.navigationSize >= this.minNavigationWidth) {
+        this.resizeNavigation(data.navigationSize);
       }
     });
   }
@@ -51,6 +78,10 @@ class UiState {
     const value = PlaybackState.maxDelay - PlaybackState.delay;
     const speed = Math.ceil(value / PlaybackState.maxDelay * 6);
     return speed ? speed : 1;
+  }
+
+  @computed get navigationWidth() {
+    return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
   @action.bound copyToClipboard(item) {
@@ -142,6 +173,28 @@ class UiState {
     }
   }
 
+  @action.bound resizeNavigation(width) {
+    this._navigationWidth = width;
+    storage.set({
+      navigationSize: this._navigationWidth
+    });
+  }
+
+  @action.bound setNavigationHover(hover) {
+    clearTimeout(this._hoverTimeout);
+    if (!hover) {
+      this._hoverTimeout = setTimeout(() => {
+        action(() => {this.navigationHover = false;})();
+      }, 600);
+    } else {
+      this.navigationHover = true;
+    }
+  }
+
+  @action.bound setNavigationDragging(isDragging) {
+    this.navigationDragging = isDragging;
+  }
+
   @action.bound observePristine() {
     this.pristineDisposer = observe(this.pristineCommand, () => {
       this.pristineDisposer();
@@ -175,6 +228,14 @@ class UiState {
     return this.suiteStates[suite.id];
   }
 
+  getTestState(test) {
+    if (!this.testStates[test.id]) {
+      this.testStates[test.id] = new TestState(test);
+    }
+
+    return this.testStates[test.id];
+  }
+
   filterFunction({name}) {
     return (name.indexOf(this.filterTerm) !== -1);
   }
@@ -192,6 +253,19 @@ class UiState {
     this.clipboard = null;
     this.isRecording = false;
     this.suiteStates = {};
+    this.clearTestStates();
+  }
+
+  @action.bound clearTestStates() {
+    Object.values(this.testStates).forEach(state => state.dispose());
+    this.testStates = {};
+  }
+
+  @action.bound saved() {
+    Object.values(this.testStates).forEach(state => {
+      state.modified = false;
+    });
+    this._project.modified = false;
   }
 }
 
