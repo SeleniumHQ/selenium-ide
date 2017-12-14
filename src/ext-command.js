@@ -109,6 +109,14 @@ ExtCommand.prototype.doSelectWindow = function(serialNumber) {
     });
 };
 
+ExtCommand.prototype.doSetWindowSize = function(_, size) {
+  const [width, height] = size.split(",").map((s) => parseInt(s));
+  return browser.windows.update(this.currentPlayingWindowId, {
+    width,
+    height
+  });
+};
+
 ExtCommand.prototype.doClose = function() {
   let removingTabId = this.currentPlayingTabId;
   this.currentPlayingTabId = -1;
