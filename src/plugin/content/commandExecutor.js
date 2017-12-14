@@ -15,6 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
+const commands = {};
+
+export function registerCommand(command, func) {
+  if (typeof command !== "string") {
+    throw new Error(`Expected to receive string instead received ${typeof command}`);
+  } else if (typeof func !== "function") {
+    throw new Error(`Expected to receive function instead received ${typeof func}`);
+  } else if (commands[command]) {
+    throw new Error(`A command named ${command} already exists`);
+  } else {
+    commands[command] = func;
+  }
+}
+
 export function canExecuteCommand(command) {
 }
 

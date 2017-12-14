@@ -26,13 +26,13 @@ describe("command executor", () => {
     expect(() => registerCommand()).toThrowError("Expected to receive string instead received undefined");
   });
   it("should fail to register a command with a key that is not string", () => {
-    expect(() => registerCommand(5, new Function())).toThrowError("Expected to receive string instead received Number");
+    expect(() => registerCommand(5, new Function())).toThrowError("Expected to receive string instead received number");
   });
   it("should fail to register a command with no callback", () => {
-    expect(() => registerCommand("command")).toThrowError("Expected to receive Function instead received undefined");
+    expect(() => registerCommand("command")).toThrowError("Expected to receive function instead received undefined");
   });
   it("should fail to register a command with a callback that is not a function", () => {
-    expect(() => registerCommand("command", 1)).toThrowError("Expected to receive Function instead received Number");
+    expect(() => registerCommand("command", 1)).toThrowError("Expected to receive function instead received number");
   });
   it("should fail to register a command with the same key as a previous one", () => {
     const key = "command";
