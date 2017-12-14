@@ -49,10 +49,17 @@ describe("command executor", () => {
     expect(() => executeCommand(commandName)).toThrowError(`The command ${commandName} is not registered with any plugin`);
   });
   it("should successfully execute a sync command", () => {
-    expect(executeCommand("syncCommand")).anything();
+    const cb = jest.fn();
+    registerCommand("syncCommand", cb);
+    executeCommand("syncCommand");
+    expect(cb).toHaveBeenCalled();
   });
   it("should fail to execute a sync command", () => {
     const command = "syncFail";
+    const cb = () => {
+      throw new Error();
+    }
+    registerCommand(command, cb);
     expect(() => {
       try {
         executeCommand(command);
@@ -64,9 +71,11 @@ describe("command executor", () => {
     }).toThrow();
   });
   it("should successfully execute an async command", () => {
-    expect(executeCommand("asyncCommand")).resolves.anything();
+    registerCommand("asyncCommand", () => Promise.resolve(true));
+    expect(executeCommand("asyncCommand")).resolves.toBeTruthy();
   });
   it("should fail to execute an async command", () => {
-    expect(executeCommand("asyncFail")).rejects.anything();
+    registerCommand("asyncFail", () => Promise.reject(false));
+    expect(executeCommand("asyncFail")).rejects.toBeFalsy();
   });
 });
