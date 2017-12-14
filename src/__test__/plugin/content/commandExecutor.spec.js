@@ -52,7 +52,16 @@ describe("command executor", () => {
     expect(executeCommand("syncCommand")).anything();
   });
   it("should fail to execute a sync command", () => {
-    expect(() => executeCommand("syncFail")).toThrow();
+    const command = "syncFail";
+    expect(() => {
+      try {
+        executeCommand(command);
+      } catch(e) {
+        if (e.message !== `The command ${command} is not registered with any plugin`) {
+          throw e;
+        }
+      }
+    }).toThrow();
   });
   it("should successfully execute an async command", () => {
     expect(executeCommand("asyncCommand")).resolves.anything();
