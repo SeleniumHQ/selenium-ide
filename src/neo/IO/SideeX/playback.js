@@ -80,7 +80,7 @@ function catchPlayingError(message) {
       playAfterConnectionFailed();
     }, 100);
   } else {
-    reportError(message);
+    reportError(message instanceof Error ? message.message : message);
     finishPlaying();
   }
 }
