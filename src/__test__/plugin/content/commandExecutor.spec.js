@@ -40,6 +40,7 @@ describe("command executor", () => {
     expect(() => registerCommand(key, new Function())).toThrowError(`A command named ${key} already exists`);
   });
   it("should check if a command may be executed", () => {
+    registerCommand("exists", new Function());
     expect(canExecuteCommand("exists")).toBeTruthy();
     expect(canExecuteCommand("nonExistent")).toBeFalsy();
   });

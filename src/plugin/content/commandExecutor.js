@@ -30,6 +30,7 @@ export function registerCommand(command, func) {
 }
 
 export function canExecuteCommand(command) {
+  return commands.hasOwnProperty(command);
 }
 
 export function executeCommand(command, target, value) {
