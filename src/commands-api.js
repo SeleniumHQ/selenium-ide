@@ -19,6 +19,7 @@ import TargetSelector from "./targetSelector";
 import Selenium from "./selenium-api";
 import BrowserBot from "./selenium-browserbot";
 import { locatorBuilders } from "./record";
+import { canExecuteCommand, executeCommand } from "./plugin/content/commandExecutor";
 
 export const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;
@@ -43,10 +44,12 @@ function doCommands(request, sender, sendResponse) {
       sendResponse({ dom_time: window.sideex_new_page });
     } else {
       const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
-      if (selenium["do" + upperCase] != null) {
+      if (selenium["do" + upperCase] !== null || canExecuteCommand(request.commands)) {
         try {
           document.body.setAttribute("SideeXPlayingFlag", true);
-          let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));                  
+          let returnValue = selenium["do" + upperCase] ?
+            selenium["do" + upperCase](request.target, selenium.preprocessParameter(request.value)) :
+            executeCommand(request.commands, request.target, selenium.preprocessParameter(request.value));
           if (returnValue instanceof Promise) {
             // The command is a asynchronous function
             returnValue.then(function() {
