@@ -51,6 +51,9 @@ function executionLoop() {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
         return executionLoop();
       }); 
+  } else if (isImplicitWait(command)) {
+    notifyWaitDeprecation(command);
+    return executionLoop();
   } else {
     return doPreparation()
       .then(doPrePageWait)
@@ -245,6 +248,10 @@ function doDelay() {
   });
 }
 
+function notifyWaitDeprecation(command) {
+  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`);
+}
+
 function isReceivingEndError(reason) {
   return (reason == "TypeError: response is undefined" ||
     reason == "Error: Could not establish connection. Receiving end does not exist." ||
@@ -263,4 +270,9 @@ function isWindowMethodCommand(command) {
     || command == "chooseCancelOnNextConfirmation"
     || command == "assertConfirmation"
     || command == "assertAlert");
+}
+
+function isImplicitWait(command) {
+  return (command == "waitForPageToLoad"
+    || command == "waitForElementPresent");
 }
