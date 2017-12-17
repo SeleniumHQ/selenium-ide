@@ -102,7 +102,12 @@ function reportError(error) {
 
 reaction(
   () => PlaybackState.isPlaying,
-  isPlaying => { isPlaying ? play(UiState.baseUrl) : null; }
+  isPlaying => {
+    if (isPlaying) {
+      console.log("hi");
+      play(UiState.baseUrl);
+    }
+  }
 );
 
 reaction(

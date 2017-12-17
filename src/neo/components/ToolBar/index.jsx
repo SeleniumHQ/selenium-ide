@@ -32,7 +32,7 @@ import "./style.css";
 @observer
 export default class ToolBar extends React.Component {
   render() {
-    const isPlayingSuite = PlaybackState.isPlaying && PlaybackState.currentRunningSuite;
+    const isPlayingSuite = PlaybackState.isPlaying && !!PlaybackState.currentRunningSuite;
     const isPlayingTest = PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite;
     const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
     const isCommandValid = UiState.selectedCommand && UiState.selectedCommand.isValid;

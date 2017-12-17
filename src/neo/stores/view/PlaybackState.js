@@ -85,7 +85,10 @@ class PlaybackState {
     UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.currentPlayingIndex = 0;
-    this.isPlaying = true;
+    this.errors = 0;
+    setTimeout(action(() => {
+      this.isPlaying = true;
+    }), 0);
   }
 
   @action.bound stopPlaying() {
