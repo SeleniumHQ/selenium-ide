@@ -85,6 +85,18 @@ export default function seed(store) {
   suite.addTestCase(playbackTest);
   suite.addTestCase(playbackTest2);
 
+  const failTest = store.createTestCase("aaba failure");
+  const failCommand = failTest.createCommand();
+  failCommand.setCommand("waitForPageToLoad");
+
+  const failTest2 = store.createTestCase("aabb failure");
+  const failCommand2 = failTest2.createCommand();
+  failCommand2.setCommand("waitForElementPresent");
+
+  const suite2 = store.createSuite("aaab suite");
+  suite2.addTestCase(failTest);
+  suite2.addTestCase(failTest2);
+
   UiState.selectTest(playbackTest);
 
   return store;
