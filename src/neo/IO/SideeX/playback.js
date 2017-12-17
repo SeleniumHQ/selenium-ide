@@ -47,7 +47,10 @@ function executionLoop() {
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return (extCommand["do" + upperCase](target, value))
-      .then(executionLoop); 
+      .then(() => {
+        PlaybackState.setCommandState(id, PlaybackStates.Passed);
+        return executionLoop();
+      }); 
   } else {
     return doPreparation()
       .then(doPrePageWait)

@@ -54,6 +54,9 @@ export default function seed(store) {
   store.setUrl(url);
   store.addUrl(url);
   const playbackTest = store.createTestCase("aa playback");
+  const setWindowSize = playbackTest.createCommand();
+  setWindowSize.setCommand("setWindowSize");
+  setWindowSize.setValue("1200,800");
   const open = playbackTest.createCommand();
   open.setCommand("open");
   open.setTarget("/wiki/Legislation");
