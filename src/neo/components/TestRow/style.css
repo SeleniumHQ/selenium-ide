@@ -75,6 +75,7 @@
 
 .test-table td .index {
   display: inline-block;
+  word-break: keep-all;
 }
 
 .test-table td .command {
