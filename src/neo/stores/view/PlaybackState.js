@@ -75,6 +75,9 @@ class PlaybackState {
     this.jumpToNextCommand = jumpToNext;
     this.paused = false;
     this.currentPlayingIndex = 0;
+    this.errors = 0;
+    this.hasFailed = false;
+    this.aborted = false;
     this.currentRunningTest = UiState.selectedTest.test;
     this.runningQueue = [command];
     this.isPlaying = true;
