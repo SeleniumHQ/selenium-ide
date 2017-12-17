@@ -79,7 +79,7 @@ import "./style.css";
         <Runs
           runs={PlaybackState.finishedTestsCount}
           failures={PlaybackState.failures}
-          hasError={PlaybackState.hasFailed}
+          hasError={!!PlaybackState.failures}
           progress={PlaybackState.finishedTestsCount}
           totalProgress={PlaybackState.testsCount}
         />
