@@ -76,7 +76,7 @@ class UiState {
 
   @computed get gaugeSpeed() {
     const value = PlaybackState.maxDelay - PlaybackState.delay;
-    const speed = Math.ceil(value / PlaybackState.maxDelay * 6);
+    const speed = Math.ceil(value / PlaybackState.maxDelay * 5);
     return speed ? speed : 1;
   }
 

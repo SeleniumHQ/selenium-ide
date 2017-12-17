@@ -56,14 +56,6 @@ input::placeholder {
   color: #A0A0A0;
 }
 
-input[type="search"], input[type="url"] {
-  border-color: #F3F3F3;
-}
-
-input[type="search"]:focus, input[type="url"]:focus {
-  border-color: #CECECE;
-}
-
 hr {
   background-color: #E5E5E5;
   border: 0;
