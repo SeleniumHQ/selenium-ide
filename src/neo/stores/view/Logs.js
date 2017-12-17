@@ -59,7 +59,8 @@ export default class LogStore {
       log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Error);
       log.setNotice();
     } else {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.failures} error(s)` : "successfully"}`, PlaybackState.hasFailed ? LogTypes.Error : LogTypes.Success);
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.errors} error(s)` : "successfully"}`,
+        PlaybackState.hasFailed ? LogTypes.Error : LogTypes.Success);
       log.setNotice();
     }
     this.addLog(log);

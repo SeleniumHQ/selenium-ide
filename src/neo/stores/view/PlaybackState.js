@@ -29,6 +29,7 @@ class PlaybackState {
   @observable finishedTestsCount = 0;
   @observable testsCount = 0;
   @observable failures = 0;
+  @observable errors = 0;
   @observable hasFailed = false;
   @observable aborted = false;
   @observable paused = false;
@@ -110,6 +111,9 @@ class PlaybackState {
 
   @action.bound finishPlaying() {
     this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
+    if (!this.hasFinishedSuccessfully) {
+      this.hasFailed = true;
+    }
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
       if (!this.hasFinishedSuccessfully) {
@@ -133,6 +137,9 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state, message) {
+    if (state === PlaybackStates.Failed) {
+      this.errors++;
+    }
     if (this.isPlaying) {
       this.commandState.set(commandId, { state, message });
     }
@@ -152,6 +159,7 @@ class PlaybackState {
     this.finishedTestsCount = 0;
     this.noStatisticsEffects = false;
     this.failures = 0;
+    this.errors = 0;
     this.hasFailed = false;
     this.aborted = false;
     this.paused = false;
