@@ -27,7 +27,7 @@ export default class SpeedGaugeButton extends React.Component {
     speed: PropTypes.number
   };
   static defaultProps = {
-    speed: 6
+    speed: 5
   };
   render() {
     return (

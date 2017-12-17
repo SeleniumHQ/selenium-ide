@@ -1,9 +1,8 @@
 @font-face {
   font-family: 'selenium-ide';
   src:
-    url('../assets/fonts/selenium-ide.ttf?9o15dy') format('truetype'),
-    url('../assets/fonts/selenium-ide.woff?9o15dy') format('woff'),
-    url('../assets/fonts/selenium-ide.svg?9o15dy#selenium-ide') format('svg');
+    url('../assets/fonts/selenium-ide.ttf?2o2c1h') format('truetype'),
+    url('../assets/fonts/selenium-ide.svg?2o2c1h#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -35,23 +34,20 @@
 .si-caret-wide:before {
   content: "\e918";
 }
-.si-gauge-6:before {
+.si-gauge-1:before {
   content: "\e90c";
 }
-.si-gauge-5:before {
+.si-gauge-2:before {
   content: "\e90e";
 }
-.si-gauge-4:before {
+.si-gauge-3:before {
   content: "\e912";
 }
-.si-gauge-3:before {
+.si-gauge-4:before {
   content: "\e913";
 }
-.si-gauge-2:before {
+.si-gauge-5:before {
   content: "\e914";
-}
-.si-gauge-1:before {
-  content: "\e915";
 }
 .si-search:before {
   content: "\e916";
