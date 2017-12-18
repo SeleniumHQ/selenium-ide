@@ -81,6 +81,15 @@ export default function seed(store) {
   thirdClick2.setCommand("clickAt");
   thirdClick2.setTarget("link=scapegoat");
 
+  const typeTest = store.createTestCase("aab type");
+  const open3 = typeTest.createCommand();
+  open3.setCommand("open");
+  open3.setTarget("/wiki/Main_Page");
+  const type = typeTest.createCommand();
+  type.setCommand("type");
+  type.setTarget("id=searchInput");
+  type.setValue("testtest");
+
   const suite = store.createSuite("aaa suite");
   suite.addTestCase(playbackTest);
   suite.addTestCase(playbackTest2);
