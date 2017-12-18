@@ -61,8 +61,8 @@ export default function seed(store) {
   open.setCommand("open");
   open.setTarget("/wiki/Legislation");
   const firstClick = playbackTest.createCommand();
-  firstClick.setCommand("clickAt");
-  firstClick.setTarget("link=enacted");
+  firstClick.setCommand("click");
+  firstClick.setTarget("css=a:contains(\"enacted\")");
   const secondClick = playbackTest.createCommand();
   secondClick.setCommand("clickAt");
   secondClick.setTarget("link=parliamentary systems");
