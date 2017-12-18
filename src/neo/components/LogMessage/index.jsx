@@ -19,15 +19,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import classNames from "classnames";
+import { LogTypes } from "../../ui-models/Log";
 import "./style.css";
 
 @observer
 export default class LogMessage extends React.Component {
   render() {
+    let statusMessage = "";
+    if (this.props.log.status && !this.props.log.isNotice) {
+      if (this.props.log.status === LogTypes.Success) {
+        statusMessage = "Success";
+      } else if (this.props.log.status === LogTypes.Error) {
+        statusMessage = `Failed${this.props.log.error ? "s" : ""}`;
+      }
+    }
     return (
       <li className={classNames("log", this.props.log.status, {notice: this.props.log.isNotice})}>
         {this.props.log.index && <span className="index">{this.props.log.index}.</span>}
-        <span className="message">{this.props.log.message}</span>
+        <span className="message">{this.props.log.message}<span className="status"> {statusMessage}</span></span>
         {this.props.log.error && <div className="error-message">{this.props.log.error}</div>}
       </li>
     );

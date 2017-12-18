@@ -23,13 +23,11 @@
   color: #E80600;
 }
 
-.log.success:not(.notice) .message:after {
-  content: "Success";
+.log.success .message .status {
   color: #23843D;
 }
 
-.log.error:not(.notice) .message:after {
-  content: "Failed:";
+.log.error .message .status {
   color: #E80600;
 }
 
