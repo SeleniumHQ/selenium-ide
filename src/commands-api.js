@@ -112,22 +112,7 @@ function doCommands(request, sender, sendResponse) {
   }
 }
 
-function sizeMessenger(request, sender, sendResponse) {
-  if (request.compensateSize) {
-    sendResponse({
-      width: window.outerWidth - window.innerWidth,
-      height: window.outerHeight - window.innerHeight
-    });
-  } else if (request.getSize) {
-    sendResponse({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
-  }
-}
-
 if (!window._listener) {
   window._listener = doCommands;
   browser.runtime.onMessage.addListener(doCommands);
-  browser.runtime.onMessage.addListener(sizeMessenger);
 }

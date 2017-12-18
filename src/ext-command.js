@@ -109,54 +109,6 @@ ExtCommand.prototype.doSelectWindow = function(serialNumber) {
     });
 };
 
-ExtCommand.prototype.doSetWindowSize = function(_, size) {
-  const [width, height] = size.split(",").map((s) => parseInt(s));
-  let tabId = this.getCurrentPlayingTabId();
-  let frameId = this.getFrame();
-  const compensatedSize = {};
-  return browser.tabs.sendMessage(tabId, {
-    compensateSize: true
-  }, { frameId: top ? 0 : frameId }).then(compensation => {
-    compensatedSize.width = width + compensation.width;
-    compensatedSize.height = height + compensation.height;
-    return browser.windows.update(this.currentPlayingWindowId, compensatedSize);
-  }).then(() => this.fixInaccuracies({
-    wantedSize: {
-      width,
-      height
-    },
-    compensatedSize
-  }));
-};
-
-ExtCommand.prototype.fixInaccuracies = function(sizes, retries = 3) {
-  return new Promise((resolve, reject) => {
-    if (!retries) return reject("Can not accurately set viewport size");
-    let tabId = this.getCurrentPlayingTabId();
-    let frameId = this.getFrame();
-    return browser.tabs.sendMessage(tabId, {
-      getSize: true
-    }, { frameId: top ? 0 : frameId }).then(actualSize => {
-      if (actualSize.width === sizes.wantedSize.width && actualSize.height === sizes.wantedSize.height) {
-        return resolve(true);
-      } else {
-        let resizedWidth = sizes.compensatedSize.width + (sizes.wantedSize.width - actualSize.width);
-        let resizedHeight = sizes.compensatedSize.height + (sizes.wantedSize.height - actualSize.height);
-        return browser.windows.update(this.currentPlayingWindowId, {
-          width: resizedWidth,
-          height: resizedHeight
-        }).then(() => this.fixInaccuracies({
-          compensatedSize: {
-            height: resizedHeight,
-            width: resizedWidth
-          },
-          wantedSize: sizes.wantedSize
-        }, --retries));
-      }
-    });
-  });
-};
-
 ExtCommand.prototype.doClose = function() {
   let removingTabId = this.currentPlayingTabId;
   this.currentPlayingTabId = -1;
@@ -221,7 +173,6 @@ function isExtCommand(command) {
       //case "open":
     case "selectFrame":
     case "selectWindow":
-    case "setWindowSize":
     case "close":
       return true;
     default:
