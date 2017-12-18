@@ -21,9 +21,27 @@ goog.require("goog.dom");
 
 export let bot = {};
 goog.require("bot");
+goog.require("bot.action");
+goog.require("bot.events");
+goog.require("bot.locators");
+goog.require("bot.inject");
+goog.require("bot.inject.cache");
+goog.require("bot.userAgent");
 goog.require("bot.Keyboard");
+bot.getWindow = function() {
+  return bot.window_;
+};
+bot.setWindow = function(win) {
+  bot.window_ = win;
+};
+bot.getDocument = function() {
+  return bot.window_.document;
+};
 
 export let core = {};
 goog.require("core.firefox");
+goog.require("core.events");
+goog.require("core.text");
+goog.require("core.locators");
 
 export default goog;
