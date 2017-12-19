@@ -24,42 +24,45 @@ describe("suite emitter", () => {
       name: "example suite",
       tests: []
     };
-    expect(SuiteEmitter.emit(suite, [])).resolves.toBe(`describe("${suite.name}", () => {});`);
+    expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`describe("${suite.name}", () => {});`);
   });
   it("should emit a suite with a single empty test", () => {
-    const tests = [{
-      id: "1",
-      name: "example test case",
-      commands: []
-    }];
+    const tests = {
+      "1": {
+        id: "1",
+        name: "example test case",
+        commands: []
+      }
+    };
     const suite = {
       id: "1",
       name: "example suite",
       tests: ["1"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests[0].name}", () => {});});`);
+    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {});});`);
   });
   it("should emit a suite with multiple empty tests", () => {
-    const tests = [{
-      id: "1",
-      name: "example test case",
-      commands: []
-    },
-    {
-      id: "2",
-      name: "second test case",
-      commands: []
-    },
-    {
-      id: "3",
-      name: "third test case",
-      commands: []
-    }];
+    const tests = {
+      "1": {
+        id: "1",
+        name: "example test case",
+        commands: []
+      },
+      "2": {
+        id: "2",
+        name: "second test case",
+        commands: []
+      },
+      "3": {
+        id: "3",
+        name: "third test case",
+        commands: []
+      }};
     const suite = {
       id: "1",
       name: "example suite",
       tests: ["1", "2", "3"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests[0].name}", () => {});it("${tests[1].name}", () => {});it("${tests[2].name}", () => {});});`);
+    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {});it("${tests["2"].name}", () => {});it("${tests["3"].name}", () => {});});`);
   });
 });

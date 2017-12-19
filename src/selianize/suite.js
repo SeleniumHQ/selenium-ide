@@ -22,7 +22,7 @@ export function emit(suite, tests) {
     let result = `describe("${suite.name}", () => {`;
 
     result += (await Promise.all(suite.tests.map(testId => (
-      tests.find(t => t.id === testId)
+      tests[testId]
     )).map(TestCaseEmitter.emit))).join("");
 
     result += "});";

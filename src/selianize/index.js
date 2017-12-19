@@ -23,7 +23,11 @@ export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = template.bootstrap();
 
-    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, project.tests)))).join("");
+    const testsHashmap = project.tests.reduce((map, test) => {
+      map[test.id] = test;
+      return map;
+    }, {});
+    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap)))).join("");
 
     res(beautify(result, { indent_size: 2 }));
   });
