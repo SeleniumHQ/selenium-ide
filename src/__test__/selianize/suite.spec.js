@@ -26,4 +26,38 @@ describe("suite emitter", () => {
     };
     expect(SuiteEmitter.emit(suite)).resolves.toBe(`describe("${suite.name}", () => {});`);
   });
+  it("should emit a suite with a single empty test", () => {
+    const suite = {
+      id: "1",
+      name: "example suite",
+      tests: [{
+        id: "1",
+        name: "example test case",
+        commands: []
+      }]
+    };
+    expect(SuiteEmitter.emit(suite)).resolves.toBe(`describe("${suite.name}", () => {it("${suite.tests[0].name}", () => {});});`);
+  });
+  it("should emit a suite with multiple empty tests", () => {
+    const suite = {
+      id: "1",
+      name: "example suite",
+      tests: [{
+        id: "1",
+        name: "example test case",
+        commands: []
+      },
+      {
+        id: "2",
+        name: "second test case",
+        commands: []
+      },
+      {
+        id: "3",
+        name: "third test case",
+        commands: []
+      }]
+    };
+    expect(SuiteEmitter.emit(suite)).resolves.toBe(`describe("${suite.name}", () => {it("${suite.tests[0].name}", () => {});it("${suite.tests[1].name}", () => {});it("${suite.tests[2].name}", () => {});});`);
+  });
 });

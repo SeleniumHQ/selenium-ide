@@ -15,11 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function emit(suite) {
-  return new Promise((res, rej) => { // eslint-disable-line no-unused-vars
-    let result = `describe("${suite.name}", () => {`;
-    result += "});";
+import TestCaseEmitter from "./testcase";
 
+export function emit(suite) {
+  return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
+    let result = `describe("${suite.name}", () => {`;
+
+    result += (await Promise.all(suite.tests.map(TestCaseEmitter.emit))).join("");
+
+    result += "});";
     res(result);
   });
 }
