@@ -104,7 +104,6 @@ reaction(
   () => PlaybackState.isPlaying,
   isPlaying => {
     if (isPlaying) {
-      console.log("hi");
       play(UiState.baseUrl);
     }
   }
