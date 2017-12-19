@@ -42,4 +42,36 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.get(BASE_URL + "${command.target}");`);
   });
+  it("should emit `click` command", () => {
+    const command = {
+      command: "click",
+      target: "link=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).perform();});`);
+  });
+  it("should emit `click at` command", () => {
+    const command = {
+      command: "clickAt",
+      target: "link=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).perform();});`);
+  });
+  it("should emit `type` command", () => {
+    const command = {
+      command: "type",
+      target: "id=input",
+      value: "example input"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
+  });
+  it("should emit `send keys` command", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=input",
+      value: "example input"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
+  });
 });

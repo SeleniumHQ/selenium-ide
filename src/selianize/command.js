@@ -16,7 +16,11 @@
 // under the License.
 
 const emitters = {
-  open: emitOpen
+  open: emitOpen,
+  click: emitClick,
+  clickAt: emitClick,
+  type: emitType,
+  sendKeys: emitType
 };
 
 export function emit(command) {
@@ -36,4 +40,12 @@ export default {
 
 function emitOpen(target) {
   return Promise.resolve(`driver.get(BASE_URL + "${target}");`);
+}
+
+function emitClick(target) {
+  return Promise.resolve(`driver.findElement(${target}).then(element => {driver.actions().click(element).perform();});`);
+}
+
+function emitType(target, value) {
+  return Promise.resolve(`driver.findElement(${target}).then(element => {driver.actions().click(element).sendKeys(${value}).perform();});`);
 }
