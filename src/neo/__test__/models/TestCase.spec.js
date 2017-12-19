@@ -15,8 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-/* eslint-disable */
-import { useStrict, observe } from "mobx";
+import { useStrict } from "mobx";
 import TestCase from "../../models/TestCase";
 import Command from "../../models/Command";
 

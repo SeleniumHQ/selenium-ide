@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-/* eslint-disable */
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";

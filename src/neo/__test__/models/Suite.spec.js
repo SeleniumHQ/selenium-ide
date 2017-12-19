@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-/* eslint-disable */
 import { useStrict } from "mobx";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import Suite from "../../models/Suite";

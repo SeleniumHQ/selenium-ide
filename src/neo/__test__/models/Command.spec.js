@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-/* eslint-disable */
 import Command, { Commands, CommandsValues } from "../../models/Command";
 
 describe("Command", () => {
