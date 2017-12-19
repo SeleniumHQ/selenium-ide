@@ -34,4 +34,12 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).rejects.toThrow(`Unknown command ${command.command}`);
   });
+  it("should emit `open` command", () => {
+    const command = {
+      command: "open",
+      target: "/",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.get(BASE_URL + "${command.target}");`);
+  });
 });

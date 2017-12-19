@@ -15,12 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const emitters = {};
+const emitters = {
+  open: emitOpen
+};
 
 export function emit(command) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
-      let result = await emitters[command.command]({...command});
+      let result = await emitters[command.command](command.target, command.value);
       res(result);
     } else {
       rej(command.command ? `Unknown command ${command.command}` : "Command can not be empty");
@@ -31,3 +33,7 @@ export function emit(command) {
 export default {
   emit
 };
+
+function emitOpen(target) {
+  return Promise.resolve(`driver.get(BASE_URL + "${target}");`);
+}
