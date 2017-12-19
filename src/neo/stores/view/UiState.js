@@ -40,7 +40,8 @@ class UiState {
   @observable navigationHover = false;
   @observable navigationDragging = false;
   @observable pristineCommand = new Command();
-  @observable lastFocus = {};
+  @observable lastFocus = {};  
+  @observable isContextOpen = [];
 
   constructor() {
     this.suiteStates = {};
@@ -97,6 +98,9 @@ class UiState {
       } else {
         this.selectCommand(undefined);
       }
+      for(var i = 0; i <= test.commands.length; i++){
+        this.isContextOpen[i]=false;
+      }
     }
     this.selectedTest = { test, suite };
   }
@@ -127,10 +131,10 @@ class UiState {
   }
 
   @action.bound selectCommand(command) {
-    this.selectedCommand = command;
+    this.selectedCommand = command;         
   }
 
-  @action.bound selectCommandByIndex(index) {
+  @action.bound selectCommandByIndex(index) {    
     const { test } = this.selectedTest; 
     if (index >= 0 && index < test.commands.length) {
       this.selectCommand(test.commands[index]);
@@ -266,6 +270,10 @@ class UiState {
       state.modified = false;
     });
     this._project.modified = false;
+  }
+
+  @action.bound onContextMenu(index) {  
+      this.isContextOpen[index] = !this.isContextOpen[index];      
   }
 }
 
