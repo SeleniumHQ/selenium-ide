@@ -17,11 +17,13 @@
 
 import TestCaseEmitter from "./testcase";
 
-export function emit(suite) {
+export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = `describe("${suite.name}", () => {`;
 
-    result += (await Promise.all(suite.tests.map(TestCaseEmitter.emit))).join("");
+    result += (await Promise.all(suite.tests.map(testId => (
+      tests.find(t => t.id === testId)
+    )).map(TestCaseEmitter.emit))).join("");
 
     result += "});";
     res(result);

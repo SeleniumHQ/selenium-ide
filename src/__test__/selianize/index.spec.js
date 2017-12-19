@@ -22,6 +22,6 @@ import Selianize from "../../selianize";
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
-    Selianize(project).resolves.anything();
+    expect(Selianize(project)).resolves.toBeDefined();
   });
 });

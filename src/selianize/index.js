@@ -15,5 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { js_beautify as beautify } from "js-beautify";
+import template from "./template";
+import SuiteEmitter from "./suite";
+
 export default function Selianize(project) {
+  return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
+    let result = template.bootstrap();
+
+    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, project.tests)))).join("");
+
+    res(beautify(result, { indent_size: 2 }));
+  });
 }
