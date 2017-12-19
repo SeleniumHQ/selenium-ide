@@ -81,6 +81,7 @@ class PlaybackState {
     this.currentRunningTest = UiState.selectedTest.test;
     this.runningQueue = [command];
     this.isPlaying = true;
+    UiState.isContextOpen={};        
   }
 
   @action.bound playNext() {

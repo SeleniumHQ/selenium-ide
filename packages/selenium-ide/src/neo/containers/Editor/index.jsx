@@ -85,6 +85,7 @@ import "./style.css";
           removeCommand={this.removeCommand}
           clearAllCommands={this.props.test ? this.props.test.clearAllCommands : null}
           swapCommands={this.props.test ? this.props.test.swapCommands : null}
+          onContextMenu={UiState.onContextMenu}    
         />
         <CommandForm
           command={UiState.selectedCommand}
