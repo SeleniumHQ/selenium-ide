@@ -15,9 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import CommandEmitter from "./command";
+
 export function emit(test) {
-  return new Promise((res, rej) => { // eslint-disable-line no-unused-vars
+  return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = `it("${test.name}", () => {`;
+
+    result += (await Promise.all(test.commands.map(CommandEmitter.emit))).join("");
+
     result += "});";
 
     res(result);

@@ -26,4 +26,40 @@ describe("test case code emitter", () => {
     };
     expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {});`);
   });
+  it("should emit a test with a single command", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: [{
+        command: "open",
+        target: "/",
+        value: ""
+      }]
+    };
+    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");});`);
+  });
+  it("should emit a test with multiple commands", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: [
+        {
+          command: "open",
+          target: "/",
+          value: ""
+        },
+        {
+          command: "open",
+          target: "/test",
+          value: ""
+        },
+        {
+          command: "open",
+          target: "/example",
+          value: ""
+        }
+      ]
+    };
+    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");});`);
+  });
 });
