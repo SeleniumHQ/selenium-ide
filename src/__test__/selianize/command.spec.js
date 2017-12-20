@@ -74,6 +74,14 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
   });
+  it("should emit `drag and drop to object` command", () => {
+    const command = {
+      command: "dragAndDropToObject",
+      target: "link=dragged",
+      value: "link=dropzone"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"dragged\")).then(dragged => {driver.findElement(By.linkText(\"dropzone\")).then(dropzone => {driver.actions().dragAndDrop(dragged, dropzone).perform();});});");
+  });
   it("should emit `type` command", () => {
     const command = {
       command: "type",

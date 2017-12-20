@@ -23,6 +23,7 @@ const emitters = {
   clickAt: emitClick,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
+  dragAndDropToObject: emitDragAndDrop,
   type: emitType,
   sendKeys: emitType,
   echo: emitEcho
@@ -53,6 +54,10 @@ async function emitClick(target) {
 
 async function emitDoubleClick(target) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().doubleClick(element).perform();});`);
+}
+
+async function emitDragAndDrop(dragged, dropzone) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(dragged)}).then(dragged => {driver.findElement(${await LocationEmitter.emit(dropzone)}).then(dropzone => {driver.actions().dragAndDrop(dragged, dropzone).perform();});});`);
 }
 
 async function emitType(target, value) {
