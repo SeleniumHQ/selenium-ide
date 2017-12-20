@@ -23,7 +23,7 @@ import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import ReactCursorPosition from 'react-cursor-position';
+import ReactCursorPosition from "react-cursor-position";
 
 import "./style.css";
 
