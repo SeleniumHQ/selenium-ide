@@ -5,12 +5,6 @@ import { findDOMNode } from "react-dom";
 import ReactModal from "react-modal";
 import classNames from "classnames";
 import { Transition } from "react-transition-group";
-import {observer} from "mobx-react";
-
-export const MenuDirections = {
-  Left: "left",
-  Bottom: "bottom"
-};
 
 const duration = 100;
 
@@ -42,9 +36,7 @@ class Menu extends React.Component {
   static propTypes = {
     isOpen: PropTypes.bool,
     children: PropTypes.node,
-    node: PropTypes.any,
     width: PropTypes.number,
-    direction: PropTypes.string,
     padding: PropTypes.number,
     onClick: PropTypes.func,
     requestClose: PropTypes.func.isRequired
@@ -52,8 +44,7 @@ class Menu extends React.Component {
   static defaultProps = {
     isOpen: false,
     width: 200,
-    padding: 5,
-    direction: MenuDirections.Left
+    padding: 5
   };
   handleClosing(e) {
     this.props.requestClose(e);
@@ -82,6 +73,7 @@ class Menu extends React.Component {
         {(status) => (
           <ReactModal
             className={classNames("menu", "content")}
+            key={"menuModal"}
             isOpen={this.props.isOpen}
             ariaHideApp={false}
             shouldCloseOnOverlayClick={true}
@@ -97,7 +89,7 @@ class Menu extends React.Component {
               }, directionStyles, transitionStyles[status])
             }}
           >
-            <div onClick={this.props.onClick}>
+            <div onClick={this.props.onClick} id={"menuModal"}>
               {this.props.children}
             </div>
           </ReactModal>
@@ -119,19 +111,17 @@ export default class ContextMenuContainer extends React.Component {
   
   close(e) {    
     e.preventDefault();
-    e.stopPropagation();    
+    e.stopPropagation();
     this.props.onContextMenu();
   }
   render() {     
     return ([             
         <Menu
           key="menu"
-          isOpen={this.props.isOpen}          
-          node={this.node}
+          isOpen={this.props.isOpen}
           onClick={this.props.closeOnClick ? this.close : null}
           requestClose={this.close}
           width={this.props.width}
-          direction={this.props.direction}
           padding={this.props.padding}
           position={this.props.position}
           rect={this.props.rect}>          

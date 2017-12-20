@@ -4,9 +4,9 @@ import ContextMenuContainer from "../ContextMenuContainer";
 import "./style.css";
 
 export default class ContextMenu extends React.Component {  
-  render() {        
+  render() {
     return (
-      <ContextMenuContainer width={this.props.width} padding={this.props.padding} index={this.props.index} onContextMenu={this.props.onContextMenu} isOpen={this.props.isOpen} 
+      <ContextMenuContainer width={this.props.width} padding={this.props.padding} onContextMenu={this.props.onContextMenu} isOpen={this.props.isOpen} 
         position={this.props.position} rect={this.props.rect}>
         <ul className="buttons">
           {this.props.children}
