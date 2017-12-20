@@ -39,11 +39,11 @@ export default class TestTable extends React.Component {
     clearAllCommands: PropTypes.func
   };
   componentDidMount() {
-    document.addEventListener('contextmenu', this.handleContextMenu);       
+    document.addEventListener('contextmenu', this.handleContextMenu);
   };
   componentWillUnmount() {
     document.removeEventListener('contextmenu', this.handleContextMenu);
-  };  
+  };
   handleContextMenu(e){         
     e.preventDefault();           
   } 
@@ -61,61 +61,67 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-                  
-      <div key="body" className="test-table test-table-body">        
-        <table>
-          <tbody>
-            { this.props.commands ? this.props.commands.map((command, index) => {                            
-              return <ReactCursorPosition key={ "cursor"+command.id }>
-                <TestRow
-                  key={command.id}
-                  id={command.id}
-                  ref={command.id}
-                  className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}                  
-                  selected={this.props.selectedCommand === command.id}
-                  index={index}
-                  command={command.command}
-                  target={command.target}
-                  value={command.value}
-                  dragInProgress={UiState.dragInProgress}
-                  onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
-                  startPlayingHere={() => { PlaybackState.startPlaying(command); }}
-                  executeCommand={() => { PlaybackState.playCommand(command); }}
-                  moveSelectionUp={() => { UiState.selectCommandByIndex(index - 1); }}
-                  moveSelectionDown={() => { UiState.selectCommandByIndex(index + 1); }}
-                  addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
-                  insertCommand={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command)); } : null}
-                  remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
-                  swapCommands={this.props.swapCommands}
-                  setDrag={UiState.setDrag}
-                  clipboard={UiState.clipboard}
-                  copyToClipboard={() => { UiState.copyToClipboard(command); }}
-                  clearAllCommands={this.props.clearAllCommands}
-                  setSectionFocus={UiState.setSectionFocus}
-                  onContextMenu={() => { this.props.onContextMenu(index); }}
-                />  
-              </ReactCursorPosition>            
-            }).concat(
-              <ReactCursorPosition key={ "cursor" + UiState.pristineCommand.id }>
-                <TestRow
-                  id={UiState.pristineCommand.id}
-                  key={UiState.selectedTest.test.id}
-                  ref={UiState.selectedTest.test.id}
-                  selected={this.props.selectedCommand === UiState.pristineCommand.id}
-                  command={UiState.pristineCommand.command}
-                  target={UiState.pristineCommand.target}
-                  value={UiState.pristineCommand.value}
-                  onClick={() => (this.props.selectCommand(UiState.pristineCommand))}
-                  addCommand={this.props.addCommand ? (command) => { this.props.addCommand(this.props.commands.length, command); } : null}
-                  moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
-                  clipboard={UiState.clipboard}
-                  setSectionFocus={UiState.setSectionFocus}
-                />
-              </ReactCursorPosition>
-              ) : null }              
-          </tbody>
-        </table>
-      </div>                
+      <ReactCursorPosition key="body" className="test-table test-table-body">                  
+        <TestRowContainer {...this.props}/>
+      </ReactCursorPosition>
     ]);
+  }
+}
+
+@observer
+class TestRowContainer extends React.Component {
+  render() {       
+    return([
+      <table key="table">
+        <tbody key="tbody">
+          { this.props.commands ? this.props.commands.map((command, index) => (                                       
+              <TestRow
+                key={command.id}
+                id={command.id}
+                ref={command.id}
+                className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}                  
+                selected={this.props.selectedCommand === command.id}
+                index={index}
+                command={command.command}
+                target={command.target}
+                value={command.value}
+                dragInProgress={UiState.dragInProgress}
+                onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
+                startPlayingHere={() => { PlaybackState.startPlaying(command); }}
+                executeCommand={() => { PlaybackState.playCommand(command); }}
+                moveSelectionUp={() => { UiState.selectCommandByIndex(index - 1); }}
+                moveSelectionDown={() => { UiState.selectCommandByIndex(index + 1); }}
+                addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
+                insertCommand={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command)); } : null}
+                remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
+                swapCommands={this.props.swapCommands}
+                setDrag={UiState.setDrag}
+                clipboard={UiState.clipboard}
+                copyToClipboard={() => { UiState.copyToClipboard(command); }}
+                clearAllCommands={this.props.clearAllCommands}
+                setSectionFocus={UiState.setSectionFocus}
+                onContextMenu={() => { this.props.onContextMenu(index); }}
+                position={this.props.position}                
+              />                
+          )).concat(              
+              <TestRow
+                id={UiState.pristineCommand.id}
+                key={UiState.selectedTest.test.id}
+                ref={UiState.selectedTest.test.id}
+                selected={this.props.selectedCommand === UiState.pristineCommand.id}
+                command={UiState.pristineCommand.command}
+                target={UiState.pristineCommand.target}
+                value={UiState.pristineCommand.value}
+                onClick={() => (this.props.selectCommand(UiState.pristineCommand))}
+                addCommand={this.props.addCommand ? (command) => { this.props.addCommand(this.props.commands.length, command); } : null}
+                moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
+                clipboard={UiState.clipboard}
+                setSectionFocus={UiState.setSectionFocus}
+                position={this.props.position}                
+              />              
+            ) : null }              
+        </tbody>
+      </table>    
+    ])    
   }
 }
