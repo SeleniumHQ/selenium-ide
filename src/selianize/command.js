@@ -26,7 +26,9 @@ const emitters = {
   dragAndDropToObject: emitDragAndDrop,
   type: emitType,
   sendKeys: emitType,
-  echo: emitEcho
+  echo: emitEcho,
+  executeScript: emitExecuteScript,
+  pause: emitPause
 };
 
 export function emit(command) {
@@ -66,4 +68,12 @@ async function emitType(target, value) {
 
 async function emitEcho(message) {
   return Promise.resolve(`console.log("${message}");`);
+}
+
+async function emitExecuteScript(script) {
+  return Promise.resolve(`driver.executeScript(\`${script}\`);`);
+}
+
+async function emitPause(time) {
+  return Promise.resolve(`driver.sleep(${time});`);
 }

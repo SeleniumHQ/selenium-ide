@@ -106,4 +106,20 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`console.log("${command.target}");`);
   });
+  it("should emit `execute script` command", () => {
+    const command = {
+      command: "executeScript",
+      target: "alert('test');\nalert('Im annoying');",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.executeScript(\`${command.target}\`);`);
+  });
+  it("should emit `pause` command", () => {
+    const command = {
+      command: "pause",
+      target: "300",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.sleep(${command.target});`);
+  });
 });
