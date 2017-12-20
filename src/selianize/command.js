@@ -76,7 +76,7 @@ async function emitRunScript(script) {
   return Promise.resolve(`driver.executeScript(\`${script}\`);`);
 }
 
-async function emitPause(time) {
+async function emitPause(_, time) {
   return Promise.resolve(`driver.sleep(${time});`);
 }
 
