@@ -30,7 +30,9 @@ const emitters = {
   runScript: emitRunScript,
   pause: emitPause,
   verifyText: emitVerifyText,
-  verifyTitle: emitVerifyTitle
+  verifyTitle: emitVerifyTitle,
+  assertText: emitVerifyText,
+  assertTitle: emitVerifyTitle
 };
 
 export function emit(command) {
