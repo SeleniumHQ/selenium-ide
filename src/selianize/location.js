@@ -15,23 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import LocationEmitter from "./location";
-
 const emitters = {
-  open: emitOpen,
-  click: emitClick,
-  clickAt: emitClick,
-  type: emitType,
-  sendKeys: emitType
+  id: emitId,
+  link: emitLink,
+  css: emitCss,
+  xpath: emitXpath
 };
 
-export function emit(command) {
+export function emit(location) {
   return new Promise(async (res, rej) => {
-    if (emitters[command.command]) {
-      let result = await emitters[command.command](command.target, command.value);
+    const [type, selector] = location.split("=");
+    if (emitters[type]) {
+      let result = await emitters[type](selector);
       res(result);
     } else {
-      rej(command.command ? `Unknown command ${command.command}` : "Command can not be empty");
+      rej(`Unknown locator ${type}`);
     }
   });
 }
@@ -40,14 +38,18 @@ export default {
   emit
 };
 
-function emitOpen(target) {
-  return Promise.resolve(`driver.get(BASE_URL + "${target}");`);
+function emitId(selector) {
+  return Promise.resolve(`By.id("${selector}")`);
 }
 
-async function emitClick(target) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).perform();});`);
+function emitLink(selector) {
+  return Promise.resolve(`By.linkText("${selector}")`);
 }
 
-async function emitType(target, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys(${value}).perform();});`);
+function emitCss(selector) {
+  return Promise.resolve(`By.css("${selector}")`);
+}
+
+function emitXpath(selector) {
+  return Promise.resolve(`By.xpath("${selector}")`);
 }

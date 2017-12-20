@@ -48,7 +48,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).perform();});`);
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
   });
   it("should emit `click at` command", () => {
     const command = {
@@ -56,7 +56,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).perform();});`);
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
   });
   it("should emit `type` command", () => {
     const command = {
@@ -64,7 +64,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
   });
   it("should emit `send keys` command", () => {
     const command = {
@@ -72,6 +72,6 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(${command.target}).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
   });
 });
