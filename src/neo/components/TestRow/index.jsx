@@ -221,8 +221,8 @@ export default class TestRow extends React.Component {
             <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
               {menuList}
             </ListMenu>: null }
-            <ContextMenu width={300} padding={-5} index={this.props.index} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
-            isOpen ={UiState.isContextOpen[this.props.index]} position={this.props.position}>
+            <ContextMenu width={300} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
+            isOpen ={UiState.isContextOpenEditor[this.props.index]} position={this.props.position}>
               {menuList}
             </ ContextMenu>
         </div>
