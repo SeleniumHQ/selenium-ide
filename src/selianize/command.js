@@ -49,5 +49,5 @@ async function emitClick(target) {
 }
 
 async function emitType(target, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys(${value}).perform();});`);
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys("${value}").perform();});`);
 }

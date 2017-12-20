@@ -64,7 +64,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys("${command.value}").perform();});`);
   });
   it("should emit `send keys` command", () => {
     const command = {
@@ -72,6 +72,6 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(${command.value}).perform();});`);
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys("${command.value}").perform();});`);
   });
 });
