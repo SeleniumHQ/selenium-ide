@@ -23,6 +23,7 @@ export function emit(test) {
 
     result += (await Promise.all(test.commands.map(CommandEmitter.emit))).join("");
 
+    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();});";
     result += "});";
 
     res(result);

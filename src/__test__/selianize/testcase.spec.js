@@ -24,7 +24,7 @@ describe("test case code emitter", () => {
       name: "example test case",
       commands: []
     };
-    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {});`);
+    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
   });
   it("should emit a test with a single command", () => {
     const test = {
@@ -36,7 +36,7 @@ describe("test case code emitter", () => {
         value: ""
       }]
     };
-    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");});`);
+    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
   });
   it("should emit a test with multiple commands", () => {
     const test = {
@@ -60,6 +60,6 @@ describe("test case code emitter", () => {
         }
       ]
     };
-    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");});`);
+    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
   });
 });

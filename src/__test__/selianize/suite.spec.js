@@ -39,7 +39,7 @@ describe("suite emitter", () => {
       name: "example suite",
       tests: ["1"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {});});`);
+    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
   it("should emit a suite with multiple empty tests", () => {
     const tests = {
@@ -63,6 +63,6 @@ describe("suite emitter", () => {
       name: "example suite",
       tests: ["1", "2", "3"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {});it("${tests["2"].name}", () => {});it("${tests["3"].name}", () => {});});`);
+    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
 });
