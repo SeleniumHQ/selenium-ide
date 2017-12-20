@@ -106,9 +106,9 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`console.log("${command.target}");`);
   });
-  it("should emit `execute script` command", () => {
+  it("should emit `run script` command", () => {
     const command = {
-      command: "executeScript",
+      command: "runScript",
       target: "alert('test');\nalert('Im annoying');",
       value: ""
     };

@@ -27,7 +27,7 @@ const emitters = {
   type: emitType,
   sendKeys: emitType,
   echo: emitEcho,
-  executeScript: emitExecuteScript,
+  runScript: emitRunScript,
   pause: emitPause
 };
 
@@ -70,7 +70,7 @@ async function emitEcho(message) {
   return Promise.resolve(`console.log("${message}");`);
 }
 
-async function emitExecuteScript(script) {
+async function emitRunScript(script) {
   return Promise.resolve(`driver.executeScript(\`${script}\`);`);
 }
 
