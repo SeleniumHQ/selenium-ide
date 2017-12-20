@@ -21,6 +21,7 @@ import SuiteState from "./SuiteState";
 import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
 import Command from "../../models/Command";
+import { findDOMNode } from "react-dom";
 
 class UiState {
   @observable selectedTest = {};
@@ -44,7 +45,8 @@ class UiState {
   @observable options = {
     recordNotifications: true
   }; 
-  @observable isContextOpen = [];
+  @observable isContextOpenEditor = [];
+  @observable isContextOpenNavigation= [];
 
   constructor() {
     this.suiteStates = {};
@@ -70,6 +72,9 @@ class UiState {
   }
 
   @computed get filteredTests() {
+    for(var i = 0; i <= this._project.tests.length; i++){
+      this.isContextOpenNavigation[i]=false;
+    }
     return this._project.tests.filter(this.filterFunction);
   }
 
@@ -105,7 +110,7 @@ class UiState {
         this.selectCommand(undefined);
       }
       for(var i = 0; i <= test.commands.length; i++){
-        this.isContextOpen[i]=false;
+        this.isContextOpenEditor[i]=false;
       }
     }
     this.selectedTest = { test, suite };
@@ -273,7 +278,7 @@ class UiState {
     this.dragInProgress = false;
     this.clipboard = null;
     this.isRecording = false;
-    this.suiteStates = {};
+    this.suiteStates = {}
     this.clearTestStates();
     this.selectTest(this._project.tests[0]);
   }
@@ -290,8 +295,19 @@ class UiState {
     this._project.modified = false;
   }
 
-  @action.bound onContextMenu(index) {  
-      this.isContextOpen[index] = !this.isContextOpen[index];      
+  @action.bound onContextMenuEditor(index) {
+      if((document.getElementsByClassName('ReactModal__Body--open').length) > 0){
+        this.isContextOpenEditor[index] = false;
+      }else{
+        this.isContextOpenEditor[index] = true;
+      }
+  }
+  @action.bound onContextMenuNavigation(index) {
+    if((document.getElementsByClassName('ReactModal__Body--open').length) > 0){
+      this.isContextOpenNavigation[index] = false;
+    }else{
+      this.isContextOpenNavigation[index] = true;
+    }
   }
 }
 

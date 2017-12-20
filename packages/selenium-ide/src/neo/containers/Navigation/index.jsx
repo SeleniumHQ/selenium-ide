@@ -77,7 +77,7 @@ import "./style.css";
         <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
         <Provider renameTest={ModalState.renameTest}>
           { this.state.showTests
-            ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
+            ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} onContextMenu={UiState.onContextMenuNavigation} />
             : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={ModalState.deleteSuite} moveTest={this.props.moveTest} /> }
         </Provider>
         <Runs
