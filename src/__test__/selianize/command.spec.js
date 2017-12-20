@@ -122,4 +122,20 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.sleep(${command.target});`);
   });
+  it("should emit `verify title` command", () => {
+    const command = {
+      command: "verifyTitle",
+      target: "example title",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe("${command.target}");});`);
+  });
+  it("should emit `verify text` command", () => {
+    const command = {
+      command: "verifyText",
+      target: "id=test",
+      value: "some text that should be here"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe("${command.value}")});});`);
+  });
 });

@@ -28,7 +28,9 @@ const emitters = {
   sendKeys: emitType,
   echo: emitEcho,
   runScript: emitRunScript,
-  pause: emitPause
+  pause: emitPause,
+  verifyText: emitVerifyText,
+  verifyTitle: emitVerifyTitle
 };
 
 export function emit(command) {
@@ -76,4 +78,11 @@ async function emitRunScript(script) {
 
 async function emitPause(time) {
   return Promise.resolve(`driver.sleep(${time});`);
+}
+
+async function emitVerifyText(locator, text) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe("${text}")});});`);
+}
+async function emitVerifyTitle(title) {
+  return Promise.resolve(`driver.getTitle().then(title => {expect(title).toBe("${title}");});`);
 }
