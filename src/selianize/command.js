@@ -70,11 +70,11 @@ async function emitDragAndDrop(dragged, dropzone) {
 }
 
 async function emitType(target, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys("${value}").perform();});`);
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys(\`${value}\`).perform();});`);
 }
 
 async function emitEcho(message) {
-  return Promise.resolve(`console.log("${message}");`);
+  return Promise.resolve(`console.log(\`${message}\`);`);
 }
 
 async function emitRunScript(script) {
@@ -86,11 +86,11 @@ async function emitPause(_, time) {
 }
 
 async function emitVerifyText(locator, text) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe("${text}")});});`);
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe(\`${text}\`)});});`);
 }
 
 async function emitVerifyTitle(title) {
-  return Promise.resolve(`driver.getTitle().then(title => {expect(title).toBe("${title}");});`);
+  return Promise.resolve(`driver.getTitle().then(title => {expect(title).toBe(\`${title}\`);});`);
 }
 
 async function emitStore(value, varName) {
