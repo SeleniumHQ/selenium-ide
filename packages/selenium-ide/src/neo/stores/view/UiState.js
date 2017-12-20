@@ -66,9 +66,6 @@ class UiState {
   }
 
   @computed get filteredTests() {
-    for(var i = 0; i <= this._project.tests.length; i++){
-      this.isContextOpenNavigation[i]=false;
-    }
     return this._project.tests.filter(this.filterFunction);
   }
 
@@ -105,6 +102,9 @@ class UiState {
       }
       for(var i = 0; i <= test.commands.length; i++){
         this.isContextOpenEditor[i]=false;
+      }
+      for(var i = 0; i <= this._project.tests.length; i++){
+        this.isContextOpenNavigation[i]=false;
       }
     }
     this.selectedTest = { test, suite };
@@ -261,7 +261,7 @@ class UiState {
     this.dragInProgress = false;
     this.clipboard = null;
     this.isRecording = false;
-    this.suiteStates = {}
+    this.suiteStates = {};
     this.clearTestStates();
   }
 
@@ -278,12 +278,13 @@ class UiState {
   }
 
   @action.bound onContextMenuEditor(index) {
-      if((document.getElementsByClassName('ReactModal__Body--open').length) > 0){
-        this.isContextOpenEditor[index] = false;
-      }else{
-        this.isContextOpenEditor[index] = true;
-      }
+    if((document.getElementsByClassName('ReactModal__Body--open').length) > 0 ){
+      this.isContextOpenEditor[index] = false;
+    }else{
+      this.isContextOpenEditor[index] = true;
+    }
   }
+
   @action.bound onContextMenuNavigation(index) {
     if((document.getElementsByClassName('ReactModal__Body--open').length) > 0){
       this.isContextOpenNavigation[index] = false;
