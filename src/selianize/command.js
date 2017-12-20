@@ -32,7 +32,10 @@ const emitters = {
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
   assertText: emitVerifyText,
-  assertTitle: emitVerifyTitle
+  assertTitle: emitVerifyTitle,
+  store: emitStore,
+  storeText: emitStoreText,
+  storeTitle: emitStoreTitle
 };
 
 export function emit(command) {
@@ -85,6 +88,19 @@ async function emitPause(_, time) {
 async function emitVerifyText(locator, text) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe("${text}")});});`);
 }
+
 async function emitVerifyTitle(title) {
   return Promise.resolve(`driver.getTitle().then(title => {expect(title).toBe("${title}");});`);
+}
+
+async function emitStore(value, varName) {
+  return Promise.resolve(`var ${varName} = "${value}";`);
+}
+
+async function emitStoreText(locator, varName) {
+  return Promise.resolve(`var ${varName};driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {${varName} = text;});});`);
+}
+
+async function emitStoreTitle(_, varName) {
+  return Promise.resolve(`var ${varName};driver.getTitle().then(title => {${varName} = title;});`);
 }

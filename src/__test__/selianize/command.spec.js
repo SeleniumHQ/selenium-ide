@@ -154,4 +154,28 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe("${command.value}")});});`);
   });
+  it("should emit `store` command", () => {
+    const command = {
+      command: "store",
+      target: "some value",
+      value: "myVar"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = "${command.target}";`);
+  });
+  it("should emit `store text` command", () => {
+    const command = {
+      command: "storeText",
+      target: "id=someElement",
+      value: "myVar"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.findElement(By.id("someElement")).then(element => {element.getText().then(text => {${command.value} = text;});});`);
+  });
+  it("should emit `store title` command", () => {
+    const command = {
+      command: "storeTitle",
+      target: "",
+      value: "myVar"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.getTitle().then(title => {${command.value} = title;});`);
+  });
 });
