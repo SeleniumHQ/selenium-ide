@@ -21,8 +21,11 @@ const emitters = {
   open: emitOpen,
   click: emitClick,
   clickAt: emitClick,
+  doubleClick: emitDoubleClick,
+  doubleClickAt: emitDoubleClick,
   type: emitType,
-  sendKeys: emitType
+  sendKeys: emitType,
+  echo: emitEcho
 };
 
 export function emit(command) {
@@ -48,6 +51,14 @@ async function emitClick(target) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).perform();});`);
 }
 
+async function emitDoubleClick(target) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().doubleClick(element).perform();});`);
+}
+
 async function emitType(target, value) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys("${value}").perform();});`);
+}
+
+async function emitEcho(message) {
+  return Promise.resolve(`console.log("${message}");`);
 }

@@ -58,6 +58,22 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
   });
+  it("should emit `double click` command", () => {
+    const command = {
+      command: "doubleClick",
+      target: "link=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
+  });
+  it("should emit `double click at` command", () => {
+    const command = {
+      command: "doubleClickAt",
+      target: "link=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
+  });
   it("should emit `type` command", () => {
     const command = {
       command: "type",
@@ -73,5 +89,13 @@ describe("command code emitter", () => {
       value: "example input"
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys("${command.value}").perform();});`);
+  });
+  it("should emit `echo` command", () => {
+    const command = {
+      command: "echo",
+      target: "test message",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`console.log("${command.target}");`);
   });
 });
