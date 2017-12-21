@@ -33,6 +33,11 @@ export default class LogStore {
     this.parseCommandStateChange = this.parseCommandStateChange.bind(this);
     this.logCommandState = this.logCommandState.bind(this);
     this.dispose = this.dispose.bind(this);
+
+    // TODO: think of an API for logging
+    window.addLog = (message) => {
+      this.addLog(new Log(message));
+    };
   }
 
   @action.bound addLog(log) {
@@ -67,7 +72,7 @@ export default class LogStore {
   }
 
   logCommandState(command, status) {
-    if (status) {
+    if (status && this.shouldLogCommand(command.command)) {
       const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
       let log;
       if (this.logs.length && this.logs[this.logs.length - 1].commandId === command.id) {
@@ -91,6 +96,10 @@ export default class LogStore {
       }
       this.addLog(log);
     }
+  }
+
+  shouldLogCommand(command) {
+    return command !== "echo";
   }
 
   dispose() {

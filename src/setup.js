@@ -26,4 +26,10 @@ function log(func, ...argv) {
 
 browser.runtime.sendMessage = log.bind(undefined, browser.runtime.sendMessage);
 
+window.LOG = {
+  debug: () => {},
+  error: () => {},
+  exception: () => {}
+};
+
 window.browser = browser;
