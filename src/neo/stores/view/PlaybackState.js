@@ -81,14 +81,6 @@ class PlaybackState {
     this.currentRunningTest = UiState.selectedTest.test;
     this.runningQueue = [command];
     this.isPlaying = true;
-    //reset to false
-    let i = 0;
-    for(i = 0; i <= UiState.isContextOpenEditor.length; i++){
-      this.isContextOpenEditor[i]=false;
-    }
-    for(i = 0; i <= UiState.isContextOpenNavigation.length; i++){
-      this.isContextOpenNavigation[i]=false;
-    }
   }
 
   @action.bound playNext() {
