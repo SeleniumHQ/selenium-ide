@@ -26,7 +26,7 @@ import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import MultilineEllipsis from "../MultilineEllipsis";
 import { observer } from "mobx-react";
 import UiState from "../../stores/view/UiState";
-import ReactDOM from "react-dom";
+import { findDOMNode } from "react-dom";
 import ContextMenu from "../ContextMenu";
 import "./style.css";
 
@@ -127,14 +127,16 @@ export default class TestRow extends React.Component {
     clearAllCommands: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    onContextMenu: PropTypes.func,
+    position: PropTypes.any
   };
   componentDidMount() {
     if (this.props.selected) {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });      
-      this.setState({rect: ReactDOM.findDOMNode(this).parentElement.getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()});
     }
   }
   componentDidUpdate(prevProps) {
@@ -143,7 +145,7 @@ export default class TestRow extends React.Component {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });      
-      this.setState({rect: ReactDOM.findDOMNode(this).parentElement.getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()});
     }
   }
   componentWillUnmount() {
@@ -183,19 +185,19 @@ export default class TestRow extends React.Component {
     }
   }  
   render() {    
-      const menuList =<div>            
-        <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
-        <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
-        <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
-        <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
-        <ListMenuSeparator />
-        <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
-        <ListMenuSeparator />
-        <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
-        <ListMenuSeparator />
-        <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
-        <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>           
-      </div>
+    const menuList =<div>            
+      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
+      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+      <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
+      <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>           
+    </div>;
 
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
@@ -219,12 +221,12 @@ export default class TestRow extends React.Component {
         <div>
           { this.props.swapCommands ? 
             <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
-              {menuList}
+             {menuList}
             </ListMenu>: null }
-            <ContextMenu width={300} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
+          <ContextMenu width={300} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
             isOpen ={UiState.isContextOpenEditor[this.props.index]} position={this.props.position}>
-              {menuList}
-            </ ContextMenu>            
+            {menuList}
+          </ ContextMenu>
         </div>
       </td>
     </tr>;

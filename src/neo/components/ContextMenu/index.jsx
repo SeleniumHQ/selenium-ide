@@ -4,6 +4,15 @@ import ContextMenuContainer from "../ContextMenuContainer";
 import "./style.css";
 
 export default class ContextMenu extends React.Component {  
+  static propTypes = {
+    width: PropTypes.number,
+    padding: PropTypes.number,
+    onContextMenu: PropTypes.func,
+    isOpen: PropTypes.bool,
+    position: PropTypes.any,
+    rect: PropTypes.any,
+    children: PropTypes.node
+  };
   render() {
     return (
       <ContextMenuContainer width={this.props.width} padding={this.props.padding} onContextMenu={this.props.onContextMenu} isOpen={this.props.isOpen} 

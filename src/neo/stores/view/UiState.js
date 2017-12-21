@@ -21,7 +21,6 @@ import SuiteState from "./SuiteState";
 import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
 import Command from "../../models/Command";
-import { findDOMNode } from "react-dom";
 
 class UiState {
   @observable selectedTest = {};
@@ -100,10 +99,11 @@ class UiState {
       } else {
         this.selectCommand(undefined);
       }
-      for(var i = 0; i <= test.commands.length; i++){
+      let i = 0;
+      for(i = 0; i <= test.commands.length; i++){
         this.isContextOpenEditor[i]=false;
       }
-      for(var i = 0; i <= this._project.tests.length; i++){
+      for(i = 0; i <= this._project.tests.length; i++){
         this.isContextOpenNavigation[i]=false;
       }
     }
@@ -278,7 +278,7 @@ class UiState {
   }
 
   @action.bound onContextMenuEditor(index) {
-    if((document.getElementsByClassName('ReactModal__Body--open').length) > 0 ){
+    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
       this.isContextOpenEditor[index] = false;
     }else{
       this.isContextOpenEditor[index] = true;
@@ -286,7 +286,7 @@ class UiState {
   }
 
   @action.bound onContextMenuNavigation(index) {
-    if((document.getElementsByClassName('ReactModal__Body--open').length) > 0){
+    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0){
       this.isContextOpenNavigation[index] = false;
     }else{
       this.isContextOpenNavigation[index] = true;
