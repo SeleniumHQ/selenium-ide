@@ -178,4 +178,12 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.getTitle().then(title => {${command.value} = title;});`);
   });
+  it("should emit `select` command", () => {
+    const command = {
+      command: "select",
+      target: "css=select",
+      value: "label=A label"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
+  });
 });

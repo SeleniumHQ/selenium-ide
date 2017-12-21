@@ -16,6 +16,7 @@
 // under the License.
 
 import LocationEmitter from "./location";
+import SelectionEmitter from "./selection";
 
 const emitters = {
   open: emitOpen,
@@ -35,7 +36,8 @@ const emitters = {
   assertTitle: emitVerifyTitle,
   store: emitStore,
   storeText: emitStoreText,
-  storeTitle: emitStoreTitle
+  storeTitle: emitStoreTitle,
+  select: emitSelect
 };
 
 export function emit(command) {
@@ -103,4 +105,8 @@ async function emitStoreText(locator, varName) {
 
 async function emitStoreTitle(_, varName) {
   return Promise.resolve(`var ${varName};driver.getTitle().then(title => {${varName} = title;});`);
+}
+
+async function emitSelect(selectElement, option) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(selectElement)}).then(element => {element.findElement(${await SelectionEmitter.emit(option)}).then(option => {option.click();});});`);
 }
