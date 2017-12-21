@@ -134,7 +134,8 @@ export default class TestRow extends React.Component {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });      
-      this.setState({rect: ReactDOM.findDOMNode(this).parentElement.getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
+
     }
   }
   componentDidUpdate(prevProps) {
@@ -143,7 +144,7 @@ export default class TestRow extends React.Component {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });      
-      this.setState({rect: ReactDOM.findDOMNode(this).parentElement.getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentWillUnmount() {

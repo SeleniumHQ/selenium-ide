@@ -76,7 +76,7 @@ export default class Test extends React.Component {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
-      this.setState({rect: ReactDOM.findDOMNode(this).getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentDidUpdate(prevProps) {
@@ -85,7 +85,7 @@ export default class Test extends React.Component {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
-      this.setState({rect: ReactDOM.findDOMNode(this).getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentWillUnmount() {
@@ -135,10 +135,10 @@ export default class Test extends React.Component {
           {menuList}
         </ListMenu> :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-        <ContextMenu width={130} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
-            isOpen ={UiState.isContextOpenNavigation[this.props.index]} position={this.props.position}>
-              {menuList}
-        </ContextMenu>
+      <ContextMenu width={130} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
+        isOpen ={UiState.isContextOpenNavigation[this.props.index]} position={this.props.position}>
+        {menuList}
+      </ContextMenu>
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
