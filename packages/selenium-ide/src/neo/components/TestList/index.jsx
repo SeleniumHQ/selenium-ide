@@ -28,13 +28,13 @@ import ReactCursorPosition from "react-cursor-position";
 import "./style.css";
 
 @inject("renameTest") @observer
-export default class TestList extends Component {
+export default class TestList extends Component {  
   componentDidMount() {
-    document.addEventListener('contextmenu', this.handleContextMenu);
-  };
+    document.addEventListener("contextmenu", this.handleContextMenu);
+  }
   componentWillUnmount() {
-    document.removeEventListener('contextmenu', this.handleContextMenu);
-  };  
+    document.removeEventListener("contextmenu", this.handleContextMenu);
+  }
   handleContextMenu(e){
     e.preventDefault();
   } 
@@ -73,7 +73,7 @@ export default class TestList extends Component {
                   setSectionFocus={UiState.setSectionFocus}
                   onContextMenu={() => { this.props.onContextMenu(index); }}
                 />}
-              </ReactCursorPosition>
+            </ReactCursorPosition>
           </li>
         ))}
       </ul>
@@ -84,6 +84,7 @@ export default class TestList extends Component {
     collapsed: PropTypes.bool,
     suite: PropTypes.object,
     renameTest: PropTypes.func,
-    removeTest: PropTypes.func.isRequired
+    removeTest: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func    
   };
 }

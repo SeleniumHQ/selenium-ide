@@ -25,7 +25,7 @@ import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
 import "./style.css";
 import ContextMenu from "../ContextMenu";
-import ReactDOM from "react-dom";
+import { findDOMNode } from "react-dom";
 import UiState from "../../stores/view/UiState";
 import { observer } from "mobx-react";
 
@@ -69,14 +69,17 @@ export default class Test extends React.Component {
     setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    index: PropTypes.number,
+    position: PropTypes.any,
+    onContextMenu: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
-      this.setState({rect: ReactDOM.findDOMNode(this).getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).getBoundingClientRect()});
     }
   }
   componentDidUpdate(prevProps) {
@@ -85,7 +88,7 @@ export default class Test extends React.Component {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
-      this.setState({rect: ReactDOM.findDOMNode(this).getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).getBoundingClientRect()});
     }
   }
   componentWillUnmount() {
@@ -115,7 +118,7 @@ export default class Test extends React.Component {
     const menuList = <div>
       <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
       <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
-    </div>
+    </div>;
 
     const rendered = <a
       href="#"
