@@ -18,6 +18,17 @@ module.exports = {
     "react"
   ],
   "rules": {
+    "no-trailing-spaces": [
+      "error"
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      { "max": 2, "maxEOF": 1 }
+    ],
+    "eol-last": [
+      "error",
+      "always"
+    ],
     "comma-dangle": [
       "error",
       "never"
