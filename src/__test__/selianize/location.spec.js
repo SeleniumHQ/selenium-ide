@@ -41,4 +41,9 @@ describe("location code emitter", () => {
     const selector = "someXpath";
     expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath("${selector}")`);
   });
+  it("should emit name locator", () => {
+    const type = "name";
+    const selector = "someName";
+    expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.name("${selector}")`);
+  });
 });

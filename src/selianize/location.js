@@ -17,6 +17,7 @@
 
 const emitters = {
   id: emitId,
+  name: emitName,
   link: emitLink,
   css: emitCss,
   xpath: emitXpath
@@ -40,6 +41,10 @@ export default {
 
 function emitId(selector) {
   return Promise.resolve(`By.id("${selector}")`);
+}
+
+function emitName(selector) {
+  return Promise.resolve(`By.name("${selector}")`);
 }
 
 function emitLink(selector) {
