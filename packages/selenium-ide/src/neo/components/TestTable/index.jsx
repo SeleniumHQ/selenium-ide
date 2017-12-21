@@ -23,9 +23,9 @@ import classNames from "classnames";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
+import ReactCursorPosition from "react-cursor-position";
 import "./style.css";
 
-import ReactCursorPosition from 'react-cursor-position';
 
 @observer
 export default class TestTable extends React.Component {
