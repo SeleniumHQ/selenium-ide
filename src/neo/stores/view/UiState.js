@@ -100,7 +100,7 @@ class UiState {
     }
     this.selectedTest = { test, suite };
   }
-  
+
   @action.bound selectTestByIndex(index, suite) {
     const selectTestInArray = (index, tests) => (
       (index >= 0 && index < tests.length) ? tests[index] : undefined
@@ -131,7 +131,7 @@ class UiState {
   }
 
   @action.bound selectCommandByIndex(index) {
-    const { test } = this.selectedTest; 
+    const { test } = this.selectedTest;
     if (index >= 0 && index < test.commands.length) {
       this.selectCommand(test.commands[index]);
     } else if (index === test.commands.length) {
@@ -162,7 +162,7 @@ class UiState {
   @action.bound resizeConsole(height) {
     this.consoleHeight = height > 0 ? height : 0;
     storage.set({
-      consoleSize: this.consoleHeight 
+      consoleSize: this.consoleHeight
     });
   }
 

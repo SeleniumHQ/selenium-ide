@@ -194,7 +194,7 @@ export default class TestRow extends React.Component {
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
       <td className="buttons">
         <div>
-          { this.props.swapCommands ? 
+          { this.props.swapCommands ?
             <ListMenu width={300} padding={-5} opener={
               <MoreButton />
             }>

@@ -50,7 +50,7 @@ function executionLoop() {
       .then(() => {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
         return executionLoop();
-      }); 
+      });
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
