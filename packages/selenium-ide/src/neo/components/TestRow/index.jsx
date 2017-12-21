@@ -136,7 +136,7 @@ export default class TestRow extends React.Component {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });      
-      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentDidUpdate(prevProps) {
@@ -145,7 +145,7 @@ export default class TestRow extends React.Component {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });      
-      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()});
+      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentWillUnmount() {
@@ -221,7 +221,7 @@ export default class TestRow extends React.Component {
         <div>
           { this.props.swapCommands ? 
             <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
-             {menuList}
+              {menuList}
             </ListMenu>: null }
           <ContextMenu width={300} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
             isOpen ={UiState.isContextOpenEditor[this.props.index]} position={this.props.position}>
