@@ -24,6 +24,10 @@ import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
 import "./style.css";
+import ContextMenu from "../ContextMenu";
+import { findDOMNode } from "react-dom";
+import UiState from "../../stores/view/UiState";
+import { observer } from "mobx-react";
 
 export const Type = "test";
 const testSource = {
@@ -44,8 +48,12 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-
+@observer
 export default class Test extends React.Component {
+  constructor(props){
+    super(props);
+    this.state ={};
+  }
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
@@ -61,13 +69,17 @@ export default class Test extends React.Component {
     setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    index: PropTypes.number,
+    position: PropTypes.any,
+    onContextMenu: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
+      this.setState({rect: findDOMNode(this).getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentDidUpdate(prevProps) {
@@ -76,6 +88,7 @@ export default class Test extends React.Component {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
+      this.setState({rect: findDOMNode(this).getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentWillUnmount() {
@@ -102,6 +115,11 @@ export default class Test extends React.Component {
     }
   }
   render() {
+    const menuList = <div>
+      <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+    </div>;
+
     const rendered = <a
       href="#"
       ref={(node) => { this.node = node; }}
@@ -110,18 +128,20 @@ export default class Test extends React.Component {
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
+      onContextMenu={this.props.onContextMenu}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
-        <ListMenu width={130} padding={-5} opener={
-          <MoreButton />
-        }>
-          <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
-          <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+        <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+          {menuList}
         </ListMenu> :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
+      <ContextMenu width={130} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
+        isOpen ={UiState.isContextOpenNavigation[this.props.index]} position={this.props.position}>
+        {menuList}
+      </ContextMenu>
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
