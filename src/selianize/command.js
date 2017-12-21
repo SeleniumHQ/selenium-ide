@@ -37,7 +37,9 @@ const emitters = {
   store: emitStore,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
-  select: emitSelect
+  select: emitSelect,
+  addSelection: emitSelect,
+  removeSelection: emitSelect
 };
 
 export function emit(command) {

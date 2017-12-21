@@ -186,4 +186,20 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
   });
+  it("should emit `add selection` command", () => {
+    const command = {
+      command: "addSelection",
+      target: "css=select",
+      value: "label=A label"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
+  });
+  it("should emit `remove selection` command", () => {
+    const command = {
+      command: "removeSelection",
+      target: "css=select",
+      value: "label=A label"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
+  });
 });
