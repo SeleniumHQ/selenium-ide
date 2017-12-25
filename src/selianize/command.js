@@ -45,7 +45,11 @@ const emitters = {
   mouseDown: emitMouseDown,
   mouseDownAt: emitMouseDown,
   mouseUp: emitMouseUp,
-  mouseUpAt: emitMouseUp
+  mouseUpAt: emitMouseUp,
+  mouseMove: emitMouseMove,
+  mouseMoveAt: emitMouseMove,
+  mouseOver: emitMouseMove,
+  mouseOut: emitMouseOut
 };
 
 export function emit(command) {
@@ -147,4 +151,12 @@ async function emitMouseDown(locator) {
 
 async function emitMouseUp(locator) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.actions().mouseUp(element).perform();});`);
+}
+
+async function emitMouseMove(locator) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.actions().mouseMove(element).perform();});`);
+}
+
+async function emitMouseOut(locator) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});`);
 }
