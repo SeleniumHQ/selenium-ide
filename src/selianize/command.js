@@ -40,14 +40,19 @@ const emitters = {
   select: emitSelect,
   addSelection: emitSelect,
   removeSelection: emitSelect,
-  selectFrame: emitSelectFrame
+  selectFrame: emitSelectFrame,
+  selectWindow: emitSelectWindow
 };
 
 export function emit(command) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
-      let result = await emitters[command.command](command.target, command.value);
-      res(result);
+      try {
+        let result = await emitters[command.command](command.target, command.value);
+        res(result);
+      } catch (e) {
+        rej(e);
+      }
     } else {
       rej(command.command ? `Unknown command ${command.command}` : "Command can not be empty");
     }
@@ -121,5 +126,13 @@ async function emitSelectFrame(frameLocation) {
     return Promise.resolve(`driver.switchTo().frame(${frameLocation.split("index=")[1]});`);
   } else {
     return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(frameLocation)}).then(frame => {driver.switchTo().frame(frame);});`);
+  }
+}
+
+function emitSelectWindow(windowLocation) {
+  if (/^name=/.test(windowLocation)) {
+    return Promise.resolve(`driver.switchTo().window("${windowLocation.split("name=")[1]}");`);
+  } else {
+    return Promise.reject("Can only emit `select window` using name locator");
   }
 }

@@ -226,4 +226,20 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"frame\")).then(frame => {driver.switchTo().frame(frame);});");
   });
+  it("should fail to emit `select window` by using unknown locator", () => {
+    const command = {
+      command: "selectWindow",
+      target: "notExisting=something",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).rejects.toThrow("Can only emit `select window` using name locator");
+  });
+  it("should emit `select window` to select a window by name", () => {
+    const command = {
+      command: "selectWindow",
+      target: "name=window",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().window(\"window\");");
+  });
 });
