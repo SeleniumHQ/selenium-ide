@@ -202,4 +202,28 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
   });
+  it("should emit `select frame` to select the top frame", () => {
+    const command = {
+      command: "selectFrame",
+      target: "relative=top",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().frame();");
+  });
+  it("should emit `select frame` to select the second frame", () => {
+    const command = {
+      command: "selectFrame",
+      target: "index=1",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().frame(1);");
+  });
+  it("should emit `select frame` to select a frame by locator", () => {
+    const command = {
+      command: "selectFrame",
+      target: "id=frame",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"frame\")).then(frame => {driver.switchTo().frame(frame);});");
+  });
 });

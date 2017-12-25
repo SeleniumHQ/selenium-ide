@@ -39,7 +39,8 @@ const emitters = {
   storeTitle: emitStoreTitle,
   select: emitSelect,
   addSelection: emitSelect,
-  removeSelection: emitSelect
+  removeSelection: emitSelect,
+  selectFrame: emitSelectFrame
 };
 
 export function emit(command) {
@@ -111,4 +112,14 @@ async function emitStoreTitle(_, varName) {
 
 async function emitSelect(selectElement, option) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(selectElement)}).then(element => {element.findElement(${await SelectionEmitter.emit(option)}).then(option => {option.click();});});`);
+}
+
+async function emitSelectFrame(frameLocation) {
+  if (frameLocation === "relative=top") {
+    return Promise.resolve("driver.switchTo().frame();");
+  } else if (/^index=/.test(frameLocation)) {
+    return Promise.resolve(`driver.switchTo().frame(${frameLocation.split("index=")[1]});`);
+  } else {
+    return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(frameLocation)}).then(frame => {driver.switchTo().frame(frame);});`);
+  }
 }
