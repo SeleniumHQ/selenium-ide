@@ -242,4 +242,36 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().window(\"window\");");
   });
+  it("should emit `mouse down` event", () => {
+    const command = {
+      command: "mouseDown",
+      target: "id=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseDown(element).perform();});");
+  });
+  it("should emit `mouse down at` event", () => {
+    const command = {
+      command: "mouseDownAt",
+      target: "id=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseDown(element).perform();});");
+  });
+  it("should emit `mouse up` event", () => {
+    const command = {
+      command: "mouseUp",
+      target: "id=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseUp(element).perform();});");
+  });
+  it("should emit `mouse up at` event", () => {
+    const command = {
+      command: "mouseUpAt",
+      target: "id=button",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseUp(element).perform();});");
+  });
 });

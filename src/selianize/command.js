@@ -41,7 +41,11 @@ const emitters = {
   addSelection: emitSelect,
   removeSelection: emitSelect,
   selectFrame: emitSelectFrame,
-  selectWindow: emitSelectWindow
+  selectWindow: emitSelectWindow,
+  mouseDown: emitMouseDown,
+  mouseDownAt: emitMouseDown,
+  mouseUp: emitMouseUp,
+  mouseUpAt: emitMouseUp
 };
 
 export function emit(command) {
@@ -135,4 +139,12 @@ function emitSelectWindow(windowLocation) {
   } else {
     return Promise.reject("Can only emit `select window` using name locator");
   }
+}
+
+async function emitMouseDown(locator) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.actions().mouseDown(element).perform();});`);
+}
+
+async function emitMouseUp(locator) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.actions().mouseUp(element).perform();});`);
 }
