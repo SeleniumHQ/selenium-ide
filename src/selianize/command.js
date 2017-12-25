@@ -49,7 +49,11 @@ const emitters = {
   mouseMove: emitMouseMove,
   mouseMoveAt: emitMouseMove,
   mouseOver: emitMouseMove,
-  mouseOut: emitMouseOut
+  mouseOut: emitMouseOut,
+  assertAlert: emitAssertAlert,
+  assertPrompt: emitAssertAlert,
+  assertConfirmation: emitAssertAlert,
+  answerOnNextPrompt: emitAnswerOnNextPrompt
 };
 
 export function emit(command) {
@@ -159,4 +163,12 @@ async function emitMouseMove(locator) {
 
 async function emitMouseOut(locator) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});`);
+}
+
+function emitAssertAlert(alertText) {
+  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${alertText});});});`);
+}
+
+function emitAnswerOnNextPrompt(textToSend) {
+  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.sendKeys("${textToSend}");});`);
 }

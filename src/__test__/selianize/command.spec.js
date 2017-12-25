@@ -306,4 +306,36 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});");
   });
+  it("should emit `assert alert` command", () => {
+    const command = {
+      command: "assertAlert",
+      target: "an alert",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+  });
+  it("should emit `assert confirmation` command", () => {
+    const command = {
+      command: "assertConfirmation",
+      target: "a confirmation",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+  });
+  it("should emit `assert prompt` command", () => {
+    const command = {
+      command: "assertPrompt",
+      target: "a prompt",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+  });
+  it("should emit `answer on next prompt` command", () => {
+    const command = {
+      command: "answerOnNextPrompt",
+      target: "an answer",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.sendKeys("${command.target}");});`);
+  });
 });
