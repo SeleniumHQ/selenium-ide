@@ -18,7 +18,7 @@
 import migrateProject from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
-import Selianize from "../../selianize";
+import Selianize, { ParseError } from "../../selianize";
 const browser = window.browser;
 
 export const supportedFileFormats = ".side, text/html";
@@ -49,7 +49,7 @@ export function exportProject(project) {
   }).catch(err => {
     ModalState.showAlert({
       title: "Error exporting project",
-      description: JSON.stringify(err && err.message || err)
+      description: ParseError(err && err.message || err)
     });
   });
 }

@@ -38,6 +38,7 @@ import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
+import "../../styles/markdown.css";
 
 import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
 import "../../IO/SideeX/record";
