@@ -47,9 +47,21 @@ export function exportProject(project) {
       conflictAction: "overwrite"
     });
   }).catch(err => {
+    const markdown = ParseError(err && err.message || err);
     ModalState.showAlert({
       title: "Error exporting project",
-      description: ParseError(err && err.message || err)
+      description: markdown,
+      confirmLabel: "Download log",
+      cancelLabel: "Close"
+    }, (choseDownload) => {
+      if (choseDownload) {
+        browser.downloads.download({
+          filename: project.name + "-logs.md",
+          url: createBlob("text/markdown", markdown),
+          saveAs: true,
+          conflictAction: "overwrite"
+        });
+      }
     });
   });
 }
