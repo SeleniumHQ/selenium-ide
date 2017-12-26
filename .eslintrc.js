@@ -3,7 +3,8 @@ module.exports = {
     "browser": true,
     "node": true,
     "es6": true,
-    "jest": true
+    "jest": true,
+    "webextensions": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parser": "babel-eslint",
