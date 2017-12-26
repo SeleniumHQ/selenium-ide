@@ -21,12 +21,19 @@ export function emit(test) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = `it("${test.name}", () => {`;
 
-    result += (await Promise.all(test.commands.map(CommandEmitter.emit))).join("");
+    let errors = [];
+    result += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
+      errors.push({
+        index: index + 1,
+        ...command,
+        message: e
+      });
+    }))))).join("");
 
     result += "return driver.getTitle().then(title => {expect(title).toBeDefined();});";
     result += "});";
 
-    res(result);
+    errors.length ? rej({...test, commands: errors}) : res(result);
   });
 }
 

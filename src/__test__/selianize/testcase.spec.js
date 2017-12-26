@@ -62,4 +62,48 @@ describe("test case code emitter", () => {
     };
     expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
   });
+  it("should reject a test with failed commands", () => {
+    const test = {
+      id: "1",
+      name: "failed test",
+      commands: [
+        {
+          command: "doesntExist",
+          target: "",
+          value: ""
+        },
+        {
+          command: "open",
+          target: "/test",
+          value: ""
+        },
+        {
+          command: "notThisOne",
+          target: "",
+          value: ""
+        }
+      ]
+    };
+    const testErrors = {
+      commands: [
+        {
+          command: "doesntExist",
+          index: 1,
+          message: "Unknown command doesntExist",
+          target: "",
+          value: ""
+        },
+        {
+          command: "notThisOne",
+          index: 3,
+          message: "Unknown command notThisOne",
+          target: "",
+          value: ""
+        }
+      ],
+      id: "1",
+      name: "failed test"
+    };
+    expect(TestCaseEmitter.emit(test)).rejects.toMatchObject(testErrors);
+  });
 });
