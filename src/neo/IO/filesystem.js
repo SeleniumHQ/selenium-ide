@@ -17,6 +17,8 @@
 
 import migrateProject from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
+import ModalState from "../stores/view/ModalState";
+import Selianize from "../../selianize";
 const browser = window.browser;
 
 export const supportedFileFormats = ".side, text/html";
@@ -33,6 +35,22 @@ function downloadProject(project) {
     url: createBlob("application/json", project.toJSON()),
     saveAs: true,
     conflictAction: "overwrite"
+  });
+}
+
+export function exportProject(project) {
+  Selianize(JSON.parse(project.toJSON())).then(data => {
+    browser.downloads.download({
+      filename: project.name + ".test.js",
+      url: createBlob("application/javascript", data),
+      saveAs: true,
+      conflictAction: "overwrite"
+    });
+  }).catch(err => {
+    ModalState.showAlert({
+      title: "Error exporting project",
+      description: JSON.stringify(err && err.message || err)
+    });
   });
 }
 

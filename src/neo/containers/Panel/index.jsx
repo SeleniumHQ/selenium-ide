@@ -39,7 +39,7 @@ import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
 
-import { loadProject, saveProject } from "../../IO/filesystem";
+import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
 import "../../IO/SideeX/record";
 import "../../IO/SideeX/playback";
 
@@ -121,6 +121,7 @@ modify(project);
               changeName={this.state.project.changeName}
               load={loadProject.bind(undefined, project)}
               save={() => saveProject(project)}
+              export={() => exportProject(project)}
             />
             <div className={classNames("content", {dragging: UiState.navigationDragging})}>
               <SplitPane
