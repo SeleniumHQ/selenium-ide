@@ -21,12 +21,18 @@ export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = `describe("${suite.name}", () => {`;
 
+    let errors = [];
     result += (await Promise.all(suite.tests.map(testId => (
       tests[testId]
-    )).map(TestCaseEmitter.emit))).join("");
+    )).map((test) => (TestCaseEmitter.emit(test).catch(e => {
+      errors.push(e);
+    }))))).join("");
 
     result += "});";
-    res(result);
+    errors.length ? rej({
+      ...suite,
+      tests: errors
+    }) : res(result);
   });
 }
 

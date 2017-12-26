@@ -65,4 +65,67 @@ describe("suite emitter", () => {
     };
     expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
+  it("should reject a suite with failed tests", () => {
+    const tests = {
+      "1": {
+        id: "1",
+        name: "first failure",
+        commands: [
+          {
+            command: "fail",
+            target: "",
+            value: ""
+          }
+        ]
+      },
+      "2": {
+        id: "2",
+        name: "another failure",
+        commands: [
+          {
+            command: "fail",
+            target: "",
+            value: ""
+          }
+        ]
+      }
+    };
+    const suite = {
+      id: "1",
+      name: "failed suite",
+      tests: ["1", "2"]
+    };
+    expect(SuiteEmitter.emit(suite, tests)).rejects.toMatchObject({
+      id: "1",
+      name: "failed suite",
+      tests: [
+        {
+          commands: [
+            {
+              command: "fail",
+              index: 1,
+              message: "Unknown command fail",
+              target: "",
+              value: ""
+            }
+          ],
+          id: "1",
+          name: "first failure"
+        },
+        {
+          commands: [
+            {
+              command: "fail",
+              index: 1,
+              message: "Unknown command fail",
+              target: "",
+              value: ""
+            }
+          ],
+          id: "2",
+          name: "another failure"
+        }
+      ]
+    });
+  });
 });
