@@ -57,7 +57,7 @@ export default class Alert extends React.Component {
           <p>{this.state.options.description}</p>
           <span className="right">
             {this.state.options.cancelLabel ? <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton> : null}
-            <FlatButton type="submit" buttonRef={(submit) => { this.submit = submit; }} onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel}</FlatButton>
+            <FlatButton type="submit" buttonRef={(submit) => { this.submit = submit; }} onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel || "OK"}</FlatButton>
           </span>
           <div className="clear"></div>
         </form>
