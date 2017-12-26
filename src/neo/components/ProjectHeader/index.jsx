@@ -22,6 +22,8 @@ import Title from "react-document-title";
 import ContentEditable from "react-contenteditable";
 import OpenButton from "../ActionButtons/Open";
 import SaveButton from "../ActionButtons/Save";
+import MoreButton from "../ActionButtons/More";
+import ListMenu, { ListMenuItem } from "../ListMenu";
 import "./style.css";
 
 export default class ProjectHeader extends React.Component {
@@ -35,7 +37,8 @@ export default class ProjectHeader extends React.Component {
     changed: PropTypes.bool,
     changeName: PropTypes.func.isRequired,
     load: PropTypes.func,
-    save: PropTypes.func
+    save: PropTypes.func,
+    export: PropTypes.func
   };
   handleKeyDown(e) {
     if (e.key === "Enter") e.preventDefault();
@@ -54,6 +57,11 @@ export default class ProjectHeader extends React.Component {
         <span className="buttons">
           <OpenButton onFileSelected={this.props.load} />
           <SaveButton data-place="left" unsaved={this.props.changed} onClick={this.props.save} />
+          <ListMenu width={250} padding={-5} opener={
+            <MoreButton />
+          }>
+            <ListMenuItem onClick={this.props.export}>Export to JavaScript code</ListMenuItem>
+          </ListMenu>
         </span>
       </div>
     );

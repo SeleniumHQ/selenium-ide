@@ -62,6 +62,6 @@
   align-items: center;
 }
 
-.header .buttons > * {
+.header .buttons > *:not(:last-child) {
   margin-left: 10px;
 }
