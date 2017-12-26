@@ -27,8 +27,11 @@ export default function Selianize(project) {
       map[test.id] = test;
       return map;
     }, {});
-    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap)))).join("");
+    let errors = [];
+    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap).catch(e => {
+      errors.push(e);
+    })))).join("");
 
-    res(beautify(result, { indent_size: 2 }));
+    errors.length ? rej({ name: project.name, suites: errors }) : res(beautify(result, { indent_size: 2 }));
   });
 }

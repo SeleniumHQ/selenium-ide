@@ -24,4 +24,47 @@ describe("Selenium code serializer", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
     expect(Selianize(project)).resolves.toBeDefined();
   });
+  it("should fail to export a project with errors", () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-2.side")));
+    const failure = {
+      name: "Untitled Project",
+      suites: [
+        {
+          id: "891b6389-7623-45b0-a986-89089de07cdb",
+          name: "aaab suite",
+          tests: [
+            {
+              commands: [
+                {
+                  command: "waitForPageToLoad",
+                  id: "fc7a1e3d-4a0e-45b5-9ee4-56bce9f1dd2c",
+                  index: 1,
+                  message: "Unknown command waitForPageToLoad",
+                  target: "",
+                  value: ""
+                }
+              ],
+              id: "33399e09-f96c-4b7c-801c-f8ff9567b8a5",
+              name: "aaba failure"
+            },
+            {
+              commands: [
+                {
+                  command: "waitForElementPresent",
+                  id: "0a0b6a3e-c1e9-4ef7-9748-dee1586be715",
+                  index: 1,
+                  message: "Unknown command waitForElementPresent",
+                  target: "",
+                  value: ""
+                }
+              ],
+              id: "44955d17-a69d-4d1a-967d-05fd70b51905",
+              name: "aabb failure"
+            }
+          ]
+        }
+      ]
+    };
+    expect(Selianize(project)).rejects.toMatchObject(failure);
+  });
 });
