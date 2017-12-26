@@ -35,3 +35,13 @@ export default function Selianize(project) {
     errors.length ? rej({ name: project.name, suites: errors }) : res(beautify(result, { indent_size: 2 }));
   });
 }
+
+export function ParseError(error) {
+  return error.suites.map(suite => (
+    (`## ${suite.name}\n`).concat(suite.tests.map(test => (
+      (`### ${test.name}\n`).concat(test.commands.map(command => (
+        (`${command.index}. ${command.message}\n`)
+      )).join("").concat("\n"))
+    )).join(""))
+  )).join("");
+}
