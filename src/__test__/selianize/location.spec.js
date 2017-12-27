@@ -18,6 +18,9 @@
 import LocationEmitter from "../../selianize/location";
 
 describe("location code emitter", () => {
+  it("should fail to emit empty string", () => {
+    expect(LocationEmitter.emit("")).rejects.toThrow("Locator can't be empty");
+  });
   it("should fail to emit unknown locator", () => {
     expect(LocationEmitter.emit("notExists=element")).rejects.toThrow("Unknown locator notExists");
   });

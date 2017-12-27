@@ -30,7 +30,7 @@ export function emit(location) {
       let result = await emitters[type](selector);
       res(result);
     } else {
-      rej(`Unknown locator ${type}`);
+      rej(type ? `Unknown locator ${type}` : "Locator can't be empty");
     }
   });
 }
