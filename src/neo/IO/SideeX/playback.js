@@ -22,6 +22,7 @@ const { ExtCommand, isExtCommand } = window;
 
 const extCommand = new ExtCommand();
 window.extCommand = extCommand;
+const xlateArgument = window.xlateArgument;
 let baseUrl = "";
 
 function play(currUrl) {
@@ -213,7 +214,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
   const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
-    extCommand.sendMessage(command, parsedTarget, value, isWindowMethodCommand(command))
+    extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
   ))
     .then(function(result) {
       if (result.result !== "success") {

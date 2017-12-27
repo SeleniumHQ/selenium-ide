@@ -46,7 +46,7 @@ function doCommands(request, sender, sendResponse) {
       if (selenium["do" + upperCase] != null) {
         try {
           document.body.setAttribute("SideeXPlayingFlag", true);
-          let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));                  
+          let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));
           if (returnValue instanceof Promise) {
             // The command is a asynchronous function
             returnValue.then(function() {

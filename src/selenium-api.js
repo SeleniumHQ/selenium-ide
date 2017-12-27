@@ -383,7 +383,8 @@ Selenium.prototype.doStoreText = function(locator, varName) {
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
-  browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+  let doc = selenium.browserbot.getDocument();
+  browser.runtime.sendMessage({ "storeStr": value || doc.title, "storeVar": varName });
 };
 
 Selenium.prototype.doEcho = function(value) {
@@ -3647,3 +3648,4 @@ Selenium.prototype.doShowElement = function(locator){
     return "element not found";
   }
 };
+
