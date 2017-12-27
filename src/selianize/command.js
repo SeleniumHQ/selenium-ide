@@ -53,7 +53,8 @@ const emitters = {
   assertAlert: emitAssertAlert,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
-  answerOnNextPrompt: emitAnswerOnNextPrompt
+  answerOnNextPrompt: emitAnswerOnNextPrompt,
+  editContent: emitEditContent
 };
 
 export function emit(command) {
@@ -171,4 +172,8 @@ function emitAssertAlert(alertText) {
 
 function emitAnswerOnNextPrompt(textToSend) {
   return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.sendKeys("${textToSend}");});`);
+}
+
+async function emitEditContent(locator, content) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {driver.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${content}'}", element);});`);
 }

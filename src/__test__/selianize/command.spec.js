@@ -338,4 +338,12 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.sendKeys("${command.target}");});`);
   });
+  it("should emit `edit content` command", () => {
+    const command = {
+      command: "editContent",
+      target: "id=contentEditable",
+      value: "<button>test</button>"
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("contentEditable")).then(element => {driver.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${command.value}'}", element);});`);
+  });
 });
