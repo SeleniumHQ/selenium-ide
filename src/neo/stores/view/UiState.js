@@ -160,7 +160,7 @@ class UiState {
   }
 
   @action.bound resizeConsole(height) {
-    this.consoleHeight = height > 0 ? height : 0;
+    this.consoleHeight = height > this.minConsoleHeight ? height : this.minConsoleHeight;
     storage.set({
       consoleSize: this.consoleHeight
     });
