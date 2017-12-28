@@ -34,6 +34,7 @@ import Editor from "../Editor";
 import Console from "../Console";
 import Modal from "../Modal";
 import UiState from "../../stores/view/UiState";
+import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";

@@ -64,43 +64,6 @@ function openPage() {
     .catch(function(e) {
       console.error(e);
     });
-
-  browser.contextMenus.create({
-    id: "verifyText",
-    title: "Verify Text",
-    documentUrlPatterns: ["<all_urls>"],
-    contexts: ["all"]
-  });
-  browser.contextMenus.create({
-    id: "verifyTitle",
-    title: "Verify Title",
-    documentUrlPatterns: ["<all_urls>"],
-    contexts: ["all"]
-  });
-  browser.contextMenus.create({
-    id: "assertText",
-    title: "Assert Text",
-    documentUrlPatterns: ["<all_urls>"],
-    contexts: ["all"]
-  });
-  browser.contextMenus.create({
-    id: "assertTitle",
-    title: "Assert Title",
-    documentUrlPatterns: ["<all_urls>"],
-    contexts: ["all"]
-  });
-  browser.contextMenus.create({
-    id: "storeText",
-    title: "Store Text",
-    documentUrlPatterns: ["<all_urls>"],
-    contexts: ["all"]
-  });
-  browser.contextMenus.create({
-    id: "storeTitle",
-    title: "Store Title",
-    documentUrlPatterns: ["<all_urls>"],
-    contexts: ["all"]
-  });
 }
 
 function openWindowFromStorageResolution() {
