@@ -66,7 +66,7 @@ import "./style.css";
     modifier(e);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
-    if (e.target.localName !== "input" && noModifiers && e.key === "ArrowLeft") {
+    if (e.target.localName !== "input" && e.target.localName !== "textarea" && noModifiers && e.key === "ArrowLeft") {
       event.preventDefault();
       event.stopPropagation();
       UiState.focusNavigation();

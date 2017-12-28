@@ -21,6 +21,7 @@ import { observer } from "mobx-react";
 import classNames from "classnames";
 import { Commands } from "../../models/Command";
 import Input from "../FormInput";
+import TextArea from "../FormTextArea";
 import CommandInput from "../CommandInput";
 import FlatButton from "../FlatButton";
 import { find, select } from "../../IO/SideeX/find-select";
@@ -57,7 +58,7 @@ import "./style.css";
             <FlatButton data-tip="<p>Select target in page</p>" className={classNames("icon", "si-select", {"active": this.props.isSelecting})} onClick={select} />
             <FlatButton data-tip="<p>Find target in page</p>" className="icon si-search" onClick={() => {find(this.props.command.target);}} />
           </div>
-          <Input
+          <TextArea
             id="value"
             name="value"
             label="Value"

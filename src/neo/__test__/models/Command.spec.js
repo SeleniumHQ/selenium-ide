@@ -47,6 +47,11 @@ describe("Command", () => {
     command.setValue("123456");
     expect(command.value).toBe("123456");
   });
+  it("should escape new lines when value is set", () => {
+    const command = new Command();
+    command.setValue("Hello\nWorld!");
+    expect(command.value).toBe("Hello\\nWorld!");
+  });
   it("should initialize the primitives with empty strings", () => {
     const command = new Command();
     expect(command.command).toBe("");

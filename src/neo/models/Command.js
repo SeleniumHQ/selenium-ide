@@ -53,7 +53,7 @@ export default class Command {
   }
 
   @action.bound setValue(value) {
-    this.value = value;
+    this.value = value.replace(/\n/g, "\\n");
   }
 
   static fromJS = function(jsRep) {
