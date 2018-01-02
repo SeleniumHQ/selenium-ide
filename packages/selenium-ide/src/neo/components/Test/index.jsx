@@ -24,10 +24,9 @@ import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
 import "./style.css";
-import ContextMenu from "../ContextMenu";
-import ReactDOM from "react-dom";
-import UiState from "../../stores/view/UiState";
 import { observer } from "mobx-react";
+import { observable, action } from "mobx";
+import ContextMenu from "../ContextMenu";
 
 export const Type = "test";
 const testSource = {
@@ -50,9 +49,10 @@ function collect(connect, monitor) {
 }
 @observer
 export default class Test extends React.Component {
+  @observable isOpen = false;
   constructor(props){
     super(props);
-    this.state ={};
+    this.handleContextMenu = this.handleContextMenu.bind(this);
   }
   static propTypes = {
     className: PropTypes.string,
@@ -76,7 +76,6 @@ export default class Test extends React.Component {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
-      this.setState({rect: findDOMNode(this).getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentDidUpdate(prevProps) {
@@ -85,7 +84,6 @@ export default class Test extends React.Component {
       this.props.setSectionFocus("navigation", () => {
         this.node.focus();
       });
-      this.setState({rect: findDOMNode(this).getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
     }
   }
   componentWillUnmount() {
@@ -111,6 +109,17 @@ export default class Test extends React.Component {
       this.props.moveSelectionDown();
     }
   }
+  @action handleContextMenu(e){
+    if(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
+      this.isOpen = false;
+    }else{
+      this.isOpen = true;
+    }
+  }
   render() {
     const menuList = <div>
       <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
@@ -125,7 +134,7 @@ export default class Test extends React.Component {
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.props.onContextMenu}
+      onContextMenu={this.handleContextMenu}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
@@ -135,8 +144,8 @@ export default class Test extends React.Component {
           {menuList}
         </ListMenu> :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-      <ContextMenu width={130} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
-        isOpen ={UiState.isContextOpenNavigation[this.props.index]} position={this.props.position}>
+      <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
+        position={this.props.position} closeTimeoutMS={50}>
         {menuList}
       </ContextMenu>
     </a>;

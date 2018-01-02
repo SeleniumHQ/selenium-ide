@@ -45,8 +45,6 @@ class UiState {
   @observable options = {
     recordNotifications: true
   }; 
-  @observable isContextOpenEditor = [];
-  @observable isContextOpenNavigation= [];
 
   constructor() {
     this.suiteStates = {};
@@ -106,12 +104,6 @@ class UiState {
       } else {
         this.selectCommand(undefined);
       }
-      for(var i = 0; i <= test.commands.length; i++){
-        this.isContextOpenEditor[i]=false;
-      }
-      for(var i = 0; i <= this._project.tests.length; i++){
-        this.isContextOpenNavigation[i]=false;
-      }
     }
     this.selectedTest = { test, suite };
   }
@@ -142,7 +134,7 @@ class UiState {
   }
 
   @action.bound selectCommand(command) {
-    this.selectedCommand = command;         
+    this.selectedCommand = command;
   }
 
   @action.bound selectCommandByIndex(index) {
@@ -293,22 +285,6 @@ class UiState {
       state.modified = false;
     });
     this._project.modified = false;
-  }
-
-  @action.bound onContextMenuEditor(index) {
-    if((document.getElementsByClassName('ReactModal__Body--open').length) > 0 ){
-      this.isContextOpenEditor[index] = false;
-    }else{
-      this.isContextOpenEditor[index] = true;
-    }
-  }
-
-  @action.bound onContextMenuNavigation(index) {
-    if((document.getElementsByClassName('ReactModal__Body--open').length) > 0){
-      this.isContextOpenNavigation[index] = false;
-    }else{
-      this.isContextOpenNavigation[index] = true;
-    }
   }
 }
 

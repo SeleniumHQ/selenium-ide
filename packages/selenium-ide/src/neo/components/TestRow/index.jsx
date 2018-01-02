@@ -25,8 +25,7 @@ import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import MultilineEllipsis from "../MultilineEllipsis";
 import { observer } from "mobx-react";
-import UiState from "../../stores/view/UiState";
-import ReactDOM from "react-dom";
+import { observable, action } from "mobx";
 import ContextMenu from "../ContextMenu";
 import "./style.css";
 
@@ -97,9 +96,11 @@ const commandTarget = {
 }))
 @observer
 export default class TestRow extends React.Component {
+  @observable isOpen = false;
   constructor(props) {
     super(props);
-    this.paste = this.paste.bind(this);    
+    this.paste = this.paste.bind(this);
+    this.handleContextMenu = this.handleContextMenu.bind(this);
     this.state ={};
   }
   static propTypes = {
@@ -127,15 +128,14 @@ export default class TestRow extends React.Component {
     clearAllCommands: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    position: PropTypes.any
   };
   componentDidMount() {
     if (this.props.selected) {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
-      });      
-      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
-
+      });
     }
   }
   componentDidUpdate(prevProps) {
@@ -143,8 +143,7 @@ export default class TestRow extends React.Component {
       this.node.focus();
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
-      });      
-      this.setState({rect: findDOMNode(this).parentElement.getBoundingClientRect()}); // eslint-disable-line react/no-find-dom-node
+      });
     }
   }
   componentWillUnmount() {
@@ -182,27 +181,38 @@ export default class TestRow extends React.Component {
     if (this.props.clipboard && this.props.clipboard.constructor.name === "Command") {
       this.props.addCommand(this.props.clipboard);
     }
-  }  
-  render() {    
-      const menuList =<div>            
-        <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
-        <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
-        <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
-        <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
-        <ListMenuSeparator />
-        <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
-        <ListMenuSeparator />
-        <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
-        <ListMenuSeparator />
-        <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
-        <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>           
-      </div>
+  }
+  @action handleContextMenu(e){
+    if(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
+      this.isOpen = false;
+    }else{
+      this.isOpen = true;
+    }
+  }
+  render() {
+    const menuList =<div>
+      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
+      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+      <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
+      <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
+    </div>;
 
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.props.onContextMenu}
+      onContextMenu={this.handleContextMenu}
       onClick={this.props.onClick}
       onDoubleClick={this.props.executeCommand}
       onKeyDown={this.handleKeyDown.bind(this)}
@@ -218,14 +228,14 @@ export default class TestRow extends React.Component {
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
       <td className="buttons">
         <div>
-          { this.props.swapCommands ? 
+          { this.props.swapCommands ?
             <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
               {menuList}
             </ListMenu>: null }
-            <ContextMenu width={300} padding={-5} onContextMenu={this.props.onContextMenu} rect={this.state.rect}
-            isOpen ={UiState.isContextOpenEditor[this.props.index]} position={this.props.position}>
-              {menuList}
-            </ ContextMenu>
+          <ContextMenu width={300} padding={-5} onContextMenu={this.handleContextMenu} isOpen={this.isOpen} opener={this}
+            direction={"cursor"} position={this.props.position} closeTimeoutMS={50}>
+            {menuList}
+          </ ContextMenu>
         </div>
       </td>
     </tr>;
