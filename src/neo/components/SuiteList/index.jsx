@@ -20,6 +20,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import Suite from "../Suite";
+import ReactCursorPosition from "react-cursor-position";
 import "./style.css";
 
 @observer export default class SuiteList extends React.Component {
@@ -30,12 +31,17 @@ import "./style.css";
     removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
+  handleContextMenu(e){
+    e.preventDefault();
+  }
   render() {
     return (
-      <ul className="projects">
+      <ul className="projects" onContextMenu={this.handleContextMenu.bind(this)}>
         {this.props.suites.map(suite => (
           <li key={suite.id}>
-            <Suite suite={suite} selectTests={() => {this.props.selectTests(suite);}} rename={this.props.rename} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} />
+            <ReactCursorPosition>
+              <Suite suite={suite} selectTests={() => {this.props.selectTests(suite);}} rename={this.props.rename} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} />
+            </ReactCursorPosition>
           </li>
         ))}
       </ul>
