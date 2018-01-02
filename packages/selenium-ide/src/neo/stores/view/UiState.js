@@ -40,9 +40,7 @@ class UiState {
   @observable navigationHover = false;
   @observable navigationDragging = false;
   @observable pristineCommand = new Command();
-  @observable lastFocus = {};  
-  @observable isContextOpenEditor = [];
-  @observable isContextOpenNavigation= [];
+  @observable lastFocus = {};
 
   constructor() {
     this.suiteStates = {};
@@ -99,13 +97,6 @@ class UiState {
       } else {
         this.selectCommand(undefined);
       }
-      let i = 0;
-      for(i = 0; i <= test.commands.length; i++){
-        this.isContextOpenEditor[i]=false;
-      }
-      for(i = 0; i <= this._project.tests.length; i++){
-        this.isContextOpenNavigation[i]=false;
-      }
     }
     this.selectedTest = { test, suite };
   }
@@ -136,7 +127,7 @@ class UiState {
   }
 
   @action.bound selectCommand(command) {
-    this.selectedCommand = command;         
+    this.selectedCommand = command;
   }
 
   @action.bound selectCommandByIndex(index) {
@@ -275,22 +266,6 @@ class UiState {
       state.modified = false;
     });
     this._project.modified = false;
-  }
-
-  @action.bound onContextMenuEditor(index) {
-    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
-      this.isContextOpenEditor[index] = false;
-    }else{
-      this.isContextOpenEditor[index] = true;
-    }
-  }
-
-  @action.bound onContextMenuNavigation(index) {
-    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0){
-      this.isContextOpenNavigation[index] = false;
-    }else{
-      this.isContextOpenNavigation[index] = true;
-    }
   }
 }
 

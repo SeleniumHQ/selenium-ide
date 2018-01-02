@@ -28,19 +28,21 @@ import ReactCursorPosition from "react-cursor-position";
 import "./style.css";
 
 @inject("renameTest") @observer
-export default class TestList extends Component {  
-  componentDidMount() {
-    document.addEventListener("contextmenu", this.handleContextMenu);
-  }
-  componentWillUnmount() {
-    document.removeEventListener("contextmenu", this.handleContextMenu);
-  }
+export default class TestList extends Component {
+  static propTypes = {
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    collapsed: PropTypes.bool,
+    suite: PropTypes.object,
+    renameTest: PropTypes.func,
+    removeTest: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func
+  };
   handleContextMenu(e){
     e.preventDefault();
-  } 
+  }
   render() {
     return (
-      <ul className={classNames("tests", {"active": !this.props.collapsed})}>
+      <ul className={classNames("tests", {"active": !this.props.collapsed})} onContextMenu={this.handleContextMenu.bind(this)}>
         {this.props.tests.map((test, index) => (
           <li key={test.id}>
             <ReactCursorPosition>
@@ -71,7 +73,6 @@ export default class TestList extends Component {
                   moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
                   moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
                   setSectionFocus={UiState.setSectionFocus}
-                  onContextMenu={() => { this.props.onContextMenu(index); }}
                 />}
             </ReactCursorPosition>
           </li>
@@ -79,12 +80,4 @@ export default class TestList extends Component {
       </ul>
     );
   }
-  static propTypes = {
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    collapsed: PropTypes.bool,
-    suite: PropTypes.object,
-    renameTest: PropTypes.func,
-    removeTest: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func    
-  };
 }
