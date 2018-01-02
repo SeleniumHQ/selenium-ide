@@ -38,18 +38,8 @@ export default class TestTable extends React.Component {
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func
   };
-  componentDidMount() {
-    document.addEventListener("contextmenu", this.handleContextMenu);
-  }
-  componentWillUnmount() {
-    document.removeEventListener("contextmenu", this.handleContextMenu);
-  }
-  handleContextMenu(e){         
-    e.preventDefault();           
-  } 
   render() {
     return ([
-      
       <div key="header" className="test-table test-table-header">
         <table>
           <thead>
@@ -61,7 +51,7 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-      <ReactCursorPosition key="body" className="test-table test-table-body">                  
+      <ReactCursorPosition key="body" className="test-table test-table-body" >
         <TestRowContainer {...this.props}/>
       </ReactCursorPosition>
     ]);
@@ -78,19 +68,18 @@ class TestRowContainer extends React.Component {
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func,
-    onContextMenu: PropTypes.func,
     position: PropTypes.any
   };
-  render() {       
+  render() {
     return([
       <table key="table">
         <tbody key="tbody">
-          { this.props.commands ? this.props.commands.map((command, index) => (                                       
+          { this.props.commands ? this.props.commands.map((command, index) => (
             <TestRow
               key={command.id}
               id={command.id}
               ref={command.id}
-              className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}                  
+              className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
               selected={this.props.selectedCommand === command.id}
               index={index}
               command={command.command}
@@ -111,10 +100,9 @@ class TestRowContainer extends React.Component {
               copyToClipboard={() => { UiState.copyToClipboard(command); }}
               clearAllCommands={this.props.clearAllCommands}
               setSectionFocus={UiState.setSectionFocus}
-              onContextMenu={() => { this.props.onContextMenu(index); }}
-              position={this.props.position}                
-            />                
-          )).concat(              
+              position={this.props.position}
+            />
+          )).concat(
             <TestRow
               id={UiState.pristineCommand.id}
               key={UiState.selectedTest.test.id}
@@ -128,11 +116,11 @@ class TestRowContainer extends React.Component {
               moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
               clipboard={UiState.clipboard}
               setSectionFocus={UiState.setSectionFocus}
-              position={this.props.position}                
-            />              
-          ) : null }              
+              position={this.props.position}
+            />
+          ) : null }
         </tbody>
-      </table>    
+      </table>
     ]);
   }
 }
