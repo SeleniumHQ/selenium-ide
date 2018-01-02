@@ -122,7 +122,9 @@ export default class Test extends React.Component {
   }
   render() {
     const menuList = <div>
-      <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
+      {this.props.suite ?
+        null :
+        <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem> }
       <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
     </div>
 
