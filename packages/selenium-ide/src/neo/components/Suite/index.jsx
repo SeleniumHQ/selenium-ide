@@ -20,6 +20,7 @@ import PropTypes from "prop-types";
 import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import { observer } from "mobx-react";
+import { observable, action } from "mobx";
 import { modifier } from "modifier-keys";
 import TestList from "../TestList";
 import { Type } from "../Test";
@@ -27,6 +28,7 @@ import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ContextMenu from "../ContextMenu";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -57,10 +59,12 @@ function collect(connect, monitor) {
 
 @observer
 class Suite extends React.Component {
+  @observable isOpen = false;
   constructor(props) {
     super(props);
     this.store = UiState.getSuiteState(props.suite);
     this.handleClick = this.handleClick.bind(this);
+    this.handleContextMenu = this.handleContextMenu.bind(this);
   }
   static propTypes = {
     suite: PropTypes.object.isRequired,
@@ -70,7 +74,8 @@ class Suite extends React.Component {
     remove: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
-    canDrop: PropTypes.bool
+    canDrop: PropTypes.bool,
+    position: PropTypes.any
   };
   handleClick() {
     this.store.setOpen(!this.store.isOpen);
@@ -87,21 +92,38 @@ class Suite extends React.Component {
       UiState.selectTestByIndex(-1, this.props.suite);
     }
   }
+  @action handleContextMenu(e){
+    if(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
+      this.isOpen = false;
+    }else{
+      this.isOpen = true;
+    }
+  }
   render() {
+    const menuList = <div>
+      <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
+      <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
+    </div>;
+
     return this.props.connectDropTarget(
-      <div onKeyDown={this.handleKeyDown.bind(this)}>
+      <div onKeyDown={this.handleKeyDown.bind(this)} onContextMenu={this.handleContextMenu}>
         <div className="project">
           <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick}>
             <span className="si-caret"></span>
             <span className="title">{this.props.suite.name}</span>
           </a>
-          <ListMenu width={130} padding={-5} opener={
-            <MoreButton />
-          }>
-            <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
-            <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
-            <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
+          <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+            {menuList}
           </ListMenu>
+          <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
+            position={this.props.position} closeTimeoutMS={50}>
+            {menuList}
+          </ContextMenu>
         </div>
         <TestList collapsed={!this.store.isOpen} suite={this.props.suite} tests={this.store.filteredTests.get()} removeTest={this.props.suite.removeTestCase} />
       </div>
