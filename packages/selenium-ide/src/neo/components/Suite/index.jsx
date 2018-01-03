@@ -29,6 +29,7 @@ import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ContextMenu from "../ContextMenu";
+import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -97,10 +98,8 @@ class Suite extends React.Component {
       e.preventDefault();
       e.stopPropagation();
     }
-    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
-      this.isOpen = false;
-    }else{
-      this.isOpen = true;
+    if(!MenuState.isOpen){
+      this.isOpen = !this.isOpen;
     }
   }
   render() {
