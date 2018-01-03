@@ -23,10 +23,11 @@ import { modifier } from "modifier-keys";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
-import "./style.css";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import ContextMenu from "../ContextMenu";
+import MenuState from "../../stores/view/MenuState";
+import "./style.css";
 
 export const Type = "test";
 const testSource = {
@@ -117,10 +118,8 @@ export default class Test extends React.Component {
       e.preventDefault();
       e.stopPropagation();
     }
-    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
-      this.isOpen = false;
-    }else{
-      this.isOpen = true;
+    if(!MenuState.isOpen){
+      this.isOpen = !this.isOpen;
     }
   }
   render() {

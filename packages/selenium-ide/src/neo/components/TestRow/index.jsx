@@ -27,6 +27,7 @@ import MultilineEllipsis from "../MultilineEllipsis";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import ContextMenu from "../ContextMenu";
+import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 export const Type = "command";
@@ -187,10 +188,8 @@ export default class TestRow extends React.Component {
       e.preventDefault();
       e.stopPropagation();
     }
-    if((document.getElementsByClassName("ReactModal__Body--open").length) > 0 ){
-      this.isOpen = false;
-    }else{
-      this.isOpen = true;
+    if(!MenuState.isOpen){
+      this.isOpen = !this.isOpen;
     }
   }
   render() {

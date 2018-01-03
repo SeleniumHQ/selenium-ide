@@ -21,6 +21,7 @@ import PropTypes from "prop-types";
 import ReactModal from "react-modal";
 import classNames from "classnames";
 import { Transition } from "react-transition-group";
+import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 export const MenuDirections = {
@@ -169,6 +170,7 @@ export default class MenuContainer extends React.Component {
     this.setState({
       isOpen: !this.state.isOpen
     });
+    MenuState.isOpen = true;
   }
   close(e) {
     e.preventDefault();
@@ -176,6 +178,7 @@ export default class MenuContainer extends React.Component {
     this.setState({
       isOpen: false
     });
+    MenuState.isOpen = false;
   }
   render() {
     return ([
