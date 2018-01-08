@@ -17,11 +17,14 @@
 
 import { js_beautify as beautify } from "js-beautify";
 import template from "./template";
+import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
 
 export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = template.bootstrap();
+
+    result += ConfigurationEmitter.emit(project);
 
     const testsHashmap = project.tests.reduce((map, test) => {
       map[test.id] = test;
