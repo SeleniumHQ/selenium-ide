@@ -56,7 +56,7 @@ UiState.setProject(project);
 if (process.env.NODE_ENV === "production") {
   UiState.selectTest(project.createTestCase("Untitled"));
 } else {
-  seed(project);
+  seed(project, 0);
 }
 
 modify(project);
