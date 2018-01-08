@@ -58,7 +58,7 @@ export default function seed(store, numberOfSuites = 5) {
   open.setTarget("/wiki/Legislation");
   const firstClick = playbackTest.createCommand();
   firstClick.setCommand("click");
-  firstClick.setTarget("css=a:contains(\"enacted\")");
+  firstClick.setTarget("link=enacted");
   const secondClick = playbackTest.createCommand();
   secondClick.setCommand("clickAt");
   secondClick.setTarget("link=parliamentary systems");
@@ -103,6 +103,8 @@ export default function seed(store, numberOfSuites = 5) {
   suite2.addTestCase(failTest2);
 
   UiState.selectTest(playbackTest);
+
+  store.changeName("project");
 
   return store;
 }
