@@ -47,5 +47,9 @@ function assignStringKey(key, value) {
 }
 
 function parseStringValue(value) {
-  return value;
+  try {
+    return JSON.parse(value);
+  } catch (e) {
+    return value;
+  }
 }
