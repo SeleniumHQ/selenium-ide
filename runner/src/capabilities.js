@@ -15,6 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import yaml from "js-yaml";
+
+export function parseYaml(input) {
+  return yaml.safeLoad(input);
+}
+
 export function parseString(input) {
   const capabilities = {};
 
@@ -26,7 +32,8 @@ export function parseString(input) {
 }
 
 export default {
-  parseString
+  parseString,
+  parseYaml
 };
 
 function matchStringPairs(input) {

@@ -15,7 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import fs from "fs";
+import path from "path";
 import Capabilities from "../capabilities";
+
+describe("capabilities yaml parser", () => {
+  it("should parse yaml capabilities", () => {
+    const capabilities = fs.readFileSync(path.join(__dirname, "capabilities_1.yml"));
+    expect(Capabilities.parseYaml(capabilities)).toEqual({
+      browserName: "chrome",
+      platform: "MAC",
+      unexpectedAlertBehaviour: "ignore"
+    });
+  });
+});
 
 describe("capabilities string parser", () => {
   it("should parse capability key", () => {
