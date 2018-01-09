@@ -67,4 +67,12 @@ describe("capabilities string parser", () => {
       }
     });
   });
+  it("should parse space separated capability keys", () => {
+    const capabilities = "browserName =chrome platform= MAC unexpectedAlertBehaviour = ignore";
+    expect(Capabilities.parseString(capabilities)).toEqual({
+      browserName: "chrome",
+      platform: "MAC",
+      unexpectedAlertBehaviour: "ignore"
+    });
+  });
 });

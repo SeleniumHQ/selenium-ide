@@ -30,7 +30,7 @@ export default {
 };
 
 function matchStringPairs(input) {
-  const regex = /([^ =]*)=(".*"|[^ ]*)/g;
+  const regex = /([^ =]*) ?= ?(".*"|[^ ]*)/g;
   let result;
   const splitCapabilities = [];
   while ((result = regex.exec(input)) !== null) {
