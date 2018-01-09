@@ -12,7 +12,7 @@
     "build-firefox": "web-ext sign -s build -a dist --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET --id=$(cat .web-extension-id)",
     "test": "jest",
     "test-dev": "jest --watch",
-    "lint": "eslint src/{neo,selianize}/ --ext .js --ext .jsx"
+    "lint": "eslint src/{neo,selianize}/ runner/src/ --ext .js --ext .jsx"
   },
   "jest": {
     "testMatch": [

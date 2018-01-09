@@ -1,0 +1,9 @@
+{
+  "name": "selenium-side-runner",
+  "version": "0.0.0",
+  "description": "Run exported Selenium IDE projects in cli",
+  "main": "dist/index.js",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "private": false
+}
