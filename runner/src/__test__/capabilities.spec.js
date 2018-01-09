@@ -62,7 +62,7 @@ describe("capabilities string parser", () => {
     expect(Capabilities.parseString(capabilities)).toEqual({
       webdriver: {
         remote: {
-          sessionId: "someId"
+          sessionid: "someId"
         }
       }
     });

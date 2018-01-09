@@ -41,9 +41,14 @@ function matchStringPairs(input) {
 }
 
 function assignStringKey(key, value) {
-  return {
-    [key]: value
-  };
+  const keyObject = {};
+  key.split(".").reduce((objectKey, currKey, index, keys) => {
+    const ref = {};
+    objectKey[currKey] = keys.length === index + 1 ? value : ref;
+    return ref;
+  }, keyObject);
+
+  return keyObject;
 }
 
 function parseStringValue(value) {
