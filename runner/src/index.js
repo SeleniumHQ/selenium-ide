@@ -17,16 +17,37 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import path from "path";
 import program from "commander";
 import Capabilities from "./capabilities";
-const metadata = require("../package.json");
+import Config from "./config";
+import metadata from "../package.json";
 
 process.title = metadata.name;
 
 program
   .version(metadata.version)
-  .option("-c, --capabilities", "Webdriver capabilities")
+  .option("-c, --capabilities [value]", "Webdriver capabilities")
   .option("--no-sideyml", "Disabled the use of .side.yml")
   .parse(process.argv);
 
-program.help();
+const configuration = {
+  capabilities: {
+    browserName: "chrome"
+  }
+};
+if (program.sideyml) {
+  try {
+    Object.assign(configuration, Config.load(path.join(process.cwd(), ".side.yml")));
+  } catch (e) {
+    console.log("could not load .side.yml");
+  }
+}
+
+if (program.capabilities) {
+  try {
+    Object.assign(configuration.capabilities, Capabilities.parseString(program.capabilities));
+  } catch (e) {
+    console.log("failed to parse inline capabilities");
+  }
+}
