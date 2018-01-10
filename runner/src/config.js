@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17,16 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import program from "commander";
-import Capabilities from "./capabilities";
-const metadata = require("../package.json");
+import fs from "fs";
+import yaml from "js-yaml";
 
-process.title = metadata.name;
+export function load(config) {
+  return yaml.safeLoad(fs.readFileSync(config));
+}
 
-program
-  .version(metadata.version)
-  .option("-c, --capabilities", "Webdriver capabilities")
-  .option("--no-sideyml", "Disabled the use of .side.yml")
-  .parse(process.argv);
-
-program.help();
+export default {
+  load
+};

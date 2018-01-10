@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17,16 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import program from "commander";
-import Capabilities from "./capabilities";
-const metadata = require("../package.json");
+import path from "path";
+import Config from "../config";
 
-process.title = metadata.name;
-
-program
-  .version(metadata.version)
-  .option("-c, --capabilities", "Webdriver capabilities")
-  .option("--no-sideyml", "Disabled the use of .side.yml")
-  .parse(process.argv);
-
-program.help();
+describe("configuration loader", () => {
+  it("should load the config from a file", () => {
+    const configuration = Config.load(path.join(__dirname, "config_1.yml"));
+    expect(configuration.capabilities).toBeDefined();
+  });
+});
