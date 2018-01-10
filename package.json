@@ -1,0 +1,12 @@
+{
+  "name": "selenium-ide",
+  "repository": "git@github.com:SeleniumHQ/selenium-ide.git",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "lerna": "^2.6.0"
+  }
+}
