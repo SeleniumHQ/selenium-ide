@@ -4,7 +4,7 @@
   "description": "Run exported Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
-    "build": "babel -d dist src --presets=node6 --ignore=__test__"
+    "build": "babel -d dist src --ignore=__test__"
   },
   "bin": {
     "selenium-side-runner": "dist/index.js"
