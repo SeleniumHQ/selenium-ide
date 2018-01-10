@@ -13,7 +13,9 @@
   "private": false,
   "dependencies": {
     "commander": "^2.12.2",
-    "js-yaml": "^3.10.0"
+    "jest": "^22.0.5",
+    "js-yaml": "^3.10.0",
+    "selenium-webdriver": "^3.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

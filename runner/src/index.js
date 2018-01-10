@@ -19,6 +19,7 @@
 
 import path from "path";
 import program from "commander";
+import jest from "jest";
 import Capabilities from "./capabilities";
 import Config from "./config";
 import metadata from "../package.json";
@@ -34,7 +35,8 @@ program
 const configuration = {
   capabilities: {
     browserName: "chrome"
-  }
+  },
+  path: path.join(__dirname, "../../")
 };
 if (program.sideyml) {
   try {
@@ -51,3 +53,7 @@ if (program.capabilities) {
     console.log("failed to parse inline capabilities");
   }
 }
+
+process.env.configuration = JSON.stringify(configuration);
+let testPath = program.args.length ? program.args[0] : "**/*.test.js";
+jest.run(["--setupFiles", path.join(__dirname, "setup.js"), "--testEnvironment", "node", "--modulePaths", path.join(__dirname, "../node_modules"), "--testMatch", testPath]);
