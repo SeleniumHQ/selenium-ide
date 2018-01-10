@@ -20,6 +20,7 @@
 import path from "path";
 import program from "commander";
 import jest from "jest";
+import winston from "winston";
 import Capabilities from "./capabilities";
 import Config from "./config";
 import metadata from "../package.json";
@@ -28,9 +29,12 @@ process.title = metadata.name;
 
 program
   .version(metadata.version)
-  .option("-c, --capabilities [value]", "Webdriver capabilities")
+  .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("--no-sideyml", "Disabled the use of .side.yml")
+  .option("--debug", "Print debug logs")
   .parse(process.argv);
+
+winston.level = program.debug ? "debug" : "warn";
 
 const configuration = {
   capabilities: {
@@ -42,7 +46,7 @@ if (program.sideyml) {
   try {
     Object.assign(configuration, Config.load(path.join(process.cwd(), ".side.yml")));
   } catch (e) {
-    console.log("could not load .side.yml");
+    winston.info("Could not load .side.yml");
   }
 }
 
@@ -50,7 +54,7 @@ if (program.capabilities) {
   try {
     Object.assign(configuration.capabilities, Capabilities.parseString(program.capabilities));
   } catch (e) {
-    console.log("failed to parse inline capabilities");
+    winston.info("Failed to parse inline capabilities");
   }
 }
 
