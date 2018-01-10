@@ -19,6 +19,6 @@ import template from "../../selianize/template";
 
 describe("Code template", () => {
   it("should return the export header", () => {
-    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\nbeforeEach(() => {driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();});afterEach(() => {driver.quit();});");
+    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\nbeforeEach(() => {driver = Runner.buildDriver();});afterEach(() => {driver.quit();});");
   });
 });

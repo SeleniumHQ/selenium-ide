@@ -16,7 +16,7 @@
 // under the License.
 
 export function bootstrap() {
-  return "// This file was generated using Selenium IDE\nbeforeEach(() => {driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();});afterEach(() => {driver.quit();});";
+  return "// This file was generated using Selenium IDE\nbeforeEach(() => {driver = Runner.buildDriver();});afterEach(() => {driver.quit();});";
 }
 
 export default {
