@@ -15,7 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import webdriver from "selenium-webdriver";
+
 const Runner = {};
 Runner.configuration = JSON.parse(process.env.configuration);
+Runner.buildDriver = function() {
+  const driver = new webdriver.Builder().withCapabilities(Runner.configuration.capabilities);
+
+  if (Runner.configuration.server) driver.usingServer(Runner.configuration.server);
+
+  return driver.build();
+};
 
 global.Runner = Runner;

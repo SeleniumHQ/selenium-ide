@@ -30,6 +30,7 @@ process.title = metadata.name;
 program
   .version(metadata.version)
   .option("-c, --capabilities [list]", "Webdriver capabilities")
+  .option("-s, --server [url]", "Webdriver remote server")
   .option("--no-sideyml", "Disabled the use of .side.yml")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
@@ -49,6 +50,8 @@ if (program.sideyml) {
     winston.info("Could not load .side.yml");
   }
 }
+
+configuration.server = program.server ? program.server : configuration.server;
 
 if (program.capabilities) {
   try {
