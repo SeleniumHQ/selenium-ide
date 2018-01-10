@@ -4,9 +4,17 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
+    "test": "jest",
     "postinstall": "lerna bootstrap"
   },
+  "jest": {
+    "testMatch": [
+      "**/packages/**/src/**/__test?(s)__/**/*.js?(x)"
+    ]
+  },
   "devDependencies": {
+    "babel-jest": "^22.0.4",
+    "jest": "^22.0.5",
     "lerna": "^2.6.0"
   }
 }

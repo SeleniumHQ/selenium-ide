@@ -1,5 +1,5 @@
 {
-  "name": "selenium-ide",
+  "name": "selenium-ide-extension",
   "version": "0.0.0",
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
@@ -10,20 +10,12 @@
     "build-prod": "rm -rf build && env NODE_ENV=production yarn build",
     "build-chrome": "./build.sh build ./selenium-ide.pem 1>/dev/null && mkdir -p dist && mv build.crx dist/selenium-ide.crx && echo \"Wrote dist/selenium-ide.crx\"",
     "build-firefox": "web-ext sign -s build -a dist --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET --id=$(cat .web-extension-id)",
-    "test": "jest",
-    "test-dev": "jest --watch",
     "lint": "eslint src/{neo,selianize}/ runner/src/ --ext .js --ext .jsx"
-  },
-  "jest": {
-    "testMatch": [
-      "**/src/**/__test?(s)__/**/*.js?(x)"
-    ]
   },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators": "^6.24.1",
@@ -45,7 +37,6 @@
     "google-closure-library": "^20170910.0.0",
     "html-webpack-plugin": "^2.30.1",
     "imports-loader": "^0.7.1",
-    "jest": "^22.0.1",
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.6",
     "react-hot-loader": "^3.0.0-beta.7",
