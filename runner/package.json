@@ -9,6 +9,14 @@
   "bin": {
     "selenium-side-runner": "dist/index.js"
   },
+  "engines": {
+    "node": ">=6"
+  },
+  "keywords": [
+    "selenium",
+    "command",
+    "line"
+  ],
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
