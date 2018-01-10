@@ -8,8 +8,8 @@
     "start": "webpack-dev-server --hot",
     "build": "webpack",
     "build-prod": "rm -rf build && env NODE_ENV=production yarn build",
-    "build-chrome": "./build.sh build ./selenium-ide.pem 1>/dev/null && mkdir -p dist && mv build.crx dist/selenium-ide.crx && echo \"Wrote dist/selenium-ide.crx\"",
-    "build-firefox": "web-ext sign -s build -a dist --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET --id=$(cat .web-extension-id)"
+    "build-chrome": "./build.sh build ../../selenium-ide.pem 1>/dev/null && mkdir -p dist && mv build.crx dist/selenium-ide.crx && echo \"Wrote dist/selenium-ide.crx\"",
+    "build-firefox": "web-ext sign -s build -a dist --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET --id=$(cat ../../.web-extension-id)"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.4",
