@@ -7,25 +7,25 @@ imports:
 
 git module atoms:
   url: https://github.com/SeleniumHQ/selenium
-  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  rev: 4c359d9e9959b0cb2341c6b30496ff72e8f6aa26
   export: "javascript/atoms"
 
 git module selenium-atoms:
   url: https://github.com/SeleniumHQ/selenium
-  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  rev: 4c359d9e9959b0cb2341c6b30496ff72e8f6aa26
   export: "javascript/selenium-atoms"
 
 git module selenium-core:
   url: https://github.com/SeleniumHQ/selenium
-  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  rev: 4c359d9e9959b0cb2341c6b30496ff72e8f6aa26
   export: "javascript/selenium-core/scripts"
 
 git module webdriver:
   url: https://github.com/SeleniumHQ/selenium
-  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  rev: 4c359d9e9959b0cb2341c6b30496ff72e8f6aa26
   export: "javascript/webdriver/atoms"
 
 git module third_party:
   url: https://github.com/SeleniumHQ/selenium
-  rev: 9ad143a002e14aee538f1a35dd56e16abe7d95ea
+  rev: 4c359d9e9959b0cb2341c6b30496ff72e8f6aa26
   export: "third_party/js"
