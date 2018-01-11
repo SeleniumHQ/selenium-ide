@@ -62,5 +62,5 @@ if (program.capabilities) {
 }
 
 process.env.configuration = JSON.stringify(configuration);
-let testPath = program.args.length ? program.args[0] : "**/*.test.js";
-jest.run(["--setupFiles", path.join(__dirname, "setup.js"), "--testEnvironment", "node", "--modulePaths", path.join(__dirname, "../node_modules"), "--testMatch", testPath]);
+let testFilter = program.args.length ? program.args[0] : "";
+jest.run(["--setupFiles", path.join(__dirname, "setup.js"), "--testEnvironment", "node", "--modulePaths", path.join(__dirname, "../node_modules"), "--testMatch", "**/*.test.js", "-t", testFilter]).catch(winston.error);
