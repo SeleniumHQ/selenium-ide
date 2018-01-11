@@ -18,6 +18,7 @@
 import webdriver from "selenium-webdriver";
 
 const Runner = {};
+const drivers = [];
 Runner.configuration = JSON.parse(process.env.configuration);
 Runner.buildDriver = function() {
   const driver = new webdriver.Builder().withCapabilities(Runner.configuration.capabilities);
@@ -25,6 +26,25 @@ Runner.buildDriver = function() {
   if (Runner.configuration.server) driver.usingServer(Runner.configuration.server);
 
   return driver.build();
+};
+
+Runner.getDriver = function() {
+  const driver = Runner.buildDriver();
+  drivers.push(driver);
+  return driver;
+};
+
+Runner.releaseDriver = function(driver) {
+  drivers.splice(drivers.indexOf(driver), 1);
+  driver.quit();
+};
+
+Runner.cleaup = function() {
+  if (drivers.length) {
+    drivers.forEach(driver => {
+      driver.quit();
+    });
+  }
 };
 
 global.Runner = Runner;
