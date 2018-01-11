@@ -1,0 +1,105 @@
+html {
+    overflow: hidden;
+}
+
+body {
+    font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 14px;
+    color: #505050;
+    margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+}
+
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    color: #505050;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #505050;
+}
+
+a:focus {
+    outline: 0;
+}
+
+input,
+textarea {
+    border: 1px #DCDCDC solid;
+    color: #3F3F3F;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 17px;
+    padding: 2px 5px;
+}
+
+textarea {
+    resize: none;
+}
+
+textarea {
+    font-family: inherit;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #40A6FF;
+    outline: 0;
+}
+
+input:disabled,
+textarea:disabled {
+    background-color: whitesmoke;
+    border-color: whitesmoke;
+    cursor: not-allowed;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #A0A0A0;
+}
+
+hr {
+    background-color: #E5E5E5;
+    border: 0;
+    height: 1px;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.dragging {
+    cursor: move!important;
+    cursor: grabbing!important;
+}
+
+.passed {
+    color: #276D3A;
+}
+
+.failed {
+    color: #DF0006;
+}
+
+::-moz-focus-inner {
+    border: 0;
+}
+
