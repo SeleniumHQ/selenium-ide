@@ -1,4 +1,4 @@
-<img src="src/icons/icon128.png" alt="logo" height="128" align="right" />
+<img src="packages/selenium-ide/src/icons/icon128.png" alt="logo" height="128" align="right" />
 
 # Selenium IDE &middot; [![Build Status](https://travis-ci.org/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.org/SeleniumHQ/selenium-ide)
 
@@ -31,14 +31,14 @@ Firefox users for the time being can download the latest `xpi` from the [release
 
 ## Building
 
-- Install the dependencies  
+- Install the dependencies
 ```peru sync```  
 ```yarn```
 - Build the extension  
 ```yarn build```
 - Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
 
-Manifest located in `<Project Directory>/build/manifest.json`
+Manifest located in `<Project Directory>/packages/selenium-ide/build/manifest.json`
 
 ## What now?
 
