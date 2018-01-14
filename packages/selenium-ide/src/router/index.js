@@ -26,14 +26,22 @@ export default class Router {
     this.patch = this._registerRoute.bind(this, "patch");
     this.delete = this._registerRoute.bind(this, "delete");
     this.all = this._registerRoute.bind(this, undefined);
+    this.run = this.run.bind(this);
+    this.use = this.use.bind(this);
   }
   _registerRoute(verb, uri, cb) {
     this.routes.push(new Route(verb, uri, cb));
+  }
+  _mount(prefix) {
+    return this.routes.map(r => new Route(r.verb, prefix + r.uri, r.run));
   }
   run({verb, uri, ...request}) {
     return new Promise((res, rej) => {
       const route = this.routes.find(r => r.test(verb, uri));
       route ? route.run(request.payload, res) : rej(new Error("No compliant route found"));
     });
+  }
+  use(prefix, router) {
+    this.routes = [...this.routes, ...router._mount(prefix)];
   }
 }

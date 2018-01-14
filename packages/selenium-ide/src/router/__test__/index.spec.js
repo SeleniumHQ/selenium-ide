@@ -82,18 +82,31 @@ describe("string router", () => {
     router.get("/", (req, res) => {
       res(true);
     });
-    return Promise.all([expect(router.run({
-      verb: "GET",
-      uri: "/"
-    })).resolves.toBeTruthy(),
-    expect(router.run({
-      verb: "get",
-      uri: "/"
-    })).resolves.toBeTruthy(),
-    expect(router.run({
-      verb: "GeT",
-      uri: "/"
-    })).resolves.toBeTruthy()
+    return Promise.all([
+      expect(router.run({
+        verb: "GET",
+        uri: "/"
+      })).resolves.toBeTruthy(),
+      expect(router.run({
+        verb: "get",
+        uri: "/"
+      })).resolves.toBeTruthy(),
+      expect(router.run({
+        verb: "GeT",
+        uri: "/"
+      })).resolves.toBeTruthy()
     ]);
+  });
+  it("should mount another router", () => {
+    const root = new Router();
+    const mounted = new Router();
+    mounted.get("/people", (req, res) => {
+      res(true);
+    });
+    root.use("/v1", mounted);
+    return expect(root.run({
+      verb: "get",
+      uri: "/v1/people"
+    })).resolves.toBeTruthy();
   });
 });
