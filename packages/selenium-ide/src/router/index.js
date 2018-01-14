@@ -15,13 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default class Route {
-  constructor(verb, uri, cb) {
-    this.verb = verb && verb.toLowerCase();
-    this.uri = uri.toLowerCase();
-    this.run = cb;
+import Route from "./route";
+
+export default class Router {
+  constructor() {
+    this.routes = [];
+    this.get = this._registerRoute.bind(this, "get");
+    this.post = this._registerRoute.bind(this, "post");
+    this.put = this._registerRoute.bind(this, "put");
+    this.patch = this._registerRoute.bind(this, "patch");
+    this.delete = this._registerRoute.bind(this, "delete");
+    this.all = this._registerRoute.bind(this, undefined);
   }
-  test(verb, uri) {
-    return (!this.verb || verb.toLowerCase() === this.verb) && uri.toLowerCase() === uri;
+  _registerRoute(verb, uri, cb) {
+    this.routes.push(new Route(verb, uri, cb));
+  }
+  run({verb, uri, ...request}) {
+    return new Promise((res, rej) => {
+      const route = this.routes.find(r => r.test(verb, uri));
+      route ? route.run(request.payload, res) : rej(new Error("No compliant route found"));
+    });
   }
 }
