@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-/* eslint-disable */
 import { registerCommand, canExecuteCommand, executeCommand } from "../../plugin/commandExecutor";
 
 describe("command executor", () => {
@@ -58,7 +57,7 @@ describe("command executor", () => {
     const command = "syncFail";
     const cb = () => {
       throw new Error();
-    }
+    };
     registerCommand(command, cb);
     expect(() => {
       try {
