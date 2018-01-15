@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, extendObservable } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Command {
@@ -29,7 +29,7 @@ export default class Command {
   }
 
   @computed get isValid() {
-    return CommandsArray.includes(this.command);
+    return Commands.array.includes(this.command);
   }
 
   @action.bound clone() {
@@ -41,8 +41,8 @@ export default class Command {
   }
 
   @action.bound setCommand(command) {
-    if (CommandsValues[command]) {
-      this.command = CommandsValues[command];
+    if (Commands.values[command]) {
+      this.command = Commands.values[command];
     } else {
       this.command = command;
     }
@@ -66,46 +66,58 @@ export default class Command {
   }
 }
 
-export const Commands = Object.freeze({
-  addSelection: "add selection",
-  answerOnNextPrompt: "answer on next prompt",
-  assertAlert: "assert alert",
-  assertConfirmation: "assert confirmation",
-  assertPrompt: "assert prompt",
-  assertText: "assert text",
-  assertTitle: "assert title",
-  chooseCancelOnNextConfirmation: "choose cancel on next confirmation",
-  chooseCancelOnNextPrompt: "choose cancel on next prompt",
-  chooseOkOnNextConfirmation: "choose ok on next confirmation",
-  clickAt: "click at",
-  doubleClickAt: "double click at",
-  dragAndDropToObject: "drag and drop to object",
-  echo: "echo",
-  editContent: "edit content",
-  mouseDownAt: "mouse down at",
-  mouseMoveAt: "mouse move at",
-  mouseOut: "mouse out",
-  mouseOver: "mouse over",
-  mouseUpAt: "mouse up at",
-  open: "open",
-  pause: "pause",
-  removeSelection: "remove selection",
-  runScript: "run script",
-  select: "select",
-  selectFrame: "select frame",
-  selectWindow: "select window",
-  sendKeys: "send keys",
-  store: "store",
-  storeText: "store text",
-  storeTitle: "store title",
-  type: "type",
-  verifyText: "verify text",
-  verifyTitle: "verify title"
-});
+class CommandList {
+  @observable list = new Map([
+    [ "addSelection", "add selection" ],
+    [ "answerOnNextPrompt", "answer on next prompt" ],
+    [ "assertAlert",  "assert alert" ],
+    [ "assertConfirmation", "assert confirmation" ],
+    [ "assertPrompt", "assert prompt" ],
+    [ "assertText", "assert text" ],
+    [ "assertTitle", "assert title" ],
+    [ "chooseCancelOnNextConfirmation", "choose cancel on next confirmation" ],
+    [ "chooseCancelOnNextPrompt", "choose cancel on next prompt" ],
+    [ "chooseOkOnNextConfirmation", "choose ok on next confirmation" ],
+    [ "clickAt", "click at" ],
+    [ "doubleClickAt", "double click at" ],
+    [ "dragAndDropToObject", "drag and drop to object" ],
+    [ "echo", "echo" ],
+    [ "editContent", "edit content" ],
+    [ "mouseDownAt", "mouse down at" ],
+    [ "mouseMoveAt", "mouse move at" ],
+    [ "mouseOut", "mouse out" ],
+    [ "mouseOver", "mouse over" ],
+    [ "mouseUpAt", "mouse up at" ],
+    [ "open", "open" ],
+    [ "pause", "pause" ],
+    [ "removeSelection", "remove selection" ],
+    [ "runScript", "run script" ],
+    [ "select", "select" ],
+    [ "selectFrame", "select frame" ],
+    [ "selectWindow", "select window" ],
+    [ "sendKeys", "send keys" ],
+    [ "store", "store" ],
+    [ "storeText", "store text" ],
+    [ "storeTitle", "store title" ],
+    [ "type", "type" ],
+    [ "verifyText", "verify text" ],
+    [ "verifyTitle", "verify title" ]
+  ])
 
-export const CommandsArray = Object.freeze(Object.keys(Commands));
+  @computed get array() {
+    return this.list.keys();
+  }
 
-export const CommandsValues = Object.freeze(CommandsArray.reduce((commands, command) => {
-  commands[Commands[command]] = command;
-  return commands;
-}, {}));
+  @computed get values() {
+    return this.array.reduce((commands, command) => {
+      commands[this.list.get(command)] = command;
+      return commands;
+    }, {});
+  }
+
+  @action.bound addCommand(id, name) {
+    this.list.set(id, name);
+  }
+}
+
+export const Commands = new CommandList();

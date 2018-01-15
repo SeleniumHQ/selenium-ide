@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Command, { Commands, CommandsValues } from "../../models/Command";
+import Command, { Commands } from "../../models/Command";
 
 describe("Command", () => {
   it("should generate and id", () => {
@@ -88,11 +88,20 @@ describe("Command", () => {
 
 describe("Commands enum", () => {
   it("should contains only strings as values", () => {
-    Object.keys(Commands).forEach(command => {
-      expect(Commands[command].constructor.name).toBe("String");
+    Commands.list.forEach(name => {
+      expect(name.constructor.name).toBe("String");
     });
   });
-  it("it should traverse through the reverse dictionary", () => {
-    expect(Commands[0]).toBe(Commands[CommandsValues[Commands[0]]]);
+  it("should traverse through the reverse dictionary", () => {
+    Commands.list.forEach((name) => {
+      expect(name).toBe(Commands.list.get(Commands.values[name]));
+    });
+    expect(Commands.list[0]).toBe(Commands[Commands.values[Commands[0]]]);
+  });
+  it("should add a command to the list", () => {
+    let key = "test", value = "a friendly test", length = Commands.array.length;
+    Commands.addCommand(key, value);
+    expect(Commands.list.get(key)).toEqual(value);
+    expect(Commands.array.length).toBe(length + 1);
   });
 });
