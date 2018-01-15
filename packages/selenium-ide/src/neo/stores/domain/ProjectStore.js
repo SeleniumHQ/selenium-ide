@@ -26,6 +26,7 @@ export default class ProjectStore {
   @observable modified = false;
   @observable name = "";
   @observable url = "";
+  @observable plugins = [];
   @observable _tests = [];
   @observable _suites = [];
   @observable _urls = [];
@@ -100,6 +101,10 @@ export default class ProjectStore {
     }
   }
 
+  @action.bound registerPlugin(plugin) {
+    this.plugins.push(plugin);
+  }
+
   @action.bound fromJS(jsRep) {
     this.id = jsRep.id || uuidv4();
     this.name = jsRep.name;
@@ -107,6 +112,7 @@ export default class ProjectStore {
     this._tests.replace(jsRep.tests.map(TestCase.fromJS));
     this._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, this.tests)));
     this._urls.replace(jsRep.urls);
+    this.plugins.replace(jsRep.plugins);
     this.modified = false;
   }
 
@@ -117,7 +123,8 @@ export default class ProjectStore {
       url: this.url,
       tests: this._tests,
       suites: this._suites.map(s => s.exportSuite()),
-      urls: this._urls
+      urls: this._urls,
+      plugins: this.plugins
     });
   }
 }

@@ -174,7 +174,14 @@ describe("Project Store", () => {
       urls: [
         "https://en.wikipedia.org",
         "http://www.seleniumhq.org"
-      ].sort()
+      ].sort(),
+      plugins: [
+        {
+          id: "1",
+          name: "Some plugin",
+          version: "1.0.0"
+        }
+      ]
     };
 
     const project = new ProjectStore();
@@ -188,6 +195,8 @@ describe("Project Store", () => {
     expect(project.suites[0] instanceof Suite).toBeTruthy();
     expect(project.urls.length).toBe(2);
     expect(project.urls[0]).toBe(projectRep.urls[0]);
+    expect(project.plugins.length).toBe(1);
+    expect(project.plugins[0]).toEqual(projectRep.plugins[0]);
   });
   it("should generate an ID for loaded project if none provided", () => {
     const projectRep = {
@@ -201,5 +210,19 @@ describe("Project Store", () => {
     const project = new ProjectStore();
     project.fromJS(projectRep);
     expect(project.id).toBeDefined();
+  });
+  it("should have a list of loaded plugins", () => {
+    const project = new ProjectStore();
+    expect(project.plugins).toBeDefined();
+  });
+  it("should add to the list of loaded plugins", () => {
+    const project = new ProjectStore();
+    const plugin = {
+      id: "1",
+      name: "Some plugin",
+      version: "1.0.0"
+    };
+    project.registerPlugin(plugin);
+    expect(project.plugins[0].id).toBe(plugin.id);
   });
 });
