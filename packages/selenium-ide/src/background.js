@@ -17,7 +17,18 @@
 
 import browser from "webextension-polyfill";
 
+let extensionWindow = undefined;
 let panelId = undefined;
+
+function browserAction() {
+  if (extensionWindow) {
+    browser.windows.update(extensionWindow.id, {
+      focused: true
+    }).catch(openPage);
+  } else {
+    openPage();
+  }
+}
 
 function openPage() {
   const getContentWindowInfo = browser.windows.getLastFocused();
@@ -27,7 +38,7 @@ function openPage() {
     .then(function(windowInfo) {
       console.log("get the window info");
       let contentWindowInfo = windowInfo[0];
-      let sideexWindowInfo = windowInfo[1];
+      let sideexWindowInfo = extensionWindow = windowInfo[1];
       console.log("contentWindowInfo Id:" + contentWindowInfo.id);
       console.log("contentWindowInfo:", contentWindowInfo);
       console.log("sideexWindowInfo Id:" + sideexWindowInfo.id);
@@ -97,7 +108,7 @@ function sideIsValid(number) {
   return number && number.constructor.name === "Number" && number > 50;
 }
 
-browser.browserAction.onClicked.addListener(openPage);
+browser.browserAction.onClicked.addListener(browserAction);
 
 function disconnectAllTabs(tabs) {
   for (let tab of tabs) {
