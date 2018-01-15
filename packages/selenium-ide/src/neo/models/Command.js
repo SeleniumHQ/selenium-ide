@@ -116,7 +116,11 @@ class CommandList {
   }
 
   @action.bound addCommand(id, name) {
-    this.list.set(id, name);
+    if (this.list.has(id)) {
+      throw new Error(`Command with the id ${id} already exists`);
+    } else {
+      this.list.set(id, name);
+    }
   }
 }
 

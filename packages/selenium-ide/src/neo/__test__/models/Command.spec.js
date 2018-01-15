@@ -104,4 +104,11 @@ describe("Commands enum", () => {
     expect(Commands.list.get(key)).toEqual(value);
     expect(Commands.array.length).toBe(length + 1);
   });
+  it("should throw if trying to add a command that already exists", () => {
+    let key = "dontDoThisTwice", value = "this shouldnt happen";
+    Commands.addCommand(key, value);
+    expect(() => {
+      Commands.addCommand(key, value);
+    }).toThrowError(`Command with the id ${key} already exists`);
+  });
 });
