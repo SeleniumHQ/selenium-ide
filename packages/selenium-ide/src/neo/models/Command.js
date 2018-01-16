@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable, extendObservable } from "mobx";
+import { action, computed, observable } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Command {
@@ -122,6 +122,13 @@ class CommandList {
       this.list.set(id, name);
     }
   }
+
+  static get instance() {
+    if (!this._instance) {
+      this._instance = new CommandList();
+    }
+    return this._instance;
+  }
 }
 
-export const Commands = new CommandList();
+export const Commands = CommandList.instance;

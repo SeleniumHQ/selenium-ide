@@ -17,7 +17,6 @@
 
 import Manager from "../../plugin/manager";
 import { canExecuteCommand } from "../../plugin/commandExecutor";
-import { Commands } from "../../neo/models/command";
 
 describe("plugin manager", () => {
   it("should have a list of active plugins", () => {
@@ -37,6 +36,5 @@ describe("plugin manager", () => {
     Manager.registerPlugin(plugin);
     expect(Manager.plugins.length).toBe(1);
     expect(canExecuteCommand(plugin.commands[0].id)).toBeTruthy();
-    expect(Commands.list.has(plugin.commands[0].id)).toBeTruthy();
   });
 });
