@@ -58,7 +58,7 @@ export default class ProjectHeader extends React.Component {
           <OpenButton onFileSelected={this.props.load} />
           <SaveButton data-place="left" unsaved={this.props.changed} onClick={this.props.save} />
           <ListMenu width={250} padding={-5} opener={
-            <MoreButton />
+            <MoreButton canFocus={true} />
           }>
             <ListMenuItem onClick={this.props.export}>Export to JavaScript code</ListMenuItem>
           </ListMenu>
