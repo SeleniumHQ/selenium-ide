@@ -16,7 +16,7 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-import { Commands } from "../neo/models/command";
+import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 
 function RunCommand(id, command) {
