@@ -109,4 +109,16 @@ describe("string router", () => {
       uri: "/v1/people"
     })).resolves.toBeTruthy();
   });
+  it("should mount on root route", () => {
+    const root = new Router();
+    const mounted = new Router();
+    mounted.get("/people", (req, res) => {
+      res(true);
+    });
+    root.use(undefined, mounted);
+    return expect(root.run({
+      verb: "get",
+      uri: "/people"
+    })).resolves.toBeTruthy();
+  });
 });

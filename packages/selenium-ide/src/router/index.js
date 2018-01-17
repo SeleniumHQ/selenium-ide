@@ -41,7 +41,7 @@ export default class Router {
       route ? route.run(request.payload, res) : rej(new Error("No compliant route found"));
     });
   }
-  use(prefix, router) {
+  use(prefix = "", router) {
     this.routes = [...this.routes, ...router._mount(prefix)];
   }
 }
