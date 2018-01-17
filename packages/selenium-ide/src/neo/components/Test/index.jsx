@@ -23,6 +23,10 @@ import { modifier } from "modifier-keys";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
+import { observer } from "mobx-react";
+import { observable, action } from "mobx";
+import ContextMenu from "../ContextMenu";
+import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 export const Type = "test";
@@ -44,8 +48,13 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-
+@observer
 export default class Test extends React.Component {
+  @observable isOpen = false;
+  constructor(props){
+    super(props);
+    this.handleContextMenu = this.handleContextMenu.bind(this);
+  }
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
@@ -61,7 +70,10 @@ export default class Test extends React.Component {
     setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    index: PropTypes.number,
+    position: PropTypes.any,
+    onContextMenu: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -101,7 +113,23 @@ export default class Test extends React.Component {
       this.props.moveSelectionDown();
     }
   }
+  @action handleContextMenu(e){
+    if(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if(!MenuState.isOpen){
+      this.isOpen = !this.isOpen;
+    }
+  }
   render() {
+    const menuList = <div>
+      {this.props.suite ?
+        null :
+        <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem> }
+      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+    </div>;
+
     const rendered = <a
       href="#"
       ref={(node) => { this.node = node; }}
@@ -110,18 +138,20 @@ export default class Test extends React.Component {
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
+      onContextMenu={this.handleContextMenu}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
-        <ListMenu width={130} padding={-5} opener={
-          <MoreButton />
-        }>
-          <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
-          <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+        <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+          {menuList}
         </ListMenu> :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
+      <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
+        position={this.props.position} closeTimeoutMS={50}>
+        {menuList}
+      </ContextMenu>
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
