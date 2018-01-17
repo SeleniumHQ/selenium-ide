@@ -152,3 +152,10 @@ browser.contextMenus.onClicked.addListener(function(info) {
 browser.runtime.onConnect.addListener(function(m) {
   port = m;
 });
+
+browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  browser.runtime.sendMessage(message).then(sendResponse).catch(() => {
+    return sendResponse({ error: "Selenium IDE is not active" });
+  });
+  return true;
+});

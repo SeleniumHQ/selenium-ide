@@ -37,4 +37,40 @@ describe("plugin manager", () => {
     expect(Manager.plugins.length).toBe(1);
     expect(canExecuteCommand(plugin.commands[0].id)).toBeTruthy();
   });
+  it("should register a plugin with no commands", () => {
+    const plugin = {
+      id: "nocommands",
+      name: "no commands here",
+      version: "1.0.0"
+    };
+    const currLength = Manager.plugins.length;
+    Manager.registerPlugin(plugin);
+    expect(Manager.plugins.length).toBe(currLength + 1);
+  });
+  it("should tell if a plugin was already registered", () => {
+    const plugin = {
+      id: "2",
+      name: "an extension from the store",
+      version: "1.0.0"
+    };
+    const anotherPlugin = {
+      id: "3",
+      name: "an extension from the store",
+      version: "1.0.0"
+    };
+    expect(Manager.hasPlugin(plugin.id)).toBeFalsy();
+    Manager.registerPlugin(anotherPlugin);
+    expect(Manager.hasPlugin(anotherPlugin.id)).toBeTruthy();
+  });
+  it("should throw if a plugin was already registered", () => {
+    const plugin = {
+      id: "4",
+      name: "dont register me twice",
+      version: "1.0.0"
+    };
+    Manager.registerPlugin(plugin);
+    expect(() => {
+      Manager.registerPlugin(plugin);
+    }).toThrowError("This plugin is already registered");
+  });
 });

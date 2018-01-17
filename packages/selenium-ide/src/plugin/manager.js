@@ -30,11 +30,21 @@ class PluginManager {
   plugins = [];
 
   registerPlugin(plugin) {
-    this.plugins.push(plugin);
-    plugin.commands.forEach(({id, name}) => {
-      Commands.addCommand(id, name);
-      registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
-    });
+    if (!this.hasPlugin(plugin.id)) {
+      this.plugins.push(plugin);
+      if (plugin.commands) {
+        plugin.commands.forEach(({id, name}) => {
+          Commands.addCommand(id, name);
+          registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
+        });
+      }
+    } else {
+      throw new Error("This plugin is already registered");
+    }
+  }
+
+  hasPlugin(pluginId) {
+    return !!this.plugins.find(p => p.id === pluginId);
   }
 }
 

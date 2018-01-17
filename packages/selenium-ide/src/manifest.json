@@ -30,7 +30,9 @@
     "notifications",
     "storage"
   ],
-
+  "externally_connectable": {
+    "ids": ["*"]
+  },
   "web_accessible_resources": [
     "icons/icon128.png",
     "assets/prompt.js"

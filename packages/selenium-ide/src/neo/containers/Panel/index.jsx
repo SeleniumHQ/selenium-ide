@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -34,6 +35,7 @@ import Editor from "../Editor";
 import Console from "../Console";
 import Modal from "../Modal";
 import UiState from "../../stores/view/UiState";
+import api from "../../../api";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
@@ -61,6 +63,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 modify(project);
+
+browser.runtime.onMessage.addListener(api);
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
