@@ -102,7 +102,12 @@ export default class ProjectStore {
   }
 
   @action.bound registerPlugin(plugin) {
-    this.plugins.push(plugin);
+    const existsInPlugins = this.plugins.findIndex(p => p.id === plugin.id);
+    if (existsInPlugins !== -1) {
+      this.plugins[existsInPlugins] = plugin;
+    } else {
+      this.plugins.push(plugin);
+    }
   }
 
   @action.bound fromJS(jsRep) {

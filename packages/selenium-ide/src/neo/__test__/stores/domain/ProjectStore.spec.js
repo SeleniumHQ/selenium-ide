@@ -225,4 +225,21 @@ describe("Project Store", () => {
     project.registerPlugin(plugin);
     expect(project.plugins[0].id).toBe(plugin.id);
   });
+  it("should upgrade the given plugin when upgraded", () => {
+    const project = new ProjectStore();
+    const plugin = {
+      id: "1",
+      name: "to be upgraded",
+      version: "1.0.0"
+    };
+    project.registerPlugin(plugin);
+    const upgraded = {
+      id: "1",
+      name: "was just upgraded",
+      version: "2.0.0"
+    };
+    project.registerPlugin(upgraded);
+    expect(project.plugins.length).toBe(1);
+    expect(project.plugins[0].version).toEqual("2.0.0");
+  });
 });
