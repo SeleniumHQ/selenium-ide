@@ -215,7 +215,7 @@ function doCommand() {
 
   const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
-    canExecuteCommand(command) ? executeCommand(command, parsedTarget, value) : doSeleniumCommand(id, command, parsedTarget, value)
+    canExecuteCommand(command) ? doPluginCommand(id, command, parsedTarget, value) : doSeleniumCommand(id, command, parsedTarget, value)
   ));
 }
 
@@ -242,6 +242,12 @@ function doSeleniumCommand(id, command, parsedTarget, value, res, implicitTime =
     } else {
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
     }
+  });
+}
+
+function doPluginCommand(id, command, target, value) {
+  return executeCommand(command, target, value).then(() => {
+    PlaybackState.setCommandState(id, PlaybackStates.Passed);
   });
 }
 

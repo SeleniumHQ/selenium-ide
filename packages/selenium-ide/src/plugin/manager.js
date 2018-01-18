@@ -15,12 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
 import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
+import sendMessage from "./communication";
 
 function RunCommand(id, command, target, value) {
-  return browser.runtime.sendMessage(id, {
+  return sendMessage(id, {
     action: "execute",
     command: {
       command,
