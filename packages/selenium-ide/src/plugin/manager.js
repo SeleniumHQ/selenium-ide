@@ -20,7 +20,6 @@ import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 
 function RunCommand(id, command, target, value) {
-  console.log(id);
   return browser.runtime.sendMessage(id, {
     action: "execute",
     command: {
