@@ -18,6 +18,7 @@
 import { reaction } from "mobx";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
+import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 const { ExtCommand, isExtCommand } = window;
 
 const extCommand = new ExtCommand();
@@ -192,7 +193,7 @@ function doDomWait(res, domTime, domCount = 0) {
     });
 }
 
-function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
+function doCommand() {
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
 
   let p = new Promise(function(resolve, reject) {
@@ -214,31 +215,34 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
   const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
-    extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
-  ))
-    .then(function(result) {
-      if (result.result !== "success") {
-        // implicit
-        if (result.result.match(/Element[\s\S]*?not found/)) {
-          if (implicitTime && (Date.now() - implicitTime > 30000)) {
-            reportError("Implicit Wait timed out after 30000ms");
-            implicitCount = 0;
-            implicitTime = "";
-          } else {
-            implicitCount++;
-            if (implicitCount == 1) {
-              implicitTime = Date.now();
-            }
-            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
-            return doCommand(false, implicitTime, implicitCount);
-          }
-        }
+    canExecuteCommand(command) ? executeCommand(command, parsedTarget, value) : doSeleniumCommand(id, command, parsedTarget, value)
+  ));
+}
 
-        PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
-      } else {
-        PlaybackState.setCommandState(id, PlaybackStates.Passed);
+function doSeleniumCommand(id, command, parsedTarget, value, res, implicitTime = Date.now(), implicitCount = 0) {
+  return extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command)).then(function(result) {
+    if (result.result !== "success") {
+      // implicit
+      if (result.result.match(/Element[\s\S]*?not found/)) {
+        if (implicitTime && (Date.now() - implicitTime > 30000)) {
+          reportError("Implicit Wait timed out after 30000ms");
+          implicitCount = 0;
+          implicitTime = "";
+        } else {
+          implicitCount++;
+          if (implicitCount == 1) {
+            implicitTime = Date.now();
+          }
+          PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
+          return doCommand(id, command, parsedTarget, value, false, implicitTime, implicitCount);
+        }
       }
-    });
+
+      PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
+    } else {
+      PlaybackState.setCommandState(id, PlaybackStates.Passed);
+    }
+  });
 }
 
 function doDelay() {
