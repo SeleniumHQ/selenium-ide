@@ -24,7 +24,6 @@ router.use(undefined, apiv1);
 
 export default function(message, sender, sendResponse) {
   if (message.uri) {
-    message.payload.id = sender.id;
     return router.run(message).then(sendResponse).catch(err => (
       sendResponse({ error: err.message })
     ));
