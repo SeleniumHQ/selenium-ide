@@ -38,7 +38,7 @@ browser.runtime.sendMessage(process.env.SIDE_ID, {
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.action === "execute") {
-    switch (event.data.command) {
+    switch (message.command.command) {
       case "successfulCommand":
         sendResponse(true);
         break;
