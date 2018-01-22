@@ -254,6 +254,7 @@ class UiState {
     this.isRecording = false;
     this.suiteStates = {};
     this.clearTestStates();
+    this.selectTest(this._project.tests[0]);
   }
 
   @action.bound clearTestStates() {
