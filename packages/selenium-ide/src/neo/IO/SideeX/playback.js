@@ -47,7 +47,8 @@ function executionLoop() {
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    return (extCommand["do" + upperCase](target, value))
+    const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
+    return (extCommand["do" + upperCase](parsedTarget, value))
       .then(() => {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
         return executionLoop();
@@ -212,9 +213,8 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
     }, 500);
   });
 
-  const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
-    extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
+    extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
   ))
     .then(function(result) {
       if (result.result !== "success") {
@@ -229,7 +229,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
             if (implicitCount == 1) {
               implicitTime = Date.now();
             }
-            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
+            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${target}...`);
             return doCommand(false, implicitTime, implicitCount);
           }
         }

@@ -170,7 +170,7 @@ ExtCommand.prototype.sendMessage = function(command, target, value, top) {
 function isExtCommand(command) {
   switch(command) {
     case "pause":
-      //case "open":
+    case "open":
     case "selectFrame":
     case "selectWindow":
     case "close":
