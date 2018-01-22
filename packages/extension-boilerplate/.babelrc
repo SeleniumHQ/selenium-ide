@@ -1,0 +1,14 @@
+{
+  "presets": ["env"],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-decorators",
+    "transform-object-rest-spread",
+    ["transform-class-properties", { "loose": true }],
+    ["babel-plugin-transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true
+    }]
+  ]
+}
