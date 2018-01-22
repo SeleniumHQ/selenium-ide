@@ -19,14 +19,15 @@ import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import sendMessage from "./communication";
 
-function RunCommand(id, command, target, value) {
+function RunCommand(id, command, target, value, options) {
   return sendMessage(id, {
     action: "execute",
     command: {
       command,
       target,
       value
-    }
+    },
+    options
   });
 }
 

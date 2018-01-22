@@ -33,10 +33,10 @@ export function canExecuteCommand(command) {
   return commands.hasOwnProperty(command);
 }
 
-export function executeCommand(command, target, value) {
+export function executeCommand(command, target, value, options) {
   if (!commands[command]) {
     throw new Error(`The command ${command} is not registered with any plugin`);
   } else {
-    return commands[command](target, value);
+    return commands[command](target, value, options);
   }
 }

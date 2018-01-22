@@ -77,4 +77,9 @@ describe("command executor", () => {
     registerCommand("asyncFail", () => Promise.reject(false));
     expect(executeCommand("asyncFail")).rejects.toBeFalsy();
   });
+  it("should pass options to the command executor", () => {
+    registerCommand("optionsCommand", (target, value, options) => (options.first));
+    const option = "test";
+    expect(executeCommand("optionsCommand", undefined, undefined, { first: option })).toEqual(option);
+  });
 });
