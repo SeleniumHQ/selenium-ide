@@ -27,6 +27,8 @@ export default function sendMessage(id, payload) {
   }).catch((response) => {
     if (isReceivingEndError(response)) {
       return Promise.reject("The plugin is either closed or deleted");
+    } else {
+      return Promise.reject(response);
     }
   });
 }
