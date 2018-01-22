@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable, observe } from "mobx";
+import { action, computed, observable, observe, extendObservable } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import TestState from "./TestState";
@@ -41,6 +41,9 @@ class UiState {
   @observable navigationDragging = false;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
+  @observable options = {
+    recordNotifications: true
+  };
 
   constructor() {
     this.suiteStates = {};
@@ -53,6 +56,9 @@ class UiState {
       }
       if (data.navigationSize !== undefined && data.navigationSize >= this.minNavigationWidth) {
         this.resizeNavigation(data.navigationSize);
+      }
+      if (data.options) {
+        this.setOptions(data.options);
       }
     });
   }
@@ -193,6 +199,13 @@ class UiState {
 
   @action.bound setNavigationDragging(isDragging) {
     this.navigationDragging = isDragging;
+  }
+
+  @action.bound setOptions(options) {
+    extendObservable(this.options, options);
+    storage.set({
+      options: this.options
+    });
   }
 
   @action.bound observePristine() {

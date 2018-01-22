@@ -20,12 +20,15 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Title from "react-document-title";
 import ContentEditable from "react-contenteditable";
+import { observer } from "mobx-react";
 import OpenButton from "../ActionButtons/Open";
 import SaveButton from "../ActionButtons/Save";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem } from "../ListMenu";
+import UiState from "../../stores/view/UiState";
 import "./style.css";
 
+@observer
 export default class ProjectHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -47,6 +50,7 @@ export default class ProjectHeader extends React.Component {
     this.props.changeName(e.target.value);
   }
   render() {
+    console.log(UiState.options.recordNotifications);
     return (
       <div className={classNames("header", {"changed": this.props.changed})}>
         <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
@@ -61,6 +65,9 @@ export default class ProjectHeader extends React.Component {
             <MoreButton canFocus={true} />
           }>
             <ListMenuItem onClick={this.props.export}>Export to JavaScript code</ListMenuItem>
+            <ListMenuItem onClick={() => { UiState.setOptions({ recordNotifications: !UiState.options.recordNotifications }); }}>
+              {UiState.options.recordNotifications ? "Disable record notifications" : "Enable record notifications"}
+            </ListMenuItem>
           </ListMenu>
         </span>
       </div>

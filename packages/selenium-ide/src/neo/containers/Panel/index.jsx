@@ -42,6 +42,7 @@ import "../../styles/resizer.css";
 import "../../styles/markdown.css";
 
 import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
+import "../../IO/notifications";
 import "../../IO/SideeX/record";
 import "../../IO/SideeX/playback";
 

@@ -25,7 +25,6 @@ var openedWindowIds = new Object();
 var openedTabCount = 1;
 var selfWindowId = -1;
 var contentWindowId;
-var notificationCount = 0;
 
 /* playing */
 var playingFrameLocations = {};
@@ -272,19 +271,3 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
         browser.runtime.onMessage.removeListener(contentWindowIdListener);
     }
 })
-
-function notification(command, target, value) {
-    let tempCount = String(notificationCount);
-    notificationCount++;
-    // In Chrome, notification.create must have "iconUrl" key in notificationOptions
-    browser.notifications.create(tempCount, {
-        "type": "basic",
-        "iconUrl": "/icons/icon128.png",
-        "title": "Record command!",
-        "message": "command: " + String(command) + "\ntarget: " + String(target[0][0]) + "\nvalue: " + String(value) 
-    });
-
-    setTimeout(function() {
-        browser.notifications.clear(tempCount);
-    }, 1500);
-}
