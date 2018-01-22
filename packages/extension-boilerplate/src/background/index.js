@@ -44,6 +44,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         break;
       case "failCommand":
         sendResponse({ error: "Some failure has occurred" });
+        break;
     }
   }
 });
