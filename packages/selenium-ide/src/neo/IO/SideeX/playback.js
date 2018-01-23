@@ -247,6 +247,7 @@ function doSeleniumCommand(id, command, parsedTarget, value, res, implicitTime =
 
 function doPluginCommand(id, command, target, value) {
   return executeCommand(command, target, value, {
+    runId: PlaybackState.runId,
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
   }).then(() => {

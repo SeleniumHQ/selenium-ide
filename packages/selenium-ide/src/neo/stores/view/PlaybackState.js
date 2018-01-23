@@ -15,10 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import uuidv4 from "uuid/v4";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 
 class PlaybackState {
+  @observable runId = "";
   @observable isPlaying = false;
   @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
@@ -50,6 +52,7 @@ class PlaybackState {
   @action.bound startPlayingSuite() {
     const { suite } = UiState.selectedTest;
     this.resetState();
+    this.runId = uuidv4();
     this.currentRunningSuite = suite.id;
     this._testsToRun = [...suite.tests];
     this.testsCount = this._testsToRun.length;
@@ -59,6 +62,7 @@ class PlaybackState {
   @action.bound startPlaying(command) {
     const { test } = UiState.selectedTest;
     this.resetState();
+    this.runId = uuidv4();
     this.currentRunningSuite = undefined;
     this.currentRunningTest = test;
     this.testsCount = 1;
