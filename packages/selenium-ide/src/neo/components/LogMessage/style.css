@@ -27,6 +27,10 @@
   color: #23843D;
 }
 
+.log.undetermined .message .status {
+  color: #da920e;
+}
+
 .log.error .message .status {
   color: #E80600;
 }
