@@ -35,3 +35,7 @@
   padding-left: 20px;
   color: #E80600;
 }
+
+.log a:hover {
+  text-decoration: underline;
+}
