@@ -86,15 +86,18 @@ export default class LogStore {
         case PlaybackStates.Pending:
           log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
           break;
+        case PlaybackStates.Undetermined:
+          log.setStatus(LogTypes.Undetermined);
+          break;
         case PlaybackStates.Failed:
-          log.setDescription(status.message);
+        case PlaybackStates.Fatal: // eslint-disable-line no-fallthrough
           log.setStatus(LogTypes.Error);
           break;
         case PlaybackStates.Passed:
-          log.setDescription(status.message);
           log.setStatus(LogTypes.Success);
           break;
       }
+      log.setDescription(status.message);
       this.addLog(log);
     }
   }
