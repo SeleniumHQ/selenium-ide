@@ -16,11 +16,12 @@
 // under the License.
 
 import browser from "webextension-polyfill";
+import FatalError from "../errors/fatal";
 
 export default function sendMessage(id, payload) {
   return browser.runtime.sendMessage(id, payload).then((response) => {
     if (response.error) {
-      return Promise.reject(new Error(response.error));
+      return Promise.reject(response.status === "fatal" ? new FatalError(response.error) : new Error(response.error));
     } else {
       return Promise.resolve(response);
     }
