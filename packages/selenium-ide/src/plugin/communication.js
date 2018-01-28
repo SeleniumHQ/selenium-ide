@@ -22,7 +22,7 @@ export default function sendMessage(id, payload) {
     if (response.error) {
       return Promise.reject(new Error(response.error));
     } else {
-      return Promise.resolve(payload);
+      return Promise.resolve(response);
     }
   }).catch((response) => {
     if (isReceivingEndError(response)) {
