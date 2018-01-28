@@ -177,9 +177,11 @@ class PlaybackState {
 }
 
 export const PlaybackStates = {
-  Passed: "passed",
   Failed: "failed",
-  Pending: "pending"
+  Fatal: "fatal",
+  Passed: "passed",
+  Pending: "pending",
+  Undetermined: "undetermined"
 };
 
 if (!window._playbackState) window._playbackState = new PlaybackState();
