@@ -250,8 +250,10 @@ function doPluginCommand(id, command, target, value) {
     runId: PlaybackState.runId,
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
-  }).then(() => {
-    PlaybackState.setCommandState(id, PlaybackStates.Passed);
+  }).then(res => {
+    console.log(res);
+    debugger;
+    PlaybackState.setCommandState(id, PlaybackStates.Passed, res && res.message || undefined);
   }).catch(err => {
     PlaybackState.setCommandState(id, PlaybackStates.Failed, err.message);
   });
