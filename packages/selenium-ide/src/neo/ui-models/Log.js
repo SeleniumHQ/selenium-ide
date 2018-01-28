@@ -6,7 +6,7 @@ export default class Log {
   @observable index = null;
   @observable commandId = null;
   @observable message = null;
-  @observable error = null;
+  @observable description = null;
   @observable status = null;
   @observable isNotice = false;
 
@@ -27,8 +27,8 @@ export default class Log {
     this.message = message;
   }
 
-  @action.bound setError(error) {
-    this.error = error;
+  @action.bound setDescription(desc) {
+    this.description = desc;
   }
 
   @action.bound setStatus(status) {

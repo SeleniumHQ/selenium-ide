@@ -87,10 +87,11 @@ export default class LogStore {
           log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
           break;
         case PlaybackStates.Failed:
-          log.setError(status.message);
+          log.setDescription(status.message);
           log.setStatus(LogTypes.Error);
           break;
         case PlaybackStates.Passed:
+          log.setDescription(status.message);
           log.setStatus(LogTypes.Success);
           break;
       }

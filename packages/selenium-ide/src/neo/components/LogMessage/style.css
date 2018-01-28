@@ -31,8 +31,11 @@
   color: #E80600;
 }
 
-.log .error-message {
+.log .details {
   padding-left: 20px;
+}
+
+.log.error .details {
   color: #E80600;
 }
 

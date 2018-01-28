@@ -31,16 +31,16 @@ export default class LogMessage extends React.Component {
       if (this.props.log.status === LogTypes.Success) {
         statusMessage = "Success";
       } else if (this.props.log.status === LogTypes.Error) {
-        statusMessage = `Failed${this.props.log.error ? ":" : ""}`;
+        statusMessage = `Failed${this.props.log.description ? ":" : ""}`;
       }
     }
     return (
       <li className={classNames("log", this.props.log.status, {notice: this.props.log.isNotice})}>
         {this.props.log.index && <span className="index">{this.props.log.index}.</span>}
         <span className="message">{this.props.log.message}<span className="status"> {statusMessage}</span></span>
-        {this.props.log.error && <div className="error-message"><Linkify properties={{
+        {this.props.log.description && <div className="details"><Linkify properties={{
           target: "_blank"
-        }}>{this.props.log.error}</Linkify></div>}
+        }}>{this.props.log.description}</Linkify></div>}
       </li>
     );
   }
