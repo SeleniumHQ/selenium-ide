@@ -103,11 +103,11 @@ class PlaybackState {
     this.paused = false;
   }
 
-  @action.bound abortPlaying() {
+  @action.bound abortPlaying(fatalHandled) {
     this.aborted = true;
     this.hasFailed = true;
     this._testsToRun = [];
-    this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
+    fatalHandled || this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
     this.stopPlaying();
   }
 

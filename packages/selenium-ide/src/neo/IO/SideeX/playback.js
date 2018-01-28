@@ -16,6 +16,7 @@
 // under the License.
 
 import { reaction } from "mobx";
+import FatalError from "../../../errors/fatal";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
@@ -251,9 +252,10 @@ function doPluginCommand(id, command, target, value) {
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
   }).then(res => {
-    PlaybackState.setCommandState(id, PlaybackStates.Passed, res && res.message || undefined);
+    PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
   }).catch(err => {
-    PlaybackState.setCommandState(id, PlaybackStates.Failed, err.message);
+    PlaybackState.setCommandState(id, err instanceof FatalError ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
+    PlaybackState.abortPlaying(true);
   });
 }
 
