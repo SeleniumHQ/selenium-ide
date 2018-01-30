@@ -54,7 +54,7 @@ class PluginManager {
 
   emitMessage(message) {
     return Promise.all(this.plugins.map(plugin => (
-      sendMessage(plugin.id, message).catch(() => (Promise.resolve()))
+      sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err)))
     )));
   }
 }
