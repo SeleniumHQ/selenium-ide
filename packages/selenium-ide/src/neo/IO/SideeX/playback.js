@@ -254,12 +254,7 @@ function doPluginCommand(id, command, target, value) {
   }).then(res => {
     PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
   }).catch(err => {
-    if (err instanceof FatalError) {
-      PlaybackState.setCommandState(id, PlaybackStates.Fatal, err.message);
-      PlaybackState.abortPlaying(true);
-    } else {
-      PlaybackState.setCommandState(id, PlaybackStates.Failed, err.message);
-    }
+    PlaybackState.setCommandState(id, err instanceof FatalError ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
   });
 }
 

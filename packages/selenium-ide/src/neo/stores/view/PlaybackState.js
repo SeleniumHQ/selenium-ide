@@ -152,6 +152,9 @@ class PlaybackState {
     }
     if (this.isPlaying) {
       this.commandState.set(commandId, { state, message });
+      if (state === PlaybackStates.Fatal) {
+        this.abortPlaying(true);
+      }
     }
   }
 
