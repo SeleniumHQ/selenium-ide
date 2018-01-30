@@ -18,6 +18,7 @@
 import uuidv4 from "uuid/v4";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
+import PluginManager from "../../../plugin/manager";
 
 class PlaybackState {
   @observable runId = "";
@@ -45,7 +46,7 @@ class PlaybackState {
 
   @computed get hasFinishedSuccessfully() {
     return !this.runningQueue.find(({id}) => (
-      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed : false
+      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed || this.commandState.get(id).state === PlaybackStates.Fatal : false
     ));
   }
 
@@ -75,6 +76,7 @@ class PlaybackState {
   }
 
   @action.bound playCommand(command, jumpToNext) {
+    this.runId = "";
     this.noStatisticsEffects = true;
     this.jumpToNextCommand = jumpToNext;
     this.paused = false;
@@ -99,8 +101,17 @@ class PlaybackState {
   }
 
   @action.bound stopPlaying() {
-    this.isPlaying = false;
-    this.paused = false;
+    if (this.isPlaying) {
+      this.isPlaying = false;
+      this.paused = false;
+      PluginManager.emitMessage({
+        action: "event",
+        event: "playbackStopped",
+        options: {
+          runId: this.runId
+        }
+      });
+    }
   }
 
   @action.bound abortPlaying(fatalHandled) {

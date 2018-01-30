@@ -18,7 +18,7 @@
 import browser from "webextension-polyfill";
 import FatalError from "../errors/fatal";
 
-export default function sendMessage(id, payload) {
+export function sendMessage(id, payload) {
   return browser.runtime.sendMessage(id, payload).then((response) => {
     if (response.error) {
       return Promise.reject(response.status === "fatal" ? new FatalError(response.error) : new Error(response.error));

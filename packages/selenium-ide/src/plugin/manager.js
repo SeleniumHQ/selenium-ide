@@ -17,7 +17,7 @@
 
 import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
-import sendMessage from "./communication";
+import { sendMessage } from "./communication";
 
 function RunCommand(id, command, target, value, options) {
   return sendMessage(id, {
@@ -50,6 +50,12 @@ class PluginManager {
 
   hasPlugin(pluginId) {
     return !!this.plugins.find(p => p.id === pluginId);
+  }
+
+  emitMessage(message) {
+    return Promise.all(this.plugins.map(plugin => (
+      sendMessage(plugin.id, message).catch(() => (Promise.resolve()))
+    )));
   }
 }
 
