@@ -110,7 +110,7 @@ class PlaybackState {
         options: {
           runId: this.runId
         }
-      });
+      }).then(console.log);
     }
   }
 

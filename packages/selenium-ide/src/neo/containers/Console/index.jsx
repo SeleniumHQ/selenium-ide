@@ -20,16 +20,17 @@ import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import LogStore from "../../stores/view/Logs";
+import logger from "../../stores/view/Logs";
+import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
 
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.store = new LogStore();
+    this.playbackLogger = new PlaybackLogger();
   }
   componentWillUnmount() {
-    this.store.dispose();
+    this.playbackLogger.dispose();
   }
   render() {
     return (
@@ -37,9 +38,9 @@ export default class Console extends React.Component {
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
         <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
-          <ClearButton onClick={this.store.clearLogs} />
+          <ClearButton onClick={logger.clearLogs} />
         </TabBar>
-        <LogList store={this.store} />
+        <LogList logger={logger} />
       </footer>
     );
   }
