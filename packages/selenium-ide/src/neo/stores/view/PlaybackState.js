@@ -19,6 +19,7 @@ import uuidv4 from "uuid/v4";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 import PluginManager from "../../../plugin/manager";
+import logger from "./Logs";
 
 class PlaybackState {
   @observable runId = "";
@@ -110,7 +111,15 @@ class PlaybackState {
         options: {
           runId: this.runId
         }
-      }).then(console.log);
+      }).then(results => {
+        results.forEach(result => {
+          if (result instanceof Error) {
+            logger.error(result.message);
+          } else {
+            logger.log(result.message);
+          }
+        });
+      });
     }
   }
 

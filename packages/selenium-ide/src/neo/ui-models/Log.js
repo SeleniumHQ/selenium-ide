@@ -60,5 +60,6 @@ export default class Log {
 export const LogTypes = {
   Success: "success",
   Error: "error",
+  Failure: "failure",
   Undetermined: "undetermined"
 };

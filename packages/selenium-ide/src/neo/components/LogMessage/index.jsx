@@ -30,7 +30,7 @@ export default class LogMessage extends React.Component {
     if (this.props.log.status && !this.props.log.isNotice) {
       if (this.props.log.status === LogTypes.Success) {
         statusMessage = "Success";
-      } else if (this.props.log.status === LogTypes.Error) {
+      } else if (this.props.log.status === LogTypes.Failure) {
         statusMessage = `Failed${this.props.log.description ? ":" : ""}`;
       } else if (this.props.log.status === LogTypes.Undetermined) {
         statusMessage = "Undetermined";
@@ -38,11 +38,13 @@ export default class LogMessage extends React.Component {
     }
     return (
       <li className={classNames("log", this.props.log.status, {notice: this.props.log.isNotice})}>
-        {this.props.log.index && <span className="index">{this.props.log.index}.</span>}
-        <span className="message">{this.props.log.message}<span className="status"> {statusMessage}</span></span>
-        {this.props.log.description && <div className="details"><Linkify properties={{
+        <Linkify properties={{
           target: "_blank"
-        }}>{this.props.log.description}</Linkify></div>}
+        }}>
+          {this.props.log.index && <span className="index">{this.props.log.index}.</span>}
+          <span className="message">{this.props.log.message}<span className="status"> {statusMessage}</span></span>
+          {this.props.log.description && <div className="details">{this.props.log.description}</div>}
+        </Linkify>
       </li>
     );
   }

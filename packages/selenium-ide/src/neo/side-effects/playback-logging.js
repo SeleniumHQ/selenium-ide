@@ -45,11 +45,11 @@ export default class PlaybackLogger {
       log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`);
       log.setNotice();
     } else if (PlaybackState.aborted) {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Error);
+      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Failure);
       log.setNotice();
     } else {
       log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.errors} error(s)` : "successfully"}`,
-        PlaybackState.hasFailed ? LogTypes.Error : LogTypes.Success);
+        PlaybackState.hasFailed ? LogTypes.Failure : LogTypes.Success);
       log.setNotice();
     }
     logger.log(log);
@@ -75,7 +75,7 @@ export default class PlaybackLogger {
           break;
         case PlaybackStates.Failed:
         case PlaybackStates.Fatal: // eslint-disable-line no-fallthrough
-          log.setStatus(LogTypes.Error);
+          log.setStatus(LogTypes.Failure);
           break;
         case PlaybackStates.Passed:
           log.setStatus(LogTypes.Success);

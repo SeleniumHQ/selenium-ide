@@ -11,6 +11,10 @@
   font-weight: bold;
 }
 
+.log.error {
+  color: #E80600;
+}
+
 .log .message:after {
   padding: 0 5px;
 }
@@ -19,7 +23,7 @@
   color: #23843D;
 }
 
-.log.error.notice {
+.log.failure.notice {
   color: #E80600;
 }
 
@@ -31,7 +35,7 @@
   color: #da920e;
 }
 
-.log.error .message .status {
+.log.failure .message .status {
   color: #E80600;
 }
 
@@ -39,7 +43,7 @@
   padding-left: 20px;
 }
 
-.log.error .details {
+.log.failure .details {
   color: #E80600;
 }
 

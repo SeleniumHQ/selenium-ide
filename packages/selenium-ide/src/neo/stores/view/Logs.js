@@ -16,7 +16,7 @@
 // under the License.
 
 import { action, observable } from "mobx";
-import Log from "../../ui-models/Log";
+import Log, { LogTypes } from "../../ui-models/Log";
 
 export class LogStore {
   @observable logs = [];
@@ -35,6 +35,14 @@ export class LogStore {
     if (!this.logs.length || this.logs[this.logs.length - 1].message !== log.message) {
       this.logs.push(log);
     }
+
+    return log;
+  }
+
+  @action.bound error(log) {
+    const errorLog = this.log(log);
+    errorLog.setStatus(LogTypes.Error);
+    console.log(errorLog);
   }
 
   @action.bound clearLogs() {
