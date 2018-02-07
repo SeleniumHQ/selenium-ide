@@ -21,9 +21,18 @@ import FatalError from "../errors/fatal";
 export function sendMessage(id, payload) {
   return browser.runtime.sendMessage(id, payload).then((response) => {
     if (response.error) {
-      return Promise.reject(response.status === "fatal" ? new FatalError(response.error) : new Error(response.error));
+      const error = response.status === "fatal" ? new FatalError(response.error) : new Error(response.error);
+      error.sender = id;
+      return Promise.reject(error);
     } else {
-      return Promise.resolve(response);
+      const r = {};
+      if (typeof response === "string") {
+        r.message = response;
+      } else if (response instanceof Object) {
+        Object.assign(r, response);
+      }
+      r.sender = id;
+      return Promise.resolve(r);
     }
   }).catch((response) => {
     if (isReceivingEndError(response)) {
