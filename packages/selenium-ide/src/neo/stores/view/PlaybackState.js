@@ -24,6 +24,7 @@ import logger from "./Logs";
 class PlaybackState {
   @observable runId = "";
   @observable isPlaying = false;
+  @observable isStopping = false;
   @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
@@ -103,7 +104,7 @@ class PlaybackState {
 
   @action.bound stopPlaying() {
     if (this.isPlaying) {
-      this.isPlaying = false;
+      this.isStopping = true;
       this.paused = false;
       PluginManager.emitMessage({
         action: "event",
@@ -111,15 +112,20 @@ class PlaybackState {
         options: {
           runId: this.runId
         }
-      }).then(results => {
+      }).then(action(results => {
         results.forEach(result => {
-          if (result instanceof Error) {
-            logger.error(result.message);
-          } else {
-            logger.log(result.message);
+          if (result.message) {
+            if (result instanceof Error) {
+              this.hasFailed = true;
+              logger.error(result.message);
+            } else {
+              logger.log(result.message);
+            }
           }
         });
-      });
+        this.isPlaying = false;
+        this.isStopping = false;
+      }));
     }
   }
 
