@@ -22,6 +22,6 @@ export default class Route {
     this.run = cb;
   }
   test(verb, uri) {
-    return (!this.verb || verb.toLowerCase() === this.verb) && uri.toLowerCase() === uri;
+    return (!this.verb || verb.toLowerCase() === this.verb) && uri.toLowerCase() === this.uri;
   }
 }

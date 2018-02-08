@@ -35,5 +35,6 @@ describe("function route", () => {
     expect(route.test("post", "/people")).toBeFalsy();
     expect(route.test("post", "people")).toBeFalsy();
     expect(route.test("post", "/peop")).toBeFalsy();
+    expect(route.test("get", "/peop")).toBeFalsy();
   });
 });
