@@ -19,6 +19,7 @@ import uuidv4 from "uuid/v4";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 import PluginManager from "../../../plugin/manager";
+import NoResponseError from "../../../errors/no-response";
 import logger from "./Logs";
 
 class PlaybackState {
@@ -116,8 +117,10 @@ class PlaybackState {
         results.forEach(result => {
           if (result.message) {
             if (result instanceof Error) {
-              this.hasFailed = true;
-              logger.error(result.message);
+              if (!(result instanceof NoResponseError)) {
+                this.hasFailed = true;
+                logger.error(result.message);
+              }
             } else {
               logger.log(result.message);
             }

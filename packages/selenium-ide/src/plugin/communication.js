@@ -17,6 +17,8 @@
 
 import browser from "webextension-polyfill";
 import FatalError from "../errors/fatal";
+import NoResponseError from "../errors/no-response";
+import Manager from "./manager";
 
 export function sendMessage(id, payload) {
   return browser.runtime.sendMessage(id, payload).then((response) => {
@@ -36,7 +38,7 @@ export function sendMessage(id, payload) {
     }
   }).catch((response) => {
     if (isReceivingEndError(response)) {
-      return Promise.reject("The plugin is either closed or deleted");
+      return Promise.reject(new NoResponseError(`${Manager.getPlugin(id).name} plugin did not respond`));
     } else {
       return Promise.reject(response);
     }
