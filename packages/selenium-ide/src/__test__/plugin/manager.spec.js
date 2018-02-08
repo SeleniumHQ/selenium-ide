@@ -73,4 +73,13 @@ describe("plugin manager", () => {
       Manager.registerPlugin(plugin);
     }).toThrowError("This plugin is already registered");
   });
+  it("should get the plugin", () => {
+    const plugin = {
+      id: "5",
+      name: "try to find me",
+      version: "1.0.0"
+    };
+    Manager.registerPlugin(plugin);
+    expect(Manager.getPlugin(plugin.id)).toBe(plugin);
+  });
 });

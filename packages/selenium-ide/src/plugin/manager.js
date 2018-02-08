@@ -52,6 +52,10 @@ class PluginManager {
     return !!this.plugins.find(p => p.id === pluginId);
   }
 
+  getPlugin(pluginId) {
+    return this.plugins.find(p => p.id === pluginId);
+  }
+
   emitMessage(message) {
     return Promise.all(this.plugins.map(plugin => (
       sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err)))
