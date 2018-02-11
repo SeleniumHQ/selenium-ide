@@ -16,16 +16,14 @@
 // under the License.
 
 import Router from "../../router";
-import Manager from "../../plugin/manager";
-import playbackRouter from "./playback";
+import PlaybackState from "../../neo/stores/view/PlaybackState";
 
 const router = new Router();
 
-router.post("/register", (req, res) => {
-  Manager.registerPlugin(req);
+router.post("/command", (req, res) => {
+  console.log("hihihihi");
+  PlaybackState.setCommandState(req.commandId, req.state, req.message);
   res(true);
 });
-
-router.use("/playback", playbackRouter);
 
 export default router;
