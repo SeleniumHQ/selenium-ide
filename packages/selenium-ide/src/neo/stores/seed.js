@@ -105,6 +105,8 @@ export default function seed(store, numberOfSuites = 5) {
   const pluginTest = store.createTestCase("plugin test");
   const checkPlugin = pluginTest.createCommand();
   checkPlugin.setCommand("checkPlugin");
+  const checkPluginSecond = pluginTest.createCommand();
+  checkPluginSecond.setCommand("checkPlugin");
 
   const pluginTest2 = store.createTestCase("plugin test 2");
   const checkPlugin2 = pluginTest2.createCommand();
