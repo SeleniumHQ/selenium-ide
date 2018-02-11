@@ -22,10 +22,13 @@ const router = new Router();
 router.use("/v1", apiv1);
 router.use(undefined, apiv1);
 
-export default function(message, sender, sendResponse) {
+export default function(message, backgroundPage, sendResponse) {
+  // The sender is always the background page since he is the one listening to the event
+  // message.id is the external extension id
   if (message.uri) {
-    return router.run(message).then(sendResponse).catch(err => (
+    router.run(message).then(sendResponse).catch(err => (
       sendResponse({ error: err.message })
     ));
+    return true;
   }
 }
