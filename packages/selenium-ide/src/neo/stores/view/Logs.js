@@ -32,7 +32,7 @@ export class LogStore {
     if (typeof log === "string") {
       log = new Log(log);
     }
-    if (!this.logs.length || this.logs[this.logs.length - 1].message !== log.message) {
+    if (!this.logs.length || !this.logs[this.logs.length - 1].isEqual(log)) {
       this.logs.push(log);
     }
 

@@ -58,13 +58,13 @@ export default class PlaybackLogger {
   logCommandState(command, status) {
     if (status && this.shouldLogCommand(command.command)) {
       const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
-      let log;
-      if (logger.logs.length && logger.logs[logger.logs.length - 1].commandId === command.id) {
-        log = logger.logs[logger.logs.length - 1];
-      } else {
+      let log = this.findCorrespondingLog(command.id);
+      let shouldAddLog = false;
+      if (!log) {
         log = new Log();
         log.setIndex(index);
         log.setCommandId(command.id);
+        shouldAddLog = true;
       }
       switch(status.state) {
         case PlaybackStates.Pending:
@@ -82,12 +82,28 @@ export default class PlaybackLogger {
           break;
       }
       log.setDescription(status.message);
-      logger.log(log);
+      if (shouldAddLog) {
+        logger.log(log);
+      }
     }
   }
 
   shouldLogCommand(command) {
     return command !== "echo";
+  }
+
+  findCorrespondingLog(commandId) {
+    if (!logger.logs.length) {
+      return;
+    }
+    for (let i = logger.logs.length - 1; i >= 0; i--) {
+      let log = logger.logs[i];
+      if (!log.commandId) {
+        return;
+      } else if (log.commandId === commandId) {
+        return log;
+      }
+    }
   }
 
   dispose() {

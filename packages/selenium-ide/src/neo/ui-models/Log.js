@@ -55,6 +55,10 @@ export default class Log {
   @action.bound setNotice() {
     this.isNotice = true;
   }
+
+  @action.bound isEqual(otherLog) {
+    return (this.message === otherLog.message && this.commandId === otherLog.commandId);
+  }
 }
 
 export const LogTypes = {
