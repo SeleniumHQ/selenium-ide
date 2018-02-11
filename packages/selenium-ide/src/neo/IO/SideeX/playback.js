@@ -250,6 +250,7 @@ function doPluginCommand(id, command, target, value) {
   return executeCommand(command, target, value, {
     commandId: id,
     runId: PlaybackState.runId,
+    testId: PlaybackState.currentRunningTest.id,
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
   }).then(res => {

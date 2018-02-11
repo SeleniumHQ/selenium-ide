@@ -57,7 +57,7 @@ class PlaybackState {
     const { suite } = UiState.selectedTest;
     this.resetState();
     this.runId = uuidv4();
-    this.currentRunningSuite = suite.id;
+    this.currentRunningSuite = suite;
     this._testsToRun = [...suite.tests];
     this.testsCount = this._testsToRun.length;
     this.playNext();
@@ -75,7 +75,18 @@ class PlaybackState {
       this.currentPlayingIndex = test.commands.indexOf(command);
     }
     this.runningQueue = test.commands.peek();
-    this.isPlaying = true;
+    PluginManager.emitMessage({
+      action: "event",
+      event: "playbackStarted",
+      options: {
+        runId: this.runId,
+        testId: this.currentRunningTest.id,
+        testName: this.currentRunningTest.name,
+        projectName: UiState._project.name
+      }
+    }).then(action(() => {
+      this.isPlaying = true;
+    }));
   }
 
   @action.bound playCommand(command, jumpToNext) {
@@ -98,40 +109,57 @@ class PlaybackState {
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.currentPlayingIndex = 0;
     this.errors = 0;
-    setTimeout(action(() => {
+    PluginManager.emitMessage({
+      action: "event",
+      event: "playbackStarted",
+      options: {
+        runId: this.runId,
+        testId: this.currentRunningTest.id,
+        testName: this.currentRunningTest.name,
+        suiteName: this.currentRunningSuite.name,
+        projectName: UiState._project.name
+      }
+    }).then(action(() => {
       this.isPlaying = true;
-    }), 0);
+    }));
   }
 
   @action.bound stopPlaying() {
     if (this.isPlaying) {
       this.isStopping = true;
       this.paused = false;
-      PluginManager.emitMessage({
+      return PluginManager.emitMessage({
         action: "event",
         event: "playbackStopped",
         options: {
-          runId: this.runId
+          runId: this.runId,
+          testId: this.currentRunningTest.id
         }
       }).then(action(results => {
-        results.forEach(result => {
-          if (result.message) {
-            if (result instanceof Error) {
-              if (!(result instanceof NoResponseError)) {
-                this.hasFailed = true;
-                logger.error(result.message);
+        return new Promise((res) => {
+          results.forEach(result => {
+            if (result.message) {
+              if (result instanceof Error) {
+                if (!(result instanceof NoResponseError)) {
+                  logger.error(result.message);
+                  if (!this.hasFinishedSuccessfully && !this.hasFailed) {
+                    this.hasFailed = true;
+                    this.failures++;
+                  }
+                }
+              } else {
+                logger.log(result.message);
               }
-            } else {
-              logger.log(result.message);
             }
-          }
-          if (!this.hasFinishedSuccessfully) this.failures++;
-          this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
+            this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
+          });
+          this.isPlaying = false;
+          this.isStopping = false;
+          return res();
         });
-        this.isPlaying = false;
-        this.isStopping = false;
       }));
     }
+    return Promise.reject("Playback is not running");
   }
 
   @action.bound abortPlaying(fatalHandled) {
@@ -161,15 +189,16 @@ class PlaybackState {
         this.failures++;
       }
     }
-    this.stopPlaying();
-    if (this.jumpToNextCommand) {
-      UiState.selectNextCommand();
-    }
-    if (this._testsToRun.length) {
-      this.playNext();
-    } else if (this.currentRunningSuite) {
-      this.suiteState.set(this.currentRunningSuite, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
-    }
+    this.stopPlaying().then(() => {
+      if (this.jumpToNextCommand) {
+        UiState.selectNextCommand();
+      }
+      if (this._testsToRun.length) {
+        this.playNext();
+      } else if (this.currentRunningSuite) {
+        this.suiteState.set(this.currentRunningSuite.id, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
+      }
+    });
   }
 
   @action.bound setPlayingIndex(index) {
@@ -177,7 +206,7 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state, message) {
-    if (state === PlaybackStates.Failed) {
+    if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
       this.errors++;
     }
     if (this.isPlaying) {

@@ -21,7 +21,6 @@ import PlaybackState from "../../neo/stores/view/PlaybackState";
 const router = new Router();
 
 router.post("/command", (req, res) => {
-  console.log("hihihihi");
   PlaybackState.setCommandState(req.commandId, req.state, req.message);
   res(true);
 });
