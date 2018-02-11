@@ -125,6 +125,8 @@ class PlaybackState {
               logger.log(result.message);
             }
           }
+          if (!this.hasFinishedSuccessfully) this.failures++;
+          this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
         });
         this.isPlaying = false;
         this.isStopping = false;
@@ -149,7 +151,6 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (!this.hasFinishedSuccessfully) {
       this.hasFailed = true;
     }
