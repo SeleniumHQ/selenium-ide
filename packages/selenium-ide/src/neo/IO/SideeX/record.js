@@ -27,6 +27,16 @@ function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
+export function recordCommand(command, target, value) {
+  const { test } = UiState.selectedTest;
+  const newCommand = UiState.selectedCommand !== UiState.pristineCommand
+    ? test.createCommand(UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand))
+    : test.createCommand();
+  newCommand.setCommand(command);
+  newCommand.setValue(value);
+  newCommand.setTarget(target);
+}
+
 window.getRecordsArray = function() {
   return [];
 };
@@ -41,11 +51,6 @@ window.addCommandAuto = function(command, targets, value) {
     UiState.setUrl(url.origin, true);
     newCommand.setTarget(url.pathname);
   } else if (command !== "open") {
-    const newCommand = UiState.selectedCommand !== UiState.pristineCommand
-      ? test.createCommand(UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand))
-      : test.createCommand();
-    newCommand.setCommand(command);
-    newCommand.setValue(value);
-    newCommand.setTarget(targets[0][0]);
+    recordCommand(command, targets[0][0], value);
   }
 };

@@ -16,18 +16,13 @@
 // under the License.
 
 import Router from "../../router";
-import Manager from "../../plugin/manager";
-import playbackRouter from "./playback";
-import recordRouter from "./record";
+import { recordCommand } from "../../neo/IO/SideeX/record";
 
 const router = new Router();
 
-router.post("/register", (req, res) => {
-  Manager.registerPlugin(req);
+router.post("/command", (req, res) => {
+  recordCommand(req.command, req.target, req.value);
   res(true);
 });
-
-router.use("/playback", playbackRouter);
-router.use("/record", recordRouter);
 
 export default router;
