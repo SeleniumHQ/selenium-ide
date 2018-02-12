@@ -98,7 +98,7 @@ export default class PlaybackLogger {
     }
     for (let i = logger.logs.length - 1; i >= 0; i--) {
       let log = logger.logs[i];
-      if (!log.commandId) {
+      if (!log.commandId && log.isNotice) { // make sure we are in the current run, maybe log runId
         return;
       } else if (log.commandId === commandId) {
         return log;

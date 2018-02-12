@@ -42,7 +42,6 @@ export class LogStore {
   @action.bound error(log) {
     const errorLog = this.log(log);
     errorLog.setStatus(LogTypes.Error);
-    console.log(errorLog);
   }
 
   @action.bound clearLogs() {

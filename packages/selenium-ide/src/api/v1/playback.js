@@ -17,11 +17,25 @@
 
 import Router from "../../router";
 import PlaybackState from "../../neo/stores/view/PlaybackState";
+import Manager from "../../plugin/manager";
+import logger from "../../neo/stores/view/Logs";
+import { LogTypes } from "../../neo/ui-models/Log";
 
 const router = new Router();
 
 router.post("/command", (req, res) => {
   PlaybackState.setCommandState(req.commandId, req.state, req.message);
+  res(true);
+});
+
+router.post("/log", (req, res) => {
+  if (req.type === LogTypes.Error) {
+    logger.error(`${Manager.getPlugin(req.id).name}: ${req.message}`);
+  } else if (req.type === "warning") {
+    logger.log(`${Manager.getPlugin(req.id).name} warning: ${req.message}`);
+  } else {
+    logger.log(`${Manager.getPlugin(req.id).name}: ${req.message}`);
+  }
   res(true);
 });
 
