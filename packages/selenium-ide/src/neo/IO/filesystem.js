@@ -19,12 +19,20 @@ import migrateProject from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "../../selianize";
+import Manager from "../../plugin/manager";
 const browser = window.browser;
 
 export const supportedFileFormats = ".side, text/html";
 
 export function saveProject(project) {
   project.version = "1.0";
+  Manager.plugins.forEach(plugin => {
+    project.registerPlugin({
+      id: plugin.id,
+      name: plugin.name,
+      version: plugin.version
+    });
+  });
   downloadProject(project);
   UiState.saved();
 }
