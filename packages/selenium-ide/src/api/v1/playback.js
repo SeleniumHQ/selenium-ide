@@ -30,11 +30,11 @@ router.post("/command", (req, res) => {
 
 router.post("/log", (req, res) => {
   if (req.type === LogTypes.Error) {
-    logger.error(`${Manager.getPlugin(req.id).name}: ${req.message}`);
+    logger.error(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
   } else if (req.type === "warning") {
-    logger.log(`${Manager.getPlugin(req.id).name} warning: ${req.message}`);
+    logger.log(`${Manager.getPlugin(req.sender).name} warning: ${req.message}`);
   } else {
-    logger.log(`${Manager.getPlugin(req.id).name}: ${req.message}`);
+    logger.log(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
   }
   res(true);
 });

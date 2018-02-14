@@ -23,7 +23,13 @@ import recordRouter from "./record";
 const router = new Router();
 
 router.post("/register", (req, res) => {
-  Manager.registerPlugin(req);
+  const plugin = {
+    id: req.sender,
+    name: req.name,
+    version: req.version,
+    commands: req.commands
+  };
+  Manager.registerPlugin(plugin);
   res(true);
 });
 

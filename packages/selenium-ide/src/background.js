@@ -154,7 +154,7 @@ browser.runtime.onConnect.addListener(function(m) {
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
-  message.payload.id = sender.id;
+  message.payload.sender = sender.id;
   browser.runtime.sendMessage(message).then(sendResponse).catch(() => {
     return sendResponse({ error: "Selenium IDE is not active" });
   });
