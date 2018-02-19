@@ -35,7 +35,7 @@ Firefox users for the time being can download the latest `xpi` from the [release
 ```peru sync```  
 ```yarn```
 - Build the extension  
-```yarn build```
+```yarn build:ext``` or ```yarn build:ext:prod``` for production build
 - Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
 
 Manifest located in `<Project Directory>/packages/selenium-ide/build/manifest.json`
