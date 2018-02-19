@@ -50,7 +50,6 @@ export default class ProjectHeader extends React.Component {
     this.props.changeName(e.target.value);
   }
   render() {
-    console.log(UiState.options.recordNotifications);
     return (
       <div className={classNames("header", {"changed": this.props.changed})}>
         <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
