@@ -98,7 +98,7 @@ class Suite extends React.Component {
           <ListMenu width={130} padding={-5} opener={
             <MoreButton />
           }>
-            <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
+            <ListMenuItem onClick={this.props.selectTests}>Select tests</ListMenuItem>
             <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
             <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
           </ListMenu>
