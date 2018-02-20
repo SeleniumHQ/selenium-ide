@@ -63,7 +63,7 @@ export default class ProjectHeader extends React.Component {
           <ListMenu width={250} padding={-5} opener={
             <MoreButton canFocus={true} />
           }>
-            <ListMenuItem onClick={this.props.export}>Export to JavaScript code</ListMenuItem>
+            { process.env.NODE_ENV !== "production" && <ListMenuItem onClick={this.props.export}>Export to JavaScript code</ListMenuItem> }
             <ListMenuItem onClick={() => { UiState.setOptions({ recordNotifications: !UiState.options.recordNotifications }); }}>
               {UiState.options.recordNotifications ? "Disable record notifications" : "Enable record notifications"}
             </ListMenuItem>
