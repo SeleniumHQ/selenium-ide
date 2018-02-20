@@ -35,7 +35,8 @@ import "./style.css";
   constructor(props) {
     super(props);
     this.state = {
-      showTests: true
+      showTests: true,
+      lastSelection: {}
     };
     this.handleChangedTab = this.handleChangedTab.bind(this);
   }
@@ -45,9 +46,12 @@ import "./style.css";
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
+    const lastSelection = this.state.lastSelection;
     this.setState({
-      showTests: tab === "Tests"
+      showTests: tab === "Tests",
+      lastSelection: UiState.selectedTest
     });
+    UiState.selectTest(lastSelection.test, lastSelection.suite);
   }
   handleKeyDown(event) {
     const e = event.nativeEvent;

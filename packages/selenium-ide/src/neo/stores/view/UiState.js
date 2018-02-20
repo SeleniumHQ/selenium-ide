@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable, observe, extendObservable } from "mobx";
+import { action, computed, observable, observe, extendObservable, reaction } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import TestState from "./TestState";

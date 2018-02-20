@@ -81,6 +81,7 @@ class ModalState {
     }, (choseDelete) => {
       if (choseDelete) {
         this._project.deleteSuite(suite);
+        UiState.selectTest();
       }
     });
   }
@@ -94,6 +95,7 @@ class ModalState {
     }, (choseDelete) => {
       if (choseDelete) {
         this._project.deleteTestCase(testCase);
+        UiState.selectTest();
       }
     });
   }
