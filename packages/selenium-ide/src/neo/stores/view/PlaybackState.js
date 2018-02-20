@@ -160,6 +160,7 @@ class PlaybackState {
   }
 
   @action.bound resetState() {
+    UiState.stopRecording();
     this.clearCommandStates();
     this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;

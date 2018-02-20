@@ -161,6 +161,10 @@ class UiState {
     this.isRecording = !this.isRecording;
   }
 
+  @action.bound stopRecording() {
+    this.isRecording = false;
+  }
+
   @action.bound setSelectingTarget(isSelecting) {
     this.isSelectingTarget = isSelecting;
   }
