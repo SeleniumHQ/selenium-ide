@@ -14,7 +14,6 @@
  *  limitations under the License.
  *
  */
-import "./prompt.css";
 
 const originalPrompt = window.prompt;
 let nextPromptResult = false;

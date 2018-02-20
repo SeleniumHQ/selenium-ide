@@ -18,6 +18,10 @@ import browser from "webextension-polyfill";
 import { record } from "./record-api";
 import { selenium } from "./commands-api";
 
+const elementForInjectingStyle = document.createElement("link");
+elementForInjectingStyle.rel = "stylesheet";
+elementForInjectingStyle.href = browser.runtime.getURL("/assets/prompt.css");
+(document.head || document.documentElement).appendChild(elementForInjectingStyle);
 const elementForInjectingScript = document.createElement("script");
 elementForInjectingScript.src = browser.runtime.getURL("/assets/prompt.js");
 (document.head || document.documentElement).appendChild(elementForInjectingScript);

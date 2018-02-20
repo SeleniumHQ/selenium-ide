@@ -33,7 +33,8 @@
 
   "web_accessible_resources": [
     "icons/icon128.png",
-    "assets/prompt.js"
+    "assets/prompt.js",
+    "assets/prompt.css"
   ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "content_scripts": [

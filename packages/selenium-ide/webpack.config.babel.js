@@ -31,7 +31,6 @@ export default {
     polyfills: ["./setup"],
     injector: ["./prompt-injector"],
     background: ["./background"],
-    prompt: ["./prompt"],
     record: ["./record"],
     escape: ["./escape"],
     neo: ["react-hot-loader/patch", "./neo/containers/Root"]
@@ -237,6 +236,8 @@ export default {
       { from: "ext-command.js", to: "vendor" },
       { from: "editor.js", to: "vendor" },
       { from: "formatCommand.js", to: "vendor" },
+      { from: "prompt.js", to: "./" },
+      { from: "prompt.css", to: "./" },
       { from: "manifest.json", to: "../" },
       { from: "icons", to: "../icons" }
     ]),
