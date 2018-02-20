@@ -360,6 +360,18 @@ Selenium.prototype.doVerifyTitle = function(value) {
   }
 };
 
+Selenium.prototype.doVerifyElementPresent = function(locator) {
+  try {
+    this.browserbot.findElement(locator);
+  } catch (error) {
+    if (error.message.match(/Element[\s\S]*?not found/)) {
+      throw new Error(`Element with locator ${locator} could not be found`);
+    } else {
+      throw error;
+    }
+  }
+};
+
 Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
@@ -370,6 +382,18 @@ Selenium.prototype.doAssertText = function(locator, value) {
 Selenium.prototype.doAssertTitle = function(value) {
   if (normalizeSpaces(this.getTitle()) !== value) {
     throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertElementPresent = function(locator) {
+  try {
+    this.browserbot.findElement(locator);
+  } catch (error) {
+    if (error.message.match(/Element[\s\S]*?not found/)) {
+      throw new Error(`Element with locator ${locator} could not be found`);
+    } else {
+      throw error;
+    }
   }
 };
 
