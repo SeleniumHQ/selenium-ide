@@ -86,7 +86,15 @@ export function loadProject(project, file) {
     if (/\.side$/.test(file.name)) {
       loadJSONProject(project, e.target.result);
     } else if (file.type === "text/html") {
-      project.fromJS(migrateProject(e.target.result));
+      try {
+        project.fromJS(migrateProject(e.target.result));
+      } catch (error) {
+        ModalState.showAlert({
+          title: "Error migrating project",
+          description: error.message,
+          confirmLabel: "Close"
+        });
+      }
     }
   };
 
