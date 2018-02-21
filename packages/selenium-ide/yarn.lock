@@ -5528,6 +5528,10 @@ xml-char-classes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
 
+xml-escape@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/xml-escape/-/xml-escape-1.1.0.tgz#3904c143fa8eb3a0030ec646d2902a2f1b706c44"
+
 xml-js@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/xml-js/-/xml-js-1.5.2.tgz#234780d012b49a19093dbd464228d06303fddc23"

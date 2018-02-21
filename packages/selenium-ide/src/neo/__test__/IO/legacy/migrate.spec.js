@@ -24,7 +24,7 @@ useStrict(true);
 
 describe("selenium html migrate", () => {
   it("should migrate the set example", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test.html"));
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test.html")).toString();
     const project = migrateProject(file);
     expect(project.name).toBe("My Test");
     expect(project.url).toBe("https://www.google.com/");
@@ -35,17 +35,23 @@ describe("selenium html migrate", () => {
     expect(test.commands.length).toBe(4);
     const command = test.commands[0];
     expect(command.command).toBe("open");
-    expect(command.target).toBe("/?gfe_rd=cr&dcr=0&ei=9vz6Way_KdPPXqjmsbgI&gws_rd=ssl");
+    expect(command.target).toBe("/?gfe_rd=cr&amp;dcr=0&amp;ei=9vz6Way_KdPPXqjmsbgI&amp;gws_rd=ssl");
     expect(command.value).toBe("");
   });
   it("should migrate the second example", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html"));
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
     const project = migrateProject(file);
     expect(project.tests[0].commands.length).toBe(26);
   });
   it("should join line breaks to <br /> in the target field", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html"));
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
     const project = migrateProject(file);
-    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />                                followers')]");
+    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
+  });
+  it("should sanitize the input prior to converting", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_3.html")).toString();
+    const project = migrateProject(file);
+    expect(project.tests[0].name).toBe("Show Details");
+    expect(project.tests[0].commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
   });
 });

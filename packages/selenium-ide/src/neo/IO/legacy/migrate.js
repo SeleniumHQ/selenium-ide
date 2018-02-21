@@ -16,9 +16,15 @@
 // under the License.
 
 import convert from "xml-js";
+import xmlescape from "xml-escape";
 
 export default function migrateProject(data) {
-  const result = JSON.parse(convert.xml2json(data, { compact: true }));
+  const sanitized = data.replace(/<link(.*")\s*\/{0}>/g, (match, group) => (
+    `<link${group} />`
+  )).replace(/<td>(.*)<\/td>/g, (match, group) => (
+    `<td>${xmlescape(group)}</td>`
+  ));
+  const result = JSON.parse(convert.xml2json(sanitized, { compact: true }));
   const project = {
     name: result.html.head.title._text,
     url: result.html.head.link._attributes.href,
