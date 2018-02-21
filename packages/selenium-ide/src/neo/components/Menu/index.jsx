@@ -100,11 +100,11 @@ class Menu extends React.Component {
       };
     } else if (this.props.direction === MenuDirections.Cursor) {
       let topPosition = 40, leftPosition = 40;
-      if(this.state.boundingRect){
-        topPosition = this.state.boundingRect.top + 5;
-        leftPosition = this.state.boundingRect.left  + this.props.position.x;
-        // if context menu is over test row's right
-        if(this.state.boundingRect.right < this.state.boundingRect.left + this.props.width + this.props.position.x){
+      if(this.props.position){
+        topPosition = this.props.position.y;
+        leftPosition = this.props.position.x;
+        //if context menu is over test row's right
+        if(this.state.boundingRect.right < this.props.width + this.props.position.x){
           leftPosition = this.state.boundingRect.right - this.props.width - 5;
         }
       }
@@ -145,6 +145,7 @@ class Menu extends React.Component {
 }
 
 export default class MenuContainer extends React.Component {
+  eventPosition;
   constructor(props) {
     super(props);
     this.state = {
@@ -167,10 +168,19 @@ export default class MenuContainer extends React.Component {
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-    MenuState.isOpen = true;
+    this.node = e.currentTarget;
+    if(MenuState.isOpen && this.state.isOpen){
+      MenuState.isOpen = false;
+      this.setState({
+        isOpen: false
+      });
+    }else{
+      this.state.isOpen ? null : this.eventPosition = {x:e.clientX,y:e.clientY} ;
+      MenuState.isOpen = true;
+      this.setState({
+        isOpen: !this.state.isOpen
+      });
+    }
   }
   close(e) {
     e.preventDefault();
@@ -178,11 +188,11 @@ export default class MenuContainer extends React.Component {
     this.setState({
       isOpen: false
     });
-    MenuState.isOpen = false;
   }
   render() {
     return ([
-      React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }),
+      (this.props.opener ?
+        React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : undefined),
       <Menu
         key="menu"
         isOpen={this.state.isOpen}
@@ -191,52 +201,8 @@ export default class MenuContainer extends React.Component {
         requestClose={this.close}
         width={this.props.width}
         direction={this.props.direction}
-        padding={this.props.padding}>
-        {this.props.children}
-      </Menu>
-    ]);
-  }
-}
-
-export class ContextMenuContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.close = this.close.bind(this);
-  }
-  static propTypes = {
-    opener: PropTypes.any,
-    width: PropTypes.number,
-    padding: PropTypes.number,
-    onContextMenu: PropTypes.func,
-    direction: PropTypes.string,
-    isOpen: PropTypes.bool,
-    position: PropTypes.any,
-    rect: PropTypes.any,
-    children: PropTypes.node,
-    closeOnClick: PropTypes.bool,
-    closeTimeoutMS: PropTypes.number
-  };
-  static defaultProps = {
-    closeOnClick: true
-  };
-  close(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.onContextMenu();
-  }
-  render() {
-    return ([
-      <Menu
-        key="menu"
-        isOpen={this.props.isOpen}
-        node={this.props.opener}
-        onClick={this.props.closeOnClick ? this.close : null}
-        direction = {this.props.direction}
-        requestClose={this.close}
-        width={this.props.width}
         padding={this.props.padding}
-        position={this.props.position}
-        rect={this.props.rect}
+        position={this.eventPosition}
         closeTimeoutMS={this.props.closeTimeoutMS}>
         {this.props.children}
       </Menu>

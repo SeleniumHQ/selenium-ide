@@ -97,12 +97,10 @@ const commandTarget = {
 }))
 @observer
 export default class TestRow extends React.Component {
-  @observable isOpen = false;
   constructor(props) {
     super(props);
     this.paste = this.paste.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
-    this.state ={};
   }
   static propTypes = {
     id: PropTypes.string,
@@ -130,7 +128,6 @@ export default class TestRow extends React.Component {
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
     setSectionFocus: PropTypes.func,
-    position: PropTypes.any
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -187,9 +184,7 @@ export default class TestRow extends React.Component {
     if(e){
       e.preventDefault();
       e.stopPropagation();
-    }
-    if(!MenuState.isOpen){
-      this.isOpen = !this.isOpen;
+      this.refs.contextMenu.handleContextMenu(e);
     }
   }
   render() {
@@ -226,16 +221,15 @@ export default class TestRow extends React.Component {
       <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
       <td className="buttons">
-        <div>
-          { this.props.swapCommands ?
+        { this.props.swapCommands ?
+          <div>
             <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
               {menuList}
-            </ListMenu>: null }
-          <ContextMenu width={300} padding={-5} onContextMenu={this.handleContextMenu} isOpen={this.isOpen} opener={this}
-            direction={"cursor"} position={this.props.position} closeTimeoutMS={50}>
-            {menuList}
-          </ ContextMenu>
-        </div>
+            </ListMenu>
+            <ContextMenu ref="contextMenu" width={300} padding={-5} direction={"cursor"} closeTimeoutMS={50}>
+              {menuList}
+            </ ContextMenu>
+          </div>: <div></div> }
       </td>
     </tr>;
     return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);

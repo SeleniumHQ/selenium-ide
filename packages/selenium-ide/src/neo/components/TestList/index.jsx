@@ -23,7 +23,6 @@ import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import ReactCursorPosition from "react-cursor-position";
 
 import "./style.css";
 
@@ -45,7 +44,6 @@ export default class TestList extends Component {
       <ul className={classNames("tests", {"active": !this.props.collapsed})} onContextMenu={this.handleContextMenu.bind(this)}>
         {this.props.tests.map((test, index) => (
           <li key={test.id}>
-            <ReactCursorPosition>
               {this.props.suite ?
                 <DraggableTest
                   className={PlaybackState.testState.get(test.id)}
@@ -74,7 +72,6 @@ export default class TestList extends Component {
                   moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
                   setSectionFocus={UiState.setSectionFocus}
                 />}
-              </ReactCursorPosition>
           </li>
         ))}
       </ul>

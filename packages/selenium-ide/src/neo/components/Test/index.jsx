@@ -145,10 +145,10 @@ export default class Test extends React.Component {
           {menuList}
         </ListMenu> :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-      <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
+      { <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
         position={this.props.position} closeTimeoutMS={50}>
         {menuList}
-      </ContextMenu>
+      </ContextMenu> }
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
