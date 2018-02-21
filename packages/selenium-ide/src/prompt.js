@@ -110,8 +110,8 @@ if (window !== window.top) {
 } else { // top window
 
   window.prompt = function(text, defaultText) {
+    recordedPrompt = text;
     if (document.body.hasAttribute("setPrompt")) {
-      recordedPrompt = text;
       document.body.removeAttribute("setPrompt");
       return nextPromptResult;
     } else {
@@ -128,8 +128,8 @@ if (window !== window.top) {
     }
   };
   window.confirm = function(text) {
+    recordedConfirmation = text;
     if (document.body.hasAttribute("setConfirm")) {
-      recordedConfirmation = text;
       document.body.removeAttribute("setConfirm");
       return nextConfirmationResult;
     } else {
@@ -146,8 +146,8 @@ if (window !== window.top) {
     }
   };
   window.alert = function(text) {
+    recordedAlert = text;
     if(document.body.hasAttribute("SideeXPlayingFlag")){
-      recordedAlert = text;
       // Response directly
       window.top.postMessage({
         direction: "from-page-script",

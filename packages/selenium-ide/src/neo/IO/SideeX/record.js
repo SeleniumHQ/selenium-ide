@@ -27,11 +27,7 @@ function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
-window.getRecordsArray = function() {
-  return [];
-};
-
-window.addCommandAuto = function(command, targets, value) {
+function record(command, targets, value, insertBeforeLastCommand = false) {
   const { test } = UiState.selectedTest;
   if (isEmpty(test.commands, command)) {
     const newCommand = test.createCommand();
@@ -41,11 +37,24 @@ window.addCommandAuto = function(command, targets, value) {
     UiState.setUrl(url.origin, true);
     newCommand.setTarget(url.pathname);
   } else if (command !== "open") {
-    const newCommand = UiState.selectedCommand !== UiState.pristineCommand
-      ? test.createCommand(UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand))
-      : test.createCommand();
+    let index = undefined;
+    if (insertBeforeLastCommand) {
+      index = UiState.selectedTest.test.commands.length - 1;
+    } else if(UiState.selectedCommand !== UiState.pristineCommand) {
+      index = UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand);
+    }
+    const newCommand = test.createCommand(index);
     newCommand.setCommand(command);
     newCommand.setValue(value);
     newCommand.setTarget(targets[0][0]);
   }
+}
+
+window.getRecordsArray = function() {
+  return [];
 };
+
+window.addCommandAuto = record;
+window.addCommandBeforeLastCommand = (...argv) => (
+  record(...argv, true)
+);
