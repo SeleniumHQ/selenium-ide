@@ -347,6 +347,18 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
+Selenium.prototype.doVerifyEditable = function(locator) {
+  if (!this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is not editable`);
+  }
+};
+
+Selenium.prototype.doVerifyNotEditable = function(locator) {
+  if (this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is editable`);
+  }
+};
+
 Selenium.prototype.doVerifyText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
@@ -387,6 +399,18 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
     if (!error.message.match(/Element[\s\S]*?not found/)) {
       throw error;
     }
+  }
+};
+
+Selenium.prototype.doAssertEditable = function(locator) {
+  if (!this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is not editable`);
+  }
+};
+
+Selenium.prototype.doAssertNotEditable = function(locator) {
+  if (this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is editable`);
   }
 };
 
