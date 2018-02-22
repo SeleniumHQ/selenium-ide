@@ -347,6 +347,24 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
+Selenium.prototype.doVerifyChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (!element.checked) {
+    throw new Error(`Element with locator ${locator} is not checked`);
+  }
+};
+
+Selenium.prototype.doVerifyNotChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (element.checked) {
+    throw new Error(`Element with locator ${locator} is checked`);
+  }
+};
+
 Selenium.prototype.doVerifyEditable = function(locator) {
   if (!this.isEditable(locator)) {
     throw new Error(`Element with locator ${locator} is not editable`);
@@ -399,6 +417,24 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
     if (!error.message.match(/Element[\s\S]*?not found/)) {
       throw error;
     }
+  }
+};
+
+Selenium.prototype.doAssertChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (!element.checked) {
+    throw new Error(`Element with locator ${locator} is not checked`);
+  }
+};
+
+Selenium.prototype.doAssertNotChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (element.checked) {
+    throw new Error(`Element with locator ${locator} is checked`);
   }
 };
 
