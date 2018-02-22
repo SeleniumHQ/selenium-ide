@@ -72,6 +72,7 @@ export const Commands = Object.freeze({
   assertAlert: "assert alert",
   assertConfirmation: "assert confirmation",
   assertElementPresent: "assert element present",
+  assertElementNotPresent: "assert element not present",
   assertPrompt: "assert prompt",
   assertText: "assert text",
   assertTitle: "assert title",
@@ -101,6 +102,7 @@ export const Commands = Object.freeze({
   storeTitle: "store title",
   type: "type",
   verifyElementPresent: "verify element present",
+  verifyElementNotPresent: "verify element not present",
   verifyText: "verify text",
   verifyTitle: "verify title"
 });

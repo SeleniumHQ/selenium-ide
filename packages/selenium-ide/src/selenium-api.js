@@ -372,6 +372,17 @@ Selenium.prototype.doVerifyElementPresent = function(locator) {
   }
 };
 
+Selenium.prototype.doVerifyElementNotPresent = function(locator) {
+  try {
+    this.browserbot.findElement(locator);
+    throw new Error(`Element with locator ${locator} was found`);
+  } catch (error) {
+    if (!error.message.match(/Element[\s\S]*?not found/)) {
+      throw error;
+    }
+  }
+};
+
 Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
@@ -392,6 +403,17 @@ Selenium.prototype.doAssertElementPresent = function(locator) {
     if (error.message.match(/Element[\s\S]*?not found/)) {
       throw new Error(`Element with locator ${locator} could not be found`);
     } else {
+      throw error;
+    }
+  }
+};
+
+Selenium.prototype.doAssertElementNotPresent = function(locator) {
+  try {
+    this.browserbot.findElement(locator);
+    throw new Error(`Element with locator ${locator} was found`);
+  } catch (error) {
+    if (!error.message.match(/Element[\s\S]*?not found/)) {
       throw error;
     }
   }
