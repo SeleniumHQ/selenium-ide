@@ -75,6 +75,7 @@ export const Commands = Object.freeze({
   assertElementNotPresent: "assert element not present",
   assertPrompt: "assert prompt",
   assertText: "assert text",
+  assertValue: "assert value",
   assertTitle: "assert title",
   chooseCancelOnNextConfirmation: "choose cancel on next confirmation",
   chooseCancelOnNextPrompt: "choose cancel on next prompt",
@@ -104,6 +105,7 @@ export const Commands = Object.freeze({
   verifyElementPresent: "verify element present",
   verifyElementNotPresent: "verify element not present",
   verifyText: "verify text",
+  verifyValue: "verify value",
   verifyTitle: "verify title"
 });
 

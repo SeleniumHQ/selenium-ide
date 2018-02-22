@@ -354,6 +354,13 @@ Selenium.prototype.doVerifyText = function(locator, value) {
   }
 };
 
+Selenium.prototype.doVerifyValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.value !== value) {
+    throw new Error("Actual value '" + element.value + "' did not match '" + value + "'");
+  }
+};
+
 Selenium.prototype.doVerifyTitle = function(value) {
   if (normalizeSpaces(this.getTitle()) !== value) {
     throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
@@ -387,6 +394,13 @@ Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
     throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.value !== value) {
+    throw new Error("Actual value '" + element.value + "' did not match '" + value + "'");
   }
 };
 
