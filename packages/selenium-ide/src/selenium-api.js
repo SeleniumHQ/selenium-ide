@@ -347,10 +347,66 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
+Selenium.prototype.doVerifyChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (!element.checked) {
+    throw new Error(`Element with locator ${locator} is not checked`);
+  }
+};
+
+Selenium.prototype.doVerifyNotChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (element.checked) {
+    throw new Error(`Element with locator ${locator} is checked`);
+  }
+};
+
+Selenium.prototype.doVerifyEditable = function(locator) {
+  if (!this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is not editable`);
+  }
+};
+
+Selenium.prototype.doVerifyNotEditable = function(locator) {
+  if (this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is editable`);
+  }
+};
+
+
+Selenium.prototype.doVerifySelectedValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "select-one") {
+    throw new Error(`Element with locator ${locator} is not a select`);
+  } else if (element.value !== value) {
+    throw new Error("Actual value '" + element.value + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doVerifyNotSelectedValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "select-one") {
+    throw new Error(`Element with locator ${locator} is not a select`);
+  } else if (element.value === value) {
+    throw new Error("Actual value '" + element.value + "' did match");
+  }
+};
+
 Selenium.prototype.doVerifyText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
     throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doVerifyValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.value !== value) {
+    throw new Error("Actual value '" + element.value + "' did not match '" + value + "'");
   }
 };
 
@@ -383,10 +439,65 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
   }
 };
 
+Selenium.prototype.doAssertChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (!element.checked) {
+    throw new Error(`Element with locator ${locator} is not checked`);
+  }
+};
+
+Selenium.prototype.doAssertNotChecked = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "checkbox" && element.type !== "radio") {
+    throw new Error(`Element with locator ${locator} is not a checkbox nor a radio button`);
+  } else if (element.checked) {
+    throw new Error(`Element with locator ${locator} is checked`);
+  }
+};
+
+Selenium.prototype.doAssertEditable = function(locator) {
+  if (!this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is not editable`);
+  }
+};
+
+Selenium.prototype.doAssertNotEditable = function(locator) {
+  if (this.isEditable(locator)) {
+    throw new Error(`Element with locator ${locator} is editable`);
+  }
+};
+
+Selenium.prototype.doAssertSelectedValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "select-one") {
+    throw new Error(`Element with locator ${locator} is not a select`);
+  } else if (element.value !== value) {
+    throw new Error("Actual value '" + element.value + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertNotSelectedValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.type !== "select-one") {
+    throw new Error(`Element with locator ${locator} is not a select`);
+  } else if (element.value === value) {
+    throw new Error("Actual value '" + element.value + "' did match");
+  }
+};
+
 Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
     throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertValue = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (element.value !== value) {
+    throw new Error("Actual value '" + element.value + "' did not match '" + value + "'");
   }
 };
 

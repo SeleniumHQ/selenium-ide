@@ -70,12 +70,19 @@ export const Commands = Object.freeze({
   addSelection: "add selection",
   answerOnNextPrompt: "answer on next prompt",
   assertAlert: "assert alert",
+  assertChecked: "assert checked",
+  assertNotChecked: "assert not checked",
   assertConfirmation: "assert confirmation",
+  assertEditable: "assert editable",
+  assertNotEditable: "assert not editable",
   assertElementPresent: "assert element present",
   assertElementNotPresent: "assert element not present",
   assertPrompt: "assert prompt",
+  assertSelectedValue: "assert selected value",
+  assertNotSelectedValue: "assert not selected value",
   assertText: "assert text",
   assertTitle: "assert title",
+  assertValue: "assert value",
   chooseCancelOnNextConfirmation: "choose cancel on next confirmation",
   chooseCancelOnNextPrompt: "choose cancel on next prompt",
   chooseOkOnNextConfirmation: "choose ok on next confirmation",
@@ -101,10 +108,17 @@ export const Commands = Object.freeze({
   storeText: "store text",
   storeTitle: "store title",
   type: "type",
+  verifyChecked: "verify checked",
+  verifyNotChecked: "verify not checked",
+  verifyEditable: "verify editable",
+  verifyNotEditable: "verify not editable",
   verifyElementPresent: "verify element present",
   verifyElementNotPresent: "verify element not present",
+  verifySelectedValue: "verify selected value",
+  verifyNotSelectedValue: "verify not selected value",
   verifyText: "verify text",
-  verifyTitle: "verify title"
+  verifyTitle: "verify title",
+  verifyValue: "verify value"
 });
 
 export const CommandsArray = Object.freeze(Object.keys(Commands));
