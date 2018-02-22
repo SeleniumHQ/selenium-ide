@@ -173,6 +173,7 @@ function isExtCommand(command) {
     case "open":
     case "selectFrame":
     case "selectWindow":
+    case "setSpeed":
     case "close":
       return true;
     default:

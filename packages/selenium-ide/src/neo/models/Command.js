@@ -104,6 +104,7 @@ export const Commands = Object.freeze({
   selectFrame: "select frame",
   selectWindow: "select window",
   sendKeys: "send keys",
+  setSpeed: "set speed",
   store: "store",
   storeText: "store text",
   storeTitle: "store title",

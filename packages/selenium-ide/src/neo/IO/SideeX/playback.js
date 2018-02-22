@@ -21,6 +21,16 @@ import UiState from "../../stores/view/UiState";
 const { ExtCommand, isExtCommand } = window;
 
 const extCommand = new ExtCommand();
+// In order to not break the separation of the execution loop from the state of the playback
+// I will set doSetSpeed here so that extCommand will not be aware of the state
+extCommand.doSetSpeed = (speed) => {
+  if (speed < 0) speed = 0;
+  if (speed > PlaybackState.maxDelay) speed = PlaybackState.maxDelay;
+
+  PlaybackState.setDelay(speed);
+  return Promise.resolve();
+};
+
 window.extCommand = extCommand;
 const xlateArgument = window.xlateArgument;
 let baseUrl = "";
