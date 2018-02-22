@@ -194,6 +194,7 @@ function doDomWait(res, domTime, domCount = 0) {
 }
 
 function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
+  if (!PlaybackState.isPlaying || PlaybackState.paused) return;
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
 
   let p = new Promise(function(resolve, reject) {
