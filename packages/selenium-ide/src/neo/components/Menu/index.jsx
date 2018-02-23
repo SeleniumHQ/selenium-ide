@@ -84,6 +84,15 @@ class Menu extends React.Component {
   handleClosing(e) {
     this.props.requestClose(e);
   }
+  overlayRef = (ref) => {
+    if (ref) {
+      ref.addEventListener('contextmenu', function(e) {
+       e.preventDefault();
+       e.stopPropagation();
+      }, false);
+    }
+    this.overlay = ref;
+  }
   render() {
     let directionStyles = {};
     if (this.props.direction === MenuDirections.Left) {
@@ -124,6 +133,7 @@ class Menu extends React.Component {
             shouldCloseOnOverlayClick={true}
             closeTimeoutMS={this.props.closeTimeoutMS}
             onRequestClose={this.handleClosing}
+            overlayRef={this.overlayRef}
             style={{
               overlay: {
                 backgroundColor: "transparent",

@@ -182,8 +182,8 @@ export default class TestRow extends React.Component {
   }
   @action handleContextMenu(e){
     if(e){
-      e.preventDefault();
-      e.stopPropagation();
+      //e.preventDefault();
+      //e.stopPropagation();
       this.refs.contextMenu.handleContextMenu(e);
     }
   }
