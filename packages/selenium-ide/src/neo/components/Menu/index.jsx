@@ -21,7 +21,6 @@ import PropTypes from "prop-types";
 import ReactModal from "react-modal";
 import classNames from "classnames";
 import { Transition } from "react-transition-group";
-import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 export const MenuDirections = {
@@ -86,10 +85,7 @@ class Menu extends React.Component {
   }
   overlayRef = (ref) => {
     if (ref) {
-      ref.addEventListener('contextmenu', function(e) {
-       e.preventDefault();
-       e.stopPropagation();
-      }, false);
+      ref.addEventListener('contextmenu', this.handleClosing, false);
     }
     this.overlay = ref;
   }
@@ -109,11 +105,11 @@ class Menu extends React.Component {
       };
     } else if (this.props.direction === MenuDirections.Cursor) {
       let topPosition = 40, leftPosition = 40;
-      if(this.props.position){
+      if (this.props.position) {
         topPosition = this.props.position.y;
         leftPosition = this.props.position.x;
         //if context menu is over test row's right
-        if(this.state.boundingRect.right < this.props.width + this.props.position.x){
+        if (this.state.boundingRect.right < this.props.width + this.props.position.x) {
           leftPosition = this.state.boundingRect.right - this.props.width - 5;
         }
       }
@@ -178,19 +174,13 @@ export default class MenuContainer extends React.Component {
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.node = e.currentTarget;
-    if(MenuState.isOpen && this.state.isOpen){
-      MenuState.isOpen = false;
-      this.setState({
-        isOpen: false
-      });
-    }else{
-      this.state.isOpen ? null : this.eventPosition = {x:e.clientX,y:e.clientY} ;
-      MenuState.isOpen = true;
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
+    if (!this.state.isOpen) {
+      this.eventPosition = { x:e.clientX, y:e.clientY }
     }
+    this.node = e.currentTarget;
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
   }
   close(e) {
     e.preventDefault();
@@ -202,7 +192,7 @@ export default class MenuContainer extends React.Component {
   render() {
     return ([
       (this.props.opener ?
-        React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : undefined),
+        React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : null),
       <Menu
         key="menu"
         isOpen={this.state.isOpen}

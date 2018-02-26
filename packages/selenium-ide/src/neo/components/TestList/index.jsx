@@ -36,12 +36,9 @@ export default class TestList extends Component {
     removeTest: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func
   };
-  handleContextMenu(e){
-    e.preventDefault();
-  }
   render() {
     return (
-      <ul className={classNames("tests", {"active": !this.props.collapsed})} onContextMenu={this.handleContextMenu.bind(this)}>
+      <ul className={classNames("tests", {"active": !this.props.collapsed})}>
         {this.props.tests.map((test, index) => (
           <li key={test.id}>
               {this.props.suite ?

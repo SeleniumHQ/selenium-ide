@@ -27,7 +27,6 @@ import MultilineEllipsis from "../MultilineEllipsis";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import ContextMenu from "../ContextMenu";
-import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 export const Type = "command";
@@ -181,11 +180,7 @@ export default class TestRow extends React.Component {
     }
   }
   @action handleContextMenu(e){
-    if(e){
-      //e.preventDefault();
-      //e.stopPropagation();
       this.refs.contextMenu.handleContextMenu(e);
-    }
   }
   render() {
     const menuList =<div>
@@ -206,7 +201,7 @@ export default class TestRow extends React.Component {
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.handleContextMenu}
+      onContextMenu={this.props.swapCommands ? this.handleContextMenu : null}
       onClick={this.props.onClick}
       onDoubleClick={this.props.executeCommand}
       onKeyDown={this.handleKeyDown.bind(this)}

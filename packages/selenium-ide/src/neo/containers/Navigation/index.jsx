@@ -64,13 +64,17 @@ import "./style.css";
       UiState.focusEditor();
     }
   }
+  handleContextMenu(e){
+    e.preventDefault();
+  }
   render() {
     return (
       <aside
         className="test-cases"
         onKeyDown={this.handleKeyDown.bind(this)}
         onMouseEnter={() => UiState.setNavigationHover(true)}
-        onMouseLeave={() => UiState.setNavigationHover(false)}>
+        onMouseLeave={() => UiState.setNavigationHover(false)}
+        onContextMenu={this.handleContextMenu.bind(this)}>
         <VerticalTabBar tabs={["Tests", "Test suites"]} tabChanged={this.handleChangedTab}>
           <AddButton data-tip={this.state.showTests ? "<p>Add new test</p>" : "<p>Add new test suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </VerticalTabBar>

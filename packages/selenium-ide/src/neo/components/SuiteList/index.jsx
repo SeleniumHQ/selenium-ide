@@ -30,12 +30,9 @@ import "./style.css";
     removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
-  handleContextMenu(e){
-    e.preventDefault();
-  }
   render() {
     return (
-      <ul className="projects" onContextMenu={this.handleContextMenu.bind(this)}>
+      <ul className="projects">
         {this.props.suites.map(suite => (
           <li key={suite.id}>
               <Suite suite={suite} selectTests={() => {this.props.selectTests(suite);}} rename={this.props.rename} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} />

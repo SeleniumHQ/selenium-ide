@@ -15,13 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable, observe, extendObservable, reaction } from "mobx";
+import { action, computed, observable, observe, extendObservable } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
 import Command from "../../models/Command";
-import { findDOMNode } from "react-dom";
 
 class UiState {
   @observable selectedTest = {};
@@ -44,7 +43,7 @@ class UiState {
   @observable lastFocus = {};
   @observable options = {
     recordNotifications: true
-  }; 
+  };
 
   constructor() {
     this.suiteStates = {};

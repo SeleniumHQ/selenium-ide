@@ -29,7 +29,6 @@ import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ContextMenu from "../ContextMenu";
-import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -94,13 +93,7 @@ class Suite extends React.Component {
     }
   }
   @action handleContextMenu(e){
-    if(e){
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if(!MenuState.isOpen){
-      this.isOpen = !this.isOpen;
-    }
+    this.refs.contextMenu.handleContextMenu(e);
   }
   render() {
     const menuList = <div>
@@ -110,8 +103,8 @@ class Suite extends React.Component {
     </div>;
 
     return this.props.connectDropTarget(
-      <div onKeyDown={this.handleKeyDown.bind(this)} onContextMenu={this.handleContextMenu}>
-        <div className="project">
+      <div onKeyDown={this.handleKeyDown.bind(this)}>
+        <div className="project" onContextMenu={this.handleContextMenu}>
           <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick}>
             <span className="si-caret"></span>
             <span className="title">{this.props.suite.name}</span>
@@ -119,8 +112,7 @@ class Suite extends React.Component {
           <ListMenu width={130} padding={-5} opener={<MoreButton />}>
             {menuList}
           </ListMenu>
-          <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
-            position={this.props.position} closeTimeoutMS={50}>
+          <ContextMenu ref="contextMenu" width={130} padding={-5} direction={"cursor"} closeTimeoutMS={50}>
             {menuList}
           </ContextMenu>
         </div>

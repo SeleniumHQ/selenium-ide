@@ -26,7 +26,6 @@ import RemoveButton from "../ActionButtons/Remove";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import ContextMenu from "../ContextMenu";
-import MenuState from "../../stores/view/MenuState";
 import "./style.css";
 
 export const Type = "test";
@@ -111,13 +110,7 @@ export default class Test extends React.Component {
     }
   }
   @action handleContextMenu(e){
-    if(e){
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if(!MenuState.isOpen){
-      this.isOpen = !this.isOpen;
-    }
+    this.refs.contextMenu.handleContextMenu(e);
   }
   render() {
     const menuList = <div>
@@ -135,7 +128,7 @@ export default class Test extends React.Component {
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.handleContextMenu}
+      onContextMenu={this.props.renameTest ? this.handleContextMenu : null}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
@@ -145,10 +138,9 @@ export default class Test extends React.Component {
           {menuList}
         </ListMenu> :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-      { <ContextMenu width={130} padding={-5} onContextMenu={this.handleContextMenu} isOpen ={this.isOpen} opener={this} direction={"cursor"}
-        position={this.props.position} closeTimeoutMS={50}>
+        <ContextMenu ref="contextMenu" width={130} padding={-5} direction={"cursor"} closeTimeoutMS={50}>
         {menuList}
-      </ContextMenu> }
+      </ContextMenu>
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }
