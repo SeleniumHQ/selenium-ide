@@ -149,6 +149,7 @@ modify(project);
                   urls={this.state.project.urls}
                   setUrl={this.state.project.setUrl}
                   test={UiState.selectedTest.test}
+                  load={loadProject.bind(undefined, project)}
                 />
               </SplitPane>
             </div>
