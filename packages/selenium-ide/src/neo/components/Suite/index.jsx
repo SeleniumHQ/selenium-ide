@@ -74,8 +74,7 @@ class Suite extends React.Component {
     remove: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
-    position: PropTypes.any
+    canDrop: PropTypes.bool
   };
   handleClick() {
     this.store.setOpen(!this.store.isOpen);

@@ -33,8 +33,7 @@ export default class TestList extends Component {
     collapsed: PropTypes.bool,
     suite: PropTypes.object,
     renameTest: PropTypes.func,
-    removeTest: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func
+    removeTest: PropTypes.func.isRequired
   };
   render() {
     return (

@@ -126,7 +126,7 @@ export default class TestRow extends React.Component {
     clearAllCommands: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func,
+    setSectionFocus: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
