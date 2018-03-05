@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrateProject from "./legacy/migrate";
+import { migrateTestCase } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "../../selianize";
@@ -87,7 +87,7 @@ export function loadProject(project, file) {
       loadJSONProject(project, e.target.result);
     } else if (file.type === "text/html") {
       try {
-        project.fromJS(migrateProject(e.target.result));
+        project.fromJS(migrateTestCase(e.target.result));
       } catch (error) {
         ModalState.showAlert({
           title: "Error migrating project",

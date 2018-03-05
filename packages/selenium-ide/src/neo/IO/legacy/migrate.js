@@ -18,7 +18,7 @@
 import convert from "xml-js";
 import xmlescape from "xml-escape";
 
-export default function migrateProject(data) {
+export function migrateTestCase(data) {
   const sanitized = data.replace(/<link(.*")\s*\/{0}>/g, (match, group) => (
     `<link${group} />`
   )).replace(/<td>(.*)<\/td>/g, (match, group) => (
