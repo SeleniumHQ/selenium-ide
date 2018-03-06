@@ -17,6 +17,7 @@
 
 import convert from "xml-js";
 import xmlescape from "xml-escape";
+import xmlunescape from "unescape";
 import JSZip from "jszip";
 
 export function migrateProject(zippedData) {
@@ -102,8 +103,8 @@ export function migrateTestCase(data) {
         commands: result.html.body.table.tbody.tr.filter(row => !/^wait/.test(row.td[0]._text)).map(row => (
           {
             command: row.td[0]._text && row.td[0]._text.replace("AndWait", "") || "",
-            target: parseTarget(row.td[1]),
-            value: row.td[2]._text || ""
+            target: xmlunescape(parseTarget(row.td[1])),
+            value: xmlunescape(row.td[2]._text || "")
           }
         ))
       }

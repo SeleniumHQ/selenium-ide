@@ -35,7 +35,7 @@ describe("selenium test case migration", () => {
     expect(test.commands.length).toBe(4);
     const command = test.commands[0];
     expect(command.command).toBe("open");
-    expect(command.target).toBe("/?gfe_rd=cr&amp;dcr=0&amp;ei=9vz6Way_KdPPXqjmsbgI&amp;gws_rd=ssl");
+    expect(command.target).toBe("/?gfe_rd=cr&dcr=0&ei=9vz6Way_KdPPXqjmsbgI&gws_rd=ssl");
     expect(command.value).toBe("");
   });
   it("should migrate the second example", () => {
@@ -53,6 +53,11 @@ describe("selenium test case migration", () => {
     const project = migrateTestCase(file);
     expect(project.tests[0].name).toBe("Show Details");
     expect(project.tests[0].commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
+  });
+  it("should decode the input post conversion", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_8.html")).toString();
+    const project = migrateTestCase(file);
+    expect(project.tests[0].commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
   });
 });
 
