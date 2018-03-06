@@ -18,7 +18,7 @@
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";
-import { migrateTestCase } from "../../../IO/legacy/migrate";
+import { migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
 
 useStrict(true);
 
@@ -53,5 +53,14 @@ describe("selenium test case migration", () => {
     const project = migrateTestCase(file);
     expect(project.tests[0].name).toBe("Show Details");
     expect(project.tests[0].commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
+  });
+});
+
+describe("selenium suite migration", () => {
+  it("should migrate the suite", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_4.zip"));
+    return migrateProject(file).then(project => {
+      expect(project.suites.length).toBe(1);
+    });
   });
 });
