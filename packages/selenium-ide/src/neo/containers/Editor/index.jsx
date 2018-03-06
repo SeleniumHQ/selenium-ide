@@ -24,11 +24,10 @@ import ToolBar from "../../components/ToolBar";
 import UrlBar from "../../components/UrlBar";
 import TestTable from "../../components/TestTable";
 import CommandForm from "../../components/CommandForm";
-import { DragDropContext, DragDropContextProvider } from 'react-dnd'
+import { DragDropContextProvider } from 'react-dnd'
 import HTML5Backend, { NativeTypes } from 'react-dnd-html5-backend'
 import "./style.css";
 
-@DragDropContext(HTML5Backend)
 @observer export default class Editor extends React.Component {
   constructor(props) {
     super(props);

@@ -46,7 +46,7 @@ export default class TestTable extends React.Component {
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func,
-    accepts: PropTypes.arrayOf(PropTypes.string),
+    accepts: PropTypes.any,
   };
   render() {
     return ([
