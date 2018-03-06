@@ -80,14 +80,14 @@ export function migrateTestCase(data) {
   const project = {
     name: result.html.head.title._text,
     url: result.html.head.link._attributes.href,
-    urls: [result.html.head.link._attributes.href],
+    urls: result.html.head.link._attributes.href ? [result.html.head.link._attributes.href] : [],
     tests: [
       {
         id: data,
         name: result.html.body.table.thead.tr.td._text,
-        commands: result.html.body.table.tbody.tr.map(row => (
+        commands: result.html.body.table.tbody.tr.filter(row => !/^wait/.test(row.td[0]._text)).map(row => (
           {
-            command: row.td[0]._text || "",
+            command: row.td[0]._text && row.td[0]._text.replace("AndWait", "") || "",
             target: parseTarget(row.td[1]),
             value: row.td[2]._text || ""
           }
