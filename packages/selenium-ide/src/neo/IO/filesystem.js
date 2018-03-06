@@ -81,6 +81,13 @@ function createBlob(mimeType, data) {
 }
 
 export function loadProject(project, file) {
+  function displayError(error) {
+    ModalState.showAlert({
+      title: "Error migrating project",
+      description: error.message,
+      confirmLabel: "Close"
+    });
+  }
   const fileReader = new FileReader();
   fileReader.onload = (e) => {
     if (/\.side$/.test(file.name)) {
@@ -92,14 +99,10 @@ export function loadProject(project, file) {
         } else if (file.type === "application/zip") {
           migrateProject(e.target.result).then(jsRep => {
             project.fromJS(jsRep);
-          });
+          }).catch(displayError);
         }
       } catch (error) {
-        ModalState.showAlert({
-          title: "Error migrating project",
-          description: error.message,
-          confirmLabel: "Close"
-        });
+        displayError(error);
       }
     }
   };

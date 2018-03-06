@@ -44,8 +44,8 @@ export function migrateProject(zippedData) {
           migrateSuite(suite, fileMap, project);
         });
         res(project);
-      }).catch(console.error);
-    });
+      }).catch(rej);
+    }).catch(rej);
   });
 }
 
