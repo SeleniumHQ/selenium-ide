@@ -69,4 +69,11 @@ describe("selenium suite migration", () => {
       expect(error.message).toBe("The file einzeltests/MH_delete.html is missing, suite can't be migrated");
     });
   });
+  it("should migrate multiple suites", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_6.zip"));
+    return migrateProject(file).then(project => {
+      expect(project.suites.length).toBe(2);
+      expect(project.tests.length).toBe(3);
+    });
+  });
 });

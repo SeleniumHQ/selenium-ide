@@ -101,7 +101,7 @@ export function migrateTestCase(data) {
 }
 
 function testCaseExists(testCase, tests) {
-  return !!tests.find((test) => test.id === testCase.id);
+  return !!tests.find((test) => test.id === testCase);
 }
 
 function sanitizeXml(data) {
