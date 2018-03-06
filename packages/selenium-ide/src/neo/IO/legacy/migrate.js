@@ -38,11 +38,31 @@ export function migrateProject(zippedData) {
         fileMap[file.name] = data;
       })
     ))).then(() => {
-      Object.keys(fileMap).filter(fileName => (
-        fileMap[fileName].includes("table id=\"suiteTable\"")
-      )).forEach(suite => {
+      const suites = [];
+      const tests = [];
+      Object.keys(fileMap).forEach(fileName => {
+        if (fileMap[fileName].includes("table id=\"suiteTable\"")) {
+          suites.push(fileName);
+        } else {
+          tests.push(fileName);
+        }
+      });
+      tests.forEach(testCaseName => {
+        const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
+        parsedTestCase.tests[0].id = testCaseName;
+        project.tests.push(parsedTestCase.tests[0]);
+        project.urls = [...project.urls, ...parsedTestCase.urls];
+      });
+      suites.forEach(suite => {
         migrateSuite(suite, fileMap, project);
       });
+      if (!suites.length) {
+        project.suites.push({
+          name: "Imported suite",
+          tests
+        });
+        project.name = "Imported project";
+      }
       return project;
     });
   });
@@ -61,12 +81,6 @@ function migrateSuite(suite, fileMap, project) {
       const testCaseName = testCase.td.a._attributes.href;
       if (!fileMap[testCaseName]) {
         throw new Error(`The file ${testCaseName} is missing, suite can't be migrated`);
-      }
-      if (!testCaseExists(testCaseName, project.tests)) {
-        const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
-        parsedTestCase.tests[0].id = testCaseName;
-        project.tests.push(parsedTestCase.tests[0]);
-        project.urls = [...project.urls, ...parsedTestCase.urls];
       }
       parsedSuite.tests.push(testCaseName);
       project.name = parsedSuite.name;
@@ -98,10 +112,6 @@ export function migrateTestCase(data) {
   };
 
   return project;
-}
-
-function testCaseExists(testCase, tests) {
-  return !!tests.find((test) => test.id === testCase);
 }
 
 function sanitizeXml(data) {

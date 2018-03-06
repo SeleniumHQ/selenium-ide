@@ -76,4 +76,11 @@ describe("selenium suite migration", () => {
       expect(project.tests.length).toBe(3);
     });
   });
+  it("should create a suite if none was given", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_7.zip"));
+    return migrateProject(file).then(project => {
+      expect(project.suites.length).toBe(1);
+      expect(project.tests.length).toBe(3);
+    });
+  });
 });
