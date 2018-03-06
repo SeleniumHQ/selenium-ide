@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { migrateTestCase } from "./legacy/migrate";
+import { migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "../../selianize";
 const browser = window.browser;
 
-export const supportedFileFormats = ".side, text/html";
+export const supportedFileFormats = ".side, text/html, application/zip";
 
 export function saveProject(project) {
   project.version = "1.0";
@@ -85,9 +85,15 @@ export function loadProject(project, file) {
   fileReader.onload = (e) => {
     if (/\.side$/.test(file.name)) {
       loadJSONProject(project, e.target.result);
-    } else if (file.type === "text/html") {
+    } else  {
       try {
-        project.fromJS(migrateTestCase(e.target.result));
+        if (file.type === "text/html") {
+          project.fromJS(migrateTestCase(e.target.result));
+        } else if (file.type === "application/zip") {
+          migrateProject(e.target.result).then(jsRep => {
+            project.fromJS(jsRep);
+          });
+        }
       } catch (error) {
         ModalState.showAlert({
           title: "Error migrating project",
@@ -98,7 +104,7 @@ export function loadProject(project, file) {
     }
   };
 
-  fileReader.readAsText(file);
+  file.type === "application/zip" ? fileReader.readAsArrayBuffer(file) : fileReader.readAsText(file);
 }
 
 function loadJSONProject(project, data) {
