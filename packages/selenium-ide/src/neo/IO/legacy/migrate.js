@@ -20,32 +20,31 @@ import xmlescape from "xml-escape";
 import JSZip from "jszip";
 
 export function migrateProject(zippedData) {
-  return new Promise((res, rej) => {
-    JSZip.loadAsync(zippedData).then(zip => {
-      const isHidden = /(^\.|\/\.)/;
-      const isHTML = /\.html$/;
-      const files = zip.filter((relativePath, file) => (
-        !file.dir && !isHidden.test(file.name) && isHTML.test(file.name)
-      ));
-      const fileMap = {};
-      const project = {
-        urls: [],
-        tests: [],
-        suites: []
-      };
-      Promise.all(files.map(file => (
-        file.async("string").then(data => {
-          fileMap[file.name] = data;
-        })
-      ))).then(() => {
-        Object.keys(fileMap).filter(fileName => (
-          fileMap[fileName].includes("table id=\"suiteTable\"")
-        )).forEach(suite => {
-          migrateSuite(suite, fileMap, project);
-        });
-        res(project);
-      }).catch(rej);
-    }).catch(rej);
+  return JSZip.loadAsync(zippedData).then(zip => {
+    const isHidden = /(^\.|\/\.)/;
+    const isHTML = /\.html$/;
+    const files = zip.filter((relativePath, file) => (
+      !file.dir && !isHidden.test(file.name) && isHTML.test(file.name)
+    ));
+    const fileMap = {};
+    const project = {
+      url: "",
+      urls: [],
+      tests: [],
+      suites: []
+    };
+    return Promise.all(files.map(file => (
+      file.async("string").then(data => {
+        fileMap[file.name] = data;
+      })
+    ))).then(() => {
+      Object.keys(fileMap).filter(fileName => (
+        fileMap[fileName].includes("table id=\"suiteTable\"")
+      )).forEach(suite => {
+        migrateSuite(suite, fileMap, project);
+      });
+      return project;
+    });
   });
 }
 
@@ -67,9 +66,10 @@ function migrateSuite(suite, fileMap, project) {
         const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
         parsedTestCase.tests[0].id = testCaseName;
         project.tests.push(parsedTestCase.tests[0]);
-        project.urls.push(parsedTestCase.urls[0]);
+        project.urls = [...project.urls, ...parsedTestCase.urls];
       }
-      project.suites[0].tests.push(testCaseName);
+      parsedSuite.tests.push(testCaseName);
+      project.name = parsedSuite.name;
     }
   });
 }
