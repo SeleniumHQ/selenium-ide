@@ -45,10 +45,12 @@ export default class TabBar extends React.Component {
     buttonsMargin: 5
   };
   handleClick(tab, index) {
-    this.setState({
-      activeTab: { tab, index }
-    });
-    if (this.props.tabChanged) this.props.tabChanged(tab);
+    if (tab !== this.state.selectedTab.tab) {
+      this.setState({
+        activeTab: { tab, index }
+      });
+      if (this.props.tabChanged) this.props.tabChanged(tab);
+    }
   }
   render() {
     return (
