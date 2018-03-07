@@ -55,4 +55,5 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 
 We coordinate work on the [#selenium](irc://freenode.net/selenium) IRC
 channel, which is also available on
-[Slack](https://seleniumhq.herokuapp.com).
+[Slack](https://seleniumhq.herokuapp.com).<br/>
+Or we can chat on [selenium-ide Slack](https://selenium-ide.slack.com).
