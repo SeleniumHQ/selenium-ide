@@ -181,7 +181,6 @@ class BackgroundRecorder {
   }
 
   addCommandMessageHandler(message, sender, sendRequest) {
-    console.log(message);
     if (!message.command || this.openedWindowIds[sender.tab.windowId] == undefined)
       return;
 

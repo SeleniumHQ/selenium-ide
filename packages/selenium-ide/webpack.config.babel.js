@@ -28,11 +28,11 @@ export default {
   context: path.resolve(__dirname, "src"),
   devtool: isProduction ? "source-map" : false,
   entry: {
-    polyfills: ["./setup"],
-    injector: ["./prompt-injector"],
-    background: ["./background"],
-    record: ["./record"],
-    escape: ["./escape"],
+    polyfills: ["./content/setup"],
+    injector: ["./content/prompt-injector"],
+    background: ["./background/background"],
+    record: ["./content/record"],
+    escape: ["./content/escape"],
     neo: ["react-hot-loader/patch", "./neo/containers/Root"]
   },
   output: {
@@ -159,7 +159,7 @@ export default {
               path.resolve(__dirname, "src")
             ],
             use: [
-              { 
+              {
                 loader: "babel-loader",
                 options: {
                   compact: true
@@ -230,15 +230,15 @@ export default {
     new webpack.NamedModulesPlugin(),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
-      { from: "global.js", to: "vendor" },
+      { from: "content/global.js", to: "vendor" },
       { from: "selenium-core-scripts/htmlutils.js", to: "vendor" },
       { from: "selenium-core-scripts/selenium-browserdetect.js", to: "vendor" },
-      { from: "ext-command.js", to: "vendor" },
-      { from: "editor.js", to: "vendor" },
-      { from: "recorder.js", to: "vendor" },
-      { from: "formatCommand.js", to: "vendor" },
-      { from: "prompt.js", to: "./" },
-      { from: "prompt.css", to: "./" },
+      { from: "background/ext-command.js", to: "vendor" },
+      { from: "background/editor.js", to: "vendor" },
+      { from: "background/recorder.js", to: "vendor" },
+      { from: "background/formatCommand.js", to: "vendor" },
+      { from: "content/prompt.js", to: "./" },
+      { from: "content/prompt.css", to: "./" },
       { from: "manifest.json", to: "../" },
       { from: "icons", to: "../icons" }
     ]),
