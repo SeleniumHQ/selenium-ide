@@ -20,7 +20,9 @@ import UiState from "../../stores/view/UiState";
 
 reaction(
   () => UiState.isRecording,
-  isRecording => { window.isRecording = isRecording; }
+  isRecording => {
+    window.toggleRecord(isRecording);
+  }
 );
 
 function isEmpty(commands, command) {
@@ -39,15 +41,35 @@ function record(command, targets, value, insertBeforeLastCommand = false) {
   } else if (command !== "open") {
     let index = undefined;
     if (insertBeforeLastCommand) {
-      index = UiState.selectedTest.test.commands.length - 1;
+      index = test.commands.length - 1;
     } else if(UiState.selectedCommand !== UiState.pristineCommand) {
-      index = UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand);
+      index = test.commands.indexOf(UiState.selectedCommand);
+    }
+    if (preprocessDoubleClick(command, test, index)) {
+      // double click removed the 2 clicks from before
+      index -= 2;
     }
     const newCommand = test.createCommand(index);
     newCommand.setCommand(command);
     newCommand.setValue(value);
     newCommand.setTarget(targets[0][0]);
   }
+}
+
+function preprocessDoubleClick(command, test, index) {
+  if (command === "doubleClickAt" && test.commands.length >= 1) {
+    const lastCommand = test.commands[index - 1];
+    const beforeLastCommand = test.commands[index - 2];
+    if (lastCommand.command === "clickAt" &&
+      lastCommand.command === beforeLastCommand.command &&
+      lastCommand.target === beforeLastCommand.target &&
+      lastCommand.value === beforeLastCommand.value) {
+      test.removeCommand(lastCommand);
+      test.removeCommand(beforeLastCommand);
+      return true;
+    }
+  }
+  return false;
 }
 
 window.getRecordsArray = function() {

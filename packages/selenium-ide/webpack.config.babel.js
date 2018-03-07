@@ -235,6 +235,7 @@ export default {
       { from: "selenium-core-scripts/selenium-browserdetect.js", to: "vendor" },
       { from: "ext-command.js", to: "vendor" },
       { from: "editor.js", to: "vendor" },
+      { from: "recorder.js", to: "vendor" },
       { from: "formatCommand.js", to: "vendor" },
       { from: "prompt.js", to: "./" },
       { from: "prompt.css", to: "./" },
