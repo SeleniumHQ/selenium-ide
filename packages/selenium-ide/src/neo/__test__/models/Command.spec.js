@@ -21,6 +21,11 @@ describe("Command", () => {
   it("should generate and id", () => {
     expect((new Command()).id).toBeDefined();
   });
+  it("should set a comment", () => {
+    const command = new Command();
+    command.setComment("test");
+    expect(command.comment).toBe("test");
+  });
   it("should set a command", () => {
     const command = new Command();
     command.setCommand(Commands.open);
@@ -53,18 +58,21 @@ describe("Command", () => {
   });
   it("should initialize the primitives with empty strings", () => {
     const command = new Command();
+    expect(command.comment).toBe("");
     expect(command.command).toBe("");
     expect(command.target).toBe("");
     expect(command.value).toBe("");
   });
   it("shouls clone itself, creating a new id", () => {
     const command = new Command();
+    command.setComment("test");
     command.setCommand("open");
     command.setTarget("a");
     command.setValue("submit");
     const clone = command.clone();
     expect(clone).not.toBe(command);
     expect(clone.id).not.toBe(command.id);
+    expect(clone.comment).toBe(command.comment);
     expect(clone.command).toBe(command.command);
     expect(clone.target).toBe(command.target);
     expect(clone.value).toBe(command.value);
@@ -73,12 +81,14 @@ describe("Command", () => {
   it("should load from JS", () => {
     const jsRepresentation = {
       id: "1",
+      comment: "test",
       command: "open",
       target: "/",
       value: "test"
     };
     const command = Command.fromJS(jsRepresentation);
     expect(command.id).toBe(jsRepresentation.id);
+    expect(command.comment).toBe(jsRepresentation.comment);
     expect(command.command).toBe(jsRepresentation.command);
     expect(command.target).toBe(jsRepresentation.target);
     expect(command.value).toBe(jsRepresentation.value);
