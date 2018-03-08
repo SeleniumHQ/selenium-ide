@@ -15,19 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// Modified in remoteControl.js from selenium-IDE
+import browser from "webextension-polyfill";
+const declaredVars = {};
+const nbsp = String.fromCharCode(160);
 
-var declaredVars = {};
-
-function xlateArgument(value) {
+export function xlateArgument(value) {
   value = value.replace(/^\s+/, "");
   value = value.replace(/\s+$/, "");
-  var r;
-  var r2;
-  var parts = [];
-  if ((r = /\$\{/.exec(value))) {
-    var regexp = /\$\{(.*?)\}/g;
-    var lastIndex = 0;
+  let r2;
+  let parts = [];
+  if (/\$\{/.exec(value)) {
+    const regexp = /\$\{(.*?)\}/g;
+    let lastIndex = 0;
     while ((r2 = regexp.exec(value))) {
       if (declaredVars[r2[1]]) {
         if (r2.index - lastIndex > 0) {
@@ -39,7 +38,7 @@ function xlateArgument(value) {
         if (r2.index - lastIndex > 0) {
           parts.push(declaredVars[string(value.substring(lastIndex, r2.index))]);
         }
-        parts.push(nonBreakingSpace());
+        parts.push(nbsp);
         lastIndex = regexp.lastIndex;
       }
     }

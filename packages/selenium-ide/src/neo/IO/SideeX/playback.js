@@ -18,9 +18,10 @@
 import { reaction } from "mobx";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
-const { ExtCommand, isExtCommand } = window;
+import ExtCommand, { isExtCommand } from "./ext-command";
+import { xlateArgument } from "./formatCommand";
 
-const extCommand = new ExtCommand();
+export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
 // I will set doSetSpeed here so that extCommand will not be aware of the state
 extCommand.doSetSpeed = (speed) => {
@@ -31,8 +32,6 @@ extCommand.doSetSpeed = (speed) => {
   return Promise.resolve();
 };
 
-window.extCommand = extCommand;
-const xlateArgument = window.xlateArgument;
 let baseUrl = "";
 
 function play(currUrl) {
