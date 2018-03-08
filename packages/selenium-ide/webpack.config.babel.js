@@ -235,6 +235,7 @@ export default {
       { from: "selenium-core-scripts/selenium-browserdetect.js", to: "vendor" },
       { from: "content/prompt.js", to: "./" },
       { from: "content/prompt.css", to: "./" },
+      { from: "content/bootstrap.html", to: "./" },
       { from: "manifest.json", to: "../" },
       { from: "icons", to: "../icons" }
     ]),
