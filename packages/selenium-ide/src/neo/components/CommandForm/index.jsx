@@ -40,13 +40,6 @@ import "./style.css";
     return (
       <div className="command-form">
         <form onSubmit={(e) => { e.preventDefault(); }}>
-          <Input
-            id="comment"
-            name="comment"
-            label="Comment"
-            value={this.props.command ? this.props.command.comment : ""}
-            disabled={!this.props.command}
-            onChange={this.props.command ? this.props.command.setComment : null} />
           <CommandInput
             id="command"
             name="command"
@@ -72,6 +65,13 @@ import "./style.css";
             value={this.props.command ? this.props.command.value : ""}
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setValue : null} />
+          <Input
+            id="comment"
+            name="comment"
+            label="Comment"
+            value={this.props.command ? this.props.command.comment : ""}
+            disabled={!this.props.command}
+            onChange={this.props.command ? this.props.command.setComment : null} />
           <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
         </form>
       </div>
