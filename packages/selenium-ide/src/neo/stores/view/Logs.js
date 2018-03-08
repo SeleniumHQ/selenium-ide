@@ -83,9 +83,14 @@ export default class LogStore {
         log.setCommandId(command.id);
       }
       switch(status.state) {
-        case PlaybackStates.Pending:
-          log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
+        case PlaybackStates.Pending: {
+          let message = status.message;
+          if (!message) {
+            message = (command.comment ? command.comment : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}`).concat("...");
+          }
+          log.setMessage(message);
           break;
+        }
         case PlaybackStates.Failed:
           log.setError(status.message);
           log.setStatus(LogTypes.Error);
