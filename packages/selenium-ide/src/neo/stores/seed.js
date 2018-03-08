@@ -54,6 +54,7 @@ export default function seed(store, numberOfSuites = 5) {
   store.addUrl(url);
   const playbackTest = store.createTestCase("aa playback");
   const open = playbackTest.createCommand();
+  open.setComment("Open the wikipedia Legislation article");
   open.setCommand("open");
   open.setTarget("/wiki/Legislation");
   const firstClick = playbackTest.createCommand();
