@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import BackgroundRecorder from "./recorder";
 import { selectTarget, endSelection } from "./find-select";
 import { extCommand } from "./playback";

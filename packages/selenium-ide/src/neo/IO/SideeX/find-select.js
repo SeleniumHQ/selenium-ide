@@ -15,10 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
-const browser = window.browser;
 
 export function find(target) {
   try{

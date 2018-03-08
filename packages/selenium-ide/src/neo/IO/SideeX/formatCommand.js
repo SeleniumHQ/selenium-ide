@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 const declaredVars = {};
 const nbsp = String.fromCharCode(160);
 

@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import UiState from "../stores/view/UiState";
 
 export function sendRecordNotification(command, target, value) {
