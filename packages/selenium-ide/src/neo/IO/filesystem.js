@@ -15,11 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import { migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "../../selianize";
-const browser = window.browser;
 
 export const supportedFileFormats = ".side, text/html, application/zip";
 
