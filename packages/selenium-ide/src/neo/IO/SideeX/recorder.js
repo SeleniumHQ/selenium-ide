@@ -1,27 +1,35 @@
-/*
- * Copyright 2017 SideeX committers
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
+// Licensed to the Software Freedom Conservancy (SFC) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The SFC licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+import UiState from "../../stores/view/UiState";
+import record from  "./record";
+import { sendRecordNotification } from "../notifications";
 
 function getSelectedCase() {
   return {
-    id: window._state.selectedTest.test.id
+    id: UiState.selectedTest.test.id
   };
 }
 
-class BackgroundRecorder {
+function hasRecorded() {
+  return !!UiState.selectedTest.test.commands.length;
+}
+
+export default class BackgroundRecorder {
   constructor() {
     this.currentRecordingTabId = {};
     this.currentRecordingWindowId = {};
@@ -57,7 +65,7 @@ class BackgroundRecorder {
         return;
       // If no command has been recorded, ignore selectWindow command
       // until the user has select a starting page to record the commands
-      if (getRecordsArray().length === 0)
+      if (!hasRecorded())
         return;
       // Ignore all unknown tabs, the activated tab may not derived from
       // other opened tabs, or it may managed by other SideeX panels
@@ -67,7 +75,7 @@ class BackgroundRecorder {
       self.currentRecordingTabId[testCaseId] = activeInfo.tabId;
       self.currentRecordingWindowId[testCaseId] = activeInfo.windowId;
       self.currentRecordingFrameLocation[testCaseId] = "root";
-      addCommandAuto("selectWindow", [[self.openedTabIds[testCaseId][activeInfo.tabId]]], "");
+      record("selectWindow", [[self.openedTabIds[testCaseId][activeInfo.tabId]]], "");
     }, 150);
   }
 
@@ -108,7 +116,7 @@ class BackgroundRecorder {
       if (tabs[0].id !== self.currentRecordingTabId[testCaseId]) {
         // If no command has been recorded, ignore selectWindow command
         // until the user has select a starting page to record commands
-        if (getRecordsArray().length === 0)
+        if (!hasRecorded())
           return;
 
         // Ignore all unknown tabs, the activated tab may not derived from
@@ -120,12 +128,12 @@ class BackgroundRecorder {
         self.currentRecordingWindowId[testCaseId] = windowId;
         self.currentRecordingTabId[testCaseId] = tabs[0].id;
         self.currentRecordingFrameLocation[testCaseId] = "root";
-        addCommandAuto("selectWindow", [[self.openedTabIds[testCaseId][tabs[0].id]]], "");
+        record("selectWindow", [[self.openedTabIds[testCaseId][tabs[0].id]]], "");
       }
     });
   }
 
-  tabsOnRemovedHandler(tabId, removeInfo) {
+  tabsOnRemovedHandler(tabId, removeInfo) { // eslint-disable-line no-unused-vars
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -137,17 +145,17 @@ class BackgroundRecorder {
 
     if (this.openedTabIds[testCaseId][tabId] != undefined) {
       if (this.currentRecordingTabId[testCaseId] !== tabId) {
-        addCommandAuto("selectWindow", [
+        record("selectWindow", [
           [this.openedTabIds[testCaseId][tabId]]
         ], "");
-        addCommandAuto("close", [
+        record("close", [
           [this.openedTabIds[testCaseId][tabId]]
         ], "");
-        addCommandAuto("selectWindow", [
+        record("selectWindow", [
           [this.openedTabIds[testCaseId][this.currentRecordingTabId[testCaseId]]]
         ], "");
       } else {
-        addCommandAuto("close", [
+        record("close", [
           [this.openedTabIds[testCaseId][tabId]]
         ], "");
       }
@@ -180,7 +188,7 @@ class BackgroundRecorder {
     }
   }
 
-  addCommandMessageHandler(message, sender, sendRequest) {
+  addCommandMessageHandler(message, sender, sendRequest) { // eslint-disable-line no-unused-vars
     if (!message.command || this.openedWindowIds[sender.tab.windowId] == undefined)
       return;
 
@@ -202,8 +210,8 @@ class BackgroundRecorder {
       this.openedTabIds[testCaseId][sender.tab.id] = "win_ser_local";
     }
 
-    if (getRecordsArray().length === 0) {
-      addCommandAuto("open", [
+    if (!hasRecorded()) {
+      record("open", [
         [sender.tab.url]
       ], "");
     }
@@ -215,30 +223,31 @@ class BackgroundRecorder {
       let newFrameLevels = message.frameLocation.split(":");
       let oldFrameLevels = this.currentRecordingFrameLocation[testCaseId].split(":");
       while (oldFrameLevels.length > newFrameLevels.length) {
-        addCommandAuto("selectFrame", [
+        record("selectFrame", [
           ["relative=parent"]
         ], "");
         oldFrameLevels.pop();
       }
       while (oldFrameLevels.length != 0 && oldFrameLevels[oldFrameLevels.length - 1] != newFrameLevels[oldFrameLevels.length - 1]) {
-        addCommandAuto("selectFrame", [
+        record("selectFrame", [
           ["relative=parent"]
         ], "");
         oldFrameLevels.pop();
       }
       while (oldFrameLevels.length < newFrameLevels.length) {
-        addCommandAuto("selectFrame", [
+        record("selectFrame", [
           ["index=" + newFrameLevels[oldFrameLevels.length]]
         ], "");
         oldFrameLevels.push(newFrameLevels[oldFrameLevels.length]);
       }
       this.currentRecordingFrameLocation[testCaseId] = message.frameLocation;
     }
-    if (message.command.includes("Value") && typeof message.value === 'undefined') {
-      sideex_log.error("Error: This element does not have property 'value'. Please change to use storeText command.");
+    if (message.command.includes("Value") && typeof message.value === "undefined") {
+      // TODO: change this to normal logging when extensibility is merged
+      window.addLog("Error: This element does not have property 'value'. Please change to use storeText command.");
       return;
-    } else if(message.command.includes("Text") && message.value === '') {
-      sideex_log.error("Error: This element does not have property 'Text'. Please change to use storeValue command.");
+    } else if(message.command.includes("Text") && message.value === "") {
+      window.addLog("Error: This element does not have property 'Text'. Please change to use storeValue command.");
       return;
     } else if (message.command.includes("store")) {
       // In Google Chrome, window.prompt() must be triggered in
@@ -250,10 +259,10 @@ class BackgroundRecorder {
           setTimeout(function() {
             message.value = prompt("Enter the name of the variable");
             if (message.insertBeforeLastCommand) {
-              addCommandBeforeLastCommand(message.command, message.target, message.value);
+              record(message.command, message.target, message.value, true);
             } else {
-              notification(message.command, message.target, message.value);
-              addCommandAuto(message.command, message.target, message.value);
+              sendRecordNotification(message.command, message.target, message.value);
+              record(message.command, message.target, message.value);
             }
           }, 100);
         });
@@ -262,10 +271,10 @@ class BackgroundRecorder {
 
     //handle choose ok/cancel confirm
     if (message.insertBeforeLastCommand) {
-      addCommandBeforeLastCommand(message.command, message.target, message.value);
+      record(message.command, message.target, message.value, true);
     } else {
-      notification(message.command, message.target, message.value);
-      addCommandAuto(message.command, message.target, message.value);
+      sendRecordNotification(message.command, message.target, message.value);
+      record(message.command, message.target, message.value);
     }
   }
 

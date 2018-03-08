@@ -24,7 +24,7 @@ export function sendRecordNotification(command, target, value) {
       "type": "basic",
       "iconUrl": "/icons/icon128.png",
       "title": "Command was recorded",
-      "message": `command: ${command} \ntarget: ${target[0][0]} \nvalue: ${value}`
+      "message": `command: ${command} \ntarget: ${tacPreprocess(target[0][0])} \nvalue: ${value}`
     }).then(id => {
       setTimeout(function() {
         browser.notifications.clear(id);
@@ -33,4 +33,7 @@ export function sendRecordNotification(command, target, value) {
   }
 }
 
-window.notification = sendRecordNotification;
+function tacPreprocess(target) {
+  if (target.includes("d-XPath")) return "auto-located-by-tac";
+  return target;
+}

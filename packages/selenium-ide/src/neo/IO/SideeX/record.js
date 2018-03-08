@@ -17,11 +17,12 @@
 
 import { reaction } from "mobx";
 import UiState from "../../stores/view/UiState";
+import { toggleRecord } from "./editor";
 
 reaction(
   () => UiState.isRecording,
   isRecording => {
-    window.toggleRecord(isRecording);
+    toggleRecord(isRecording);
   }
 );
 
@@ -29,7 +30,7 @@ function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
-function record(command, targets, value, insertBeforeLastCommand = false) {
+export default function record(command, targets, value, insertBeforeLastCommand = false) {
   const { test } = UiState.selectedTest;
   if (isEmpty(test.commands, command)) {
     const newCommand = test.createCommand();
@@ -71,12 +72,3 @@ function preprocessDoubleClick(command, test, index) {
   }
   return false;
 }
-
-window.getRecordsArray = function() {
-  return [];
-};
-
-window.addCommandAuto = record;
-window.addCommandBeforeLastCommand = (...argv) => (
-  record(...argv, true)
-);

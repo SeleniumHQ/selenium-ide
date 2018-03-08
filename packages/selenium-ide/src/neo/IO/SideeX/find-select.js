@@ -74,7 +74,7 @@ export function select() {
   }
 }
 
-window.selectTarget = function(target) {
+export function selectTarget(target) {
   UiState.setSelectingTarget(false);
   if (UiState.selectedCommand) {
     UiState.selectedCommand.setTarget(target[0][0]);
@@ -82,9 +82,9 @@ window.selectTarget = function(target) {
     const command = UiState.selectedTest.test.createCommand();
     command.setTarget(target[0][0]);
   }
-};
+}
 
-window.endSelection = function(tabId) {
+export function endSelection(tabId) {
   UiState.setSelectingTarget(false);
   browser.tabs.sendMessage(tabId, {selectMode: true, selecting: false});
-};
+}
