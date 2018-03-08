@@ -40,6 +40,13 @@ import "./style.css";
     return (
       <div className="command-form">
         <form onSubmit={(e) => { e.preventDefault(); }}>
+          <Input
+            id="comment"
+            name="comment"
+            label="Comment"
+            value={this.props.command ? this.props.command.comment : ""}
+            disabled={!this.props.command}
+            onChange={this.props.command ? this.props.command.setComment : null} />
           <CommandInput
             id="command"
             name="command"
