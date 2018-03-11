@@ -28,7 +28,8 @@
     "downloads",
     "webNavigation",
     "notifications",
-    "storage"
+    "storage",
+    "<all_urls>"
   ],
 
   "web_accessible_resources": [
