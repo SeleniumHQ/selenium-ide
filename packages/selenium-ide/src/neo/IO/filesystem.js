@@ -16,12 +16,27 @@
 // under the License.
 
 import browser from "webextension-polyfill";
+import parser from "ua-parser-js";
 import { migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "../../selianize";
+import chromeGetFile from "./filesystem/chrome";
+import firefoxGetFile from "./filesystem/firefox";
 
 export const supportedFileFormats = ".side, text/html, application/zip";
+const parsedUA = parser(window.navigator.userAgent);
+
+export function getFile(path) {
+  const browserName = parsedUA.browser.name;
+  if (browserName === "Chrome") {
+    return chromeGetFile(path);
+  } else if (browserName === "Firefox") {
+    return firefoxGetFile(path);
+  } else {
+    return Promise.reject(new Error("Operation is not supported in this browser"));
+  }
+}
 
 export function saveProject(project) {
   project.version = "1.0";
