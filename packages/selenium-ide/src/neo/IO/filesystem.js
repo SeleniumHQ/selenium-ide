@@ -29,13 +29,23 @@ const parsedUA = parser(window.navigator.userAgent);
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name;
-  if (browserName === "Chrome") {
-    return chromeGetFile(path);
-  } else if (browserName === "Firefox") {
-    return firefoxGetFile(path);
-  } else {
-    return Promise.reject(new Error("Operation is not supported in this browser"));
-  }
+  return (() => {
+    if (browserName === "Chrome") {
+      return chromeGetFile(path);
+    } else if (browserName === "Firefox") {
+      return firefoxGetFile(path);
+    } else {
+      return Promise.reject(new Error("Operation is not supported in this browser"));
+    }
+  })().then(blob => {
+    return new Promise((res) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        res(reader.result);
+      });
+      reader.readAsDataURL(blob);
+    });
+  });
 }
 
 export function saveProject(project) {
