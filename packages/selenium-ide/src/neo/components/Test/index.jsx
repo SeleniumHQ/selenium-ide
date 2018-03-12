@@ -20,12 +20,7 @@ import PropTypes from "prop-types";
 import { DragSource } from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
-import ListMenu, { ListMenuItem } from "../ListMenu";
-import MoreButton from "../ActionButtons/More";
 import RemoveButton from "../ActionButtons/Remove";
-import { observer } from "mobx-react";
-import { observable, action } from "mobx";
-import ContextMenu from "../ContextMenu";
 import "./style.css";
 
 export const Type = "test";
@@ -47,13 +42,7 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-@observer
 export default class Test extends React.Component {
-  @observable isOpen = false;
-  constructor(props){
-    super(props);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
-  }
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
@@ -69,7 +58,9 @@ export default class Test extends React.Component {
     setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    onContextMenu: PropTypes.func,
+    menu: PropTypes.node
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -109,17 +100,7 @@ export default class Test extends React.Component {
       this.props.moveSelectionDown();
     }
   }
-  @action handleContextMenu(e){
-    this.refs.contextMenu.handleContextMenu(e);
-  }
   render() {
-    const menuList = <div>
-      {this.props.suite ?
-        null :
-        <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem> }
-      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
-    </div>
-
     const rendered = <a
       href="#"
       ref={(node) => { this.node = node; }}
@@ -128,19 +109,14 @@ export default class Test extends React.Component {
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.props.renameTest ? this.handleContextMenu : null}
+      onContextMenu={this.props.onContextMenu}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
-        <ListMenu width={130} padding={-5} opener={<MoreButton />}>
-          {menuList}
-        </ListMenu> :
+        this.props.menu :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-        <ContextMenu ref="contextMenu" width={130} padding={-5} direction={"cursor"} closeTimeoutMS={50}>
-          {menuList}
-        </ContextMenu>
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }

@@ -19,14 +19,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
-import { modifier, parse } from "modifier-keys";
+import { modifier } from "modifier-keys";
 import CommandName from "../CommandName";
-import MoreButton from "../ActionButtons/More";
-import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import MultilineEllipsis from "../MultilineEllipsis";
 import { observer } from "mobx-react";
-import { observable, action } from "mobx";
-import ContextMenu from "../ContextMenu";
 import "./style.css";
 
 export const Type = "command";
@@ -96,11 +92,6 @@ const commandTarget = {
 }))
 @observer
 export default class TestRow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.paste = this.paste.bind(this);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
-  }
   static propTypes = {
     id: PropTypes.string,
     index: PropTypes.number,
@@ -126,7 +117,10 @@ export default class TestRow extends React.Component {
     clearAllCommands: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    onContextMenu: PropTypes.func,
+    paste: PropTypes.func,
+    menu: PropTypes.node
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -171,37 +165,15 @@ export default class TestRow extends React.Component {
     } else if (this.props.copyToClipboard && onlyPrimary && key === "C") {
       this.props.copyToClipboard();
     } else if (onlyPrimary && key === "V") {
-      this.paste();
+      this.props.paste(this.props.index, this.props.command);
     }
-  }
-  paste() {
-    if (this.props.clipboard && this.props.clipboard.constructor.name === "Command") {
-      this.props.addCommand(this.props.clipboard);
-    }
-  }
-  @action handleContextMenu(e){
-      this.refs.contextMenu.handleContextMenu(e);
   }
   render() {
-    const menuList =<div>
-      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
-      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
-      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
-      <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
-      <ListMenuSeparator />
-      <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
-      <ListMenuSeparator />
-      <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
-      <ListMenuSeparator />
-      <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
-      <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
-    </div>;
-
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.props.swapCommands ? this.handleContextMenu : null}
+      onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}
       onClick={this.props.onClick}
       onDoubleClick={this.props.executeCommand}
       onKeyDown={this.handleKeyDown.bind(this)}
@@ -216,15 +188,7 @@ export default class TestRow extends React.Component {
       <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
       <td className="buttons">
-        { this.props.swapCommands ?
-          <div>
-            <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
-              {menuList}
-            </ListMenu>
-            <ContextMenu ref="contextMenu" width={300} padding={-5} direction={"cursor"} closeTimeoutMS={50}>
-              {menuList}
-            </ ContextMenu>
-          </div>: <div></div> }
+        { this.props.swapCommands ? this.props.menu : <div/> }
       </td>
     </tr>;
     return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);

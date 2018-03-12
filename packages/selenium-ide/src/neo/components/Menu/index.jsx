@@ -85,7 +85,7 @@ class Menu extends React.Component {
   }
   overlayRef = (ref) => {
     if (ref) {
-      ref.addEventListener('contextmenu', this.handleClosing, false);
+      ref.addEventListener("contextmenu", this.handleClosing, false);
     }
     this.overlay = ref;
   }
@@ -151,7 +151,6 @@ class Menu extends React.Component {
 }
 
 export default class MenuContainer extends React.Component {
-  eventPosition;
   constructor(props) {
     super(props);
     this.state = {
@@ -166,7 +165,14 @@ export default class MenuContainer extends React.Component {
     width: PropTypes.number,
     direction: PropTypes.string,
     padding: PropTypes.number,
-    closeOnClick: PropTypes.bool
+    closeOnClick: PropTypes.bool,
+    isContextMenu: PropTypes.bool,
+    isOpenContextMenu: PropTypes.bool,
+    OnContextMenu: PropTypes.func,
+    eventTartget: PropTypes.object,
+    position: PropTypes.object,
+    close: PropTypes.func,
+    closeTimeoutMS: PropTypes.number
   };
   static defaultProps = {
     closeOnClick: true
@@ -174,10 +180,6 @@ export default class MenuContainer extends React.Component {
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    if (!this.state.isOpen) {
-      this.eventPosition = { x:e.clientX, y:e.clientY }
-    }
-    this.node = e.currentTarget;
     this.setState({
       isOpen: !this.state.isOpen
     });
@@ -195,14 +197,14 @@ export default class MenuContainer extends React.Component {
         React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : null),
       <Menu
         key="menu"
-        isOpen={this.state.isOpen}
-        node={this.node}
-        onClick={this.props.closeOnClick ? this.close : null}
-        requestClose={this.close}
+        isOpen={this.props.isContextMenu ? this.props.isOpenContextMenu : this.state.isOpen}
+        node={this.props.isContextMenu ? (this.props.eventTartget ? this.props.eventTartget: this.node) : this.node}
+        onClick={this.props.closeOnClick ? (this.props.isContextMenu ? this.props.close : this.close) : null}
+        requestClose={this.props.isContextMenu ? this.props.close : this.close}
         width={this.props.width}
         direction={this.props.direction}
         padding={this.props.padding}
-        position={this.eventPosition}
+        position={this.props.position}
         closeTimeoutMS={this.props.closeTimeoutMS}>
         {this.props.children}
       </Menu>

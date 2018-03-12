@@ -23,8 +23,12 @@ import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-
+import { withOnContextMenu } from "../ContextMenu";
+import ListMenu, { ListMenuItem } from "../ListMenu";
+import MoreButton from "../ActionButtons/More";
 import "./style.css";
+
+const TestWithContextMenu = withOnContextMenu(Test);
 
 @inject("renameTest") @observer
 export default class TestList extends Component {
@@ -40,34 +44,40 @@ export default class TestList extends Component {
       <ul className={classNames("tests", {"active": !this.props.collapsed})}>
         {this.props.tests.map((test, index) => (
           <li key={test.id}>
-              {this.props.suite ?
-                <DraggableTest
-                  className={PlaybackState.testState.get(test.id)}
-                  test={test}
-                  suite={this.props.suite}
-                  selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
-                  changed={UiState.getTestState(test).modified}
-                  selectTest={UiState.selectTest}
-                  dragInProgress={UiState.dragInProgress}
-                  setDrag={UiState.setDrag}
-                  removeTest={() => { this.props.removeTest(test); }}
-                  moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
-                  moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
-                  setSectionFocus={UiState.setSectionFocus}
-                /> :
-                <Test
-                  className={PlaybackState.testState.get(test.id)}
-                  index={index}
-                  test={test}
-                  selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
-                  changed={UiState.getTestState(test).modified}
-                  selectTest={UiState.selectTest}
-                  renameTest={this.props.renameTest}
-                  removeTest={() => { this.props.removeTest(test); }}
-                  moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
-                  moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
-                  setSectionFocus={UiState.setSectionFocus}
-                />}
+            {this.props.suite ?
+              <DraggableTest
+                className={PlaybackState.testState.get(test.id)}
+                test={test}
+                suite={this.props.suite}
+                selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
+                changed={UiState.getTestState(test).modified}
+                selectTest={UiState.selectTest}
+                dragInProgress={UiState.dragInProgress}
+                setDrag={UiState.setDrag}
+                removeTest={() => { this.props.removeTest(test); }}
+                moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
+                moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
+                setSectionFocus={UiState.setSectionFocus}
+              /> :
+              <TestWithContextMenu
+                key={test.id}
+                className={PlaybackState.testState.get(test.id)}
+                index={index}
+                test={test}
+                selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
+                changed={UiState.getTestState(test).modified}
+                selectTest={UiState.selectTest}
+                renameTest={this.props.renameTest}
+                removeTest={() => { this.props.removeTest(test); }}
+                moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
+                moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
+                setSectionFocus={UiState.setSectionFocus}
+                menu={
+                  <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+                    <ListMenuItem onClick={() => this.props.renameTest(test.name, test.setName)}>Rename</ListMenuItem>
+                    <ListMenuItem onClick={() => { this.props.removeTest(test); }}>Delete</ListMenuItem>
+                  </ListMenu>}
+              />}
           </li>
         ))}
       </ul>

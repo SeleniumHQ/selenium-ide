@@ -20,7 +20,12 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import Suite from "../Suite";
+import { withOnContextMenu } from "../ContextMenu";
+import ListMenu, { ListMenuItem } from "../ListMenu";
+import MoreButton from "../ActionButtons/More";
 import "./style.css";
+
+const SuiteWithContextMenu = withOnContextMenu(Suite);
 
 @observer export default class SuiteList extends React.Component {
   static propTypes = {
@@ -35,7 +40,20 @@ import "./style.css";
       <ul className="projects">
         {this.props.suites.map(suite => (
           <li key={suite.id}>
-            <Suite suite={suite} selectTests={() => {this.props.selectTests(suite);}} rename={this.props.rename} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} />
+            <SuiteWithContextMenu
+              suite={suite}
+              selectTests={() => {this.props.selectTests(suite);}}
+              rename={this.props.rename}
+              remove={() => {this.props.removeSuite(suite);}}
+              moveTest={this.props.moveTest}
+              menu={
+                <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+                  <ListMenuItem onClick={() => {this.props.selectTests(suite);}}>Add tests</ListMenuItem>
+                  <ListMenuItem onClick={() => this.props.rename(suite.name, suite.setName)}>Rename</ListMenuItem>
+                  <ListMenuItem onClick={() => {this.props.removeSuite(suite);}}>Delete</ListMenuItem>
+                </ListMenu>
+              }
+            />
           </li>
         ))}
       </ul>
