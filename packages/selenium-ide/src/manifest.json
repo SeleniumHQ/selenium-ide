@@ -29,6 +29,7 @@
     "webNavigation",
     "notifications",
     "storage",
+    "debugger",
     "<all_urls>"
   ],
 
