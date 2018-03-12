@@ -188,7 +188,7 @@ export default class TestRow extends React.Component {
         opacity: this.props.isDragging ? "0" : "1"
       }}>
       {this.props.comment ?
-        <td className="comment"><span></span>
+        <td className="comment" colSpan="3"><span></span>
           {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
           <span>{this.props.comment}</span>
         </td> :
