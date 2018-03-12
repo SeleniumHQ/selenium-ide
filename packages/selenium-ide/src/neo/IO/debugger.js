@@ -42,7 +42,7 @@ export default class Debugger {
 
   detach() {
     return new Promise(res => {
-      if (!this.connection) {
+      if (this.connection) {
         chrome.debugger.detach(this.connection, () => {
           this.connection = undefined;
           res();
