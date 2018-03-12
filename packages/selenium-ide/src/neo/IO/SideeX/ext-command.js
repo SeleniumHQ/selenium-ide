@@ -16,8 +16,11 @@
 // under the License.
 
 import browser from "webextension-polyfill";
+import parser from "ua-parser-js";
 import { recorder } from "./editor";
 import Debugger from "../debugger";
+
+const parsedUA = parser(window.navigator.userAgent);
 
 export default class ExtCommand {
   constructor(contentWindowId) {
@@ -230,6 +233,8 @@ export default class ExtCommand {
 
   doType(locator, value) {
     if (/^\//.test(value)) {
+      const browserName = parsedUA.browser.name;
+      if (browserName !== "Chrome") return Promise.reject(new Error("File uploading is only support in Chrome at this time"));
       const connection = new Debugger(this.currentPlayingTabId);
       return connection.attach().then(() => (
         connection.getDocument().then(docNode => (
