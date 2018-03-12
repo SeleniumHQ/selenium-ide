@@ -20,6 +20,7 @@ import uuidv4 from "uuid/v4";
 
 export default class Command {
   id = null;
+  @observable comment = "";
   @observable command = "";
   @observable target = "";
   @observable value = "";
@@ -34,10 +35,15 @@ export default class Command {
 
   @action.bound clone() {
     const clone = new Command();
+    clone.setComment(this.comment);
     clone.setCommand(this.command);
     clone.setTarget(this.target);
     clone.setValue(this.value);
     return clone;
+  }
+
+  @action.bound setComment(comment) {
+    this.comment = comment;
   }
 
   @action.bound setCommand(command) {
@@ -58,6 +64,7 @@ export default class Command {
 
   static fromJS = function(jsRep) {
     const command = new Command(jsRep.id);
+    command.setComment(jsRep.comment);
     command.setCommand(jsRep.command);
     command.setTarget(jsRep.target);
     command.setValue(jsRep.value);
