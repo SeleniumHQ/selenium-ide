@@ -82,6 +82,9 @@ export default class Debugger {
       case "name": {
         return `*[name=${selector}]`;
       }
+      case "css": {
+        return selector;
+      }
     }
   }
 }
