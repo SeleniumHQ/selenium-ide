@@ -86,5 +86,6 @@ export default class Debugger {
         return selector;
       }
     }
+    throw new Error("This locator type is unavailable with this command");
   }
 }
