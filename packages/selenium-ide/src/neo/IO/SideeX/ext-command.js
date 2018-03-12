@@ -234,10 +234,14 @@ export default class ExtCommand {
       return connection.attach().then(() => (
         connection.getDocument().then(docNode => (
           connection.querySelector(locator, docNode.nodeId).then(nodeId => (
-            connection.sendCommand("DOM.setFileInputFiles", { nodeId, files: [value] }).then(connection.detach)
+            connection.sendCommand("DOM.setFileInputFiles", { nodeId, files: value.split(",") }).then(connection.detach)
           ))
         ))
-      ));
+      )).catch(e => {
+        return connection.detach().then(() => {
+          throw e;
+        });
+      });
     } else {
       return this.sendMessage("type", locator, value);
     }
