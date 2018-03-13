@@ -24,7 +24,7 @@ describe("command code emitter", () => {
       target: "",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).rejects.toThrow("Command can not be empty");
+    return expect(CommandEmitter.emit(command)).rejects.toThrow("Command can not be empty");
   });
   it("should fail to emit unknown command", () => {
     const command = {
@@ -32,7 +32,7 @@ describe("command code emitter", () => {
       target: "",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).rejects.toThrow(`Unknown command ${command.command}`);
+    return expect(CommandEmitter.emit(command)).rejects.toThrow(`Unknown command ${command.command}`);
   });
   it("should emit `open` command", () => {
     const command = {
@@ -40,7 +40,7 @@ describe("command code emitter", () => {
       target: "/",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.get(BASE_URL + "${command.target}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.get(BASE_URL + "${command.target}");`);
   });
   it("should emit `open` with absolute url", () => {
     const command = {
@@ -56,7 +56,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.linkText(\"button\")));driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
   });
   it("should emit `click at` command", () => {
     const command = {
@@ -64,7 +64,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.linkText(\"button\")));driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().click(element).perform();});");
   });
   it("should emit `double click` command", () => {
     const command = {
@@ -72,7 +72,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.linkText(\"button\")));driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
   });
   it("should emit `double click at` command", () => {
     const command = {
@@ -80,7 +80,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.linkText(\"button\")));driver.findElement(By.linkText(\"button\")).then(element => {driver.actions().doubleClick(element).perform();});");
   });
   it("should emit `drag and drop to object` command", () => {
     const command = {
@@ -88,7 +88,7 @@ describe("command code emitter", () => {
       target: "link=dragged",
       value: "link=dropzone"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.linkText(\"dragged\")).then(dragged => {driver.findElement(By.linkText(\"dropzone\")).then(dropzone => {driver.actions().dragAndDrop(dragged, dropzone).perform();});});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.linkText(\"dragged\")));driver.wait(until.elementLocated(By.linkText(\"dropzone\")));driver.findElement(By.linkText(\"dragged\")).then(dragged => {driver.findElement(By.linkText(\"dropzone\")).then(dropzone => {driver.actions().dragAndDrop(dragged, dropzone).perform();});});");
   });
   it("should emit `type` command", () => {
     const command = {
@@ -96,7 +96,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(\`${command.value}\`).perform();});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("input")));driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(\`${command.value}\`).perform();});`);
   });
   it("should emit `send keys` command", () => {
     const command = {
@@ -104,7 +104,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(\`${command.value}\`).perform();});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("input")));driver.findElement(By.id("input")).then(element => {driver.actions().click(element).sendKeys(\`${command.value}\`).perform();});`);
   });
   it("should emit `echo` command", () => {
     const command = {
@@ -112,7 +112,7 @@ describe("command code emitter", () => {
       target: "test message",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`console.log(\`${command.target}\`);`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`console.log(\`${command.target}\`);`);
   });
   it("should emit `run script` command", () => {
     const command = {
@@ -120,7 +120,7 @@ describe("command code emitter", () => {
       target: "alert('test');\nalert('Im annoying');",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.executeScript(\`${command.target}\`);`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.executeScript(\`${command.target}\`);`);
   });
   it("should emit `pause` command", () => {
     const command = {
@@ -128,7 +128,7 @@ describe("command code emitter", () => {
       target: "",
       value: "300"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.sleep(${command.value});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.sleep(${command.value});`);
   });
   it("should emit `verify title` command", () => {
     const command = {
@@ -136,7 +136,7 @@ describe("command code emitter", () => {
       target: "example title",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
   });
   it("should emit `verify text` command", () => {
     const command = {
@@ -144,7 +144,7 @@ describe("command code emitter", () => {
       target: "id=test",
       value: "some text that should be here"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe(\`${command.value}\`)});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe(\`${command.value}\`)});});`);
   });
   it("should emit `assert title` command", () => {
     const command = {
@@ -152,7 +152,7 @@ describe("command code emitter", () => {
       target: "example title",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
   });
   it("should emit `assert text` command", () => {
     const command = {
@@ -160,7 +160,7 @@ describe("command code emitter", () => {
       target: "id=test",
       value: "some text that should be here"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe(\`${command.value}\`)});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe(\`${command.value}\`)});});`);
   });
   it("should emit `store` command", () => {
     const command = {
@@ -168,7 +168,7 @@ describe("command code emitter", () => {
       target: "some value",
       value: "myVar"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = "${command.target}";`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = "${command.target}";`);
   });
   it("should emit `store text` command", () => {
     const command = {
@@ -176,7 +176,7 @@ describe("command code emitter", () => {
       target: "id=someElement",
       value: "myVar"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.findElement(By.id("someElement")).then(element => {element.getText().then(text => {${command.value} = text;});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.wait(until.elementLocated(By.id("someElement")));driver.findElement(By.id("someElement")).then(element => {element.getText().then(text => {${command.value} = text;});});`);
   });
   it("should emit `store title` command", () => {
     const command = {
@@ -184,7 +184,7 @@ describe("command code emitter", () => {
       target: "",
       value: "myVar"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.getTitle().then(title => {${command.value} = title;});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.getTitle().then(title => {${command.value} = title;});`);
   });
   it("should emit `select` command", () => {
     const command = {
@@ -192,7 +192,7 @@ describe("command code emitter", () => {
       target: "css=select",
       value: "label=A label"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.css(\"select\")));driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
   });
   it("should emit `add selection` command", () => {
     const command = {
@@ -200,7 +200,7 @@ describe("command code emitter", () => {
       target: "css=select",
       value: "label=A label"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.css(\"select\")));driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
   });
   it("should emit `remove selection` command", () => {
     const command = {
@@ -208,7 +208,7 @@ describe("command code emitter", () => {
       target: "css=select",
       value: "label=A label"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.css(\"select\")));driver.findElement(By.css(\"select\")).then(element => {element.findElement(By.xpath(\"//option[. = 'A label']\")).then(option => {option.click();});});");
   });
   it("should emit `select frame` to select the top frame", () => {
     const command = {
@@ -216,7 +216,7 @@ describe("command code emitter", () => {
       target: "relative=top",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().frame();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().frame();");
   });
   it("should emit `select frame` to select the second frame", () => {
     const command = {
@@ -224,7 +224,7 @@ describe("command code emitter", () => {
       target: "index=1",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().frame(1);");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().frame(1);");
   });
   it("should emit `select frame` to select a frame by locator", () => {
     const command = {
@@ -232,7 +232,7 @@ describe("command code emitter", () => {
       target: "id=frame",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"frame\")).then(frame => {driver.switchTo().frame(frame);});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"frame\")).then(frame => {driver.switchTo().frame(frame);});");
   });
   it("should fail to emit `select window` by using unknown locator", () => {
     const command = {
@@ -240,7 +240,7 @@ describe("command code emitter", () => {
       target: "notExisting=something",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).rejects.toThrow("Can only emit `select window` using name locator");
+    return expect(CommandEmitter.emit(command)).rejects.toThrow("Can only emit `select window` using name locator");
   });
   it("should emit `select window` to select a window by name", () => {
     const command = {
@@ -248,7 +248,7 @@ describe("command code emitter", () => {
       target: "name=window",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().window(\"window\");");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().window(\"window\");");
   });
   it("should emit `mouse down` event", () => {
     const command = {
@@ -256,7 +256,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseDown(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseDown(element).perform();});");
   });
   it("should emit `mouse down at` event", () => {
     const command = {
@@ -264,7 +264,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseDown(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseDown(element).perform();});");
   });
   it("should emit `mouse up` event", () => {
     const command = {
@@ -272,7 +272,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseUp(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseUp(element).perform();});");
   });
   it("should emit `mouse up at` event", () => {
     const command = {
@@ -280,7 +280,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseUp(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseUp(element).perform();});");
   });
   it("should emit `mouse move` event", () => {
     const command = {
@@ -288,7 +288,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element).perform();});");
   });
   it("should emit `mouse move at` event", () => {
     const command = {
@@ -296,7 +296,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element).perform();});");
   });
   it("should emit `mouse over` event", () => {
     const command = {
@@ -304,7 +304,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element).perform();});");
   });
   it("should emit `mouse out` event", () => {
     const command = {
@@ -312,7 +312,7 @@ describe("command code emitter", () => {
       target: "id=button",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"button\")));driver.findElement(By.id(\"button\")).then(element => {driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});");
   });
   it("should emit `assert alert` command", () => {
     const command = {
@@ -320,7 +320,7 @@ describe("command code emitter", () => {
       target: "an alert",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
   });
   it("should emit `assert confirmation` command", () => {
     const command = {
@@ -328,7 +328,7 @@ describe("command code emitter", () => {
       target: "a confirmation",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
   });
   it("should emit `assert prompt` command", () => {
     const command = {
@@ -336,7 +336,7 @@ describe("command code emitter", () => {
       target: "a prompt",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
   });
   it("should emit `answer on next prompt` command", () => {
     const command = {
@@ -344,7 +344,7 @@ describe("command code emitter", () => {
       target: "an answer",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.sendKeys("${command.target}");});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.sendKeys("${command.target}");});`);
   });
   it("should emit `edit content` command", () => {
     const command = {
@@ -352,7 +352,7 @@ describe("command code emitter", () => {
       target: "id=contentEditable",
       value: "<button>test</button>"
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("contentEditable")).then(element => {driver.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${command.value}'}", element);});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("contentEditable")));driver.findElement(By.id("contentEditable")).then(element => {driver.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${command.value}'}", element);});`);
   });
   it("should emit `submit` command", () => {
     const command = {
@@ -360,6 +360,6 @@ describe("command code emitter", () => {
       target: "id=form",
       value: ""
     };
-    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"form\")).then(element => {element.submit();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"form\")));driver.findElement(By.id(\"form\")).then(element => {element.submit();});");
   });
 });
