@@ -76,6 +76,7 @@ export function withOnContextMenu(WrappredComponent){
       const listMenu = this.props.menu;
       return ([
         <WrappredComponent key="wrap" onContextMenu={this.onContextMenu} {...this.props} />,
+        ( listMenu ?
         <ContextMenu
           key="contextmenu"
           direction={"cursor"}
@@ -91,6 +92,7 @@ export function withOnContextMenu(WrappredComponent){
         >
           {listMenu.props.children}
         </ContextMenu>
+        : null )
       ]);
     }
   };

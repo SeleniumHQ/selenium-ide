@@ -23,12 +23,9 @@ import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import { withOnContextMenu } from "../ContextMenu";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import "./style.css";
-
-const TestWithContextMenu = withOnContextMenu(Test);
 
 @inject("renameTest") @observer
 export default class TestList extends Component {
@@ -59,7 +56,7 @@ export default class TestList extends Component {
                 moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
                 setSectionFocus={UiState.setSectionFocus}
               /> :
-              <TestWithContextMenu
+              <Test
                 key={test.id}
                 className={PlaybackState.testState.get(test.id)}
                 index={index}

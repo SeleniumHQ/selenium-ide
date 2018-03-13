@@ -25,6 +25,7 @@ import TestList from "../TestList";
 import { Type } from "../Test";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import { withOnContextMenu } from "../ContextMenu";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -105,4 +106,4 @@ class Suite extends React.Component {
   }
 }
 
-export default DropTarget(Type, testTarget, collect)(Suite);
+export default withOnContextMenu(DropTarget(Type, testTarget, collect)(Suite));

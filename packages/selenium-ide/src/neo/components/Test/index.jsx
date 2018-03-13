@@ -21,6 +21,7 @@ import { DragSource } from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
 import RemoveButton from "../ActionButtons/Remove";
+import { withOnContextMenu } from "../ContextMenu";
 import "./style.css";
 
 export const Type = "test";
@@ -42,7 +43,7 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-export default class Test extends React.Component {
+class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
@@ -123,3 +124,5 @@ export default class Test extends React.Component {
 }
 
 export const DraggableTest = DragSource(Type, testSource, collect)(Test);
+
+export default withOnContextMenu(Test);

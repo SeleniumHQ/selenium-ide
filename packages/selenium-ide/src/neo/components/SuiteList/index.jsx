@@ -20,12 +20,9 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import Suite from "../Suite";
-import { withOnContextMenu } from "../ContextMenu";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import "./style.css";
-
-const SuiteWithContextMenu = withOnContextMenu(Suite);
 
 @observer export default class SuiteList extends React.Component {
   static propTypes = {
@@ -40,7 +37,7 @@ const SuiteWithContextMenu = withOnContextMenu(Suite);
       <ul className="projects">
         {this.props.suites.map(suite => (
           <li key={suite.id}>
-            <SuiteWithContextMenu
+            <Suite
               suite={suite}
               selectTests={() => {this.props.selectTests(suite);}}
               rename={this.props.rename}

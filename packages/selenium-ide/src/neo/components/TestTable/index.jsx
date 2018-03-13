@@ -24,12 +24,9 @@ import classNames from "classnames";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
-import { withOnContextMenu } from "../ContextMenu";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import "./style.css";
-
-const TestRowWithContextMenu = withOnContextMenu(TestRow);
 
 @observer
 export default class TestTable extends React.Component {
@@ -68,7 +65,7 @@ export default class TestTable extends React.Component {
         <table>
           <tbody>
             { this.props.commands ? this.props.commands.map((command, index) => (
-              <TestRowWithContextMenu
+              <TestRow
                 key={command.id}
                 id={command.id}
                 className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}

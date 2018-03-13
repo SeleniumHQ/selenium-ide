@@ -22,7 +22,7 @@ import { DragSource, DropTarget } from "react-dnd";
 import { modifier } from "modifier-keys";
 import CommandName from "../CommandName";
 import MultilineEllipsis from "../MultilineEllipsis";
-import { observer } from "mobx-react";
+import { withOnContextMenu } from "../ContextMenu";
 import "./style.css";
 
 export const Type = "command";
@@ -90,8 +90,7 @@ const commandTarget = {
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
-@observer
-export default class TestRow extends React.Component {
+class TestRow extends React.Component {
   static propTypes = {
     id: PropTypes.string,
     index: PropTypes.number,
@@ -194,3 +193,5 @@ export default class TestRow extends React.Component {
     return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }
+
+export default withOnContextMenu(TestRow);
