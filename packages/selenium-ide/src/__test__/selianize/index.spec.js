@@ -22,7 +22,7 @@ import Selianize, { ParseError } from "../../selianize";
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
-    expect(Selianize(project)).resolves.toBeDefined();
+    return expect(Selianize(project)).resolves.toBeDefined();
   });
   it("should fail to export a project with errors", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-2.side")));
@@ -65,7 +65,7 @@ describe("Selenium code serializer", () => {
         }
       ]
     };
-    expect(Selianize(project)).rejects.toMatchObject(failure);
+    return expect(Selianize(project)).rejects.toMatchObject(failure);
   });
   it("should parse the error to markdown", () => {
     const failure = {

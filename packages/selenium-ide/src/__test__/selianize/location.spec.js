@@ -19,34 +19,34 @@ import LocationEmitter from "../../selianize/location";
 
 describe("location code emitter", () => {
   it("should fail to emit empty string", () => {
-    expect(LocationEmitter.emit("")).rejects.toThrow("Locator can't be empty");
+    return expect(LocationEmitter.emit("")).rejects.toThrow("Locator can't be empty");
   });
   it("should fail to emit unknown locator", () => {
-    expect(LocationEmitter.emit("notExists=element")).rejects.toThrow("Unknown locator notExists");
+    return expect(LocationEmitter.emit("notExists=element")).rejects.toThrow("Unknown locator notExists");
   });
   it("should emit id locator", () => {
     const type = "id";
     const selector = "someId";
-    expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.id("${selector}")`);
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.id("${selector}")`);
   });
   it("should emit link locator", () => {
     const type = "link";
     const selector = "someLink";
-    expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.linkText("${selector}")`);
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.linkText("${selector}")`);
   });
   it("should emit css locator", () => {
     const type = "css";
     const selector = "someCss";
-    expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("${selector}")`);
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("${selector}")`);
   });
   it("should emit xpath locator", () => {
     const type = "xpath";
     const selector = "someXpath";
-    expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath("${selector}")`);
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath("${selector}")`);
   });
   it("should emit name locator", () => {
     const type = "name";
     const selector = "someName";
-    expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.name("${selector}")`);
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.name("${selector}")`);
   });
 });

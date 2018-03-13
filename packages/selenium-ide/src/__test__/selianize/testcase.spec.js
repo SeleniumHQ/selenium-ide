@@ -24,7 +24,7 @@ describe("test case code emitter", () => {
       name: "example test case",
       commands: []
     };
-    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`);
+    return expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`);
   });
   it("should emit a test with a single command", () => {
     const test = {
@@ -36,7 +36,7 @@ describe("test case code emitter", () => {
         value: ""
       }]
     };
-    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {driver.get(BASE_URL + "${test.commands[0].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`);
+    return expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {driver.get(BASE_URL + "${test.commands[0].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`);
   });
   it("should emit a test with multiple commands", () => {
     const test = {
@@ -60,7 +60,7 @@ describe("test case code emitter", () => {
         }
       ]
     };
-    expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`);
+    return expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`);
   });
   it("should reject a test with failed commands", () => {
     const test = {
@@ -104,6 +104,6 @@ describe("test case code emitter", () => {
       id: "1",
       name: "failed test"
     };
-    expect(TestCaseEmitter.emit(test)).rejects.toMatchObject(testErrors);
+    return expect(TestCaseEmitter.emit(test)).rejects.toMatchObject(testErrors);
   });
 });

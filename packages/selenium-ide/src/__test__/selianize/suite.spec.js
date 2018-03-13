@@ -24,7 +24,7 @@ describe("suite emitter", () => {
       name: "example suite",
       tests: []
     };
-    expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`describe("${suite.name}", () => {});`);
+    return expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`describe("${suite.name}", () => {});`);
   });
   it("should emit a suite with a single empty test", () => {
     const tests = {
@@ -39,7 +39,7 @@ describe("suite emitter", () => {
       name: "example suite",
       tests: ["1"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
   });
   it("should emit a suite with multiple empty tests", () => {
     const tests = {
@@ -63,7 +63,7 @@ describe("suite emitter", () => {
       name: "example suite",
       tests: ["1", "2", "3"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["2"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["3"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["2"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["3"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
   });
   it("should reject a suite with failed tests", () => {
     const tests = {
@@ -95,7 +95,7 @@ describe("suite emitter", () => {
       name: "failed suite",
       tests: ["1", "2"]
     };
-    expect(SuiteEmitter.emit(suite, tests)).rejects.toMatchObject({
+    return expect(SuiteEmitter.emit(suite, tests)).rejects.toMatchObject({
       id: "1",
       name: "failed suite",
       tests: [
