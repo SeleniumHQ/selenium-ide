@@ -28,7 +28,9 @@
     "downloads",
     "webNavigation",
     "notifications",
-    "storage"
+    "storage",
+    "debugger",
+    "<all_urls>"
   ],
 
   "web_accessible_resources": [
