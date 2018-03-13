@@ -346,4 +346,12 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("contentEditable")).then(element => {driver.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${command.value}'}", element);});`);
   });
+  it("should emit `submit` command", () => {
+    const command = {
+      command: "submit",
+      target: "id=form",
+      value: ""
+    };
+    expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElement(By.id(\"form\")).then(element => {element.submit();});");
+  });
 });

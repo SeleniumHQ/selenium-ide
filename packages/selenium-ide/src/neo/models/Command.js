@@ -115,6 +115,7 @@ export const Commands = Object.freeze({
   store: "store",
   storeText: "store text",
   storeTitle: "store title",
+  submit: "submit",
   type: "type",
   verifyChecked: "verify checked",
   verifyNotChecked: "verify not checked",
