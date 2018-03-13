@@ -30,7 +30,7 @@ export function emit(test) {
       });
     }))))).join("");
 
-    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch(() => {Runner.releaseDriver(driver);});});";
+    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});";
 
     errors.length ? rej({...test, commands: errors}) : res(result);
   });

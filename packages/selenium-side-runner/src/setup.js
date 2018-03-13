@@ -36,14 +36,16 @@ Runner.getDriver = function() {
 
 Runner.releaseDriver = function(driver) {
   drivers.splice(drivers.indexOf(driver), 1);
-  driver.quit();
+  return driver.quit();
 };
 
 Runner.cleaup = function() {
   if (drivers.length) {
-    drivers.forEach(driver => {
-      driver.quit();
-    });
+    return Promise.all(drivers.map(driver => (
+      driver.quit()
+    )));
+  } else {
+    return Promise.resolve();
   }
 };
 
