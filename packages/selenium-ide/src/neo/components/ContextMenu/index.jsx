@@ -5,9 +5,7 @@ import "./style.css";
 
 export default class ContextMenu extends React.Component {
   static propTypes = {
-    isContextMenu: PropTypes.bool,
     isOpenContextMenu: PropTypes.bool,
-    onContextMenu: PropTypes.func,
     width: PropTypes.number,
     close: PropTypes.func,
     padding: PropTypes.number,
@@ -20,9 +18,7 @@ export default class ContextMenu extends React.Component {
   render() {
     return (
       <MenuContainer
-        isContextMenu={this.props.isContextMenu}
         isOpenContextMenu={this.props.isOpenContextMenu}
-        onContextMenu={this.props.onContextMenu}
         width={this.props.width}
         close={this.props.close}
         padding={this.props.padding}
@@ -77,22 +73,20 @@ export function withOnContextMenu(WrappredComponent){
       return ([
         <WrappredComponent key="wrap" onContextMenu={this.onContextMenu} {...this.props} />,
         ( listMenu ?
-        <ContextMenu
-          key="contextmenu"
-          direction={"cursor"}
-          isContextMenu={true}
-          isOpenContextMenu={this.state.isOpen}
-          onContextMenu={this.onContextMenu}
-          eventTartget={this.eventTartget}
-          close={this.close}
-          width={listMenu.props.width}
-          padding={listMenu.props.padding}
-          position={this.eventPosition}
-          closeTimeoutMS={50}
-        >
-          {listMenu.props.children}
-        </ContextMenu>
-        : null )
+          <ContextMenu
+            key="contextmenu"
+            direction={"cursor"}
+            isOpenContextMenu={this.state.isOpen}
+            eventTartget={this.eventTartget}
+            close={this.close}
+            width={listMenu.props.width}
+            padding={listMenu.props.padding}
+            position={this.eventPosition}
+            closeTimeoutMS={50}
+          >
+            {listMenu.props.children}
+          </ContextMenu>
+          : null )
       ]);
     }
   };

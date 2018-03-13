@@ -166,9 +166,7 @@ export default class MenuContainer extends React.Component {
     direction: PropTypes.string,
     padding: PropTypes.number,
     closeOnClick: PropTypes.bool,
-    isContextMenu: PropTypes.bool,
     isOpenContextMenu: PropTypes.bool,
-    OnContextMenu: PropTypes.func,
     eventTartget: PropTypes.object,
     position: PropTypes.object,
     close: PropTypes.func,
@@ -197,10 +195,10 @@ export default class MenuContainer extends React.Component {
         React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : null),
       <Menu
         key="menu"
-        isOpen={this.props.isContextMenu ? this.props.isOpenContextMenu : this.state.isOpen}
-        node={this.props.isContextMenu ? (this.props.eventTartget ? this.props.eventTartget: this.node) : this.node}
-        onClick={this.props.closeOnClick ? (this.props.isContextMenu ? this.props.close : this.close) : null}
-        requestClose={this.props.isContextMenu ? this.props.close : this.close}
+        isOpen={this.props.isOpenContextMenu || this.state.isOpen}
+        node={this.props.eventTartget || this.node}
+        onClick={this.props.closeOnClick ? (this.props.close || this.close) : null}
+        requestClose={this.props.close || this.close}
         width={this.props.width}
         direction={this.props.direction}
         padding={this.props.padding}
