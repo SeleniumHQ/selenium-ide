@@ -25,7 +25,9 @@ const emitters = {
 
 export function emit(location) {
   return new Promise(async (res, rej) => {
-    const [type, selector] = location.split("=");
+    const fragments = location.split("=");
+    const type = fragments.shift();
+    const selector = fragments.join("=");
     if (emitters[type]) {
       let result = await emitters[type](selector);
       res(result);

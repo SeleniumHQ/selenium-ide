@@ -39,6 +39,11 @@ describe("location code emitter", () => {
     const selector = "someCss";
     return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("${selector}")`);
   });
+  it("should emit css locator with `=` sign", () => {
+    const type = "css";
+    const selector = "a[title=\"JScript\"]";
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("${selector}")`);
+  });
   it("should emit xpath locator", () => {
     const type = "xpath";
     const selector = "someXpath";
