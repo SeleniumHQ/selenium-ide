@@ -73,7 +73,12 @@ export function emit(command) {
   });
 }
 
+export function canEmit(commandName) {
+  return !!(emitters[commandName]);
+}
+
 export default {
+  canEmit,
   emit
 };
 

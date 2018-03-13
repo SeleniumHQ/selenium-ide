@@ -16,6 +16,7 @@
 // under the License.
 
 import CommandEmitter from "../../selianize/command";
+import { CommandsArray } from "../../neo/models/Command";
 
 describe("command code emitter", () => {
   it("should fail to emit with no command", () => {
@@ -361,5 +362,14 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"form\")));driver.findElement(By.id(\"form\")).then(element => {element.submit();});");
+  });
+  it("should emit all known commands", () => {
+    CommandsArray.forEach(command => {
+      expect(() => {
+        if (!CommandEmitter.canEmit(command)) {
+          throw new Error(`${command} has no emitter, write one!`);
+        }
+      }).not.toThrow();
+    });
   });
 });
