@@ -131,6 +131,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.sleep(${command.value});`);
   });
+  it("should emit `verify checked` command", () => {
+    const command = {
+      command: "verifyChecked",
+      target: "id=check",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"check\")));driver.findElement(By.id(\"check\")).then(element => {element.isSelected().then(selected => {expect(selected).toBeTruthy();});});");
+  });
+  it("should emit `verify not checked` command", () => {
+    const command = {
+      command: "verifyNotChecked",
+      target: "id=check",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"check\")));driver.findElement(By.id(\"check\")).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});");
+  });
   it("should emit `verify title` command", () => {
     const command = {
       command: "verifyTitle",
@@ -146,6 +162,22 @@ describe("command code emitter", () => {
       value: "some text that should be here"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).toBe(\`${command.value}\`)});});`);
+  });
+  it("should emit `assert checked` command", () => {
+    const command = {
+      command: "assertChecked",
+      target: "id=check",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"check\")));driver.findElement(By.id(\"check\")).then(element => {element.isSelected().then(selected => {expect(selected).toBeTruthy();});});");
+  });
+  it("should emit `assert not checked` command", () => {
+    const command = {
+      command: "assertNotChecked",
+      target: "id=check",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"check\")));driver.findElement(By.id(\"check\")).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});");
   });
   it("should emit `assert title` command", () => {
     const command = {

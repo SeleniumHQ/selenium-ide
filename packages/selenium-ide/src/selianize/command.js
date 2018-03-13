@@ -30,8 +30,12 @@ const emitters = {
   echo: emitEcho,
   runScript: emitRunScript,
   pause: emitPause,
+  verifyChecked: emitVerifyChecked,
+  verifyNotChecked: emitVerifyNotChecked,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
+  assertChecked: emitVerifyChecked,
+  assertNotChecked: emitVerifyNotChecked,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
   store: emitStore,
@@ -116,6 +120,14 @@ async function emitRunScript(script) {
 
 async function emitPause(_, time) {
   return Promise.resolve(`driver.sleep(${time});`);
+}
+
+async function emitVerifyChecked(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeTruthy();});});`);
+}
+
+async function emitVerifyNotChecked(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});`);
 }
 
 async function emitVerifyText(locator, text) {
