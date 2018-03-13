@@ -147,6 +147,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"check\")));driver.findElement(By.id(\"check\")).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});");
   });
+  it("should emit `verify editable` command", () => {
+    const command = {
+      command: "verifyEditable",
+      target: "id=text",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"text\")));driver.findElement(By.id(\"text\")).then(element => {element.isEnabled().then(enabled => {expect(enabled).toBeTruthy();element.getAttribute(\"readonly\").then(readonly => {expect(readonly).toBeFalsy();});});});");
+  });
+  it("should emit `verify not editable` command", () => {
+    const command = {
+      command: "verifyNotEditable",
+      target: "id=text",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"text\")));driver.findElement(By.id(\"text\")).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute(\"readonly\").then(readonly => {expect(readonly).toBeTruthy();});}});});");
+  });
   it("should emit `verify title` command", () => {
     const command = {
       command: "verifyTitle",
@@ -178,6 +194,22 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"check\")));driver.findElement(By.id(\"check\")).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});");
+  });
+  it("should emit `assert editable` command", () => {
+    const command = {
+      command: "assertEditable",
+      target: "id=text",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"text\")));driver.findElement(By.id(\"text\")).then(element => {element.isEnabled().then(enabled => {expect(enabled).toBeTruthy();element.getAttribute(\"readonly\").then(readonly => {expect(readonly).toBeFalsy();});});});");
+  });
+  it("should emit `assert not editable` command", () => {
+    const command = {
+      command: "assertNotEditable",
+      target: "id=text",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"text\")));driver.findElement(By.id(\"text\")).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute(\"readonly\").then(readonly => {expect(readonly).toBeTruthy();});}});});");
   });
   it("should emit `assert title` command", () => {
     const command = {
