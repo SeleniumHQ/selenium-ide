@@ -42,6 +42,14 @@ describe("command code emitter", () => {
     };
     expect(CommandEmitter.emit(command)).resolves.toBe(`driver.get(BASE_URL + "${command.target}");`);
   });
+  it("should emit `open` with absolute url", () => {
+    const command = {
+      command: "open",
+      target: "https://www.seleniumhq.org/",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.get("${command.target}");`);
+  });
   it("should emit `click` command", () => {
     const command = {
       command: "click",

@@ -78,7 +78,11 @@ export default {
 };
 
 function emitOpen(target) {
-  return Promise.resolve(`driver.get(BASE_URL + "${target}");`);
+  let url = `BASE_URL + "${target}"`;
+  try {
+    url = `"${new URL(target).href}"`;
+  } catch (e) {} // eslint-disable-line no-empty
+  return Promise.resolve(`driver.get(${url});`);
 }
 
 async function emitClick(target) {
