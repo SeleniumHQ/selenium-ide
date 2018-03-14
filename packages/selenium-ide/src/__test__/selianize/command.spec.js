@@ -163,6 +163,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"text\")));driver.findElement(By.id(\"text\")).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute(\"readonly\").then(readonly => {expect(readonly).toBeTruthy();});}});});");
   });
+  it("should emit `verify element present` command", () => {
+    const command = {
+      command: "verifyElementPresent",
+      target: "id=element",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElements(By.id(\"element\")).then(elements => {expect(elements.length).toBeGreaterThan(0);});");
+  });
+  it("should emit `verify element not present` command", () => {
+    const command = {
+      command: "verifyElementNotPresent",
+      target: "id=element",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElements(By.id(\"element\")).then(elements => {expect(elements.length).toBe(0);});");
+  });
   it("should emit `verify title` command", () => {
     const command = {
       command: "verifyTitle",
@@ -210,6 +226,22 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"text\")));driver.findElement(By.id(\"text\")).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute(\"readonly\").then(readonly => {expect(readonly).toBeTruthy();});}});});");
+  });
+  it("should emit `assert element present` command", () => {
+    const command = {
+      command: "assertElementPresent",
+      target: "id=element",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElements(By.id(\"element\")).then(elements => {expect(elements.length).toBeGreaterThan(0);});");
+  });
+  it("should emit `assert element not present` command", () => {
+    const command = {
+      command: "assertElementNotPresent",
+      target: "id=element",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElements(By.id(\"element\")).then(elements => {expect(elements.length).toBe(0);});");
   });
   it("should emit `assert title` command", () => {
     const command = {

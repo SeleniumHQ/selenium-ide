@@ -34,12 +34,16 @@ const emitters = {
   verifyNotChecked: emitVerifyNotChecked,
   verifyEditable: emitVerifyEditable,
   verifyNotEditable: emitVerifyNotEditable,
+  verifyElementPresent: emitVerifyElementPresent,
+  verifyElementNotPresent: emitVerifyElementNotPresent,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
   assertChecked: emitVerifyChecked,
   assertNotChecked: emitVerifyNotChecked,
   assertEditable: emitVerifyEditable,
   assertNotEditable: emitVerifyNotEditable,
+  assertElementPresent: emitVerifyElementPresent,
+  assertElementNotPresent: emitVerifyElementNotPresent,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
   store: emitStore,
@@ -140,6 +144,14 @@ async function emitVerifyEditable(locator) {
 
 async function emitVerifyNotEditable(locator) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute("readonly").then(readonly => {expect(readonly).toBeTruthy();});}});});`);
+}
+
+async function emitVerifyElementPresent(locator) {
+  return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBeGreaterThan(0);});`);
+}
+
+async function emitVerifyElementNotPresent(locator) {
+  return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBe(0);});`);
 }
 
 async function emitVerifyText(locator, text) {
