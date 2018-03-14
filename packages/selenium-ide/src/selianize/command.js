@@ -73,7 +73,11 @@ const emitters = {
   assertConfirmation: emitAssertAlert,
   answerOnNextPrompt: emitAnswerOnNextPrompt,
   editContent: emitEditContent,
-  submit: emitSubmit
+  submit: emitSubmit,
+  chooseCancelOnNextConfirmation: skip,
+  chooseCancelOnNextPrompt: skip,
+  chooseOkOnNextConfirmation: skip,
+  setSpeed: skip
 };
 
 export function emit(command) {
@@ -245,4 +249,8 @@ async function emitEditContent(locator, content) {
 
 async function emitSubmit(locator) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.submit();});`);
+}
+
+function skip() {
+  return Promise.resolve();
 }

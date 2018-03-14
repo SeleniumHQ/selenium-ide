@@ -507,6 +507,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"form\")));driver.findElement(By.id(\"form\")).then(element => {element.submit();});");
   });
+  it("should skip playback supported commands, that are not supported in webdriver", () => {
+    return Promise.all([
+      expect(CommandEmitter.emit({command: "chooseCancelOnNextConfirmation"})).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({command: "chooseCancelOnNextPrompt"})).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({command: "chooseOkOnNextConfirmation"})).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({command: "setSpeed"})).resolves.toBeUndefined()
+    ]);
+  });
   it("should emit all known commands", () => {
     CommandsArray.forEach(command => {
       expect(() => {
