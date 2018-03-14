@@ -18,3 +18,5 @@ yarn-error.log
 dist/
 .web-extension-id
 *.log
+tests/webdriver/
+tests/selianize/
