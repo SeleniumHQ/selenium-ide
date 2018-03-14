@@ -7,10 +7,13 @@
     "start": "cd packages/selenium-ide && yarn start",
     "build:ext": "cd packages/selenium-ide && yarn build",
     "build:runner": "cd packages/selenium-side-runner && yarn build",
+    "build:runner:selianize": "cd packages/selenium-side-runner && babel -d ../../tests/selianize ../../packages/selenium-ide/src/selianize --ignore=__test__",
+    "build:runner:examples": "cd tests && mkdir -p webdriver && ls examples | grep \"\\.side$\" | NODE_PATH=\"../packages/selenium-ide/node_modules\" xargs node simple-export.js",
     "build:ext:prod": "cd packages/selenium-ide && yarn build-prod",
     "pack:chrome": "cd packages/selenium-ide && yarn build-chrome",
     "pack:firefox": "cd packages/selenium-ide && yarn build-firefox",
     "test": "jest",
+    "test:webdriver": "cd tests/webdriver && node ../../packages/selenium-side-runner/dist/index.js",
     "lint": "eslint packages/selenium-ide/src/{neo,selianize}/ packages/selenium-side-runner/src/ --ext .js --ext .jsx",
     "postinstall": "lerna bootstrap"
   },
