@@ -38,6 +38,7 @@ const emitters = {
   verifyElementNotPresent: emitVerifyElementNotPresent,
   verifySelectedValue: emitVerifySelectedValue,
   verifyNotSelectedValue: emitVerifyNotSelectedValue,
+  verifyValue: emitVerifyValue,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
   assertChecked: emitVerifyChecked,
@@ -48,6 +49,7 @@ const emitters = {
   assertElementNotPresent: emitVerifyElementNotPresent,
   assertSelectedValue: emitVerifySelectedValue,
   assertNotSelectedValue: emitVerifyNotSelectedValue,
+  assertValue: emitVerifyValue,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
   store: emitStore,
@@ -165,6 +167,10 @@ async function emitVerifySelectedValue(locator, value) {
 
 async function emitVerifyNotSelectedValue(locator, value) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${value}");});});});`);
+}
+
+async function emitVerifyValue(locator, value) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(value => {expect(value).toBe("${value}");});});`);
 }
 
 async function emitVerifyText(locator, text) {
