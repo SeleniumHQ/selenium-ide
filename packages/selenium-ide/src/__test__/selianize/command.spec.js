@@ -179,6 +179,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElements(By.id(\"element\")).then(elements => {expect(elements.length).toBe(0);});");
   });
+  it("should emit `verify selected value` command", () => {
+    const command = {
+      command: "verifySelectedValue",
+      target: "id=select",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("select")).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).toBe("${command.value}");});});});`);
+  });
+  it("should emit `verify not selected value` command", () => {
+    const command = {
+      command: "verifyNotSelectedValue",
+      target: "id=select",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("select")).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${command.value}");});});});`);
+  });
   it("should emit `verify title` command", () => {
     const command = {
       command: "verifyTitle",
@@ -242,6 +258,22 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("driver.findElements(By.id(\"element\")).then(elements => {expect(elements.length).toBe(0);});");
+  });
+  it("should emit `assert selected value` command", () => {
+    const command = {
+      command: "assertSelectedValue",
+      target: "id=select",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("select")).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).toBe("${command.value}");});});});`);
+  });
+  it("should emit `assert not selected value` command", () => {
+    const command = {
+      command: "assertNotSelectedValue",
+      target: "id=select",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("select")).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${command.value}");});});});`);
   });
   it("should emit `assert title` command", () => {
     const command = {

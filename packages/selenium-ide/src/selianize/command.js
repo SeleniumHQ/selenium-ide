@@ -36,6 +36,8 @@ const emitters = {
   verifyNotEditable: emitVerifyNotEditable,
   verifyElementPresent: emitVerifyElementPresent,
   verifyElementNotPresent: emitVerifyElementNotPresent,
+  verifySelectedValue: emitVerifySelectedValue,
+  verifyNotSelectedValue: emitVerifyNotSelectedValue,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
   assertChecked: emitVerifyChecked,
@@ -44,6 +46,8 @@ const emitters = {
   assertNotEditable: emitVerifyNotEditable,
   assertElementPresent: emitVerifyElementPresent,
   assertElementNotPresent: emitVerifyElementNotPresent,
+  assertSelectedValue: emitVerifySelectedValue,
+  assertNotSelectedValue: emitVerifyNotSelectedValue,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
   store: emitStore,
@@ -152,6 +156,15 @@ async function emitVerifyElementPresent(locator) {
 
 async function emitVerifyElementNotPresent(locator) {
   return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBe(0);});`);
+}
+
+async function emitVerifySelectedValue(locator, value) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).toBe("${value}");});});});`);
+}
+
+
+async function emitVerifyNotSelectedValue(locator, value) {
+  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${value}");});});});`);
 }
 
 async function emitVerifyText(locator, text) {
