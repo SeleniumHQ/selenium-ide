@@ -10,6 +10,6 @@ script:
   - yarn lint
   - yarn test
   - yarn build:runner
-  - yarn build:runner:selianize
+  - yarn build:selianize
   - yarn build:runner:examples
   - yarn test:webdriver --server http://localhost:4444/wd/hub
