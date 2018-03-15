@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import SuiteEmitter from "../../selianize/suite";
+import SuiteEmitter from "../src/suite";
 
 describe("suite emitter", () => {
   it("should emit an empty suite", () => {

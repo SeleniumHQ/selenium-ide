@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import TestCaseEmitter from "../../selianize/testcase";
+import TestCaseEmitter from "../src/testcase";
 
 describe("test case code emitter", () => {
   it("should emit an empty test case", () => {

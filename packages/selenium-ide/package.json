@@ -42,7 +42,6 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "js-beautify": "^1.7.5",
-    "js-string-escape": "^1.0.1",
     "jszip": "^3.1.5",
     "mobx": "^3.3.1",
     "mobx-react": "^4.3.3",

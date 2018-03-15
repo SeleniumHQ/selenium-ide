@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import SelectionEmitter from "../../selianize/selection";
+import SelectionEmitter from "../src/selection";
 
 describe("selection location code emitter", () => {
   it("should fail to emit unknown selection locator", () => {

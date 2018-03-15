@@ -17,7 +17,7 @@
 
 import fs from "fs";
 import path from "path";
-import Selianize, { ParseError } from "../../selianize";
+import Selianize, { ParseError } from "../src";
 
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {

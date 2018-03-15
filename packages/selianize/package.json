@@ -1,0 +1,22 @@
+{
+  "name": "selianize",
+  "version": "0.0.0",
+  "description": "Export Selenium IDE projects into javascript",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "scripts": {
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "keywords": [
+  ],
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "js-beautify": "^1.7.5",
+    "js-string-escape": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel-preset-node6": "^11.0.0"
+  }
+}

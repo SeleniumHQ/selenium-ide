@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import LocationEmitter from "../../selianize/location";
+import LocationEmitter from "../src/location";
 
 describe("location code emitter", () => {
   it("should fail to emit empty string", () => {

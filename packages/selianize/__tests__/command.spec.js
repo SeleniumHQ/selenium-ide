@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import CommandEmitter from "../../selianize/command";
-import { CommandsArray } from "../../neo/models/Command";
+import CommandEmitter from "../src/command";
+import { CommandsArray } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
   it("should fail to emit with no command", () => {

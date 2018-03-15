@@ -15,13 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ConfigurationEmitter from "../../selianize/configuration";
+import template from "../src/template";
 
-describe("configuration code emitter", () => {
-  it("should emit project configuration", () => {
-    const project = {
-      url: "http://www.seleniumhq.org"
-    };
-    expect(ConfigurationEmitter.emit(project)).toBe(`const BASE_URL = '${project.url}';`);
+describe("Code template", () => {
+  it("should return the export header", () => {
+    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\nconst By = require('selenium-webdriver').By;const until = require('selenium-webdriver').until;jest.setTimeout(30000);afterAll(() => {Runner.cleaup();});");
   });
 });
