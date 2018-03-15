@@ -31,7 +31,7 @@ export default class Suite {
   }
 
   @computed get tests() {
-    return SortBy(this._tests, "name");
+    return this._tests;
   }
 
   isTest(test) {
@@ -64,6 +64,15 @@ export default class Suite {
     } else {
       this._tests.replace(tests);
     }
+  }
+
+  @action.bound insertTestCaseAt(tests, index) {
+    this._tests.splice(index, 0, tests);
+  }
+
+  @action.bound swapTestCases(from, to) {
+    const tests = this._tests.splice(from, 1)[0];
+    this.insertTestCaseAt(tests, to);
   }
 
   exportSuite() {
