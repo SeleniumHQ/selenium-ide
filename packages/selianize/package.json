@@ -7,7 +7,8 @@
   "module": "dist/selianize.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "postinstall": "yarn build"
   },
   "engines": {
     "node": ">=6"
