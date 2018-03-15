@@ -20,7 +20,7 @@ import parser from "ua-parser-js";
 import { migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
-import Selianize, { ParseError } from "../../selianize";
+import Selianize, { ParseError } from "selianize";
 import chromeGetFile from "./filesystem/chrome";
 import firefoxGetFile from "./filesystem/firefox";
 

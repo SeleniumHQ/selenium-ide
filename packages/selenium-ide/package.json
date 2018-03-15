@@ -62,6 +62,7 @@
     "react-tooltip": "^3.4.0",
     "react-transition-group": "^2.2.1",
     "scroll-into-view-if-needed": "^1.4.0",
+    "selianize": "*",
     "sort-array": "^2.0.0",
     "styled-components": "^2.1.2",
     "ua-parser-js": "^0.7.17",
