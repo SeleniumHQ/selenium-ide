@@ -105,10 +105,7 @@ export default {
 };
 
 function emitOpen(target) {
-  let url = `BASE_URL + "${target}"`;
-  try {
-    url = `"${new URL(target).href}"`;
-  } catch (e) {} // eslint-disable-line no-empty
+  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `BASE_URL + "${target}"`;
   return Promise.resolve(`driver.get(${url});`);
 }
 
