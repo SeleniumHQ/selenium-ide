@@ -473,7 +473,7 @@ describe("command code emitter", () => {
       target: "a confirmation",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${command.target}");});});`);
   });
   it("should emit `assert prompt` command", () => {
     const command = {
@@ -481,11 +481,27 @@ describe("command code emitter", () => {
       target: "a prompt",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${command.target}");});});`);
+  });
+  it("should emit `choose ok on next confirmation` command", () => {
+    const command = {
+      command: "webdriverChooseOkOnNextConfirmation",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().alert().then(alert => {alert.accept();});");
+  });
+  it("should emit `choose cancel on next confirmation` command", () => {
+    const command = {
+      command: "webdriverChooseCancelOnNextConfirmation",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().alert().then(alert => {alert.dismiss();});");
   });
   it("should emit `answer on next prompt` command", () => {
     const command = {
-      command: "answerOnNextPrompt",
+      command: "webdriverAnswerOnNextPrompt",
       target: "an answer",
       value: ""
     };
@@ -509,6 +525,7 @@ describe("command code emitter", () => {
   });
   it("should skip playback supported commands, that are not supported in webdriver", () => {
     return Promise.all([
+      expect(CommandEmitter.emit({command: "answerOnNextPrompt"})).resolves.toBeUndefined(),
       expect(CommandEmitter.emit({command: "chooseCancelOnNextConfirmation"})).resolves.toBeUndefined(),
       expect(CommandEmitter.emit({command: "chooseCancelOnNextPrompt"})).resolves.toBeUndefined(),
       expect(CommandEmitter.emit({command: "chooseOkOnNextConfirmation"})).resolves.toBeUndefined(),

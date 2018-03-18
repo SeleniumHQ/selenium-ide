@@ -68,12 +68,15 @@ const emitters = {
   mouseMoveAt: emitMouseMove,
   mouseOver: emitMouseMove,
   mouseOut: emitMouseOut,
-  assertAlert: emitAssertAlert,
+  assertAlert: emitAssertAlertAndAccept,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
-  answerOnNextPrompt: emitAnswerOnNextPrompt,
+  webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
+  webdriverChooseOkOnNextConfirmation: emitChooseOkOnNextConfirmation,
+  webdriverChooseCancelOnNextConfirmation: emitChooseCancelOnNextConfirmation,
   editContent: emitEditContent,
   submit: emitSubmit,
+  answerOnNextPrompt: skip,
   chooseCancelOnNextConfirmation: skip,
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
@@ -237,7 +240,19 @@ async function emitMouseOut(locator) {
 }
 
 function emitAssertAlert(alertText) {
+  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${alertText}");});});`);
+}
+
+function emitAssertAlertAndAccept(alertText) {
   return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${alertText}");alert.accept();});});`);
+}
+
+function emitChooseOkOnNextConfirmation() {
+  return Promise.resolve("driver.switchTo().alert().then(alert => {alert.accept();});");
+}
+
+function emitChooseCancelOnNextConfirmation() {
+  return Promise.resolve("driver.switchTo().alert().then(alert => {alert.dismiss();});");
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
