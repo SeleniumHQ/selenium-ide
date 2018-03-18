@@ -505,7 +505,15 @@ describe("command code emitter", () => {
       target: "an answer",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.sendKeys("${command.target}");});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.sendKeys("${command.target}").then(() => {alert.accept();});});`);
+  });
+  it("should emit `choose cancel on next prompt` command", () => {
+    const command = {
+      command: "webdriverChooseCancelOnNextPrompt",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.switchTo().alert().then(alert => {alert.dismiss();});");
   });
   it("should emit `edit content` command", () => {
     const command = {

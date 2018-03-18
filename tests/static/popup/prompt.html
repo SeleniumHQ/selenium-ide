@@ -1,6 +1,13 @@
 <script type="text/javascript">
   function show() {
-      document.title = prompt("test");
+      const answer = prompt("test");
+      if (answer === null) {
+          document.title = "cancel";
+      } else if (answer === "") {
+          document.title = "empty";
+      } else {
+          document.title = answer;
+      }
   }
 </script>
 <button id="b" onclick="show()">show prompt</button>

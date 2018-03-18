@@ -74,6 +74,7 @@ const emitters = {
   webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
   webdriverChooseOkOnNextConfirmation: emitChooseOkOnNextConfirmation,
   webdriverChooseCancelOnNextConfirmation: emitChooseCancelOnNextConfirmation,
+  webdriverChooseCancelOnNextPrompt: emitChooseCancelOnNextConfirmation,
   editContent: emitEditContent,
   submit: emitSubmit,
   answerOnNextPrompt: skip,
@@ -256,7 +257,7 @@ function emitChooseCancelOnNextConfirmation() {
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
-  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.sendKeys("${textToSend}");});`);
+  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.sendKeys("${textToSend}").then(() => {alert.accept();});});`);
 }
 
 async function emitEditContent(locator, content) {
