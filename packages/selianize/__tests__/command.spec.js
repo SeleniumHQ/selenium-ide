@@ -465,7 +465,7 @@ describe("command code emitter", () => {
       target: "an alert",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${command.target});});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${command.target}");alert.accept();});});`);
   });
   it("should emit `assert confirmation` command", () => {
     const command = {

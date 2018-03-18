@@ -237,7 +237,7 @@ async function emitMouseOut(locator) {
 }
 
 function emitAssertAlert(alertText) {
-  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(${alertText});});});`);
+  return Promise.resolve(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${alertText}");alert.accept();});});`);
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
