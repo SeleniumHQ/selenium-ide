@@ -145,6 +145,9 @@ export default class ExtCommand {
   }
 
   sendMessage(command, target, value, top) {
+    if (/^webdriver/.test(command)) {
+      return Promise.resolve({ result: "success" });
+    }
     let tabId = this.getCurrentPlayingTabId();
     let frameId = this.getCurrentPlayingFrameId();
     return browser.tabs.sendMessage(tabId, {

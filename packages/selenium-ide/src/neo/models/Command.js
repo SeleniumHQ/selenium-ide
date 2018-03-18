@@ -127,7 +127,11 @@ export const Commands = Object.freeze({
   verifyNotSelectedValue: "verify not selected value",
   verifyText: "verify text",
   verifyTitle: "verify title",
-  verifyValue: "verify value"
+  verifyValue: "verify value",
+  webdriverAnswerOnNextPrompt: "webdriver answer on next prompt",
+  webdriverChooseCancelOnNextConfirmation: "webdriver choose cancel on next confirmation",
+  webdriverChooseCancelOnNextPrompt: "webdriver choose cancel on next prompt",
+  webdriverChooseOkOnNextConfirmation: "webdriver choose ok on next confirmation"
 });
 
 export const CommandsArray = Object.freeze(Object.keys(Commands));
