@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ConfigurationEmitter from "../../selianize/configuration";
+import ConfigurationEmitter from "../src/configuration";
 
 describe("configuration code emitter", () => {
   it("should emit project configuration", () => {

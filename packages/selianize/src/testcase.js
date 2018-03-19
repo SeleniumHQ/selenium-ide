@@ -15,10 +15,27 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import template from "../../selianize/template";
+import CommandEmitter from "./command";
 
-describe("Code template", () => {
-  it("should return the export header", () => {
-    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\nconst By = require('selenium-webdriver').By;jest.setTimeout(30000);afterAll(() => {Runner.cleaup();});");
+export function emit(test) {
+  return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
+    let result = `it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {`;
+
+    let errors = [];
+    result += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
+      errors.push({
+        index: index + 1,
+        ...command,
+        message: e
+      });
+    }))))).join("");
+
+    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});";
+
+    errors.length ? rej({...test, commands: errors}) : res(result);
   });
-});
+}
+
+export default {
+  emit
+};

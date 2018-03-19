@@ -42,6 +42,11 @@ if (window === window.top) {
               record("chooseCancelOnNextPrompt", [[""]], "", true, event.data.frameLocation);
             }
             record("assertPrompt", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
+            if (event.data.recordedResult != null) {
+              record("webdriverAnswerOnNextPrompt", [[event.data.recordedResult]], "", false, event.data.frameLocation);
+            } else {
+              record("webdriverChooseCancelOnNextPrompt", [[""]], "", false, event.data.frameLocation);
+            }
             break;
           case "confirm":
             if (event.data.recordedResult == true) {
@@ -50,6 +55,11 @@ if (window === window.top) {
               record("chooseCancelOnNextConfirmation", [[""]], "", true, event.data.frameLocation);
             }
             record("assertConfirmation", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
+            if (event.data.recordedResult == true) {
+              record("webdriverChooseOkOnNextConfirmation", [[""]], "", false, event.data.frameLocation);
+            } else {
+              record("webdriverChooseCancelOnNextConfirmation", [[""]], "", false, event.data.frameLocation);
+            }
             break;
           case "alert":
             //record("answerOnNextAlert",[[event.data.recordedResult]],"",true);

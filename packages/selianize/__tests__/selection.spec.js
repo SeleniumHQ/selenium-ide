@@ -15,30 +15,30 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import SelectionEmitter from "../../selianize/selection";
+import SelectionEmitter from "../src/selection";
 
 describe("selection location code emitter", () => {
   it("should fail to emit unknown selection locator", () => {
-    expect(SelectionEmitter.emit("notExists=element")).rejects.toThrow("Unknown selection locator notExists");
+    return expect(SelectionEmitter.emit("notExists=element")).rejects.toThrow("Unknown selection locator notExists");
   });
   it("should emit label locator", () => {
     const type = "label";
     const selector = "a label";
-    expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath("//option[. = '${selector}']")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath("//option[. = '${selector}']")`);
   });
   it("should emit id locator", () => {
     const type = "id";
     const selector = "someId";
-    expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*[id=${selector}]")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*[id=${selector}]")`);
   });
   it("should emit value locator", () => {
     const type = "value";
     const selector = "someValue";
-    expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*[value=${selector}]")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*[value=${selector}]")`);
   });
   it("should emit id locator", () => {
     const type = "index";
     const selector = "2";
-    expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*:nth-child(${selector})")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*:nth-child(${selector})")`);
   });
 });

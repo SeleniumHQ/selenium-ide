@@ -16,7 +16,7 @@
 // under the License.
 
 export function bootstrap() {
-  return "// This file was generated using Selenium IDE\nconst By = require('selenium-webdriver').By;jest.setTimeout(30000);afterAll(() => {Runner.cleaup();});";
+  return "// This file was generated using Selenium IDE\nconst By = require('selenium-webdriver').By;const until = require('selenium-webdriver').until;jest.setTimeout(30000);afterAll(() => {Runner.cleaup();});";
 }
 
 export default {
