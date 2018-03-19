@@ -43,8 +43,11 @@ import "../../styles/markdown.css";
 
 import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
-import "../../IO/SideeX/record";
-import "../../IO/SideeX/playback";
+
+if (process.env.NODE_ENV !== "test") {
+  require("../../IO/SideeX/record");
+  require("../../IO/SideeX/playback");
+}
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/conditional/scrollbar.css");
