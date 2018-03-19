@@ -56,7 +56,10 @@ const project = observable(new ProjectStore());
 UiState.setProject(project);
 
 if (process.env.NODE_ENV === "production") {
-  UiState.selectTest(project.createTestCase("Untitled"));
+  const suite = project.createSuite("Default Suite");
+  const test = project.createTestCase("Untitled");
+  suite.addTestCase(test);
+  UiState.selectTest(test);
 } else {
   seed(project, 0);
 }
