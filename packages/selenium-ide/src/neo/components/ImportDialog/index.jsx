@@ -22,23 +22,36 @@ import classNames from "classnames";
 import Modal from "../Modal";
 import ModalHeader from "../ModalHeader";
 import FlatButton from "../FlatButton";
+import { parseSuiteRequirements } from "../../IO/legacy/migrate";
 import "./style.css";
 
 export default class ImportDialog extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   static propTypes = {
     cancel: PropTypes.func.isRequired,
-    files: PropTypes.array.isRequired,
-    onDrop: PropTypes.func.isRequired
+    suite: PropTypes.string.isRequired
   };
+  componentWillReceiveProps(nextProps) {
+    if (this.props.suite !== nextProps.suite) {
+      this.setState({
+        files: parseSuiteRequirements(nextProps.suite).map(name => ({name}))
+      });
+    }
+  }
+  onDrop(files) {
+  }
   render() {
     return (
-      <Modal className="import-dialog" isOpen={true}>
+      <Modal className="import-dialog" isOpen={this.props.isImporting}>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title="Import suite" close={this.props.cancel} />
           <p>{"Hey there, I see you wanted to import an old IDE suite, I need you to give me these test cases that you've used."}</p>
-          <Dropzone accept="text/html" onDrop={this.props.onDrop}>
+          <Dropzone className="dropzone" accept="text/html" onDrop={this.onDrop.bind(this)}>
             <ul>
-              {this.props.files.map(({name, accepted}) => (
+              {this.state.files && this.state.files.map(({name, accepted}) => (
                 <li key={name} className={classNames({accepted})}>{name}</li>
               ))}
             </ul>

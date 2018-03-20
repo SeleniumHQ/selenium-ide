@@ -2,6 +2,14 @@
     padding: 10px;
 }
 
+.import-dialog .dropzone {
+    height: 200px;
+    border-width: 2px;
+    border-color: rgb(102, 102, 102);
+    border-style: dashed;
+    border-radius: 5px;
+}
+
 .import-dialog ul li {
     padding: 2px 0;
 }
