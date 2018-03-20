@@ -21,6 +21,7 @@ import UiState from "./UiState";
 class ModalState {
   @observable editedSuite = null;
   @observable renameState = {};
+  @observable importSuiteState = {};
 
   constructor() {
     this.renameTest = this.rename.bind(this, Types.test);
@@ -98,6 +99,20 @@ class ModalState {
         UiState.selectTest();
       }
     });
+  }
+
+  @action.bound importSuite(suite, onComplete) {
+    this.importSuiteState = {
+      suite,
+      onComplete: () => {
+        this.cancelImport();
+        onComplete();
+      }
+    };
+  }
+
+  @action.bound cancelImport() {
+    this.importSuiteState = {};
   }
 
   nameIsUnique(value, list) {
