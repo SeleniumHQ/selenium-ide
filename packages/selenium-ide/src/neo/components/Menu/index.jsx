@@ -167,7 +167,7 @@ export default class MenuContainer extends React.Component {
     padding: PropTypes.number,
     closeOnClick: PropTypes.bool,
     isOpenContextMenu: PropTypes.bool,
-    eventTartget: PropTypes.object,
+    eventTarget: PropTypes.object,
     position: PropTypes.object,
     close: PropTypes.func,
     closeTimeoutMS: PropTypes.number
@@ -196,7 +196,7 @@ export default class MenuContainer extends React.Component {
       <Menu
         key="menu"
         isOpen={this.props.isOpenContextMenu || this.state.isOpen}
-        node={this.props.eventTartget || this.node}
+        node={this.props.eventTarget || this.node}
         onClick={this.props.closeOnClick ? (this.props.close || this.close) : null}
         requestClose={this.props.close || this.close}
         width={this.props.width}

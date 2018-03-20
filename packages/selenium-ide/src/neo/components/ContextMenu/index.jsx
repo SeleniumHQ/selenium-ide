@@ -9,7 +9,7 @@ export default class ContextMenu extends React.Component {
     width: PropTypes.number,
     close: PropTypes.func,
     padding: PropTypes.number,
-    eventTartget: PropTypes.object,
+    eventTarget: PropTypes.object,
     position: PropTypes.object,
     direction: PropTypes.string,
     closeTimeoutMS: PropTypes.number,
@@ -22,7 +22,7 @@ export default class ContextMenu extends React.Component {
         width={this.props.width}
         close={this.props.close}
         padding={this.props.padding}
-        eventTartget={this.props.eventTartget}
+        eventTarget={this.props.eventTarget}
         position={this.props.position}
         direction={this.props.direction}
         closeTimeoutMS={this.props.closeTimeoutMS}>
@@ -37,7 +37,7 @@ export default class ContextMenu extends React.Component {
 export function withOnContextMenu(WrappredComponent){
   return class WithOnContextMenu extends React.Component {
     eventPosition;
-    eventTartget;
+    eventTarget;
     listMenu;
     constructor(props){
       super(props);
@@ -57,7 +57,7 @@ export function withOnContextMenu(WrappredComponent){
       if (!this.state.isOpen) {
         this.eventPosition = { x:e.clientX, y:e.clientY };
         //send currentTarget to child component.
-        this.eventTartget=e.currentTarget;
+        this.eventTarget=e.currentTarget;
       }
       this.setState({
         isOpen: !this.state.isOpen
@@ -80,7 +80,7 @@ export function withOnContextMenu(WrappredComponent){
           key="contextmenu"
           direction={"cursor"}
           isOpenContextMenu={this.state.isOpen}
-          eventTartget={this.eventTartget}
+          eventTarget={this.eventTarget}
           close={this.close}
           width={this.listMenu ? this.listMenu.props.width : 150}
           padding={this.listMenu ? this.listMenu.props.padding : -5}
