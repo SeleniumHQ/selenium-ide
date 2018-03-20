@@ -43,6 +43,18 @@ export function verifyFile(file) {
   }
 }
 
+export function parseSuiteRequirements(suite) {
+  const regex = /<a href="(.*)">/g;
+  let lastResult = regex.exec(suite);
+  const results = [];
+  while (lastResult) {
+    results.push(lastResult[1]);
+    lastResult = regex.exec(suite);
+  }
+
+  return results;
+}
+
 export function migrateProject(zippedData) {
   return JSZip.loadAsync(zippedData).then(zip => {
     const isHidden = /(^\.|\/\.)/;

@@ -18,7 +18,7 @@
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";
-import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
+import { verifyFile, FileTypes, parseSuiteRequirements, migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
 
 useStrict(true);
 
@@ -78,6 +78,12 @@ describe("selenium test case migration", () => {
 });
 
 describe("selenium suite migration", () => {
+  it("should give a list of required test cases", () => {
+    const suite = fs.readFileSync(path.join(__dirname, "IDE_test_4/000_clear_mandant_Suite.html")).toString();
+    const required = parseSuiteRequirements(suite);
+    expect(required.length).toBe(3);
+    expect(required).toEqual(["einzeltests/MH_delete.html", "einzeltests/kontakte_leeren.html", "einzeltests/DMS_clear.html"]);
+  });
   it("should migrate the suite", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_4.zip"));
     return migrateProject(file).then(project => {
