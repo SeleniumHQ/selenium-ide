@@ -24,7 +24,7 @@ import Selianize, { ParseError } from "selianize";
 import chromeGetFile from "./filesystem/chrome";
 import firefoxGetFile from "./filesystem/firefox";
 
-export const supportedFileFormats = ".side, text/html, application/zip";
+export const supportedFileFormats = ".side, text/html";
 const parsedUA = parser(window.navigator.userAgent);
 
 export function getFile(path) {
@@ -119,20 +119,14 @@ export function loadProject(project, file) {
       loadJSONProject(project, e.target.result);
     } else  {
       try {
-        if (file.type === "text/html") {
-          project.fromJS(migrateTestCase(e.target.result));
-        } else if (file.type === "application/zip") {
-          migrateProject(e.target.result).then(jsRep => {
-            project.fromJS(jsRep);
-          }).catch(displayError);
-        }
+        project.fromJS(migrateTestCase(e.target.result));
       } catch (error) {
         displayError(error);
       }
     }
   };
 
-  file.type === "application/zip" ? fileReader.readAsArrayBuffer(file) : fileReader.readAsText(file);
+  fileReader.readAsText(file);
 }
 
 function loadJSONProject(project, data) {
