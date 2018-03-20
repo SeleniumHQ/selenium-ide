@@ -20,6 +20,29 @@ import xmlescape from "xml-escape";
 import xmlunescape from "unescape";
 import JSZip from "jszip";
 
+export const FileTypes = {
+  Suite: "suite",
+  TestCase: "testcase"
+};
+
+function isSuite(file) {
+  return file.includes("table id=\"suiteTable\"");
+}
+
+function isTestCase(file) {
+  return file.includes("http://selenium-ide.openqa.org/profiles/test-case");
+}
+
+export function verifyFile(file) {
+  if (isSuite(file)) {
+    return FileTypes.Suite;
+  } else if (isTestCase(file)) {
+    return FileTypes.TestCase;
+  } else {
+    throw  new Error("Unknown file was received");
+  }
+}
+
 export function migrateProject(zippedData) {
   return JSZip.loadAsync(zippedData).then(zip => {
     const isHidden = /(^\.|\/\.)/;
@@ -42,9 +65,9 @@ export function migrateProject(zippedData) {
       const suites = [];
       const tests = [];
       Object.keys(fileMap).forEach(fileName => {
-        if (fileMap[fileName].includes("table id=\"suiteTable\"")) {
+        if (isSuite(fileMap[fileName])) {
           suites.push(fileName);
-        } else {
+        } else if (isTestCase(fileMap[fileName])) {
           tests.push(fileName);
         }
       });

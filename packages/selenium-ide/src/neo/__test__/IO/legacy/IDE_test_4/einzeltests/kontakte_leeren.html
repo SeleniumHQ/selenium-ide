@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>kontakte_leeren</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">kontakte_leeren</td></tr>
+</thead><tbody>
+<!--kontos löschen-->
+<!---->
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Online-Banking-Zugang</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>konto_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>css=ul.list.label &gt; li &gt; a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>konto_delete_end</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=ul.list.label &gt; li &gt; a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>konto_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>konto_delete_end</td>
+	<td></td>
+</tr>
+<!--!!!!!!!!!!!!!-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Kontoeinstellungen</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>mail_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//tr[2]/td/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>mail_delete_end</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//tr[2]/td/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>mail_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>mail_delete_end</td>
+	<td></td>
+</tr>
+<!--!!!!!!!!!!!!!-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Export</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>export_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>css=ul.list.label &gt; li &gt; a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>export_delete_end</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=ul.list.label &gt; li &gt; a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>export_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>export_delete_end</td>
+	<td></td>
+</tr>
+<!--!!!!!!!!!!!!!-->
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/objectdata/global-notice-board')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//li[5]/strong</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>notice_board_delete_end</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.btnFooter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>notice_board_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>document.Objectdata_Form_NoticeBoardMessageCategory.elements[31]</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>notice_board_delete_end</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.Objectdata_Form_NoticeBoardMessageCategory.elements[31]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>notice_board_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>notice_board_delete_end</td>
+	<td></td>
+</tr>
+<!--!!!!!!!!!!!!!-->
+<tr>
+	<td>clickAndWait</td>
+	<td>class=adress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'alle')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Filters-filter_1-VALUE_name</td>
+	<td>Verwaltung</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=übermitteln</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Verwaltung</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=als Verwalter markieren</td>
+	<td></td>
+</tr>
+<!--Datev löschen wenn da-->
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.objectdata</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Buchungs-Export</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>datev_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>css=ul.objectList &gt; li..active &gt; a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>datev_delete_end</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=ul.objectList &gt; li..active &gt; a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>datev_delete_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>datev_delete_end</td>
+	<td></td>
+</tr>
+<!---->
+<!---->
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.adress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Mieter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>start_mieter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>mietinteressent</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>start_mieter</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>label</td>
+	<td>mietinteressent</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>start_mieteinter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Mietinteressenten</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>dienst</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>start_mieteinter</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>label</td>
+	<td>dienst</td>
+	<td></td>
+</tr>
+<!--testen, ob Ista Dienstleister ist und aktiviert-->
+<tr>
+	<td>store</td>
+	<td>awi-rems.de</td>
+	<td>domain</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Dienstleister / Handwerker</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>start_dienst</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>eigen</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>start_dienst</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>label</td>
+	<td>eigen</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Eigentümer</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>start_eigen</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>ende</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[2]/div/ul/li/ul/li/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>start_eigen</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>label</td>
+	<td>ende</td>
+	<td></td>
+</tr>
+<!--Verwaltung als Verwalter markieren, damit Immoware gelöscht werden kann-->
+<tr>
+	<td>clickAndWait</td>
+	<td>class=adress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'alle')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Filters-filter_1-VALUE_name</td>
+	<td>Verwaltung</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=übermitteln</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Verwaltung</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=als Verwalter markieren</td>
+	<td></td>
+</tr>
+<!--kalender löschen-->
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.calendar</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>start_kalender</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//span/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>kalender_ende</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>id=sbox-window</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>start_kalender</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>kalender_ende</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>label</td>
+	<td>start_day</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>css=a.calendar-event-title.boxed_resizable</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>day_ende</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>css=a.calendar-event-title.boxed_resizable</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>id=sbox-window</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>250</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>start_day</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>day_ende</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.objectdata</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=autom. Verwalterhonorar</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>admin_fee_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>css=ul.objectList.adminFeeConfigurations &gt; li.active &gt; a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>admin_fee_ende</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=ul.objectList.adminFeeConfigurations &gt; li.active &gt; a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a[title=&quot;löschen&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Wollen Sie den Datensatz wirklich löschen?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>admin_fee_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>admin_fee_ende</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -18,9 +18,25 @@
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";
-import { migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
+import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
 
 useStrict(true);
+
+describe("file classifier", () => {
+  it("should recognize suite", () => {
+    const suite = fs.readFileSync(path.join(__dirname, "IDE_test_4/000_clear_mandant_Suite.html")).toString();
+    expect(verifyFile(suite)).toBe(FileTypes.Suite);
+  });
+  it("should recognize test case", () => {
+    const test = fs.readFileSync(path.join(__dirname, "IDE_test.html")).toString();
+    expect(verifyFile(test)).toBe(FileTypes.TestCase);
+  });
+  it("should throw when another file is given", () => {
+    expect(() => {
+      verifyFile("something is wrong here");
+    }).toThrowError("Unknown file was received");
+  });
+});
 
 describe("selenium test case migration", () => {
   it("should migrate the set example", () => {
