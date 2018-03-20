@@ -104,9 +104,9 @@ class ModalState {
   @action.bound importSuite(suite, onComplete) {
     this.importSuiteState = {
       suite,
-      onComplete: () => {
+      onComplete: (...argv) => {
         this.cancelImport();
-        onComplete();
+        onComplete(...argv);
       }
     };
   }

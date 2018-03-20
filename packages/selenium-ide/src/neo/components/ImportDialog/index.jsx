@@ -23,6 +23,7 @@ import Modal from "../Modal";
 import ModalHeader from "../ModalHeader";
 import FlatButton from "../FlatButton";
 import { parseSuiteRequirements } from "../../IO/legacy/migrate";
+import { loadAsText } from "../../IO/filesystem";
 import "./style.css";
 
 export default class ImportDialog extends React.Component {
@@ -31,8 +32,10 @@ export default class ImportDialog extends React.Component {
     this.state = {};
   }
   static propTypes = {
+    isImporting: PropTypes.bool.isRequired,
     cancel: PropTypes.func.isRequired,
-    suite: PropTypes.string.isRequired
+    suite: PropTypes.string,
+    onComplete: PropTypes.func
   };
   componentWillReceiveProps(nextProps) {
     if (this.props.suite !== nextProps.suite) {
@@ -41,7 +44,26 @@ export default class ImportDialog extends React.Component {
       });
     }
   }
-  onDrop(files) {
+  onDrop(blobs) {
+    Promise.all(blobs.filter(blob => (
+      // Dont load files we dont need
+      !!this.state.files.find(({name}) => (
+        name.includes(blob.name)
+      )
+      ))).map(loadAsText)).then(fileContents => {
+      const files = [...this.state.files];
+      fileContents.forEach((fileContents, index) => {
+        // Find the required file in the list
+        const fileIndex = files.findIndex(({name}) => (
+          name.includes(blobs[index].name)
+        ));
+        // set it's contents
+        files[fileIndex].contents = fileContents;
+      });
+      this.setState({ files }, () => {
+        this.props.onComplete(this.state.files);
+      });
+    });
   }
   render() {
     return (
@@ -51,8 +73,8 @@ export default class ImportDialog extends React.Component {
           <p>{"Hey there, I see you wanted to import an old IDE suite, I need you to give me these test cases that you've used."}</p>
           <Dropzone className="dropzone" accept="text/html" onDrop={this.onDrop.bind(this)}>
             <ul>
-              {this.state.files && this.state.files.map(({name, accepted}) => (
-                <li key={name} className={classNames({accepted})}>{name}</li>
+              {this.state.files && this.state.files.map(({name, contents}) => (
+                <li key={name} className={classNames({accepted: !!contents})}>{name}</li>
               ))}
             </ul>
           </Dropzone>
