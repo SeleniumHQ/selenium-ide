@@ -55,53 +55,43 @@ export function parseSuiteRequirements(suite) {
   return results;
 }
 
-export function migrateProject(zippedData) {
-  return JSZip.loadAsync(zippedData).then(zip => {
-    const isHidden = /(^\.|\/\.)/;
-    const isHTML = /\.html$/;
-    const files = zip.filter((relativePath, file) => (
-      !file.dir && !isHidden.test(file.name) && isHTML.test(file.name)
-    ));
-    const fileMap = {};
-    const project = {
-      url: "",
-      urls: [],
-      tests: [],
-      suites: []
-    };
-    return Promise.all(files.map(file => (
-      file.async("string").then(data => {
-        fileMap[file.name] = data;
-      })
-    ))).then(() => {
-      const suites = [];
-      const tests = [];
-      Object.keys(fileMap).forEach(fileName => {
-        if (isSuite(fileMap[fileName])) {
-          suites.push(fileName);
-        } else if (isTestCase(fileMap[fileName])) {
-          tests.push(fileName);
-        }
-      });
-      tests.forEach(testCaseName => {
-        const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
-        parsedTestCase.tests[0].id = testCaseName;
-        project.tests.push(parsedTestCase.tests[0]);
-        project.urls = [...project.urls, ...parsedTestCase.urls];
-      });
-      suites.forEach(suite => {
-        migrateSuite(suite, fileMap, project);
-      });
-      if (!suites.length) {
-        project.suites.push({
-          name: "Imported suite",
-          tests
-        });
-        project.name = "Imported project";
-      }
-      return project;
-    });
+export function migrateProject(files) {
+  const fileMap = {};
+  files.forEach(({name, contents}) => {
+    fileMap[name] = contents;
   });
+  const project = {
+    url: "",
+    urls: [],
+    tests: [],
+    suites: []
+  };
+  const suites = [];
+  const tests = [];
+  Object.keys(fileMap).forEach(fileName => {
+    if (isSuite(fileMap[fileName])) {
+      suites.push(fileName);
+    } else if (isTestCase(fileMap[fileName])) {
+      tests.push(fileName);
+    }
+  });
+  tests.forEach(testCaseName => {
+    const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
+    parsedTestCase.tests[0].id = testCaseName;
+    project.tests.push(parsedTestCase.tests[0]);
+    project.urls = [...project.urls, ...parsedTestCase.urls];
+  });
+  suites.forEach(suite => {
+    migrateSuite(suite, fileMap, project);
+  });
+  if (!suites.length) {
+    project.suites.push({
+      name: "Imported suite",
+      tests
+    });
+    project.name = "Imported project";
+  }
+  return project;
 }
 
 function migrateSuite(suite, fileMap, project) {
