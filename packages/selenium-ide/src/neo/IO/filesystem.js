@@ -17,7 +17,7 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
-import { migrateTestCase, migrateProject } from "./legacy/migrate";
+import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "selianize";
@@ -115,11 +115,17 @@ export function loadProject(project, file) {
   }
   const fileReader = new FileReader();
   fileReader.onload = (e) => {
+    const contents = e.target.result;
     if (/\.side$/.test(file.name)) {
-      loadJSONProject(project, e.target.result);
+      loadJSONProject(project, contents);
     } else  {
       try {
-        project.fromJS(migrateTestCase(e.target.result));
+        const type = verifyFile(contents);
+        if (type === FileTypes.Suite) {
+          ModalState.importSuite(contents, console.log);
+        } else if (type === FileTypes.TestCase) {
+          project.fromJS(migrateTestCase(e.target.result));
+        }
       } catch (error) {
         displayError(error);
       }
