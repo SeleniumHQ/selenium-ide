@@ -48,6 +48,17 @@ export function getFile(path) {
   });
 }
 
+export function loadAsText(blob) {
+  return new Promise((res) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      res(e.target.result);
+    };
+
+    fileReader.readAsText(blob);
+  });
+}
+
 export function saveProject(project) {
   project.version = "1.0";
   downloadProject(project);
@@ -113,26 +124,24 @@ export function loadProject(project, file) {
       confirmLabel: "Close"
     });
   }
-  const fileReader = new FileReader();
-  fileReader.onload = (e) => {
-    const contents = e.target.result;
+  loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
       loadJSONProject(project, contents);
     } else  {
       try {
         const type = verifyFile(contents);
         if (type === FileTypes.Suite) {
-          ModalState.importSuite(contents, console.log);
+          ModalState.importSuite(contents, (files) => {
+            project.fromJS(migrateProject(files));
+          });
         } else if (type === FileTypes.TestCase) {
-          project.fromJS(migrateTestCase(e.target.result));
+          project.fromJS(migrateTestCase(contents));
         }
       } catch (error) {
         displayError(error);
       }
     }
-  };
-
-  fileReader.readAsText(file);
+  });
 }
 
 function loadJSONProject(project, data) {
