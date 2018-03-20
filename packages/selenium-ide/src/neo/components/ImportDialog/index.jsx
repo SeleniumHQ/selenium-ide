@@ -61,7 +61,10 @@ export default class ImportDialog extends React.Component {
         files[fileIndex].contents = fileContents;
       });
       this.setState({ files }, () => {
-        this.props.onComplete(this.state.files);
+        // check if all files have been uploaded
+        if (!this.state.files.find((file) => !file.contents)) {
+          this.props.onComplete(this.state.files);
+        }
       });
     });
   }
