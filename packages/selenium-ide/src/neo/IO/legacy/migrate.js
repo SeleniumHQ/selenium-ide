@@ -129,7 +129,8 @@ export function migrateTestCase(data) {
           {
             command: row.td[0]._text && row.td[0]._text.replace("AndWait", "") || "",
             target: xmlunescape(parseTarget(row.td[1])),
-            value: xmlunescape(row.td[2]._text || "")
+            value: xmlunescape(row.td[2]._text || ""),
+            comment: ""
           }
         ))
       }
