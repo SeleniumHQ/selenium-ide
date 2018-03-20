@@ -19,20 +19,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
-import { parse } from "modifier-keys";
 import classNames from "classnames";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
-import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
-import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
 @observer
 export default class TestTable extends React.Component {
   constructor(props){
     super(props);
-    this.paste = this.paste.bind(this);
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
@@ -43,11 +39,6 @@ export default class TestTable extends React.Component {
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func
   };
-  paste(index) {
-    if ( UiState.clipboard && UiState.clipboard.constructor.name === "Command") {
-      this.props.addCommand(index, UiState.clipboard);
-    }
-  }
   render() {
     return ([
       <div key="header" className="test-table test-table-header">
@@ -89,22 +80,6 @@ export default class TestTable extends React.Component {
                 copyToClipboard={() => { UiState.copyToClipboard(command); }}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
-                paste={this.paste}
-                menu={
-                  <ListMenu width={300} padding={-5} opener={<MoreButton />}>
-                    <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => { UiState.copyToClipboard(command); if(this.props.removeCommand){ this.props.removeCommand(index, command); }}}>Cut</ListMenuItem>
-                    <ListMenuItem label={parse("c", { primaryKey: true})} onClick={() => { UiState.copyToClipboard(command); }}>Copy</ListMenuItem>
-                    <ListMenuItem label={parse("v", { primaryKey: true})} onClick={() => {this.paste(index); }}>Paste</ListMenuItem>
-                    <ListMenuItem label="Del" onClick={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}>Delete</ListMenuItem>
-                    <ListMenuSeparator />
-                    <ListMenuItem onClick={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command.command)); } : null}>Insert new command</ListMenuItem>
-                    <ListMenuSeparator />
-                    <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
-                    <ListMenuSeparator />
-                    <ListMenuItem label="S" onClick={() => { PlaybackState.startPlaying(command); }}>Play from here</ListMenuItem>
-                    <ListMenuItem label="X" onClick={() => { PlaybackState.playCommand(command); }}>Execute this command</ListMenuItem>
-                  </ListMenu>
-                }
               />
             )).concat(
               <TestRow

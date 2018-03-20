@@ -20,8 +20,6 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import Suite from "../Suite";
-import ListMenu, { ListMenuItem } from "../ListMenu";
-import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
 @observer export default class SuiteList extends React.Component {
@@ -43,13 +41,6 @@ import "./style.css";
               rename={this.props.rename}
               remove={() => {this.props.removeSuite(suite);}}
               moveTest={this.props.moveTest}
-              menu={
-                <ListMenu width={130} padding={-5} opener={<MoreButton />}>
-                  <ListMenuItem onClick={() => {this.props.selectTests(suite);}}>Add tests</ListMenuItem>
-                  <ListMenuItem onClick={() => this.props.rename(suite.name, suite.setName)}>Rename</ListMenuItem>
-                  <ListMenuItem onClick={() => {this.props.removeSuite(suite);}}>Delete</ListMenuItem>
-                </ListMenu>
-              }
             />
           </li>
         ))}

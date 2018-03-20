@@ -109,7 +109,7 @@ class Menu extends React.Component {
         topPosition = this.props.position.y;
         leftPosition = this.props.position.x;
         //if context menu is over test row's right
-        if (this.state.boundingRect.right < this.props.width + this.props.position.x) {
+        if (this.state.boundingRect && this.state.boundingRect.right < this.props.width + this.props.position.x) {
           leftPosition = this.state.boundingRect.right - this.props.width - 5;
         }
       }

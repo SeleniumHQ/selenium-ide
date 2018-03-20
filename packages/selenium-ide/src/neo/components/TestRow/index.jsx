@@ -19,8 +19,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
-import { modifier } from "modifier-keys";
+import { modifier, parse } from "modifier-keys";
 import CommandName from "../CommandName";
+import MoreButton from "../ActionButtons/More";
+import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import MultilineEllipsis from "../MultilineEllipsis";
 import { withOnContextMenu } from "../ContextMenu";
 import "./style.css";
@@ -91,6 +93,10 @@ const commandTarget = {
   isDragging: monitor.isDragging()
 }))
 class TestRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.paste = this.paste.bind(this);
+  }
   static propTypes = {
     id: PropTypes.string,
     index: PropTypes.number,
@@ -118,8 +124,7 @@ class TestRow extends React.Component {
     moveSelectionDown: PropTypes.func,
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
-    paste: PropTypes.func,
-    menu: PropTypes.node
+    setContextMenu: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -164,10 +169,31 @@ class TestRow extends React.Component {
     } else if (this.props.copyToClipboard && onlyPrimary && key === "C") {
       this.props.copyToClipboard();
     } else if (onlyPrimary && key === "V") {
-      this.props.paste(this.props.index, this.props.command);
+      this.paste();
+    }
+  }
+  paste() {
+    if (this.props.clipboard && this.props.clipboard.constructor.name === "Command") {
+      this.props.addCommand(this.props.clipboard);
     }
   }
   render() {
+    const listMenu =<ListMenu width={300} padding={-5} opener={<MoreButton /> }>
+      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
+      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+      <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
+      <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
+    </ListMenu>;
+    //setting component of context menu.
+    this.props.setContextMenu(listMenu);
+
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
@@ -187,7 +213,9 @@ class TestRow extends React.Component {
       <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
       <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
       <td className="buttons">
-        { this.props.swapCommands ? this.props.menu : <div/> }
+        { this.props.swapCommands ?
+          listMenu
+          : <div></div> }
       </td>
     </tr>;
     return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);

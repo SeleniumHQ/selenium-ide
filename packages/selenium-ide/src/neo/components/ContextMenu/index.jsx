@@ -38,8 +38,10 @@ export function withOnContextMenu(WrappredComponent){
   return class WithOnContextMenu extends React.Component {
     eventPosition;
     eventTartget;
+    listMenu;
     constructor(props){
       super(props);
+      this.setContextMenu = this.setContextMenu.bind(this);
       this.onContextMenu = this.onContextMenu.bind(this);
       this.close = this.close.bind(this);
       this.state = { isOpen: false };
@@ -51,11 +53,11 @@ export function withOnContextMenu(WrappredComponent){
     }
     onContextMenu(e){
       e.preventDefault();
-      //send currentTarget to child component.
-      this.eventTartget=e.currentTarget;
       //click position
       if (!this.state.isOpen) {
         this.eventPosition = { x:e.clientX, y:e.clientY };
+        //send currentTarget to child component.
+        this.eventTartget=e.currentTarget;
       }
       this.setState({
         isOpen: !this.state.isOpen
@@ -68,25 +70,25 @@ export function withOnContextMenu(WrappredComponent){
         isOpen: false
       });
     }
+    setContextMenu(menu){
+      if(menu) this.listMenu = menu ;
+    }
     render() {
-      const listMenu = this.props.menu;
       return ([
-        <WrappredComponent key="wrap" onContextMenu={this.onContextMenu} {...this.props} />,
-        ( listMenu ?
-          <ContextMenu
-            key="contextmenu"
-            direction={"cursor"}
-            isOpenContextMenu={this.state.isOpen}
-            eventTartget={this.eventTartget}
-            close={this.close}
-            width={listMenu.props.width}
-            padding={listMenu.props.padding}
-            position={this.eventPosition}
-            closeTimeoutMS={50}
-          >
-            {listMenu.props.children}
-          </ContextMenu>
-          : null )
+        <WrappredComponent key="wrap" onContextMenu={this.onContextMenu} setContextMenu={this.setContextMenu} {...this.props} />,
+        <ContextMenu
+          key="contextmenu"
+          direction={"cursor"}
+          isOpenContextMenu={this.state.isOpen}
+          eventTartget={this.eventTartget}
+          close={this.close}
+          width={this.listMenu ? this.listMenu.props.width : 150}
+          padding={this.listMenu ? this.listMenu.props.padding : -5}
+          position={this.eventPosition}
+          closeTimeoutMS={50}
+        >
+          {this.listMenu ? this.listMenu.props.children : null }
+        </ContextMenu>
       ]);
     }
   };

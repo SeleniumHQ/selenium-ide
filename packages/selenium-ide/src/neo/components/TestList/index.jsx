@@ -23,8 +23,6 @@ import classNames from "classnames";
 import Test, { DraggableTest } from "../Test";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
-import ListMenu, { ListMenuItem } from "../ListMenu";
-import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
 @inject("renameTest") @observer
@@ -69,11 +67,6 @@ export default class TestList extends Component {
                 moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
                 moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}
                 setSectionFocus={UiState.setSectionFocus}
-                menu={
-                  <ListMenu width={130} padding={-5} opener={<MoreButton />}>
-                    <ListMenuItem onClick={() => this.props.renameTest(test.name, test.setName)}>Rename</ListMenuItem>
-                    <ListMenuItem onClick={() => { this.props.removeTest(test); }}>Delete</ListMenuItem>
-                  </ListMenu>}
               />}
           </li>
         ))}
