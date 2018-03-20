@@ -73,7 +73,7 @@ export default class ImportDialog extends React.Component {
       <Modal className="import-dialog" isOpen={this.props.isImporting}>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title="Import suite" close={this.props.cancel} />
-          <p>{"Hey there, I see you wanted to import an old IDE suite, I need you to give me these test cases that you've used."}</p>
+          <p>{"In order to import old Selenium IDE suites, you'll need to upload (only once) the test cases referenced"}</p>
           <Dropzone className="dropzone" accept="text/html" onDrop={this.onDrop.bind(this)}>
             <ul>
               {this.state.files && this.state.files.map(({name, contents}) => (

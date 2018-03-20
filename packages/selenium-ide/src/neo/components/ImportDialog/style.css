@@ -12,6 +12,7 @@
 
 .import-dialog ul li {
     padding: 2px 0;
+    word-break: break-word;
 }
 
 .import-dialog ul li:before {
