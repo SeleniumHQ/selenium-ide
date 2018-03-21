@@ -49,8 +49,8 @@ export default class ImportDialog extends React.Component {
       // Dont load files we dont need
       !!this.state.files.find(({name}) => (
         name.includes(blob.name)
-      )
-      ))).map(loadAsText)).then(fileContents => {
+      ))
+    )).map(loadAsText)).then(fileContents => {
       const files = [...this.state.files];
       fileContents.forEach((fileContents, index) => {
         // Find the required file in the list
