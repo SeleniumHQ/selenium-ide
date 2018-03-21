@@ -36,6 +36,11 @@ a:focus {
     outline: 0;
 }
 
+a.link {
+    color: #333333;
+    text-decoration: underline;
+}
+
 input,
 textarea {
     border: 1px #DCDCDC solid;

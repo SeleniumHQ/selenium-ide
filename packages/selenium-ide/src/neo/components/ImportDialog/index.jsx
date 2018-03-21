@@ -73,8 +73,10 @@ export default class ImportDialog extends React.Component {
       <Modal className="import-dialog" isOpen={this.props.isImporting}>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title="Import suite" close={this.props.cancel} />
-          <p>{"In order to import old Selenium IDE suites, you'll need to upload (only once) the test cases referenced"}</p>
-          <Dropzone className="dropzone" accept="text/html" onDrop={this.onDrop.bind(this)}>
+          <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests, by dragging and dropping below or{" "}
+            <a className="link" href="#" onClick={() => { this.dropzone.open(); }}>selecting them</a>
+          </p>
+          <Dropzone className="dropzone" accept="text/html" onDrop={this.onDrop.bind(this)} ref={(node) => { this.dropzone = node; }}>
             <ul>
               {this.state.files && this.state.files.map(({name, contents}) => (
                 <li key={name} className={classNames({accepted: !!contents})}>{name}</li>
