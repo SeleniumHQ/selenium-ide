@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { transformToConditional, eliminate } from "../../../IO/legacy/goto-elimination";
+import { transformToConditional, eliminate, transformOutward } from "../../../IO/legacy/goto-elimination";
 
 describe("goto conditional conversion", () => {
   it("should convert unconditional goto to conditional goto", () => {
@@ -184,6 +184,208 @@ describe("goto elimination transformation", () => {
       {
         command: "endDo",
         target: "true"
+      },
+      {
+        command: "statement"
+      }
+    ]);
+  });
+});
+
+describe("outward movement transformation", () => {
+  it("should move goto out of a while", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "while",
+        target: "condition"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition2"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(transformOutward(procedure)).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "while",
+        target: "condition"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "storeValue",
+        target: "condition2",
+        value: "label_1"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "break"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      }
+    ]);
+  });
+  it("should move goto out of an if", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition2"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(transformOutward(procedure)).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "storeValue",
+        target: "condition2",
+        value: "label_1"
+      },
+      {
+        command: "if",
+        target: "!${label_1}"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
       },
       {
         command: "statement"
