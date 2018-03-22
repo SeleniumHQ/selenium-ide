@@ -419,3 +419,10 @@ describe("outward movement transformation", () => {
     ]);
   });
 });
+
+describe("inward movement transformation", () => {
+  it("should move goto into a while", () => {
+  });
+  it("should move goto into an if", () => {
+  });
+});
