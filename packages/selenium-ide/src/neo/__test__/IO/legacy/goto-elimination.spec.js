@@ -160,7 +160,7 @@ describe("goto elimination transformation", () => {
         command: "statement"
       }
     ];
-    expect(eliminateGoto(procedure)).toEqual([
+    expect(eliminateGoto(procedure, procedure[6], procedure[2])).toEqual([
       {
         command: "statement"
       },

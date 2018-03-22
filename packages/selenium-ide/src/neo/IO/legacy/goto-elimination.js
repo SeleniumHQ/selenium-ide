@@ -37,19 +37,21 @@ export function eliminateLabel(procedure, label) {
 
 export function eliminateGoto(procedure, goto, label) {
   // only for siblings
+  const p = [...procedure];
   const gotoIndex = procedure.indexOf(goto), labelIndex = procedure.indexOf(label);
   if (gotoIndex < labelIndex) {
     // eliminate using conditional
     const ifIndex = gotoIndex - 1;
-    const p = [...procedure];
     p[ifIndex] = Object.assign({...p[ifIndex]}, {target: `!${p[ifIndex].target}`});
     p.splice(labelIndex, 0, { command: "end" });
     p.splice(gotoIndex, 2);
-
-    return p;
   } else {
     // eliminate using do while
+    const ifIndex = gotoIndex - 1;
+    p.splice(ifIndex, 3, { command: "endDo", target: p[ifIndex].target });
+    p.splice(labelIndex, 0, { command: "do" });
   }
+  return p;
 }
 
 function isConditionalGoto(procedure, goto) {
