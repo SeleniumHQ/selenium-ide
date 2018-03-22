@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { transformToConditional } from "../../../IO/legacy/goto-elimination";
+import { transformToConditional, eliminate } from "../../../IO/legacy/goto-elimination";
 
 describe("goto conditional conversion", () => {
   it("should convert unconditional goto to conditional goto", () => {
@@ -65,5 +65,129 @@ describe("goto conditional conversion", () => {
 
 describe("goto elimination transformation", () => {
   it("should eliminate goto before label statement", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(eliminate(procedure)).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "!true"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      }
+    ]);
+  });
+  it("should eliminate goto after label statement", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(eliminate(procedure)).toEqual([
+      {
+        command: "statement"
+      },
+
+      {
+        command: "statement"
+      },
+      {
+        command: "do"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "endDo",
+        target: "true"
+      },
+      {
+        command: "statement"
+      }
+    ]);
   });
 });
