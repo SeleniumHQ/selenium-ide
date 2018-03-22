@@ -36,11 +36,11 @@ export default class ContextMenu extends React.Component {
 
 export function withOnContextMenu(WrappredComponent){
   return class WithOnContextMenu extends React.Component {
-    eventPosition;
-    eventTarget;
-    listMenu;
     constructor(props){
       super(props);
+      this.eventPosition = null;
+      this.eventTarget = null;
+      this.listMenu = null;
       this.setContextMenu = this.setContextMenu.bind(this);
       this.onContextMenu = this.onContextMenu.bind(this);
       this.close = this.close.bind(this);
