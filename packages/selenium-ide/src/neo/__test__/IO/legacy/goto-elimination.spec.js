@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { transformToConditional, eliminate, transformOutward } from "../../../IO/legacy/goto-elimination";
+import { transformToConditional, eliminateGoto, eliminateLabel, transformOutward } from "../../../IO/legacy/goto-elimination";
 
 describe("goto conditional conversion", () => {
   it("should convert unconditional goto to conditional goto", () => {
@@ -97,7 +97,7 @@ describe("goto elimination transformation", () => {
         command: "statement"
       }
     ];
-    expect(eliminate(procedure)).toEqual([
+    expect(eliminateGoto(procedure)).toEqual([
       {
         command: "statement"
       },
@@ -160,7 +160,7 @@ describe("goto elimination transformation", () => {
         command: "statement"
       }
     ];
-    expect(eliminate(procedure)).toEqual([
+    expect(eliminateGoto(procedure)).toEqual([
       {
         command: "statement"
       },
@@ -190,6 +190,30 @@ describe("goto elimination transformation", () => {
       }
     ]);
   });
+});
+
+describe("label elimination", () => {
+  const label = {
+    command: "label",
+    target: "label_1"
+  };
+  const procedure = [
+    {
+      command: "statement"
+    },
+    label,
+    {
+      command: "statement"
+    }
+  ];
+  expect(eliminateLabel(procedure, label)).toEqual([
+    {
+      command: "statement"
+    },
+    {
+      command: "statement"
+    }
+  ]);
 });
 
 describe("outward movement transformation", () => {
