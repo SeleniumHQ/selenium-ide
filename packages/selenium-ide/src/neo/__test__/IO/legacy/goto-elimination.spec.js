@@ -97,7 +97,7 @@ describe("goto elimination transformation", () => {
         command: "statement"
       }
     ];
-    expect(eliminateGoto(procedure)).toEqual([
+    expect(eliminateGoto(procedure, procedure[2], procedure[7])).toEqual([
       {
         command: "statement"
       },
@@ -193,27 +193,29 @@ describe("goto elimination transformation", () => {
 });
 
 describe("label elimination", () => {
-  const label = {
-    command: "label",
-    target: "label_1"
-  };
-  const procedure = [
-    {
-      command: "statement"
-    },
-    label,
-    {
-      command: "statement"
-    }
-  ];
-  expect(eliminateLabel(procedure, label)).toEqual([
-    {
-      command: "statement"
-    },
-    {
-      command: "statement"
-    }
-  ]);
+  it("should eliminate labels", () => {
+    const label = {
+      command: "label",
+      target: "label_1"
+    };
+    const procedure = [
+      {
+        command: "statement"
+      },
+      label,
+      {
+        command: "statement"
+      }
+    ];
+    expect(eliminateLabel(procedure, label)).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      }
+    ]);
+  });
 });
 
 describe("outward movement transformation", () => {

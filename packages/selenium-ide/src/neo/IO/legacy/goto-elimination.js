@@ -30,3 +30,29 @@ export function transformToConditional(goto) {
     }
   ]);
 }
+
+export function eliminateLabel(procedure, label) {
+  return procedure.filter(p => p !== label);
+}
+
+export function eliminateGoto(procedure, goto, label) {
+  // only for siblings
+  const gotoIndex = procedure.indexOf(goto), labelIndex = procedure.indexOf(label);
+  if (gotoIndex < labelIndex) {
+    // eliminate using conditional
+    const ifIndex = gotoIndex - 1;
+    const p = [...procedure];
+    p[ifIndex] = Object.assign({...p[ifIndex]}, {target: `!${p[ifIndex].target}`});
+    p.splice(labelIndex, 0, { command: "end" });
+    p.splice(gotoIndex, 2);
+
+    return p;
+  } else {
+    // eliminate using do while
+  }
+}
+
+function isConditionalGoto(procedure, goto) {
+  const index = procedure.indexOf(goto);
+  return (procedure[index - 1].command === "if" && procedure[index + 1] === "end");
+}
