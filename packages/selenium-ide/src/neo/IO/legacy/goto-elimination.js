@@ -54,6 +54,59 @@ export function eliminateGoto(procedure, goto, label) {
   return p;
 }
 
+export function transformOutward(procedure, goto) {
+  const block = findEnclosingBlock(procedure, goto);
+  const end = findBlockClose(procedure, block);
+  const p = [...procedure];
+  if (block !== "if") {
+    // outward loop movement
+  } else {
+    // outward conditional movement
+  }
+  return p;
+}
+
+function findEnclosingBlock(procedure, goto) {
+  // remember to skip the enclosing if
+  for (let i = procedure.indexOf(goto) - 2; i >= 0; i--) {
+    if (isBlock(procedure[i])) return procedure[i];
+  }
+}
+
+function findBlockClose(procedure, block) {
+  let level = 1, index = procedure.indexOf(block);
+  while (level !== 0) {
+    index++;
+    if (isBlock(procedure[index])) {
+      level++;
+    } else if (isBlockEnd(procedure[index])) {
+      level--;
+    }
+  }
+  return procedure[index];
+}
+
+function isBlock(statement) {
+  switch(statement.command) {
+    case "if":
+    case "do":
+    case "while":
+      return true;
+    default:
+      return false;
+  }
+}
+
+function isBlockEnd(statement) {
+  switch(statement.command) {
+    case "end":
+    case "endDo":
+      return true;
+    default:
+      return false;
+  }
+}
+
 function isConditionalGoto(procedure, goto) {
   const index = procedure.indexOf(goto);
   return (procedure[index - 1].command === "if" && procedure[index + 1] === "end");
