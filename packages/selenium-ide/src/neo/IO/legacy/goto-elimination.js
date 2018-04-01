@@ -60,10 +60,27 @@ export function transformOutward(procedure, goto) {
   const p = [...procedure];
   if (block !== "if") {
     // outward loop movement
+    transformOutwardLoop(p, goto, block, end);
   } else {
     // outward conditional movement
   }
   return p;
+}
+
+export function transformOutwardLoop(p, goto, block, end) {
+  const ifIndex = p.indexOf(goto) - 1;
+  p.splice(ifIndex, 3,
+    { command: "storeValue", target: p[ifIndex].target, value: goto.target },
+    { command: "if", target: `\${${goto.target}}` },
+    { command: "break" },
+    { command: "end" }
+  );
+  const endIndex = p.indexOf(end);
+  p.splice(endIndex + 1, 0,
+    { command: "if", target: `\${${goto.target}}` },
+    { command: "goto", target: goto.target },
+    { command: "end" }
+  );
 }
 
 function findEnclosingBlock(procedure, goto) {
