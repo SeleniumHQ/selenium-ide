@@ -464,7 +464,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       }
     ];
-    expect(transformInward(procedure)).toEqual([
+    expect(transformInward(procedure, procedure[2])).toEqual([
       {
         command: "statement"
       },
@@ -525,7 +525,235 @@ describe("inward movement transformation", () => {
     ]);
   });
   it("should move goto into an if's then", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition2"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "else"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(transformInward(procedure, procedure[2])).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "storeValue",
+        target: "condition",
+        value: "label_1"
+      },
+      {
+        command: "if",
+        target: "!${label_1}"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "if",
+        target: "${label_1} || condition2"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "else"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ]);
   });
   it("should move goto into an if's else", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition2"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "else"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(transformInward(procedure, procedure[2])).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "storeValue",
+        target: "condition",
+        value: "label_1"
+      },
+      {
+        command: "if",
+        target: "!${label_1}"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "if",
+        target: "!${label_1} && condition2"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "else"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ]);
   });
 });
