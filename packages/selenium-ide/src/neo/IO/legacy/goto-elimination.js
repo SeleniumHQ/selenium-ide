@@ -99,6 +99,46 @@ function transformOutwardConditional(p, goto, block, end) {
   );
 }
 
+export function transformInward(procedure, goto) {
+}
+
+export function lift(procedure, goto, label) {
+  const p = [
+    { command: "storeValue", target: "false", value: goto.target },
+    ...procedure
+  ];
+  const labelIndex = p.indexOf(label);
+  p.splice(labelIndex, 0,
+    {
+      command: "do"
+    },
+    {
+      command: "if",
+      target: `\${${goto.target}}`
+    },
+    {
+      command: "goto",
+      target: goto.target
+    },
+    {
+      command: "end"
+    }
+  );
+  const ifIndex = p.indexOf(goto) - 1;
+  p.splice(ifIndex, 3,
+    {
+      command: "storeValue",
+      target: "condition",
+      value: goto.target
+    },
+    {
+      command: "endDo",
+      target: `\${${goto.target}}`
+    }
+  );
+  return p;
+}
+
 function findEnclosingBlock(procedure, goto) {
   // remember to skip the enclosing if
   for (let i = procedure.indexOf(goto) - 2; i >= 0; i--) {

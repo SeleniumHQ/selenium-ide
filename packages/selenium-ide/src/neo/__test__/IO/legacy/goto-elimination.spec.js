@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { transformToConditional, eliminateGoto, eliminateLabel, transformOutward, transformInward } from "../../../IO/legacy/goto-elimination";
+import { transformToConditional, eliminateGoto, eliminateLabel, transformOutward, transformInward, lift } from "../../../IO/legacy/goto-elimination";
 
 describe("goto conditional conversion", () => {
   it("should convert unconditional goto to conditional goto", () => {
@@ -750,6 +750,80 @@ describe("inward movement transformation", () => {
       },
       {
         command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ]);
+  });
+});
+
+describe("lifting transformation", () => {
+  it("should lift the goto above it's label", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(lift(procedure, procedure[4], procedure[1])).toEqual([
+      {
+        command: "storeValue",
+        target: "false",
+        value: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "do"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "storeValue",
+        target: "condition",
+        value: "label_1"
+      },
+      {
+        command: "endDo",
+        target: "${label_1}"
       },
       {
         command: "statement"
