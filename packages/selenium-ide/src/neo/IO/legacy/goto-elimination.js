@@ -58,16 +58,17 @@ export function transformOutward(procedure, goto) {
   const block = findEnclosingBlock(procedure, goto);
   const end = findBlockClose(procedure, block);
   const p = [...procedure];
-  if (block !== "if") {
+  if (block.command !== "if") {
     // outward loop movement
     transformOutwardLoop(p, goto, block, end);
   } else {
     // outward conditional movement
+    transformOutwardConditional(p, goto, block, end);
   }
   return p;
 }
 
-export function transformOutwardLoop(p, goto, block, end) {
+function transformOutwardLoop(p, goto, block, end) {
   const ifIndex = p.indexOf(goto) - 1;
   p.splice(ifIndex, 3,
     { command: "storeValue", target: p[ifIndex].target, value: goto.target },
@@ -77,6 +78,21 @@ export function transformOutwardLoop(p, goto, block, end) {
   );
   const endIndex = p.indexOf(end);
   p.splice(endIndex + 1, 0,
+    { command: "if", target: `\${${goto.target}}` },
+    { command: "goto", target: goto.target },
+    { command: "end" }
+  );
+}
+
+function transformOutwardConditional(p, goto, block, end) {
+  const ifIndex = p.indexOf(goto) - 1;
+  p.splice(ifIndex, 3,
+    { command: "storeValue", target: p[ifIndex].target, value: goto.target },
+    { command: "if", target: `!\${${goto.target}}` }
+  );
+  const endIndex = p.indexOf(end);
+  p.splice(endIndex + 1, 0,
+    { command: "end" },
     { command: "if", target: `\${${goto.target}}` },
     { command: "goto", target: goto.target },
     { command: "end" }

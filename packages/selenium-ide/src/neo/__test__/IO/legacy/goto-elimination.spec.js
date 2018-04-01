@@ -363,7 +363,7 @@ describe("outward movement transformation", () => {
         command: "statement"
       }
     ];
-    expect(transformOutward(procedure)).toEqual([
+    expect(transformOutward(procedure, procedure[4])).toEqual([
       {
         command: "statement"
       },
