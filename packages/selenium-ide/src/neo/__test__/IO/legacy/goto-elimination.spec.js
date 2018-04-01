@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { transformToConditional, eliminateGoto, eliminateLabel, transformOutward } from "../../../IO/legacy/goto-elimination";
+import { transformToConditional, eliminateGoto, eliminateLabel, transformOutward, transformInward } from "../../../IO/legacy/goto-elimination";
 
 describe("goto conditional conversion", () => {
   it("should convert unconditional goto to conditional goto", () => {
@@ -422,7 +422,110 @@ describe("outward movement transformation", () => {
 
 describe("inward movement transformation", () => {
   it("should move goto into a while", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "condition"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "while",
+        target: "condition2"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(transformInward(procedure)).toEqual([
+      {
+        command: "statement"
+      },
+      {
+        command: "storeValue",
+        target: "condition",
+        value: "label_1"
+      },
+      {
+        command: "if",
+        target: "!${label_1}"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "while",
+        target: "${label_1} || condition2"
+      },
+      {
+        command: "if",
+        target: "${label_1}"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "storeValue",
+        target: "false",
+        value: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "statement"
+      }
+    ]);
   });
-  it("should move goto into an if", () => {
+  it("should move goto into an if's then", () => {
+  });
+  it("should move goto into an if's else", () => {
   });
 });
