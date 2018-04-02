@@ -45,23 +45,23 @@ export default class Command {
   }
 
   @action.bound setComment(comment) {
-    this.comment = comment;
+    this.comment = comment || "";
   }
 
   @action.bound setCommand(command) {
     if (CommandsValues[command]) {
       this.command = CommandsValues[command];
     } else {
-      this.command = command;
+      this.command = command || "";
     }
   }
 
   @action.bound setTarget(target) {
-    this.target = target;
+    this.target = target || "";
   }
 
   @action.bound setValue(value) {
-    this.value = value.replace(/\n/g, "\\n");
+    this.value = value ? value.replace(/\n/g, "\\n") : "";
   }
 
   @action.bound toggleBreakpoint() {

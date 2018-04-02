@@ -41,6 +41,17 @@ describe("Command", () => {
     command.setCommand("test invalid");
     expect(command.isValid).toBeFalsy();
   });
+  it("should replace undefined input with empty strings", () => {
+    const command = new Command();
+    command.setCommand();
+    command.setTarget();
+    command.setValue();
+    command.setComment();
+    expect(command.command).toEqual("");
+    expect(command.target).toEqual("");
+    expect(command.value).toEqual("");
+    expect(command.comment).toEqual("");
+  });
   it("should set the target", () => {
     const command = new Command();
     command.setTarget("a");
