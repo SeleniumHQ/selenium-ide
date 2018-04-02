@@ -22,7 +22,7 @@ export function eliminate(procedure) {
   const unconditionalGotos = p.filter(statement => (statement.command === "goto" || statement.command === "gotoIf"));
   unconditionalGotos.forEach(goto => {
     const index = p.indexOf(goto);
-    p.splice(index, 1, transformToConditional(goto));
+    p.splice(index, 1, ...transformToConditional(goto));
   });
 
   const labels = p.filter(statement => statement.command === "label");
@@ -39,7 +39,7 @@ export function eliminate(procedure) {
 
     // goto and label are siblings
     // eliminate goto
-    eliminateGoto(p, goto, label);
+    p = eliminateGoto(p, goto, label);
     // remove it from the list of gotos
     gotos.shift();
   }
@@ -111,7 +111,7 @@ function transformOutwardLoop(p, goto, block, end) {
   const endIndex = p.indexOf(end);
   p.splice(endIndex + 1, 0,
     { command: "if", target: `\${${goto.target}}` },
-    { command: "goto", target: goto.target },
+    goto,
     { command: "end" }
   );
 }
@@ -126,7 +126,7 @@ function transformOutwardConditional(p, goto, block, end) {
   p.splice(endIndex + 1, 0,
     { command: "end" },
     { command: "if", target: `\${${goto.target}}` },
-    { command: "goto", target: goto.target },
+    goto,
     { command: "end" }
   );
 }
@@ -148,10 +148,7 @@ export function lift(procedure, goto, label) {
       command: "if",
       target: `\${${goto.target}}`
     },
-    {
-      command: "goto",
-      target: goto.target
-    },
+    goto,
     {
       command: "end"
     }
@@ -192,7 +189,7 @@ function findBlockClose(procedure, block) {
 }
 
 function findMatchingLabel(listOfLabels, goto) {
-  return listOfLabels.filter(statement => (statement.command === "label" && statement.target === goto.target));
+  return listOfLabels.find(statement => (statement.command === "label" && statement.target === goto.target));
 }
 
 function isBlock(statement) {
