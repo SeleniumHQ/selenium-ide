@@ -283,7 +283,7 @@ describe("outward movement transformation", () => {
         command: "statement"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "condition2",
         value: "label_1"
       },
@@ -384,7 +384,7 @@ describe("outward movement transformation", () => {
         command: "statement"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "condition2",
         value: "label_1"
       },
@@ -478,7 +478,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "condition",
         value: "label_1"
       },
@@ -518,7 +518,7 @@ describe("inward movement transformation", () => {
         target: "label_1"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "false",
         value: "label_1"
       },
@@ -590,7 +590,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "condition",
         value: "label_1"
       },
@@ -706,7 +706,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "condition",
         value: "label_1"
       },
@@ -797,7 +797,7 @@ describe("lifting transformation", () => {
     ];
     expect(lift(procedure, procedure[4], procedure[1])).toEqual([
       {
-        command: "storeValue",
+        command: "store",
         target: "false",
         value: "label_1"
       },
@@ -826,7 +826,7 @@ describe("lifting transformation", () => {
         command: "statement"
       },
       {
-        command: "storeValue",
+        command: "store",
         target: "condition",
         value: "label_1"
       },

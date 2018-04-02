@@ -118,7 +118,7 @@ export function transformOutward(procedure, goto) {
 function transformOutwardLoop(p, goto, block, end) {
   const ifIndex = p.indexOf(goto) - 1;
   p.splice(ifIndex, 3,
-    { command: "storeValue", target: p[ifIndex].target, value: goto.target },
+    { command: "store", target: p[ifIndex].target, value: goto.target },
     { command: "if", target: `\${${goto.target}}` },
     { command: "break" },
     { command: "end" }
@@ -134,7 +134,7 @@ function transformOutwardLoop(p, goto, block, end) {
 function transformOutwardConditional(p, goto, block, end) {
   const ifIndex = p.indexOf(goto) - 1;
   p.splice(ifIndex, 3,
-    { command: "storeValue", target: p[ifIndex].target, value: goto.target },
+    { command: "store", target: p[ifIndex].target, value: goto.target },
     { command: "if", target: `!\${${goto.target}}` }
   );
   const endIndex = p.indexOf(end);
@@ -151,7 +151,7 @@ export function transformInward(procedure, goto) {
 
 export function lift(procedure, goto, label) {
   const p = [
-    { command: "storeValue", target: "false", value: goto.target },
+    { command: "store", target: "false", value: goto.target },
     ...procedure
   ];
   const labelIndex = p.indexOf(label);
@@ -171,7 +171,7 @@ export function lift(procedure, goto, label) {
   const ifIndex = p.indexOf(goto) - 1;
   p.splice(ifIndex, 3,
     {
-      command: "storeValue",
+      command: "store",
       target: "condition",
       value: goto.target
     },
