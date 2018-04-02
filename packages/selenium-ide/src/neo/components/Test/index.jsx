@@ -20,9 +20,10 @@ import PropTypes from "prop-types";
 import { DragSource } from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
+import RemoveButton from "../ActionButtons/Remove";
+import { withOnContextMenu } from "../ContextMenu";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
-import RemoveButton from "../ActionButtons/Remove";
 import "./style.css";
 
 export const Type = "test";
@@ -44,8 +45,7 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-
-export default class Test extends React.Component {
+class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
@@ -61,7 +61,9 @@ export default class Test extends React.Component {
     setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    onContextMenu: PropTypes.func,
+    setContextMenu: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -102,6 +104,15 @@ export default class Test extends React.Component {
     }
   }
   render() {
+    const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+      {this.props.suite ?
+        null :
+        <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem> }
+      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+    </ListMenu>;
+    //setting component of context menu.
+    this.props.setContextMenu ? this.props.setContextMenu(listMenu) : null;
+
     const rendered = <a
       href="#"
       ref={(node) => { this.node = node; }}
@@ -110,17 +121,13 @@ export default class Test extends React.Component {
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
+      onContextMenu={this.props.onContextMenu}
       style={{
         display: this.props.isDragging ? "none" : "flex"
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
-        <ListMenu width={130} padding={-5} opener={
-          <MoreButton />
-        }>
-          <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
-          <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
-        </ListMenu> :
+        listMenu :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
@@ -128,3 +135,5 @@ export default class Test extends React.Component {
 }
 
 export const DraggableTest = DragSource(Type, testSource, collect)(Test);
+
+export default withOnContextMenu(Test);

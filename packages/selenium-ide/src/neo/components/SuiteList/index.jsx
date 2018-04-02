@@ -35,7 +35,13 @@ import "./style.css";
       <ul className="projects">
         {this.props.suites.map(suite => (
           <li key={suite.id}>
-            <Suite suite={suite} selectTests={() => {this.props.selectTests(suite);}} rename={this.props.rename} remove={() => {this.props.removeSuite(suite);}} moveTest={this.props.moveTest} />
+            <Suite
+              suite={suite}
+              selectTests={() => {this.props.selectTests(suite);}}
+              rename={this.props.rename}
+              remove={() => {this.props.removeSuite(suite);}}
+              moveTest={this.props.moveTest}
+            />
           </li>
         ))}
       </ul>
