@@ -15,7 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { transformToConditional, eliminateGoto, eliminateLabel, transformOutward, transformInward, lift } from "../../../IO/legacy/goto-elimination";
+import {
+  transformToConditional,
+  eliminateGoto,
+  eliminateLabel,
+  transformOutward,
+  transformInward,
+  lift,
+  relation,
+  Relationship
+} from "../../../IO/legacy/goto-elimination";
 
 describe("goto conditional conversion", () => {
   it("should convert unconditional goto to conditional goto", () => {
@@ -829,5 +838,143 @@ describe("lifting transformation", () => {
         command: "statement"
       }
     ]);
+  });
+});
+
+describe("goto-label relations", () => {
+  it("goto should be sibling of label at level 0", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      }
+    ];
+    expect(relation(procedure, procedure[1], procedure[3])).toBe(Relationship.Siblings);
+  });
+  it("goto should be sibling of label inside the same block", () => {
+    const procedure = [
+      {
+        command: "statement"
+      },
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      }
+    ];
+    expect(relation(procedure, procedure[2], procedure[4])).toBe(Relationship.Siblings);
+  });
+  it("should work for reverse label-goto as well", () => {
+    const procedure = [
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      }
+    ];
+    expect(relation(procedure, procedure[1], procedure[0])).toBe(Relationship.Siblings);
+  });
+  it("should be directly related if the goto is nested inside the label block", () => {
+    const procedure = [
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      }
+    ];
+    expect(relation(procedure, procedure[1], procedure[3])).toBe(Relationship.DirectlyRelated);
+  });
+  it("should be directly related if the label is nested inside the goto block", () => {
+    const procedure = [
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      }
+    ];
+    expect(relation(procedure, procedure[3], procedure[1])).toBe(Relationship.DirectlyRelated);
+  });
+  it("should be indirectly related if goto and label are nested inside different branches of the procedure", () => {
+    const procedure = [
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      }
+    ];
+    expect(relation(procedure, procedure[5], procedure[1])).toBe(Relationship.IndirectlyRelated);
   });
 });

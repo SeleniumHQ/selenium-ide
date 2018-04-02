@@ -179,11 +179,7 @@ function findBlockClose(procedure, block) {
   let level = 1, index = procedure.indexOf(block);
   while (level !== 0) {
     index++;
-    if (isBlock(procedure[index])) {
-      level++;
-    } else if (isBlockEnd(procedure[index])) {
-      level--;
-    }
+    level = levelIncrement(procedure[index], level);
   }
   return procedure[index];
 }
@@ -213,7 +209,49 @@ function isBlockEnd(statement) {
   }
 }
 
+function levelIncrement(statement, level = 0) {
+  if (isBlock(statement)) {
+    level++;
+  } else if (isBlockEnd(statement)) {
+    level--;
+  }
+  return level;
+}
+
 function isConditionalGoto(procedure, goto) {
   const index = procedure.indexOf(goto);
   return (procedure[index - 1].command === "if" && procedure[index + 1] === "end");
 }
+
+// for this calculation a tree would've been a better data structure
+export function relation(procedure, goto, label) {
+  let level, first, outOfBlock;
+  for (let index = 0; index < procedure.length; index++) {
+    const statement = procedure[index];
+    level = levelIncrement(statement, level);
+    // 0 is truthy
+    if (first !== undefined && outOfBlock === undefined && level < first) {
+      outOfBlock = level;
+    } else if (first !== undefined && outOfBlock !== undefined && level > outOfBlock) {
+      return Relationship.IndirectlyRelated;
+    }
+
+    if (first === undefined && (statement === goto || statement === label)) {
+      // matched the first one
+      first = level;
+    } else if (first !== undefined && (statement === goto || statement === label)) {
+      // matched the second one
+      if (level === first) {
+        return Relationship.Siblings;
+      } else {
+        return Relationship.DirectlyRelated;
+      }
+    }
+  }
+}
+
+export const Relationship = {
+  Siblings: "siblings",
+  DirectlyRelated: "related",
+  IndirectlyRelated: "unrelated"
+};
