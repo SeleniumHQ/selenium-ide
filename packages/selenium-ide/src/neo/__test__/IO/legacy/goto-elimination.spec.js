@@ -848,8 +848,15 @@ describe("goto-label relations", () => {
         command: "statement"
       },
       {
+        command: "if",
+        target: "true"
+      },
+      {
         command: "goto",
         target: "label_1"
+      },
+      {
+        command: "end"
       },
       {
         command: "statement"
@@ -862,12 +869,16 @@ describe("goto-label relations", () => {
         command: "statement"
       }
     ];
-    expect(relation(procedure, procedure[1], procedure[3])).toBe(Relationship.Siblings);
+    expect(relation(procedure, procedure[2], procedure[5])).toBe(Relationship.Siblings);
   });
   it("goto should be sibling of label inside the same block", () => {
     const procedure = [
       {
         command: "statement"
+      },
+      {
+        command: "while",
+        target: "true"
       },
       {
         command: "if",
@@ -876,6 +887,9 @@ describe("goto-label relations", () => {
       {
         command: "goto",
         target: "label_1"
+      },
+      {
+        command: "end"
       },
       {
         command: "statement"
@@ -891,7 +905,7 @@ describe("goto-label relations", () => {
         command: "end"
       }
     ];
-    expect(relation(procedure, procedure[2], procedure[4])).toBe(Relationship.Siblings);
+    expect(relation(procedure, procedure[3], procedure[6])).toBe(Relationship.Siblings);
   });
   it("should work for reverse label-goto as well", () => {
     const procedure = [
@@ -900,13 +914,20 @@ describe("goto-label relations", () => {
         target: "label_1"
       },
       {
+        command: "if",
+        target: "true"
+      },
+      {
         command: "goto",
         target: "label_1"
+      },
+      {
+        command: "end"
       }
     ];
-    expect(relation(procedure, procedure[1], procedure[0])).toBe(Relationship.Siblings);
+    expect(relation(procedure, procedure[2], procedure[0])).toBe(Relationship.Siblings);
   });
-  it("should be directly related if the goto is nested inside the label block", () => {
+  it("goto should be sibling of label even with block between them", () => {
     const procedure = [
       {
         command: "if",
@@ -920,11 +941,47 @@ describe("goto-label relations", () => {
         command: "end"
       },
       {
+        command: "while"
+      },
+      {
+        command: "statement"
+      },
+      {
+        command: "end"
+      },
+      {
         command: "label",
         target: "label_1"
       }
     ];
-    expect(relation(procedure, procedure[1], procedure[3])).toBe(Relationship.DirectlyRelated);
+    expect(relation(procedure, procedure[1], procedure[5])).toBe(Relationship.Siblings);
+  });
+  it("should be directly related if the goto is nested inside the label block", () => {
+    const procedure = [
+      {
+        command: "while",
+        target: "true"
+      },
+      {
+        command: "if",
+        target: "true"
+      },
+      {
+        command: "goto",
+        target: "label_1"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "end"
+      },
+      {
+        command: "label",
+        target: "label_1"
+      }
+    ];
+    expect(relation(procedure, procedure[2], procedure[5])).toBe(Relationship.DirectlyRelated);
   });
   it("should be directly related if the label is nested inside the goto block", () => {
     const procedure = [
@@ -940,11 +997,18 @@ describe("goto-label relations", () => {
         command: "end"
       },
       {
+        command: "if",
+        target: "true"
+      },
+      {
         command: "goto",
         target: "label_1"
+      },
+      {
+        command: "end"
       }
     ];
-    expect(relation(procedure, procedure[3], procedure[1])).toBe(Relationship.DirectlyRelated);
+    expect(relation(procedure, procedure[4], procedure[1])).toBe(Relationship.DirectlyRelated);
   });
   it("should be indirectly related if goto and label are nested inside different branches of the procedure", () => {
     const procedure = [
@@ -964,6 +1028,10 @@ describe("goto-label relations", () => {
         target: "true"
       },
       {
+        command: "while",
+        target: "true"
+      },
+      {
         command: "if",
         target: "true"
       },
@@ -973,8 +1041,11 @@ describe("goto-label relations", () => {
       },
       {
         command: "end"
+      },
+      {
+        command: "end"
       }
     ];
-    expect(relation(procedure, procedure[5], procedure[1])).toBe(Relationship.IndirectlyRelated);
+    expect(relation(procedure, procedure[6], procedure[1])).toBe(Relationship.IndirectlyRelated);
   });
 });

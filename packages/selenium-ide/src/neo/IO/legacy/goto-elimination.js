@@ -33,15 +33,30 @@ export function eliminate(procedure) {
     const goto = gotos[0];
     const label = findMatchingLabel(labels, goto);
 
-    // Make goto and label directly related
+    const relationship = relation(p, goto, label);
+    if (relationship === Relationship.IndirectlyRelated) {
+      // Make goto and label directly related
+      // Ignoring switch and else statements
+      p = transformOutward(p, goto);
+    } else if (relationship === Relationship.DirectlyRelated) {
+      // Make goto and label siblings
+      if (calculateLevel(goto) > calculateLevel(label)) {
+        p = transformOutward(p, goto);
+      } else {
+        if (p.indexOf(goto) > p.indexOf(label)) {
+          p = lift(p, goto, label);
+        }
+        // Inward transformation
+        throw new Error("not implemented");
+      }
+    } else {
+      // goto and label are siblings
 
-    // Make goto and label siblings
-
-    // goto and label are siblings
-    // eliminate goto
-    p = eliminateGoto(p, goto, label);
-    // remove it from the list of gotos
-    gotos.shift();
+      // eliminate goto
+      p = eliminateGoto(p, goto, label);
+      // remove it from the list of gotos
+      gotos.shift();
+    }
   }
 
   return p;
@@ -218,9 +233,17 @@ function levelIncrement(statement, level = 0) {
   return level;
 }
 
+function calculateLevel(procedure, statement) {
+  let level = 0;
+  for (let index = 0; index < procedure.length; index++) {
+    level = levelIncrement(procedure[index], level);
+    if (procedure[index] === statement) return level;
+  }
+}
+
 function isConditionalGoto(procedure, goto) {
   const index = procedure.indexOf(goto);
-  return (procedure[index - 1].command === "if" && procedure[index + 1] === "end");
+  return (procedure[index].command === "goto" && procedure[index - 1].command === "if" && procedure[index + 1].command === "end");
 }
 
 // for this calculation a tree would've been a better data structure
@@ -228,23 +251,31 @@ export function relation(procedure, goto, label) {
   let level, first, outOfBlock;
   for (let index = 0; index < procedure.length; index++) {
     const statement = procedure[index];
-    level = levelIncrement(statement, level);
+    // if its a conditional goto, decrease the level, and skip the end
+    if (isConditionalGoto(procedure, statement)) {
+      level--;
+      index++;
+    } else {
+      level = levelIncrement(statement, level);
+    }
     // 0 is truthy
     if (first !== undefined && outOfBlock === undefined && level < first) {
       outOfBlock = level;
-    } else if (first !== undefined && outOfBlock !== undefined && level > outOfBlock) {
+    } else if (first !== undefined && outOfBlock !== undefined && level > outOfBlock && !isBlock(statement)) {
       return Relationship.IndirectlyRelated;
     }
 
-    if (first === undefined && (statement === goto || statement === label)) {
-      // matched the first one
-      first = level;
-    } else if (first !== undefined && (statement === goto || statement === label)) {
-      // matched the second one
-      if (level === first) {
-        return Relationship.Siblings;
-      } else {
-        return Relationship.DirectlyRelated;
+    if (statement === goto || statement === label) {
+      if (first === undefined) {
+        // matched the first one
+        first = level;
+      } else if (first !== undefined) {
+        // matched the second one
+        if (level === first) {
+          return Relationship.Siblings;
+        } else {
+          return Relationship.DirectlyRelated;
+        }
       }
     }
   }
