@@ -168,7 +168,7 @@ export function lift(procedure, goto, label) {
       command: "end"
     }
   );
-  const ifIndex = p.indexOf(goto) - 1;
+  const ifIndex = p.lastIndexOf(goto) - 1;
   p.splice(ifIndex, 3,
     {
       command: "store",
