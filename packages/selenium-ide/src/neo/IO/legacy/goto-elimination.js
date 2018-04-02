@@ -15,6 +15,38 @@
 // specific language governing permissions and limitations
 // under the License.
 
+export function eliminate(procedure) {
+  let p = [...procedure];
+
+  // Change all gotos to conditionals
+  const unconditionalGotos = p.filter(statement => (statement.command === "goto" || statement.command === "gotoIf"));
+  unconditionalGotos.forEach(goto => {
+    const index = p.indexOf(goto);
+    p.splice(index, 1, transformToConditional(goto));
+  });
+
+  const labels = p.filter(statement => statement.command === "label");
+  const gotos = p.filter(statement => statement.command === "goto");
+
+  // start eliminating
+  while (gotos.length) {
+    const goto = gotos[0];
+    const label = findMatchingLabel(labels, goto);
+
+    // Make goto and label directly related
+
+    // Make goto and label siblings
+
+    // goto and label are siblings
+    // eliminate goto
+    eliminateGoto(p, goto, label);
+    // remove it from the list of gotos
+    gotos.shift();
+  }
+
+  return p;
+}
+
 export function transformToConditional(goto) {
   return ([
     {
@@ -157,6 +189,10 @@ function findBlockClose(procedure, block) {
     }
   }
   return procedure[index];
+}
+
+function findMatchingLabel(listOfLabels, goto) {
+  return listOfLabels.filter(statement => (statement.command === "label" && statement.target === goto.target));
 }
 
 function isBlock(statement) {
