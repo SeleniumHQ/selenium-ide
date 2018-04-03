@@ -649,7 +649,7 @@ describe("inward movement transformation", () => {
       }
     ]);
   });
-  it("should move goto into an if's else", () => {
+  it.skip("should move goto into an if's else", () => {
     const procedure = [
       {
         command: "statement"
