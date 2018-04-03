@@ -57,7 +57,7 @@ describe("selenium test case migration", () => {
   it("should decode the input post conversion", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_8.html")).toString();
     const project = migrateTestCase(file);
-    expect(project.tests[0].commands[16].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
+    expect(project.tests[0].commands[13].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
   });
 });
 

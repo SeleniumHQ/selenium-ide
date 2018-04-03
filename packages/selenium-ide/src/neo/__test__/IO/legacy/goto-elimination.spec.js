@@ -18,7 +18,7 @@
 import {
   transformToConditional,
   eliminateGoto,
-  eliminateLabel,
+  eliminateLabels,
   transformOutward,
   transformInward,
   lift,
@@ -216,7 +216,7 @@ describe("label elimination", () => {
         command: "statement"
       }
     ];
-    expect(eliminateLabel(procedure, label)).toEqual([
+    expect(eliminateLabels(procedure)).toEqual([
       {
         command: "statement"
       },

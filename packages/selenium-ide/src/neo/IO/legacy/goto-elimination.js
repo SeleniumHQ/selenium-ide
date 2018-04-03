@@ -62,7 +62,7 @@ export function eliminate(procedure) {
     }
   }
 
-  return p;
+  return eliminateLabels(p);
 }
 
 export function transformToConditional(goto) {
@@ -81,8 +81,8 @@ export function transformToConditional(goto) {
   ]);
 }
 
-export function eliminateLabel(procedure, label) {
-  return procedure.filter(p => p !== label);
+export function eliminateLabels(procedure) {
+  return procedure.filter(s => s.command !== "label");
 }
 
 export function eliminateGoto(procedure, goto, label) {
