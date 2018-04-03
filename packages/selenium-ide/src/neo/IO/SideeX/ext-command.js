@@ -243,7 +243,7 @@ export default class ExtCommand {
       return connection.attach().then(() => (
         connection.getDocument().then(docNode => (
           connection.querySelector(locator, docNode.nodeId).then(nodeId => (
-            connection.sendCommand("DOM.setFileInputFiles", { nodeId, files: value.split(",") }).then(connection.detach)
+            connection.sendCommand("DOM.setFileInputFiles", { nodeId, files: value.split(",") }).then(connection.detach).then(() => ({ result: "success" }))
           ))
         ))
       )).catch(e => {
@@ -252,7 +252,7 @@ export default class ExtCommand {
         });
       });
     } else {
-      return this.sendMessage("type", xlateArgument(locator), xlateArgument(value));
+      return this.sendMessage("type", locator, value);
     }
   }
 
@@ -351,7 +351,6 @@ export function isExtCommand(command) {
     case "selectWindow":
     case "setSpeed":
     case "close":
-    case "type":
       return true;
     default:
       return false;
