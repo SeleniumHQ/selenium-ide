@@ -43,14 +43,14 @@ export function eliminate(procedure) {
       p = transformOutward(p, goto);
     } else if (relationship === Relationship.DirectlyRelated) {
       // Make goto and label siblings
-      if (calculateLevel(goto) > calculateLevel(label)) {
+      if (calculateLevel(p, goto) > calculateLevel(p, label)) {
         p = transformOutward(p, goto);
       } else {
         if (p.indexOf(goto) > p.indexOf(label)) {
           p = lift(p, goto, label);
         }
         // Inward transformation
-        throw new Error("not implemented");
+        p = transformInward(p, goto, label);
       }
     } else {
       // goto and label are siblings
@@ -184,6 +184,7 @@ function transformInwardLoop(p, goto, block, label) {
 }
 
 function transformInwardConditional() {
+  throw new Error("not implemented");
 }
 
 export function lift(procedure, goto, label) {
@@ -285,7 +286,8 @@ function levelIncrement(statement, level = 0) {
 }
 
 function calculateLevel(procedure, statement) {
-  let level = 0;
+  // ignore the goto condition in terms of level
+  let level = statement.command === "goto" ? -1 : 0;
   for (let index = 0; index < procedure.length; index++) {
     level = levelIncrement(procedure[index], level);
     if (procedure[index] === statement) return level;
@@ -337,3 +339,17 @@ export const Relationship = {
   DirectlyRelated: "related",
   IndirectlyRelated: "unrelated"
 };
+
+export function prettyPrint(procedure) {
+  let level = 0;
+  return procedure.map(statement => {
+    if (isBlockEnd(statement)) {
+      level--;
+    }
+    let r = `${"  ".repeat(level)}${statement.command} ${statement.target || ""}`;
+    if (isBlock(statement)) {
+      level++;
+    }
+    return r;
+  }).join("\n");
+}
