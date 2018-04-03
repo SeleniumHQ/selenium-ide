@@ -100,9 +100,9 @@ export function migrateTestCase(data) {
       {
         id: data,
         name: result.html.body.table.thead.tr.td._text,
-        commands: result.html.body.table.tbody.tr.filter(row => !/^wait/.test(row.td[0]._text)).map(row => (
+        commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
           {
-            command: row.td[0]._text && row.td[0]._text.replace("AndWait", "") || "",
+            command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
             target: xmlunescape(parseTarget(row.td[1])),
             value: xmlunescape(row.td[2]._text || "")
           }
