@@ -473,7 +473,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       }
     ];
-    expect(transformInward(procedure, procedure[2])).toEqual([
+    expect(transformInward(procedure, procedure[2], procedure[8])).toEqual([
       {
         command: "statement"
       },
@@ -585,7 +585,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       }
     ];
-    expect(transformInward(procedure, procedure[2])).toEqual([
+    expect(transformInward(procedure, procedure[2], procedure[8])).toEqual([
       {
         command: "statement"
       },
@@ -701,7 +701,7 @@ describe("inward movement transformation", () => {
         command: "statement"
       }
     ];
-    expect(transformInward(procedure, procedure[2])).toEqual([
+    expect(transformInward(procedure, procedure[2], procedure[11])).toEqual([
       {
         command: "statement"
       },

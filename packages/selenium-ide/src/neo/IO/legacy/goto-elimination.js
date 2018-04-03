@@ -15,6 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+// GENENRAL NOTE: procedure is non-mutable while p is
+// Do not mutate statements, create new references
+// Don't break goto references, you do not need to change them anyway (just their location)
 export function eliminate(procedure) {
   let p = [...procedure];
 
@@ -146,7 +149,41 @@ function transformOutwardConditional(p, goto, block, end) {
   );
 }
 
-export function transformInward(procedure, goto) {
+export function transformInward(procedure, goto, label) {
+  const block = findFirstEnclosingBlock(procedure, procedure.indexOf(goto), label);
+  const p = [...procedure];
+  if (block.command !== "if") {
+    // outward loop movement
+    transformInwardLoop(p, goto, block, label);
+  } else {
+    // outward conditional movement
+    transformInwardConditional(p, goto, block, label);
+  }
+  return p;
+}
+
+function transformInwardLoop(p, goto, block, label) {
+  const ifIndex = p.indexOf(goto) - 1;
+  p.splice(ifIndex, 3,
+    { command: "store", target: p[ifIndex].target, value: goto.target },
+    { command: "if", target: `!\${${goto.target}}` }
+  );
+  const blockIndex = p.indexOf(block);
+  p.splice(blockIndex, 1,
+    { command: "end" },
+    { command: "while", target: `\${${goto.target}} || ${block.target}` },
+    { command: "if", target: `\${${goto.target}}` },
+    goto,
+    { command: "end" }
+  );
+  const labelIndex = p.indexOf(label);
+  p.splice(labelIndex + 1, 0,
+    { command: "store", target: "false", value: goto.target }
+  );
+  return p;
+}
+
+function transformInwardConditional() {
 }
 
 export function lift(procedure, goto, label) {
@@ -181,6 +218,20 @@ export function lift(procedure, goto, label) {
     }
   );
   return p;
+}
+
+function findFirstEnclosingBlock(procedure, offset, statement) {
+  const blocks = [];
+  for (let i = offset; i < procedure.length; i++) {
+    const block = procedure[i];
+    if (isBlock(block)) {
+      blocks.push(block);
+    } else if (isBlockEnd(block)) {
+      blocks.pop(block);
+    } else if (block === statement) {
+      return blocks[0];
+    }
+  }
 }
 
 function findEnclosingBlock(procedure, goto) {
