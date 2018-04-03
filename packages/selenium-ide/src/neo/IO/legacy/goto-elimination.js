@@ -152,17 +152,17 @@ function transformOutwardConditional(p, goto, block, end) {
 export function transformInward(procedure, goto, label) {
   const block = findFirstEnclosingBlock(procedure, procedure.indexOf(goto), label);
   const p = [...procedure];
-  if (block.command !== "if") {
+  if (block.command !== "else") {
     // outward loop movement
-    transformInwardLoop(p, goto, block, label);
+    transformInwardLoopConditional(p, goto, block, label);
   } else {
     // outward conditional movement
-    transformInwardConditional(p, goto, block, label);
+    transformInwardElseConditional(p, goto, block, label);
   }
   return p;
 }
 
-function transformInwardLoop(p, goto, block, label) {
+function transformInwardLoopConditional(p, goto, block, label) {
   const ifIndex = p.indexOf(goto) - 1;
   p.splice(ifIndex, 3,
     { command: "store", target: p[ifIndex].target, value: goto.target },
@@ -171,19 +171,23 @@ function transformInwardLoop(p, goto, block, label) {
   const blockIndex = p.indexOf(block);
   p.splice(blockIndex, 1,
     { command: "end" },
-    { command: "while", target: `\${${goto.target}} || ${block.target}` },
+    { command: block.command, target: `\${${goto.target}} || ${block.target}` },
     { command: "if", target: `\${${goto.target}}` },
     goto,
     { command: "end" }
   );
   const labelIndex = p.indexOf(label);
-  p.splice(labelIndex + 1, 0,
-    { command: "store", target: "false", value: goto.target }
-  );
+
+  // make sure that the next time the while condition isn't shorted
+  if (block.command === "while") {
+    p.splice(labelIndex + 1, 0,
+      { command: "store", target: "false", value: goto.target }
+    );
+  }
   return p;
 }
 
-function transformInwardConditional() {
+function transformInwardElseConditional() {
   throw new Error("not implemented");
 }
 
