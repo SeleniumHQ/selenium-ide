@@ -62,7 +62,7 @@ export function eliminate(procedure) {
     }
   }
 
-  return eliminateLabels(p);
+  return optimize(eliminateLabels(p));
 }
 
 export function transformToConditional(goto) {
@@ -79,6 +79,14 @@ export function transformToConditional(goto) {
       command: "end"
     }
   ]);
+}
+
+function optimize(procedure) {
+  return procedure.filter((statement, i) => {
+    if (isBlock(statement)) return !isBlockEnd(procedure[i + 1]);
+    if (isBlockEnd(statement)) return !isBlock(procedure[i - 1]);
+    return true;
+  });
 }
 
 export function eliminateLabels(procedure) {
