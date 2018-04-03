@@ -18,7 +18,6 @@
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { recorder } from "./editor";
-import { xlateArgument } from "./formatCommand";
 import Debugger from "../debugger";
 
 const parsedUA = parser(window.navigator.userAgent);
