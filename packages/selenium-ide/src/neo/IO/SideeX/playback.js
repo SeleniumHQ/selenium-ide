@@ -60,8 +60,8 @@ function executionLoop() {
     return (extCommand["do" + upperCase](parsedTarget, value))
       .then(() => {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        return executionLoop();
-      });
+        return doDelay();
+      }).then(executionLoop);
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
