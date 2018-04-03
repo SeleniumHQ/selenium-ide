@@ -24,6 +24,7 @@ import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import MultilineEllipsis from "../MultilineEllipsis";
+import { withOnContextMenu } from "../ContextMenu";
 import "./style.css";
 
 export const Type = "command";
@@ -91,7 +92,7 @@ const commandTarget = {
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
-export default class TestRow extends React.Component {
+class TestRow extends React.Component {
   constructor(props) {
     super(props);
     this.paste = this.paste.bind(this);
@@ -122,7 +123,9 @@ export default class TestRow extends React.Component {
     clearAllCommands: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
-    setSectionFocus: PropTypes.func
+    setSectionFocus: PropTypes.func,
+    onContextMenu: PropTypes.func,
+    setContextMenu: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -176,10 +179,27 @@ export default class TestRow extends React.Component {
     }
   }
   render() {
+    const listMenu =<ListMenu width={300} padding={-5} opener={<MoreButton /> }>
+      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
+      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+      <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+      <ListMenuSeparator />
+      <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
+      <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
+    </ListMenu>;
+    //setting component of context menu.
+    this.props.setContextMenu(listMenu);
+
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
       tabIndex={this.props.selected ? "0" : "-1"}
+      onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}
       onClick={this.props.onClick}
       onDoubleClick={this.props.executeCommand}
       onKeyDown={this.handleKeyDown.bind(this)}
@@ -201,26 +221,13 @@ export default class TestRow extends React.Component {
           <td><MultilineEllipsis lines={3}>{this.props.value}</MultilineEllipsis></td>
         </React.Fragment>}
       <td className="buttons">
-        <div>
-          { this.props.swapCommands ?
-            <ListMenu width={300} padding={-5} opener={
-              <MoreButton />
-            }>
-              <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(); this.props.remove();}}>Cut</ListMenuItem>
-              <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.props.copyToClipboard}>Copy</ListMenuItem>
-              <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
-              <ListMenuItem label="Del" onClick={this.props.remove}>Delete</ListMenuItem>
-              <ListMenuSeparator />
-              <ListMenuItem onClick={() => { this.props.insertCommand(); }}>Insert new command</ListMenuItem>
-              <ListMenuSeparator />
-              <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
-              <ListMenuSeparator />
-              <ListMenuItem label="S" onClick={this.props.startPlayingHere}>Play from here</ListMenuItem>
-              <ListMenuItem label="X" onClick={this.props.executeCommand}>Execute this command</ListMenuItem>
-            </ListMenu> : null }
-        </div>
+        { this.props.swapCommands ?
+          listMenu
+          : <div></div> }
       </td>
     </tr>;
     return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }
+
+export default withOnContextMenu(TestRow);

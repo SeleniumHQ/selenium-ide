@@ -23,6 +23,7 @@ import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
 import classNames from "classnames";
+import { modifier } from "modifier-keys";
 import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
@@ -101,6 +102,17 @@ modify(project);
       }
     });
   }
+  handleKeyDown(event) {
+    const e = event.nativeEvent;
+    modifier(e);
+    const key = e.key.toUpperCase();
+    const onlyPrimary = (e.primaryKey && !e.secondaryKey);
+
+    if (onlyPrimary && key === "S") {
+      e.preventDefault();
+      saveProject(project);
+    }
+  }
   navigationDragStart() {
     UiState.setNavigationDragging(true);
     UiState.resizeNavigation(UiState.navigationWidth);
@@ -116,7 +128,7 @@ modify(project);
   }
   render() {
     return (
-      <div className="container">
+      <div className="container" onKeyDown={this.handleKeyDown.bind(this)}>
         <SplitPane
           split="horizontal"
           minSize={UiState.minContentHeight}

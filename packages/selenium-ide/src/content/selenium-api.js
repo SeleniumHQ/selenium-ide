@@ -52,7 +52,7 @@ function build_sendkeys_maps() {
   add_sendkeys_key("TAB", "\uE004");
   //  add_sendkeys_key("CLEAR", '\uE005');
   //  add_sendkeys_key("RETURN", '\uE006');
-  add_sendkeys_key("ENTER", "\uE007");
+  add_sendkeys_key("ENTER", "\u000A");
   add_sendkeys_key("SHIFT", "\uE008");
   add_sendkeys_key("CONTROL", "\uE009", "CTRL");
   add_sendkeys_key("ALT", "\uE00A");

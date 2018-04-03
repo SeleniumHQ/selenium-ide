@@ -27,6 +27,9 @@ import "./style.css";
 
 @observer
 export default class TestTable extends React.Component {
+  constructor(props){
+    super(props);
+  }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
     selectedCommand: PropTypes.string,

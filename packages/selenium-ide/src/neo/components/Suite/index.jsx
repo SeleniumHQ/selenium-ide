@@ -23,10 +23,11 @@ import { observer } from "mobx-react";
 import { modifier } from "modifier-keys";
 import TestList from "../TestList";
 import { Type } from "../Test";
-import ListMenu, { ListMenuItem } from "../ListMenu";
-import MoreButton from "../ActionButtons/More";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import { withOnContextMenu } from "../ContextMenu";
+import ListMenu, { ListMenuItem } from "../ListMenu";
+import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
 function containsTest(tests, test) {
@@ -70,7 +71,9 @@ class Suite extends React.Component {
     remove: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
-    canDrop: PropTypes.bool
+    canDrop: PropTypes.bool,
+    onContextMenu: PropTypes.func,
+    setContextMenu: PropTypes.func
   };
   handleClick() {
     this.store.setOpen(!this.store.isOpen);
@@ -88,20 +91,22 @@ class Suite extends React.Component {
     }
   }
   render() {
+    const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+      <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
+      <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
+    </ListMenu>;
+    //setting component of context menu.
+    this.props.setContextMenu(listMenu);
+
     return this.props.connectDropTarget(
-      <div onKeyDown={this.handleKeyDown.bind(this)}>
-        <div className="project">
-          <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick}>
+      <div onKeyDown={this.handleKeyDown.bind(this)} >
+        <div className="project" onContextMenu={this.props.onContextMenu} >
+          <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick} >
             <span className="si-caret"></span>
             <span className="title">{this.props.suite.name}</span>
           </a>
-          <ListMenu width={130} padding={-5} opener={
-            <MoreButton />
-          }>
-            <ListMenuItem onClick={this.props.selectTests}>Select tests</ListMenuItem>
-            <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
-            <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
-          </ListMenu>
+          {listMenu}
         </div>
         <TestList collapsed={!this.store.isOpen} suite={this.props.suite} tests={this.store.filteredTests.get()} removeTest={(test) => {
           this.props.suite.removeTestCase(test);
@@ -112,4 +117,4 @@ class Suite extends React.Component {
   }
 }
 
-export default DropTarget(Type, testTarget, collect)(Suite);
+export default withOnContextMenu(DropTarget(Type, testTarget, collect)(Suite));
