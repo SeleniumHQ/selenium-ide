@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 
@@ -113,6 +114,15 @@ class PlaybackState {
 
   @action.bound resume() {
     this.paused = false;
+  }
+
+  @action.bound break() {
+    this.paused = true;
+    browser.windows.getCurrent().then(windowInfo => {
+      browser.windows.update(windowInfo.id, {
+        focused: true
+      });
+    });
   }
 
   @action.bound finishPlaying() {
