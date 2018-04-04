@@ -106,6 +106,7 @@ class TestRow extends React.Component {
     command: PropTypes.string.isRequired,
     target: PropTypes.string,
     value: PropTypes.string,
+    level: PropTypes.number,
     isBreakpoint: PropTypes.bool,
     toggleBreakpoint: PropTypes.func,
     onClick: PropTypes.func,
@@ -200,6 +201,7 @@ class TestRow extends React.Component {
     //setting component of context menu.
     this.props.setContextMenu(listMenu);
 
+    const index = this.props.index >= 0 ? <span className="index" style={{paddingRight: `${(this.props.level || 0) * 5}px`}}>{this.props.index + 1}.</span> : null;
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"break-point": this.props.isBreakpoint}, {"dragging": this.props.dragInProgress})}
@@ -214,12 +216,12 @@ class TestRow extends React.Component {
       }}>
       {this.props.comment ?
         <td className="comment" colSpan="3"><span></span>
-          {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+          {index}
           <span>{this.props.comment}</span>
         </td> :
         <React.Fragment>
           <td><span></span>
-            {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+            {index}
             <span className="command"><CommandName>{this.props.command}</CommandName></span>
           </td>
           <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>
