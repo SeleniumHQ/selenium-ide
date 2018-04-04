@@ -115,8 +115,8 @@ export default class ProjectStore {
       id: this.id,
       name: this.name,
       url: this.url,
-      tests: this._tests,
-      suites: this._suites.map(s => s.exportSuite()),
+      tests: this._tests.map(t => t.export()),
+      suites: this._suites.map(s => s.export()),
       urls: this._urls
     });
   }

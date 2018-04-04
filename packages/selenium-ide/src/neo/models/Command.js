@@ -24,9 +24,11 @@ export default class Command {
   @observable command = "";
   @observable target = "";
   @observable value = "";
+  @observable isBreakpoint = false;
 
   constructor(id = uuidv4()) {
     this.id = id;
+    this.export = this.export.bind(this);
   }
 
   @computed get isValid() {
@@ -60,6 +62,20 @@ export default class Command {
 
   @action.bound setValue(value) {
     this.value = value.replace(/\n/g, "\\n");
+  }
+
+  @action.bound toggleBreakpoint() {
+    this.isBreakpoint = !this.isBreakpoint;
+  }
+
+  export() {
+    return {
+      id: this.id,
+      comment: this.comment,
+      command: this.command,
+      target: this.target,
+      value: this.value
+    };
   }
 
   static fromJS = function(jsRep) {

@@ -12,16 +12,16 @@
   word-break: break-word;
 }
 
-.test-table tbody tr.pending {
-  background-color: #FFFCC5;
-}
-
 .test-table tbody tr:hover {
   background-color: #F3F3F3;
 }
 
 .test-table tbody tr.selected {
   background-color: #E3F2FF;
+}
+
+.test-table tbody tr.pending {
+  background-color: #FFFCC5;
 }
 
 .test-table tbody tr:focus {
@@ -36,7 +36,7 @@
   position: relative;
 }
 
-.test-table tbody tr.pending td:first-child span:first-child {
+.test-table tbody tr td:first-child span:first-child {
   position: absolute;
   left: 0;
   top: 0;
@@ -46,7 +46,19 @@
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-left: 6px solid #505050;
+  border-left: 6px solid transparent;
+}
+
+.test-table tbody tr.break-point td:first-child span:first-child {
+  border-left-color: #40A6FF;
+}
+
+.test-table tbody tr.pending td:first-child span:first-child {
+  border-left-color: #505050;
+}
+
+.test-table tbody tr.pending.break-point td:first-child span:first-child {
+  border-left-color: #e25807;
 }
 
 .test-table tbody tr td:first-child span:nth-child(2) {

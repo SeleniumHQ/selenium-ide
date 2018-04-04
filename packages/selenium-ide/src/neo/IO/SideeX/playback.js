@@ -33,6 +33,7 @@ extCommand.doSetSpeed = (speed) => {
 };
 
 let baseUrl = "";
+let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -51,17 +52,24 @@ function playAfterConnectionFailed() {
 
 function executionLoop() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if ((PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) || (!PlaybackState.isPlaying || PlaybackState.paused)) return false;
-  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // reached the end
+  if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) return false;
+  const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // breakpoint
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
+  if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
+  else if (ignoreBreakpoint && isBreakpoint) ignoreBreakpoint = false;
+  // paused
+  if ((!PlaybackState.isPlaying || PlaybackState.paused)) return false;
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
-    return (extCommand["do" + upperCase](parsedTarget, value))
-      .then(() => {
-        PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        return doDelay();
-      }).then(executionLoop);
+    return doDelay().then(() => (
+      (extCommand["do" + upperCase](parsedTarget, value))
+        .then(() => {
+          PlaybackState.setCommandState(id, PlaybackStates.Passed);
+        }).then(executionLoop)
+    ));
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
@@ -71,8 +79,8 @@ function executionLoop() {
       .then(doPageWait)
       .then(doAjaxWait)
       .then(doDomWait)
-      .then(doCommand)
       .then(doDelay)
+      .then(doCommand)
       .then(executionLoop);
   }
 }
@@ -125,6 +133,7 @@ reaction(
   paused => {
     if (!paused) {
       PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
+      ignoreBreakpoint = true;
       playAfterConnectionFailed();
     }
   }

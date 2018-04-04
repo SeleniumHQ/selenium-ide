@@ -63,12 +63,19 @@ describe("Command", () => {
     expect(command.target).toBe("");
     expect(command.value).toBe("");
   });
+  it("should have a breakpoint", () => {
+    const command = new Command();
+    expect(command.isBreakpoint).toBeFalsy();
+    command.toggleBreakpoint();
+    expect(command.isBreakpoint).toBeTruthy();
+  });
   it("shouls clone itself, creating a new id", () => {
     const command = new Command();
     command.setComment("test");
     command.setCommand("open");
     command.setTarget("a");
     command.setValue("submit");
+    command.toggleBreakpoint();
     const clone = command.clone();
     expect(clone).not.toBe(command);
     expect(clone.id).not.toBe(command.id);
@@ -76,6 +83,7 @@ describe("Command", () => {
     expect(clone.command).toBe(command.command);
     expect(clone.target).toBe(command.target);
     expect(clone.value).toBe(command.value);
+    expect(clone.isBreakpoint).toBeFalsy();
   });
 
   it("should load from JS", () => {
@@ -92,6 +100,7 @@ describe("Command", () => {
     expect(command.command).toBe(jsRepresentation.command);
     expect(command.target).toBe(jsRepresentation.target);
     expect(command.value).toBe(jsRepresentation.value);
+    expect(command.isBreakpoint).toBeFalsy();
     expect(command instanceof Command).toBeTruthy();
   });
 });
