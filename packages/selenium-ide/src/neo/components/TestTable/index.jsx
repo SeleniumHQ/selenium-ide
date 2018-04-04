@@ -40,6 +40,7 @@ export default class TestTable extends React.Component {
     clearAllCommands: PropTypes.func
   };
   render() {
+    let level = 0;
     return ([
       <div key="header" className="test-table test-table-header">
         <table>
@@ -55,8 +56,9 @@ export default class TestTable extends React.Component {
       <div key="body" className="test-table test-table-body">
         <table>
           <tbody>
-            { this.props.commands ? this.props.commands.map((command, index) => (
-              <TestRow
+            {this.props.commands ? this.props.commands.map((command, index) => {
+              if (isBlockEnd(command.command) && level > 0) level--;
+              const row = <TestRow
                 key={command.id}
                 id={command.id}
                 className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
@@ -66,6 +68,7 @@ export default class TestTable extends React.Component {
                 command={command.command}
                 target={command.target}
                 value={command.value}
+                level={level}
                 isBreakpoint={command.isBreakpoint}
                 toggleBreakpoint={command.toggleBreakpoint}
                 dragInProgress={UiState.dragInProgress}
@@ -83,8 +86,10 @@ export default class TestTable extends React.Component {
                 copyToClipboard={() => { UiState.copyToClipboard(command); }}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
-              />
-            )).concat(
+              />;
+              if (isBlock(command.command)) level++;
+              return row;
+            }).concat(
               <TestRow
                 id={UiState.pristineCommand.id}
                 key={UiState.selectedTest.test.id}
@@ -102,5 +107,29 @@ export default class TestTable extends React.Component {
         </table>
       </div>
     ]);
+  }
+}
+
+function isBlock(command) {
+  switch(command) {
+    case "if":
+    case "do":
+    case "while":
+    case "times":
+    case "else":
+      return true;
+    default:
+      return false;
+  }
+}
+
+function isBlockEnd(command) {
+  switch(command) {
+    case "end":
+    case "endDo":
+    case "else":
+      return true;
+    default:
+      return false;
   }
 }
