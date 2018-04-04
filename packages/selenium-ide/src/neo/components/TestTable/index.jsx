@@ -66,6 +66,8 @@ export default class TestTable extends React.Component {
                 command={command.command}
                 target={command.target}
                 value={command.value}
+                isBreakpoint={command.isBreakpoint}
+                toggleBreakpoint={command.toggleBreakpoint}
                 dragInProgress={UiState.dragInProgress}
                 onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
                 startPlayingHere={() => { PlaybackState.startPlaying(command); }}
