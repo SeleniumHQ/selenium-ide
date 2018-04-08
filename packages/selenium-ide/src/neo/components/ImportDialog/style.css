@@ -3,11 +3,44 @@
 }
 
 .import-dialog .dropzone {
-    height: 200px;
-    border-width: 2px;
-    border-color: rgb(102, 102, 102);
+    display: flow-root;
+    background-color: rgba(163,163,163,0.11);
+}
+
+.import-dialog .dropzone.accept {
+    background-color: #E3F2FF;
+}
+
+.import-dialog .dropzone.reject {
+    background-color: rgba(206, 0, 0, 0.11);
+}
+
+.import-dialog .dropzone > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px;
+    height: 160px;
+    border-width: 1px;
+    border-color: #505050;
     border-style: dashed;
-    border-radius: 5px;
+    border-radius: 3px;
+}
+
+.import-dialog .dropzone .file-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.import-dialog .dropzone .file-icon > img {
+    margin: 15px;
+}
+
+.import-dialog .dropzone .file-icon > p {
+    margin: 10px;
+    text-align: center;
+    font-weight: 500;
 }
 
 .import-dialog ul li {

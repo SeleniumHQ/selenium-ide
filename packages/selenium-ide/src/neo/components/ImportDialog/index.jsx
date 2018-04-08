@@ -24,6 +24,7 @@ import ModalHeader from "../ModalHeader";
 import FlatButton from "../FlatButton";
 import { parseSuiteRequirements } from "../../IO/legacy/migrate";
 import { loadAsText } from "../../IO/filesystem";
+import HtmlFile from "../../assets/images/html_file.png";
 import "./style.css";
 
 export default class ImportDialog extends React.Component {
@@ -70,19 +71,27 @@ export default class ImportDialog extends React.Component {
   }
   render() {
     return (
-      <Modal className="import-dialog" isOpen={this.props.isImporting}>
+      <Modal className="import-dialog" isOpen={this.props.isImporting} onRequestClose={this.props.cancel}>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title="Import suite" close={this.props.cancel} />
-          <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests, by dragging and dropping below or{" "}
-            <a className="link" href="#" onClick={() => { this.dropzone.open(); }}>selecting them</a>
+          <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests
           </p>
-          <Dropzone className="dropzone" accept="text/html" onDrop={this.onDrop.bind(this)} ref={(node) => { this.dropzone = node; }}>
-            <ul>
-              {this.state.files && this.state.files.map(({name, contents}) => (
-                <li key={name} className={classNames({accepted: !!contents})}>{name}</li>
-              ))}
-            </ul>
+          <Dropzone className="dropzone" acceptClassName="accept" rejectClassName="reject" accept="text/html" onDrop={this.onDrop.bind(this)}>
+            <div>
+              <div className="file-icon">
+                <img alt="html file" height="50" src={HtmlFile} />
+                <p>
+                  Drop files here, or{" "}
+                  <a className="link" href="#">browse</a>
+                </p>
+              </div>
+            </div>
           </Dropzone>
+          <ul>
+            {this.state.files && this.state.files.map(({name, contents}) => (
+              <li key={name} className={classNames({accepted: !!contents})}>{name}</li>
+            ))}
+          </ul>
           <hr />
           <span className="right">
             <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
