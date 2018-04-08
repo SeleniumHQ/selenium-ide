@@ -9,7 +9,7 @@
 .test-table tbody tr td {
   border-top: 1px solid transparent;
   border-collapse: separate;
-  word-break: break-word;
+  word-break: break-all;
 }
 
 .test-table tbody tr:hover {
