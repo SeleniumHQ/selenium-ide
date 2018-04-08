@@ -18,7 +18,6 @@
 import convert from "xml-js";
 import xmlescape from "xml-escape";
 import xmlunescape from "unescape";
-import JSZip from "jszip";
 
 export const FileTypes = {
   Suite: "suite",
