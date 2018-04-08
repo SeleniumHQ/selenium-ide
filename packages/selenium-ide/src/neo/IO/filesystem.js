@@ -17,14 +17,14 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
-import { migrateTestCase, migrateProject } from "./legacy/migrate";
+import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "selianize";
 import chromeGetFile from "./filesystem/chrome";
 import firefoxGetFile from "./filesystem/firefox";
 
-export const supportedFileFormats = ".side, text/html, application/zip";
+export const supportedFileFormats = ".side, text/html";
 const parsedUA = parser(window.navigator.userAgent);
 
 export function getFile(path) {
@@ -45,6 +45,17 @@ export function getFile(path) {
       });
       reader.readAsDataURL(blob);
     });
+  });
+}
+
+export function loadAsText(blob) {
+  return new Promise((res) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      res(e.target.result);
+    };
+
+    fileReader.readAsText(blob);
   });
 }
 
@@ -113,26 +124,24 @@ export function loadProject(project, file) {
       confirmLabel: "Close"
     });
   }
-  const fileReader = new FileReader();
-  fileReader.onload = (e) => {
+  loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
-      loadJSONProject(project, e.target.result);
+      loadJSONProject(project, contents);
     } else  {
       try {
-        if (file.type === "text/html") {
-          project.fromJS(migrateTestCase(e.target.result));
-        } else if (file.type === "application/zip") {
-          migrateProject(e.target.result).then(jsRep => {
-            project.fromJS(jsRep);
-          }).catch(displayError);
+        const type = verifyFile(contents);
+        if (type === FileTypes.Suite) {
+          ModalState.importSuite(contents, (files) => {
+            project.fromJS(migrateProject(files));
+          });
+        } else if (type === FileTypes.TestCase) {
+          project.fromJS(migrateTestCase(contents));
         }
       } catch (error) {
         displayError(error);
       }
     }
-  };
-
-  file.type === "application/zip" ? fileReader.readAsArrayBuffer(file) : fileReader.readAsText(file);
+  });
 }
 
 function loadJSONProject(project, data) {

@@ -18,9 +18,25 @@
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";
-import { migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
+import { verifyFile, FileTypes, parseSuiteRequirements, migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
 
 useStrict(true);
+
+describe("file classifier", () => {
+  it("should recognize suite", () => {
+    const suite = fs.readFileSync(path.join(__dirname, "IDE_test_4/000_clear_mandant_Suite.html")).toString();
+    expect(verifyFile(suite)).toBe(FileTypes.Suite);
+  });
+  it("should recognize test case", () => {
+    const test = fs.readFileSync(path.join(__dirname, "IDE_test.html")).toString();
+    expect(verifyFile(test)).toBe(FileTypes.TestCase);
+  });
+  it("should throw when another file is given", () => {
+    expect(() => {
+      verifyFile("something is wrong here");
+    }).toThrowError("Unknown file was received");
+  });
+});
 
 describe("selenium test case migration", () => {
   it("should migrate the set example", () => {
@@ -62,30 +78,96 @@ describe("selenium test case migration", () => {
 });
 
 describe("selenium suite migration", () => {
+  it("should give a list of required test cases", () => {
+    const suite = fs.readFileSync(path.join(__dirname, "IDE_test_4/000_clear_mandant_Suite.html")).toString();
+    const required = parseSuiteRequirements(suite);
+    expect(required.length).toBe(3);
+    expect(required).toEqual(["einzeltests/MH_delete.html", "einzeltests/kontakte_leeren.html", "einzeltests/DMS_clear.html"]);
+  });
   it("should migrate the suite", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test_4.zip"));
-    return migrateProject(file).then(project => {
-      expect(project.suites.length).toBe(1);
-    });
+    const files = [
+      {
+        name: "000_clear_mandant_Suite.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "000_clear_mandant_Suite.html")).toString()
+      },
+      {
+        name: "einzeltests/DMS_clear.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/DMS_clear.html")).toString()
+      },
+      {
+        name: "einzeltests/kontakte_leeren.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/kontakte_leeren.html")).toString()
+      },
+      {
+        name: "einzeltests/MH_delete.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/MH_delete.html")).toString()
+      }
+    ];
+    expect(migrateProject(files).suites.length).toBe(1);
   });
   it("should fail to migrate due to missing test case", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test_5.zip"));
-    return migrateProject(file).catch(error => {
-      expect(error.message).toBe("The file einzeltests/MH_delete.html is missing, suite can't be migrated");
-    });
+    const files = [
+      {
+        name: "000_clear_mandant_Suite.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "000_clear_mandant_Suite.html")).toString()
+      },
+      {
+        name: "einzeltests/DMS_clear.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/DMS_clear.html")).toString()
+      },
+      {
+        name: "einzeltests/kontakte_leeren.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/kontakte_leeren.html")).toString()
+      }
+    ];
+    expect(() => {
+      migrateProject(files);
+    }).toThrow("The file einzeltests/MH_delete.html is missing, suite can't be migrated");
   });
   it("should migrate multiple suites", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test_6.zip"));
-    return migrateProject(file).then(project => {
-      expect(project.suites.length).toBe(2);
-      expect(project.tests.length).toBe(3);
-    });
+    const files = [
+      {
+        name: "000_clear_mandant_Suite.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "000_clear_mandant_Suite.html")).toString()
+      },
+      {
+        name: "001_clear_mandant_Suite.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "000_clear_mandant_Suite.html")).toString()
+      },
+      {
+        name: "einzeltests/DMS_clear.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/DMS_clear.html")).toString()
+      },
+      {
+        name: "einzeltests/kontakte_leeren.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/kontakte_leeren.html")).toString()
+      },
+      {
+        name: "einzeltests/MH_delete.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/MH_delete.html")).toString()
+      }
+    ];
+    const project = migrateProject(files);
+    expect(project.suites.length).toBe(2);
+    expect(project.tests.length).toBe(3);
   });
   it("should create a suite if none was given", () => {
-    const file = fs.readFileSync(path.join(__dirname, "IDE_test_7.zip"));
-    return migrateProject(file).then(project => {
-      expect(project.suites.length).toBe(1);
-      expect(project.tests.length).toBe(3);
-    });
+    const files = [
+      {
+        name: "einzeltests/DMS_clear.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/DMS_clear.html")).toString()
+      },
+      {
+        name: "einzeltests/kontakte_leeren.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/kontakte_leeren.html")).toString()
+      },
+      {
+        name: "einzeltests/MH_delete.html",
+        contents: fs.readFileSync(path.join(__dirname, "IDE_test_4", "einzeltests/MH_delete.html")).toString()
+      }
+    ];
+    const project = migrateProject(files);
+    expect(project.suites.length).toBe(1);
+    expect(project.tests.length).toBe(3);
   });
 });

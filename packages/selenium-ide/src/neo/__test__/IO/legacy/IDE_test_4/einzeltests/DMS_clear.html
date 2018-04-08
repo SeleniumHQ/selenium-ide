@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>DMS_clear</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">DMS_clear</td></tr>
+</thead><tbody>
+<tr>
+	<td>label</td>
+	<td>start_expose</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.dms</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>xpath=//span[contains(text(),'Exposé Fotos')]</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>expose_ende</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=//span[contains(text(),'Exposé Fotos')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=−</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeConfirmation</td>
+	<td>test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>expose_ende</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>clickAndWait</td>
+	<td>css=a.dms</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(), 'alle')]</td>
+	<td></td>
+</tr>
+<!---->
+<tr>
+	<td>label</td>
+	<td>DMS_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeElementPresent</td>
+	<td>//div[2]/ul/li/a</td>
+	<td>element_present</td>
+</tr>
+<tr>
+	<td>gotoIf</td>
+	<td>${element_present} == false</td>
+	<td>DMS_ende</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[2]/ul/li/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[@onclick='return confirm(&quot;Wollen Sie den Datensatz wirklich löschen?&quot;)']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeConfirmation</td>
+	<td>test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goto</td>
+	<td>DMS_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>label</td>
+	<td>DMS_ende</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
