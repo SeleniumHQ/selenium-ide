@@ -106,15 +106,22 @@ export const Commands = Object.freeze({
   assertText: "assert text",
   assertTitle: "assert title",
   assertValue: "assert value",
+  break: "break",
   chooseCancelOnNextConfirmation: "choose cancel on next confirmation",
   chooseCancelOnNextPrompt: "choose cancel on next prompt",
   chooseOkOnNextConfirmation: "choose ok on next confirmation",
   click: "click",
   clickAt: "click at",
+  continue: "continue",
+  do: "do",
   doubleClickAt: "double click at",
   dragAndDropToObject: "drag and drop to object",
   echo: "echo",
   editContent: "edit content",
+  else: "else",
+  end: "end",
+  endDo: "endDo",
+  if: "if",
   mouseDownAt: "mouse down at",
   mouseMoveAt: "mouse move at",
   mouseOut: "mouse out",
@@ -133,6 +140,7 @@ export const Commands = Object.freeze({
   storeText: "store text",
   storeTitle: "store title",
   submit: "submit",
+  times: "times",
   type: "type",
   verifyChecked: "verify checked",
   verifyNotChecked: "verify not checked",
@@ -148,7 +156,8 @@ export const Commands = Object.freeze({
   webdriverAnswerOnNextPrompt: "webdriver answer on next prompt",
   webdriverChooseCancelOnNextConfirmation: "webdriver choose cancel on next confirmation",
   webdriverChooseCancelOnNextPrompt: "webdriver choose cancel on next prompt",
-  webdriverChooseOkOnNextConfirmation: "webdriver choose ok on next confirmation"
+  webdriverChooseOkOnNextConfirmation: "webdriver choose ok on next confirmation",
+  while: "while"
 });
 
 export const CommandsArray = Object.freeze(Object.keys(Commands));
