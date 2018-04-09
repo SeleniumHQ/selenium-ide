@@ -33,11 +33,11 @@
 }
 
 .test-table tbody tr td:first-child {
-  color: #8B8B8B;
   position: relative;
-  width: 20px;
+  width: 37px;
   flex: initial;
   border-right: 1px transparent solid;
+  padding: 5px;
 }
 
 .test-table tbody tr:not(:focus) td:first-child {
@@ -74,8 +74,14 @@
   border-left-color: #e25807;
 }
 
-.test-table tbody tr td:first-child span:nth-child(3) {
-  margin-right: 5px;
+.test-table tbody tr td:first-child span.index {
+    padding: 0 5px;
+    color: #8B8B8B;
+}
+
+
+.test-table tbody tr td:first-child span.comment-icon {
+    float: right;
 }
 
 .test-table tbody tr.passed td {
@@ -105,10 +111,10 @@
 
 .test-table td .command {
   display: inline-block;
+  color: #8B8B8B;
 }
 
 .test-table td:nth-child(2) {
-  color: #8B8B8B;
   padding: 5px 10px;
   display: flex;
   align-items: start;

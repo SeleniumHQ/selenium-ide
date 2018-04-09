@@ -46,7 +46,7 @@
 
 .test-table .filler {
   border-right: 1px #CECECE solid;
-  width: 20px;
-  padding: 5px 10px;
+  width: 37px;
+  padding: 5px;
   flex-grow: 1;
 }

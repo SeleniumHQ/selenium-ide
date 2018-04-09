@@ -215,6 +215,7 @@ class TestRow extends React.Component {
       <td>
         <span></span>
         {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+        {this.props.comment ? <span className="comment-icon">{"//"}</span> : null}
       </td>
       {this.props.comment ?
         <td className="comment" colSpan="3">
