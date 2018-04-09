@@ -212,14 +212,16 @@ class TestRow extends React.Component {
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
+      <td>
+        <span></span>
+        {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+      </td>
       {this.props.comment ?
-        <td className="comment" colSpan="3"><span></span>
-          {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+        <td className="comment" colSpan="3">
           <span>{this.props.comment}</span>
         </td> :
         <React.Fragment>
-          <td><span></span>
-            {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+          <td>
             <span className="command"><CommandName>{this.props.command}</CommandName></span>
           </td>
           <td><MultilineEllipsis lines={3}>{this.props.target}</MultilineEllipsis></td>

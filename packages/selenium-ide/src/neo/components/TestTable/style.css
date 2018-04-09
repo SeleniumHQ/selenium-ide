@@ -4,6 +4,8 @@
 
 .test-table-body {
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .test-table table {
@@ -40,4 +42,11 @@
   margin: auto;
   bottom: 0;
   top: 0;
+}
+
+.test-table .filler {
+  border-right: 1px #CECECE solid;
+  width: 20px;
+  padding: 5px 10px;
+  flex-grow: 1;
 }

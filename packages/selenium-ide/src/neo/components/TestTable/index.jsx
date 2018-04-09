@@ -100,6 +100,7 @@ export default class TestTable extends React.Component {
               />) : null }
           </tbody>
         </table>
+        <div className="filler"></div>
       </div>
     ]);
   }
