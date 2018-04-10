@@ -22,6 +22,7 @@ import { PropTypes as MobxPropTypes } from "mobx-react";
 import classNames from "classnames";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ModalState from "../../stores/view/ModalState";
 import TestRow from "../TestRow";
 import { DropTarget } from 'react-dnd'
 import "./style.css";
@@ -32,6 +33,12 @@ const fileTarget = {
       let fileName = monitor.getItem().files[0].name;
       if((/\.side$|\.html$/).test(fileName)){
         props.onDrop(props, monitor)
+      }else{
+        ModalState.showAlert({
+          title: `'${fileName}' can't be loaded.`,
+          description: "This format is not supported.",
+          confirmLabel: "Close"
+        });
       }
     }
   }
