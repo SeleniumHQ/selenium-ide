@@ -20,10 +20,34 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import classNames from "classnames";
+import { DropTarget } from "react-dnd";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ModalState from "../../stores/view/ModalState";
 import TestRow from "../TestRow";
 import "./style.css";
+
+const fileTarget = {
+  drop(props, monitor) {
+    if (props.onDrop) {
+      let fileName = monitor.getItem().files[0].name;
+      if((/\.side$|\.html$/).test(fileName)){
+        props.onDrop(props, monitor);
+      }else{
+        ModalState.showAlert({
+          title: `'${fileName}' can't be loaded.`,
+          description: "This format is not supported.",
+          confirmLabel: "Close"
+        });
+      }
+    }
+  }
+};
+
+@DropTarget(props => props.accepts, fileTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver()
+}))
 
 @observer
 export default class TestTable extends React.Component {
@@ -37,7 +61,10 @@ export default class TestTable extends React.Component {
     addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
-    clearAllCommands: PropTypes.func
+    clearAllCommands: PropTypes.func,
+    accepts: PropTypes.any,
+    connectDropTarget: PropTypes.func,
+    isOver: PropTypes.bool
   };
   render() {
     return ([
@@ -52,55 +79,57 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-      <div key="body" className="test-table test-table-body">
-        <table>
-          <tbody>
-            { this.props.commands ? this.props.commands.map((command, index) => (
-              <TestRow
-                key={command.id}
-                id={command.id}
-                className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
-                selected={this.props.selectedCommand === command.id}
-                index={index}
-                comment={command.comment}
-                command={command.command}
-                target={command.target}
-                value={command.value}
-                isBreakpoint={command.isBreakpoint}
-                toggleBreakpoint={command.toggleBreakpoint}
-                dragInProgress={UiState.dragInProgress}
-                onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
-                startPlayingHere={() => { PlaybackState.startPlaying(command); }}
-                executeCommand={() => { PlaybackState.playCommand(command); }}
-                moveSelectionUp={() => { UiState.selectCommandByIndex(index - 1); }}
-                moveSelectionDown={() => { UiState.selectCommandByIndex(index + 1); }}
-                addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
-                insertCommand={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command)); } : null}
-                remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
-                swapCommands={this.props.swapCommands}
-                setDrag={UiState.setDrag}
-                clipboard={UiState.clipboard}
-                copyToClipboard={() => { UiState.copyToClipboard(command); }}
-                clearAllCommands={this.props.clearAllCommands}
-                setSectionFocus={UiState.setSectionFocus}
-              />
-            )).concat(
-              <TestRow
-                id={UiState.pristineCommand.id}
-                key={UiState.selectedTest.test.id}
-                selected={this.props.selectedCommand === UiState.pristineCommand.id}
-                command={UiState.pristineCommand.command}
-                target={UiState.pristineCommand.target}
-                value={UiState.pristineCommand.value}
-                onClick={() => (this.props.selectCommand(UiState.pristineCommand))}
-                addCommand={this.props.addCommand ? (command) => { this.props.addCommand(this.props.commands.length, command); } : null}
-                moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
-                clipboard={UiState.clipboard}
-                setSectionFocus={UiState.setSectionFocus}
-              />) : null }
-          </tbody>
-        </table>
-      </div>
+      this.props.connectDropTarget(
+        <div key="body" className="test-table test-table-body" style={{ border: this.props.isOver? "2px #40A6FF solid" : "transparent"}}>
+          <table>
+            <tbody>
+              { this.props.commands ? this.props.commands.map((command, index) => (
+                <TestRow
+                  key={command.id}
+                  id={command.id}
+                  className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
+                  selected={this.props.selectedCommand === command.id}
+                  index={index}
+                  comment={command.comment}
+                  command={command.command}
+                  target={command.target}
+                  value={command.value}
+                  isBreakpoint={command.isBreakpoint}
+                  toggleBreakpoint={command.toggleBreakpoint}
+                  dragInProgress={UiState.dragInProgress}
+                  onClick={this.props.selectCommand ? () => { this.props.selectCommand(command); } : null}
+                  startPlayingHere={() => { PlaybackState.startPlaying(command); }}
+                  executeCommand={() => { PlaybackState.playCommand(command); }}
+                  moveSelectionUp={() => { UiState.selectCommandByIndex(index - 1); }}
+                  moveSelectionDown={() => { UiState.selectCommandByIndex(index + 1); }}
+                  addCommand={this.props.addCommand ? (command) => { this.props.addCommand(index, command); } : null}
+                  insertCommand={this.props.addCommand ? (command) => { this.props.selectCommand(this.props.addCommand(index, command)); } : null}
+                  remove={this.props.removeCommand ? () => { this.props.removeCommand(index, command); } : null}
+                  swapCommands={this.props.swapCommands}
+                  setDrag={UiState.setDrag}
+                  clipboard={UiState.clipboard}
+                  copyToClipboard={() => { UiState.copyToClipboard(command); }}
+                  clearAllCommands={this.props.clearAllCommands}
+                  setSectionFocus={UiState.setSectionFocus}
+                />
+              )).concat(
+                <TestRow
+                  id={UiState.pristineCommand.id}
+                  key={UiState.selectedTest.test.id}
+                  selected={this.props.selectedCommand === UiState.pristineCommand.id}
+                  command={UiState.pristineCommand.command}
+                  target={UiState.pristineCommand.target}
+                  value={UiState.pristineCommand.value}
+                  onClick={() => (this.props.selectCommand(UiState.pristineCommand))}
+                  addCommand={this.props.addCommand ? (command) => { this.props.addCommand(this.props.commands.length, command); } : null}
+                  moveSelectionUp={() => { UiState.selectCommandByIndex(this.props.commands.length - 1); }}
+                  clipboard={UiState.clipboard}
+                  setSectionFocus={UiState.setSectionFocus}
+                />) : null }
+            </tbody>
+          </table>
+        </div>
+      )
     ]);
   }
 }
