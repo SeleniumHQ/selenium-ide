@@ -19,6 +19,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { modifier } from "modifier-keys";
+import { DragDropContext, DragDropContextProvider } from 'react-dnd'
+import HTML5Backend, { NativeTypes } from 'react-dnd-html5-backend'
 import UiState from "../../stores/view/UiState";
 import ToolBar from "../../components/ToolBar";
 import UrlBar from "../../components/UrlBar";
@@ -26,17 +28,20 @@ import TestTable from "../../components/TestTable";
 import CommandForm from "../../components/CommandForm";
 import "./style.css";
 
+@DragDropContext(HTML5Backend)
 @observer export default class Editor extends React.Component {
   constructor(props) {
     super(props);
     this.addCommand = this.addCommand.bind(this);
     this.removeCommand = this.removeCommand.bind(this);
+    this.handleFileDrop = this.handleFileDrop.bind(this)
   }
   static propTypes = {
     test: PropTypes.object,
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
-    setUrl: PropTypes.func.isRequired
+    setUrl: PropTypes.func.isRequired,
+    load: PropTypes.func,
   };
   addCommand(index, command) {
     if (command) {
@@ -75,27 +80,36 @@ import "./style.css";
   handleContextMenu(e){
     e.preventDefault();
   }
+  handleFileDrop(item, monitor) {
+    if (monitor) {
+      this.props.load(monitor.getItem().files[0]);
+    }
+  }
   render() {
     return (
-      <main className="editor" onKeyDown={this.handleKeyDown.bind(this)} onContextMenu={this.handleContextMenu.bind(this)}>
-        <ToolBar />
-        <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
-        <TestTable
-          commands={this.props.test ? this.props.test.commands : null}
-          selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
-          selectCommand={UiState.selectCommand}
-          addCommand={this.addCommand}
-          removeCommand={this.removeCommand}
-          clearAllCommands={this.props.test ? this.props.test.clearAllCommands : null}
-          swapCommands={this.props.test ? this.props.test.swapCommands : null}
-        />
-        <CommandForm
-          command={UiState.selectedCommand}
-          setCommand={this.handleCommandChange}
-          isSelecting={UiState.isSelectingTarget}
-          onSubmit={UiState.selectNextCommand}
-        />
-      </main>
+      <DragDropContextProvider backend={HTML5Backend}>
+        <main className="editor" onKeyDown={this.handleKeyDown.bind(this)} onContextMenu={this.handleContextMenu.bind(this)}>
+          <ToolBar />
+          <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
+          <TestTable
+            commands={this.props.test ? this.props.test.commands : null}
+            selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
+            selectCommand={UiState.selectCommand}
+            addCommand={this.addCommand}
+            removeCommand={this.removeCommand}
+            clearAllCommands={this.props.test ? this.props.test.clearAllCommands : null}
+            swapCommands={this.props.test ? this.props.test.swapCommands : null}
+            onDrop={this.handleFileDrop}
+            accepts={NativeTypes["FILE"]}
+          />
+          <CommandForm
+            command={UiState.selectedCommand}
+            setCommand={this.handleCommandChange}
+            isSelecting={UiState.isSelectingTarget}
+            onSubmit={UiState.selectNextCommand}
+          />
+        </main>
+      </DragDropContextProvider>
     );
   }
 }
