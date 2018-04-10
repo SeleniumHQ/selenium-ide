@@ -27,6 +27,7 @@ function Recorder(window) {
 }
 
 Recorder.eventHandlers = {};
+Recorder.mutationObservers = {};
 Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
   handler.handlerName = handlerName;
   if (!options) options = false;
@@ -35,6 +36,13 @@ Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
     this.eventHandlers[key] = [];
   }
   this.eventHandlers[key].push(handler);
+};
+
+Recorder.addMutationObserver = function(observerName, callback, config) {
+  const observer = new MutationObserver(callback);
+  observer.observerName = observerName;
+  observer.config = config;
+  this.mutationObservers[observerName] = observer;
 };
 
 Recorder.prototype.parseEventKey = function(eventKey) {
@@ -59,6 +67,11 @@ Recorder.prototype.attach = function() {
       this.eventListeners[eventKey].push(handlers[i]);
     }
   }
+
+  for (let observerName in Recorder.mutationObservers) {
+    const observer = Recorder.mutationObservers[observerName];
+    observer.observe(this.window.document.body, observer.config);
+  }
 };
 
 Recorder.prototype.detach = function() {
@@ -71,6 +84,11 @@ Recorder.prototype.detach = function() {
     }
   }
   delete this.eventListeners;
+
+  for (let observerName in Recorder.mutationObservers) {
+    const observer = Recorder.mutationObservers[observerName];
+    observer.disconnect();
+  }
 };
 
 // show element

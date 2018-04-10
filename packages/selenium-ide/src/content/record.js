@@ -432,8 +432,20 @@ if (Recorder) {
 
   // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/11/08
   // Record: mouseOver
-  Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function() {
+  Recorder.addMutationObserver("DOMNodeInserted", function(mutations) {
     if (pageLoaded === true && window.document.documentElement.getElementsByTagName("*").length > nowNode) {
+      // Get list of inserted nodes from the mutations list to simulate 'DOMNodeInserted'.
+      const insertedNodes = mutations.reduce((nodes, mutation) => {
+        if (mutation.type === "childList") {
+          nodes.push.apply(nodes, mutation.addedNodes);
+        }
+        return nodes;
+      }, []);
+      // If no nodes inserted, just bail.
+      if (!insertedNodes.length) {
+        return;
+      }
+
       let self = this;
       if (this.scrollDetector) {
         //TODO: fix target
@@ -454,7 +466,7 @@ if (Recorder) {
         delete this.mouseoverLocator;
       }
     }
-  }, true);
+  }, {childList:true, subtree:true});
 
   // InfluentialMouseoverExt & InfluentialScrollingExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/08/02
   let readyTimeOut = null;
