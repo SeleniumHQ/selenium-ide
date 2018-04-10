@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { modifier } from "modifier-keys";
-import { DragDropContext, DragDropContextProvider } from 'react-dnd'
+import { DragDropContextProvider } from 'react-dnd'
 import HTML5Backend, { NativeTypes } from 'react-dnd-html5-backend'
 import UiState from "../../stores/view/UiState";
 import ToolBar from "../../components/ToolBar";
@@ -28,7 +28,6 @@ import TestTable from "../../components/TestTable";
 import CommandForm from "../../components/CommandForm";
 import "./style.css";
 
-@DragDropContext(HTML5Backend)
 @observer export default class Editor extends React.Component {
   constructor(props) {
     super(props);
