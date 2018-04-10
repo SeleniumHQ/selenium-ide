@@ -26,16 +26,20 @@ import TestRow from "../TestRow";
 import { DropTarget } from 'react-dnd'
 import "./style.css";
 
-const boxTarget = {
+const fileTarget = {
   drop(props, monitor) {
     if (props.onDrop) {
-      props.onDrop(props, monitor)
+      let fileName = monitor.getItem().files[0].name;
+      if((/\.side$|\.html$/).test(fileName)){
+        props.onDrop(props, monitor)
+      }
     }
   }
 }
 
-@DropTarget(props => props.accepts, boxTarget, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget()
+@DropTarget(props => props.accepts, fileTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver()
 }))
 
 @observer
@@ -67,7 +71,7 @@ export default class TestTable extends React.Component {
         </table>
       </div>,
       this.props.connectDropTarget(
-        <div key="body" className="test-table test-table-body">
+        <div key="body" className="test-table test-table-body" style={{ border: this.props.isOver? "2px #40A6FF solid" : "transparent"}}>
           <table>
             <tbody>
               { this.props.commands ? this.props.commands.map((command, index) => (
