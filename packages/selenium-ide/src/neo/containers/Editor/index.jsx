@@ -19,8 +19,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { modifier } from "modifier-keys";
-import { DragDropContextProvider } from 'react-dnd'
-import HTML5Backend, { NativeTypes } from 'react-dnd-html5-backend'
+import { DragDropContextProvider } from "react-dnd";
+import HTML5Backend, { NativeTypes } from "react-dnd-html5-backend";
 import UiState from "../../stores/view/UiState";
 import ToolBar from "../../components/ToolBar";
 import UrlBar from "../../components/UrlBar";
@@ -33,14 +33,14 @@ import "./style.css";
     super(props);
     this.addCommand = this.addCommand.bind(this);
     this.removeCommand = this.removeCommand.bind(this);
-    this.handleFileDrop = this.handleFileDrop.bind(this)
+    this.handleFileDrop = this.handleFileDrop.bind(this);
   }
   static propTypes = {
     test: PropTypes.object,
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired,
-    load: PropTypes.func,
+    load: PropTypes.func
   };
   addCommand(index, command) {
     if (command) {

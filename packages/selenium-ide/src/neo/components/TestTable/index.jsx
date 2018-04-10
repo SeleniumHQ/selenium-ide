@@ -20,11 +20,11 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import classNames from "classnames";
+import { DropTarget } from "react-dnd";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
 import TestRow from "../TestRow";
-import { DropTarget } from 'react-dnd'
 import "./style.css";
 
 const fileTarget = {
@@ -32,7 +32,7 @@ const fileTarget = {
     if (props.onDrop) {
       let fileName = monitor.getItem().files[0].name;
       if((/\.side$|\.html$/).test(fileName)){
-        props.onDrop(props, monitor)
+        props.onDrop(props, monitor);
       }else{
         ModalState.showAlert({
           title: `'${fileName}' can't be loaded.`,
@@ -42,7 +42,7 @@ const fileTarget = {
       }
     }
   }
-}
+};
 
 @DropTarget(props => props.accepts, fileTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
@@ -63,6 +63,8 @@ export default class TestTable extends React.Component {
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func,
     accepts: PropTypes.any,
+    connectDropTarget: PropTypes.func,
+    isOver: PropTypes.bool
   };
   render() {
     return ([
