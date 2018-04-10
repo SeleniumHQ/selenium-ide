@@ -80,7 +80,7 @@ export default class Command {
 
   static fromJS = function(jsRep) {
     const command = new Command(jsRep.id);
-    command.setComment(jsRep.comment);
+    command.setComment(jsRep.comment ? jsRep.comment : "");
     command.setCommand(jsRep.command);
     command.setTarget(jsRep.target);
     command.setValue(jsRep.value);
