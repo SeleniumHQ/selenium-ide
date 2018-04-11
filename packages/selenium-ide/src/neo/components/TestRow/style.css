@@ -84,6 +84,10 @@
     float: right;
 }
 
+.test-table td.command {
+  color: #8B8B8B;
+}
+
 .test-table tbody tr.passed td {
   color: #008425;
 }
@@ -107,10 +111,6 @@
 .test-table td .index {
   display: inline-block;
   word-break: keep-all;
-}
-
-.test-table td .command {
-  color: #8B8B8B;
 }
 
 .test-table .cell__hidden {

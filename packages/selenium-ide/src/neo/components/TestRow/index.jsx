@@ -223,8 +223,8 @@ class TestRow extends React.Component {
       <td className={classNames("comment", {"cell__hidden": !this.props.command.comment})} colSpan="3">
         <span>{this.props.command.comment}</span>
       </td>
-      <td className={classNames({"cell__alternate": this.props.command.comment})}>
-        <span className="command"><CommandName>{this.props.command.command}</CommandName></span>
+      <td className={classNames("command", {"cell__alternate": this.props.command.comment})}>
+        <CommandName>{this.props.command.command}</CommandName>
       </td>
       <td className={classNames({"cell__alternate": this.props.command.comment})}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
       <td className={classNames({"cell__alternate": this.props.command.comment})}><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
