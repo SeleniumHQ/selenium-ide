@@ -18,8 +18,7 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 
 ### Pre-packaged
 - [Chrome extension](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
-
-Firefox users for the time being can download the latest `xpi` from the [releases](https://github.com/SeleniumHQ/selenium-ide/releases) page.
+- [Firefox extension](https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/)
 
 ## Prerequisites
 
