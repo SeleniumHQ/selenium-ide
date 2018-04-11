@@ -110,22 +110,19 @@
 }
 
 .test-table td .command {
-  display: inline-block;
   color: #8B8B8B;
 }
 
-.test-table td:nth-child(2) {
-  padding: 5px 10px;
-  display: flex;
-  align-items: start;
+.test-table .cell__hidden {
+    display: none;
 }
 
-.test-table td:nth-child(3) {
-  width: 30%;
+.test-table tr:hover .comment {
+    display: none;
 }
 
-.test-table td:nth-child(4) {
-  width: 39%;
+.test-table tr:not(:hover) .cell__alternate {
+    display: none;
 }
 
 .test-table td.buttons {

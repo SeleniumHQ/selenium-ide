@@ -220,17 +220,14 @@ class TestRow extends React.Component {
         {!this.props.isPristine ? <span className="index">{this.props.index + 1}.</span> : null}
         {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
       </td>
-      {this.props.command.comment ?
-        <td className="comment" colSpan="3">
-          <span>{this.props.command.comment}</span>
-        </td> :
-        <React.Fragment>
-          <td>
-            <span className="command"><CommandName>{this.props.command.command}</CommandName></span>
-          </td>
-          <td><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
-          <td><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
-        </React.Fragment>}
+      <td className={classNames("comment", {"cell__hidden": !this.props.command.comment})} colSpan="3">
+        <span>{this.props.command.comment}</span>
+      </td>
+      <td className={classNames({"cell__alternate": this.props.command.comment})}>
+        <span className="command"><CommandName>{this.props.command.command}</CommandName></span>
+      </td>
+      <td className={classNames({"cell__alternate": this.props.command.comment})}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
+      <td className={classNames({"cell__alternate": this.props.command.comment})}><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
       <td className="buttons">
         { !this.props.isPristine ?
           listMenu

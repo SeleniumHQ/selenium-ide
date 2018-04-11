@@ -24,12 +24,12 @@
   flex: 0% 1 1;
 }
 
-.test-table th:first-child > * {
-  padding-left: 12px;
+.test-table th:first-child {
+    margin-left: 47px;
 }
 
-.test-table th:nth-child(3) {
-  flex: 22px 1 1;
+.test-table th:last-child {
+    margin-right: 22px;
 }
 
 .test-table th:not(:last-child):after {
