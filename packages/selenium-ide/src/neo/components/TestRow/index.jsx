@@ -93,6 +93,11 @@ const commandTarget = {
 class TestRow extends React.Component {
   constructor(props) {
     super(props);
+    this.copy = this.copy.bind(this);
+    this.cut = this.cut.bind(this);
+    this.paste = this.paste.bind(this);
+    this.select = this.select.bind(this);
+    this.remove = this.remove.bind(this);
   }
   static propTypes = {
     index: PropTypes.number,
@@ -145,7 +150,7 @@ class TestRow extends React.Component {
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
 
     if (this.props.remove && noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
-      this.props.remove(this.props.index, this.props.command);
+      this.remove();
     } else if (!this.props.isPristine && noModifiers && key === "B") {
       this.props.command.toggleBreakpoint();
     } else if (!this.props.isPristine && noModifiers && key === "S") {
@@ -157,20 +162,35 @@ class TestRow extends React.Component {
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowDown") {
       this.props.moveSelection(this.props.index + 1);
     } else if (!this.props.isPristine && onlyPrimary && key === "X") {
-      this.props.copyToClipboard(this.props.command);
-      this.props.remove(this.props.index, this.props.command);
+      this.cut();
     } else if (!this.props.isPristine && onlyPrimary && key === "C") {
-      this.props.copyToClipboard(this.props.command);
+      this.copy();
     } else if (onlyPrimary && key === "V") {
-      this.props.pasteFromClipboard(this.props.index);
+      this.paste();
     }
+  }
+  copy() {
+    this.props.copyToClipboard(this.props.command);
+  }
+  cut() {
+    this.props.copyToClipboard(this.props.command);
+    this.props.remove(this.props.index, this.props.command);
+  }
+  paste() {
+    this.props.pasteFromClipboard(this.props.index);
+  }
+  select() {
+    this.props.select(this.props.command);
+  }
+  remove() {
+    this.props.remove(this.props.index, this.props.command);
   }
   render() {
     const listMenu =<ListMenu width={300} padding={-5} opener={<MoreButton /> }>
-      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(this.props.command); this.props.remove(this.props.index, this.props.command);}}>Cut</ListMenuItem>
-      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(this.props.command); }}>Copy</ListMenuItem>
-      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={() => {this.props.pasteFromClipboard(this.props.index); }}>Paste</ListMenuItem>
-      <ListMenuItem label="Del" onClick={() => {this.props.remove(this.props.index, this.props.command);}}>Delete</ListMenuItem>
+      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={this.cut}>Cut</ListMenuItem>
+      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.copy}>Copy</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+      <ListMenuItem label="Del" onClick={this.remove}>Delete</ListMenuItem>
       <ListMenuSeparator />
       <ListMenuItem onClick={() => { this.props.addCommand(this.props.index); }}>Insert new command</ListMenuItem>
       <ListMenuSeparator />
@@ -188,10 +208,10 @@ class TestRow extends React.Component {
       className={classNames(this.props.className, {"selected": this.props.selected}, {"break-point": this.props.command.isBreakpoint})}
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}
-      onClick={() => { this.props.select(this.props.command); }}
+      onClick={this.select}
       onDoubleClick={() => { this.props.executeCommand(this.props.command); }}
       onKeyDown={this.handleKeyDown.bind(this)}
-      onFocus={() => { this.props.select(this.props.command); }}
+      onFocus={this.select}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
