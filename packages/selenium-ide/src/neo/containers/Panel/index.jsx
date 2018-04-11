@@ -76,6 +76,7 @@ modify(project);
     super(props);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
+    this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
     this.quitHandler = window.addEventListener("beforeunload", (e) => {
       if (project.modified) {
@@ -102,15 +103,17 @@ modify(project);
       }
     });
   }
-  handleKeyDown(event) {
-    const e = event.nativeEvent;
+  handleKeyDown(e) {
     modifier(e);
     const key = e.key.toUpperCase();
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
     if (onlyPrimary && key === "S") {
       e.preventDefault();
       saveProject(project);
+    } else if (noModifiers && key === "ESCAPE") {
+      UiState.toggleConsole();
     }
   }
   navigationDragStart() {
@@ -128,7 +131,7 @@ modify(project);
   }
   render() {
     return (
-      <div className="container" onKeyDown={this.handleKeyDown.bind(this)}>
+      <div className="container">
         <SplitPane
           split="horizontal"
           minSize={UiState.minContentHeight}

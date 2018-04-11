@@ -178,6 +178,22 @@ class UiState {
     });
   }
 
+  @action.bound maximizeConsole() {
+    this.resizeConsole(this.windowHeight - this.minContentHeight);
+  }
+
+  @action.bound minimizeConsole() {
+    this.resizeConsole(this.minConsoleHeight);
+  }
+
+  @action.bound toggleConsole() {
+    if (this.consoleHeight === this.minConsoleHeight) {
+      this.maximizeConsole();
+    } else {
+      this.minimizeConsole();
+    }
+  }
+
   @action.bound setWindowHeight(height) {
     this.windowHeight = height;
     if (this.windowHeight - this.consoleHeight < this.minContentHeight) {
