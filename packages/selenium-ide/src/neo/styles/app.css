@@ -41,6 +41,14 @@ a.link {
     text-decoration: underline;
 }
 
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: initial;
+}
+
 input,
 textarea {
     border: 1px #DCDCDC solid;
