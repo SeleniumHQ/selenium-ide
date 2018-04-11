@@ -103,6 +103,7 @@ class TestRow extends React.Component {
     index: PropTypes.number,
     selected: PropTypes.bool,
     className: PropTypes.string,
+    status: PropTypes.string,
     command: PropTypes.object.isRequired,
     isPristine: PropTypes.bool,
     select: PropTypes.func,
@@ -135,6 +136,8 @@ class TestRow extends React.Component {
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });
+    } else if (this.props.status === "pending") {
+      this.node.scrollIntoViewIfNeeded();
     }
   }
   componentWillUnmount() {
@@ -205,7 +208,7 @@ class TestRow extends React.Component {
 
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
-      className={classNames(this.props.className, {"selected": this.props.selected}, {"break-point": this.props.command.isBreakpoint})}
+      className={classNames(this.props.className, this.props.status, {"selected": this.props.selected}, {"break-point": this.props.command.isBreakpoint})}
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}
       onClick={this.select}

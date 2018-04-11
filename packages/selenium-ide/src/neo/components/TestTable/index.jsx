@@ -58,7 +58,7 @@ export default class TestTable extends React.Component {
             { this.props.commands ? this.props.commands.map((command, index) => (
               <TestRow
                 key={command.id}
-                className={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
+                status={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
                 selected={this.props.selectedCommand === command.id}
                 index={index}
                 command={command}
