@@ -26,7 +26,6 @@ class UiState {
   @observable selectedTest = {};
   @observable selectedCommand = null;
   @observable filterTerm = "";
-  @observable dragInProgress = false;
   @observable clipboard = null;
   @observable isRecording = false;
   @observable isSelectingTarget = false;
@@ -94,6 +93,13 @@ class UiState {
     this.clipboard = item;
   }
 
+  @action.bound pasteFromClipboard(index) {
+    if (this.clipboard && this.selectedTest.test) {
+      const newCommand = this.clipboard.clone();
+      this.selectedTest.test.insertCommandAt(newCommand, index);
+    }
+  }
+
   @action.bound selectTest(test, suite) {
     if (test !== this.selectedTest.test) {
       if (test && test.commands.length) {
@@ -151,10 +157,6 @@ class UiState {
 
   @action.bound changeFilter(term) {
     this.filterTerm = term;
-  }
-
-  @action.bound setDrag(dragProgress) {
-    this.dragInProgress = dragProgress;
   }
 
   @action.bound toggleRecord() {
@@ -266,7 +268,6 @@ class UiState {
     this.selectedTest = {};
     this.selectedCommand = null;
     this.filterTerm = "";
-    this.dragInProgress = false;
     this.clipboard = null;
     this.isRecording = false;
     this.suiteStates = {};

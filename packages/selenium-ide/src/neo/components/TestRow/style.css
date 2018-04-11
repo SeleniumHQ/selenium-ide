@@ -34,6 +34,19 @@
 
 .test-table tbody tr td:first-child {
   position: relative;
+  width: 37px;
+  flex: initial;
+  border-right: 1px transparent solid;
+  padding: 5px;
+}
+
+.test-table tbody tr:not(:focus) td:first-child {
+    padding-top: 6px;
+    border-top: none;
+}
+
+.test-table tbody tr td:first-child {
+  border-right: 1px #CECECE solid;
 }
 
 .test-table tbody tr td:first-child span:first-child {
@@ -61,8 +74,14 @@
   border-left-color: #e25807;
 }
 
-.test-table tbody tr td:first-child span:nth-child(2) {
-  margin-right: 5px;
+.test-table tbody tr td:first-child span.index {
+    padding: 0 5px;
+    color: #8B8B8B;
+}
+
+
+.test-table tbody tr td:first-child span.comment-icon {
+    float: right;
 }
 
 .test-table tbody tr.passed td {
@@ -91,22 +110,19 @@
 }
 
 .test-table td .command {
-  display: inline-block;
-}
-
-.test-table td:nth-child(1) {
   color: #8B8B8B;
-  padding: 5px 10px;
-  display: flex;
-  align-items: start;
 }
 
-.test-table td:nth-child(2) {
-  width: 30%;
+.test-table .cell__hidden {
+    display: none;
 }
 
-.test-table td:nth-child(3) {
-  width: 39%;
+.test-table tr:hover .comment {
+    display: none;
+}
+
+.test-table tr:not(:hover) .cell__alternate {
+    display: none;
 }
 
 .test-table td.buttons {

@@ -4,6 +4,8 @@
 
 .test-table-body {
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .test-table table {
@@ -22,12 +24,12 @@
   flex: 0% 1 1;
 }
 
-.test-table th:first-child > * {
-  padding-left: 12px;
+.test-table th:first-child {
+    margin-left: 47px;
 }
 
-.test-table th:nth-child(3) {
-  flex: 22px 1 1;
+.test-table th:last-child {
+    margin-right: 22px;
 }
 
 .test-table th:not(:last-child):after {
@@ -40,4 +42,11 @@
   margin: auto;
   bottom: 0;
   top: 0;
+}
+
+.test-table .filler {
+  border-right: 1px #CECECE solid;
+  width: 37px;
+  padding: 5px;
+  flex-grow: 1;
 }
