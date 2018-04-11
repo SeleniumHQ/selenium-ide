@@ -47,8 +47,6 @@ export default class TestList extends Component {
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
                 changed={UiState.getTestState(test).modified}
                 selectTest={UiState.selectTest}
-                dragInProgress={UiState.dragInProgress}
-                setDrag={UiState.setDrag}
                 removeTest={() => { this.props.removeTest(test); }}
                 moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
                 moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}

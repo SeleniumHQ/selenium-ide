@@ -29,14 +29,10 @@ import "./style.css";
 export const Type = "test";
 const testSource = {
   beginDrag(props) {
-    props.setDrag(true);
     return {
       id: props.test.id,
       suite: props.suite.id
     };
-  },
-  endDrag(props) {
-    props.setDrag(false);
   }
 };
 function collect(connect, monitor) {
@@ -57,8 +53,6 @@ class Test extends React.Component {
     renameTest: PropTypes.func,
     removeTest: PropTypes.func.isRequired,
     connectDragSource: PropTypes.func,
-    dragInProgress: PropTypes.bool,
-    setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
     setSectionFocus: PropTypes.func,
@@ -116,7 +110,7 @@ class Test extends React.Component {
     const rendered = <a
       href="#"
       ref={(node) => { this.node = node; }}
-      className={classNames("test", this.props.className, {"changed": this.props.changed}, {"selected": this.props.selected}, {"dragging": this.props.dragInProgress})}
+      className={classNames("test", this.props.className, {"changed": this.props.changed}, {"selected": this.props.selected})}
       onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}
