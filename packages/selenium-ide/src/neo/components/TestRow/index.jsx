@@ -93,7 +93,6 @@ const commandTarget = {
 class TestRow extends React.Component {
   constructor(props) {
     super(props);
-    this.paste = this.paste.bind(this);
   }
   static propTypes = {
     index: PropTypes.number,
@@ -110,8 +109,8 @@ class TestRow extends React.Component {
     isDragging: PropTypes.bool,
     connectDragSource: PropTypes.func,
     connectDropTarget: PropTypes.func,
-    clipboard: PropTypes.any,
     copyToClipboard: PropTypes.func,
+    pasteFromClipboard: PropTypes.func,
     clearAllCommands: PropTypes.func,
     moveSelection: PropTypes.func,
     setSectionFocus: PropTypes.func,
@@ -163,19 +162,14 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && onlyPrimary && key === "C") {
       this.props.copyToClipboard(this.props.command);
     } else if (onlyPrimary && key === "V") {
-      this.paste();
-    }
-  }
-  paste() {
-    if (this.props.clipboard && this.props.clipboard.constructor.name === "Command") {
-      this.props.addCommand(this.props.index, this.props.clipboard);
+      this.props.pasteFromClipboard(this.props.index);
     }
   }
   render() {
     const listMenu =<ListMenu width={300} padding={-5} opener={<MoreButton /> }>
       <ListMenuItem label={parse("x", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(this.props.command); this.props.remove(this.props.index, this.props.command);}}>Cut</ListMenuItem>
       <ListMenuItem label={parse("c", { primaryKey: true})} onClick={() => {this.props.copyToClipboard(this.props.command); }}>Copy</ListMenuItem>
-      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={() => {this.props.pasteFromClipboard(this.props.index); }}>Paste</ListMenuItem>
       <ListMenuItem label="Del" onClick={() => {this.props.remove(this.props.index, this.props.command);}}>Delete</ListMenuItem>
       <ListMenuSeparator />
       <ListMenuItem onClick={() => { this.props.addCommand(this.props.index); }}>Insert new command</ListMenuItem>
