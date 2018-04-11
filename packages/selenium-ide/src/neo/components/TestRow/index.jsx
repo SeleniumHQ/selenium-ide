@@ -100,6 +100,7 @@ class TestRow extends React.Component {
     selected: PropTypes.bool,
     className: PropTypes.string,
     command: PropTypes.object.isRequired,
+    isPristine: PropTypes.bool,
     select: PropTypes.func,
     startPlayingHere: PropTypes.func,
     executeCommand: PropTypes.func,
@@ -146,20 +147,20 @@ class TestRow extends React.Component {
 
     if (this.props.remove && noModifiers && (e.key === "Delete" || e.key == "Backspace")) {
       this.props.remove(this.props.index, this.props.command);
-    } else if (this.props.moveSelection && noModifiers && key === "B") {
+    } else if (!this.props.isPristine && noModifiers && key === "B") {
       this.props.command.toggleBreakpoint();
-    } else if (this.props.moveSelection && noModifiers && key === "S") {
+    } else if (!this.props.isPristine && noModifiers && key === "S") {
       this.props.startPlayingHere(this.props.command);
-    } else if (this.props.moveSelection && noModifiers && key === "X") {
+    } else if (!this.props.isPristine && noModifiers && key === "X") {
       this.props.executeCommand(this.props.command);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowUp") {
       this.props.moveSelection(this.props.index - 1);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowDown") {
       this.props.moveSelection(this.props.index + 1);
-    } else if (this.props.copyToClipboard && onlyPrimary && key === "X") {
+    } else if (!this.props.isPristine && onlyPrimary && key === "X") {
       this.props.copyToClipboard(this.props.command);
       this.props.remove(this.props.index, this.props.command);
-    } else if (this.props.copyToClipboard && onlyPrimary && key === "C") {
+    } else if (!this.props.isPristine && onlyPrimary && key === "C") {
       this.props.copyToClipboard(this.props.command);
     } else if (onlyPrimary && key === "V") {
       this.paste();
@@ -202,7 +203,7 @@ class TestRow extends React.Component {
       }}>
       <td>
         <span></span>
-        {this.props.index >= 0 ? <span className="index">{this.props.index + 1}.</span> : null}
+        {!this.props.isPristine ? <span className="index">{this.props.index + 1}.</span> : null}
         {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
       </td>
       {this.props.command.comment ?
@@ -217,12 +218,12 @@ class TestRow extends React.Component {
           <td><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
         </React.Fragment>}
       <td className="buttons">
-        { this.props.swapCommands ?
+        { !this.props.isPristine ?
           listMenu
           : <div></div> }
       </td>
     </tr>;
-    return (this.props.swapCommands ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
+    return (!this.props.isPristine ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }
 

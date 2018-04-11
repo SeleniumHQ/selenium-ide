@@ -62,6 +62,7 @@ export default class TestTable extends React.Component {
                 selected={this.props.selectedCommand === command.id}
                 index={index}
                 command={command}
+                isPristine={false}
                 select={this.props.selectCommand}
                 startPlayingHere={PlaybackState.startPlaying}
                 executeCommand={PlaybackState.playCommand}
@@ -80,6 +81,7 @@ export default class TestTable extends React.Component {
                 selected={this.props.selectedCommand === UiState.pristineCommand.id}
                 index={this.props.commands.length}
                 command={UiState.pristineCommand}
+                isPristine={true}
                 select={this.props.selectCommand}
                 addCommand={this.props.addCommand}
                 moveSelection={UiState.selectCommandByIndex}
