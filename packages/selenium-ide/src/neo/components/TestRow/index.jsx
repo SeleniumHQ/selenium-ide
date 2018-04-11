@@ -224,7 +224,7 @@ class TestRow extends React.Component {
         {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
       </td>
       <td className={classNames("comment", {"cell__hidden": !this.props.command.comment})} colSpan="3">
-        <span>{this.props.command.comment}</span>
+        <MultilineEllipsis lines={1}>{this.props.command.comment}</MultilineEllipsis>
       </td>
       <td className={classNames("command", {"cell__alternate": this.props.command.comment})}>
         <CommandName>{this.props.command.command}</CommandName>
