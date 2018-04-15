@@ -31,11 +31,14 @@ export default function Selianize(project) {
       return map;
     }, {});
     let errors = [];
-    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap).catch(e => {
+    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap).catch(e => {
       errors.push(e);
-    })))).join("");
+    }))));
 
-    errors.length ? rej({ name: project.name, suites: errors }) : res(beautify(result, { indent_size: 2 }));
+    const results = suites.reduce((accumulator, suiteCode, index) => (Object.assign(accumulator, {
+      [project.suites[index].name]: `${result}${suiteCode}`
+    })), {});
+    errors.length ? rej({ name: project.name, suites: errors }) : res(results);
   });
 }
 
