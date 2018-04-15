@@ -21,8 +21,10 @@
   "private": false,
   "dependencies": {
     "commander": "^2.12.2",
+    "glob": "^7.1.2",
     "jest": "^22.0.5",
     "js-yaml": "^3.10.0",
+    "rimraf": "^2.6.2",
     "selenium-webdriver": "^3.6.0",
     "winston": "^2.4.0"
   },

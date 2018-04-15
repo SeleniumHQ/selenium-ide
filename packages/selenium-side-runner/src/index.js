@@ -17,10 +17,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import fs from "fs";
 import path from "path";
 import program from "commander";
+import glob from "glob";
 import jest from "jest";
 import winston from "winston";
+import rimraf from "rimraf";
 import Capabilities from "./capabilities";
 import Config from "./config";
 import metadata from "../package.json";
@@ -61,6 +64,39 @@ if (program.capabilities) {
   }
 }
 
+function runProject(project) {
+  const projectPath = `side-suite-${project.name}`;
+  fs.mkdirSync(projectPath);
+  process.chdir(projectPath);
+  fs.writeFileSync("package.json", JSON.stringify({
+    name: project.name,
+    version: "0.0.0"
+  }));
+  Object.keys(project.code).forEach(suite => {
+    fs.writeFileSync(`${suite}.test.js`, project.code[suite]);
+  });
+  winston.info(`Running ${project.name}`);
+  return jest.run([
+    "--setupFiles", path.join(__dirname, "setup.js"),
+    "--testEnvironment", "node",
+    "--modulePaths", path.join(__dirname, "../node_modules"),
+    "--testMatch", "**/*.test.js",
+    "-t", testFilter
+  ]).then((r) => {
+    process.chdir("..");
+    rimraf.sync(projectPath);
+    return r;
+  }).catch(winston.error);
+}
+
+function runAll(projects, index = 0) {
+  if (index >= projects.length) return Promise.resolve();
+  return runProject(projects[index]).then(() => {
+    return runAll(projects, ++index);
+  });
+}
+
 process.env.configuration = JSON.stringify(configuration);
 let testFilter = program.args.length ? program.args[0] : "";
-jest.run(["--setupFiles", path.join(__dirname, "setup.js"), "--testEnvironment", "node", "--modulePaths", path.join(__dirname, "../node_modules"), "--testMatch", "**/*.test.js", "-t", testFilter]).catch(winston.error);
+const projects = glob.sync("**/*.side").map(p => JSON.parse(fs.readFileSync(p)));
+runAll(projects);
