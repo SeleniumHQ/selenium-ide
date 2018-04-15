@@ -145,7 +145,6 @@ modify(project);
               changeName={this.state.project.changeName}
               load={loadProject.bind(undefined, project)}
               save={() => saveProject(project)}
-              export={() => exportProject(project)}
             />
             <div className={classNames("content", {dragging: UiState.navigationDragging})}>
               <SplitPane
