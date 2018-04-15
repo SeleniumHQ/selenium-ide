@@ -66,23 +66,19 @@ export function saveProject(project) {
 }
 
 function downloadProject(project) {
-  browser.downloads.download({
-    filename: project.name + ".side",
-    url: createBlob("application/json", project.toJSON()),
-    saveAs: true,
-    conflictAction: "overwrite"
-  });
-}
-
-export function exportProject(project) {
-  Selianize(JSON.parse(project.toJSON())).then(data => {
-    browser.downloads.download({
-      filename: project.name + ".test.js",
-      url: createBlob("application/javascript", data),
+  return exportProject(project).then(code => {
+    project.code = code;
+    return browser.downloads.download({
+      filename: project.name + ".side",
+      url: createBlob("application/json", project.toJSON()),
       saveAs: true,
       conflictAction: "overwrite"
     });
-  }).catch(err => {
+  });
+}
+
+function exportProject(project) {
+  return Selianize(JSON.parse(project.toJSON())).catch(err => {
     const markdown = ParseError(err && err.message || err);
     ModalState.showAlert({
       title: "Error exporting project",
