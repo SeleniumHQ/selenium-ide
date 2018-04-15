@@ -137,7 +137,7 @@ class TestRow extends React.Component {
         this.node.focus();
       });
     } else if (this.props.status === "pending") {
-      this.node.scrollIntoViewIfNeeded();
+      this.node.scrollIntoView();
     }
   }
   componentWillUnmount() {
