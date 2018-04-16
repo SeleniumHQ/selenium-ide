@@ -24,6 +24,7 @@ import program from "commander";
 import glob from "glob";
 import winston from "winston";
 import rimraf from "rimraf";
+import { js_beautify as beautify } from "js-beautify";
 import Capabilities from "./capabilities";
 import Config from "./config";
 import metadata from "../package.json";
@@ -78,7 +79,7 @@ function runProject(project) {
     version: "0.0.0"
   }));
   Object.keys(project.code).forEach(suite => {
-    fs.writeFileSync(`${suite}.test.js`, project.code[suite]);
+    fs.writeFileSync(`${suite}.test.js`, beautify(project.code[suite], { indent_size: 2 }));
   });
   winston.info(`Running ${project.name}`);
 
@@ -92,6 +93,7 @@ function runProject(project) {
     ], { stdio: "inherit" });
 
     child.on("exit", (code) => {
+      console.log("");
       process.chdir("..");
       rimraf.sync(projectPath);
       if (code) {
@@ -109,7 +111,7 @@ function runAll(projects, index = 0) {
     return runAll(projects, ++index);
   }).catch((error) => {
     process.exitCode = 1;
-    error && winston.error(error.message);
+    error && winston.error(error.message + "\n");
     return runAll(projects, ++index);
   });
 }

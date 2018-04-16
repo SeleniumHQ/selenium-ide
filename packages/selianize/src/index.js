@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { js_beautify as beautify } from "js-beautify";
 import template from "./template";
 import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
