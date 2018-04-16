@@ -66,6 +66,7 @@ if (program.capabilities) {
 
 function runProject(project) {
   const projectPath = `side-suite-${project.name}`;
+  rimraf.sync(projectPath);
   fs.mkdirSync(projectPath);
   process.chdir(projectPath);
   fs.writeFileSync("package.json", JSON.stringify({
