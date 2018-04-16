@@ -8,9 +8,8 @@ before_install:
   - docker-compose up -d
 install:
   - yarn
-  - yarn build:runner
   - yarn build:selianize
-  - yarn build:runner:examples
+  - yarn build:runner
 script:
   - yarn lint
   - yarn test
