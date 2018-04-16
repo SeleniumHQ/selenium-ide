@@ -22,7 +22,6 @@
   "private": false,
   "dependencies": {
     "commander": "^2.12.2",
-    "glob": "^7.1.2",
     "jest": "^22.0.5",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",

@@ -21,7 +21,6 @@ import fs from "fs";
 import path from "path";
 import { fork } from "child_process";
 import program from "commander";
-import glob from "glob";
 import winston from "winston";
 import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
@@ -32,12 +31,19 @@ import metadata from "../package.json";
 process.title = metadata.name;
 
 program
+  .usage("[options] project.side [project.side] [*.side]")
   .version(metadata.version)
   .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("-s, --server [url]", "Webdriver remote server")
+  .option("-f, --filter [String]", "Filter test cases by name")
   .option("--no-sideyml", "Disabled the use of .side.yml")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
+
+if (!program.args.length) {
+  program.outputHelp();
+  process.exit(1);
+}
 
 winston.cli();
 winston.level = program.debug ? "debug" : "warn";
@@ -88,9 +94,8 @@ function runProject(project) {
       "--setupFiles", path.join(__dirname, "setup.js"),
       "--testEnvironment", "node",
       "--modulePaths", path.join(__dirname, "../node_modules"),
-      "--testMatch", "**/*.test.js",
-      "-t", testFilter
-    ], { stdio: "inherit" });
+      "--testMatch", "**/*.test.js"
+    ].concat(program.filter ? ["-t", program.filter] : []), { stdio: "inherit" });
 
     child.on("exit", (code) => {
       console.log("");
@@ -117,12 +122,6 @@ function runAll(projects, index = 0) {
 }
 
 process.env.configuration = JSON.stringify(configuration);
-let testFilter = program.args.length ? program.args[0] : "";
-const projects = glob.sync("**/*.side").map(p => JSON.parse(fs.readFileSync(p)));
-
-if (!projects.length) {
-  winston.error("No projects found!");
-  process.exit(1);
-}
+const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
 
 runAll(projects);
