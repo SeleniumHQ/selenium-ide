@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
     "build:ext": "cd packages/selenium-ide && yarn build",
-    "build:runner": "cd packages/selenium-side-runner && yarn build",
+    "build:runner": "cd packages/selenium-side-runner && yarn build && yarn pkg",
     "build:runner:examples": "cd tests && mkdir -p webdriver && ls examples | grep \"\\.side$\" | xargs node simple-export.js",
     "build:selianize": "cd packages/selianize && yarn build",
     "build:ext:prod": "cd packages/selenium-ide && yarn build-prod",
