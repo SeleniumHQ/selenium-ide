@@ -119,4 +119,10 @@ function runAll(projects, index = 0) {
 process.env.configuration = JSON.stringify(configuration);
 let testFilter = program.args.length ? program.args[0] : "";
 const projects = glob.sync("**/*.side").map(p => JSON.parse(fs.readFileSync(p)));
+
+if (!projects.length) {
+  winston.error("No projects found!");
+  process.exit(1);
+}
+
 runAll(projects);
