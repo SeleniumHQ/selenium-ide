@@ -42,7 +42,7 @@ import "../../styles/layout.css";
 import "../../styles/resizer.css";
 import "../../styles/markdown.css";
 
-import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
+import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
 if (process.env.NODE_ENV !== "test") {
