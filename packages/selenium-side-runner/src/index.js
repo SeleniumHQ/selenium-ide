@@ -19,9 +19,9 @@
 
 import fs from "fs";
 import path from "path";
+import { fork } from "child_process";
 import program from "commander";
 import glob from "glob";
-import jest from "jest";
 import winston from "winston";
 import rimraf from "rimraf";
 import Capabilities from "./capabilities";
@@ -38,6 +38,7 @@ program
   .option("--debug", "Print debug logs")
   .parse(process.argv);
 
+winston.cli();
 winston.level = program.debug ? "debug" : "warn";
 
 const configuration = {
@@ -65,6 +66,9 @@ if (program.capabilities) {
 }
 
 function runProject(project) {
+  if (!project.code) {
+    return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
+  }
   const projectPath = `side-suite-${project.name}`;
   rimraf.sync(projectPath);
   fs.mkdirSync(projectPath);
@@ -77,26 +81,35 @@ function runProject(project) {
     fs.writeFileSync(`${suite}.test.js`, project.code[suite]);
   });
   winston.info(`Running ${project.name}`);
-  return jest.run([
-    "--setupFiles", path.join(__dirname, "setup.js"),
-    "--testEnvironment", "node",
-    "--modulePaths", path.join(__dirname, "../node_modules"),
-    "--testMatch", "**/*.test.js",
-    "-t", testFilter
-  ]).then((r) => {
-    process.chdir("..");
-    rimraf.sync(projectPath);
-    return r;
-  }).catch((error) => {
-    process.chdir("..");
-    rimraf.sync(projectPath);
-    winston.error(error);
+
+  return new Promise((resolve, reject) => {
+    const child = fork(require.resolve("./child"), [
+      "--setupFiles", path.join(__dirname, "setup.js"),
+      "--testEnvironment", "node",
+      "--modulePaths", path.join(__dirname, "../node_modules"),
+      "--testMatch", "**/*.test.js",
+      "-t", testFilter
+    ], { stdio: "inherit" });
+
+    child.on("exit", (code) => {
+      process.chdir("..");
+      rimraf.sync(projectPath);
+      if (code) {
+        reject();
+      } else {
+        resolve();
+      }
+    });
   });
 }
 
 function runAll(projects, index = 0) {
   if (index >= projects.length) return Promise.resolve();
   return runProject(projects[index]).then(() => {
+    return runAll(projects, ++index);
+  }).catch((error) => {
+    process.exitCode = 1;
+    error && winston.error(error.message);
     return runAll(projects, ++index);
   });
 }
