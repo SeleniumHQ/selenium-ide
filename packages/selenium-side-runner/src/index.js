@@ -86,7 +86,11 @@ function runProject(project) {
     process.chdir("..");
     rimraf.sync(projectPath);
     return r;
-  }).catch(winston.error);
+  }).catch((error) => {
+    process.chdir("..");
+    rimraf.sync(projectPath);
+    winston.error(error);
+  });
 }
 
 function runAll(projects, index = 0) {
