@@ -59,7 +59,8 @@ export function loadAsText(blob) {
   });
 }
 
-export function saveProject(project) {
+export function saveProject(_project) {
+  const project = _project.toJS();
   project.version = "1.0";
   downloadProject(project);
   UiState.saved();
@@ -70,7 +71,7 @@ function downloadProject(project) {
     project.code = code;
     return browser.downloads.download({
       filename: project.name + ".side",
-      url: createBlob("application/json", project.toJSON()),
+      url: createBlob("application/json", JSON.stringify(project)),
       saveAs: true,
       conflictAction: "overwrite"
     });
@@ -78,7 +79,7 @@ function downloadProject(project) {
 }
 
 function exportProject(project) {
-  return Selianize(JSON.parse(project.toJSON())).catch(err => {
+  return Selianize(project).catch(err => {
     const markdown = ParseError(err && err.message || err);
     ModalState.showAlert({
       title: "Error exporting project",
