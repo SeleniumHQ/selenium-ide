@@ -82,7 +82,7 @@ function exportProject(project) {
   return Selianize(project).catch(err => {
     const markdown = ParseError(err && err.message || err);
     ModalState.showAlert({
-      title: "Error exporting project",
+      title: "Error saving project",
       description: markdown,
       confirmLabel: "Download log",
       cancelLabel: "Close"
@@ -96,6 +96,7 @@ function exportProject(project) {
         });
       }
     });
+    return Promise.reject();
   });
 }
 
