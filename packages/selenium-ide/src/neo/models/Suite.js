@@ -22,6 +22,7 @@ import SortBy from "sort-array";
 export default class Suite {
   id = null;
   @observable name = null;
+  @observable timeout = 300;
   @observable _tests = [];
 
   constructor(id = uuidv4(), name = "Untitled Suite") {
@@ -40,6 +41,14 @@ export default class Suite {
 
   @action.bound setName(name) {
     this.name = name;
+  }
+
+  @action.bound setTimeout(timeout) {
+    if (timeout !== undefined && timeout.constructor.name !== "Number") {
+      throw new Error(`Expected to receive Number instead received ${timeout !== undefined ? timeout.constructor.name : timeout}`);
+    } else {
+      this.timeout = timeout;
+    }
   }
 
   @action.bound addTestCase(test) {
@@ -70,6 +79,7 @@ export default class Suite {
     return {
       id: this.id,
       name: this.name,
+      timeout: this.timeout,
       tests: this._tests.map(t => t.id)
     };
   }
