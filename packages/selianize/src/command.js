@@ -94,7 +94,11 @@ export function emit(command) {
         rej(e);
       }
     } else {
-      rej(command.command ? `Unknown command ${command.command}` : "Command can not be empty");
+      if (!command.command) {
+        res();
+      } else {
+        rej(`Unknown command ${command.command}`);
+      }
     }
   });
 }

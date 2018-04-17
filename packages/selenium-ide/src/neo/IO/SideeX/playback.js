@@ -55,6 +55,10 @@ function executionLoop() {
   // reached the end
   if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) return false;
   const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // is command empty?
+  if (!command) {
+    return executionLoop();
+  }
   // breakpoint
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();

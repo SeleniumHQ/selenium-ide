@@ -19,13 +19,13 @@ import CommandEmitter from "../src/command";
 import { CommandsArray } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
-  it("should fail to emit with no command", () => {
+  it("should skip empty commands", () => {
     const command = {
       command: "",
       target: "",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).rejects.toThrow("Command can not be empty");
+    return expect(CommandEmitter.emit(command)).resolves.toBeUndefined();
   });
   it("should fail to emit unknown command", () => {
     const command = {
