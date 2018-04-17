@@ -19,7 +19,7 @@ import TestCaseEmitter from "./testcase";
 
 export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = `describe("${suite.name}", () => {`;
+    let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {`;
 
     let errors = [];
     result += (await Promise.all(suite.tests.map(testId => (
