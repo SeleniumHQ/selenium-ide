@@ -36,7 +36,8 @@ program
   .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("-s, --server [url]", "Webdriver remote server")
   .option("-f, --filter [string]", "Filter test cases by name")
-  .option("-w, --maxWorkers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
+  .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
+  .option("--base-url [url]", "Override the base URL that was set in the IDE")
   .option("--no-sideyml", "Disabled the use of .side.yml")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
@@ -72,6 +73,8 @@ if (program.capabilities) {
     winston.info("Failed to parse inline capabilities");
   }
 }
+
+configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUrl;
 
 function runProject(project) {
   if (!project.code) {

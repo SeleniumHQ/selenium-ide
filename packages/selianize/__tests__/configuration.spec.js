@@ -22,6 +22,6 @@ describe("configuration code emitter", () => {
     const project = {
       url: "http://www.seleniumhq.org"
     };
-    expect(ConfigurationEmitter.emit(project)).toBe(`const BASE_URL = '${project.url}';`);
+    expect(ConfigurationEmitter.emit(project)).toBe(`const BASE_URL = Runner.configuration.baseUrl || '${project.url}';`);
   });
 });

@@ -16,7 +16,7 @@
 // under the License.
 
 export function emit(project) {
-  return `const BASE_URL = '${project.url}';`;
+  return `const BASE_URL = Runner.configuration.baseUrl || '${project.url}';`;
 }
 
 export default {
