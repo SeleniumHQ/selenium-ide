@@ -20,6 +20,9 @@
   ],
   "license": "Apache-2.0",
   "private": false,
+  "pkg": {
+    "scripts": "node_modules/jest-*/**/*.js"
+  },
   "dependencies": {
     "commander": "^2.12.2",
     "jest": "^22.0.5",

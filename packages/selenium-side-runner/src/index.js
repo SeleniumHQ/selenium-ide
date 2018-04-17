@@ -91,7 +91,7 @@ function runProject(project) {
 
   return new Promise((resolve, reject) => {
     const child = fork(require.resolve("./child"), [
-      "--setupFiles", path.join(__dirname, "setup.js"),
+      "--setupFiles", require.resolve("./setup.js"),
       "--testEnvironment", "node",
       "--modulePaths", path.join(__dirname, "../node_modules"),
       "--testMatch", "**/*.test.js"
