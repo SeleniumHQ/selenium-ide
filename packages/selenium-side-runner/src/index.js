@@ -35,7 +35,8 @@ program
   .version(metadata.version)
   .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("-s, --server [url]", "Webdriver remote server")
-  .option("-f, --filter [String]", "Filter test cases by name")
+  .option("-f, --filter [string]", "Filter test cases by name")
+  .option("-w, --maxWorkers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
   .option("--no-sideyml", "Disabled the use of .side.yml")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
@@ -95,7 +96,8 @@ function runProject(project) {
       "--testEnvironment", "node",
       "--modulePaths", path.join(__dirname, "../node_modules"),
       "--testMatch", "**/*.test.js"
-    ].concat(program.filter ? ["-t", program.filter] : []), { stdio: "inherit" });
+    ].concat(program.filter ? ["-t", program.filter] : [])
+      .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
 
     child.on("exit", (code) => {
       console.log("");
