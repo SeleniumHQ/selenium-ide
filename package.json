@@ -12,7 +12,7 @@
     "pack:chrome": "cd packages/selenium-ide && yarn build-chrome",
     "pack:firefox": "cd packages/selenium-ide && yarn build-firefox",
     "test": "jest",
-    "test:webdriver": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js",
+    "test:webdriver": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
     "lint": "eslint packages/selenium-ide/src/{neo,selianize}/ packages/selenium-side-runner/src/ --ext .js --ext .jsx",
     "postinstall": "lerna bootstrap"
   },
