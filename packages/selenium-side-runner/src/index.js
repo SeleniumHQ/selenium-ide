@@ -88,8 +88,16 @@ function runProject(project) {
     name: project.name,
     version: "0.0.0"
   }));
-  Object.keys(project.code).forEach(suite => {
-    fs.writeFileSync(`${suite}.test.js`, beautify(project.code[suite], { indent_size: 2 }));
+  project.code.forEach(suite => {
+    if (!suite.tests) {
+      // not parallel
+      writeJSFile(suite.name, suite.code);
+    } else if (suite.test.length) {
+      // parallel suite
+      suite.tests.forEach(test => {
+        writeJSFile(path.join(suite.name, test.name), `${suite.code}${test.code}`);
+      });
+    }
   });
   winston.info(`Running ${project.name}`);
 
@@ -124,6 +132,10 @@ function runAll(projects, index = 0) {
     error && winston.error(error.message + "\n");
     return runAll(projects, ++index);
   });
+}
+
+function writeJSFile(name, data) {
+  fs.writeFileSync(`${name}.test.js`, beautify(data, { indent_size: 2 }));
 }
 
 process.env.configuration = JSON.stringify(configuration);

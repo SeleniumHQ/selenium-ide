@@ -35,7 +35,7 @@ export default function Selianize(project) {
     }))));
 
     const results = suites.map((suiteCode, index) => ({
-      name: [project.suites[index].name],
+      name: project.suites[index].name,
       code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
       tests: Array.isArray(suiteCode) ? suiteCode : undefined
     }));
