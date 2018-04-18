@@ -49,6 +49,15 @@ describe("Suite model", () => {
     suite.setTimeout(400);
     expect(suite.timeout).toBe(400);
   });
+  it("should initiate as a sequential suite", () => {
+    const suite = new Suite();
+    expect(suite.isParallel).toBeFalsy();
+  });
+  it("should set the suite to parallel", () => {
+    const suite = new Suite();
+    suite.setParallel(true);
+    expect(suite.isParallel).toBeTruthy();
+  });
   it("should add a new Test Case", () => {
     const store = new ProjectStore();
     const suite = new Suite();

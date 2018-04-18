@@ -23,6 +23,7 @@ export default class Suite {
   id = null;
   @observable name = null;
   @observable timeout = 300;
+  @observable isParallel = false;
   @observable _tests = [];
 
   constructor(id = uuidv4(), name = "Untitled Suite") {
@@ -49,6 +50,10 @@ export default class Suite {
     } else {
       this.timeout = timeout;
     }
+  }
+
+  @action.bound setParallel(parallel) {
+    this.isParallel = !!parallel;
   }
 
   @action.bound addTestCase(test) {
