@@ -51,6 +51,7 @@ class UiState {
     this.observePristine();
     storage.get().then(data => {
       if (data.consoleSize !== undefined && data.consoleSize >= this.minConsoleHeight) {
+        this.storedConsoleHeight = data.consoleSize > this.minConsoleHeight ? data.consoleSize : this.windowHeight - this.minContentHeight;
         this.resizeConsole(data.consoleSize);
       }
       if (data.navigationSize !== undefined && data.navigationSize >= this.minNavigationWidth) {
@@ -172,6 +173,7 @@ class UiState {
   }
 
   @action.bound resizeConsole(height) {
+    this.storedConsoleHeight = height > this.minConsoleHeight + 20 ? height : this.storedConsoleHeight;
     this.consoleHeight = height > this.minConsoleHeight ? height : this.minConsoleHeight;
     storage.set({
       consoleSize: this.consoleHeight
@@ -186,9 +188,13 @@ class UiState {
     this.resizeConsole(this.minConsoleHeight);
   }
 
+  @action.bound restoreConsoleSize() {
+    this.resizeConsole(this.storedConsoleHeight);
+  }
+
   @action.bound toggleConsole() {
     if (this.consoleHeight === this.minConsoleHeight) {
-      this.maximizeConsole();
+      this.restoreConsoleSize();
     } else {
       this.minimizeConsole();
     }
