@@ -76,7 +76,7 @@ export default class ImportDialog extends React.Component {
           <ModalHeader title="Import suite" close={this.props.cancel} />
           <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests
           </p>
-          <Dropzone className="dropzone" acceptClassName="accept" rejectClassName="reject" accept="text/html" onDrop={this.onDrop.bind(this)}>
+          <Dropzone className="dropzone" acceptClassName="accept" rejectClassName="reject" accept="text/html" onDropAccepted={this.onDrop.bind(this)}>
             <div>
               <div className="file-icon">
                 <img alt="html file" height="50" src={HtmlFile} />
