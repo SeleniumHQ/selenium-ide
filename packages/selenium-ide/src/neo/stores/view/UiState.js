@@ -188,13 +188,13 @@ class UiState {
     this.resizeConsole(this.minConsoleHeight);
   }
 
-  @action.bound storedsizeConsole() {
+  @action.bound restoreConsoleSize() {
     this.resizeConsole(this.storedConsoleHeight);
   }
 
   @action.bound toggleConsole() {
     if (this.consoleHeight === this.minConsoleHeight) {
-      this.storedsizeConsole();
+      this.restoreConsoleSize();
     } else {
       this.minimizeConsole();
     }
