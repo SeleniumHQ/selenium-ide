@@ -234,7 +234,7 @@ class TestRow extends React.Component {
       <td className="buttons">
         { !this.props.isPristine ?
           listMenu
-          : <div></div> }
+          : <div/> }
       </td>
     </tr>;
     return (!this.props.isPristine ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);

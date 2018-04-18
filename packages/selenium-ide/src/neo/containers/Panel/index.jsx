@@ -176,10 +176,13 @@ modify(project);
                 </SplitPane>
               </div>
             </div>
-            <Console height={UiState.consoleHeight} />
-          </SplitPane>
-          <Modal project={this.state.project} />
-          <Tooltip />
+          <Console
+            height={UiState.consoleHeight}
+            minHeight={UiState.minConsoleHeight}
+          />
+        </SplitPane>
+        <Modal project={this.state.project} />
+        <Tooltip />
         </SuiteDropzone>
       </div>
     );

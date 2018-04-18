@@ -39,11 +39,14 @@ export default class Console extends React.Component {
         <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
-        <LogList store={this.store} />
+        { this.props.height !== this.props.minHeight ?
+          <LogList store={this.store} />
+          : <div/> }
       </footer>
     );
   }
   static propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
+    minHeight: PropTypes.number
   };
 }
