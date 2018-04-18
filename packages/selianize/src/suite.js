@@ -28,7 +28,10 @@ export function emit(suite, tests) {
 
 
     if (suite.isParallel) {
-      testsCode = testsCode.map(code => code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`));
+      testsCode = testsCode.map((code, index) => ({
+        name: tests[suite.tests[index]].name,
+        code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
+      }));
       return res(testsCode);
     }
 

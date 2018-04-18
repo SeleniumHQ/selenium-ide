@@ -34,9 +34,11 @@ export default function Selianize(project) {
       errors.push(e);
     }))));
 
-    const results = suites.reduce((accumulator, suiteCode, index) => (Object.assign(accumulator, {
-      [project.suites[index].name]: `${result}${suiteCode}`
-    })), {});
+    const results = suites.map((suiteCode, index) => ({
+      name: [project.suites[index].name],
+      code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
+      tests: Array.isArray(suiteCode) ? suiteCode : undefined
+    }));
     errors.length ? rej({ name: project.name, suites: errors }) : res(results);
   });
 }
