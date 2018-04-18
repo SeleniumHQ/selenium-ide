@@ -19,14 +19,22 @@ import TestCaseEmitter from "./testcase";
 
 export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {`;
-
     let errors = [];
-    result += (await Promise.all(suite.tests.map(testId => (
+    let testsCode = (await Promise.all(suite.tests.map(testId => (
       tests[testId]
     )).map((test) => (TestCaseEmitter.emit(test).catch(e => {
       errors.push(e);
-    }))))).join("");
+    })))));
+
+
+    if (suite.isParallel) {
+      testsCode = testsCode.map(code => code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`));
+      return res(testsCode);
+    }
+
+    let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {`;
+
+    result += testsCode.join("");
 
     result += "});";
     errors.length ? rej({

@@ -68,6 +68,35 @@ describe("suite emitter", () => {
     };
     return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["2"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["3"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
   });
+  it("should emit a parallel suite", () => {
+    const tests = {
+      "1": {
+        id: "1",
+        name: "example test case",
+        commands: []
+      },
+      "2": {
+        id: "2",
+        name: "second test case",
+        commands: []
+      },
+      "3": {
+        id: "3",
+        name: "third test case",
+        commands: []
+      }};
+    const suite = {
+      id: "1",
+      name: "example suite",
+      timeout: "30",
+      isParallel: true,
+      tests: ["1", "2", "3"]
+    };
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toEqual([
+      `jest.setTimeout(30000);test("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`,
+      `jest.setTimeout(30000);test("${tests["2"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`,
+      `jest.setTimeout(30000);test("${tests["3"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});`]);
+  });
   it("should reject a suite with failed tests", () => {
     const tests = {
       "1": {
