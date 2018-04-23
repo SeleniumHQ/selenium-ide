@@ -22,6 +22,7 @@ import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
 import ImportDialog from "../../components/ImportDialog";
+import SuiteSettings from "../../components/SuiteSettings";
 import ModalState from "../../stores/view/ModalState";
 
 @observer
@@ -57,6 +58,13 @@ export default class Modal extends Component {
           suite={ModalState.importSuiteState.suite}
           onComplete={ModalState.importSuiteState.onComplete}
           cancel={ModalState.cancelImport}
+        />
+        <SuiteSettings
+          isEditing={ModalState.suiteSettingsState.editing}
+          timeout={ModalState.suiteSettingsState.timeout}
+          isParallel={ModalState.suiteSettingsState.isParallel}
+          submit={ModalState.suiteSettingsState ? ModalState.suiteSettingsState.done : null}
+          cancel={ModalState.cancelSuiteSettings}
         />
       </div>
     );

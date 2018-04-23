@@ -79,7 +79,15 @@ import "./style.css";
         <Provider renameTest={ModalState.renameTest}>
           { this.state.showTests
             ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
-            : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={ModalState.deleteSuite} moveTest={this.props.moveTest} /> }
+            : <SuiteList
+              suites={this.props.suites}
+              rename={ModalState.renameSuite}
+              editSettings={ModalState.editSuiteSettings}
+              selectTests={ModalState.editSuite}
+              removeSuite={ModalState.deleteSuite}
+              moveTest={this.props.moveTest}
+            />
+          }
         </Provider>
         <Runs
           runs={PlaybackState.finishedTestsCount}

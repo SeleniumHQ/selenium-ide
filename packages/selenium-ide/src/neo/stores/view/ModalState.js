@@ -22,6 +22,7 @@ class ModalState {
   @observable editedSuite = null;
   @observable renameState = {};
   @observable importSuiteState = {};
+  @observable suiteSettingsState = {};
 
   constructor() {
     this.renameTest = this.rename.bind(this, Types.test);
@@ -113,6 +114,23 @@ class ModalState {
 
   @action.bound cancelImport() {
     this.importSuiteState = {};
+  }
+
+  @action.bound editSuiteSettings(suite) {
+    this.suiteSettingsState = {
+      editing: true,
+      isParallel: suite.isParallel,
+      timeout: suite.timeout,
+      done: ({isParallel, timeout}) => {
+        suite.setTimeout(timeout);
+        suite.setParallel(isParallel);
+        this.cancelSuiteSettings();
+      }
+    };
+  }
+
+  @action.bound cancelSuiteSettings() {
+    this.suiteSettingsState = {};
   }
 
   nameIsUnique(value, list) {

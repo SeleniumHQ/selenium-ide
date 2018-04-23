@@ -27,6 +27,7 @@ import "./style.css";
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     selectTests: PropTypes.func.isRequired,
     rename: PropTypes.func.isRequired,
+    editSettings: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired
   };
@@ -39,6 +40,7 @@ import "./style.css";
               suite={suite}
               selectTests={() => {this.props.selectTests(suite);}}
               rename={this.props.rename}
+              editSettings={() => {this.props.editSettings(suite);}}
               remove={() => {this.props.removeSuite(suite);}}
               moveTest={this.props.moveTest}
             />

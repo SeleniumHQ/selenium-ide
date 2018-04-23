@@ -19,10 +19,12 @@ import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
 import SortBy from "sort-array";
 
+export const DEFAULT_TIMEOUT = 300;
+
 export default class Suite {
   id = null;
   @observable name = null;
-  @observable timeout = 300;
+  @observable timeout = DEFAULT_TIMEOUT;
   @observable isParallel = false;
   @observable _tests = [];
 
