@@ -84,6 +84,7 @@ export default class Suite {
     return {
       id: this.id,
       name: this.name,
+      parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id)
     };
@@ -93,6 +94,8 @@ export default class Suite {
   static fromJS = function(jsRep, projectTests) {
     const suite = new Suite(jsRep.id);
     suite.setName(jsRep.name);
+    suite.setTimeout(jsRep.timeout);
+    suite.setParallel(jsRep.parallel);
     suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({id}) => id === testId)));
 
     return suite;

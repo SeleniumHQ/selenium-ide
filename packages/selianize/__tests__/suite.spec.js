@@ -89,7 +89,7 @@ describe("suite emitter", () => {
       id: "1",
       name: "example suite",
       timeout: "30",
-      isParallel: true,
+      parallel: true,
       tests: ["1", "2", "3"]
     };
     return expect(SuiteEmitter.emit(suite, tests)).resolves.toEqual([

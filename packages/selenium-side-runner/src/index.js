@@ -77,7 +77,7 @@ if (program.capabilities) {
 configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUrl;
 
 function runProject(project) {
-  if (!project.code) {
+  if (!project.code || project.version !== "1.0") {
     return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
   }
   const projectPath = `side-suite-${project.name}`;
@@ -92,7 +92,8 @@ function runProject(project) {
     if (!suite.tests) {
       // not parallel
       writeJSFile(suite.name, suite.code);
-    } else if (suite.test.length) {
+    } else if (suite.tests.length) {
+      fs.mkdirSync(suite.name);
       // parallel suite
       suite.tests.forEach(test => {
         writeJSFile(path.join(suite.name, test.name), `${suite.code}${test.code}`);
