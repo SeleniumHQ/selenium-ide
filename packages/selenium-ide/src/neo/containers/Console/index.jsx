@@ -33,10 +33,13 @@ export default class Console extends React.Component {
   }
   render() {
     return (
-      <footer className="console" style={{
-        height: this.props.height ? `${this.props.height}px` : "initial"
-      }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0} restoreSize={this.props.restoreSize}>
+      <footer
+        className="console"
+        style={{
+          height: this.props.height ? `${this.props.height}px` : "initial"
+        }}
+        onClick={this.props.restoreSize}>
+        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
         <LogList store={this.store} />
