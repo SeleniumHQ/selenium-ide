@@ -26,6 +26,7 @@
   "dependencies": {
     "commander": "^2.12.2",
     "jest": "^22.0.5",
+    "jest-environment-selenium": "*",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
     "rimraf": "^2.6.2",

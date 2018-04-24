@@ -19,6 +19,6 @@ import template from "../src/template";
 
 describe("Code template", () => {
   it("should return the export header", () => {
-    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\nconst By = require('selenium-webdriver').By;const until = require('selenium-webdriver').until;afterAll(() => {Runner.cleaup();});");
+    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\n");
   });
 });

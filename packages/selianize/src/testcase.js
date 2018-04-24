@@ -19,7 +19,7 @@ import CommandEmitter from "./command";
 
 export function emit(test) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = `it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {`;
+    let result = `it("${test.name}", () => {`;
 
     let errors = [];
     result += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
@@ -30,7 +30,7 @@ export function emit(test) {
       });
     }))))).join("");
 
-    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});";
+    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();});});";
 
     errors.length ? rej({...test, commands: errors}) : res(result);
   });
