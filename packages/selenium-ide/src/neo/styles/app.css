@@ -91,6 +91,10 @@ hr {
     height: 1px;
 }
 
+form .form-contents {
+    margin: 10px 0;
+}
+
 .right {
     float: right;
 }

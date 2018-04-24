@@ -60,10 +60,14 @@ export default class SuiteSettings extends React.Component {
   render() {
     return (
       <Modal className="suite-settings-dialog" isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
-        <form onSubmit={(e) => { e.preventDefault(); }}>
+        <form onSubmit={(e) => { e.preventDefault(); }} style={{
+          minWidth: "300px"
+        }}>
           <ModalHeader title="Suite properties" close={this.props.cancel} />
-          <Input name="suite-timeout" type="number" label="Timeout" placeholder={DEFAULT_TIMEOUT} value={this.state.timeout} onChange={this.onTimeoutChange.bind(this)} />
-          <Checkbox label="Run in parallel" checked={this.state.isParallel} onChange={this.onIsParallelChange.bind(this)} />
+          <div className="form-contents">
+            <Input name="suite-timeout" type="number" label="Timeout (seconds)" placeholder={DEFAULT_TIMEOUT} value={this.state.timeout} width={130} onChange={this.onTimeoutChange.bind(this)} />
+            <Checkbox label="Run in parallel" checked={this.state.isParallel} width={130} onChange={this.onIsParallelChange.bind(this)} />
+          </div>
           <span className="right">
             <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
             <FlatButton type="submit" onClick={() => {this.props.submit({timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT, isParallel: this.state.isParallel});}} style={{
