@@ -176,7 +176,9 @@ modify(project);
                 </SplitPane>
               </div>
             </div>
-            <Console height={UiState.consoleHeight} />
+            <Console
+              height={UiState.consoleHeight}
+              restoreSize={UiState.restoreConsoleSize} />
           </SplitPane>
           <Modal project={this.state.project} />
           <Tooltip />

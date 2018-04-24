@@ -38,7 +38,8 @@ export default class TabBar extends React.Component {
     defaultTab: PropTypes.string,
     tabWidth: PropTypes.number,
     buttonsMargin: PropTypes.number,
-    tabChanged: PropTypes.func
+    tabChanged: PropTypes.func,
+    restoreSize: PropTypes.func
   };
   static defaultProps = {
     tabWidth: 80,
@@ -51,6 +52,7 @@ export default class TabBar extends React.Component {
       });
       if (this.props.tabChanged) this.props.tabChanged(tab);
     }
+    this.props.restoreSize();
   }
   render() {
     return (
