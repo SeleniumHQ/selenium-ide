@@ -106,6 +106,7 @@ function runProject(project) {
     const child = fork(require.resolve("./child"), [
       "--testEnvironment", "jest-environment-selenium",
       "--setupTestFrameworkScriptFile", require.resolve("jest-environment-selenium/dist/setup.js"),
+      "--testEnvironmentOptions", JSON.stringify(configuration),
       "--modulePaths", path.join(__dirname, "../node_modules"),
       "--testMatch", "**/*.test.js"
     ].concat(program.filter ? ["-t", program.filter] : [])
@@ -139,7 +140,6 @@ function writeJSFile(name, data) {
   fs.writeFileSync(`${name}.test.js`, beautify(data, { indent_size: 2 }));
 }
 
-process.env.configuration = JSON.stringify(configuration);
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
 
 runAll(projects);
