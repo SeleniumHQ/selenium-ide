@@ -150,44 +150,43 @@ async function emitPause(_, time) {
 }
 
 async function emitVerifyChecked(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeTruthy();});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeChecked();`);
 }
 
 async function emitVerifyNotChecked(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeChecked();`);
 }
 
 async function emitVerifyEditable(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isEnabled().then(enabled => {expect(enabled).toBeTruthy();element.getAttribute("readonly").then(readonly => {expect(readonly).toBeFalsy();});});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeEditable();`);
 }
 
 async function emitVerifyNotEditable(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute("readonly").then(readonly => {expect(readonly).toBeTruthy();});}});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeEditable();`);
 }
 
 async function emitVerifyElementPresent(locator) {
-  return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBeGreaterThan(0);});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.toBePresent();`);
 }
 
 async function emitVerifyElementNotPresent(locator) {
-  return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBe(0);});`);
+  return Promise.resolve(`expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.not.toBePresent();`);
 }
 
 async function emitVerifySelectedValue(locator, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).toBe("${value}");});});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveSelectedValue("${value}");`);
 }
 
-
 async function emitVerifyNotSelectedValue(locator, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${value}");});});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toHaveSelectedValue("${value}");`);
 }
 
 async function emitVerifyValue(locator, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(value => {expect(value).toBe("${value}");});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveValue("${value}");`);
 }
 
 async function emitVerifyText(locator, text) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe(\`${text}\`)});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveText("${text}");`);
 }
 
 async function emitVerifyTitle(title) {
