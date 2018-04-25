@@ -105,6 +105,7 @@ function runProject(project) {
   return new Promise((resolve, reject) => {
     const child = fork(require.resolve("./child"), [
       "--testEnvironment", "jest-environment-selenium",
+      "--setupTestFrameworkScriptFile", require.resolve("jest-environment-selenium/dist/setup.js"),
       "--modulePaths", path.join(__dirname, "../node_modules"),
       "--testMatch", "**/*.test.js"
     ].concat(program.filter ? ["-t", program.filter] : [])
