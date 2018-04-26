@@ -61,7 +61,7 @@ export default class TestSelector extends React.Component {
       <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <ModalHeader title="Select tests" close={this.props.cancelSelection} />
-          <SearchBar inputRef={(input) => { this.input = input; }} filter={this.filter} />
+          <SearchBar inputRef={(input) => { this.input = input; }} filter={this.filter} value={this.state.filterTerm} />
           <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
           <hr />
           <span className="right">
