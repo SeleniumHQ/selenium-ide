@@ -143,6 +143,7 @@ export const Commands = Object.freeze({
   verifySelectedValue: "verify selected value",
   verifyNotSelectedValue: "verify not selected value",
   verifyText: "verify text",
+  verifyNotText: "verify not text",
   verifyTitle: "verify title",
   verifyValue: "verify value",
   webdriverAnswerOnNextPrompt: "webdriver answer on next prompt",

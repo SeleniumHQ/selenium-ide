@@ -403,6 +403,14 @@ Selenium.prototype.doVerifyText = function(locator, value) {
   }
 };
 
+Selenium.prototype.doVerifyNotText = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+
+  if (getText(element) === value) {
+    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
+  }
+};
+
 Selenium.prototype.doVerifyValue = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (element.value !== value) {
