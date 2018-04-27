@@ -104,6 +104,7 @@ export const Commands = Object.freeze({
   assertSelectedValue: "assert selected value",
   assertNotSelectedValue: "assert not selected value",
   assertText: "assert text",
+  assertNotText: "assert not text",
   assertTitle: "assert title",
   assertValue: "assert value",
   chooseCancelOnNextConfirmation: "choose cancel on next confirmation",
