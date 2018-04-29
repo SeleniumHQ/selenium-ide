@@ -28,8 +28,8 @@ describe("Command", () => {
   });
   it("should set a command", () => {
     const command = new Command();
-    command.setCommand(Commands.open);
-    expect(command.command).toBe(Commands.open);
+    command.setCommand(Commands.values.open);
+    expect(command.command).toBe(Commands.values.open);
   });
   it("should be a valid command", () => {
     const command = new Command();

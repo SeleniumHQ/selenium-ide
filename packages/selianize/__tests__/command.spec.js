@@ -16,7 +16,7 @@
 // under the License.
 
 import CommandEmitter from "../src/command";
-import { CommandsArray } from "../../selenium-ide/src/neo/models/Command";
+import { Commands } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
   it("should skip empty commands", () => {
@@ -541,7 +541,7 @@ describe("command code emitter", () => {
     ]);
   });
   it("should emit all known commands", () => {
-    CommandsArray.forEach(command => {
+    Commands.array.forEach(command => {
       expect(() => {
         if (!CommandEmitter.canEmit(command)) {
           throw new Error(`${command} has no emitter, write one!`);
