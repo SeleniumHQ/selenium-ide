@@ -39,6 +39,13 @@ describe("Selenium code serializer", () => {
     RegisterTestHook(hook);
     return expect((await Selianize(project))[0].code).toMatch(/it\("aa playback", \(\) => {decorateSomething\(\(\) => {driver\.get.*toBeDefined\(\);}\);}\);}\);}\);/);
   });
+  it("should register a new command emitter", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-4-new-command.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve("some new command code"));
+    RegisterEmitter("newCommand", hook);
+    return expect((await Selianize(project))[0].code).toMatch(/some new command codereturn/);
+  });
   it("should fail to export a project with errors", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-2.side")));
     const failure = {

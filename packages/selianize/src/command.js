@@ -107,9 +107,16 @@ export function canEmit(commandName) {
   return !!(emitters[commandName]);
 }
 
+function registerEmitter(command, emitter) {
+  if (!canEmit(command)) {
+    emitters[command] = emitter;
+  }
+}
+
 export default {
   canEmit,
-  emit
+  emit,
+  registerEmitter
 };
 
 function emitOpen(target) {
