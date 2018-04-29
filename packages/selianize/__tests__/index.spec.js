@@ -17,12 +17,27 @@
 
 import fs from "fs";
 import path from "path";
-import Selianize, { ParseError } from "../src";
+import Selianize, { ParseError, RegisterTestHook, RegisterEmitter } from "../src";
 
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
     return expect(Selianize(project)).resolves.toBeDefined();
+  });
+  it("should register a test emitter hook", () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({setup: "", teardown: ""}));
+    RegisterTestHook(hook);
+    Selianize(project);
+    expect(hook).toHaveBeenCalledTimes(3);
+  });
+  it("hook should add setup and teardown code", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({setup: "decorateSomething(() => {", teardown: "});"}));
+    RegisterTestHook(hook);
+    return expect((await Selianize(project))[0].code).toMatch(/it\("aa playback", \(\) => {decorateSomething\(\(\) => {driver\.get.*toBeDefined\(\);}\);}\);}\);}\);/);
   });
   it("should fail to export a project with errors", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-2.side")));

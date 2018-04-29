@@ -18,6 +18,7 @@
 import template from "./template";
 import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
+import TestCaseEmitter from "./testcase";
 
 export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
@@ -41,6 +42,10 @@ export default function Selianize(project) {
     }));
     errors.length ? rej({ name: project.name, suites: errors }) : res(results);
   });
+}
+
+export function RegisterTestHook(hook) {
+  TestCaseEmitter.registerHook(hook);
 }
 
 export function ParseError(error) {
