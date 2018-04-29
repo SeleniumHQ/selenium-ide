@@ -20,12 +20,22 @@ import FatalError from "../../../errors/fatal";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
-const { ExtCommand, isExtCommand } = window;
+import ExtCommand, { isExtCommand } from "./ext-command";
+import { xlateArgument } from "./formatCommand";
 
-const extCommand = new ExtCommand();
-window.extCommand = extCommand;
-const xlateArgument = window.xlateArgument;
+export const extCommand = new ExtCommand();
+// In order to not break the separation of the execution loop from the state of the playback
+// I will set doSetSpeed here so that extCommand will not be aware of the state
+extCommand.doSetSpeed = (speed) => {
+  if (speed < 0) speed = 0;
+  if (speed > PlaybackState.maxDelay) speed = PlaybackState.maxDelay;
+
+  PlaybackState.setDelay(speed);
+  return Promise.resolve();
+};
+
 let baseUrl = "";
+let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -42,18 +52,38 @@ function playAfterConnectionFailed() {
     .catch(catchPlayingError);
 }
 
+function didFinishQueue() {
+  return (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying);
+}
+
+function isStopping() {
+  return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
+}
+
 function executionLoop() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if ((PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) || (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping)) return false;
-  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // reached the end
+  if (didFinishQueue() || isStopping()) return false;
+  const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // is command empty?
+  if (!command) {
+    return executionLoop();
+  }
+  // breakpoint
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
+  if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
+  else if (ignoreBreakpoint && isBreakpoint) ignoreBreakpoint = false;
+  // paused
+  if (isStopping()) return false;
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    return (extCommand["do" + upperCase](target, value))
-      .then(() => {
-        PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        return executionLoop();
-      });
+    const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
+    return doDelay().then(() => (
+      (extCommand["do" + upperCase](parsedTarget, value))
+        .then(() => {
+          PlaybackState.setCommandState(id, PlaybackStates.Passed);
+        }).then(executionLoop)
+    ));
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
@@ -63,8 +93,8 @@ function executionLoop() {
       .then(doPageWait)
       .then(doAjaxWait)
       .then(doDomWait)
-      .then(doCommand)
       .then(doDelay)
+      .then(doCommand)
       .then(executionLoop);
   }
 }
@@ -117,6 +147,7 @@ reaction(
   paused => {
     if (!paused) {
       PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
+      ignoreBreakpoint = true;
       playAfterConnectionFailed();
     }
   }
@@ -195,6 +226,7 @@ function doDomWait(res, domTime, domCount = 0) {
 }
 
 function doCommand() {
+  if (!PlaybackState.isPlaying || PlaybackState.paused) return;
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
 
   let p = new Promise(function(resolve, reject) {
@@ -221,21 +253,25 @@ function doCommand() {
 }
 
 function doSeleniumCommand(id, command, parsedTarget, value, res, implicitTime = Date.now(), implicitCount = 0) {
-  return extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command)).then(function(result) {
+  return (command !== "type"
+    ? extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
+    : extCommand.doType(xlateArgument(parsedTarget), xlateArgument(value))).then(function(result) {
     if (result.result !== "success") {
-      // implicit
-      if (result.result.match(/Element[\s\S]*?not found/)) {
-        if (implicitTime && (Date.now() - implicitTime > 30000)) {
-          reportError("Implicit Wait timed out after 30000ms");
-          implicitCount = 0;
-          implicitTime = "";
-        } else {
-          implicitCount++;
-          if (implicitCount == 1) {
-            implicitTime = Date.now();
+      if (result.result !== "success") {
+        // implicit
+        if (result.result.match(/Element[\s\S]*?not found/)) {
+          if (implicitTime && (Date.now() - implicitTime > 30000)) {
+            reportError("Implicit Wait timed out after 30000ms");
+            implicitCount = 0;
+            implicitTime = "";
+          } else {
+            implicitCount++;
+            if (implicitCount == 1) {
+              implicitTime = Date.now();
+            }
+            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
+            return doCommand(false, implicitTime, implicitCount);
           }
-          PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
-          return doCommand(id, command, parsedTarget, value, false, implicitTime, implicitCount);
         }
       }
 

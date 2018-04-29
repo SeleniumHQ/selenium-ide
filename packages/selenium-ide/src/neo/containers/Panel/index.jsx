@@ -24,6 +24,7 @@ import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
 import parser from "ua-parser-js";
 import classNames from "classnames";
+import { modifier } from "modifier-keys";
 import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
@@ -43,9 +44,13 @@ import "../../styles/layout.css";
 import "../../styles/resizer.css";
 import "../../styles/markdown.css";
 
-import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
-import "../../IO/SideeX/record";
-import "../../IO/SideeX/playback";
+import { loadProject, saveProject } from "../../IO/filesystem";
+import "../../IO/notifications";
+
+if (process.env.NODE_ENV !== "test") {
+  require("../../IO/SideeX/record");
+  require("../../IO/SideeX/playback");
+}
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/conditional/scrollbar.css");
@@ -57,7 +62,10 @@ const project = observable(new ProjectStore());
 UiState.setProject(project);
 
 if (process.env.NODE_ENV === "production") {
-  UiState.selectTest(project.createTestCase("Untitled"));
+  const suite = project.createSuite("Default Suite");
+  const test = project.createTestCase("Untitled");
+  suite.addTestCase(test);
+  UiState.selectTest(test);
 } else {
   seed(project, 0);
 }
@@ -72,6 +80,7 @@ browser.runtime.onMessage.addListener(api);
     super(props);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
+    this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
     this.quitHandler = window.addEventListener("beforeunload", (e) => {
       if (project.modified) {
@@ -97,6 +106,19 @@ browser.runtime.onMessage.addListener(api);
         width: currWindow.outerWidth
       }
     });
+  }
+  handleKeyDown(e) {
+    modifier(e);
+    const key = e.key.toUpperCase();
+    const onlyPrimary = (e.primaryKey && !e.secondaryKey);
+    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+
+    if (onlyPrimary && key === "S") {
+      e.preventDefault();
+      saveProject(project);
+    } else if (noModifiers && key === "ESCAPE") {
+      UiState.toggleConsole();
+    }
   }
   navigationDragStart() {
     UiState.setNavigationDragging(true);
@@ -127,7 +149,6 @@ browser.runtime.onMessage.addListener(api);
               changeName={this.state.project.changeName}
               load={loadProject.bind(undefined, project)}
               save={() => saveProject(project)}
-              export={() => exportProject(project)}
             />
             <div className={classNames("content", {dragging: UiState.navigationDragging})}>
               <SplitPane

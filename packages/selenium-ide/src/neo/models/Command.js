@@ -20,12 +20,15 @@ import uuidv4 from "uuid/v4";
 
 export default class Command {
   id = null;
+  @observable comment = "";
   @observable command = "";
   @observable target = "";
   @observable value = "";
+  @observable isBreakpoint = false;
 
   constructor(id = uuidv4()) {
     this.id = id;
+    this.export = this.export.bind(this);
   }
 
   @computed get isValid() {
@@ -34,30 +37,50 @@ export default class Command {
 
   @action.bound clone() {
     const clone = new Command();
+    clone.setComment(this.comment);
     clone.setCommand(this.command);
     clone.setTarget(this.target);
     clone.setValue(this.value);
     return clone;
   }
 
+  @action.bound setComment(comment) {
+    this.comment = comment || "";
+  }
+
   @action.bound setCommand(command) {
     if (Commands.values[command]) {
       this.command = Commands.values[command];
     } else {
-      this.command = command;
+      this.command = command || "";
     }
   }
 
   @action.bound setTarget(target) {
-    this.target = target;
+    this.target = target || "";
   }
 
   @action.bound setValue(value) {
-    this.value = value.replace(/\n/g, "\\n");
+    this.value = value ? value.replace(/\n/g, "\\n") : "";
+  }
+
+  @action.bound toggleBreakpoint() {
+    this.isBreakpoint = !this.isBreakpoint;
+  }
+
+  export() {
+    return {
+      id: this.id,
+      comment: this.comment,
+      command: this.command,
+      target: this.target,
+      value: this.value
+    };
   }
 
   static fromJS = function(jsRep) {
     const command = new Command(jsRep.id);
+    command.setComment(jsRep.comment);
     command.setCommand(jsRep.command);
     command.setTarget(jsRep.target);
     command.setValue(jsRep.value);
@@ -71,14 +94,25 @@ class CommandList {
     [ "addSelection", "add selection" ],
     [ "answerOnNextPrompt", "answer on next prompt" ],
     [ "assertAlert",  "assert alert" ],
+    [ "assertChecked", "assert checked" ],
+    [ "assertNotChecked", "assert not checked" ],
     [ "assertConfirmation", "assert confirmation" ],
+    [ "assertEditable", "assert editable" ],
+    [ "assertNotEditable", "assert not editable" ],
+    [ "assertElementPresent", "assert element present" ],
+    [ "assertElementNotPresent", "assert element not present" ],
     [ "assertPrompt", "assert prompt" ],
+    [ "assertSelectedValue", "assert selected value" ],
+    [ "assertNotSelectedValue", "assert not selected value" ],
     [ "assertText", "assert text" ],
     [ "assertTitle", "assert title" ],
+    [ "assertValue", "assert value" ],
     [ "chooseCancelOnNextConfirmation", "choose cancel on next confirmation" ],
     [ "chooseCancelOnNextPrompt", "choose cancel on next prompt" ],
     [ "chooseOkOnNextConfirmation", "choose ok on next confirmation" ],
+    [ "click", "click" ],
     [ "clickAt", "click at" ],
+    [ "doubleClick", "double click" ],
     [ "doubleClickAt", "double click at" ],
     [ "dragAndDropToObject", "drag and drop to object" ],
     [ "echo", "echo" ],
@@ -96,12 +130,27 @@ class CommandList {
     [ "selectFrame", "select frame" ],
     [ "selectWindow", "select window" ],
     [ "sendKeys", "send keys" ],
+    [ "setSpeed", "set speed" ],
     [ "store", "store" ],
     [ "storeText", "store text" ],
     [ "storeTitle", "store title" ],
+    [ "submit", "submit" ],
     [ "type", "type" ],
+    [ "verifyChecked", "verify checked" ],
+    [ "verifyNotChecked", "verify not checked" ],
+    [ "verifyEditable", "verify editable" ],
+    [ "verifyNotEditable", "verify not editable" ],
+    [ "verifyElementPresent", "verify element present" ],
+    [ "verifyElementNotPresent", "verify element not present" ],
+    [ "verifySelectedValue", "verify selected value" ],
+    [ "verifyNotSelectedValue", "verify not selected value" ],
     [ "verifyText", "verify text" ],
-    [ "verifyTitle", "verify title" ]
+    [ "verifyTitle", "verify title" ],
+    [ "verifyValue", "verify value" ],
+    [ "webdriverAnswerOnNextPrompt", "webdriver answer on next prompt" ],
+    [ "webdriverChooseCancelOnNextConfirmation", "webdriver choose cancel on next confirmation" ],
+    [ "webdriverChooseCancelOnNextPrompt", "webdriver choose cancel on next prompt" ],
+    [ "webdriverChooseOkOnNextConfirmation", "webdriver choose ok on next confirmation" ]
   ])
 
   @computed get array() {

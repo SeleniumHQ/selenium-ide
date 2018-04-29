@@ -16,21 +16,120 @@
 // under the License.
 
 import convert from "xml-js";
+import xmlescape from "xml-escape";
+import xmlunescape from "unescape";
 
-export default function migrateProject(data) {
-  const result = JSON.parse(convert.xml2json(data, { compact: true }));
+export const FileTypes = {
+  Suite: "suite",
+  TestCase: "testcase"
+};
+
+function isSuite(file) {
+  return file.includes("table id=\"suiteTable\"");
+}
+
+function isTestCase(file) {
+  return file.includes("http://selenium-ide.openqa.org/profiles/test-case");
+}
+
+export function verifyFile(file) {
+  if (isSuite(file)) {
+    return FileTypes.Suite;
+  } else if (isTestCase(file)) {
+    return FileTypes.TestCase;
+  } else {
+    throw  new Error("Unknown file was received");
+  }
+}
+
+export function parseSuiteRequirements(suite) {
+  const regex = /<a href="(.*)">/g;
+  let lastResult = regex.exec(suite);
+  const results = [];
+  while (lastResult) {
+    results.push(lastResult[1]);
+    lastResult = regex.exec(suite);
+  }
+
+  return results;
+}
+
+export function migrateProject(files) {
+  const fileMap = {};
+  files.forEach(({name, contents}) => {
+    fileMap[name] = contents;
+  });
+  const project = {
+    url: "",
+    urls: [],
+    tests: [],
+    suites: []
+  };
+  const suites = [];
+  const tests = [];
+  Object.keys(fileMap).forEach(fileName => {
+    if (isSuite(fileMap[fileName])) {
+      suites.push(fileName);
+    } else if (isTestCase(fileMap[fileName])) {
+      tests.push(fileName);
+    }
+  });
+  tests.forEach(testCaseName => {
+    const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
+    parsedTestCase.tests[0].id = testCaseName;
+    project.tests.push(parsedTestCase.tests[0]);
+    project.urls = [...project.urls, ...parsedTestCase.urls];
+  });
+  suites.forEach(suite => {
+    migrateSuite(suite, fileMap, project);
+  });
+  if (!suites.length) {
+    project.suites.push({
+      name: "Imported suite",
+      tests
+    });
+    project.name = "Imported project";
+  }
+  return project;
+}
+
+function migrateSuite(suite, fileMap, project) {
+  const result = JSON.parse(convert.xml2json(fileMap[suite], { compact: true }));
+  const parsedSuite = {
+    id: suite,
+    name: result.html.head.title._text,
+    tests: []
+  };
+  project.suites.push(parsedSuite);
+  result.html.body.table.tbody.tr.forEach(testCase => {
+    if (testCase.td.a) {
+      const testCaseName = testCase.td.a._attributes.href;
+      if (!fileMap[testCaseName]) {
+        throw new Error(`The file ${testCaseName} is missing, suite can't be migrated`);
+      }
+      parsedSuite.tests.push(testCaseName);
+      project.name = parsedSuite.name;
+    }
+  });
+}
+
+export function migrateTestCase(data) {
+  const sanitized = sanitizeXml(data);
+  const result = JSON.parse(convert.xml2json(sanitized, { compact: true }));
   const project = {
     name: result.html.head.title._text,
     url: result.html.head.link._attributes.href,
-    urls: [result.html.head.link._attributes.href],
+    urls: result.html.head.link._attributes.href ? [result.html.head.link._attributes.href] : [],
     tests: [
       {
+        id: data,
         name: result.html.body.table.thead.tr.td._text,
-        commands: result.html.body.table.tbody.tr.map(row => (
+        commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
           {
-            command: row.td[0]._text || "",
-            target: parseTarget(row.td[1]),
-            value: row.td[2]._text || ""
+            command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
+            target: xmlunescape(parseTarget(row.td[1])),
+            value: xmlunescape(row.td[2]._text || ""),
+            comment: ""
           }
         ))
       }
@@ -39,6 +138,14 @@ export default function migrateProject(data) {
   };
 
   return project;
+}
+
+function sanitizeXml(data) {
+  return data.replace(/<link(.*")\s*\/{0}>/g, (match, group) => (
+    `<link${group} />`
+  )).replace(/<td>(.*)<\/td>/g, (match, group) => (
+    `<td>${xmlescape(group)}</td>`
+  ));
 }
 
 function parseTarget(targetCell) {

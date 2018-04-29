@@ -1,0 +1,12 @@
+version: '3'
+services:
+  nginx:
+    image: "nginx"
+    ports:
+      - "80:80"
+    volumes:
+      - "./tests/static:/usr/share/nginx/html:ro"
+  selenium:
+    image: "selenium/standalone-chrome:3.11.0-antimony"
+    ports:
+      - "4444:4444"

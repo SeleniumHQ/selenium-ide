@@ -72,9 +72,12 @@ import "./style.css";
       UiState.focusNavigation();
     }
   }
+  handleContextMenu(e){
+    e.preventDefault();
+  }
   render() {
     return (
-      <main className="editor" onKeyDown={this.handleKeyDown.bind(this)}>
+      <main className="editor" onKeyDown={this.handleKeyDown.bind(this)} onContextMenu={this.handleContextMenu.bind(this)}>
         <ToolBar />
         <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
         <TestTable

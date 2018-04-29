@@ -36,6 +36,19 @@ a:focus {
     outline: 0;
 }
 
+a.link {
+    color: #333333;
+    text-decoration: underline;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: initial;
+}
+
 input,
 textarea {
     border: 1px #DCDCDC solid;
@@ -76,6 +89,10 @@ hr {
     background-color: #E5E5E5;
     border: 0;
     height: 1px;
+}
+
+form .form-contents {
+    margin: 10px 0;
 }
 
 .right {

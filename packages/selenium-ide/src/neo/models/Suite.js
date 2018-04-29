@@ -19,15 +19,19 @@ import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
 import SortBy from "sort-array";
 
+export const DEFAULT_TIMEOUT = 300;
+
 export default class Suite {
   id = null;
   @observable name = null;
+  @observable timeout = DEFAULT_TIMEOUT;
+  @observable isParallel = false;
   @observable _tests = [];
 
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;
-    this.exportSuite = this.exportSuite.bind(this);
+    this.export = this.export.bind(this);
   }
 
   @computed get tests() {
@@ -40,6 +44,18 @@ export default class Suite {
 
   @action.bound setName(name) {
     this.name = name;
+  }
+
+  @action.bound setTimeout(timeout) {
+    if (timeout !== undefined && timeout.constructor.name !== "Number") {
+      throw new Error(`Expected to receive Number instead received ${timeout !== undefined ? timeout.constructor.name : timeout}`);
+    } else {
+      this.timeout = timeout;
+    }
+  }
+
+  @action.bound setParallel(parallel) {
+    this.isParallel = !!parallel;
   }
 
   @action.bound addTestCase(test) {
@@ -66,10 +82,12 @@ export default class Suite {
     }
   }
 
-  exportSuite() {
+  export() {
     return {
       id: this.id,
       name: this.name,
+      parallel: this.isParallel,
+      timeout: this.timeout,
       tests: this._tests.map(t => t.id)
     };
   }
@@ -78,6 +96,8 @@ export default class Suite {
   static fromJS = function(jsRep, projectTests) {
     const suite = new Suite(jsRep.id);
     suite.setName(jsRep.name);
+    suite.setTimeout(jsRep.timeout);
+    suite.setParallel(jsRep.parallel);
     suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({id}) => id === testId)));
 
     return suite;

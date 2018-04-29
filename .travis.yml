@@ -1,6 +1,16 @@
+sudo: required
 language: node_js
 node_js:
-  - "node"
+  - "9"
+services:
+  - docker
+before_install:
+  - docker-compose up -d
+install:
+  - yarn
+  - yarn build:selianize
+  - yarn build:runner
 script:
   - yarn lint
   - yarn test
+  - yarn test:webdriver --server http://localhost:4444/wd/hub

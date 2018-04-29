@@ -29,6 +29,7 @@ export default class OpenButton extends React.Component {
   }
   handleChange(e) {
     this.props.onFileSelected(e.target.files[0]);
+    this.input.value = "";
   }
   render() {
     return (

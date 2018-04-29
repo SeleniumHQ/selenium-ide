@@ -48,7 +48,7 @@ export default class ToolBar extends React.Component {
           disabled={isTestEmpty || isPlayingSuite}
           onClick={!PlaybackState.paused ? PlaybackState.startPlaying : PlaybackState.resume}
         />
-        { PlaybackState.isPlaying ? <Stop onClick={PlaybackState.abortPlaying} /> : null }
+        { PlaybackState.isPlaying ? <Stop onClick={() => {PlaybackState.abortPlaying();}} /> : null }
         { PlaybackState.isPlaying ?
           <Pause isActive={PlaybackState.paused}
             data-tip={!PlaybackState.paused ? "<p>Pause test execution</p>" : "<p>Resume test execution</p>"}

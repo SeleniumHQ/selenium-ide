@@ -17,31 +17,28 @@
 
 import { reaction } from "mobx";
 import UiState from "../../stores/view/UiState";
+import { toggleRecord } from "./editor";
 
 reaction(
   () => UiState.isRecording,
-  isRecording => { window.isRecording = isRecording; }
+  isRecording => {
+    toggleRecord(isRecording);
+  }
 );
 
 function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
-export function recordCommand(command, target, value) {
+export function recordCommand(command, target, value, index) {
   const { test } = UiState.selectedTest;
-  const newCommand = UiState.selectedCommand !== UiState.pristineCommand
-    ? test.createCommand(UiState.selectedTest.test.commands.indexOf(UiState.selectedCommand))
-    : test.createCommand();
+  const newCommand = test.createCommand(index);
   newCommand.setCommand(command);
-  newCommand.setValue(value);
   newCommand.setTarget(target);
+  newCommand.setValue(value);
 }
 
-window.getRecordsArray = function() {
-  return [];
-};
-
-window.addCommandAuto = function(command, targets, value) {
+export default function record(command, targets, value, insertBeforeLastCommand = false) {
   const { test } = UiState.selectedTest;
   if (isEmpty(test.commands, command)) {
     const newCommand = test.createCommand();
@@ -51,6 +48,32 @@ window.addCommandAuto = function(command, targets, value) {
     UiState.setUrl(url.origin, true);
     newCommand.setTarget(url.pathname);
   } else if (command !== "open") {
+    let index = undefined;
+    if (insertBeforeLastCommand) {
+      index = test.commands.length - 1;
+    } else if(UiState.selectedCommand !== UiState.pristineCommand) {
+      index = test.commands.indexOf(UiState.selectedCommand);
+    }
+    if (preprocessDoubleClick(command, test, index)) {
+      // double click removed the 2 clicks from before
+      index -= 2;
+    }
     recordCommand(command, targets[0][0], value);
   }
-};
+}
+
+function preprocessDoubleClick(command, test, index) {
+  if (command === "doubleClickAt" && test.commands.length >= 1) {
+    const lastCommand = test.commands[index - 1];
+    const beforeLastCommand = test.commands[index - 2];
+    if (lastCommand.command === "clickAt" &&
+      lastCommand.command === beforeLastCommand.command &&
+      lastCommand.target === beforeLastCommand.target &&
+      lastCommand.value === beforeLastCommand.value) {
+      test.removeCommand(lastCommand);
+      test.removeCommand(beforeLastCommand);
+      return true;
+    }
+  }
+  return false;
+}

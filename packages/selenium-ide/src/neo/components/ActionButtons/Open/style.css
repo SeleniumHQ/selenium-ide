@@ -23,6 +23,7 @@
   border: 1px solid transparent;
   display: inline-block;
   position: relative;
+  cursor: pointer;
 }
 
 .file-input > label > i {

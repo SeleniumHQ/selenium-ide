@@ -15,16 +15,53 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrateProject from "./legacy/migrate";
+import browser from "webextension-polyfill";
+import parser from "ua-parser-js";
+import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
-import Selianize, { ParseError } from "../../selianize";
+import Selianize, { ParseError } from "selianize";
 import Manager from "../../plugin/manager";
-const browser = window.browser;
+import chromeGetFile from "./filesystem/chrome";
+import firefoxGetFile from "./filesystem/firefox";
 
 export const supportedFileFormats = ".side, text/html";
+const parsedUA = parser(window.navigator.userAgent);
 
-export function saveProject(project) {
+export function getFile(path) {
+  const browserName = parsedUA.browser.name;
+  return (() => {
+    if (browserName === "Chrome") {
+      return chromeGetFile(path);
+    } else if (browserName === "Firefox") {
+      return firefoxGetFile(path);
+    } else {
+      return Promise.reject(new Error("Operation is not supported in this browser"));
+    }
+  })().then(blob => {
+    return new Promise((res) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        res(reader.result);
+      });
+      reader.readAsDataURL(blob);
+    });
+  });
+}
+
+export function loadAsText(blob) {
+  return new Promise((res) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      res(e.target.result);
+    };
+
+    fileReader.readAsText(blob);
+  });
+}
+
+export function saveProject(_project) {
+  const project = _project.toJS();
   project.version = "1.0";
   Manager.plugins.forEach(plugin => {
     project.registerPlugin({
@@ -38,26 +75,22 @@ export function saveProject(project) {
 }
 
 function downloadProject(project) {
-  browser.downloads.download({
-    filename: project.name + ".side",
-    url: createBlob("application/json", project.toJSON()),
-    saveAs: true,
-    conflictAction: "overwrite"
-  });
-}
-
-export function exportProject(project) {
-  Selianize(JSON.parse(project.toJSON())).then(data => {
-    browser.downloads.download({
-      filename: project.name + ".test.js",
-      url: createBlob("application/javascript", data),
+  return exportProject(project).then(code => {
+    project.code = code;
+    return browser.downloads.download({
+      filename: project.name + ".side",
+      url: createBlob("application/json", JSON.stringify(project)),
       saveAs: true,
       conflictAction: "overwrite"
     });
-  }).catch(err => {
+  });
+}
+
+function exportProject(project) {
+  return Selianize(project).catch(err => {
     const markdown = ParseError(err && err.message || err);
     ModalState.showAlert({
-      title: "Error exporting project",
+      title: "Error saving project",
       description: markdown,
       confirmLabel: "Download log",
       cancelLabel: "Close"
@@ -71,6 +104,7 @@ export function exportProject(project) {
         });
       }
     });
+    return Promise.reject();
   });
 }
 
@@ -89,16 +123,31 @@ function createBlob(mimeType, data) {
 }
 
 export function loadProject(project, file) {
-  const fileReader = new FileReader();
-  fileReader.onload = (e) => {
+  function displayError(error) {
+    ModalState.showAlert({
+      title: "Error migrating project",
+      description: error.message,
+      confirmLabel: "Close"
+    });
+  }
+  loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
-      loadJSONProject(project, e.target.result);
-    } else if (file.type === "text/html") {
-      project.fromJS(migrateProject(e.target.result));
+      loadJSONProject(project, contents);
+    } else  {
+      try {
+        const type = verifyFile(contents);
+        if (type === FileTypes.Suite) {
+          ModalState.importSuite(contents, (files) => {
+            project.fromJS(migrateProject(files));
+          });
+        } else if (type === FileTypes.TestCase) {
+          project.fromJS(migrateTestCase(contents));
+        }
+      } catch (error) {
+        displayError(error);
+      }
     }
-  };
-
-  fileReader.readAsText(file);
+  });
 }
 
 function loadJSONProject(project, data) {

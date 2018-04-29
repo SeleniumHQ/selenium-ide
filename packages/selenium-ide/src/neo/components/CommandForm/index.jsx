@@ -65,7 +65,14 @@ import "./style.css";
             value={this.props.command ? this.props.command.value : ""}
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setValue : null} />
-          <input type="submit" onClick={this.props.onSubmit} />
+          <Input
+            id="comment"
+            name="comment"
+            label="Comment"
+            value={this.props.command ? this.props.command.comment : ""}
+            disabled={!this.props.command}
+            onChange={this.props.command ? this.props.command.setComment : null} />
+          <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
         </form>
       </div>
     );

@@ -16,6 +16,7 @@
 // under the License.
 
 import uuidv4 from "uuid/v4";
+import browser from "webextension-polyfill";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 import PluginManager from "../../../plugin/manager";
@@ -178,6 +179,15 @@ class PlaybackState {
     this.paused = false;
   }
 
+  @action.bound break() {
+    this.paused = true;
+    browser.windows.getCurrent().then(windowInfo => {
+      browser.windows.update(windowInfo.id, {
+        focused: true
+      });
+    });
+  }
+
   @action.bound finishPlaying() {
     if (!this.hasFinishedSuccessfully) {
       this.hasFailed = true;
@@ -226,6 +236,7 @@ class PlaybackState {
   }
 
   @action.bound resetState() {
+    UiState.stopRecording();
     this.clearCommandStates();
     this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;

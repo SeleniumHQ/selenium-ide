@@ -25,7 +25,8 @@ import "./style.css";
 
 export const MenuDirections = {
   Left: "left",
-  Bottom: "bottom"
+  Bottom: "bottom",
+  Cursor: "cursor"
 };
 
 const duration = 100;
@@ -63,12 +64,15 @@ class Menu extends React.Component {
     direction: PropTypes.string,
     padding: PropTypes.number,
     onClick: PropTypes.func,
-    requestClose: PropTypes.func.isRequired
+    requestClose: PropTypes.func.isRequired,
+    position: PropTypes.any,
+    closeTimeoutMS: PropTypes.number
   };
   static defaultProps = {
     width: 200,
     padding: 5,
-    direction: MenuDirections.Left
+    direction: MenuDirections.Left,
+    closeTimeoutMS: 300
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.node) {
@@ -78,6 +82,12 @@ class Menu extends React.Component {
   }
   handleClosing(e) {
     this.props.requestClose(e);
+  }
+  overlayRef = (ref) => {
+    if (ref) {
+      ref.addEventListener("contextmenu", this.handleClosing, false);
+    }
+    this.overlay = ref;
   }
   render() {
     let directionStyles = {};
@@ -93,6 +103,21 @@ class Menu extends React.Component {
         left: `${this.state.boundingRect ? this.state.boundingRect.left + (this.state.boundingRect.width - this.props.width) / 2 : "40"}px`,
         transformOrigin: `${this.props.width / 2}px 0px 0px`
       };
+    } else if (this.props.direction === MenuDirections.Cursor) {
+      let topPosition = 40, leftPosition = 40;
+      if (this.props.position) {
+        topPosition = this.props.position.y;
+        leftPosition = this.props.position.x;
+        //if context menu is over test row's right
+        if (this.state.boundingRect && this.state.boundingRect.right < this.props.width + this.props.position.x) {
+          leftPosition = this.state.boundingRect.right - this.props.width - 5;
+        }
+      }
+      directionStyles = {
+        top: topPosition +"px",
+        left: leftPosition +"px",
+        transformOrigin: `${this.props.width / 2}px 0px 0px`
+      };
     }
     return (
       <Transition in={this.props.isOpen} timeout={duration}>
@@ -102,8 +127,9 @@ class Menu extends React.Component {
             isOpen={this.props.isOpen}
             ariaHideApp={false}
             shouldCloseOnOverlayClick={true}
-            closeTimeoutMS={300}
+            closeTimeoutMS={this.props.closeTimeoutMS}
             onRequestClose={this.handleClosing}
+            overlayRef={this.overlayRef}
             style={{
               overlay: {
                 backgroundColor: "transparent",
@@ -139,7 +165,12 @@ export default class MenuContainer extends React.Component {
     width: PropTypes.number,
     direction: PropTypes.string,
     padding: PropTypes.number,
-    closeOnClick: PropTypes.bool
+    closeOnClick: PropTypes.bool,
+    isOpenContextMenu: PropTypes.bool,
+    eventTarget: PropTypes.object,
+    position: PropTypes.object,
+    close: PropTypes.func,
+    closeTimeoutMS: PropTypes.number
   };
   static defaultProps = {
     closeOnClick: true
@@ -160,16 +191,19 @@ export default class MenuContainer extends React.Component {
   }
   render() {
     return ([
-      React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }),
+      (this.props.opener ?
+        React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : null),
       <Menu
         key="menu"
-        isOpen={this.state.isOpen}
-        node={this.node}
-        onClick={this.props.closeOnClick ? this.close : null}
-        requestClose={this.close}
+        isOpen={this.props.isOpenContextMenu || this.state.isOpen}
+        node={this.props.eventTarget || this.node}
+        onClick={this.props.closeOnClick ? (this.props.close || this.close) : null}
+        requestClose={this.props.close || this.close}
         width={this.props.width}
         direction={this.props.direction}
-        padding={this.props.padding}>
+        padding={this.props.padding}
+        position={this.props.position}
+        closeTimeoutMS={this.props.closeTimeoutMS}>
         {this.props.children}
       </Menu>
     ]);

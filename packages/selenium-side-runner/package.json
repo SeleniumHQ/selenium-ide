@@ -1,10 +1,11 @@
 {
   "name": "selenium-side-runner",
-  "version": "0.0.0",
-  "description": "Run exported Selenium IDE projects in cli",
+  "version": "0.5.0",
+  "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
-    "build": "babel -d dist src --ignore=__test__"
+    "build": "babel -d dist src --ignore=__test__",
+    "pkg": "pkg package.json --out-path=dist/bin"
   },
   "bin": {
     "selenium-side-runner": "dist/index.js"
@@ -19,15 +20,22 @@
   ],
   "license": "Apache-2.0",
   "private": false,
+  "pkg": {
+    "scripts": "node_modules/jest-*/**/*.js"
+  },
   "dependencies": {
     "commander": "^2.12.2",
-    "jest": "^22.0.5",
+    "jest": "^23.0.0-alpha.7",
+    "jest-environment-selenium": "^0.2.0",
+    "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
+    "rimraf": "^2.6.2",
     "selenium-webdriver": "^3.6.0",
     "winston": "^2.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-node6": "^11.0.0"
+    "babel-preset-node6": "^11.0.0",
+    "pkg": "^4.3.1"
   }
 }

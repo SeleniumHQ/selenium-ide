@@ -34,6 +34,30 @@ describe("Suite model", () => {
     suite.setName("test");
     expect(suite.name).toBe("test");
   });
+  it("should have a timeout", () => {
+    const suite = new Suite();
+    expect(suite.timeout).toBe(300);
+  });
+  it("should fail to set the timeout to something other than number", () => {
+    const suite = new Suite();
+    expect(() => {
+      suite.setTimeout("not a number");
+    }).toThrowError("Expected to receive Number instead received String");
+  });
+  it("should set the timeout", () => {
+    const suite = new Suite();
+    suite.setTimeout(400);
+    expect(suite.timeout).toBe(400);
+  });
+  it("should initiate as a sequential suite", () => {
+    const suite = new Suite();
+    expect(suite.isParallel).toBeFalsy();
+  });
+  it("should set the suite to parallel", () => {
+    const suite = new Suite();
+    suite.setParallel(true);
+    expect(suite.isParallel).toBeTruthy();
+  });
   it("should add a new Test Case", () => {
     const store = new ProjectStore();
     const suite = new Suite();

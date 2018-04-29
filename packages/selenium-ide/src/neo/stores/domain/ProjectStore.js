@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable, computed } from "mobx";
+import { action, observable, computed, toJS } from "mobx";
 import uuidv4 from "uuid/v4";
 import SortBy from "sort-array";
 import TestCase from "../../models/TestCase";
@@ -33,7 +33,7 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
-    this.toJSON = this.toJSON.bind(this);
+    this.toJS = this.toJS.bind(this);
   }
 
   @computed get suites() {
@@ -111,23 +111,23 @@ export default class ProjectStore {
   }
 
   @action.bound fromJS(jsRep) {
-    this.id = jsRep.id || uuidv4();
     this.name = jsRep.name;
     this.setUrl(jsRep.url);
     this._tests.replace(jsRep.tests.map(TestCase.fromJS));
     this._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, this.tests)));
     this._urls.replace(jsRep.urls);
     this.plugins.replace(jsRep.plugins);
+    this.id = jsRep.id || uuidv4();
     this.modified = false;
   }
 
-  toJSON() {
-    return JSON.stringify({
+  toJS() {
+    return toJS({
       id: this.id,
       name: this.name,
       url: this.url,
-      tests: this._tests,
-      suites: this._suites.map(s => s.exportSuite()),
+      tests: this._tests.map(t => t.export()),
+      suites: this._suites.map(s => s.export()),
       urls: this._urls,
       plugins: this.plugins
     });

@@ -35,7 +35,8 @@ import "./style.css";
   constructor(props) {
     super(props);
     this.state = {
-      showTests: true
+      showTests: true,
+      lastSelection: {}
     };
     this.handleChangedTab = this.handleChangedTab.bind(this);
   }
@@ -45,9 +46,12 @@ import "./style.css";
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
+    const lastSelection = this.state.lastSelection;
     this.setState({
-      showTests: tab === "Tests"
+      showTests: tab === "Tests",
+      lastSelection: UiState.selectedTest
     });
+    UiState.selectTest(lastSelection.test, lastSelection.suite);
   }
   handleKeyDown(event) {
     const e = event.nativeEvent;
@@ -66,7 +70,8 @@ import "./style.css";
         className="test-cases"
         onKeyDown={this.handleKeyDown.bind(this)}
         onMouseEnter={() => UiState.setNavigationHover(true)}
-        onMouseLeave={() => UiState.setNavigationHover(false)}>
+        onMouseLeave={() => UiState.setNavigationHover(false)}
+      >
         <VerticalTabBar tabs={["Tests", "Test suites"]} tabChanged={this.handleChangedTab}>
           <AddButton data-tip={this.state.showTests ? "<p>Add new test</p>" : "<p>Add new test suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
         </VerticalTabBar>
@@ -74,7 +79,15 @@ import "./style.css";
         <Provider renameTest={ModalState.renameTest}>
           { this.state.showTests
             ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
-            : <SuiteList suites={this.props.suites} rename={ModalState.renameSuite} selectTests={ModalState.editSuite} removeSuite={ModalState.deleteSuite} moveTest={this.props.moveTest} /> }
+            : <SuiteList
+              suites={this.props.suites}
+              rename={ModalState.renameSuite}
+              editSettings={ModalState.editSuiteSettings}
+              selectTests={ModalState.editSuite}
+              removeSuite={ModalState.deleteSuite}
+              moveTest={this.props.moveTest}
+            />
+          }
         </Provider>
         <Runs
           runs={PlaybackState.finishedTestsCount}

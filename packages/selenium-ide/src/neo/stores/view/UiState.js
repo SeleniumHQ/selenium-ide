@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable, observe } from "mobx";
+import { action, computed, observable, observe, extendObservable } from "mobx";
 import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import TestState from "./TestState";
@@ -26,7 +26,6 @@ class UiState {
   @observable selectedTest = {};
   @observable selectedCommand = null;
   @observable filterTerm = "";
-  @observable dragInProgress = false;
   @observable clipboard = null;
   @observable isRecording = false;
   @observable isSelectingTarget = false;
@@ -41,6 +40,9 @@ class UiState {
   @observable navigationDragging = false;
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
+  @observable options = {
+    recordNotifications: true
+  };
 
   constructor() {
     this.suiteStates = {};
@@ -53,6 +55,9 @@ class UiState {
       }
       if (data.navigationSize !== undefined && data.navigationSize >= this.minNavigationWidth) {
         this.resizeNavigation(data.navigationSize);
+      }
+      if (data.options) {
+        this.setOptions(data.options);
       }
     });
   }
@@ -86,6 +91,13 @@ class UiState {
 
   @action.bound copyToClipboard(item) {
     this.clipboard = item;
+  }
+
+  @action.bound pasteFromClipboard(index) {
+    if (this.clipboard && this.selectedTest.test) {
+      const newCommand = this.clipboard.clone();
+      this.selectedTest.test.insertCommandAt(newCommand, index);
+    }
   }
 
   @action.bound selectTest(test, suite) {
@@ -147,12 +159,12 @@ class UiState {
     this.filterTerm = term;
   }
 
-  @action.bound setDrag(dragProgress) {
-    this.dragInProgress = dragProgress;
-  }
-
   @action.bound toggleRecord() {
     this.isRecording = !this.isRecording;
+  }
+
+  @action.bound stopRecording() {
+    this.isRecording = false;
   }
 
   @action.bound setSelectingTarget(isSelecting) {
@@ -164,6 +176,22 @@ class UiState {
     storage.set({
       consoleSize: this.consoleHeight
     });
+  }
+
+  @action.bound maximizeConsole() {
+    this.resizeConsole(this.windowHeight - this.minContentHeight);
+  }
+
+  @action.bound minimizeConsole() {
+    this.resizeConsole(this.minConsoleHeight);
+  }
+
+  @action.bound toggleConsole() {
+    if (this.consoleHeight === this.minConsoleHeight) {
+      this.maximizeConsole();
+    } else {
+      this.minimizeConsole();
+    }
   }
 
   @action.bound setWindowHeight(height) {
@@ -193,6 +221,13 @@ class UiState {
 
   @action.bound setNavigationDragging(isDragging) {
     this.navigationDragging = isDragging;
+  }
+
+  @action.bound setOptions(options) {
+    extendObservable(this.options, options);
+    storage.set({
+      options: this.options
+    });
   }
 
   @action.bound observePristine() {
@@ -249,11 +284,11 @@ class UiState {
     this.selectedTest = {};
     this.selectedCommand = null;
     this.filterTerm = "";
-    this.dragInProgress = false;
     this.clipboard = null;
     this.isRecording = false;
     this.suiteStates = {};
     this.clearTestStates();
+    this.selectTest(this._project.tests[0]);
   }
 
   @action.bound clearTestStates() {
