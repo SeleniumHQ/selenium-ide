@@ -17,19 +17,26 @@
 
 import fs from "fs";
 import path from "path";
-import Selianize, { ParseError, RegisterTestHook, RegisterEmitter } from "../src";
+import Selianize, { ParseError, RegisterConfigurationHook, RegisterTestHook, RegisterEmitter } from "../src";
 
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
     return expect(Selianize(project)).resolves.toBeDefined();
   });
-  it("should register a test emitter hook", () => {
+  it("hook should add configuration code", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve("some code the the top"));
+    RegisterConfigurationHook(hook);
+    return expect((await Selianize(project))[0].code).toMatch(/some code the the top/);
+  });
+  it("should register a test emitter hook", async () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
     const hook = jest.fn();
     hook.mockReturnValue(Promise.resolve({setup: "", teardown: ""}));
     RegisterTestHook(hook);
-    Selianize(project);
+    await Selianize(project);
     expect(hook).toHaveBeenCalledTimes(3);
   });
   it("hook should add setup and teardown code", async () => {

@@ -25,7 +25,7 @@ export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = template.bootstrap();
 
-    result += ConfigurationEmitter.emit(project);
+    result += await ConfigurationEmitter.emit(project);
 
     const testsHashmap = project.tests.reduce((map, test) => {
       map[test.id] = test;
@@ -43,6 +43,10 @@ export default function Selianize(project) {
     }));
     errors.length ? rej({ name: project.name, suites: errors }) : res(results);
   });
+}
+
+export function RegisterConfigurationHook(hook) {
+  ConfigurationEmitter.registerHook(hook);
 }
 
 export function RegisterTestHook(hook) {
