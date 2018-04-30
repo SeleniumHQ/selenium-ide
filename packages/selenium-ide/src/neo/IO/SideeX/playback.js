@@ -275,7 +275,7 @@ function doSeleniumCommand(id, command, parsedTarget, value, res, implicitTime =
         }
       }
 
-      PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
+      PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
     } else {
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
     }
