@@ -14,7 +14,7 @@
     "pack:firefox": "cd packages/selenium-ide && yarn build-firefox",
     "test": "jest",
     "test:webdriver": "cd tests/webdriver && node ../../packages/selenium-side-runner/dist/index.js",
-    "lint": "eslint packages/selenium-ide/src/{neo,selianize}/ packages/selenium-side-runner/src/ --ext .js --ext .jsx",
+    "lint": "eslint packages/selenium-ide/src/neo/ --ext .js --ext .jsx",
     "postinstall": "lerna bootstrap"
   },
   "jest": {
