@@ -111,6 +111,8 @@ export const Commands = Object.freeze({
   chooseOkOnNextConfirmation: "choose ok on next confirmation",
   click: "click",
   clickAt: "click at",
+  check: "check",
+  uncheck: "uncheck",
   doubleClickAt: "double click at",
   dragAndDropToObject: "drag and drop to object",
   echo: "echo",
