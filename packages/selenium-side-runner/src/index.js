@@ -19,6 +19,7 @@
 
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import { fork } from "child_process";
 import program from "commander";
 import winston from "winston";
@@ -54,6 +55,7 @@ const configuration = {
   capabilities: {
     browserName: "chrome"
   },
+  runId: crypto.randomBytes(16).toString("hex"),
   path: path.join(__dirname, "../../")
 };
 if (program.sideyml) {
