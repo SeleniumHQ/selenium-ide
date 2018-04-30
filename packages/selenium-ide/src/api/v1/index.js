@@ -27,7 +27,8 @@ router.post("/register", (req, res) => {
     id: req.sender,
     name: req.name,
     version: req.version,
-    commands: req.commands
+    commands: req.commands,
+    dependencies: req.dependencies
   };
   Manager.registerPlugin(plugin);
   res(true);

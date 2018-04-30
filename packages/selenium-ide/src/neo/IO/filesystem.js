@@ -63,12 +63,15 @@ export function loadAsText(blob) {
 export function saveProject(_project) {
   const project = _project.toJS();
   project.version = "1.0";
+  project.plugins = [];
+  project.dependencies = {};
   Manager.plugins.forEach(plugin => {
-    project.registerPlugin({
+    project.plugins.push({
       id: plugin.id,
       name: plugin.name,
       version: plugin.version
     });
+    Object.assign(project.dependencies, plugin.dependencies);
   });
   downloadProject(project);
   UiState.saved();
