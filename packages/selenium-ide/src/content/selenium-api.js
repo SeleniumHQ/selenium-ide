@@ -478,6 +478,20 @@ Selenium.prototype.doAssertSelectedValue = function(locator, value) {
   }
 };
 
+Selenium.prototype.doVerifySelectedLabel = function(selectLocator, value) {
+  let selectedLabel = this.findSelectedOptionProperty(selectLocator, "text");
+  if (selectedLabel !== value) {
+    throw new Error("Actual label '" + selectedLabel + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertSelectedLabel = function(selectLocator, value) {
+  let selectedLabel = this.findSelectedOptionProperty(selectLocator, "text");
+  if (selectedLabel !== value) {
+    throw new Error("Actual label '" + selectedLabel + "' did not match '" + value + "'");
+  }
+};
+
 Selenium.prototype.doAssertNotSelectedValue = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (element.type !== "select-one") {

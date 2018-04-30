@@ -102,6 +102,8 @@ export const Commands = Object.freeze({
   assertElementNotPresent: "assert element not present",
   assertPrompt: "assert prompt",
   assertSelectedValue: "assert selected value",
+  assertSelectedLabel: "assert selected label",
+  verifySelectedLabel: "verify selected label",
   assertNotSelectedValue: "assert not selected value",
   assertText: "assert text",
   assertTitle: "assert title",
