@@ -544,6 +544,16 @@ Selenium.prototype.doStoreTitle = function(value, varName) {
   browser.runtime.sendMessage({ "storeStr": value || doc.title, "storeVar": varName });
 };
 
+Selenium.prototype.doStoreXPathCount = function(xpath, varName) {
+  let count = this.browserbot.evaluateXPathCount(xpath, this.browserbot.getDocument());
+  browser.runtime.sendMessage({ "storeStr": count || 0, "storeVar": varName });
+};
+
+Selenium.prototype.doStoreAttribute = function(locator, varName) {
+  let attributeValue = this.browserbot.findAttribute(locator);
+  browser.runtime.sendMessage({ "storeStr": attributeValue, "storeVar": varName });
+};
+
 Selenium.prototype.doEcho = function(value) {
   browser.runtime.sendMessage({ "echoStr": value });
 };

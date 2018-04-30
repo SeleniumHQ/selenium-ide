@@ -132,6 +132,8 @@ export const Commands = Object.freeze({
   store: "store",
   storeText: "store text",
   storeTitle: "store title",
+  storeXPathCount: "store xpath count",
+  storeAttribute: "store attribute",
   submit: "submit",
   type: "type",
   verifyChecked: "verify checked",
