@@ -27,6 +27,7 @@ import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
 import Capabilities from "./capabilities";
 import Config from "./config";
+import { install } from "./npm";
 import metadata from "../package.json";
 
 process.title = metadata.name;
@@ -88,7 +89,8 @@ function runProject(project) {
   process.chdir(projectPath);
   fs.writeFileSync("package.json", JSON.stringify({
     name: project.name,
-    version: "0.0.0"
+    version: "0.0.0",
+    dependencies: project.dependencies || {}
   }));
   project.code.forEach(suite => {
     if (!suite.tests) {
@@ -105,24 +107,32 @@ function runProject(project) {
   winston.info(`Running ${project.name}`);
 
   return new Promise((resolve, reject) => {
-    const child = fork(require.resolve("./child"), [
-      "--testEnvironment", "jest-environment-selenium",
-      "--setupTestFrameworkScriptFile", require.resolve("jest-environment-selenium/dist/setup.js"),
-      "--testEnvironmentOptions", JSON.stringify(configuration),
-      "--modulePaths", path.join(__dirname, "../node_modules"),
-      "--testMatch", "**/*.test.js"
-    ].concat(program.filter ? ["-t", program.filter] : [])
-      .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
+    let npmInstall;
+    if (project.dependencies && Object.keys(project.dependencies)) {
+      npmInstall = install();
+    } else {
+      npmInstall = Promise.resolve();
+    }
+    npmInstall.then(() => {
+      const child = fork(require.resolve("./child"), [
+        "--testEnvironment", "jest-environment-selenium",
+        "--setupTestFrameworkScriptFile", require.resolve("jest-environment-selenium/dist/setup.js"),
+        "--testEnvironmentOptions", JSON.stringify(configuration),
+        "--modulePaths", path.join(__dirname, "../node_modules"),
+        "--testMatch", "**/*.test.js"
+      ].concat(program.filter ? ["-t", program.filter] : [])
+        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
 
-    child.on("exit", (code) => {
-      console.log("");
-      process.chdir("..");
-      rimraf.sync(projectPath);
-      if (code) {
-        reject();
-      } else {
-        resolve();
-      }
+      child.on("exit", (code) => {
+        console.log("");
+        process.chdir("..");
+        rimraf.sync(projectPath);
+        if (code) {
+          reject();
+        } else {
+          resolve();
+        }
+      });
     });
   });
 }
