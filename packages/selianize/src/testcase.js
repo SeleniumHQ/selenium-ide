@@ -24,7 +24,7 @@ export function emit(test) {
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
 
     let result = `it("${test.name}", () => {`;
-    result += hookResults.map((hook) => hook.setup).join("");
+    result += hookResults.map((hook) => hook.setup || "").join("");
 
     let errors = [];
     result += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
@@ -35,8 +35,8 @@ export function emit(test) {
       });
     }))))).join("");
 
+    result += hookResults.map((hook) => hook.teardown || "").join("");
     result += "return driver.getTitle().then(title => {expect(title).toBeDefined();});});";
-    result += hookResults.map((hook) => hook.teardown).join("");
 
     errors.length ? rej({...test, commands: errors}) : res(result);
   });
