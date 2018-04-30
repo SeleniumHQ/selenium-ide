@@ -18,7 +18,7 @@
 const hooks = [];
 
 export async function emit(project) {
-  return `const BASE_URL = configuration.baseUrl || '${project.url}';${(await Promise.all(hooks.map((hook) => hook()))).join("")}`;
+  return `const BASE_URL = configuration.baseUrl || '${project.url}';${(await Promise.all(hooks.map((hook) => hook({name: project.name})))).join("")}`;
 }
 
 function registerHook(hook) {
