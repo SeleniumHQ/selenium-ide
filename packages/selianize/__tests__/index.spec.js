@@ -17,7 +17,7 @@
 
 import fs from "fs";
 import path from "path";
-import Selianize, { ParseError, RegisterConfigurationHook, RegisterTestHook, RegisterEmitter } from "../src";
+import Selianize, { ParseError, RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "../src";
 
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
@@ -30,6 +30,21 @@ describe("Selenium code serializer", () => {
     hook.mockReturnValue(Promise.resolve("some code the the top"));
     RegisterConfigurationHook(hook);
     return expect((await Selianize(project))[0].code).toMatch(/some code the the top/);
+  });
+  it("should register a suite emitter hook", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({before: "", after: "", beforeAll: "", afterAll: ""}));
+    RegisterSuiteHook(hook);
+    await Selianize(project);
+    expect(hook).toHaveBeenCalledTimes(1);
+  });
+  it("should add a before and after code", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({before: "before code", beforeAll: "before all code", after: "after code", afterAll: "after all code"}));
+    RegisterSuiteHook(hook);
+    return expect((await Selianize(project))[0].code).toMatch(/describe\("aaa suite", \(\) => {beforeAll\(\(\) => {before all code}\);beforeEach\(\(\) => {before code}\);afterEach\(\(\) => {after code}\);afterAll\(\(\) => {after all code}\);it\(/);
   });
   it("should register a test emitter hook", async () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));

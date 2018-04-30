@@ -49,6 +49,10 @@ export function RegisterConfigurationHook(hook) {
   ConfigurationEmitter.registerHook(hook);
 }
 
+export function RegisterSuiteHook(hook) {
+  SuiteEmitter.registerHook(hook);
+}
+
 export function RegisterTestHook(hook) {
   TestCaseEmitter.registerHook(hook);
 }
