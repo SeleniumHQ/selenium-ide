@@ -31,15 +31,15 @@ export default class Console extends React.Component {
   componentWillUnmount() {
     this.store.dispose();
   }
+  handleClick(tab){
+    if (this.props.restoreSize) this.props.restoreSize();
+  }
   render() {
     return (
-      <footer
-        className="console"
-        style={{
+      <footer className="console" style={{
           height: this.props.height ? `${this.props.height}px` : "initial"
-        }}
-        onClick={this.props.restoreSize}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
+        }}>
+        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0} tabChanged={this.handleClick}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
         <LogList store={this.store} />
