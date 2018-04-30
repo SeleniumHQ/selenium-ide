@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "selianize";
 import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import { sendMessage } from "./communication";
@@ -32,15 +33,27 @@ function RunCommand(id, command, target, value, options) {
 }
 
 class PluginManager {
-  plugins = [];
+  constructor() {
+    this.plugins = [];
+    RegisterConfigurationHook((project) => {
+      return new Promise((res) => {
+        Promise.all(this.plugins.map(plugin => this.emitConfiguration(plugin.id, project).catch((e) => {console.log(e); return "";}))).then(configs => (
+          res(configs.join(""))
+        ));
+      });
+    });
+  }
 
   registerPlugin(plugin) {
     if (!this.hasPlugin(plugin.id)) {
       this.plugins.push(plugin);
+      RegisterSuiteHook(this.emitSuite.bind(undefined, plugin.id));
+      RegisterTestHook(this.emitTest.bind(undefined, plugin.id));
       if (plugin.commands) {
         plugin.commands.forEach(({id, name}) => {
           Commands.addCommand(id, name);
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
+          RegisterEmitter(id, this.emitCommand.bind(undefined, plugin.id, id));
         });
       }
     } else {
@@ -54,6 +67,42 @@ class PluginManager {
 
   getPlugin(pluginId) {
     return this.plugins.find(p => p.id === pluginId);
+  }
+
+  emitConfiguration(pluginId, project) {
+    return sendMessage(pluginId, {
+      action: "emit",
+      entity: "config",
+      project
+    }).then(res => res.message);
+  }
+
+  emitSuite(pluginId, suiteInfo) {
+    return sendMessage(pluginId, {
+      action: "emit",
+      entity: "suite",
+      suite: suiteInfo
+    }).catch(() => ({}));
+  }
+
+  emitTest(pluginId, test) {
+    return sendMessage(pluginId, {
+      action: "emit",
+      entity: "test",
+      test
+    }).catch(() => ({}));
+  }
+
+  emitCommand(pluginId, command, target, value) {
+    return sendMessage(pluginId, {
+      action: "emit",
+      entity: "command",
+      command: {
+        command,
+        target,
+        value
+      }
+    }).then(res => res.message);
   }
 
   emitMessage(message) {
