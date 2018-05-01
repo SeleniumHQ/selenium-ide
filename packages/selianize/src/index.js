@@ -20,6 +20,7 @@ import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
 import TestCaseEmitter from "./testcase";
 import CommandEmitter from "./command";
+import LocationEmitter from "./location";
 
 export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
@@ -70,3 +71,5 @@ export function ParseError(error) {
     )).join(""))
   )).join("");
 }
+
+export const Location = LocationEmitter;

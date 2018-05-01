@@ -16,27 +16,12 @@
 // under the License.
 
 import Router from "../../router";
-import Manager from "../../plugin/manager";
-import playbackRouter from "./playback";
-import recordRouter from "./record";
-import exportRouter from "./export";
+import { Location } from "selianize";
 
 const router = new Router();
 
-router.post("/register", (req, res) => {
-  const plugin = {
-    id: req.sender,
-    name: req.name,
-    version: req.version,
-    commands: req.commands,
-    dependencies: req.dependencies
-  };
-  Manager.registerPlugin(plugin);
-  res(true);
+router.get("/location", (req, res) => {
+  Location.emit(req.location).then(res);
 });
-
-router.use("/playback", playbackRouter);
-router.use("/record", recordRouter);
-router.use("/export", exportRouter);
 
 export default router;
