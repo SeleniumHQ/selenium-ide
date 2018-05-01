@@ -225,7 +225,7 @@ function doDomWait(res, domTime, domCount = 0) {
     });
 }
 
-function doCommand() {
+function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   if (!PlaybackState.isPlaying || PlaybackState.paused) return;
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
 
@@ -248,41 +248,30 @@ function doCommand() {
 
   const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
-    canExecuteCommand(command) ? doPluginCommand(id, command, parsedTarget, value) : doSeleniumCommand(id, command, parsedTarget, value)
+    canExecuteCommand(command) ?
+      doPluginCommand(id, command, parsedTarget, value, implicitTime, implicitCount) :
+      doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount)
   ));
 }
 
-function doSeleniumCommand(id, command, parsedTarget, value, res, implicitTime = Date.now(), implicitCount = 0) {
+function doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount) {
   return (command !== "type"
     ? extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
     : extCommand.doType(xlateArgument(parsedTarget), xlateArgument(value))).then(function(result) {
     if (result.result !== "success") {
-      if (result.result !== "success") {
-        // implicit
-        if (result.result.match(/Element[\s\S]*?not found/)) {
-          if (implicitTime && (Date.now() - implicitTime > 30000)) {
-            reportError("Implicit Wait timed out after 30000ms");
-            implicitCount = 0;
-            implicitTime = "";
-          } else {
-            implicitCount++;
-            if (implicitCount == 1) {
-              implicitTime = Date.now();
-            }
-            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${parsedTarget}...`);
-            return doCommand(false, implicitTime, implicitCount);
-          }
-        }
+      // implicit
+      if (isElementNotFound(result.result)) {
+        return doImplicitWait(result.result, id, parsedTarget, implicitTime, implicitCount);
+      } else {
+        PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
       }
-
-      PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
     } else {
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
     }
   });
 }
 
-function doPluginCommand(id, command, target, value) {
+function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
   return executeCommand(command, target, value, {
     commandId: id,
     runId: PlaybackState.runId,
@@ -292,8 +281,33 @@ function doPluginCommand(id, command, target, value) {
   }).then(res => {
     PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
   }).catch(err => {
-    PlaybackState.setCommandState(id, err instanceof FatalError ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
+    if (isElementNotFound(err.message)) {
+      return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
+    } else {
+      PlaybackState.setCommandState(id, err instanceof FatalError ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
+    }
   });
+}
+
+function isElementNotFound(error) {
+  return error.match(/Element[\s\S]*?not found/);
+}
+
+function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
+  if (isElementNotFound(error)) {
+    if (implicitTime && (Date.now() - implicitTime > 30000)) {
+      reportError("Implicit Wait timed out after 30000ms");
+      implicitCount = 0;
+      implicitTime = "";
+    } else {
+      implicitCount++;
+      if (implicitCount == 1) {
+        implicitTime = Date.now();
+      }
+      PlaybackState.setCommandState(commandId, PlaybackStates.Pending, `Trying to find ${target}...`);
+      return doCommand(false, implicitTime, implicitCount);
+    }
+  }
 }
 
 function doDelay() {
