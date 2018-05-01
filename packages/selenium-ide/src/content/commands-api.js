@@ -79,6 +79,15 @@ function doCommands(request, sender, sendResponse) {
     }
     return true;
   }
+  if (request.resolveLocator) {
+    try {
+      const element = selenium.browserbot.findElement(request.locator);
+      const locator = locatorBuilders.buildAll(element).find(([loc, strat]) => (/^xpath/.test(strat)))[0]; //eslint-disable-line no-unused-vars
+      sendResponse({result: "success", locator});
+    } catch(e) {
+      sendResponse({result: e.message});
+    }
+  }
   if (request.selectMode) {
     if (request.selecting) {
       targetSelector = new TargetSelector(function (element, win) {

@@ -157,6 +157,11 @@ export default class ExtCommand {
     }, { frameId: top ? 0 : frameId });
   }
 
+  sendPayload(payload) {
+    let tabId = this.getCurrentPlayingTabId();
+    return browser.tabs.sendMessage(tabId, payload);
+  }
+
   setLoading(tabId) {
     // Does clearing the object will cause some problem(e.g. missing the frameId)?
     // Ans: Yes, but I don't know why

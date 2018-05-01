@@ -20,8 +20,22 @@ import PlaybackState from "../../neo/stores/view/PlaybackState";
 import Manager from "../../plugin/manager";
 import logger from "../../neo/stores/view/Logs";
 import { LogTypes } from "../../neo/ui-models/Log";
+import { extCommand } from "../../neo/IO/SideeX/playback";
 
 const router = new Router();
+
+router.get("/location", (req, res) => {
+  extCommand.sendPayload({
+    resolveLocator: true,
+    locator: req.location
+  }).then(result => {
+    if (result.result === "success") {
+      res(result.locator);
+    } else {
+      res({error: result.result});
+    }
+  });
+});
 
 router.post("/command", (req, res) => {
   PlaybackState.setCommandState(req.commandId, req.state, req.message);
