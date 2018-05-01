@@ -17,11 +17,15 @@
 
 import Router from "../../router";
 import { recordCommand } from "../../neo/IO/SideeX/record";
+import { select } from "../../neo/IO/SideeX/find-select";
 
 const router = new Router();
 
 router.post("/command", (req, res) => {
-  recordCommand(req.command, req.target, req.value);
+  recordCommand(req.command, req.target, req.value, undefined, req.select);
+  if (select) {
+    select();
+  }
   res(true);
 });
 

@@ -30,12 +30,16 @@ function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
-export function recordCommand(command, target, value, index) {
+export function recordCommand(command, target, value, index, select = false) {
   const { test } = UiState.selectedTest;
   const newCommand = test.createCommand(index);
   newCommand.setCommand(command);
   newCommand.setTarget(target);
   newCommand.setValue(value);
+
+  if (select) {
+    UiState.selectCommand(newCommand);
+  }
 }
 
 export default function record(command, targets, value, insertBeforeLastCommand = false) {
