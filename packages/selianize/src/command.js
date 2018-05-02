@@ -55,6 +55,8 @@ const emitters = {
   store: emitStore,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
+  storeXPathCount: skip,
+  storeAttribute: skip,
   select: emitSelect,
   addSelection: emitSelect,
   removeSelection: emitSelect,
