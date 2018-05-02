@@ -28,6 +28,6 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-node6": "^11.0.0"
+    "babel-preset-node8": "^1.2.0"
   }
 }
