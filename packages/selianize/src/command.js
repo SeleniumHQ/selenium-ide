@@ -22,6 +22,8 @@ const emitters = {
   open: emitOpen,
   click: emitClick,
   clickAt: emitClick,
+  check: skip,
+  uncheck: skip,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
