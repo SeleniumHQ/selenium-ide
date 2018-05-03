@@ -5,13 +5,13 @@
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
     "build": "babel -d dist src --ignore=__test__",
-    "pkg": "pkg package.json --out-path=dist/bin"
+    "pkg": "pkg package.json --targets=node9-linux-x64,node9-macos-x64,node9-windows-x64 --out-path=dist/bin"
   },
   "bin": {
     "selenium-side-runner": "dist/index.js"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "keywords": [
     "selenium",
@@ -21,12 +21,13 @@
   "license": "Apache-2.0",
   "private": false,
   "pkg": {
-    "scripts": "node_modules/jest-*/**/*.js"
+    "scripts": "node_modules/jest-*/**/*.js",
+    "assets": "node_modules/jest-jasmine2/build/jasmine*/**"
   },
   "dependencies": {
     "commander": "^2.12.2",
     "global-npm": "^0.3.0",
-    "jest": "^23.0.0-alpha.7",
+    "jest": "^23.0.0-charlie.0",
     "jest-environment-selenium": "^0.2.0",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
@@ -37,6 +38,6 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-node6": "^11.0.0",
-    "pkg": "^4.3.1"
+    "pkg": "https://github.com/corevo/pkg#a5a5e8717ca7ce17f51c32b4f82883f5cea9839a"
   }
 }
