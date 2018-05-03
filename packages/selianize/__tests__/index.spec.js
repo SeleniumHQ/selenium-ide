@@ -60,14 +60,14 @@ describe("Selenium code serializer", () => {
     hook.mockReturnValue(Promise.resolve({setup: "", teardown: ""}));
     hook.mockReturnValueOnce(Promise.resolve({setup: "some setup code", teardown: "other teardown code"}));
     RegisterTestHook(hook);
-    return expect((await Selianize(project))[0].code).toMatch(/it\("aa playback", \(\) => {some setup code.*other teardown codereturn.*}\);/);
+    return expect((await Selianize(project))[0].code).toMatch(/it\("aa playback", async \(\) => {some setup code.*other teardown codeawait.*}\);/);
   });
   it("should register a new command emitter", async () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-4-new-command.side")));
     const hook = jest.fn();
     hook.mockReturnValue(Promise.resolve("some new command code"));
     RegisterEmitter("newCommand", hook);
-    return expect((await Selianize(project))[0].code).toMatch(/some new command codereturn/);
+    return expect((await Selianize(project))[0].code).toMatch(/some new command codeawait/);
   });
   it("should fail to export a project with errors", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-2.side")));

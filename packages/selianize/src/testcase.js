@@ -23,7 +23,7 @@ export function emit(test) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
 
-    let result = `it("${test.name}", () => {`;
+    let result = `it("${test.name}", async () => {`;
     result += hookResults.map((hook) => hook.setup || "").join("");
 
     let errors = [];
@@ -36,7 +36,7 @@ export function emit(test) {
     }))))).join("");
 
     result += hookResults.map((hook) => hook.teardown || "").join("");
-    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();});});";
+    result += "await driver.getTitle().then(title => {expect(title).toBeDefined();});});";
 
     errors.length ? rej({...test, commands: errors}) : res(result);
   });

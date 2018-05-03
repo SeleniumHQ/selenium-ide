@@ -41,7 +41,7 @@ describe("suite emitter", () => {
       timeout: "30",
       tests: ["1"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
   it("should emit a suite with multiple empty tests", () => {
     const tests = {
@@ -66,7 +66,7 @@ describe("suite emitter", () => {
       timeout: "30",
       tests: ["1", "2", "3"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
   it("should emit a parallel suite", () => {
     const tests = {
@@ -95,15 +95,15 @@ describe("suite emitter", () => {
     return expect(SuiteEmitter.emit(suite, tests)).resolves.toEqual([
       {
         name: tests["1"].name,
-        code: `jest.setTimeout(30000);test("${tests["1"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+        code: `jest.setTimeout(30000);test("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       },
       {
         name: tests["2"].name,
-        code: `jest.setTimeout(30000);test("${tests["2"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+        code: `jest.setTimeout(30000);test("${tests["2"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       },
       {
         name: tests["3"].name,
-        code: `jest.setTimeout(30000);test("${tests["3"].name}", () => {return driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+        code: `jest.setTimeout(30000);test("${tests["3"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       }]);
   });
   it("should reject a suite with failed tests", () => {
