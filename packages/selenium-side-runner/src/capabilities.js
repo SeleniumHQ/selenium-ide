@@ -52,6 +52,10 @@ function assignStringKey(key, value) {
 }
 
 function parseStringValue(value) {
+  // is array
+  if (/^\[.*\]$/.test(value)) {
+    return value.match(/((\w|-)*)/g).filter(s => !!s);
+  }
   try {
     return JSON.parse(value);
   } catch (e) {
