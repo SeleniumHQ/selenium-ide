@@ -15,7 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import npm from "global-npm";
+let npm;
+
+try {
+  npm = require("global-npm");
+} catch (err) {
+  if (err.code === "MODULE_NOT_FOUND") {
+    npm = require("npm");
+  } else {
+    throw err;
+  }
+}
 
 export function install() {
   return new Promise((res, rej) => {

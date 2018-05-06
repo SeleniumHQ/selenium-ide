@@ -21,8 +21,7 @@
   "license": "Apache-2.0",
   "private": false,
   "pkg": {
-    "scripts": "node_modules/jest-*/**/*.js",
-    "assets": "node_modules/jest-jasmine2/build/jasmine*/**"
+    "scripts": [ "node_modules/jest-*/**/*.js", "node_modules/node-gyp/**/*.js" ]
   },
   "dependencies": {
     "commander": "^2.12.2",
@@ -38,6 +37,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-node6": "^11.0.0",
+    "npm": "^6.0.0",
     "pkg": "https://github.com/corevo/pkg#a5a5e8717ca7ce17f51c32b4f82883f5cea9839a"
   }
 }
