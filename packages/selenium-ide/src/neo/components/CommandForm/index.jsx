@@ -34,7 +34,7 @@ import "./style.css";
     onSubmit: PropTypes.func
   };
   parseCommandName(command) {
-    return Commands.list.has(command) ? Commands.list.get(command) : command;
+    return Commands.list.has(command) ? Commands.list.get(command).name : command;
   }
   render() {
     return (

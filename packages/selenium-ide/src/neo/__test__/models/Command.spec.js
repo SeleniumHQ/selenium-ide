@@ -118,18 +118,18 @@ describe("Command", () => {
 
 describe("Commands enum", () => {
   it("should contains only strings as values", () => {
-    Commands.list.forEach(name => {
-      expect(name.constructor.name).toBe("String");
+    Commands.list.forEach(commandInfo => {
+      expect(commandInfo.name.constructor.name).toBe("String");
     });
   });
   it("should traverse through the reverse dictionary", () => {
-    Commands.list.forEach((name) => {
-      expect(name).toBe(Commands.list.get(Commands.values[name]));
+    Commands.list.forEach((commandInfo) => {
+      expect(commandInfo.name).toBe(Commands.list.get(Commands.values[commandInfo.name]).name);
     });
     expect(Commands.list[0]).toBe(Commands[Commands.values[Commands[0]]]);
   });
   it("should add a command to the list", () => {
-    let key = "test", value = "a friendly test", length = Commands.array.length;
+    let key = "test", value = { name: "a friendly test" }, length = Commands.array.length;
     Commands.addCommand(key, value);
     expect(Commands.list.get(key)).toEqual(value);
     expect(Commands.array.length).toBe(length + 1);

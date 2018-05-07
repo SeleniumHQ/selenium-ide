@@ -35,10 +35,10 @@ export default class CommandInput extends React.Component {
       <Input name={this.props.name} label={this.props.label}>
         <AutoComplete
           getItemValue={(item) => (
-            Commands.list.get(item)
+            Commands.list.get(item).name
           )}
           items={Commands.array}
-          shouldItemRender={(item, value) => (Commands.list.get(item).indexOf(value) !== -1)}
+          shouldItemRender={(item, value) => (Commands.list.get(item).name.indexOf(value) !== -1)}
           renderDefaultStyledItem={(item) =>
             <CommandName>{item}</CommandName>
           }

@@ -24,6 +24,6 @@ export default class CommandName extends React.Component {
     children: PropTypes.string
   };
   render() {
-    return Commands.list.has(this.props.children) ? Commands.list.get(this.props.children) : this.props.children;
+    return Commands.list.has(this.props.children) ? Commands.list.get(this.props.children).name : this.props.children;
   }
 }

@@ -91,66 +91,186 @@ export default class Command {
 
 class CommandList {
   @observable list = new Map([
-    [ "addSelection", "add selection" ],
-    [ "answerOnNextPrompt", "answer on next prompt" ],
-    [ "assertAlert",  "assert alert" ],
-    [ "assertChecked", "assert checked" ],
-    [ "assertNotChecked", "assert not checked" ],
-    [ "assertConfirmation", "assert confirmation" ],
-    [ "assertEditable", "assert editable" ],
-    [ "assertNotEditable", "assert not editable" ],
-    [ "assertElementPresent", "assert element present" ],
-    [ "assertElementNotPresent", "assert element not present" ],
-    [ "assertPrompt", "assert prompt" ],
-    [ "assertSelectedValue", "assert selected value" ],
-    [ "assertNotSelectedValue", "assert not selected value" ],
-    [ "assertText", "assert text" ],
-    [ "assertTitle", "assert title" ],
-    [ "assertValue", "assert value" ],
-    [ "chooseCancelOnNextConfirmation", "choose cancel on next confirmation" ],
-    [ "chooseCancelOnNextPrompt", "choose cancel on next prompt" ],
-    [ "chooseOkOnNextConfirmation", "choose ok on next confirmation" ],
-    [ "click", "click" ],
-    [ "clickAt", "click at" ],
-    [ "doubleClick", "double click" ],
-    [ "doubleClickAt", "double click at" ],
-    [ "dragAndDropToObject", "drag and drop to object" ],
-    [ "echo", "echo" ],
-    [ "editContent", "edit content" ],
-    [ "mouseDownAt", "mouse down at" ],
-    [ "mouseMoveAt", "mouse move at" ],
-    [ "mouseOut", "mouse out" ],
-    [ "mouseOver", "mouse over" ],
-    [ "mouseUpAt", "mouse up at" ],
-    [ "open", "open" ],
-    [ "pause", "pause" ],
-    [ "removeSelection", "remove selection" ],
-    [ "runScript", "run script" ],
-    [ "select", "select" ],
-    [ "selectFrame", "select frame" ],
-    [ "selectWindow", "select window" ],
-    [ "sendKeys", "send keys" ],
-    [ "setSpeed", "set speed" ],
-    [ "store", "store" ],
-    [ "storeText", "store text" ],
-    [ "storeTitle", "store title" ],
-    [ "submit", "submit" ],
-    [ "type", "type" ],
-    [ "verifyChecked", "verify checked" ],
-    [ "verifyNotChecked", "verify not checked" ],
-    [ "verifyEditable", "verify editable" ],
-    [ "verifyNotEditable", "verify not editable" ],
-    [ "verifyElementPresent", "verify element present" ],
-    [ "verifyElementNotPresent", "verify element not present" ],
-    [ "verifySelectedValue", "verify selected value" ],
-    [ "verifyNotSelectedValue", "verify not selected value" ],
-    [ "verifyText", "verify text" ],
-    [ "verifyTitle", "verify title" ],
-    [ "verifyValue", "verify value" ],
-    [ "webdriverAnswerOnNextPrompt", "webdriver answer on next prompt" ],
-    [ "webdriverChooseCancelOnNextConfirmation", "webdriver choose cancel on next confirmation" ],
-    [ "webdriverChooseCancelOnNextPrompt", "webdriver choose cancel on next prompt" ],
-    [ "webdriverChooseOkOnNextConfirmation", "webdriver choose ok on next confirmation" ]
+    [ "addSelection", {
+      name: "add selection"
+    }],
+    [ "answerOnNextPrompt", {
+      name: "answer on next prompt"
+    }],
+    [ "assertAlert",  {
+      name: "assert alert"
+    }],
+    [ "assertChecked", {
+      name: "assert checked"
+    }],
+    [ "assertNotChecked", {
+      name: "assert not checked"
+    }],
+    [ "assertConfirmation", {
+      name: "assert confirmation"
+    }],
+    [ "assertEditable", {
+      name: "assert editable"
+    }],
+    [ "assertNotEditable", {
+      name: "assert not editable"
+    }],
+    [ "assertElementPresent", {
+      name: "assert element present"
+    }],
+    [ "assertElementNotPresent", {
+      name: "assert element not present"
+    }],
+    [ "assertPrompt", {
+      name: "assert prompt"
+    }],
+    [ "assertSelectedValue", {
+      name: "assert selected value"
+    }],
+    [ "assertNotSelectedValue", {
+      name: "assert not selected value"
+    }],
+    [ "assertText", {
+      name: "assert text"
+    }],
+    [ "assertTitle", {
+      name: "assert title"
+    }],
+    [ "assertValue", {
+      name: "assert value"
+    }],
+    [ "chooseCancelOnNextConfirmation", {
+      name: "choose cancel on next confirmation"
+    }],
+    [ "chooseCancelOnNextPrompt", {
+      name: "choose cancel on next prompt"
+    }],
+    [ "chooseOkOnNextConfirmation", {
+      name: "choose ok on next confirmation"
+    }],
+    [ "click", {
+      name: "click"
+    }],
+    [ "clickAt", {
+      name: "click at"
+    }],
+    [ "doubleClick", {
+      name: "double click"
+    }],
+    [ "doubleClickAt", {
+      name: "double click at"
+    }],
+    [ "dragAndDropToObject", {
+      name: "drag and drop to object"
+    }],
+    [ "echo", {
+      name: "echo"
+    }],
+    [ "editContent", {
+      name: "edit content"
+    }],
+    [ "mouseDownAt", {
+      name: "mouse down at"
+    }],
+    [ "mouseMoveAt", {
+      name: "mouse move at"
+    }],
+    [ "mouseOut", {
+      name: "mouse out"
+    }],
+    [ "mouseOver", {
+      name: "mouse over"
+    }],
+    [ "mouseUpAt", {
+      name: "mouse up at"
+    }],
+    [ "open", {
+      name: "open"
+    }],
+    [ "pause", {
+      name: "pause"
+    }],
+    [ "removeSelection", {
+      name: "remove selection"
+    }],
+    [ "runScript", {
+      name: "run script"
+    }],
+    [ "select", {
+      name: "select"
+    }],
+    [ "selectFrame", {
+      name: "select frame"
+    }],
+    [ "selectWindow", {
+      name: "select window"
+    }],
+    [ "sendKeys", {
+      name: "send keys"
+    }],
+    [ "setSpeed", {
+      name: "set speed"
+    }],
+    [ "store", {
+      name: "store"
+    }],
+    [ "storeText", {
+      name: "store text"
+    }],
+    [ "storeTitle", {
+      name: "store title"
+    }],
+    [ "submit", {
+      name: "submit"
+    }],
+    [ "type", {
+      name: "type"
+    }],
+    [ "verifyChecked", {
+      name: "verify checked"
+    }],
+    [ "verifyNotChecked", {
+      name: "verify not checked"
+    }],
+    [ "verifyEditable", {
+      name: "verify editable"
+    }],
+    [ "verifyNotEditable", {
+      name: "verify not editable"
+    }],
+    [ "verifyElementPresent", {
+      name: "verify element present"
+    }],
+    [ "verifyElementNotPresent", {
+      name: "verify element not present"
+    }],
+    [ "verifySelectedValue", {
+      name: "verify selected value"
+    }],
+    [ "verifyNotSelectedValue", {
+      name: "verify not selected value"
+    }],
+    [ "verifyText", {
+      name: "verify text"
+    }],
+    [ "verifyTitle", {
+      name: "verify title"
+    }],
+    [ "verifyValue", {
+      name: "verify value"
+    }],
+    [ "webdriverAnswerOnNextPrompt", {
+      name: "webdriver answer on next prompt"
+    }],
+    [ "webdriverChooseCancelOnNextConfirmation", {
+      name: "webdriver choose cancel on next confirmation"
+    }],
+    [ "webdriverChooseCancelOnNextPrompt", {
+      name: "webdriver choose cancel on next prompt"
+    }],
+    [ "webdriverChooseOkOnNextConfirmation", {
+      name: "webdriver choose ok on next confirmation"
+    }]
   ])
 
   @computed get array() {
@@ -159,7 +279,7 @@ class CommandList {
 
   @computed get values() {
     return this.array.reduce((commands, command) => {
-      commands[this.list.get(command)] = command;
+      commands[this.list.get(command).name] = command;
       return commands;
     }, {});
   }
