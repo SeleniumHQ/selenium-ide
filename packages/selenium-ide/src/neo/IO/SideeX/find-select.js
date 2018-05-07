@@ -31,9 +31,10 @@ export function find(target) {
       if (!tabs.length) {
         console.log("No match tabs");
       } else {
+        const region = new Region(target);
         browser.tabs.sendMessage(tabs[0].id, {
           showElement: true,
-          targetValue: target
+          targetValue: region.isValid() ? region.toJS() : target
         }).then((response) => {
           if (response && response.result === "element not found") {
             ModalState.showAlert({

@@ -3783,17 +3783,24 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 Selenium.prototype.doShowElement = function(locator){
   try{
     const highlightElement = document.getElementById("selenium-highlight");
-    let element = this.browserbot.findElement(locator);
-    const elementRects = element.getBoundingClientRect();
     const bodyRects = document.documentElement.getBoundingClientRect();
+    if (locator.x) {
+      highlightElement.style.left = parseInt(locator.x) + "px";
+      highlightElement.style.top = parseInt(locator.y) + "px";
+      highlightElement.style.width = parseInt(locator.width) + "px";
+      highlightElement.style.height = parseInt(locator.height) + "px";
+    } else {
+      const element = this.browserbot.findElement(locator);
+      const elementRects = element.getBoundingClientRect();
+      highlightElement.style.left = parseInt(elementRects.left - bodyRects.left) + "px";
+      highlightElement.style.top = parseInt(elementRects.top - bodyRects.top) + "px";
+      highlightElement.style.width = parseInt(elementRects.width) + "px";
+      highlightElement.style.height = parseInt(elementRects.height) + "px";
+    }
     highlightElement.style.position = "absolute";
     highlightElement.style.zIndex = "100";
     highlightElement.style.display = "block";
     highlightElement.style.pointerEvents = "none";
-    highlightElement.style.top = parseInt(elementRects.top - bodyRects.top) + "px";
-    highlightElement.style.left = parseInt(elementRects.left - bodyRects.left) + "px";
-    highlightElement.style.width = parseInt(elementRects.width) + "px";
-    highlightElement.style.height = parseInt(elementRects.height) + "px";
     scrollIntoViewIfNeeded(highlightElement, { centerIfNeeded: true });
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
