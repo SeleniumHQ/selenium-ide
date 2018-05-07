@@ -19,6 +19,8 @@ import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
+import { TargetTypes } from "../../models/Command";
+import Region from "../../models/Region";
 
 export function find(target) {
   try{
@@ -48,7 +50,7 @@ export function find(target) {
   }
 }
 
-export function select() {
+export function select(type, rect) {
   UiState.setSelectingTarget(!UiState.isSelectingTarget);
   if (!UiState.isSelectingTarget) {
     browser.tabs.query({
@@ -68,8 +70,13 @@ export function select() {
       if (tabs.length === 0) {
         console.log("No match tabs");
         UiState.setSelectingTarget(false);
-      } else
-        browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
+      } else {
+        if (type === TargetTypes.LOCATOR) {
+          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, element: true});
+        } else if (type === TargetTypes.REGION) {
+          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS()});
+        }
+      }
     });
   }
 }

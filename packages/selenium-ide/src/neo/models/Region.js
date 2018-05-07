@@ -16,7 +16,7 @@
 // under the License.
 
 export default class Region {
-  constructor(region) {
+  constructor(region = "") {
     this.x = (region.match(/x:\s*(\d*)/) || [])[1];
     this.y = (region.match(/y:\s*(\d*)/) || [])[1];
     this.width = (region.match(/width:\s*(\d*)/) || [])[1];
@@ -32,6 +32,6 @@ export default class Region {
       y: this.y,
       width: this.width,
       height: this.height
-    } : {};
+    } : undefined;
   }
 }

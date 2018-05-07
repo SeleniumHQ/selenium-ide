@@ -91,7 +91,8 @@ export default class Command {
 
 export const TargetTypes = {
   NONE: 0,
-  LOCATOR: 1
+  LOCATOR: 1,
+  REGION: 2
 };
 
 class CommandList {

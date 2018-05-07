@@ -19,6 +19,7 @@ import TargetSelector from "./targetSelector";
 import Selenium from "./selenium-api";
 import BrowserBot from "./selenium-browserbot";
 import { locatorBuilders } from "./record";
+import { editRegion, removeRegion } from "./region";
 
 export const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;
@@ -89,7 +90,7 @@ function doCommands(request, sender, sendResponse) {
     }
   }
   if (request.selectMode) {
-    if (request.selecting) {
+    if (request.selecting && request.element) {
       targetSelector = new TargetSelector(function (element, win) {
         if (element && win) {
           const target = locatorBuilders.buildAll(element);
@@ -110,11 +111,26 @@ function doCommands(request, sender, sendResponse) {
           cancelSelectTarget: true
         });
       });
-
+    } else if (request.selecting && request.region) {
+      editRegion(request.rect, (target) => {
+        if (target) {
+          browser.runtime.sendMessage({
+            selectTarget: true,
+            target: [[target]]
+          });
+        } else {
+          browser.runtime.sendMessage({
+            cancelSelectTarget: true
+          });
+        }
+      });
     } else {
       if (targetSelector) {
         targetSelector.cleanup();
         targetSelector = null;
+        return;
+      } else {
+        removeRegion();
         return;
       }
     }

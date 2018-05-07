@@ -28,6 +28,10 @@ import { find, select } from "../../IO/SideeX/find-select";
 import "./style.css";
 
 @observer export default class CommandForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSelect = this.handleSelect.bind(this);
+  }
   static propTypes = {
     command: PropTypes.object,
     isSelecting: PropTypes.bool,
@@ -38,6 +42,12 @@ import "./style.css";
   }
   parseCommandTargetType(command) {
     return Commands.list.has(command) ? Commands.list.get(command).type : undefined;
+  }
+  handleSelect() {
+    const type = this.parseCommandTargetType(this.props.command.command);
+    if (type) {
+      select(type, this.props.command.target);
+    }
   }
   render() {
     return (
@@ -62,7 +72,7 @@ import "./style.css";
               data-tip="<p>Select target in page</p>"
               className={classNames("icon", "si-select", {"active": this.props.isSelecting})}
               disabled={this.props.command ? !this.parseCommandTargetType(this.props.command.command) : true}
-              onClick={select}
+              onClick={this.handleSelect}
             />
             <FlatButton
               data-tip="<p>Find target in page</p>"
