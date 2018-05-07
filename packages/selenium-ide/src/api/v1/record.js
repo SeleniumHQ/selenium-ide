@@ -17,6 +17,7 @@
 
 import browser from "webextension-polyfill";
 import Router from "../../router";
+import { Commands } from "../../neo/models/Command";
 import { recordCommand } from "../../neo/IO/SideeX/record";
 import { select } from "../../neo/IO/SideeX/find-select";
 import { extCommand } from "../../neo/IO/SideeX/playback";
@@ -38,8 +39,9 @@ router.get("/tab", (req, res) => {
 
 router.post("/command", (req, res) => {
   recordCommand(req.command, req.target, req.value, undefined, req.select);
-  if (req.select) {
-    select();
+  const type = Commands.list.has(req.command) && Commands.list.get(req.command).type;
+  if (req.select && type) {
+    select(type);
   }
   res(true);
 });
