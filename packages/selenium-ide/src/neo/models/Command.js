@@ -89,10 +89,16 @@ export default class Command {
   }
 }
 
+export const TargetTypes = {
+  NONE: 0,
+  LOCATOR: 1
+};
+
 class CommandList {
   @observable list = new Map([
     [ "addSelection", {
-      name: "add selection"
+      name: "add selection",
+      type: TargetTypes.LOCATOR
     }],
     [ "answerOnNextPrompt", {
       name: "answer on next prompt"
@@ -101,43 +107,53 @@ class CommandList {
       name: "assert alert"
     }],
     [ "assertChecked", {
-      name: "assert checked"
+      name: "assert checked",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertNotChecked", {
-      name: "assert not checked"
+      name: "assert not checked",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertConfirmation", {
       name: "assert confirmation"
     }],
     [ "assertEditable", {
-      name: "assert editable"
+      name: "assert editable",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertNotEditable", {
-      name: "assert not editable"
+      name: "assert not editable",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertElementPresent", {
-      name: "assert element present"
+      name: "assert element present",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertElementNotPresent", {
-      name: "assert element not present"
+      name: "assert element not present",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertPrompt", {
       name: "assert prompt"
     }],
     [ "assertSelectedValue", {
-      name: "assert selected value"
+      name: "assert selected value",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertNotSelectedValue", {
-      name: "assert not selected value"
+      name: "assert not selected value",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertText", {
-      name: "assert text"
+      name: "assert text",
+      type: TargetTypes.LOCATOR
     }],
     [ "assertTitle", {
       name: "assert title"
     }],
     [ "assertValue", {
-      name: "assert value"
+      name: "assert value",
+      type: TargetTypes.LOCATOR
     }],
     [ "chooseCancelOnNextConfirmation", {
       name: "choose cancel on next confirmation"
@@ -149,40 +165,51 @@ class CommandList {
       name: "choose ok on next confirmation"
     }],
     [ "click", {
-      name: "click"
+      name: "click",
+      type: TargetTypes.LOCATOR
     }],
     [ "clickAt", {
-      name: "click at"
+      name: "click at",
+      type: TargetTypes.LOCATOR
     }],
     [ "doubleClick", {
-      name: "double click"
+      name: "double click",
+      type: TargetTypes.LOCATOR
     }],
     [ "doubleClickAt", {
-      name: "double click at"
+      name: "double click at",
+      type: TargetTypes.LOCATOR
     }],
     [ "dragAndDropToObject", {
-      name: "drag and drop to object"
+      name: "drag and drop to object",
+      type: TargetTypes.LOCATOR
     }],
     [ "echo", {
       name: "echo"
     }],
     [ "editContent", {
-      name: "edit content"
+      name: "edit content",
+      type: TargetTypes.LOCATOR
     }],
     [ "mouseDownAt", {
-      name: "mouse down at"
+      name: "mouse down at",
+      type: TargetTypes.LOCATOR
     }],
     [ "mouseMoveAt", {
-      name: "mouse move at"
+      name: "mouse move at",
+      type: TargetTypes.LOCATOR
     }],
     [ "mouseOut", {
-      name: "mouse out"
+      name: "mouse out",
+      type: TargetTypes.LOCATOR
     }],
     [ "mouseOver", {
-      name: "mouse over"
+      name: "mouse over",
+      type: TargetTypes.LOCATOR
     }],
     [ "mouseUpAt", {
-      name: "mouse up at"
+      name: "mouse up at",
+      type: TargetTypes.LOCATOR
     }],
     [ "open", {
       name: "open"
@@ -191,22 +218,26 @@ class CommandList {
       name: "pause"
     }],
     [ "removeSelection", {
-      name: "remove selection"
+      name: "remove selection",
+      type: TargetTypes.LOCATOR
     }],
     [ "runScript", {
       name: "run script"
     }],
     [ "select", {
-      name: "select"
+      name: "select",
+      type: TargetTypes.LOCATOR
     }],
     [ "selectFrame", {
-      name: "select frame"
+      name: "select frame",
+      type: TargetTypes.LOCATOR
     }],
     [ "selectWindow", {
       name: "select window"
     }],
     [ "sendKeys", {
-      name: "send keys"
+      name: "send keys",
+      type: TargetTypes.LOCATOR
     }],
     [ "setSpeed", {
       name: "set speed"
@@ -215,49 +246,62 @@ class CommandList {
       name: "store"
     }],
     [ "storeText", {
-      name: "store text"
+      name: "store text",
+      type: TargetTypes.LOCATOR
     }],
     [ "storeTitle", {
       name: "store title"
     }],
     [ "submit", {
-      name: "submit"
+      name: "submit",
+      type: TargetTypes.LOCATOR
     }],
     [ "type", {
-      name: "type"
+      name: "type",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyChecked", {
-      name: "verify checked"
+      name: "verify checked",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyNotChecked", {
-      name: "verify not checked"
+      name: "verify not checked",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyEditable", {
-      name: "verify editable"
+      name: "verify editable",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyNotEditable", {
-      name: "verify not editable"
+      name: "verify not editable",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyElementPresent", {
-      name: "verify element present"
+      name: "verify element present",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyElementNotPresent", {
-      name: "verify element not present"
+      name: "verify element not present",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifySelectedValue", {
-      name: "verify selected value"
+      name: "verify selected value",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyNotSelectedValue", {
-      name: "verify not selected value"
+      name: "verify not selected value",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyText", {
-      name: "verify text"
+      name: "verify text",
+      type: TargetTypes.LOCATOR
     }],
     [ "verifyTitle", {
       name: "verify title"
     }],
     [ "verifyValue", {
-      name: "verify value"
+      name: "verify value",
+      type: TargetTypes.LOCATOR
     }],
     [ "webdriverAnswerOnNextPrompt", {
       name: "webdriver answer on next prompt"

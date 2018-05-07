@@ -36,6 +36,9 @@ import "./style.css";
   parseCommandName(command) {
     return Commands.list.has(command) ? Commands.list.get(command).name : command;
   }
+  parseCommandTargetType(command) {
+    return Commands.list.has(command) ? Commands.list.get(command).type : undefined;
+  }
   render() {
     return (
       <div className="command-form">
@@ -55,8 +58,18 @@ import "./style.css";
               value={this.props.command ? this.props.command.target : ""}
               disabled={!this.props.command}
               onChange={this.props.command ? this.props.command.setTarget : null} />
-            <FlatButton data-tip="<p>Select target in page</p>" className={classNames("icon", "si-select", {"active": this.props.isSelecting})} onClick={select} />
-            <FlatButton data-tip="<p>Find target in page</p>" className="icon si-search" onClick={() => {find(this.props.command.target);}} />
+            <FlatButton
+              data-tip="<p>Select target in page</p>"
+              className={classNames("icon", "si-select", {"active": this.props.isSelecting})}
+              disabled={this.props.command ? !this.parseCommandTargetType(this.props.command.command) : true}
+              onClick={select}
+            />
+            <FlatButton
+              data-tip="<p>Find target in page</p>"
+              className="icon si-search"
+              disabled={this.props.command ? !this.parseCommandTargetType(this.props.command.command) : true}
+              onClick={() => {find(this.props.command.target);}}
+            />
           </div>
           <TextArea
             id="value"
