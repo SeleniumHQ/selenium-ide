@@ -17,28 +17,18 @@
 
 import Router from "../../router";
 import Manager from "../../plugin/manager";
-import playbackRouter from "./playback";
-import recordRouter from "./record";
-import exportRouter from "./export";
-import popupRouter from "./popup";
+import ModalState from "../../neo/stores/view/ModalState";
 
 const router = new Router();
 
-router.post("/register", (req, res) => {
-  const plugin = {
-    id: req.sender,
-    name: req.name,
-    version: req.version,
-    commands: req.commands,
-    dependencies: req.dependencies
-  };
-  Manager.registerPlugin(plugin);
-  res(true);
+router.post("/alert", (req, res) => {
+  const plugin = Manager.getPlugin(req.sender);
+  ModalState.showAlert({
+    title: `${plugin.name} says`,
+    description: req.text,
+    cancelLabel: req.cancel,
+    confirmLabel: req.confirm
+  }, res);
 });
-
-router.use("/playback", playbackRouter);
-router.use("/record", recordRouter);
-router.use("/export", exportRouter);
-router.use("/popup", popupRouter);
 
 export default router;
