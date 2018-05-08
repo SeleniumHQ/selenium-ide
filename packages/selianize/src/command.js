@@ -41,7 +41,7 @@ const emitters = {
   verifyValue: emitVerifyValue,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
-  verifyNotText: skip,
+  verifyNotText: emitVerifyNotText,
   assertChecked: emitVerifyChecked,
   assertNotChecked: emitVerifyNotChecked,
   assertEditable: emitVerifyEditable,
@@ -70,7 +70,7 @@ const emitters = {
   mouseOver: emitMouseMove,
   mouseOut: emitMouseOut,
   assertAlert: emitAssertAlertAndAccept,
-  assertNotText: skip,
+  assertNotText: emitVerifyNotText,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
   webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
@@ -186,6 +186,10 @@ async function emitVerifyValue(locator, value) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe(\`${text}\`)});});`);
+}
+
+async function emitVerifyNotText(locator, text) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${text}\`)});});`);
 }
 
 async function emitVerifyTitle(title) {
