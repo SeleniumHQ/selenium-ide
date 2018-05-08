@@ -155,4 +155,11 @@ export function loadProject(project, file) {
 
 function loadJSONProject(project, data) {
   project.fromJS(JSON.parse(data));
+  Manager.emitMessage({
+    action: "event",
+    event: "projectLoaded",
+    project: {
+      name: project.name
+    }
+  });
 }
