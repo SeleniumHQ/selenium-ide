@@ -24,6 +24,12 @@ import popupRouter from "./popup";
 
 const router = new Router();
 
+router.get("/health", (req, res) => {
+  const a = Manager.hasPlugin(req.sender);
+  console.log("health: " + a);
+  res(Manager.hasPlugin(req.sender));
+});
+
 router.post("/register", (req, res) => {
   const plugin = {
     id: req.sender,
