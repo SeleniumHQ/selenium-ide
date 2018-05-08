@@ -30,6 +30,7 @@ function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
+// for plugins
 export function recordCommand(command, target, value, index, select = false) {
   const { test } = UiState.selectedTest;
   const newCommand = test.createCommand(index);
@@ -42,7 +43,9 @@ export function recordCommand(command, target, value, index, select = false) {
   }
 }
 
+// for record module
 export default function record(command, targets, value, insertBeforeLastCommand = false) {
+  if (UiState.isSelectingTarget) return;
   const { test } = UiState.selectedTest;
   if (isEmpty(test.commands, command)) {
     const newCommand = test.createCommand();
