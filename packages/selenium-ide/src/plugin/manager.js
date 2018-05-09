@@ -37,7 +37,7 @@ class PluginManager {
     this.plugins = [];
     RegisterConfigurationHook((project) => {
       return new Promise((res) => {
-        Promise.all(this.plugins.map(plugin => this.emitConfiguration(plugin.id, project).catch((e) => {console.log(e); return "";}))).then(configs => (
+        Promise.all(this.plugins.map(plugin => this.emitConfiguration(plugin, project).catch((e) => {console.log(e); return "";}))).then(configs => (
           res(configs.join(""))
         ));
       });
@@ -46,14 +46,15 @@ class PluginManager {
 
   registerPlugin(plugin) {
     if (!this.hasPlugin(plugin.id)) {
+      plugin.canEmit = false;
       this.plugins.push(plugin);
-      RegisterSuiteHook(this.emitSuite.bind(undefined, plugin.id));
-      RegisterTestHook(this.emitTest.bind(undefined, plugin.id));
+      RegisterSuiteHook(this.emitSuite.bind(undefined, plugin));
+      RegisterTestHook(this.emitTest.bind(undefined, plugin));
       if (plugin.commands) {
         plugin.commands.forEach(({id, name, type}) => {
           Commands.addCommand(id, { name, type });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
-          RegisterEmitter(id, this.emitCommand.bind(undefined, plugin.id, id));
+          RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
         });
       }
     } else {
@@ -69,32 +70,74 @@ class PluginManager {
     return this.plugins.find(p => p.id === pluginId);
   }
 
-  emitConfiguration(pluginId, project) {
-    return sendMessage(pluginId, {
-      action: "emit",
-      entity: "config",
-      project
-    }).then(res => res.message);
+  validatePluginExport(project) {
+    function validatePlugin(plugin) {
+      return sendMessage(plugin.id, {
+        action: "emit",
+        entity: "project",
+        project
+      }).catch(() => (false)).then(({canEmit}) => {
+        plugin.canEmit = canEmit;
+        return plugin;
+      });
+    }
+    return Promise.all(this.plugins.map((plugin) => (validatePlugin(plugin))));
   }
 
-  emitSuite(pluginId, suiteInfo) {
-    return sendMessage(pluginId, {
-      action: "emit",
-      entity: "suite",
-      suite: suiteInfo
-    }).catch(() => ({}));
+  // IMPORTANT: call this function only after calling validatePluginExport!!
+  emitDependencies() {
+    let dependencies = {};
+    let plugins = this.plugins.filter(plugin => plugin.canEmit).map(plugin => {
+      Object.assign(dependencies, plugin.dependencies);
+      return {
+        id: plugin.id,
+        name: plugin.name,
+        version: plugin.version
+      };
+    });
+
+    return { plugins, dependencies };
   }
 
-  emitTest(pluginId, test) {
-    return sendMessage(pluginId, {
-      action: "emit",
-      entity: "test",
-      test
-    }).catch(() => ({}));
+  emitConfiguration(plugin, project) {
+    if (plugin.canEmit) {
+      return sendMessage(plugin.id, {
+        action: "emit",
+        entity: "config",
+        project
+      }).then(res => res.message);
+    } else {
+      return Promise.resolve("");
+    }
   }
 
-  emitCommand(pluginId, command, target, value) {
-    return sendMessage(pluginId, {
+  emitSuite(plugin, suiteInfo) {
+    if (plugin.canEmit) {
+      return sendMessage(plugin.id, {
+        action: "emit",
+        entity: "suite",
+        suite: suiteInfo
+      }).catch(() => ({}));
+    } else {
+      return Promise.resolve({});
+    }
+  }
+
+  emitTest(plugin, test) {
+    if (plugin.canEmit) {
+      return sendMessage(plugin.id, {
+        action: "emit",
+        entity: "test",
+        test
+      }).catch(() => ({}));
+    } else {
+      return Promise.resolve({});
+    }
+  }
+
+  emitCommand(plugin, command, target, value) {
+    // no need to check emission as it is be unreachable, in case a project can't emit
+    return sendMessage(plugin.id, {
       action: "emit",
       entity: "command",
       command: {

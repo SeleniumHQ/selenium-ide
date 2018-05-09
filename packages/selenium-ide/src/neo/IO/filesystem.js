@@ -63,16 +63,6 @@ export function loadAsText(blob) {
 export function saveProject(_project) {
   const project = _project.toJS();
   project.version = "1.0";
-  project.plugins = [];
-  project.dependencies = {};
-  Manager.plugins.forEach(plugin => {
-    project.plugins.push({
-      id: plugin.id,
-      name: plugin.name,
-      version: plugin.version
-    });
-    Object.assign(project.dependencies, plugin.dependencies);
-  });
   downloadProject(project);
   UiState.saved();
 }
@@ -80,6 +70,7 @@ export function saveProject(_project) {
 function downloadProject(project) {
   return exportProject(project).then(code => {
     project.code = code;
+    Object.assign(project, Manager.emitDependencies());
     return browser.downloads.download({
       filename: project.name + ".side",
       url: createBlob("application/json", JSON.stringify(project)),
@@ -90,24 +81,26 @@ function downloadProject(project) {
 }
 
 function exportProject(project) {
-  return Selianize(project).catch(err => {
-    const markdown = ParseError(err && err.message || err);
-    ModalState.showAlert({
-      title: "Error saving project",
-      description: markdown,
-      confirmLabel: "Download log",
-      cancelLabel: "Close"
-    }, (choseDownload) => {
-      if (choseDownload) {
-        browser.downloads.download({
-          filename: project.name + "-logs.md",
-          url: createBlob("text/markdown", markdown),
-          saveAs: true,
-          conflictAction: "overwrite"
-        });
-      }
+  return Manager.validatePluginExport(project).then(() => {
+    return Selianize(project).catch(err => {
+      const markdown = ParseError(err && err.message || err);
+      ModalState.showAlert({
+        title: "Error saving project",
+        description: markdown,
+        confirmLabel: "Download log",
+        cancelLabel: "Close"
+      }, (choseDownload) => {
+        if (choseDownload) {
+          browser.downloads.download({
+            filename: project.name + "-logs.md",
+            url: createBlob("text/markdown", markdown),
+            saveAs: true,
+            conflictAction: "overwrite"
+          });
+        }
+      });
+      return Promise.reject();
     });
-    return Promise.reject();
   });
 }
 
