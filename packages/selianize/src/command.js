@@ -23,7 +23,7 @@ const emitters = {
   click: emitClick,
   clickAt: emitClick,
   check: emitCheck,
-  uncheck: emitCheck,
+  uncheck: emitUncheck,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
@@ -140,7 +140,11 @@ async function emitEcho(message) {
 }
 
 async function emitCheck(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.click();});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });`);
+}
+
+async function emitUncheck(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });`);
 }
 
 async function emitRunScript(script) {
