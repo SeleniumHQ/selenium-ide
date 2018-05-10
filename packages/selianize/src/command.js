@@ -41,7 +41,7 @@ const emitters = {
   verifyValue: emitVerifyValue,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
-  verifySelectedLabel: skip,
+  verifySelectedLabel: emitVerifySelectedLabel,
   assertChecked: emitVerifyChecked,
   assertNotChecked: emitVerifyNotChecked,
   assertEditable: emitVerifyEditable,
@@ -53,7 +53,7 @@ const emitters = {
   assertValue: emitVerifyValue,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
-  assertSelectedLabel: skip,
+  assertSelectedLabel: emitVerifySelectedLabel,
   store: emitStore,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
@@ -175,6 +175,9 @@ async function emitVerifySelectedValue(locator, value) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).toBe("${value}");});});});`);
 }
 
+async function emitVerifySelectedLabel(locator, labelValue) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${labelValue}");});});});});`)
+}
 
 async function emitVerifyNotSelectedValue(locator, value) {
   return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${value}");});});});`);
