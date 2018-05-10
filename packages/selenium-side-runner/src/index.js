@@ -37,7 +37,7 @@ program
   .version(metadata.version)
   .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("-s, --server [url]", "Webdriver remote server")
-  .option("-p, --params [url]", "General parameters")
+  .option("-p, --params [list]", "General parameters")
   .option("-f, --filter [string]", "Filter test cases by name")
   .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
