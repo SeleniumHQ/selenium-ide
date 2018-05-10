@@ -44,7 +44,7 @@ describe("Selenium code serializer", () => {
     const hook = jest.fn();
     hook.mockReturnValue(Promise.resolve({before: "before code", beforeAll: "before all code", after: "after code", afterAll: "after all code"}));
     RegisterSuiteHook(hook);
-    return expect((await Selianize(project))[0].code).toMatch(/describe\("aaa suite", \(\) => {beforeAll\(\(\) => {before all code}\);beforeEach\(\(\) => {before code}\);afterEach\(\(\) => {after code}\);afterAll\(\(\) => {after all code}\);it\(/);
+    return expect((await Selianize(project))[0].code).toMatch(/describe\("aaa suite", \(\) => {beforeAll\(async \(\) => {before all code}\);beforeEach\(async \(\) => {before code}\);afterEach\(async \(\) => {after code}\);afterAll\(async \(\) => {after all code}\);it\(/);
   });
   it("should register a test emitter hook", async () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));

@@ -23,10 +23,10 @@ export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = (await Promise.all(hooks.map((hook) => hook({name: suite.name})))).reduce((code, result) => (
       code
-      + (result.beforeAll ? `beforeAll(() => {${result.beforeAll}});` : "")
-      + (result.before ? `beforeEach(() => {${result.before}});` : "")
-      + (result.after ? `afterEach(() => {${result.after}});` : "")
-      + (result.afterAll ? `afterAll(() => {${result.afterAll}});` : "")
+      + (result.beforeAll ? `beforeAll(async () => {${result.beforeAll}});` : "")
+      + (result.before ? `beforeEach(async () => {${result.before}});` : "")
+      + (result.after ? `afterEach(async () => {${result.after}});` : "")
+      + (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : "")
     ), "");
     let errors = [];
     let testsCode = (await Promise.all(suite.tests.map(testId => (
