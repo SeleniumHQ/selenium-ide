@@ -140,15 +140,7 @@ async function emitEcho(message) {
 }
 
 async function emitCheck(locator) {
-  return Promise.resolve(`
-  driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));
-  driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {
-    element.click();
-  });`);
-}
-
-async function emitUncheck(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeTruthy();});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.click();});`);
 }
 
 async function emitRunScript(script) {
