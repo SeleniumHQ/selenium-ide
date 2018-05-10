@@ -346,7 +346,7 @@ describe("command code emitter", () => {
       target: "xpath=button[3]@id",
       value: "myVar"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value}; driver.wait(until.elementLocated(By.xpath("button[3]"))); driver.findElement(By.xpath("button[3]")).then(element => {element.getAttribute("id").then(attribute => {${command.value} = attribute})});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value}; driver.wait(until.elementLocated(By.xpath("button[3]"))); driver.findElement(By.xpath("button[3]")).then(element => {element.getAttribute("id").then(attribute => {${command.value} = attribute;})});`);
   });
   it("should emit `select` command", () => {
     const command = {

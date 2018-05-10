@@ -205,7 +205,7 @@ async function emitStoreTitle(_, varName) {
 }
 
 async function emitStoreXpathCount(locator, varName) {
-  return Promise.resolve(`var ${varName};driver.wait(until.elementsLocated(${await LocationEmitter.emit(locator)}));driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {${varName} = elements.length});`);
+  return Promise.resolve(`var ${varName};driver.wait(until.elementsLocated(${await LocationEmitter.emit(locator)}));driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {${varName} = elements.length;});`);
 }
 
 async function emitStoreAttribute(locator, varName) {
@@ -213,7 +213,7 @@ async function emitStoreAttribute(locator, varName) {
   const elementLocator = locator.slice(0, attributePos);
   const attributeName = locator.slice(attributePos + 1);
 
-  return Promise.resolve(`var ${varName};driver.wait(until.elementLocated(${await LocationEmitter.emit(elementLocator)})); driver.findElement(${await LocationEmitter.emit(elementLocator)}).then(element => element.getAttribute("${attributeName}").then(attribute => {${varName} = attribute}));`);
+  return Promise.resolve(`var ${varName};driver.wait(until.elementLocated(${await LocationEmitter.emit(elementLocator)})); driver.findElement(${await LocationEmitter.emit(elementLocator)}).then(element => element.getAttribute("${attributeName}").then(attribute => {${varName} = attribute;}));`);
 }
 
 async function emitSelect(selectElement, option) {
