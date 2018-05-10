@@ -335,18 +335,18 @@ describe("command code emitter", () => {
   it("should emit `store xpath count` command", () => {
     const command = {
       command: "storeXPathCount",
-      target: "//button",
+      target: "xpath=button",
       value: "myVar"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.wait(until.elementsLocated(By.xpath("${command.target}")));driver.findElements(By.xpath("${command.target}")).then(elements => {${command.value} = elements.length});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value};driver.wait(until.elementsLocated(By.xpath("button")));driver.findElements(By.xpath("button")).then(elements => {${command.value} = elements.length});`);
   });
   it("should emit `store attribute` command", () => {
     const command = {
       command: "storeAttribute",
-      target: "//button[3]@id",
+      target: "xpath=button[3]@id",
       value: "myVar"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value}; driver.wait(until.elementLocated(By.xpath("//button[3]")); driver.findElement(By.xpath("//button[3]")).then(element => {element.getAttribute("id").then(attribute => {${command.value} = attribute})});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value}; driver.wait(until.elementLocated(By.xpath("button[3]"))); driver.findElement(By.xpath("button[3]")).then(element => {element.getAttribute("id").then(attribute => {${command.value} = attribute})});`);
   });
   it("should emit `select` command", () => {
     const command = {

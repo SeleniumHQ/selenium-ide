@@ -213,7 +213,7 @@ async function emitStoreAttribute(locator, varName) {
   const elementLocator = locator.slice(0, attributePos);
   const attributeName = locator.slice(attributePos + 1);
 
-  return Promise.resolve(`var ${varName}; driver.wait(until.elementLocated(${await LocationEmitter.emit(elementLocator)})); driver.findElement(${await LocationEmitter.emit(elementLocator)}).then(element => {element.getAttribute("${attributeName}").then(attribute => {${varName} = attribute})});`);
+  return Promise.resolve(`var ${varName};driver.wait(until.elementLocated(${await LocationEmitter.emit(elementLocator)})); driver.findElement(${await LocationEmitter.emit(elementLocator)}).then(element => element.getAttribute("${attributeName}").then(attribute => {${varName} = attribute}));`);
 }
 
 async function emitSelect(selectElement, option) {
