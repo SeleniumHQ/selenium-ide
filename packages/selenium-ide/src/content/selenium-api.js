@@ -52,7 +52,7 @@ function build_sendkeys_maps() {
   add_sendkeys_key("TAB", "\uE004");
   //  add_sendkeys_key("CLEAR", '\uE005');
   //  add_sendkeys_key("RETURN", '\uE006');
-  add_sendkeys_key("ENTER", "\u000A");
+  add_sendkeys_key("ENTER", "\uE007");
   add_sendkeys_key("SHIFT", "\uE008");
   add_sendkeys_key("CONTROL", "\uE009", "CTRL");
   add_sendkeys_key("ALT", "\uE00A");
@@ -403,6 +403,13 @@ Selenium.prototype.doVerifyText = function(locator, value) {
   }
 };
 
+Selenium.prototype.doVerifyNotText = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (getText(element) === value) {
+    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
+  }
+};
+
 Selenium.prototype.doVerifyValue = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (element.value !== value) {
@@ -505,6 +512,13 @@ Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
     throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertNotText = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (getText(element) === value) {
+    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
   }
 };
 
@@ -1769,7 +1783,7 @@ Selenium.prototype.getAlert = function() {
      * page's onload() event handler. In this case a visible dialog WILL be
      * generated and Selenium will hang until someone manually clicks OK.</p>
      * @return string The message of the most recent JavaScript alert
-     
+
      */
   if (!this.browserbot.hasAlerts()) {
     Assert.fail("There were no alerts");// eslint-disable-line no-undef
