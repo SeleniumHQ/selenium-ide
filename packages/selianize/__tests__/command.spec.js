@@ -17,6 +17,7 @@
 
 import CommandEmitter from "../src/command";
 import { CommandsArray } from "../../selenium-ide/src/neo/models/Command";
+import LocationEmitter from "../src/location";
 
 describe("command code emitter", () => {
   it("should fail to emit with no command", () => {
@@ -202,6 +203,14 @@ describe("command code emitter", () => {
       value: "test"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.findElement(By.id("test")).then(element => {element.getAttribute("value").then(value => {expect(value).toBe("${command.value}");});});`);
+  });
+  it("should emit `verify not text` command", () => {
+    const command = {
+      command: "verifyNotText",
+      target: "id=test",
+      value: "text"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${command.value}\`)});});`);
   });
   it("should emit `verify title` command", () => {
     const command = {
@@ -474,6 +483,14 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${command.target}");});});`);
+  });
+  it("should emit `assert not text` command", () => {
+    const command = {
+      command: "assertNotText",
+      target: "id=test",
+      value: "text"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${command.value}\`)});});`);
   });
   it("should emit `assert prompt` command", () => {
     const command = {
