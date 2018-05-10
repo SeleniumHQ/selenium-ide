@@ -17,6 +17,7 @@
 
 import CommandEmitter from "../src/command";
 import { CommandsArray } from "../../selenium-ide/src/neo/models/Command";
+import LocationEmitter from "../src/location";
 
 describe("command code emitter", () => {
   it("should fail to emit with no command", () => {
@@ -121,7 +122,7 @@ describe("command code emitter", () => {
       target: "id=f",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("f")));driver.findElement(By.id("f")).then(element => {element.click();});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("f")));driver.findElement(By.id("f")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });`);
   });
   it("should emit `uncheck` command", () => {
     const command = {
@@ -129,7 +130,7 @@ describe("command code emitter", () => {
       target: "id=f",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("f")));driver.findElement(By.id("f")).then(element => {element.click();});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("f")));driver.findElement(By.id("f")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });`);
   });
   it("should emit `run script` command", () => {
     const command = {
