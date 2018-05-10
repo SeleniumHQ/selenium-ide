@@ -55,8 +55,8 @@ const emitters = {
   store: emitStore,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
-  storeXPathCount: skip,
-  storeAttribute: skip,
+  storeXPathCount: emitStoreXpathCount,
+  storeAttribute: emitStoreAttribute,
   select: emitSelect,
   addSelection: emitSelect,
   removeSelection: emitSelect,
@@ -202,6 +202,18 @@ async function emitStoreText(locator, varName) {
 
 async function emitStoreTitle(_, varName) {
   return Promise.resolve(`var ${varName};driver.getTitle().then(title => {${varName} = title;});`);
+}
+
+async function emitStoreXpathCount(locator, varName) {
+  return Promise.resolve(`var ${varName};driver.wait(until.elementsLocated(${await LocationEmitter.emit(locator)}));driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {${varName} = elements.length});`);
+}
+
+async function emitStoreAttribute(locator, varName) {
+  const attributePos = locator.lastIndexOf("@");
+  const elementLocator = locator.slice(0, attributePos);
+  const attributeName = locator.slice(attributePos + 1);
+
+  return Promise.resolve(`var ${varName}; driver.wait(until.elementLocated(${await LocationEmitter.emit(elementLocator)})); driver.findElement(${await LocationEmitter.emit(elementLocator)}).then(element => {element.getAttribute("${attributeName}").then(attribute => {${varName} = attribute})});`);
 }
 
 async function emitSelect(selectElement, option) {
