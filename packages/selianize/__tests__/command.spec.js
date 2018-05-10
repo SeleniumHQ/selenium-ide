@@ -211,6 +211,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
   });
+  it("should emit 'verify selected label' command", () => {
+    const command = {
+      command: "verifySelectedLabel",
+      target: "id=test",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id('id=test')));driver.findElement(By.id('id=test')).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${command.value}");});});});});`);
+  });
   it("should emit `verify text` command", () => {
     const command = {
       command: "verifyText",
@@ -290,6 +298,14 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
+  });
+  it("should emit 'assert selected label' command", () => {
+    const command = {
+      command: "assertSelectedLabel",
+      target: "id=test",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id('id=test')));driver.findElement(By.id('id=test')).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${command.value}");});});});});`);
   });
   it("should emit `assert value` command", () => {
     const command = {
