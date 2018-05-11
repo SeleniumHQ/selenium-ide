@@ -116,6 +116,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`console.log(\`${command.target}\`);`);
   });
+  it("should emit `check` command", () => {
+    const command = {
+      command: "check",
+      target: "id=f",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("f")));driver.findElement(By.id("f")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });`);
+  });
+  it("should emit `uncheck` command", () => {
+    const command = {
+      command: "uncheck",
+      target: "id=f",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("f")));driver.findElement(By.id("f")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });`);
+  });
   it("should emit `run script` command", () => {
     const command = {
       command: "runScript",
