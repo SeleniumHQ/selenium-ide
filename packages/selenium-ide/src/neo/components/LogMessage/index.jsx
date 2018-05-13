@@ -29,7 +29,7 @@ export default class LogMessage extends React.Component {
     let statusMessage = "";
     if (this.props.log.status && !this.props.log.isNotice) {
       if (this.props.log.status === LogTypes.Success) {
-        statusMessage = "Success";
+        statusMessage = "OK";
       } else if (this.props.log.status === LogTypes.Failure) {
         statusMessage = `Failed${this.props.log.description ? ":" : ""}`;
       } else if (this.props.log.status === LogTypes.Undetermined) {

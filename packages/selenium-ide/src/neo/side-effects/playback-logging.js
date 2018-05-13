@@ -68,7 +68,7 @@ export default class PlaybackLogger {
       }
       switch(status.state) {
         case PlaybackStates.Pending:
-          log.setMessage(status.message ? status.message : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
+          log.setMessage(status.message ? status.message : `${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}...`);
           break;
         case PlaybackStates.Undetermined:
           log.setStatus(LogTypes.Undetermined);
