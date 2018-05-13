@@ -17,6 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { observe } from "mobx";
 import { observer } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import classNames from "classnames";
@@ -29,6 +30,10 @@ import "./style.css";
 export default class TestTable extends React.Component {
   constructor(props){
     super(props);
+    this.newCommand = {};
+    this.detectNewCommand = this.detectNewCommand.bind(this);
+    this.disposeNewCommand = this.disposeNewCommand.bind(this);
+    this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
@@ -39,6 +44,18 @@ export default class TestTable extends React.Component {
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func
   };
+  detectNewCommand(change) {
+    this.newCommand = change.added[0];
+  }
+  disposeNewCommand() {
+    this.newCommand = undefined;
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.commands !== this.props.commands) {
+      this.newObserverDisposer();
+      this.newObserverDisposer = observe(nextProps.commands, this.detectNewCommand);
+    }
+  }
   render() {
     return ([
       <div key="header" className="test-table test-table-header">
@@ -62,6 +79,7 @@ export default class TestTable extends React.Component {
                 selected={this.props.selectedCommand === command.id}
                 index={index}
                 command={command}
+                new={command === this.newCommand ? this.disposeNewCommand : undefined}
                 isPristine={false}
                 select={this.props.selectCommand}
                 startPlayingHere={PlaybackState.startPlaying}
