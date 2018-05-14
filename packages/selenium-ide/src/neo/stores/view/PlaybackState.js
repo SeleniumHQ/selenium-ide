@@ -153,6 +153,13 @@ class PlaybackState {
     }));
   }
 
+  @action.bound stopPlayingGracefully() {
+    if (this.isPlaying) {
+      this.isStopping = true;
+      this.paused = false;
+    }
+  }
+
   @action.bound stopPlaying() {
     if (this.isPlaying) {
       this.isStopping = true;
@@ -195,8 +202,8 @@ class PlaybackState {
     this.aborted = true;
     this.hasFailed = true;
     this._testsToRun = [];
-    fatalHandled || this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
-    this.stopPlaying();
+    fatalHandled || this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Undetermined, message: "Aborting..." });
+    this.stopPlayingGracefully();
   }
 
   @action.bound pause() {
