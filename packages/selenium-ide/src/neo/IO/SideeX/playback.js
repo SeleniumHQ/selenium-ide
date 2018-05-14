@@ -20,6 +20,7 @@ import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import ExtCommand, { isExtCommand } from "./ext-command";
 import { xlateArgument } from "./formatCommand";
+import PlaybackTree from "./playbackTree";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -51,6 +52,14 @@ function playAfterConnectionFailed() {
 }
 
 function executionLoop() {
+  console.log('PlaybackState.runningQueue', PlaybackState.runningQueue);
+  const playbackTree = new PlaybackTree(PlaybackState.runningQueue);
+  console.log('playbackTree: ', playbackTree );
+  console.log('playbackTree.executionNodes', playbackTree.executionNodes);
+  executionLoopImpl();
+}
+
+function executionLoopImpl() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   // reached the end
   if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) return false;
@@ -68,11 +77,11 @@ function executionLoop() {
       (extCommand["do" + upperCase](parsedTarget, value))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        }).then(executionLoop)
+        }).then(executionLoopImpl)
     ));
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
-    return executionLoop();
+    return executionLoopImpl();
   } else {
     return doPreparation()
       .then(doPrePageWait)
@@ -81,7 +90,7 @@ function executionLoop() {
       .then(doDomWait)
       .then(doDelay)
       .then(doCommand)
-      .then(executionLoop);
+      .then(executionLoopImpl);
   }
 }
 
