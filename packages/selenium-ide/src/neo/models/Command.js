@@ -25,6 +25,8 @@ export default class Command {
   @observable target = "";
   @observable value = "";
   @observable isBreakpoint = false;
+  @observable left = {};
+  @observable right = {};
 
   constructor(id = uuidv4()) {
     this.id = id;
@@ -66,6 +68,14 @@ export default class Command {
 
   @action.bound toggleBreakpoint() {
     this.isBreakpoint = !this.isBreakpoint;
+  }
+
+  @action.bound setLeft(node) {
+    this.left = node;
+  }
+
+  @action.bound setRight(node) {
+    this.right = node;
   }
 
   export() {
