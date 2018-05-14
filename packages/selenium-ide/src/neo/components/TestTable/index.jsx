@@ -53,7 +53,9 @@ export default class TestTable extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.commands !== this.props.commands) {
       this.newObserverDisposer();
-      this.newObserverDisposer = observe(nextProps.commands, this.detectNewCommand);
+      if (nextProps.commands) {
+        this.newObserverDisposer = observe(nextProps.commands, this.detectNewCommand);
+      }
     }
   }
   render() {
