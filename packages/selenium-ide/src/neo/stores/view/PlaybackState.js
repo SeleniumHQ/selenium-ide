@@ -19,6 +19,7 @@ import uuidv4 from "uuid/v4";
 import browser from "webextension-polyfill";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
+import ModalState from "./ModalState";
 import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import logger from "./Logs";
@@ -54,54 +55,81 @@ class PlaybackState {
     ));
   }
 
+  beforePlaying(play) {
+    if (UiState.isRecording) {
+      ModalState.showAlert({
+        title: "Stop recording",
+        description: "Are you sure you would like to stop recording, and start playing?",
+        confirmLabel: "Playback",
+        cancelLabel: "cancel"
+      }, (chosePlay) => {
+        if (chosePlay) {
+          UiState.stopRecording();
+          play();
+        }
+      });
+    } else {
+      play();
+    }
+  }
+
   @action.bound startPlayingSuite() {
-    const { suite } = UiState.selectedTest;
-    this.resetState();
-    this.runId = uuidv4();
-    this.currentRunningSuite = suite;
-    this._testsToRun = [...suite.tests];
-    this.testsCount = this._testsToRun.length;
-    this.playNext();
+    const playSuite = action(() => {
+      const { suite } = UiState.selectedTest;
+      this.resetState();
+      this.runId = uuidv4();
+      this.currentRunningSuite = suite;
+      this._testsToRun = [...suite.tests];
+      this.testsCount = this._testsToRun.length;
+      this.playNext();
+    });
+    this.beforePlaying(playSuite);
   }
 
   @action.bound startPlaying(command) {
-    const { test } = UiState.selectedTest;
-    this.resetState();
-    this.runId = uuidv4();
-    this.currentRunningSuite = undefined;
-    this.currentRunningTest = test;
-    this.testsCount = 1;
-    this.currentPlayingIndex = 0;
-    if (command && command.constructor.name === "Command") {
-      this.currentPlayingIndex = test.commands.indexOf(command);
-    }
-    this.runningQueue = test.commands.peek();
-    PluginManager.emitMessage({
-      action: "event",
-      event: "playbackStarted",
-      options: {
-        runId: this.runId,
-        testId: this.currentRunningTest.id,
-        testName: this.currentRunningTest.name,
-        projectName: UiState._project.name
+    const playTest = action(() => {
+      const { test } = UiState.selectedTest;
+      this.resetState();
+      this.runId = uuidv4();
+      this.currentRunningSuite = undefined;
+      this.currentRunningTest = test;
+      this.testsCount = 1;
+      this.currentPlayingIndex = 0;
+      if (command && command.constructor.name === "Command") {
+        this.currentPlayingIndex = test.commands.indexOf(command);
       }
-    }).then(action(() => {
-      this.isPlaying = true;
-    }));
+      this.runningQueue = test.commands.peek();
+      PluginManager.emitMessage({
+        action: "event",
+        event: "playbackStarted",
+        options: {
+          runId: this.runId,
+          testId: this.currentRunningTest.id,
+          testName: this.currentRunningTest.name,
+          projectName: UiState._project.name
+        }
+      }).then(action(() => {
+        this.isPlaying = true;
+      }));
+    });
+    this.beforePlaying(playTest);
   }
 
   @action.bound playCommand(command, jumpToNext) {
-    this.runId = "";
-    this.noStatisticsEffects = true;
-    this.jumpToNextCommand = jumpToNext;
-    this.paused = false;
-    this.currentPlayingIndex = 0;
-    this.errors = 0;
-    this.hasFailed = false;
-    this.aborted = false;
-    this.currentRunningTest = UiState.selectedTest.test;
-    this.runningQueue = [command];
-    this.isPlaying = true;
+    const playCommand = action(() => {
+      this.runId = "";
+      this.noStatisticsEffects = true;
+      this.jumpToNextCommand = jumpToNext;
+      this.paused = false;
+      this.currentPlayingIndex = 0;
+      this.errors = 0;
+      this.hasFailed = false;
+      this.aborted = false;
+      this.currentRunningTest = UiState.selectedTest.test;
+      this.runningQueue = [command];
+      this.isPlaying = true;
+    });
+    this.beforePlaying(playCommand);
   }
 
   @action.bound playNext() {
@@ -236,7 +264,6 @@ class PlaybackState {
   }
 
   @action.bound resetState() {
-    UiState.stopRecording();
     this.clearCommandStates();
     this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;
