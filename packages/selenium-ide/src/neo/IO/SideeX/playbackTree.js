@@ -15,35 +15,81 @@
 // specific language governing permissions and limitations
 // under the License.
 
+
+// For now it iterates through commands array twice. Not sure how to avoid that for now
+
 export default class PlaybackTree{
   constructor(commandsArray) {
     this.commands = commandsArray;
-    this.execute();
+    this.process();
   }
 
-  execute() {
-    for(let i = this.commands.length; i>=0; i--) {
-      if (this.isControlFlowFunction(this.commands[i].command)) {
-        this.commands[i].setLeft(undefined);
+  process() {
+    // TODO: Make sure to clone commands in order to skip re-renders on UI
+    let endBlockIndexes = [];
+    let blocks = [];
+    for(let i = this.commands.length-1; i>=0; i--) {
+      if (!this.isControlFlowFunction(this.commands[i].command)) {
         this.commands[i].setRight(this.commands[i+1]);
+        this.commands[i].setLeft(undefined);
         // TODO: do not rely on left and right to be undefined on closing execution
       } else {
-        // TODO: process control flow command and determine left and right for them
+        this.inverseControlFlowSwitcher(this.commands[i], i, endBlockIndexes);
       }
     }
+
+    for(let i = 0; i < this.commands.length; i++) {
+      if (this.isControlFlowFunction(this.commands[i].command)) {
+        this.controlFlowSwitcher(this.commands[i], i, blocks);
+      }
+    }
+
     this.executionNodes = this.commands;
   }
 
+  inverseControlFlowSwitcher(command, index, endBlockIndexes) {
+    switch(command.command) {
+      case "if":
+      case "while":
+        command.setRight(this.commands[index+1]);
+        command.setLeft(this.commands(endBlockIndexes.pop() + 1));
+        break;
+      case "else":
+        command.setRight(this.commands(endBlockIndexes.pop() + 1));
+        command.setLeft(undefined);
+        endBlockIndexes.push(index);
+        break;
+      case "end":
+        command.setLeft(undefined);
+        endBlockIndexes.push(index);
+    }
+  }
+
+  controlFlowSwitcher(command, index, blocks) {
+    if (["if", "else", "while"].includes(command.command)) {
+      blocks.push(command);
+    } else if (command.command === "end") {
+      let lastBlock = blocks.pop();
+      if(["if", "else"].includes(lastBlock.command)) {
+        command.setRight(this.commands[index+1]);
+      } else if (lastBlock.command === "while") {
+        command.setRight(lastBlock);
+      }
+    } else {
+      throw new Error("Unknown control flow operator");
+    }
+  }
+
+  // TODO: avoid duplicates with TestTable
   isControlFlowFunction(command) {
     return this.isBlock(command) || this.isBlockEnd(command);
   }
 
+  // TODO: do, times
   isBlock(command) {
     switch(command) {
       case "if":
-      case "do":
       case "while":
-      case "times":
       case "else":
         return true;
       default:
@@ -51,14 +97,27 @@ export default class PlaybackTree{
     }
   }
 
+  // TODO: endDo
   isBlockEnd(command) {
     switch(command) {
       case "end":
-      case "endDo":
       case "else":
         return true;
       default:
         return false;
+    }
+  }
+
+  // TODO: maintenance function: remove when possible
+  maintenance() {
+
+    runCommand(this.executionNodes[0]);
+
+    function runCommand(command) {
+      console.log(command.command);
+      if (command.right) {
+        runCommand(command.right);
+      }
     }
   }
 

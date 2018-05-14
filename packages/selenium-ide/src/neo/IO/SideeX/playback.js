@@ -52,10 +52,8 @@ function playAfterConnectionFailed() {
 }
 
 function executionLoop() {
-  console.log('PlaybackState.runningQueue', PlaybackState.runningQueue);
   const playbackTree = new PlaybackTree(PlaybackState.runningQueue);
-  console.log('playbackTree: ', playbackTree );
-  console.log('playbackTree.executionNodes', playbackTree.executionNodes);
+  playbackTree.maintenance();
   executionLoopImpl();
 }
 
