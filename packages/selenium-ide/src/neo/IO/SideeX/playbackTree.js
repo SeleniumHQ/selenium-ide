@@ -34,49 +34,52 @@ export default class PlaybackTree{
         this.commands[i].setLeft(undefined);
         // TODO: do not rely on left and right to be undefined on closing execution
       } else {
-        this.inverseControlFlowSwitcher(this.commands[i], i, endBlockIndexes);
+        this.inverseControlFlowSwitcher(i, endBlockIndexes);
       }
     }
 
     for(let i = 0; i < this.commands.length; i++) {
       if (this.isControlFlowFunction(this.commands[i].command)) {
-        this.controlFlowSwitcher(this.commands[i], i, blocks);
+        this.controlFlowSwitcher(i, blocks);
       }
     }
 
     this.executionNodes = this.commands;
   }
 
-  inverseControlFlowSwitcher(command, index, endBlockIndexes) {
-    switch(command.command) {
+  inverseControlFlowSwitcher(index, endBlockIndexes) {
+    switch(this.commands[index].command) {
       case "if":
       case "while":
-        command.setRight(this.commands[index+1]);
-        command.setLeft(this.commands(endBlockIndexes.pop() + 1));
+        this.commands[index].setRight(this.commands[index+1]);
+        this.commands[index].setLeft(this.commands[endBlockIndexes.pop() + 1]);
         break;
       case "else":
-        command.setRight(this.commands(endBlockIndexes.pop() + 1));
-        command.setLeft(undefined);
+        this.commands[index].setRight(this.commands[endBlockIndexes.pop() + 1]);
+        this.commands[index].setLeft(undefined);
         endBlockIndexes.push(index);
         break;
       case "end":
-        command.setLeft(undefined);
+        this.commands[index].setLeft(undefined);
         endBlockIndexes.push(index);
+        break;
+      default:
+        window.addLog(`Unknown control flow operator "${this.commands[index].command}"`);
     }
   }
 
-  controlFlowSwitcher(command, index, blocks) {
-    if (["if", "else", "while"].includes(command.command)) {
-      blocks.push(command);
-    } else if (command.command === "end") {
+  controlFlowSwitcher(index, blocks) {
+    if (["if", "else", "while"].includes(this.commands[index].command)) {
+      blocks.push(this.commands[index]);
+    } else if (this.commands[index].command === "end") {
       let lastBlock = blocks.pop();
       if(["if", "else"].includes(lastBlock.command)) {
-        command.setRight(this.commands[index+1]);
+        this.commands[index].setRight(this.commands[index+1]);
       } else if (lastBlock.command === "while") {
-        command.setRight(lastBlock);
+        this.commands[index].setRight(lastBlock);
       }
     } else {
-      throw new Error("Unknown control flow operator");
+      window.addLog(`Unknown control flow operator "${this.commands[index].command}"`);
     }
   }
 
@@ -111,14 +114,30 @@ export default class PlaybackTree{
   // TODO: maintenance function: remove when possible
   maintenance() {
 
-    runCommand(this.executionNodes[0]);
-
-    function runCommand(command) {
-      console.log(command.command);
-      if (command.right) {
-        runCommand(command.right);
+    // runCommand(this.executionNodes[0]);
+    window.addLog("maintenance");
+    this.executionNodes.forEach((node) => {
+      window.addLog(`[[ Command: ]] ${node.command}`);
+      if (node.left) {
+        window.addLog(`[[ Command left direction: ]] ${node.left.command}`);
+      } else {
+        window.addLog(`[[ Command left direction: ]] not defined`);
       }
-    }
+      if (node.right) {
+        window.addLog(`[[ Command right direction: ]] ${node.right.command}`);
+      } else {
+        window.addLog(`[[ Command right direction: ]] not defined`);
+      }
+      window.addLog(`----------------------`);
+    });
+
+    // function runCommand(command) {
+    //   window.addLog()
+    //   console.log(command.command);
+    //   if (command.right) {
+    //     runCommand(command.right);
+    //   }
+    // }
   }
 
 }
