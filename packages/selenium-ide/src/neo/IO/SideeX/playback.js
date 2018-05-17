@@ -53,11 +53,7 @@ function playAfterConnectionFailed() {
 
 function executionLoop() {
   const playbackTree = new PlaybackTree(PlaybackState.runningQueue);
-  playbackTree.maintenance();
-  executionLoopImpl();
-}
-
-function executionLoopImpl() {
+  // playbackTree.maintenance();
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   // reached the end
   if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) return false;
@@ -75,11 +71,11 @@ function executionLoopImpl() {
       (extCommand["do" + upperCase](parsedTarget, value))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        }).then(executionLoopImpl)
+        }).then(executionLoop)
     ));
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
-    return executionLoopImpl();
+    return executionLoop();
   } else {
     return doPreparation()
       .then(doPrePageWait)
@@ -88,7 +84,7 @@ function executionLoopImpl() {
       .then(doDomWait)
       .then(doDelay)
       .then(doCommand)
-      .then(executionLoopImpl);
+      .then(executionLoop);
   }
 }
 
@@ -245,6 +241,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
       : extCommand.doType(xlateArgument(target), xlateArgument(value))
   ))
     .then(function(result) {
+      window.addLog(`result ${JSON.stringify(result, null, 4)}`);
       if (result.result !== "success") {
         // implicit
         if (result.result.match(/Element[\s\S]*?not found/)) {
