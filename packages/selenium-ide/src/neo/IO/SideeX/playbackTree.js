@@ -111,6 +111,10 @@ export default class PlaybackTree{
     }
   }
 
+  static processCommands(commandsArray) {
+    new PlaybackTree(commandsArray);
+  }
+
   // TODO: maintenance function: remove when possible
   maintenance() {
 

@@ -428,6 +428,14 @@ Selenium.prototype.doVerifyElementPresent = function(locator) {
   }
 };
 
+Selenium.prototype.doIf = function(string) {
+  return eval(string);
+};
+
+Selenium.prototype.doEnd = function() {
+  return true;
+};
+
 Selenium.prototype.doVerifyElementNotPresent = function(locator) {
   try {
     this.browserbot.findElement(locator);

@@ -38,6 +38,7 @@ let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
+  PlaybackTree.processCommands(PlaybackState.runningQueue);
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
@@ -52,9 +53,9 @@ function playAfterConnectionFailed() {
 }
 
 function executionLoop() {
-  const playbackTree = new PlaybackTree(PlaybackState.runningQueue);
-  // playbackTree.maintenance();
-  (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
+  if (PlaybackState.currentPlayingIndex < 0) {
+    PlaybackState.setPlayingIndex(0);
+  }
   // reached the end
   if (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) return false;
   const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
@@ -71,11 +72,14 @@ function executionLoop() {
       (extCommand["do" + upperCase](parsedTarget, value))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        }).then(executionLoop)
+          return doControlFlow(true);
+        }).then(doDelay).then(executionLoop)
     ));
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
-    return executionLoop();
+    return doControlFlow(true)
+      .then(doDelay)
+      .then(executionLoop);
   } else {
     return doPreparation()
       .then(doPrePageWait)
@@ -84,8 +88,30 @@ function executionLoop() {
       .then(doDomWait)
       .then(doDelay)
       .then(doCommand)
+      .then(doControlFlow)
       .then(executionLoop);
   }
+}
+
+function doControlFlow(result) {
+  let nextPlayingIndex;
+  if (result) {
+    // right
+    if (PlaybackState.runningQueue[PlaybackState.currentPlayingIndex].right) {
+      nextPlayingIndex = PlaybackState.runningQueue.indexOf(PlaybackState.runningQueue[PlaybackState.currentPlayingIndex].right);
+    } else {
+      nextPlayingIndex = PlaybackState.runningQueue.length + 1;
+    }
+  } else {
+    // left
+    if (PlaybackState.runningQueue[PlaybackState.currentPlayingIndex].left) {
+      nextPlayingIndex = PlaybackState.runningQueue.indexOf(PlaybackState.runningQueue[PlaybackState.currentPlayingIndex].left);
+    } else {
+      nextPlayingIndex = PlaybackState.runningQueue.length + 1;
+    }
+  }
+  PlaybackState.setPlayingIndex(nextPlayingIndex);
+  return Promise.resolve();
 }
 
 function prepareToPlay() {
@@ -104,7 +130,6 @@ function finishPlaying() {
 function catchPlayingError(message) {
   if (isReceivingEndError(message)) {
     setTimeout(function() {
-      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
       playAfterConnectionFailed();
     }, 100);
   } else {
@@ -145,7 +170,7 @@ reaction(
 function doPreparation() {
   return extCommand.sendMessage("waitPreparation", "", "")
     .then(function() {
-      return true;
+      return Promise.resolve();
     });
 }
 
@@ -241,8 +266,11 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
       : extCommand.doType(xlateArgument(target), xlateArgument(value))
   ))
     .then(function(result) {
-      window.addLog(`result ${JSON.stringify(result, null, 4)}`);
-      if (result.result !== "success") {
+      if (result.result === "truthy") {
+        return true;
+      } else if (result.result === "falsy") {
+        return false;
+      } else if (result.result !== "success") {
         // implicit
         if (result.result.match(/Element[\s\S]*?not found/)) {
           if (implicitTime && (Date.now() - implicitTime > 30000)) {
@@ -262,6 +290,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
         PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
       } else {
         PlaybackState.setCommandState(id, PlaybackStates.Passed);
+        return true;
       }
     });
 }

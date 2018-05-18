@@ -41,6 +41,8 @@ function doCommands(request, sender, sendResponse) {
     } else if (request.commands == "domWait") {
       selenium["doDomWait"]("", selenium.preprocessParameter(""));
       sendResponse({ dom_time: window.sideex_new_page });
+    } else if (isConditinal(request.commands)) {
+      executeConditional(request, sendResponse);
     } else {
       const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
       if (selenium["do" + upperCase] != null) {
@@ -110,6 +112,36 @@ function doCommands(request, sender, sendResponse) {
       }
     }
   }
+}
+
+function isConditinal(commandName) {
+  return ["if", "while"].includes(commandName);
+}
+
+function executeConditional(request, sendResponse) {
+
+  const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
+  if (selenium["do" + upperCase] != null) {
+    try {
+      document.body.setAttribute("SideeXPlayingFlag", true);
+      let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));
+      // conditional command executed!
+      if (returnValue) {
+        document.body.removeAttribute("SideeXPlayingFlag");
+        sendResponse({result: "truthy"});
+      } else {
+        document.body.removeAttribute("SideeXPlayingFlag");
+        sendResponse({result: "falsy"});
+      }
+    } catch(e) {
+      // Synchronous command failed
+      document.body.removeAttribute("SideeXPlayingFlag");
+      sendResponse({result: e.message});
+    }
+  } else {
+    sendResponse({ result: "Unknown command: " + request.commands });
+  }
+
 }
 
 if (!window._listener) {
