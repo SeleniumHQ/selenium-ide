@@ -52,13 +52,21 @@ export function find(target) {
 }
 
 export function select(type, rect) {
+  const tabConnectionFailure = () => {
+    ModalState.showAlert({
+      title: "Can't connect to tab",
+      description: "Make sure the tab begins with `http://`, or try to refresh the tab.",
+      confirmLabel: "Close"
+    });
+    UiState.setSelectingTarget(false);
+  };
   UiState.setSelectingTarget(!UiState.isSelectingTarget);
   if (!UiState.isSelectingTarget) {
     browser.tabs.query({
       active: true,
       windowId: window.contentWindowId
     }).then(function(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
+      browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false}).catch(tabConnectionFailure);
     }).catch(function(reason) {
       console.log(reason);
     });
@@ -73,9 +81,9 @@ export function select(type, rect) {
         UiState.setSelectingTarget(false);
       } else {
         if (type === TargetTypes.LOCATOR) {
-          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, element: true});
+          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, element: true}).catch(tabConnectionFailure);
         } else if (type === TargetTypes.REGION) {
-          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS()});
+          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS()}).catch(tabConnectionFailure);
         }
       }
     });
