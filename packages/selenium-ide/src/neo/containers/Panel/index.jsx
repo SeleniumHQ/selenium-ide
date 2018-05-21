@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -70,6 +71,27 @@ if (process.env.NODE_ENV === "production") {
 }
 
 modify(project);
+
+function firefox57WorkaroundForBlankPanel () {
+  // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
+  // browser. windows. create () displays blank windows (panel, popup or detached_panel)
+  // The trick to display content is to resize the window...
+  // We do not check the browser since this doesn't affect chrome at all
+
+  function getCurrentWindow () {
+    return browser.windows.getCurrent();
+  }
+
+  getCurrentWindow().then((currentWindow) => {
+    const updateInfo = {
+      width: currentWindow.width,
+      height: currentWindow.height + 1 // 1 pixel more than original size...
+    };
+    browser.windows.update(currentWindow.id, updateInfo);
+  });
+}
+
+firefox57WorkaroundForBlankPanel();
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
