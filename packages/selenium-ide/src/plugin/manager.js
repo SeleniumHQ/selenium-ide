@@ -20,6 +20,8 @@ import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import { sendMessage } from "./communication";
 
+const TIMEOUT = 5000;
+
 function RunCommand(id, command, target, value, options) {
   return sendMessage(id, {
     action: "execute",
@@ -148,10 +150,21 @@ class PluginManager {
     }).then(res => res.message);
   }
 
-  emitMessage(message) {
-    return Promise.all(this.plugins.map(plugin => (
-      sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err)))
-    )));
+  emitMessage(message, keepAliveCB) {
+    return Promise.all(this.plugins.map(plugin => {
+      let didReachTimeout = false;
+      const emitInterval = setInterval(() => {
+        didReachTimeout = true;
+        keepAliveCB(plugin);
+      }, TIMEOUT);
+      return sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err))).then(r => {
+        clearInterval(emitInterval);
+        if (didReachTimeout) {
+          keepAliveCB(plugin, true);
+        }
+        return r;
+      });
+    }));
   }
 }
 

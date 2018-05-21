@@ -23,6 +23,7 @@ import ModalState from "./ModalState";
 import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import logger from "./Logs";
+import { LogTypes } from "../../ui-models/Log";
 
 class PlaybackState {
   @observable runId = "";
@@ -99,6 +100,8 @@ class PlaybackState {
         this.currentPlayingIndex = test.commands.indexOf(command);
       }
       this.runningQueue = test.commands.peek();
+      const pluginsLogs = {};
+      if (PluginManager.plugins.length) logger.log("Preparing plugins for test run...");
       PluginManager.emitMessage({
         action: "event",
         event: "playbackStarted",
@@ -107,6 +110,17 @@ class PlaybackState {
           testId: this.currentRunningTest.id,
           testName: this.currentRunningTest.name,
           projectName: UiState._project.name
+        }
+      }, (plugin, resolved) => {
+        let log = pluginsLogs[plugin.id];
+
+        if (!log) {
+          log = logger.log(`Waiting for ${plugin.name} to start...`);
+          pluginsLogs[plugin.id] = log;
+        }
+
+        if (resolved) {
+          log.setStatus(LogTypes.Success);
         }
       }).then(action(() => {
         this.isPlaying = true;
@@ -164,12 +178,24 @@ class PlaybackState {
     if (this.isPlaying) {
       this.isStopping = true;
       this.paused = false;
+      const pluginsLogs = {};
       return PluginManager.emitMessage({
         action: "event",
         event: "playbackStopped",
         options: {
           runId: this.runId,
           testId: this.currentRunningTest.id
+        }
+      }, (plugin, resolved) => {
+        let log = pluginsLogs[plugin.id];
+
+        if (!log) {
+          log = logger.log(`Waiting for ${plugin.name} to finish...`);
+          pluginsLogs[plugin.id] = log;
+        }
+
+        if (resolved) {
+          log.setStatus(LogTypes.Success);
         }
       }).then(action(results => {
         return new Promise((res) => {
