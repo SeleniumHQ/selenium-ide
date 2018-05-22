@@ -235,7 +235,7 @@ export default class ExtCommand {
   }
 
   doType(locator, value) {
-    if (/^\//.test(value)) {
+    if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
       if (browserName !== "Chrome") return Promise.reject(new Error("File uploading is only support in Chrome at this time"));
       const connection = new Debugger(this.currentPlayingTabId);
