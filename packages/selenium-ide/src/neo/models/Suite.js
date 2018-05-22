@@ -46,7 +46,7 @@ export default class Suite {
     this.name = name;
   }
 
-  @action.bound setTimeout(timeout) {
+  @action.bound setTimeout(timeout = DEFAULT_TIMEOUT) {
     if (timeout !== undefined && timeout.constructor.name !== "Number") {
       throw new Error(`Expected to receive Number instead received ${timeout !== undefined ? timeout.constructor.name : timeout}`);
     } else {

@@ -44,6 +44,11 @@ describe("Suite model", () => {
       suite.setTimeout("not a number");
     }).toThrowError("Expected to receive Number instead received String");
   });
+  it("should set the timeout to the default given undefined", () => {
+    const suite = new Suite();
+    suite.setTimeout();
+    expect(suite.timeout).toBe(300);
+  });
   it("should set the timeout", () => {
     const suite = new Suite();
     suite.setTimeout(400);
