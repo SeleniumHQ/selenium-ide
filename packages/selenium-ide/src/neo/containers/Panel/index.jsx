@@ -35,6 +35,7 @@ import Navigation from "../Navigation";
 import Editor from "../Editor";
 import Console from "../Console";
 import Modal from "../Modal";
+import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import api from "../../../api";
 import "../../side-effects/contextMenu";
@@ -180,6 +181,7 @@ browser.runtime.onMessage.addListener(api);
           <Console height={UiState.consoleHeight} />
         </SplitPane>
         <Modal project={this.state.project} />
+        <Changelog />
         <Tooltip />
       </div>
     );

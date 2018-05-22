@@ -143,3 +143,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   });
   return true;
 });
+
+browser.runtime.onInstalled.addListener(() => {
+  browser.storage.local.set({
+    updated: true
+  });
+});
