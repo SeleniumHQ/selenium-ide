@@ -3,7 +3,11 @@
 .markdown h3,
 .markdown h4 {
     color: #727272;
-    margin: 3px 0;
+    margin: 7px 0;
+}
+
+.markdown p {
+    margin: 5px 0;
 }
 
 .markdown ol {
@@ -13,4 +17,12 @@
 
 .markdown ol li {
     margin: 3px 0;
+}
+
+.markdown a {
+    color: #40A6FF;
+}
+
+.markdown a:hover {
+    text-decoration: underline;
 }
