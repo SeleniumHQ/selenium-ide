@@ -3796,7 +3796,9 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 // Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
   try{
-    const highlightElement = document.getElementById("selenium-highlight");
+    const highlightElement = document.createElement("div");
+    highlightElement.id = "selenium-highlight";
+    document.body.appendChild(highlightElement);
     let element = this.browserbot.findElement(locator);
     const elementRects = element.getBoundingClientRect();
     const bodyRects = document.documentElement.getBoundingClientRect();
@@ -3811,8 +3813,7 @@ Selenium.prototype.doShowElement = function(locator){
     scrollIntoViewIfNeeded(highlightElement, { centerIfNeeded: true });
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
-      highlightElement.className = "";
-      highlightElement.style.display = "none";
+      document.body.removeChild(highlightElement);
     }, 500);
     return "element found";
   } catch (e) {
