@@ -22,6 +22,8 @@ const emitters = {
   open: emitOpen,
   click: emitClick,
   clickAt: emitClick,
+  check: emitCheck,
+  uncheck: emitUncheck,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
@@ -41,6 +43,7 @@ const emitters = {
   verifyValue: emitVerifyValue,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
+  verifyNotText: emitVerifyNotText,
   assertChecked: emitVerifyChecked,
   assertNotChecked: emitVerifyNotChecked,
   assertEditable: emitVerifyEditable,
@@ -71,6 +74,7 @@ const emitters = {
   mouseOver: emitMouseMove,
   mouseOut: emitMouseOut,
   assertAlert: emitAssertAlertAndAccept,
+  assertNotText: emitVerifyNotText,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
   webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
@@ -139,6 +143,14 @@ async function emitEcho(message) {
   return Promise.resolve(`console.log(\`${message}\`);`);
 }
 
+async function emitCheck(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });`);
+}
+
+async function emitUncheck(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });`);
+}
+
 async function emitRunScript(script) {
   return Promise.resolve(`driver.executeScript(\`${script}\`);`);
 }
@@ -186,6 +198,10 @@ async function emitVerifyValue(locator, value) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe(\`${text}\`)});});`);
+}
+
+async function emitVerifyNotText(locator, text) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${text}\`)});});`);
 }
 
 async function emitVerifyTitle(title) {

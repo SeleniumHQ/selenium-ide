@@ -1,5 +1,8 @@
 .import-dialog ul {
     padding: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+    margin: 5px 0;
 }
 
 .import-dialog .dropzone {
