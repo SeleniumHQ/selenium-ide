@@ -42,5 +42,6 @@ export default class Log {
 
 export const LogTypes = {
   Success: "success",
-  Error: "error"
+  Error: "error",
+  Deprecated: "deprecated"
 };
