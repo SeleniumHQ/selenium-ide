@@ -35,3 +35,11 @@
   padding-left: 20px;
   color: #E80600;
 }
+
+.log.deprecated.notice {
+  color: #f56607;
+}
+
+.log.deprecated .message .status {
+  color: #f56607;
+}

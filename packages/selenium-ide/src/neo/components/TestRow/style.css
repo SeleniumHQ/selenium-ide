@@ -92,6 +92,11 @@
   color: #E80600;
 }
 
+.test-table tbody tr.deprecated td {
+  color: #f56607;
+  text-decoration: line-through;
+}
+
 .test-table tr {
   display: flex;
 }

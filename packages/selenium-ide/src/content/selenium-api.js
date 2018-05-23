@@ -3820,3 +3820,6 @@ Selenium.prototype.doShowElement = function(locator){
   }
 };
 
+Selenium.prototype.doDeprecated = function(target, value) {
+  //Do something like adding logs.
+}

@@ -215,6 +215,7 @@ class TestRow extends React.Component {
       onDoubleClick={() => { this.props.executeCommand(this.props.command); }}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.select}
+      data-tip={this.props.status == "deprecated" ? "<p>\"" + this.props.command.command + "\" is Deprecated</p>" : null}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>

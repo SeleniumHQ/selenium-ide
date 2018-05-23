@@ -186,7 +186,8 @@ class PlaybackState {
 export const PlaybackStates = {
   Passed: "passed",
   Failed: "failed",
-  Pending: "pending"
+  Pending: "pending",
+  Deprecated: "deprecated"
 };
 
 if (!window._playbackState) window._playbackState = new PlaybackState();

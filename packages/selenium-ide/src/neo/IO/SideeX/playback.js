@@ -238,9 +238,14 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
       : extCommand.doType(xlateArgument(target), xlateArgument(value))
   ))
     .then(function(result) {
-      if (result.result !== "success") {
+      let retResult = result.result;
+      if (retResult === "success") {
+        PlaybackState.setCommandState(id, PlaybackStates.Passed);
+      } else if(retResult === "deprecated") {
+        PlaybackState.setCommandState(id, PlaybackStates.Deprecated);
+      } else {
         // implicit
-        if (result.result.match(/Element[\s\S]*?not found/)) {
+        if (retResult.match(/Element[\s\S]*?not found/)) {
           if (implicitTime && (Date.now() - implicitTime > 30000)) {
             reportError("Implicit Wait timed out after 30000ms");
             implicitCount = 0;
@@ -254,10 +259,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
             return doCommand(false, implicitTime, implicitCount);
           }
         }
-
         PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
-      } else {
-        PlaybackState.setCommandState(id, PlaybackStates.Passed);
       }
     });
 }
