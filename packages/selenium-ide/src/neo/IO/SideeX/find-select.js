@@ -66,7 +66,7 @@ export function select(type, rect) {
       active: true,
       windowId: window.contentWindowId
     }).then(function(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false}).catch(tabConnectionFailure);
+      browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
     }).catch(function(reason) {
       console.log(reason);
     });

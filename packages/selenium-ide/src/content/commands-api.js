@@ -134,6 +134,7 @@ function doCommands(request, sender, sendResponse) {
         return;
       }
     }
+    sendResponse(true);
   }
 }
 
