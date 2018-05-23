@@ -31,6 +31,8 @@ export default class LogMessage extends React.Component {
         statusMessage = "Success";
       } else if (this.props.log.status === LogTypes.Error) {
         statusMessage = `Failed${this.props.log.error ? ":" : ""}`;
+      } else if (this.props.log.status === LogTypes.Deprecated) {
+        statusMessage = "Deprecated";
       }
     }
     return (

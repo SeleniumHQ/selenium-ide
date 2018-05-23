@@ -68,6 +68,9 @@ function doCommands(request, sender, sendResponse) {
           document.body.removeAttribute("SideeXPlayingFlag");
           sendResponse({result: e.message});
         }
+      } else if (request.commands.toLowerCase().includes("wait")) {
+        selenium["doDeprecated"](request.target, selenium.preprocessParameter(request.value));
+        sendResponse({result: "deprecated"});
       } else {
         sendResponse({ result: "Unknown command: " + request.commands });
       }

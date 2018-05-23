@@ -99,7 +99,7 @@ export default class LogStore {
           log.setStatus(LogTypes.Success);
           break;
         case PlaybackStates.Deprecated:
-          log.setStatus(LogTypes.deprecated);
+          log.setStatus(LogTypes.Deprecated);
           break;
       }
       this.addLog(log);
