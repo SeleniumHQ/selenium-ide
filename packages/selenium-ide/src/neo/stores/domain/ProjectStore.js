@@ -56,7 +56,7 @@ export default class ProjectStore {
   }
 
   @action.bound changeName(name) {
-    this.name = name;
+    this.name = name.replace(/<[^>]*>/g, ""); // firefox adds unencoded html elements to the string, strip them
   }
 
   @action.bound setModified() {

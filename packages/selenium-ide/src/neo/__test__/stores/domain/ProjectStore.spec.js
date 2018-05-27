@@ -40,6 +40,11 @@ describe("Project Store", () => {
     store.changeName("changed");
     expect(store.name).toBe("changed");
   });
+  it("should remove illegal characters from the project name", () => {
+    const store = new ProjectStore("test");
+    store.changeName("te&nbsp;<br>st<br>");
+    expect(store.name).toBe("te&nbsp;st");
+  });
   it("should have a base url", () => {
     const store = new ProjectStore();
     expect(store).toHaveProperty("url");
