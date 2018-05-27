@@ -17,6 +17,7 @@
 
 import { reaction } from "mobx";
 import FatalError from "../../../errors/fatal";
+import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
@@ -284,7 +285,7 @@ function doPluginCommand(id, command, target, value, implicitTime, implicitCount
     if (isElementNotFound(err.message)) {
       return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
     } else {
-      PlaybackState.setCommandState(id, err instanceof FatalError ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
+      PlaybackState.setCommandState(id, (err instanceof FatalError || err instanceof NoResponseError) ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
     }
   });
 }
