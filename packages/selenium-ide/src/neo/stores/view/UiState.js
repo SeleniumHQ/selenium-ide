@@ -173,7 +173,8 @@ class UiState {
   @action.bound emitRecordingState() {
     Manager.emitMessage({
       action: "event",
-      event: this.isRecording ? "recordingStarted" : "recordingStopped"
+      event: this.isRecording ? "recordingStarted" : "recordingStopped",
+      testName: this.selectedTest.test.name
     });
   }
 
