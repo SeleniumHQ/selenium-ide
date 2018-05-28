@@ -98,7 +98,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("input")));driver.findElement(By.id("input")).then(element => {element.clear().then(() => {element.sendKeys("${command.value}");});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("input")));driver.findElement(By.id("input")).then(element => {element.clear().then(() => {element.sendKeys(\`${command.value}\`);});});`);
   });
   it("should emit `send keys` command", () => {
     const command = {
