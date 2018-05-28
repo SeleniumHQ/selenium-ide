@@ -132,7 +132,7 @@ async function emitDragAndDrop(dragged, dropzone) {
 }
 
 async function emitType(target, value) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}));driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.clear().then(() => {element.sendKeys("${value}");});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}));driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.clear().then(() => {element.sendKeys(\`${value}\`);});});`);
 }
 
 async function emitSendKeys(target, value) {
