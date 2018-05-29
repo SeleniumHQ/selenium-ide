@@ -29,6 +29,7 @@ export default class PlaybackTree{
     let endIndexes = [];
     let endBlockIndexes = [];
     let blocks = [];
+    let doBlockIndexes = [];
     for(let i = this.commands.length-1; i>=0; i--) {
       this.inverseExtCommandSwitcher(i, endIndexes);
       if (this.isControlFlowFunction(this.commands[i].command)) {
@@ -38,7 +39,7 @@ export default class PlaybackTree{
 
     for(let i = 0; i < this.commands.length; i++) {
       if (this.isControlFlowFunction(this.commands[i].command)) {
-        this.controlFlowSwitcher(i, blocks);
+        this.controlFlowSwitcher(i, blocks, doBlockIndexes);
       }
     }
 
@@ -47,8 +48,8 @@ export default class PlaybackTree{
 
   inverseExtCommandSwitcher(index, endIndexes) {
     if (!this.isControlFlowFunction(this.commands[index].command)) {
-      // commands preceding 'else', 'elseIf' or 'end' will point to appropriate end in the right
-      if (endIndexes.length > 0 && this.isBlockEnd(this.commands[index+1].command)) {
+      // commands preceding 'else', 'elseIf' will point to appropriate end in the right
+      if (endIndexes.length > 0 && ["else", "elseIf"].includes(this.commands[index+1].command)) {
         this.commands[index].setRight(this.commands[endIndexes[endIndexes.length-1]]);
       } else {
         this.commands[index].setRight(this.commands[index+1]);
@@ -97,7 +98,7 @@ export default class PlaybackTree{
     }
   }
 
-  controlFlowSwitcher(index, blocks) {
+  controlFlowSwitcher(index, blocks, doBlockIndexes) {
     if (["if", "else", "while", "elseIf"].includes(this.commands[index].command)) {
       blocks.push(this.commands[index]);
     } else if (this.commands[index].command === "end") {
@@ -107,6 +108,13 @@ export default class PlaybackTree{
       } else if (lastBlock.command === "while") {
         this.commands[index].setRight(lastBlock);
       }
+    } else if (this.commands[index].command === "do") {
+      this.commands[index].setLeft(undefined);
+      this.commands[index].setRight(this.commands[index+1]);
+      doBlockIndexes.push(index);
+    } else if (this.commands[index].command === "repeatIf") {
+      this.commands[index].setLeft(this.commands[index+1]);
+      this.commands[index].setRight(this.commands[doBlockIndexes.pop()]);
     } else {
       window.addLog(`Unknown control flow operator "${this.commands[index].command}"`);
     }
@@ -124,6 +132,7 @@ export default class PlaybackTree{
       case "while":
       case "elseIf":
       case "else":
+      case "do":
         return true;
       default:
         return false;
@@ -136,6 +145,7 @@ export default class PlaybackTree{
       case "end":
       case "else":
       case "elseIf":
+      case "repeatIf":
         return true;
       default:
         return false;

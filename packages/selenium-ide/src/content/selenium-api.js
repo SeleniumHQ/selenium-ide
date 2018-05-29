@@ -440,11 +440,19 @@ Selenium.prototype.doElseIf = function(string) {
   return eval(string);
 };
 
+Selenium.prototype.doRepeatIf = function(string) {
+  return eval(string);
+};
+
 Selenium.prototype.doElse = function() {
   return true;
 };
 
 Selenium.prototype.doEnd = function() {
+  return true;
+};
+
+Selenium.prototype.doDo = function() {
   return true;
 };
 
