@@ -115,7 +115,7 @@ function doCommands(request, sender, sendResponse) {
 }
 
 function isConditinal(commandName) {
-  return ["if", "while"].includes(commandName);
+  return ["if", "while", "elseIf"].includes(commandName);
 }
 
 function executeConditional(request, sendResponse) {

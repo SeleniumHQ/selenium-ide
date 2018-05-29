@@ -26,14 +26,12 @@ export default class PlaybackTree{
 
   process() {
     // TODO: Make sure to clone commands in order to skip re-renders on UI
+    let endIndexes = [];
     let endBlockIndexes = [];
     let blocks = [];
     for(let i = this.commands.length-1; i>=0; i--) {
-      if (!this.isControlFlowFunction(this.commands[i].command)) {
-        this.commands[i].setRight(this.commands[i+1]);
-        this.commands[i].setLeft(undefined);
-        // TODO: do not rely on left and right to be undefined on closing execution
-      } else {
+      this.inverseExtCommandSwitcher(i, endIndexes);
+      if (this.isControlFlowFunction(this.commands[i].command)) {
         this.inverseControlFlowSwitcher(i, endBlockIndexes);
       }
     }
@@ -47,9 +45,40 @@ export default class PlaybackTree{
     this.executionNodes = this.commands;
   }
 
+  inverseExtCommandSwitcher(index, endIndexes) {
+    if (!this.isControlFlowFunction(this.commands[index].command)) {
+      // commands preceding 'else', 'elseIf' or 'end' will point to appropriate end in the right
+      if (endIndexes.length > 0 && this.isBlockEnd(this.commands[index+1].command)) {
+        this.commands[index].setRight(this.commands[endIndexes[endIndexes.length-1]]);
+      } else {
+        this.commands[index].setRight(this.commands[index+1]);
+      }
+
+      this.commands[index].setLeft(undefined);
+    } else if (this.commands[index].command === "end") {
+      endIndexes.push(index);
+    } else if (this.commands[index].command === "if") {
+      endIndexes.pop();
+    }
+  }
+
   inverseControlFlowSwitcher(index, endBlockIndexes) {
+    let lastEndBlockIndex;
     switch(this.commands[index].command) {
       case "if":
+      case "elseIf":
+        lastEndBlockIndex = endBlockIndexes.pop();
+        if (this.commands[lastEndBlockIndex].command === "elseIf") {
+          this.commands[index].setRight(this.commands[index+1]);
+          this.commands[index].setLeft(this.commands[lastEndBlockIndex]);
+        } else {
+          this.commands[index].setRight(this.commands[index+1]);
+          this.commands[index].setLeft(this.commands[lastEndBlockIndex + 1]);
+        }
+        if (this.commands[index].command === "elseIf") {
+          endBlockIndexes.push(index);
+        }
+        break;
       case "while":
         this.commands[index].setRight(this.commands[index+1]);
         this.commands[index].setLeft(this.commands[endBlockIndexes.pop() + 1]);
@@ -69,11 +98,11 @@ export default class PlaybackTree{
   }
 
   controlFlowSwitcher(index, blocks) {
-    if (["if", "else", "while"].includes(this.commands[index].command)) {
+    if (["if", "else", "while", "elseIf"].includes(this.commands[index].command)) {
       blocks.push(this.commands[index]);
     } else if (this.commands[index].command === "end") {
       let lastBlock = blocks.pop();
-      if(["if", "else"].includes(lastBlock.command)) {
+      if(["if", "else", "elseIf"].includes(lastBlock.command)) {
         this.commands[index].setRight(this.commands[index+1]);
       } else if (lastBlock.command === "while") {
         this.commands[index].setRight(lastBlock);
@@ -93,6 +122,7 @@ export default class PlaybackTree{
     switch(command) {
       case "if":
       case "while":
+      case "elseIf":
       case "else":
         return true;
       default:
@@ -105,6 +135,7 @@ export default class PlaybackTree{
     switch(command) {
       case "end":
       case "else":
+      case "elseIf":
         return true;
       default:
         return false;
@@ -112,7 +143,8 @@ export default class PlaybackTree{
   }
 
   static processCommands(commandsArray) {
-    new PlaybackTree(commandsArray);
+    let a = new PlaybackTree(commandsArray);
+    a.maintenance();
   }
 
   // TODO: maintenance function: remove when possible

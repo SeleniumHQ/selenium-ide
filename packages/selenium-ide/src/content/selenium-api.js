@@ -432,6 +432,18 @@ Selenium.prototype.doIf = function(string) {
   return eval(string);
 };
 
+Selenium.prototype.doWhile = function(string) {
+  return eval(string);
+};
+
+Selenium.prototype.doElseIf = function(string) {
+  return eval(string);
+};
+
+Selenium.prototype.doElse = function() {
+  return true;
+};
+
 Selenium.prototype.doEnd = function() {
   return true;
 };
