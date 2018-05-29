@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
+import StoredVarList from "../../components/StoredVarList"
 import ClearButton from "../../components/ActionButtons/Clear";
 import LogStore from "../../stores/view/Logs";
 import "./style.css";
@@ -26,20 +27,30 @@ import "./style.css";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
+    this.state={ activeIndex: 0 };
     this.store = new LogStore();
+    this.handleTabChanged = this.handleTabChanged.bind(this);
   }
   componentWillUnmount() {
     this.store.dispose();
   }
+  handleTabChanged(tab, index){
+    this.setState({activeIndex: index});
+  }
   render() {
+    const consoleBox =[
+      <LogList store={this.store} />
+      ,
+      <StoredVarList />
+    ];
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
+        <TabBar tabs={["Log", "Stored-Vars"]} tabWidth={100} buttonsMargin={0} tabChanged={this.handleTabChanged}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
-        <LogList store={this.store} />
+        {consoleBox[this.state.activeIndex]}
       </footer>
     );
   }
