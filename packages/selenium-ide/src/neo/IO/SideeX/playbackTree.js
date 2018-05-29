@@ -80,6 +80,7 @@ export default class PlaybackTree{
           endBlockIndexes.push(index);
         }
         break;
+      case "times":
       case "while":
         this.commands[index].setRight(this.commands[index+1]);
         this.commands[index].setLeft(this.commands[endBlockIndexes.pop() + 1]);
@@ -99,13 +100,17 @@ export default class PlaybackTree{
   }
 
   controlFlowSwitcher(index, blocks, doBlockIndexes) {
-    if (["if", "else", "while", "elseIf"].includes(this.commands[index].command)) {
+    if (["if", "else", "while", "elseIf", "times"].includes(this.commands[index].command)) {
+      if (["else", "elseIf"].includes(this.commands[index].command)) {
+        // treat if-elseif-else constructions as closed blocks
+        blocks.pop();
+      }
       blocks.push(this.commands[index]);
     } else if (this.commands[index].command === "end") {
       let lastBlock = blocks.pop();
       if(["if", "else", "elseIf"].includes(lastBlock.command)) {
         this.commands[index].setRight(this.commands[index+1]);
-      } else if (lastBlock.command === "while") {
+      } else if (lastBlock.command === "while" || lastBlock.command === "times" ) {
         this.commands[index].setRight(lastBlock);
       }
     } else if (this.commands[index].command === "do") {
@@ -130,6 +135,7 @@ export default class PlaybackTree{
     switch(command) {
       case "if":
       case "while":
+      case "times":
       case "elseIf":
       case "else":
       case "do":

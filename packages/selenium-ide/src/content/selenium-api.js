@@ -436,6 +436,11 @@ Selenium.prototype.doWhile = function(string) {
   return eval(string);
 };
 
+Selenium.prototype.doTimes = function(counter) {
+  // return to it when 'eval' and stored variables properly figured out
+  return true;
+};
+
 Selenium.prototype.doElseIf = function(string) {
   return eval(string);
 };
