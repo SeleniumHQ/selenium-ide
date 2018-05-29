@@ -37,10 +37,7 @@ export default class Command {
 
   @action.bound clone() {
     const clone = new Command();
-    clone.setComment(this.comment);
-    clone.setCommand(this.command);
-    clone.setTarget(this.target);
-    clone.setValue(this.value);
+    clone.setData(this.export());
     return clone;
   }
 
@@ -68,6 +65,13 @@ export default class Command {
     this.isBreakpoint = !this.isBreakpoint;
   }
 
+  @action.bound setData(jsRep){
+    this.setComment(jsRep.comment);
+    this.setCommand(jsRep.command);
+    this.setTarget(jsRep.target);
+    this.setValue(jsRep.value);
+  }
+
   export() {
     return {
       id: this.id,
@@ -80,11 +84,7 @@ export default class Command {
 
   static fromJS = function(jsRep) {
     const command = new Command(jsRep.id);
-    command.setComment(jsRep.comment);
-    command.setCommand(jsRep.command);
-    command.setTarget(jsRep.target);
-    command.setValue(jsRep.value);
-
+    command.setData(jsRep);
     return command;
   }
 }
