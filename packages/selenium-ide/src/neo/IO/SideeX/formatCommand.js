@@ -70,5 +70,12 @@ function handleFormatCommand(message) {
   }
 }
 
+export function getStoredVars(){
+  return declaredVars;
+}
+
+export function setStoredVar(){
+
+}
 browser.runtime.onMessage.addListener(handleFormatCommand);
 

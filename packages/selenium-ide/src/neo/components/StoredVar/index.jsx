@@ -17,24 +17,18 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import { observer } from "mobx-react";
-import { getStoredVars, setStoredVar } from "../../IO/SideeX/formatCommand";
-import StoredVar from "../StoredVar";
 import "./style.css";
 
 @observer
-export default class StoredVarList extends React.Component {
+export default class StoredVar extends React.Component {
   render() {
-    const storedVars = getStoredVars();
     return (
-      <div className="storedVars" >
-        <ul>
-          {Object.keys(storedVars).map((storedKey, index) => (
-            <StoredVar index={index+1} key={storedKey} keyVar={storedKey} value={storedVars[storedKey]}/>
-          ))}
-        </ul>
-      </div>
-    );
+        <li className={classNames("storedVar", {"isEditing": this.props.isEditing})}>
+          <span>{this.props.index} : {this.props.keyVar} : {this.props.value}</span>
+        </li>
+      );
   }
   static propTypes = {
     store: PropTypes.object
