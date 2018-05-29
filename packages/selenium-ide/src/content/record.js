@@ -514,5 +514,11 @@ if (Recorder) {
     }
   }, true);
 
-  recorder.attach();
+  browser.runtime.sendMessage({
+    attachRecorderRequest: true
+  }).then((shouldAttach) => {
+    if (shouldAttach) {
+      recorder.attach();
+    }
+  }).catch();
 }

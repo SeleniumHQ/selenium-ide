@@ -32,6 +32,10 @@ function hasRecorded() {
 
 export default class BackgroundRecorder {
   constructor() {
+    // The only way to know if a tab is recordable is to assume it is, and verify it sends a record
+    // In order to do that we need to optimistically attach the recorder to all tabs, and try to
+    // remove it, even if it's in a priviledged tab
+    this.lastAttachedTabId = undefined;
     this.currentRecordingTabId = {};
     this.currentRecordingWindowId = {};
     this.currentRecordingFrameLocation = {};
@@ -44,10 +48,28 @@ export default class BackgroundRecorder {
     this.selfWindowId = -1;
     this.attached = false;
     this.rebind();
+    browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler);
+  }
+
+  attachToTab(tabId) {
+    browser.tabs.sendMessage(tabId, {attachRecorder: true}).catch();
+  }
+
+  detachFromTab(tabId) {
+    browser.tabs.sendMessage(tabId, {detachRecorder: true}).catch();
+  }
+
+  reattachToTab(tabId) {
+    if (this.lastAttachedTabId && this.lastAttachedTabId !== tabId) {
+      this.detachFromTab(this.lastAttachedTabId);
+    }
+    this.attachToTab(tabId);
+    this.lastAttachedTabId = tabId;
   }
 
   // TODO: rename method
   tabsOnActivatedHandler(activeInfo) {
+    this.reattachToTab(activeInfo.tabId);
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -81,6 +103,14 @@ export default class BackgroundRecorder {
   }
 
   windowsOnFocusChangedHandler(windowId) {
+    browser.tabs.query({
+      active: true,
+      windowId
+    }).then((tabs) => {
+      if (tabs.length) {
+        this.reattachToTab(tabs[0].id);
+      }
+    });
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -167,6 +197,7 @@ export default class BackgroundRecorder {
   }
 
   webNavigationOnCreatedNavigationTargetHandler(details) {
+    this.reattachToTab(details.tabId);
     let testCase = getSelectedCase();
     if (!testCase)
       return;
@@ -186,6 +217,12 @@ export default class BackgroundRecorder {
           });
       }
       this.openedTabCount[testCaseId]++;
+    }
+  }
+
+  attachRecorderRequestHandler(message, sender, sendResponse) {
+    if (message.attachRecorderRequest) {
+      return sendResponse(this.attached);
     }
   }
 
@@ -293,6 +330,7 @@ export default class BackgroundRecorder {
     this.tabsOnRemovedHandler = this.tabsOnRemovedHandler.bind(this);
     this.webNavigationOnCreatedNavigationTargetHandler = this.webNavigationOnCreatedNavigationTargetHandler.bind(this);
     this.addCommandMessageHandler = this.addCommandMessageHandler.bind(this);
+    this.attachRecorderRequestHandler = this.attachRecorderRequestHandler.bind(this);
   }
 
   attach() {
@@ -311,6 +349,8 @@ export default class BackgroundRecorder {
     if (!this.attached) {
       return;
     }
+    this.detachFromTab(this.lastAttachedTabId);
+    this.lastAttachedTabId = undefined;
     this.attached = false;
     browser.tabs.onActivated.removeListener(this.tabsOnActivatedHandler);
     browser.windows.onFocusChanged.removeListener(this.windowsOnFocusChangedHandler);
