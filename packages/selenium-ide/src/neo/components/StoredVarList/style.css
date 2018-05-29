@@ -1,0 +1,10 @@
+.storedVars {
+  color: #5B5B5B;
+  overflow-y: auto;
+  width: 100%;
+  font-size: 12px;
+}
+
+.storedVars ul {
+  margin: 5px 8px;
+}
