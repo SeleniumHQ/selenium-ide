@@ -461,6 +461,14 @@ Selenium.prototype.doDo = function() {
   return true;
 };
 
+Selenium.prototype.doContinue = function() {
+  return true;
+};
+
+Selenium.prototype.doBreak = function() {
+  return true;
+};
+
 Selenium.prototype.doVerifyElementNotPresent = function(locator) {
   try {
     this.browserbot.findElement(locator);

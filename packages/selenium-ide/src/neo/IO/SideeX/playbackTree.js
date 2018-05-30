@@ -125,33 +125,18 @@ export default class PlaybackTree{
     }
   }
 
-  // TODO: avoid duplicates with TestTable
   isControlFlowFunction(command) {
-    return this.isBlock(command) || this.isBlockEnd(command);
-  }
-
-  // TODO: do, times
-  isBlock(command) {
     switch(command) {
       case "if":
+      case "elseIf":
+      case "else":
       case "while":
       case "times":
-      case "elseIf":
-      case "else":
-      case "do":
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  // TODO: endDo
-  isBlockEnd(command) {
-    switch(command) {
-      case "end":
-      case "else":
-      case "elseIf":
       case "repeatIf":
+      case "do":
+      case "end":
+      case "continue":
+      case "break":
         return true;
       default:
         return false;
@@ -165,7 +150,6 @@ export default class PlaybackTree{
 
   // TODO: maintenance function: remove when possible
   maintenance() {
-
     // runCommand(this.executionNodes[0]);
     window.addLog("maintenance");
     this.executionNodes.forEach((node) => {
@@ -182,14 +166,5 @@ export default class PlaybackTree{
       }
       window.addLog(`----------------------`);
     });
-
-    // function runCommand(command) {
-    //   window.addLog()
-    //   console.log(command.command);
-    //   if (command.right) {
-    //     runCommand(command.right);
-    //   }
-    // }
   }
-
 }
