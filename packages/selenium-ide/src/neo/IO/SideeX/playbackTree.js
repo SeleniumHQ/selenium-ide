@@ -58,7 +58,7 @@ export default class PlaybackTree{
       this.com(index).setLeft(undefined);
     } else if (this.com(index).command === "end") {
       endIndexes.push(index);
-    } else if (this.com(index).command === "if") {
+    } else if (["if", "times", "while"].includes(this.com(index).command)) {
       endIndexes.pop();
     }
   }
