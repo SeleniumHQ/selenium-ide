@@ -30,6 +30,12 @@ export default class PlaybackTree{
     let endBlockIndexes = [];
     let blocks = [];
     let doBlockIndexes = [];
+
+    // for continue
+    let whileTimesIndexes = [];
+    let doIndexes = [];
+    let ifIndexes = [];
+    let nextRepeatIfContinueIndex = {index: undefined};
     for(let i = this.commands.length-1; i>=0; i--) {
       this.inverseExtCommandSwitcher(i, endIndexes);
       if (this.isControlFlowFunction(this.commands[i].command)) {
@@ -40,88 +46,138 @@ export default class PlaybackTree{
     for(let i = 0; i < this.commands.length; i++) {
       if (this.isControlFlowFunction(this.commands[i].command)) {
         this.controlFlowSwitcher(i, blocks, doBlockIndexes);
+        this.continueProcessor(i, whileTimesIndexes, doIndexes, ifIndexes, nextRepeatIfContinueIndex);
       }
     }
 
     this.executionNodes = this.commands;
   }
 
-  inverseExtCommandSwitcher(index, endIndexes) {
-    if (!this.isControlFlowFunction(this.com(index).command)) {
-      // commands preceding 'else', 'elseIf' will point to appropriate end in the right
-      if (endIndexes.length > 0 && ["else", "elseIf"].includes(this.com(index+1).command)) {
-        this.com(index).setRight(this.com(endIndexes[endIndexes.length-1]));
+  continueProcessor(i, loopIndexes, doIndexes, ifIndexes, nextRepeatIfContinueIndex) {
+    let loops = ["times", "while"];
+    if (loops.includes(this.com(i).command)) {
+      loopIndexes.push(i);
+    } else if (this.com(i).command === "do") {
+      doIndexes.push(i);
+    } else if (this.com(i).command === "if") {
+      ifIndexes.push(i);
+    } else if (this.com(i).command === "continue") {
+      if (doIndexes.length === 0) {
+        this.com(i).setRight(this.com(loopIndexes[loopIndexes.length-1]));
+        this.com(i).setLeft(undefined);
+      }
+      if (loopIndexes[loopIndexes.length-1] > doIndexes[doIndexes.length-1]) {
+        this.com(i).setRight(this.com(loopIndexes[loopIndexes.length-1]));
+        this.com(i).setLeft(undefined);
       } else {
-        this.com(index).setRight(this.com(index+1));
+        nextRepeatIfContinueIndex.index = i;
+      }
+    } else if (this.com(i).command === "end") {
+      if (loopIndexes[loopIndexes-1] > ifIndexes[ifIndexes-1] ) {
+        loopIndexes.pop();
+      } else {
+        ifIndexes.pop();
+      }
+    } else if (this.com(i).command === "repeatIf") {
+      doIndexes.pop();
+      if(nextRepeatIfContinueIndex.index) {
+        this.com(nextRepeatIfContinueIndex.index).setRight(this.com(i));
+        this.com(nextRepeatIfContinueIndex.index).setLeft(undefined);
+      }
+    }
+  }
+
+  // continueProcessor(i, loopIndexes, ifIndexes) {
+  //   let loops = ["times", "while"];
+  //   if (loops.includes(this.com(i).command)) {
+  //     loopIndexes.push(i);
+  //   } else if (this.com(i).command === "if") {
+  //     ifIndexes.push(i);
+  //   } else if (this.com(i).command === "continue") {
+  //     this.com(i).setRight(loopIndexes[loopIndexes.length-1]);
+  //     this.com(i).setLeft(undefined);
+  //   } else if (this.com(i).command === "end") {
+  //     loopIndexes.pop();
+  //     ifIndexes.pop();
+  //   }
+  // }
+
+  inverseExtCommandSwitcher(i, endIndexes) {
+    if (!this.isControlFlowFunction(this.com(i).command)) {
+      // commands preceding 'else', 'elseIf' will point to appropriate end in the right
+      if (endIndexes.length > 0 && ["else", "elseIf"].includes(this.com(i+1).command)) {
+        this.com(i).setRight(this.com(endIndexes[endIndexes.length-1]));
+      } else {
+        this.com(i).setRight(this.com(i+1));
       }
 
-      this.com(index).setLeft(undefined);
-    } else if (this.com(index).command === "end") {
-      endIndexes.push(index);
-    } else if (["if", "times", "while"].includes(this.com(index).command)) {
+      this.com(i).setLeft(undefined);
+    } else if (this.com(i).command === "end") {
+      endIndexes.push(i);
+    } else if (["if", "times", "while"].includes(this.com(i).command)) {
       endIndexes.pop();
     }
   }
 
-  inverseControlFlowSwitcher(index, endBlockIndexes) {
+  inverseControlFlowSwitcher(i, endBlockIndexes) {
     let lastEndBlockIndex;
-    switch(this.com(index).command) {
+    switch(this.com(i).command) {
       case "if":
       case "elseIf":
         lastEndBlockIndex = endBlockIndexes.pop();
         if (this.commands[lastEndBlockIndex].command === "elseIf") {
-          this.com(index).setRight(this.com(index+1));
-          this.com(index).setLeft(this.com(lastEndBlockIndex));
+          this.com(i).setRight(this.com(i+1));
+          this.com(i).setLeft(this.com(lastEndBlockIndex));
         } else {
-          this.com(index).setRight(this.com(index+1));
-          this.com(index).setLeft(this.com(lastEndBlockIndex + 1));
+          this.com(i).setRight(this.com(i+1));
+          this.com(i).setLeft(this.com(lastEndBlockIndex + 1));
         }
-        if (this.com(index).command === "elseIf") {
-          endBlockIndexes.push(index);
+        if (this.com(i).command === "elseIf") {
+          endBlockIndexes.push(i);
         }
         break;
       case "times":
       case "while":
-        this.com(index).setRight(this.com(index+1));
-        this.com(index).setLeft(this.com(endBlockIndexes.pop() + 1));
+        this.com(i).setRight(this.com(i+1));
+        this.com(i).setLeft(this.com(endBlockIndexes.pop() + 1));
         break;
       case "else":
-        this.com(index).setRight(this.com(endBlockIndexes.pop() + 1));
-        this.com(index).setLeft(undefined);
-        endBlockIndexes.push(index);
+        this.com(i).setRight(this.com(endBlockIndexes.pop() + 1));
+        this.com(i).setLeft(undefined);
+        endBlockIndexes.push(i);
         break;
       case "end":
-        this.com(index).setLeft(undefined);
-        endBlockIndexes.push(index);
+        this.com(i).setLeft(undefined);
+        endBlockIndexes.push(i);
         break;
       default:
-        window.addLog(`Unknown control flow operator "${this.com(index).command}"`);
+        window.addLog(`Unknown control flow operator "${this.com(i).command}"`);
     }
   }
 
-  controlFlowSwitcher(index, blocks, doBlockIndexes) {
-    if (["if", "else", "while", "elseIf", "times"].includes(this.com(index).command)) {
-      if (["else", "elseIf"].includes(this.com(index).command)) {
+  controlFlowSwitcher(i, blocks, doBlockIndexes) {
+    if (["if", "else", "while", "elseIf", "times"].includes(this.com(i).command)) {
+      if (["else", "elseIf"].includes(this.com(i).command)) {
         // treat if-elseif-else constructions as closed blocks
         blocks.pop();
       }
-      blocks.push(this.com(index));
-    } else if (this.com(index).command === "end") {
+      blocks.push(this.com(i));
+    } else if (this.com(i).command === "end") {
       let lastBlock = blocks.pop();
       if(["if", "else", "elseIf"].includes(lastBlock.command)) {
-        this.com(index).setRight(this.com(index+1));
+        this.com(i).setRight(this.com(i+1));
       } else if (lastBlock.command === "while" || lastBlock.command === "times" ) {
-        this.com(index).setRight(lastBlock);
+        this.com(i).setRight(lastBlock);
       }
-    } else if (this.com(index).command === "do") {
-      this.com(index).setLeft(undefined);
-      this.com(index).setRight(this.com(index+1));
-      doBlockIndexes.push(index);
-    } else if (this.com(index).command === "repeatIf") {
-      this.com(index).setLeft(this.com(index+1));
-      this.com(index).setRight(this.com(doBlockIndexes.pop()));
+    } else if (this.com(i).command === "do") {
+      this.com(i).setLeft(undefined);
+      this.com(i).setRight(this.com(i+1));
+      doBlockIndexes.push(i);
+    } else if (this.com(i).command === "repeatIf") {
+      this.com(i).setLeft(this.com(i+1));
+      this.com(i).setRight(this.com(doBlockIndexes.pop()));
     } else {
-      window.addLog(`Unknown control flow operator "${this.com(index).command}"`);
+      window.addLog(`Unknown control flow operator "${this.com(i).command}"`);
     }
   }
 
