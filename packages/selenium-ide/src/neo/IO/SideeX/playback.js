@@ -235,7 +235,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   return p.then(() => (
     command !== "type"
       ? extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
-      : extCommand.doType(xlateArgument(target), xlateArgument(value))
+      : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
   ))
     .then(function(result) {
       if (result.result !== "success") {
