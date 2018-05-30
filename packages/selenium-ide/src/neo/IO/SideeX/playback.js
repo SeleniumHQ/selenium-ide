@@ -277,6 +277,7 @@ function doPluginCommand(id, command, target, value, implicitTime, implicitCount
     commandId: id,
     runId: PlaybackState.runId,
     testId: PlaybackState.currentRunningTest.id,
+    frameId: extCommand.getCurrentPlayingFrameId(),
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
   }).then(res => {
