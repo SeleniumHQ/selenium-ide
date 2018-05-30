@@ -53,6 +53,7 @@ export default class PlaybackTree{
     this.executionNodes = this.commands;
   }
 
+  // won't work with embedded loops following continue. TODO: redo that
   continueProcessor(i, loopIndexes, doIndexes, ifIndexes, nextRepeatIfContinueIndex) {
     let loops = ["times", "while"];
     if (loops.includes(this.com(i).command)) {
@@ -86,21 +87,6 @@ export default class PlaybackTree{
       }
     }
   }
-
-  // continueProcessor(i, loopIndexes, ifIndexes) {
-  //   let loops = ["times", "while"];
-  //   if (loops.includes(this.com(i).command)) {
-  //     loopIndexes.push(i);
-  //   } else if (this.com(i).command === "if") {
-  //     ifIndexes.push(i);
-  //   } else if (this.com(i).command === "continue") {
-  //     this.com(i).setRight(loopIndexes[loopIndexes.length-1]);
-  //     this.com(i).setLeft(undefined);
-  //   } else if (this.com(i).command === "end") {
-  //     loopIndexes.pop();
-  //     ifIndexes.pop();
-  //   }
-  // }
 
   inverseExtCommandSwitcher(i, endIndexes) {
     if (!this.isControlFlowFunction(this.com(i).command)) {
