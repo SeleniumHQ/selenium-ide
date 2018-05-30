@@ -82,7 +82,17 @@ class PlaybackState {
       this.currentRunningSuite = suite;
       this._testsToRun = [...suite.tests];
       this.testsCount = this._testsToRun.length;
-      this.playNext();
+      PluginManager.emitMessage({
+        action: "event",
+        event: "suitePlaybackStarted",
+        options: {
+          runId: this.runId,
+          suiteName: this.currentRunningSuite.name,
+          projectName: UiState._project.name
+        }
+      }).then(() => {
+        this.playNext();
+      });
     });
     this.beforePlaying(playSuite);
   }
@@ -184,7 +194,10 @@ class PlaybackState {
         event: "playbackStopped",
         options: {
           runId: this.runId,
-          testId: this.currentRunningTest.id
+          testId: this.currentRunningTest.id,
+          testName: this.currentRunningTest.name,
+          suiteName: this.currentRunningSuite ? this.currentRunningSuite.name : undefined,
+          projectName: UiState._project.name
         }
       }, (plugin, resolved) => {
         let log = pluginsLogs[plugin.id];
@@ -267,6 +280,15 @@ class PlaybackState {
       if (this._testsToRun.length) {
         this.playNext();
       } else if (this.currentRunningSuite) {
+        PluginManager.emitMessage({
+          action: "event",
+          event: "suitePlaybackStopped",
+          options: {
+            runId: this.runId,
+            suiteName: this.currentRunningSuite.name,
+            projectName: UiState._project.name
+          }
+        });
         this.suiteState.set(this.currentRunningSuite.id, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
       }
     });
