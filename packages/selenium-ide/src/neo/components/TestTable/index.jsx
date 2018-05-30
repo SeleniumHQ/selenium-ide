@@ -116,6 +116,7 @@ function isBlock(command) {
     case "do":
     case "while":
     case "times":
+    case "elseIf":
     case "else":
       return true;
     default:
@@ -126,7 +127,8 @@ function isBlock(command) {
 function isBlockEnd(command) {
   switch(command) {
     case "end":
-    case "endDo":
+    case "repeatIf":
+    case "elseIf":
     case "else":
       return true;
     default:

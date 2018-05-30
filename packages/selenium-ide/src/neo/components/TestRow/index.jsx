@@ -201,7 +201,7 @@ class TestRow extends React.Component {
     //setting component of context menu.
     this.props.setContextMenu(listMenu);
 
-    const index = this.props.index >= 0 ? <span className="index" style={{paddingRight: `${(this.props.level || 0) * 5}px`}}>{this.props.index + 1}.</span> : null;
+    const index = this.props.index >= 0 ? <span className="index" style={{paddingRight: `${(this.props.level || 0) * 10}px`}}>{this.props.index + 1}.</span> : null;
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
       className={classNames(this.props.className, {"selected": this.props.selected}, {"break-point": this.props.isBreakpoint}, {"dragging": this.props.dragInProgress})}
