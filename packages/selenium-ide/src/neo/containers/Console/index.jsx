@@ -35,22 +35,21 @@ export default class Console extends React.Component {
     this.store.dispose();
   }
   handleTabChanged(tab, index){
-    this.setState({activeIndex: index});
+    this.setState({activeTab: tab});
   }
   render() {
-    const consoleBox =[
-      <LogList store={this.store} />
-      ,
-      <StoredVarList />
-    ];
+    const consoleBox ={
+      "Log" :<LogList store={this.store} />,
+      "Stored-Vars" : <StoredVarList />
+    };
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log", "Stored-Vars"]} tabWidth={100} buttonsMargin={0} tabChanged={this.handleTabChanged}>
+        <TabBar tabs={Object.keys(consoleBox)} tabWidth={100} buttonsMargin={0} tabChanged={this.handleTabChanged}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
-        {consoleBox[this.state.activeIndex]}
+        {consoleBox[this.state.activeTab]}
       </footer>
     );
   }
