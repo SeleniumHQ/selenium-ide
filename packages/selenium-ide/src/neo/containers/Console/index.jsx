@@ -27,16 +27,20 @@ export default class Console extends React.Component {
   constructor(props) {
     super(props);
     this.store = new LogStore();
+    this.tabClicked = this.tabClicked.bind(this);
   }
   componentWillUnmount() {
     this.store.dispose();
+  }
+  tabClicked(tab){
+    this.props.restoreSize();
   }
   render() {
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
+        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0} tabClicked={this.tabClicked}>
           <ClearButton onClick={this.store.clearLogs} />
         </TabBar>
         <LogList store={this.store} />
@@ -44,6 +48,7 @@ export default class Console extends React.Component {
     );
   }
   static propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
+    restoreSize: PropTypes.func
   };
 }
