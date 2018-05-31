@@ -171,7 +171,7 @@ firefox57WorkaroundForBlankPanel();
                 save={() => saveProject(project)}
                 export={() => exportProject(project)}
               />
-              <div className={classNames("content", {dragging: UiState.navigationDragging})}>
+              <div className={classNames("content", { dragging: UiState.navigationDragging })}>
                 <SplitPane
                   split="vertical"
                   minSize={UiState.minNavigationWidth}

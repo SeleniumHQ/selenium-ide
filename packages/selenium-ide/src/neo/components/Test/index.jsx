@@ -110,7 +110,7 @@ class Test extends React.Component {
     const rendered = <a
       href="#"
       ref={(node) => { this.node = node; }}
-      className={classNames("test", this.props.className, {"changed": this.props.changed}, {"selected": this.props.selected})}
+      className={classNames("test", this.props.className, { "changed": this.props.changed }, { "selected": this.props.selected })}
       onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
       onKeyDown={this.handleKeyDown.bind(this)}

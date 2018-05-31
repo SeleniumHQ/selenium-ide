@@ -102,7 +102,7 @@ class Suite extends React.Component {
     return this.props.connectDropTarget(
       <div onKeyDown={this.handleKeyDown.bind(this)} >
         <div className="project" onContextMenu={this.props.onContextMenu} >
-          <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), {"hover": (this.props.isOver && this.props.canDrop)}, {"active": this.store.isOpen})} onClick={this.handleClick} >
+          <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), { "hover": (this.props.isOver && this.props.canDrop) }, { "active": this.store.isOpen })} onClick={this.handleClick} >
             <span className="si-caret"></span>
             <span className="title">{this.props.suite.name}</span>
           </a>

@@ -23,10 +23,10 @@ import "./style.css";
 
 export default class SaveButton extends React.Component {
   render() {
-    const props = {...this.props};
+    const props = { ...this.props };
     delete props.unsaved;
     return (
-      <ActionButton data-tip="<p>Save project</p>" {...props} className={classNames("si-save", {pulse: this.props.unsaved}, this.props.className)} />// eslint-disable-line react/prop-types
+      <ActionButton data-tip="<p>Save project</p>" {...props} className={classNames("si-save", { pulse: this.props.unsaved }, this.props.className)} />// eslint-disable-line react/prop-types
     );
   }
 

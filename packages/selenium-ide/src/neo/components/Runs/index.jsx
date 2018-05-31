@@ -39,7 +39,7 @@ export default class Runs extends React.Component {
         <Progress hasError={this.props.hasError} progress={this.props.progress} totalProgress={this.props.totalProgress} />
         <div className="status">
           <span>Runs: {this.props.runs}</span>
-          <span>Failures: <span className={classNames({"failed": this.props.failures})}>{this.props.failures}</span></span>
+          <span>Failures: <span className={classNames({ "failed": this.props.failures })}>{this.props.failures}</span></span>
         </div>
       </div>
     );

@@ -44,7 +44,7 @@ function handleMessage(message, sender, sendResponse) { // eslint-disable-line n
 
   if (message.attachRecorderRequest) {
     if (isRecording && !isPlaying) {
-      browser.tabs.sendMessage(sender.tab.id, {attachRecorder: true});
+      browser.tabs.sendMessage(sender.tab.id, { attachRecorder: true });
     }
   }
 }

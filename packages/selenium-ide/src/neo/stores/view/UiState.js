@@ -277,7 +277,7 @@ class UiState {
     return this.testStates[test.id];
   }
 
-  filterFunction({name}) {
+  filterFunction({ name }) {
     return (name.indexOf(this.filterTerm) !== -1);
   }
 

@@ -138,7 +138,7 @@ export default class ExtCommand {
   }
 
   queryActiveTab(windowId) {
-    return browser.tabs.query({windowId: windowId, active: true, url: ["http://*/*", "https://*/*"]})
+    return browser.tabs.query({ windowId: windowId, active: true, url: ["http://*/*", "https://*/*"] })
       .then(function(tabs) {
         return tabs[0];
       });
@@ -223,7 +223,7 @@ export default class ExtCommand {
     return this.wait("playingTabNames", serialNumber)
       .then(function() {
         self.currentPlayingTabId = self.playingTabNames[serialNumber];
-        browser.tabs.update(self.currentPlayingTabId, {active: true});
+        browser.tabs.update(self.currentPlayingTabId, { active: true });
       });
   }
 
