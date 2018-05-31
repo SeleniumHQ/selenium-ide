@@ -7,7 +7,8 @@
 .row .cell {
   word-break: break-all;
   display: table-cell;
-  padding: 3px 2px;
+  padding: 2px 1px;
+
 }
 
 .row .storedKey {
@@ -29,6 +30,21 @@
   padding: 0;
   width: 48%;
   text-align: left;
+  box-shadow: 0 0 0 1px transparent inset;
+}
+
+.row .storedVar .value {
+  border-radius: 4px;
+}
+
+.row .storedVar .value:hover {
+  box-shadow: 0 0 0 1px #CECECE inset;
+}
+
+.row .storedVar .value:focus {
+  box-shadow: 0 0 0 1px #A8A8A8 inset;
+  cursor: initial;
+  outline: 0;
 }
 
 .editBtn {

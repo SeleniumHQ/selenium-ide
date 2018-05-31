@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { observer } from "mobx-react";
+import ContentEditable from "react-contenteditable";
 import EditButton from "../ActionButtons/Edit";
 import "./style.css";
 
@@ -26,10 +27,14 @@ import "./style.css";
 export default class StoredVar extends React.Component {
   constructor(props){
     super(props);
-    this.edit = this.edit.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
-  edit(){
-    console.log("edit");
+  handleKeyDown(e) {
+    if (e.key === "Enter") e.preventDefault();
+  }
+  handleChange(e) {
+    this.props.edit(this.props.keyVar, e.target.value);
   }
   render() {
     return (
@@ -37,9 +42,11 @@ export default class StoredVar extends React.Component {
         <div className="cell index">{this.props.index}.</div>
         <div className="cell storedKey">{this.props.keyVar}</div>
         <div className="cell col">:</div>
-        <div className="cell storedVar">{this.props.value}</div>
+        <div className="cell storedVar">
+          <ContentEditable className="value" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.value} />
+        </div>
         <div className="cell valEdit">
-          <EditButton className="editBtn" data-place="left" onClick={this.edit} />
+          <EditButton className="editBtn" data-place="left" />
         </div>
       </div>
     );
@@ -48,6 +55,7 @@ export default class StoredVar extends React.Component {
     isEditing: PropTypes.bool,
     index: PropTypes.number,
     keyVar: PropTypes.string,
-    value: PropTypes.string
+    value: PropTypes.string,
+    edit: PropTypes.func
   };
 }

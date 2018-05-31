@@ -24,6 +24,13 @@ import "./style.css";
 
 @observer
 export default class StoredVarList extends React.Component {
+  constructor(props){
+    super(props);
+    this.editStoredVar = this.editStoredVar.bind(this);
+  }
+  editStoredVar(key, value){
+    setStoredVar(key, value);
+  }
   render() {
     const storedVars = getStoredVars();
     return (
@@ -37,7 +44,12 @@ export default class StoredVarList extends React.Component {
 
           <div className="valList">
             {Object.keys(storedVars).map((storedKey, index) => (
-              <StoredVar index={index+1} key={storedKey} keyVar={storedKey} value={storedVars[storedKey]}/>
+              <StoredVar
+                key={storedKey}
+                index={index+1}
+                keyVar={storedKey}
+                value={storedVars[storedKey]}
+                edit={this.editStoredVar}/>
             ))}
           </div>
         </div>
