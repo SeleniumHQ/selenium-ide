@@ -74,8 +74,15 @@ export function getStoredVars(){
   return declaredVars;
 }
 
-export function setStoredVar(){
-
+export function setStoredVar(key, value){
+  let retVal = false;
+  try {
+    declaredVars[key] = value;
+    retVal = true;
+  } catch(e) {
+    console.log(e);
+  }
+  return retVal;
 }
-browser.runtime.onMessage.addListener(handleFormatCommand);
 
+browser.runtime.onMessage.addListener(handleFormatCommand);
