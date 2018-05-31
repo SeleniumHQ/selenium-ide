@@ -2,7 +2,7 @@
   display: table-header-group;
   background: #FFFFFF;
   border-bottom: 2px solid #5B5B5B;
-  font-size: 13px;
+  font-size: 14px;
   color: #5B5B5B;
   text-align: center;
 }
@@ -24,11 +24,7 @@
   background: #f2efef;
 }
 
-.storedVars .row {
-  display: table-row;
-}
-
-.valList .cell, .valHeader .head {
+.valHeader .head {
   display: table-cell;
   padding: 3px 2px;
 }
@@ -39,10 +35,11 @@
   width: 100%;
   text-align: left;
   border-collapse: collapse;
+  max-width: 655px;
 }
 
 .storeContainer  {
   padding: 0 10px;
-  max-width: 655px;
   overflow-y: auto;
+  overflow-x: hidden;
 }

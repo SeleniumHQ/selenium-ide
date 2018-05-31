@@ -1,8 +1,36 @@
 .row {
   font-size: 12px;
   text-align: center;
+  display: table-row;
 }
 
-.editBtn{
+.row .cell {
+  word-break: break-all;
+  display: table-cell;
+  padding: 3px 2px;
+}
+
+.row .storedKey {
+  float: left;
+  padding: 0;
+  width: 48%;
+  text-align: right;
+}
+
+.row .col {
+  float: left;
+  padding: 0;
+  width: 4%;
+  text-align: center;
+}
+
+.row .storedVar {
+  float: left;
+  padding: 0;
+  width: 48%;
+  text-align: left;
+}
+
+.editBtn {
   font-size: 14px;
 }

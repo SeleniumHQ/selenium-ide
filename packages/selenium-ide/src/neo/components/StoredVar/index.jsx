@@ -33,14 +33,16 @@ export default class StoredVar extends React.Component {
   }
   render() {
     return (
-        <div className={classNames("row", {"isEditing": this.props.isEditing})}>
-          <div className="cell index">{this.props.index}.</div>
-          <div className="cell value">{this.props.keyVar} : {this.props.value}</div>
-          <div className="cell valEdit">
-            <EditButton className="editBtn" data-place="left" onClick={this.edit} />
-          </div>
+      <div className={classNames("row", {"isEditing": this.props.isEditing})}>
+        <div className="cell index">{this.props.index}.</div>
+        <div className="cell storedKey">{this.props.keyVar}</div>
+        <div className="cell col">:</div>
+        <div className="cell storedVar">{this.props.value}</div>
+        <div className="cell valEdit">
+          <EditButton className="editBtn" data-place="left" onClick={this.edit} />
         </div>
-      );
+      </div>
+    );
   }
   static propTypes = {
     isEditing: PropTypes.bool,
