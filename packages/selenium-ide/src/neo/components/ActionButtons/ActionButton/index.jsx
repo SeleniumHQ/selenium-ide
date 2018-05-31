@@ -22,10 +22,10 @@ import "./style.css";
 
 export default class ActionButton extends React.Component {
   render() {
-    const props = {...this.props};
+    const props = { ...this.props };
     delete props.isActive;
     return (
-      <button type="button" {...props} className={classNames("btn-action", {"active": this.props.isActive}, this.props.className)} />
+      <button type="button" {...props} className={classNames("btn-action", { "active": this.props.isActive }, this.props.className)} />
     );
   }
 

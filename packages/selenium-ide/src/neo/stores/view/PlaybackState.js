@@ -43,7 +43,7 @@ class PlaybackState {
   }
 
   @computed get hasFinishedSuccessfully() {
-    return !this.runningQueue.find(({id}) => (
+    return !this.runningQueue.find(({ id }) => (
       this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed : false
     ));
   }

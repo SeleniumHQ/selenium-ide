@@ -21,10 +21,10 @@ import classNames from "classnames";
 
 export default class MoreButton extends React.Component {
   render() {
-    const props = {...this.props};
+    const props = { ...this.props };
     delete props.canFocus;
     return (
-      <ActionButton tabIndex={this.props.canFocus ? "0" : "-1"} {...props} className={classNames({"no-focus": !this.props.canFocus}, "si-more", this.props.className)} />// eslint-disable-line react/prop-types
+      <ActionButton tabIndex={this.props.canFocus ? "0" : "-1"} {...props} className={classNames({ "no-focus": !this.props.canFocus }, "si-more", this.props.className)} />// eslint-disable-line react/prop-types
     );
   }
 }

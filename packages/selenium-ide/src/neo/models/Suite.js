@@ -78,7 +78,7 @@ export default class Suite {
   static fromJS = function(jsRep, projectTests) {
     const suite = new Suite(jsRep.id);
     suite.setName(jsRep.name);
-    suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({id}) => id === testId)));
+    suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({ id }) => id === testId)));
 
     return suite;
   }

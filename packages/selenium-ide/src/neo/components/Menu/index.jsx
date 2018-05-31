@@ -114,8 +114,8 @@ class Menu extends React.Component {
         }
       }
       directionStyles = {
-        top: topPosition +"px",
-        left: leftPosition +"px",
+        top: topPosition + "px",
+        left: leftPosition + "px",
         transformOrigin: `${this.props.width / 2}px 0px 0px`
       };
     }

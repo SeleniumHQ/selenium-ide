@@ -55,7 +55,7 @@ export function select() {
       active: true,
       windowId: window.contentWindowId
     }).then(function(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
+      browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: false });
     }).catch(function(reason) {
       console.log(reason);
     });
@@ -69,7 +69,7 @@ export function select() {
         console.log("No match tabs");
         UiState.setSelectingTarget(false);
       } else
-        browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true});
+        browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true });
     });
   }
 }
@@ -86,5 +86,5 @@ export function selectTarget(target) {
 
 export function endSelection(tabId) {
   UiState.setSelectingTarget(false);
-  browser.tabs.sendMessage(tabId, {selectMode: true, selecting: false});
+  browser.tabs.sendMessage(tabId, { selectMode: true, selecting: false });
 }

@@ -30,12 +30,12 @@ export default class FormInput extends React.Component {
     type: "text"
   };
   render() {
-    const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}});
+    const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);} });
     return (
       <div className="form-input">
         <label htmlFor={this.props.name}>{this.props.label}</label>
         { this.props.children
-          ?  this.props.children
+          ? this.props.children
           : <input {...props} /> }
       </div>
     );

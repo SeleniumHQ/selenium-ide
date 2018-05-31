@@ -21,10 +21,10 @@ import UiState from "./view/UiState";
 
 export default function seed(store, numberOfSuites = 5) {
   function generateSuite() {
-    return store.createSuite(generate({ words: 2}).spaced);
+    return store.createSuite(generate({ words: 2 }).spaced);
   }
   function generateTestCase() {
-    return store.createTestCase(generate({ words: 2}).spaced);
+    return store.createTestCase(generate({ words: 2 }).spaced);
   }
   const targets = ["a", "button"];
   function generateCommand(test) {
@@ -32,7 +32,7 @@ export default function seed(store, numberOfSuites = 5) {
     command.setCommand(CommandsArray[Math.floor(Math.random() * CommandsArray.length)]);
     let targetChance = Math.floor(Math.random() * 10);
     command.setTarget(targetChance < targets.length ? targets[targetChance] : "");
-    command.setValue(Math.floor(Math.random() * 2) ? generate({ words: 1}).spaced : "");
+    command.setValue(Math.floor(Math.random() * 2) ? generate({ words: 1 }).spaced : "");
     return command;
   }
   function randomBetween(min, max) {
