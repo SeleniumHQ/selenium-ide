@@ -162,6 +162,7 @@ class PlaybackState {
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.currentPlayingIndex = 0;
     this.errors = 0;
+    this.hasFailed = false;
     PluginManager.emitMessage({
       action: "event",
       event: "playbackStarted",
