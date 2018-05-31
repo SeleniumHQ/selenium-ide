@@ -100,6 +100,12 @@ function runProject(project) {
   fs.writeFileSync("package.json", JSON.stringify({
     name: project.name,
     version: "0.0.0",
+    jest: {
+      modulePaths: [path.join(__dirname, "../node_modules")],
+      setupTestFrameworkScriptFile: require.resolve("jest-environment-selenium/dist/setup.js"),
+      testEnvironment: "jest-environment-selenium",
+      testEnvironmentOptions: configuration
+    },
     dependencies: project.dependencies || {}
   }));
   project.code.forEach(suite => {
@@ -125,10 +131,6 @@ function runProject(project) {
     }
     npmInstall.then(() => {
       const child = fork(require.resolve("./child"), [
-        "--testEnvironment", "jest-environment-selenium",
-        "--setupTestFrameworkScriptFile", require.resolve("jest-environment-selenium/dist/setup.js"),
-        "--testEnvironmentOptions", JSON.stringify(configuration),
-        "--modulePaths", path.join(__dirname, "../node_modules"),
         "--testMatch", "**/*.test.js"
       ].concat(program.filter ? ["-t", program.filter] : [])
         .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
