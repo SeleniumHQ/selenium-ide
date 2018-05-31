@@ -39,10 +39,10 @@
   width: 100%;
   text-align: left;
   border-collapse: collapse;
-  overflow-y: auto;
 }
 
 .storeContainer  {
   padding: 0 10px;
   max-width: 655px;
+  overflow-y: auto;
 }

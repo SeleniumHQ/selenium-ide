@@ -19,16 +19,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { observer } from "mobx-react";
+import EditButton from "../ActionButtons/Edit";
 import "./style.css";
 
 @observer
 export default class StoredVar extends React.Component {
+  constructor(props){
+    super(props);
+    this.edit = this.edit.bind(this);
+  }
+  edit(){
+    console.log("edit");
+  }
   render() {
     return (
         <div className={classNames("row", {"isEditing": this.props.isEditing})}>
           <div className="cell index">{this.props.index}.</div>
           <div className="cell value">{this.props.keyVar} : {this.props.value}</div>
-          <div className="cell valEdit"><button>edit</button></div>
+          <div className="cell valEdit">
+            <EditButton className="editBtn" data-place="left" onClick={this.edit} />
+          </div>
         </div>
       );
   }
