@@ -1,10 +1,48 @@
-.storedVars {
+.valHeader {
+  display: table-header-group;
+  background: #FFFFFF;
+  border-bottom: 2px solid #5B5B5B;
+  font-size: 13px;
   color: #5B5B5B;
-  overflow-y: auto;
-  width: 100%;
-  font-size: 12px;
+  text-align: center;
 }
 
-.storedVars ul {
-  margin: 5px 8px;
+.storedVars .index {
+  width : 20px;
+}
+
+.valList {
+  display: table-row-group;
+}
+
+.valList .valEdit {
+  text-align: right;
+  width: 40px;
+}
+
+.valList .row:nth-child(even) {
+  background: #f2efef;
+}
+
+.storedVars .row {
+  display: table-row;
+}
+
+.valList .cell, .valHeader .head {
+  display: table-cell;
+  padding: 3px 2px;
+}
+
+.storedVars {
+  display: table;
+  border: 2px solid #FFFCFE;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  overflow-y: auto;
+}
+
+.storeContainer  {
+  padding: 0 10px;
+  max-width: 655px;
 }

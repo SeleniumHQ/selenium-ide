@@ -27,12 +27,20 @@ export default class StoredVarList extends React.Component {
   render() {
     const storedVars = getStoredVars();
     return (
-      <div className="storedVars" >
-        <ul>
-          {Object.keys(storedVars).map((storedKey, index) => (
-            <StoredVar index={index+1} key={storedKey} keyVar={storedKey} value={storedVars[storedKey]}/>
-          ))}
-        </ul>
+      <div className="storeContainer">
+        <div className="storedVars" >
+          <div className="valHeader">
+            <div className="head index">No.</div>
+            <div className="head value">values</div>
+            <div className="head valEdit"></div>
+          </div>
+
+          <div className="valList">
+            {Object.keys(storedVars).map((storedKey, index) => (
+              <StoredVar index={index+1} key={storedKey} keyVar={storedKey} value={storedVars[storedKey]}/>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

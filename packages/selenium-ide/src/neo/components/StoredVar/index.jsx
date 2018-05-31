@@ -25,9 +25,11 @@ import "./style.css";
 export default class StoredVar extends React.Component {
   render() {
     return (
-        <li className={classNames("storedVar", {"isEditing": this.props.isEditing})}>
-          <span>{this.props.index} : {this.props.keyVar} : {this.props.value}</span>
-        </li>
+        <div className={classNames("row", {"isEditing": this.props.isEditing})}>
+          <div className="cell index">{this.props.index}.</div>
+          <div className="cell value">{this.props.keyVar} : {this.props.value}</div>
+          <div className="cell valEdit"><button>edit</button></div>
+        </div>
       );
   }
   static propTypes = {
