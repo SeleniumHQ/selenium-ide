@@ -32,7 +32,7 @@ export default class Progress extends React.Component {
   };
   render() {
     return (
-      <progress className={classNames("progress", {"has-error": this.props.hasError})} value={this.props.progress} max={this.props.totalProgress}></progress>
+      <progress className={classNames("progress", { "has-error": this.props.hasError })} value={this.props.progress} max={this.props.totalProgress}></progress>
     );
   }
 }

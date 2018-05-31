@@ -138,7 +138,7 @@ export default class ExtCommand {
   }
 
   queryActiveTab(windowId) {
-    return browser.tabs.query({windowId: windowId, active: true, url: ["http://*/*", "https://*/*"]})
+    return browser.tabs.query({ windowId: windowId, active: true, url: ["http://*/*", "https://*/*"] })
       .then(function(tabs) {
         return tabs[0];
       });
@@ -223,7 +223,7 @@ export default class ExtCommand {
     return this.wait("playingTabNames", serialNumber)
       .then(function() {
         self.currentPlayingTabId = self.playingTabNames[serialNumber];
-        browser.tabs.update(self.currentPlayingTabId, {active: true});
+        browser.tabs.update(self.currentPlayingTabId, { active: true });
       });
   }
 
@@ -234,7 +234,7 @@ export default class ExtCommand {
     return browser.tabs.remove(removingTabId);
   }
 
-  doType(locator, value) {
+  doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
       if (browserName !== "Chrome") return Promise.reject(new Error("File uploading is only support in Chrome at this time"));
@@ -251,7 +251,7 @@ export default class ExtCommand {
         });
       });
     } else {
-      return this.sendMessage("type", locator, value);
+      return this.sendMessage("type", locator, value, top);
     }
   }
 

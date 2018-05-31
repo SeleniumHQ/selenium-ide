@@ -189,10 +189,10 @@ class TestRow extends React.Component {
     this.props.remove(this.props.index, this.props.command);
   }
   render() {
-    const listMenu =<ListMenu width={300} padding={-5} opener={<MoreButton /> }>
-      <ListMenuItem label={parse("x", { primaryKey: true})} onClick={this.cut}>Cut</ListMenuItem>
-      <ListMenuItem label={parse("c", { primaryKey: true})} onClick={this.copy}>Copy</ListMenuItem>
-      <ListMenuItem label={parse("v", { primaryKey: true})} onClick={this.paste}>Paste</ListMenuItem>
+    const listMenu = <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
+      <ListMenuItem label={parse("x", { primaryKey: true })} onClick={this.cut}>Cut</ListMenuItem>
+      <ListMenuItem label={parse("c", { primaryKey: true })} onClick={this.copy}>Copy</ListMenuItem>
+      <ListMenuItem label={parse("v", { primaryKey: true })} onClick={this.paste}>Paste</ListMenuItem>
       <ListMenuItem label="Del" onClick={this.remove}>Delete</ListMenuItem>
       <ListMenuSeparator />
       <ListMenuItem onClick={() => { this.props.addCommand(this.props.index); }}>Insert new command</ListMenuItem>
@@ -208,7 +208,7 @@ class TestRow extends React.Component {
 
     const rendered = <tr
       ref={node => {return(this.node = node || this.node);}}
-      className={classNames(this.props.className, this.props.status, {"selected": this.props.selected}, {"break-point": this.props.command.isBreakpoint})}
+      className={classNames(this.props.className, this.props.status, { "selected": this.props.selected }, { "break-point": this.props.command.isBreakpoint })}
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}
       onClick={this.select}
@@ -223,14 +223,14 @@ class TestRow extends React.Component {
         {!this.props.isPristine ? <span className="index">{this.props.index + 1}.</span> : null}
         {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
       </td>
-      <td className={classNames("comment", {"cell__hidden": !this.props.command.comment})} colSpan="3">
+      <td className={classNames("comment", { "cell__hidden": !this.props.command.comment })} colSpan="3">
         <MultilineEllipsis lines={1}>{this.props.command.comment}</MultilineEllipsis>
       </td>
-      <td className={classNames("command", {"cell__alternate": this.props.command.comment})}>
+      <td className={classNames("command", { "cell__alternate": this.props.command.comment })}>
         <CommandName>{this.props.command.command}</CommandName>
       </td>
-      <td className={classNames({"cell__alternate": this.props.command.comment})}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
-      <td className={classNames({"cell__alternate": this.props.command.comment})}><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
+      <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
+      <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
       <td className="buttons">
         { !this.props.isPristine ?
           listMenu

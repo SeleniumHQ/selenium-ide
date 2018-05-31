@@ -43,7 +43,7 @@ export default class CommandInput extends React.Component {
             <CommandName>{item}</CommandName>
           }
           value={this.props.value}
-          inputProps={{disabled: this.props.disabled}}
+          inputProps={{ disabled: this.props.disabled }}
           onChange={(e) => { if (this.props.onChange) this.props.onChange(e.target.value); }}
           onSelect={(value) => { if (this.props.onChange) this.props.onChange(value); }}
         />

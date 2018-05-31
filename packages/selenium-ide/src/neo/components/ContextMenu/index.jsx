@@ -55,9 +55,9 @@ export function withOnContextMenu(WrappredComponent){
       e.preventDefault();
       //click position
       if (!this.state.isOpen) {
-        this.eventPosition = { x:e.clientX, y:e.clientY };
+        this.eventPosition = { x: e.clientX, y: e.clientY };
         //send currentTarget to child component.
-        this.eventTarget=e.currentTarget;
+        this.eventTarget = e.currentTarget;
       }
       this.setState({
         isOpen: !this.state.isOpen
