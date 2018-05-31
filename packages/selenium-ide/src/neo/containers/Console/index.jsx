@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
-import StoredVarList from "../../components/StoredVarList"
+import StoredVarList from "../../components/StoredVarList";
 import ClearButton from "../../components/ActionButtons/Clear";
 import LogStore from "../../stores/view/Logs";
 import "./style.css";

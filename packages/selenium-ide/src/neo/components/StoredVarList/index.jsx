@@ -45,6 +45,5 @@ export default class StoredVarList extends React.Component {
     );
   }
   static propTypes = {
-    store: PropTypes.object
   };
 }

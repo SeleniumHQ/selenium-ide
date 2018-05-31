@@ -43,6 +43,9 @@ export default class StoredVar extends React.Component {
       );
   }
   static propTypes = {
-    store: PropTypes.object
+    isEditing: PropTypes.bool,
+    index: PropTypes.number,
+    keyVar: PropTypes.string,
+    value: PropTypes.string
   };
 }
