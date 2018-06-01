@@ -21,16 +21,18 @@ import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import StoredVarList from "../../components/StoredVarList";
 import ClearButton from "../../components/ActionButtons/Clear";
+import RefreshButton from "../../components/ActionButtons/Refresh";
 import LogStore from "../../stores/view/Logs";
 import "./style.css";
 
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeTab : "Log" };
+    this.state = { activeTab : "Log", refresh: 0 };
     this.store = new LogStore();
     this.handleTabChanged = this.handleTabChanged.bind(this);
     this.tabClicked = this.tabClicked.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
   componentWillUnmount() {
     this.store.dispose();
@@ -41,17 +43,26 @@ export default class Console extends React.Component {
   tabClicked(tab){
     this.props.restoreSize();
   }
+  refresh(){
+    this.setState({refresh: !this.state.refresh});
+  }
   render() {
-    const consoleBox ={
-      "Log" :<LogList store={this.store} />,
-      "Stored-Vars" : <StoredVarList />
+    const buttonsBox = {
+      "Log" : <ClearButton onClick={this.store.clearLogs} />,
+      "Stored-Vars" : <RefreshButton onClick={this.refresh} />
     };
+
+    const consoleBox = {
+      "Log" : <LogList store={this.store} />,
+      "Stored-Vars" : <StoredVarList refresh={this.state.refresh}/>
+    };
+
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
         <TabBar tabs={Object.keys(consoleBox)} tabWidth={100} buttonsMargin={0} tabChanged={this.handleTabChanged} tabClicked={this.tabClicked}>
-          <ClearButton onClick={this.store.clearLogs} />
+          {buttonsBox[this.state.activeTab]}
         </TabBar>
         {consoleBox[this.state.activeTab]}
       </footer>
