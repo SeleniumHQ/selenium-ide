@@ -41,6 +41,10 @@
   box-shadow: 0 0 0 1px #CECECE inset;
 }
 
+.row:hover .deleteBtn {
+  opacity: 1;
+}
+
 .row .storedVar .value:focus {
   box-shadow: 0 0 0 1px #A8A8A8 inset;
   cursor: initial;
@@ -54,4 +58,5 @@
 
 .deleteBtn {
   font-size: 14px;
+  opacity: 0;
 }
