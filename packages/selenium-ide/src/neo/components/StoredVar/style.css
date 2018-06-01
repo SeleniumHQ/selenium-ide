@@ -47,6 +47,11 @@
   outline: 0;
 }
 
-.editBtn {
+.row .valDel {
+  text-align: right;
+  width: 40px;
+}
+
+.deleteBtn {
   font-size: 14px;
 }

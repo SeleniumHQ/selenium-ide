@@ -15,11 +15,6 @@
   display: table-row-group;
 }
 
-.valList .valEdit {
-  text-align: right;
-  width: 40px;
-}
-
 .valList .row:nth-child(even) {
   background: #f2efef;
 }

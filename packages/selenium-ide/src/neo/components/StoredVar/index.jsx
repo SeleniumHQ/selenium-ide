@@ -45,7 +45,7 @@ export default class StoredVar extends React.Component {
         <div className="cell storedVar">
           <ContentEditable className="value" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.value} />
         </div>
-        <div className="cell valEdit">
+        <div className="cell valDel">
           <DeleteButton className="deleteBtn" data-place="left" />
         </div>
       </div>
