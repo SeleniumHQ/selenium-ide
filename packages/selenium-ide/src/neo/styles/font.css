@@ -100,3 +100,6 @@
 .si-delete:before {
   content: "\e920";
 }
+.si-refresh:before {
+  content: "\e921";
+}
