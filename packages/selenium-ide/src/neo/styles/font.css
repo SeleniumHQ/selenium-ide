@@ -97,3 +97,6 @@
 .si-stop:before {
   content: "\e90f";
 }
+.si-delete:before {
+  content: "\e920";
+}
