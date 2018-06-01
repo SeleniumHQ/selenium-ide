@@ -34,7 +34,7 @@
 }
 
 .storeContainer  {
-  padding: 0 10px;
+  padding: 0 10px 20px;
   overflow-y: auto;
   overflow-x: hidden;
 }
