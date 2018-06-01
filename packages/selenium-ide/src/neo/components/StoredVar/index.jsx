@@ -17,7 +17,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import { observer } from "mobx-react";
 import ContentEditable from "react-contenteditable";
 import DeleteButton from "../ActionButtons/Delete";
@@ -38,7 +37,7 @@ export default class StoredVar extends React.Component {
   }
   render() {
     return (
-      <div className={classNames("row", {"isEditing": this.props.isEditing})}>
+      <div className="row">
         <div className="cell index">{this.props.index}.</div>
         <div className="cell storedKey">{this.props.keyVar}</div>
         <div className="cell col">:</div>
