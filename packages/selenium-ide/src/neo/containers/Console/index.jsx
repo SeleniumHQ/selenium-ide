@@ -27,7 +27,7 @@ import "./style.css";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state={ activeIndex: 0 };
+    this.state = { activeTab : "Log" };
     this.store = new LogStore();
     this.handleTabChanged = this.handleTabChanged.bind(this);
     this.tabClicked = this.tabClicked.bind(this);
@@ -35,7 +35,7 @@ export default class Console extends React.Component {
   componentWillUnmount() {
     this.store.dispose();
   }
-  handleTabChanged(tab, index){
+  handleTabChanged(tab){
     this.setState({activeTab: tab});
   }
   tabClicked(tab){
