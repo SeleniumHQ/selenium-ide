@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { observer } from "mobx-react";
 import ContentEditable from "react-contenteditable";
-import EditButton from "../ActionButtons/Edit";
+import DeleteButton from "../ActionButtons/Delete";
 import "./style.css";
 
 @observer
@@ -46,7 +46,7 @@ export default class StoredVar extends React.Component {
           <ContentEditable className="value" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.value} />
         </div>
         <div className="cell valEdit">
-          <EditButton className="editBtn" data-place="left" />
+          <DeleteButton className="deleteBtn" data-place="left" />
         </div>
       </div>
     );
