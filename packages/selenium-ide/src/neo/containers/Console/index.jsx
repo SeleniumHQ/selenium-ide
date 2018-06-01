@@ -54,7 +54,7 @@ export default class Console extends React.Component {
 
     const consoleBox = {
       "Log" : <LogList store={this.store} />,
-      "Stored-Vars" : <StoredVarList refresh={this.state.refresh}/>
+      "Stored-Vars" : <StoredVarList refresh={this.refresh}/>
     };
 
     return (

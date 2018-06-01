@@ -33,6 +33,9 @@ export default class StoredVar extends React.Component {
   handleChange(e) {
     this.props.edit(this.props.keyVar, e.target.value);
   }
+  delete(){
+    this.props.delete(this.props.keyVar);
+  }
   render() {
     return (
       <div className="row">
@@ -43,7 +46,7 @@ export default class StoredVar extends React.Component {
           <ContentEditable className="value" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.value} />
         </div>
         <div className="cell valDel">
-          <DeleteButton className="deleteBtn" data-place="left" />
+          <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />
         </div>
       </div>
     );

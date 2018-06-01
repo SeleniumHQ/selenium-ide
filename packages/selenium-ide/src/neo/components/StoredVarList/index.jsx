@@ -17,7 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { getStoredVars, setStoredVar } from "../../IO/SideeX/formatCommand";
+import { getStoredVars, setStoredVar, deleteStoredVar } from "../../IO/SideeX/formatCommand";
 import StoredVar from "../StoredVar";
 import "./style.css";
 
@@ -25,9 +25,14 @@ export default class StoredVarList extends React.Component {
   constructor(props){
     super(props);
     this.editStoredVar = this.editStoredVar.bind(this);
+    this.deleteStoredVar = this.deleteStoredVar.bind(this);
   }
   editStoredVar(key, value){
     setStoredVar(key, value);
+  }
+  deleteStoredVar(key){
+    deleteStoredVar(key);
+    this.props.refresh();
   }
   render() {
     const storedVars = getStoredVars();
@@ -47,7 +52,8 @@ export default class StoredVarList extends React.Component {
                 index={index+1}
                 keyVar={storedKey}
                 value={storedVars[storedKey]}
-                edit={this.editStoredVar}/>
+                edit={this.editStoredVar}
+                delete={this.deleteStoredVar}/>
             ))}
           </div>
         </div>

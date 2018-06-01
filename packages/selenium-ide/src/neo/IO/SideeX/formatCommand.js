@@ -85,4 +85,8 @@ export function setStoredVar(key, value){
   return retVal;
 }
 
+export function deleteStoredVar(key){
+  delete declaredVars[key];
+}
+
 browser.runtime.onMessage.addListener(handleFormatCommand);
