@@ -17,12 +17,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { observer } from "mobx-react";
 import { getStoredVars, setStoredVar } from "../../IO/SideeX/formatCommand";
 import StoredVar from "../StoredVar";
 import "./style.css";
 
-@observer
 export default class StoredVarList extends React.Component {
   constructor(props){
     super(props);

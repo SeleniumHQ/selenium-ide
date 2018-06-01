@@ -17,12 +17,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { observer } from "mobx-react";
 import ContentEditable from "react-contenteditable";
 import DeleteButton from "../ActionButtons/Delete";
 import "./style.css";
 
-@observer
 export default class StoredVar extends React.Component {
   constructor(props){
     super(props);
