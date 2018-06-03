@@ -17,6 +17,7 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
+import { js_beautify as beautify } from "js-beautify";
 import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "./legacy/migrate";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
@@ -73,7 +74,7 @@ function downloadProject(project) {
     Object.assign(project, Manager.emitDependencies());
     return browser.downloads.download({
       filename: project.name + ".side",
-      url: createBlob("application/json", JSON.stringify(project)),
+      url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
       saveAs: true,
       conflictAction: "overwrite"
     });
