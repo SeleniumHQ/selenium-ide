@@ -40,3 +40,10 @@ export default class Changelog extends React.Component {
     return null;
   }
 }
+
+export function showChangelog() {
+  ModalState.showAlert({
+    title: "What's new",
+    description: changelog
+  });
+}
