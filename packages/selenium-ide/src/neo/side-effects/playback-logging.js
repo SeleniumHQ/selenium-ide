@@ -81,7 +81,10 @@ export default class PlaybackLogger {
           log.setStatus(LogTypes.Success);
           break;
       }
-      log.setDescription(status.message);
+      if (status.state !== PlaybackStates.Pending) {
+        // In pending the description is used as the message
+        log.setDescription(status.message);
+      }
       if (shouldAddLog) {
         logger.log(log);
       }
