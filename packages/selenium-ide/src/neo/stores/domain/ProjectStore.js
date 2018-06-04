@@ -57,7 +57,12 @@ export default class ProjectStore {
   }
 
   @action.bound addUrl(url) {
-    this._urls.push(url);
+    if (!this._urls.find((u) => (u === url)))
+      this._urls.push(url);
+  }
+
+  @action.bound addCurrentUrl() {
+    this.addUrl(this.url);
   }
 
   @action.bound changeName(name) {
