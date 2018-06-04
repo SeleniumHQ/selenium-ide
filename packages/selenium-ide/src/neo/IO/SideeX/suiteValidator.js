@@ -26,17 +26,13 @@ export default class SuiteValidator{
   process() {
     for(let i = 0; i < this.commandNamesArray.length; i++) {
       const commandName = this.commandNamesArray[i];
-      if(!this.isControlFlowFunction(commandName)) {
-        continue;
-      }
+      if(!this.isControlFlowFunction(commandName)) continue;
       if (!["end", "repeatIf"].includes(commandName)) {
         this.processBlock(commandName, i);
       } else {
         this.processBlockEnd(commandName, i);
       }
-      if(this.isIntermediateValid() !== true) {
-        break;
-      }
+      if(this.isIntermediateValid() !== true) break;
     }
   }
 
@@ -64,12 +60,13 @@ export default class SuiteValidator{
   }
 
   isLoopOpen() {
+    let loopIsPresent = false;
     ["times", "do", "while"].forEach((loop) => {
       if (this.blocksStack.includes(loop)) {
-        return true;
+        loopIsPresent = true;
       }
     });
-    return false;
+    return loopIsPresent;
   }
 
   processBlockEnd(command, i) {
@@ -108,7 +105,7 @@ export default class SuiteValidator{
   }
 
   isIntermediateValid() {
-    if(this.error["index"]) {
+    if(this.error["error"]) {
       return this.error;
     } else {
       return true;
