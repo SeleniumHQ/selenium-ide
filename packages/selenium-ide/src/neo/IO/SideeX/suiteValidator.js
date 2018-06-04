@@ -15,15 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
-// For now it iterates through commands array twice. Not sure how to avoid that for now
-
 export default class SuiteValidator{
-  constructor(commandsArray) {
+  constructor(commandNamesArray) {
     this.blocksStack = [];
-    this.commandNamesArray = commandsArray.map((command) => {
-      return command.command;
-    });
+    this.commandNamesArray = commandNamesArray;
     this.error = {};
     this.process();
   }
@@ -31,12 +26,17 @@ export default class SuiteValidator{
   process() {
     for(let i = 0; i < this.commandNamesArray.length; i++) {
       const commandName = this.commandNamesArray[i];
-      if (!this.isBlockEnder(commandName)) {
+      if(!this.isControlFlowFunction(commandName)) {
+        continue;
+      }
+      if (!["end", "repeatIf"].includes(commandName)) {
         this.processBlock(commandName, i);
       } else {
         this.processBlockEnd(commandName, i);
       }
-      if(this.isIntermediateValid() !== true) break;
+      if(this.isIntermediateValid() !== true) {
+        break;
+      }
     }
   }
 
@@ -84,10 +84,10 @@ export default class SuiteValidator{
   }
 
   closeEndBlock(index) {
-    if(["if", "elseIf"].includes(this.blocksStack[this.blocksStack.length-1])) {
+    if(["else", "elseIf"].includes(this.blocksStack[this.blocksStack.length-1])) {
       // remove all of the if-elseIf-else commands from the stack
       const lastIfCommandIndex = this.blocksStack.lastIndexOf("if");
-      this.blocksStack.splice(lastIfCommandIndex, this.blocksStack.length-1-lastIfCommandIndex);
+      this.blocksStack.splice(lastIfCommandIndex, this.blocksStack.length-lastIfCommandIndex);
     } else if (this.blocksStack[this.blocksStack.length-1] === "do") {
       this.error = {index: index, error: "'do' must be enclosed with 'repeatIf'"};
     } else {
@@ -123,6 +123,18 @@ export default class SuiteValidator{
     if(this.blocksStack.length > 0) {
       this.error = {index: this.findLastCommand(this.blocksStack[this.blocksStack.length-1]), error: "Error with the syntax"};
     }
+    return this.isIntermediateValid();
+  }
+
+  isControlFlowFunction(command) {
+    return ["if", "elseIf", "else", "while",
+      "times", "repeatIf", "do", "end",
+      "continue", "break"].includes(command);
+  }
+
+  static validateCommands(commandsArray) {
+    let validator = new SuiteValidator(commandsArray);
+    return validator.isValid();
   }
 }
 
