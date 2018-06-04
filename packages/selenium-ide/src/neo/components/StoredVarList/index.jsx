@@ -17,22 +17,37 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import StoredVar, { StoredVarAddBtn } from "../StoredVar";
 import { getStoredVars, setStoredVar, deleteStoredVar } from "../../IO/SideeX/formatCommand";
-import StoredVar from "../StoredVar";
 import "./style.css";
 
 export default class StoredVarList extends React.Component {
   constructor(props){
     super(props);
+    this.state = { add:false };
     this.editStoredVar = this.editStoredVar.bind(this);
     this.deleteStoredVar = this.deleteStoredVar.bind(this);
+    this.addStoredVar = this.addStoredVar.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
   editStoredVar(key, value){
     setStoredVar(key, value);
+    this.setState({ add : false });
   }
   deleteStoredVar(key){
     deleteStoredVar(key);
+    this.setState({ add : false });
+  }
+  addStoredVar(key, value){
+    setStoredVar(key, value);
+    this.setState({ add : false });
+  }
+  refresh(){
+    this.setState({ add : false });
     this.props.refresh();
+  }
+  add(){
+    this.setState({ add : true });
   }
   render() {
     const storedVars = getStoredVars();
@@ -53,10 +68,20 @@ export default class StoredVarList extends React.Component {
                 keyVar={storedKey}
                 value={storedVars[storedKey]}
                 edit={this.editStoredVar}
-                delete={this.deleteStoredVar}/>
+                delete={this.deleteStoredVar}
+                refresh={this.refresh}
+                />
             ))}
+            {this.state.add ?
+              <StoredVar
+                delete={this.deleteStoredVar}
+                add={this.addStoredVar}
+                refresh={this.refresh}
+                />
+                : <StoredVarAddBtn add={this.add.bind(this)}/>}
           </div>
         </div>
+
       </div>
     );
   }

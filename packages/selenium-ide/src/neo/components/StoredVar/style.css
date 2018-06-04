@@ -60,3 +60,12 @@
   font-size: 14px;
   opacity: 0;
 }
+
+.row .add {
+  text-align: center;
+}
+
+.row .adding{
+  padding: 0;
+  line-height: 14px;
+}

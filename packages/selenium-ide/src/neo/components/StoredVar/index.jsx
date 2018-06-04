@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ContentEditable from "react-contenteditable";
 import DeleteButton from "../ActionButtons/Delete";
+import AddButton from "../../components/ActionButtons/Add";
 import "./style.css";
 
 export default class StoredVar extends React.Component {
@@ -26,9 +27,17 @@ export default class StoredVar extends React.Component {
     super(props);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.keyChanged = this.keyChanged.bind(this);
+    this.valueChanged = this.valueChanged.bind(this);
+    this.saveValue = { key:"", value:"" };
   }
   handleKeyDown(e) {
-    if (e.key === "Enter") e.preventDefault();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if(this.saveValue.key && this.saveValue.value){
+        this.props.add(this.saveValue.key, this.saveValue.value);
+      }
+    }
   }
   handleChange(e) {
     this.props.edit(this.props.keyVar, e.target.value);
@@ -36,14 +45,21 @@ export default class StoredVar extends React.Component {
   delete(){
     this.props.delete(this.props.keyVar);
   }
+  keyChanged(e) {
+    this.saveValue.key = e.target.value;
+  }
+  valueChanged(e) {
+    this.saveValue.value = e.target.value;
+  }
   render() {
     return (
       <div className="row">
-        <div className="cell index">{this.props.index}.</div>
-        <div className="cell storedKey">{this.props.keyVar}</div>
+        <div className="cell index">{this.props.index} {this.props.add ? "" : "."}</div>
+        <div className="cell storedKey">{this.props.add ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.keyChanged} className="adding"/> : this.props.keyVar}</div>
         <div className="cell col">:</div>
         <div className="cell storedVar">
-          <ContentEditable className="value" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.value} />
+          {this.props.add ? <input type="text" className="adding" onKeyDown={this.handleKeyDown} onChange={this.valueChanged}/> :
+          <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} />}
         </div>
         <div className="cell valDel">
           <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />
@@ -58,4 +74,16 @@ export default class StoredVar extends React.Component {
     value: PropTypes.string,
     edit: PropTypes.func
   };
+}
+
+export class StoredVarAddBtn extends React.Component {
+  render() {
+    return (
+      <div className="row">
+        <div className="cell index"></div>
+        <div className="cell add"><AddButton onClick={this.props.add}/></div>
+        <div className="cell storedVar"></div>
+      </div>
+    );
+  }
 }

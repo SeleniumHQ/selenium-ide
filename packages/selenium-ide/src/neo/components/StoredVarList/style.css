@@ -7,6 +7,9 @@
   text-align: center;
 }
 
+.row {
+  width:100%
+}
 .storedVars .index {
   width : 20px;
 }
