@@ -58,8 +58,8 @@ export default class StoredVar extends React.Component {
         <div className="cell storedKey">{this.props.add ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.keyChanged} className="adding"/> : this.props.keyVar}</div>
         <div className="cell col">:</div>
         <div className="cell storedVar">
-          {this.props.add ? <input type="text" className="adding" onKeyDown={this.handleKeyDown} onChange={this.valueChanged}/> :
-          <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} />}
+          {this.props.add ? <input type="text" className="adding" onKeyDown={this.handleKeyDown} onChange={this.valueChanged} /> :
+          <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} onKeyDown={this.handleKeyDown} />}
         </div>
         <div className="cell valDel">
           <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />
