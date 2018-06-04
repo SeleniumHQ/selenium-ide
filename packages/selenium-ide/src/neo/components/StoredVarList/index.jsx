@@ -55,9 +55,9 @@ export default class StoredVarList extends React.Component {
       <div className="storeContainer">
         <div className="storedVars" >
           <div className="valHeader">
-            <div className="head index">No.</div>
-            <div className="head value">values</div>
-            <div className="head valEdit"></div>
+            <div className="index">No.</div>
+            <div className="value">values</div>
+            <div className="valEdit"></div>
           </div>
 
           <div className="valList">

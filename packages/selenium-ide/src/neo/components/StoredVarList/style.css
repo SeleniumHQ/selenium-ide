@@ -7,11 +7,9 @@
   text-align: center;
 }
 
-.row {
-  width:100%
-}
-.storedVars .index {
-  width : 20px;
+.valHeader div {
+  display: table-cell;
+  padding: 3px 2px;
 }
 
 .valList {
@@ -22,11 +20,6 @@
   background: #f2efef;
 }
 
-.valHeader .head {
-  display: table-cell;
-  padding: 3px 2px;
-}
-
 .storedVars {
   display: table;
   border: 2px solid #FFFCFE;
@@ -34,6 +27,10 @@
   text-align: left;
   border-collapse: collapse;
   max-width: 655px;
+}
+
+.storedVars .index {
+  width : 20px;
 }
 
 .storeContainer  {
