@@ -52,7 +52,7 @@ export default class TabBar extends React.Component {
       });
       if (this.props.tabChanged) this.props.tabChanged(tab, index);
     }
-    if (this.props.tabClicked) this.props.tabClicked(tab);
+    if (this.props.tabClicked) this.props.tabClicked();
   }
   render() {
     return (

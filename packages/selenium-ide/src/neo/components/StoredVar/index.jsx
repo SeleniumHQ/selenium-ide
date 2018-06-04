@@ -29,7 +29,7 @@ export default class StoredVar extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.keyChanged = this.keyChanged.bind(this);
     this.valueChanged = this.valueChanged.bind(this);
-    this.saveValue = { key:"", value:"" };
+    this.saveValue = { key: "", value: "" };
   }
   handleKeyDown(e) {
     if (e.key === "Enter") {
@@ -59,7 +59,7 @@ export default class StoredVar extends React.Component {
         <div className="cell col">:</div>
         <div className="cell storedVar">
           {this.props.add ? <input type="text" className="adding" onKeyDown={this.handleKeyDown} onChange={this.valueChanged} /> :
-          <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} onKeyDown={this.handleKeyDown} />}
+            <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} onKeyDown={this.handleKeyDown} />}
         </div>
         <div className="cell valDel">
           <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />
@@ -72,11 +72,16 @@ export default class StoredVar extends React.Component {
     index: PropTypes.number,
     keyVar: PropTypes.string,
     value: PropTypes.string,
-    edit: PropTypes.func
+    edit: PropTypes.func,
+    delete: PropTypes.func,
+    add: PropTypes.func
   };
 }
 
 export class StoredVarAddBtn extends React.Component {
+  static propTypes = {
+    add: PropTypes.func
+  }
   render() {
     return (
       <div className="row">

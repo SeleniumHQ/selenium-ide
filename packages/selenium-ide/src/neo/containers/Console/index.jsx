@@ -28,7 +28,7 @@ import "./style.css";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeTab : "Log", refresh: 0 };
+    this.state = { activeTab: "Log", refresh: 0 };
     this.store = new LogStore();
     this.handleTabChanged = this.handleTabChanged.bind(this);
     this.tabClicked = this.tabClicked.bind(this);
@@ -37,24 +37,24 @@ export default class Console extends React.Component {
   componentWillUnmount() {
     this.store.dispose();
   }
-  handleTabChanged(tab){
-    this.setState({activeTab: tab});
+  handleTabChanged(tab) {
+    this.setState({ activeTab: tab });
   }
-  tabClicked(tab){
+  tabClicked() {
     this.props.restoreSize();
   }
-  refresh(){
-    this.setState({refresh: !this.state.refresh});
+  refresh() {
+    this.setState({ refresh: !this.state.refresh });
   }
   render() {
     const buttonsBox = {
-      "Log" : <ClearButton onClick={this.store.clearLogs} />,
-      "Stored-Vars" : <RefreshButton onClick={this.refresh} />
+      "Log": <ClearButton onClick={this.store.clearLogs} />,
+      "Stored-Vars": <RefreshButton onClick={this.refresh} />
     };
 
     const consoleBox = {
-      "Log" : <LogList store={this.store} />,
-      "Stored-Vars" : <StoredVarList refresh={this.refresh}/>
+      "Log": <LogList store={this.store} />,
+      "Stored-Vars": <StoredVarList refresh={this.refresh}/>
     };
 
     return (

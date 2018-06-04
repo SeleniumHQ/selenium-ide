@@ -24,7 +24,7 @@ import "./style.css";
 export default class StoredVarList extends React.Component {
   constructor(props){
     super(props);
-    this.state = { add:false };
+    this.state = { add: false };
     this.editStoredVar = this.editStoredVar.bind(this);
     this.deleteStoredVar = this.deleteStoredVar.bind(this);
     this.addStoredVar = this.addStoredVar.bind(this);
@@ -32,22 +32,22 @@ export default class StoredVarList extends React.Component {
   }
   editStoredVar(key, value){
     setStoredVar(key, value);
-    this.setState({ add : false });
+    this.setState({ add: false });
   }
   deleteStoredVar(key){
     deleteStoredVar(key);
-    this.setState({ add : false });
+    this.setState({ add: false });
   }
   addStoredVar(key, value){
     setStoredVar(key, value);
-    this.setState({ add : false });
+    this.setState({ add: false });
   }
   refresh(){
-    this.setState({ add : false });
+    this.setState({ add: false });
     this.props.refresh();
   }
   add(){
-    this.setState({ add : true });
+    this.setState({ add: true });
   }
   render() {
     const storedVars = getStoredVars();
@@ -64,21 +64,21 @@ export default class StoredVarList extends React.Component {
             {Object.keys(storedVars).map((storedKey, index) => (
               <StoredVar
                 key={storedKey}
-                index={index+1}
+                index={index + 1}
                 keyVar={storedKey}
                 value={storedVars[storedKey]}
                 edit={this.editStoredVar}
                 delete={this.deleteStoredVar}
                 refresh={this.refresh}
-                />
+              />
             ))}
             {this.state.add ?
               <StoredVar
                 delete={this.deleteStoredVar}
                 add={this.addStoredVar}
                 refresh={this.refresh}
-                />
-                : <StoredVarAddBtn add={this.add.bind(this)}/>}
+              />
+              : <StoredVarAddBtn add={this.add.bind(this)}/>}
           </div>
         </div>
 
@@ -86,5 +86,6 @@ export default class StoredVarList extends React.Component {
     );
   }
   static propTypes = {
+    refresh: PropTypes.func
   };
 }
