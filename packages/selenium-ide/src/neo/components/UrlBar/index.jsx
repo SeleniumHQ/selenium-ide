@@ -37,7 +37,6 @@ export default class UrlBar extends React.Component {
               type: "url",
               placeholder: "Playback base URL"
             }}
-            shouldItemRender={(item, value) => (item.indexOf(value) !== -1)}
             onChange={(e) => {this.props.setUrl(e.target.value);}}
             onSelect={this.props.setUrl}
           />
