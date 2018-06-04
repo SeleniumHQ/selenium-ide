@@ -60,6 +60,20 @@ describe("Project Store", () => {
     store.addUrl(url);
     expect(store.urls.length).toBe(1);
   });
+  it("should not add duplicates to the url list", () => {
+    const store = new ProjectStore();
+    const url = "http://www.seleniumhq.org/";
+    store.addUrl(url);
+    store.addUrl(url);
+    expect(store.urls.length).toBe(1);
+  });
+  it("should add the current url to the cache", () => {
+    const store = new ProjectStore();
+    store.setUrl("http://www.seleniumhq.org/");
+    expect(store.urls.length).toBe(0);
+    store.addCurrentUrl();
+    expect(store.urls.length).toBe(1);
+  });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();
     expect(store.tests.length).toBe(0);

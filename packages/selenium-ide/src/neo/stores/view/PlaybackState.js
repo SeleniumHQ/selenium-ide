@@ -57,6 +57,7 @@ class PlaybackState {
   }
 
   beforePlaying(play) {
+    UiState._project.addCurrentUrl();
     if (UiState.isRecording) {
       ModalState.showAlert({
         title: "Stop recording",
