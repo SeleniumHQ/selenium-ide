@@ -17,7 +17,7 @@
 
 import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
-import SortBy from "sort-array";
+import naturalCompare from "string-natural-compare";
 
 export const DEFAULT_TIMEOUT = 300;
 
@@ -35,7 +35,9 @@ export default class Suite {
   }
 
   @computed get tests() {
-    return SortBy(this._tests, "name");
+    return this._tests.sort((t1, t2) => (
+      naturalCompare(t1.name, t2.name)
+    ));
   }
 
   isTest(test) {

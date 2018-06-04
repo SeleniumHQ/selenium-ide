@@ -93,6 +93,12 @@ describe("Project Store", () => {
     const test = store.createTestCase("my test");
     expect(test.name).toBe("my test");
   });
+  it("should rename a test with a name that already exists", () => {
+    const store = new ProjectStore();
+    store.createTestCase("my test");
+    const test2 = store.createTestCase("my test");
+    expect(test2.name).toBe("my test (1)");
+  });
   it("should create a suite", () => {
     const store = new ProjectStore();
     expect(store.suites.length).toBe(0);

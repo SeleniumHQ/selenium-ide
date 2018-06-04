@@ -19,6 +19,7 @@ import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { js_beautify as beautify } from "js-beautify";
 import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "./legacy/migrate";
+import TestCase from "../models/TestCase";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "selianize";
@@ -138,7 +139,8 @@ export function loadProject(project, file) {
             project.fromJS(migrateProject(files));
           });
         } else if (type === FileTypes.TestCase) {
-          project.fromJS(migrateTestCase(contents));
+          const { test } = migrateTestCase(contents);
+          project.addTestCase(TestCase.fromJS(test));
         }
       } catch (error) {
         displayError(error);
