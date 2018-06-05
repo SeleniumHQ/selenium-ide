@@ -50,7 +50,7 @@ export default class TabBar extends React.Component {
       this.setState({
         activeTab: { tab, index }
       });
-      if (this.props.tabChanged) this.props.tabChanged(tab, index);
+      if (this.props.tabChanged) this.props.tabChanged(tab);
     }
     if (this.props.tabClicked) this.props.tabClicked();
   }
