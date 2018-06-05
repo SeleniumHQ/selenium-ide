@@ -41,6 +41,7 @@ export default class Console extends React.Component {
     this.setState({ activeTab: tab });
   }
   tabClicked() {
+    this.refresh();
     this.props.restoreSize();
   }
   refresh() {
