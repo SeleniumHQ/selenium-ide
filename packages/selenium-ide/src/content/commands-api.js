@@ -42,6 +42,20 @@ function doCommands(request, sender, sendResponse) {
       selenium["doDomWait"]("", selenium.preprocessParameter(""));
       sendResponse({ dom_time: window.sideex_new_page });
     } else if (isConditinal(request.commands)) {
+      window.addEventListener("message", function(event) {
+        console.log("event: ", event);
+        console.log("sandbox eval result:", event.data.evaluationResult);
+      });
+
+      let iframe = document.getElementById("evalSandboxFrame");
+      let message = {
+        command: "evaluateCommand",
+        evaluationCommand: "'test' + 1"
+      };
+      iframe.contentWindow.postMessage(message, "*");
+
+      console.log(document);
+
       executeConditional(request, sendResponse);
     } else {
       const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);

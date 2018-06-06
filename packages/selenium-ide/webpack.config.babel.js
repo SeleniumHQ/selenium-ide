@@ -236,6 +236,7 @@ export default {
       { from: "content/prompt.js", to: "./" },
       { from: "content/prompt.css", to: "./" },
       { from: "content/bootstrap.html", to: "./" },
+      { from: "sandbox/sandbox.html", to: "./" },
       { from: "manifest.json", to: "../" },
       { from: "icons", to: "../icons" }
     ]),

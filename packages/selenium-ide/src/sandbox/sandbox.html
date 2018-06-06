@@ -1,0 +1,41 @@
+<!--
+  - Copyright (c) 2012 The Chromium Authors. All rights reserved.
+  - Use of this source code is governed by a BSD-style license that can be
+  - found in the LICENSE file.
+  -->
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<script id="hello-world-template" type="text/x-handlebars-template">
+    <div class="entry">
+        <h1>Hello, {{thing}}!</h1>
+    </div>
+</script>
+<script>
+  // Set up message event handler:
+  window.addEventListener('message', function(event) {
+    var command = event.data.command;
+    var name = event.data.name || 'hello';
+    var evaluationCommand = event.data.evaluationCommand;
+    console.log("event.data", event.data);
+    switch(command) {
+      case 'evaluateCommand':
+        event.source.postMessage({
+          name: name,
+          evaluationResult: eval(evaluationCommand)
+        }, event.origin);
+        break;
+
+      // You could imagine additional functionality. For instance:
+      //
+      // case 'new':
+      //   templates[event.data.name] = Handlebars.compile(event.data.source);
+      //   event.source.postMessage({name: name, success: true}, event.origin);
+      //   break;
+    }
+  });
+</script>
+</body>
+</html>
