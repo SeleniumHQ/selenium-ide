@@ -37,10 +37,7 @@ export default class Command {
 
   @action.bound clone() {
     const clone = new Command();
-    clone.setComment(this.comment);
-    clone.setCommand(this.command);
-    clone.setTarget(this.target);
-    clone.setValue(this.value);
+    clone.setData(this.export());
     return clone;
   }
 
@@ -68,6 +65,13 @@ export default class Command {
     this.isBreakpoint = !this.isBreakpoint;
   }
 
+  @action.bound setData(jsRep){
+    this.setComment(jsRep.comment);
+    this.setCommand(jsRep.command);
+    this.setTarget(jsRep.target);
+    this.setValue(jsRep.value);
+  }
+
   export() {
     return {
       id: this.id,
@@ -80,11 +84,7 @@ export default class Command {
 
   static fromJS = function(jsRep) {
     const command = new Command(jsRep.id);
-    command.setComment(jsRep.comment);
-    command.setCommand(jsRep.command);
-    command.setTarget(jsRep.target);
-    command.setValue(jsRep.value);
-
+    command.setData(jsRep);
     return command;
   }
 }
@@ -104,7 +104,7 @@ class CommandList {
     [ "answerOnNextPrompt", {
       name: "answer on next prompt"
     }],
-    [ "assertAlert",  {
+    [ "assertAlert", {
       name: "assert alert"
     }],
     [ "assertChecked", {
@@ -145,8 +145,16 @@ class CommandList {
       name: "assert not selected value",
       type: TargetTypes.LOCATOR
     }],
+    [ "assertSelectedLabel", {
+      name: "assert selected label",
+      type: TargetTypes.LOCATOR
+    }],
     [ "assertText", {
       name: "assert text",
+      type: TargetTypes.LOCATOR
+    }],
+    [ "assertNotText", {
+      name: "assert not text",
       type: TargetTypes.LOCATOR
     }],
     [ "assertTitle", {
@@ -171,6 +179,14 @@ class CommandList {
     }],
     [ "clickAt", {
       name: "click at",
+      type: TargetTypes.LOCATOR
+    }],
+    [ "check", {
+      name: "check",
+      type: TargetTypes.LOCATOR
+    }],
+    [ "uncheck", {
+      name: "uncheck",
       type: TargetTypes.LOCATOR
     }],
     [ "doubleClick", {
@@ -297,11 +313,19 @@ class CommandList {
       name: "verify text",
       type: TargetTypes.LOCATOR
     }],
+    [ "verifyNotText", {
+      name: "verify not text",
+      type: TargetTypes.LOCATOR
+    }],
     [ "verifyTitle", {
       name: "verify title"
     }],
     [ "verifyValue", {
       name: "verify value",
+      type: TargetTypes.LOCATOR
+    }],
+    [ "verifySelectedLabel", {
+      name: "verify selected label",
       type: TargetTypes.LOCATOR
     }],
     [ "webdriverAnswerOnNextPrompt", {

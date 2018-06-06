@@ -121,7 +121,7 @@ class ModalState {
       editing: true,
       isParallel: suite.isParallel,
       timeout: suite.timeout,
-      done: ({isParallel, timeout}) => {
+      done: ({ isParallel, timeout }) => {
         suite.setTimeout(timeout);
         suite.setParallel(isParallel);
         this.cancelSuiteSettings();

@@ -24,7 +24,7 @@ export default class FormTextArea extends React.Component {
     onChange: PropTypes.func
   };
   render() {
-    const props = Object.assign({ rows: "1" }, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}});
+    const props = Object.assign({ rows: "1" }, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);} });
     return (
       <Input {...props}><textarea {...props}></textarea></Input>
     );

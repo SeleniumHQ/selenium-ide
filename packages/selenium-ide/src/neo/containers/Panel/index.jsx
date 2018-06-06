@@ -30,6 +30,7 @@ import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import modify from "../../side-effects/modify";
+import SuiteDropzone from "../../components/SuiteDropzone";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -73,6 +74,27 @@ if (process.env.NODE_ENV === "production") {
 }
 
 modify(project);
+
+function firefox57WorkaroundForBlankPanel () {
+  // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
+  // browser. windows. create () displays blank windows (panel, popup or detached_panel)
+  // The trick to display content is to resize the window...
+  // We do not check the browser since this doesn't affect chrome at all
+
+  function getCurrentWindow () {
+    return browser.windows.getCurrent();
+  }
+
+  getCurrentWindow().then((currentWindow) => {
+    const updateInfo = {
+      width: currentWindow.width,
+      height: currentWindow.height + 1 // 1 pixel more than original size...
+    };
+    browser.windows.update(currentWindow.id, updateInfo);
+  });
+}
+
+firefox57WorkaroundForBlankPanel();
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
@@ -136,52 +158,54 @@ modify(project);
   render() {
     return (
       <div className="container">
-        <SplitPane
-          split="horizontal"
-          minSize={UiState.minContentHeight}
-          maxSize={UiState.maxContentHeight}
-          size={UiState.windowHeight - UiState.consoleHeight}
-          onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
-          <div className="wrapper">
-            <ProjectHeader
-              title={this.state.project.name}
-              changed={this.state.project.modified}
-              changeName={this.state.project.changeName}
-              load={loadProject.bind(undefined, project)}
-              save={() => saveProject(project)}
-            />
-            <div className={classNames("content", {dragging: UiState.navigationDragging})}>
-              <SplitPane
-                split="vertical"
-                minSize={UiState.minNavigationWidth}
-                maxSize={UiState.maxNavigationWidth}
-                size={UiState.navigationWidth}
-                onChange={UiState.resizeNavigation}
-                onDragStarted={this.navigationDragStart}
-                onDragFinished={this.navigationDragEnd}>
-                <Navigation
-                  tests={UiState.filteredTests}
-                  suites={this.state.project.suites}
-                  createSuite={this.createSuite}
-                  removeSuite={this.state.project.deleteSuite}
-                  createTest={this.createTest}
-                  moveTest={this.moveTest}
-                  deleteTest={this.deleteTest}
-                />
-                <Editor
-                  url={this.state.project.url}
-                  urls={this.state.project.urls}
-                  setUrl={this.state.project.setUrl}
-                  test={UiState.selectedTest.test}
-                />
-              </SplitPane>
+        <SuiteDropzone loadProject={loadProject.bind(undefined, project)}>
+          <SplitPane
+            split="horizontal"
+            minSize={UiState.minContentHeight}
+            maxSize={UiState.maxContentHeight}
+            size={UiState.windowHeight - UiState.consoleHeight}
+            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
+            <div className="wrapper">
+              <ProjectHeader
+                title={this.state.project.name}
+                changed={this.state.project.modified}
+                changeName={this.state.project.changeName}
+                load={loadProject.bind(undefined, project)}
+                save={() => saveProject(project)}
+              />
+              <div className={classNames("content", { dragging: UiState.navigationDragging })}>
+                <SplitPane
+                  split="vertical"
+                  minSize={UiState.minNavigationWidth}
+                  maxSize={UiState.maxNavigationWidth}
+                  size={UiState.navigationWidth}
+                  onChange={UiState.resizeNavigation}
+                  onDragStarted={this.navigationDragStart}
+                  onDragFinished={this.navigationDragEnd}>
+                  <Navigation
+                    tests={UiState.filteredTests}
+                    suites={this.state.project.suites}
+                    createSuite={this.createSuite}
+                    removeSuite={this.state.project.deleteSuite}
+                    createTest={this.createTest}
+                    moveTest={this.moveTest}
+                    deleteTest={this.deleteTest}
+                  />
+                  <Editor
+                    url={this.state.project.url}
+                    urls={this.state.project.urls}
+                    setUrl={this.state.project.setUrl}
+                    test={UiState.selectedTest.test}
+                  />
+                </SplitPane>
+              </div>
             </div>
-          </div>
-          <Console height={UiState.consoleHeight} />
-        </SplitPane>
-        <Modal project={this.state.project} />
-        <Changelog />
-        <Tooltip />
+            <Console height={UiState.consoleHeight} restoreSize={UiState.restoreConsoleSize} />
+          </SplitPane>
+          <Modal project={this.state.project} />
+          <Changelog />
+          <Tooltip />
+        </SuiteDropzone>
       </div>
     );
   }

@@ -22,6 +22,8 @@ const emitters = {
   open: emitOpen,
   click: emitClick,
   clickAt: emitClick,
+  check: emitCheck,
+  uncheck: emitUncheck,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
@@ -41,6 +43,8 @@ const emitters = {
   verifyValue: emitVerifyValue,
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
+  verifyNotText: emitVerifyNotText,
+  verifySelectedLabel: emitVerifySelectedLabel,
   assertChecked: emitVerifyChecked,
   assertNotChecked: emitVerifyNotChecked,
   assertEditable: emitVerifyEditable,
@@ -52,6 +56,7 @@ const emitters = {
   assertValue: emitVerifyValue,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
+  assertSelectedLabel: emitVerifySelectedLabel,
   store: emitStore,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
@@ -69,6 +74,7 @@ const emitters = {
   mouseOver: emitMouseMove,
   mouseOut: emitMouseOut,
   assertAlert: emitAssertAlertAndAccept,
+  assertNotText: emitVerifyNotText,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
   webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
@@ -148,6 +154,14 @@ async function emitEcho(message) {
   return Promise.resolve(`console.log(\`${message}\`);`);
 }
 
+async function emitCheck(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });`);
+}
+
+async function emitUncheck(locator) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });`);
+}
+
 async function emitRunScript(script) {
   return Promise.resolve(`driver.executeScript(\`${script}\`);`);
 }
@@ -184,6 +198,10 @@ async function emitVerifySelectedValue(locator, value) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveSelectedValue("${value}");`);
 }
 
+async function emitVerifySelectedLabel(locator, labelValue) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${labelValue}");});});});});`);
+}
+
 async function emitVerifyNotSelectedValue(locator, value) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toHaveSelectedValue("${value}");`);
 }
@@ -194,6 +212,10 @@ async function emitVerifyValue(locator, value) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveText("${text}");`);
+}
+
+async function emitVerifyNotText(locator, text) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${text}\`)});});`);
 }
 
 async function emitVerifyTitle(title) {

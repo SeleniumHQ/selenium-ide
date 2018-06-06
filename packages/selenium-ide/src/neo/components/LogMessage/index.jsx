@@ -37,7 +37,7 @@ export default class LogMessage extends React.Component {
       }
     }
     return (
-      <li className={classNames("log", this.props.log.status, {notice: this.props.log.isNotice})}>
+      <li className={classNames("log", this.props.log.status, { notice: this.props.log.isNotice })}>
         <Linkify properties={{
           target: "_blank"
         }}>

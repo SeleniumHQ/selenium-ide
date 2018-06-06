@@ -100,7 +100,7 @@ export default class Suite {
     suite.setName(jsRep.name);
     suite.setTimeout(jsRep.timeout);
     suite.setParallel(jsRep.parallel);
-    suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({id}) => id === testId)));
+    suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({ id }) => id === testId)));
 
     return suite;
   }

@@ -258,7 +258,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 function doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount) {
   return (command !== "type"
     ? extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
-    : extCommand.doType(xlateArgument(parsedTarget), xlateArgument(value))).then(function(result) {
+    : extCommand.doType(xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {

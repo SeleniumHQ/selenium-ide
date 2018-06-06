@@ -38,7 +38,7 @@ export function verifyFile(file) {
   } else if (isTestCase(file)) {
     return FileTypes.TestCase;
   } else {
-    throw  new Error("Unknown file was received");
+    throw new Error("Unknown file was received");
   }
 }
 
@@ -56,7 +56,7 @@ export function parseSuiteRequirements(suite) {
 
 export function migrateProject(files) {
   const fileMap = {};
-  files.forEach(({name, contents}) => {
+  files.forEach(({ name, contents }) => {
     fileMap[name] = contents;
   });
   const project = {

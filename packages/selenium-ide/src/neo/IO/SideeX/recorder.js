@@ -17,7 +17,7 @@
 
 import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
-import record from  "./record";
+import record from "./record";
 import { sendRecordNotification } from "../notifications";
 
 function getSelectedCase() {
@@ -52,11 +52,11 @@ export default class BackgroundRecorder {
   }
 
   attachToTab(tabId) {
-    browser.tabs.sendMessage(tabId, {attachRecorder: true}).catch();
+    browser.tabs.sendMessage(tabId, { attachRecorder: true }).catch();
   }
 
   detachFromTab(tabId) {
-    browser.tabs.sendMessage(tabId, {detachRecorder: true}).catch();
+    browser.tabs.sendMessage(tabId, { detachRecorder: true }).catch();
   }
 
   reattachToTab(tabId) {
@@ -290,7 +290,7 @@ export default class BackgroundRecorder {
     } else if (message.command.includes("store")) {
       // In Google Chrome, window.prompt() must be triggered in
       // an actived tabs of front window, so we let panel window been focused
-      browser.windows.update(this.selfWindowId, {focused: true})
+      browser.windows.update(this.selfWindowId, { focused: true })
         .then(function() {
           // Even if window has been focused, window.prompt() still failed.
           // Delay a little time to ensure that status has been updated

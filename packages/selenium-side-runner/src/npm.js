@@ -29,7 +29,7 @@ try {
 
 export function install() {
   return new Promise((res, rej) => {
-    npm.load({progress: false, loglevel: "silent"}, (e) => {
+    npm.load({ progress: false, loglevel: "silent" }, (e) => {
       if (e) {
         rej(e);
       } else {

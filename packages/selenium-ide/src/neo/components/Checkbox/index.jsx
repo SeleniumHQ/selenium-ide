@@ -37,7 +37,7 @@ export default class Checkbox extends React.Component {
   render() {
     const checked = (this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false));
     return (
-      <div className={classNames("control", {"form-input": this.props.form})}>
+      <div className={classNames("control", { "form-input": this.props.form })}>
         <input
           key="checkbox"
           type="checkbox"
@@ -49,7 +49,7 @@ export default class Checkbox extends React.Component {
         />
         {this.props.form ?
           <label key="label" htmlFor={this.id}><span>{checked ? "✓" : ""}</span>{this.props.label}</label> :
-          <label key="label" htmlFor={this.id}><div style={{width: `${this.props.width}px`}}>{this.props.label}</div><span>{checked ? "✓" : ""}</span></label>
+          <label key="label" htmlFor={this.id}><div style={{ width: `${this.props.width}px` }}>{this.props.label}</div><span>{checked ? "✓" : ""}</span></label>
         }
       </div>
     );

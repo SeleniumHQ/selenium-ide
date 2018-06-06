@@ -131,7 +131,7 @@ export function loadProject(project, file) {
   loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
       loadJSONProject(project, contents);
-    } else  {
+    } else {
       try {
         const type = verifyFile(contents);
         if (type === FileTypes.Suite) {

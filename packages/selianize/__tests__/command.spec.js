@@ -115,6 +115,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`console.log(\`${command.target}\`);`);
   });
+  it("should emit `check` command", () => {
+    const command = {
+      command: "check",
+      target: "id=f",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });");
+  });
+  it("should emit `uncheck` command", () => {
+    const command = {
+      command: "uncheck",
+      target: "id=f",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });");
+  });
   it("should emit `run script` command", () => {
     const command = {
       command: "runScript",
@@ -203,6 +219,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));expect(driver.findElement(By.id("test"))).resolves.toHaveValue("${command.value}");`);
   });
+  it("should emit `verify not text` command", () => {
+    const command = {
+      command: "verifyNotText",
+      target: "id=test",
+      value: "text"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${command.value}\`)});});`);
+  });
   it("should emit `verify title` command", () => {
     const command = {
       command: "verifyTitle",
@@ -210,6 +234,14 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
+  });
+  it("should emit 'verify selected label' command", () => {
+    const command = {
+      command: "verifySelectedLabel",
+      target: "id=test",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${command.value}");});});});});`);
   });
   it("should emit `verify text` command", () => {
     const command = {
@@ -290,6 +322,14 @@ describe("command code emitter", () => {
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.getTitle().then(title => {expect(title).toBe(\`${command.target}\`);});`);
+  });
+  it("should emit 'assert selected label' command", () => {
+    const command = {
+      command: "assertSelectedLabel",
+      target: "id=test",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${command.value}");});});});});`);
   });
   it("should emit `assert value` command", () => {
     const command = {
@@ -475,6 +515,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe("${command.target}");});});`);
   });
+  it("should emit `assert not text` command", () => {
+    const command = {
+      command: "assertNotText",
+      target: "id=test",
+      value: "text"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("test")));driver.findElement(By.id("test")).then(element => {element.getText().then(text => {expect(text).not.toBe(\`${command.value}\`)});});`);
+  });
   it("should emit `assert prompt` command", () => {
     const command = {
       command: "assertPrompt",
@@ -533,11 +581,11 @@ describe("command code emitter", () => {
   });
   it("should skip playback supported commands, that are not supported in webdriver", () => {
     return Promise.all([
-      expect(CommandEmitter.emit({command: "answerOnNextPrompt"})).resolves.toBeUndefined(),
-      expect(CommandEmitter.emit({command: "chooseCancelOnNextConfirmation"})).resolves.toBeUndefined(),
-      expect(CommandEmitter.emit({command: "chooseCancelOnNextPrompt"})).resolves.toBeUndefined(),
-      expect(CommandEmitter.emit({command: "chooseOkOnNextConfirmation"})).resolves.toBeUndefined(),
-      expect(CommandEmitter.emit({command: "setSpeed"})).resolves.toBeUndefined()
+      expect(CommandEmitter.emit({ command: "answerOnNextPrompt" })).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({ command: "chooseCancelOnNextConfirmation" })).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({ command: "chooseCancelOnNextPrompt" })).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({ command: "chooseOkOnNextConfirmation" })).resolves.toBeUndefined(),
+      expect(CommandEmitter.emit({ command: "setSpeed" })).resolves.toBeUndefined()
     ]);
   });
   it("should emit all known commands", () => {

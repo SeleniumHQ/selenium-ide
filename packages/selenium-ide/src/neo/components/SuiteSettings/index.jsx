@@ -70,7 +70,7 @@ export default class SuiteSettings extends React.Component {
           </div>
           <span className="right">
             <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-            <FlatButton type="submit" onClick={() => {this.props.submit({timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT, isParallel: this.state.isParallel});}} style={{
+            <FlatButton type="submit" onClick={() => {this.props.submit({ timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT, isParallel: this.state.isParallel });}} style={{
               marginRight: "0"
             }}>Submit</FlatButton>
           </span>

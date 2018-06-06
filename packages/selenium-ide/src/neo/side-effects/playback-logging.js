@@ -35,7 +35,7 @@ export default class PlaybackLogger {
   }
 
   parseCommandStateChange(commandId, status, cb) {
-    const command = PlaybackState.currentRunningTest.commands.find(({id}) => (id === commandId));
+    const command = PlaybackState.currentRunningTest.commands.find(({ id }) => (id === commandId));
     cb(command, status);
   }
 

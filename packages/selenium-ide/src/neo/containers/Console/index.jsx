@@ -28,9 +28,13 @@ import CommandReference from "../../components/CommandReference";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      tab: "Log"
+    };
     this.playbackLogger = new PlaybackLogger();
     //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
+    this.tabClicked = this.tabClicked.bind(this);
+    this.tabChangedHandler = this.tabChangedHandler.bind(this);
   }
   componentWillUnmount() {
     //this.loggerObserver.dispose();
@@ -42,20 +46,24 @@ export default class Console extends React.Component {
     });
   }
   //create different object which stores name and read status (e.g., unread boolean)
+  tabClicked(){
+    this.props.restoreSize();
+  }
   render() {
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler.bind(this)}>
+        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
           <ClearButton onClick={logger.clearLogs} />
         </TabBar>
-      {this.state.tab === "Log" && <LogList logger={logger} /> }
-      {this.state.tab === "Reference" && <CommandReference /> }
+        {this.state.tab === "Log" && <LogList logger={logger} /> }
+        {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );
   }
   static propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
+    restoreSize: PropTypes.func
   };
 }

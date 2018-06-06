@@ -50,7 +50,7 @@ export default class TestSelector extends React.Component {
   }
   selectTest(isSelected, test) {
     this.setState({
-      selectedTests: { ...this.state.selectedTests, [test.id]: isSelected ? test : undefined}
+      selectedTests: { ...this.state.selectedTests, [test.id]: isSelected ? test : undefined }
     });
   }
   filter(filterTerm) {
@@ -97,7 +97,7 @@ class TestSelectorList extends React.Component {
   render() {
     return (
       <ul className="tests">
-        {this.props.tests.filter(({name}) => (name.indexOf(this.props.filterTerm) !== -1)).map(test => (
+        {this.props.tests.filter(({ name }) => (name.indexOf(this.props.filterTerm) !== -1)).map(test => (
           <li key={test.id}>
             <Checkbox label={test.name} checked={!!this.props.selectedTests[test.id]} form={true} onChange={this.handleChange.bind(this, test)} />
           </li>

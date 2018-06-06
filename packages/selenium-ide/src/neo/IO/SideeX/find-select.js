@@ -66,7 +66,7 @@ export function select(type, rect) {
       active: true,
       windowId: window.contentWindowId
     }).then(function(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: false});
+      browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: false });
     }).catch(function(reason) {
       console.log(reason);
     });
@@ -81,9 +81,9 @@ export function select(type, rect) {
         UiState.setSelectingTarget(false);
       } else {
         if (type === TargetTypes.LOCATOR) {
-          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, element: true}).catch(tabConnectionFailure);
+          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, element: true }).catch(tabConnectionFailure);
         } else if (type === TargetTypes.REGION) {
-          browser.tabs.sendMessage(tabs[0].id, {selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS()}).catch(tabConnectionFailure);
+          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS() }).catch(tabConnectionFailure);
         }
       }
     });
@@ -102,5 +102,5 @@ export function selectTarget(target) {
 
 export function endSelection(tabId) {
   UiState.setSelectingTarget(false);
-  browser.tabs.sendMessage(tabId, {selectMode: true, selecting: false});
+  browser.tabs.sendMessage(tabId, { selectMode: true, selecting: false });
 }

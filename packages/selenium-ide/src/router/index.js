@@ -35,7 +35,7 @@ export default class Router {
   _mount(prefix) {
     return this.routes.map(r => new Route(r.verb, prefix + r.uri, r.run));
   }
-  run({verb, uri, ...request}) {
+  run({ verb, uri, ...request }) {
     return new Promise((res, rej) => {
       const route = this.routes.find(r => r.test(verb, uri));
       route ? route.run(request.payload, res) : rej(new Error("No compliant route found"));

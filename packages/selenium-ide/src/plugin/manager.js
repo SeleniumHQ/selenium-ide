@@ -53,7 +53,7 @@ class PluginManager {
       RegisterSuiteHook(this.emitSuite.bind(undefined, plugin));
       RegisterTestHook(this.emitTest.bind(undefined, plugin));
       if (plugin.commands) {
-        plugin.commands.forEach(({id, name, type}) => {
+        plugin.commands.forEach(({ id, name, type }) => {
           Commands.addCommand(id, { name, type });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
@@ -78,7 +78,7 @@ class PluginManager {
         action: "emit",
         entity: "project",
         project
-      }).catch(() => (false)).then(({canEmit}) => {
+      }).catch(() => (false)).then(({ canEmit }) => {
         plugin.canEmit = canEmit;
         return plugin;
       });

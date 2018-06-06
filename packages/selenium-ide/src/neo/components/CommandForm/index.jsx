@@ -70,7 +70,7 @@ import "./style.css";
               onChange={this.props.command ? this.props.command.setTarget : null} />
             <FlatButton
               data-tip="<p>Select target in page</p>"
-              className={classNames("icon", "si-select", {"active": this.props.isSelecting})}
+              className={classNames("icon", "si-select", { "active": this.props.isSelecting })}
               disabled={this.props.command ? !this.parseCommandTargetType(this.props.command.command) : true}
               onClick={this.handleSelect}
             />
