@@ -23,24 +23,35 @@ import ClearButton from "../../components/ActionButtons/Clear";
 import logger from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
+import CommandReference from "../../components/CommandReference";
 
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
     this.playbackLogger = new PlaybackLogger();
+    //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
   }
   componentWillUnmount() {
+    //this.loggerObserver.dispose();
     this.playbackLogger.dispose();
   }
+  tabChangedHandler(tab) {
+    this.setState({
+      tab
+    });
+  }
+  //create different object which stores name and read status (e.g., unread boolean)
   render() {
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
+        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler.bind(this)}>
           <ClearButton onClick={logger.clearLogs} />
         </TabBar>
-        <LogList logger={logger} />
+      {this.state.tab === "Log" && <LogList logger={logger} /> }
+      {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );
   }
