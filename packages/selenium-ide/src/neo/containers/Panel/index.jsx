@@ -37,7 +37,6 @@ import Console from "../Console";
 import Modal from "../Modal";
 import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
-import api from "../../../api";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
@@ -51,6 +50,8 @@ import "../../IO/notifications";
 if (process.env.NODE_ENV !== "test") {
   require("../../IO/SideeX/record");
   require("../../IO/SideeX/playback");
+  const api = require("../../../api");
+  browser.runtime.onMessage.addListener(api.default);
 }
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
@@ -72,8 +73,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 modify(project);
-
-browser.runtime.onMessage.addListener(api);
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {

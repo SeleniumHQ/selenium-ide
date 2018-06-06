@@ -75,10 +75,10 @@ export function migrateProject(files) {
     }
   });
   tests.forEach(testCaseName => {
-    const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
-    parsedTestCase.tests[0].id = testCaseName;
-    project.tests.push(parsedTestCase.tests[0]);
-    project.urls = [...project.urls, ...parsedTestCase.urls];
+    const { test, baseUrl } = migrateTestCase(fileMap[testCaseName]);
+    test.id = testCaseName;
+    project.tests.push(test);
+    project.urls = [...project.urls, baseUrl];
   });
   suites.forEach(suite => {
     migrateSuite(suite, fileMap, project);
@@ -116,28 +116,20 @@ function migrateSuite(suite, fileMap, project) {
 export function migrateTestCase(data) {
   const sanitized = sanitizeXml(data);
   const result = JSON.parse(convert.xml2json(sanitized, { compact: true }));
-  const project = {
-    name: result.html.head.title._text,
-    url: result.html.head.link._attributes.href,
-    urls: result.html.head.link._attributes.href ? [result.html.head.link._attributes.href] : [],
-    tests: [
+  const baseUrl = result.html.head.link._attributes.href;
+  const test = {
+    name: result.html.body.table.thead.tr.td._text,
+    commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
       {
-        id: data,
-        name: result.html.body.table.thead.tr.td._text,
-        commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
-          {
-            command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
-            target: xmlunescape(parseTarget(row.td[1])),
-            value: xmlunescape(row.td[2]._text || ""),
-            comment: ""
-          }
-        ))
+        command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
+        target: xmlunescape(parseTarget(row.td[1])),
+        value: xmlunescape(row.td[2]._text || ""),
+        comment: ""
       }
-    ],
-    suites: []
+    ))
   };
 
-  return project;
+  return { test, baseUrl };
 }
 
 function sanitizeXml(data) {

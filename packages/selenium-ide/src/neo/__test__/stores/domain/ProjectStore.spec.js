@@ -60,6 +60,20 @@ describe("Project Store", () => {
     store.addUrl(url);
     expect(store.urls.length).toBe(1);
   });
+  it("should not add duplicates to the url list", () => {
+    const store = new ProjectStore();
+    const url = "http://www.seleniumhq.org/";
+    store.addUrl(url);
+    store.addUrl(url);
+    expect(store.urls.length).toBe(1);
+  });
+  it("should add the current url to the cache", () => {
+    const store = new ProjectStore();
+    store.setUrl("http://www.seleniumhq.org/");
+    expect(store.urls.length).toBe(0);
+    store.addCurrentUrl();
+    expect(store.urls.length).toBe(1);
+  });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();
     expect(store.tests.length).toBe(0);
@@ -92,6 +106,12 @@ describe("Project Store", () => {
     const store = new ProjectStore();
     const test = store.createTestCase("my test");
     expect(test.name).toBe("my test");
+  });
+  it("should rename a test with a name that already exists", () => {
+    const store = new ProjectStore();
+    store.createTestCase("my test");
+    const test2 = store.createTestCase("my test");
+    expect(test2.name).toBe("my test (1)");
   });
   it("should create a suite", () => {
     const store = new ProjectStore();

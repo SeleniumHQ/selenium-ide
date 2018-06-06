@@ -17,7 +17,7 @@
 
 import { action, observable, computed, toJS } from "mobx";
 import uuidv4 from "uuid/v4";
-import SortBy from "sort-array";
+import naturalCompare from "string-natural-compare";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 
@@ -37,11 +37,15 @@ export default class ProjectStore {
   }
 
   @computed get suites() {
-    return SortBy(this._suites, "name");
+    return this._suites.sort((s1, s2) => (
+      naturalCompare(s1.name, s2.name)
+    ));
   }
 
   @computed get tests() {
-    return SortBy(this._tests, "name");
+    return this._tests.sort((t1, t2) => (
+      naturalCompare(t1.name, t2.name)
+    ));
   }
 
   @computed get urls() {
@@ -53,7 +57,12 @@ export default class ProjectStore {
   }
 
   @action.bound addUrl(url) {
-    this._urls.push(url);
+    if (!this._urls.find((u) => (u === url)))
+      this._urls.push(url);
+  }
+
+  @action.bound addCurrentUrl() {
+    this.addUrl(this.url);
   }
 
   @action.bound changeName(name) {
@@ -86,6 +95,16 @@ export default class ProjectStore {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
+      let foundNumber = 0;
+      // handle duplicate names -> name (1)
+      // by using the sorted array we can do it in one read of the array
+      this.tests.forEach((t) => {
+        if (t.name === (foundNumber ? `${test.name} (${foundNumber})` : test.name))
+          foundNumber++;
+      });
+      if (foundNumber) {
+        test.name = `${test.name} (${foundNumber})`;
+      }
       this._tests.push(test);
     }
   }
