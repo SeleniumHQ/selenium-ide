@@ -25,6 +25,7 @@ export default class Log {
   @observable message = null;
   @observable description = null;
   @observable status = null;
+  @observable channel = null;
   @observable isNotice = false;
 
   constructor(message, status) {
@@ -50,6 +51,10 @@ export default class Log {
 
   @action.bound setStatus(status) {
     this.status = status;
+  }
+
+  @action.bound setChannel(channel) {
+    this.channel = channel;
   }
 
   @action.bound setNotice() {

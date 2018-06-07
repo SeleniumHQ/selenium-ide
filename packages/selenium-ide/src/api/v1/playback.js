@@ -18,11 +18,12 @@
 import Router from "../../router";
 import PlaybackState from "../../neo/stores/view/PlaybackState";
 import Manager from "../../plugin/manager";
-import logger from "../../neo/stores/view/Logs";
+import { Logger, Channels } from "../../neo/stores/view/Logs";
 import { LogTypes } from "../../neo/ui-models/Log";
 import { extCommand } from "../../neo/IO/SideeX/playback";
 
 const router = new Router();
+const logger = new Logger(Channels.PLAYBACK);
 
 router.get("/location", (req, res) => {
   extCommand.sendPayload({
@@ -32,7 +33,7 @@ router.get("/location", (req, res) => {
     if (result.result === "success") {
       res(result.locator);
     } else {
-      res({error: result.result});
+      res({ error: result.result });
     }
   });
 });

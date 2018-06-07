@@ -22,7 +22,7 @@ import UiState from "./UiState";
 import ModalState from "./ModalState";
 import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
-import logger from "./Logs";
+import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
 
 class PlaybackState {
@@ -48,6 +48,7 @@ class PlaybackState {
     this.maxDelay = 3000;
     this._testsToRun = [];
     this.runningQueue = [];
+    this.logger = new Logger(Channels.PLAYBACK);
   }
 
   @computed get hasFinishedSuccessfully() {
@@ -112,7 +113,7 @@ class PlaybackState {
       }
       this.runningQueue = test.commands.peek();
       const pluginsLogs = {};
-      if (PluginManager.plugins.length) logger.log("Preparing plugins for test run...");
+      if (PluginManager.plugins.length) this.logger.log("Preparing plugins for test run...");
       PluginManager.emitMessage({
         action: "event",
         event: "playbackStarted",
@@ -126,7 +127,7 @@ class PlaybackState {
         let log = pluginsLogs[plugin.id];
 
         if (!log) {
-          log = logger.log(`Waiting for ${plugin.name} to start...`);
+          log = this.logger.log(`Waiting for ${plugin.name} to start...`);
           pluginsLogs[plugin.id] = log;
         }
 
@@ -205,7 +206,7 @@ class PlaybackState {
         let log = pluginsLogs[plugin.id];
 
         if (!log) {
-          log = logger.log(`Waiting for ${plugin.name} to finish...`);
+          log = this.logger.log(`Waiting for ${plugin.name} to finish...`);
           pluginsLogs[plugin.id] = log;
         }
 
@@ -218,14 +219,14 @@ class PlaybackState {
             if (result.message) {
               if (result instanceof Error) {
                 if (!(result instanceof NoResponseError)) {
-                  logger.error(result.message);
+                  this.logger.error(result.message);
                   if (!this.hasFinishedSuccessfully && !this.hasFailed) {
                     this.hasFailed = true;
                     this.failures++;
                   }
                 }
               } else {
-                logger.log(result.message);
+                this.logger.log(result.message);
               }
             }
             this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
