@@ -29,13 +29,13 @@ export default class StoredVar extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.keyChanged = this.keyChanged.bind(this);
     this.valueChanged = this.valueChanged.bind(this);
-    this.saveValue = { key: "", value: "" };
+    this.state = { key: "", value: "" };
   }
   handleKeyDown(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      if(this.saveValue.key && this.saveValue.value){
-        this.props.add(this.saveValue.key, this.saveValue.value);
+      if(this.state.key && this.state.value){
+        this.props.add(this.state.key, this.state.value);
       }
     }
   }
@@ -46,10 +46,10 @@ export default class StoredVar extends React.Component {
     this.props.delete(this.props.keyVar);
   }
   keyChanged(e) {
-    this.saveValue.key = e.target.value;
+    this.setState({ key: e.target.value })
   }
   valueChanged(e) {
-    this.saveValue.value = e.target.value;
+    this.setState({ value: e.target.value })
   }
   render() {
     return (
