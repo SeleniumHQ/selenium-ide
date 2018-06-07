@@ -335,6 +335,7 @@ export default class ExtCommand {
       // we assume that there has an "open" command
       // select Frame directly will cause failed
       this.playingTabStatus[this.currentPlayingTabId] = true;
+      this.doOpen(tab.url);
     }
   }
 
