@@ -31,7 +31,6 @@ export default class Console extends React.Component {
   constructor(props) {
     super(props);
     this.state = { tab: "Log", refresh: 0 };
-    this.store = new LogStore();
     this.tabClicked = this.tabClicked.bind(this);
     this.refresh = this.refresh.bind(this);
 
@@ -62,21 +61,16 @@ export default class Console extends React.Component {
       "Stored-Vars": <RefreshButton onClick={this.refresh} />
     };
 
-    const consoleBox = {
-      "Log": <LogList store={this.store} />,
-      "Stored-Vars": <StoredVarList refresh={this.refresh}/>
-    };
-
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
+        <TabBar tabs={["Log", "Stored-Vars", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
           {buttonsBox[this.state.tab]}
         </TabBar>
         {this.state.tab === "Log" && <LogList logger={logger} /> }
+        {this.state.tab === "Stored-Vars" && <StoredVarList refresh={this.refresh}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
-        {consoleBox[this.state.tab]}
       </footer>
     );
   }
