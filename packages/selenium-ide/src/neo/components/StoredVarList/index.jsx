@@ -24,7 +24,7 @@ import "./style.css";
 export default class StoredVarList extends React.Component {
   constructor(props){
     super(props);
-    this.state = { add: false };
+    this.state = { addingVariable: false };
     this.editStoredVar = this.editStoredVar.bind(this);
     this.deleteStoredVar = this.deleteStoredVar.bind(this);
     this.addStoredVar = this.addStoredVar.bind(this);
@@ -32,22 +32,22 @@ export default class StoredVarList extends React.Component {
   }
   editStoredVar(key, value){
     setStoredVar(key, value);
-    this.setState({ add: false });
+    this.setState({ addingVariable: false });
   }
   deleteStoredVar(key){
     deleteStoredVar(key);
-    this.setState({ add: false });
+    this.setState({ addingVariable: false });
   }
   addStoredVar(key, value){
     setStoredVar(key, value);
-    this.setState({ add: false });
+    this.setState({ addingVariable: false });
   }
   refresh(){
-    this.setState({ add: false });
+    this.setState({ addingVariable: false });
     this.props.refresh();
   }
   add(){
-    this.setState({ add: true });
+    this.setState({ addingVariable: true });
   }
   render() {
     const storedVars = getStoredVars();
@@ -72,7 +72,7 @@ export default class StoredVarList extends React.Component {
                 refresh={this.refresh}
               />
             ))}
-            {this.state.add ?
+            {this.state.addingVariable ?
               <StoredVar
                 delete={this.deleteStoredVar}
                 add={this.addStoredVar}
