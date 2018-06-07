@@ -37,20 +37,27 @@ export class Logger {
     this.channel = channel;
 
     this.log = this.log.bind(this, this.channel);
-    this.error = this.error.bind(this, this.channel);
+    this.warn = this.warn.bind(this);
+    this.error = this.error.bind(this);
   }
 
   log(channel, log) {
     if (typeof log === "string") {
       log = new Log(log);
     }
+    log.setChannel(channel);
     output.log(log);
 
     return log;
   }
 
-  error(channel, log) {
-    const errorLog = this.log(channel, log);
+  warn(log) {
+    const warnLog = this.log(typeof log === "string" ? `Warning ${log}` : log);
+    warnLog.setStatus(LogTypes.Warning);
+  }
+
+  error(log) {
+    const errorLog = this.log(log);
     errorLog.setStatus(LogTypes.Error);
   }
 

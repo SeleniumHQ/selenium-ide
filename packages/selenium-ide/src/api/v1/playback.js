@@ -47,7 +47,7 @@ router.post("/log", (req, res) => {
   if (req.type === LogTypes.Error) {
     logger.error(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
   } else if (req.type === "warning") {
-    logger.log(`${Manager.getPlugin(req.sender).name} warning: ${req.message}`);
+    logger.warn(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
   } else {
     logger.log(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
   }

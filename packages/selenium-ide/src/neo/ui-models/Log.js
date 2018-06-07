@@ -68,6 +68,7 @@ export default class Log {
 
 export const LogTypes = {
   Success: "success",
+  Warning: "warn",
   Error: "error",
   Failure: "failure",
   Undetermined: "undetermined"
