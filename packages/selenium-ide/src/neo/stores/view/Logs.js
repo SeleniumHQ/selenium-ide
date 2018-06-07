@@ -18,33 +18,61 @@
 import { action, observable } from "mobx";
 import Log, { LogTypes } from "../../ui-models/Log";
 
-export class LogStore {
+class Output {
   @observable logs = [];
 
-  constructor() {
-    // TODO: think of an API for logging
-    window.addLog = (message) => {
-      this.log(new Log(message));
-    };
-  }
-
   @action.bound log(log) {
-    if (typeof log === "string") {
-      log = new Log(log);
-    }
     this.logs.push(log);
-
-    return log;
   }
 
-  @action.bound error(log) {
-    const errorLog = this.log(log);
-    errorLog.setStatus(LogTypes.Error);
-  }
-
-  @action.bound clearLogs() {
+  @action.bound clear() {
     this.logs.clear();
   }
 }
 
-export default new LogStore;
+export const output = new Output();
+
+export class Logger {
+  constructor(channel = Channels.SYSTEM) {
+    this.channel = channel;
+
+    this.log = this.log.bind(this, this.channel);
+    this.warn = this.warn.bind(this);
+    this.error = this.error.bind(this);
+  }
+
+  log(channel, log) {
+    if (typeof log === "string") {
+      log = new Log(log);
+    }
+    log.setChannel(channel);
+    output.log(log);
+
+    return log;
+  }
+
+  warn(log) {
+    const warnLog = this.log(typeof log === "string" ? `Warning ${log}` : log);
+    warnLog.setStatus(LogTypes.Warning);
+  }
+
+  error(log) {
+    const errorLog = this.log(log);
+    errorLog.setStatus(LogTypes.Error);
+  }
+
+  get(channel) {
+    return new Logger(channel);
+  }
+
+  clearLogs() {
+    output.clear();
+  }
+}
+
+export const Channels = {
+  PLAYBACK: "playback",
+  SYSTEM: "sys"
+};
+
+export default new Logger;

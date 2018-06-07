@@ -19,6 +19,9 @@ import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
 import record from "./record";
 import { sendRecordNotification } from "../notifications";
+import { Logger, Channels } from "../../stores/view/Logs";
+
+const logger = new Logger(Channels.PLAYBACK);
 
 function getSelectedCase() {
   return {
@@ -281,11 +284,10 @@ export default class BackgroundRecorder {
       this.currentRecordingFrameLocation[testCaseId] = message.frameLocation;
     }
     if (message.command.includes("Value") && typeof message.value === "undefined") {
-      // TODO: change this to normal logging when extensibility is merged
-      window.addLog("Error: This element does not have property 'value'. Please change to use storeText command.");
+      logger.error("This element does not have property 'value'. Please change to use storeText command.");
       return;
     } else if(message.command.includes("Text") && message.value === "") {
-      window.addLog("Error: This element does not have property 'Text'. Please change to use storeValue command.");
+      logger.error("This element does not have property 'Text'. Please change to use storeValue command.");
       return;
     } else if (message.command.includes("store")) {
       // In Google Chrome, window.prompt() must be triggered in

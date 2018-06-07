@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import logger from "../../stores/view/Logs";
+import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
 import CommandReference from "../../components/CommandReference";
@@ -55,9 +55,9 @@ export default class Console extends React.Component {
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
         <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
-          <ClearButton onClick={logger.clearLogs} />
+          <ClearButton onClick={output.clear} />
         </TabBar>
-        {this.state.tab === "Log" && <LogList logger={logger} /> }
+        {this.state.tab === "Log" && <LogList output={output} /> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );
