@@ -1,1 +1,79 @@
-{"id":"31fcc435-c58e-4fc0-b96c-67db4cc7b1b3","name":"check-examples","url":"http://nginx:80","tests":[{"id":"6039c6d8-87e9-4fa1-b785-fdeb385b218d","name":"check-examples","commands":[{"id":"3e83b2d1-70e6-463a-95df-2712892e6aa7","comment":"","command":"open","target":"/check.html","value":""},{"id":"910b677a-24ba-4c90-879b-799347091085","comment":"","command":"check","target":"id=f","value":""},{"id":"e050fea7-ff7f-4a6d-86db-b65e23c66a1f","comment":"","command":"assertChecked","target":"id=f","value":""},{"id":"af271c97-e857-4d26-93dc-4306f65f326c","comment":"","command":"check","target":"id=f","value":""},{"id":"7d568629-dddc-4e85-8463-175eba18a057","comment":"Ensure no-op on checking already checked element","command":"assertChecked","target":"id=f","value":""},{"id":"ecc4ad19-5532-40fb-b33b-0afb0e8c9fe7","comment":"","command":"uncheck","target":"id=f","value":""},{"id":"449d7cc6-bcfd-43e8-a45d-69578b6a1787","comment":"","command":"assertNotChecked","target":"id=f","value":""},{"id":"0b7aeb69-49ae-4051-8e16-4df9bdb13e91","comment":"","command":"uncheck","target":"id=f","value":""},{"id":"92a69862-748c-4f28-8335-789210000b24","comment":"Ensure no-op on unchecking already unchecked element","command":"assertNotChecked","target":"id=f","value":""}]}],"suites":[{"id":"3d4775e5-d40b-4359-a098-fc05b297cfaa","name":"aaa suite","tests":["6039c6d8-87e9-4fa1-b785-fdeb385b218d"]},{"id":"ffc656d8-e255-48e4-9076-486c362b6444","name":"aaab suite","tests":[]}],"urls":["https://en.wikipedia.org"]}
+{
+  "id": "31fcc435-c58e-4fc0-b96c-67db4cc7b1b3",
+  "name": "check-examples",
+  "url": "http://nginx:80",
+  "tests": [{
+    "id": "6039c6d8-87e9-4fa1-b785-fdeb385b218d",
+    "name": "check-examples",
+    "commands": [{
+      "id": "3e83b2d1-70e6-463a-95df-2712892e6aa7",
+      "comment": "",
+      "command": "open",
+      "target": "/check.html",
+      "value": ""
+    }, {
+      "id": "910b677a-24ba-4c90-879b-799347091085",
+      "comment": "",
+      "command": "check",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "e050fea7-ff7f-4a6d-86db-b65e23c66a1f",
+      "comment": "",
+      "command": "assertChecked",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "af271c97-e857-4d26-93dc-4306f65f326c",
+      "comment": "",
+      "command": "check",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "7d568629-dddc-4e85-8463-175eba18a057",
+      "comment": "Ensure no-op on checking already checked element",
+      "command": "assertChecked",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "ecc4ad19-5532-40fb-b33b-0afb0e8c9fe7",
+      "comment": "",
+      "command": "uncheck",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "449d7cc6-bcfd-43e8-a45d-69578b6a1787",
+      "comment": "",
+      "command": "assertNotChecked",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "0b7aeb69-49ae-4051-8e16-4df9bdb13e91",
+      "comment": "",
+      "command": "uncheck",
+      "target": "id=f",
+      "value": ""
+    }, {
+      "id": "92a69862-748c-4f28-8335-789210000b24",
+      "comment": "Ensure no-op on unchecking already unchecked element",
+      "command": "assertNotChecked",
+      "target": "id=f",
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "3d4775e5-d40b-4359-a098-fc05b297cfaa",
+    "name": "checks",
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["6039c6d8-87e9-4fa1-b785-fdeb385b218d"]
+  }],
+  "urls": ["https://en.wikipedia.org"],
+  "plugins": [],
+  "version": "1.0",
+  "code": [{
+    "name": "checks",
+    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80';jest.setTimeout(300000);describe(\"checks\", () => {it(\"check-examples\", async () => {driver.get(BASE_URL + \"/check.html\");driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.toBeChecked();driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.toBeChecked();driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.not.toBeChecked();driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.not.toBeChecked();await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+  }],
+  "dependencies": {}
+}

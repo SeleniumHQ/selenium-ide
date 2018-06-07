@@ -26,10 +26,6 @@ let contentWindowId;
 
 const recorder = new BackgroundRecorder();
 
-/* flags */
-let isRecording = false;
-let isPlaying = false;
-
 export function toggleRecord(isRecording) {
   isRecording ? recorder.attach() : recorder.detach();
 }
@@ -40,12 +36,6 @@ function handleMessage(message, sender, sendResponse) { // eslint-disable-line n
   }
   if (message.cancelSelectTarget) {
     endSelection(sender.tab.id);
-  }
-
-  if (message.attachRecorderRequest) {
-    if (isRecording && !isPlaying) {
-      browser.tabs.sendMessage(sender.tab.id, { attachRecorder: true });
-    }
   }
 }
 

@@ -68,6 +68,7 @@ class Suite extends React.Component {
     connectDropTarget: PropTypes.func.isRequired,
     selectTests: PropTypes.func.isRequired,
     rename: PropTypes.func.isRequired,
+    editSettings: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
@@ -95,6 +96,7 @@ class Suite extends React.Component {
       <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
       <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
       <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
+      <ListMenuItem onClick={this.props.editSettings}>Settings</ListMenuItem>
     </ListMenu>;
     //setting component of context menu.
     this.props.setContextMenu(listMenu);

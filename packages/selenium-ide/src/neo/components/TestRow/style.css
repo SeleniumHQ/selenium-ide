@@ -88,8 +88,17 @@
   color: #008425;
 }
 
+.test-table tbody tr.undetermined td {
+  color: #d49b2c;
+}
+
 .test-table tbody tr.failed td {
   color: #E80600;
+}
+
+.test-table tbody tr.fatal td:not(:first-child) {
+  color: #E80600;
+  font-weight: bold;
 }
 
 .test-table tr {

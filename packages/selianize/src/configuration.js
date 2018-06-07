@@ -15,10 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function emit(project) {
-  return `const BASE_URL = '${project.url}';`;
+const hooks = [];
+
+export async function emit(project) {
+  return `const BASE_URL = configuration.baseUrl || '${project.url}';${(await Promise.all(hooks.map((hook) => hook({name: project.name})))).join("")}`;
+}
+
+function registerHook(hook) {
+  hooks.push(hook);
 }
 
 export default {
-  emit
+  emit,
+  registerHook
 };

@@ -41,13 +41,7 @@ describe("file classifier", () => {
 describe("selenium test case migration", () => {
   it("should migrate the set example", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.name).toBe("My Test");
-    expect(project.url).toBe("https://www.google.com/");
-    expect(project.urls.length).toBe(1);
-    expect(project.suites).toBeInstanceOf(Array);
-    expect(project.tests.length).toBe(1);
-    const test = project.tests[0];
+    const { test } = migrateTestCase(file);
     expect(test.commands.length).toBe(4);
     const command = test.commands[0];
     expect(command.command).toBe("open");
@@ -56,24 +50,24 @@ describe("selenium test case migration", () => {
   });
   it("should migrate the second example", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].commands.length).toBe(26);
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(26);
   });
   it("should join line breaks to <br /> in the target field", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
+    const { test } = migrateTestCase(file);
+    expect(test.commands[8].target).toBe("//a[contains(text(),'Most<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
   });
   it("should sanitize the input prior to converting", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_3.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].name).toBe("Show Details");
-    expect(project.tests[0].commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
+    const { test } = migrateTestCase(file);
+    expect(test.name).toBe("Show Details");
+    expect(test.commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
   });
   it("should decode the input post conversion", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_8.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
+    const { test } = migrateTestCase(file);
+    expect(test.commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
   });
 });
 

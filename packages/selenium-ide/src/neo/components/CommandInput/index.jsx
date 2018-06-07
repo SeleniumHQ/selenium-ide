@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import AutoComplete from "../AutoComplete";
 import Input from "../FormInput";
 import CommandName from "../CommandName";
-import { Commands, CommandsArray } from "../../models/Command";
+import { Commands } from "../../models/Command";
 
 export default class CommandInput extends React.Component {
   static propTypes = {
@@ -35,10 +35,10 @@ export default class CommandInput extends React.Component {
       <Input name={this.props.name} label={this.props.label}>
         <AutoComplete
           getItemValue={(item) => (
-            Commands[item]
+            Commands.list.get(item).name
           )}
-          items={CommandsArray}
-          shouldItemRender={(item, value) => (Commands[item].indexOf(value) !== -1)}
+          items={Commands.array}
+          shouldItemRender={(item, value) => (Commands.list.get(item).name.indexOf(value) !== -1)}
           renderDefaultStyledItem={(item) =>
             <CommandName>{item}</CommandName>
           }

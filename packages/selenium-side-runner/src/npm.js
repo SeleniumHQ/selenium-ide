@@ -15,38 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import webdriver from "selenium-webdriver";
+let npm;
 
-const Runner = {};
-const drivers = [];
-Runner.configuration = JSON.parse(process.env.configuration);
-Runner.buildDriver = function() {
-  const driver = new webdriver.Builder().withCapabilities(Runner.configuration.capabilities);
-
-  if (Runner.configuration.server) driver.usingServer(Runner.configuration.server);
-
-  return driver.build();
-};
-
-Runner.getDriver = function() {
-  const driver = Runner.buildDriver();
-  drivers.push(driver);
-  return driver;
-};
-
-Runner.releaseDriver = function(driver) {
-  drivers.splice(drivers.indexOf(driver), 1);
-  return driver.quit();
-};
-
-Runner.cleaup = function() {
-  if (drivers.length) {
-    return Promise.all(drivers.map(driver => (
-      driver.quit()
-    )));
+try {
+  npm = require("global-npm");
+} catch (err) {
+  if (err.code === "MODULE_NOT_FOUND") {
+    npm = require("npm");
   } else {
-    return Promise.resolve();
+    throw err;
   }
-};
+}
 
-global.Runner = Runner;
+export function install() {
+  return new Promise((res, rej) => {
+    npm.load({ progress: false, loglevel: "silent" }, (e) => {
+      if (e) {
+        rej(e);
+      } else {
+        npm.commands.install((e) => {
+          if (e) {
+            rej(e);
+          } else {
+            res();
+          }
+        });
+      }
+    });
+  });
+}

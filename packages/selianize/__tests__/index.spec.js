@@ -17,12 +17,57 @@
 
 import fs from "fs";
 import path from "path";
-import Selianize, { ParseError } from "../src";
+import Selianize, { ParseError, RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "../src";
 
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
     return expect(Selianize(project)).resolves.toBeDefined();
+  });
+  it("hook should add configuration code", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve("some code the the top"));
+    RegisterConfigurationHook(hook);
+    return expect((await Selianize(project))[0].code).toMatch(/some code the the top/);
+  });
+  it("should register a suite emitter hook", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({before: "", after: "", beforeAll: "", afterAll: ""}));
+    RegisterSuiteHook(hook);
+    await Selianize(project);
+    expect(hook).toHaveBeenCalledTimes(1);
+  });
+  it("should add a before and after code", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({before: "before code", beforeAll: "before all code", after: "after code", afterAll: "after all code"}));
+    RegisterSuiteHook(hook);
+    return expect((await Selianize(project))[0].code).toMatch(/describe\("aaa suite", \(\) => {beforeAll\(async \(\) => {before all code}\);beforeEach\(async \(\) => {before code}\);afterEach\(async \(\) => {after code}\);afterAll\(async \(\) => {after all code}\);it\(/);
+  });
+  it("should register a test emitter hook", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({setup: "", teardown: ""}));
+    RegisterTestHook(hook);
+    await Selianize(project);
+    expect(hook).toHaveBeenCalledTimes(3);
+  });
+  it("hook should add setup and teardown code", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve({setup: "", teardown: ""}));
+    hook.mockReturnValueOnce(Promise.resolve({setup: "some setup code", teardown: "other teardown code"}));
+    RegisterTestHook(hook);
+    return expect((await Selianize(project))[0].code).toMatch(/it\("aa playback", async \(\) => {some setup code.*other teardown codeawait.*}\);/);
+  });
+  it("should register a new command emitter", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-4-new-command.side")));
+    const hook = jest.fn();
+    hook.mockReturnValue(Promise.resolve("some new command code"));
+    RegisterEmitter("newCommand", hook);
+    return expect((await Selianize(project))[0].code).toMatch(/some new command codeawait/);
   });
   it("should fail to export a project with errors", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-2.side")));

@@ -36,6 +36,7 @@ import Navigation from "../Navigation";
 import Editor from "../Editor";
 import Console from "../Console";
 import Modal from "../Modal";
+import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
@@ -44,12 +45,14 @@ import "../../styles/layout.css";
 import "../../styles/resizer.css";
 import "../../styles/markdown.css";
 
-import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
+import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
 if (process.env.NODE_ENV !== "test") {
   require("../../IO/SideeX/record");
   require("../../IO/SideeX/playback");
+  const api = require("../../../api");
+  browser.runtime.onMessage.addListener(api.default);
 }
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
@@ -169,7 +172,6 @@ firefox57WorkaroundForBlankPanel();
                 changeName={this.state.project.changeName}
                 load={loadProject.bind(undefined, project)}
                 save={() => saveProject(project)}
-                export={() => exportProject(project)}
               />
               <div className={classNames("content", { dragging: UiState.navigationDragging })}>
                 <SplitPane
@@ -198,11 +200,10 @@ firefox57WorkaroundForBlankPanel();
                 </SplitPane>
               </div>
             </div>
-            <Console
-              height={UiState.consoleHeight}
-              restoreSize={UiState.restoreConsoleSize} />
+            <Console height={UiState.consoleHeight} restoreSize={UiState.restoreConsoleSize} />
           </SplitPane>
           <Modal project={this.state.project} />
+          <Changelog />
           <Tooltip />
         </SuiteDropzone>
       </div>

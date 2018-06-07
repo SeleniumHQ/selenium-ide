@@ -24,8 +24,9 @@ import { observer } from "mobx-react";
 import OpenButton from "../ActionButtons/Open";
 import SaveButton from "../ActionButtons/Save";
 import MoreButton from "../ActionButtons/More";
-import ListMenu, { ListMenuItem } from "../ListMenu";
+import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
 import UiState from "../../stores/view/UiState";
+import { showChangelog } from "../Changelog";
 import "./style.css";
 
 @observer
@@ -40,8 +41,7 @@ export default class ProjectHeader extends React.Component {
     changed: PropTypes.bool,
     changeName: PropTypes.func.isRequired,
     load: PropTypes.func,
-    save: PropTypes.func,
-    export: PropTypes.func
+    save: PropTypes.func
   };
   handleKeyDown(e) {
     if (e.key === "Enter") e.preventDefault();
@@ -63,9 +63,12 @@ export default class ProjectHeader extends React.Component {
           <ListMenu width={250} padding={-5} opener={
             <MoreButton canFocus={true} />
           }>
-            { process.env.NODE_ENV !== "production" && <ListMenuItem onClick={this.props.export}>Export to JavaScript code</ListMenuItem> }
             <ListMenuItem onClick={() => { UiState.setOptions({ recordNotifications: !UiState.options.recordNotifications }); }}>
               {UiState.options.recordNotifications ? "Disable record notifications" : "Enable record notifications"}
+            </ListMenuItem>
+            <ListMenuSeparator />
+            <ListMenuItem onClick={showChangelog}>
+              {"What's new"}
             </ListMenuItem>
           </ListMenu>
         </span>

@@ -27,6 +27,9 @@ const emitters = {
 
 export function emit(location) {
   return new Promise(async (res, rej) => {
+    if (/^\/\//.test(location)) {
+      return res(await emitters.xpath(location));
+    }
     const fragments = location.split("=");
     const type = fragments.shift();
     const selector = StringEscape(fragments.join("="));

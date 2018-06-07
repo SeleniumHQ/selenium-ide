@@ -15,12 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import uuidv4 from "uuid/v4";
 import browser from "webextension-polyfill";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
+import ModalState from "./ModalState";
+import PluginManager from "../../../plugin/manager";
+import NoResponseError from "../../../errors/no-response";
+import logger from "./Logs";
+import { LogTypes } from "../../ui-models/Log";
 
 class PlaybackState {
+  @observable runId = "";
   @observable isPlaying = false;
+  @observable isStopping = false;
   @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
@@ -44,44 +52,109 @@ class PlaybackState {
 
   @computed get hasFinishedSuccessfully() {
     return !this.runningQueue.find(({ id }) => (
-      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed : false
+      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed || this.commandState.get(id).state === PlaybackStates.Fatal : false
     ));
   }
 
+  beforePlaying(play) {
+    UiState._project.addCurrentUrl();
+    if (UiState.isRecording) {
+      ModalState.showAlert({
+        title: "Stop recording",
+        description: "Are you sure you would like to stop recording, and start playing?",
+        confirmLabel: "Playback",
+        cancelLabel: "cancel"
+      }, (chosePlay) => {
+        if (chosePlay) {
+          UiState.stopRecording();
+          play();
+        }
+      });
+    } else {
+      play();
+    }
+  }
+
   @action.bound startPlayingSuite() {
-    const { suite } = UiState.selectedTest;
-    this.resetState();
-    this.currentRunningSuite = suite.id;
-    this._testsToRun = [...suite.tests];
-    this.testsCount = this._testsToRun.length;
-    this.playNext();
+    const playSuite = action(() => {
+      const { suite } = UiState.selectedTest;
+      this.resetState();
+      this.runId = uuidv4();
+      this.currentRunningSuite = suite;
+      this._testsToRun = [...suite.tests];
+      this.testsCount = this._testsToRun.length;
+      PluginManager.emitMessage({
+        action: "event",
+        event: "suitePlaybackStarted",
+        options: {
+          runId: this.runId,
+          suiteName: this.currentRunningSuite.name,
+          projectName: UiState._project.name
+        }
+      }).then(() => {
+        this.playNext();
+      });
+    });
+    this.beforePlaying(playSuite);
   }
 
   @action.bound startPlaying(command) {
-    const { test } = UiState.selectedTest;
-    this.resetState();
-    this.currentRunningSuite = undefined;
-    this.currentRunningTest = test;
-    this.testsCount = 1;
-    this.currentPlayingIndex = 0;
-    if (command && command.constructor.name === "Command") {
-      this.currentPlayingIndex = test.commands.indexOf(command);
-    }
-    this.runningQueue = test.commands.peek();
-    this.isPlaying = true;
+    const playTest = action(() => {
+      const { test } = UiState.selectedTest;
+      this.resetState();
+      this.runId = uuidv4();
+      this.currentRunningSuite = undefined;
+      this.currentRunningTest = test;
+      this.testsCount = 1;
+      this.currentPlayingIndex = 0;
+      if (command && command.constructor.name === "Command") {
+        this.currentPlayingIndex = test.commands.indexOf(command);
+      }
+      this.runningQueue = test.commands.peek();
+      const pluginsLogs = {};
+      if (PluginManager.plugins.length) logger.log("Preparing plugins for test run...");
+      PluginManager.emitMessage({
+        action: "event",
+        event: "playbackStarted",
+        options: {
+          runId: this.runId,
+          testId: this.currentRunningTest.id,
+          testName: this.currentRunningTest.name,
+          projectName: UiState._project.name
+        }
+      }, (plugin, resolved) => {
+        let log = pluginsLogs[plugin.id];
+
+        if (!log) {
+          log = logger.log(`Waiting for ${plugin.name} to start...`);
+          pluginsLogs[plugin.id] = log;
+        }
+
+        if (resolved) {
+          log.setStatus(LogTypes.Success);
+        }
+      }).then(action(() => {
+        this.isPlaying = true;
+      }));
+    });
+    this.beforePlaying(playTest);
   }
 
   @action.bound playCommand(command, jumpToNext) {
-    this.noStatisticsEffects = true;
-    this.jumpToNextCommand = jumpToNext;
-    this.paused = false;
-    this.currentPlayingIndex = 0;
-    this.errors = 0;
-    this.hasFailed = false;
-    this.aborted = false;
-    this.currentRunningTest = UiState.selectedTest.test;
-    this.runningQueue = [command];
-    this.isPlaying = true;
+    const playCommand = action(() => {
+      this.runId = "";
+      this.noStatisticsEffects = true;
+      this.jumpToNextCommand = jumpToNext;
+      this.paused = false;
+      this.currentPlayingIndex = 0;
+      this.errors = 0;
+      this.hasFailed = false;
+      this.aborted = false;
+      this.currentRunningTest = UiState.selectedTest.test;
+      this.runningQueue = [command];
+      this.isPlaying = true;
+    });
+    this.beforePlaying(playCommand);
   }
 
   @action.bound playNext() {
@@ -90,22 +163,88 @@ class PlaybackState {
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.currentPlayingIndex = 0;
     this.errors = 0;
-    setTimeout(action(() => {
+    this.hasFailed = false;
+    PluginManager.emitMessage({
+      action: "event",
+      event: "playbackStarted",
+      options: {
+        runId: this.runId,
+        testId: this.currentRunningTest.id,
+        testName: this.currentRunningTest.name,
+        suiteName: this.currentRunningSuite.name,
+        projectName: UiState._project.name
+      }
+    }).then(action(() => {
       this.isPlaying = true;
-    }), 0);
+    }));
+  }
+
+  @action.bound stopPlayingGracefully() {
+    if (this.isPlaying) {
+      this.isStopping = true;
+      this.paused = false;
+    }
   }
 
   @action.bound stopPlaying() {
-    this.isPlaying = false;
-    this.paused = false;
+    if (this.isPlaying) {
+      this.isStopping = true;
+      this.paused = false;
+      const pluginsLogs = {};
+      return PluginManager.emitMessage({
+        action: "event",
+        event: "playbackStopped",
+        options: {
+          runId: this.runId,
+          testId: this.currentRunningTest.id,
+          testName: this.currentRunningTest.name,
+          suiteName: this.currentRunningSuite ? this.currentRunningSuite.name : undefined,
+          projectName: UiState._project.name
+        }
+      }, (plugin, resolved) => {
+        let log = pluginsLogs[plugin.id];
+
+        if (!log) {
+          log = logger.log(`Waiting for ${plugin.name} to finish...`);
+          pluginsLogs[plugin.id] = log;
+        }
+
+        if (resolved) {
+          log.setStatus(LogTypes.Success);
+        }
+      }).then(action(results => {
+        return new Promise((res) => {
+          results.forEach(result => {
+            if (result.message) {
+              if (result instanceof Error) {
+                if (!(result instanceof NoResponseError)) {
+                  logger.error(result.message);
+                  if (!this.hasFinishedSuccessfully && !this.hasFailed) {
+                    this.hasFailed = true;
+                    this.failures++;
+                  }
+                }
+              } else {
+                logger.log(result.message);
+              }
+            }
+            this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
+          });
+          this.isPlaying = false;
+          this.isStopping = false;
+          return res();
+        });
+      }));
+    }
+    return Promise.reject("Playback is not running");
   }
 
-  @action.bound abortPlaying() {
+  @action.bound abortPlaying(fatalHandled) {
     this.aborted = true;
     this.hasFailed = true;
     this._testsToRun = [];
-    this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Failed, message: "Playback aborted" });
-    this.stopPlaying();
+    fatalHandled || this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Undetermined, message: "Aborting..." });
+    this.stopPlayingGracefully();
   }
 
   @action.bound pause() {
@@ -126,7 +265,6 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
     if (!this.hasFinishedSuccessfully) {
       this.hasFailed = true;
     }
@@ -137,15 +275,25 @@ class PlaybackState {
         this.failures++;
       }
     }
-    this.stopPlaying();
-    if (this.jumpToNextCommand) {
-      UiState.selectNextCommand();
-    }
-    if (this._testsToRun.length) {
-      this.playNext();
-    } else if (this.currentRunningSuite) {
-      this.suiteState.set(this.currentRunningSuite, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
-    }
+    this.stopPlaying().then(() => {
+      if (this.jumpToNextCommand) {
+        UiState.selectNextCommand();
+      }
+      if (this._testsToRun.length) {
+        this.playNext();
+      } else if (this.currentRunningSuite) {
+        PluginManager.emitMessage({
+          action: "event",
+          event: "suitePlaybackStopped",
+          options: {
+            runId: this.runId,
+            suiteName: this.currentRunningSuite.name,
+            projectName: UiState._project.name
+          }
+        });
+        this.suiteState.set(this.currentRunningSuite.id, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
+      }
+    });
   }
 
   @action.bound setPlayingIndex(index) {
@@ -153,11 +301,14 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state, message) {
-    if (state === PlaybackStates.Failed) {
+    if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
       this.errors++;
     }
     if (this.isPlaying) {
       this.commandState.set(commandId, { state, message });
+      if (state === PlaybackStates.Fatal) {
+        this.abortPlaying(true);
+      }
     }
   }
 
@@ -170,7 +321,6 @@ class PlaybackState {
   }
 
   @action.bound resetState() {
-    UiState.stopRecording();
     this.clearCommandStates();
     this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;
@@ -184,9 +334,11 @@ class PlaybackState {
 }
 
 export const PlaybackStates = {
-  Passed: "passed",
   Failed: "failed",
-  Pending: "pending"
+  Fatal: "fatal",
+  Passed: "passed",
+  Pending: "pending",
+  Undetermined: "undetermined"
 };
 
 if (!window._playbackState) window._playbackState = new PlaybackState();

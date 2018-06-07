@@ -67,6 +67,14 @@ describe("capabilities string parser", () => {
       }
     });
   });
+  it("should parse dot-notation arrays", () => {
+    const capabilities = "chromeOptions.args=[disable-infobars]";
+    expect(Capabilities.parseString(capabilities)).toEqual({
+      chromeOptions: {
+        args: [ "disable-infobars" ]
+      }
+    });
+  });
   it("should parse space separated capability keys", () => {
     const capabilities = "browserName =chrome platform= MAC unexpectedAlertBehaviour = ignore";
     expect(Capabilities.parseString(capabilities)).toEqual({

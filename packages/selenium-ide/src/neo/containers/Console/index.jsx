@@ -22,24 +22,33 @@ import LogList from "../../components/LogList";
 import StoredVarList from "../../components/StoredVarList";
 import ClearButton from "../../components/ActionButtons/Clear";
 import RefreshButton from "../../components/ActionButtons/Refresh";
-import LogStore from "../../stores/view/Logs";
+import logger from "../../stores/view/Logs";
+import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
+import CommandReference from "../../components/CommandReference";
 
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeTab: "Log", refresh: 0 };
+    this.state = { tab: "Log", refresh: 0 };
     this.store = new LogStore();
-    this.handleTabChanged = this.handleTabChanged.bind(this);
     this.tabClicked = this.tabClicked.bind(this);
     this.refresh = this.refresh.bind(this);
+
+    this.playbackLogger = new PlaybackLogger();
+    //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
+    this.tabChangedHandler = this.tabChangedHandler.bind(this);
   }
   componentWillUnmount() {
-    this.store.dispose();
+    //this.loggerObserver.dispose();
+    this.playbackLogger.dispose();
   }
-  handleTabChanged(tab) {
-    this.setState({ activeTab: tab });
+  tabChangedHandler(tab) {
+    this.setState({
+      tab
+    });
   }
+  //create different object which stores name and read status (e.g., unread boolean)
   tabClicked() {
     this.refresh();
     this.props.restoreSize();
@@ -49,7 +58,7 @@ export default class Console extends React.Component {
   }
   render() {
     const buttonsBox = {
-      "Log": <ClearButton onClick={this.store.clearLogs} />,
+      "Log": <ClearButton onClick={logger.clearLogs} />,
       "Stored-Vars": <RefreshButton onClick={this.refresh} />
     };
 
@@ -62,10 +71,12 @@ export default class Console extends React.Component {
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={Object.keys(consoleBox)} tabWidth={100} buttonsMargin={0} tabChanged={this.handleTabChanged} tabClicked={this.tabClicked}>
-          {buttonsBox[this.state.activeTab]}
+        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
+          {buttonsBox[this.state.tab]}
         </TabBar>
-        {consoleBox[this.state.activeTab]}
+        {this.state.tab === "Log" && <LogList logger={logger} /> }
+        {this.state.tab === "Reference" && <CommandReference /> }
+        {consoleBox[this.state.tab]}
       </footer>
     );
   }

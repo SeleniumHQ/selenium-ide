@@ -105,6 +105,7 @@ class TestRow extends React.Component {
     className: PropTypes.string,
     status: PropTypes.string,
     command: PropTypes.object.isRequired,
+    new: PropTypes.func,
     isPristine: PropTypes.bool,
     select: PropTypes.func,
     startPlayingHere: PropTypes.func,
@@ -207,7 +208,13 @@ class TestRow extends React.Component {
     this.props.setContextMenu(listMenu);
 
     const rendered = <tr
-      ref={node => {return(this.node = node || this.node);}}
+      ref={node => {
+        if (node && this.props.new) {
+          this.props.new();
+          node.scrollIntoView();
+        }
+        return (this.node = node || this.node);
+      }}
       className={classNames(this.props.className, this.props.status, { "selected": this.props.selected }, { "break-point": this.props.command.isBreakpoint })}
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}

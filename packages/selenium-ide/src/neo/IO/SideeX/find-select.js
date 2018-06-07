@@ -19,6 +19,8 @@ import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
+import { TargetTypes } from "../../models/Command";
+import Region from "../../models/Region";
 
 export function find(target) {
   try{
@@ -29,9 +31,10 @@ export function find(target) {
       if (!tabs.length) {
         console.log("No match tabs");
       } else {
+        const region = new Region(target);
         browser.tabs.sendMessage(tabs[0].id, {
           showElement: true,
-          targetValue: target
+          targetValue: region.isValid() ? region.toJS() : target
         }).then((response) => {
           if (response && response.result === "element not found") {
             ModalState.showAlert({
@@ -48,7 +51,15 @@ export function find(target) {
   }
 }
 
-export function select() {
+export function select(type, rect) {
+  const tabConnectionFailure = () => {
+    ModalState.showAlert({
+      title: "Can't connect to tab",
+      description: "Make sure the tab begins with `http://`, or try to refresh the tab.",
+      confirmLabel: "Close"
+    });
+    UiState.setSelectingTarget(false);
+  };
   UiState.setSelectingTarget(!UiState.isSelectingTarget);
   if (!UiState.isSelectingTarget) {
     browser.tabs.query({
@@ -68,8 +79,13 @@ export function select() {
       if (tabs.length === 0) {
         console.log("No match tabs");
         UiState.setSelectingTarget(false);
-      } else
-        browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true });
+      } else {
+        if (type === TargetTypes.LOCATOR) {
+          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, element: true }).catch(tabConnectionFailure);
+        } else if (type === TargetTypes.REGION) {
+          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS() }).catch(tabConnectionFailure);
+        }
+      }
     });
   }
 }
