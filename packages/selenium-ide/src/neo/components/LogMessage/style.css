@@ -1,3 +1,7 @@
+.log {
+  margin: 7px 0;
+}
+
 .log .index {
   display: inline-block;
   width: 20px;
