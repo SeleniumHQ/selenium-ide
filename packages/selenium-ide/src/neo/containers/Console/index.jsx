@@ -60,13 +60,13 @@ export default class Console extends React.Component {
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log", "Stored-Vars", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
+        <TabBar tabs={["Log", "Variables", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
           {this.state.tab === "Log" && <ClearButton onClick={logger.clearLogs} /> }
-          {this.state.tab === "Stored-Vars" && <RefreshButton onClick={this.refresh} /> }
+          {this.state.tab === "Variables" && <RefreshButton onClick={this.refresh} /> }
           {this.state.tab === "Reference" && <ClearButton onClick={logger.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList logger={logger} /> }
-        {this.state.tab === "Stored-Vars" && <StoredVarList refresh={this.refresh}/> }
+        {this.state.tab === "Variables" && <StoredVarList refresh={this.refresh}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );
