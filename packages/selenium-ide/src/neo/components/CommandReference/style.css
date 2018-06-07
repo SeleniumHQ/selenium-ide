@@ -1,0 +1,11 @@
+.command-reference .name {
+  font-weight: bold;
+}
+
+.command-reference .description {
+  font-weight: bold;
+}
+
+.command-reference .pattern {
+  padding-left: 15px;
+}

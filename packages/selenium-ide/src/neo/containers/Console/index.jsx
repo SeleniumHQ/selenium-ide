@@ -57,8 +57,10 @@ export default class Console extends React.Component {
         <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
           <ClearButton onClick={output.clear} />
         </TabBar>
-        {this.state.tab === "Log" && <LogList output={output} /> }
-        {this.state.tab === "Reference" && <CommandReference /> }
+        <div className="viewport">
+          {this.state.tab === "Log" && <LogList output={output} /> }
+          {this.state.tab === "Reference" && <CommandReference /> }
+        </div>
       </footer>
     );
   }

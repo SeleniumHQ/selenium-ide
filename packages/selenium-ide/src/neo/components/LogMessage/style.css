@@ -1,7 +1,3 @@
-.log {
-  margin: 7px 0;
-}
-
 .log .index {
   display: inline-block;
   width: 20px;
@@ -17,10 +13,6 @@
 
 .log.error {
   color: #E80600;
-}
-
-.log .message:after {
-  padding: 0 5px;
 }
 
 .log.success.notice {

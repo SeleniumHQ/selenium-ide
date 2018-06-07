@@ -23,12 +23,15 @@ import "./style.css";
 export default class ReferenceMessage extends React.Component {
   render() {
     return (
-      <div className="reference-message">
+      <div className="command-reference">
         <ul>
-          <li>name</li>
-          <li>description</li>
-          <li>params</li>
-          <li>response</li>
+          <li className="name">assert text present (pattern)</li>
+          <li className="description">generated from is text present (pattern)</li>
+          <br />
+          <li>arguments:</li>
+          <li className="pattern">pattern - a pattern to match the text of the page</li>
+          <li>returns:</li>
+          <li className="pattern">pattern - a pattern to match the text of the page</li>
         </ul>
       </div>
     );
