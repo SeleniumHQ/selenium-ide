@@ -18,7 +18,7 @@
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";
-import { verifyFile, FileTypes, parseSuiteRequirements, migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
+import { verifyFile, FileTypes, parseSuiteRequirements, migrateTestCase, migrateProject, migrateUrls } from "../../../IO/legacy/migrate";
 
 useStrict(true);
 
@@ -163,5 +163,39 @@ describe("selenium suite migration", () => {
     const project = migrateProject(files);
     expect(project.suites.length).toBe(1);
     expect(project.tests.length).toBe(3);
+  });
+});
+
+describe("url migration", () => {
+  it("should migrate all urls to absolute ones", () => {
+    const test = {
+      commands: [
+        {
+          command: "open",
+          target: "/index.html"
+        },
+        {
+          command: "open",
+          target: "/users"
+        }
+      ]
+    };
+    const baseUrl = "https://seleniumhq.org/";
+    const migrated = migrateUrls(test, baseUrl);
+    expect(migrated.commands[0].target).toBe("https://seleniumhq.org/index.html");
+    expect(migrated.commands[1].target).toBe("https://seleniumhq.org/users");
+  });
+  it("should not migrate absolute urls", () => {
+    const test = {
+      commands: [
+        {
+          command: "open",
+          target: "https://seleniumhq.org/index.html"
+        }
+      ]
+    };
+    const baseUrl = "https://wikipedia.org";
+    const migrated = migrateUrls(test, baseUrl);
+    expect(migrated.commands[0].target).toBe("https://seleniumhq.org/index.html");
   });
 });
