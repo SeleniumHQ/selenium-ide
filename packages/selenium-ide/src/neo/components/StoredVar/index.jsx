@@ -46,10 +46,10 @@ export default class StoredVar extends React.Component {
     this.props.delete(this.props.keyVar);
   }
   keyChanged(e) {
-    this.setState({ key: e.target.value })
+    this.setState({ key: e.target.value });
   }
   valueChanged(e) {
-    this.setState({ value: e.target.value })
+    this.setState({ value: e.target.value });
   }
   render() {
     return (

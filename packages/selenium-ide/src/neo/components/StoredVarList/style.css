@@ -1,4 +1,4 @@
-.valHeader {
+.value-header {
   display: table-header-group;
   background: #FFFFFF;
   border-bottom: 2px solid #5B5B5B;
@@ -7,16 +7,16 @@
   text-align: center;
 }
 
-.valHeader div {
+.value-header div {
   display: table-cell;
   padding: 3px 2px;
 }
 
-.valList {
+.value-list {
   display: table-row-group;
 }
 
-.valList .row:nth-child(even) {
+.value-list .row:nth-child(even) {
   background: #f2efef;
 }
 

@@ -54,13 +54,13 @@ export default class StoredVarList extends React.Component {
     return (
       <div className="storeContainer">
         <div className="storedVars" >
-          <div className="valHeader">
+          <div className="value-header">
             <div className="index">No.</div>
             <div className="value">values</div>
             <div className="valEdit"></div>
           </div>
 
-          <div className="valList">
+          <div className="value-list">
             {Object.keys(storedVars).map((storedKey, index) => (
               <StoredVar
                 key={storedKey}
