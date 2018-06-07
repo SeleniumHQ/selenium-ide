@@ -48,7 +48,7 @@ export default class Console extends React.Component {
     });
   }
   //create different object which stores name and read status (e.g., unread boolean)
-  tabClicked() {
+  tabClicked(tab) {
     this.refresh();
     this.props.restoreSize();
   }
