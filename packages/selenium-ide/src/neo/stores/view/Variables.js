@@ -17,7 +17,7 @@
 
 import browser from "webextension-polyfill";
 import { action, observable } from "mobx";
-import { setStoredVar, deleteStoredVar  } from "../../IO/SideeX/formatCommand";
+import { setStoredVar, deleteStoredVar } from "../../IO/SideeX/formatCommand";
 
 export class Variables {
   @observable storedVars = new Map();
@@ -28,7 +28,7 @@ export class Variables {
 
   @action.bound handleFormatCommand(message) {
     if (message.storeStr) {
-      this.addVariable(message.storeVar, message.storeStr)
+      this.addVariable(message.storeVar, message.storeStr);
     }
   }
 

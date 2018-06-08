@@ -19,7 +19,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import StoredVar, { StoredVarAddBtn } from "../StoredVar";
 import { observer } from "mobx-react";
-import { getStoredVars, setStoredVar, deleteStoredVar } from "../../IO/SideeX/formatCommand";
 import "./style.css";
 
 @observer
@@ -54,7 +53,7 @@ export default class StoredVarList extends React.Component {
           <div className="value-header">
             <div className="index">No.</div>
             <div className="value">values</div>
-            <div className="valEdit"></div>
+            <div className="remarks"></div>
           </div>
 
           <div className="value-list">
@@ -81,6 +80,6 @@ export default class StoredVarList extends React.Component {
     );
   }
   static propTypes = {
-    refresh: PropTypes.func
+    variables: PropTypes.object
   };
 }
