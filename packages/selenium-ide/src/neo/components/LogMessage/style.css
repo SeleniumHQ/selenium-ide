@@ -11,6 +11,10 @@
   font-weight: bold;
 }
 
+.log.warn {
+  color: #DC9914;
+}
+
 .log.error {
   color: #E80600;
 }

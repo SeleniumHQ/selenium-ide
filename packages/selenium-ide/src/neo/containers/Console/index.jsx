@@ -21,7 +21,7 @@ import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import StoredVarList from "../../components/StoredVarList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import logger from "../../stores/view/Logs";
+import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
 import CommandReference from "../../components/CommandReference";
@@ -59,11 +59,11 @@ export default class Console extends React.Component {
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
         <TabBar tabs={["Log", "Variables", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
-          {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={logger.clearLogs} /> }
+          {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clearLogs} /> }
           {this.state.tab === "Variables" && <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} /> }
-          {this.state.tab === "Reference" && <ClearButton onClick={logger.clearLogs} /> }
+          {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
         </TabBar>
-        {this.state.tab === "Log" && <LogList logger={logger} /> }
+        {this.state.tab === "Log" && <LogList output={output} /> }
         {this.state.tab === "Variables" && <StoredVarList variables={variables}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>

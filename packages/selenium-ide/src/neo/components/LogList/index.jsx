@@ -30,7 +30,7 @@ export default class LogList extends React.Component {
     return (
       <div className="logs" ref={container => {this.container = container;}}>
         <ul>
-          {this.props.logger.logs.map((log) => (
+          {this.props.output.logs.map((log) => (
             <LogMessage key={log.id} log={log} />
           ))}
         </ul>
@@ -38,6 +38,6 @@ export default class LogList extends React.Component {
     );
   }
   static propTypes = {
-    logger: PropTypes.object
+    output: PropTypes.object
   };
 }

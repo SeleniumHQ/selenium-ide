@@ -30,9 +30,9 @@ router.get("/tab", (req, res) => {
     windowId: extCommand.getContentWindowId()
   }).then((tabs) => {
     if (!tabs.length) {
-      res({error: "No active tab found"});
+      res({ error: "No active tab found" });
     } else {
-      res({id: tabs[0].id});
+      res({ id: tabs[0].id });
     }
   });
 });

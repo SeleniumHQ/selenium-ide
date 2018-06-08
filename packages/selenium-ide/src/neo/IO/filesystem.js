@@ -18,7 +18,7 @@
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { js_beautify as beautify } from "js-beautify";
-import { verifyFile, FileTypes, migrateTestCase, migrateProject } from "./legacy/migrate";
+import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
 import TestCase from "../models/TestCase";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
@@ -139,8 +139,19 @@ export function loadProject(project, file) {
             project.fromJS(migrateProject(files));
           });
         } else if (type === FileTypes.TestCase) {
-          const { test } = migrateTestCase(contents);
-          project.addTestCase(TestCase.fromJS(test));
+          const { test, baseUrl } = migrateTestCase(contents);
+          if (project.url && project.url !== baseUrl) {
+            ModalState.showAlert({
+              title: "Migrate test case",
+              description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
+              confirmLabel: "Migrate",
+              cancelLabel: "Discard"
+            }, (choseDownload) => {
+              if (choseDownload) {
+                project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl)));
+              }
+            });
+          }
         }
       } catch (error) {
         displayError(error);

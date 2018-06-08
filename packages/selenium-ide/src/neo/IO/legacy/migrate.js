@@ -132,6 +132,19 @@ export function migrateTestCase(data) {
   return { test, baseUrl };
 }
 
+export function migrateUrls(test, url) {
+  return Object.assign({}, test, {
+    commands: test.commands.map((command) => {
+      if (command.command === "open") {
+        return Object.assign({}, command, {
+          target: (new URL(command.target, url)).href
+        });
+      }
+      return command;
+    })
+  });
+}
+
 function sanitizeXml(data) {
   return data.replace(/<link(.*")\s*\/{0}>/g, (match, group) => (
     `<link${group} />`

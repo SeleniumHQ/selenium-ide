@@ -25,6 +25,7 @@ export default class Log {
   @observable message = null;
   @observable description = null;
   @observable status = null;
+  @observable channel = null;
   @observable isNotice = false;
 
   constructor(message, status) {
@@ -52,6 +53,10 @@ export default class Log {
     this.status = status;
   }
 
+  @action.bound setChannel(channel) {
+    this.channel = channel;
+  }
+
   @action.bound setNotice() {
     this.isNotice = true;
   }
@@ -63,6 +68,7 @@ export default class Log {
 
 export const LogTypes = {
   Success: "success",
+  Warning: "warn",
   Error: "error",
   Failure: "failure",
   Undetermined: "undetermined"

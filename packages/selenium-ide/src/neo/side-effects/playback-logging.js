@@ -17,11 +17,12 @@
 
 import { observe } from "mobx";
 import Log, { LogTypes } from "../ui-models/Log";
-import logger from "../stores/view/Logs";
+import { Logger, Channels, output } from "../stores/view/Logs";
 import PlaybackState, { PlaybackStates } from "../stores/view/PlaybackState";
 
 export default class PlaybackLogger {
   constructor() {
+    this.logger = new Logger(Channels.PLAYBACK);
     this.playbackDisposer = observe(PlaybackState, "isPlaying", (isPlaying) => {
       this.logPlayingState(isPlaying.newValue);
     });
@@ -52,7 +53,7 @@ export default class PlaybackLogger {
         PlaybackState.hasFailed ? LogTypes.Failure : LogTypes.Success);
       log.setNotice();
     }
-    logger.log(log);
+    this.logger.log(log);
   }
 
   logCommandState(command, status) {
@@ -86,7 +87,7 @@ export default class PlaybackLogger {
         log.setDescription(status.message);
       }
       if (shouldAddLog) {
-        logger.log(log);
+        this.logger.log(log);
       }
     }
   }
@@ -96,11 +97,11 @@ export default class PlaybackLogger {
   }
 
   findCorrespondingLog(commandId) {
-    if (!logger.logs.length) {
+    if (!output.logs.length) {
       return;
     }
-    for (let i = logger.logs.length - 1; i >= 0; i--) {
-      let log = logger.logs[i];
+    for (let i = output.logs.length - 1; i >= 0; i--) {
+      let log = output.logs[i];
       if (!log.commandId && log.isNotice) { // make sure we are in the current run, maybe log runId
         return;
       } else if (log.commandId === commandId) {
