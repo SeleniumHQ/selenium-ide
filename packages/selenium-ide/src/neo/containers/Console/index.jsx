@@ -21,18 +21,17 @@ import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import StoredVarList from "../../components/StoredVarList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import RefreshButton from "../../components/ActionButtons/Refresh";
 import logger from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
 import CommandReference from "../../components/CommandReference";
+import variables from "../../stores/view/Variables";
 
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
     this.state = { tab: "Log", refresh: 0 };
     this.tabClicked = this.tabClicked.bind(this);
-    this.refresh = this.refresh.bind(this);
 
     this.playbackLogger = new PlaybackLogger();
     //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
@@ -52,9 +51,6 @@ export default class Console extends React.Component {
     this.refresh();
     this.props.restoreSize();
   }
-  refresh() {
-    this.setState({ refresh: !this.state.refresh });
-  }
   render() {
     return (
       <footer className="console" style={{
@@ -62,11 +58,11 @@ export default class Console extends React.Component {
       }}>
         <TabBar tabs={["Log", "Variables", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
           {this.state.tab === "Log" && <ClearButton onClick={logger.clearLogs} /> }
-          {this.state.tab === "Variables" && <RefreshButton onClick={this.refresh} /> }
+          {this.state.tab === "Variables" && <ClearButton onClick={variables.clearVariables} /> }
           {this.state.tab === "Reference" && <ClearButton onClick={logger.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList logger={logger} /> }
-        {this.state.tab === "Variables" && <StoredVarList refresh={this.refresh}/> }
+        {this.state.tab === "Variables" && <StoredVarList variables={variables}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );

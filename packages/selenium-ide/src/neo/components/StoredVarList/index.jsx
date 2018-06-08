@@ -18,9 +18,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import StoredVar, { StoredVarAddBtn } from "../StoredVar";
+import { observer } from "mobx-react";
 import { getStoredVars, setStoredVar, deleteStoredVar } from "../../IO/SideeX/formatCommand";
 import "./style.css";
 
+@observer
 export default class StoredVarList extends React.Component {
   constructor(props){
     super(props);
@@ -28,29 +30,24 @@ export default class StoredVarList extends React.Component {
     this.editStoredVar = this.editStoredVar.bind(this);
     this.deleteStoredVar = this.deleteStoredVar.bind(this);
     this.addStoredVar = this.addStoredVar.bind(this);
-    this.refresh = this.refresh.bind(this);
   }
   editStoredVar(key, value){
-    setStoredVar(key, value);
     this.setState({ addingVariable: false });
+    this.props.variables.addVariable(key, value);
   }
   deleteStoredVar(key){
-    deleteStoredVar(key);
     this.setState({ addingVariable: false });
+    this.props.variables.deleteVariable(key);
   }
   addStoredVar(key, value){
-    setStoredVar(key, value);
     this.setState({ addingVariable: false });
-  }
-  refresh(){
-    this.setState({ addingVariable: false });
-    this.props.refresh();
+    this.props.variables.addVariable(key, value);
   }
   add(){
     this.setState({ addingVariable: true });
   }
   render() {
-    const storedVars = getStoredVars();
+    const stored = this.props.variables.storedVars;
     return (
       <div className="storeContainer">
         <div className="storedVars" >
@@ -61,22 +58,20 @@ export default class StoredVarList extends React.Component {
           </div>
 
           <div className="value-list">
-            {Object.keys(storedVars).map((storedKey, index) => (
+            {stored.keys().map((storedKey, index) => (
               <StoredVar
                 key={storedKey}
                 index={index + 1}
                 keyVar={storedKey}
-                value={storedVars[storedKey]}
+                value={stored.get(storedKey)}
                 edit={this.editStoredVar}
                 delete={this.deleteStoredVar}
-                refresh={this.refresh}
               />
             ))}
             {this.state.addingVariable ?
               <StoredVar
                 delete={this.deleteStoredVar}
                 add={this.addStoredVar}
-                refresh={this.refresh}
               />
               : <StoredVarAddBtn add={this.add.bind(this)}/>}
           </div>
