@@ -59,8 +59,8 @@ export default class Console extends React.Component {
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
         <TabBar tabs={["Log", "Variables", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
-          {this.state.tab === "Log" && <ClearButton onClick={logger.clearLogs} /> }
-          {this.state.tab === "Variables" && <ClearButton onClick={variables.clearVariables} /> }
+          {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={logger.clearLogs} /> }
+          {this.state.tab === "Variables" && <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} /> }
           {this.state.tab === "Reference" && <ClearButton onClick={logger.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList logger={logger} /> }
