@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "selianize";
+import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter, RegisterLocationEmitter } from "selianize";
 import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import { registerLocator } from "./locatorResolver";
@@ -72,6 +72,7 @@ class PluginManager {
       if (plugin.locators) {
         plugin.locators.forEach(({ id }) => {
           registerLocator(id, ResolveLocator.bind(undefined, plugin.id, id));
+          RegisterLocationEmitter(id, this.emitLocation.bind(undefined, plugin, id));
         });
       }
     } else {
@@ -153,7 +154,7 @@ class PluginManager {
   }
 
   emitCommand(plugin, command, target, value) {
-    // no need to check emission as it is be unreachable, in case a project can't emit
+    // no need to check emission as it will be unreachable, in case a project can't emit
     return sendMessage(plugin.id, {
       action: "emit",
       entity: "command",
@@ -161,6 +162,18 @@ class PluginManager {
         command,
         target,
         value
+      }
+    }).then(res => res.message);
+  }
+
+  emitLocation(plugin, locator, target) {
+    // no need to check emission as it will be unreachable, in case a project can't emit
+    return sendMessage(plugin.id, {
+      action: "emit",
+      entity: "location",
+      command: {
+        locator,
+        target
       }
     }).then(res => res.message);
   }

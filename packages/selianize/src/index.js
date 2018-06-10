@@ -62,6 +62,10 @@ export function RegisterEmitter(command, emitter) {
   CommandEmitter.registerEmitter(command, emitter);
 }
 
+export function RegisterLocationEmitter(location, emitter) {
+  LocationEmitter.registerEmitter(location, emitter);
+}
+
 export function ParseError(error) {
   return error.suites.map(suite => (
     (`## ${suite.name}\n`).concat(suite.tests.map(test => (
