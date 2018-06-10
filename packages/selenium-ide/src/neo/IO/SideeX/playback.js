@@ -20,7 +20,9 @@ import FatalError from "../../../errors/fatal";
 import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
+import { Commands, TargetTypes } from "../../models/Command";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
+import { canResolveLocator, resolveLocator } from "../../../plugin/locatorResolver";
 import ExtCommand, { isExtCommand } from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 
@@ -229,9 +231,28 @@ function doDomWait(res, domTime, domCount = 0) {
 function prepDoCommand() {
   if (!PlaybackState.isPlaying || PlaybackState.paused) return;
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
-  const parsed = command === "open" ? new URL(target, baseUrl).href : target;
 
-  return doCommand(id, command, { target, parsed }, value);
+  let parseTarget = Promise.resolve(target);
+  if (command === "open") {
+    parseTarget = Promise.resolve(new URL(target, baseUrl).href);
+  } else if (Commands.list.get(command).type === TargetTypes.LOCATOR) {
+    const breakLocator = /\s*([^\s]*)\s*=\s*(.*[^\s])\s*/;
+    const results = target.match(breakLocator);
+    if (canResolveLocator(results[1])) {
+      parseTarget = resolveLocator(results[1], results[2], {
+        commandId: id,
+        runId: PlaybackState.runId,
+        testId: PlaybackState.currentRunningTest.id,
+        frameId: extCommand.getCurrentPlayingFrameId(),
+        tabId: extCommand.currentPlayingTabId,
+        windowId: extCommand.currentPlayingWindowId
+      });
+    }
+  }
+
+  return parseTarget.then((parsed) => (
+    doCommand(id, command, { target, parsed }, value)
+  ));
 }
 
 function doCommand(id, command, target, value, implicitTime = Date.now(), implicitCount = 0) {
