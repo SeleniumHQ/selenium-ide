@@ -19,19 +19,25 @@ import React from "react";
 import { observer } from "mobx-react";
 import "./style.css";
 
+
+          //{ Array.from(this.props.selectedCommand.arguments).map((argument) => <li>{argument}</li>) }
 @observer
-export default class ReferenceMessage extends React.Component {
+export default class CommandReference extends React.Component {
   render() {
     return (
       <div className="command-reference">
         <ul>
-          <li className="name">assert text present (pattern)</li>
-          <li className="description">generated from is text present (pattern)</li>
+          { this.props.selectedCommand.name &&
+            <li className="name">
+              {this.props.selectedCommand.name}&nbsp;
+              {this.props.selectedCommand.target && <em>{this.props.selectedCommand.target.name}</em>}
+              {this.props.selectedCommand.value && <em>, {this.props.selectedCommand.value.name}</em>}
+            </li> }
+          { this.props.selectedCommand.description && <li className="description">{this.props.selectedCommand.description}</li> }
           <br />
           <li>arguments:</li>
-          <li className="pattern">pattern - a pattern to match the text of the page</li>
-          <li>returns:</li>
-          <li className="pattern">pattern - a pattern to match the text of the page</li>
+          { this.props.selectedCommand.target &&
+            <li className="argument">{this.props.selectedCommand.target.name} - {this.props.selectedCommand.target.value}</li> }
         </ul>
       </div>
     );

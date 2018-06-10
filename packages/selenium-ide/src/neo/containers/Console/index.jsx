@@ -24,7 +24,11 @@ import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
 import CommandReference from "../../components/CommandReference";
+import UiState from "../../stores/view/UiState";
+import { observer } from "mobx-react";
+import { Commands } from "../../models/Command";
 
+@observer
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +42,7 @@ export default class Console extends React.Component {
   }
   componentWillUnmount() {
     //this.loggerObserver.dispose();
+    this.testTableObserver.dispose();
     this.playbackLogger.dispose();
   }
   tabChangedHandler(tab) {
@@ -45,10 +50,10 @@ export default class Console extends React.Component {
       tab
     });
   }
-  //create different object which stores name and read status (e.g., unread boolean)
   tabClicked(){
     this.props.restoreSize();
   }
+  //create different object which stores name and read status (e.g., unread boolean)
   render() {
     return (
       <footer className="console" style={{
@@ -57,10 +62,8 @@ export default class Console extends React.Component {
         <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
           <ClearButton onClick={output.clear} />
         </TabBar>
-        <div className="viewport">
-          {this.state.tab === "Log" && <LogList output={output} /> }
-          {this.state.tab === "Reference" && <CommandReference /> }
-        </div>
+        {this.state.tab === "Log" && <LogList output={output} /> }
+        {this.state.tab === "Reference" && <CommandReference selectedCommand={Commands.list.get(UiState.selectedCommand.command)}/> }
       </footer>
     );
   }
