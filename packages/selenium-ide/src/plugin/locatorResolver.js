@@ -24,9 +24,19 @@ function verifyXpath(locator, response) {
   return response;
 }
 
+function isDefaultLocator(locator) {
+  return (locator === "id" ||
+    locator === "name" ||
+    locator === "link" ||
+    locator === "css" ||
+    locator === "xpath");
+}
+
 export function registerLocator(locator, func) {
   if (typeof locator !== "string") {
     throw new Error(`Expected to receive string instead received ${typeof locator}`);
+  } else if (isDefaultLocator(locator)) {
+    throw new Error("Overriding default locator strategies is disallowed");
   } else if (typeof func !== "function") {
     throw new Error(`Expected to receive function instead received ${typeof func}`);
   } else if (locators[locator]) {

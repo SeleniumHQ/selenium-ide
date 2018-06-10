@@ -38,6 +38,13 @@ describe("locator resolver", () => {
     registerLocator(key, new Function());
     expect(() => registerLocator(key, new Function())).toThrowError(`A locator named ${key} already exists`);
   });
+  it("should fail to override a default locator", () => {
+    expect(() => registerLocator("id", new Function())).toThrowError("Overriding default locator strategies is disallowed");
+    expect(() => registerLocator("name", new Function())).toThrowError("Overriding default locator strategies is disallowed");
+    expect(() => registerLocator("link", new Function())).toThrowError("Overriding default locator strategies is disallowed");
+    expect(() => registerLocator("css", new Function())).toThrowError("Overriding default locator strategies is disallowed");
+    expect(() => registerLocator("xpath", new Function())).toThrowError("Overriding default locator strategies is disallowed");
+  });
   it("should check if a locator may be resolved", () => {
     registerLocator("exists", new Function());
     expect(canResolveLocator("exists")).toBeTruthy();
