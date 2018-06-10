@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter, RegisterLocationEmitter } from "selianize";
+import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterCommandEmitter, RegisterLocationEmitter } from "selianize";
 import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import { registerLocator } from "./locatorResolver";
@@ -66,7 +66,7 @@ class PluginManager {
         plugin.commands.forEach(({ id, name, type }) => {
           Commands.addCommand(id, { name, type });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
-          RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
+          RegisterCommandEmitter(id, this.emitCommand.bind(undefined, plugin, id));
         });
       }
       if (plugin.locators) {

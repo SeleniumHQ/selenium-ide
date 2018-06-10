@@ -58,7 +58,7 @@ export function RegisterTestHook(hook) {
   TestCaseEmitter.registerHook(hook);
 }
 
-export function RegisterEmitter(command, emitter) {
+export function RegisterCommandEmitter(command, emitter) {
   CommandEmitter.registerEmitter(command, emitter);
 }
 

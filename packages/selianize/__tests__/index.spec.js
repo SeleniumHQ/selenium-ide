@@ -17,7 +17,7 @@
 
 import fs from "fs";
 import path from "path";
-import Selianize, { ParseError, RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter, RegisterLocationEmitter } from "../src";
+import Selianize, { ParseError, RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterCommandEmitter, RegisterLocationEmitter } from "../src";
 
 describe("Selenium code serializer", () => {
   it("should export the code to javascript", () => {
@@ -66,7 +66,7 @@ describe("Selenium code serializer", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-4-new-command.side")));
     const hook = jest.fn();
     hook.mockReturnValue(Promise.resolve("some new command code"));
-    RegisterEmitter("newCommand", hook);
+    RegisterCommandEmitter("newCommand", hook);
     return expect((await Selianize(project))[0].code).toMatch(/some new command codeawait/);
   });
   it("should register a new location emitter", async () => {
