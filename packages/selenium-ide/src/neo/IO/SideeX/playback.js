@@ -95,7 +95,7 @@ function executionLoop() {
       .then(doAjaxWait)
       .then(doDomWait)
       .then(doDelay)
-      .then(doCommand)
+      .then(prepDoCommand)
       .then(executionLoop);
   }
 }
@@ -226,10 +226,15 @@ function doDomWait(res, domTime, domCount = 0) {
     });
 }
 
-function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
+function prepDoCommand() {
   if (!PlaybackState.isPlaying || PlaybackState.paused) return;
   const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const parsed = command === "open" ? new URL(target, baseUrl).href : target;
 
+  return doCommand(id, command, { target, parsed }, value);
+}
+
+function doCommand(id, command, target, value, implicitTime = Date.now(), implicitCount = 0) {
   let p = new Promise(function(resolve, reject) {
     let count = 0;
     let interval = setInterval(function() {
@@ -247,22 +252,21 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
     }, 500);
   });
 
-  const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
     canExecuteCommand(command) ?
-      doPluginCommand(id, command, parsedTarget, value, implicitTime, implicitCount) :
-      doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount)
+      doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
+      doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
   ));
 }
 
-function doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount) {
+function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
   return (command !== "type"
-    ? extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
-    : extCommand.doType(xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
+    ? extCommand.sendMessage(command, xlateArgument(target.parsed), xlateArgument(value), isWindowMethodCommand(command))
+    : extCommand.doType(xlateArgument(target.parsed), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {
-        return doImplicitWait(result.result, id, parsedTarget, implicitTime, implicitCount);
+        return doImplicitWait(result.result, id, command, target, value, implicitTime, implicitCount);
       } else {
         PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
       }
@@ -273,7 +277,7 @@ function doSeleniumCommand(id, command, parsedTarget, value, implicitTime, impli
 }
 
 function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
-  return executeCommand(command, target, value, {
+  return executeCommand(command, target.parsed, value, {
     commandId: id,
     runId: PlaybackState.runId,
     testId: PlaybackState.currentRunningTest.id,
@@ -284,7 +288,7 @@ function doPluginCommand(id, command, target, value, implicitTime, implicitCount
     PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
   }).catch(err => {
     if (isElementNotFound(err.message)) {
-      return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
+      return doImplicitWait(err.message, id, command, target, value, implicitTime, implicitCount);
     } else {
       PlaybackState.setCommandState(id, (err instanceof FatalError || err instanceof NoResponseError) ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
     }
@@ -295,7 +299,7 @@ function isElementNotFound(error) {
   return error.match(/Element[\s\S]*?not found/);
 }
 
-function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
+function doImplicitWait(error, id, command, target, value, implicitTime, implicitCount) {
   if (isElementNotFound(error)) {
     if (implicitTime && (Date.now() - implicitTime > 30000)) {
       reportError("Implicit Wait timed out after 30000ms");
@@ -306,8 +310,8 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
       if (implicitCount == 1) {
         implicitTime = Date.now();
       }
-      PlaybackState.setCommandState(commandId, PlaybackStates.Pending, `Trying to find ${target}...`);
-      return doCommand(false, implicitTime, implicitCount);
+      PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${target.target}...`);
+      return doCommand(id, command, target, value, implicitTime, implicitCount);
     }
   }
 }
