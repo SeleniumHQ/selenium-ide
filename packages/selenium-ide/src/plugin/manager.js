@@ -18,6 +18,7 @@
 import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "selianize";
 import { Commands } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
+import { registerLocator } from "./locatorResolver";
 import { sendMessage } from "./communication";
 
 const TIMEOUT = 5000;
@@ -32,6 +33,15 @@ function RunCommand(id, command, target, value, options) {
     },
     options
   });
+}
+
+function ResolveLocator(id, locator, target, options) {
+  return sendMessage(id, {
+    action: "resolve",
+    locator,
+    target,
+    options
+  }).then(res => (res.message));
 }
 
 class PluginManager {
@@ -57,6 +67,11 @@ class PluginManager {
           Commands.addCommand(id, { name, type });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
+        });
+      }
+      if (plugin.locators) {
+        plugin.locators.forEach(({ id }) => {
+          registerLocator(id, ResolveLocator.bind(undefined, plugin.id, id));
         });
       }
     } else {
