@@ -37,7 +37,7 @@ export function emit(location) {
       let result = await emitters[type](selector);
       res(result);
     } else {
-      rej(type ? `Unknown locator ${type}` : "Locator can't be empty");
+      rej(new Error(type ? `Unknown locator ${type}` : "Locator can't be empty"));
     }
   });
 }
