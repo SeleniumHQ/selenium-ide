@@ -107,7 +107,7 @@ export const TargetTypes = {
   //option
 };
 
-export const ValueTypes = {
+const ValueTypes = {
   //option
   //text
   //coordString

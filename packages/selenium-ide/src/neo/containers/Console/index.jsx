@@ -63,7 +63,7 @@ export default class Console extends React.Component {
           <ClearButton onClick={output.clear} />
         </TabBar>
         {this.state.tab === "Log" && <LogList output={output} /> }
-        {this.state.tab === "Reference" && <CommandReference selectedCommand={Commands.list.get(UiState.selectedCommand.command)}/> }
+        {this.state.tab === "Reference" && <CommandReference currentCommand={Commands.list.get(UiState.selectedCommand.command)}/> }
       </footer>
     );
   }

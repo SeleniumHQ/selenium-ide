@@ -20,24 +20,24 @@ import { observer } from "mobx-react";
 import "./style.css";
 
 
-          //{ Array.from(this.props.selectedCommand.arguments).map((argument) => <li>{argument}</li>) }
+          //{ Array.from(this.props.currentCommand.arguments).map((argument) => <li>{argument}</li>) }
 @observer
 export default class CommandReference extends React.Component {
   render() {
     return (
       <div className="command-reference">
         <ul>
-          { this.props.selectedCommand.name &&
+          { this.props.currentCommand.name &&
             <li className="name">
-              {this.props.selectedCommand.name}&nbsp;
-              {this.props.selectedCommand.target && <em>{this.props.selectedCommand.target.name}</em>}
-              {this.props.selectedCommand.value && <em>, {this.props.selectedCommand.value.name}</em>}
+              {this.props.currentCommand.name}&nbsp;
+              {this.props.currentCommand.target && <em>{this.props.currentCommand.target.name}</em>}
+              {this.props.currentCommand.value && <em>, {this.props.currentCommand.value.name}</em>}
             </li> }
-          { this.props.selectedCommand.description && <li className="description">{this.props.selectedCommand.description}</li> }
+          { this.props.currentCommand.description && <li className="description">{this.props.currentCommand.description}</li> }
           <br />
           <li>arguments:</li>
-          { this.props.selectedCommand.target &&
-            <li className="argument">{this.props.selectedCommand.target.name} - {this.props.selectedCommand.target.value}</li> }
+          { this.props.currentCommand.target &&
+            <li className="argument">{this.props.currentCommand.target.name} - {this.props.currentCommand.target.value}</li> }
         </ul>
       </div>
     );
