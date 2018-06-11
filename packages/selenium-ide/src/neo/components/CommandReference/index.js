@@ -17,7 +17,7 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import "./style.css";
+//import "./style.css";
 
 
           //{ Array.from(this.props.currentCommand.arguments).map((argument) => <li>{argument}</li>) }
