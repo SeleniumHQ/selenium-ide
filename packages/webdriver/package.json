@@ -1,0 +1,20 @@
+{
+  "name": "browser-webdriver",
+  "version": "3.6.0-alpha.0",
+  "main": "build/webdriver.js",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "build": "yarn run browserify src/index.js > build/webdriver.js",
+    "build:dev": "yarn run watchify src/index.js -o build/webdriver.js"
+  },
+  "files": [
+    "build/webdriver.js"
+  ],
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "selenium-webdriver": "3.6.0",
+    "watchify": "^3.11.0"
+  }
+}
