@@ -15,31 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
 import { action, observable } from "mobx";
-import { setStoredVar, deleteStoredVar } from "../../IO/SideeX/formatCommand";
 
-export class Variables {
+class Variables {
   @observable storedVars = new Map();
 
-  constructor() {
-    browser.runtime.onMessage.addListener((this.handleFormatCommand));
-  }
-
-  @action.bound handleFormatCommand(message) {
-    if (message.storeStr) {
-      this.addVariable(message.storeVar, message.storeStr);
-    }
+  @action.bound get(key) {
+    return this.storedVars.get(key);
   }
 
   @action.bound addVariable(key, value) {
     this.storedVars.set(key, value);
-    setStoredVar(key, value);
   }
 
   @action.bound deleteVariable(key) {
     this.storedVars.delete(key);
-    deleteStoredVar(key);
   }
 
   @action.bound clearVariables() {
@@ -47,4 +37,6 @@ export class Variables {
   }
 }
 
-export default new Variables;
+if (!window._variables) window._variables = new Variables();
+
+export default window._variables;
