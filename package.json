@@ -21,10 +21,6 @@
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy"
     },
-    "modulePaths": [
-      "<rootDir>/packages/selenium-ide"
-    ],
-    "setupTestFrameworkScriptFile": "./packages/selenium-ide/scripts/jest/enzyme.config.js",
     "testMatch": [
       "**/packages/**/__test?(s)__/**/*.js?(x)"
     ]
@@ -32,14 +28,12 @@
   "devDependencies": {
     "babel-eslint": "^8.2.1",
     "babel-jest": "^22.0.4",
-    "enzyme": "^3.3.0",
     "eslint": "^4.15.0",
     "eslint-plugin-class-property": "^1.1.0",
     "eslint-plugin-jest": "^21.6.1",
     "eslint-plugin-react": "^7.5.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^22.0.5",
-    "jest-enzyme": "^6.0.1",
     "lerna": "^2.6.0",
     "web-ext": "^2.4.0"
   }

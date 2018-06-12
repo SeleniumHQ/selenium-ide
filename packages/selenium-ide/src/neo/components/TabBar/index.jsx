@@ -62,7 +62,7 @@ export default class TabBar extends React.Component {
             <li key={tab} style={{
               width: `${this.props.tabWidth}px`
             }}>
-              <a href="#" onClick={this.handleClick.bind(this, tab, index)}>{tab}</a>
+              <a className={tab.toLowerCase()} href="#" onClick={this.handleClick.bind(this, tab, index)}>{tab}</a>
             </li>
           ))}
           {this.props.children ? <li className="buttons" style={{
