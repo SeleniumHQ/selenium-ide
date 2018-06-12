@@ -103,7 +103,7 @@ export function emit(command) {
       if (!command.command) {
         res();
       } else {
-        rej(`Unknown command ${command.command}`);
+        rej(new Error(`Unknown command ${command.command}`));
       }
     }
   });
@@ -252,7 +252,7 @@ function emitSelectWindow(windowLocation) {
   if (/^name=/.test(windowLocation)) {
     return Promise.resolve(`driver.switchTo().window("${windowLocation.split("name=")[1]}");`);
   } else {
-    return Promise.reject("Can only emit `select window` using name locator");
+    return Promise.reject(new Error("Can only emit `select window` using name locator"));
   }
 }
 

@@ -26,12 +26,12 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
-    "babel-jest": "^22.0.4",
+    "babel-jest": "^23.0.1",
     "eslint": "^4.15.0",
     "eslint-plugin-class-property": "^1.1.0",
-    "eslint-plugin-jest": "^21.6.1",
+    "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-react": "^7.5.1",
-    "jest": "^22.0.5",
+    "jest": "^23.1.0",
     "lerna": "^2.6.0",
     "web-ext": "^2.4.0"
   }

@@ -84,7 +84,7 @@ describe("Selenium code serializer", () => {
                   command: "waitForPageToLoad",
                   id: "fc7a1e3d-4a0e-45b5-9ee4-56bce9f1dd2c",
                   index: 1,
-                  message: "Unknown command waitForPageToLoad",
+                  message: new Error("Unknown command waitForPageToLoad"),
                   target: "",
                   value: ""
                 }
@@ -98,7 +98,7 @@ describe("Selenium code serializer", () => {
                   command: "waitForElementPresent",
                   id: "0a0b6a3e-c1e9-4ef7-9748-dee1586be715",
                   index: 1,
-                  message: "Unknown command waitForElementPresent",
+                  message: new Error("Unknown command waitForElementPresent"),
                   target: "",
                   value: ""
                 }
@@ -126,7 +126,7 @@ describe("Selenium code serializer", () => {
                   command: "waitForPageToLoad",
                   id: "fc7a1e3d-4a0e-45b5-9ee4-56bce9f1dd2c",
                   index: 1,
-                  message: "Unknown command waitForPageToLoad",
+                  message: new Error("Unknown command waitForPageToLoad"),
                   target: "",
                   value: ""
                 }
@@ -140,7 +140,7 @@ describe("Selenium code serializer", () => {
                   command: "waitForElementPresent",
                   id: "0a0b6a3e-c1e9-4ef7-9748-dee1586be715",
                   index: 1,
-                  message: "Unknown command waitForElementPresent",
+                  message: new Error("Unknown command waitForElementPresent"),
                   target: "",
                   value: ""
                 }

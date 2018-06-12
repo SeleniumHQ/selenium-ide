@@ -89,14 +89,14 @@ describe("test case code emitter", () => {
         {
           command: "doesntExist",
           index: 1,
-          message: "Unknown command doesntExist",
+          message: new Error("Unknown command doesntExist"),
           target: "",
           value: ""
         },
         {
           command: "notThisOne",
           index: 3,
-          message: "Unknown command notThisOne",
+          message: new Error("Unknown command notThisOne"),
           target: "",
           value: ""
         }

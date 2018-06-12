@@ -29,7 +29,7 @@ export function emit(location) {
       let result = await emitters[type](selector);
       res(result);
     } else {
-      rej(`Unknown selection locator ${type}`);
+      rej(new Error(`Unknown selection locator ${type}`));
     }
   });
 }
