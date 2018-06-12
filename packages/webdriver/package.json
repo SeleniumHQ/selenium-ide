@@ -6,13 +6,15 @@
   "license": "Apache-2.0",
   "private": false,
   "scripts": {
-    "build": "yarn run browserify src/index.js > build/webdriver.js",
-    "build:dev": "yarn run watchify src/index.js -o build/webdriver.js"
+    "build": "yarn run browserify src/index.js -s browser-webdriver -o build/webdriver.js",
+    "build:dev": "yarn run watchify src/index.js -s browser-webdriver -o build/webdriver.js"
   },
   "files": [
     "build/webdriver.js"
   ],
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-node8": "^1.2.0",
     "browserify": "^16.2.2",
     "selenium-webdriver": "3.6.0",
     "watchify": "^3.11.0"
