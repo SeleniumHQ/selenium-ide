@@ -9,6 +9,8 @@ before_install:
   - docker-compose up -d
 install:
   - yarn --ignore-engines
+  - yarn build:webdriver
+  - cp packages/webdriver/build/webdriver.js test/static/
   - yarn build:selianize
   - yarn build:runner
 script:
