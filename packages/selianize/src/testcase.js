@@ -38,7 +38,7 @@ export function emit(test) {
     result += hookResults.map((hook) => hook.teardown || "").join("");
     result += "await driver.getTitle().then(title => {expect(title).toBeDefined();});});";
 
-    errors.length ? rej({...test, commands: errors}) : res(result);
+    errors.length ? rej({ ...test, commands: errors }) : res(result);
   });
 }
 
