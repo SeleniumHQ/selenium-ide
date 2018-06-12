@@ -21,6 +21,7 @@
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy"
     },
+    "setupTestFrameworkScriptFile": "./packages/selenium-ide/scripts/jest/test.config.js",
     "testMatch": [
       "**/packages/**/__test?(s)__/**/*.js?(x)"
     ]

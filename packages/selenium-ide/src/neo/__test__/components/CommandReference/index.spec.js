@@ -1,6 +1,5 @@
 import React from "react";
 import {renderIntoDocument, cleanup} from "react-testing-library";
-import "jest-dom/extend-expect"
 import CommandReference from "../../../components/CommandReference"
 
 describe("<CommandReference />", () => {
