@@ -21,7 +21,7 @@ const hooks = [];
 
 export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    const hookResults = (await Promise.all(hooks.map((hook) => hook({name: suite.name})))).reduce((code, result) => (
+    const hookResults = (await Promise.all(hooks.map((hook) => hook({ name: suite.name })))).reduce((code, result) => (
       code
       + (result.beforeAll ? `beforeAll(async () => {${result.beforeAll}});` : "")
       + (result.before ? `beforeEach(async () => {${result.before}});` : "")
