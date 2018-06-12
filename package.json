@@ -16,7 +16,7 @@
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",
     "test:webdriver": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
-    "lint": "eslint packages/selenium-ide/src/{neo,selianize,plugin,router,api}/ packages/selenium-side-runner/src/ packages/selianize/src/ --ext .js --ext .jsx",
+    "lint": "eslint packages/selenium-ide/src/{neo,selianize,plugin,router,api}/ packages/selenium-side-runner/src/ packages/selianize/src/ packages/webdriver/src/ --ext .js --ext .jsx",
     "postinstall": "lerna bootstrap"
   },
   "jest": {
