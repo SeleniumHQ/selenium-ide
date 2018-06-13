@@ -21,8 +21,10 @@ import UiState from "../../stores/view/UiState";
 import ExtCommand, { isExtCommand } from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 import PlaybackTree from "./playbackTree";
+import SandboxCommand from "./sandboxCommand";
 
 export const extCommand = new ExtCommand();
+const sandboxCommand = new SandboxCommand();
 // In order to not break the separation of the execution loop from the state of the playback
 // I will set doSetSpeed here so that extCommand will not be aware of the state
 extCommand.doSetSpeed = (speed) => {
@@ -260,11 +262,15 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
     }, 500);
   });
 
-  return p.then(() => (
-    command !== "type"
-      ? extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
-      : extCommand.doType(xlateArgument(target), xlateArgument(value))
-  ))
+  return p.then(() => {
+    if (command === "type") {
+      return extCommand.doType(xlateArgument(target), xlateArgument(value));
+    } else if (isConditinal(command)) {
+      return sandboxCommand.evalExpression(target);
+    } else {
+      return extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command));
+    }
+  })
     .then(function(result) {
       if (result.result === "truthy") {
         return true;
@@ -293,6 +299,10 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
         return true;
       }
     });
+}
+
+function isConditinal(commandName) {
+  return ["if", "while", "elseIf", "repeatIf", "times"].includes(commandName);
 }
 
 function doDelay() {
