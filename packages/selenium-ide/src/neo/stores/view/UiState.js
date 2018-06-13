@@ -175,7 +175,9 @@ class UiState {
     Manager.emitMessage({
       action: "event",
       event: this.isRecording ? "recordingStarted" : "recordingStopped",
-      testName: this.selectedTest.test.name
+      options: {
+        testName: this.selectedTest.test.name
+      }
     });
   }
 
