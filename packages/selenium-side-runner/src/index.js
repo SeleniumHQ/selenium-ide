@@ -41,7 +41,7 @@ program
   .option("-f, --filter [string]", "Filter test cases by name")
   .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
-  .option("--no-sideyml", "Disabled the use of .side.yml")
+  .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
 
@@ -61,12 +61,12 @@ const configuration = {
   runId: crypto.randomBytes(16).toString("hex"),
   path: path.join(__dirname, "../../")
 };
-if (program.sideyml) {
-  try {
-    Object.assign(configuration, Config.load(path.join(process.cwd(), ".side.yml")));
-  } catch (e) {
-    winston.info("Could not load .side.yml");
-  }
+
+const configurationFilePath = program.configurationFile || ".side.yml";
+try {
+  Object.assign(configuration, Config.load(path.join(process.cwd(), configurationFilePath)));
+} catch (e) {
+  winston.info("Could not load .side.yml");
 }
 
 configuration.server = program.server ? program.server : configuration.server;
