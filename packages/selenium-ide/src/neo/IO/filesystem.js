@@ -166,7 +166,7 @@ function loadJSONProject(project, data) {
     action: "event",
     event: "projectLoaded",
     options: {
-      project: project.name
+      projectName: project.name
     }
   });
 }
