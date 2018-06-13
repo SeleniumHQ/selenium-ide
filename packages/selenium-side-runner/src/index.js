@@ -66,7 +66,7 @@ const configurationFilePath = program.configurationFile || ".side.yml";
 try {
   Object.assign(configuration, Config.load(path.join(process.cwd(), configurationFilePath)));
 } catch (e) {
-  winston.info("Could not load .side.yml");
+  winston.info("Could not load " + configurationFilePath);
 }
 
 configuration.server = program.server ? program.server : configuration.server;
