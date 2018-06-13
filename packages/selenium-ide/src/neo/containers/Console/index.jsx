@@ -30,7 +30,7 @@ import variables from "../../stores/view/Variables";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tab: "Log", refresh: 0 };
+    this.state = { tab: "Log" };
     this.tabClicked = this.tabClicked.bind(this);
 
     this.playbackLogger = new PlaybackLogger();
