@@ -17,6 +17,7 @@
 
 import Manager from "../../plugin/manager";
 import { canExecuteCommand } from "../../plugin/commandExecutor";
+import { canResolveLocator } from "../../plugin/locatorResolver";
 
 describe("plugin manager", () => {
   it("should have a list of active plugins", () => {
@@ -30,12 +31,16 @@ describe("plugin manager", () => {
       commands: [{
         id: "aCommand",
         name: "do something"
+      }],
+      locators: [{
+        id: "aLocator"
       }]
     };
     expect(Manager.plugins.length).toBe(0);
     Manager.registerPlugin(plugin);
     expect(Manager.plugins.length).toBe(1);
     expect(canExecuteCommand(plugin.commands[0].id)).toBeTruthy();
+    expect(canResolveLocator(plugin.locators[0].id)).toBeTruthy();
   });
   it("should register a plugin with no commands", () => {
     const plugin = {

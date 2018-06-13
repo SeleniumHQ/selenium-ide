@@ -42,8 +42,20 @@ export function emit(location) {
   });
 }
 
+export function canEmit(locatorName) {
+  return !!(emitters[locatorName]);
+}
+
+export function registerEmitter(locator, emitter) {
+  if (!canEmit(locator)) {
+    emitters[locator] = emitter;
+  }
+}
+
 export default {
-  emit
+  canEmit,
+  emit,
+  registerEmitter
 };
 
 function emitId(selector) {
