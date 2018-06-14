@@ -79,7 +79,7 @@ function executionLoop() {
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return doDelay().then(() => (
-      (extCommand["do" + upperCase](target, value))
+      (extCommand["do" + upperCase](xlateArgument(target), xlateArgument(value)))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
         }).then(executionLoop)
