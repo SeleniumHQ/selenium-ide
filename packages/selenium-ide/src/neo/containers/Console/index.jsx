@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
-import StoredVarList from "../../components/StoredVarList";
+import VariableList from "../../components/VariableList";
 import ClearButton from "../../components/ActionButtons/Clear";
 import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
@@ -64,7 +64,7 @@ export default class Console extends React.Component {
           {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList output={output} /> }
-        {this.state.tab === "Variables" && <StoredVarList variables={variables}/> }
+        {this.state.tab === "Variables" && <VariableList variables={variables}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );

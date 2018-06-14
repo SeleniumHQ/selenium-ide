@@ -22,7 +22,7 @@ import { observer } from "mobx-react";
 import "./style.css";
 
 @observer
-export default class StoredVarList extends React.Component {
+export default class VariableList extends React.Component {
   constructor(props){
     super(props);
     this.state = { addingVariable: false };
