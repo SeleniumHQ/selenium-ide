@@ -39,7 +39,7 @@ export default class Console extends React.Component {
     };
     this.playbackLogger = new PlaybackLogger();
     this.loggerObserver = observe(output.logs, () => {
-      this.setState({ logsUnread: true });
+      this.setState({ logsUnread: this.state.tab === "Log" ? false : true });
     });
     this.tabClicked = this.tabClicked.bind(this);
     this.tabChangedHandler = this.tabChangedHandler.bind(this);

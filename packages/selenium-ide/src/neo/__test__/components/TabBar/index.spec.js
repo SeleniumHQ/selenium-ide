@@ -4,9 +4,10 @@ import TabBar from "../../../components/TabBar";
 
 describe("<TabBar />", () => {
   afterEach(cleanup);
-  xit("should show an unread notification when the log updates", () => {
-  });
-  xit("should not show an unread notification when the log updates and viewing the log tab", () => {
+  it("displays an unread notification on the log tab when the unread status is set to true", () => {
+    const { container } = renderIntoDocument(<TabBar tabs={[{ name: "Log", unread: true }, { name: "Reference" }]} />);
+    const unreadLogTab = container.querySelector(".log.unread");
+    expect(unreadLogTab).not.toBe(null);
   });
   it("should return the selected tab name when selected", () => {
     const handleTabChange = (passedSelectedTab) => {
