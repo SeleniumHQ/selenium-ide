@@ -183,8 +183,12 @@ class TestRow extends React.Component {
   paste() {
     this.props.pasteFromClipboard(this.props.index);
   }
-  select() {
-    this.props.select(this.props.command);
+  select(e) {
+    if (e.ctrlKey) {
+      this.props.addSelectedCommands(this.props.command);
+    }else{
+      this.props.select(this.props.command);
+    }
   }
   remove() {
     this.props.remove(this.props.index, this.props.command);

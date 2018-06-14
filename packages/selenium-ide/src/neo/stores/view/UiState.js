@@ -143,8 +143,8 @@ class UiState {
 
   @action.bound selectCommand(command) {
     this.selectedCommand = command;
-    this.selectedCommands.clear();
-    this.selectedCommands.push(command);
+    this.clearSelectedCommands();
+    this.addSelectedCommands(command);
   }
 
   @action.bound selectCommandByIndex(index) {
@@ -328,6 +328,15 @@ class UiState {
       state.modified = false;
     });
     this._project.modified = false;
+  }
+
+  @action.bound addSelectedCommands(command){
+    if (!this.selectedCommands.find((c) => (c === command)))
+      this.selectedCommands.push(command);
+  }
+
+  @action.bound clearSelectedCommands(){
+    this.selectedCommands.clear();
   }
 }
 
