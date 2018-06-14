@@ -225,7 +225,6 @@ class TestRow extends React.Component {
       onClick={this.select}
       onDoubleClick={() => { this.props.executeCommand(this.props.command); }}
       onKeyDown={this.handleKeyDown.bind(this)}
-      onFocus={this.select}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
