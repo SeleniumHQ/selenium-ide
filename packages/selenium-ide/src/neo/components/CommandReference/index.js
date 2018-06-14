@@ -25,17 +25,27 @@ export default class CommandReference extends React.Component {
     return (
       <div className="command-reference">
         <ul>
-          { this.props.currentCommand.name &&
+          { !(this.props.currentCommand && this.props.currentCommand.name) &&
+            <li className="invalid-command">
+              <strong>Invalid command name provided.</strong>
+            </li>
+          }
+          { this.props.currentCommand && this.props.currentCommand.name &&
             <li className="name">
-              {this.props.currentCommand.name}{" "}
+              {this.props.currentCommand.name && <strong>{this.props.currentCommand.name}</strong>}{" "}
               {this.props.currentCommand.target && <em>{this.props.currentCommand.target.name}</em>}
               {this.props.currentCommand.value && <em>, {this.props.currentCommand.value.name}</em>}
             </li> }
-          { this.props.currentCommand.description && <li className="description">{this.props.currentCommand.description}</li> }
+          { this.props.currentCommand && this.props.currentCommand.description &&
+            <li className="description">{this.props.currentCommand.description}</li> }
           <br />
-          <li>arguments:</li>
-          { this.props.currentCommand.target &&
+          { this.props.currentCommand && this.props.currentCommand.target &&
+            <li>arguments:</li>
+          }
+          { this.props.currentCommand && this.props.currentCommand.target &&
             <li className="argument">{this.props.currentCommand.target.name} - {this.props.currentCommand.target.value}</li> }
+          { this.props.currentCommand && this.props.currentCommand.value &&
+            <li className="argument">{this.props.currentCommand.value.name} - {this.props.currentCommand.value.value}</li> }
         </ul>
       </div>
     );
