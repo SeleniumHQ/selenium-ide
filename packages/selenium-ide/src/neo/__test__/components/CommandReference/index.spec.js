@@ -9,6 +9,11 @@ describe("<CommandReference />", () => {
     const commandName = container.querySelector(".name");
     expect(commandName).toHaveTextContent("name ");
   });
+  it("should render a helpful message when no name provided", () => {
+    const { container } = renderIntoDocument(<CommandReference currentCommand={{}}/>);
+    const commandName = container.querySelector(".invalid-command");
+    expect(commandName).toHaveTextContent("Invalid command name provided.");
+  });
   it("should render a name with a target", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{name: "name", target: {name: "target"}}}/>);
     const commandName = container.querySelector(".name");
