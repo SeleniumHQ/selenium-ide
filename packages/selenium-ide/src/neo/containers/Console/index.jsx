@@ -39,8 +39,8 @@ export default class Console extends React.Component {
     };
     this.playbackLogger = new PlaybackLogger();
     this.loggerObserver = observe(output.logs, () => {
-      this.setState({ logsUnread: true })
-    })
+      this.setState({ logsUnread: true });
+    });
     this.tabClicked = this.tabClicked.bind(this);
     this.tabChangedHandler = this.tabChangedHandler.bind(this);
   }
@@ -59,7 +59,7 @@ export default class Console extends React.Component {
     this.props.restoreSize();
   }
   render() {
-    const tabs = [{name: "Log", unread: this.state.logsUnread}, {name: "Reference", unread: false}]
+    const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }];
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
