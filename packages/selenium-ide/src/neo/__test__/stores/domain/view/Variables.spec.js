@@ -22,6 +22,10 @@ useStrict(true);
 
 describe("Varaibles", () => {
   it("should clear the map", () => {
+    const key = "key1";
+    const value = "value1";
+    Variables.addVariable(key, value);
+    expect(Variables.storedVars.size).toBe(1);
     Variables.clearVariables();
     expect(Variables.storedVars.size).toBe(0);
   });
