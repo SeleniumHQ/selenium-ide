@@ -58,7 +58,9 @@ class PlaybackState {
   }
 
   beforePlaying(play) {
-    UiState._project.addCurrentUrl();
+    try {
+      UiState._project.addCurrentUrl();
+    } catch (e) {} // eslint-disable-line no-empty
     if (UiState.isRecording) {
       ModalState.showAlert({
         title: "Stop recording",
