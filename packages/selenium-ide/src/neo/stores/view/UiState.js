@@ -26,6 +26,7 @@ import Manager from "../../../plugin/manager";
 class UiState {
   @observable selectedTest = {};
   @observable selectedCommand = null;
+  @observable selectedCommands = [];
   @observable filterTerm = "";
   @observable clipboard = null;
   @observable isRecording = false;
@@ -142,6 +143,8 @@ class UiState {
 
   @action.bound selectCommand(command) {
     this.selectedCommand = command;
+    this.selectedCommands.clear();
+    this.selectedCommands.push(command);
   }
 
   @action.bound selectCommandByIndex(index) {
@@ -306,6 +309,7 @@ class UiState {
   @action.bound projectChanged() {
     this.selectedTest = {};
     this.selectedCommand = null;
+    this.selectedCommands = [];
     this.filterTerm = "";
     this.clipboard = null;
     this.isRecording = false;

@@ -80,6 +80,7 @@ import "./style.css";
         <TestTable
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
+          selectedCommands={UiState.selectedCommands}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}
