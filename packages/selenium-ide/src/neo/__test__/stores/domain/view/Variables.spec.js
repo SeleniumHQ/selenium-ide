@@ -20,7 +20,7 @@ import Variables from "../../../../stores/view/Variables";
 
 useStrict(true);
 
-describe("Varaibles", () => {
+describe("Variables", () => {
   it("should clear the map", () => {
     const key = "key1";
     const value = "value1";
