@@ -26,6 +26,7 @@ import "./style.css";
 import CommandReference from "../../components/CommandReference";
 import UiState from "../../stores/view/UiState";
 import { observer } from "mobx-react";
+import { observe } from "mobx";
 import { Commands } from "../../models/Command";
 
 @observer
@@ -33,37 +34,43 @@ export default class Console extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tab: "Log"
+      tab: "Log",
+      logsUnread: false
     };
     this.playbackLogger = new PlaybackLogger();
-    //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
+    this.loggerObserver = observe(output.logs, () => {
+      this.setState({ logsUnread: true })
+    })
     this.tabClicked = this.tabClicked.bind(this);
     this.tabChangedHandler = this.tabChangedHandler.bind(this);
   }
   componentWillUnmount() {
-    //this.loggerObserver.dispose();
+    this.loggerObserver.dispose();
     this.testTableObserver.dispose();
     this.playbackLogger.dispose();
   }
   tabChangedHandler(tab) {
     this.setState({
-      tab
+      tab,
+      logsUnread: tab === "Log" ? false : this.state.logsUnread
     });
   }
   tabClicked(){
     this.props.restoreSize();
   }
-  //create different object which stores name and read status (e.g., unread boolean)
   render() {
+    const tabs = [{name: "Log", unread: this.state.logsUnread}, {name: "Reference", unread: false}]
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
+        <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
           <ClearButton onClick={output.clear} />
         </TabBar>
-        {this.state.tab === "Log" && <LogList output={output} /> }
-        {this.state.tab === "Reference" && <CommandReference currentCommand={Commands.list.get(UiState.selectedCommand.command)}/> }
+        <div className="viewport">
+          {this.state.tab === "Log" && <LogList output={output} /> }
+          {this.state.tab === "Reference" && <CommandReference currentCommand={Commands.list.get(UiState.selectedCommand.command)}/> }
+        </div>
       </footer>
     );
   }
