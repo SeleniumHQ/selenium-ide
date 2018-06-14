@@ -25,7 +25,7 @@
   text-align: center;
 }
 
-.row .storedVar {
+.row .variable {
   float: left;
   padding: 0;
   width: 48%;
@@ -33,11 +33,11 @@
   box-shadow: 0 0 0 1px transparent inset;
 }
 
-.row .storedVar .value {
+.row .variable .value {
   border-radius: 4px;
 }
 
-.row .storedVar .value:hover {
+.row .variable .value:hover {
   box-shadow: 0 0 0 1px #CECECE inset;
 }
 
@@ -45,7 +45,7 @@
   opacity: 1;
 }
 
-.row .storedVar .value:focus {
+.row .variable .value:focus {
   box-shadow: 0 0 0 1px #A8A8A8 inset;
   cursor: initial;
   outline: 0;

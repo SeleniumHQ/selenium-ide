@@ -20,7 +20,7 @@
   background: #f2efef;
 }
 
-.storedVars {
+.variables {
   display: table;
   border: 2px solid #FFFCFE;
   width: 100%;
@@ -29,7 +29,7 @@
   max-width: 655px;
 }
 
-.storedVars .index {
+.variables .index {
   width : 20px;
 }
 

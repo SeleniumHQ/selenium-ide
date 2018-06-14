@@ -24,7 +24,7 @@ import { observer } from "mobx-react";
 import "./style.css";
 
 @observer
-export default class StoredVar extends React.Component {
+export default class Variable extends React.Component {
   constructor(props){
     super(props);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -63,7 +63,7 @@ export default class StoredVar extends React.Component {
           {this.props.add ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.keyChanged}/> : this.props.keyVar}
         </div>
         <div className="cell col">:</div>
-        <div className="cell storedVar">
+        <div className="cell variable">
           {this.props.add ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.valueChanged} /> :
             <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} onKeyDown={this.handleKeyDown} />}
         </div>
@@ -84,7 +84,7 @@ export default class StoredVar extends React.Component {
   };
 }
 
-export class StoredVarAddBtn extends React.Component {
+export class VariableAddBtn extends React.Component {
   static propTypes = {
     add: PropTypes.func
   }
@@ -93,7 +93,7 @@ export class StoredVarAddBtn extends React.Component {
       <div className="row">
         <div className="cell index"></div>
         <div className="cell add"><AddButton onClick={this.props.add}/></div>
-        <div className="cell storedVar"></div>
+        <div className="cell variable"></div>
       </div>
     );
   }
