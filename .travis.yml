@@ -10,7 +10,7 @@ before_install:
 install:
   - yarn --ignore-engines
   - yarn build:webdriver
-  - cp packages/webdriver/build/webdriver.js test/static/
+  - cp packages/webdriver/build/webdriver.js tests/static/
   - yarn build:selianize
   - yarn build:runner
 script:
