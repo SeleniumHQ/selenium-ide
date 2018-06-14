@@ -28,7 +28,7 @@ class UiState {
   @observable selectedCommand = null;
   @observable selectedCommands = [];
   @observable filterTerm = "";
-  @observable clipboard = null;
+  @observable clipboard = [];
   @observable isRecording = false;
   @observable isSelectingTarget = false;
   @observable windowHeight = window.innerHeight;
@@ -93,13 +93,19 @@ class UiState {
   }
 
   @action.bound copyToClipboard(item) {
-    this.clipboard = item;
+    this.clipboard.clear();
+    for(let i=0; i<this.selectedCommands.length; i++){
+      this.clipboard.push(this.selectedCommands[i]);
+    }
   }
 
   @action.bound pasteFromClipboard(index) {
-    if (this.clipboard && this.selectedTest.test) {
-      const newCommand = this.clipboard.clone();
-      this.selectedTest.test.insertCommandAt(newCommand, index);
+    if (this.clipboard.length && this.selectedTest.test) {
+      for(let i=0; i<this.clipboard.length; i++){
+        const newCommand = this.clipboard[i].clone();
+        this.selectedTest.test.insertCommandAt(newCommand, index + i + 1);
+      }
+
     }
   }
 
@@ -311,7 +317,7 @@ class UiState {
     this.selectedCommand = null;
     this.selectedCommands = [];
     this.filterTerm = "";
-    this.clipboard = null;
+    this.clipboard = [];
     this.isRecording = false;
     this.suiteStates = {};
     this.clearTestStates();
