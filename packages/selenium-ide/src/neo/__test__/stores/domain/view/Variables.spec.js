@@ -20,6 +20,10 @@ import Variables from "../../../../stores/view/Variables";
 
 useStrict(true);
 
+afterEach(() => {
+  Variables.clearVariables();
+});
+
 describe("Variables", () => {
   it("should clear the map", () => {
     const key = "key1";
@@ -30,14 +34,12 @@ describe("Variables", () => {
     expect(Variables.storedVars.size).toBe(0);
   });
   it("should add new key and value to the map", () => {
-    Variables.clearVariables();
     const key = "key1";
     const value = "value1";
     Variables.addVariable(key, value);
     expect(Variables.storedVars.size).toBe(1);
   });
   it("should not add duplicates to the map", () => {
-    Variables.clearVariables();
     const key = "key1";
     const value = "value1";
     const value2 = "value2";
@@ -46,7 +48,6 @@ describe("Variables", () => {
     expect(Variables.storedVars.size).toBe(1);
   });
   it("should get the value correctly from the map", () => {
-    Variables.clearVariables();
     const key1 = "key1";
     const value1 = "value1";
     const key2 = "key2";
@@ -56,7 +57,6 @@ describe("Variables", () => {
     expect(Variables.get(key1)).toBe(value1);
   });
   it("should delete the key and the value from the map", () => {
-    Variables.clearVariables();
     const key = "key1";
     const value = "value1";
     Variables.addVariable(key, value);
