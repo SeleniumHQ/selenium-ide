@@ -163,7 +163,9 @@ class PlaybackState {
   }
 
   @action.bound playNext() {
-    clearVariables();
+    if (UiState.selectedTest.suite.isParallel) {
+      clearVariables();
+    }
     this.currentRunningTest = this._testsToRun.shift();
     UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.runningQueue = this.currentRunningTest.commands.peek();
