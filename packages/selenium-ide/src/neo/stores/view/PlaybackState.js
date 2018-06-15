@@ -24,6 +24,7 @@ import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
+import { clearVariables } from "../../IO/SideeX/formatCommand";
 
 class PlaybackState {
   @observable runId = "";
@@ -105,6 +106,7 @@ class PlaybackState {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
       this.resetState();
+      clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
@@ -161,6 +163,7 @@ class PlaybackState {
   }
 
   @action.bound playNext() {
+    clearVariables();
     this.currentRunningTest = this._testsToRun.shift();
     UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.runningQueue = this.currentRunningTest.commands.peek();
