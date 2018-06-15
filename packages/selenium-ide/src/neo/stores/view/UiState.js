@@ -149,7 +149,6 @@ class UiState {
 
   @action.bound selectCommand(command) {
     this.selectedCommand = command;
-    this.clearSelectedCommands();
     this.addSelectedCommands(command);
   }
 

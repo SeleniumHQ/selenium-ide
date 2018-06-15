@@ -185,8 +185,14 @@ class TestRow extends React.Component {
   }
   select(e) {
     if (e.ctrlKey) {
+      // call from onClick while holding clicking ctrl key
       this.props.addSelectedCommands(this.props.command);
-    }else{
+    } else if(e.ctrlKey == false) {
+      // call from onClick while don't holding clicking ctrl key
+      this.props.clearSelectedCommands();
+      this.props.select(this.props.command);
+    } else{
+      // call from onFocus
       this.props.select(this.props.command);
     }
   }
@@ -225,6 +231,7 @@ class TestRow extends React.Component {
       onClick={this.select}
       onDoubleClick={() => { this.props.executeCommand(this.props.command); }}
       onKeyDown={this.handleKeyDown.bind(this)}
+      onFocus={this.select}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>

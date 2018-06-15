@@ -82,6 +82,7 @@ import "./style.css";
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectedCommands={UiState.selectedCommands}
           addSelectedCommands={UiState.addSelectedCommands}
+          clearSelectedCommands={UiState.clearSelectedCommands}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}
