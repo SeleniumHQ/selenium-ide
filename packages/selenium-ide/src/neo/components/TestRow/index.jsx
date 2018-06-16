@@ -183,11 +183,11 @@ class TestRow extends React.Component {
   paste() {
     this.props.pasteFromClipboard(this.props.index);
   }
-  select(e) {
-    if (e.ctrlKey) {
+  select(event) {
+    if (event.ctrlKey || event.metaKey ) {
       // call from onClick while holding clicking ctrl key
       this.props.addSelectedCommands(this.props.command);
-    } else if(e.ctrlKey == false) {
+    } else if(event.ctrlKey == false) {
       // call from onClick while don't holding clicking ctrl key
       this.props.clearSelectedCommands();
       this.props.select(this.props.command);
