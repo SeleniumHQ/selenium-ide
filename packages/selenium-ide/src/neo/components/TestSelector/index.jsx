@@ -78,7 +78,7 @@ export default class TestSelector extends React.Component {
   static propTypes = {
     isEditing: PropTypes.bool.isRequired,
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    selectedTests: PropTypes.array,
+    selectedTests: PropTypes.object,
     cancelSelection: PropTypes.func.isRequired,
     completeSelection: PropTypes.func.isRequired
   };
