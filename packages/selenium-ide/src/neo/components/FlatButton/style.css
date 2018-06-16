@@ -37,7 +37,7 @@
   border-radius: 2px;
 }
 
-.btn.icon:hover {
+.btn.icon:hover:not(:disabled) {
   color: #40A6FF;
 }
 

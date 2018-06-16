@@ -403,6 +403,13 @@ Selenium.prototype.doVerifyText = function(locator, value) {
   }
 };
 
+Selenium.prototype.doVerifyNotText = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (getText(element) === value) {
+    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
+  }
+};
+
 Selenium.prototype.doVerifyValue = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (element.value !== value) {
@@ -478,6 +485,20 @@ Selenium.prototype.doAssertSelectedValue = function(locator, value) {
   }
 };
 
+Selenium.prototype.doVerifySelectedLabel = function(selectLocator, value) {
+  let selectedLabel = this.findSelectedOptionProperty(selectLocator, "text");
+  if (selectedLabel !== value) {
+    throw new Error("Actual label '" + selectedLabel + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertSelectedLabel = function(selectLocator, value) {
+  let selectedLabel = this.findSelectedOptionProperty(selectLocator, "text");
+  if (selectedLabel !== value) {
+    throw new Error("Actual label '" + selectedLabel + "' did not match '" + value + "'");
+  }
+};
+
 Selenium.prototype.doAssertNotSelectedValue = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (element.type !== "select-one") {
@@ -491,6 +512,13 @@ Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
   if (getText(element) !== value) {
     throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  }
+};
+
+Selenium.prototype.doAssertNotText = function(locator, value) {
+  let element = this.browserbot.findElement(locator);
+  if (getText(element) === value) {
+    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
   }
 };
 
@@ -1755,7 +1783,7 @@ Selenium.prototype.getAlert = function() {
      * page's onload() event handler. In this case a visible dialog WILL be
      * generated and Selenium will hang until someone manually clicks OK.</p>
      * @return string The message of the most recent JavaScript alert
-     
+
      */
   if (!this.browserbot.hasAlerts()) {
     Assert.fail("There were no alerts");// eslint-disable-line no-undef
@@ -3782,23 +3810,31 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 // Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
   try{
-    const highlightElement = document.getElementById("selenium-highlight");
-    let element = this.browserbot.findElement(locator);
-    const elementRects = element.getBoundingClientRect();
-    const bodyRects = document.documentElement.getBoundingClientRect();
+    const highlightElement = document.createElement("div");
+    highlightElement.id = "selenium-highlight";
+    document.body.appendChild(highlightElement);
+    if (locator.x) {
+      highlightElement.style.left = parseInt(locator.x) + "px";
+      highlightElement.style.top = parseInt(locator.y) + "px";
+      highlightElement.style.width = parseInt(locator.width) + "px";
+      highlightElement.style.height = parseInt(locator.height) + "px";
+    } else {
+      const bodyRects = document.documentElement.getBoundingClientRect();
+      const element = this.browserbot.findElement(locator);
+      const elementRects = element.getBoundingClientRect();
+      highlightElement.style.left = parseInt(elementRects.left - bodyRects.left) + "px";
+      highlightElement.style.top = parseInt(elementRects.top - bodyRects.top) + "px";
+      highlightElement.style.width = parseInt(elementRects.width) + "px";
+      highlightElement.style.height = parseInt(elementRects.height) + "px";
+    }
     highlightElement.style.position = "absolute";
     highlightElement.style.zIndex = "100";
     highlightElement.style.display = "block";
     highlightElement.style.pointerEvents = "none";
-    highlightElement.style.top = parseInt(elementRects.top - bodyRects.top) + "px";
-    highlightElement.style.left = parseInt(elementRects.left - bodyRects.left) + "px";
-    highlightElement.style.width = parseInt(elementRects.width) + "px";
-    highlightElement.style.height = parseInt(elementRects.height) + "px";
     scrollIntoViewIfNeeded(highlightElement, { centerIfNeeded: true });
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
-      highlightElement.className = "";
-      highlightElement.style.display = "none";
+      document.body.removeChild(highlightElement);
     }, 500);
     return "element found";
   } catch (e) {

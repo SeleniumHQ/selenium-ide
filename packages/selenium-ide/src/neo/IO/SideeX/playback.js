@@ -16,8 +16,11 @@
 // under the License.
 
 import { reaction } from "mobx";
+import FatalError from "../../../errors/fatal";
+import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
+import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 import ExtCommand, { isExtCommand } from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 
@@ -33,6 +36,7 @@ extCommand.doSetSpeed = (speed) => {
 };
 
 let baseUrl = "";
+let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -49,19 +53,37 @@ function playAfterConnectionFailed() {
     .catch(catchPlayingError);
 }
 
+function didFinishQueue() {
+  return (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying);
+}
+
+function isStopping() {
+  return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
+}
+
 function executionLoop() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  if ((PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying) || (!PlaybackState.isPlaying || PlaybackState.paused)) return false;
-  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // reached the end
+  if (didFinishQueue() || isStopping()) return false;
+  const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  // is command empty?
+  if (!command) {
+    return executionLoop();
+  }
+  // breakpoint
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
+  if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
+  else if (ignoreBreakpoint && isBreakpoint) ignoreBreakpoint = false;
+  // paused
+  if (isStopping()) return false;
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
-    return (extCommand["do" + upperCase](parsedTarget, value))
-      .then(() => {
-        PlaybackState.setCommandState(id, PlaybackStates.Passed);
-        return executionLoop();
-      });
+    return doDelay().then(() => (
+      (extCommand["do" + upperCase](xlateArgument(target), xlateArgument(value)))
+        .then(() => {
+          PlaybackState.setCommandState(id, PlaybackStates.Passed);
+        }).then(executionLoop)
+    ));
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
@@ -71,15 +93,15 @@ function executionLoop() {
       .then(doPageWait)
       .then(doAjaxWait)
       .then(doDomWait)
-      .then(doCommand)
       .then(doDelay)
+      .then(doCommand)
       .then(executionLoop);
   }
 }
 
 function prepareToPlay() {
   PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
-  return extCommand.init();
+  return extCommand.init(baseUrl);
 }
 
 function prepareToPlayAfterConnectionFailed() {
@@ -125,6 +147,7 @@ reaction(
   paused => {
     if (!paused) {
       PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
+      ignoreBreakpoint = true;
       playAfterConnectionFailed();
     }
   }
@@ -224,31 +247,67 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   });
 
   return p.then(() => (
-    extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
-  ))
-    .then(function(result) {
-      if (result.result !== "success") {
-        // implicit
-        if (result.result.match(/Element[\s\S]*?not found/)) {
-          if (implicitTime && (Date.now() - implicitTime > 30000)) {
-            reportError("Implicit Wait timed out after 30000ms");
-            implicitCount = 0;
-            implicitTime = "";
-          } else {
-            implicitCount++;
-            if (implicitCount == 1) {
-              implicitTime = Date.now();
-            }
-            PlaybackState.setCommandState(id, PlaybackStates.Pending, `Trying to find ${target}...`);
-            return doCommand(false, implicitTime, implicitCount);
-          }
-        }
+    canExecuteCommand(command) ?
+      doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
+      doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
+  ));
+}
 
-        PlaybackState.setCommandState(id, PlaybackStates.Failed, result.result);
+function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
+  return (command !== "type"
+    ? extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
+    : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
+    if (result.result !== "success") {
+      // implicit
+      if (isElementNotFound(result.result)) {
+        return doImplicitWait(result.result, id, target, implicitTime, implicitCount);
       } else {
-        PlaybackState.setCommandState(id, PlaybackStates.Passed);
+        PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
       }
-    });
+    } else {
+      PlaybackState.setCommandState(id, PlaybackStates.Passed);
+    }
+  });
+}
+
+function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
+  return executeCommand(command, target, value, {
+    commandId: id,
+    runId: PlaybackState.runId,
+    testId: PlaybackState.currentRunningTest.id,
+    frameId: extCommand.getCurrentPlayingFrameId(),
+    tabId: extCommand.currentPlayingTabId,
+    windowId: extCommand.currentPlayingWindowId
+  }).then(res => {
+    PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
+  }).catch(err => {
+    if (isElementNotFound(err.message)) {
+      return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
+    } else {
+      PlaybackState.setCommandState(id, (err instanceof FatalError || err instanceof NoResponseError) ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
+    }
+  });
+}
+
+function isElementNotFound(error) {
+  return error.match(/Element[\s\S]*?not found/);
+}
+
+function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
+  if (isElementNotFound(error)) {
+    if (implicitTime && (Date.now() - implicitTime > 30000)) {
+      reportError("Implicit Wait timed out after 30000ms");
+      implicitCount = 0;
+      implicitTime = "";
+    } else {
+      implicitCount++;
+      if (implicitCount == 1) {
+        implicitTime = Date.now();
+      }
+      PlaybackState.setCommandState(commandId, PlaybackStates.Pending, `Trying to find ${target}...`);
+      return doCommand(false, implicitTime, implicitCount);
+    }
+  }
 }
 
 function doDelay() {

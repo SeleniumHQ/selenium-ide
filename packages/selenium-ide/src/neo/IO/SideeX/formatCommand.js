@@ -16,8 +16,11 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-const declaredVars = {};
+import { Logger, Channels } from "../../stores/view/Logs";
+
+const logger = new Logger(Channels.PLAYBACK);
 const nbsp = String.fromCharCode(160);
+let declaredVars = {};
 
 export function xlateArgument(value) {
   value = value.replace(/^\s+/, "");
@@ -51,6 +54,10 @@ export function xlateArgument(value) {
   }
 }
 
+export function clearVariables() {
+  declaredVars = {};
+}
+
 function string(value) {
   if (value != null) {
     value = value.replace(/\\\\/g, "\\");
@@ -66,7 +73,7 @@ function handleFormatCommand(message) {
   if (message.storeStr) {
     declaredVars[message.storeVar] = message.storeStr;
   } else if (message.echoStr) {
-    window.addLog("echo: " + message.echoStr);
+    logger.log("echo: " + message.echoStr);
   }
 }
 

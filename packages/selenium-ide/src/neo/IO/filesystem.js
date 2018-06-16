@@ -17,14 +17,17 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
-import { migrateTestCase, migrateProject } from "./legacy/migrate";
+import { js_beautify as beautify } from "js-beautify";
+import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
+import TestCase from "../models/TestCase";
 import UiState from "../stores/view/UiState";
 import ModalState from "../stores/view/ModalState";
-import Selianize, { ParseError } from "../../selianize";
+import Selianize, { ParseError } from "selianize";
+import Manager from "../../plugin/manager";
 import chromeGetFile from "./filesystem/chrome";
 import firefoxGetFile from "./filesystem/firefox";
 
-export const supportedFileFormats = ".side, text/html, application/zip";
+export const supportedFileFormats = ".side, text/html";
 const parsedUA = parser(window.navigator.userAgent);
 
 export function getFile(path) {
@@ -48,45 +51,57 @@ export function getFile(path) {
   });
 }
 
-export function saveProject(project) {
+export function loadAsText(blob) {
+  return new Promise((res) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      res(e.target.result);
+    };
+
+    fileReader.readAsText(blob);
+  });
+}
+
+export function saveProject(_project) {
+  const project = _project.toJS();
   project.version = "1.0";
   downloadProject(project);
   UiState.saved();
 }
 
 function downloadProject(project) {
-  browser.downloads.download({
-    filename: project.name + ".side",
-    url: createBlob("application/json", project.toJSON()),
-    saveAs: true,
-    conflictAction: "overwrite"
-  });
-}
-
-export function exportProject(project) {
-  Selianize(JSON.parse(project.toJSON())).then(data => {
-    browser.downloads.download({
-      filename: project.name + ".test.js",
-      url: createBlob("application/javascript", data),
+  return exportProject(project).then(code => {
+    project.code = code;
+    Object.assign(project, Manager.emitDependencies());
+    return browser.downloads.download({
+      filename: project.name + ".side",
+      url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
       saveAs: true,
       conflictAction: "overwrite"
     });
-  }).catch(err => {
-    const markdown = ParseError(err && err.message || err);
-    ModalState.showAlert({
-      title: "Error exporting project",
-      description: markdown,
-      confirmLabel: "Download log",
-      cancelLabel: "Close"
-    }, (choseDownload) => {
-      if (choseDownload) {
-        browser.downloads.download({
-          filename: project.name + "-logs.md",
-          url: createBlob("text/markdown", markdown),
-          saveAs: true,
-          conflictAction: "overwrite"
-        });
-      }
+  });
+}
+
+function exportProject(project) {
+  return Manager.validatePluginExport(project).then(() => {
+    return Selianize(project).catch(err => {
+      const markdown = ParseError(err && err.message || err);
+      ModalState.showAlert({
+        title: "Error saving project",
+        description: markdown,
+        confirmLabel: "Download log",
+        cancelLabel: "Close"
+      }, (choseDownload) => {
+        if (choseDownload) {
+          browser.downloads.download({
+            filename: project.name + "-logs.md",
+            url: createBlob("text/markdown", markdown),
+            saveAs: true,
+            conflictAction: "overwrite"
+          });
+        }
+      });
+      return Promise.reject();
     });
   });
 }
@@ -113,28 +128,45 @@ export function loadProject(project, file) {
       confirmLabel: "Close"
     });
   }
-  const fileReader = new FileReader();
-  fileReader.onload = (e) => {
+  loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
-      loadJSONProject(project, e.target.result);
-    } else  {
+      loadJSONProject(project, contents);
+    } else {
       try {
-        if (file.type === "text/html") {
-          project.fromJS(migrateTestCase(e.target.result));
-        } else if (file.type === "application/zip") {
-          migrateProject(e.target.result).then(jsRep => {
-            project.fromJS(jsRep);
-          }).catch(displayError);
+        const type = verifyFile(contents);
+        if (type === FileTypes.Suite) {
+          ModalState.importSuite(contents, (files) => {
+            project.fromJS(migrateProject(files));
+          });
+        } else if (type === FileTypes.TestCase) {
+          const { test, baseUrl } = migrateTestCase(contents);
+          if (project.url && project.url !== baseUrl) {
+            ModalState.showAlert({
+              title: "Migrate test case",
+              description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
+              confirmLabel: "Migrate",
+              cancelLabel: "Discard"
+            }, (choseDownload) => {
+              if (choseDownload) {
+                project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl)));
+              }
+            });
+          }
         }
       } catch (error) {
         displayError(error);
       }
     }
-  };
-
-  file.type === "application/zip" ? fileReader.readAsArrayBuffer(file) : fileReader.readAsText(file);
+  });
 }
 
 function loadJSONProject(project, data) {
   project.fromJS(JSON.parse(data));
+  Manager.emitMessage({
+    action: "event",
+    event: "projectLoaded",
+    options: {
+      projectName: project.name
+    }
+  });
 }

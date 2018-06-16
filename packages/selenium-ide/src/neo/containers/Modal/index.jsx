@@ -21,6 +21,8 @@ import { observer } from "mobx-react";
 import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
+import ImportDialog from "../../components/ImportDialog";
+import SuiteSettings from "../../components/SuiteSettings";
 import ModalState from "../../stores/view/ModalState";
 
 @observer
@@ -51,6 +53,19 @@ export default class Modal extends Component {
           verify={ModalState.renameState.verify}
           setValue={ModalState.renameState ? ModalState.renameState.done : null}
           cancel={ModalState.cancelRenaming} />
+        <ImportDialog
+          isImporting={!!ModalState.importSuiteState.suite}
+          suite={ModalState.importSuiteState.suite}
+          onComplete={ModalState.importSuiteState.onComplete}
+          cancel={ModalState.cancelImport}
+        />
+        <SuiteSettings
+          isEditing={ModalState.suiteSettingsState.editing}
+          timeout={ModalState.suiteSettingsState.timeout}
+          isParallel={ModalState.suiteSettingsState.isParallel}
+          submit={ModalState.suiteSettingsState ? ModalState.suiteSettingsState.done : null}
+          cancel={ModalState.cancelSuiteSettings}
+        />
       </div>
     );
   }

@@ -18,8 +18,7 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 
 ### Pre-packaged
 - [Chrome extension](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
-
-Firefox users for the time being can download the latest `xpi` from the [releases](https://github.com/SeleniumHQ/selenium-ide/releases) page.
+- [Firefox extension](https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/)
 
 ## Prerequisites
 
@@ -33,9 +32,9 @@ Firefox users for the time being can download the latest `xpi` from the [release
 
 - Install the dependencies
 ```peru sync```  
-```yarn```
+```yarn``` or if using Node 10 ```yarn --ignore-engines```
 - Build the extension  
-```yarn build:ext``` or ```yarn build:ext:prod``` for production build
+```yarn build:ext:prod``` or ```yarn build:ext``` for faster development build (also includes beta features)
 - Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
 
 Manifest located in `<Project Directory>/packages/selenium-ide/build/manifest.json`

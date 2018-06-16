@@ -27,6 +27,7 @@ export default class TestCase {
   constructor(id = uuidv4(), name = "Untitled Test") {
     this.id = id;
     this.name = name;
+    this.export = this.export.bind(this);
   }
 
   @action.bound setName(name) {
@@ -72,6 +73,14 @@ export default class TestCase {
 
   @action.bound clearAllCommands() {
     this.commands.clear();
+  }
+
+  export() {
+    return {
+      id: this.id,
+      name: this.name,
+      commands: this.commands.map(c => c.export())
+    };
   }
 
   @action

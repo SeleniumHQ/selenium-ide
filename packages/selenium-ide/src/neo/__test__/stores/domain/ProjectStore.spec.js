@@ -40,6 +40,11 @@ describe("Project Store", () => {
     store.changeName("changed");
     expect(store.name).toBe("changed");
   });
+  it("should remove illegal characters from the project name", () => {
+    const store = new ProjectStore("test");
+    store.changeName("te&nbsp;<br>st<br>");
+    expect(store.name).toBe("te&nbsp;st");
+  });
   it("should have a base url", () => {
     const store = new ProjectStore();
     expect(store).toHaveProperty("url");
@@ -59,6 +64,26 @@ describe("Project Store", () => {
     const url = "http://www.seleniumhq.org/";
     store.addUrl(url);
     expect(store.urls.length).toBe(1);
+  });
+  it("should not add duplicates to the url list", () => {
+    const store = new ProjectStore();
+    const url = new URL("http://www.seleniumhq.org/").href;
+    store.addUrl(url);
+    store.addUrl(url);
+    expect(store.urls.length).toBe(1);
+  });
+  it("should add the current url to the cache", () => {
+    const store = new ProjectStore();
+    store.setUrl("http://www.seleniumhq.org/");
+    expect(store.urls.length).toBe(0);
+    store.addCurrentUrl();
+    expect(store.urls.length).toBe(1);
+  });
+  it("should verify the current url is valid", () => {
+    const store = new ProjectStore();
+    expect(() => {
+      store.addUrl("test is not valid url");
+    }).toThrowError("Invalid URL");
   });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();
@@ -92,6 +117,12 @@ describe("Project Store", () => {
     const store = new ProjectStore();
     const test = store.createTestCase("my test");
     expect(test.name).toBe("my test");
+  });
+  it("should rename a test with a name that already exists", () => {
+    const store = new ProjectStore();
+    store.createTestCase("my test");
+    const test2 = store.createTestCase("my test");
+    expect(test2.name).toBe("my test (1)");
   });
   it("should create a suite", () => {
     const store = new ProjectStore();
@@ -174,7 +205,14 @@ describe("Project Store", () => {
       urls: [
         "https://en.wikipedia.org",
         "http://www.seleniumhq.org"
-      ].sort()
+      ].sort(),
+      plugins: [
+        {
+          id: "1",
+          name: "Some plugin",
+          version: "1.0.0"
+        }
+      ]
     };
 
     const project = new ProjectStore();
@@ -188,6 +226,8 @@ describe("Project Store", () => {
     expect(project.suites[0] instanceof Suite).toBeTruthy();
     expect(project.urls.length).toBe(2);
     expect(project.urls[0]).toBe(projectRep.urls[0]);
+    expect(project.plugins.length).toBe(1);
+    expect(project.plugins[0]).toEqual(projectRep.plugins[0]);
   });
   it("should generate an ID for loaded project if none provided", () => {
     const projectRep = {
@@ -201,5 +241,36 @@ describe("Project Store", () => {
     const project = new ProjectStore();
     project.fromJS(projectRep);
     expect(project.id).toBeDefined();
+  });
+  it("should have a list of loaded plugins", () => {
+    const project = new ProjectStore();
+    expect(project.plugins).toBeDefined();
+  });
+  it("should add to the list of loaded plugins", () => {
+    const project = new ProjectStore();
+    const plugin = {
+      id: "1",
+      name: "Some plugin",
+      version: "1.0.0"
+    };
+    project.registerPlugin(plugin);
+    expect(project.plugins[0].id).toBe(plugin.id);
+  });
+  it("should upgrade the given plugin when upgraded", () => {
+    const project = new ProjectStore();
+    const plugin = {
+      id: "1",
+      name: "to be upgraded",
+      version: "1.0.0"
+    };
+    project.registerPlugin(plugin);
+    const upgraded = {
+      id: "1",
+      name: "was just upgraded",
+      version: "2.0.0"
+    };
+    project.registerPlugin(upgraded);
+    expect(project.plugins.length).toBe(1);
+    expect(project.plugins[0].version).toEqual("2.0.0");
   });
 });

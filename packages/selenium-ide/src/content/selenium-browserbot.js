@@ -35,7 +35,7 @@ const createEventObject = window.global.createEventObject;
 const absolutify = window.global.absolutify;
 const addLoadListener = window.global.addLoadListener;
 const highlight = window.global.highlight;
-const parse_locator = window.global.parse_locator;
+const _parse_locator = window.global.parse_locator;
 const eval_xpath = window.global.eval_xpath;
 const eval_css = window.global.eval_css;
 const PatternMatcher = window.global.PatternMatcher;
@@ -50,6 +50,14 @@ const reassembleLocation = window.global.reassembleLocation;
 const serializeObject = window.global.serializeObject;
 
 window.global.browserVersion = new window.global.BrowserVersion();
+
+function parse_locator(...args) {
+  if (!args[0]) {
+    throw new TypeError("Locator cannot be empty");
+  } else {
+    return _parse_locator(...args);
+  }
+}
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.

@@ -438,9 +438,7 @@ if (Recorder) {
       if (this.scrollDetector) {
         //TODO: fix target
         record("runScript", [
-          [
-            ["window.scrollTo(0," + window.scrollY + ")" ]
-          ]
+          ["window.scrollTo(0," + window.scrollY + ")" ]
         ], "");
         pageLoaded = false;
         setTimeout(function() {
@@ -516,5 +514,11 @@ if (Recorder) {
     }
   }, true);
 
-  recorder.attach();
+  browser.runtime.sendMessage({
+    attachRecorderRequest: true
+  }).then((shouldAttach) => {
+    if (shouldAttach) {
+      recorder.attach();
+    }
+  }).catch();
 }

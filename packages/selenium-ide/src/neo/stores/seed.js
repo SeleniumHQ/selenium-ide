@@ -21,10 +21,10 @@ import UiState from "./view/UiState";
 
 export default function seed(store, numberOfSuites = 5) {
   function generateSuite() {
-    return store.createSuite(generate({ words: 2}).spaced);
+    return store.createSuite(generate({ words: 2 }).spaced);
   }
   function generateTestCase() {
-    return store.createTestCase(generate({ words: 2}).spaced);
+    return store.createTestCase(generate({ words: 2 }).spaced);
   }
   const targets = ["a", "button"];
   function generateCommand(test) {
@@ -32,7 +32,7 @@ export default function seed(store, numberOfSuites = 5) {
     command.setCommand(CommandsArray[Math.floor(Math.random() * CommandsArray.length)]);
     let targetChance = Math.floor(Math.random() * 10);
     command.setTarget(targetChance < targets.length ? targets[targetChance] : "");
-    command.setValue(Math.floor(Math.random() * 2) ? generate({ words: 1}).spaced : "");
+    command.setValue(Math.floor(Math.random() * 2) ? generate({ words: 1 }).spaced : "");
     return command;
   }
   function randomBetween(min, max) {
@@ -82,26 +82,24 @@ export default function seed(store, numberOfSuites = 5) {
   const open3 = typeTest.createCommand();
   open3.setCommand("open");
   open3.setTarget("/wiki/Main_Page");
+  const clickSearch = typeTest.createCommand();
+  clickSearch.setCommand("clickAt");
+  clickSearch.setTarget("id=searchInput");
   const type = typeTest.createCommand();
   type.setCommand("type");
   type.setTarget("id=searchInput");
-  type.setValue("testtest");
+  type.setValue("Selenium IDE");
+
+  const submit = typeTest.createCommand();
+  submit.setCommand("clickAt");
+  submit.setTarget("css=.mw-searchSuggest-link:first-child");
 
   const suite = store.createSuite("aaa suite");
   suite.addTestCase(playbackTest);
-  suite.addTestCase(playbackTest2);
-
-  const failTest = store.createTestCase("aaba failure");
-  const failCommand = failTest.createCommand();
-  failCommand.setCommand("waitForPageToLoad");
-
-  const failTest2 = store.createTestCase("aabb failure");
-  const failCommand2 = failTest2.createCommand();
-  failCommand2.setCommand("waitForElementPresent");
 
   const suite2 = store.createSuite("aaab suite");
-  suite2.addTestCase(failTest);
-  suite2.addTestCase(failTest2);
+  suite2.addTestCase(typeTest);
+  suite2.addTestCase(playbackTest2);
 
   UiState.selectTest(playbackTest);
 

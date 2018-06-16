@@ -20,30 +20,50 @@ import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import LogStore from "../../stores/view/Logs";
+import { output } from "../../stores/view/Logs";
+import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
+import CommandReference from "../../components/CommandReference";
 
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.store = new LogStore();
+    this.state = {
+      tab: "Log"
+    };
+    this.playbackLogger = new PlaybackLogger();
+    //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
+    this.tabClicked = this.tabClicked.bind(this);
+    this.tabChangedHandler = this.tabChangedHandler.bind(this);
   }
   componentWillUnmount() {
-    this.store.dispose();
+    //this.loggerObserver.dispose();
+    this.playbackLogger.dispose();
+  }
+  tabChangedHandler(tab) {
+    this.setState({
+      tab
+    });
+  }
+  //create different object which stores name and read status (e.g., unread boolean)
+  tabClicked(){
+    this.props.restoreSize();
   }
   render() {
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
-          <ClearButton onClick={this.store.clearLogs} />
+        <TabBar tabs={["Log", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
+          <ClearButton onClick={output.clear} />
         </TabBar>
-        <LogList store={this.store} />
+        {this.state.tab === "Log" && <LogList output={output} /> }
+        {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );
   }
   static propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
+    restoreSize: PropTypes.func
   };
 }

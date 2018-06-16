@@ -30,7 +30,22 @@ function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");
 }
 
+// for plugins
+export function recordCommand(command, target, value, index, select = false) {
+  const { test } = UiState.selectedTest;
+  const newCommand = test.createCommand(index);
+  newCommand.setCommand(command);
+  newCommand.setTarget(target);
+  newCommand.setValue(value);
+
+  if (select) {
+    UiState.selectCommand(newCommand);
+  }
+}
+
+// for record module
 export default function record(command, targets, value, insertBeforeLastCommand = false) {
+  if (UiState.isSelectingTarget) return;
   const { test } = UiState.selectedTest;
   if (isEmpty(test.commands, command)) {
     const newCommand = test.createCommand();
@@ -50,10 +65,7 @@ export default function record(command, targets, value, insertBeforeLastCommand 
       // double click removed the 2 clicks from before
       index -= 2;
     }
-    const newCommand = test.createCommand(index);
-    newCommand.setCommand(command);
-    newCommand.setValue(value);
-    newCommand.setTarget(targets[0][0]);
+    recordCommand(command, targets[0][0], value);
   }
 }
 

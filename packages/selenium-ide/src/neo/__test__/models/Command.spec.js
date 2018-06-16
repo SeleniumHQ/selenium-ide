@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Command, { Commands, CommandsValues } from "../../models/Command";
+import Command, { Commands } from "../../models/Command";
 
 describe("Command", () => {
   it("should generate and id", () => {
@@ -28,8 +28,8 @@ describe("Command", () => {
   });
   it("should set a command", () => {
     const command = new Command();
-    command.setCommand(Commands.open);
-    expect(command.command).toBe(Commands.open);
+    command.setCommand(Commands.values.open);
+    expect(command.command).toBe(Commands.values.open);
   });
   it("should be a valid command", () => {
     const command = new Command();
@@ -40,6 +40,17 @@ describe("Command", () => {
     const command = new Command();
     command.setCommand("test invalid");
     expect(command.isValid).toBeFalsy();
+  });
+  it("should replace undefined input with empty strings", () => {
+    const command = new Command();
+    command.setCommand();
+    command.setTarget();
+    command.setValue();
+    command.setComment();
+    expect(command.command).toEqual("");
+    expect(command.target).toEqual("");
+    expect(command.value).toEqual("");
+    expect(command.comment).toEqual("");
   });
   it("should set the target", () => {
     const command = new Command();
@@ -63,12 +74,19 @@ describe("Command", () => {
     expect(command.target).toBe("");
     expect(command.value).toBe("");
   });
+  it("should have a breakpoint", () => {
+    const command = new Command();
+    expect(command.isBreakpoint).toBeFalsy();
+    command.toggleBreakpoint();
+    expect(command.isBreakpoint).toBeTruthy();
+  });
   it("shouls clone itself, creating a new id", () => {
     const command = new Command();
     command.setComment("test");
     command.setCommand("open");
     command.setTarget("a");
     command.setValue("submit");
+    command.toggleBreakpoint();
     const clone = command.clone();
     expect(clone).not.toBe(command);
     expect(clone.id).not.toBe(command.id);
@@ -76,6 +94,7 @@ describe("Command", () => {
     expect(clone.command).toBe(command.command);
     expect(clone.target).toBe(command.target);
     expect(clone.value).toBe(command.value);
+    expect(clone.isBreakpoint).toBeFalsy();
   });
 
   it("should load from JS", () => {
@@ -92,17 +111,34 @@ describe("Command", () => {
     expect(command.command).toBe(jsRepresentation.command);
     expect(command.target).toBe(jsRepresentation.target);
     expect(command.value).toBe(jsRepresentation.value);
+    expect(command.isBreakpoint).toBeFalsy();
     expect(command instanceof Command).toBeTruthy();
   });
 });
 
 describe("Commands enum", () => {
   it("should contains only strings as values", () => {
-    Object.keys(Commands).forEach(command => {
-      expect(Commands[command].constructor.name).toBe("String");
+    Commands.list.forEach(commandInfo => {
+      expect(commandInfo.name.constructor.name).toBe("String");
     });
   });
-  it("it should traverse through the reverse dictionary", () => {
-    expect(Commands[0]).toBe(Commands[CommandsValues[Commands[0]]]);
+  it("should traverse through the reverse dictionary", () => {
+    Commands.list.forEach((commandInfo) => {
+      expect(commandInfo.name).toBe(Commands.list.get(Commands.values[commandInfo.name]).name);
+    });
+    expect(Commands.list[0]).toBe(Commands[Commands.values[Commands[0]]]);
+  });
+  it("should add a command to the list", () => {
+    let key = "test", value = { name: "a friendly test" }, length = Commands.array.length;
+    Commands.addCommand(key, value);
+    expect(Commands.list.get(key)).toEqual(value);
+    expect(Commands.array.length).toBe(length + 1);
+  });
+  it("should throw if trying to add a command that already exists", () => {
+    let key = "dontDoThisTwice", value = "this shouldnt happen";
+    Commands.addCommand(key, value);
+    expect(() => {
+      Commands.addCommand(key, value);
+    }).toThrowError(`Command with the id ${key} already exists`);
   });
 });

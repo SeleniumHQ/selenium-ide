@@ -1,0 +1,43 @@
+{
+  "id": "1181f1d8-191a-4a2e-9d46-ded8000cd0b7",
+  "name": "select-examples",
+  "url": "http://nginx:80",
+  "tests": [{
+    "id": "6acbf258-048b-4493-8478-accfc444fb3d",
+    "name": "select-verify-labels",
+    "commands": [{
+      "id": "eea382e5-6064-4770-a3b2-bf7fd717271d",
+      "comment": "",
+      "command": "open",
+      "target": "/select.html",
+      "value": ""
+    }, {
+      "id": "55847a24-c2e4-481a-b5ff-6e360d370151",
+      "comment": "",
+      "command": "assertSelectedLabel",
+      "target": "id=select",
+      "value": "One"
+    }, {
+      "id": "71537b82-ff16-449e-8aa9-618ee22f5ccd",
+      "comment": "",
+      "command": "verifySelectedLabel",
+      "target": "id=select",
+      "value": "One"
+    }]
+  }],
+  "suites": [{
+    "id": "e7102959-f85f-4d57-9a39-846e52239b1b",
+    "name": "select",
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["6acbf258-048b-4493-8478-accfc444fb3d"]
+  }],
+  "urls": ["https://en.wikipedia.org"],
+  "plugins": [],
+  "version": "1.0",
+  "code": [{
+    "name": "select",
+    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80';jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {driver.get(BASE_URL + \"/select.html\");driver.wait(until.elementLocated(By.id(\"select\")));driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});driver.wait(until.elementLocated(By.id(\"select\")));driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+  }],
+  "dependencies": {}
+}

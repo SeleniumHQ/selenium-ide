@@ -25,9 +25,6 @@ elementForInjectingStyle.href = browser.runtime.getURL("/assets/prompt.css");
 const elementForInjectingScript = document.createElement("script");
 elementForInjectingScript.src = browser.runtime.getURL("/assets/prompt.js");
 (document.head || document.documentElement).appendChild(elementForInjectingScript);
-const highlightElement = document.createElement("div");
-highlightElement.id = "selenium-highlight";
-document.body.appendChild(highlightElement);
 
 if (window === window.top) {
   window.addEventListener("message", function(event) {
@@ -42,6 +39,11 @@ if (window === window.top) {
               record("chooseCancelOnNextPrompt", [[""]], "", true, event.data.frameLocation);
             }
             record("assertPrompt", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
+            if (event.data.recordedResult != null) {
+              record("webdriverAnswerOnNextPrompt", [[event.data.recordedResult]], "", false, event.data.frameLocation);
+            } else {
+              record("webdriverChooseCancelOnNextPrompt", [[""]], "", false, event.data.frameLocation);
+            }
             break;
           case "confirm":
             if (event.data.recordedResult == true) {
@@ -50,6 +52,11 @@ if (window === window.top) {
               record("chooseCancelOnNextConfirmation", [[""]], "", true, event.data.frameLocation);
             }
             record("assertConfirmation", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
+            if (event.data.recordedResult == true) {
+              record("webdriverChooseOkOnNextConfirmation", [[""]], "", false, event.data.frameLocation);
+            } else {
+              record("webdriverChooseCancelOnNextConfirmation", [[""]], "", false, event.data.frameLocation);
+            }
             break;
           case "alert":
             //record("answerOnNextAlert",[[event.data.recordedResult]],"",true);

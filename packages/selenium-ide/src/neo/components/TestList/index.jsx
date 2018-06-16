@@ -27,9 +27,16 @@ import "./style.css";
 
 @inject("renameTest") @observer
 export default class TestList extends Component {
+  static propTypes = {
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    collapsed: PropTypes.bool,
+    suite: PropTypes.object,
+    renameTest: PropTypes.func,
+    removeTest: PropTypes.func.isRequired
+  };
   render() {
     return (
-      <ul className={classNames("tests", {"active": !this.props.collapsed})}>
+      <ul className={classNames("tests", { "active": !this.props.collapsed })}>
         {this.props.tests.map((test, index) => (
           <li key={test.id}>
             {this.props.suite ?
@@ -41,8 +48,6 @@ export default class TestList extends Component {
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
                 changed={UiState.getTestState(test).modified}
                 selectTest={UiState.selectTest}
-                dragInProgress={UiState.dragInProgress}
-                setDrag={UiState.setDrag}
                 removeTest={() => { this.props.removeTest(test); }}
                 moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
                 moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
@@ -50,7 +55,9 @@ export default class TestList extends Component {
                 swapTestCases={this.props.suite.swapTestCases}
               /> :
               <Test
+                key={test.id}
                 className={PlaybackState.testState.get(test.id)}
+                index={index}
                 test={test}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
                 changed={UiState.getTestState(test).modified}
@@ -66,11 +73,4 @@ export default class TestList extends Component {
       </ul>
     );
   }
-  static propTypes = {
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    collapsed: PropTypes.bool,
-    suite: PropTypes.object,
-    renameTest: PropTypes.func,
-    removeTest: PropTypes.func.isRequired
-  };
 }
