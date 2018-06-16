@@ -94,7 +94,7 @@ const testTarget = {
   isDragging: monitor.isDragging()
 }))
 
-export default class Test extends React.Component {
+export class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
