@@ -15,10 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default {
-  runtime: {
-    onMessage: {
-      addListener: jest.fn()
-    }
-  }
-};
+const storage = {};
+
+export function get(...argv) {
+  return Promise.resolve(argv.reduce((data, key) => {
+    data[key] = storage[key];
+    return data;
+  }, {}));
+}
+
+export function set(keys) {
+  Object.assign(storage, keys);
+  return Promise.resolve();
+}
+
+export default { get, set };
