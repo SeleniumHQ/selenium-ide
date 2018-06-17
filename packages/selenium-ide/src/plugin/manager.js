@@ -53,8 +53,8 @@ class PluginManager {
       RegisterSuiteHook(this.emitSuite.bind(undefined, plugin));
       RegisterTestHook(this.emitTest.bind(undefined, plugin));
       if (plugin.commands) {
-        plugin.commands.forEach(({ id, name, type }) => {
-          Commands.addCommand(id, { name, type });
+        plugin.commands.forEach(({ id, name, type, docs }) => {
+          Commands.addCommand(id, { name, type, ...docs });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
         });

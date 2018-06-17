@@ -29,7 +29,12 @@ describe("plugin manager", () => {
       version: "1.0.0",
       commands: [{
         id: "aCommand",
-        name: "do something"
+        name: "do something",
+        docs: [
+          { description: "sample description" },
+          { target: { name: "new target", value: "new target description" } },
+          { value: { name: "new value", value: "new value description" } }
+        ]
       }]
     };
     expect(Manager.plugins.length).toBe(0);
