@@ -16,10 +16,6 @@
   display: table-row-group;
 }
 
-.value-list .row:nth-child(even) {
-  background: #f2efef;
-}
-
 .variables {
   display: table;
   border: 2px solid #FFFCFE;
