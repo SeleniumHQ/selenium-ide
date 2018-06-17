@@ -29,10 +29,6 @@
   max-width: 655px;
 }
 
-.variables .index {
-  width : 20px;
-}
-
 .storeContainer  {
   padding: 0 10px;
   overflow-y: auto;

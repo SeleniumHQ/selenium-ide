@@ -51,16 +51,14 @@ export default class VariableList extends React.Component {
       <div className="storeContainer">
         <div className="variables" >
           <div className="value-header">
-            <div className="index">No.</div>
             <div className="value">values</div>
             <div className="remarks"></div>
           </div>
 
           <div className="value-list">
-            {stored.keys().map((storedKey, index) => (
+            {stored.keys().map((storedKey) => (
               <Variable
                 key={storedKey}
-                index={index + 1}
                 keyVar={storedKey}
                 value={stored.get(storedKey)}
                 edit={this.editVariable}
