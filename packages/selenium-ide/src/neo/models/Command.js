@@ -204,6 +204,9 @@ class CommandList {
     [ "echo", {
       name: "echo"
     }],
+    [ "executeScript", {
+      name: "execute script"
+    }],
     [ "editContent", {
       name: "edit content",
       type: TargetTypes.LOCATOR

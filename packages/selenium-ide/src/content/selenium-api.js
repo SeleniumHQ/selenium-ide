@@ -562,6 +562,10 @@ Selenium.prototype.doStore = function(value, varName) {
   browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
 };
 
+Selenium.prototype.doStoreEval = function() {
+  throw new Error("store eval is obsolete please migrate to execute script");
+};
+
 Selenium.prototype.doStoreText = function(locator, varName) {
   let element = this.browserbot.findElement(locator);
   browser.runtime.sendMessage({ "storeStr": element.textContent, "storeVar": varName });
@@ -2934,7 +2938,7 @@ Selenium.prototype.doWaitForPageToLoad.dontCheckAlertsAndConfirms = true;
 Selenium.prototype.preprocessParameter = function(value) {
   let match = value.match(/^javascript\{((.|\r?\n)+)\}$/);
   if (match && match[1]) {
-    let result = eval(match[1]);
+    let result = window.eval(match[1]);
     return result == null ? null : result.toString();
   }
   return this.replaceVariables(value);
@@ -3139,6 +3143,10 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
     }
     //LOG.setLogLevelThreshold(logLevel);
 }*/
+
+Selenium.prototype.doExecuteScript = function(script, varName) {
+  browser.runtime.sendMessage({ "storeStr": window.eval(script), "storeVar": varName });
+};
 
 Selenium.prototype.doRunScript = function(script) {
   /**

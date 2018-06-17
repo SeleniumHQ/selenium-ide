@@ -31,6 +31,7 @@ const emitters = {
   sendKeys: emitSendKeys,
   echo: emitEcho,
   runScript: emitRunScript,
+  executeScript: emitExecuteScript,
   pause: emitPause,
   verifyChecked: emitVerifyChecked,
   verifyNotChecked: emitVerifyNotChecked,
@@ -164,6 +165,10 @@ async function emitUncheck(locator) {
 
 async function emitRunScript(script) {
   return Promise.resolve(`driver.executeScript(\`${script}\`);`);
+}
+
+async function emitExecuteScript(script, varName) {
+  return Promise.resolve(`var ${varName} = await driver.executeScript("${script}");`);
 }
 
 async function emitPause(_, time) {

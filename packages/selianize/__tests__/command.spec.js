@@ -139,6 +139,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.executeScript(\`${command.target}\`);`);
   });
+  it("should emit `execute script` command", () => {
+    const command = {
+      command: "executeScript",
+      target: "javascript",
+      value: "myVar"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = await driver.executeScript("${command.target}");`);
+  });
   it("should emit `pause` command", () => {
     const command = {
       command: "pause",
