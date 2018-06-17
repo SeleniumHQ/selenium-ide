@@ -16,11 +16,16 @@
 // under the License.
 
 import React from "react";
+import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import "./style.css";
 
 @observer
 export default class CommandReference extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    currentCommand: PropTypes.object
+  };
   render() {
     return (
       <div className="command-reference">
