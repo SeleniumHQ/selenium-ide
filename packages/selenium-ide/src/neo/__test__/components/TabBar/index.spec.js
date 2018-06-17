@@ -7,7 +7,9 @@ describe("<TabBar />", () => {
   it("displays an unread notification on the log tab when the unread status is set to true", () => {
     const { container } = renderIntoDocument(<TabBar tabs={[{ name: "Log", unread: true }, { name: "Reference" }]} />);
     const unreadLogTab = container.querySelector(".log.unread");
+    const unreadReferenceTab = container.querySelector(".reference.unread");
     expect(unreadLogTab).not.toBe(null);
+    expect(unreadReferenceTab).toBe(null);
   });
   it("should return the selected tab name when selected", () => {
     const handleTabChange = (passedSelectedTab) => {
