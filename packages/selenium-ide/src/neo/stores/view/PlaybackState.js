@@ -24,6 +24,7 @@ import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
+import { clearVariables } from "../../IO/SideeX/formatCommand";
 
 class PlaybackState {
   @observable runId = "";
@@ -58,7 +59,9 @@ class PlaybackState {
   }
 
   beforePlaying(play) {
-    UiState._project.addCurrentUrl();
+    try {
+      UiState._project.addCurrentUrl();
+    } catch (e) {} // eslint-disable-line no-empty
     if (UiState.isRecording) {
       ModalState.showAlert({
         title: "Stop recording",
@@ -103,6 +106,7 @@ class PlaybackState {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
       this.resetState();
+      clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
@@ -159,6 +163,9 @@ class PlaybackState {
   }
 
   @action.bound playNext() {
+    if (UiState.selectedTest.suite.isParallel) {
+      clearVariables();
+    }
     this.currentRunningTest = this._testsToRun.shift();
     UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.runningQueue = this.currentRunningTest.commands.peek();
