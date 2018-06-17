@@ -57,6 +57,11 @@ export default class Console extends React.Component {
   tabClicked(){
     this.props.restoreSize();
   }
+  currentCommand(){
+    if (UiState.selectedCommand) {
+      Commands.list.get(UiState.selectedCommand.command);
+    }
+  }
   render() {
     const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }];
     return (
@@ -68,7 +73,7 @@ export default class Console extends React.Component {
         </TabBar>
         <div className="viewport">
           {this.state.tab === "Log" && <LogList output={output} /> }
-          {this.state.tab === "Reference" && <CommandReference currentCommand={Commands.list.get(UiState.selectedCommand.command)}/> }
+          {this.state.tab === "Reference" && <CommandReference currentCommand={this.currentCommand}/> }
         </div>
       </footer>
     );
