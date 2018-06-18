@@ -189,8 +189,9 @@ class CommandList {
     }],
     [ "answerOnNextPrompt", {
       name: "answer on next prompt",
-      description: "Instructs Selenium to return the specified answer string in\
-                     response to the next JavaScript prompt.",
+      description: "Affects the next alert prompt. This command will send \
+                    the specified answer string to it. If the alert is already \
+                    present, then see webdriver answer on next prompt.",
       target: ArgTypes.answer
     }],
     [ "assertAlert", {
@@ -297,17 +298,21 @@ class CommandList {
     }],
     [ "chooseCancelOnNextConfirmation", {
       name: "choose cancel on next confirmation",
-      description: "After running this command, the next call to confirm() will\
-                    return false, as if the user had clicked Cancel. To resume \
-                    using the default behavior for future confirmations, refer \
-                    to choose ok on next confirmation."
+      description: "Affects the next confirmation alert. This command will \
+                    cancel it. If the alert is already present, then use \
+                    webdriver choose cancel on next confirmation instead."
     }],
     [ "chooseCancelOnNextPrompt", {
-      name: "choose cancel on next prompt"
+      name: "choose cancel on next prompt",
+      description: "Affects the next alert prompt. This command will cancel \
+                    it. If the alert is already present, then use webdriver \
+                    choose cancel on next prompt instead."
     }],
     [ "chooseOkOnNextConfirmation", {
       name: "choose ok on next confirmation",
-      description: "Undo the effect of calling choose cancel on next confirmation."
+      description: "Affects the next confirmation alert. This command will accept \
+                    it. If the alert is already present, then use webdriver \
+                    choose ok on next prompt instead."
     }],
     [ "click", {
       name: "click",
@@ -618,22 +623,29 @@ class CommandList {
     }],
     [ "webdriverAnswerOnNextPrompt", {
       name: "webdriver answer on next prompt",
-      description: "Instructs Selenium to provide the specified answer string \
-                    in response to the next JavaScript prompt.",
+      description: "Affects a currently showing alert prompt. This command \
+                    instructs Selenium to provide the specified answer to it. \
+                    If the alert has not appeared yet then use answer on next \
+                    prompt instead.",
       target: ArgTypes.answer
     }],
     [ "webdriverChooseCancelOnNextConfirmation", {
       name: "webdriver choose cancel on next confirmation",
-      description: "Instructs Selenium to return the specified answer string in \
-                    response to the next JavaScript prompt."
+      description: "Affects a currently showing confirmation alert. This command \
+                    instructs Selenium to cancel it. If the alert has not \
+                    appeared yet then use choose cancel on next confirmation instead."
     }],
     [ "webdriverChooseCancelOnNextPrompt", {
       name: "webdriver choose cancel on next prompt",
-      description: "Instructs Selenium to cancel the next JavaScript prompt."
+      description: "Affects a currently showing alert prompt. This command \
+                    instructs Selenium to cancel it. If the alert has not \
+                    appeared yet then use choose cancel on next prompt instead."
     }],
     [ "webdriverChooseOkOnNextConfirmation", {
       name: "webdriver choose ok on next confirmation",
-      description: "Undo the effect of calling choose cancel on next confirmation."
+      description: "Affects a currently showing confirmation alert. This command \
+                    instructs Selenium to accept it. If the alert has not \
+                    appeared yet then use choose ok on next confirmation instead."
     }]
   ])
 
