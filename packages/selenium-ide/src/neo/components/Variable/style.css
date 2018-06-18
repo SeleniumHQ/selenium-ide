@@ -33,11 +33,13 @@
   box-shadow: 0 0 0 1px transparent inset;
 }
 
-.row .variable .value {
+.row .editable {
   border-radius: 4px;
+  padding: 0;
+  line-height: 14px;
 }
 
-.row .variable .value:hover {
+.row .editable:hover {
   box-shadow: 0 0 0 1px #CECECE inset;
 }
 
@@ -45,7 +47,7 @@
   opacity: 1;
 }
 
-.row .variable .value:focus {
+.row .editable:focus {
   box-shadow: 0 0 0 1px #A8A8A8 inset;
   cursor: initial;
   outline: 0;
@@ -59,9 +61,4 @@
 .deleteBtn {
   font-size: 14px;
   opacity: 0;
-}
-
-.row input{
-  padding: 0;
-  line-height: 14px;
 }

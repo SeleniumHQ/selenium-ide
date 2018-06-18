@@ -55,7 +55,7 @@ export default class VariableList extends React.Component {
                 key="adding"
                 delete={variables.deleteVariable}
                 add={variables.addVariable}
-                adding={variables.addingVariable}
+                isAdding={variables.addingVariable}
               />
             )}
           </div>
