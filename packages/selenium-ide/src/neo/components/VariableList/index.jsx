@@ -42,7 +42,7 @@ export default class VariableList extends React.Component {
           </div>
 
           <div className="value-list">
-            {variables.storedVars.keys().map((storedKey) => (
+            {variables.storedVars.keys().sort().map((storedKey) => (
               <Variable
                 key={storedKey}
                 keyVar={storedKey}
