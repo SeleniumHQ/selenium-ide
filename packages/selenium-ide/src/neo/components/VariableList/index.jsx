@@ -33,6 +33,7 @@ export default class VariableList extends React.Component {
 
   render() {
     const variables = this.props.variables;
+    console.log(variables.isEditable);
     return (
       <div className="storeContainer">
         <div className="variables" >

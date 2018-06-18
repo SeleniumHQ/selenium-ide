@@ -17,6 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import ContentEditable from "react-contenteditable";
 import DeleteButton from "../ActionButtons/Delete";
 import { observer } from "mobx-react";
@@ -54,14 +55,26 @@ export default class Variable extends React.Component {
     this.setState({ value: e.target.value });
   }
   render() {
+    const isEditing = this.props.keyVar || this.props.isAdding;
     return (
-      <div className="row" style={{ display: this.props.keyVar ? "table-row" : "none" }}>
+      <div className="row">
         <div className="cell storedKey">
-          <ContentEditable className="editable" onChange={this.keyChanged} html={this.props.keyVar} onKeyDown={this.handleKeyDown} onBlur={this.handleChange}/>
+          <ContentEditable
+            className={classNames("edit", { "editable": this.props.isAdding })}
+            disabled={true}
+            onChange={this.keyChanged}
+            html={this.props.keyVar}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleChange}/>
         </div>
-        <div className="cell col">{this.props.keyVar ? ":" : null}</div>
+        <div className="cell col">{ isEditing ? ":" : null }</div>
         <div className="cell variable">
-          <ContentEditable className="editable" onChange={this.valueChanged} html={this.props.value} onKeyDown={this.handleKeyDown} onBlur={this.handleChange} />
+          <ContentEditable
+            className={classNames("edit", { "editable": this.props.isAdding })}
+            onChange={this.valueChanged}
+            html={this.props.value}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleChange} />
         </div>
         <div className="cell del">
           {this.props.isAdding ? null : <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />}

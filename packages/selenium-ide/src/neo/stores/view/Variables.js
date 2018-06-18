@@ -16,10 +16,12 @@
 // under the License.
 
 import { action, observable } from "mobx";
+import PlaybackState from "./PlaybackState";
 
 class Variables {
   @observable storedVars = new Map();
   @observable addingVariable = false;
+  @observable isEditable =  (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 
   @action.bound get(key) {
     return this.storedVars.get(key);
