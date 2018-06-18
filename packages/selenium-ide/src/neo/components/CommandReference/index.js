@@ -26,15 +26,25 @@ export default class CommandReference extends React.Component {
     children: PropTypes.node,
     currentCommand: PropTypes.object
   };
+  invalidCommand() {
+    return (
+      <li className="invalid-command">
+        <strong>Invalid command name provided.</strong>
+      </li>
+    );
+  }
+  argument(param) {
+    return(
+      <li className="argument">
+        { param.name } - { param.value }
+      </li>
+    );
+  }
   render() {
     return (
       <div className="command-reference">
         <ul>
-          { !(this.props.currentCommand && this.props.currentCommand.name) &&
-            <li className="invalid-command">
-              <strong>Invalid command name provided.</strong>
-            </li>
-          }
+          { !(this.props.currentCommand && this.props.currentCommand.name) && this.invalidCommand() }
           { this.props.currentCommand && this.props.currentCommand.name &&
             <li className="name">
               {this.props.currentCommand.name && <strong>{this.props.currentCommand.name}</strong>}{" "}
@@ -44,13 +54,9 @@ export default class CommandReference extends React.Component {
           { this.props.currentCommand && this.props.currentCommand.description &&
             <li className="description">{this.props.currentCommand.description}</li> }
           <br />
-          { this.props.currentCommand && this.props.currentCommand.target &&
-            <li>arguments:</li>
-          }
-          { this.props.currentCommand && this.props.currentCommand.target &&
-            <li className="argument">{this.props.currentCommand.target.name} - {this.props.currentCommand.target.value}</li> }
-          { this.props.currentCommand && this.props.currentCommand.value &&
-            <li className="argument">{this.props.currentCommand.value.name} - {this.props.currentCommand.value.value}</li> }
+          { this.props.currentCommand && this.props.currentCommand.target && <li>arguments:</li> }
+          { this.props.currentCommand && this.props.currentCommand.target && this.argument(this.props.currentCommand.target) }
+          { this.props.currentCommand && this.props.currentCommand.value && this.argument(this.props.currentCommand.value) }
         </ul>
       </div>
     );

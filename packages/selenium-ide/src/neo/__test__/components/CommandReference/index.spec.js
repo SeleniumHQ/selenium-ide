@@ -46,9 +46,14 @@ describe("<CommandReference />", () => {
     const commandDescription = container.querySelector(".description");
     expect(commandDescription).toHaveTextContent("description");
   });
-  it("should render an argument", () => {
+  it("should render an target argument", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target name", value: "target value" } }}/>);
     const commandArgument = container.querySelector(".argument");
     expect(commandArgument).toHaveTextContent("target name - target value");
+  });
+  it("should render an value argument", () => {
+    const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", value: { name: "value name", value: "value value" } }}/>);
+    const commandArgument = container.querySelector(".argument");
+    expect(commandArgument).toHaveTextContent("value name - value value");
   });
 });
