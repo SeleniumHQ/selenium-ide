@@ -19,7 +19,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import ContentEditable from "react-contenteditable";
 import DeleteButton from "../ActionButtons/Delete";
-import AddButton from "../../components/ActionButtons/Add";
 import { observer } from "mobx-react";
 import "./style.css";
 
@@ -41,11 +40,11 @@ export default class Variable extends React.Component {
       }
     }
   }
-  handleChange(e) {
+  handleChange() {
     this.delete();
-    this.props.edit(this.state.key || this.props.keyVar, this.state.value ||this.props.value);
+    this.props.edit(this.state.key || this.props.keyVar, this.state.value || this.props.value);
   }
-  delete(){
+  delete() {
     this.props.delete(this.props.keyVar);
   }
   keyChanged(e) {
@@ -56,13 +55,13 @@ export default class Variable extends React.Component {
   }
   render() {
     return (
-      <div className="row" style={{display:this.props.keyVar ? "table-row" : "none"}}>
+      <div className="row" style={{ display: this.props.keyVar ? "table-row" : "none" }}>
         <div className="cell storedKey">
           <ContentEditable className="editable" onChange={this.keyChanged} html={this.props.keyVar} onKeyDown={this.handleKeyDown} onBlur={this.handleChange}/>
         </div>
         <div className="cell col">{this.props.keyVar ? ":" : null}</div>
         <div className="cell variable">
-            <ContentEditable className="editable" onChange={this.valueChanged} html={this.props.value} onKeyDown={this.handleKeyDown} onBlur={this.handleChange} />
+          <ContentEditable className="editable" onChange={this.valueChanged} html={this.props.value} onKeyDown={this.handleKeyDown} onBlur={this.handleChange} />
         </div>
         <div className="cell del">
           {this.props.isAdding ? null : <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />}
@@ -76,6 +75,6 @@ export default class Variable extends React.Component {
     edit: PropTypes.func,
     delete: PropTypes.func,
     add: PropTypes.func,
-    adding: PropTypes.bool
+    isAdding: PropTypes.bool
   };
 }
