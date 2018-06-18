@@ -47,12 +47,12 @@ describe("<CommandReference />", () => {
     expect(commandDescription).toHaveTextContent("description");
   });
   it("should render an target argument", () => {
-    const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target name", value: "target value" } }}/>);
+    const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target name", description: "target value" } }}/>);
     const commandArgument = container.querySelector(".argument");
     expect(commandArgument).toHaveTextContent("target name - target value");
   });
   it("should render an value argument", () => {
-    const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", value: { name: "value name", value: "value value" } }}/>);
+    const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", value: { name: "value name", description: "value value" } }}/>);
     const commandArgument = container.querySelector(".argument");
     expect(commandArgument).toHaveTextContent("value name - value value");
   });

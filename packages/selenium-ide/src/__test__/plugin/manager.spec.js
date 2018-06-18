@@ -31,9 +31,9 @@ describe("plugin manager", () => {
         id: "aCommand",
         name: "do something",
         docs: {
-          description: "sample description",
-          target: { name: "new target", value: "new target description" },
-          value: { name: "new value", value: "new value description" }
+          description: "command description",
+          target: { name: "command target", description: "command target description" },
+          value: { name: "command value", description: "command value description" }
         }
       }]
     };

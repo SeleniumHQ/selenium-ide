@@ -36,7 +36,7 @@ export default class CommandReference extends React.Component {
   argument(param) {
     return(
       <li className="argument">
-        { param.name } - { param.value }
+        { param.name } - { param.description }
       </li>
     );
   }

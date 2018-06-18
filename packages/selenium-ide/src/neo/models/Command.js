@@ -98,42 +98,42 @@ export const TargetTypes = {
 const ArgTypes = {
   answer: {
     name: "answer",
-    value: "The answer to give in response to the prompt pop-up."
+    description: "The answer to give in response to the prompt pop-up."
   },
   alertText: {
     name: "alertText",
-    value: "text to check"
+    description: "text to check"
   },
   coordString: {
     name: "coordString",
-    value: "Specifies the x,y position (e.g., - 10,20) of the mouse event relat\
-            ive to the element found from a locator."
+    description: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
+                  relative to the element found from a locator."
   },
   expression: {
     name: "expression",
-    value: "The value you'd like to store."
+    description: "The value you'd like to store."
   },
   formLocator: {
     name: "formLocator",
-    value: "An element locator for the form you want to submit."
+    description: "An element locator for the form you want to submit."
   },
   locator: {
     name: "locator",
-    value: "An element locator."
+    description: "An element locator."
   },
   locatorOfObjectToBeDragged: {
     name: "locatorOfObjectToBeDragged",
-    value: "The locator of element to be dragged."
+    description: "The locator of element to be dragged."
   },
   locatorOfDragDestinationObject: {
     name: "locatorOfDragDestinationObject",
-    value: "The locator of an element whose location (e.g., the center-most pix\
-            el within it) will be the point where locator of object to be dragg\
-            ed is dropped."
+    description: "The locator of an element whose location (e.g., the center-most \
+                  pixel within it) will be the point where locator of object to be \
+                  dragged is dropped."
   },
   optionLocator: {
     name: "option",
-    value: "An option locator, typically just an option label (e.g. \"John Smith\")."
+    description: "An option locator, typically just an option label (e.g. \"John Smith\")."
   },
   message: {
     name: "message",
@@ -141,41 +141,41 @@ const ArgTypes = {
   },
   pattern: {
     name: "text",
-    value: "An exact string match. Support for pattern matching is in the works\
-            . See https://github.com/SeleniumHQ/selenium-ide/issues/141 for det\
-            ails."
+    description: "An exact string match. Support for pattern matching is in the \
+                  works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 \
+                  for details."
   },
   script: {
     name: "script",
-    value: "The JavaScript snippet to run."
+    description: "The JavaScript snippet to run."
   },
   selectLocator: {
     name: "selectLocator",
-    value: "An element locator identifying a drop-down menu."
+    description: "An element locator identifying a drop-down menu."
   },
   text: {
     name: "text",
-    value: "The text to verify."
+    description: "The text to verify."
   },
   url: {
     name: "url",
-    value: "The URL to open (may be relative or absolute)."
+    description: "The URL to open (may be relative or absolute)."
   },
   value: {
     name: "value",
-    value: "The value to type."
+    description: "The value to type."
   },
   variableName: {
     name: "variableName",
-    value: "The name of the variable you'd like to store the result of an expression in."
+    description: "The name of the variable you'd like to store the result of an expression in."
   },
   waitTime: {
     name: "waitTime",
-    value: "The amount of time to wait (in milliseconds)."
+    description: "The amount of time to wait (in milliseconds)."
   },
   window: {
     name: "window",
-    value: "The id of the browser window to select."
+    description: "The id of the browser window to select."
   }
 };
 
