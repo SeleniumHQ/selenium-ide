@@ -106,8 +106,8 @@ const ArgTypes = {
   },
   coordString: {
     name: "coordString",
-    value: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
-            relative to the element found from a locator."
+    value: "Specifies the x,y position (e.g., - 10,20) of the mouse event relat\
+            ive to the element found from a locator."
   },
   expression: {
     name: "expression",
@@ -127,8 +127,9 @@ const ArgTypes = {
   },
   locatorOfDragDestinationObject: {
     name: "locatorOfDragDestinationObject",
-    value: "The locator of an element whose location (e.g., the center-most \
-            pixel within it) will be the point where locator of object to be dragged is dropped."
+    value: "The locator of an element whose location (e.g., the center-most pix\
+            el within it) will be the point where locator of object to be dragg\
+            ed is dropped."
   },
   optionLocator: {
     name: "option",
@@ -140,8 +141,9 @@ const ArgTypes = {
   },
   pattern: {
     name: "text",
-    value: "An exact string match. Support for pattern matching is in the works. \
-            See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details."
+    value: "An exact string match. Support for pattern matching is in the works\
+            . See https://github.com/SeleniumHQ/selenium-ide/issues/141 for det\
+            ails."
   },
   script: {
     name: "script",
@@ -187,8 +189,8 @@ class CommandList {
     }],
     [ "answerOnNextPrompt", {
       name: "answer on next prompt",
-      description: "Instructs Selenium to return the specified answer string in \
-                    response to the next JavaScript prompt.",
+      description: "Instructs Selenium to return the specified answer string in\
+                     response to the next JavaScript prompt.",
       target: ArgTypes.answer
     }],
     [ "assertAlert", {
@@ -243,16 +245,16 @@ class CommandList {
     [ "assertSelectedValue", {
       name: "assert selected value",
       type: TargetTypes.LOCATOR,
-      description: "Confirm that the value attribute of the selected option in a \
-                    dropdown element contains the provided value.",
+      description: "Confirm that the value attribute of the selected option in \
+                    a dropdown element contains the provided value.",
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern
     }],
     [ "assertNotSelectedValue", {
       name: "assert not selected value",
       type: TargetTypes.LOCATOR,
-      description: "Confirm that the value attribute of the selected option in a \
-                    dropdown element does not contain the provided value.",
+      description: "Confirm that the value attribute of the selected option in \
+                    a dropdown element does not contain the provided value.",
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern
     }],
@@ -286,17 +288,19 @@ class CommandList {
     [ "assertValue", {
       name: "assert value",
       type: TargetTypes.LOCATOR,
-      description: "Confirm the (whitespace-trimmed) value of an input field (or anything \
-                    else with a value parameter). For checkbox/radio elements, the value \
-                    will be \"on\" or \"off\" depending on whether the element is checked or not.",
+      description: "Confirm the (whitespace-trimmed) value of an input field (or \
+                    anything else with a value parameter). For checkbox/radio \
+                    elements, the value will be \"on\" or \"off\" depending on \
+                    whether the element is checked or not.",
       target: ArgTypes.locator,
       value: ArgTypes.pattern
     }],
     [ "chooseCancelOnNextConfirmation", {
       name: "choose cancel on next confirmation",
-      description: "After running this command, the next call to confirm() will return \
-                    false, as if the user had clicked Cancel. To resume using the default \
-                    behavior for future confirmations, refer to choose ok on next confirmation."
+      description: "After running this command, the next call to confirm() will\
+                    return false, as if the user had clicked Cancel. To resume \
+                    using the default behavior for future confirmations, refer \
+                    to choose ok on next confirmation."
     }],
     [ "chooseCancelOnNextPrompt", {
       name: "choose cancel on next prompt"
@@ -314,9 +318,10 @@ class CommandList {
     [ "clickAt", {
       name: "click at",
       type: TargetTypes.LOCATOR,
-      description: "Clicks on a target element (e.g., a link, button, checkbox, or radio button).\
-                    The coordinates are relative to the target element (e.g., 0,0 is the top left \
-                    corner of the element) and are mostly used to check effects that relay on them,\
+      description: "Clicks on a target element (e.g., a link, button, checkbox, \
+                    or radio button). The coordinates are relative to the target \
+                    element (e.g., 0,0 is the top left corner of the element) \
+                    and are mostly used to check effects that relay on them, \
                     for example the material ripple effect.",
       target: ArgTypes.locator,
       value: ArgTypes.coordString
@@ -342,9 +347,10 @@ class CommandList {
     [ "doubleClickAt", {
       name: "double click at",
       type: TargetTypes.LOCATOR,
-      description: "Double clicks on a target element (e.g., a link, button, checkbox, or radio \
-                    button). The coordinates are relative to the target element (e.g., 0,0 is the \
-                    top left corner of the element) and are mostly used to check effects that \
+      description: "Double clicks on a target element (e.g., a link, button, \
+                    checkbox, or radio button). The coordinates are relative \
+                    to the target element (e.g., 0,0 is the top left corner \
+                    of the element) and are mostly used to check effects that \
                     relay on them, for example the material ripple effect.",
       target: ArgTypes.locator,
       value: ArgTypes.coordString
@@ -435,9 +441,9 @@ class CommandList {
       name: "select",
       type: TargetTypes.LOCATOR,
       description: "Select an element from a drop-down menu using an option locator. \
-                    Option locators provide different ways of specifying a select element \
-                    (e.g., label=, value=, id=, index=). If no option locator prefix \
-                    is provided, a match on the label will be attempted.",
+                    Option locators provide different ways of specifying a select \
+                    element (e.g., label=, value=, id=, index=). If no option \
+                    locator prefix is provided, a match on the label will be attempted.",
       target: ArgTypes.selectLocator
     }],
     [ "selectFrame", {
@@ -515,7 +521,8 @@ class CommandList {
       description: "Sets the value of an input field, as though you typed it in. \
                     Can also be used to set the value of combo boxes, check boxes, \
                     etc. In these cases, value should be the value of the option \
-                    selected, not the visible text. NOTE: Chrome only: No XPath locators.",
+                    selected, not the visible text. \
+                    NOTE: Chrome only: No XPath locators.",
       target: ArgTypes.locator,
       value: ArgTypes.value
     }],
