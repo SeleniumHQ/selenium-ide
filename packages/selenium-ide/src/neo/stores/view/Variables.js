@@ -32,7 +32,8 @@ class Variables {
 
   @action.bound deleteVariable(key) {
     this.addingVariable = false;
-    this.storedVars.delete(key);
+    if(this.storedVars.has(key))
+      this.storedVars.delete(key);
   }
 
   @action.bound clearVariables() {
