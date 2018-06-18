@@ -16,7 +16,7 @@
 // under the License.
 
 import { useStrict } from "mobx";
-import Variables from "../../../../stores/view/Variables";
+import Variables from "../../../stores/view/Variables";
 
 useStrict(true);
 
