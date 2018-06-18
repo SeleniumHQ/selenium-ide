@@ -21,7 +21,6 @@ import variables from "../../stores/view/Variables";
 
 const logger = new Logger(Channels.PLAYBACK);
 const nbsp = String.fromCharCode(160);
-let declaredVars = {};
 
 export function xlateArgument(value) {
   value = value.replace(/^\s+/, "");
@@ -53,10 +52,6 @@ export function xlateArgument(value) {
   } else {
     return string(value);
   }
-}
-
-export function clearVariables() {
-  declaredVars = {};
 }
 
 function string(value) {
