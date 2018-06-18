@@ -3145,7 +3145,21 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
 }*/
 
 Selenium.prototype.doExecuteScript = function(script, varName) {
-  browser.runtime.sendMessage({ "storeStr": window.eval(script), "storeVar": varName });
+  const value = window.eval(`(() => {${script}})()`);
+  if (value && value.constructor.name === "Promise") {
+    throw new Error("Expected sync operation, instead received Promise");
+  }
+  return browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+};
+
+Selenium.prototype.doExecuteAsyncScript = function(script, varName) {
+  const value = window.eval(`(() => {${script}})()`);
+  if (value && value.constructor.name !== "Promise") {
+    throw new Error(`Expected async operation, instead received ${value ? value.constructor.name : value}`);
+  }
+  return Promise.resolve(value).then((v) => {
+    return browser.runtime.sendMessage({ "storeStr": v, "storeVar": varName });
+  });
 };
 
 Selenium.prototype.doRunScript = function(script) {

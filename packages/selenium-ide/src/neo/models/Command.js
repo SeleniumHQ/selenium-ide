@@ -207,6 +207,9 @@ class CommandList {
     [ "executeScript", {
       name: "execute script"
     }],
+    [ "executeAsyncScript", {
+      name: "execute async script"
+    }],
     [ "editContent", {
       name: "edit content",
       type: TargetTypes.LOCATOR

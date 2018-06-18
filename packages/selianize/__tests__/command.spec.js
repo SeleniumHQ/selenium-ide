@@ -97,7 +97,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("input")));driver.findElement(By.id("input")).then(element => {element.clear().then(() => {element.sendKeys("${command.value}");});});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`driver.wait(until.elementLocated(By.id("input")));driver.findElement(By.id("input")).then(element => {element.clear().then(() => {element.sendKeys(\`${command.value}\`);});});`);
   });
   it("should emit `send keys` command", () => {
     const command = {
@@ -145,7 +145,15 @@ describe("command code emitter", () => {
       target: "javascript",
       value: "myVar"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = await driver.executeScript("${command.target}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = await driver.executeScript(\`${command.target}\`);`);
+  });
+  it("should emit `execute async script` command", () => {
+    const command = {
+      command: "executeAsyncScript",
+      target: "javascript",
+      value: "myVar"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`var ${command.value} = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${command.target}.then(callback).catch(callback);\`);`);
   });
   it("should emit `pause` command", () => {
     const command = {

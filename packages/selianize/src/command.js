@@ -32,6 +32,7 @@ const emitters = {
   echo: emitEcho,
   runScript: emitRunScript,
   executeScript: emitExecuteScript,
+  executeAsyncScript: emitExecuteAsyncScript,
   pause: emitPause,
   verifyChecked: emitVerifyChecked,
   verifyNotChecked: emitVerifyNotChecked,
@@ -144,7 +145,7 @@ async function emitDragAndDrop(dragged, dropzone) {
 }
 
 async function emitType(target, value) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}));driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.clear().then(() => {element.sendKeys("${value}");});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}));driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.clear().then(() => {element.sendKeys(\`${value}\`);});});`);
 }
 
 async function emitSendKeys(target, value) {
@@ -168,7 +169,11 @@ async function emitRunScript(script) {
 }
 
 async function emitExecuteScript(script, varName) {
-  return Promise.resolve(`var ${varName} = await driver.executeScript("${script}");`);
+  return Promise.resolve(`var ${varName} = await driver.executeScript(\`${script}\`);`);
+}
+
+async function emitExecuteAsyncScript(script, varName) {
+  return Promise.resolve(`var ${varName} = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);\`);`);
 }
 
 async function emitPause(_, time) {
