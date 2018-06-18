@@ -17,7 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Variable, { VariableAddBtn } from "../Variable";
+import Variable from "../Variable";
 import { observer } from "mobx-react";
 import "./style.css";
 
@@ -25,28 +25,14 @@ import "./style.css";
 export default class VariableList extends React.Component {
   constructor(props){
     super(props);
-    this.state = { addingVariable: false };
     this.editVariable = this.editVariable.bind(this);
-    this.deleteVariable = this.deleteVariable.bind(this);
-    this.addVariable = this.addVariable.bind(this);
   }
   editVariable(key, value){
-    this.setState({ addingVariable: false });
     this.props.variables.addVariable(key, value);
   }
-  deleteVariable(key){
-    this.setState({ addingVariable: false });
-    this.props.variables.deleteVariable(key);
-  }
-  addVariable(key, value){
-    this.setState({ addingVariable: false });
-    this.props.variables.addVariable(key, value);
-  }
-  add(){
-    this.setState({ addingVariable: true });
-  }
+
   render() {
-    const stored = this.props.variables.storedVars;
+    const variables = this.props.variables;
     return (
       <div className="storeContainer">
         <div className="variables" >
@@ -56,24 +42,24 @@ export default class VariableList extends React.Component {
           </div>
 
           <div className="value-list">
-            {stored.keys().map((storedKey) => (
+            {variables.storedVars.keys().map((storedKey) => (
               <Variable
                 key={storedKey}
                 keyVar={storedKey}
-                value={stored.get(storedKey)}
+                value={variables.storedVars.get(storedKey)}
                 edit={this.editVariable}
-                delete={this.deleteVariable}
+                delete={variables.deleteVariable}
               />
-            ))}
-            {this.state.addingVariable ?
+            )).concat(
               <Variable
-                delete={this.deleteVariable}
-                add={this.addVariable}
+                key="adding"
+                delete={variables.deleteVariable}
+                add={variables.addVariable}
+                adding={variables.addingVariable}
               />
-              : <VariableAddBtn add={this.add.bind(this)}/>}
+            )}
           </div>
         </div>
-
       </div>
     );
   }

@@ -21,6 +21,7 @@ import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import VariableList from "../../components/VariableList";
 import ClearButton from "../../components/ActionButtons/Clear";
+import AddButton from "../../components/ActionButtons/Add";
 import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
@@ -60,7 +61,11 @@ export default class Console extends React.Component {
       }}>
         <TabBar tabs={["Log", "Variables", "Reference"]} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
           {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clearLogs} /> }
-          {this.state.tab === "Variables" && <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} /> }
+          {this.state.tab === "Variables" &&
+            <div>
+              <AddButton data-tip="<p>Add Variable</p>" onClick={() => variables.setAddingVariable(true)} />
+              <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} />
+            </div> }
           {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList output={output} /> }

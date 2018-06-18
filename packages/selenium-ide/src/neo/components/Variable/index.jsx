@@ -57,11 +57,11 @@ export default class Variable extends React.Component {
     return (
       <div className="row">
         <div className="cell storedKey">
-          {this.props.add ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.keyChanged}/> : this.props.keyVar}
+          {this.props.adding ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.keyChanged}/> : this.props.keyVar}
         </div>
         <div className="cell col">:</div>
         <div className="cell variable">
-          {this.props.add ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.valueChanged} /> :
+          {this.props.adding ? <input type="text" onKeyDown={this.handleKeyDown} onChange={this.valueChanged} /> :
             <ContentEditable className="value" onChange={this.handleChange} html={this.props.value} onKeyDown={this.handleKeyDown} />}
         </div>
         <div className="cell del">
@@ -76,20 +76,7 @@ export default class Variable extends React.Component {
     value: PropTypes.string,
     edit: PropTypes.func,
     delete: PropTypes.func,
-    add: PropTypes.func
+    add: PropTypes.func,
+    adding: PropTypes.bool
   };
-}
-
-export class VariableAddBtn extends React.Component {
-  static propTypes = {
-    add: PropTypes.func
-  }
-  render() {
-    return (
-      <div className="row">
-        <div className="cell add"><AddButton onClick={this.props.add}/></div>
-        <div className="cell variable"></div>
-      </div>
-    );
-  }
 }

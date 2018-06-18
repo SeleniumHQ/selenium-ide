@@ -19,21 +19,29 @@ import { action, observable } from "mobx";
 
 class Variables {
   @observable storedVars = new Map();
+  @observable addingVariable = false;
 
   @action.bound get(key) {
     return this.storedVars.get(key);
   }
 
   @action.bound addVariable(key, value) {
+    this.addingVariable = false;
     this.storedVars.set(key, value);
   }
 
   @action.bound deleteVariable(key) {
+    this.addingVariable = false;
     this.storedVars.delete(key);
   }
 
   @action.bound clearVariables() {
+    this.addingVariable = false;
     this.storedVars.clear();
+  }
+
+  @action.bound setAddingVariable(isAdding){
+    this.addingVariable = isAdding;
   }
 }
 
