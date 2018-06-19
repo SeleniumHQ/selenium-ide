@@ -50,3 +50,7 @@
 .log a:hover {
   text-decoration: underline;
 }
+
+.log .message:after {
+  padding: 0 5px;
+}
