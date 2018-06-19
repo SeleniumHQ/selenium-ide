@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable, computed} from "mobx";
+import { action, observable, computed } from "mobx";
 import PlaybackState from "./PlaybackState";
 
 class Variables {
@@ -38,7 +38,7 @@ class Variables {
     this.storedVars.clear();
   }
 
-  @computed get isRunning(){
+  @computed get isStop(){
     return !PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping;
   }
 }

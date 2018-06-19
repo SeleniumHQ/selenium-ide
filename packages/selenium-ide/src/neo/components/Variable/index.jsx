@@ -60,8 +60,8 @@ export default class Variable extends React.Component {
       <div className="row">
         <div className="cell storedKey">
           <ContentEditable
-            className={classNames("edit", { "editable": this.props.isAdding })}
-            disabled={true}
+            className={classNames("edit", { "editable": this.props.isStop })}
+            disabled={this.props.isStop ? false : true}
             onChange={this.keyChanged}
             html={this.props.keyVar}
             onKeyDown={this.handleKeyDown}
@@ -70,7 +70,8 @@ export default class Variable extends React.Component {
         <div className="cell col">{ isEditing ? ":" : null }</div>
         <div className="cell variable">
           <ContentEditable
-            className={classNames("edit", { "editable": this.props.isAdding })}
+            className={classNames("edit", { "editable": this.props.isStop })}
+            disabled={this.props.isStop ? false : true}
             onChange={this.valueChanged}
             html={this.props.value}
             onKeyDown={this.handleKeyDown}
@@ -88,6 +89,7 @@ export default class Variable extends React.Component {
     edit: PropTypes.func,
     delete: PropTypes.func,
     add: PropTypes.func,
-    isAdding: PropTypes.bool
+    isAdding: PropTypes.bool,
+    isStop: PropTypes.bool
   };
 }

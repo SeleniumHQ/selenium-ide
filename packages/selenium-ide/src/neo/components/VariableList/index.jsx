@@ -64,6 +64,7 @@ export default class VariableList extends React.Component {
                 value={variables.storedVars.get(storedKey)}
                 edit={this.editVariable}
                 delete={this.deleteVariable}
+                isStop={variables.isStop}
               />
             )).concat(
               <Variable
@@ -71,6 +72,7 @@ export default class VariableList extends React.Component {
                 delete={this.deleteVariable}
                 add={this.addVariable}
                 isAdding={this.addingVariable}
+                isStop={variables.isStop}
               />
             )}
           </div>
