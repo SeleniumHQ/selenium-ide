@@ -23,22 +23,22 @@ describe("<CommandReference />", () => {
   afterEach(cleanup);
   it("should render a name", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name" }}/>);
-    const commandName = container.querySelector(".name");
+    const commandName = container.querySelector(".signature");
     expect(commandName).toHaveTextContent("name ");
   });
   it("should render a helpful message when no (or invalid) name provided", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{}}/>);
     const commandName = container.querySelector(".invalid-command");
-    expect(commandName).toHaveTextContent("Invalid command name provided.");
+    expect(commandName).toHaveTextContent("Unknown command name provided.");
   });
   it("should render a name with a target", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target" } }}/>);
-    const commandName = container.querySelector(".name");
+    const commandName = container.querySelector(".signature");
     expect(commandName).toHaveTextContent("name target");
   });
   it("should render a name with a target and a value", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target" }, value: { name: "value" } }}/>);
-    const commandName = container.querySelector(".name");
+    const commandName = container.querySelector(".signature");
     expect(commandName).toHaveTextContent("name target, value");
   });
   it("should render a description", () => {

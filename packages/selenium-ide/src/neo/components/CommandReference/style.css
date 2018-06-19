@@ -1,7 +1,15 @@
-.command-reference .name {
+.command-reference .signature {
   font-weight: bold;
+}
+
+.command-reference .name {
+  padding-right: 2px;
 }
 
 .command-reference .argument {
   padding-left: 15px;
+}
+
+.command-reference .description {
+  padding-top: 5px;
 }

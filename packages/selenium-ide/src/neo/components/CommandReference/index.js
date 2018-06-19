@@ -29,7 +29,7 @@ export default class CommandReference extends React.Component {
   invalidCommand() {
     return (
       <li className="invalid-command">
-        <strong>Invalid command name provided.</strong>
+        <strong>Unknown command name provided.</strong>
       </li>
     );
   }
@@ -46,10 +46,10 @@ export default class CommandReference extends React.Component {
         <ul>
           { !(this.props.currentCommand && this.props.currentCommand.name) && this.invalidCommand() }
           { this.props.currentCommand && this.props.currentCommand.name &&
-            <li className="name">
-              {this.props.currentCommand.name && <strong>{this.props.currentCommand.name}</strong>}{" "}
-              {this.props.currentCommand.target && <em>{this.props.currentCommand.target.name}</em>}
-              {this.props.currentCommand.value && <em>, {this.props.currentCommand.value.name}</em>}
+            <li className="signature">
+              {this.props.currentCommand.name && <strong className="name">{this.props.currentCommand.name}</strong>}{" "}
+              {this.props.currentCommand.target && <em className="target">{this.props.currentCommand.target.name}</em>}
+              {this.props.currentCommand.value && <em className="value">, {this.props.currentCommand.value.name}</em>}
             </li> }
           { this.props.currentCommand && this.props.currentCommand.description &&
             <li className="description">{this.props.currentCommand.description}</li> }
