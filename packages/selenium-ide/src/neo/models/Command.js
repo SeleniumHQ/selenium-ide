@@ -101,11 +101,11 @@ const ArgTypes = {
     description: "The answer to give in response to the prompt pop-up."
   },
   alertText: {
-    name: "alertText",
+    name: "alert text",
     description: "text to check"
   },
   coordString: {
-    name: "coordString",
+    name: "coord String",
     description: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
                   relative to the element found from a locator."
   },
@@ -114,7 +114,7 @@ const ArgTypes = {
     description: "The value you'd like to store."
   },
   formLocator: {
-    name: "formLocator",
+    name: "form locator",
     description: "An element locator for the form you want to submit."
   },
   locator: {
@@ -122,11 +122,11 @@ const ArgTypes = {
     description: "An element locator."
   },
   locatorOfObjectToBeDragged: {
-    name: "locatorOfObjectToBeDragged",
+    name: "locator of object to be dragged",
     description: "The locator of element to be dragged."
   },
   locatorOfDragDestinationObject: {
-    name: "locatorOfDragDestinationObject",
+    name: "locator of drag destination object",
     description: "The locator of an element whose location (e.g., the center-most \
                   pixel within it) will be the point where locator of object to be \
                   dragged is dropped."
@@ -150,7 +150,7 @@ const ArgTypes = {
     description: "The JavaScript snippet to run."
   },
   selectLocator: {
-    name: "selectLocator",
+    name: "select locator",
     description: "An element locator identifying a drop-down menu."
   },
   text: {
@@ -166,11 +166,11 @@ const ArgTypes = {
     description: "The value to type."
   },
   variableName: {
-    name: "variableName",
+    name: "variable name",
     description: "The name of the variable you'd like to store the result of an expression in."
   },
   waitTime: {
-    name: "waitTime",
+    name: "wait time",
     description: "The amount of time to wait (in milliseconds)."
   },
   window: {
