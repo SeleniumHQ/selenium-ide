@@ -16,7 +16,7 @@
 // under the License.
 
 import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "selianize";
-import { Commands } from "../neo/models/Command";
+import { Commands, ArgTypes } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import { sendMessage } from "./communication";
 
@@ -46,6 +46,15 @@ class PluginManager {
     });
   }
 
+  useExistingArgTypesIfProvided(target_type, docs) {
+    if (typeof(docs[target_type]) === "string" && docs[target_type] in ArgTypes) {
+      docs[target_type] = {
+        name: docs[target_type],
+        description: ArgTypes[docs[target_type]].description
+      };
+    }
+  }
+
   registerPlugin(plugin) {
     if (!this.hasPlugin(plugin.id)) {
       plugin.canEmit = false;
@@ -54,6 +63,8 @@ class PluginManager {
       RegisterTestHook(this.emitTest.bind(undefined, plugin));
       if (plugin.commands) {
         plugin.commands.forEach(({ id, name, type, docs }) => {
+          this.useExistingArgTypesIfProvided("target", docs);
+          this.useExistingArgTypesIfProvided("value", docs);
           Commands.addCommand(id, { name, type, ...docs });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));

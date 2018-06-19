@@ -95,7 +95,7 @@ export const TargetTypes = {
   REGION: "region"
 };
 
-const ArgTypes = {
+export const ArgTypes = {
   answer: {
     name: "answer",
     description: "The answer to give in response to the prompt pop-up."

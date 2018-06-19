@@ -35,6 +35,15 @@ describe("plugin manager", () => {
           target: { name: "command target", description: "command target description" },
           value: { name: "command value", description: "command value description" }
         }
+      },
+      {
+        id: "anotherCommand",
+        name: "do something else",
+        docs: {
+          description: "command description",
+          target: "locator",
+          value: "pattern"
+        }
       }]
     };
     expect(Manager.plugins.length).toBe(0);
