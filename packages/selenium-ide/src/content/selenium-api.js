@@ -347,6 +347,10 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
+Selenium.prototype.eval = function(script, scoped = true) {
+  return window.eval(scoped ? `(() => {${script}})()` : script);
+};
+
 Selenium.prototype.doVerifyChecked = function(locator) {
   let element = this.browserbot.findElement(locator);
   if (element.type !== "checkbox" && element.type !== "radio") {
@@ -615,7 +619,7 @@ Selenium.prototype.doWaitPreparation = function() {
   // _win.addEventListener("DOMNodeRemovedFromDocument", setDOMModifiedTime, false);
   // _win.addEventListener("DOMSubtreeModified", setDOMModifiedTime, false);
 
-  window.eval("function setNewPageValue(e) {window.new_page = true;};\
+  this.eval("function setNewPageValue(e) {window.new_page = true;};\
                 window.addEventListener(\"beforeunload\", setNewPageValue, false);\
                 if (window.XMLHttpRequest) {if (!window.origXMLHttpRequest || !window.ajax_obj) {\
                 window.ajax_obj = []; window.origXMLHttpRequest = window.XMLHttpRequest;\
@@ -626,11 +630,11 @@ Selenium.prototype.doWaitPreparation = function() {
                 _win.addEventListener(\"DOMNodeInsertedIntoDocument\", setDOMModifiedTime, false);\
                 _win.addEventListener(\"DOMNodeRemoved\", setDOMModifiedTime, false);\
                 _win.addEventListener(\"DOMNodeRemovedFromDocument\", setDOMModifiedTime, false);\
-                _win.addEventListener(\"DOMSubtreeModified\", setDOMModifiedTime, false);");
+                _win.addEventListener(\"DOMSubtreeModified\", setDOMModifiedTime, false);", false);
 };
 
 Selenium.prototype.doPrePageWait = function() {
-  window.sideex_new_page = window.eval("(function() {return window.new_page;}())");
+  window.sideex_new_page = this.eval("(function() {return window.new_page;}())", false);
 };
 
 Selenium.prototype.doPageWait = function() {
@@ -641,7 +645,7 @@ Selenium.prototype.doPageWait = function() {
   // }
 
   let expression = "if(window.document.readyState==\"complete\"){return true;}else{return false;}";
-  window.sideex_page_done = window.eval("(function() {" + expression + "}())");
+  window.sideex_page_done = this.eval("(function() {" + expression + "}())", false);
 };
 
 Selenium.prototype.doAjaxWait = function() {
@@ -673,11 +677,11 @@ Selenium.prototype.doAjaxWait = function() {
                       window.ajax_obj[index].readyState !== undefined &&\
                       window.ajax_obj[index].readyState !== 0) {return false;}}return true;}}\
                       else {if (window.origXMLHttpRequest) {window.origXMLHttpRequest = \"\";}return true;}";
-  window.sideex_ajax_done = window.eval("(function() {" + expression + "}())");
+  window.sideex_ajax_done = this.eval("(function() {" + expression + "}())", false);
 };
 
 Selenium.prototype.doDomWait = function() {
-  window.sideex_dom_time = window.eval("(function() {return window.domModifiedTime;}())");
+  window.sideex_dom_time = this.eval("(function() {return window.domModifiedTime;}())", false);
 };
 
 Selenium.prototype.doClick = function(locator) {
@@ -1935,7 +1939,7 @@ Selenium.prototype.getEval = function(script) {
      */
   try {
     //LOG.info('script is: ' + script);
-    let result = eval(script);
+    let result = this.eval(script);
     // Selenium RC doesn't allow returning null
     if (null == result) return "null";
     return result;
@@ -2326,7 +2330,7 @@ Selenium.prototype.getAttributeFromAllWindows = function(attributeName) {
   // but in this case, attributeName may contain dots (e.g. document.title)
   // in that case, we have no choice but to use eval...
   try {
-    attributes.push(eval("win." + attributeName));
+    attributes.push(this.eval("win." + attributeName));
   } catch (ignored) {
     // Dead object
   }
@@ -2334,7 +2338,7 @@ Selenium.prototype.getAttributeFromAllWindows = function(attributeName) {
     try {
       win = selenium.browserbot.openedWindows[windowName];
       if (!selenium.browserbot._windowClosed(win)) {
-        attributes.push(eval("win." + attributeName));
+        attributes.push(this.eval("win." + attributeName));
       }
     } catch (e) {
       console.error(e);
@@ -2362,12 +2366,12 @@ Selenium.prototype.findWindow = function(soughtAfterWindowPropertyValue) {
   // DGF normally you should use []s instead of eval "win."+attributeName
   // but in this case, attributeName may contain dots (e.g. document.title)
   // in that case, we have no choice but to use eval...
-  if (PatternMatcher.matches(soughtAfterWindowPropertyValue, eval("this.browserbot.topWindow." + targetPropertyName))) {
+  if (PatternMatcher.matches(soughtAfterWindowPropertyValue, this.eval("this.browserbot.topWindow." + targetPropertyName))) {
     return this.browserbot.topWindow;
   }
   for (let windowName in selenium.browserbot.openedWindows) {
     let openedWindow = selenium.browserbot.openedWindows[windowName];
-    if (PatternMatcher.matches(soughtAfterWindowPropertyValue, eval("openedWindow." + targetPropertyName))) {
+    if (PatternMatcher.matches(soughtAfterWindowPropertyValue, this.eval("openedWindow." + targetPropertyName))) {
       return openedWindow;
     }
   }
@@ -2864,7 +2868,7 @@ Selenium.prototype.doWaitForCondition = function(script, timeout) {
      */
 
   return Selenium.decorateFunctionWithTimeout(function() {
-    return eval(script);
+    return this.eval(script);
   }, timeout);
 };
 
@@ -2938,7 +2942,7 @@ Selenium.prototype.doWaitForPageToLoad.dontCheckAlertsAndConfirms = true;
 Selenium.prototype.preprocessParameter = function(value) {
   let match = value.match(/^javascript\{((.|\r?\n)+)\}$/);
   if (match && match[1]) {
-    let result = window.eval(match[1]);
+    let result = this.eval(match[1]);
     return result == null ? null : result.toString();
   }
   return this.replaceVariables(value);
@@ -3145,7 +3149,7 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
 }*/
 
 Selenium.prototype.doExecuteScript = function(script, varName) {
-  const value = window.eval(`(() => {${script}})()`);
+  const value = this.eval(script);
   if (value && value.constructor.name === "Promise") {
     throw new Error("Expected sync operation, instead received Promise");
   }
@@ -3153,7 +3157,7 @@ Selenium.prototype.doExecuteScript = function(script, varName) {
 };
 
 Selenium.prototype.doExecuteAsyncScript = function(script, varName) {
-  const value = window.eval(`(() => {${script}})()`);
+  const value = this.eval(script);
   if (value && value.constructor.name !== "Promise") {
     throw new Error(`Expected async operation, instead received ${value ? value.constructor.name : value}`);
   }
