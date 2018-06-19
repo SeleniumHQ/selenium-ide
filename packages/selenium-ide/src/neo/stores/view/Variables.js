@@ -15,12 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from "mobx";
+import { action, observable, computed} from "mobx";
 import PlaybackState from "./PlaybackState";
 
 class Variables {
   @observable storedVars = new Map();
-  @observable isEditable =  (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 
   @action.bound get(key) {
     return this.storedVars.get(key);
@@ -37,6 +36,10 @@ class Variables {
 
   @action.bound clearVariables() {
     this.storedVars.clear();
+  }
+
+  @computed get isRunning(){
+    return !PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping;
   }
 }
 
