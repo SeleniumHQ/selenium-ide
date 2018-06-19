@@ -2856,6 +2856,12 @@ Selenium.prototype.doWaitForPageToLoad.dontCheckAlertsAndConfirms = true;
 Selenium.prototype.preprocessParameter = function(value) {
   let match = value.match(/^javascript\{((.|\r?\n)+)\}$/);
   if (match && match[1]) {
+    browser.runtime.sendMessage({
+      log: {
+        type: "warn",
+        message: "parameter preprocessing using javascript{} tag is deprecated, please use execute script"
+      }
+    });
     let result = this.eval(match[1]);
     return result == null ? null : result.toString();
   }
