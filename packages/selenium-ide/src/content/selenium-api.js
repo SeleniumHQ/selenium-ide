@@ -2316,68 +2316,6 @@ Selenium.prototype.getAllFields = function() {
   return this.browserbot.getAllFields();
 };
 
-Selenium.prototype.getAttributeFromAllWindows = function(attributeName) {
-  /** Returns an array of JavaScript property values from all known windows having one.
-     *
-     * @param attributeName name of an attribute on the windows
-     * @return string[] the set of values of this attribute from all known windows.
-     */
-  let attributes = new Array();
-
-  let win = selenium.browserbot.topWindow;
-
-  // DGF normally you should use []s instead of eval "win."+attributeName
-  // but in this case, attributeName may contain dots (e.g. document.title)
-  // in that case, we have no choice but to use eval...
-  try {
-    attributes.push(this.eval("win." + attributeName));
-  } catch (ignored) {
-    // Dead object
-  }
-  for (let windowName in this.browserbot.openedWindows) {
-    try {
-      win = selenium.browserbot.openedWindows[windowName];
-      if (!selenium.browserbot._windowClosed(win)) {
-        attributes.push(this.eval("win." + attributeName));
-      }
-    } catch (e) {
-      console.error(e);
-    } // DGF If we miss one... meh. It's probably closed or inaccessible anyway.
-  }
-  return attributes;
-};
-
-Selenium.prototype.findWindow = function(soughtAfterWindowPropertyValue) {
-  let targetPropertyName = "name";
-  if (soughtAfterWindowPropertyValue.match("^title=")) {
-    targetPropertyName = "document.title";
-    soughtAfterWindowPropertyValue = soughtAfterWindowPropertyValue.replace(/^title=/, "");
-  } else {
-    // matching "name":
-    // If we are not in proxy injection mode, then the top-level test window will be named selenium_myiframe.
-    // But as far as the interface goes, we are expected to match a blank string to this window, if
-    // we are searching with respect to the widow name.
-    // So make a special case so that this logic will work:
-    if (PatternMatcher.matches(soughtAfterWindowPropertyValue, "")) {
-      return this.browserbot.getCurrentWindow();
-    }
-  }
-
-  // DGF normally you should use []s instead of eval "win."+attributeName
-  // but in this case, attributeName may contain dots (e.g. document.title)
-  // in that case, we have no choice but to use eval...
-  if (PatternMatcher.matches(soughtAfterWindowPropertyValue, this.eval("this.browserbot.topWindow." + targetPropertyName))) {
-    return this.browserbot.topWindow;
-  }
-  for (let windowName in selenium.browserbot.openedWindows) {
-    let openedWindow = selenium.browserbot.openedWindows[windowName];
-    if (PatternMatcher.matches(soughtAfterWindowPropertyValue, this.eval("openedWindow." + targetPropertyName))) {
-      return openedWindow;
-    }
-  }
-  throw new SeleniumError("could not find window with property " + targetPropertyName + " matching " + soughtAfterWindowPropertyValue);
-};
-
 Selenium.prototype.doSetMouseSpeed = function(pixels) {
   /** Configure the number of pixels between "mousemove" events during dragAndDrop commands (default=10).
      * <p>Setting this value to 0 means that we'll send a "mousemove" event to every single pixel
@@ -2502,30 +2440,6 @@ Selenium.prototype.doWindowMaximize = function() {
 
     window.resizeTo(screen.availWidth, screen.availHeight);
   }
-};
-
-Selenium.prototype.getAllWindowIds = function() {
-  /** Returns the IDs of all windows that the browser knows about in an array.
-     *
-     * @return string[] Array of identifiers of all windows that the browser knows about.
-     */
-  return this.getAttributeFromAllWindows("id");
-};
-
-Selenium.prototype.getAllWindowNames = function() {
-  /** Returns the names of all windows that the browser knows about in an array.
-     *
-     * @return string[] Array of names of all windows that the browser knows about.
-     */
-  return this.getAttributeFromAllWindows("name");
-};
-
-Selenium.prototype.getAllWindowTitles = function() {
-  /** Returns the titles of all windows that the browser knows about in an array.
-     *
-     * @return string[] Array of titles of all windows that the browser knows about.
-     */
-  return this.getAttributeFromAllWindows("document.title");
 };
 
 Selenium.prototype.getHtmlSource = function() {
