@@ -104,7 +104,7 @@ export const ArgTypes = {
     name: "alert text",
     description: "text to check"
   },
-  coordString: {
+  coord: {
     name: "coord String",
     description: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
                   relative to the element found from a locator."
@@ -144,6 +144,11 @@ export const ArgTypes = {
     description: "An exact string match. Support for pattern matching is in the \
                   works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 \
                   for details."
+  },
+  region: {
+    name: "region",
+    description: "Specify a rectangle with coordinates and lengths (e.g., \"x: \
+                  257, y: 300, width: 462, height: 280\")."
   },
   script: {
     name: "script",
@@ -329,7 +334,7 @@ class CommandList {
                     and are mostly used to check effects that relay on them, \
                     for example the material ripple effect.",
       target: ArgTypes.locator,
-      value: ArgTypes.coordString
+      value: ArgTypes.coord
     }],
     [ "check", {
       name: "check",
@@ -358,7 +363,7 @@ class CommandList {
                     of the element) and are mostly used to check effects that \
                     relay on them, for example the material ripple effect.",
       target: ArgTypes.locator,
-      value: ArgTypes.coordString
+      value: ArgTypes.coord
     }],
     [ "dragAndDropToObject", {
       name: "drag and drop to object",
@@ -383,7 +388,7 @@ class CommandList {
       description: "Simulates a user pressing the left mouse button (without releasing it yet) \
                     at the specified location.",
       target: ArgTypes.locator,
-      value: ArgTypes.coordString
+      value: ArgTypes.coord
     }],
     [ "mouseMoveAt", {
       name: "mouse move at",
@@ -391,7 +396,7 @@ class CommandList {
       description: "Simulates a user pressing the mouse button (without releasing it yet) \
                     on the specified element.",
       target: ArgTypes.locator,
-      value: ArgTypes.coordString
+      value: ArgTypes.coord
     }],
     [ "mouseOut", {
       name: "mouse out",
@@ -411,7 +416,7 @@ class CommandList {
       description: "Simulates the event that occurs when the user releases the mouse button \
                     (e.g., stops holding the button down) at the specified location.",
       target: ArgTypes.locator,
-      value: ArgTypes.coordString
+      value: ArgTypes.coord
     }],
     [ "open", {
       name: "open",

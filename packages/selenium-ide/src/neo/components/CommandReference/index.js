@@ -35,11 +35,13 @@ export default class CommandReference extends React.Component {
     );
   }
   argument(param) {
-    return(
-      <li className="argument">
-        { param.name } - { param.description }
-      </li>
-    );
+    if (param.name !== "" || param.description !== "") {
+      return(
+        <li className="argument">
+          { param.name } - { param.description }
+        </li>
+      );
+    }
   }
   commandSignature() {
     return(
