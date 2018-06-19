@@ -25,15 +25,29 @@ import "./style.css";
 export default class VariableList extends React.Component {
   constructor(props){
     super(props);
+    this.state = { addingVariable: false };
     this.editVariable = this.editVariable.bind(this);
+    this.deleteVariable = this.deleteVariable.bind(this);
+    this.addVariable = this.addVariable.bind(this);
   }
   editVariable(key, value){
+    this.setState({ addingVariable: false });
     this.props.variables.addVariable(key, value);
+  }
+  deleteVariable(key){
+    this.setState({ addingVariable: false });
+    this.props.variables.deleteVariable(key);
+  }
+  addVariable(key, value){
+    this.setState({ addingVariable: false });
+    this.props.variables.addVariable(key, value);
+  }
+  add(){
+    this.setState({ addingVariable: true });
   }
 
   render() {
     const variables = this.props.variables;
-    console.log(variables.isEditable);
     return (
       <div className="storeContainer">
         <div className="variables" >
@@ -49,14 +63,14 @@ export default class VariableList extends React.Component {
                 keyVar={storedKey}
                 value={variables.storedVars.get(storedKey)}
                 edit={this.editVariable}
-                delete={variables.deleteVariable}
+                delete={this.deleteVariable}
               />
             )).concat(
               <Variable
                 key="adding"
-                delete={variables.deleteVariable}
-                add={variables.addVariable}
-                isAdding={variables.addingVariable}
+                delete={this.deleteVariable}
+                add={this.addVariable}
+                isAdding={this.addingVariable}
               />
             )}
           </div>

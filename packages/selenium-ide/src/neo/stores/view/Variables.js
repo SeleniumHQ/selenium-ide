@@ -20,7 +20,6 @@ import PlaybackState from "./PlaybackState";
 
 class Variables {
   @observable storedVars = new Map();
-  @observable addingVariable = false;
   @observable isEditable =  (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 
   @action.bound get(key) {
@@ -28,23 +27,16 @@ class Variables {
   }
 
   @action.bound addVariable(key, value) {
-    this.addingVariable = false;
     this.storedVars.set(key, value);
   }
 
   @action.bound deleteVariable(key) {
-    this.addingVariable = false;
     if(this.storedVars.has(key))
       this.storedVars.delete(key);
   }
 
   @action.bound clearVariables() {
-    this.addingVariable = false;
     this.storedVars.clear();
-  }
-
-  @action.bound setAddingVariable(isAdding){
-    this.addingVariable = isAdding;
   }
 }
 
