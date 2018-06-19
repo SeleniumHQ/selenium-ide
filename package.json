@@ -14,7 +14,7 @@
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",
     "test:webdriver": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
-    "lint": "eslint packages/selenium-ide/src/{neo,selianize,plugin,router,api}/ packages/selenium-side-runner/src/ --ext .js --ext .jsx",
+    "lint": "eslint packages/selenium-ide/src/{neo,selianize,plugin,router,api}/ packages/selenium-side-runner/src/ packages/selianize/src/ --ext .js --ext .jsx",
     "postinstall": "lerna bootstrap"
   },
   "jest": {
@@ -24,12 +24,12 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
-    "babel-jest": "^22.0.4",
+    "babel-jest": "^23.0.1",
     "eslint": "^4.15.0",
     "eslint-plugin-class-property": "^1.1.0",
-    "eslint-plugin-jest": "^21.6.1",
+    "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-react": "^7.5.1",
-    "jest": "^22.0.5",
+    "jest": "^23.1.0",
     "lerna": "^2.6.0",
     "web-ext": "^2.4.0"
   }

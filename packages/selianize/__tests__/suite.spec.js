@@ -146,7 +146,7 @@ describe("suite emitter", () => {
             {
               command: "fail",
               index: 1,
-              message: "Unknown command fail",
+              message: new Error("Unknown command fail"),
               target: "",
               value: ""
             }
@@ -159,7 +159,7 @@ describe("suite emitter", () => {
             {
               command: "fail",
               index: 1,
-              message: "Unknown command fail",
+              message: new Error("Unknown command fail"),
               target: "",
               value: ""
             }

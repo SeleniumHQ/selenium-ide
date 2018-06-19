@@ -78,9 +78,8 @@ function executionLoop() {
   if (isStopping()) return false;
   if (isExtCommand(command)) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
     return doDelay().then(() => (
-      (extCommand["do" + upperCase](parsedTarget, value))
+      (extCommand["do" + upperCase](xlateArgument(target), xlateArgument(value)))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
         }).then(executionLoop)
@@ -102,7 +101,7 @@ function executionLoop() {
 
 function prepareToPlay() {
   PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
-  return extCommand.init();
+  return extCommand.init(baseUrl);
 }
 
 function prepareToPlayAfterConnectionFailed() {
@@ -247,22 +246,21 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
     }, 500);
   });
 
-  const parsedTarget = command === "open" ? new URL(target, baseUrl).href : target;
   return p.then(() => (
     canExecuteCommand(command) ?
-      doPluginCommand(id, command, parsedTarget, value, implicitTime, implicitCount) :
-      doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount)
+      doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
+      doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
   ));
 }
 
-function doSeleniumCommand(id, command, parsedTarget, value, implicitTime, implicitCount) {
+function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
   return (command !== "type"
-    ? extCommand.sendMessage(command, xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))
-    : extCommand.doType(xlateArgument(parsedTarget), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
+    ? extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
+    : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {
-        return doImplicitWait(result.result, id, parsedTarget, implicitTime, implicitCount);
+        return doImplicitWait(result.result, id, target, implicitTime, implicitCount);
       } else {
         PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
       }

@@ -56,7 +56,8 @@ export default class ProjectStore {
     this.url = url;
   }
 
-  @action.bound addUrl(url) {
+  @action.bound addUrl(urlToAdd) {
+    const url = (new URL(urlToAdd)).href;
     if (!this._urls.find((u) => (u === url)))
       this._urls.push(url);
   }

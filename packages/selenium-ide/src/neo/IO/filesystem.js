@@ -165,8 +165,8 @@ function loadJSONProject(project, data) {
   Manager.emitMessage({
     action: "event",
     event: "projectLoaded",
-    project: {
-      name: project.name
+    options: {
+      projectName: project.name
     }
   });
 }

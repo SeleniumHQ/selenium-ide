@@ -27,7 +27,7 @@ try {
   }
 }
 
-export function install() {
+function install() {
   return new Promise((res, rej) => {
     npm.load({ progress: false, loglevel: "silent" }, (e) => {
       if (e) {
@@ -44,3 +44,5 @@ export function install() {
     });
   });
 }
+
+install();

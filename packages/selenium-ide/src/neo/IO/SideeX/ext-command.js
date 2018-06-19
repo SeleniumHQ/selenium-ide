@@ -62,7 +62,7 @@ export default class ExtCommand {
     };
   }
 
-  init() {
+  init(baseUrl) {
     this.attach();
     this.playingTabNames = {};
     this.playingTabIds = {};
@@ -71,6 +71,7 @@ export default class ExtCommand {
     this.playingTabCount = 1;
     this.currentPlayingWindowId = this.contentWindowId;
     this.currentPlayingFrameLocation = "root";
+    this.baseUrl = baseUrl;
     return this.queryActiveTab(this.currentPlayingWindowId)
       .then(this.setFirstTab.bind(this));
   }
@@ -196,7 +197,13 @@ export default class ExtCommand {
     this.playingTabCount++;
   }
 
-  doOpen(url) {
+  doOpen(targetUrl) {
+    let url = targetUrl;
+    try {
+      url = (new URL(targetUrl)).href;
+    } catch (e) {
+      url = (new URL(targetUrl, this.baseUrl)).href;
+    }
     return browser.tabs.update(this.currentPlayingTabId, {
       url: url
     });

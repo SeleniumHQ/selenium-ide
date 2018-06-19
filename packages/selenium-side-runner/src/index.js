@@ -27,7 +27,6 @@ import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
 import Capabilities from "./capabilities";
 import Config from "./config";
-import { install } from "./npm";
 import metadata from "../package.json";
 
 process.title = metadata.name;
@@ -41,7 +40,7 @@ program
   .option("-f, --filter [string]", "Filter test cases by name")
   .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
-  .option("--no-sideyml", "Disabled the use of .side.yml")
+  .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
 
@@ -61,12 +60,12 @@ const configuration = {
   runId: crypto.randomBytes(16).toString("hex"),
   path: path.join(__dirname, "../../")
 };
-if (program.sideyml) {
-  try {
-    Object.assign(configuration, Config.load(path.join(process.cwd(), ".side.yml")));
-  } catch (e) {
-    winston.info("Could not load .side.yml");
-  }
+
+const configurationFilePath = program.configurationFile || ".side.yml";
+try {
+  Object.assign(configuration, Config.load(path.join(process.cwd(), configurationFilePath)));
+} catch (e) {
+  winston.info("Could not load " + configurationFilePath);
 }
 
 configuration.server = program.server ? program.server : configuration.server;
@@ -89,15 +88,16 @@ if (program.params) {
 
 configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUrl;
 
+let projectPath;
+
 function runProject(project) {
   if (!project.code || project.version !== "1.0") {
     return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
   }
-  const projectPath = `side-suite-${project.name}`;
+  projectPath = `side-suite-${project.name}`;
   rimraf.sync(projectPath);
   fs.mkdirSync(projectPath);
-  process.chdir(projectPath);
-  fs.writeFileSync("package.json", JSON.stringify({
+  fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify({
     name: project.name,
     version: "0.0.0",
     jest: {
@@ -111,12 +111,12 @@ function runProject(project) {
   project.code.forEach(suite => {
     if (!suite.tests) {
       // not parallel
-      writeJSFile(suite.name, suite.code);
+      writeJSFile(path.join(projectPath, suite.name), suite.code);
     } else if (suite.tests.length) {
       fs.mkdirSync(suite.name);
       // parallel suite
       suite.tests.forEach(test => {
-        writeJSFile(path.join(suite.name, test.name), `${suite.code}${test.code}`);
+        writeJSFile(path.join(projectPath, suite.name, test.name), `${suite.code}${test.code}`);
       });
     }
   });
@@ -124,8 +124,17 @@ function runProject(project) {
 
   return new Promise((resolve, reject) => {
     let npmInstall;
-    if (project.dependencies && Object.keys(project.dependencies)) {
-      npmInstall = install();
+    if (project.dependencies && Object.keys(project.dependencies).length) {
+      npmInstall = new Promise((resolve, reject) => {
+        const child = fork(require.resolve("./npm"), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
+        child.on("exit", (code) => {
+          if (code) {
+            reject();
+          } else {
+            resolve();
+          }
+        });
+      });
     } else {
       npmInstall = Promise.resolve();
     }
@@ -133,11 +142,10 @@ function runProject(project) {
       const child = fork(require.resolve("./child"), [
         "--testMatch", "**/*.test.js"
       ].concat(program.filter ? ["-t", program.filter] : [])
-        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
+        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
 
       child.on("exit", (code) => {
         console.log("");
-        process.chdir("..");
         rimraf.sync(projectPath);
         if (code) {
           reject();
@@ -145,7 +153,7 @@ function runProject(project) {
           resolve();
         }
       });
-    });
+    }).catch(reject);
   });
 }
 
@@ -165,5 +173,13 @@ function writeJSFile(name, data) {
 }
 
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
+
+function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
+  rimraf.sync(projectPath);
+  process.exit(code);
+}
+
+process.on("SIGINT", handleQuit);
+process.on("SIGTERM", handleQuit);
 
 runAll(projects);

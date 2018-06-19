@@ -20,6 +20,7 @@ import browser from "webextension-polyfill";
 import { action, computed, observable } from "mobx";
 import UiState from "./UiState";
 import ModalState from "./ModalState";
+import variables from "./Variables";
 import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
@@ -58,7 +59,9 @@ class PlaybackState {
   }
 
   beforePlaying(play) {
-    UiState._project.addCurrentUrl();
+    try {
+      UiState._project.addCurrentUrl();
+    } catch (e) {} // eslint-disable-line no-empty
     if (UiState.isRecording) {
       ModalState.showAlert({
         title: "Stop recording",
@@ -80,6 +83,7 @@ class PlaybackState {
     const playSuite = action(() => {
       const { suite } = UiState.selectedTest;
       this.resetState();
+      variables.clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = suite;
       this._testsToRun = [...suite.tests];
@@ -103,6 +107,7 @@ class PlaybackState {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
       this.resetState();
+      variables.clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
@@ -159,6 +164,9 @@ class PlaybackState {
   }
 
   @action.bound playNext() {
+    if (UiState.selectedTest.suite.isParallel) {
+      variables.clearVariables();
+    }
     this.currentRunningTest = this._testsToRun.shift();
     UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.runningQueue = this.currentRunningTest.commands.peek();
