@@ -28,7 +28,7 @@ export default class LogList extends React.Component {
   }
   render() {
     return (
-      <div className="logs" ref={container => {this.container = container;}}>
+      <div className="logs">
         <ul>
           {this.props.output.logs.map((log) => (
             <LogMessage key={log.id} log={log} />
