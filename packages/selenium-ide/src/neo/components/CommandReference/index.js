@@ -54,7 +54,7 @@ export default class CommandReference extends React.Component {
           { this.props.currentCommand && this.props.currentCommand.description &&
             <li className="description">{this.props.currentCommand.description}</li> }
           <br />
-          { this.props.currentCommand && this.props.currentCommand.target && <li>arguments:</li> }
+          { this.props.currentCommand && (this.props.currentCommand.target || this.props.currentCommand.value) && <li>arguments:</li> }
           { this.props.currentCommand && this.props.currentCommand.target && this.argument(this.props.currentCommand.target) }
           { this.props.currentCommand && this.props.currentCommand.value && this.argument(this.props.currentCommand.value) }
         </ul>
