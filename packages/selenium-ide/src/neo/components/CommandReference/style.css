@@ -13,3 +13,8 @@
 .command-reference .description {
   padding-top: 5px;
 }
+
+.command-reference .arguments {
+  padding-top: 15px;
+  padding-bottom: 3px;
+}
