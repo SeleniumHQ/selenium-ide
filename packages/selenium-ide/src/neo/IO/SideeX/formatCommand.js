@@ -17,10 +17,10 @@
 
 import browser from "webextension-polyfill";
 import { Logger, Channels } from "../../stores/view/Logs";
+import variables from "../../stores/view/Variables";
 
 const logger = new Logger(Channels.PLAYBACK);
 const nbsp = String.fromCharCode(160);
-let declaredVars = {};
 
 export function xlateArgument(value) {
   value = value.replace(/^\s+/, "");
@@ -31,15 +31,15 @@ export function xlateArgument(value) {
     const regexp = /\$\{(.*?)\}/g;
     let lastIndex = 0;
     while ((r2 = regexp.exec(value))) {
-      if (declaredVars[r2[1]]) {
+      if (variables.get(r2[1])) {
         if (r2.index - lastIndex > 0) {
           parts.push(string(value.substring(lastIndex, r2.index)));
         }
-        parts.push(declaredVars[r2[1]]);
+        parts.push(variables.get(r2[1]));
         lastIndex = regexp.lastIndex;
       } else if (r2[1] == "nbsp") {
         if (r2.index - lastIndex > 0) {
-          parts.push(declaredVars[string(value.substring(lastIndex, r2.index))]);
+          parts.push(variables.get(string(value.substring(lastIndex, r2.index))));
         }
         parts.push(nbsp);
         lastIndex = regexp.lastIndex;
@@ -52,10 +52,6 @@ export function xlateArgument(value) {
   } else {
     return string(value);
   }
-}
-
-export function clearVariables() {
-  declaredVars = {};
 }
 
 function string(value) {
@@ -71,11 +67,10 @@ function string(value) {
 
 function handleFormatCommand(message) {
   if (message.storeStr) {
-    declaredVars[message.storeVar] = message.storeStr;
+    variables.addVariable(message.storeVar, message.storeStr);
   } else if (message.echoStr) {
     logger.log("echo: " + message.echoStr);
   }
 }
 
 browser.runtime.onMessage.addListener(handleFormatCommand);
-
