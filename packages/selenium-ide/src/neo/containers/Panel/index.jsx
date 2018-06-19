@@ -29,7 +29,6 @@ import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
-import modify from "../../side-effects/modify";
 import SuiteDropzone from "../../components/SuiteDropzone";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
@@ -71,8 +70,6 @@ if (process.env.NODE_ENV === "production") {
 } else {
   seed(project, 0);
 }
-
-modify(project);
 
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829

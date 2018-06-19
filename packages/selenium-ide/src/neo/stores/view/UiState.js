@@ -323,7 +323,7 @@ class UiState {
     Object.values(this.testStates).forEach(state => {
       state.modified = false;
     });
-    this._project.modified = false;
+    this._project.setModified(false);
   }
 }
 
