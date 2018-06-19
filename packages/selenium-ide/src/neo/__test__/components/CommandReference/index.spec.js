@@ -26,9 +26,9 @@ describe("<CommandReference />", () => {
     const commandName = container.querySelector(".signature");
     expect(commandName).toHaveTextContent("name ");
   });
-  it("should render a helpful message when no (or invalid) name provided", () => {
+  it("should render a helpful message when no (or uknown) name provided", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{}}/>);
-    const commandName = container.querySelector(".invalid-command");
+    const commandName = container.querySelector(".unknown-command");
     expect(commandName).toHaveTextContent("Unknown command name provided.");
   });
   it("should render a name with a target", () => {
@@ -42,9 +42,14 @@ describe("<CommandReference />", () => {
     expect(commandName).toHaveTextContent("name target, value");
   });
   it("should render a description", () => {
-    const { container } = renderIntoDocument(<CommandReference currentCommand={{ description: "description" }}/>);
+    const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", description: "description" }}/>);
     const commandDescription = container.querySelector(".description");
     expect(commandDescription).toHaveTextContent("description");
+  });
+  it("should not render a description unless a name is provided", () => {
+    const { container } = renderIntoDocument(<CommandReference currentCommand={{ description: "description" }}/>);
+    const commandDescription = container.querySelector(".description");
+    expect(commandDescription).not.toBeInTheDOM();
   });
   it("should render an target argument", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target name", description: "target value" } }}/>);
