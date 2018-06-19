@@ -31,12 +31,13 @@ import variables from "../../stores/view/Variables";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tab: "Log" };
+    this.state = { tab: "Log", isAddingVariable: false };
     this.tabClicked = this.tabClicked.bind(this);
 
     this.playbackLogger = new PlaybackLogger();
     //this.loggerObserver = observe(logger.logs, () => { setState { //set log state to unread } })
     this.tabChangedHandler = this.tabChangedHandler.bind(this);
+    this.addVariableClicked = this.addVariableClicked.bind(this);
   }
   componentWillUnmount() {
     //this.loggerObserver.dispose();
@@ -49,10 +50,15 @@ export default class Console extends React.Component {
   }
   //create different object which stores name and read status (e.g., unread boolean)
   tabClicked(tab) {
-    this.setState({
+    this.setState({ 
       tab
     });
     this.props.restoreSize();
+  }
+  addVariableClicked(isAdding) {
+    this.setState({ 
+      isAddingVariable: isAdding
+    });
   }
   render() {
     return (
@@ -63,13 +69,13 @@ export default class Console extends React.Component {
           {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clearLogs} /> }
           {this.state.tab === "Variables" &&
             <div>
-              <AddButton data-tip="<p>Add Variable</p>" onClick={() => variables.setAddingVariable(true)} />
+              <AddButton data-tip="<p>Add Variable</p>" onClick={() => this.addVariableClicked(true)} />
               <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} />
             </div> }
           {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList output={output} /> }
-        {this.state.tab === "Variables" && <VariableList variables={variables}/> }
+        {this.state.tab === "Variables" && <VariableList variables={variables} isAdding={this.state.isAddingVariable} setIsAddng={this.addVariableClicked}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );

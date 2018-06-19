@@ -66,21 +66,22 @@ export default class VariableList extends React.Component {
                 delete={this.deleteVariable}
                 isStop={variables.isStop}
               />
-            )).concat(
-              <Variable
-                key="adding"
+            ))}
+            { this.props.isAdding ?  <Variable
+                edit={this.editVariable}
                 delete={this.deleteVariable}
                 add={this.addVariable}
-                isAdding={this.addingVariable}
+                setIsAdding={this.props.setIsAdding}
                 isStop={variables.isStop}
-              />
-            )}
+              /> : null}
           </div>
         </div>
       </div>
     );
   }
   static propTypes = {
-    variables: PropTypes.object
+    variables: PropTypes.object,
+    isAdding: PropTypes.bool,
+    setIsAdding: PropTypes.func
   };
 }
