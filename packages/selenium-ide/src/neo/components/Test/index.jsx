@@ -174,7 +174,7 @@ export class Test extends React.Component {
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.onContextMenu}
       style={{
-        display: this.props.isDragging ? "none" : "flex"
+        opacity: this.props.isDragging ? "0" : "1"
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
