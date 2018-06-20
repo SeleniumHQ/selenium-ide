@@ -32,6 +32,7 @@ export default class Variable extends React.Component {
     this.keyChanged = this.keyChanged.bind(this);
     this.valueChanged = this.valueChanged.bind(this);
     this.delete = this.delete.bind(this);
+    this.edit = this.edit.bind(this);
     this.state = { key: "", value: "" };
   }
   componentDidMount() {
@@ -44,7 +45,7 @@ export default class Variable extends React.Component {
       const isValidKey = this.state.key || this.props.keyVar;
       const isValidValue = this.state.value || this.props.value;
       if (isValidKey && isValidValue) {
-        this.props.add(this.state.key, this.state.value);
+        this.edit(isValidKey, isValidValue);
       }
     }
   }
@@ -52,14 +53,17 @@ export default class Variable extends React.Component {
     const isValidKey = this.state.key || this.props.keyVar;
     const isValidValue = this.state.value || this.props.value;
     if (isValidKey && isValidValue) {
-      this.delete();
-      this.props.add(this.state.key || this.props.keyVar, this.state.value || this.props.value);
+      this.edit(isValidKey, isValidValue);
     } else if (!(isValidKey || isValidValue)) {
       this.props.setIsAdding(false);
     }
   }
   delete() {
     this.props.delete(this.props.keyVar);
+  }
+  edit(key, value){
+    this.delete();
+    this.props.add(key, value);
   }
   keyChanged(e) {
     this.setState({ key: e.target.value });
