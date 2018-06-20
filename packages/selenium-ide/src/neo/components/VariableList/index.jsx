@@ -48,11 +48,11 @@ export default class VariableList extends React.Component {
           </div>
 
           <div className="value-list">
-            {variables.storedVars.keys().sort().map((storedKey) => (
+            {variables.storedVars.entries().sort().map((storedMap) => (
               <Variable
-                key={storedKey}
-                keyVar={storedKey}
-                value={variables.storedVars.get(storedKey)}
+                key={storedMap}
+                keyVar={storedMap[0]}
+                value={storedMap[1]}
                 add={this.addVariable}
                 delete={this.deleteVariable}
                 isStop={variables.isStop}
