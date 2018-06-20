@@ -41,7 +41,9 @@ export default class Variable extends React.Component {
   handleKeyDown(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (this.state.key && this.state.value) {
+      const isValidKey = this.state.key || this.props.keyVar;
+      const isValidValue = this.state.value || this.props.value;
+      if (isValidKey && isValidValue) {
         this.props.add(this.state.key, this.state.value);
       }
     }
