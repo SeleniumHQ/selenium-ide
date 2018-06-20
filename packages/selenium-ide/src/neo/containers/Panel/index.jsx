@@ -160,7 +160,11 @@ firefox57WorkaroundForBlankPanel();
             minSize={UiState.minContentHeight}
             maxSize={UiState.maxContentHeight}
             size={UiState.windowHeight - UiState.consoleHeight}
-            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
+            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}
+            style={{
+              position: "initial"
+            }}
+          >
             <div className="wrapper">
               <ProjectHeader
                 title={this.state.project.name}
