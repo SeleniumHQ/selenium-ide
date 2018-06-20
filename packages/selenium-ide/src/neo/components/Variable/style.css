@@ -1,13 +1,11 @@
 .row {
   font-size: 12px;
-  text-align: center;
   display: table-row;
 }
 
 .row .cell {
   word-break: break-all;
   display: table-cell;
-  padding: 2px 1px;
 
 }
 
@@ -59,6 +57,7 @@
 }
 
 .deleteBtn {
-  font-size: 14px;
+  font-size: 15px;
   opacity: 0;
+  height: 20px;
 }
