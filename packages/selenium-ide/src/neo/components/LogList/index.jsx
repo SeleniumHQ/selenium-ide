@@ -24,7 +24,7 @@ import "./style.css";
 @observer
 export default class LogList extends React.Component {
   componentDidUpdate() {
-    this.props.scroll(10000);
+    this.props.scrollTo(10000);
   }
   render() {
     return (
@@ -39,6 +39,6 @@ export default class LogList extends React.Component {
   }
   static propTypes = {
     output: PropTypes.object,
-    scroll: PropTypes.func
+    scrollTo: PropTypes.func
   };
 }

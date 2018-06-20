@@ -43,6 +43,9 @@ export default class Console extends React.Component {
     });
     this.tabClicked = this.tabClicked.bind(this);
     this.tabChangedHandler = this.tabChangedHandler.bind(this);
+    this.setViewportRef = element => {
+      this.viewport = element;
+    };
     this.scroll = this.scroll.bind(this);
   }
   componentWillUnmount() {
@@ -59,9 +62,7 @@ export default class Console extends React.Component {
     this.props.restoreSize();
   }
   scroll(to) {
-    if (this.viewport) {
-      this.viewport.scrollTo(0, to);
-    }
+    this.viewport.scrollTo(0, to);
   }
   render() {
     const command = UiState.selectedCommand ? Commands.list.get(UiState.selectedCommand.command) : undefined;
@@ -73,8 +74,8 @@ export default class Console extends React.Component {
         <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
           <ClearButton onClick={output.clear} />
         </TabBar>
-        <div className="viewport" ref={node => {this.viewport = node;}}>
-          {this.state.tab === "Log" && <LogList output={output} scroll={this.scroll}/> }
+        <div className="viewport" ref={this.setViewportRef}>
+          {this.state.tab === "Log" && <LogList output={output} scrollTo={this.scroll}/> }
           {this.state.tab === "Reference" && <CommandReference currentCommand={command}/> }
         </div>
       </footer>
