@@ -181,7 +181,7 @@ export class Test extends React.Component {
         listMenu :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
     </a>;
-    return (this.props.suite ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
+    return (this.props.suite && !this.props.suite.isParallel ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }
 export const DraggableTest = DragSource(Type, testSource, collect)(Test);
