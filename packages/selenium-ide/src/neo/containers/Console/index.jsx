@@ -17,6 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import VariableList from "../../components/VariableList";
@@ -28,6 +29,7 @@ import "./style.css";
 import CommandReference from "../../components/CommandReference";
 import variables from "../../stores/view/Variables";
 
+@observer
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
@@ -69,8 +71,8 @@ export default class Console extends React.Component {
           {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clearLogs} /> }
           {this.state.tab === "Variables" &&
             <div>
-              <AddButton data-tip="<p>Add Variable</p>" onClick={() => this.addVariableClicked(true)} />
-              <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} />
+              <AddButton data-tip="<p>Add Variable</p>" onClick={() => this.addVariableClicked(true)} disabled={!variables.isStop} />
+              <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} disabled={!variables.isStop}/>
             </div> }
           {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
         </TabBar>

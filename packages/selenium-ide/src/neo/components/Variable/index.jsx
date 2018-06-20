@@ -103,7 +103,7 @@ export default class Variable extends React.Component {
               onBlur={this.handleChanged} />}
         </div>
         <div className="cell del">
-          <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} />
+          <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>
         </div>
       </div>
     );
