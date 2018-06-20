@@ -46,13 +46,20 @@ class PluginManager {
     });
   }
 
-  useExistingArgTypesIfProvided(target_type, docs) {
-    if (typeof(docs[target_type]) === "string" && docs[target_type] in ArgTypes) {
-      docs[target_type] = {
-        name: docs[target_type],
-        description: ArgTypes[docs[target_type]].description
-      };
-    }
+  useExistingArgTypesIfProvided(docs) {
+    const doks = {};
+    Object.assign(doks, docs);
+    ["target", "value"].forEach(function(target_type) {
+      if (typeof(docs[target_type]) === "string" && docs[target_type] in ArgTypes) {
+        Object.assign(doks, {
+          [target_type]: {
+            name: docs[target_type],
+            description: ArgTypes[docs[target_type]].description
+          }
+        });
+      }
+    });
+    return doks;
   }
 
   registerPlugin(plugin) {
@@ -63,9 +70,8 @@ class PluginManager {
       RegisterTestHook(this.emitTest.bind(undefined, plugin));
       if (plugin.commands) {
         plugin.commands.forEach(({ id, name, type, docs }) => {
-          this.useExistingArgTypesIfProvided("target", docs);
-          this.useExistingArgTypesIfProvided("value", docs);
-          Commands.addCommand(id, { name, type, ...docs });
+          const doks = this.useExistingArgTypesIfProvided(docs);
+          Commands.addCommand(id, { name, type, ...doks });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
         });

@@ -16,6 +16,7 @@
 // under the License.
 
 import Manager from "../../plugin/manager";
+import { ArgTypes } from "../../../src/neo/models/Command";
 import { canExecuteCommand } from "../../plugin/commandExecutor";
 
 describe("plugin manager", () => {
@@ -42,7 +43,7 @@ describe("plugin manager", () => {
         docs: {
           description: "command description",
           target: "locator",
-          value: "pattern"
+          value: "script"
         }
       }]
     };
@@ -95,5 +96,18 @@ describe("plugin manager", () => {
     };
     Manager.registerPlugin(plugin);
     expect(Manager.getPlugin(plugin.id)).toBe(plugin);
+  });
+  it("should use existing command ArgTypes if present", () => {
+    const docs = {
+      description: "command description",
+      target: ArgTypes.locator.name,
+      value: ArgTypes.script.name
+    };
+    const expectedDocs = {
+      description: "command description",
+      target: { name: ArgTypes.locator.name, description: ArgTypes.locator.description },
+      value: { name: ArgTypes.script.name, description: ArgTypes.script.description }
+    };
+    expect(Manager.useExistingArgTypesIfProvided(docs)).toEqual(expectedDocs);
   });
 });
