@@ -28,9 +28,10 @@ export default class Variable extends React.Component {
   constructor(props){
     super(props);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChanged = this.handleChanged.bind(this);
     this.keyChanged = this.keyChanged.bind(this);
     this.valueChanged = this.valueChanged.bind(this);
+    this.delete = this.delete.bind(this);
     this.state = { key: "", value: "" };
   }
   handleKeyDown(e) {
@@ -41,9 +42,11 @@ export default class Variable extends React.Component {
       }
     }
   }
-  handleChange() {
-    this.delete();
-    this.props.edit(this.state.key || this.props.keyVar, this.state.value || this.props.value);
+  handleChanged() {
+    if ((this.state.key || this.props.keyVar) && (this.state.value || this.props.value)) {
+      this.delete();
+      this.props.add(this.state.key || this.props.keyVar, this.state.value || this.props.value);
+    }
   }
   delete() {
     this.props.delete(this.props.keyVar);
@@ -55,30 +58,43 @@ export default class Variable extends React.Component {
     this.setState({ value: e.target.value });
   }
   render() {
-    const isEditing = this.props.keyVar || this.props.isAdding;
     return (
       <div className="row">
         <div className="cell storedKey">
-          <ContentEditable
-            className={classNames("edit", { "editable": this.props.isStop })}
-            disabled={this.props.isStop ? false : true}
-            onChange={this.keyChanged}
-            html={this.props.keyVar}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleChange}/>
+          {this.props.isAdding ?
+            <input
+              className="edit"
+              onChange={this.keyChanged}
+              onKeyDown={this.handleKeyDown}
+              onBlur={this.handleChanged}/>
+            :
+            <ContentEditable
+              className={classNames("edit", { "editable": this.props.isStop })}
+              disabled={this.props.isStop ? false : true}
+              onChange={this.keyChanged}
+              html={this.props.keyVar}
+              onKeyDown={this.handleKeyDown}
+              onBlur={this.handleChanged}/>}
         </div>
-        <div className="cell col">{ isEditing ? ":" : null }</div>
+        <div className="cell col">:</div>
         <div className="cell variable">
-          <ContentEditable
-            className={classNames("edit", { "editable": this.props.isStop })}
-            disabled={this.props.isStop ? false : true}
-            onChange={this.valueChanged}
-            html={this.props.value}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleChange} />
+          {this.props.isAdding ?
+            <input
+              className="edit"
+              onChange={this.valueChanged}
+              onKeyDown={this.handleKeyDown}
+              onBlur={this.handleChanged} />
+            :
+            <ContentEditable
+              className={classNames("edit", { "editable": this.props.isStop })}
+              disabled={this.props.isStop ? false : true}
+              onChange={this.valueChanged}
+              html={this.props.value}
+              onKeyDown={this.handleKeyDown}
+              onBlur={this.handleChanged} />}
         </div>
         <div className="cell del">
-          {this.props.isAdding ? null : <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete.bind(this)} />}
+          <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} />
         </div>
       </div>
     );
@@ -86,7 +102,6 @@ export default class Variable extends React.Component {
   static propTypes = {
     keyVar: PropTypes.string,
     value: PropTypes.string,
-    edit: PropTypes.func,
     delete: PropTypes.func,
     add: PropTypes.func,
     isAdding: PropTypes.bool,

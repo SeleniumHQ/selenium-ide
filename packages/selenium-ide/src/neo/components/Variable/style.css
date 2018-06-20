@@ -36,6 +36,7 @@
 .row .edit {
   padding: 0;
   line-height: 14px;
+  width: 100%;
 }
 
 .row .editable:hover {

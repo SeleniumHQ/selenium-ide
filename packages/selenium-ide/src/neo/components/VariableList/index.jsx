@@ -25,25 +25,16 @@ import "./style.css";
 export default class VariableList extends React.Component {
   constructor(props){
     super(props);
-    this.state = { addingVariable: false };
-    this.editVariable = this.editVariable.bind(this);
     this.deleteVariable = this.deleteVariable.bind(this);
     this.addVariable = this.addVariable.bind(this);
   }
-  editVariable(key, value){
-    this.setState({ addingVariable: false });
-    this.props.variables.addVariable(key, value);
-  }
   deleteVariable(key){
-    this.setState({ addingVariable: false });
     this.props.variables.deleteVariable(key);
+    this.props.setIsAdding(false);
   }
   addVariable(key, value){
-    this.setState({ addingVariable: false });
     this.props.variables.addVariable(key, value);
-  }
-  add(){
-    this.setState({ addingVariable: true });
+    this.props.setIsAdding(false);
   }
 
   render() {
@@ -62,15 +53,16 @@ export default class VariableList extends React.Component {
                 key={storedKey}
                 keyVar={storedKey}
                 value={variables.storedVars.get(storedKey)}
-                edit={this.editVariable}
+                add={this.addVariable}
                 delete={this.deleteVariable}
                 isStop={variables.isStop}
               />
             ))}
-            { this.props.isAdding ?  <Variable
-                edit={this.editVariable}
-                delete={this.deleteVariable}
+            { this.props.isAdding ?
+              <Variable
                 add={this.addVariable}
+                delete={this.deleteVariable}
+                isAdding={this.props.isAdding}
                 setIsAdding={this.props.setIsAdding}
                 isStop={variables.isStop}
               /> : null}

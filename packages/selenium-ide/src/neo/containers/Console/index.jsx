@@ -50,13 +50,13 @@ export default class Console extends React.Component {
   }
   //create different object which stores name and read status (e.g., unread boolean)
   tabClicked(tab) {
-    this.setState({ 
+    this.setState({
       tab
     });
     this.props.restoreSize();
   }
   addVariableClicked(isAdding) {
-    this.setState({ 
+    this.setState({
       isAddingVariable: isAdding
     });
   }
@@ -75,7 +75,7 @@ export default class Console extends React.Component {
           {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
         </TabBar>
         {this.state.tab === "Log" && <LogList output={output} /> }
-        {this.state.tab === "Variables" && <VariableList variables={variables} isAdding={this.state.isAddingVariable} setIsAddng={this.addVariableClicked}/> }
+        {this.state.tab === "Variables" && <VariableList variables={variables} isAdding={this.state.isAddingVariable} setIsAdding={this.addVariableClicked}/> }
         {this.state.tab === "Reference" && <CommandReference /> }
       </footer>
     );
