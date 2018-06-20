@@ -34,16 +34,22 @@ export default class Variable extends React.Component {
     this.delete = this.delete.bind(this);
     this.state = { key: "", value: "" };
   }
+  componentDidMount() {
+    if (this.input)
+      this.input.focus();
+  }
   handleKeyDown(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      if(this.state.key && this.state.value){
+      if (this.state.key && this.state.value) {
         this.props.add(this.state.key, this.state.value);
       }
     }
   }
   handleChanged() {
-    if ((this.state.key || this.props.keyVar) && (this.state.value || this.props.value)) {
+    const isValidKey = this.state.key || this.props.keyVar;
+    const isValidValue = this.state.value || this.props.value;
+    if (isValidKey && isValidValue) {
       this.delete();
       this.props.add(this.state.key || this.props.keyVar, this.state.value || this.props.value);
     }
@@ -63,6 +69,7 @@ export default class Variable extends React.Component {
         <div className="cell storedKey">
           {this.props.isAdding ?
             <input
+              ref={(input) => { this.input = input; }}
               className="edit"
               onChange={this.keyChanged}
               onKeyDown={this.handleKeyDown}
