@@ -43,6 +43,7 @@ export default class Console extends React.Component {
     });
     this.tabClicked = this.tabClicked.bind(this);
     this.tabChangedHandler = this.tabChangedHandler.bind(this);
+    this.scroll = this.scroll.bind(this);
   }
   componentWillUnmount() {
     this.loggerDisposer();
@@ -57,6 +58,11 @@ export default class Console extends React.Component {
   tabClicked(){
     this.props.restoreSize();
   }
+  scroll(to) {
+    if (this.viewport) {
+      this.viewport.scrollTo(0, to);
+    }
+  }
   render() {
     const command = UiState.selectedCommand ? Commands.list.get(UiState.selectedCommand.command) : undefined;
     const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }];
@@ -68,7 +74,7 @@ export default class Console extends React.Component {
           <ClearButton onClick={output.clear} />
         </TabBar>
         <div className="viewport" ref={node => {this.viewport = node;}}>
-          {this.state.tab === "Log" && <LogList output={output} viewportRef={this.viewport}/> }
+          {this.state.tab === "Log" && <LogList output={output} scroll={this.scroll}/> }
           {this.state.tab === "Reference" && <CommandReference currentCommand={command}/> }
         </div>
       </footer>
