@@ -2,7 +2,8 @@
   display: table-header-group;
   background: #FFFFFF;
   border-bottom: 2px solid #5B5B5B;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: bold;
   color: #5B5B5B;
   text-align: left;
 }
