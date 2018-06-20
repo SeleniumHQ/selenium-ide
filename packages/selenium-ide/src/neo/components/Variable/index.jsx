@@ -52,6 +52,8 @@ export default class Variable extends React.Component {
     if (isValidKey && isValidValue) {
       this.delete();
       this.props.add(this.state.key || this.props.keyVar, this.state.value || this.props.value);
+    } else if (!(isValidKey || isValidValue)) {
+      this.props.setIsAdding(false);
     }
   }
   delete() {
@@ -112,6 +114,7 @@ export default class Variable extends React.Component {
     delete: PropTypes.func,
     add: PropTypes.func,
     isAdding: PropTypes.bool,
-    isStop: PropTypes.bool
+    isStop: PropTypes.bool,
+    setIsAdding: PropTypes.func
   };
 }
