@@ -16,7 +16,7 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-import { Logger, Channels } from "../../stores/view/Logs";
+import { Logger, Channels, output } from "../../stores/view/Logs";
 import variables from "../../stores/view/Variables";
 
 const logger = new Logger(Channels.PLAYBACK);
@@ -70,6 +70,9 @@ function handleFormatCommand(message) {
     variables.addVariable(message.storeVar, message.storeStr);
   } else if (message.echoStr) {
     logger.log("echo: " + message.echoStr);
+  } else if (message.log && output.logs[output.logs.length - 1].message.indexOf(message.log.message) === -1) {
+    // this check may be dangerous, especially if something else is bombarding the logs
+    logger[message.log.type || "log"](message.log.message);
   }
 }
 

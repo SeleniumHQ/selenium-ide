@@ -19,6 +19,7 @@ import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { recorder } from "./editor";
 import Debugger from "../debugger";
+import variables from "../../stores/view/Variables";
 
 const parsedUA = parser(window.navigator.userAgent);
 
@@ -267,6 +268,11 @@ export default class ExtCommand {
     }
   }
 
+  doStore(string, varName) {
+    variables.addVariable(varName, string);
+    return Promise.resolve();
+  }
+
   wait(...properties) {
     if (!properties.length)
       return Promise.reject("No arguments");
@@ -361,6 +367,7 @@ export function isExtCommand(command) {
     case "selectFrame":
     case "selectWindow":
     case "setSpeed":
+    case "store":
     case "close":
       return true;
     default:

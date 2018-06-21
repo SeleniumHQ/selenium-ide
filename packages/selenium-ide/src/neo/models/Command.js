@@ -378,9 +378,26 @@ class CommandList {
                     Useful for debugging.",
       target: ArgTypes.message
     }],
+    [ "executeScript", {
+      name: "execute script",
+      description: "Executes a snippet of JavaScript in the context of the currently selected frame or \
+                    window. The script fragment will be executed as the body of an anonymous function.",
+      target: ArgTypes.script
+    }],
+    [ "executeAsyncScript", {
+      name: "execute async script",
+      description: "Executes an async snippet of JavaScript in the context of the currently selected frame or \
+                    window. The script fragment will be executed as the body of an anonymous function and must return a Promise.\
+                    The Promise result will be saved on the variable.",
+      target: ArgTypes.script,
+      value: ArgTypes.variableName
+    }],
     [ "editContent", {
       name: "edit content",
-      type: TargetTypes.LOCATOR
+      type: TargetTypes.LOCATOR,
+      description: "Sets the value of a content editable element as if you typed in it.",
+      target: ArgTypes.locator,
+      value: ArgTypes.value
     }],
     [ "mouseDownAt", {
       name: "mouse down at",
@@ -490,7 +507,7 @@ class CommandList {
                     simple \"type\" command, which forces the specified value \
                     into the page directly, this command will not replace the \
                     existing content.",
-      target: ArgTypes.locartor,
+      target: ArgTypes.locator,
       value: ArgTypes.value
     }],
     [ "setSpeed", {
@@ -532,7 +549,8 @@ class CommandList {
                     Can also be used to set the value of combo boxes, check boxes, \
                     etc. In these cases, value should be the value of the option \
                     selected, not the visible text. \
-                    NOTE: Chrome only: No XPath locators.",
+                    Chrome only: If a file path is given it will be uploaded to the input (for type=file), \
+                    NOTE: No XPath locators.",
       target: ArgTypes.locator,
       value: ArgTypes.value
     }],
