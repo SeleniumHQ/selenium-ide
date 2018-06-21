@@ -64,7 +64,14 @@ function isStopping() {
 function executionLoop() {
   (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   // reached the end
-  if (didFinishQueue() || isStopping()) return false;
+  if (didFinishQueue() || isStopping()) {
+    // is the callstack empty?
+    if (PlaybackState.callstack.length) {
+      PlaybackState.unwindTestCase();
+    } else {
+      return false;
+    }
+  }
   const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   // is command empty?
   if (!command) {

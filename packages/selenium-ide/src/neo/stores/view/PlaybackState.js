@@ -345,7 +345,7 @@ class PlaybackState {
     this.callstack.push({
       caller: this.currentRunningTest,
       callee: testCase,
-      position: this.currentPlayingIndex
+      position: this.currentPlayingIndex + 1 // continue from the next command after unwinding
     });
     this.currentRunningTest = testCase;
     this.currentPlayingIndex = -1;
@@ -353,7 +353,11 @@ class PlaybackState {
   }
 
   @action.bound unwindTestCase() {
-    return this.callstack.pop();
+    const top = this.callstack.pop();
+    this.currentRunningTest = top.caller;
+    this.currentPlayingIndex = top.position;
+    this.runningQueue = top.caller.commands.peek();
+    return top;
   }
 
   @action.bound clearStack() {
