@@ -44,6 +44,7 @@ class PlaybackState {
   @observable aborted = false;
   @observable paused = false;
   @observable delay = 0;
+  @observable callstack = [];
 
   constructor() {
     this.maxDelay = 3000;
@@ -56,6 +57,13 @@ class PlaybackState {
     return !this.runningQueue.find(({ id }) => (
       this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed || this.commandState.get(id).state === PlaybackStates.Fatal : false
     ));
+  }
+
+  @computed get testMap() {
+    return UiState._project.tests.reduce((testMap, test) => {
+      testMap[test.name] = test;
+      return testMap;
+    }, {});
   }
 
   beforePlaying(play) {
@@ -327,6 +335,29 @@ class PlaybackState {
 
   @action.bound setDelay(delay) {
     this.delay = delay;
+  }
+
+  @action.bound callTestCase(_testCase) {
+    let testCase = _testCase;
+    if (typeof testCase === "string") {
+      testCase = this.testMap[testCase];
+    }
+    this.callstack.push({
+      caller: this.currentRunningTest,
+      callee: testCase,
+      position: this.currentPlayingIndex
+    });
+    this.currentRunningTest = testCase;
+    this.currentPlayingIndex = -1;
+    this.runningQueue = testCase.commands.peek();
+  }
+
+  @action.bound unwindTestCase() {
+    return this.callstack.pop();
+  }
+
+  @action.bound clearStack() {
+    this.callstack.clear();
   }
 
   @action.bound resetState() {

@@ -19,6 +19,7 @@ import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { recorder } from "./editor";
 import Debugger from "../debugger";
+import PlaybackState from "../../stores/view/PlaybackState";
 
 const parsedUA = parser(window.navigator.userAgent);
 
@@ -246,6 +247,11 @@ export default class ExtCommand {
     return browser.tabs.remove(removingTabId);
   }
 
+  doRun(target) {
+    PlaybackState.callTestCase(target);
+    return Promise.resolve();
+  }
+
   doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
@@ -360,6 +366,7 @@ export function isExtCommand(command) {
     case "open":
     case "selectFrame":
     case "selectWindow":
+    case "run":
     case "setSpeed":
     case "close":
       return true;
