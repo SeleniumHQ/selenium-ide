@@ -16,21 +16,57 @@
 // under the License.
 
 import React from "react";
+import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import "./style.css";
+import classNames from "classnames";
 
 @observer
-export default class ReferenceMessage extends React.Component {
-  render() {
+export default class CommandReference extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    currentCommand: PropTypes.object
+  };
+  unknownCommand() {
     return (
-      <div className="reference-message">
-        <ul>
-          <li>name</li>
-          <li>description</li>
-          <li>params</li>
-          <li>response</li>
-        </ul>
+      <div className={classNames("command-reference", "unknown-command")}>
+        <strong>Unknown command name provided.</strong>
       </div>
     );
+  }
+  argument(param) {
+    if (param.name !== "" || param.description !== "") {
+      return(
+        <li className="argument">
+          { param.name } - { param.description }
+        </li>
+      );
+    }
+  }
+  commandSignature() {
+    return(
+      <li className="signature">
+        { this.props.currentCommand.name && <strong className="name">{this.props.currentCommand.name}</strong> }{" "}
+        { this.props.currentCommand.target && <em className="target">{this.props.currentCommand.target.name }</em>}
+        { this.props.currentCommand.value && <em className="value">, {this.props.currentCommand.value.name }</em>}
+      </li>
+    );
+  }
+  render() {
+    if (!(this.props.currentCommand && this.props.currentCommand.name)) {
+      return this.unknownCommand();
+    } else {
+      return (
+        <div className="command-reference">
+          <ul>
+            { this.props.currentCommand.name && this.commandSignature() }
+            { this.props.currentCommand.description && <li className="description">{this.props.currentCommand.description}</li> }
+            { (this.props.currentCommand.target || this.props.currentCommand.value) && <li className="arguments">arguments:</li> }
+            { this.props.currentCommand.target && this.argument(this.props.currentCommand.target) }
+            { this.props.currentCommand.value && this.argument(this.props.currentCommand.value) }
+          </ul>
+        </div>
+      );
+    }
   }
 }
