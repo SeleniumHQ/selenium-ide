@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+jest.mock("../../../IO/storage");
 import PlaybackState from "../../../stores/view/PlaybackState";
 import UiState from "../../../stores/view/UiState";
 import ProjectStore from "../../../stores/domain/ProjectStore";
@@ -33,7 +34,7 @@ describe("Playback State Call Stack", () => {
     PlaybackState.currentRunningTest = test;
     PlaybackState.currentPlayingIndex = 5;
     PlaybackState.callTestCase(pushed);
-    expect(PlaybackState.callstack[0].position).toBe(5);
+    expect(PlaybackState.callstack[0].position).toBe(6);
     expect(PlaybackState.callstack[0].caller).toBe(test);
     expect(PlaybackState.callstack[0].callee).toBe(pushed);
   });
@@ -42,11 +43,11 @@ describe("Playback State Call Stack", () => {
     const pushed = new TestCase();
     PlaybackState.currentRunningTest = test;
     PlaybackState.currentPlayingIndex = 5;
-    PlaybackState.callTestCase(pushed, 5);
+    PlaybackState.callTestCase(pushed);
     const { caller, callee, position } = PlaybackState.unwindTestCase();
     expect(callee).toBe(pushed);
     expect(caller).toBe(test);
-    expect(position).toBe(5);
+    expect(position).toBe(6);
   });
   it("should keep the caller-callee structure", () => {
     const test = new TestCase();
@@ -57,11 +58,11 @@ describe("Playback State Call Stack", () => {
     PlaybackState.callTestCase(routine);
     PlaybackState.callTestCase(finalRoutine);
 
-    expect(PlaybackState.callstack[0].position).toBe(5);
+    expect(PlaybackState.callstack[0].position).toBe(6);
     expect(PlaybackState.callstack[0].caller).toBe(test);
     expect(PlaybackState.callstack[0].callee).toBe(routine);
 
-    expect(PlaybackState.callstack[1].position).toBe(-1);
+    expect(PlaybackState.callstack[1].position).toBe(0);
     expect(PlaybackState.callstack[1].caller).toBe(routine);
     expect(PlaybackState.callstack[1].callee).toBe(finalRoutine);
   });

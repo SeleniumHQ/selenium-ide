@@ -20,6 +20,7 @@ import parser from "ua-parser-js";
 import { recorder } from "./editor";
 import Debugger from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
+import variables from "../../stores/view/Variables";
 
 const parsedUA = parser(window.navigator.userAgent);
 
@@ -273,6 +274,11 @@ export default class ExtCommand {
     }
   }
 
+  doStore(string, varName) {
+    variables.addVariable(varName, string);
+    return Promise.resolve();
+  }
+
   wait(...properties) {
     if (!properties.length)
       return Promise.reject("No arguments");
@@ -368,6 +374,7 @@ export function isExtCommand(command) {
     case "selectWindow":
     case "run":
     case "setSpeed":
+    case "store":
     case "close":
       return true;
     default:
