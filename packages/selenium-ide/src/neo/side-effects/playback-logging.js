@@ -26,10 +26,19 @@ export default class PlaybackLogger {
     this.playbackDisposer = observe(PlaybackState, "isPlaying", (isPlaying) => {
       this.logPlayingState(isPlaying.newValue);
     });
+    this.callstackDisposer = observe(PlaybackState.callstack, (change) => {
+      if (change.addedCount) {
+        this.logStackPush(change.added[0].caller, change.added[0].callee);
+      } else if (change.removedCount) {
+        this.logStackUnwind(change.removed[0].caller, change.removed[0].callee);
+      }
+    });
     this.commandStateDisposer = observe(PlaybackState.commandState, (change) => {
       this.parseCommandStateChange(change.name, change.newValue, this.logCommandState);
     });
     this.logPlayingState = this.logPlayingState.bind(this);
+    this.logStackPush = this.logStackPush.bind(this);
+    this.logStackUnwind = this.logStackUnwind.bind(this);
     this.parseCommandStateChange = this.parseCommandStateChange.bind(this);
     this.logCommandState = this.logCommandState.bind(this);
     this.dispose = this.dispose.bind(this);
@@ -56,8 +65,20 @@ export default class PlaybackLogger {
     this.logger.log(log);
   }
 
+  logStackPush(caller, callee) {
+    const log = new Log(`Running '${callee.name}', called by '${caller.name}'`);
+    log.setNotice();
+    this.logger.log(log);
+  }
+
+  logStackUnwind(caller, callee) {
+    const log = new Log(`Finished running '${callee.name}', returning to '${caller.name}'`);
+    log.setNotice();
+    this.logger.log(log);
+  }
+
   logCommandState(command, status) {
-    if (status && this.shouldLogCommand(command.command)) {
+    if (status && command && this.shouldLogCommand(command.command)) {
       const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
       let log = this.findCorrespondingLog(command.id);
       let shouldAddLog = false;
@@ -93,7 +114,7 @@ export default class PlaybackLogger {
   }
 
   shouldLogCommand(command) {
-    return command !== "echo";
+    return (command !== "echo" && command !== "run");
   }
 
   findCorrespondingLog(commandId) {
@@ -112,6 +133,7 @@ export default class PlaybackLogger {
 
   dispose() {
     this.playbackDisposer();
+    this.callstackDisposer();
     this.commandStateDisposer();
   }
 }
