@@ -70,16 +70,25 @@ export function saveProject(_project) {
 }
 
 function downloadProject(project) {
-  return exportProject(project).then(code => {
-    project.code = code;
-    Object.assign(project, Manager.emitDependencies());
+  if (process.env.NODE_ENV === "production") {
     return browser.downloads.download({
       filename: project.name + ".side",
       url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
       saveAs: true,
       conflictAction: "overwrite"
     });
-  });
+  } else {
+    return exportProject(project).then(code => {
+      project.code = code;
+      Object.assign(project, Manager.emitDependencies());
+      return browser.downloads.download({
+        filename: project.name + ".side",
+        url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
+        saveAs: true,
+        conflictAction: "overwrite"
+      });
+    });
+  }
 }
 
 function exportProject(project) {
