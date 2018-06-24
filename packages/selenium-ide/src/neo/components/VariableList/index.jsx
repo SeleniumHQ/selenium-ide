@@ -42,11 +42,6 @@ export default class VariableList extends React.Component {
     return (
       <div className="storeContainer">
         <div className="variables" >
-          <div className="value-header">
-            <div className="value">Values</div>
-            <div className="remarks"></div>
-          </div>
-
           <div className="value-list">
             {variables.storedVars.entries().sort().map((storedMap) => (
               <Variable
