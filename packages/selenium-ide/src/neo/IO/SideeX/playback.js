@@ -61,22 +61,29 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
+function setPlayingIndex() {
+  if (PlaybackState.currentPlayingIndex < 0) {
+    PlaybackState.setPlayingIndex(0);
+  } else {
+    PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
+  }
+}
+
+function callStackEmpty() {
+  return PlaybackState.callstack.length;
+}
+
 function executionLoop() {
-  (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  // reached the end
+  setPlayingIndex();
   if (didFinishQueue() || isStopping()) {
-    // is the callstack empty?
-    if (PlaybackState.callstack.length) {
+    if (callStackEmpty()) {
       PlaybackState.unwindTestCase();
     } else {
       return false;
     }
   }
   const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
-  // is command empty?
-  if (!command) {
-    return executionLoop();
-  }
+  if (!command) return executionLoop();
   // breakpoint
   PlaybackState.setCommandState(id, PlaybackStates.Pending);
   if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
@@ -84,9 +91,8 @@ function executionLoop() {
   // paused
   if (isStopping()) return false;
   if (isExtCommand(command)) {
-    let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return doDelay().then(() => (
-      (extCommand["do" + upperCase](xlateArgument(target), xlateArgument(value)))
+      (extCommand[extCommand.name(command)](xlateArgument(target), xlateArgument(value)))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
         }).then(executionLoop)
