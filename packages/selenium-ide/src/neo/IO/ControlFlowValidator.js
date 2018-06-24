@@ -21,18 +21,10 @@ export default class ControlFlowValidator {
   }
 
   process() {
-    if ((this.startsWithWhile()) && (this.endsWithEndWhile())) {
-      if (this.containsIf() && this.ifIsNotClosed()) {
-        return false;
-      } else if (this.hasIncompleteCommandSegments("if", "end")) {
-        return false;
-      } else {
-        return true;
-      }
-    } else if (this.startsWithIf() && this.endsWithEnd()) {
-      if (this.containsWhile() && this.whileIsNotClosed()) {
-        return false;
-      } else if (this.hasIncompleteCommandSegments("if", "end")) {
+    if ((this.startsWith("while") && this.endsWith("endWhile")) ||
+        (this.startsWith("if") && this.endsWith("end"))) {
+      if (this.hasIncompleteCommandSegments("if", "end") ||
+          this.hasIncompleteCommandSegments("while", "endWhile")) {
         return false;
       } else {
         return true;
@@ -40,6 +32,15 @@ export default class ControlFlowValidator {
     } else {
       return false;
     }
+  }
+
+
+  startsWith(command) {
+    return this.commandStack[0] === command;
+  }
+
+  endsWith(command) {
+    return this.commandStack[this.commandStack.length - 1] === command;
   }
 
   commandCount(commandName) {
@@ -50,35 +51,4 @@ export default class ControlFlowValidator {
     return (this.commandCount(openingKeyword) !== this.commandCount(closingKeyword));
   }
 
-  startsWithIf() {
-    return this.commandStack[0] === "if";
-  }
-
-  startsWithWhile() {
-    return this.commandStack[0] === "while";
-  }
-
-  containsIf() {
-    return this.commandStack.includes("if");
-  }
-
-  containsWhile() {
-    return this.commandStack.includes("while");
-  }
-
-  endsWithEnd() {
-    return this.commandStack[this.commandStack.length - 1] === "end";
-  }
-
-  endsWithEndWhile() {
-    return this.commandStack[this.commandStack.length - 1] === "endWhile";
-  }
-
-  whileIsNotClosed() {
-    return !this.commandStack.includes("endWhile");
-  }
-
-  ifIsNotClosed() {
-    return !this.commandStack.includes("end");
-  }
 }
