@@ -209,7 +209,7 @@ class TestRow extends React.Component {
 
     const rendered = <tr
       ref={node => {
-        if (node && this.props.new) {
+        if (node && this.props.new && !this.props.isDragging) {
           this.props.new();
           node.scrollIntoView();
         }
