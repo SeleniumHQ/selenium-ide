@@ -21,13 +21,16 @@ import uuidv4 from "uuid/v4";
 export default class Command {
   id = null;
   @observable comment = "";
-  @observable command = "";
-  @observable target = "";
-  @observable value = "";
+  @observable command;
+  @observable target;
+  @observable value;
   @observable isBreakpoint = false;
 
-  constructor(id = uuidv4()) {
+  constructor(id = uuidv4(), command, target, value) {
     this.id = id;
+    this.command = command || "";
+    this.target = target || "";
+    this.value = value || "";
     this.export = this.export.bind(this);
   }
 
