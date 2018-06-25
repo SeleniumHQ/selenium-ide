@@ -61,7 +61,7 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
-function setPlayingIndex() {
+function incrementPlayingIndex() {
   if (PlaybackState.currentPlayingIndex < 0) {
     PlaybackState.setPlayingIndex(0);
   } else {
@@ -69,14 +69,14 @@ function setPlayingIndex() {
   }
 }
 
-function callStackEmpty() {
-  return PlaybackState.callstack.length;
+function isCallStackEmpty() {
+  return !!PlaybackState.callstack.length;
 }
 
 function executionLoop() {
-  setPlayingIndex();
+  incrementPlayingIndex();
   if (didFinishQueue() || isStopping()) {
-    if (callStackEmpty()) {
+    if (isCallStackEmpty()) {
       PlaybackState.unwindTestCase();
     } else {
       return false;
@@ -92,7 +92,7 @@ function executionLoop() {
   if (isStopping()) return false;
   if (isExtCommand(command)) {
     return doDelay().then(() => (
-      (extCommand[extCommand.name(command)](xlateArgument(target), xlateArgument(value)))
+      (extCommand.get(command, target, value))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
         }).then(executionLoop)
