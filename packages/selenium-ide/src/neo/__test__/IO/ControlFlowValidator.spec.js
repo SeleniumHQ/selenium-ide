@@ -58,7 +58,7 @@ describe("Control Flow Validations", () => {
     expect(validator.process()).toBeTruthy();
   });
 
-  test.skip("if-end-while-endwhile block", () => {
+  test("if-end-while-endwhile block", () => {
     let validator = new ControlFlowValidator(["if", "end", "while", "endWhile"]);
     expect(validator.process()).toBeTruthy();
   });
