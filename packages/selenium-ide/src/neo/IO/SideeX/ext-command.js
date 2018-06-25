@@ -21,7 +21,6 @@ import { recorder } from "./editor";
 import Debugger from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
-import { xlateArgument } from "./formatCommand";
 
 const parsedUA = parser(window.navigator.userAgent);
 
@@ -366,9 +365,9 @@ export default class ExtCommand {
     return false;
   }
 
-  get(command, target, value) {
+  name(command) {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    return this["do" + upperCase](xlateArgument(target), xlateArgument(value));
+    return "do" + upperCase;
   }
 }
 

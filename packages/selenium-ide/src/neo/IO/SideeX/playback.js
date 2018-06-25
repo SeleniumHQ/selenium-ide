@@ -92,7 +92,7 @@ function executionLoop() {
   if (isStopping()) return false;
   if (isExtCommand(command)) {
     return doDelay().then(() => (
-      (extCommand.get(command, target, value))
+      (extCommand[extCommand.name(command)](xlateArgument(target), xlateArgument(value)))
         .then(() => {
           PlaybackState.setCommandState(id, PlaybackStates.Passed);
         }).then(executionLoop)
