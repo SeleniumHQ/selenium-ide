@@ -16,29 +16,20 @@
 // under the License.
 
 import React from "react";
-import PropTypes from "prop-types";
-import { observer } from "mobx-react";
-import LogMessage from "../LogMessage";
-import "./style.css";
+import { renderIntoDocument, fireEvent, cleanup } from "react-testing-library";
+import TabBar from "../../../components/TabBar";
 
-@observer
-export default class LogList extends React.Component {
-  componentDidUpdate() {
-    this.props.scrollTo(10000);
-  }
-  render() {
-    return (
-      <div className="logs">
-        <ul>
-          {this.props.output.logs.map((log) => (
-            <LogMessage key={log.id} log={log} />
-          ))}
-        </ul>
-      </div>
-    );
-  }
-  static propTypes = {
-    output: PropTypes.object,
-    scrollTo: PropTypes.func
-  };
-}
+describe("<TabBar />", () => {
+  afterEach(cleanup);
+  it("should return the selected tab name when selected", () => {
+    const handleTabChange = (passedSelectedTab) => {
+      expect(passedSelectedTab).toBe("Reference");
+    };
+    const { container } = renderIntoDocument(<TabBar tabs={[{ name: "Log" }, { name: "Reference" }]} tabChanged={handleTabChange}/>);
+    const referenceTab = container.querySelector(".reference");
+    fireEvent(referenceTab, new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true
+    }));
+  });
+});

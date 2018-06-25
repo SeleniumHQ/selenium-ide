@@ -18,6 +18,10 @@
     "postinstall": "lerna bootstrap"
   },
   "jest": {
+    "moduleNameMapper": {
+      "^.+\\.(css|scss)$": "identity-obj-proxy"
+    },
+    "setupTestFrameworkScriptFile": "./packages/selenium-ide/scripts/jest/test.config.js",
     "testMatch": [
       "**/packages/**/__test?(s)__/**/*.js?(x)"
     ]
@@ -29,6 +33,7 @@
     "eslint-plugin-class-property": "^1.1.0",
     "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-react": "^7.5.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^23.1.0",
     "lerna": "^2.6.0",
     "web-ext": "^2.4.0"

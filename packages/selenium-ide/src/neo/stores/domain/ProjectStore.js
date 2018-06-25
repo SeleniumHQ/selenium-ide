@@ -20,6 +20,7 @@ import uuidv4 from "uuid/v4";
 import naturalCompare from "string-natural-compare";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
+import modify from "../../side-effects/modify";
 
 export default class ProjectStore {
   @observable id = uuidv4();
@@ -33,6 +34,7 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
+    modify(this);
     this.toJS = this.toJS.bind(this);
   }
 
@@ -70,8 +72,11 @@ export default class ProjectStore {
     this.name = name.replace(/<[^>]*>/g, ""); // firefox adds unencoded html elements to the string, strip them
   }
 
-  @action.bound setModified() {
-    this.modified = true;
+  @action.bound setModified(modified = true) {
+    this.modified = modified;
+    if (!modified) {
+      modify(this);
+    }
   }
 
   @action.bound createSuite(...argv) {
@@ -138,7 +143,7 @@ export default class ProjectStore {
     this._urls.replace(jsRep.urls);
     this.plugins.replace(jsRep.plugins);
     this.id = jsRep.id || uuidv4();
-    this.modified = false;
+    this.setModified(false);
   }
 
   toJS() {
