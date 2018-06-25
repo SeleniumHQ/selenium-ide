@@ -18,6 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import { observe } from "mobx";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import VariableList from "../../components/VariableList";
@@ -25,13 +26,11 @@ import ClearButton from "../../components/ActionButtons/Clear";
 import AddButton from "../../components/ActionButtons/Add";
 import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
-import "./style.css";
 import CommandReference from "../../components/CommandReference";
 import variables from "../../stores/view/Variables";
 import UiState from "../../stores/view/UiState";
-import { observer } from "mobx-react";
-import { observe } from "mobx";
 import { Commands } from "../../models/Command";
+import "./style.css";
 
 @observer
 export default class Console extends React.Component {
@@ -72,12 +71,13 @@ export default class Console extends React.Component {
     this.setState({
       isAddingVariable: isAdding
     });
+  }
   scroll(to) {
     this.viewport.scrollTo(0, to);
   }
   render() {
     const command = UiState.selectedCommand ? Commands.list.get(UiState.selectedCommand.command) : undefined;
-    const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }];
+    const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }, { name: "Variables", unread: false }];
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
