@@ -168,20 +168,24 @@ class PluginManager {
   }
 
   emitMessage(message, keepAliveCB) {
-    return Promise.all(this.plugins.map(plugin => {
-      let didReachTimeout = false;
-      const emitInterval = setInterval(() => {
-        didReachTimeout = true;
-        keepAliveCB(plugin);
-      }, TIMEOUT);
-      return sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err))).then(r => {
-        clearInterval(emitInterval);
-        if (didReachTimeout) {
-          keepAliveCB(plugin, true);
-        }
-        return r;
-      });
-    }));
+    if (this.plugins.length) {
+      return Promise.all(this.plugins.map(plugin => {
+        let didReachTimeout = false;
+        const emitInterval = setInterval(() => {
+          didReachTimeout = true;
+          keepAliveCB(plugin);
+        }, TIMEOUT);
+        return sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err))).then(r => {
+          clearInterval(emitInterval);
+          if (didReachTimeout) {
+            keepAliveCB(plugin, true);
+          }
+          return r;
+        });
+      }));
+    } else {
+      return Promise.resolve([]);
+    }
   }
 }
 
