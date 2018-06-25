@@ -1,9 +1,4 @@
 .value-list {
-  display: table-row-group;
-}
-
-.variables {
-  display: table;
   border: 2px solid #FFFCFE;
   width: 100%;
   text-align: left;
@@ -12,7 +7,6 @@
 }
 
 .storeContainer  {
-  padding: 0 10px;
   overflow-y: auto;
   overflow-x: hidden;
 }
