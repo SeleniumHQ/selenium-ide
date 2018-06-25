@@ -21,10 +21,8 @@ export default class ControlFlowValidator {
   }
 
   process() {
-    if ((this.startsWith("while") && this.endsWith("endWhile")) ||
-        (this.startsWith("if") && this.endsWith("end"))) {
-      if (this.hasIncompleteCommandSegments("if", "end") ||
-          this.hasIncompleteCommandSegments("while", "endWhile")) {
+    if (this.isBoundByCompleteSegments()) {
+      if (this.hasIncompleteCommandSegments()) {
         return false;
       } else {
         return true;
@@ -47,8 +45,13 @@ export default class ControlFlowValidator {
     return this.commandStack.filter(command => command === commandName).length;
   }
 
-  hasIncompleteCommandSegments(openingKeyword, closingKeyword) {
-    return (this.commandCount(openingKeyword) !== this.commandCount(closingKeyword));
+  hasIncompleteCommandSegments() {
+    return (this.commandCount("if") !== this.commandCount("end") ||
+            this.commandCount("while") !== this.commandCount("endWhile"));
   }
 
+  isBoundByCompleteSegments() {
+    return (this.startsWith("while") && this.endsWith("endWhile") ||
+            this.startsWith("if") && this.endsWith("end"));
+  }
 }

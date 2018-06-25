@@ -17,99 +17,118 @@
 
 import ControlFlowValidator from "../../IO/ControlFlowValidator";
 
-describe("Control Flow Valdiator", () => {
-  it("should invalidate a if block", () => {
-    let validator = new ControlFlowValidator(["if"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it("should validate an if-end block", () => {
+describe("Control Flow Validations", () => {
+  test("if-end block", () => {
     let validator = new ControlFlowValidator(["if", "end"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should invalidate an end-if block", () => {
-    let validator = new ControlFlowValidator(["end", "if"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it("should validate an if-if-end-end block", () => {
+  test("if-if-end-end block", () => {
     let validator = new ControlFlowValidator(["if", "if", "end", "end"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should invalidate an if-if-end block", () => {
-    let validator = new ControlFlowValidator(["if", "if", "end"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it("should validate an if-else-end block", () => {
+  test("if-else-end block", () => {
     let validator = new ControlFlowValidator(["if", "else", "end"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should validate an if-elseif-end block", () => {
+  test("if-elseif-end block", () => {
     let validator = new ControlFlowValidator(["if", "elseIf", "end"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should validate an if-elseif-elseif-elseif-end block", () => {
+  test("if-elseif-elseif-elseif-end block", () => {
     let validator = new ControlFlowValidator(["if", "elseIf", "elseIf", "elseIf", "end"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should invalidate an else-if-end block", () => {
-    let validator = new ControlFlowValidator(["else", "if", "end"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it.skip("should invalidate an if-else-elseif-end block", () => {
-    let validator = new ControlFlowValidator(["if", "else", "elseIf", "end"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it("should validate an if-while-endwhile-end block", () => {
+  test("if-while-endwhile-end block", () => {
     let validator = new ControlFlowValidator(["if", "while", "endWhile", "end"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should invalidate an if-while-end-endwhile block", () => {
-    let validator = new ControlFlowValidator(["if", "while", "end", "endWhile"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it.skip("should invalidate an if-while-end block", () => {
-    let validator = new ControlFlowValidator(["if", "while", "end"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it("should validate a while-endwhile block", () => {
+  test("while-endwhile block", () => {
     let validator = new ControlFlowValidator(["while", "endWhile"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should invalidate a while block", () => {
-    let validator = new ControlFlowValidator(["while"]);
-    expect(validator.process()).toBeFalsy();
-  });
-
-  it("should validate a while-if-end-endwhile block", () => {
+  test("while-if-end-endwhile block", () => {
     let validator = new ControlFlowValidator(["while", "if", "end", "endWhile"]);
     expect(validator.process()).toBeTruthy();
   });
 
-  it("should invalidate a while-if-endwhile-end block", () => {
+  test.skip("if-end-while-endwhile block", () => {
+    let validator = new ControlFlowValidator(["if", "end", "while", "endWhile"]);
+    expect(validator.process()).toBeTruthy();
+  });
+});
+
+describe("Control Flow Invalidations", () => {
+  test.skip("returns command that invalidates segment", () => {
+  });
+
+  test.skip("returns commands that invalidate segment", () => {
+  });
+
+  test("if block", () => {
+    let validator = new ControlFlowValidator(["if"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("end-if block", () => {
+    let validator = new ControlFlowValidator(["end", "if"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("if-if-end block", () => {
+    let validator = new ControlFlowValidator(["if", "if", "end"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("else-if-end block", () => {
+    let validator = new ControlFlowValidator(["else", "if", "end"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("if-while-end-endwhile block", () => {
+    let validator = new ControlFlowValidator(["if", "while", "end", "endWhile"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("while-if-endwhile-end block", () => {
     let validator = new ControlFlowValidator(["while", "if", "endWhile", "end"]);
     expect(validator.process()).toBeFalsy();
   });
 
-  it("should invalidate a while-if-endwhile block", () => {
+  test("while-if-endwhile block", () => {
     let validator = new ControlFlowValidator(["while", "if", "endWhile"]);
     expect(validator.process()).toBeFalsy();
   });
 
-  it.skip("should invalidate a while-else-endwhile block", () => {
+  test("while block", () => {
+    let validator = new ControlFlowValidator(["while"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("if-while-end block", () => {
+    let validator = new ControlFlowValidator(["if", "while", "end"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test("if-end-while-if-endwhile block", () => {
+    let validator = new ControlFlowValidator(["if", "end", "while", "if", "endWhile"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test.skip("if-else-elseif-end block", () => {
+    let validator = new ControlFlowValidator(["if", "else", "elseIf", "end"]);
+    expect(validator.process()).toBeFalsy();
+  });
+
+  test.skip("while-else-endwhile block", () => {
     let validator = new ControlFlowValidator(["while", "else", "endWhile"]);
     expect(validator.process()).toBeFalsy();
   });
+
 });
