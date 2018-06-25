@@ -91,7 +91,6 @@ export default class Variable extends React.Component {
               onKeyDown={this.handleKeyDown}
               onBlur={this.handleChanged}/>}
         </div>
-        <div className="cell col">:</div>
         <div className="cell variable">
           {this.props.isAdding ?
             <input
