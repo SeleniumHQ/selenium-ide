@@ -65,7 +65,7 @@ export default class Console extends React.Component {
     this.setState({
       tab
     });
-    this.props.restoreSize();
+    if(this.props.restoreSize) this.props.restoreSize();
   }
   addVariableClicked(isAdding) {
     this.setState({
