@@ -50,9 +50,10 @@ export default class ExtCommand {
       }
     };
 
-    this.frameLocationMessageHandler = (message, sender) => {
+    this.frameLocationMessageHandler = (message, sender, sendResponse) => {
       if (message.frameLocation) {
         this.setFrame(sender.tab.id, message.frameLocation, sender.frameId);
+        sendResponse(true);
       }
     };
 

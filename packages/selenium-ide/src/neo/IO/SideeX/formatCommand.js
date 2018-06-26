@@ -65,14 +65,17 @@ function string(value) {
   }
 }
 
-function handleFormatCommand(message) {
+function handleFormatCommand(message, sender, sendResponse) {
   if (message.storeStr) {
     variables.addVariable(message.storeVar, message.storeStr);
+    return sendResponse(true);
   } else if (message.echoStr) {
     logger.log("echo: " + message.echoStr);
+    return sendResponse(true);
   } else if (message.log && output.logs[output.logs.length - 1].message.indexOf(message.log.message) === -1) {
     // this check may be dangerous, especially if something else is bombarding the logs
     logger[message.log.type || "log"](message.log.message);
+    return sendResponse(true);
   }
 }
 
