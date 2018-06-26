@@ -41,7 +41,12 @@ export default class VariableList extends React.Component {
     const variables = this.props.variables;
     return (
       <ul className="value-list">
-        <li className="value-header variable"><strong className="name">Name</strong><strong className="value">Value</strong><div className="deleteBtn"/></li>
+        {variables.storedVars.size == 0 ? null :
+          <li className="value-header variable">
+            <strong className="name">Name</strong>
+            <strong className="value">Value</strong>
+            <div className="deleteBtn"/>
+          </li>}
         {variables.storedVars.entries().sort().map((storedMap) => (
           <Variable
             key={Math.random()}
