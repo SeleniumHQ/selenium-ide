@@ -5,8 +5,6 @@
 }
 
 .variable .name, .variable .value {
-  line-height: 14px;
-  width: 100%;
   float: left;
   padding: 5px;
   width: 48%;
