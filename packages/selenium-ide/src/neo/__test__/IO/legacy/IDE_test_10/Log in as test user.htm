@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://stage.local.com/" />
+<title>Log in as test user</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Log in as test user</td></tr>
+</thead><tbody>
+<!--======================================================Log in as test user=========================================================-->
+<tr>
+	<td>open</td>
+	<td>/user/logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<!--Log in as test user-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='user-register-button']/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[6]/button/span[3][contains(text(), 'Se connecter')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=edit-name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=edit-name</td>
+	<td>${autotest_user_email}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=login-pass</td>
+	<td>${autotest_user_password}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-pass</td>
+	<td>${KEY_ENTER}</td>
+</tr>
+<!--Storage of city-->
+<tr>
+	<td>store</td>
+	<td>Paris</td>
+	<td>SRISAutoCity</td>
+</tr>
+<!--Save city in cookie-->
+<!--Verification that user is log in -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@href='/user/logout']/span</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
