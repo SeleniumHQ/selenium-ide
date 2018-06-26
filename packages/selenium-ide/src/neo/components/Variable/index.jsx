@@ -18,7 +18,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import ContentEditable from "react-contenteditable";
 import DeleteButton from "../ActionButtons/Delete";
 import { observer } from "mobx-react";
 import "./style.css";
@@ -77,30 +76,30 @@ export default class Variable extends React.Component {
         {this.props.isAdding ?
           <input
             ref={(input) => { this.input = input; }}
-            className="name"
+            className="name isAdding"
             onChange={this.keyChanged}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged}/>
           :
-          <ContentEditable
+          <input
             className={classNames("name", { "editable": this.props.isStop })}
             disabled={this.props.isStop ? false : true}
             onChange={this.keyChanged}
-            html={this.props.keyVar}
+            value={this.props.keyVar}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged}/>}
         {this.props.isAdding ?
           <input
-            className="value"
+            className="value isAdding"
             onChange={this.valueChanged}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged} />
           :
-          <ContentEditable
+          <input
             className={classNames("value", { "editable": this.props.isStop })}
             disabled={this.props.isStop ? false : true}
             onChange={this.valueChanged}
-            html={this.props.value}
+            value={this.props.value}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged} />}
         <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>

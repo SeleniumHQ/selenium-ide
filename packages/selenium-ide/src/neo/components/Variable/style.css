@@ -19,9 +19,17 @@
   opacity: 1;
 }
 
-.variable .editable:focus {
-  border: 1px #DCDCDC solid;
+.variable input:disabled {
+  background-color: transparent;
+}
+
+.variable input:not(.isAdding) {
   cursor: initial;
+  outline: 0;
+  border:none;
+}
+.variable .editable:focus {
+  border: 1px #4ea1ff solid;
   outline: 0;
 }
 

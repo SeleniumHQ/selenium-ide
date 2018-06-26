@@ -40,32 +40,34 @@ export default class VariableList extends React.Component {
   render() {
     const variables = this.props.variables;
     return (
-      <ul className="value-list">
-        {variables.storedVars.size == 0 ? null :
-          <li className="value-header variable">
-            <strong className="name">Name</strong>
-            <strong className="value">Value</strong>
-            <div className="deleteBtn"/>
-          </li>}
-        {variables.storedVars.entries().sort().map((storedMap) => (
-          <Variable
-            key={Math.random()}
-            keyVar={storedMap[0]}
-            value={storedMap[1]}
-            add={this.addVariable}
-            delete={this.deleteVariable}
-            isStop={variables.isStop}
-          />
-        ))}
-        { this.props.isAdding ?
-          <Variable
-            add={this.addVariable}
-            delete={this.deleteVariable}
-            isAdding={this.props.isAdding}
-            setIsAdding={this.props.setIsAdding}
-            isStop={variables.isStop}
-          /> : null}
-      </ul>
+      <form onSubmit={(e) => { e.preventDefault(); }}>
+        <ul className="value-list">
+          {variables.storedVars.size == 0 ? null :
+            <li className="value-header variable">
+              <strong className="name">Name</strong>
+              <strong className="value">Value</strong>
+              <div className="deleteBtn"/>
+            </li>}
+          {variables.storedVars.entries().sort().map((storedMap) => (
+            <Variable
+              key={Math.random()}
+              keyVar={storedMap[0]}
+              value={storedMap[1]}
+              add={this.addVariable}
+              delete={this.deleteVariable}
+              isStop={variables.isStop}
+            />
+          ))}
+          { this.props.isAdding ?
+            <Variable
+              add={this.addVariable}
+              delete={this.deleteVariable}
+              isAdding={this.props.isAdding}
+              setIsAdding={this.props.setIsAdding}
+              isStop={variables.isStop}
+            /> : null}
+        </ul>
+      </form>
     );
   }
   static propTypes = {
