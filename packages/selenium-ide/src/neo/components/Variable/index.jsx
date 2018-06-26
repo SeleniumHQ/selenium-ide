@@ -73,44 +73,38 @@ export default class Variable extends React.Component {
   }
   render() {
     return (
-      <div className="variable">
-        <div className="name">
-          {this.props.isAdding ?
-            <input
-              ref={(input) => { this.input = input; }}
-              className="edit"
-              onChange={this.keyChanged}
-              onKeyDown={this.handleKeyDown}
-              onBlur={this.handleChanged}/>
-            :
-            <ContentEditable
-              className={classNames("edit", { "editable": this.props.isStop })}
-              disabled={this.props.isStop ? false : true}
-              onChange={this.keyChanged}
-              html={this.props.keyVar}
-              onKeyDown={this.handleKeyDown}
-              onBlur={this.handleChanged}/>}
-        </div>
-        <div className="value">
-          {this.props.isAdding ?
-            <input
-              className="edit"
-              onChange={this.valueChanged}
-              onKeyDown={this.handleKeyDown}
-              onBlur={this.handleChanged} />
-            :
-            <ContentEditable
-              className={classNames("edit", { "editable": this.props.isStop })}
-              disabled={this.props.isStop ? false : true}
-              onChange={this.valueChanged}
-              html={this.props.value}
-              onKeyDown={this.handleKeyDown}
-              onBlur={this.handleChanged} />}
-        </div>
-        <div className="del">
-          <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>
-        </div>
-      </div>
+      <li className="variable">
+        {this.props.isAdding ?
+          <input
+            ref={(input) => { this.input = input; }}
+            className="name"
+            onChange={this.keyChanged}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleChanged}/>
+          :
+          <ContentEditable
+            className={classNames("name", { "editable": this.props.isStop })}
+            disabled={this.props.isStop ? false : true}
+            onChange={this.keyChanged}
+            html={this.props.keyVar}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleChanged}/>}
+        {this.props.isAdding ?
+          <input
+            className="value"
+            onChange={this.valueChanged}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleChanged} />
+          :
+          <ContentEditable
+            className={classNames("value", { "editable": this.props.isStop })}
+            disabled={this.props.isStop ? false : true}
+            onChange={this.valueChanged}
+            html={this.props.value}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleChanged} />}
+        <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>
+      </li>
     );
   }
   static propTypes = {

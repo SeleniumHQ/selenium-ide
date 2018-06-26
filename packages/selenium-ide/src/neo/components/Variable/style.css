@@ -4,20 +4,17 @@
   display: flex;
 }
 
-.variable:hover {
-  background-color: #F3F3F3;
-}
 .variable .name, .variable .value {
+  line-height: 14px;
+  width: 100%;
   float: left;
   padding: 5px;
   width: 48%;
   text-align: left;
 }
 
-.variable .edit {
-  padding: 0;
-  line-height: 14px;
-  width: 100%;
+.variable:hover {
+  background-color: #F3F3F3;
 }
 
 .variable:hover .deleteBtn {
@@ -30,11 +27,8 @@
   outline: 0;
 }
 
-.variable .del {
+.variable .deleteBtn {
   width: 4%;
-}
-
-.deleteBtn {
   font-size: 15px;
   opacity: 0;
   height: 20px;

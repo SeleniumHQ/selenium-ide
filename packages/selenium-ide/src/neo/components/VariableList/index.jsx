@@ -40,7 +40,7 @@ export default class VariableList extends React.Component {
   render() {
     const variables = this.props.variables;
     return (
-      <div className="value-list">
+      <ul className="value-list">
         {variables.storedVars.entries().sort().map((storedMap) => (
           <Variable
             key={Math.random()}
@@ -59,7 +59,7 @@ export default class VariableList extends React.Component {
             setIsAdding={this.props.setIsAdding}
             isStop={variables.isStop}
           /> : null}
-      </div>
+      </ul>
     );
   }
   static propTypes = {
