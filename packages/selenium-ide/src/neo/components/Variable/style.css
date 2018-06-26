@@ -11,7 +11,7 @@
   text-align: left;
 }
 
-.variable:hover {
+.variable:not(.value-header):hover {
   background-color: #F3F3F3;
 }
 
