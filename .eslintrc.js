@@ -57,6 +57,25 @@ module.exports = {
     ],
     "no-var": [
       "error"
+    ],
+    "no-multi-spaces": [
+      "error"
+    ],
+    "key-spacing": [
+      "error",
+      {
+        "beforeColon": false
+      }
+    ],
+    "space-infix-ops": [
+      "error"
+    ],
+    "comma-spacing": [
+      "error"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
     ]
   }
 };

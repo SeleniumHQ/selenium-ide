@@ -17,8 +17,11 @@
 
 import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
-import record from  "./record";
+import record from "./record";
 import { sendRecordNotification } from "../notifications";
+import { Logger, Channels } from "../../stores/view/Logs";
+
+const logger = new Logger(Channels.PLAYBACK);
 
 function getSelectedCase() {
   return {
@@ -32,6 +35,10 @@ function hasRecorded() {
 
 export default class BackgroundRecorder {
   constructor() {
+    // The only way to know if a tab is recordable is to assume it is, and verify it sends a record
+    // In order to do that we need to optimistically attach the recorder to all tabs, and try to
+    // remove it, even if it's in a priviledged tab
+    this.lastAttachedTabId = undefined;
     this.currentRecordingTabId = {};
     this.currentRecordingWindowId = {};
     this.currentRecordingFrameLocation = {};
@@ -44,10 +51,28 @@ export default class BackgroundRecorder {
     this.selfWindowId = -1;
     this.attached = false;
     this.rebind();
+    browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler);
+  }
+
+  attachToTab(tabId) {
+    browser.tabs.sendMessage(tabId, { attachRecorder: true }).catch();
+  }
+
+  detachFromTab(tabId) {
+    browser.tabs.sendMessage(tabId, { detachRecorder: true }).catch();
+  }
+
+  reattachToTab(tabId) {
+    if (this.lastAttachedTabId && this.lastAttachedTabId !== tabId) {
+      this.detachFromTab(this.lastAttachedTabId);
+    }
+    this.attachToTab(tabId);
+    this.lastAttachedTabId = tabId;
   }
 
   // TODO: rename method
   tabsOnActivatedHandler(activeInfo) {
+    this.reattachToTab(activeInfo.tabId);
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -81,6 +106,14 @@ export default class BackgroundRecorder {
   }
 
   windowsOnFocusChangedHandler(windowId) {
+    browser.tabs.query({
+      active: true,
+      windowId
+    }).then((tabs) => {
+      if (tabs.length) {
+        this.reattachToTab(tabs[0].id);
+      }
+    });
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -167,6 +200,7 @@ export default class BackgroundRecorder {
   }
 
   webNavigationOnCreatedNavigationTargetHandler(details) {
+    this.reattachToTab(details.tabId);
     let testCase = getSelectedCase();
     if (!testCase)
       return;
@@ -189,9 +223,16 @@ export default class BackgroundRecorder {
     }
   }
 
-  addCommandMessageHandler(message, sender, sendRequest) { // eslint-disable-line no-unused-vars
+  attachRecorderRequestHandler(message, sender, sendResponse) {
+    if (message.attachRecorderRequest) {
+      return sendResponse(this.attached);
+    }
+  }
+
+  addCommandMessageHandler(message, sender, sendResponse) {
     if (!message.command || this.openedWindowIds[sender.tab.windowId] == undefined)
       return;
+    sendResponse(true);
 
     let testCaseId = getSelectedCase().id;
 
@@ -244,16 +285,15 @@ export default class BackgroundRecorder {
       this.currentRecordingFrameLocation[testCaseId] = message.frameLocation;
     }
     if (message.command.includes("Value") && typeof message.value === "undefined") {
-      // TODO: change this to normal logging when extensibility is merged
-      window.addLog("Error: This element does not have property 'value'. Please change to use storeText command.");
+      logger.error("This element does not have property 'value'. Please change to use storeText command.");
       return;
     } else if(message.command.includes("Text") && message.value === "") {
-      window.addLog("Error: This element does not have property 'Text'. Please change to use storeValue command.");
+      logger.error("This element does not have property 'Text'. Please change to use storeValue command.");
       return;
     } else if (message.command.includes("store")) {
       // In Google Chrome, window.prompt() must be triggered in
       // an actived tabs of front window, so we let panel window been focused
-      browser.windows.update(this.selfWindowId, {focused: true})
+      browser.windows.update(this.selfWindowId, { focused: true })
         .then(function() {
           // Even if window has been focused, window.prompt() still failed.
           // Delay a little time to ensure that status has been updated
@@ -293,6 +333,7 @@ export default class BackgroundRecorder {
     this.tabsOnRemovedHandler = this.tabsOnRemovedHandler.bind(this);
     this.webNavigationOnCreatedNavigationTargetHandler = this.webNavigationOnCreatedNavigationTargetHandler.bind(this);
     this.addCommandMessageHandler = this.addCommandMessageHandler.bind(this);
+    this.attachRecorderRequestHandler = this.attachRecorderRequestHandler.bind(this);
   }
 
   attach() {
@@ -311,6 +352,8 @@ export default class BackgroundRecorder {
     if (!this.attached) {
       return;
     }
+    this.detachFromTab(this.lastAttachedTabId);
+    this.lastAttachedTabId = undefined;
     this.attached = false;
     browser.tabs.onActivated.removeListener(this.tabsOnActivatedHandler);
     browser.windows.onFocusChanged.removeListener(this.windowsOnFocusChangedHandler);

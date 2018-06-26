@@ -15,11 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Command, { Commands, CommandsValues } from "../../models/Command";
+import Command, { Commands } from "../../models/Command";
 
 describe("Command", () => {
   it("should generate and id", () => {
     expect((new Command()).id).toBeDefined();
+  });
+  it("should set basic values in constructor", () => {
+    const c = "click at";
+    const t = "button";
+    const v = "32, 21";
+    const command = new Command(undefined, c, t, v);
+    expect(command.command).toBe(c);
+    expect(command.target).toBe(t);
+    expect(command.value).toBe(v);
+    expect(command.id).toBeDefined();
   });
   it("should set a comment", () => {
     const command = new Command();
@@ -28,8 +38,8 @@ describe("Command", () => {
   });
   it("should set a command", () => {
     const command = new Command();
-    command.setCommand(Commands.open);
-    expect(command.command).toBe(Commands.open);
+    command.setCommand(Commands.values.open);
+    expect(command.command).toBe(Commands.values.open);
   });
   it("should be a valid command", () => {
     const command = new Command();
@@ -118,11 +128,27 @@ describe("Command", () => {
 
 describe("Commands enum", () => {
   it("should contains only strings as values", () => {
-    Object.keys(Commands).forEach(command => {
-      expect(Commands[command].constructor.name).toBe("String");
+    Commands.list.forEach(commandInfo => {
+      expect(commandInfo.name.constructor.name).toBe("String");
     });
   });
-  it("it should traverse through the reverse dictionary", () => {
-    expect(Commands[0]).toBe(Commands[CommandsValues[Commands[0]]]);
+  it("should traverse through the reverse dictionary", () => {
+    Commands.list.forEach((commandInfo) => {
+      expect(commandInfo.name).toBe(Commands.list.get(Commands.values[commandInfo.name]).name);
+    });
+    expect(Commands.list[0]).toBe(Commands[Commands.values[Commands[0]]]);
+  });
+  it("should add a command to the list", () => {
+    let key = "test", value = { name: "a friendly test" }, length = Commands.array.length;
+    Commands.addCommand(key, value);
+    expect(Commands.list.get(key)).toEqual(value);
+    expect(Commands.array.length).toBe(length + 1);
+  });
+  it("should throw if trying to add a command that already exists", () => {
+    let key = "dontDoThisTwice", value = "this shouldnt happen";
+    Commands.addCommand(key, value);
+    expect(() => {
+      Commands.addCommand(key, value);
+    }).toThrowError(`Command with the id ${key} already exists`);
   });
 });

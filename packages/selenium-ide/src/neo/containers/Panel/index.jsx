@@ -29,27 +29,28 @@ import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
-import modify from "../../side-effects/modify";
 import SuiteDropzone from "../../components/SuiteDropzone";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
 import Console from "../Console";
 import Modal from "../Modal";
+import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
-import "../../styles/markdown.css";
 
-import { loadProject, exportProject, saveProject } from "../../IO/filesystem";
+import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
 if (process.env.NODE_ENV !== "test") {
   require("../../IO/SideeX/record");
   require("../../IO/SideeX/playback");
+  const api = require("../../../api");
+  browser.runtime.onMessage.addListener(api.default);
 }
 
 if (parser(window.navigator.userAgent).os.name === "Windows") {
@@ -70,8 +71,6 @@ if (process.env.NODE_ENV === "production") {
   seed(project, 0);
 }
 
-modify(project);
-
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
   // browser. windows. create () displays blank windows (panel, popup or detached_panel)
@@ -91,7 +90,9 @@ function firefox57WorkaroundForBlankPanel () {
   });
 }
 
-firefox57WorkaroundForBlankPanel();
+if (browser.windows) {
+  firefox57WorkaroundForBlankPanel();
+}
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
@@ -161,7 +162,11 @@ firefox57WorkaroundForBlankPanel();
             minSize={UiState.minContentHeight}
             maxSize={UiState.maxContentHeight}
             size={UiState.windowHeight - UiState.consoleHeight}
-            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
+            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}
+            style={{
+              position: "initial"
+            }}
+          >
             <div className="wrapper">
               <ProjectHeader
                 title={this.state.project.name}
@@ -169,9 +174,8 @@ firefox57WorkaroundForBlankPanel();
                 changeName={this.state.project.changeName}
                 load={loadProject.bind(undefined, project)}
                 save={() => saveProject(project)}
-                export={() => exportProject(project)}
               />
-              <div className={classNames("content", {dragging: UiState.navigationDragging})}>
+              <div className={classNames("content", { dragging: UiState.navigationDragging })}>
                 <SplitPane
                   split="vertical"
                   minSize={UiState.minNavigationWidth}
@@ -198,9 +202,10 @@ firefox57WorkaroundForBlankPanel();
                 </SplitPane>
               </div>
             </div>
-            <Console height={UiState.consoleHeight} />
+            <Console height={UiState.consoleHeight} restoreSize={UiState.restoreConsoleSize} />
           </SplitPane>
           <Modal project={this.state.project} />
+          <Changelog />
           <Tooltip />
         </SuiteDropzone>
       </div>

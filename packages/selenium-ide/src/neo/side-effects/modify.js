@@ -29,7 +29,7 @@ function isDomainModel(object) {
 export default function(project) {
   let disposer = spy((event) => {
     if (!project.modified && isDomainModel(event.object) && event.type === "action" && event.name !== "setModified") {
-      project.setModified();
+      project.setModified(true);
     } else if (project.modified) {
       setTimeout(disposer, 0);
     }

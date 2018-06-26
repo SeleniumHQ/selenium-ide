@@ -22,9 +22,10 @@ describe("suite emitter", () => {
     const suite = {
       id: "1",
       name: "example suite",
+      timeout: "30",
       tests: []
     };
-    return expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`describe("${suite.name}", () => {});`);
+    return expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {});`);
   });
   it("should emit a suite with a single empty test", () => {
     const tests = {
@@ -37,9 +38,10 @@ describe("suite emitter", () => {
     const suite = {
       id: "1",
       name: "example suite",
+      timeout: "30",
       tests: ["1"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
   it("should emit a suite with multiple empty tests", () => {
     const tests = {
@@ -61,9 +63,48 @@ describe("suite emitter", () => {
     const suite = {
       id: "1",
       name: "example suite",
+      timeout: "30",
       tests: ["1", "2", "3"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`describe("${suite.name}", () => {it("${tests["1"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["2"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});it("${tests["3"].name}", () => {const driver = Runner.getDriver();return driver.then(() => {return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});});`);
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+  });
+  it("should emit a parallel suite", () => {
+    const tests = {
+      "1": {
+        id: "1",
+        name: "example test case",
+        commands: []
+      },
+      "2": {
+        id: "2",
+        name: "second test case",
+        commands: []
+      },
+      "3": {
+        id: "3",
+        name: "third test case",
+        commands: []
+      }};
+    const suite = {
+      id: "1",
+      name: "example suite",
+      timeout: "30",
+      parallel: true,
+      tests: ["1", "2", "3"]
+    };
+    return expect(SuiteEmitter.emit(suite, tests)).resolves.toEqual([
+      {
+        name: tests["1"].name,
+        code: `jest.setTimeout(30000);test("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+      },
+      {
+        name: tests["2"].name,
+        code: `jest.setTimeout(30000);test("${tests["2"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+      },
+      {
+        name: tests["3"].name,
+        code: `jest.setTimeout(30000);test("${tests["3"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+      }]);
   });
   it("should reject a suite with failed tests", () => {
     const tests = {
@@ -93,6 +134,7 @@ describe("suite emitter", () => {
     const suite = {
       id: "1",
       name: "failed suite",
+      timeout: "30",
       tests: ["1", "2"]
     };
     return expect(SuiteEmitter.emit(suite, tests)).rejects.toMatchObject({
@@ -104,7 +146,7 @@ describe("suite emitter", () => {
             {
               command: "fail",
               index: 1,
-              message: "Unknown command fail",
+              message: new Error("Unknown command fail"),
               target: "",
               value: ""
             }
@@ -117,7 +159,7 @@ describe("suite emitter", () => {
             {
               command: "fail",
               index: 1,
-              message: "Unknown command fail",
+              message: new Error("Unknown command fail"),
               target: "",
               value: ""
             }

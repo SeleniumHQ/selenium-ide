@@ -1,1 +1,55 @@
-{"id":"b4675761-fdf4-4799-a7b0-989dd0f481f0","name":"text-comparison","url":"http://nginx:80","tests":[{"id":"1f270ca5-5a7c-4067-8f67-b4fc0dcea00b","name":"text comparison","commands":[{"id":"87af5840-26f1-4a35-8814-3d4e05c913a9","comment":"","command":"open","target":"/popup/alert.html","value":""},{"id":"8a202701-15f3-43c1-ab92-faee105450af","comment":"","command":"assertText","target":"id=b","value":"show alert"},{"id":"9edb7147-7266-4b7f-8a91-a13fe4ad7180","comment":"","command":"verifyText","target":"id=b","value":"show alert"},{"id":"5d44c22b-bee6-4ee0-bb36-076db811c90a","comment":"","command":"assertNotText","target":"id=b","value":"not show alert"},{"id":"02068205-16e4-495e-aed5-87cdab7e7487","comment":"","command":"verifyNotText","target":"id=b","value":"not show alert"}]}],"suites":[{"id":"33487441-d469-4fe2-8f5e-893104aa2316","name":"inputs","tests":["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b"]},{"id":"cb3c0325-5ffe-420e-82d8-969c2e6fdd5a","name":"waits","tests":[]},{"id":"4e8580a2-5621-444f-b528-b1eb0306e1ee","name":"popups","tests":[]}],"urls":["https://en.wikipedia.org","http://localhost:5000","http://localhost:5000","http://localhost:5000","http://localhost:5000"]}
+{
+  "id": "b4675761-fdf4-4799-a7b0-989dd0f481f0",
+  "name": "text-comparison",
+  "url": "http://nginx:80",
+  "tests": [{
+    "id": "1f270ca5-5a7c-4067-8f67-b4fc0dcea00b",
+    "name": "text comparison",
+    "commands": [{
+      "id": "87af5840-26f1-4a35-8814-3d4e05c913a9",
+      "comment": "",
+      "command": "open",
+      "target": "/popup/alert.html",
+      "value": ""
+    }, {
+      "id": "8a202701-15f3-43c1-ab92-faee105450af",
+      "comment": "",
+      "command": "assertText",
+      "target": "id=b",
+      "value": "show alert"
+    }, {
+      "id": "9edb7147-7266-4b7f-8a91-a13fe4ad7180",
+      "comment": "",
+      "command": "verifyText",
+      "target": "id=b",
+      "value": "show alert"
+    }, {
+      "id": "5d44c22b-bee6-4ee0-bb36-076db811c90a",
+      "comment": "",
+      "command": "assertNotText",
+      "target": "id=b",
+      "value": "not show alert"
+    }, {
+      "id": "02068205-16e4-495e-aed5-87cdab7e7487",
+      "comment": "",
+      "command": "verifyNotText",
+      "target": "id=b",
+      "value": "not show alert"
+    }]
+  }],
+  "suites": [{
+    "id": "33487441-d469-4fe2-8f5e-893104aa2316",
+    "name": "text",
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b"]
+  }],
+  "urls": ["https://en.wikipedia.org", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000"],
+  "plugins": [],
+  "version": "1.0",
+  "code": [{
+    "name": "text",
+    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80';jest.setTimeout(300000);describe(\"text\", () => {it(\"text comparison\", async () => {driver.get(BASE_URL + \"/popup/alert.html\");driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");driver.wait(until.elementLocated(By.id(\"b\")));driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});driver.wait(until.elementLocated(By.id(\"b\")));driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+  }],
+  "dependencies": {}
+}

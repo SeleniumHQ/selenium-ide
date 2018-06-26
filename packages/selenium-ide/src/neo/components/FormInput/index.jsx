@@ -23,6 +23,7 @@ export default class FormInput extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    width: PropTypes.number,
     children: PropTypes.element,
     onChange: PropTypes.func
   };
@@ -30,12 +31,14 @@ export default class FormInput extends React.Component {
     type: "text"
   };
   render() {
-    const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}});
+    const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}, width: undefined });
     return (
       <div className="form-input">
-        <label htmlFor={this.props.name}>{this.props.label}</label>
+        <label htmlFor={this.props.name} style={{
+          width: `${this.props.width}px`
+        }}>{this.props.label}</label>
         { this.props.children
-          ?  this.props.children
+          ? this.props.children
           : <input {...props} /> }
       </div>
     );

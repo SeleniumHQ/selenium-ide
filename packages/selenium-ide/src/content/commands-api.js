@@ -19,6 +19,7 @@ import TargetSelector from "./targetSelector";
 import Selenium from "./selenium-api";
 import BrowserBot from "./selenium-browserbot";
 import { locatorBuilders } from "./record";
+import { editRegion, removeRegion } from "./region";
 
 export const selenium = new Selenium(BrowserBot.createForWindow(window));
 let contentSideexTabId = window.contentSideexTabId;
@@ -46,7 +47,7 @@ function doCommands(request, sender, sendResponse) {
       if (selenium["do" + upperCase] != null) {
         try {
           document.body.setAttribute("SideeXPlayingFlag", true);
-          let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));
+          let returnValue = selenium["do"+upperCase](selenium.preprocessParameter(request.target),selenium.preprocessParameter(request.value));
           if (returnValue instanceof Promise) {
             // The command is a asynchronous function
             returnValue.then(function() {
@@ -79,8 +80,17 @@ function doCommands(request, sender, sendResponse) {
     }
     return true;
   }
+  if (request.resolveLocator) {
+    try {
+      const element = selenium.browserbot.findElement(request.locator);
+      const locator = locatorBuilders.buildAll(element).find(([loc, strat]) => (/^xpath/.test(strat)))[0]; //eslint-disable-line no-unused-vars
+      sendResponse({result: "success", locator});
+    } catch(e) {
+      sendResponse({result: e.message});
+    }
+  }
   if (request.selectMode) {
-    if (request.selecting) {
+    if (request.selecting && request.element) {
       targetSelector = new TargetSelector(function (element, win) {
         if (element && win) {
           const target = locatorBuilders.buildAll(element);
@@ -101,14 +111,30 @@ function doCommands(request, sender, sendResponse) {
           cancelSelectTarget: true
         });
       });
-
+    } else if (request.selecting && request.region) {
+      editRegion(request.rect, (target) => {
+        if (target) {
+          browser.runtime.sendMessage({
+            selectTarget: true,
+            target: [[target]]
+          });
+        } else {
+          browser.runtime.sendMessage({
+            cancelSelectTarget: true
+          });
+        }
+      });
     } else {
       if (targetSelector) {
         targetSelector.cleanup();
         targetSelector = null;
         return;
+      } else {
+        removeRegion();
+        return;
       }
     }
+    sendResponse(true);
   }
 }
 

@@ -132,3 +132,23 @@ browser.contextMenus.onClicked.addListener(function(info) {
 browser.runtime.onConnect.addListener(function(m) {
   port = m;
 });
+
+browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  if (!message.payload) {
+    message.payload = {};
+  }
+  message.payload.sender = sender.id;
+  browser.runtime.sendMessage(message).then(sendResponse).catch(() => {
+    return sendResponse({ error: "Selenium IDE is not active" });
+  });
+  return true;
+});
+
+browser.runtime.onInstalled.addListener(() => {
+  // Notify updates only in production
+  if (process.env.NODE_ENV === "production") {
+    browser.storage.local.set({
+      updated: true
+    });
+  }
+});

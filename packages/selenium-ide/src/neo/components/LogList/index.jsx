@@ -24,13 +24,13 @@ import "./style.css";
 @observer
 export default class LogList extends React.Component {
   componentDidUpdate() {
-    this.container.scrollTo(0, 10000);
+    this.props.scrollTo(10000);
   }
   render() {
     return (
-      <div className="logs" ref={container => {this.container = container;}}>
+      <div className="logs">
         <ul>
-          {this.props.store.logs.map((log) => (
+          {this.props.output.logs.map((log) => (
             <LogMessage key={log.id} log={log} />
           ))}
         </ul>
@@ -38,6 +38,7 @@ export default class LogList extends React.Component {
     );
   }
   static propTypes = {
-    store: PropTypes.object
+    output: PropTypes.object,
+    scrollTo: PropTypes.func
   };
 }

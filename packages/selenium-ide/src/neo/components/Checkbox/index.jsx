@@ -17,6 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import uuidv4 from "uuid/v4";
 import "./style.css";
 
@@ -28,13 +29,15 @@ export default class Checkbox extends React.Component {
   static propTypes = {
     name: PropTypes.string,
     label: PropTypes.string,
+    form: PropTypes.bool,
+    width: PropTypes.number,
     checked: PropTypes.bool,
     onChange: PropTypes.func.isRequired
   };
   render() {
     const checked = (this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false));
     return (
-      <div className="control">
+      <div className={classNames("control", { "form-input": this.props.form })}>
         <input
           key="checkbox"
           type="checkbox"
@@ -44,7 +47,10 @@ export default class Checkbox extends React.Component {
           checked={checked}
           onChange={this.props.onChange}
         />
-        <label key="label" htmlFor={this.id}><span>{checked ? "✓" : ""}</span>{this.props.label}</label>
+        {this.props.form ?
+          <label key="label" htmlFor={this.id}><span>{checked ? "✓" : ""}</span>{this.props.label}</label> :
+          <label key="label" htmlFor={this.id}><div style={{ width: `${this.props.width}px` }}>{this.props.label}</div><span>{checked ? "✓" : ""}</span></label>
+        }
       </div>
     );
   }

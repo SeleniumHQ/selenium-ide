@@ -17,16 +17,35 @@
 
 import TestCaseEmitter from "./testcase";
 
+const hooks = [];
+
 export function emit(suite, tests) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = `describe("${suite.name}", () => {`;
-
+    const hookResults = (await Promise.all(hooks.map((hook) => hook({ name: suite.name })))).reduce((code, result) => (
+      code
+      + (result.beforeAll ? `beforeAll(async () => {${result.beforeAll}});` : "")
+      + (result.before ? `beforeEach(async () => {${result.before}});` : "")
+      + (result.after ? `afterEach(async () => {${result.after}});` : "")
+      + (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : "")
+    ), "");
     let errors = [];
-    result += (await Promise.all(suite.tests.map(testId => (
+    let testsCode = (await Promise.all(suite.tests.map(testId => (
       tests[testId]
     )).map((test) => (TestCaseEmitter.emit(test).catch(e => {
       errors.push(e);
-    }))))).join("");
+    })))));
+
+    if (suite.parallel) {
+      testsCode = testsCode.map((code, index) => ({
+        name: tests[suite.tests[index]].name,
+        code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
+      }));
+      return res(testsCode);
+    }
+
+    let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}`;
+
+    result += testsCode.join("");
 
     result += "});";
     errors.length ? rej({
@@ -36,6 +55,11 @@ export function emit(suite, tests) {
   });
 }
 
+function registerHook(hook) {
+  hooks.push(hook);
+}
+
 export default {
-  emit
+  emit,
+  registerHook
 };

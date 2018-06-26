@@ -17,9 +17,14 @@
 
 import CommandEmitter from "./command";
 
+const hooks = [];
+
 export function emit(test) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = `it("${test.name}", () => {const driver = Runner.getDriver();return driver.then(() => {`;
+    const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
+
+    let result = `it("${test.name}", async () => {`;
+    result += hookResults.map((hook) => hook.setup || "").join("");
 
     let errors = [];
     result += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
@@ -30,12 +35,18 @@ export function emit(test) {
       });
     }))))).join("");
 
-    result += "return driver.getTitle().then(title => {expect(title).toBeDefined();Runner.releaseDriver(driver);});}).catch((e) => (Runner.releaseDriver(driver).then(() => {throw e;})));});";
+    result += hookResults.map((hook) => hook.teardown || "").join("");
+    result += "await driver.getTitle().then(title => {expect(title).toBeDefined();});});";
 
-    errors.length ? rej({...test, commands: errors}) : res(result);
+    errors.length ? rej({ ...test, commands: errors }) : res(result);
   });
 }
 
+function registerHook(hook) {
+  hooks.push(hook);
+}
+
 export default {
-  emit
+  emit,
+  registerHook
 };

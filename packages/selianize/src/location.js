@@ -27,6 +27,9 @@ const emitters = {
 
 export function emit(location) {
   return new Promise(async (res, rej) => {
+    if (/^\/\//.test(location)) {
+      return res(await emitters.xpath(location));
+    }
     const fragments = location.split("=");
     const type = fragments.shift();
     const selector = StringEscape(fragments.join("="));
@@ -34,7 +37,7 @@ export function emit(location) {
       let result = await emitters[type](selector);
       res(result);
     } else {
-      rej(type ? `Unknown locator ${type}` : "Locator can't be empty");
+      rej(new Error(type ? `Unknown locator ${type}` : "Locator can't be empty"));
     }
   });
 }

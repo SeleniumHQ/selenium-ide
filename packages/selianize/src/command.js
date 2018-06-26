@@ -31,6 +31,8 @@ const emitters = {
   sendKeys: emitSendKeys,
   echo: emitEcho,
   runScript: emitRunScript,
+  executeScript: emitExecuteScript,
+  executeAsyncScript: emitExecuteAsyncScript,
   pause: emitPause,
   verifyChecked: emitVerifyChecked,
   verifyNotChecked: emitVerifyNotChecked,
@@ -44,6 +46,7 @@ const emitters = {
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
   verifyNotText: emitVerifyNotText,
+  verifySelectedLabel: emitVerifySelectedLabel,
   assertChecked: emitVerifyChecked,
   assertNotChecked: emitVerifyNotChecked,
   assertEditable: emitVerifyEditable,
@@ -55,10 +58,11 @@ const emitters = {
   assertValue: emitVerifyValue,
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
+  assertSelectedLabel: emitVerifySelectedLabel,
   store: emitStore,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
-  storeXPathCount: emitStoreXpathCount,
+  storeXpathCount: emitStoreXpathCount,
   storeAttribute: emitStoreAttribute,
   select: emitSelect,
   addSelection: emitSelect,
@@ -100,7 +104,11 @@ export function emit(command) {
         rej(e);
       }
     } else {
-      rej(command.command ? `Unknown command ${command.command}` : "Command can not be empty");
+      if (!command.command) {
+        res();
+      } else {
+        rej(new Error(`Unknown command ${command.command}`));
+      }
     }
   });
 }
@@ -109,9 +117,16 @@ export function canEmit(commandName) {
   return !!(emitters[commandName]);
 }
 
+function registerEmitter(command, emitter) {
+  if (!canEmit(command)) {
+    emitters[command] = emitter;
+  }
+}
+
 export default {
   canEmit,
-  emit
+  emit,
+  registerEmitter
 };
 
 function emitOpen(target) {
@@ -155,49 +170,60 @@ async function emitRunScript(script) {
   return Promise.resolve(`driver.executeScript(\`${script}\`);`);
 }
 
+async function emitExecuteScript(script, varName) {
+  return Promise.resolve(`var ${varName} = await driver.executeScript(\`${script}\`);`);
+}
+
+async function emitExecuteAsyncScript(script, varName) {
+  return Promise.resolve(`var ${varName} = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);\`);`);
+}
+
 async function emitPause(_, time) {
   return Promise.resolve(`driver.sleep(${time});`);
 }
 
 async function emitVerifyChecked(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeTruthy();});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeChecked();`);
 }
 
 async function emitVerifyNotChecked(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isSelected().then(selected => {expect(selected).toBeFalsy();});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeChecked();`);
 }
 
 async function emitVerifyEditable(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isEnabled().then(enabled => {expect(enabled).toBeTruthy();element.getAttribute("readonly").then(readonly => {expect(readonly).toBeFalsy();});});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeEditable();`);
 }
 
 async function emitVerifyNotEditable(locator) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.isEnabled().then(enabled => {try {expect(enabled).toBeFalsy();}catch (e) {element.getAttribute("readonly").then(readonly => {expect(readonly).toBeTruthy();});}});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeEditable();`);
 }
 
 async function emitVerifyElementPresent(locator) {
-  return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBeGreaterThan(0);});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.toBePresent();`);
 }
 
 async function emitVerifyElementNotPresent(locator) {
-  return Promise.resolve(`driver.findElements(${await LocationEmitter.emit(locator)}).then(elements => {expect(elements.length).toBe(0);});`);
+  return Promise.resolve(`expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.not.toBePresent();`);
 }
 
 async function emitVerifySelectedValue(locator, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).toBe("${value}");});});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveSelectedValue("${value}");`);
 }
 
+async function emitVerifySelectedLabel(locator, labelValue) {
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(selectedValue => {element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe("${labelValue}");});});});});`);
+}
 
 async function emitVerifyNotSelectedValue(locator, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getTagName().then(tagName => {expect(tagName).toBe("select");element.getAttribute("value").then(selectedValue => {expect(selectedValue).not.toBe("${value}");});});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toHaveSelectedValue("${value}");`);
 }
 
 async function emitVerifyValue(locator, value) {
-  return Promise.resolve(`driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(value => {expect(value).toBe("${value}");});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveValue("${value}");`);
 }
 
 async function emitVerifyText(locator, text) {
-  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {expect(text).toBe(\`${text}\`)});});`);
+  return Promise.resolve(`driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveText("${text}");`);
 }
 
 async function emitVerifyNotText(locator, text) {
@@ -250,7 +276,7 @@ function emitSelectWindow(windowLocation) {
   if (/^name=/.test(windowLocation)) {
     return Promise.resolve(`driver.switchTo().window("${windowLocation.split("name=")[1]}");`);
   } else {
-    return Promise.reject("Can only emit `select window` using name locator");
+    return Promise.reject(new Error("Can only emit `select window` using name locator"));
   }
 }
 

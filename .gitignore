@@ -19,3 +19,4 @@ dist/
 .web-extension-id
 *.log
 tests/webdriver/
+.*.swp

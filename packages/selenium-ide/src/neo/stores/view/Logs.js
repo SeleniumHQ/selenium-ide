@@ -15,100 +15,64 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observe, observable } from "mobx";
+import { action, observable } from "mobx";
 import Log, { LogTypes } from "../../ui-models/Log";
-import PlaybackState, { PlaybackStates } from "./PlaybackState";
 
-export default class LogStore {
+class Output {
   @observable logs = [];
 
-  constructor() {
-    this.playbackDisposer = observe(PlaybackState, "isPlaying", (isPlaying) => {
-      this.logPlayingState(isPlaying.newValue);
-    });
-    this.commandStateDisposer = observe(PlaybackState.commandState, (change) => {
-      this.parseCommandStateChange(change.name, change.newValue, this.logCommandState);
-    });
-    this.logPlayingState = this.logPlayingState.bind(this);
-    this.parseCommandStateChange = this.parseCommandStateChange.bind(this);
-    this.logCommandState = this.logCommandState.bind(this);
-    this.dispose = this.dispose.bind(this);
-
-    // TODO: think of an API for logging
-    window.addLog = (message) => {
-      this.addLog(new Log(message));
-    };
+  @action.bound log(log) {
+    this.logs.push(log);
   }
 
-  @action.bound addLog(log) {
-    if (!this.logs.length || this.logs[this.logs.length - 1].message !== log.message) {
-      this.logs.push(log);
-    }
-  }
-
-  parseCommandStateChange(commandId, status, cb) {
-    const command = PlaybackState.currentRunningTest.commands.find(({id}) => (id === commandId));
-    cb(command, status);
-  }
-
-  @action.bound clearLogs() {
+  @action.bound clear() {
     this.logs.clear();
   }
+}
 
-  logPlayingState(isPlaying) {
-    let log;
-    if (isPlaying) {
-      log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`);
-      log.setNotice();
-    } else if (PlaybackState.aborted) {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Error);
-      log.setNotice();
-    } else {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.errors} error(s)` : "successfully"}`,
-        PlaybackState.hasFailed ? LogTypes.Error : LogTypes.Success);
-      log.setNotice();
+export const output = new Output();
+
+export class Logger {
+  constructor(channel = Channels.SYSTEM) {
+    this.channel = channel;
+
+    this.log = this.log.bind(this, this.channel);
+    this.warn = this.warn.bind(this);
+    this.error = this.error.bind(this);
+  }
+
+  log(channel, log) {
+    if (typeof log === "string") {
+      log = new Log(log);
     }
-    this.addLog(log);
+    log.setChannel(channel);
+    output.log(log);
+
+    return log;
   }
 
-  logCommandState(command, status) {
-    if (status && this.shouldLogCommand(command.command)) {
-      const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
-      let log;
-      if (this.logs.length && this.logs[this.logs.length - 1].commandId === command.id) {
-        log = this.logs[this.logs.length - 1];
-      } else {
-        log = new Log();
-        log.setIndex(index);
-        log.setCommandId(command.id);
-      }
-      switch(status.state) {
-        case PlaybackStates.Pending: {
-          let message = status.message;
-          if (!message) {
-            message = (command.comment ? command.comment : `Trying to execute ${command.command} on ${command.target}${command.value ? " with value " + command.value : ""}`).concat("...");
-          }
-          log.setMessage(message);
-          break;
-        }
-        case PlaybackStates.Failed:
-          log.setError(status.message);
-          log.setStatus(LogTypes.Error);
-          break;
-        case PlaybackStates.Passed:
-          log.setStatus(LogTypes.Success);
-          break;
-      }
-      this.addLog(log);
-    }
+  warn(log) {
+    const warnLog = this.log(typeof log === "string" ? `Warning ${log}` : log);
+    warnLog.setStatus(LogTypes.Warning);
   }
 
-  shouldLogCommand(command) {
-    return command !== "echo";
+  error(log) {
+    const errorLog = this.log(log);
+    errorLog.setStatus(LogTypes.Error);
   }
 
-  dispose() {
-    this.playbackDisposer();
-    this.commandStateDisposer();
+  get(channel) {
+    return new Logger(channel);
+  }
+
+  clearLogs() {
+    output.clear();
   }
 }
+
+export const Channels = {
+  PLAYBACK: "playback",
+  SYSTEM: "sys"
+};
+
+export default new Logger;

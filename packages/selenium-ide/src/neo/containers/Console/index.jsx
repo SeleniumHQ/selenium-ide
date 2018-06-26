@@ -20,30 +20,69 @@ import PropTypes from "prop-types";
 import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import LogStore from "../../stores/view/Logs";
+import { output } from "../../stores/view/Logs";
+import PlaybackLogger from "../../side-effects/playback-logging";
 import "./style.css";
+import CommandReference from "../../components/CommandReference";
+import UiState from "../../stores/view/UiState";
+import { observer } from "mobx-react";
+import { observe } from "mobx";
+import { Commands } from "../../models/Command";
 
+@observer
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.store = new LogStore();
+    this.state = {
+      tab: "Log",
+      logsUnread: false
+    };
+    this.playbackLogger = new PlaybackLogger();
+    this.loggerDisposer = observe(output.logs, () => {
+      this.setState({ logsUnread: this.state.tab === "Log" ? false : true });
+    });
+    this.tabClicked = this.tabClicked.bind(this);
+    this.tabChangedHandler = this.tabChangedHandler.bind(this);
+    this.setViewportRef = element => {
+      this.viewport = element;
+    };
+    this.scroll = this.scroll.bind(this);
   }
   componentWillUnmount() {
-    this.store.dispose();
+    this.loggerDisposer();
+    this.playbackLogger.dispose();
+  }
+  tabChangedHandler(tab) {
+    this.setState({
+      tab,
+      logsUnread: tab === "Log" ? false : this.state.logsUnread
+    });
+  }
+  tabClicked(){
+    this.props.restoreSize();
+  }
+  scroll(to) {
+    this.viewport.scrollTo(0, to);
   }
   render() {
+    const command = UiState.selectedCommand ? Commands.list.get(UiState.selectedCommand.command) : undefined;
+    const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }];
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={["Log"]} tabWidth={70} buttonsMargin={0}>
-          <ClearButton onClick={this.store.clearLogs} />
+        <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
+          <ClearButton onClick={output.clear} />
         </TabBar>
-        <LogList store={this.store} />
+        <div className="viewport" ref={this.setViewportRef}>
+          {this.state.tab === "Log" && <LogList output={output} scrollTo={this.scroll}/> }
+          {this.state.tab === "Reference" && <CommandReference currentCommand={command}/> }
+        </div>
       </footer>
     );
   }
   static propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
+    restoreSize: PropTypes.func
   };
 }

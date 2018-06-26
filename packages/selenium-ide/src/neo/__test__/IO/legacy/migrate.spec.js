@@ -18,7 +18,7 @@
 import fs from "fs";
 import path from "path";
 import { useStrict } from "mobx";
-import { verifyFile, FileTypes, parseSuiteRequirements, migrateTestCase, migrateProject } from "../../../IO/legacy/migrate";
+import { verifyFile, FileTypes, parseSuiteRequirements, migrateTestCase, migrateProject, migrateUrls } from "../../../IO/legacy/migrate";
 
 useStrict(true);
 
@@ -41,13 +41,7 @@ describe("file classifier", () => {
 describe("selenium test case migration", () => {
   it("should migrate the set example", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.name).toBe("My Test");
-    expect(project.url).toBe("https://www.google.com/");
-    expect(project.urls.length).toBe(1);
-    expect(project.suites).toBeInstanceOf(Array);
-    expect(project.tests.length).toBe(1);
-    const test = project.tests[0];
+    const { test } = migrateTestCase(file);
     expect(test.commands.length).toBe(4);
     const command = test.commands[0];
     expect(command.command).toBe("open");
@@ -56,24 +50,29 @@ describe("selenium test case migration", () => {
   });
   it("should migrate the second example", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].commands.length).toBe(26);
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(26);
   });
   it("should join line breaks to <br /> in the target field", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].commands[8].target).toBe("//a[contains(text(),'Most<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
+    const { test } = migrateTestCase(file);
+    expect(test.commands[8].target).toBe("//a[contains(text(),'Most<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
   });
   it("should sanitize the input prior to converting", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_3.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].name).toBe("Show Details");
-    expect(project.tests[0].commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
+    const { test } = migrateTestCase(file);
+    expect(test.name).toBe("Show Details");
+    expect(test.commands[0].target).toBe("http://unknow.url/?func=ll&objid=2838227");
   });
   it("should decode the input post conversion", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_8.html")).toString();
-    const project = migrateTestCase(file);
-    expect(project.tests[0].commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
+    const { test } = migrateTestCase(file);
+    expect(test.commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
+  });
+  it("should import a test case with a comment in it", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_9.html")).toString();
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(2);
   });
 });
 
@@ -83,6 +82,12 @@ describe("selenium suite migration", () => {
     const required = parseSuiteRequirements(suite);
     expect(required.length).toBe(3);
     expect(required).toEqual(["einzeltests/MH_delete.html", "einzeltests/kontakte_leeren.html", "einzeltests/DMS_clear.html"]);
+  });
+  it("should reduct multiple same named test cases", () => {
+    const suite = fs.readFileSync(path.join(__dirname, "IDE_test_10/Suite login_multiple cases.htm")).toString();
+    const required = parseSuiteRequirements(suite);
+    expect(required.length).toBe(2);
+    expect(required).toEqual(["Log in as test user.htm", "Log out from BO.htm"]);
   });
   it("should migrate the suite", () => {
     const files = [
@@ -169,5 +174,39 @@ describe("selenium suite migration", () => {
     const project = migrateProject(files);
     expect(project.suites.length).toBe(1);
     expect(project.tests.length).toBe(3);
+  });
+});
+
+describe("url migration", () => {
+  it("should migrate all urls to absolute ones", () => {
+    const test = {
+      commands: [
+        {
+          command: "open",
+          target: "/index.html"
+        },
+        {
+          command: "open",
+          target: "/users"
+        }
+      ]
+    };
+    const baseUrl = "https://seleniumhq.org/";
+    const migrated = migrateUrls(test, baseUrl);
+    expect(migrated.commands[0].target).toBe("https://seleniumhq.org/index.html");
+    expect(migrated.commands[1].target).toBe("https://seleniumhq.org/users");
+  });
+  it("should not migrate absolute urls", () => {
+    const test = {
+      commands: [
+        {
+          command: "open",
+          target: "https://seleniumhq.org/index.html"
+        }
+      ]
+    };
+    const baseUrl = "https://wikipedia.org";
+    const migrated = migrateUrls(test, baseUrl);
+    expect(migrated.commands[0].target).toBe("https://seleniumhq.org/index.html");
   });
 });

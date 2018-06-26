@@ -15,28 +15,51 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { js_beautify as beautify } from "js-beautify";
 import template from "./template";
 import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
+import TestCaseEmitter from "./testcase";
+import CommandEmitter from "./command";
+import LocationEmitter from "./location";
 
 export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = template.bootstrap();
 
-    result += ConfigurationEmitter.emit(project);
+    result += await ConfigurationEmitter.emit(project);
 
     const testsHashmap = project.tests.reduce((map, test) => {
       map[test.id] = test;
       return map;
     }, {});
     let errors = [];
-    result += (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap).catch(e => {
+    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap).catch(e => {
       errors.push(e);
-    })))).join("");
+    }))));
 
-    errors.length ? rej({ name: project.name, suites: errors }) : res(beautify(result, { indent_size: 2 }));
+    const results = suites.map((suiteCode, index) => ({
+      name: project.suites[index].name,
+      code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
+      tests: Array.isArray(suiteCode) ? suiteCode : undefined
+    }));
+    errors.length ? rej({ name: project.name, suites: errors }) : res(results);
   });
+}
+
+export function RegisterConfigurationHook(hook) {
+  ConfigurationEmitter.registerHook(hook);
+}
+
+export function RegisterSuiteHook(hook) {
+  SuiteEmitter.registerHook(hook);
+}
+
+export function RegisterTestHook(hook) {
+  TestCaseEmitter.registerHook(hook);
+}
+
+export function RegisterEmitter(command, emitter) {
+  CommandEmitter.registerEmitter(command, emitter);
 }
 
 export function ParseError(error) {
@@ -48,3 +71,5 @@ export function ParseError(error) {
     )).join(""))
   )).join("");
 }
+
+export const Location = LocationEmitter;

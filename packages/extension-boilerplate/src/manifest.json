@@ -1,0 +1,25 @@
+{
+  "description": "A boilerplate for Selenium IDE plugins",
+  "manifest_version": 2,
+  "name": "Selenium IDE plugin",
+  "version": "1.0.0.0",
+  "version_name": "1.0.0",
+  "homepage_url": "https://github.com/SeleniumHQ/selenium-ide/tree/master/packages/extension-boilerplate",
+  "permissions": [],
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "externally_connectable": {
+    "ids": ["*"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["assets/content.js"],
+      "match_about_blank": true,
+      "all_frames": true
+    }
+  ],
+  "background":
+  {
+    "scripts": ["assets/background.js"]
+  }
+}

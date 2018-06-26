@@ -38,25 +38,25 @@ export function verifyFile(file) {
   } else if (isTestCase(file)) {
     return FileTypes.TestCase;
   } else {
-    throw  new Error("Unknown file was received");
+    throw new Error("Unknown file was received");
   }
 }
 
 export function parseSuiteRequirements(suite) {
   const regex = /<a href="(.*)">/g;
   let lastResult = regex.exec(suite);
-  const results = [];
+  const results = {};
   while (lastResult) {
-    results.push(lastResult[1]);
+    results[lastResult[1]] = true;
     lastResult = regex.exec(suite);
   }
 
-  return results;
+  return Object.keys(results);
 }
 
 export function migrateProject(files) {
   const fileMap = {};
-  files.forEach(({name, contents}) => {
+  files.forEach(({ name, contents }) => {
     fileMap[name] = contents;
   });
   const project = {
@@ -75,10 +75,10 @@ export function migrateProject(files) {
     }
   });
   tests.forEach(testCaseName => {
-    const parsedTestCase = migrateTestCase(fileMap[testCaseName]);
-    parsedTestCase.tests[0].id = testCaseName;
-    project.tests.push(parsedTestCase.tests[0]);
-    project.urls = [...project.urls, ...parsedTestCase.urls];
+    const { test, baseUrl } = migrateTestCase(fileMap[testCaseName]);
+    test.id = testCaseName;
+    project.tests.push(test);
+    project.urls = [...project.urls, baseUrl];
   });
   suites.forEach(suite => {
     migrateSuite(suite, fileMap, project);
@@ -116,28 +116,33 @@ function migrateSuite(suite, fileMap, project) {
 export function migrateTestCase(data) {
   const sanitized = sanitizeXml(data);
   const result = JSON.parse(convert.xml2json(sanitized, { compact: true }));
-  const project = {
-    name: result.html.head.title._text,
-    url: result.html.head.link._attributes.href,
-    urls: result.html.head.link._attributes.href ? [result.html.head.link._attributes.href] : [],
-    tests: [
+  const baseUrl = result.html.head.link._attributes.href;
+  const test = {
+    name: result.html.body.table.thead.tr.td._text,
+    commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
       {
-        id: data,
-        name: result.html.body.table.thead.tr.td._text,
-        commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
-          {
-            command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
-            target: xmlunescape(parseTarget(row.td[1])),
-            value: xmlunescape(row.td[2]._text || ""),
-            comment: ""
-          }
-        ))
+        command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
+        target: xmlunescape(parseTarget(row.td[1])),
+        value: xmlunescape(row.td[2]._text || ""),
+        comment: ""
       }
-    ],
-    suites: []
+    ))
   };
 
-  return project;
+  return { test, baseUrl };
+}
+
+export function migrateUrls(test, url) {
+  return Object.assign({}, test, {
+    commands: test.commands.map((command) => {
+      if (command.command === "open") {
+        return Object.assign({}, command, {
+          target: (new URL(command.target, url)).href
+        });
+      }
+      return command;
+    })
+  });
 }
 
 function sanitizeXml(data) {
@@ -145,7 +150,7 @@ function sanitizeXml(data) {
     `<link${group} />`
   )).replace(/<td>(.*)<\/td>/g, (match, group) => (
     `<td>${xmlescape(group)}</td>`
-  ));
+  )).replace(/<!--(.|\s)*?-->/g, "");
 }
 
 function parseTarget(targetCell) {

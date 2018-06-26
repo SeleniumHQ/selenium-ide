@@ -18,7 +18,7 @@
 export function parseString(input) {
   const capabilities = {};
 
-  matchStringPairs(input).forEach(({key, value}) => {
+  matchStringPairs(input).forEach(({ key, value }) => {
     Object.assign(capabilities, assignStringKey(key, parseStringValue(value)));
   });
 
@@ -34,7 +34,7 @@ function matchStringPairs(input) {
   let result;
   const splitCapabilities = [];
   while ((result = regex.exec(input)) !== null) {
-    splitCapabilities.push({key: result[1], value: result[2]});
+    splitCapabilities.push({ key: result[1], value: result[2] });
   }
 
   return splitCapabilities;
@@ -52,6 +52,10 @@ function assignStringKey(key, value) {
 }
 
 function parseStringValue(value) {
+  // is array
+  if (/^\[.*\]$/.test(value)) {
+    return value.match(/((\w|-)*)/g).filter(s => !!s);
+  }
   try {
     return JSON.parse(value);
   } catch (e) {

@@ -17,6 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import "./style.css";
 
 export default class TabBar extends React.Component {
@@ -38,29 +39,31 @@ export default class TabBar extends React.Component {
     defaultTab: PropTypes.string,
     tabWidth: PropTypes.number,
     buttonsMargin: PropTypes.number,
-    tabChanged: PropTypes.func
+    tabChanged: PropTypes.func,
+    tabClicked: PropTypes.func
   };
   static defaultProps = {
     tabWidth: 80,
     buttonsMargin: 5
   };
   handleClick(tab, index) {
-    if (tab !== this.state.selectedTab.tab) {
+    if (tab !== this.state.activeTab.tab) {
       this.setState({
         activeTab: { tab, index }
       });
       if (this.props.tabChanged) this.props.tabChanged(tab);
     }
+    if (this.props.tabClicked) this.props.tabClicked(tab);
   }
   render() {
     return (
       <div className="tabbar">
         <ul>
           {this.props.tabs.map((tab, index) => (
-            <li key={tab} style={{
+            <li key={tab.name} style={{
               width: `${this.props.tabWidth}px`
             }}>
-              <a href="#" onClick={this.handleClick.bind(this, tab, index)}>{tab}</a>
+              <a className={classNames(tab.name.toLowerCase(), { "unread": tab.unread })} href="#" onClick={this.handleClick.bind(this, tab.name, index)}>{tab.name}</a>
             </li>
           ))}
           {this.props.children ? <li className="buttons" style={{

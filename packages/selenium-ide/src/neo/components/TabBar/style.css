@@ -34,3 +34,14 @@
   position: absolute;
   bottom: 0;
 }
+
+.tabbar .unread:after {
+  content: "";
+  display: inline-block;
+  height: 5px;
+  width: 5px;
+  margin: 2px 8px;
+  background-color: #40A6FF;
+  border-radius: 50%;
+}
+

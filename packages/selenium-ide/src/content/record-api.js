@@ -23,7 +23,8 @@ let frameLocation = "";
 
 function Recorder(window) {
   this.window = window;
-  this.attach();
+  this.eventListeners = {};
+  this.attached = false;
 }
 
 Recorder.eventHandlers = {};
@@ -46,18 +47,20 @@ Recorder.prototype.parseEventKey = function(eventKey) {
 };
 
 Recorder.prototype.attach = function() {
-  this.eventListeners = {};
-  for (let eventKey in Recorder.eventHandlers) {
-    const eventInfo = this.parseEventKey(eventKey);
-    const eventName = eventInfo.eventName;
-    const capture = eventInfo.capture;
+  if (!this.attached) {
+    for (let eventKey in Recorder.eventHandlers) {
+      const eventInfo = this.parseEventKey(eventKey);
+      const eventName = eventInfo.eventName;
+      const capture = eventInfo.capture;
 
-    const handlers = Recorder.eventHandlers[eventKey];
-    this.eventListeners[eventKey] = [];
-    for (let i=0 ; i<handlers.length ; i++) {
-      this.window.document.addEventListener(eventName, handlers[i], capture);
-      this.eventListeners[eventKey].push(handlers[i]);
+      const handlers = Recorder.eventHandlers[eventKey];
+      this.eventListeners[eventKey] = [];
+      for (let i=0 ; i<handlers.length ; i++) {
+        this.window.document.addEventListener(eventName, handlers[i], capture);
+        this.eventListeners[eventKey].push(handlers[i]);
+      }
     }
+    this.attached = true;
   }
 };
 
@@ -66,11 +69,12 @@ Recorder.prototype.detach = function() {
     const eventInfo = this.parseEventKey(eventKey);
     const eventName = eventInfo.eventName;
     const capture = eventInfo.capture;
-    for (let i=0 ; i<this.eventListeners[eventKey] ; i++) {
+    for (let i = 0; i < this.eventListeners[eventKey].length; i++) {
       this.window.document.removeEventListener(eventName, this.eventListeners[eventKey][i], capture);
     }
   }
-  delete this.eventListeners;
+  this.eventListeners = {};
+  this.attached = false;
 };
 
 // show element
@@ -81,9 +85,26 @@ function startShowElement(message){
   }
 }
 
+function attachRecorderHandler(message) {
+  if (message.attachRecorder) {
+    recorder.attach();
+  }
+}
+
+function detachRecorderHandler(message) {
+  if (message.detachRecorder) {
+    recorder.detach();
+  }
+}
+
 if (!window._recordListener) {
+  // injector event handlers
   window._recordListener = startShowElement;
   browser.runtime.onMessage.addListener(startShowElement);
+} else {
+  // recorder event handlers
+  browser.runtime.onMessage.addListener(attachRecorderHandler);
+  browser.runtime.onMessage.addListener(detachRecorderHandler);
 }
 
 // set frame id

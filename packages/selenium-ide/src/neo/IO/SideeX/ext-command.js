@@ -19,6 +19,7 @@ import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { recorder } from "./editor";
 import Debugger from "../debugger";
+import variables from "../../stores/view/Variables";
 
 const parsedUA = parser(window.navigator.userAgent);
 
@@ -49,9 +50,10 @@ export default class ExtCommand {
       }
     };
 
-    this.frameLocationMessageHandler = (message, sender) => {
+    this.frameLocationMessageHandler = (message, sender, sendResponse) => {
       if (message.frameLocation) {
         this.setFrame(sender.tab.id, message.frameLocation, sender.frameId);
+        sendResponse(true);
       }
     };
 
@@ -62,7 +64,7 @@ export default class ExtCommand {
     };
   }
 
-  init() {
+  init(baseUrl) {
     this.attach();
     this.playingTabNames = {};
     this.playingTabIds = {};
@@ -71,6 +73,7 @@ export default class ExtCommand {
     this.playingTabCount = 1;
     this.currentPlayingWindowId = this.contentWindowId;
     this.currentPlayingFrameLocation = "root";
+    this.baseUrl = baseUrl;
     return this.queryActiveTab(this.currentPlayingWindowId)
       .then(this.setFirstTab.bind(this));
   }
@@ -138,7 +141,7 @@ export default class ExtCommand {
   }
 
   queryActiveTab(windowId) {
-    return browser.tabs.query({windowId: windowId, active: true, url: ["http://*/*", "https://*/*"]})
+    return browser.tabs.query({ windowId: windowId, active: true, url: ["http://*/*", "https://*/*"] })
       .then(function(tabs) {
         return tabs[0];
       });
@@ -155,6 +158,11 @@ export default class ExtCommand {
       target: target,
       value: value
     }, { frameId: top ? 0 : frameId });
+  }
+
+  sendPayload(payload) {
+    let tabId = this.getCurrentPlayingTabId();
+    return browser.tabs.sendMessage(tabId, payload);
   }
 
   setLoading(tabId) {
@@ -191,7 +199,13 @@ export default class ExtCommand {
     this.playingTabCount++;
   }
 
-  doOpen(url) {
+  doOpen(targetUrl) {
+    let url = targetUrl;
+    try {
+      url = (new URL(targetUrl)).href;
+    } catch (e) {
+      url = (new URL(targetUrl, this.baseUrl)).href;
+    }
     return browser.tabs.update(this.currentPlayingTabId, {
       url: url
     });
@@ -223,7 +237,7 @@ export default class ExtCommand {
     return this.wait("playingTabNames", serialNumber)
       .then(function() {
         self.currentPlayingTabId = self.playingTabNames[serialNumber];
-        browser.tabs.update(self.currentPlayingTabId, {active: true});
+        browser.tabs.update(self.currentPlayingTabId, { active: true });
       });
   }
 
@@ -234,7 +248,7 @@ export default class ExtCommand {
     return browser.tabs.remove(removingTabId);
   }
 
-  doType(locator, value) {
+  doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
       if (browserName !== "Chrome") return Promise.reject(new Error("File uploading is only support in Chrome at this time"));
@@ -251,8 +265,13 @@ export default class ExtCommand {
         });
       });
     } else {
-      return this.sendMessage("type", locator, value);
+      return this.sendMessage("type", locator, value, top);
     }
+  }
+
+  doStore(string, varName) {
+    variables.addVariable(varName, string);
+    return Promise.resolve();
   }
 
   wait(...properties) {
@@ -349,6 +368,7 @@ export function isExtCommand(command) {
     case "selectFrame":
     case "selectWindow":
     case "setSpeed":
+    case "store":
     case "close":
       return true;
     default:
