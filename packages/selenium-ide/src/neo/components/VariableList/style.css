@@ -1,12 +1,7 @@
 .value-list {
-  border: 2px solid #FFFCFE;
-  width: 100%;
   text-align: left;
-  border-collapse: collapse;
-  max-width: 255px;
-}
-
-.storeContainer  {
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction:column;
 }

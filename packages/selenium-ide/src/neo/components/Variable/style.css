@@ -1,27 +1,24 @@
 .row {
   font-size: 12px;
-  display: table-row;
-}
-
-.row .cell {
   word-break: break-all;
-  display: table-cell;
-
+  display: flex;
 }
 
+.row:hover {
+  background-color: #F3F3F3;
+}
 .row .storedKey {
   float: left;
-  padding: 0;
-  width: 48%;
+  padding: 5px;
+  width: 25%;
   text-align: left;
 }
 
 .row .variable {
   float: left;
-  padding: 0;
-  width: 48%;
+  padding: 5px;
+  width: 25%;
   text-align: left;
-  box-shadow: 0 0 0 1px transparent inset;
 }
 
 .row .edit {
@@ -30,23 +27,18 @@
   width: 100%;
 }
 
-.row .editable:hover {
-  box-shadow: 0 0 0 1px #CECECE inset;
-}
-
 .row:hover .deleteBtn {
   opacity: 1;
 }
 
 .row .editable:focus {
-  box-shadow: 0 0 0 1px #A8A8A8 inset;
+  border: 1px #DCDCDC solid;
   cursor: initial;
   outline: 0;
 }
 
 .row .del {
-  text-align: right;
-  width: 40px;
+  width: 10%;
 }
 
 .deleteBtn {

@@ -74,7 +74,7 @@ export default class Variable extends React.Component {
   render() {
     return (
       <div className="row">
-        <div className="cell storedKey">
+        <div className="storedKey">
           {this.props.isAdding ?
             <input
               ref={(input) => { this.input = input; }}
@@ -91,7 +91,7 @@ export default class Variable extends React.Component {
               onKeyDown={this.handleKeyDown}
               onBlur={this.handleChanged}/>}
         </div>
-        <div className="cell variable">
+        <div className="variable">
           {this.props.isAdding ?
             <input
               className="edit"
@@ -107,7 +107,7 @@ export default class Variable extends React.Component {
               onKeyDown={this.handleKeyDown}
               onBlur={this.handleChanged} />}
         </div>
-        <div className="cell del">
+        <div className="del">
           <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>
         </div>
       </div>

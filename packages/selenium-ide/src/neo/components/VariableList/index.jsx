@@ -40,27 +40,25 @@ export default class VariableList extends React.Component {
   render() {
     const variables = this.props.variables;
     return (
-      <div className="storeContainer">
-        <div className="value-list">
-          {variables.storedVars.entries().sort().map((storedMap) => (
-            <Variable
-              key={storedMap}
-              keyVar={storedMap[0]}
-              value={storedMap[1]}
-              add={this.addVariable}
-              delete={this.deleteVariable}
-              isStop={variables.isStop}
-            />
-          ))}
-          { this.props.isAdding ?
-            <Variable
-              add={this.addVariable}
-              delete={this.deleteVariable}
-              isAdding={this.props.isAdding}
-              setIsAdding={this.props.setIsAdding}
-              isStop={variables.isStop}
-            /> : null}
-        </div>
+      <div className="value-list">
+        {variables.storedVars.entries().sort().map((storedMap) => (
+          <Variable
+            key={storedMap}
+            keyVar={storedMap[0]}
+            value={storedMap[1]}
+            add={this.addVariable}
+            delete={this.deleteVariable}
+            isStop={variables.isStop}
+          />
+        ))}
+        { this.props.isAdding ?
+          <Variable
+            add={this.addVariable}
+            delete={this.deleteVariable}
+            isAdding={this.props.isAdding}
+            setIsAdding={this.props.setIsAdding}
+            isStop={variables.isStop}
+          /> : null}
       </div>
     );
   }
