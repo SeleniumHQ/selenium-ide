@@ -69,6 +69,11 @@ describe("selenium test case migration", () => {
     const { test } = migrateTestCase(file);
     expect(test.commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
   });
+  it("should import a test case with a comment in it", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_9.html")).toString();
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(2);
+  });
 });
 
 describe("selenium suite migration", () => {

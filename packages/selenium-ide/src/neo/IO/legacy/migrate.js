@@ -150,7 +150,7 @@ function sanitizeXml(data) {
     `<link${group} />`
   )).replace(/<td>(.*)<\/td>/g, (match, group) => (
     `<td>${xmlescape(group)}</td>`
-  ));
+  )).replace(/<!--(.|\s)*?-->/g, "");
 }
 
 function parseTarget(targetCell) {
