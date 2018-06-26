@@ -43,7 +43,7 @@ export default class VariableList extends React.Component {
       <div className="value-list">
         {variables.storedVars.entries().sort().map((storedMap) => (
           <Variable
-            key={storedMap}
+            key={Math.random()}
             keyVar={storedMap[0]}
             value={storedMap[1]}
             add={this.addVariable}
