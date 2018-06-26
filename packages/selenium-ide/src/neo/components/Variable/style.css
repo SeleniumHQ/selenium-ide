@@ -1,44 +1,37 @@
-.row {
+.variable {
   font-size: 12px;
   word-break: break-all;
   display: flex;
 }
 
-.row:hover {
+.variable:hover {
   background-color: #F3F3F3;
 }
-.row .storedKey {
+.variable .name, .variable .value {
   float: left;
   padding: 5px;
-  width: 25%;
+  width: 48%;
   text-align: left;
 }
 
-.row .variable {
-  float: left;
-  padding: 5px;
-  width: 25%;
-  text-align: left;
-}
-
-.row .edit {
+.variable .edit {
   padding: 0;
   line-height: 14px;
   width: 100%;
 }
 
-.row:hover .deleteBtn {
+.variable:hover .deleteBtn {
   opacity: 1;
 }
 
-.row .editable:focus {
+.variable .editable:focus {
   border: 1px #DCDCDC solid;
   cursor: initial;
   outline: 0;
 }
 
-.row .del {
-  width: 10%;
+.variable .del {
+  width: 4%;
 }
 
 .deleteBtn {

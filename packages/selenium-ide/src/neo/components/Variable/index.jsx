@@ -73,8 +73,8 @@ export default class Variable extends React.Component {
   }
   render() {
     return (
-      <div className="row">
-        <div className="storedKey">
+      <div className="variable">
+        <div className="name">
           {this.props.isAdding ?
             <input
               ref={(input) => { this.input = input; }}
@@ -91,7 +91,7 @@ export default class Variable extends React.Component {
               onKeyDown={this.handleKeyDown}
               onBlur={this.handleChanged}/>}
         </div>
-        <div className="variable">
+        <div className="value">
           {this.props.isAdding ?
             <input
               className="edit"
