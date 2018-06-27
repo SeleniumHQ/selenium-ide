@@ -35,6 +35,7 @@ export default class TestList extends Component {
     removeTest: PropTypes.func.isRequired
   };
   render() {
+    const callstackTest = PlaybackState.callstack.length ? PlaybackState.callstack[0].caller : undefined;
     return (
       <ul className={classNames("tests", { "active": !this.props.collapsed })}>
         {this.props.tests.map((test, index) => (
@@ -42,6 +43,8 @@ export default class TestList extends Component {
             {this.props.suite ?
               <DraggableTest
                 className={PlaybackState.testState.get(test.id)}
+                callstack={callstackTest === test ? PlaybackState.callstack : undefined}
+                selectedStackIndex={callstackTest === test ? UiState.selectedTest.stack : undefined}
                 test={test}
                 suite={this.props.suite}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
@@ -55,6 +58,8 @@ export default class TestList extends Component {
               <Test
                 key={test.id}
                 className={PlaybackState.testState.get(test.id)}
+                callstack={callstackTest === test ? PlaybackState.callstack : undefined}
+                selectedStackIndex={callstackTest === test ? UiState.selectedTest.stack : undefined}
                 index={index}
                 test={test}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}

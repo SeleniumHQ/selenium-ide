@@ -20,6 +20,7 @@ import PropTypes from "prop-types";
 import { DragSource } from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
+import Callstack from "../Callstack";
 import RemoveButton from "../ActionButtons/Remove";
 import { withOnContextMenu } from "../ContextMenu";
 import ListMenu, { ListMenuItem } from "../ListMenu";
@@ -44,9 +45,11 @@ function collect(connect, monitor) {
 class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    callstack: PropTypes.object,
     test: PropTypes.object.isRequired,
     suite: PropTypes.object,
     selected: PropTypes.bool,
+    selectedStackIndex: PropTypes.number,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
     selectTest: PropTypes.func.isRequired,
@@ -80,7 +83,7 @@ class Test extends React.Component {
     }
   }
   handleClick(test, suite) {
-    this.props.selectTest(test, suite);
+    this.props.selectTest(test, suite, this.props.callstack ? this.props.callstack.length - 1 : undefined);
   }
   handleKeyDown(event) {
     const e = event.nativeEvent;
@@ -117,12 +120,16 @@ class Test extends React.Component {
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.onContextMenu}
       style={{
-        display: this.props.isDragging ? "none" : "flex"
+        display: this.props.isDragging ? "none" : "block"
       }}>
-      <span>{this.props.test.name}</span>
-      {this.props.renameTest ?
-        listMenu :
-        <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
+      <div className="name">
+        <span>{this.props.test.name}</span>
+        {this.props.renameTest ?
+          listMenu :
+          <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />
+        }
+      </div>
+      {this.props.callstack ? <Callstack stack={this.props.callstack} selectedIndex={this.props.selectedStackIndex} /> : undefined}
     </a>;
     return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
   }

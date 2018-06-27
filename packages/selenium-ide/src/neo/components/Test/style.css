@@ -1,22 +1,24 @@
 .test {
-  display: flex;
-  align-items: center;
   font-size: 13px;
   padding-left: 11px;
   background-color: #FFF;
-  align-items: center;
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
 }
 
-.test > span {
+.test .name {
+  display: flex;
+  align-items: center;
+}
+
+.test .name > span {
   flex-grow: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
-.test > button {
+.test .name > button {
   font-size: 22px;
   width: 22px;
   height: 22px;
@@ -29,7 +31,7 @@
   background-color: #F3F3F3
 }
 
-.test:hover > button {
+.test:hover .name > button {
   opacity: 1;
 }
 
@@ -42,6 +44,6 @@
   background-color: #E3F2FF;
 }
 
-.test.changed > span:after {
+.test.changed .name > span:after {
   content: "*";
 }
