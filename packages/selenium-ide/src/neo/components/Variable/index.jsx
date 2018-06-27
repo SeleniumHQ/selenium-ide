@@ -85,7 +85,7 @@ export default class Variable extends React.Component {
             className={classNames("name", { "editable": this.props.isStop })}
             disabled={this.props.isStop ? false : true}
             onChange={this.keyChanged}
-            value={this.props.keyVar}
+            value={this.state.key || this.props.keyVar}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged}/>}
         {this.props.isAdding ?
@@ -99,7 +99,7 @@ export default class Variable extends React.Component {
             className={classNames("value", { "editable": this.props.isStop })}
             disabled={this.props.isStop ? false : true}
             onChange={this.valueChanged}
-            value={this.props.value}
+            value={this.state.value || this.props.value}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged} />}
         <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>
