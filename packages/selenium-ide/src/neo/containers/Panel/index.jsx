@@ -197,7 +197,7 @@ if (browser.windows) {
                     url={this.state.project.url}
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
-                    test={UiState.selectedTest.test}
+                    test={UiState.displayedTest}
                   />
                 </SplitPane>
               </div>

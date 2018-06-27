@@ -102,7 +102,13 @@ class UiState {
     }
   }
 
-  @action.bound selectTest(test, suite) {
+  @computed get displayedTest() {
+    return (this.selectedTest.stack !== undefined && this.selectedTest.stack >= 0 && this.selectedTest.stack < PlaybackState.callstack.length) ?
+      PlaybackState.callstack[this.selectedTest.stack].callee :
+      this.selectedTest.test;
+  }
+
+  @action.bound selectTest(test, suite, stack) {
     if (test !== this.selectedTest.test) {
       if (test && test.commands.length) {
         this.selectCommand(test.commands[0]);
@@ -112,7 +118,7 @@ class UiState {
         this.selectCommand(undefined);
       }
     }
-    this.selectedTest = { test, suite };
+    this.selectedTest = { test, suite, stack };
   }
 
   @action.bound selectTestByIndex(index, suite) {
