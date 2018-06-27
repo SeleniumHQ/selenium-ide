@@ -1,0 +1,12 @@
+.test > div:not(.name) {
+    padding: 1px 0;
+}
+
+.test > div:not(.name).selected {
+    color: #3a9cf1;
+}
+
+.test > div:not(.name) > span {
+    display: inline-block;
+    transform: scaleY(-1) rotate(270deg);
+}
