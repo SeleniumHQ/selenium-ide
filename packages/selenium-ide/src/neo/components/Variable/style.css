@@ -19,7 +19,7 @@
   opacity: 1;
 }
 
-.variable input:disabled {
+.variable input {
   background-color: transparent;
 }
 
