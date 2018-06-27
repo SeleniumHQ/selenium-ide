@@ -55,17 +55,17 @@ export default function record(command, targets, value, insertBeforeLastCommand 
     UiState.setUrl(url.origin, true);
     newCommand.setTarget(url.pathname);
   } else if (command !== "open") {
-    let index = undefined;
+    let index = test.commands.length;
     if (insertBeforeLastCommand) {
       index = test.commands.length - 1;
-    } else if(UiState.selectedCommand !== UiState.pristineCommand) {
+    } else if (UiState.selectedCommand !== UiState.pristineCommand) {
       index = test.commands.indexOf(UiState.selectedCommand);
     }
     if (preprocessDoubleClick(command, test, index)) {
       // double click removed the 2 clicks from before
       index -= 2;
     }
-    recordCommand(command, targets[0][0], value);
+    recordCommand(command, targets[0][0], value, index);
   }
 }
 

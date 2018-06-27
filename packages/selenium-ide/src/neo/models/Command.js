@@ -21,13 +21,16 @@ import uuidv4 from "uuid/v4";
 export default class Command {
   id = null;
   @observable comment = "";
-  @observable command = "";
-  @observable target = "";
-  @observable value = "";
+  @observable command;
+  @observable target;
+  @observable value;
   @observable isBreakpoint = false;
 
-  constructor(id = uuidv4()) {
+  constructor(id = uuidv4(), command, target, value) {
     this.id = id;
+    this.command = command || "";
+    this.target = target || "";
+    this.value = value || "";
     this.export = this.export.bind(this);
   }
 
@@ -103,6 +106,10 @@ export const ArgTypes = {
   alertText: {
     name: "alert text",
     description: "text to check"
+  },
+  attributeLocator: {
+    name: "attribute locator",
+    description: "An element locator followed by an @ sign and then the name of the attribute, e.g. \"foo@bar\"."
   },
   coord: {
     name: "coord String",
@@ -181,6 +188,10 @@ export const ArgTypes = {
   window: {
     name: "window",
     description: "The id of the browser window to select."
+  },
+  xpath: {
+    name: "xpath",
+    description: "The xpath expression to evaluate."
   }
 };
 
@@ -523,6 +534,14 @@ class CommandList {
       target: ArgTypes.expression,
       value: ArgTypes.variableName
     }],
+    [ "storeAttribute", {
+      name: "store attribute",
+      description: "Gets the value of an element attribute. \
+                    The value of the attribute may differ across browsers \
+                    (this is the case for the \"style\" attribute, for example).",
+      target: ArgTypes.attributeLocator,
+      value: ArgTypes.variableName
+    }],
     [ "storeText", {
       name: "store text",
       type: TargetTypes.LOCATOR,
@@ -534,6 +553,13 @@ class CommandList {
     [ "storeTitle", {
       name: "store title",
       description: "Gets the title of the current page."
+    }],
+    [ "storeXpathCount", {
+      name: "store xpath count",
+      description: "Gets the number of nodes that match the specified xpath, \
+                    eg. \"//table\" would give the number of tables.",
+      target: ArgTypes.xpath,
+      value: ArgTypes.variableName
     }],
     [ "submit", {
       name: "submit",

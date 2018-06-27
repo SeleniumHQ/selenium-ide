@@ -245,8 +245,8 @@ class PlaybackState {
                 this.logger.log(result.message);
               }
             }
-            this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
           });
+          this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
           this.isPlaying = false;
           this.isStopping = false;
           return res();

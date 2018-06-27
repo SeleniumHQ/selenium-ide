@@ -90,7 +90,9 @@ function firefox57WorkaroundForBlankPanel () {
   });
 }
 
-firefox57WorkaroundForBlankPanel();
+if (browser.windows) {
+  firefox57WorkaroundForBlankPanel();
+}
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {

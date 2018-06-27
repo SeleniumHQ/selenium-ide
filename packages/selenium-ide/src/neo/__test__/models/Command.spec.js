@@ -21,6 +21,16 @@ describe("Command", () => {
   it("should generate and id", () => {
     expect((new Command()).id).toBeDefined();
   });
+  it("should set basic values in constructor", () => {
+    const c = "click at";
+    const t = "button";
+    const v = "32, 21";
+    const command = new Command(undefined, c, t, v);
+    expect(command.command).toBe(c);
+    expect(command.target).toBe(t);
+    expect(command.value).toBe(v);
+    expect(command.id).toBeDefined();
+  });
   it("should set a comment", () => {
     const command = new Command();
     command.setComment("test");

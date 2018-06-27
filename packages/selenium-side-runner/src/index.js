@@ -113,7 +113,7 @@ function runProject(project) {
       // not parallel
       writeJSFile(path.join(projectPath, suite.name), suite.code);
     } else if (suite.tests.length) {
-      fs.mkdirSync(suite.name);
+      fs.mkdirSync(path.join(projectPath, suite.name));
       // parallel suite
       suite.tests.forEach(test => {
         writeJSFile(path.join(projectPath, suite.name, test.name), `${suite.code}${test.code}`);

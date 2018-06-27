@@ -69,6 +69,11 @@ describe("selenium test case migration", () => {
     const { test } = migrateTestCase(file);
     expect(test.commands[14].target).toBe("//a[@onclick='return confirm(\"Wollen Sie den Datensatz wirklich löschen?\")']");
   });
+  it("should import a test case with a comment in it", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_9.html")).toString();
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(2);
+  });
 });
 
 describe("selenium suite migration", () => {
@@ -77,6 +82,12 @@ describe("selenium suite migration", () => {
     const required = parseSuiteRequirements(suite);
     expect(required.length).toBe(3);
     expect(required).toEqual(["einzeltests/MH_delete.html", "einzeltests/kontakte_leeren.html", "einzeltests/DMS_clear.html"]);
+  });
+  it("should reduct multiple same named test cases", () => {
+    const suite = fs.readFileSync(path.join(__dirname, "IDE_test_10/Suite login_multiple cases.htm")).toString();
+    const required = parseSuiteRequirements(suite);
+    expect(required.length).toBe(2);
+    expect(required).toEqual(["Log in as test user.htm", "Log out from BO.htm"]);
   });
   it("should migrate the suite", () => {
     const files = [

@@ -45,13 +45,13 @@ export function verifyFile(file) {
 export function parseSuiteRequirements(suite) {
   const regex = /<a href="(.*)">/g;
   let lastResult = regex.exec(suite);
-  const results = [];
+  const results = {};
   while (lastResult) {
-    results.push(lastResult[1]);
+    results[lastResult[1]] = true;
     lastResult = regex.exec(suite);
   }
 
-  return results;
+  return Object.keys(results);
 }
 
 export function migrateProject(files) {
@@ -150,7 +150,7 @@ function sanitizeXml(data) {
     `<link${group} />`
   )).replace(/<td>(.*)<\/td>/g, (match, group) => (
     `<td>${xmlescape(group)}</td>`
-  ));
+  )).replace(/<!--(.|\s)*?-->/g, "");
 }
 
 function parseTarget(targetCell) {
