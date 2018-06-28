@@ -23,12 +23,18 @@ import "./style.css";
 export default class Callstack extends React.Component {
   static propTypes = {
     stack: PropTypes.object.isRequired,
-    selectedIndex: PropTypes.number
+    selectedIndex: PropTypes.number,
+    onClick: PropTypes.func
   };
+  handleClick(index, e, ...args) {
+    if (this.props.onClick) {
+      this.props.onClick(index, e, ...args);
+    }
+  }
   render() {
     return (
       this.props.stack.map(({ callee }, index) => (
-        <StackItem key={callee.id} index={index} selected={index === this.props.selectedIndex}>{callee.name}</StackItem>
+        <StackItem key={callee.id} index={index} selected={index === this.props.selectedIndex} onClick={this.handleClick.bind(this, index)}>{callee.name}</StackItem>
       ))
     );
   }
@@ -38,16 +44,17 @@ class StackItem extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     index: PropTypes.number.isRequired,
-    selected: PropTypes.bool
+    selected: PropTypes.bool,
+    onClick: PropTypes.func.isRequired
   };
   render() {
     return (
-      <div className={classNames({ "selected": this.props.selected })} style={{
-        paddingLeft: `${this.props.index * 5 + 2}px`
+      <a className={classNames("stack-item", { "selected": this.props.selected })} onClick={this.props.onClick} style={{
+        paddingLeft: `${this.props.index * 5 + 13}px`
       }}>
         <span className={"si-step-into"}></span>
         {this.props.children}
-      </div>
+      </a>
     );
   }
 }
