@@ -27,6 +27,7 @@ import VerticalTabBar from "../../components/VerticalTabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
 import SuiteList from "../../components/SuiteList";
+import ExecutionPlan from "../../components/ExecutionPlan";
 import Runs from "../../components/Runs";
 import AddButton from "../../components/ActionButtons/Add";
 import "./style.css";
@@ -35,7 +36,7 @@ import "./style.css";
   constructor(props) {
     super(props);
     this.state = {
-      showTests: true,
+      tab: "Runs",
       lastSelection: {}
     };
     this.handleChangedTab = this.handleChangedTab.bind(this);
@@ -48,7 +49,7 @@ import "./style.css";
   handleChangedTab(tab) {
     const lastSelection = this.state.lastSelection;
     this.setState({
-      showTests: tab === "Tests",
+      tab,
       lastSelection: UiState.selectedTest
     });
     UiState.selectTest(lastSelection.test, lastSelection.suite);
@@ -72,30 +73,42 @@ import "./style.css";
         onMouseEnter={() => UiState.setNavigationHover(true)}
         onMouseLeave={() => UiState.setNavigationHover(false)}
       >
-        <VerticalTabBar tabs={["Tests", "Test suites"]} tabChanged={this.handleChangedTab}>
-          <AddButton data-tip={this.state.showTests ? "<p>Add new test</p>" : "<p>Add new test suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
+        <VerticalTabBar tabs={["Tests", "Test suites", "Runs"]} defaultTab="Runs" tabChanged={this.handleChangedTab}>
+          {this.state.tab === "Tests" && <AddButton data-tip={"<p>Add new test</p>"} onClick={ModalState.createTest} />}
+          {this.state.tab === "Test suites" && <AddButton data-tip={"<p>Add new test suite</p>"} onClick={ModalState.createSuite} />}
         </VerticalTabBar>
-        <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
         <Provider renameTest={ModalState.renameTest}>
-          { this.state.showTests
-            ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
-            : <SuiteList
-              suites={this.props.suites}
-              rename={ModalState.renameSuite}
-              editSettings={ModalState.editSuiteSettings}
-              selectTests={ModalState.editSuite}
-              removeSuite={ModalState.deleteSuite}
-              moveTest={this.props.moveTest}
-            />
-          }
+          <React.Fragment>
+            {this.state.tab === "Tests" && <React.Fragment>
+              <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
+              <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
+            </React.Fragment>
+            }
+            {this.state.tab === "Test suites" && <React.Fragment>
+              <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
+              <SuiteList
+                suites={this.props.suites}
+                rename={ModalState.renameSuite}
+                editSettings={ModalState.editSuiteSettings}
+                selectTests={ModalState.editSuite}
+                removeSuite={ModalState.deleteSuite}
+                moveTest={this.props.moveTest}
+              />
+            </React.Fragment>
+            }
+            {this.state.tab === "Runs" && <React.Fragment>
+              <ExecutionPlan />
+              <Runs
+                runs={PlaybackState.finishedTestsCount}
+                failures={PlaybackState.failures}
+                hasError={!!PlaybackState.failures}
+                progress={PlaybackState.finishedTestsCount}
+                totalProgress={PlaybackState.testsCount}
+              />
+            </React.Fragment>
+            }
+          </React.Fragment>
         </Provider>
-        <Runs
-          runs={PlaybackState.finishedTestsCount}
-          failures={PlaybackState.failures}
-          hasError={!!PlaybackState.failures}
-          progress={PlaybackState.finishedTestsCount}
-          totalProgress={PlaybackState.testsCount}
-        />
       </aside>
     );
   }
