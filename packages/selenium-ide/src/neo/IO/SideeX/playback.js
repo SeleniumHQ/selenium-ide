@@ -124,13 +124,13 @@ function catchPlayingError(message) {
   }
 }
 
-function reportError(error) {
+function reportError(error, state = PlaybackStates.Failed) {
   const { id } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
   }
-  PlaybackState.setCommandState(id, PlaybackStates.Failed, message);
+  PlaybackState.setCommandState(id, state, message);
 }
 
 reaction(
@@ -323,7 +323,7 @@ function doDelay() {
 }
 
 function notifyWaitDeprecation(command) {
-  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`);
+  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`, PlaybackStates.Deprecated);
 }
 
 function isReceivingEndError(reason) {
