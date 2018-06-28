@@ -96,6 +96,10 @@
   color: #E80600;
 }
 
+.test-table tbody tr.deprecated td {
+  color: #E80600;
+}
+
 .test-table tbody tr.fatal td:not(:first-child) {
   color: #E80600;
   font-weight: bold;

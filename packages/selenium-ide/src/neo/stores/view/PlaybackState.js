@@ -343,6 +343,7 @@ class PlaybackState {
 }
 
 export const PlaybackStates = {
+  Deprecated: "deprecated",
   Failed: "failed",
   Fatal: "fatal",
   Passed: "passed",

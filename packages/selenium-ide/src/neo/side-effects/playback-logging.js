@@ -74,6 +74,7 @@ export default class PlaybackLogger {
         case PlaybackStates.Undetermined:
           log.setStatus(LogTypes.Undetermined);
           break;
+        case PlaybackStates.Deprecated:
         case PlaybackStates.Failed:
         case PlaybackStates.Fatal: // eslint-disable-line no-fallthrough
           log.setStatus(LogTypes.Failure);
