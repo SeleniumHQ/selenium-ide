@@ -109,16 +109,17 @@ class UiState {
   }
 
   @action.bound selectTest(test, suite, stack) {
-    if (test !== this.selectedTest.test) {
-      if (test && test.commands.length) {
-        this.selectCommand(test.commands[0]);
-      } else if (test && !test.commands.length) {
+    const _test = (stack !== undefined && stack >= 0) ? PlaybackState.callstack[stack].callee : test;
+    if (_test !== this.displayedTest) {
+      if (_test && _test.commands.length) {
+        this.selectCommand(_test.commands[0]);
+      } else if (_test && !_test.commands.length) {
         this.selectCommand(this.pristineCommand);
       } else {
         this.selectCommand(undefined);
       }
     }
-    this.selectedTest = { test, suite, stack };
+    this.selectedTest = { test, suite, stack: (stack >= 0) ? stack : undefined };
   }
 
   @action.bound selectTestByIndex(index, suite) {
