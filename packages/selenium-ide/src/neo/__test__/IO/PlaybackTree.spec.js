@@ -23,6 +23,83 @@ class CommandNode {
   }
 }
 
+class Level {
+  constructor(_stack) {
+    this.level = 0;
+    this.stack = [];
+    Object.assign(this.stack, _stack);
+  }
+
+  increase() {
+    this.level++;
+  }
+
+  decrease() {
+    this.level--;
+  }
+
+  store(index) {
+    Object.assign(this.stack[index], { level: this.level });
+  }
+}
+
+class Command {
+  constructor(command, commandProcessor) {
+    switch(command.name) {
+      case "if":
+        return new If(command, commandProcessor);
+      case "end":
+        return new End(command, commandProcessor);
+      default:
+        // return generic command object
+        break;
+    }
+  }
+}
+
+class ICommand {
+  constructor(command, commandProcessor) {
+    this.command = command;
+    this.commandProcessor = commandProcessor;
+  }
+
+  validate() {
+  }
+
+  level() {
+  }
+
+  setState() {
+  }
+}
+
+class If extends ICommand {
+  constructor(command, commandProcessor) {
+    super(command, commandProcessor);
+  }
+
+  level() {
+    this.commandProcessor.level.store(this.commandProcessor.index);
+    this.commandProcessor.level.increase();
+  }
+
+  setState() {
+    this.commandProcessor.state.push({
+      name: this.command.name,
+      index: this.commandProcessor.index
+    });
+  }
+
+  process() {
+  }
+}
+
+class End extends ICommand {
+  constructor(command, commandProcessor) {
+    super(command, commandProcessor);
+  }
+}
+
 class Automata {
   constructor(stack) {
     this.inputStack = stack;
@@ -32,18 +109,21 @@ class Automata {
 
   preprocess() {
     let topOf = this.topOf;
-    let level = 0;
     let state = [];
-    let stack = [];
-    Object.assign(stack, this.inputStack);
+    let level = new Level(this.inputStack);
     this.inputStack.forEach(function(command, index) {
+      let cmd = new Command(command, { index, level, state });
       switch(command.name) {
         case "if":
+          cmd.validate();
+          cmd.level();
+          cmd.setState();
+          break;
         case "while":
         case "times":
         case "repeatIf":
-          Object.assign(stack[index], { level: level });
-          level++;
+          level.store(index);
+          level.increase();
           state.push({ name: command.name, index: index });
           break;
         case "else":
@@ -51,19 +131,19 @@ class Automata {
           if (topOf(state).name !== "if") {
             throw "An else / elseIf used outside of an if block";
           }
-          level--;
-          Object.assign(stack[index], { level: level });
-          level++;
+          level.decrease();
+          level.store(index);
+          level.increase();
           break;
         case "end":
           if (topOf(state).name === "while" ||
               topOf(state).name === "times" ||
               topOf(state).name === "repeatIf") {
-            level--;
-            Object.assign(stack[index], { level: level });
+            level.decrease();
+            level.store(index);
             state.pop();
           } else if (topOf(state).name === "if") {
-            const segment = stack.slice(topOf(state).index, index);
+            const segment = level.stack.slice(topOf(state).index, index);
             const elseCount = segment.filter(kommand => kommand.name === "else").length;
             const elseSegment = segment.filter(kommand => kommand.name.match(/else/));
             if (elseCount > 1) {
@@ -71,21 +151,21 @@ class Automata {
             } else if (elseCount === 1 && topOf(elseSegment).name !== "else") {
               throw "Incorrect command order of elseIf / else";
             } else if (elseCount === 0 || topOf(elseSegment).name === "else") {
-              level--;
-              Object.assign(stack[index], { level: level });
+              level.decrease();
+              level.store(index);
               state.pop();
             }
           }
           break;
         default:
-          Object.assign(stack[index], { level: level });
+          level.store(index);
           break;
       }
     });
     if (state.length > 0) {
       throw "Incomplete block at " + topOf(state).name;
     } else {
-      this.preprocessStack = stack;
+      this.preprocessStack = level.stack;
       return this.preprocessStack;
     }
   }
