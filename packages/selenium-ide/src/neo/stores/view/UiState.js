@@ -102,9 +102,9 @@ class UiState {
   }
 
   @action.bound pasteFromClipboard(index) {
-    if (this.clipboard && this.selectedTest.test) {
+    if (this.clipboard && this.displayedTest) {
       const newCommand = this.clipboard.clone();
-      this.selectedTest.test.insertCommandAt(newCommand, index);
+      this.displayedTest.insertCommandAt(newCommand, index);
     }
   }
 
@@ -278,7 +278,7 @@ class UiState {
   @action.bound observePristine() {
     this.pristineDisposer = observe(this.pristineCommand, () => {
       this.pristineDisposer();
-      this.selectedTest.test.addCommand(this.pristineCommand);
+      this.displayedTest.addCommand(this.pristineCommand);
       this.pristineCommand = new Command();
       this.observePristine();
     });
