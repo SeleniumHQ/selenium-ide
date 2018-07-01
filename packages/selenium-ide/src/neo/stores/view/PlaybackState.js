@@ -77,6 +77,7 @@ class PlaybackState {
       UiState._project.addCurrentUrl();
     } catch (e) {} // eslint-disable-line no-empty
     UiState.changeView("Executing");
+    UiState.selectCommand(undefined);
     if (UiState.isRecording) {
       ModalState.showAlert({
         title: "Stop recording",
@@ -183,7 +184,7 @@ class PlaybackState {
       variables.clearVariables();
     }
     this.currentRunningTest = this._testsToRun.shift();
-    UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
+    UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite, undefined, true);
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.currentPlayingIndex = 0;
     this.errors = 0;
@@ -276,11 +277,14 @@ class PlaybackState {
   }
 
   @action.bound resume() {
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
+    UiState.selectCommand(undefined);
     this.paused = false;
   }
 
-  @action.bound break() {
+  @action.bound break(command) {
     this.paused = true;
+    UiState.selectCommand(command);
     browser.windows.getCurrent().then(windowInfo => {
       browser.windows.update(windowInfo.id, {
         focused: true
@@ -354,7 +358,7 @@ class PlaybackState {
       callee: testCase,
       position: this.currentPlayingIndex
     });
-    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1);
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     this.currentRunningTest = testCase;
     this.currentPlayingIndex = -1;
     this.runningQueue = testCase.commands.peek();
@@ -365,7 +369,7 @@ class PlaybackState {
     this.currentRunningTest = top.caller;
     this.currentPlayingIndex = top.position;
     this.runningQueue = top.caller.commands.peek();
-    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1);
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     return top;
   }
 

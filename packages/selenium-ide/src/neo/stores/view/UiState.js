@@ -114,18 +114,22 @@ class UiState {
       this.selectedTest.test;
   }
 
-  @action.bound selectTest(test, suite, stack) {
-    const _test = (stack !== undefined && stack >= 0) ? PlaybackState.callstack[stack].callee : test;
-    if (_test !== this.displayedTest) {
-      if (_test && _test.commands.length) {
-        this.selectCommand(_test.commands[0]);
-      } else if (_test && !_test.commands.length) {
-        this.selectCommand(this.pristineCommand);
-      } else {
-        this.selectCommand(undefined);
+  @action.bound selectTest(test, suite, stack, override) {
+    if (!PlaybackState.isPlaying || PlaybackState.paused || override) {
+      const _test = (stack !== undefined && stack >= 0) ? PlaybackState.callstack[stack].callee : test;
+      if (_test !== this.displayedTest) {
+        if (PlaybackState.isPlaying && !PlaybackState.paused) {
+          this.selectCommand(undefined);
+        } else if (_test && _test.commands.length) {
+          this.selectCommand(_test.commands[0]);
+        } else if (_test && !_test.commands.length) {
+          this.selectCommand(this.pristineCommand);
+        } else {
+          this.selectCommand(undefined);
+        }
       }
+      this.selectedTest = { test, suite, stack: (stack >= 0) ? stack : undefined };
     }
-    this.selectedTest = { test, suite, stack: (stack >= 0) ? stack : undefined };
   }
 
   @action.bound selectTestByIndex(index, suite) {
@@ -163,7 +167,9 @@ class UiState {
   }
 
   @action.bound selectCommand(command) {
-    this.selectedCommand = command;
+    if (!PlaybackState.isPlaying || PlaybackState.paused) {
+      this.selectedCommand = command;
+    }
   }
 
   @action.bound selectCommandByIndex(index) {

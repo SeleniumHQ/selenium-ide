@@ -54,16 +54,16 @@
 }
 
 .test > a.executing {
-    background-color: #dbf9cf;
-}
-
-.test:focus > a.selected.executing {
-    border-top: 1px solid #73d671;
-    border-bottom: 1px solid #73d671;
+    background-color: #E3F2FF;
 }
 
 .test.paused > a.executing {
     background-color: #FFFCC5;
+}
+
+.test.paused:focus > a.selected.executing {
+    border-top: 1px solid #d3d622;
+    border-bottom: 1px solid #d3d622;
 }
 
 .test.changed .name > span:after {

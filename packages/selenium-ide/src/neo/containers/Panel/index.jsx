@@ -30,6 +30,7 @@ import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import SuiteDropzone from "../../components/SuiteDropzone";
+import PauseBanner from "../../components/PauseBanner";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -168,6 +169,7 @@ if (browser.windows) {
             }}
           >
             <div className="wrapper">
+              <PauseBanner />
               <ProjectHeader
                 title={this.state.project.name}
                 changed={this.state.project.modified}

@@ -83,19 +83,19 @@ function executionLoop() {
       return false;
     }
   }
-  const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
-  if (!command) return executionLoop();
+  const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  if (!command.command) return executionLoop();
   // breakpoint
-  PlaybackState.setCommandState(id, PlaybackStates.Pending);
-  if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
-  else if (ignoreBreakpoint && isBreakpoint) ignoreBreakpoint = false;
+  PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
+  if (!ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
+  else if (ignoreBreakpoint && command.isBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  if (isExtCommand(command)) {
+  if (isExtCommand(command.command)) {
     return doDelay().then(() => (
-      (extCommand[extCommand.name(command)](xlateArgument(target), xlateArgument(value)))
+      (extCommand[extCommand.name(command.command)](xlateArgument(command.target), xlateArgument(command.value)))
         .then(() => {
-          PlaybackState.setCommandState(id, PlaybackStates.Passed);
+          PlaybackState.setCommandState(command.id, PlaybackStates.Passed);
         }).then(executionLoop)
     ));
   } else if (isImplicitWait(command)) {
