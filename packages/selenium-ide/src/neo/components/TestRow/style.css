@@ -21,6 +21,10 @@
 }
 
 .test-table tbody tr.pending {
+  background-color: #dbf9cf;
+}
+
+.test-table.paused tbody tr.pending {
   background-color: #FFFCC5;
 }
 
@@ -30,6 +34,10 @@
 
 .test-table tbody tr:focus td {
   border-top: 1px solid #75BFFF;
+}
+
+.test-table tbody tr.pending:focus td {
+    border-top: 1px solid #73d671;
 }
 
 .test-table tbody tr td:first-child {

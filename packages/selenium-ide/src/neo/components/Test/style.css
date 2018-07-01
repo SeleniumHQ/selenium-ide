@@ -54,6 +54,15 @@
 }
 
 .test > a.executing {
+    background-color: #dbf9cf;
+}
+
+.test:focus > a.selected.executing {
+    border-top: 1px solid #73d671;
+    border-bottom: 1px solid #73d671;
+}
+
+.test.paused > a.executing {
     background-color: #FFFCC5;
 }
 

@@ -51,6 +51,7 @@ export default class Test extends React.Component {
     menu: PropTypes.node,
     selected: PropTypes.bool,
     isExecuting: PropTypes.bool,
+    paused: PropTypes.bool,
     selectedStackIndex: PropTypes.number,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
@@ -121,7 +122,7 @@ export default class Test extends React.Component {
   render() {
     const rendered = <div
       ref={(node) => { this.node = node; }}
-      className={classNames("test", this.props.className, { "changed": this.props.changed }, { "selected": this.props.selected })}
+      className={classNames("test", this.props.className, { "changed": this.props.changed }, { "selected": this.props.selected }, { "paused": this.props.paused })}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.onContextMenu}
@@ -130,7 +131,7 @@ export default class Test extends React.Component {
       }}>
       <a
         ref={(button) => { this.button = button; }}
-        className={classNames("name", { "selected": this.props.selected && this.props.selectedStackIndex === undefined }, { "executing": this.props.isExecuting && this.props.callstack && this.props.callstack.length === undefined })}
+        className={classNames("name", { "selected": this.props.selected && this.props.selectedStackIndex === undefined }, { "executing": this.props.isExecuting && this.props.callstack && !this.props.callstack.length })}
         onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}>
         <span>{this.props.test.name}</span>
         {this.props.menu}
