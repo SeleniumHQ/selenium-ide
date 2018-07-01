@@ -59,6 +59,12 @@ class PlaybackState {
     ));
   }
 
+  @computed get testsToRun() {
+    return this.currentRunningSuite ? this.currentRunningSuite.tests
+           : this.currentRunningTest ? [this.callstack.length ? this.callstack[0].caller : this.currentRunningTest] // eslint-disable-line indent
+           : undefined; // eslint-disable-line indent
+  }
+
   @computed get testMap() {
     return UiState._project.tests.reduce((testMap, test) => {
       testMap[test.name] = test;

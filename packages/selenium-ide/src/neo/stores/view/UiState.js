@@ -24,6 +24,8 @@ import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
 
 class UiState {
+  views = [ "Tests", "Test suites", "Runs" ];
+  @observable selectedView = "Runs";
   @observable selectedTest = {};
   @observable selectedCommand = null;
   @observable filterTerm = "";
@@ -91,6 +93,10 @@ class UiState {
     return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
+  @action.bound changeView(view) {
+    this.selectedView = view;
+  }
+
   @action.bound copyToClipboard(item) {
     this.clipboard = item;
   }
@@ -126,10 +132,10 @@ class UiState {
     const selectTestInArray = (index, tests) => (
       (index >= 0 && index < tests.length) ? tests[index] : undefined
     );
-    if (!suite) {
+    if (this.selectedView === "Tests") {
       const test = selectTestInArray(index, this.filteredTests);
       if (test) this.selectTest(test);
-    } else {
+    } else if (this.selectedView === "Test suites") {
       const suiteState = this.getSuiteState(suite);
       const tests = suiteState.filteredTests.get();
       const test = selectTestInArray(index, tests);
@@ -144,6 +150,15 @@ class UiState {
         const nextSuite = this._project.suites[suiteIndex + 1];
         this.selectTestByIndex(0, nextSuite);
       }
+    } else if (this.selectedView === "Runs") {
+      const test = selectTestInArray(index, PlaybackState.testsToRun);
+      if (test) {
+        let stack = undefined;
+        if (PlaybackState.callstack.length && PlaybackState.callstack[0].caller === test) {
+          stack = PlaybackState.callstack.length - 1;
+        }
+        this.selectTest(test, suite, stack);
+      }
     }
   }
 
@@ -152,7 +167,7 @@ class UiState {
   }
 
   @action.bound selectCommandByIndex(index) {
-    const { test } = this.selectedTest;
+    const test = this.displayedTest;
     if (index >= 0 && index < test.commands.length) {
       this.selectCommand(test.commands[index]);
     } else if (index === test.commands.length) {
@@ -161,7 +176,7 @@ class UiState {
   }
 
   @action.bound selectNextCommand() {
-    this.selectCommandByIndex(this.selectedTest.test.commands.indexOf(this.selectedCommand) + 1);
+    this.selectCommandByIndex(this.displayedTest.commands.indexOf(this.selectedCommand) + 1);
   }
 
   @action.bound changeFilter(term) {

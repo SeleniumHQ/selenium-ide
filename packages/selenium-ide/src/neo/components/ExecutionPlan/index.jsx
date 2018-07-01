@@ -22,12 +22,9 @@ import "./style.css";
 
 export default class ExecutionPlan extends React.Component {
   render () {
-    const tests = PlaybackState.currentRunningSuite ? PlaybackState.currentRunningSuite.tests
-                 : PlaybackState.currentRunningTest ? [PlaybackState.callstack.length ? PlaybackState.callstack[0].caller : PlaybackState.currentRunningTest] // eslint-disable-line indent
-                 : undefined; // eslint-disable-line indent
     return (
-      tests
-        ? <TestList tests={tests} suite={PlaybackState.currentRunningSuite} noMenu={true} />
+      PlaybackState.testsToRun
+        ? <TestList tests={PlaybackState.testsToRun} suite={PlaybackState.currentRunningSuite} noMenu={true} />
         : <div className="content no-session">
           <span>No Execution Session</span>
         </div>

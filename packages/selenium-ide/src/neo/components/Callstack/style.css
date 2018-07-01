@@ -1,6 +1,5 @@
 .test > .stack-item:not(.name) {
     display: block;
-    padding: 1px 0;
 }
 
 .test > .stack-item:not(.name).selected {

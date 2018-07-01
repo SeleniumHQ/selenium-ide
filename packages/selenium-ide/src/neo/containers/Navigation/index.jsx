@@ -36,7 +36,6 @@ import "./style.css";
   constructor(props) {
     super(props);
     this.state = {
-      tab: "Runs",
       lastSelection: {}
     };
     this.handleChangedTab = this.handleChangedTab.bind(this);
@@ -49,9 +48,9 @@ import "./style.css";
   handleChangedTab(tab) {
     const lastSelection = this.state.lastSelection;
     this.setState({
-      tab,
       lastSelection: UiState.selectedTest
     });
+    UiState.changeView(tab);
     UiState.selectTest(lastSelection.test, lastSelection.suite);
   }
   handleKeyDown(event) {
@@ -73,18 +72,18 @@ import "./style.css";
         onMouseEnter={() => UiState.setNavigationHover(true)}
         onMouseLeave={() => UiState.setNavigationHover(false)}
       >
-        <VerticalTabBar tabs={["Tests", "Test suites", "Runs"]} defaultTab="Runs" tabChanged={this.handleChangedTab}>
-          {this.state.tab === "Tests" && <AddButton data-tip={"<p>Add new test</p>"} onClick={ModalState.createTest} />}
-          {this.state.tab === "Test suites" && <AddButton data-tip={"<p>Add new test suite</p>"} onClick={ModalState.createSuite} />}
+        <VerticalTabBar tabs={UiState.views} tab={UiState.selectedView} tabChanged={this.handleChangedTab}>
+          {UiState.selectedView === "Tests" && <AddButton data-tip={"<p>Add new test</p>"} onClick={ModalState.createTest} />}
+          {UiState.selectedView === "Test suites" && <AddButton data-tip={"<p>Add new test suite</p>"} onClick={ModalState.createSuite} />}
         </VerticalTabBar>
         <Provider renameTest={ModalState.renameTest}>
           <React.Fragment>
-            {this.state.tab === "Tests" && <React.Fragment>
+            {UiState.selectedView === "Tests" && <React.Fragment>
               <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
               <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
             </React.Fragment>
             }
-            {this.state.tab === "Test suites" && <React.Fragment>
+            {UiState.selectedView === "Test suites" && <React.Fragment>
               <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
               <SuiteList
                 suites={this.props.suites}
@@ -96,7 +95,7 @@ import "./style.css";
               />
             </React.Fragment>
             }
-            {this.state.tab === "Runs" && <React.Fragment>
+            {UiState.selectedView === "Runs" && <React.Fragment>
               <ExecutionPlan />
               <Runs
                 runs={PlaybackState.finishedTestsCount}
