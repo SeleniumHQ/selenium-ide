@@ -24,8 +24,8 @@ import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
 
 class UiState {
-  views = [ "Tests", "Test suites", "Runs" ];
-  @observable selectedView = "Runs";
+  views = [ "Tests", "Test suites", "Executing" ];
+  @observable selectedView = "Tests";
   @observable selectedTest = {};
   @observable selectedCommand = null;
   @observable filterTerm = "";
@@ -150,7 +150,7 @@ class UiState {
         const nextSuite = this._project.suites[suiteIndex + 1];
         this.selectTestByIndex(0, nextSuite);
       }
-    } else if (this.selectedView === "Runs") {
+    } else if (this.selectedView === "Executing") {
       const test = selectTestInArray(index, PlaybackState.testsToRun);
       if (test) {
         let stack = undefined;

@@ -27,7 +27,7 @@ export default class VerticalTabBar extends React.Component {
     buttonsMargin: 5
   };
   handleClick(tab) {
-    if (tab !== this.state.activeTab.tab) {
+    if (tab !== (this.props.tab || this.state.activeTab.tab)) {
       this.setState({
         activeTab: { tab }
       });

@@ -95,7 +95,7 @@ import "./style.css";
               />
             </React.Fragment>
             }
-            {UiState.selectedView === "Runs" && <React.Fragment>
+            {UiState.selectedView === "Executing" && <React.Fragment>
               <ExecutionPlan />
               <Runs
                 runs={PlaybackState.finishedTestsCount}

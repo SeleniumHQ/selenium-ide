@@ -26,7 +26,7 @@ export default class ExecutionPlan extends React.Component {
       PlaybackState.testsToRun
         ? <TestList tests={PlaybackState.testsToRun} suite={PlaybackState.currentRunningSuite} noMenu={true} />
         : <div className="content no-session">
-          <span>No Execution Session</span>
+          <span>No Tests Running</span>
         </div>
     );
   }
