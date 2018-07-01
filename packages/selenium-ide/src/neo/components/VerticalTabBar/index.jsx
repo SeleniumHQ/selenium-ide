@@ -18,6 +18,7 @@ export default class VerticalTabBar extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     tabs: PropTypes.array.isRequired,
+    tab: PropTypes.string,
     defaultTab: PropTypes.string,
     buttonsMargin: PropTypes.number,
     tabChanged: PropTypes.func
@@ -39,7 +40,7 @@ export default class VerticalTabBar extends React.Component {
         <div>
           <ListMenu direction={MenuDirections.Bottom} width={130} padding={5} opener={
             <VerticalTabBarItem focusable={true}>
-              <span>{this.state.activeTab.tab}</span>
+              <span>{this.props.tab || this.state.activeTab.tab}</span>
             </VerticalTabBarItem>
           }>
             {this.props.tabs.map(tab => (
