@@ -15,14 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-class CommandNode {
-  constructor() {
-    this.next = undefined;
-    this.left = undefined;
-    this.right = undefined;
-  }
-}
-
 class Command {
   constructor(command, commandStackHandler) {
     switch(command.name) {
@@ -34,6 +26,7 @@ class Command {
       case "while":
       case "times":
       case "repeatIf":
+      case "do":
         return new Loop(command, commandStackHandler);
       case "end":
         return new End(command, commandStackHandler);
@@ -79,9 +72,19 @@ class Loop {
   }
 
   preprocess() {
-    this.commandStackHandler.store();
-    this.commandStackHandler.setState();
-    this.commandStackHandler.increaseLevel();
+    if (this.command.name === "repeatIf") {
+      if (this.commandStackHandler.top().name !== "do") {
+        throw "A repeatIf used without a do block";
+      }
+      this.commandStackHandler.store();
+    } else if (this.command.name === "while" &&
+               this.commandStackHandler.top().name === "do") {
+      this.commandStackHandler.store();
+    } else {
+      this.commandStackHandler.store();
+      this.commandStackHandler.setState();
+      this.commandStackHandler.increaseLevel();
+    }
   }
 
 }
@@ -98,12 +101,8 @@ class End {
       this.commandStackHandler.store();
       this.commandStackHandler.popState();
     } else if (this.terminatesIf()) {
-      const segment = this.commandStackHandler.segment(
-        this.commandStackHandler.top().index,
-        this.commandStackHandler.currentCommandIndex
-      );
-      const elseCount = segment.filter(command => command.name === "else").length;
-      const elseSegment = segment.filter(command => command.name.match(/else/));
+      const elseCount = this.commandStackHandler.currentSegment().filter(command => command.name === "else").length;
+      const elseSegment = this.commandStackHandler.currentSegment().filter(command => command.name.match(/else/));
       if (elseCount > 1) {
         throw "Too many else commands used";
       } else if (elseCount === 1 && this.commandStackHandler.topOf(elseSegment).name !== "else") {
@@ -113,6 +112,8 @@ class End {
         this.commandStackHandler.store();
         this.commandStackHandler.popState();
       }
+    } else {
+      throw "Use of end without an opening keyword";
     }
   }
 
@@ -123,7 +124,7 @@ class End {
   terminatesLoop() {
     return (this.commandStackHandler.top().name === "while" ||
             this.commandStackHandler.top().name === "times" ||
-            this.commandStackHandler.top().name === "repeatIf");
+            this.commandStackHandler.top().name === "do");
   }
 
 }
@@ -170,15 +171,20 @@ class CommandStackHandler {
   }
 
   top() {
-    return this.state[this.state.length - 1];
+    let command = this.state[this.state.length - 1];
+    if (command) {
+      return this.state[this.state.length - 1];
+    } else {
+      return { name: "" };
+    }
   }
 
   topOf(segment) {
     return segment[segment.length - 1];
   }
 
-  segment(startIndex, endIndex) {
-    return this.stack.slice(startIndex, endIndex);
+  currentSegment() {
+    return this.stack.slice(this.top().index, this.currentCommandIndex);
   }
 
   setCurrentCommand(command, index) {
@@ -190,6 +196,14 @@ class CommandStackHandler {
     if (this.state.length > 0) {
       throw "Incomplete block at " + this.top().name;
     }
+  }
+}
+
+class CommandNode {
+  constructor() {
+    this.next = undefined;
+    this.left = undefined;
+    this.right = undefined;
   }
 }
 
@@ -213,27 +227,27 @@ class PlaybackTree {
   }
 
   process() {
-    let _stack = this.preprocessStack;
-    let stack = this.stack;
-    this.preprocessStack.forEach(function(command, index) {
-      if (_stack[index + 1] && (command.level === _stack[index + 1].level)) {
-        let node = new CommandNode;
-        node.next = _stack[index + 1];
-        stack.push(node);
-      } else {
-        let node = new CommandNode;
-        node.right = _stack[index + 1];
-        let segment = _stack.slice(index + 1, _stack.length + 1);
-        let leftTarget = segment.findIndex(kommand => kommand.level === command.level);
-        for(let i = index; i < _stack.length + 1; i++) {
-          if (_stack[i + 1] && (_stack[i].level === _stack[i + 1].level)) {
-            node.left = _stack[i + 1];
-            break;
-          }
-        }
-        stack.push(node);
-      }
-    });
+    //let _stack = this.preprocessStack;
+    //let stack = this.stack;
+    //this.preprocessStack.forEach(function(command, index) {
+    //  if (_stack[index + 1] && (command.level === _stack[index + 1].level)) {
+    //    let node = new CommandNode;
+    //    node.next = _stack[index + 1];
+    //    stack.push(node);
+    //  } else {
+    //    let node = new CommandNode;
+    //    node.right = _stack[index + 1];
+    //    let segment = _stack.slice(index + 1, _stack.length + 1);
+    //    let leftTarget = segment.findIndex(kommand => kommand.level === command.level);
+    //    for(let i = index; i < _stack.length + 1; i++) {
+    //      if (_stack[i + 1] && (_stack[i].level === _stack[i + 1].level)) {
+    //        node.left = _stack[i + 1];
+    //        break;
+    //      }
+    //    }
+    //    stack.push(node);
+    //  }
+    //});
   }
 
   topOf(stack) {
@@ -243,6 +257,34 @@ class PlaybackTree {
 }
 
 describe("Control Flow", () => {
+  describe.skip("Process", () => {
+    describe("Generate Linked List", () => {
+      test("has next for command-command", () => {
+        let input = [
+          { name: "command1" },
+          { name: "command2" }
+        ];
+        let playbackTree = new PlaybackTree(input);
+        playbackTree.preprocess();
+        playbackTree.process();
+        expect(playbackTree.stack[0].next).toEqual(input[1]);
+      });
+
+      test("has next and left, right for if-command-end", () => {
+        let input = [
+          { name: "if" },
+          { name: "command" },
+          { name: "end" }
+        ];
+        let playbackTree = new PlaybackTree(input);
+        playbackTree.preprocess();
+        playbackTree.process();
+        expect(playbackTree.stack[0].next).toBeUndefined();
+        expect(playbackTree.stack[0].right).toEqual(input[1]);
+        expect(playbackTree.stack[0].left).toEqual(input[2]);
+      });
+    });
+  });
   describe("Preprocess", () => {
     test("marked with correct levels", () => {
       let _playbackTree = new PlaybackTree([
@@ -252,16 +294,32 @@ describe("Control Flow", () => {
         { name: "while" },
         { name: "command" },
         { name: "end" },
+        { name: "do" },
+        { name: "command" },
+        { name: "while" },
+        { name: "end" },
+        { name: "do" },
+        { name: "command" },
+        { name: "repeatIf" },
+        { name: "end" },
         { name: "end" }
       ]);
       let playbackTree = _playbackTree.preprocess();
-      expect(playbackTree[0].level).toEqual(0); // if
-      expect(playbackTree[1].level).toEqual(1); //   command
-      expect(playbackTree[2].level).toEqual(0); // else
-      expect(playbackTree[3].level).toEqual(1); //   while
-      expect(playbackTree[4].level).toEqual(2); //     command
-      expect(playbackTree[5].level).toEqual(1); //   end
-      expect(playbackTree[6].level).toEqual(0); // end
+      expect(playbackTree[0].level).toEqual(0); //  if
+      expect(playbackTree[1].level).toEqual(1); //    command
+      expect(playbackTree[2].level).toEqual(0); //  else
+      expect(playbackTree[3].level).toEqual(1); //    while
+      expect(playbackTree[4].level).toEqual(2); //      command
+      expect(playbackTree[5].level).toEqual(1); //    end
+      expect(playbackTree[6].level).toEqual(1); //    do
+      expect(playbackTree[7].level).toEqual(2); //      command
+      expect(playbackTree[8].level).toEqual(2); //      while
+      expect(playbackTree[9].level).toEqual(1); //    end
+      expect(playbackTree[10].level).toEqual(1); //   do
+      expect(playbackTree[11].level).toEqual(2); //     command
+      expect(playbackTree[12].level).toEqual(2); //     repeatIf
+      expect(playbackTree[13].level).toEqual(1); //   end
+      expect(playbackTree[14].level).toEqual(0); // end
     });
     describe("Validation", () => {
       test("if, end", () => {
@@ -288,12 +346,12 @@ describe("Control Flow", () => {
         let playbackTree = new PlaybackTree([{ name: "times" }, { name: "end" }]);
         expect(playbackTree.preprocess()).toBeTruthy();
       });
-      test("repeatIf, end", () => {
-        let playbackTree = new PlaybackTree([{ name: "repeatIf" }, { name: "end" }]);
+      test("do, repeatIf, end", () => {
+        let playbackTree = new PlaybackTree([{ name: "do" }, { name: "repeatIf" }, { name: "end" }]);
         expect(playbackTree.preprocess()).toBeTruthy();
       });
-      test("repeatIf, if, end, end", () => {
-        let playbackTree = new PlaybackTree([{ name: "repeatIf" }, { name: "if" }, { name: "end" }, { name: "end" }]);
+      test("do, while, end", () => {
+        let playbackTree = new PlaybackTree([{ name: "do" }, { name: "while" }, { name: "end" }]);
         expect(playbackTree.preprocess()).toBeTruthy();
       });
     });
@@ -336,41 +394,17 @@ describe("Control Flow", () => {
       });
       test("repeatIf", () => {
         let playbackTree = new PlaybackTree([{ name: "repeatIf" }]);
-        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at repeatIf");
+        expect(function() { playbackTree.preprocess(); }).toThrow("A repeatIf used without a do block");
       });
-      test("repeatIf, if", () => {
-        let playbackTree = new PlaybackTree([{ name: "repeatIf" }, { name: "if" }]);
-        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at if");
+      test("do", () => {
+        let playbackTree = new PlaybackTree([{ name: "do" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at do");
+      });
+      test("end", () => {
+        let playbackTree = new PlaybackTree([{ name: "end" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Use of end without an opening keyword");
       });
     });
   });
 
-  describe.skip("Process", () => {
-    describe("Generate Linked List", () => {
-      test("has next for command-command", () => {
-        let input = [
-          { name: "command1" },
-          { name: "command2" }
-        ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree.preprocess();
-        playbackTree.process();
-        expect(playbackTree.stack[0].next).toEqual(input[1]);
-      });
-
-      test("has next and left, right for if-command-end", () => {
-        let input = [
-          { name: "if" },
-          { name: "command" },
-          { name: "end" }
-        ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree.preprocess();
-        playbackTree.process();
-        expect(playbackTree.stack[0].next).toBeUndefined();
-        expect(playbackTree.stack[0].right).toEqual(input[1]);
-        expect(playbackTree.stack[0].left).toEqual(input[2]);
-      });
-    });
-  });
 });
