@@ -53,6 +53,10 @@
   border-bottom: 1px solid #75BFFF;
 }
 
+.test > a.executing {
+    background-color: #FFFCC5;
+}
+
 .test.changed .name > span:after {
   content: "*";
 }

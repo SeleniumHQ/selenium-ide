@@ -3,7 +3,6 @@
 }
 
 .test > .stack-item:not(.name).selected {
-    color: #3a9cf1;
 }
 
 .test > .stack-item:not(.name) > span {

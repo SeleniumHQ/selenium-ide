@@ -97,7 +97,7 @@ export default class TestTable extends React.Component {
               />
             )).concat(
               <TestRow
-                key={UiState.selectedTest.test.id}
+                key={UiState.displayedTest.id}
                 selected={this.props.selectedCommand === UiState.pristineCommand.id}
                 index={this.props.commands.length}
                 command={UiState.pristineCommand}

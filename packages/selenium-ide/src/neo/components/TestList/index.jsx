@@ -36,7 +36,6 @@ export default class TestList extends Component {
     noMenu: PropTypes.bool
   };
   render() {
-    const callstackTest = PlaybackState.callstack.length ? PlaybackState.callstack[0].caller : undefined;
     return (
       <ul className={classNames("tests", { "active": !this.props.collapsed })}>
         {this.props.tests.map((test, index) => (
@@ -45,12 +44,13 @@ export default class TestList extends Component {
               <Test
                 key={test.id}
                 className={PlaybackState.testState.get(test.id)}
-                callstack={callstackTest === test ? PlaybackState.callstack : undefined}
-                selectedStackIndex={callstackTest === test ? UiState.selectedTest.stack : undefined}
+                callstack={PlaybackState.stackCaller === test ? PlaybackState.callstack : undefined}
+                selectedStackIndex={PlaybackState.stackCaller === test ? UiState.selectedTest.stack : undefined}
                 index={index}
                 test={test}
                 suite={this.props.suite}
                 selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
+                isExecuting={PlaybackState.stackCaller && PlaybackState.stackCaller.id === test.id}
                 changed={UiState.getTestState(test).modified}
                 selectTest={UiState.selectTest}
                 moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
@@ -63,6 +63,7 @@ export default class TestList extends Component {
                   test={test}
                   suite={this.props.suite}
                   selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
+                  isExecuting={PlaybackState.currentRunningTest && PlaybackState.currentRunningTest.id === test.id}
                   changed={UiState.getTestState(test).modified}
                   selectTest={UiState.selectTest}
                   removeTest={this.props.removeTest ? () => { this.props.removeTest(test); } : undefined}
@@ -76,6 +77,7 @@ export default class TestList extends Component {
                   index={index}
                   test={test}
                   selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id}
+                  isExecuting={PlaybackState.currentRunningTest && PlaybackState.currentRunningTest.id === test.id}
                   changed={UiState.getTestState(test).modified}
                   selectTest={UiState.selectTest}
                   renameTest={this.props.renameTest}

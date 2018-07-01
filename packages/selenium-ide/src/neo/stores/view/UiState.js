@@ -154,7 +154,7 @@ class UiState {
       const test = selectTestInArray(index, PlaybackState.testsToRun);
       if (test) {
         let stack = undefined;
-        if (PlaybackState.callstack.length && PlaybackState.callstack[0].caller === test) {
+        if (PlaybackState.callstack.length && PlaybackState.stackCaller === test) {
           stack = PlaybackState.callstack.length - 1;
         }
         this.selectTest(test, suite, stack);

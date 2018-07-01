@@ -50,6 +50,7 @@ export default class Test extends React.Component {
     suite: PropTypes.object,
     menu: PropTypes.node,
     selected: PropTypes.bool,
+    isExecuting: PropTypes.bool,
     selectedStackIndex: PropTypes.number,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
@@ -129,7 +130,7 @@ export default class Test extends React.Component {
       }}>
       <a
         ref={(button) => { this.button = button; }}
-        className={classNames("name", { "selected": this.props.selected && this.props.selectedStackIndex === undefined })}
+        className={classNames("name", { "selected": this.props.selected && this.props.selectedStackIndex === undefined }, { "executing": this.props.isExecuting && this.props.callstack && this.props.callstack.length === undefined })}
         onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}>
         <span>{this.props.test.name}</span>
         {this.props.menu}
@@ -138,6 +139,7 @@ export default class Test extends React.Component {
       {this.props.callstack ? <Callstack
         stack={this.props.callstack}
         selectedIndex={this.props.selectedStackIndex}
+        isExecuting={this.props.isExecuting}
         onClick={this.handleCallstackClick.bind(this, this.props.test, this.props.suite)}
       /> : undefined}
     </div>;

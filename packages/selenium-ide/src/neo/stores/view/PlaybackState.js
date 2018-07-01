@@ -61,7 +61,7 @@ class PlaybackState {
 
   @computed get testsToRun() {
     return this.currentRunningSuite ? this.currentRunningSuite.tests
-           : this.currentRunningTest ? [this.callstack.length ? this.callstack[0].caller : this.currentRunningTest] // eslint-disable-line indent
+           : this.currentRunningTest ? [this.stackCaller] // eslint-disable-line indent
            : undefined; // eslint-disable-line indent
   }
 
@@ -353,7 +353,7 @@ class PlaybackState {
       callee: testCase,
       position: this.currentPlayingIndex + 1 // continue from the next command after unwinding
     });
-    UiState.selectTest(this.callstack[0].caller, this.currentRunningSuite, this.callstack.length - 1);
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1);
     this.currentRunningTest = testCase;
     this.currentPlayingIndex = -1;
     this.runningQueue = testCase.commands.peek();
@@ -364,12 +364,16 @@ class PlaybackState {
     this.currentRunningTest = top.caller;
     this.currentPlayingIndex = top.position;
     this.runningQueue = top.caller.commands.peek();
-    UiState.selectTest(this.callstack.length ? this.callstack[0].caller : this.currentRunningTest, this.currentRunningSuite, this.callstack.length - 1);
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1);
     return top;
   }
 
   @action.bound clearStack() {
     this.callstack.clear();
+  }
+
+  @computed get stackCaller() {
+    return this.callstack.length ? this.callstack[0].caller : this.currentRunningTest;
   }
 
   @action.bound resetState() {
