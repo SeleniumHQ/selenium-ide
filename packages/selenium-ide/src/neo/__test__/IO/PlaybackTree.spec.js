@@ -23,84 +23,177 @@ class CommandNode {
   }
 }
 
-class Level {
-  constructor(_stack) {
-    this.level = 0;
-    this.stack = [];
-    Object.assign(this.stack, _stack);
-  }
-
-  increase() {
-    this.level++;
-  }
-
-  decrease() {
-    this.level--;
-  }
-
-  store(index) {
-    Object.assign(this.stack[index], { level: this.level });
-  }
-}
-
 class Command {
-  constructor(command, commandProcessor) {
+  constructor(command, commandStackHandler) {
     switch(command.name) {
       case "if":
-        return new If(command, commandProcessor);
+        return new If(command, commandStackHandler);
+      case "else":
+      case "elseIf":
+        return new Else(command, commandStackHandler);
+      case "while":
+      case "times":
+      case "repeatIf":
+        return new Loop(command, commandStackHandler);
       case "end":
-        return new End(command, commandProcessor);
+        return new End(command, commandStackHandler);
       default:
-        // return generic command object
-        break;
+        return new Default(command, commandStackHandler);
     }
   }
 }
 
-class ICommand {
-  constructor(command, commandProcessor) {
+class If {
+  constructor(command, commandStackHandler) {
     this.command = command;
-    this.commandProcessor = commandProcessor;
+    this.commandStackHandler = commandStackHandler;
   }
 
-  validate() {
+  preprocess() {
+    this.commandStackHandler.store();
+    this.commandStackHandler.setState();
+    this.commandStackHandler.increaseLevel();
+  }
+}
+
+class Else {
+  constructor(command, commandStackHandler) {
+    this.command = command;
+    this.commandStackHandler = commandStackHandler;
   }
 
-  level() {
+  preprocess() {
+    if (this.commandStackHandler.top().name !== "if") {
+      throw "An else / elseIf used outside of an if block";
+    }
+    this.commandStackHandler.decreaseLevel();
+    this.commandStackHandler.store();
+    this.commandStackHandler.increaseLevel();
+  }
+}
+
+class Loop {
+  constructor(command, commandStackHandler) {
+    this.command = command;
+    this.commandStackHandler = commandStackHandler;
+  }
+
+  preprocess() {
+    this.commandStackHandler.store();
+    this.commandStackHandler.setState();
+    this.commandStackHandler.increaseLevel();
+  }
+
+}
+
+class End {
+  constructor(command, commandStackHandler) {
+    this.command = command;
+    this.commandStackHandler = commandStackHandler;
+  }
+
+  preprocess() {
+    if (this.terminatesLoop()) {
+      this.commandStackHandler.decreaseLevel();
+      this.commandStackHandler.store();
+      this.commandStackHandler.popState();
+    } else if (this.terminatesIf()) {
+      const segment = this.commandStackHandler.segment(
+        this.commandStackHandler.top().index,
+        this.commandStackHandler.currentCommandIndex
+      );
+      const elseCount = segment.filter(command => command.name === "else").length;
+      const elseSegment = segment.filter(command => command.name.match(/else/));
+      if (elseCount > 1) {
+        throw "Too many else commands used";
+      } else if (elseCount === 1 && this.commandStackHandler.topOf(elseSegment).name !== "else") {
+        throw "Incorrect command order of elseIf / else";
+      } else if (elseCount === 0 || this.commandStackHandler.topOf(elseSegment).name === "else") {
+        this.commandStackHandler.decreaseLevel();
+        this.commandStackHandler.store();
+        this.commandStackHandler.popState();
+      }
+    }
+  }
+
+  terminatesIf() {
+    return (this.commandStackHandler.top().name === "if");
+  }
+
+  terminatesLoop() {
+    return (this.commandStackHandler.top().name === "while" ||
+            this.commandStackHandler.top().name === "times" ||
+            this.commandStackHandler.top().name === "repeatIf");
+  }
+
+}
+
+class Default {
+  constructor(command, commandStackHandler) {
+    this.command = command;
+    this.commandStackHandler = commandStackHandler;
+  }
+
+  preprocess() {
+    this.commandStackHandler.store();
+  }
+}
+
+class CommandStackHandler {
+  constructor(stack) {
+    this.stack = [];
+    Object.assign(this.stack, stack);
+    this.state = [];
+    this.level = 0;
+    this.currentCommand;
+    this.currentCommandIndex;
+  }
+
+  increaseLevel() {
+    this.level++;
+  }
+
+  decreaseLevel() {
+    this.level--;
+  }
+
+  store() {
+    Object.assign(this.stack[this.currentCommandIndex], { level: this.level });
   }
 
   setState() {
+    this.state.push({ name: this.currentCommand.name, index: this.currentCommandIndex });
+  }
+
+  popState() {
+    this.state.pop();
+  }
+
+  top() {
+    return this.state[this.state.length - 1];
+  }
+
+  topOf(segment) {
+    return segment[segment.length - 1];
+  }
+
+  segment(startIndex, endIndex) {
+    return this.stack.slice(startIndex, endIndex);
+  }
+
+  setCurrentCommand(command, index) {
+    this.currentCommand = command;
+    this.currentCommandIndex = index;
+  }
+
+  confirmation() {
+    if (this.state.length > 0) {
+      throw "Incomplete block at " + this.top().name;
+    }
   }
 }
 
-class If extends ICommand {
-  constructor(command, commandProcessor) {
-    super(command, commandProcessor);
-  }
-
-  level() {
-    this.commandProcessor.level.store(this.commandProcessor.index);
-    this.commandProcessor.level.increase();
-  }
-
-  setState() {
-    this.commandProcessor.state.push({
-      name: this.command.name,
-      index: this.commandProcessor.index
-    });
-  }
-
-  process() {
-  }
-}
-
-class End extends ICommand {
-  constructor(command, commandProcessor) {
-    super(command, commandProcessor);
-  }
-}
-
-class Automata {
+class PlaybackTree {
   constructor(stack) {
     this.inputStack = stack;
     this.preprocessStack = [];
@@ -108,66 +201,15 @@ class Automata {
   }
 
   preprocess() {
-    let topOf = this.topOf;
-    let state = [];
-    let level = new Level(this.inputStack);
-    this.inputStack.forEach(function(command, index) {
-      let cmd = new Command(command, { index, level, state });
-      switch(command.name) {
-        case "if":
-          cmd.validate();
-          cmd.level();
-          cmd.setState();
-          break;
-        case "while":
-        case "times":
-        case "repeatIf":
-          level.store(index);
-          level.increase();
-          state.push({ name: command.name, index: index });
-          break;
-        case "else":
-        case "elseIf":
-          if (topOf(state).name !== "if") {
-            throw "An else / elseIf used outside of an if block";
-          }
-          level.decrease();
-          level.store(index);
-          level.increase();
-          break;
-        case "end":
-          if (topOf(state).name === "while" ||
-              topOf(state).name === "times" ||
-              topOf(state).name === "repeatIf") {
-            level.decrease();
-            level.store(index);
-            state.pop();
-          } else if (topOf(state).name === "if") {
-            const segment = level.stack.slice(topOf(state).index, index);
-            const elseCount = segment.filter(kommand => kommand.name === "else").length;
-            const elseSegment = segment.filter(kommand => kommand.name.match(/else/));
-            if (elseCount > 1) {
-              throw "Too many else commands used";
-            } else if (elseCount === 1 && topOf(elseSegment).name !== "else") {
-              throw "Incorrect command order of elseIf / else";
-            } else if (elseCount === 0 || topOf(elseSegment).name === "else") {
-              level.decrease();
-              level.store(index);
-              state.pop();
-            }
-          }
-          break;
-        default:
-          level.store(index);
-          break;
-      }
+    let commandStackHandler = new CommandStackHandler(this.inputStack);
+    this.inputStack.forEach(function(currentCommand, currentCommandIndex) {
+      commandStackHandler.setCurrentCommand(currentCommand, currentCommandIndex);
+      let command = new Command(currentCommand, commandStackHandler);
+      command.preprocess();
     });
-    if (state.length > 0) {
-      throw "Incomplete block at " + topOf(state).name;
-    } else {
-      this.preprocessStack = level.stack;
-      return this.preprocessStack;
-    }
+    commandStackHandler.confirmation();
+    this.preprocessStack = commandStackHandler.stack;
+    return this.preprocessStack;
   }
 
   process() {
@@ -183,10 +225,8 @@ class Automata {
         node.right = _stack[index + 1];
         let segment = _stack.slice(index + 1, _stack.length + 1);
         let leftTarget = segment.findIndex(kommand => kommand.level === command.level);
-        console.log(leftTarget);
         for(let i = index; i < _stack.length + 1; i++) {
           if (_stack[i + 1] && (_stack[i].level === _stack[i + 1].level)) {
-            console.log("HELLO!");
             node.left = _stack[i + 1];
             break;
           }
@@ -205,7 +245,7 @@ class Automata {
 describe("Control Flow", () => {
   describe("Preprocess", () => {
     test("marked with correct levels", () => {
-      let automataFactory = new Automata([
+      let _playbackTree = new PlaybackTree([
         { name: "if" },
         { name: "command" },
         { name: "else" },
@@ -214,93 +254,93 @@ describe("Control Flow", () => {
         { name: "end" },
         { name: "end" }
       ]);
-      let automata = automataFactory.preprocess();
-      expect(automata[0].level).toEqual(0); // if
-      expect(automata[1].level).toEqual(1); //   command
-      expect(automata[2].level).toEqual(0); // else
-      expect(automata[3].level).toEqual(1); //   while
-      expect(automata[4].level).toEqual(2); //     command
-      expect(automata[5].level).toEqual(1); //   end
-      expect(automata[6].level).toEqual(0); // end
+      let playbackTree = _playbackTree.preprocess();
+      expect(playbackTree[0].level).toEqual(0); // if
+      expect(playbackTree[1].level).toEqual(1); //   command
+      expect(playbackTree[2].level).toEqual(0); // else
+      expect(playbackTree[3].level).toEqual(1); //   while
+      expect(playbackTree[4].level).toEqual(2); //     command
+      expect(playbackTree[5].level).toEqual(1); //   end
+      expect(playbackTree[6].level).toEqual(0); // end
     });
     describe("Validation", () => {
       test("if, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("if, else, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "else" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "else" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("if, elseIf, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "elseIf" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "elseIf" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("if, elseIf, else, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "elseIf" }, { name: "else" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "elseIf" }, { name: "else" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("while, end", () => {
-        let automata = new Automata([{ name: "while" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "while" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("times, end", () => {
-        let automata = new Automata([{ name: "times" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "times" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("repeatIf, end", () => {
-        let automata = new Automata([{ name: "repeatIf" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "repeatIf" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
       test("repeatIf, if, end, end", () => {
-        let automata = new Automata([{ name: "repeatIf" }, { name: "if" }, { name: "end" }, { name: "end" }]);
-        expect(automata.preprocess()).toBeTruthy();
+        let playbackTree = new PlaybackTree([{ name: "repeatIf" }, { name: "if" }, { name: "end" }, { name: "end" }]);
+        expect(playbackTree.preprocess()).toBeTruthy();
       });
     });
     describe("Invalidation", () => {
       test("if", () => {
-        let automata = new Automata([{ name: "if" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at if");
+        let playbackTree = new PlaybackTree([{ name: "if" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at if");
       });
       test("if, if, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "if" }, { name: "end" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at if");
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "if" }, { name: "end" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at if");
       });
       test("if, else, elseIf, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "end" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incorrect command order of elseIf / else");
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "end" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incorrect command order of elseIf / else");
       });
       test("if, else, else, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "else" }, { name: "else" }, { name: "end" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Too many else commands used");
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "else" }, { name: "else" }, { name: "end" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Too many else commands used");
       });
       test("while", () => {
-        let automata = new Automata([{ name: "while" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at while");
+        let playbackTree = new PlaybackTree([{ name: "while" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at while");
       });
       test("if, while", () => {
-        let automata = new Automata([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "while" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at while");
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "while" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at while");
       });
       test("if, while, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "while" }, { name: "end" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at if");
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "while" }, { name: "end" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at if");
       });
       test("if, while, else, end", () => {
-        let automata = new Automata([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "while" }, { name: "else" }, { name: "end" }]);
-        expect(function() { automata.preprocess(); }).toThrow("An else / elseIf used outside of an if block");
+        let playbackTree = new PlaybackTree([{ name: "if" }, { name: "else" }, { name: "elseIf" }, { name: "while" }, { name: "else" }, { name: "end" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("An else / elseIf used outside of an if block");
       });
       test("times", () => {
-        let automata = new Automata([{ name: "times" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at times");
+        let playbackTree = new PlaybackTree([{ name: "times" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at times");
       });
       test("repeatIf", () => {
-        let automata = new Automata([{ name: "repeatIf" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at repeatIf");
+        let playbackTree = new PlaybackTree([{ name: "repeatIf" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at repeatIf");
       });
       test("repeatIf, if", () => {
-        let automata = new Automata([{ name: "repeatIf" }, { name: "if" }]);
-        expect(function() { automata.preprocess(); }).toThrow("Incomplete block at if");
+        let playbackTree = new PlaybackTree([{ name: "repeatIf" }, { name: "if" }]);
+        expect(function() { playbackTree.preprocess(); }).toThrow("Incomplete block at if");
       });
     });
   });
@@ -312,10 +352,10 @@ describe("Control Flow", () => {
           { name: "command1" },
           { name: "command2" }
         ];
-        let automata = new Automata(input);
-        automata.preprocess();
-        automata.process();
-        expect(automata.stack[0].next).toEqual(input[1]);
+        let playbackTree = new PlaybackTree(input);
+        playbackTree.preprocess();
+        playbackTree.process();
+        expect(playbackTree.stack[0].next).toEqual(input[1]);
       });
 
       test("has next and left, right for if-command-end", () => {
@@ -324,12 +364,12 @@ describe("Control Flow", () => {
           { name: "command" },
           { name: "end" }
         ];
-        let automata = new Automata(input);
-        automata.preprocess();
-        automata.process();
-        expect(automata.stack[0].next).toBeUndefined();
-        expect(automata.stack[0].right).toEqual(input[1]);
-        expect(automata.stack[0].left).toEqual(input[2]);
+        let playbackTree = new PlaybackTree(input);
+        playbackTree.preprocess();
+        playbackTree.process();
+        expect(playbackTree.stack[0].next).toBeUndefined();
+        expect(playbackTree.stack[0].right).toEqual(input[1]);
+        expect(playbackTree.stack[0].left).toEqual(input[2]);
       });
     });
   });
