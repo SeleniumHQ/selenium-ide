@@ -78,6 +78,7 @@ function executionLoop() {
   if (didFinishQueue() || isStopping()) {
     if (isCallStackEmpty()) {
       PlaybackState.unwindTestCase();
+      return executionLoop();
     } else {
       return false;
     }

@@ -351,7 +351,7 @@ class PlaybackState {
     this.callstack.push({
       caller: this.currentRunningTest,
       callee: testCase,
-      position: this.currentPlayingIndex + 1 // continue from the next command after unwinding
+      position: this.currentPlayingIndex
     });
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1);
     this.currentRunningTest = testCase;
