@@ -93,10 +93,7 @@ class UiState {
   }
 
   @action.bound copyToClipboard(item) {
-    this.clipboard.clear();
-    for(let i=0; i<this.selectedCommands.length; i++){
-      this.clipboard.push(this.selectedCommands[i]);
-    }
+    this.clipboard.replace(this.selectedCommands);
   }
 
   @action.bound pasteFromClipboard(index) {
