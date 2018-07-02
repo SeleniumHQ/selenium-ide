@@ -1,6 +1,7 @@
 .pause-banner {
     background: #FFFCC5;
     border: 1px solid #CECECE;
+    border-radius: 2px;
     display: flex;
     flex-direction: column;
     align-items: center;

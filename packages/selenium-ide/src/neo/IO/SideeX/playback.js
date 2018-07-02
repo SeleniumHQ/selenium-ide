@@ -40,6 +40,7 @@ let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
+  ignoreBreakpoint = false;
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
@@ -70,18 +71,16 @@ function incrementPlayingIndex() {
 }
 
 function isCallStackEmpty() {
-  return !!PlaybackState.callstack.length;
+  return !PlaybackState.callstack.length;
 }
 
 function executionLoop() {
   incrementPlayingIndex();
-  if (didFinishQueue() || isStopping()) {
-    if (isCallStackEmpty()) {
-      PlaybackState.unwindTestCase();
-      return executionLoop();
-    } else {
-      return false;
-    }
+  if (didFinishQueue() && !isCallStackEmpty()) {
+    PlaybackState.unwindTestCase();
+    return executionLoop();
+  } else if (isStopping() || didFinishQueue()) {
+    return false;
   }
   const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   if (!command.command) return executionLoop();

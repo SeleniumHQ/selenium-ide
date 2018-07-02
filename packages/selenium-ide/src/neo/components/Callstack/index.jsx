@@ -39,7 +39,7 @@ export default class Callstack extends React.Component {
           key={callee.id}
           index={index}
           selected={index === this.props.selectedIndex}
-          isExecuting={index === this.props.stack.length - 1}
+          isExecuting={this.props.isExecuting && index === this.props.stack.length - 1}
           onClick={this.handleClick.bind(this, index)}>
           {callee.name}
         </StackItem>

@@ -99,7 +99,6 @@ class PlaybackState {
     const playSuite = action(() => {
       const { suite } = UiState.selectedTest;
       this.resetState();
-      variables.clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = suite;
       this._testsToRun = [...suite.tests];
@@ -123,7 +122,6 @@ class PlaybackState {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
       this.resetState();
-      variables.clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
@@ -268,7 +266,13 @@ class PlaybackState {
     this.aborted = true;
     this.hasFailed = true;
     this._testsToRun = [];
-    fatalHandled || this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Undetermined, message: "Aborting..." });
+    if (!fatalHandled) {
+      if (this.paused) {
+        this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Fatal, message: "Playback aborted" });
+      } else {
+        this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Undetermined, message: "Aborting..." });
+      }
+    }
     this.stopPlayingGracefully();
   }
 
@@ -383,6 +387,8 @@ class PlaybackState {
 
   @action.bound resetState() {
     this.clearCommandStates();
+    this.clearStack();
+    variables.clearVariables();
     this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;
     this.noStatisticsEffects = false;
