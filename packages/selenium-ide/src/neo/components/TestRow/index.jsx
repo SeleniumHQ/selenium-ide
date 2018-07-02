@@ -190,8 +190,11 @@ class TestRow extends React.Component {
   paste() {
     this.props.pasteFromClipboard(this.props.index);
   }
-  select(e) {
-    if(e.ctrlKey == false) {
+  select(event) {
+    console.log(event.ctrlKey)
+    console.log(event.metaKey);
+    console.log(event.ctrlKey && event.metaKey);
+    if((event.ctrlKey || event.metaKey) == false) {
       console.log("none ctrl key");
       // call from onClick while don't holding clicking ctrl key
       this.clearSelectedCommands();
