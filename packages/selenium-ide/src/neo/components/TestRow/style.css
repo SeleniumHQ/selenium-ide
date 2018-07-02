@@ -32,11 +32,11 @@
   outline: 0;
 }
 
-.test-table tbody tr:focus td {
+.test-table tbody tr.selected:focus td {
   border-top: 1px solid #75BFFF;
 }
 
-.test-table.paused tbody tr.pending:focus td {
+.test-table.paused tbody tr.selected.pending:focus td {
     border-top: 1px solid #d3d622;
 }
 
