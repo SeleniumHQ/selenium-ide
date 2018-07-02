@@ -109,6 +109,8 @@ export default class TestTable extends React.Component {
                 moveSelection={UiState.selectCommandByIndex}
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 setSectionFocus={UiState.setSectionFocus}
+                addSelectedCommands={this.props.addSelectedCommands}
+                clearSelectedCommands={this.props.clearSelectedCommands}
               />) : null }
           </tbody>
         </table>
