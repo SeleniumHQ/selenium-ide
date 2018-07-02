@@ -98,6 +98,8 @@ class TestRow extends React.Component {
     this.paste = this.paste.bind(this);
     this.select = this.select.bind(this);
     this.remove = this.remove.bind(this);
+    this.focus = this.focus.bind(this);
+    this.clearSelectedCommands = this.clearSelectedCommands.bind(this);
   }
   static propTypes = {
     index: PropTypes.number,
@@ -162,8 +164,10 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && noModifiers && key === "X") {
       this.props.executeCommand(this.props.command);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowUp") {
+      this.clearSelectedCommands();
       this.props.moveSelection(this.props.index - 1);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowDown") {
+      this.clearSelectedCommands();
       this.props.moveSelection(this.props.index + 1);
     } else if (!this.props.isPristine && onlyPrimary && key === "X") {
       this.cut();
@@ -171,7 +175,10 @@ class TestRow extends React.Component {
       this.copy();
     } else if (onlyPrimary && key === "V") {
       this.paste();
+    } else if (key === "TAB" ) {
+      this.clearSelectedCommands();
     }
+
   }
   copy() {
     this.props.copyToClipboard(this.props.command);
@@ -184,20 +191,26 @@ class TestRow extends React.Component {
     this.props.pasteFromClipboard(this.props.index);
   }
   select(e) {
-    if (e.ctrlKey) {
-      // call from onClick while holding clicking ctrl key
-      this.props.addSelectedCommands(this.props.command);
-    } else if(e.ctrlKey == false) {
+    if(e.ctrlKey == false) {
+      console.log("none ctrl key");
       // call from onClick while don't holding clicking ctrl key
-      this.props.clearSelectedCommands();
-      this.props.select(this.props.command);
-    } else{
-      // call from onFocus
-      this.props.select(this.props.command);
+      this.clearSelectedCommands();
     }
+    console.log("select");
+    if(this.props.addSelectedCommands)
+      this.props.addSelectedCommands(this.props.command);
+  }
+  focus(){
+    //call from onFocus
+    this.props.select(this.props.command);
   }
   remove() {
     this.props.remove(this.props.index, this.props.command);
+  }
+  clearSelectedCommands(){
+    if (this.props.clearSelectedCommands){
+      this.props.clearSelectedCommands();
+    }
   }
   render() {
     const listMenu = <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
@@ -231,7 +244,7 @@ class TestRow extends React.Component {
       onClick={this.select}
       onDoubleClick={() => { this.props.executeCommand(this.props.command); }}
       onKeyDown={this.handleKeyDown.bind(this)}
-      onFocus={this.select}
+      onFocus={this.focus}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
