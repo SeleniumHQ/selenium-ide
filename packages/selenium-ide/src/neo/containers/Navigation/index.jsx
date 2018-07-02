@@ -35,9 +35,6 @@ import "./style.css";
 @observer export default class Navigation extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      lastSelection: {}
-    };
     this.handleChangedTab = this.handleChangedTab.bind(this);
   }
   static propTypes = {
@@ -46,12 +43,21 @@ import "./style.css";
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
-    const lastSelection = this.state.lastSelection;
-    this.setState({
-      lastSelection: UiState.selectedTest
-    });
-    UiState.changeView(tab);
-    UiState.selectTest(lastSelection.test, lastSelection.suite);
+    if (PlaybackState.isPlaying && !PlaybackState.paused) {
+      ModalState.showAlert({
+        title: "Playback is Running",
+        description: "Can't change the view while playback is running, pause the playback?",
+        confirmLabel: "Pause",
+        cancelLabel: "Cancel"
+      }, (choseChange) => {
+        if (choseChange) {
+          PlaybackState.pause();
+          UiState.changeView(tab);
+        }
+      });
+    } else {
+      UiState.changeView(tab);
+    }
   }
   handleKeyDown(event) {
     const e = event.nativeEvent;

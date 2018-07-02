@@ -279,6 +279,7 @@ class PlaybackState {
   }
 
   @action.bound resume() {
+    UiState.changeView("Executing");
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     UiState.selectCommand(undefined);
     this.paused = false;

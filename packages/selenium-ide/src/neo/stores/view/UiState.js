@@ -25,6 +25,7 @@ import Manager from "../../../plugin/manager";
 
 class UiState {
   views = [ "Tests", "Test suites", "Executing" ];
+  @observable lastViewSelection = new Map();
   @observable selectedView = "Tests";
   @observable selectedTest = {};
   @observable selectedCommand = null;
@@ -94,7 +95,12 @@ class UiState {
   }
 
   @action.bound changeView(view) {
+    this.lastViewSelection.set(this.selectedView, this.selectedTest);
     this.selectedView = view;
+    const lastSelection = this.lastViewSelection.get(this.selectedView);
+    if (lastSelection) {
+      this.selectTest(lastSelection.test, lastSelection.suite, lastSelection.stack);
+    }
   }
 
   @action.bound copyToClipboard(item) {
