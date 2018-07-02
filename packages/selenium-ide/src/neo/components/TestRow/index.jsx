@@ -238,7 +238,7 @@ class TestRow extends React.Component {
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={(!this.props.isPristine && !this.props.readOnly) ? this.props.onContextMenu : null}
       onClick={this.select}
-      onDoubleClick={() => { this.props.executeCommand ? this.props.executeCommand(this.props.command) : undefined; }}
+      onDoubleClick={() => { this.props.executeCommand && !this.props.readOnly ? this.props.executeCommand(this.props.command) : undefined; }}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.select}
       style={{

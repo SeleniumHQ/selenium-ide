@@ -38,9 +38,10 @@ class PlaybackState {
   @observable suiteState = new Map();
   @observable finishedTestsCount = 0;
   @observable testsCount = 0;
+  // number of test cases that failed (max 1 for non-suite runs)
   @observable failures = 0;
+  // number of commands that failed
   @observable errors = 0;
-  @observable hasFailed = false;
   @observable aborted = false;
   @observable paused = false;
   @observable delay = 0;
@@ -53,10 +54,12 @@ class PlaybackState {
     this.logger = new Logger(Channels.PLAYBACK);
   }
 
+  @computed get hasFailed() {
+    return this.failures > 0;
+  }
+
   @computed get hasFinishedSuccessfully() {
-    return !this.runningQueue.find(({ id }) => (
-      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed || this.commandState.get(id).state === PlaybackStates.Fatal : false
-    ));
+    return this.errors === 0;
   }
 
   @computed get testsToRun() {
@@ -168,7 +171,6 @@ class PlaybackState {
       this.paused = false;
       this.currentPlayingIndex = 0;
       this.errors = 0;
-      this.hasFailed = false;
       this.aborted = false;
       this.currentRunningTest = UiState.selectedTest.test;
       this.runningQueue = [command];
@@ -182,11 +184,10 @@ class PlaybackState {
       variables.clearVariables();
     }
     this.currentRunningTest = this._testsToRun.shift();
-    UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite, undefined, true);
     this.runningQueue = this.currentRunningTest.commands.peek();
+    this.clearStack();
     this.currentPlayingIndex = 0;
     this.errors = 0;
-    this.hasFailed = false;
     PluginManager.emitMessage({
       action: "event",
       event: "playbackStarted",
@@ -199,6 +200,7 @@ class PlaybackState {
       }
     }).then(action(() => {
       this.isPlaying = true;
+      UiState.selectTest(this.currentRunningTest, this.currentRunningSuite, undefined, true);
     }));
   }
 
@@ -242,8 +244,7 @@ class PlaybackState {
               if (result instanceof Error) {
                 if (!(result instanceof NoResponseError)) {
                   this.logger.error(result.message);
-                  if (!this.hasFinishedSuccessfully && !this.hasFailed) {
-                    this.hasFailed = true;
+                  if (!this.hasFinishedSuccessfully) {
                     this.failures++;
                   }
                 }
@@ -252,7 +253,7 @@ class PlaybackState {
               }
             }
           });
-          this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
+          this.testState.set(this.stackCaller.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
           this.isPlaying = false;
           this.isStopping = false;
           return res();
@@ -262,16 +263,13 @@ class PlaybackState {
     return Promise.reject("Playback is not running");
   }
 
-  @action.bound abortPlaying(fatalHandled) {
+  @action.bound abortPlaying() {
     this.aborted = true;
-    this.hasFailed = true;
     this._testsToRun = [];
-    if (!fatalHandled) {
-      if (this.paused) {
-        this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Fatal, message: "Playback aborted" });
-      } else {
-        this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Undetermined, message: "Aborting..." });
-      }
+    if (this.paused) {
+      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
+    } else {
+      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
     }
     this.stopPlayingGracefully();
   }
@@ -297,13 +295,9 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    if (!this.hasFinishedSuccessfully) {
-      this.hasFailed = true;
-    }
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
       if (!this.hasFinishedSuccessfully) {
-        this.hasFailed = true;
         this.failures++;
       }
     }
@@ -323,7 +317,7 @@ class PlaybackState {
             projectName: UiState._project.name
           }
         });
-        this.suiteState.set(this.currentRunningSuite.id, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
+        this.suiteState.set(this.currentRunningSuite.id, this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
       }
     });
   }
@@ -332,14 +326,18 @@ class PlaybackState {
     this.currentPlayingIndex = index;
   }
 
+  @action.bound setCommandStateAtomically(commandId, callstackIndex, state, message) {
+    this.commandState.set(`${callstackIndex !== undefined ? callstackIndex + ":" : ""}${commandId}`, { state, message });
+  }
+
   @action.bound setCommandState(commandId, state, message) {
     if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
       this.errors++;
     }
     if (this.isPlaying) {
-      this.commandState.set(commandId, { state, message });
+      this.setCommandStateAtomically(commandId, this.callstack.length ? this.callstack.length - 1 : undefined, state, message);
       if (state === PlaybackStates.Fatal) {
-        this.abortPlaying(true);
+        this.stopPlayingGracefully();
       }
     }
   }
@@ -394,7 +392,6 @@ class PlaybackState {
     this.noStatisticsEffects = false;
     this.failures = 0;
     this.errors = 0;
-    this.hasFailed = false;
     this.aborted = false;
     this.paused = false;
   }

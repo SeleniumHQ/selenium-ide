@@ -200,6 +200,7 @@ if (browser.windows) {
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
                     test={UiState.displayedTest}
+                    callstackIndex={UiState.selectedTest.stack}
                   />
                 </SplitPane>
               </div>

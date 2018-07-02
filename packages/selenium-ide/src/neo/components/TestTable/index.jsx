@@ -37,6 +37,7 @@ export default class TestTable extends React.Component {
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
+    callstackIndex: PropTypes.number,
     selectedCommand: PropTypes.string,
     selectCommand: PropTypes.func,
     addCommand: PropTypes.func,
@@ -59,6 +60,7 @@ export default class TestTable extends React.Component {
     }
   }
   render() {
+    const commandStatePrefix = this.props.callstackIndex !== undefined ? `${this.props.callstackIndex}:` : "";
     return ([
       <div key="header" className="test-table test-table-header">
         <table>
@@ -77,7 +79,7 @@ export default class TestTable extends React.Component {
             { this.props.commands ? this.props.commands.map((command, index) => (
               <TestRow
                 key={command.id}
-                status={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
+                status={classNames(PlaybackState.commandState.get(commandStatePrefix + command.id) ? PlaybackState.commandState.get(commandStatePrefix + command.id).state : "")}
                 selected={this.props.selectedCommand === command.id}
                 readOnly={(PlaybackState.isPlaying && !PlaybackState.paused)}
                 index={index}

@@ -83,6 +83,7 @@ function executionLoop() {
     return false;
   }
   const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
   if (!command.command) return executionLoop();
   // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
@@ -94,7 +95,8 @@ function executionLoop() {
     return doDelay().then(() => (
       (extCommand[extCommand.name(command.command)](xlateArgument(command.target), xlateArgument(command.value)))
         .then(() => {
-          PlaybackState.setCommandState(command.id, PlaybackStates.Passed);
+          // we need to set the stackIndex manually because run command messes with that
+          PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
         }).then(executionLoop)
     ));
   } else if (isImplicitWait(command)) {
