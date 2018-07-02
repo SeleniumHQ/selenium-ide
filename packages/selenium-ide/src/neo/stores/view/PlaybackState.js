@@ -318,7 +318,7 @@ class PlaybackState {
             projectName: UiState._project.name
           }
         });
-        this.suiteState.set(this.currentRunningSuite.id, this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
+        this.suiteState.set(this.currentRunningSuite.id, this.hasFailed ? PlaybackStates.Failed : PlaybackStates.Passed);
       }
     });
   }
