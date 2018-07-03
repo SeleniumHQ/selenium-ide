@@ -16,177 +16,166 @@
 // under the License.
 
 class Command {
-  constructor(command, commandStackHandler) {
-    this.command = command;
-    this.commandStackHandler = commandStackHandler;
+  constructor(command) {
+    Object.assign(this, command);
   }
 
-  static load(command, commandStackHandler) {
+  static load(command) {
     switch(command.name) {
       case "if":
-        return new If(command, commandStackHandler);
+        return new If(command);
       case "else":
       case "elseIf":
-        return new Else(command, commandStackHandler);
+        return new Else(command);
       case "while":
-        return new While(command, commandStackHandler);
+        return new While(command);
       case "times":
-        return new Times(command, commandStackHandler);
+        return new Times(command);
       case "repeatIf":
-        return new RepeatIf(command, commandStackHandler);
+        return new RepeatIf(command);
       case "do":
-        return new Do(command, commandStackHandler);
+        return new Do(command);
       case "end":
-        return new End(command, commandStackHandler);
+        return new End(command);
       default:
-        return new Default(command, commandStackHandler);
+        return new Default(command);
     }
   }
 
-  static isControlFlowCommand(name) {
+  isControlFlowCommand() {
     return !!(["if", "else", "elseIf", "do",
-      "times", "while", "repeatIf", "end"].find(n => n === name));
+      "times", "while", "repeatIf", "end"].find(n => n === this.name));
   }
 
-  static isLoop(name) {
-    return !!(["times", "while", "repeatIf"].find(n => n === name));
+  isLoop() {
+    return !!(["times", "while", "repeatIf"].find(n => n === this.name));
   }
 
-  static isIf(name) {
-    return !!(["if"].find(n => n === name));
+  isIf() {
+    return !!(["if"].find(n => n === this.name));
   }
 
-  static isEnd(name) {
-    return !!(["end"].find(n => n === name));
+  isEnd() {
+    return !!(["end"].find(n => n === this.name));
   }
 }
 
 class If extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    this.commandStackHandler.store();
-    this.commandStackHandler.setState();
-    this.commandStackHandler.increaseLevel();
+  preprocess(commandStackHandler) {
+    commandStackHandler.store();
+    commandStackHandler.setState();
+    commandStackHandler.increaseLevel();
   }
 }
 
 class Else extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    if (this.commandStackHandler.top().name !== "if") {
+  preprocess(commandStackHandler) {
+    if (commandStackHandler.top().name !== "if") {
       throw "An else / elseIf used outside of an if block";
     }
-    this.commandStackHandler.decreaseLevel();
-    this.commandStackHandler.store();
-    this.commandStackHandler.increaseLevel();
+    commandStackHandler.decreaseLevel();
+    commandStackHandler.store();
+    commandStackHandler.increaseLevel();
   }
 }
 
 class While extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    if (this.commandStackHandler.top().name === "do") {
-      this.commandStackHandler.store();
+  preprocess(commandStackHandler) {
+    if (commandStackHandler.top().name === "do") {
+      commandStackHandler.store();
     } else {
-      this.commandStackHandler.store();
-      this.commandStackHandler.setState();
-      this.commandStackHandler.increaseLevel();
+      commandStackHandler.store();
+      commandStackHandler.setState();
+      commandStackHandler.increaseLevel();
     }
   }
 }
 
 class Do extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    this.commandStackHandler.store();
-    this.commandStackHandler.setState();
-    this.commandStackHandler.increaseLevel();
+  preprocess(commandStackHandler) {
+    commandStackHandler.store();
+    commandStackHandler.setState();
+    commandStackHandler.increaseLevel();
   }
 }
 
 class Times extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    this.commandStackHandler.store();
-    this.commandStackHandler.setState();
-    this.commandStackHandler.increaseLevel();
+  preprocess(commandStackHandler) {
+    commandStackHandler.store();
+    commandStackHandler.setState();
+    commandStackHandler.increaseLevel();
   }
 }
 
 class RepeatIf extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    if (this.commandStackHandler.top().name !== "do") {
+  preprocess(commandStackHandler) {
+    if (commandStackHandler.top().name !== "do") {
       throw "A repeatIf used without a do block";
     }
-    this.commandStackHandler.store();
+    commandStackHandler.store();
   }
 }
 
 class End extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    if (this.terminatesLoop()) {
-      this.commandStackHandler.decreaseLevel();
-      this.commandStackHandler.store();
-      this.commandStackHandler.popState();
-    } else if (this.terminatesIf()) {
-      const elseCount = this.commandStackHandler.currentSegment().filter(command => command.name === "else").length;
-      const elseSegment = this.commandStackHandler.currentSegment().filter(command => command.name.match(/else/));
+  preprocess(commandStackHandler) {
+    if (commandStackHandler.terminatesLoop()) {
+      commandStackHandler.decreaseLevel();
+      commandStackHandler.store();
+      commandStackHandler.popState();
+    } else if (commandStackHandler.terminatesIf()) {
+      const elseCount = commandStackHandler.currentSegment().filter(command => command.name === "else").length;
+      const elseSegment = commandStackHandler.currentSegment().filter(command => command.name.match(/else/));
       if (elseCount > 1) {
         throw "Too many else commands used";
-      } else if (elseCount === 1 && this.commandStackHandler.topOf(elseSegment).name !== "else") {
+      } else if (elseCount === 1 && commandStackHandler.topOf(elseSegment).name !== "else") {
         throw "Incorrect command order of elseIf / else";
-      } else if (elseCount === 0 || this.commandStackHandler.topOf(elseSegment).name === "else") {
-        this.commandStackHandler.decreaseLevel();
-        this.commandStackHandler.store();
-        this.commandStackHandler.popState();
+      } else if (elseCount === 0 || commandStackHandler.topOf(elseSegment).name === "else") {
+        commandStackHandler.decreaseLevel();
+        commandStackHandler.store();
+        commandStackHandler.popState();
       }
     } else {
       throw "Use of end without an opening keyword";
     }
   }
 
-  terminatesIf() {
-    return (this.commandStackHandler.top().name === "if");
-  }
-
-  terminatesLoop() {
-    return (this.commandStackHandler.top().name === "while" ||
-            this.commandStackHandler.top().name === "times" ||
-            this.commandStackHandler.top().name === "do");
-  }
-
 }
 
 class Default extends Command {
-  constructor(command, commandStackHandler) {
-    super(command, commandStackHandler);
+  constructor(command) {
+    super(command);
   }
 
-  preprocess() {
-    this.commandStackHandler.store();
+  preprocess(commandStackHandler) {
+    commandStackHandler.store();
   }
 }
 
@@ -236,6 +225,16 @@ class CommandStackHandler {
     return segment[segment.length - 1];
   }
 
+  terminatesIf() {
+    return (this.top().name === "if");
+  }
+
+  terminatesLoop() {
+    return (this.top().name === "while" ||
+            this.top().name === "times" ||
+            this.top().name === "do");
+  }
+
   currentSegment() {
     return this._stack.slice(this.top().index, this.currentCommandIndex);
   }
@@ -273,9 +272,9 @@ class PlaybackTree {
   preprocess() {
     let commandStackHandler = new CommandStackHandler(this.inputStack);
     this.inputStack.forEach(function(currentCommand, currentCommandIndex) {
-      commandStackHandler.setCurrentCommand(currentCommand, currentCommandIndex);
-      let command = Command.load(currentCommand, commandStackHandler);
-      command.preprocess();
+      let command = Command.load(currentCommand);
+      commandStackHandler.setCurrentCommand(command, currentCommandIndex);
+      command.preprocess(commandStackHandler);
     });
     commandStackHandler.confirm();
     this.preprocessStack = commandStackHandler.stack;
@@ -315,14 +314,14 @@ class PlaybackTree {
     _stack.forEach(function(currentCommandNode, index) {
       let nextCommandNode = _stack[index + 1];
       if (nextCommandNode) {
-        if (Command.isControlFlowCommand(currentCommandNode.command.name) &&
-            !Command.isEnd(currentCommandNode.command.name)) {
+        if (currentCommandNode.command.isControlFlowCommand() &&
+            !currentCommandNode.command.isEnd()) {
           currentCommandNode.right = nextCommandNode;
           currentCommandNode.left = nextNodeAtSameLevel(_stack, index, currentCommandNode.level);
-        } else if (Command.isControlFlowCommand(nextCommandNode.command.name)) {
+        } else if (nextCommandNode.command.isControlFlowCommand()) {
           let openingNode;
           openingNode = previousOpeningNode(_stack, index, currentCommandNode.level);
-          if (openingNode && !Command.isLoop(openingNode.command.name)) {
+          if (openingNode && !openingNode.command.isLoop()) {
             currentCommandNode.next = nextEndNode(_stack, index, openingNode.level);
           } else {
             currentCommandNode.next = openingNode;
