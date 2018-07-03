@@ -195,6 +195,8 @@ class TestRow extends React.Component {
     this.props.pasteFromClipboard(this.props.index);
   }
   select(event) {
+    event.preventDefault();
+    event.stopPropagation();
     console.log(event.ctrlKey)
     console.log(event.metaKey);
     console.log(event.ctrlKey && event.metaKey);
