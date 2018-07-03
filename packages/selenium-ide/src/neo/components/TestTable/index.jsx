@@ -96,6 +96,7 @@ export default class TestTable extends React.Component {
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
+                selectAll={this.props.selectAllCommands}
               />
             )).concat(
               <TestRow
@@ -111,6 +112,7 @@ export default class TestTable extends React.Component {
                 setSectionFocus={UiState.setSectionFocus}
                 addSelectedCommands={this.props.addSelectedCommands}
                 clearSelectedCommands={this.props.clearSelectedCommands}
+                selectAll={this.props.selectAllCommands}
               />) : null }
           </tbody>
         </table>

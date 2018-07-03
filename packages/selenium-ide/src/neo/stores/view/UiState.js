@@ -343,6 +343,12 @@ class UiState {
   @action.bound clearSelectedCommands(){
     this.selectedCommands.clear();
   }
+
+  @action.bound selectAllCommands(){
+    this.selectedTest.test.commands.forEach((command, index) => {
+      this.selectCommand(command, index + 1);
+    });
+  }
 }
 
 if (!window._state) window._state = new UiState();

@@ -102,6 +102,7 @@ firefox57WorkaroundForBlankPanel();
     super(props);
     this.state = { project };
     this.moveTest = this.moveTest.bind(this);
+    this.selectAllCommands = this.selectAllCommands.bind(this);
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
     this.quitHandler = window.addEventListener("beforeunload", (e) => {
@@ -140,6 +141,9 @@ firefox57WorkaroundForBlankPanel();
       saveProject(project);
     } else if (noModifiers && key === "ESCAPE") {
       UiState.toggleConsole();
+    } else if (onlyPrimary && key === "A" && e.target.localName === "body") {
+      e.preventDefault();
+      this.selectAllCommands();
     }
   }
   navigationDragStart() {
@@ -155,9 +159,16 @@ firefox57WorkaroundForBlankPanel();
     window.removeEventListener(this.resizeHandler);
     window.removeEventListener(this.quitHandler);
   }
+  onClick(event){
+    UiState.clearSelectedCommands();
+  }
+  selectAllCommands(){
+    UiState.selectCommandByIndex(1);
+    UiState.selectAllCommands();
+  }
   render() {
     return (
-      <div className="container">
+      <div className="container" onClick={this.onClick.bind(this)}>
         <SuiteDropzone loadProject={loadProject.bind(undefined, project)}>
           <SplitPane
             split="horizontal"
@@ -196,6 +207,7 @@ firefox57WorkaroundForBlankPanel();
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
                     test={UiState.selectedTest.test}
+                    selectAllCommands={this.selectAllCommands}
                   />
                 </SplitPane>
               </div>

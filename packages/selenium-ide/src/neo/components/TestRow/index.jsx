@@ -124,7 +124,8 @@ class TestRow extends React.Component {
     moveSelection: PropTypes.func,
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
-    setContextMenu: PropTypes.func
+    setContextMenu: PropTypes.func,
+    selectAll: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -177,6 +178,9 @@ class TestRow extends React.Component {
       this.paste();
     } else if (key === "TAB" ) {
       this.clearSelectedCommands();
+    } else if (onlyPrimary && key === "A") {
+      event.preventDefault();
+      this.props.selectAll();
     }
 
   }
