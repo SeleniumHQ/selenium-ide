@@ -125,6 +125,8 @@ class TestRow extends React.Component {
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func,
+    addSelectedCommands: PropTypes.func,
+    clearSelectedCommands: PropTypes.func,
     selectAll: PropTypes.func
   };
   componentDidMount() {
@@ -185,10 +187,10 @@ class TestRow extends React.Component {
 
   }
   copy() {
-    this.props.copyToClipboard(this.props.command);
+    this.props.copyToClipboard();
   }
   cut() {
-    this.props.copyToClipboard(this.props.command);
+    this.props.copyToClipboard();
     this.props.remove(this.props.index, this.props.command);
   }
   paste() {
@@ -197,7 +199,7 @@ class TestRow extends React.Component {
   select(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log(event.ctrlKey)
+    console.log(event.ctrlKey);
     console.log(event.metaKey);
     console.log(event.ctrlKey && event.metaKey);
     if((event.ctrlKey || event.metaKey) == false) {

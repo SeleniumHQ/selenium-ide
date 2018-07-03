@@ -92,7 +92,7 @@ class UiState {
     return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
-  @action.bound copyToClipboard(item) {
+  @action.bound copyToClipboard() {
     this.clipboard.replace(this.selectedCommands);
   }
 

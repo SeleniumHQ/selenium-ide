@@ -36,7 +36,8 @@ import "./style.css";
     test: PropTypes.object,
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
-    setUrl: PropTypes.func.isRequired
+    setUrl: PropTypes.func.isRequired,
+    selectAllCommands: PropTypes.func
   };
   addCommand(index, command) {
     if (command) {

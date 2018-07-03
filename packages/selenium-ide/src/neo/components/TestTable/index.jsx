@@ -42,7 +42,11 @@ export default class TestTable extends React.Component {
     addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
-    clearAllCommands: PropTypes.func
+    clearAllCommands: PropTypes.func,
+    clearSelectedCommands: PropTypes.func,
+    addSelectedCommands: PropTypes.func,
+    selectAllCommands: PropTypes.func,
+    selectedCommands: PropTypes.object
   };
   detectNewCommand(change) {
     this.newCommand = change.added[0];

@@ -159,7 +159,7 @@ firefox57WorkaroundForBlankPanel();
     window.removeEventListener(this.resizeHandler);
     window.removeEventListener(this.quitHandler);
   }
-  onClick(event){
+  onClick(){
     UiState.clearSelectedCommands();
   }
   selectAllCommands(){
