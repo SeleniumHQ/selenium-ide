@@ -266,7 +266,7 @@ class PlaybackTree {
   constructor(stack) {
     this.inputStack = stack;
     this._preprocessStack = [];
-    this._processStack = [];
+    this.stack = [];
   }
 
   preprocess() {
@@ -306,23 +306,23 @@ class PlaybackTree {
   }
 
   process() {
-    let _preprocessStack = this._preprocessStack;
-    let _processStack = this._processStack;
+    Object.assign(this.stack, this._preprocessStack);
+    let stack = this.stack;
     let nextNodeAtSameLevel = this.nextNodeAtSameLevel;
     let nextEndNode = this.nextEndNode;
     let previousOpeningNode = this.previousOpeningNode;
-    _preprocessStack.forEach(function(currentCommandNode, index) {
-      let nextCommandNode = _preprocessStack[index + 1];
+    stack.forEach(function(currentCommandNode, currentCommandIndex) {
+      let nextCommandNode = stack[currentCommandIndex + 1];
       if (nextCommandNode) {
         if (currentCommandNode.command.isControlFlowCommand() &&
             !currentCommandNode.command.isEnd()) {
           currentCommandNode.right = nextCommandNode;
-          currentCommandNode.left = nextNodeAtSameLevel(_preprocessStack, index, currentCommandNode.level);
+          currentCommandNode.left = nextNodeAtSameLevel(stack, currentCommandIndex, currentCommandNode.level);
         } else if (nextCommandNode.command.isControlFlowCommand()) {
           let openingNode;
-          openingNode = previousOpeningNode(_preprocessStack, index, currentCommandNode.level);
+          openingNode = previousOpeningNode(stack, currentCommandIndex, currentCommandNode.level);
           if (openingNode && !openingNode.command.isLoop()) {
-            currentCommandNode.next = nextEndNode(_preprocessStack, index, openingNode.level);
+            currentCommandNode.next = nextEndNode(stack, currentCommandIndex, openingNode.level);
           } else {
             currentCommandNode.next = openingNode;
           }
@@ -330,9 +330,8 @@ class PlaybackTree {
           currentCommandNode.next = nextCommandNode;
         }
       }
-      _processStack.push(currentCommandNode);
     });
-    return this._processStack;
+    return this.stack;
   }
 
 }
