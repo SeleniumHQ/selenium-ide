@@ -38,9 +38,10 @@ class PlaybackState {
   @observable suiteState = new Map();
   @observable finishedTestsCount = 0;
   @observable testsCount = 0;
+  // number of test cases that failed (max 1 for non-suite runs)
   @observable failures = 0;
+  // number of commands that failed
   @observable errors = 0;
-  @observable hasFailed = false;
   @observable aborted = false;
   @observable paused = false;
   @observable delay = 0;
@@ -53,10 +54,18 @@ class PlaybackState {
     this.logger = new Logger(Channels.PLAYBACK);
   }
 
+  @computed get hasFailed() {
+    return this.failures > 0;
+  }
+
   @computed get hasFinishedSuccessfully() {
-    return !this.runningQueue.find(({ id }) => (
-      this.commandState.get(id) ? this.commandState.get(id).state === PlaybackStates.Failed || this.commandState.get(id).state === PlaybackStates.Fatal : false
-    ));
+    return this.errors === 0;
+  }
+
+  @computed get testsToRun() {
+    return this.currentRunningSuite ? this.currentRunningSuite.tests
+           : this.currentRunningTest ? [this.stackCaller] // eslint-disable-line indent
+           : undefined; // eslint-disable-line indent
   }
 
   @computed get testMap() {
@@ -70,6 +79,8 @@ class PlaybackState {
     try {
       UiState._project.addCurrentUrl();
     } catch (e) {} // eslint-disable-line no-empty
+    UiState.changeView("Executing");
+    UiState.selectCommand(undefined);
     if (UiState.isRecording) {
       ModalState.showAlert({
         title: "Stop recording",
@@ -91,7 +102,6 @@ class PlaybackState {
     const playSuite = action(() => {
       const { suite } = UiState.selectedTest;
       this.resetState();
-      variables.clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = suite;
       this._testsToRun = [...suite.tests];
@@ -115,7 +125,6 @@ class PlaybackState {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
       this.resetState();
-      variables.clearVariables();
       this.runId = uuidv4();
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
@@ -162,7 +171,6 @@ class PlaybackState {
       this.paused = false;
       this.currentPlayingIndex = 0;
       this.errors = 0;
-      this.hasFailed = false;
       this.aborted = false;
       this.currentRunningTest = UiState.selectedTest.test;
       this.runningQueue = [command];
@@ -176,11 +184,10 @@ class PlaybackState {
       variables.clearVariables();
     }
     this.currentRunningTest = this._testsToRun.shift();
-    UiState.selectTest(this.currentRunningTest, UiState.selectedTest.suite);
     this.runningQueue = this.currentRunningTest.commands.peek();
+    this.clearStack();
     this.currentPlayingIndex = 0;
     this.errors = 0;
-    this.hasFailed = false;
     PluginManager.emitMessage({
       action: "event",
       event: "playbackStarted",
@@ -193,6 +200,7 @@ class PlaybackState {
       }
     }).then(action(() => {
       this.isPlaying = true;
+      UiState.selectTest(this.currentRunningTest, this.currentRunningSuite, undefined, true);
     }));
   }
 
@@ -236,8 +244,7 @@ class PlaybackState {
               if (result instanceof Error) {
                 if (!(result instanceof NoResponseError)) {
                   this.logger.error(result.message);
-                  if (!this.hasFinishedSuccessfully && !this.hasFailed) {
-                    this.hasFailed = true;
+                  if (!this.hasFinishedSuccessfully) {
                     this.failures++;
                   }
                 }
@@ -245,8 +252,8 @@ class PlaybackState {
                 this.logger.log(result.message);
               }
             }
-            this.testState.set(this.currentRunningTest.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
           });
+          this.testState.set(this.stackCaller.id, this.hasFinishedSuccessfully ? PlaybackStates.Passed : PlaybackStates.Failed);
           this.isPlaying = false;
           this.isStopping = false;
           return res();
@@ -256,11 +263,14 @@ class PlaybackState {
     return Promise.reject("Playback is not running");
   }
 
-  @action.bound abortPlaying(fatalHandled) {
+  @action.bound abortPlaying() {
     this.aborted = true;
-    this.hasFailed = true;
     this._testsToRun = [];
-    fatalHandled || this.commandState.set(this.runningQueue[this.currentPlayingIndex].id, { state: PlaybackStates.Undetermined, message: "Aborting..." });
+    if (this.paused) {
+      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
+    } else {
+      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+    }
     this.stopPlayingGracefully();
   }
 
@@ -269,11 +279,15 @@ class PlaybackState {
   }
 
   @action.bound resume() {
+    UiState.changeView("Executing");
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
+    UiState.selectCommand(undefined);
     this.paused = false;
   }
 
-  @action.bound break() {
+  @action.bound break(command) {
     this.paused = true;
+    UiState.selectCommand(command);
     browser.windows.getCurrent().then(windowInfo => {
       browser.windows.update(windowInfo.id, {
         focused: true
@@ -282,13 +296,9 @@ class PlaybackState {
   }
 
   @action.bound finishPlaying() {
-    if (!this.hasFinishedSuccessfully) {
-      this.hasFailed = true;
-    }
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
       if (!this.hasFinishedSuccessfully) {
-        this.hasFailed = true;
         this.failures++;
       }
     }
@@ -308,7 +318,7 @@ class PlaybackState {
             projectName: UiState._project.name
           }
         });
-        this.suiteState.set(this.currentRunningSuite.id, !this.hasFailed ? PlaybackStates.Passed : PlaybackStates.Failed);
+        this.suiteState.set(this.currentRunningSuite.id, this.hasFailed ? PlaybackStates.Failed : PlaybackStates.Passed);
       }
     });
   }
@@ -317,14 +327,18 @@ class PlaybackState {
     this.currentPlayingIndex = index;
   }
 
+  @action.bound setCommandStateAtomically(commandId, callstackIndex, state, message) {
+    this.commandState.set(`${callstackIndex !== undefined ? callstackIndex + ":" : ""}${commandId}`, { state, message });
+  }
+
   @action.bound setCommandState(commandId, state, message) {
     if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
       this.errors++;
     }
     if (this.isPlaying) {
-      this.commandState.set(commandId, { state, message });
+      this.setCommandStateAtomically(commandId, this.callstack.length ? this.callstack.length - 1 : undefined, state, message);
       if (state === PlaybackStates.Fatal) {
-        this.abortPlaying(true);
+        this.stopPlayingGracefully();
       }
     }
   }
@@ -345,8 +359,9 @@ class PlaybackState {
     this.callstack.push({
       caller: this.currentRunningTest,
       callee: testCase,
-      position: this.currentPlayingIndex + 1 // continue from the next command after unwinding
+      position: this.currentPlayingIndex
     });
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     this.currentRunningTest = testCase;
     this.currentPlayingIndex = -1;
     this.runningQueue = testCase.commands.peek();
@@ -357,6 +372,7 @@ class PlaybackState {
     this.currentRunningTest = top.caller;
     this.currentPlayingIndex = top.position;
     this.runningQueue = top.caller.commands.peek();
+    UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     return top;
   }
 
@@ -364,14 +380,19 @@ class PlaybackState {
     this.callstack.clear();
   }
 
+  @computed get stackCaller() {
+    return this.callstack.length ? this.callstack[0].caller : this.currentRunningTest;
+  }
+
   @action.bound resetState() {
     this.clearCommandStates();
+    this.clearStack();
+    variables.clearVariables();
     this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;
     this.noStatisticsEffects = false;
     this.failures = 0;
     this.errors = 0;
-    this.hasFailed = false;
     this.aborted = false;
     this.paused = false;
   }

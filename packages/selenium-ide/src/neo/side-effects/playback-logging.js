@@ -34,7 +34,9 @@ export default class PlaybackLogger {
       }
     });
     this.commandStateDisposer = observe(PlaybackState.commandState, (change) => {
-      this.parseCommandStateChange(change.name, change.newValue, this.logCommandState);
+      if (change.type === "add" || change.type === "update") {
+        this.parseCommandStateChange(change.name, change.newValue, this.logCommandState);
+      }
     });
     this.logPlayingState = this.logPlayingState.bind(this);
     this.logStackPush = this.logStackPush.bind(this);
@@ -44,22 +46,31 @@ export default class PlaybackLogger {
     this.dispose = this.dispose.bind(this);
   }
 
-  parseCommandStateChange(commandId, status, cb) {
-    const command = PlaybackState.currentRunningTest.commands.find(({ id }) => (id === commandId));
+  parseCommandStateChange(stateId, status, cb) {
+    const commandParts = stateId.split(":");
+    let commandId, stackIndex;
+    if (commandParts.length === 2) {
+      stackIndex = commandParts[0];
+      commandId = commandParts[1];
+    } else {
+      commandId = commandParts[0];
+    }
+    const test = stackIndex !== undefined ? PlaybackState.callstack[stackIndex].callee : PlaybackState.currentRunningTest;
+    const command = test.commands.find(({ id }) => (id === commandId));
     cb(command, status);
   }
 
   logPlayingState(isPlaying) {
     let log;
     if (isPlaying) {
-      log = new Log(`Running '${PlaybackState.currentRunningTest.name}'`);
+      log = new Log(`Running '${PlaybackState.stackCaller.name}'`);
       log.setNotice();
     } else if (PlaybackState.aborted) {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' was aborted`, LogTypes.Failure);
+      log = new Log(`'${PlaybackState.stackCaller.name}' was aborted`, LogTypes.Failure);
       log.setNotice();
     } else {
-      log = new Log(`'${PlaybackState.currentRunningTest.name}' completed ${PlaybackState.hasFailed ? `with ${PlaybackState.errors} error(s)` : "successfully"}`,
-        PlaybackState.hasFailed ? LogTypes.Failure : LogTypes.Success);
+      log = new Log(`'${PlaybackState.stackCaller.name}' completed ${!PlaybackState.hasFinishedSuccessfully ? `with ${PlaybackState.errors} error(s)` : "successfully"}`,
+        !PlaybackState.hasFinishedSuccessfully ? LogTypes.Failure : LogTypes.Success);
       log.setNotice();
     }
     this.logger.log(log);

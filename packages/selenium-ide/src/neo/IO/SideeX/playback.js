@@ -40,6 +40,7 @@ let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
+  ignoreBreakpoint = false;
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
@@ -70,31 +71,32 @@ function incrementPlayingIndex() {
 }
 
 function isCallStackEmpty() {
-  return !!PlaybackState.callstack.length;
+  return !PlaybackState.callstack.length;
 }
 
 function executionLoop() {
   incrementPlayingIndex();
-  if (didFinishQueue() || isStopping()) {
-    if (isCallStackEmpty()) {
-      PlaybackState.unwindTestCase();
-    } else {
-      return false;
-    }
+  if (didFinishQueue() && !isCallStackEmpty()) {
+    PlaybackState.unwindTestCase();
+    return executionLoop();
+  } else if (isStopping() || didFinishQueue()) {
+    return false;
   }
-  const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
-  if (!command) return executionLoop();
+  const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
+  if (!command.command) return executionLoop();
   // breakpoint
-  PlaybackState.setCommandState(id, PlaybackStates.Pending);
-  if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
-  else if (ignoreBreakpoint && isBreakpoint) ignoreBreakpoint = false;
+  PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
+  if (!ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
+  else if (ignoreBreakpoint && command.isBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  if (isExtCommand(command)) {
+  if (isExtCommand(command.command)) {
     return doDelay().then(() => (
-      (extCommand[extCommand.name(command)](xlateArgument(target), xlateArgument(value)))
+      (extCommand[extCommand.name(command.command)](xlateArgument(command.target), xlateArgument(command.value)))
         .then(() => {
-          PlaybackState.setCommandState(id, PlaybackStates.Passed);
+          // we need to set the stackIndex manually because run command messes with that
+          PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
         }).then(executionLoop)
     ));
   } else if (isImplicitWait(command)) {

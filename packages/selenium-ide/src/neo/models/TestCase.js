@@ -34,11 +34,11 @@ export default class TestCase {
     this.name = name;
   }
 
-  @action.bound createCommand(index) {
+  @action.bound createCommand(index, c, t, v) {
     if (index !== undefined && index.constructor.name !== "Number") {
       throw new Error(`Expected to receive Number instead received ${index !== undefined ? index.constructor.name : index}`);
     } else {
-      const command = new Command();
+      const command = new Command(undefined, c, t, v);
       index !== undefined ? this.commands.splice(index, 0, command) : this.commands.push(command);
       return command;
     }

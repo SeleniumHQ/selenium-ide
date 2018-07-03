@@ -113,6 +113,9 @@ if (!window._recordListener) {
   let currentParentWindow;
   while (currentWindow !== window.top) {
     currentParentWindow = currentWindow.parent;
+    if (!currentParentWindow.frames.length) {
+      break;
+    }
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
       if (currentParentWindow.frames[idx] === currentWindow) {
         frameLocation = ":" + idx + frameLocation;
