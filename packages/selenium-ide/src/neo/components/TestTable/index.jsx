@@ -70,7 +70,8 @@ export default class TestTable extends React.Component {
       const to = fromIndex > toIndex ? fromIndex : toIndex;
 
       for(let i = from; i <= to; i++){
-        UiState.selectCommand(this.props.commands[i], i);
+        if(this.props.commands[i])
+          UiState.selectCommand(this.props.commands[i], i);
       }
     }
   }
