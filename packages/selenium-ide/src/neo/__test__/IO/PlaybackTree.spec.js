@@ -252,7 +252,7 @@ class CommandStackHandler {
     this._currentCommandIndex = index;
   }
 
-  confirm() {
+  confirmControlFlowSyntax() {
     if (this._state.length > 0) {
       throw "Incomplete block at " + this.topOfState().name;
     }
@@ -283,7 +283,7 @@ class PlaybackTree {
       let command = Command.load(currentCommand);
       command.preprocess(currentCommandIndex, commandStackHandler);
     });
-    commandStackHandler.confirm();
+    commandStackHandler.confirmControlFlowSyntax();
     Object.assign(this._preprocessStack, commandStackHandler.stack);
     return this._preprocessStack;
   }
