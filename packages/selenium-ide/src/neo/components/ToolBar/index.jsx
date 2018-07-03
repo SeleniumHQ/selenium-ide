@@ -61,7 +61,7 @@ export default class ToolBar extends React.Component {
           float: "right",
           marginRight: "3px"
         }}>
-          { !PlaybackState.isPlaying && UiState.selectedTest.test ? <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} /> : null }
+          <Record disabled={PlaybackState.isPlaying || !UiState.selectedTest.test} isRecording={UiState.isRecording} onClick={UiState.toggleRecord} />
         </span>
         <div style={{
           clear: "right"
