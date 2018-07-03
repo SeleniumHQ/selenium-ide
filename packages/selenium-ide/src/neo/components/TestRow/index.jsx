@@ -99,7 +99,6 @@ class TestRow extends React.Component {
     this.select = this.select.bind(this);
     this.remove = this.remove.bind(this);
     this.focus = this.focus.bind(this);
-    this.clearSelectedCommands = this.clearSelectedCommands.bind(this);
   }
   static propTypes = {
     index: PropTypes.number,
@@ -127,7 +126,8 @@ class TestRow extends React.Component {
     setContextMenu: PropTypes.func,
     addToSelectedCommands: PropTypes.func,
     clearSelectedCommands: PropTypes.func,
-    selectAll: PropTypes.func
+    selectAll: PropTypes.func,
+    selectByRange: PropTypes.func
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -167,10 +167,10 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && noModifiers && key === "X") {
       this.props.executeCommand(this.props.command);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowUp") {
-      this.clearSelectedCommands();
+      this.props.clearSelectedCommands();
       this.props.moveSelection(this.props.index - 1);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowDown") {
-      this.clearSelectedCommands();
+      this.props.clearSelectedCommands();
       this.props.moveSelection(this.props.index + 1);
     } else if (!this.props.isPristine && onlyPrimary && key === "X") {
       this.cut();
@@ -179,7 +179,7 @@ class TestRow extends React.Component {
     } else if (onlyPrimary && key === "V") {
       this.paste();
     } else if (key === "TAB" ) {
-      this.clearSelectedCommands();
+      this.props.clearSelectedCommands();
     } else if (onlyPrimary && key === "A") {
       event.preventDefault();
       this.props.selectAll();
@@ -199,17 +199,16 @@ class TestRow extends React.Component {
   select(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log(event.ctrlKey);
-    console.log(event.metaKey);
-    console.log(event.ctrlKey && event.metaKey);
-    if((event.ctrlKey || event.metaKey) == false) {
-      console.log("none ctrl key");
+    if((event.ctrlKey || event.metaKey || event.shiftKey) == false) {
       // call from onClick while don't holding clicking ctrl key
-      this.clearSelectedCommands();
+      this.props.clearSelectedCommands();
     }
-    console.log("select");
-    if(this.props.addToSelectedCommands)
-      this.props.addToSelectedCommands(this.props.command, this.props.index);
+
+    if(event.shiftKey){
+      this.props.selectByRange(this.props.command);
+    }
+
+    this.props.addToSelectedCommands(this.props.command, this.props.index);
   }
   focus(){
     //call from onFocus
@@ -217,11 +216,6 @@ class TestRow extends React.Component {
   }
   remove() {
     this.props.remove(this.props.index);
-  }
-  clearSelectedCommands(){
-    if (this.props.clearSelectedCommands){
-      this.props.clearSelectedCommands();
-    }
   }
   render() {
     const listMenu = <ListMenu width={300} padding={-5} opener={<MoreButton /> }>

@@ -34,6 +34,7 @@ export default class TestTable extends React.Component {
     this.detectNewCommand = this.detectNewCommand.bind(this);
     this.disposeNewCommand = this.disposeNewCommand.bind(this);
     this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
+    this.selectCommandByRange = this.selectCommandByRange.bind(this);
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
@@ -59,6 +60,23 @@ export default class TestTable extends React.Component {
       this.newObserverDisposer();
       if (nextProps.commands) {
         this.newObserverDisposer = observe(nextProps.commands, this.detectNewCommand);
+      }
+    }
+  }
+  selectCommandByRange(lastCommandSelected){
+    if(this.props.selectedCommands.length > 1){
+      const fromIndex = this.props.selectedCommands[this.props.selectedCommands.length -2].index;
+      const toIndex = lastCommandSelected.index;
+      let from, to;
+      if (fromIndex > toIndex) {
+        from = toIndex;
+        to = fromIndex;
+      } else {
+        from = fromIndex;
+        to = toIndex;
+      }
+      for(let i = from; i <= to; i++){
+        UiState.selectCommand(this.props.commands[i], i);
       }
     }
   }
@@ -101,6 +119,7 @@ export default class TestTable extends React.Component {
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
                 selectAll={this.props.selectAllCommands}
+                selectByRange={this.selectCommandByRange}
               />
             )).concat(
               <TestRow
@@ -117,6 +136,7 @@ export default class TestTable extends React.Component {
                 addToSelectedCommands={this.props.addToSelectedCommands}
                 clearSelectedCommands={this.props.clearSelectedCommands}
                 selectAll={this.props.selectAllCommands}
+                selectByRange={this.selectCommandByRange}
               />) : null }
           </tbody>
         </table>
