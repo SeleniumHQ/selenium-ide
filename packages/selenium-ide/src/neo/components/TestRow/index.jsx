@@ -126,7 +126,6 @@ class TestRow extends React.Component {
     setContextMenu: PropTypes.func,
     addToSelectedCommands: PropTypes.func,
     clearSelectedCommands: PropTypes.func,
-    selectAll: PropTypes.func,
     selectByRange: PropTypes.func
   };
   componentDidMount() {
@@ -180,11 +179,7 @@ class TestRow extends React.Component {
       this.paste();
     } else if (key === "TAB" ) {
       this.props.clearSelectedCommands();
-    } else if (onlyPrimary && key === "A") {
-      event.preventDefault();
-      this.props.selectAll();
     }
-
   }
   copy() {
     this.props.copyToClipboard();

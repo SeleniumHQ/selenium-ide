@@ -46,7 +46,6 @@ export default class TestTable extends React.Component {
     clearAllCommands: PropTypes.func,
     clearSelectedCommands: PropTypes.func,
     addToSelectedCommands: PropTypes.func,
-    selectAllCommands: PropTypes.func,
     selectedCommands: PropTypes.object
   };
   detectNewCommand(change) {
@@ -118,7 +117,6 @@ export default class TestTable extends React.Component {
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
-                selectAll={this.props.selectAllCommands}
                 selectByRange={this.selectCommandByRange}
               />
             )).concat(
@@ -135,7 +133,6 @@ export default class TestTable extends React.Component {
                 setSectionFocus={UiState.setSectionFocus}
                 addToSelectedCommands={this.props.addToSelectedCommands}
                 clearSelectedCommands={this.props.clearSelectedCommands}
-                selectAll={this.props.selectAllCommands}
                 selectByRange={this.selectCommandByRange}
               />) : null }
           </tbody>

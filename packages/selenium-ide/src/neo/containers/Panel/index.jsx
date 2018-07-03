@@ -141,7 +141,7 @@ firefox57WorkaroundForBlankPanel();
       saveProject(project);
     } else if (noModifiers && key === "ESCAPE") {
       UiState.toggleConsole();
-    } else if (onlyPrimary && key === "A" && e.target.localName === "body") {
+    } else if (onlyPrimary && key === "A" && e.target.localName !== "input" && e.target.localName !== "textarea") {
       e.preventDefault();
       this.selectAllCommands();
     }
@@ -164,6 +164,7 @@ firefox57WorkaroundForBlankPanel();
   }
   selectAllCommands(){
     UiState.clearSelectedCommands();
+    UiState.selectCommandByIndex(0);
     UiState.selectAllCommands();
   }
   render() {
@@ -207,7 +208,6 @@ firefox57WorkaroundForBlankPanel();
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
                     test={UiState.selectedTest.test}
-                    selectAllCommands={this.selectAllCommands}
                   />
                 </SplitPane>
               </div>

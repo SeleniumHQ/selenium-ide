@@ -37,7 +37,6 @@ import "./style.css";
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired,
-    selectAllCommands: PropTypes.func
   };
   addCommand(index, command) {
     if (command) {
@@ -86,7 +85,6 @@ import "./style.css";
           selectedCommands={UiState.selectedCommands}
           addToSelectedCommands={UiState.addToSelectedCommands}
           clearSelectedCommands={UiState.clearSelectedCommands}
-          selectAllCommands={this.props.selectAllCommands}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}
