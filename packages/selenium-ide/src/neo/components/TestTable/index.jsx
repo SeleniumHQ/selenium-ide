@@ -64,16 +64,11 @@ export default class TestTable extends React.Component {
   }
   selectCommandByRange(lastCommandSelected){
     if(this.props.selectedCommands.length > 1){
-      const fromIndex = this.props.selectedCommands[this.props.selectedCommands.length -2].index;
+      const fromIndex = this.props.selectedCommands[this.props.selectedCommands.length - 2].index;
       const toIndex = lastCommandSelected.index;
-      let from, to;
-      if (fromIndex > toIndex) {
-        from = toIndex;
-        to = fromIndex;
-      } else {
-        from = fromIndex;
-        to = toIndex;
-      }
+      const from = fromIndex > toIndex ? toIndex : fromIndex;
+      const to = fromIndex > toIndex ? fromIndex : toIndex;
+
       for(let i = from; i <= to; i++){
         UiState.selectCommand(this.props.commands[i], i);
       }

@@ -36,7 +36,7 @@ import "./style.css";
     test: PropTypes.object,
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
-    setUrl: PropTypes.func.isRequired,
+    setUrl: PropTypes.func.isRequired
   };
   addCommand(index, command) {
     if (command) {
@@ -52,7 +52,7 @@ import "./style.css";
     const { test } = this.props;
     UiState.selectedCommands.forEach((command) =>
       test.removeCommand(command)
-    )
+    );
     if (UiState.selectedCommands.indexOf(UiState.selectedCommand) > -1) {
       if (test.commands.length > index) {
         UiState.selectCommand(test.commands[index]);
