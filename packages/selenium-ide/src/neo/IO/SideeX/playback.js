@@ -87,8 +87,8 @@ function executionLoop() {
   if (!command.command) return executionLoop();
   // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
-  if (!ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
-  else if (ignoreBreakpoint && command.isBreakpoint) ignoreBreakpoint = false;
+  if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
+  else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
   if (isExtCommand(command.command)) {

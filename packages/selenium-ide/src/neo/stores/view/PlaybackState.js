@@ -30,6 +30,8 @@ class PlaybackState {
   @observable runId = "";
   @observable isPlaying = false;
   @observable isStopping = false;
+  @observable breakpointsDisabled = false;
+  @observable pauseOnExceptions = false;
   @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
@@ -73,6 +75,14 @@ class PlaybackState {
       testMap[test.name] = test;
       return testMap;
     }, {});
+  }
+
+  @action.bound toggleDisableBreakpoints() {
+    this.breakpointsDisabled = !this.breakpointsDisabled;
+  }
+
+  @action.bound togglePauseOnExceptions() {
+    this.pauseOnExceptions = !this.pauseOnExceptions;
   }
 
   beforePlaying(play) {
@@ -332,13 +342,18 @@ class PlaybackState {
   }
 
   @action.bound setCommandState(commandId, state, message) {
-    if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
+    if (!this.pauseOnExceptions && (state === PlaybackStates.Failed || state === PlaybackStates.Fatal)) {
       this.errors++;
     }
     if (this.isPlaying) {
       this.setCommandStateAtomically(commandId, this.callstack.length ? this.callstack.length - 1 : undefined, state, message);
       if (state === PlaybackStates.Fatal) {
-        this.stopPlayingGracefully();
+        if (!this.pauseOnExceptions) {
+          this.stopPlayingGracefully();
+        } else if (this.pauseOnExceptions) {
+          this.break(this.runningQueue[this.currentPlayingIndex]);
+          this.setPlayingIndex(this.currentPlayingIndex - 1);
+        }
       }
     }
   }

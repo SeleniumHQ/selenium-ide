@@ -73,7 +73,7 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-      <div key="body" className={classNames("test-table", "test-table-body", { "paused": PlaybackState.paused })}>
+      <div key="body" className={classNames("test-table", "test-table-body", { "paused": PlaybackState.paused }, { "breakpoints-disabled": PlaybackState.breakpointsDisabled })}>
         <table>
           <tbody>
             { this.props.commands ? this.props.commands.map((command, index) => (

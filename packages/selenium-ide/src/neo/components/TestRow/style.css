@@ -85,8 +85,16 @@
     color: white;
 }
 
+.test-table.breakpoints-disabled tbody tr.break-point td:first-child .index {
+    background-color: rgba(64, 166, 255, 0.5);
+}
+
 .test-table tbody tr.break-point td:first-child .arrow {
-  border-left-color: #40A6FF;
+    border-left-color: #40A6FF;
+}
+
+.test-table.breakpoints-disabled tbody tr.break-point td:first-child .arrow {
+    border-left-color: rgba(64, 166, 255, 0.5);
 }
 
 .test-table tbody tr td:first-child span.comment-icon {

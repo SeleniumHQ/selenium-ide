@@ -22,6 +22,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-download:before {
+  content: "\e901";
+}
+.si-filter:before {
+  content: "\e915";
+}
+.si-disable-breakpoints:before {
+  content: "\e91b";
+}
+.si-break-exceptions:before {
+  content: "\e91c";
+}
+.si-stop:before {
+  content: "\e91d";
+}
 .si-open:before {
   content: "\e905";
 }
@@ -59,9 +74,12 @@
   content: "\e910";
 }
 .si-add:before {
-  content: "\e901";
+  content: "\e90d";
 }
 .si-clear:before {
+  content: "\e91a";
+}
+.si-delete:before {
   content: "\e902";
 }
 .si-step-into:before {
@@ -92,8 +110,5 @@
   content: "\e90b";
 }
 .si-select:before {
-  content: "\e90d";
-}
-.si-stop:before {
   content: "\e90f";
 }
