@@ -145,7 +145,7 @@ class UiState {
 
   @action.bound selectCommand(command, index) {
     this.selectedCommand = command;
-    this.addSelectedCommands(command, index);
+    this.addToSelectedCommands(command, index);
   }
 
   @action.bound selectCommandByIndex(index) {
@@ -331,7 +331,7 @@ class UiState {
     this._project.modified = false;
   }
 
-  @action.bound addSelectedCommands(command, index){
+  @action.bound addToSelectedCommands(command, index){
     command.index = index ? index : 0;
     if (!this.selectedCommands.find((c) => (c === command)))
       this.selectedCommands.push(command);

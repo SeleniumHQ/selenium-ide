@@ -84,7 +84,7 @@ import "./style.css";
           commands={this.props.test ? this.props.test.commands : null}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectedCommands={UiState.selectedCommands}
-          addSelectedCommands={UiState.addSelectedCommands}
+          addToSelectedCommands={UiState.addToSelectedCommands}
           clearSelectedCommands={UiState.clearSelectedCommands}
           selectAllCommands={this.props.selectAllCommands}
           selectCommand={UiState.selectCommand}

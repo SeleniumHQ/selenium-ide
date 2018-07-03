@@ -44,7 +44,7 @@ export default class TestTable extends React.Component {
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func,
     clearSelectedCommands: PropTypes.func,
-    addSelectedCommands: PropTypes.func,
+    addToSelectedCommands: PropTypes.func,
     selectAllCommands: PropTypes.func,
     selectedCommands: PropTypes.object
   };
@@ -82,8 +82,8 @@ export default class TestTable extends React.Component {
               <TestRow
                 key={command.id}
                 status={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
-                selected={this.props.selectedCommand === command.id || !!this.props.selectedCommands.find((Lcommand) => (Lcommand.id === command.id))}
-                addSelectedCommands={this.props.addSelectedCommands}
+                selected={this.props.selectedCommand === command.id || !!this.props.selectedCommands.find((cmd) => (cmd.id === command.id))}
+                addToSelectedCommands={this.props.addToSelectedCommands}
                 clearSelectedCommands={this.props.clearSelectedCommands}
                 index={index}
                 command={command}
@@ -114,7 +114,7 @@ export default class TestTable extends React.Component {
                 moveSelection={UiState.selectCommandByIndex}
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 setSectionFocus={UiState.setSectionFocus}
-                addSelectedCommands={this.props.addSelectedCommands}
+                addToSelectedCommands={this.props.addToSelectedCommands}
                 clearSelectedCommands={this.props.clearSelectedCommands}
                 selectAll={this.props.selectAllCommands}
               />) : null }

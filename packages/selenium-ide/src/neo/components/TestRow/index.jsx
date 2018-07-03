@@ -125,7 +125,7 @@ class TestRow extends React.Component {
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func,
-    addSelectedCommands: PropTypes.func,
+    addToSelectedCommands: PropTypes.func,
     clearSelectedCommands: PropTypes.func,
     selectAll: PropTypes.func
   };
@@ -208,8 +208,8 @@ class TestRow extends React.Component {
       this.clearSelectedCommands();
     }
     console.log("select");
-    if(this.props.addSelectedCommands)
-      this.props.addSelectedCommands(this.props.command, this.props.index);
+    if(this.props.addToSelectedCommands)
+      this.props.addToSelectedCommands(this.props.command, this.props.index);
   }
   focus(){
     //call from onFocus
