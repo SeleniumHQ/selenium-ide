@@ -191,7 +191,7 @@ class TestRow extends React.Component {
   }
   cut() {
     this.props.copyToClipboard();
-    this.props.remove(this.props.index, this.props.command);
+    this.props.remove(this.props.index);
   }
   paste() {
     this.props.pasteFromClipboard(this.props.index);
@@ -216,7 +216,7 @@ class TestRow extends React.Component {
     this.props.select(this.props.command, this.props.index);
   }
   remove() {
-    this.props.remove(this.props.index, this.props.command);
+    this.props.remove(this.props.index);
   }
   clearSelectedCommands(){
     if (this.props.clearSelectedCommands){

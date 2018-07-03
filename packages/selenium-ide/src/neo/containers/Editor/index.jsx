@@ -49,10 +49,12 @@ import "./style.css";
       return newCommand;
     }
   }
-  removeCommand(index, command) {
+  removeCommand(index) {
     const { test } = this.props;
-    test.removeCommand(command);
-    if (UiState.selectedCommand === command) {
+    UiState.selectedCommands.forEach((command) =>
+      test.removeCommand(command)
+    )
+    if (UiState.selectedCommands.indexOf(UiState.selectedCommand) > -1) {
       if (test.commands.length > index) {
         UiState.selectCommand(test.commands[index]);
       } else if (test.commands.length) {
