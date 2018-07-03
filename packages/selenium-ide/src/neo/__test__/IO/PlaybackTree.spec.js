@@ -65,7 +65,8 @@ class If extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     commandStackHandler.createAndStoreCommandNode();
     commandStackHandler.pushState();
     commandStackHandler.increaseLevel();
@@ -77,7 +78,8 @@ class Else extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     if (commandStackHandler.topOfState().name !== "if") {
       throw "An else / elseIf used outside of an if block";
     }
@@ -92,7 +94,8 @@ class While extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     if (commandStackHandler.topOfState().name === "do") {
       commandStackHandler.createAndStoreCommandNode();
     } else {
@@ -108,7 +111,8 @@ class Do extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     commandStackHandler.createAndStoreCommandNode();
     commandStackHandler.pushState();
     commandStackHandler.increaseLevel();
@@ -120,7 +124,8 @@ class Times extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     commandStackHandler.createAndStoreCommandNode();
     commandStackHandler.pushState();
     commandStackHandler.increaseLevel();
@@ -132,7 +137,8 @@ class RepeatIf extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     if (commandStackHandler.topOfState().name !== "do") {
       throw "A repeatIf used without a do block";
     }
@@ -145,7 +151,8 @@ class End extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     if (commandStackHandler.terminatesLoop()) {
       commandStackHandler.decreaseLevel();
       commandStackHandler.createAndStoreCommandNode();
@@ -174,7 +181,8 @@ class Default extends Command {
     super(command);
   }
 
-  preprocess(commandStackHandler) {
+  preprocess(commandIndex, commandStackHandler) {
+    commandStackHandler.setCurrentCommand(this, commandIndex);
     commandStackHandler.createAndStoreCommandNode();
   }
 }
@@ -273,8 +281,7 @@ class PlaybackTree {
     let commandStackHandler = new CommandStackHandler(this.inputStack);
     this.inputStack.forEach(function(currentCommand, currentCommandIndex) {
       let command = Command.load(currentCommand);
-      commandStackHandler.setCurrentCommand(command, currentCommandIndex);
-      command.preprocess(commandStackHandler);
+      command.preprocess(currentCommandIndex, commandStackHandler);
     });
     commandStackHandler.confirm();
     Object.assign(this._preprocessStack, commandStackHandler.stack);
