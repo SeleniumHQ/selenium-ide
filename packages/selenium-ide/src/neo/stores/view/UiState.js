@@ -333,9 +333,11 @@ class UiState {
   }
 
   @action.bound addToSelectedCommands(command, index){
-    command.index = index ? index : 0;
-    if (!this.selectedCommands.find((c) => (c === command)))
-      this.selectedCommands.push(command);
+    if(command){
+      command.index = index ? index : 0;
+      if (!this.selectedCommands.find((c) => (c === command)))
+        this.selectedCommands.push(command);
+    }
   }
 
   @action.bound clearSelectedCommands(){
