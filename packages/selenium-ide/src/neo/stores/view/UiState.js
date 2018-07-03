@@ -98,11 +98,10 @@ class UiState {
 
   @action.bound pasteFromClipboard(index) {
     if (this.clipboard.length && this.selectedTest.test) {
-      for(let i=0; i<this.clipboard.length; i++){
-        const newCommand = this.clipboard[i].clone();
-        this.selectedTest.test.insertCommandAt(newCommand, index + i + 1);
-      }
-
+      this.clipboard.forEach((command, idx) => {
+        const newCommand = command.clone();
+        this.selectedTest.test.insertCommandAt(newCommand, index + idx + 1);
+      });
     }
   }
 
