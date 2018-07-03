@@ -265,8 +265,8 @@ class CommandNode {
 class PlaybackTree {
   constructor(stack) {
     this.inputStack = stack;
-    this.preprocessStack = [];
-    this.processStack = [];
+    this._preprocessStack = [];
+    this._processStack = [];
   }
 
   preprocess() {
@@ -277,8 +277,8 @@ class PlaybackTree {
       command.preprocess(commandStackHandler);
     });
     commandStackHandler.confirm();
-    this.preprocessStack = commandStackHandler.stack;
-    return this.preprocessStack;
+    Object.assign(this._preprocessStack, commandStackHandler.stack);
+    return this._preprocessStack;
   }
 
   nextNodeAtSameLevel(stack, index, level) {
@@ -306,23 +306,23 @@ class PlaybackTree {
   }
 
   process() {
-    let _stack = this.preprocessStack;
-    let stack = this.processStack;
+    let _preprocessStack = this._preprocessStack;
+    let _processStack = this._processStack;
     let nextNodeAtSameLevel = this.nextNodeAtSameLevel;
     let nextEndNode = this.nextEndNode;
     let previousOpeningNode = this.previousOpeningNode;
-    _stack.forEach(function(currentCommandNode, index) {
-      let nextCommandNode = _stack[index + 1];
+    _preprocessStack.forEach(function(currentCommandNode, index) {
+      let nextCommandNode = _preprocessStack[index + 1];
       if (nextCommandNode) {
         if (currentCommandNode.command.isControlFlowCommand() &&
             !currentCommandNode.command.isEnd()) {
           currentCommandNode.right = nextCommandNode;
-          currentCommandNode.left = nextNodeAtSameLevel(_stack, index, currentCommandNode.level);
+          currentCommandNode.left = nextNodeAtSameLevel(_preprocessStack, index, currentCommandNode.level);
         } else if (nextCommandNode.command.isControlFlowCommand()) {
           let openingNode;
-          openingNode = previousOpeningNode(_stack, index, currentCommandNode.level);
+          openingNode = previousOpeningNode(_preprocessStack, index, currentCommandNode.level);
           if (openingNode && !openingNode.command.isLoop()) {
-            currentCommandNode.next = nextEndNode(_stack, index, openingNode.level);
+            currentCommandNode.next = nextEndNode(_preprocessStack, index, openingNode.level);
           } else {
             currentCommandNode.next = openingNode;
           }
@@ -330,8 +330,9 @@ class PlaybackTree {
           currentCommandNode.next = nextCommandNode;
         }
       }
-      stack.push(currentCommandNode);
+      _processStack.push(currentCommandNode);
     });
+    return this._processStack;
   }
 
 }
@@ -340,7 +341,7 @@ describe("Control Flow", () => {
   describe("Preprocess", () => {
     describe("Leveling", () => {
       test("returns leveled command stack", () => {
-        let _playbackTree = new PlaybackTree([
+        let playbackTree = new PlaybackTree([
           { name: "if" },
           { name: "command" },
           { name: "else" },
@@ -357,22 +358,22 @@ describe("Control Flow", () => {
           { name: "end" },
           { name: "end" }
         ]);
-        let playbackTree = _playbackTree.preprocess();
-        expect(playbackTree[0].level).toEqual(0); //  if
-        expect(playbackTree[1].level).toEqual(1); //    command
-        expect(playbackTree[2].level).toEqual(0); //  else
-        expect(playbackTree[3].level).toEqual(1); //    while
-        expect(playbackTree[4].level).toEqual(2); //      command
-        expect(playbackTree[5].level).toEqual(1); //    end
-        expect(playbackTree[6].level).toEqual(1); //    do
-        expect(playbackTree[7].level).toEqual(2); //      command
-        expect(playbackTree[8].level).toEqual(2); //      while
-        expect(playbackTree[9].level).toEqual(1); //    end
-        expect(playbackTree[10].level).toEqual(1); //   do
-        expect(playbackTree[11].level).toEqual(2); //     command
-        expect(playbackTree[12].level).toEqual(2); //     repeatIf
-        expect(playbackTree[13].level).toEqual(1); //   end
-        expect(playbackTree[14].level).toEqual(0); // end
+        let stack = playbackTree.preprocess();
+        expect(stack[0].level).toEqual(0); //  if
+        expect(stack[1].level).toEqual(1); //    command
+        expect(stack[2].level).toEqual(0); //  else
+        expect(stack[3].level).toEqual(1); //    while
+        expect(stack[4].level).toEqual(2); //      command
+        expect(stack[5].level).toEqual(1); //    end
+        expect(stack[6].level).toEqual(1); //    do
+        expect(stack[7].level).toEqual(2); //      command
+        expect(stack[8].level).toEqual(2); //      while
+        expect(stack[9].level).toEqual(1); //    end
+        expect(stack[10].level).toEqual(1); //   do
+        expect(stack[11].level).toEqual(2); //     command
+        expect(stack[12].level).toEqual(2); //     repeatIf
+        expect(stack[13].level).toEqual(1); //   end
+        expect(stack[14].level).toEqual(0); // end
       });
     });
     describe("Syntax Validation", () => {
@@ -469,15 +470,15 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree.preprocess();
-        playbackTree.process();
-        expect(playbackTree.processStack[0].command).toEqual(input[0]);
-        expect(playbackTree.processStack[1].command).toEqual(input[1]);
-        expect(playbackTree.processStack[0].next).toEqual(playbackTree.processStack[1]);
-        expect(playbackTree.processStack[0].left).toBeUndefined();
-        expect(playbackTree.processStack[0].right).toBeUndefined();
-        expect(playbackTree.processStack[1].next).toBeUndefined();
-        expect(playbackTree.processStack[1].left).toBeUndefined();
-        expect(playbackTree.processStack[1].right).toBeUndefined();
+        let stack = playbackTree.process();
+        expect(stack[0].command).toEqual(input[0]);
+        expect(stack[1].command).toEqual(input[1]);
+        expect(stack[0].next).toEqual(stack[1]);
+        expect(stack[0].left).toBeUndefined();
+        expect(stack[0].right).toBeUndefined();
+        expect(stack[1].next).toBeUndefined();
+        expect(stack[1].left).toBeUndefined();
+        expect(stack[1].right).toBeUndefined();
       });
       test("if-command-else-command-end", () => {
         let input = [
@@ -489,8 +490,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree.preprocess();
-        playbackTree.process();
-        let stack = playbackTree.processStack;
+        let stack = playbackTree.process();
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -520,8 +520,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree.preprocess();
-        playbackTree.process();
-        let stack = playbackTree.processStack;
+        let stack = playbackTree.process();
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -547,8 +546,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree.preprocess();
-        playbackTree.process();
-        let stack = playbackTree.processStack;
+        let stack = playbackTree.process();
         // if
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toBeUndefined();
@@ -594,8 +592,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree.preprocess();
-        playbackTree.process();
-        let stack = playbackTree.processStack;
+        let stack = playbackTree.process();
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();
