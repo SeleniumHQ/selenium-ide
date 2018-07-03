@@ -163,7 +163,7 @@ firefox57WorkaroundForBlankPanel();
     UiState.clearSelectedCommands();
   }
   selectAllCommands(){
-    UiState.selectCommandByIndex(1);
+    UiState.clearSelectedCommands();
     UiState.selectAllCommands();
   }
   render() {
