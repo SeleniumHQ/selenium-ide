@@ -93,7 +93,8 @@ class UiState {
   }
 
   @action.bound copyToClipboard() {
-    this.clipboard.replace(this.selectedCommands);
+    // sorting by index
+    this.clipboard.replace(this.selectedCommands.sort((c1, c2) => c1.index - c2.index));
   }
 
   @action.bound pasteFromClipboard(index) {
@@ -335,9 +336,6 @@ class UiState {
     command.index = index ? index : 0;
     if (!this.selectedCommands.find((c) => (c === command)))
       this.selectedCommands.push(command);
-    // sorting by index
-    if(this.selectedCommands.length > 1)
-      this.selectedCommands = this.selectedCommands.sort((c1, c2) => c1.index - c2.index);
   }
 
   @action.bound clearSelectedCommands(){
