@@ -66,8 +66,8 @@ class If extends Command {
   }
 
   preprocess(commandStackHandler) {
-    commandStackHandler.store();
-    commandStackHandler.setState();
+    commandStackHandler.createAndStoreCommandNode();
+    commandStackHandler.pushState();
     commandStackHandler.increaseLevel();
   }
 }
@@ -78,11 +78,11 @@ class Else extends Command {
   }
 
   preprocess(commandStackHandler) {
-    if (commandStackHandler.top().name !== "if") {
+    if (commandStackHandler.topOfState().name !== "if") {
       throw "An else / elseIf used outside of an if block";
     }
     commandStackHandler.decreaseLevel();
-    commandStackHandler.store();
+    commandStackHandler.createAndStoreCommandNode();
     commandStackHandler.increaseLevel();
   }
 }
@@ -93,11 +93,11 @@ class While extends Command {
   }
 
   preprocess(commandStackHandler) {
-    if (commandStackHandler.top().name === "do") {
-      commandStackHandler.store();
+    if (commandStackHandler.topOfState().name === "do") {
+      commandStackHandler.createAndStoreCommandNode();
     } else {
-      commandStackHandler.store();
-      commandStackHandler.setState();
+      commandStackHandler.createAndStoreCommandNode();
+      commandStackHandler.pushState();
       commandStackHandler.increaseLevel();
     }
   }
@@ -109,8 +109,8 @@ class Do extends Command {
   }
 
   preprocess(commandStackHandler) {
-    commandStackHandler.store();
-    commandStackHandler.setState();
+    commandStackHandler.createAndStoreCommandNode();
+    commandStackHandler.pushState();
     commandStackHandler.increaseLevel();
   }
 }
@@ -121,8 +121,8 @@ class Times extends Command {
   }
 
   preprocess(commandStackHandler) {
-    commandStackHandler.store();
-    commandStackHandler.setState();
+    commandStackHandler.createAndStoreCommandNode();
+    commandStackHandler.pushState();
     commandStackHandler.increaseLevel();
   }
 }
@@ -133,10 +133,10 @@ class RepeatIf extends Command {
   }
 
   preprocess(commandStackHandler) {
-    if (commandStackHandler.top().name !== "do") {
+    if (commandStackHandler.topOfState().name !== "do") {
       throw "A repeatIf used without a do block";
     }
-    commandStackHandler.store();
+    commandStackHandler.createAndStoreCommandNode();
   }
 }
 
@@ -148,7 +148,7 @@ class End extends Command {
   preprocess(commandStackHandler) {
     if (commandStackHandler.terminatesLoop()) {
       commandStackHandler.decreaseLevel();
-      commandStackHandler.store();
+      commandStackHandler.createAndStoreCommandNode();
       commandStackHandler.popState();
     } else if (commandStackHandler.terminatesIf()) {
       const elseCount = commandStackHandler.currentSegment().filter(command => command.name === "else").length;
@@ -159,7 +159,7 @@ class End extends Command {
         throw "Incorrect command order of elseIf / else";
       } else if (elseCount === 0 || commandStackHandler.topOf(elseSegment).name === "else") {
         commandStackHandler.decreaseLevel();
-        commandStackHandler.store();
+        commandStackHandler.createAndStoreCommandNode();
         commandStackHandler.popState();
       }
     } else {
@@ -175,18 +175,18 @@ class Default extends Command {
   }
 
   preprocess(commandStackHandler) {
-    commandStackHandler.store();
+    commandStackHandler.createAndStoreCommandNode();
   }
 }
 
 class CommandStackHandler {
   constructor(stack) {
-    this._stack = stack;
+    this._inputStack = stack;
+    this._state = [];
+    this._currentCommand;
+    this._currentCommandIndex;
     this.stack = [];
-    this.state = [];
     this.level = 0;
-    this.currentCommand;
-    this.currentCommandIndex;
   }
 
   increaseLevel() {
@@ -197,25 +197,25 @@ class CommandStackHandler {
     this.level--;
   }
 
-  store() {
+  createAndStoreCommandNode() {
     let node = new CommandNode;
-    node.command = this.currentCommand;
+    node.command = this._currentCommand;
     node.level = this.level;
     this.stack.push(node);
   }
 
-  setState() {
-    this.state.push({ name: this.currentCommand.name, index: this.currentCommandIndex });
+  pushState() {
+    this._state.push({ name: this._currentCommand.name, index: this._currentCommandIndex });
   }
 
   popState() {
-    this.state.pop();
+    this._state.pop();
   }
 
-  top() {
-    let command = this.state[this.state.length - 1];
+  topOfState() {
+    let command = this._state[this._state.length - 1];
     if (command) {
-      return this.state[this.state.length - 1];
+      return this._state[this._state.length - 1];
     } else {
       return { name: "" };
     }
@@ -226,27 +226,27 @@ class CommandStackHandler {
   }
 
   terminatesIf() {
-    return (this.top().name === "if");
+    return (this.topOfState().name === "if");
   }
 
   terminatesLoop() {
-    return (this.top().name === "while" ||
-            this.top().name === "times" ||
-            this.top().name === "do");
+    return (this.topOfState().name === "while" ||
+            this.topOfState().name === "times" ||
+            this.topOfState().name === "do");
   }
 
   currentSegment() {
-    return this._stack.slice(this.top().index, this.currentCommandIndex);
+    return this._inputStack.slice(this.topOfState().index, this._currentCommandIndex);
   }
 
   setCurrentCommand(command, index) {
-    this.currentCommand = command;
-    this.currentCommandIndex = index;
+    this._currentCommand = command;
+    this._currentCommandIndex = index;
   }
 
   confirm() {
-    if (this.state.length > 0) {
-      throw "Incomplete block at " + this.top().name;
+    if (this._state.length > 0) {
+      throw "Incomplete block at " + this.topOfState().name;
     }
   }
 }
