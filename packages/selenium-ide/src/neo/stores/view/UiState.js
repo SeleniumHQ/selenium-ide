@@ -143,9 +143,9 @@ class UiState {
     }
   }
 
-  @action.bound selectCommand(command) {
+  @action.bound selectCommand(command, index) {
     this.selectedCommand = command;
-    this.addSelectedCommands(command);
+    this.addSelectedCommands(command, index);
   }
 
   @action.bound selectCommandByIndex(index) {
@@ -331,9 +331,13 @@ class UiState {
     this._project.modified = false;
   }
 
-  @action.bound addSelectedCommands(command){
+  @action.bound addSelectedCommands(command, index){
+    command.index = index ? index : 0;
     if (!this.selectedCommands.find((c) => (c === command)))
       this.selectedCommands.push(command);
+    // sorting by index
+    if(this.selectedCommands.length > 1)
+      this.selectedCommands = this.selectedCommands.sort((c1, c2) => c1.index - c2.index);
   }
 
   @action.bound clearSelectedCommands(){

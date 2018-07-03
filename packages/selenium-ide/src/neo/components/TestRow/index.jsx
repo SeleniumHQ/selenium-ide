@@ -201,11 +201,11 @@ class TestRow extends React.Component {
     }
     console.log("select");
     if(this.props.addSelectedCommands)
-      this.props.addSelectedCommands(this.props.command);
+      this.props.addSelectedCommands(this.props.command, this.props.index);
   }
   focus(){
     //call from onFocus
-    this.props.select(this.props.command);
+    this.props.select(this.props.command, this.props.index);
   }
   remove() {
     this.props.remove(this.props.index, this.props.command);
