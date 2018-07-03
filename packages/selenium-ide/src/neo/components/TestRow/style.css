@@ -59,6 +59,10 @@
   width: 42px;
 }
 
+.test-table tbody tr td:first-child a.break-toggle {
+    display: block;
+}
+
 .test-table tbody tr td:first-child span.index {
     color: #8B8B8B;
     line-height: 16px;
