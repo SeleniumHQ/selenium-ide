@@ -69,7 +69,7 @@ export default class PlaybackLogger {
       log = new Log(`'${PlaybackState.stackCaller.name}' was aborted`, LogTypes.Failure);
       log.setNotice();
     } else {
-      log = new Log(`'${PlaybackState.stackCaller.name}' completed ${!PlaybackState.hasFinishedSuccessfully ? `with ${PlaybackState.errors} error(s)` : "successfully"}`,
+      log = new Log(`'${PlaybackState.stackCaller.name}' ${!PlaybackState.hasFinishedSuccessfully ? `ended with ${PlaybackState.errors} error(s)` : "completed successfully"}`,
         !PlaybackState.hasFinishedSuccessfully ? LogTypes.Failure : LogTypes.Success);
       log.setNotice();
     }
