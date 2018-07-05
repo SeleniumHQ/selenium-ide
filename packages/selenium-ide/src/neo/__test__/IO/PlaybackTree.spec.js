@@ -19,10 +19,10 @@ class CommandStackHandler {
   constructor(stack) {
     this._inputStack = stack;
     this._state = [];
+    this._level = 0;
     this._currentCommand;
     this._currentCommandIndex;
     this.stack = [];
-    this.level = 0;
   }
 
   preprocessCommand(command, index) {
@@ -32,111 +32,112 @@ class CommandStackHandler {
       case "if":
       case "do":
       case "times":
-        this.mutation1();
+        this._mutation1();
         break;
       case "while":
-        if (this.topOfState().name === "do") {
-          this.mutation3();
+        if (this._topOfState().name === "do") {
+          this._mutation3();
         } else {
-          this.mutation1();
+          this._mutation1();
         }
         break;
       case "repeatIf":
-        if (this.topOfState().name !== "do") {
+        if (this._topOfState().name !== "do") {
           throw "A repeatIf used without a do block";
         }
-        this.mutation3();
+        this._mutation3();
         break;
       case "else":
-        if (this.topOfState().name !== "if") {
+        if (this._topOfState().name !== "if") {
           throw "An else / elseIf used outside of an if block";
         }
-        this.mutation2();
+        this._mutation2();
         break;
       case "end":
-        if (this.terminatesLoop()) {
-          this.mutation4();
-        } else if (this.terminatesIf()) {
-          const elseCount = this.currentSegment().filter(command => command.name === "else").length;
-          const elseSegment = this.currentSegment().filter(command => command.name.match(/else/));
+        if (this._terminatesLoop()) {
+          this._mutation4();
+        } else if (this._terminatesIf()) {
+          const elseCount = this._currentSegment().filter(command => command.name === "else").length;
+          const elseSegment = this._currentSegment().filter(command => command.name.match(/else/));
           if (elseCount > 1) {
             throw "Too many else commands used";
-          } else if (elseCount === 1 && this.topOf(elseSegment).name !== "else") {
+          } else if (elseCount === 1 && this._topOf(elseSegment).name !== "else") {
             throw "Incorrect command order of elseIf / else";
-          } else if (elseCount === 0 || this.topOf(elseSegment).name === "else") {
-            this.mutation4();
+          } else if (elseCount === 0 || this._topOf(elseSegment).name === "else") {
+            this._mutation4();
           }
         } else {
           throw "Use of end without an opening keyword";
         }
         break;
       default:
-        this.mutation3();
+        this._mutation3();
         break;
     }
   }
 
-  createAndStoreCommandNode() {
+  confirmControlFlowSyntax() {
+    if (this._state.length > 0) {
+      throw "Incomplete block at " + this._topOfState().name;
+    }
+  }
+
+  _createAndStoreCommandNode() {
     let node = new CommandNode;
     node.command = this._currentCommand;
-    node.level = this.level;
+    node.level = this._level;
     this.stack.push(node);
   }
 
-  topOfState() {
+  _topOf(segment) {
+    return segment[segment.length - 1];
+  }
+
+  _topOfState() {
     let command = this._state[this._state.length - 1];
     if (command) {
-      return this.topOf(this._state);
+      return this._topOf(this._state);
     } else {
       return { name: "" };
     }
   }
 
-  topOf(segment) {
-    return segment[segment.length - 1];
+  _currentSegment() {
+    return this._inputStack.slice(this._topOfState().index, this._currentCommandIndex);
   }
 
-  terminatesIf() {
-    return (this.topOfState().name === "if");
+  _terminatesIf() {
+    return (this._topOfState().name === "if");
   }
 
-  terminatesLoop() {
-    return (this.topOfState().name === "while" ||
-            this.topOfState().name === "times" ||
-            this.topOfState().name === "do");
+  _terminatesLoop() {
+    return (this._topOfState().name === "while" ||
+            this._topOfState().name === "times" ||
+            this._topOfState().name === "do");
   }
 
-  currentSegment() {
-    return this._inputStack.slice(this.topOfState().index, this._currentCommandIndex);
-  }
-
-  confirmControlFlowSyntax() {
-    if (this._state.length > 0) {
-      throw "Incomplete block at " + this.topOfState().name;
-    }
-  }
-
-  mutation1() {
-    this.createAndStoreCommandNode();
+  _mutation1() {
+    this._createAndStoreCommandNode();
     this._state.push({ name: this._currentCommand.name, index: this._currentCommandIndex });
-    this.level++;
+    this._level++;
   }
 
-  mutation2() {
-    this.level--;
-    this.createAndStoreCommandNode();
-    this.level++;
+  _mutation2() {
+    this._level--;
+    this._createAndStoreCommandNode();
+    this._level++;
   }
 
-  mutation3() {
-    this.createAndStoreCommandNode();
+  _mutation3() {
+    this._createAndStoreCommandNode();
   }
 
-  mutation4() {
-    this.level--;
-    this.createAndStoreCommandNode();
+  _mutation4() {
+    this._level--;
+    this._createAndStoreCommandNode();
     this._state.pop();
   }
+
 }
 
 class CommandNode {
