@@ -26,10 +26,7 @@ export class PlaybackTree {
 
   preprocess() {
     let commandStackHandler = new CommandStackHandler(this.inputStack);
-    this.inputStack.forEach(function(currentCommand, currentCommandIndex) {
-      commandStackHandler.preprocessCommand(currentCommand, currentCommandIndex);
-    });
-    commandStackHandler.confirmControlFlowSyntax();
+    commandStackHandler.preprocessCommands();
     this._preprocessStack = [...commandStackHandler.stack];
     return this._preprocessStack;
   }

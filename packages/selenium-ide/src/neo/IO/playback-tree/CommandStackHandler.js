@@ -17,6 +17,24 @@
 
 import { CommandNode } from "./CommandNode";
 
+function isIf(command) {
+  return (command.name === "if");
+}
+
+function isElse(command) {
+  return (command.name === "else");
+}
+
+function isDo(command) {
+  return (command.name === "do");
+}
+
+function isLoop(command) {
+  return (command.name === "while" ||
+          command.name === "times" ||
+          command.name === "do");
+}
+
 export class CommandStackHandler {
   constructor(stack) {
     this._inputStack = stack;
@@ -27,53 +45,61 @@ export class CommandStackHandler {
     this.stack = [];
   }
 
-  preprocessCommand(command, index) {
-    this._currentCommand = command;
-    this._currentCommandIndex = index;
-    switch (command.name) {
+  preprocessCommands() {
+    let that = this;
+    this._inputStack.forEach(function(currentCommand, currentCommandIndex) {
+      that._currentCommand = currentCommand;
+      that._currentCommandIndex = currentCommandIndex;
+      that._preprocessCommand();
+    });
+    this.confirmControlFlowSyntax();
+  }
+
+  _preprocessCommand() {
+    switch (this._currentCommand.name) {
       case "if":
       case "do":
       case "times":
-        this._mutation1();
+        this._trackControlFlowBranchOpening();
         break;
       case "while":
-        if (this._topOfState().name === "do") {
-          this._mutation3();
+        if (isDo(this._topOfState())) {
+          this._trackCommand();
         } else {
-          this._mutation1();
+          this._trackControlFlowBranchOpening();
         }
         break;
       case "repeatIf":
-        if (this._topOfState().name !== "do") {
+        if (!isDo(this._topOfState())) {
           throw "A repeatIf used without a do block";
         }
-        this._mutation3();
+        this._trackCommand();
         break;
       case "else":
-        if (this._topOfState().name !== "if") {
+        if (!isIf(this._topOfState())) {
           throw "An else / elseIf used outside of an if block";
         }
-        this._mutation2();
+        this._trackControlFlowCommandElse();
         break;
       case "end":
-        if (this._terminatesLoop()) {
-          this._mutation4();
-        } else if (this._terminatesIf()) {
+        if (isLoop(this._topOfState())) {
+          this._trackControlFlowBranchEnding();
+        } else if (isIf(this._topOfState())) {
           const elseCount = this._currentSegment().filter(command => command.name === "else").length;
           const elseSegment = this._currentSegment().filter(command => command.name.match(/else/));
           if (elseCount > 1) {
             throw "Too many else commands used";
-          } else if (elseCount === 1 && this._topOf(elseSegment).name !== "else") {
+          } else if (elseCount === 1 && !isElse(this._topOf(elseSegment))) {
             throw "Incorrect command order of elseIf / else";
-          } else if (elseCount === 0 || this._topOf(elseSegment).name === "else") {
-            this._mutation4();
+          } else if (elseCount === 0 || isElse(this._topOf(elseSegment))) {
+            this._trackControlFlowBranchEnding();
           }
         } else {
           throw "Use of end without an opening keyword";
         }
         break;
       default:
-        this._mutation3();
+        this._trackCommand();
         break;
     }
   }
@@ -108,33 +134,23 @@ export class CommandStackHandler {
     return this._inputStack.slice(this._topOfState().index, this._currentCommandIndex);
   }
 
-  _terminatesIf() {
-    return (this._topOfState().name === "if");
-  }
-
-  _terminatesLoop() {
-    return (this._topOfState().name === "while" ||
-            this._topOfState().name === "times" ||
-            this._topOfState().name === "do");
-  }
-
-  _mutation1() {
+  _trackControlFlowBranchOpening() {
     this._state.push({ name: this._currentCommand.name, index: this._currentCommandIndex });
     this._createAndStoreCommandNode();
     this._level++;
   }
 
-  _mutation2() {
+  _trackControlFlowCommandElse() {
     this._level--;
     this._createAndStoreCommandNode();
     this._level++;
   }
 
-  _mutation3() {
+  _trackCommand() {
     this._createAndStoreCommandNode();
   }
 
-  _mutation4() {
+  _trackControlFlowBranchEnding() {
     this._level--;
     this._createAndStoreCommandNode();
     this._state.pop();
