@@ -119,8 +119,8 @@ export class CommandStackHandler {
   }
 
   _mutation1() {
-    this._createAndStoreCommandNode();
     this._state.push({ name: this._currentCommand.name, index: this._currentCommandIndex });
+    this._createAndStoreCommandNode();
     this._level++;
   }
 
