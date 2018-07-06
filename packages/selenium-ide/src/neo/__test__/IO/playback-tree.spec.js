@@ -151,7 +151,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[1].command).toEqual(input[1]);
@@ -163,7 +163,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].left).toBeUndefined();
@@ -184,7 +184,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         // if
         expect(stack[0].next).toBeUndefined();
@@ -223,7 +223,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -246,7 +246,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         // if
         expect(stack[0].next).toBeUndefined();
@@ -286,7 +286,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         // if
         expect(stack[0].next).toBeUndefined();
@@ -330,7 +330,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();
@@ -354,7 +354,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._processCommands();
+        playbackTree._processCommandNodes();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();

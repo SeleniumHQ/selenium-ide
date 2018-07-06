@@ -207,7 +207,7 @@ export class PlaybackTree {
     }
   }
 
-  _processCommands() {
+  _processCommandNodes() {
     this._state = [];
     let that = this;
     that._commandNodeStack.forEach(function(currentCommandNode, currentCommandNodeIndex) {
