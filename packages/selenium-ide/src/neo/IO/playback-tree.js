@@ -45,6 +45,10 @@ function isElse(command) {
   return (command.name === "else");
 }
 
+function isElseIf(command) {
+  return (command.name === "elseIf");
+}
+
 function isEnd(command) {
   return (command.name === "end");
 }
@@ -252,7 +256,7 @@ export class PlaybackTree {
           }
           break;
         default:
-          if (isIf(this._topOfState()) && isControlFlowCommand(nextCommandNode.command)) {
+          if (isIf(this._topOfState()) && (isElse(nextCommandNode.command) || isElseIf(nextCommandNode.command) || isEnd(nextCommandNode.command))) {
             commandNode.next = this._findNextEndNodeAtLevel(commandNodeIndex, this._topOfState().level);
           } else if (isWhile(this._topOfState()) && isControlFlowCommand(nextCommandNode.command)) {
             commandNode.next = this._commandNodeStack[this._topOfState().index];
