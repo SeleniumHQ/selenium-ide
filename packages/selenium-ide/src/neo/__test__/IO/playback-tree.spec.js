@@ -151,7 +151,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._process();
+        playbackTree._processCommands();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[1].command).toEqual(input[1]);
@@ -162,9 +162,11 @@ describe("Control Flow", () => {
         expect(stack[1].left).toBeUndefined();
         expect(stack[1].right).toBeUndefined();
       });
-      test("if-command-else-command-end", () => {
+      test("if-command-elseIf-command-else-command-end", () => {
         let input = [
           { name: "if" },
+          { name: "command" },
+          { name: "elseIf" },
           { name: "command" },
           { name: "else" },
           { name: "command" },
@@ -172,28 +174,43 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._process();
+        playbackTree._processCommands();
         let stack = playbackTree._commandNodeStack;
+        // if
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
         expect(stack[0].left).toEqual(stack[2]);
+        // command
         expect(stack[1].command).toEqual(input[1]);
-        expect(stack[1].next).toEqual(stack[4]);
+        expect(stack[1].next).toEqual(stack[6]);
         expect(stack[1].right).toBeUndefined();
         expect(stack[1].left).toBeUndefined();
+        // elseIf
         expect(stack[2].command).toEqual(input[2]);
         expect(stack[2].next).toBeUndefined();
         expect(stack[2].right).toEqual(stack[3]);
         expect(stack[2].left).toEqual(stack[4]);
+        // command
         expect(stack[3].command).toEqual(input[3]);
-        expect(stack[3].next).toEqual(stack[4]);
+        expect(stack[3].next).toEqual(stack[6]);
         expect(stack[3].right).toBeUndefined();
         expect(stack[3].left).toBeUndefined();
+        // else
         expect(stack[4].command).toEqual(input[4]);
-        expect(stack[4].next).toBeUndefined();
+        expect(stack[4].next).toEqual(stack[5]);
         expect(stack[4].right).toBeUndefined();
         expect(stack[4].left).toBeUndefined();
+        // command
+        expect(stack[5].command).toEqual(input[5]);
+        expect(stack[5].next).toEqual(stack[6]);
+        expect(stack[5].right).toBeUndefined();
+        expect(stack[5].left).toBeUndefined();
+        // end
+        expect(stack[6].command).toEqual(input[6]);
+        expect(stack[6].next).toBeUndefined();
+        expect(stack[6].right).toBeUndefined();
+        expect(stack[6].left).toBeUndefined();
       });
       test("while-command-end", () => {
         let input = [
@@ -203,7 +220,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._process();
+        playbackTree._processCommands();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toBeUndefined();
@@ -224,19 +241,20 @@ describe("Control Flow", () => {
           { name: "while" },
           { name: "command" },
           { name: "end" },
+          { name: "command" },
           { name: "else" },
           { name: "command" },
           { name: "end" }
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._process();
+        playbackTree._processCommands();
         let stack = playbackTree._commandNodeStack;
         // if
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
-        expect(stack[0].left).toEqual(stack[4]);
+        expect(stack[0].left).toEqual(stack[5]);
         // while
         expect(stack[1].command).toEqual(input[1]);
         expect(stack[1].next).toBeUndefined();
@@ -249,26 +267,31 @@ describe("Control Flow", () => {
         expect(stack[2].left).toBeUndefined();
         // end
         expect(stack[3].command).toEqual(input[3]);
-        expect(stack[3].next).toEqual(stack[6]);
+        expect(stack[3].next).toEqual(stack[4]);
         expect(stack[3].right).toBeUndefined();
         expect(stack[3].left).toBeUndefined();
-        // else
-        expect(stack[4].command).toEqual(input[4]);
-        expect(stack[4].next).toBeUndefined();
-        expect(stack[4].right).toEqual(stack[5]);
-        expect(stack[4].left).toEqual(stack[6]);
         // command
+        expect(stack[4].command).toEqual(input[4]);
+        expect(stack[4].next).toEqual(stack[7]);
+        expect(stack[4].right).toBeUndefined();
+        expect(stack[4].left).toBeUndefined();
+        // else
         expect(stack[5].command).toEqual(input[5]);
         expect(stack[5].next).toEqual(stack[6]);
         expect(stack[5].right).toBeUndefined();
         expect(stack[5].left).toBeUndefined();
-        // end
+        // command
         expect(stack[6].command).toEqual(input[6]);
-        expect(stack[6].next).toBeUndefined();
+        expect(stack[6].next).toEqual(stack[7]);
         expect(stack[6].right).toBeUndefined();
         expect(stack[6].left).toBeUndefined();
+        // end
+        expect(stack[7].command).toEqual(input[7]);
+        expect(stack[7].next).toBeUndefined();
+        expect(stack[7].right).toBeUndefined();
+        expect(stack[7].left).toBeUndefined();
       });
-      test.skip("do-command-while-end", () => {
+      test("do-command-while-end", () => {
         let input = [
           { name: "do" },
           { name: "command" },
@@ -277,7 +300,7 @@ describe("Control Flow", () => {
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
-        playbackTree._process();
+        playbackTree._processCommands();
         let stack = playbackTree._commandNodeStack;
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].next).toEqual(stack[1]);
@@ -289,7 +312,7 @@ describe("Control Flow", () => {
         expect(stack[1].left).toBeUndefined();
         expect(stack[2].command).toEqual(input[2]);
         expect(stack[2].next).toBeUndefined();
-        expect(stack[2].right).toEqual(stack[0]);
+        expect(stack[2].right).toEqual(stack[0]); // here
         expect(stack[2].left).toEqual(stack[3]);
         expect(stack[3].command).toEqual(input[3]);
         expect(stack[3].next).toBeUndefined();

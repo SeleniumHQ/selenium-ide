@@ -80,7 +80,7 @@ export class PlaybackTree {
       that._currentCommandIndex = currentCommandIndex;
       that._preprocessCommand();
     });
-    if (this._state.length > 0) {
+    if (!this._isStateEmpty()) {
       throw "Incomplete block at " + this._topOfState().name;
     }
     return true;
@@ -107,6 +107,7 @@ export class PlaybackTree {
         this._trackCommand();
         break;
       case "else":
+      case "elseIf":
         if (!isIf(this._topOfState())) {
           throw "An else / elseIf used outside of an if block";
         }
@@ -155,6 +156,10 @@ export class PlaybackTree {
     }
   }
 
+  _isStateEmpty() {
+    return (this._state.length === 0);
+  }
+
   _currentSegment() {
     return this._commandStack.slice(this._topOfState().index, this._currentCommandIndex);
   }
@@ -181,59 +186,81 @@ export class PlaybackTree {
     this._state.pop();
   }
 
-  _nextNodeAtSameLevel(stack, index, level) {
-    for(let i = index + 1; i !== stack.length; i++) {
-      if (stack[i].level === level) {
-        return stack[i];
+  _findNextNodeAtLevel(index, level) {
+    for(let i = index + 1; i < this._commandNodeStack.length + 1; i++) {
+      if (this._commandNodeStack[i].level === level) {
+        return this._commandNodeStack[i];
       }
     }
   }
 
-  _nextEndNode(stack, index, level) {
-    for(let i = index + 1; i !== stack.length; i++) {
-      if (stack[i].command.name === "end" && stack[i].level === level) {
-        return stack[i];
+  _findNextEndNodeAtLevel(index, level) {
+    for(let i = index + 1; i < this._commandNodeStack.length + 1; i++) {
+      if (this._commandNodeStack[i].level === level &&
+          this._commandNodeStack[i].command.name === "end") {
+        return this._commandNodeStack[i];
       }
     }
   }
 
-  _previousOpeningNode(stack, index, level) {
-    for(let i = index; i > -1; i--) {
-      if (stack[i].level === level - 1) {
-        return stack[i];
-      }
-    }
-  }
-
-  _process() {
+  _processCommands() {
+    this._state = [];
     let that = this;
-    that._commandNodeStack.forEach(function(currentCommandNode, currentCommandIndex) {
-      let nextCommandNode = that._commandNodeStack[currentCommandIndex + 1];
-      if (nextCommandNode) {
-        if (isControlFlowCommand(currentCommandNode.command) &&
-            !isEnd(currentCommandNode.command) &&
-            !isDo(currentCommandNode.command)) {
-          currentCommandNode.right = nextCommandNode;
-          currentCommandNode.left = that._nextNodeAtSameLevel(that._commandNodeStack, currentCommandIndex, currentCommandNode.level);
-        } else if (isControlFlowCommand(nextCommandNode.command)) {
-          let openingNode = that._previousOpeningNode(that._commandNodeStack, currentCommandIndex, currentCommandNode.level);
-          if (openingNode) {
-            if (isLoop(openingNode.command)) {
-              currentCommandNode.next = openingNode;
-            } else if (isDo(openingNode.command) && isWhile(currentCommandNode.command)) {
-              currentCommandNode.next = openingNode;
-            } else if (!isLoop(openingNode.command) && !isDo(openingNode.command)) {
-              currentCommandNode.next = that._nextEndNode(that._commandNodeStack, currentCommandIndex, openingNode.level);
+    that._commandNodeStack.forEach(function(currentCommandNode, currentCommandNodeIndex) {
+      that._processCommandNode(currentCommandNode, currentCommandNodeIndex);
+    });
+  }
+
+  _processCommandNode(commandNode, commandNodeIndex) {
+    let nextCommandNode = this._commandNodeStack[commandNodeIndex + 1];
+    if (nextCommandNode) {
+      switch(commandNode.command.name) {
+        case "do":
+          this._state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
+          commandNode.next = nextCommandNode;
+          break;
+        case "if":
+          this._state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
+          commandNode.right = nextCommandNode;
+          commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
+          break;
+        case "else":
+          commandNode.next = nextCommandNode;
+          break;
+        case "elseIf":
+          commandNode.right = nextCommandNode;
+          commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
+          break;
+        case "while":
+          if (isDo(this._topOfState())) {
+            commandNode.right = this._commandNodeStack[this._topOfState().index];
+            commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, this._topOfState().level);
+          } else {
+            this._state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
+            commandNode.right = nextCommandNode;
+            commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, commandNode.level);
+          }
+          break;
+        case "end":
+          this._state.pop();
+          if (!this._isStateEmpty()) {
+            if (isControlFlowCommand(nextCommandNode.command)) {
+              commandNode.next = this._findNextEndNodeAtLevel(commandNodeIndex, this._topOfState().level);
             } else {
-              currentCommandNode.next = nextCommandNode;
+              commandNode.next = nextCommandNode;
             }
           }
-        } else {
-          currentCommandNode.next = nextCommandNode;
-        }
+          break;
+        default:
+          if (isIf(this._topOfState()) && isControlFlowCommand(nextCommandNode.command)) {
+            commandNode.next = this._findNextEndNodeAtLevel(commandNodeIndex, this._topOfState().level);
+          } else if (isWhile(this._topOfState()) && isControlFlowCommand(nextCommandNode.command)) {
+            commandNode.next = this._commandNodeStack[this._topOfState().index];
+          } else {
+            commandNode.next = nextCommandNode;
+          }
+          break;
       }
-    });
-    return this.stack;
+    }
   }
-
 }
