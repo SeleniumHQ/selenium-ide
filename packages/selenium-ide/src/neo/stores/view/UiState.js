@@ -313,7 +313,6 @@ class UiState {
     this.selectedCommand = null;
     this.selectedCommands = [];
     this.filterTerm = "";
-    this.clipboard = [];
     this.isRecording = false;
     this.suiteStates = {};
     this.clearTestStates();
