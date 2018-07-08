@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { PlaybackTree } from "../../IO/playback-tree";
+import { PlaybackTree } from "../../playback/playback-tree";
 
 describe("Control Flow", () => {
   describe("Preprocess", () => {
