@@ -115,20 +115,8 @@ export class PlaybackTree {
       case Command.if:
       case Command.do:
       case Command.times:
-        this._trackControlFlowBranchOpening();
-        break;
       case Command.while:
-        if (isDo(topOf(this._state))) {
-          this._trackCommand();
-        } else {
-          this._trackControlFlowBranchOpening();
-        }
-        break;
-      case Command.repeatIf:
-        if (!isDo(topOf(this._state))) {
-          throw "A repeatIf used without a do block";
-        }
-        this._trackCommand();
+        this._trackControlFlowBranchOpening();
         break;
       case Command.else:
       case Command.elseIf:
@@ -136,6 +124,12 @@ export class PlaybackTree {
           throw "An else / elseIf used outside of an if block";
         }
         this._trackControlFlowCommandElse();
+        break;
+      case Command.repeatIf:
+        if (!isDo(topOf(this._state))) {
+          throw "A repeatIf used without a do block";
+        }
+        this._trackControlFlowBranchEnding();
         break;
       case Command.end:
         if (isLoop(topOf(this._state))) {
@@ -223,14 +217,15 @@ export class PlaybackTree {
     let nextCommandNode = this._commandNodeStack[commandNodeIndex + 1];
     if (nextCommandNode) {
       switch(commandNode.command.command) {
-        case Command.do:
-          state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
-          commandNode.next = nextCommandNode;
-          break;
         case Command.if:
+        case Command.while:
           state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
           commandNode.right = nextCommandNode;
           commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
+          break;
+        case Command.do:
+          state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
+          commandNode.next = nextCommandNode;
           break;
         case Command.else:
           commandNode.next = nextCommandNode;
@@ -239,20 +234,15 @@ export class PlaybackTree {
           commandNode.right = nextCommandNode;
           commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
           break;
-        case Command.while:
-          if (isDo(topOf(state))) {
-            commandNode.right = this._commandNodeStack[topOf(state).index];
-            commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, topOf(state).level);
-          } else {
-            state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
-            commandNode.right = nextCommandNode;
-            commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, commandNode.level);
-          }
+        case Command.repeatIf:
+          commandNode.right = this._commandNodeStack[topOf(state).index];
+          commandNode.left = nextCommandNode;
+          state.pop();
           break;
         case Command.end:
           state.pop();
           if (!isEmpty(state)) {
-            if (isControlFlowCommand(nextCommandNode.command)) {
+            if (isElse(nextCommandNode.command) || isElseIf(nextCommandNode.command)) {
               commandNode.next = this._findNextEndNodeAtLevel(commandNodeIndex, topOf(state).level);
             } else {
               commandNode.next = nextCommandNode;

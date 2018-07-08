@@ -32,11 +32,9 @@ describe("Control Flow", () => {
           new Command(null, "do", "", ""),
           new Command(null, "command", "", ""),
           new Command(null, "while", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "do", "", ""),
           new Command(null, "command", "", ""),
-          new Command(null, "repeatIf", "", ""),
           new Command(null, "end", "", ""),
+          new Command(null, "repeatIf", "", ""),
           new Command(null, "end", "", "")
         ]);
         playbackTree._preprocessCommands();
@@ -50,12 +48,10 @@ describe("Control Flow", () => {
         expect(stack[6].level).toEqual(1); //    do
         expect(stack[7].level).toEqual(2); //      command
         expect(stack[8].level).toEqual(2); //      while
-        expect(stack[9].level).toEqual(1); //    end
-        expect(stack[10].level).toEqual(1); //   do
-        expect(stack[11].level).toEqual(2); //     command
-        expect(stack[12].level).toEqual(2); //     repeatIf
-        expect(stack[13].level).toEqual(1); //   end
-        expect(stack[14].level).toEqual(0); // end
+        expect(stack[9].level).toEqual(3); //        command
+        expect(stack[10].level).toEqual(2); //     end
+        expect(stack[11].level).toEqual(1); //   repeatIf
+        expect(stack[12].level).toEqual(0); //  end
       });
     });
     describe("Syntax Validation", () => {
@@ -105,19 +101,19 @@ describe("Control Flow", () => {
         ]);
         expect(playbackTree._preprocessCommands()).toBeTruthy();
       });
-      test("do, repeatIf, end", () => {
+      test("do, repeatIf", () => {
         let playbackTree = new PlaybackTree([
           new Command(null, "do", "", ""),
-          new Command(null, "repeatIf", "", ""),
-          new Command(null, "end", "", "")
+          new Command(null, "repeatIf", "", "")
         ]);
         expect(playbackTree._preprocessCommands()).toBeTruthy();
       });
-      test("do, while, end", () => {
+      test("do, while, end, repeatIf", () => {
         let playbackTree = new PlaybackTree([
           new Command(null, "do", "", ""),
           new Command(null, "while", "", ""),
-          new Command(null, "end", "", "")
+          new Command(null, "end", "", ""),
+          new Command(null, "repeatIf", "", "")
         ]);
         expect(playbackTree._preprocessCommands()).toBeTruthy();
       });
@@ -384,12 +380,12 @@ describe("Control Flow", () => {
         expect(stack[7].right).toBeUndefined();
         expect(stack[7].left).toBeUndefined();
       });
-      test("do-command-while-end", () => {
+      test("do-command-repeatIf-end", () => {
         let input = [
           new Command(null, "do", "", ""),
           new Command(null, "command", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "end", "", "")
+          new Command(null, "repeatIf", "", ""),
+          new Command(null, "command", "", "")
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
@@ -408,12 +404,14 @@ describe("Control Flow", () => {
         expect(stack[3].right).toBeUndefined();
         expect(stack[3].left).toBeUndefined();
       });
-      test.skip("do-command-repeatIf-end", () => {
+      test("do-command-while-end-repeatIf", () => {
         let input = [
           new Command(null, "do", "", ""),
           new Command(null, "command", "", ""),
-          new Command(null, "repeatIf", "", ""),
-          new Command(null, "end", "", "")
+          new Command(null, "while", "", ""),
+          new Command(null, "command", "", ""),
+          new Command(null, "end", "", ""),
+          new Command(null, "repeatIf", "", "")
         ];
         let playbackTree = new PlaybackTree(input);
         playbackTree._preprocessCommands();
@@ -426,11 +424,17 @@ describe("Control Flow", () => {
         expect(stack[1].right).toBeUndefined();
         expect(stack[1].left).toBeUndefined();
         expect(stack[2].next).toBeUndefined();
-        expect(stack[2].right).toEqual(stack[0]);
-        expect(stack[2].left).toEqual(stack[3]);
-        expect(stack[3].next).toBeUndefined();
+        expect(stack[2].right).toEqual(stack[3]);
+        expect(stack[2].left).toEqual(stack[4]);
+        expect(stack[3].next).toEqual(stack[2]);
         expect(stack[3].right).toBeUndefined();
         expect(stack[3].left).toBeUndefined();
+        expect(stack[4].next).toEqual(stack[5]);
+        expect(stack[4].right).toBeUndefined();
+        expect(stack[4].left).toBeUndefined();
+        expect(stack[5].next).toBeUndefined();
+        expect(stack[5].right).toBeUndefined();
+        expect(stack[5].left).toBeUndefined();
       });
     });
   });
