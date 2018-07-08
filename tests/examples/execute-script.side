@@ -76,10 +76,10 @@
     }],
     "tests": [{
       "name": "execute script",
-      "code": "module.exports.execute_script = async function execute_script(driver, vars) {await driver.get(BASE_URL + \"/value.html\");vars[\"sync\"] = await driver.executeScript(`return \"sync\"`);await driver.wait(until.elementLocated(By.id(\"v\")));await driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.sync}`);});});await driver.wait(until.elementLocated(By.id(\"v\")));await expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"sync\");}"
+      "code": "tests.execute_script = async function execute_script(driver, vars) {await driver.get(BASE_URL + \"/value.html\");vars[\"sync\"] = await driver.executeScript(`return \"sync\"`);await driver.wait(until.elementLocated(By.id(\"v\")));await driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.sync}`);});});await driver.wait(until.elementLocated(By.id(\"v\")));await expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"sync\");}"
     }, {
       "name": "execute async script",
-      "code": "module.exports.execute_async_script = async function execute_async_script(driver, vars) {await driver.get(BASE_URL + \"/value.html\");vars[\"async\"] = await driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];return new Promise((r) => {setTimeout(() => {r(\"async\")}, 500)}).then(callback).catch(callback);`);await driver.wait(until.elementLocated(By.id(\"v\")));await driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.async}`);});});await driver.wait(until.elementLocated(By.id(\"v\")));await expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"async\");}"
+      "code": "tests.execute_async_script = async function execute_async_script(driver, vars) {await driver.get(BASE_URL + \"/value.html\");vars[\"async\"] = await driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];return new Promise((r) => {setTimeout(() => {r(\"async\")}, 500)}).then(callback).catch(callback);`);await driver.wait(until.elementLocated(By.id(\"v\")));await driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.async}`);});});await driver.wait(until.elementLocated(By.id(\"v\")));await expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"async\");}"
     }]
   },
   "dependencies": {}
