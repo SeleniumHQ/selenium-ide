@@ -22,6 +22,6 @@ describe("configuration code emitter", () => {
     const project = {
       url: "http://www.seleniumhq.org"
     };
-    expect(ConfigurationEmitter.emit(project)).resolves.toBe(`const BASE_URL = configuration.baseUrl || '${project.url}';`);
+    return expect(ConfigurationEmitter.emit(project)).resolves.toBe(`global.BASE_URL = configuration.baseUrl || '${project.url}';const vars = {};`);
   });
 });

@@ -47,9 +47,15 @@
   "urls": ["https://en.wikipedia.org", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000"],
   "plugins": [],
   "version": "1.0",
-  "code": [{
-    "name": "text",
-    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80';jest.setTimeout(300000);describe(\"text\", () => {it(\"text comparison\", async () => {driver.get(BASE_URL + \"/popup/alert.html\");driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");driver.wait(until.elementLocated(By.id(\"b\")));driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});driver.wait(until.elementLocated(By.id(\"b\")));driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-  }],
+  "code": {
+    "suites": [{
+      "name": "text",
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"text\", () => {it(\"text comparison\", async () => {await tests.text_comparison(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+    }],
+    "tests": [{
+      "name": "text comparison",
+      "code": "module.exports.text_comparison = async function text_comparison(driver, vars) {await driver.get(BASE_URL + \"/popup/alert.html\");await driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");await driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");await driver.wait(until.elementLocated(By.id(\"b\")));await driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});await driver.wait(until.elementLocated(By.id(\"b\")));await driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});}"
+    }]
+  },
   "dependencies": {}
 }

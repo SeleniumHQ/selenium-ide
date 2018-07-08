@@ -24,7 +24,11 @@ describe("test case code emitter", () => {
       name: "example test case",
       commands: []
     };
-    return expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
+    return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
+      name: "example test case",
+      test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
+      function: "module.exports.example_test_case = async function example_test_case(driver, vars) {}"
+    });
   });
   it("should emit a test with a single command", () => {
     const test = {
@@ -36,7 +40,11 @@ describe("test case code emitter", () => {
         value: ""
       }]
     };
-    return expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", async () => {driver.get(BASE_URL + "${test.commands[0].target}");await driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
+    return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
+      name: "example test case",
+      test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
+      function: `module.exports.example_test_case = async function example_test_case(driver, vars) {await driver.get(BASE_URL + "${test.commands[0].target}");}`
+    });
   });
   it("should emit a test with multiple commands", () => {
     const test = {
@@ -60,7 +68,11 @@ describe("test case code emitter", () => {
         }
       ]
     };
-    return expect(TestCaseEmitter.emit(test)).resolves.toBe(`it("${test.name}", async () => {driver.get(BASE_URL + "${test.commands[0].target}");driver.get(BASE_URL + "${test.commands[1].target}");driver.get(BASE_URL + "${test.commands[2].target}");await driver.getTitle().then(title => {expect(title).toBeDefined();});});`);
+    return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
+      name: "example test case",
+      test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
+      function: `module.exports.example_test_case = async function example_test_case(driver, vars) {await driver.get(BASE_URL + "${test.commands[0].target}");await driver.get(BASE_URL + "${test.commands[1].target}");await driver.get(BASE_URL + "${test.commands[2].target}");}`
+    });
   });
   it("should reject a test with failed commands", () => {
     const test = {

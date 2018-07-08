@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import TestCaseEmitter from "./testcase";
-
 const hooks = [];
 
 export function emit(suite, tests) {
@@ -28,12 +26,9 @@ export function emit(suite, tests) {
       + (result.after ? `afterEach(async () => {${result.after}});` : "")
       + (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : "")
     ), "");
-    let errors = [];
     let testsCode = (await Promise.all(suite.tests.map(testId => (
       tests[testId]
-    )).map((test) => (TestCaseEmitter.emit(test).catch(e => {
-      errors.push(e);
-    })))));
+    )).map((test) => (test.test))));
 
     if (suite.parallel) {
       testsCode = testsCode.map((code, index) => ({
@@ -48,10 +43,7 @@ export function emit(suite, tests) {
     result += testsCode.join("");
 
     result += "});";
-    errors.length ? rej({
-      ...suite,
-      tests: errors
-    }) : res(result);
+    res(result);
   });
 }
 

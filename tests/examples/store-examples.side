@@ -42,7 +42,7 @@
     }, {
       "id": "3ca83da5-71ac-44cd-91b4-0dff477a2969",
       "comment": "",
-      "command": "storeXPathCount",
+      "command": "storeXpathCount",
       "target": "xpath=//span",
       "value": "span_count"
     }, {
@@ -60,7 +60,7 @@
     }, {
       "id": "fe8b75e9-f193-4341-9cda-4ee743559acd",
       "comment": "",
-      "command": "storeXPathCount",
+      "command": "storeXpathCount",
       "target": "xpath=//div[contains(@class, \"testclass\")]",
       "value": "div_count"
     }, {
@@ -87,9 +87,18 @@
   "urls": ["https://en.wikipedia.org", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000"],
   "plugins": [],
   "version": "1.0",
-  "code": [{
-    "name": "store",
-    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80';jest.setTimeout(300000);describe(\"store\", () => {it(\"attributes\", async () => {driver.get(BASE_URL + \"/store/attributes.html\");let var1;driver.wait(until.elementLocated(By.id(\"test-id-1\"))); driver.findElement(By.id(\"test-id-1\")).then(element => element.getAttribute(\"style\").then(attribute => {var1 = attribute;}));driver.wait(until.elementLocated(By.id(\"test\")));driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${var1}`);});});driver.wait(until.elementLocated(By.id(\"test\")));expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"color: blue;\");await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"xpath count\", async () => {driver.get(BASE_URL + \"/store/nodes.html\");let span_count;driver.wait(until.elementsLocated(By.xpath(\"//span\")));driver.findElements(By.xpath(\"//span\")).then(elements => {span_count = elements.length;});driver.wait(until.elementLocated(By.id(\"test\")));driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${span_count}`);});});driver.wait(until.elementLocated(By.id(\"test\")));expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"10\");let div_count;driver.wait(until.elementsLocated(By.xpath(\"//div[contains(@class, \\\"testclass\\\")]\")));driver.findElements(By.xpath(\"//div[contains(@class, \\\"testclass\\\")]\")).then(elements => {div_count = elements.length;});driver.wait(until.elementLocated(By.id(\"test\")));driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${div_count}`);});});driver.wait(until.elementLocated(By.id(\"test\")));expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"6\");await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-  }],
+  "code": {
+    "suites": [{
+      "name": "store",
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"store\", () => {it(\"attributes\", async () => {await tests.attributes(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"xpath count\", async () => {await tests.xpath_count(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+    }],
+    "tests": [{
+      "name": "attributes",
+      "code": "module.exports.attributes = async function attributes(driver, vars) {await driver.get(BASE_URL + \"/store/attributes.html\");await driver.wait(until.elementLocated(By.id(\"test-id-1\")));await driver.findElement(By.id(\"test-id-1\")).then(element => element.getAttribute(\"style\").then(attribute => {vars[\"var1\"] = attribute;}));await driver.wait(until.elementLocated(By.id(\"test\")));await driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.var1}`);});});await driver.wait(until.elementLocated(By.id(\"test\")));expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"color: blue;\");}"
+    }, {
+      "name": "xpath count",
+      "code": "module.exports.xpath_count = async function xpath_count(driver, vars) {await driver.get(BASE_URL + \"/store/nodes.html\");await driver.wait(until.elementsLocated(By.xpath(\"//span\")));await driver.findElements(By.xpath(\"//span\")).then(elements => {vars[\"span_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(\"test\")));await driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.span_count}`);});});await driver.wait(until.elementLocated(By.id(\"test\")));expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"10\");await driver.wait(until.elementsLocated(By.xpath(\"//div[contains(@class, \\\"testclass\\\")]\")));await driver.findElements(By.xpath(\"//div[contains(@class, \\\"testclass\\\")]\")).then(elements => {vars[\"div_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(\"test\")));await driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.div_count}`);});});await driver.wait(until.elementLocated(By.id(\"test\")));expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"6\");}"
+    }]
+  },
   "dependencies": {}
 }

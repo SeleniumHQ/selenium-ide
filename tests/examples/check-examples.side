@@ -71,9 +71,15 @@
   "urls": ["https://en.wikipedia.org"],
   "plugins": [],
   "version": "1.0",
-  "code": [{
-    "name": "checks",
-    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80';jest.setTimeout(300000);describe(\"checks\", () => {it(\"check-examples\", async () => {driver.get(BASE_URL + \"/check.html\");driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.toBeChecked();driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.toBeChecked();driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.not.toBeChecked();driver.wait(until.elementLocated(By.id(\"f\")));driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.not.toBeChecked();await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-  }],
+  "code": {
+    "suites": [{
+      "name": "checks",
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"checks\", () => {it(\"check-examples\", async () => {await tests.check-examples(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+    }],
+    "tests": [{
+      "name": "check-examples",
+      "code": "module.exports.check-examples = async function check-examples(driver, vars) {await driver.get(BASE_URL + \"/check.html\");await driver.wait(until.elementLocated(By.id(\"f\")));await driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.toBeChecked();await driver.wait(until.elementLocated(By.id(\"f\")));await driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.toBeChecked();await driver.wait(until.elementLocated(By.id(\"f\")));await driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.not.toBeChecked();await driver.wait(until.elementLocated(By.id(\"f\")));await driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(\"f\")));expect(driver.findElement(By.id(\"f\"))).resolves.not.toBeChecked();}"
+    }]
+  },
   "dependencies": {}
 }

@@ -108,15 +108,19 @@ function runProject(project) {
     },
     dependencies: project.dependencies || {}
   }));
-  project.code.forEach(suite => {
+  const tests = project.code.tests.reduce((tests, test) => {
+    return tests += test.code;
+  }, "module.exports = {};");
+  writeJSFile(path.join(projectPath, "commons"), tests, ".js");
+  project.code.suites.forEach(suite => {
     if (!suite.tests) {
       // not parallel
-      writeJSFile(path.join(projectPath, suite.name), suite.code);
+      writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${suite.code}`);
     } else if (suite.tests.length) {
       fs.mkdirSync(path.join(projectPath, suite.name));
       // parallel suite
       suite.tests.forEach(test => {
-        writeJSFile(path.join(projectPath, suite.name, test.name), `${suite.code}${test.code}`);
+        writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${suite.code}${test.code}`);
       });
     }
   });
@@ -168,14 +172,14 @@ function runAll(projects, index = 0) {
   });
 }
 
-function writeJSFile(name, data) {
-  fs.writeFileSync(`${name}.test.js`, beautify(data, { indent_size: 2 }));
+function writeJSFile(name, data, postfix = ".test.js") {
+  fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
 }
 
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
 
 function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
-  rimraf.sync(projectPath);
+  //rimraf.sync(projectPath);
   process.exit(code);
 }
 

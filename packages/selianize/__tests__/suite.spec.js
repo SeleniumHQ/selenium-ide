@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import TestCaseEmitter from "../src/testcase";
 import SuiteEmitter from "../src/suite";
 
 describe("suite emitter", () => {
@@ -27,7 +28,7 @@ describe("suite emitter", () => {
     };
     return expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {});`);
   });
-  it("should emit a suite with a single empty test", () => {
+  it("should emit a suite with a single empty test", async () => {
     const tests = {
       "1": {
         id: "1",
@@ -41,9 +42,11 @@ describe("suite emitter", () => {
       timeout: "30",
       tests: ["1"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+    return expect(SuiteEmitter.emit(suite, {
+      1: await TestCaseEmitter.emit(tests["1"])
+    })).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
-  it("should emit a suite with multiple empty tests", () => {
+  it("should emit a suite with multiple empty tests", async () => {
     const tests = {
       "1": {
         id: "1",
@@ -59,16 +62,21 @@ describe("suite emitter", () => {
         id: "3",
         name: "third test case",
         commands: []
-      }};
+      }
+    };
     const suite = {
       id: "1",
       name: "example suite",
       timeout: "30",
       tests: ["1", "2", "3"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+    return expect(SuiteEmitter.emit(suite, {
+      1: await TestCaseEmitter.emit(tests["1"]),
+      2: await TestCaseEmitter.emit(tests["2"]),
+      3: await TestCaseEmitter.emit(tests["3"])
+    })).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await tests.second_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await tests.third_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
   });
-  it("should emit a parallel suite", () => {
+  it("should emit a parallel suite", async () => {
     const tests = {
       "1": {
         id: "1",
@@ -84,7 +92,8 @@ describe("suite emitter", () => {
         id: "3",
         name: "third test case",
         commands: []
-      }};
+      }
+    };
     const suite = {
       id: "1",
       name: "example suite",
@@ -92,82 +101,22 @@ describe("suite emitter", () => {
       parallel: true,
       tests: ["1", "2", "3"]
     };
-    return expect(SuiteEmitter.emit(suite, tests)).resolves.toEqual([
+    return expect(SuiteEmitter.emit(suite, {
+      1: await TestCaseEmitter.emit(tests["1"]),
+      2: await TestCaseEmitter.emit(tests["2"]),
+      3: await TestCaseEmitter.emit(tests["3"])
+    })).resolves.toEqual([
       {
         name: tests["1"].name,
-        code: `jest.setTimeout(30000);test("${tests["1"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+        code: `jest.setTimeout(30000);test("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       },
       {
         name: tests["2"].name,
-        code: `jest.setTimeout(30000);test("${tests["2"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+        code: `jest.setTimeout(30000);test("${tests["2"].name}", async () => {await tests.second_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       },
       {
         name: tests["3"].name,
-        code: `jest.setTimeout(30000);test("${tests["3"].name}", async () => {await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
+        code: `jest.setTimeout(30000);test("${tests["3"].name}", async () => {await tests.third_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       }]);
-  });
-  it("should reject a suite with failed tests", () => {
-    const tests = {
-      "1": {
-        id: "1",
-        name: "first failure",
-        commands: [
-          {
-            command: "fail",
-            target: "",
-            value: ""
-          }
-        ]
-      },
-      "2": {
-        id: "2",
-        name: "another failure",
-        commands: [
-          {
-            command: "fail",
-            target: "",
-            value: ""
-          }
-        ]
-      }
-    };
-    const suite = {
-      id: "1",
-      name: "failed suite",
-      timeout: "30",
-      tests: ["1", "2"]
-    };
-    return expect(SuiteEmitter.emit(suite, tests)).rejects.toMatchObject({
-      id: "1",
-      name: "failed suite",
-      tests: [
-        {
-          commands: [
-            {
-              command: "fail",
-              index: 1,
-              message: new Error("Unknown command fail"),
-              target: "",
-              value: ""
-            }
-          ],
-          id: "1",
-          name: "first failure"
-        },
-        {
-          commands: [
-            {
-              command: "fail",
-              index: 1,
-              message: new Error("Unknown command fail"),
-              target: "",
-              value: ""
-            }
-          ],
-          id: "2",
-          name: "another failure"
-        }
-      ]
-    });
   });
 });
