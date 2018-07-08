@@ -18,8 +18,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 import PlaybackState from "../../stores/view/PlaybackState";
-import PlayCurrent from "../../components/ActionButtons/PlayCurrent";
-import Stop from "../../components/ActionButtons/Stop";
 import "./style.css";
 
 @observer
