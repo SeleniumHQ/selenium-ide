@@ -38,44 +38,45 @@ const Command = {
 };
 
 function isControlFlowCommand(command) {
-  return (command.name === Command.do ||
-          command.name === Command.else ||
-          command.name === Command.elseIf ||
-          command.name === Command.end ||
-          command.name === Command.if ||
-          command.name === Command.repeatIf ||
-          command.name === Command.times ||
-          command.name === Command.while);
+  // #command is the command name
+  return (command.command === Command.do ||
+          command.command === Command.else ||
+          command.command === Command.elseIf ||
+          command.command === Command.end ||
+          command.command === Command.if ||
+          command.command === Command.repeatIf ||
+          command.command === Command.times ||
+          command.command === Command.while);
 }
 
 function isDo(command) {
-  return (command.name === Command.do);
+  return (command.command === Command.do);
 }
 
 function isElse(command) {
-  return (command.name === Command.else);
+  return (command.command === Command.else);
 }
 
 function isElseIf(command) {
-  return (command.name === Command.elseIf);
+  return (command.command === Command.elseIf);
 }
 
 function isEnd(command) {
-  return (command.name === Command.end);
+  return (command.command === Command.end);
 }
 
 function isIf(command) {
-  return (command.name === Command.if);
+  return (command.command === Command.if);
 }
 
 function isLoop(command) {
-  return (command.name === Command.while ||
-          command.name === Command.times ||
-          command.name === Command.do);
+  return (command.command === Command.while ||
+          command.command === Command.times ||
+          command.command === Command.do);
 }
 
 function isWhile(command) {
-  return (command.name === Command.while);
+  return (command.command === Command.while);
 }
 
 function isEmpty(obj) {
@@ -113,13 +114,13 @@ export class PlaybackTree {
       that._preprocessCommand();
     });
     if (!isEmpty(this._state)) {
-      throw "Incomplete block at " + topOf(this._state).name;
+      throw "Incomplete block at " + topOf(this._state).command;
     }
     return true;
   }
 
   _preprocessCommand() {
-    switch (this._currentCommand.name) {
+    switch (this._currentCommand.command) {
       case Command.if:
       case Command.do:
       case Command.times:
@@ -151,7 +152,7 @@ export class PlaybackTree {
         } else if (isIf(topOf(this._state))) {
           const numberOfElse = this._currentSegment().filter(command => isElse(command)).length;
           const allElseInCurrentSegment = this._currentSegment().filter(
-            command => (command.name === Command.else || command.name === Command.elseIf));
+            command => (command.command === Command.else || command.command === Command.elseIf));
           if (numberOfElse > 1) {
             throw "Too many else commands used";
           } else if (numberOfElse === 1 && !isElse(topOf(allElseInCurrentSegment))) {
@@ -174,7 +175,7 @@ export class PlaybackTree {
   }
 
   _trackControlFlowBranchOpening() {
-    this._state.push({ name: this._currentCommand.name, index: this._currentCommandIndex });
+    this._state.push({ command: this._currentCommand.command, index: this._currentCommandIndex });
     this._createAndStoreCommandNode();
     this._level++;
   }
@@ -212,7 +213,7 @@ export class PlaybackTree {
   _findNextEndNodeAtLevel(index, level) {
     for(let i = index + 1; i < this._commandNodeStack.length + 1; i++) {
       if (this._commandNodeStack[i].level === level &&
-          this._commandNodeStack[i].command.name === Command.end) {
+          this._commandNodeStack[i].command.command === Command.end) {
         return this._commandNodeStack[i];
       }
     }
@@ -230,13 +231,13 @@ export class PlaybackTree {
     let state = this._state;
     let nextCommandNode = this._commandNodeStack[commandNodeIndex + 1];
     if (nextCommandNode) {
-      switch(commandNode.command.name) {
+      switch(commandNode.command.command) {
         case Command.do:
-          state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
+          state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
           commandNode.next = nextCommandNode;
           break;
         case Command.if:
-          state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
+          state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
           commandNode.right = nextCommandNode;
           commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
           break;
@@ -252,7 +253,7 @@ export class PlaybackTree {
             commandNode.right = this._commandNodeStack[topOf(state).index];
             commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, topOf(state).level);
           } else {
-            state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
+            state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
             commandNode.right = nextCommandNode;
             commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, commandNode.level);
           }
