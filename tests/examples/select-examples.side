@@ -38,11 +38,11 @@
   "code": {
     "suites": [{
       "name": "select",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {await tests.select-verify-labels(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {await tests.select_verify_labels(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "select-verify-labels",
-      "code": "module.exports.select-verify-labels = async function select-verify-labels(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});}"
+      "code": "module.exports.select_verify_labels = async function select_verify_labels(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});}"
     }]
   },
   "dependencies": {}

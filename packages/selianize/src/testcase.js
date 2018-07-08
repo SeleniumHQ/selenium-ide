@@ -47,7 +47,7 @@ export function emit(test) {
 }
 
 function convertToSnake(string) {
-  return string.replace(/\s/g, "_");
+  return string.replace(/(\s|-)/g, "_");
 }
 
 function registerHook(hook) {
