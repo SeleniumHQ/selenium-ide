@@ -187,31 +187,31 @@ async function emitPause(_, time) {
 }
 
 async function emitVerifyChecked(locator) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeChecked();`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeChecked();`);
 }
 
 async function emitVerifyNotChecked(locator) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeChecked();`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeChecked();`);
 }
 
 async function emitVerifyEditable(locator) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeEditable();`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toBeEditable();`);
 }
 
 async function emitVerifyNotEditable(locator) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeEditable();`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toBeEditable();`);
 }
 
 async function emitVerifyElementPresent(locator) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.toBePresent();`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.toBePresent();`);
 }
 
 async function emitVerifyElementNotPresent(locator) {
-  return Promise.resolve(`expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.not.toBePresent();`);
+  return Promise.resolve(`await expect(driver.findElements(${await LocationEmitter.emit(locator)})).resolves.not.toBePresent();`);
 }
 
 async function emitVerifySelectedValue(locator, value) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveSelectedValue("${value}");`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveSelectedValue("${value}");`);
 }
 
 async function emitVerifySelectedLabel(locator, labelValue) {
@@ -219,15 +219,15 @@ async function emitVerifySelectedLabel(locator, labelValue) {
 }
 
 async function emitVerifyNotSelectedValue(locator, value) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toHaveSelectedValue("${value}");`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.not.toHaveSelectedValue("${value}");`);
 }
 
 async function emitVerifyValue(locator, value) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveValue("${value}");`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveValue("${value}");`);
 }
 
 async function emitVerifyText(locator, text) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveText("${text}");`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await expect(driver.findElement(${await LocationEmitter.emit(locator)})).resolves.toHaveText("${text}");`);
 }
 
 async function emitVerifyNotText(locator, text) {

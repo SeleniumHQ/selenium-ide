@@ -169,7 +169,7 @@ describe("command code emitter", () => {
       target: "id=check",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));expect(driver.findElement(By.id(\"check\"))).resolves.toBeChecked();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));await expect(driver.findElement(By.id(\"check\"))).resolves.toBeChecked();");
   });
   it("should emit `verify not checked` command", () => {
     const command = {
@@ -177,7 +177,7 @@ describe("command code emitter", () => {
       target: "id=check",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));expect(driver.findElement(By.id(\"check\"))).resolves.not.toBeChecked();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));await expect(driver.findElement(By.id(\"check\"))).resolves.not.toBeChecked();");
   });
   it("should emit `verify editable` command", () => {
     const command = {
@@ -185,7 +185,7 @@ describe("command code emitter", () => {
       target: "id=text",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));expect(driver.findElement(By.id(\"text\"))).resolves.toBeEditable();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));await expect(driver.findElement(By.id(\"text\"))).resolves.toBeEditable();");
   });
   it("should emit `verify not editable` command", () => {
     const command = {
@@ -193,7 +193,7 @@ describe("command code emitter", () => {
       target: "id=text",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));expect(driver.findElement(By.id(\"text\"))).resolves.not.toBeEditable();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));await expect(driver.findElement(By.id(\"text\"))).resolves.not.toBeEditable();");
   });
   it("should emit `verify element present` command", () => {
     const command = {
@@ -201,7 +201,7 @@ describe("command code emitter", () => {
       target: "id=element",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"element\")));expect(driver.findElements(By.id(\"element\"))).resolves.toBePresent();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"element\")));await expect(driver.findElements(By.id(\"element\"))).resolves.toBePresent();");
   });
   it("should emit `verify element not present` command", () => {
     const command = {
@@ -209,7 +209,7 @@ describe("command code emitter", () => {
       target: "id=element",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(driver.findElements(By.id(\"element\"))).resolves.not.toBePresent();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await expect(driver.findElements(By.id(\"element\"))).resolves.not.toBePresent();");
   });
   it("should emit `verify selected value` command", () => {
     const command = {
@@ -217,7 +217,7 @@ describe("command code emitter", () => {
       target: "id=select",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));expect(driver.findElement(By.id("select"))).resolves.toHaveSelectedValue("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));await expect(driver.findElement(By.id("select"))).resolves.toHaveSelectedValue("${command.value}");`);
   });
   it("should emit `verify not selected value` command", () => {
     const command = {
@@ -225,7 +225,7 @@ describe("command code emitter", () => {
       target: "id=select",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));expect(driver.findElement(By.id("select"))).resolves.not.toHaveSelectedValue("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));await expect(driver.findElement(By.id("select"))).resolves.not.toHaveSelectedValue("${command.value}");`);
   });
   it("should emit `verify value` command", () => {
     const command = {
@@ -233,7 +233,7 @@ describe("command code emitter", () => {
       target: "id=test",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));expect(driver.findElement(By.id("test"))).resolves.toHaveValue("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));await expect(driver.findElement(By.id("test"))).resolves.toHaveValue("${command.value}");`);
   });
   it("should emit `verify not text` command", () => {
     const command = {
@@ -265,7 +265,7 @@ describe("command code emitter", () => {
       target: "id=test",
       value: "some text that should be here"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));expect(driver.findElement(By.id("test"))).resolves.toHaveText("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));await expect(driver.findElement(By.id("test"))).resolves.toHaveText("${command.value}");`);
   });
   it("should emit `assert checked` command", () => {
     const command = {
@@ -273,7 +273,7 @@ describe("command code emitter", () => {
       target: "id=check",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));expect(driver.findElement(By.id(\"check\"))).resolves.toBeChecked();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));await expect(driver.findElement(By.id(\"check\"))).resolves.toBeChecked();");
   });
   it("should emit `assert not checked` command", () => {
     const command = {
@@ -281,7 +281,7 @@ describe("command code emitter", () => {
       target: "id=check",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));expect(driver.findElement(By.id(\"check\"))).resolves.not.toBeChecked();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"check\")));await expect(driver.findElement(By.id(\"check\"))).resolves.not.toBeChecked();");
   });
   it("should emit `assert editable` command", () => {
     const command = {
@@ -289,7 +289,7 @@ describe("command code emitter", () => {
       target: "id=text",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));expect(driver.findElement(By.id(\"text\"))).resolves.toBeEditable();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));await expect(driver.findElement(By.id(\"text\"))).resolves.toBeEditable();");
   });
   it("should emit `assert not editable` command", () => {
     const command = {
@@ -297,7 +297,7 @@ describe("command code emitter", () => {
       target: "id=text",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));expect(driver.findElement(By.id(\"text\"))).resolves.not.toBeEditable();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"text\")));await expect(driver.findElement(By.id(\"text\"))).resolves.not.toBeEditable();");
   });
   it("should emit `assert element present` command", () => {
     const command = {
@@ -305,7 +305,7 @@ describe("command code emitter", () => {
       target: "id=element",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"element\")));expect(driver.findElements(By.id(\"element\"))).resolves.toBePresent();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"element\")));await expect(driver.findElements(By.id(\"element\"))).resolves.toBePresent();");
   });
   it("should emit `assert element not present` command", () => {
     const command = {
@@ -313,7 +313,7 @@ describe("command code emitter", () => {
       target: "id=element",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(driver.findElements(By.id(\"element\"))).resolves.not.toBePresent();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await expect(driver.findElements(By.id(\"element\"))).resolves.not.toBePresent();");
   });
   it("should emit `assert selected value` command", () => {
     const command = {
@@ -321,7 +321,7 @@ describe("command code emitter", () => {
       target: "id=select",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));expect(driver.findElement(By.id("select"))).resolves.toHaveSelectedValue("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));await expect(driver.findElement(By.id("select"))).resolves.toHaveSelectedValue("${command.value}");`);
   });
   it("should emit `assert not selected value` command", () => {
     const command = {
@@ -329,7 +329,7 @@ describe("command code emitter", () => {
       target: "id=select",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));expect(driver.findElement(By.id("select"))).resolves.not.toHaveSelectedValue("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("select")));await expect(driver.findElement(By.id("select"))).resolves.not.toHaveSelectedValue("${command.value}");`);
   });
   it("should emit `assert title` command", () => {
     const command = {
@@ -353,7 +353,7 @@ describe("command code emitter", () => {
       target: "id=test",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));expect(driver.findElement(By.id("test"))).resolves.toHaveValue("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));await expect(driver.findElement(By.id("test"))).resolves.toHaveValue("${command.value}");`);
   });
   it("should emit `assert text` command", () => {
     const command = {
@@ -361,7 +361,7 @@ describe("command code emitter", () => {
       target: "id=test",
       value: "some text that should be here"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));expect(driver.findElement(By.id("test"))).resolves.toHaveText("${command.value}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id("test")));await expect(driver.findElement(By.id("test"))).resolves.toHaveText("${command.value}");`);
   });
   it("should emit `store` command", () => {
     const command = {

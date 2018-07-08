@@ -54,7 +54,7 @@
     }],
     "tests": [{
       "name": "text comparison",
-      "code": "module.exports.text_comparison = async function text_comparison(driver, vars) {await driver.get(BASE_URL + \"/popup/alert.html\");await driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");await driver.wait(until.elementLocated(By.id(\"b\")));expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");await driver.wait(until.elementLocated(By.id(\"b\")));await driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});await driver.wait(until.elementLocated(By.id(\"b\")));await driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});}"
+      "code": "module.exports.text_comparison = async function text_comparison(driver, vars) {await driver.get(BASE_URL + \"/popup/alert.html\");await driver.wait(until.elementLocated(By.id(\"b\")));await expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");await driver.wait(until.elementLocated(By.id(\"b\")));await expect(driver.findElement(By.id(\"b\"))).resolves.toHaveText(\"show alert\");await driver.wait(until.elementLocated(By.id(\"b\")));await driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});await driver.wait(until.elementLocated(By.id(\"b\")));await driver.findElement(By.id(\"b\")).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});}"
     }]
   },
   "dependencies": {}
