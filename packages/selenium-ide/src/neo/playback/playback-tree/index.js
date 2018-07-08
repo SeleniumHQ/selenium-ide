@@ -15,16 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-class CommandNode {
-  constructor(command) {
-    this.command = command;
-    this.next = undefined;
-    this.left = undefined;
-    this.right = undefined;
-    this.level;
-    this.timesVisited = 0;
-  }
-}
+import { CommandNode } from "./command-node";
 
 const Command = {
   if: "if",
