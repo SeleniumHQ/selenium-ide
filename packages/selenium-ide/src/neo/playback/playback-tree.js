@@ -16,55 +16,66 @@
 // under the License.
 
 class CommandNode {
-  constructor() {
-    this.command;
+  constructor(command) {
+    this.command = command;
     this.next = undefined;
     this.left = undefined;
     this.right = undefined;
     this.level;
-    this.timesVisited;
+    this.timesVisited = 0;
   }
 }
 
+const Command = {
+  if: "if",
+  else: "else",
+  elseIf: "elseIf",
+  times: "times",
+  while: "while",
+  do: "do",
+  repeatIf: "repeatIf",
+  end: "end"
+};
+
 function isControlFlowCommand(command) {
-  return (command.name === "do" ||
-          command.name === "else" ||
-          command.name === "elseIf" ||
-          command.name === "end" ||
-          command.name === "if" ||
-          command.name === "repeatIf" ||
-          command.name === "times" ||
-          command.name === "while");
+  return (command.name === Command.do ||
+          command.name === Command.else ||
+          command.name === Command.elseIf ||
+          command.name === Command.end ||
+          command.name === Command.if ||
+          command.name === Command.repeatIf ||
+          command.name === Command.times ||
+          command.name === Command.while);
 }
 
 function isDo(command) {
-  return (command.name === "do");
+  return (command.name === Command.do);
 }
 
 function isElse(command) {
-  return (command.name === "else");
+  return (command.name === Command.else);
 }
 
 function isElseIf(command) {
-  return (command.name === "elseIf");
+  return (command.name === Command.elseIf);
 }
 
 function isEnd(command) {
-  return (command.name === "end");
+  return (command.name === Command.end);
 }
 
 function isIf(command) {
-  return (command.name === "if");
+  return (command.name === Command.if);
 }
 
 function isLoop(command) {
-  return (command.name === "while" ||
-          command.name === "times" ||
-          command.name === "do");
+  return (command.name === Command.while ||
+          command.name === Command.times ||
+          command.name === Command.do);
 }
 
 function isWhile(command) {
-  return (command.name === "while");
+  return (command.name === Command.while);
 }
 
 function isEmpty(obj) {
@@ -109,37 +120,38 @@ export class PlaybackTree {
 
   _preprocessCommand() {
     switch (this._currentCommand.name) {
-      case "if":
-      case "do":
-      case "times":
+      case Command.if:
+      case Command.do:
+      case Command.times:
         this._trackControlFlowBranchOpening();
         break;
-      case "while":
+      case Command.while:
         if (isDo(topOf(this._state))) {
           this._trackCommand();
         } else {
           this._trackControlFlowBranchOpening();
         }
         break;
-      case "repeatIf":
+      case Command.repeatIf:
         if (!isDo(topOf(this._state))) {
           throw "A repeatIf used without a do block";
         }
         this._trackCommand();
         break;
-      case "else":
-      case "elseIf":
+      case Command.else:
+      case Command.elseIf:
         if (!isIf(topOf(this._state))) {
           throw "An else / elseIf used outside of an if block";
         }
         this._trackControlFlowCommandElse();
         break;
-      case "end":
+      case Command.end:
         if (isLoop(topOf(this._state))) {
           this._trackControlFlowBranchEnding();
         } else if (isIf(topOf(this._state))) {
           const numberOfElse = this._currentSegment().filter(command => isElse(command)).length;
-          const allElseInCurrentSegment = this._currentSegment().filter(command => command.name.match(/else/));
+          const allElseInCurrentSegment = this._currentSegment().filter(
+            command => (command.name === Command.else || command.name === Command.elseIf));
           if (numberOfElse > 1) {
             throw "Too many else commands used";
           } else if (numberOfElse === 1 && !isElse(topOf(allElseInCurrentSegment))) {
@@ -184,8 +196,7 @@ export class PlaybackTree {
   }
 
   _createAndStoreCommandNode() {
-    let node = new CommandNode;
-    node.command = this._currentCommand;
+    let node = new CommandNode(this._currentCommand);
     node.level = this._level;
     this._commandNodeStack.push(node);
   }
@@ -201,7 +212,7 @@ export class PlaybackTree {
   _findNextEndNodeAtLevel(index, level) {
     for(let i = index + 1; i < this._commandNodeStack.length + 1; i++) {
       if (this._commandNodeStack[i].level === level &&
-          this._commandNodeStack[i].command.name === "end") {
+          this._commandNodeStack[i].command.name === Command.end) {
         return this._commandNodeStack[i];
       }
     }
@@ -220,23 +231,23 @@ export class PlaybackTree {
     let nextCommandNode = this._commandNodeStack[commandNodeIndex + 1];
     if (nextCommandNode) {
       switch(commandNode.command.name) {
-        case "do":
+        case Command.do:
           state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
           commandNode.next = nextCommandNode;
           break;
-        case "if":
+        case Command.if:
           state.push({ name: commandNode.command.name, level: commandNode.level, index: commandNodeIndex });
           commandNode.right = nextCommandNode;
           commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
           break;
-        case "else":
+        case Command.else:
           commandNode.next = nextCommandNode;
           break;
-        case "elseIf":
+        case Command.elseIf:
           commandNode.right = nextCommandNode;
           commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
           break;
-        case "while":
+        case Command.while:
           if (isDo(topOf(state))) {
             commandNode.right = this._commandNodeStack[topOf(state).index];
             commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, topOf(state).level);
@@ -246,7 +257,7 @@ export class PlaybackTree {
             commandNode.left = this._findNextEndNodeAtLevel(commandNodeIndex, commandNode.level);
           }
           break;
-        case "end":
+        case Command.end:
           state.pop();
           if (!isEmpty(state)) {
             if (isControlFlowCommand(nextCommandNode.command)) {
