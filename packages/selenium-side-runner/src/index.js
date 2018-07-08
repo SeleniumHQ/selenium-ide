@@ -179,7 +179,7 @@ function writeJSFile(name, data, postfix = ".test.js") {
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
 
 function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
-  //rimraf.sync(projectPath);
+  rimraf.sync(projectPath);
   process.exit(code);
 }
 
