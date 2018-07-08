@@ -27,7 +27,7 @@ describe("test case code emitter", () => {
     return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: "module.exports.example_test_case = async function example_test_case(driver, vars) {}"
+      function: "tests.example_test_case = async function example_test_case(driver, vars) {}"
     });
   });
   it("should emit a test with a single command", () => {
@@ -43,7 +43,7 @@ describe("test case code emitter", () => {
     return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: `module.exports.example_test_case = async function example_test_case(driver, vars) {await driver.get(BASE_URL + "${test.commands[0].target}");}`
+      function: `tests.example_test_case = async function example_test_case(driver, vars) {await driver.get(BASE_URL + "${test.commands[0].target}");}`
     });
   });
   it("should emit a test with multiple commands", () => {
@@ -71,7 +71,7 @@ describe("test case code emitter", () => {
     return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: `module.exports.example_test_case = async function example_test_case(driver, vars) {await driver.get(BASE_URL + "${test.commands[0].target}");await driver.get(BASE_URL + "${test.commands[1].target}");await driver.get(BASE_URL + "${test.commands[2].target}");}`
+      function: `tests.example_test_case = async function example_test_case(driver, vars) {await driver.get(BASE_URL + "${test.commands[0].target}");await driver.get(BASE_URL + "${test.commands[1].target}");await driver.get(BASE_URL + "${test.commands[2].target}");}`
     });
   });
   it("should reject a test with failed commands", () => {

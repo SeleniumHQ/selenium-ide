@@ -110,7 +110,7 @@ function runProject(project) {
   }));
   const tests = project.code.tests.reduce((tests, test) => {
     return tests += test.code;
-  }, "module.exports = {};");
+  }, "const tests = {};").concat("module.exports = tests;");
   writeJSFile(path.join(projectPath, "commons"), tests, ".js");
   project.code.suites.forEach(suite => {
     if (!suite.tests) {

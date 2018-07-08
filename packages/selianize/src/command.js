@@ -17,6 +17,7 @@
 
 import LocationEmitter from "./location";
 import SelectionEmitter from "./selection";
+import { convertToSnake } from "./testcase";
 
 const emitters = {
   open: emitOpen,
@@ -30,6 +31,7 @@ const emitters = {
   type: emitType,
   sendKeys: emitSendKeys,
   echo: emitEcho,
+  run: emitRun,
   runScript: emitRunScript,
   executeScript: emitExecuteScript,
   executeAsyncScript: emitExecuteAsyncScript,
@@ -168,6 +170,10 @@ async function emitCheck(locator) {
 
 async function emitUncheck(locator) {
   return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}));await driver.findElement(${await LocationEmitter.emit(locator)}).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });`);
+}
+
+async function emitRun(testCase) {
+  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars);`);
 }
 
 async function emitRunScript(script) {

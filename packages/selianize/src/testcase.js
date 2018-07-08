@@ -30,7 +30,7 @@ export function emit(test) {
     emittedTest += hookResults.map((hook) => hook.teardown || "").join("");
     emittedTest += "});";
 
-    let func = `module.exports.${convertToSnake(test.name)} = async function ${convertToSnake(test.name)}(driver, vars) {`;
+    let func = `tests.${convertToSnake(test.name)} = async function ${convertToSnake(test.name)}(driver, vars) {`;
     let errors = [];
     func += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
       errors.push({
@@ -46,7 +46,7 @@ export function emit(test) {
   });
 }
 
-function convertToSnake(string) {
+export function convertToSnake(string) {
   return string.replace(/(\s|-)/g, "_");
 }
 

@@ -131,6 +131,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.id(\"f\")));await driver.findElement(By.id(\"f\")).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });");
   });
+  it("should emit `run` command", () => {
+    const command = {
+      command: "run",
+      target: "some test case",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await tests.some_test_case(driver, vars);");
+  });
   it("should emit `run script` command", () => {
     const command = {
       command: "runScript",
