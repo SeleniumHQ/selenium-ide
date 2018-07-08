@@ -136,7 +136,7 @@ const verify = {
   }
 };
 
-export function verifySyntax(commandStack) {
+function verifySyntax(commandStack) {
   let state = [];
   commandStack.forEach(function(command, commandIndex) {
     if (verify[command.command]) {
