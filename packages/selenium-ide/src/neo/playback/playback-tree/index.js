@@ -17,57 +17,48 @@
 
 import { CommandNode } from "./command-node";
 
-const Command = {
-  if: "if",
+export function createPlaybackTree(commandStack) {
+  verifyControlFlowSyntax(commandStack);
+  let levels = deriveCommandLevels(commandStack);
+  let nodes = initCommandNodes(commandStack, levels);
+  return connectCommandNodes(nodes);
+}
+
+const CommandName = {
+  do: "do",
   else: "else",
   elseIf: "elseIf",
-  times: "times",
-  while: "while",
-  do: "do",
+  end: "end",
+  if: "if",
   repeatIf: "repeatIf",
-  end: "end"
+  times: "times",
+  while: "while"
 };
 
-function isControlFlowCommand(command) {
-  // #command is the command name
-  return (command.command === Command.do ||
-          command.command === Command.else ||
-          command.command === Command.elseIf ||
-          command.command === Command.end ||
-          command.command === Command.if ||
-          command.command === Command.repeatIf ||
-          command.command === Command.times ||
-          command.command === Command.while);
+function isElseOrElseIf(command) {
+  return (command.command === CommandName.else ||
+          command.command === CommandName.elseIf);
 }
 
 function isDo(command) {
-  return (command.command === Command.do);
+  return (command.command === CommandName.do);
 }
 
 function isElse(command) {
-  return (command.command === Command.else);
-}
-
-function isElseIf(command) {
-  return (command.command === Command.elseIf);
+  return (command.command === CommandName.else);
 }
 
 function isEnd(command) {
-  return (command.command === Command.end);
+  return (command.command === CommandName.end);
 }
 
 function isIf(command) {
-  return (command.command === Command.if);
+  return (command.command === CommandName.if);
 }
 
 function isLoop(command) {
-  return (command.command === Command.while ||
-          command.command === Command.times ||
-          command.command === Command.do);
-}
-
-function isWhile(command) {
-  return (command.command === Command.while);
+  return (command.command === CommandName.while ||
+          command.command === CommandName.times);
 }
 
 function isEmpty(obj) {
@@ -87,7 +78,21 @@ function topOf(array) {
   }
 }
 
-const verify = {
+function verifyControlFlowSyntax(commandStack) {
+  let state = [];
+  commandStack.forEach(function(command, commandIndex) {
+    if (verifyCommand[command.command]) {
+      verifyCommand[command.command](command.command, commandIndex, commandStack, state);
+    }
+  });
+  if (!isEmpty(state)) {
+    throw "Incomplete block at " + topOf(state).command;
+  } else {
+    return true;
+  }
+}
+
+const verifyCommand = {
   if: function (commandName, commandIndex, stack, state) {
     state.push({ command: commandName, index: commandIndex });
   },
@@ -121,13 +126,13 @@ const verify = {
       state.pop();
     } else if (isIf(topOf(state))) {
       const numberOfElse = stack.slice(topOf(state).index, commandIndex).filter(command => isElse(command)).length;
-      const allElseInCurrentSegment = stack.slice(topOf(state).index, commandIndex).filter(
-        command => (command.command === Command.else || command.command === Command.elseIf));
+      const allElses = stack.slice(topOf(state).index, commandIndex).filter(
+        command => (command.command === CommandName.else || command.command === CommandName.elseIf));
       if (numberOfElse > 1) {
         throw "Too many else commands used";
-      } else if (numberOfElse === 1 && !isElse(topOf(allElseInCurrentSegment))) {
+      } else if (numberOfElse === 1 && !isElse(topOf(allElses))) {
         throw "Incorrect command order of elseIf / else";
-      } else if (numberOfElse === 0 || isElse(topOf(allElseInCurrentSegment))) {
+      } else if (numberOfElse === 0 || isElse(topOf(allElses))) {
         state.pop();
       }
     } else {
@@ -136,187 +141,158 @@ const verify = {
   }
 };
 
-function verifySyntax(commandStack) {
-  let state = [];
-  commandStack.forEach(function(command, commandIndex) {
-    if (verify[command.command]) {
-      verify[command.command](command.command, commandIndex, commandStack, state);
+function deriveCommandLevels(commandStack) {
+  let level = 0;
+  let levels = [];
+  commandStack.forEach(function(command) {
+    if (levelCommand[command.command]) {
+      level = levelCommand[command.command](command, level, levels);
+    } else {
+      levelCommand["default"](command, level, levels);
     }
   });
-  if (!isEmpty(state)) {
-    throw "Incomplete block at " + topOf(state).command;
-  } else {
-    return true;
-  }
+  return levels;
 }
 
-export class PlaybackTree {
-  constructor(commandStack) {
-    this._commandStack = commandStack;
-    this._commandNodeStack = [];
+let levelCommand = {
+  if: function (command, level, levels) {
+    levels.push(level);
+    level++;
+    return level;
+  },
+  do: function (command, level, levels) {
+    levels.push(level);
+    level++;
+    return level;
+  },
+  times: function (command, level, levels) {
+    levels.push(level);
+    level++;
+    return level;
+  },
+  while: function (command, level, levels) {
+    levels.push(level);
+    level++;
+    return level;
+  },
+  else: function (command, level, levels) {
+    level--;
+    levels.push(level);
+    level++;
+    return level;
+  },
+  elseIf: function (command, level, levels) {
+    level--;
+    levels.push(level);
+    level++;
+    return level;
+  },
+  repeatIf: function (command, level, levels) {
+    level--;
+    levels.push(level);
+    return level;
+  },
+  end: function (command, level, levels) {
+    level--;
+    levels.push(level);
+    return level;
+  },
+  default: function (command, level, levels) {
+    levels.push(level);
+    return level;
   }
+};
 
-  _preprocessCommands() {
-    return verifySyntax(this._commandStack);
-    //let tracker = { state: [], level: 0 };
-    //let that = this;
-    //this._commandStack.forEach(function(currentCommand, currentCommandIndex) {
-    //  that._preprocessCommand(currentCommand, currentCommandIndex, tracker);
-    //});
-    //return isStateEmpty(tracker.state);
-  }
+function initCommandNodes(commandStack, levels) {
+  let commandNodes = [];
+  commandStack.forEach(function(command, index) {
+    let node = new CommandNode(command);
+    node.index = index;
+    node.level = levels[index];
+    commandNodes.push(node);
+  });
+  return commandNodes;
+}
 
-  _preprocessCommand(currentCommand, currentCommandIndex, tracker) {
-    switch (currentCommand.command) {
-      case Command.if:
-      case Command.do:
-      case Command.times:
-      case Command.while:
-        this._trackControlFlowBranchOpening(currentCommand, currentCommandIndex, tracker);
-        break;
-      case Command.else:
-      case Command.elseIf:
-        if (!isIf(topOf(tracker.state))) {
-          throw "An else / elseIf used outside of an if block";
-        }
-        this._trackControlFlowCommandElse(currentCommand, tracker);
-        break;
-      case Command.repeatIf:
-        if (!isDo(topOf(tracker.state))) {
-          throw "A repeatIf used without a do block";
-        }
-        this._trackControlFlowBranchEnding(currentCommand, tracker);
-        break;
-      case Command.end:
-        if (isLoop(topOf(tracker.state))) {
-          this._trackControlFlowBranchEnding(currentCommand, tracker);
-        } else if (isIf(topOf(tracker.state))) {
-          const numberOfElse = this._numberOfElseInSegment(this._commandStack, topOf(tracker.state).index, currentCommandIndex);
-          const allElseInCurrentSegment = this._allElseInSegment(this._commandStack, topOf(tracker.state).index, currentCommandIndex);
-          if (numberOfElse > 1) {
-            throw "Too many else commands used";
-          } else if (numberOfElse === 1 && !isElse(topOf(allElseInCurrentSegment))) {
-            throw "Incorrect command order of elseIf / else";
-          } else if (numberOfElse === 0 || isElse(topOf(allElseInCurrentSegment))) {
-            this._trackControlFlowBranchEnding(currentCommand, tracker);
-          }
-        } else {
-          throw "Use of end without an opening keyword";
-        }
-        break;
-      default:
-        this._trackCommand(currentCommand, tracker);
-        break;
-    }
-  }
-
-  _numberOfElseInSegment(stack, startingIndex, endingIndex) {
-    return stack.slice(startingIndex, endingIndex).filter(command => isElse(command)).length;
-  }
-
-  _allElseInSegment(stack, startingIndex, endingIndex) {
-    return stack.slice(startingIndex, endingIndex).filter(command => (command.command === Command.else || command.command === Command.elseIf));
-  }
-
-  _trackControlFlowBranchOpening(currentCommand, currentCommandIndex, tracker) {
-    tracker.state.push({ command: currentCommand.command, index: currentCommandIndex });
-    this._createAndStoreCommandNode(currentCommand, tracker.level);
-    tracker.level++;
-  }
-
-  _trackControlFlowCommandElse(currentCommand, tracker) {
-    tracker.level--;
-    this._createAndStoreCommandNode(currentCommand, tracker.level);
-    tracker.level++;
-  }
-
-  _trackCommand(currentCommand, tracker) {
-    this._createAndStoreCommandNode(currentCommand, tracker.level);
-  }
-
-  _trackControlFlowBranchEnding(currentCommand, tracker) {
-    tracker.level--;
-    this._createAndStoreCommandNode(currentCommand, tracker.level);
-    tracker.state.pop();
-  }
-
-  _createAndStoreCommandNode(currentCommand, level) {
-    let node = new CommandNode(currentCommand);
-    node.level = level;
-    this._commandNodeStack.push(node);
-  }
-
-  _findNextNodeAtLevel(index, level) {
-    for(let i = index + 1; i < this._commandNodeStack.length + 1; i++) {
-      if (this._commandNodeStack[i].level === level) {
-        return this._commandNodeStack[i];
-      }
-    }
-  }
-
-  _findNextEndNodeAtLevel(index, level) {
-    for(let i = index + 1; i < this._commandNodeStack.length + 1; i++) {
-      if (this._commandNodeStack[i].level === level &&
-          this._commandNodeStack[i].command.command === Command.end) {
-        return this._commandNodeStack[i];
-      }
-    }
-  }
-
-  _processCommandNodes() {
-    let state = [];
-    let that = this;
-    that._commandNodeStack.forEach(function(currentCommandNode, currentCommandNodeIndex) {
-      that._processCommandNode(currentCommandNode, currentCommandNodeIndex, state);
-    });
-  }
-
-
-  _processCommandNode(commandNode, commandNodeIndex, state) {
-    let nextCommandNode = this._commandNodeStack[commandNodeIndex + 1];
+function connectCommandNodes(commandNodeStack) {
+  let _commandNodeStack = [ ...commandNodeStack ];
+  let state = [];
+  _commandNodeStack.forEach(function(commandNode) {
+    let nextCommandNode = _commandNodeStack[commandNode.index + 1];
     if (nextCommandNode) {
-      switch(commandNode.command.command) {
-        case Command.if:
-        case Command.while:
-          state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
-          commandNode.right = nextCommandNode;
-          commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
-          break;
-        case Command.do:
-          state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNodeIndex });
-          commandNode.next = nextCommandNode;
-          break;
-        case Command.else:
-          commandNode.next = nextCommandNode;
-          break;
-        case Command.elseIf:
-          commandNode.right = nextCommandNode;
-          commandNode.left = this._findNextNodeAtLevel(commandNodeIndex, commandNode.level);
-          break;
-        case Command.repeatIf:
-          commandNode.right = this._commandNodeStack[topOf(state).index];
-          commandNode.left = nextCommandNode;
-          state.pop();
-          break;
-        case Command.end:
-          state.pop();
-          if (!isEmpty(state)) {
-            if (isElse(nextCommandNode.command) || isElseIf(nextCommandNode.command)) {
-              commandNode.next = this._findNextEndNodeAtLevel(commandNodeIndex, topOf(state).level);
-            } else {
-              commandNode.next = nextCommandNode;
-            }
-          }
-          break;
-        default:
-          if (isIf(topOf(state)) && (isElse(nextCommandNode.command) || isElseIf(nextCommandNode.command) || isEnd(nextCommandNode.command))) {
-            commandNode.next = this._findNextEndNodeAtLevel(commandNodeIndex, topOf(state).level);
-          } else if (topOf(state) && isWhile(topOf(state)) && isControlFlowCommand(nextCommandNode.command)) {
-            commandNode.next = this._commandNodeStack[topOf(state).index];
-          } else {
-            commandNode.next = nextCommandNode;
-          }
-          break;
+      if (connectCommandNode[commandNode.command.command]) {
+        connectCommandNode[commandNode.command.command](commandNode, nextCommandNode, _commandNodeStack, state);
+      } else {
+        connectCommandNode["default"](commandNode, nextCommandNode, _commandNodeStack, state);
+      }
+    }
+  });
+  return _commandNodeStack;
+}
+
+let connectCommandNode = {
+  default: function (commandNode, nextCommandNode, stack, state) {
+    if (isIf(topOf(state)) && (isElseOrElseIf(nextCommandNode.command))) {
+      commandNode.next = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
+    } else if (isLoop(topOf(state)) && isEnd(nextCommandNode.command)) {
+      commandNode.next = stack[topOf(state).index];
+    } else {
+      commandNode.next = nextCommandNode;
+    }
+  },
+  do: function (commandNode, nextCommandNode, stack, state) {
+    state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
+    commandNode.next = nextCommandNode;
+  },
+  else: function (commandNode, nextCommandNode) {
+    commandNode.next = nextCommandNode;
+  },
+  elseIf: function (commandNode, nextCommandNode, stack) {
+    commandNode.right = nextCommandNode;
+    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+  },
+  end: function (commandNode, nextCommandNode, stack, state) {
+    state.pop();
+    if (!isEmpty(state)) {
+      if (isElseOrElseIf(nextCommandNode.command)) {
+        commandNode.next = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
+      } else {
+        commandNode.next = nextCommandNode;
+      }
+    }
+  },
+  if: function (commandNode, nextCommandNode, stack, state) {
+    state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
+    commandNode.right = nextCommandNode;
+    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+  },
+  repeatIf: function (commandNode, nextCommandNode, stack, state) {
+    commandNode.right = stack[topOf(state).index];
+    commandNode.left = nextCommandNode;
+    state.pop();
+  },
+  times: function (commandNode, nextCommandNode, stack, state) {
+    state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
+    commandNode.right = nextCommandNode;
+    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+  },
+  while: function (commandNode, nextCommandNode, stack, state) {
+    state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
+    commandNode.right = nextCommandNode;
+    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+  }
+};
+
+function findNextNodeBy(stack, index, level, commandName) {
+  for(let i = index + 1; i < stack.length + 1; i++) {
+    if (commandName) {
+      if (stack[i].level === level &&
+          stack[i].command.command === commandName) {
+        return stack[i];
+      }
+    } else {
+      if (stack[i].level === level) {
+        return stack[i];
       }
     }
   }

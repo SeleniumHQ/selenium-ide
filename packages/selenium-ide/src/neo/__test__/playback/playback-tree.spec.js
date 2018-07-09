@@ -15,14 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { PlaybackTree } from "../../playback/playback-tree";
+import { createPlaybackTree } from "../../playback/playback-tree";
 import Command from "../../models/Command";
 
 describe("Control Flow", () => {
   describe("Preprocess", () => {
-    describe.skip("Leveling", () => {
+    describe("Leveling", () => {
       test("returns leveled command stack", () => {
-        let playbackTree = new PlaybackTree([
+        let stack = createPlaybackTree([
           new Command(null, "if", "", ""),
           new Command(null, "command", "", ""),
           new Command(null, "else", "", ""),
@@ -37,8 +37,6 @@ describe("Control Flow", () => {
           new Command(null, "repeatIf", "", ""),
           new Command(null, "end", "", "")
         ]);
-        playbackTree._preprocessCommands();
-        let stack = playbackTree._commandNodeStack;
         expect(stack[0].level).toEqual(0); //  if
         expect(stack[1].level).toEqual(1); //    command
         expect(stack[2].level).toEqual(0); //  else
@@ -56,174 +54,167 @@ describe("Control Flow", () => {
     });
     describe("Syntax Validation", () => {
       test("if, end", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "if", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("if, else, end", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("if, elseIf, end", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "if", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("if, elseIf, else, end", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "if", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("while, end", () => {
-        let playbackTree = new PlaybackTree([
+        let result = new createPlaybackTree([
           new Command(null, "while", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("times, end", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "times", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("do, repeatIf", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "do", "", ""),
           new Command(null, "repeatIf", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
       test("do, while, end, repeatIf", () => {
-        let playbackTree = new PlaybackTree([
+        let result = createPlaybackTree([
           new Command(null, "do", "", ""),
           new Command(null, "while", "", ""),
           new Command(null, "end", "", ""),
           new Command(null, "repeatIf", "", "")
         ]);
-        expect(playbackTree._preprocessCommands()).toBeTruthy();
+        expect(result).toBeTruthy();
       });
     });
     describe("Syntax Invalidation", () => {
       test("if", () => {
-        let playbackTree = new PlaybackTree([new Command(null, "if", "", "")]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at if");
+        let input = [new Command(null, "if", "", "")];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at if");
       });
       test("if, if, end", () => {
-        let playbackTree = new PlaybackTree([
+        let input = [
           new Command(null, "if", "", ""),
           new Command(null, "if", "", ""),
           new Command(null, "end", "", "")
-        ]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at if");
+        ];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at if");
       });
       test("if, else, elseIf, end", () => {
-        let playbackTree = new PlaybackTree([
+        let input = [
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "end", "", "")
-        ]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incorrect command order of elseIf / else");
+        ];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incorrect command order of elseIf / else");
       });
       test("if, else, else, end", () => {
-        let playbackTree = new PlaybackTree([
+        let input = [
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
-        ]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Too many else commands used");
+        ];
+        expect(function() { createPlaybackTree(input); }).toThrow("Too many else commands used");
       });
       test("while", () => {
-        let playbackTree = new PlaybackTree([new Command(null, "while", "", "")]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at while");
+        let input = [new Command(null, "while", "", "")];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at while");
       });
       test("if, while", () => {
-        let playbackTree = new PlaybackTree([
+        let input = [
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "while", "", "")
-        ]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at while");
+        ];
+        expect(function() {createPlaybackTree(input); }).toThrow("Incomplete block at while");
       });
       test("if, while, end", () => {
-        let playbackTree = new PlaybackTree([
+        let input = [
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "while", "", ""),
           new Command(null, "end", "", "")
-        ]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at if");
+        ];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at if");
       });
       test("if, while, else, end", () => {
-        let playbackTree = new PlaybackTree([
+        let input = [
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "while", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
-        ]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("An else / elseIf used outside of an if block");
+        ];
+        expect(function() { createPlaybackTree(input); }).toThrow("An else / elseIf used outside of an if block");
       });
       test("times", () => {
-        let playbackTree = new PlaybackTree([new Command(null, "times", "", "")]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at times");
+        let input = [new Command(null, "times", "", "")];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at times");
       });
       test("repeatIf", () => {
-        let playbackTree = new PlaybackTree([new Command(null, "repeatIf", "", "")]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("A repeatIf used without a do block");
+        let input = [new Command(null, "repeatIf", "", "")];
+        expect(function() { createPlaybackTree(input); }).toThrow("A repeatIf used without a do block");
       });
       test("do", () => {
-        let playbackTree = new PlaybackTree([new Command(null, "do", "", "")]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Incomplete block at do");
+        let input = [new Command(null, "do", "", "")];
+        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at do");
       });
       test("end", () => {
-        let playbackTree = new PlaybackTree([new Command(null, "end", "", "")]);
-        expect(function() { playbackTree._preprocessCommands(); }).toThrow("Use of end without an opening keyword");
+        let input = [new Command(null, "end", "", "")];
+        expect(function() { createPlaybackTree(input); }).toThrow("Use of end without an opening keyword");
       });
     });
   });
-  describe.skip("Process", () => {
+  describe("Process", () => {
     describe("Linked List Validation", () => {
-      test("nodes contain command references", () => {
-        let input = [
-          new Command(null, "command1", "", ""),
-          new Command(null, "command2", "", "")
-        ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+      test("nodes contain command references and levels", () => {
+        let input = [ new Command(null, "command1", "", ""), new Command(null, "command2", "", "") ];
+        let stack = createPlaybackTree(input);
         expect(stack[0].command).toEqual(input[0]);
+        expect(stack[0].level).toEqual(0);
         expect(stack[1].command).toEqual(input[1]);
+        expect(stack[1].level).toEqual(0);
       });
       test("command-command", () => {
         let input = [
           new Command(null, "command1", "", ""),
           new Command(null, "command2", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].left).toBeUndefined();
         expect(stack[0].right).toBeUndefined();
@@ -241,10 +232,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         // if
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -280,10 +268,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
         expect(stack[0].left).toEqual(stack[2]);
@@ -294,6 +279,27 @@ describe("Control Flow", () => {
         expect(stack[2].right).toBeUndefined();
         expect(stack[2].left).toBeUndefined();
       });
+      test("while-command-command-end", () => {
+        let input = [
+          new Command(null, "while", "", ""),
+          new Command(null, "command", "", ""),
+          new Command(null, "command", "", ""),
+          new Command(null, "end", "", "")
+        ];
+        let stack = createPlaybackTree(input);
+        expect(stack[0].next).toBeUndefined();
+        expect(stack[0].right).toEqual(stack[1]);
+        expect(stack[0].left).toEqual(stack[3]);
+        expect(stack[1].next).toEqual(stack[2]);
+        expect(stack[1].right).toBeUndefined();
+        expect(stack[1].left).toBeUndefined();
+        expect(stack[2].next).toEqual(stack[0]);
+        expect(stack[2].right).toBeUndefined();
+        expect(stack[2].left).toBeUndefined();
+        expect(stack[3].next).toBeUndefined();
+        expect(stack[3].right).toBeUndefined();
+        expect(stack[3].left).toBeUndefined();
+      });
       test("if-command-while-command-end-end", () => {
         let input = [
           new Command(null, "if", "", ""),
@@ -303,10 +309,7 @@ describe("Control Flow", () => {
           new Command(null, "end", "", ""),
           new Command(null, "end", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         // if
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -343,10 +346,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         // if
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -387,10 +387,7 @@ describe("Control Flow", () => {
           new Command(null, "repeatIf", "", ""),
           new Command(null, "command", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
@@ -413,10 +410,7 @@ describe("Control Flow", () => {
           new Command(null, "end", "", ""),
           new Command(null, "repeatIf", "", "")
         ];
-        let playbackTree = new PlaybackTree(input);
-        playbackTree._preprocessCommands();
-        playbackTree._processCommandNodes();
-        let stack = playbackTree._commandNodeStack;
+        let stack = createPlaybackTree(input);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
@@ -435,6 +429,23 @@ describe("Control Flow", () => {
         expect(stack[5].next).toBeUndefined();
         expect(stack[5].right).toBeUndefined();
         expect(stack[5].left).toBeUndefined();
+      });
+      test("times-command-end", () => {
+        let input = [
+          new Command(null, "times", "", ""),
+          new Command(null, "command", "", ""),
+          new Command(null, "end", "", "")
+        ];
+        let stack = createPlaybackTree(input);
+        expect(stack[0].next).toBeUndefined();
+        expect(stack[0].right).toEqual(stack[1]);
+        expect(stack[0].left).toEqual(stack[2]);
+        expect(stack[1].next).toEqual(stack[0]);
+        expect(stack[1].right).toBeUndefined();
+        expect(stack[1].left).toBeUndefined();
+        expect(stack[2].next).toBeUndefined();
+        expect(stack[2].right).toBeUndefined();
+        expect(stack[2].left).toBeUndefined();
       });
     });
   });

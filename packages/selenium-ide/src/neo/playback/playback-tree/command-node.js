@@ -21,6 +21,7 @@ export class CommandNode {
     this.next = undefined;
     this.left = undefined;
     this.right = undefined;
+    this.index;
     this.level;
     this.timesVisited = 0;
   }
