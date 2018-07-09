@@ -35,17 +35,17 @@ const CommandName = {
   while: "while"
 };
 
-function isElseOrElseIf(command) {
-  return (command.command === CommandName.else ||
-          command.command === CommandName.elseIf);
-}
-
 function isDo(command) {
   return (command.command === CommandName.do);
 }
 
 function isElse(command) {
   return (command.command === CommandName.else);
+}
+
+function isElseOrElseIf(command) {
+  return (command.command === CommandName.else ||
+          command.command === CommandName.elseIf);
 }
 
 function isEnd(command) {
@@ -93,16 +93,7 @@ function verifyControlFlowSyntax(commandStack) {
 }
 
 const verifyCommand = {
-  if: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
-  },
   do: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
-  },
-  times: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
-  },
-  while: function (commandName, commandIndex, stack, state) {
     state.push({ command: commandName, index: commandIndex });
   },
   else: function (commandName, commandIndex, stack, state) {
@@ -114,12 +105,6 @@ const verifyCommand = {
     if (!isIf(topOf(state))) {
       throw "An else / elseIf used outside of an if block";
     }
-  },
-  repeatIf: function (commandName, commandIndex, stack, state) {
-    if (!isDo(topOf(state))) {
-      throw "A repeatIf used without a do block";
-    }
-    state.pop();
   },
   end: function (commandName, commandIndex, stack, state) {
     if (isLoop(topOf(state))) {
@@ -138,6 +123,21 @@ const verifyCommand = {
     } else {
       throw "Use of end without an opening keyword";
     }
+  },
+  if: function (commandName, commandIndex, stack, state) {
+    state.push({ command: commandName, index: commandIndex });
+  },
+  repeatIf: function (commandName, commandIndex, stack, state) {
+    if (!isDo(topOf(state))) {
+      throw "A repeatIf used without a do block";
+    }
+    state.pop();
+  },
+  times: function (commandName, commandIndex, stack, state) {
+    state.push({ command: commandName, index: commandIndex });
+  },
+  while: function (commandName, commandIndex, stack, state) {
+    state.push({ command: commandName, index: commandIndex });
   }
 };
 
@@ -155,22 +155,11 @@ function deriveCommandLevels(commandStack) {
 }
 
 let levelCommand = {
-  if: function (command, level, levels) {
+  default: function (command, level, levels) {
     levels.push(level);
-    level++;
     return level;
   },
   do: function (command, level, levels) {
-    levels.push(level);
-    level++;
-    return level;
-  },
-  times: function (command, level, levels) {
-    levels.push(level);
-    level++;
-    return level;
-  },
-  while: function (command, level, levels) {
     levels.push(level);
     level++;
     return level;
@@ -187,18 +176,29 @@ let levelCommand = {
     level++;
     return level;
   },
-  repeatIf: function (command, level, levels) {
-    level--;
-    levels.push(level);
-    return level;
-  },
   end: function (command, level, levels) {
     level--;
     levels.push(level);
     return level;
   },
-  default: function (command, level, levels) {
+  if: function (command, level, levels) {
     levels.push(level);
+    level++;
+    return level;
+  },
+  repeatIf: function (command, level, levels) {
+    level--;
+    levels.push(level);
+    return level;
+  },
+  times: function (command, level, levels) {
+    levels.push(level);
+    level++;
+    return level;
+  },
+  while: function (command, level, levels) {
+    levels.push(level);
+    level++;
     return level;
   }
 };
