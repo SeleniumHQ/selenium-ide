@@ -165,6 +165,10 @@ export const ArgTypes = {
     name: "select locator",
     description: "An element locator identifying a drop-down menu."
   },
+  testCase: {
+    name: "test case",
+    description: "Test case name from the project."
+  },
   text: {
     name: "text",
     description: "The text to verify."
@@ -464,6 +468,11 @@ class CommandList {
                     element using an option locator.",
       target: ArgTypes.locator,
       value: ArgTypes.optionLocator
+    }],
+    [ "run", {
+      name: "run",
+      description: "Runs a test case from the current project.",
+      target: ArgTypes.testCase
     }],
     [ "runScript", {
       name: "run script",

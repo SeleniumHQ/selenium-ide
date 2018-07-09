@@ -87,8 +87,8 @@ function executionLoop() {
   if (!command.command) return executionLoop();
   // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
-  if (!ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
-  else if (ignoreBreakpoint && command.isBreakpoint) ignoreBreakpoint = false;
+  if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
+  else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
   if (isExtCommand(command.command)) {
@@ -139,13 +139,13 @@ function catchPlayingError(message) {
   }
 }
 
-function reportError(error) {
+function reportError(error, nonFatal) {
   const { id } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
   }
-  PlaybackState.setCommandState(id, PlaybackStates.Failed, message);
+  PlaybackState.setCommandState(id, nonFatal ? PlaybackStates.Failed : PlaybackStates.Fatal, message);
 }
 
 reaction(
@@ -309,7 +309,10 @@ function isElementNotFound(error) {
 }
 
 function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
-  if (isElementNotFound(error)) {
+  if (isStopping()) {
+    PlaybackState.setCommandState(commandId, PlaybackStates.Fatal, "Playback aborted");
+    return false;
+  } else if (isElementNotFound(error)) {
     if (implicitTime && (Date.now() - implicitTime > 30000)) {
       reportError("Implicit Wait timed out after 30000ms");
       implicitCount = 0;
@@ -338,7 +341,7 @@ function doDelay() {
 }
 
 function notifyWaitDeprecation(command) {
-  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`);
+  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`, true);
 }
 
 function isReceivingEndError(reason) {

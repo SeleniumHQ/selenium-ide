@@ -245,9 +245,11 @@ class TestRow extends React.Component {
         opacity: this.props.isDragging ? "0" : "1"
       }}>
       <td>
-        {!this.props.isPristine ? <span className="code index">{this.props.index + 1}</span> : null}
-        <span className="arrow"></span>
-        {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
+        {!this.props.isPristine ? <a className="break-toggle" onClick={this.props.command.toggleBreakpoint} onDoubleClick={(e) => { e.stopPropagation(); }}>
+          <span className="code index">{this.props.index + 1}</span>
+          <span className="arrow"></span>
+          {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
+        </a> : null}
       </td>
       <td className={classNames("comment", { "cell__hidden": !this.props.command.comment })} colSpan="3">
         <MultilineEllipsis lines={1}>{this.props.command.comment}</MultilineEllipsis>

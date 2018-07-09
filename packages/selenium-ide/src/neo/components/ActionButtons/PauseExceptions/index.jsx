@@ -15,17 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const hooks = [];
+import React from "react";
+import ActionButton from "../ActionButton";
+import classNames from "classnames";
 
-export async function emit(project) {
-  return `global.BASE_URL = configuration.baseUrl || '${project.url}';const vars = {};${(await Promise.all(hooks.map((hook) => hook({ name: project.name })))).join("")}`;
+export default class PauseExceptionsButton extends React.Component {
+  render() {
+    return (
+      <ActionButton data-tip="<p>Pause on exceptions</p>" {...this.props} className={classNames("si-break-exceptions", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
 }
-
-function registerHook(hook) {
-  hooks.push(hook);
-}
-
-export default {
-  emit,
-  registerHook
-};
