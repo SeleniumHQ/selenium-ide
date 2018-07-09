@@ -74,6 +74,11 @@ describe("selenium test case migration", () => {
     const { test } = migrateTestCase(file);
     expect(test.commands.length).toBe(2);
   });
+  it("should import a test case with a command in it", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_10.html")).toString();
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(1);
+  });
 });
 
 describe("selenium suite migration", () => {
