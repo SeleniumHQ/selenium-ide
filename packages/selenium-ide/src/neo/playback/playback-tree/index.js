@@ -16,12 +16,23 @@
 // under the License.
 
 import { CommandNode } from "./command-node";
+export { createPlaybackTree, verifyControlFlowSyntax, deriveCommandLevels, connectCommandNodes };
 
-export function createPlaybackTree(commandStack) {
+function createPlaybackTree(commandStack) {
   verifyControlFlowSyntax(commandStack);
   let levels = deriveCommandLevels(commandStack);
-  let nodes = initCommandNodes(commandStack, levels);
-  return connectCommandNodes(nodes);
+  let initNodes = initCommandNodes(commandStack, levels);
+  return connectCommandNodes(initNodes);
+  //Automata.startingCommandNode = nodes[0];
+  //Automata.currentCommandNode = nodes[0];
+  //return Automata;
+}
+
+class Automata {
+  constructor() {
+    this.startingCommandNode;
+    this.currentCommandNode;
+  }
 }
 
 const CommandName = {
@@ -94,52 +105,66 @@ function verifyControlFlowSyntax(commandStack) {
 
 const verifyCommand = {
   do: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
+    trackControlFlowBranchOpen(commandName, commandIndex, stack, state);
   },
   else: function (commandName, commandIndex, stack, state) {
-    if (!isIf(topOf(state))) {
-      throw "An else / elseIf used outside of an if block";
-    }
+    verifyElse(commandName, commandIndex, stack, state);
   },
   elseIf: function (commandName, commandIndex, stack, state) {
-    if (!isIf(topOf(state))) {
-      throw "An else / elseIf used outside of an if block";
-    }
+    verifyElse(commandName, commandIndex, stack, state);
   },
   end: function (commandName, commandIndex, stack, state) {
-    if (isLoop(topOf(state))) {
-      state.pop();
-    } else if (isIf(topOf(state))) {
-      const numberOfElse = stack.slice(topOf(state).index, commandIndex).filter(command => isElse(command)).length;
-      const allElses = stack.slice(topOf(state).index, commandIndex).filter(
-        command => (command.command === CommandName.else || command.command === CommandName.elseIf));
-      if (numberOfElse > 1) {
-        throw "Too many else commands used";
-      } else if (numberOfElse === 1 && !isElse(topOf(allElses))) {
-        throw "Incorrect command order of elseIf / else";
-      } else if (numberOfElse === 0 || isElse(topOf(allElses))) {
-        state.pop();
-      }
-    } else {
-      throw "Use of end without an opening keyword";
-    }
+    verifyEnd(commandName, commandIndex, stack, state);
   },
   if: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
+    trackControlFlowBranchOpen(commandName, commandIndex, stack, state);
   },
   repeatIf: function (commandName, commandIndex, stack, state) {
-    if (!isDo(topOf(state))) {
-      throw "A repeatIf used without a do block";
-    }
-    state.pop();
+    verifyRepeatIf(commandName, commandIndex, stack, state);
   },
   times: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
+    trackControlFlowBranchOpen(commandName, commandIndex, stack, state);
   },
   while: function (commandName, commandIndex, stack, state) {
-    state.push({ command: commandName, index: commandIndex });
+    trackControlFlowBranchOpen(commandName, commandIndex, stack, state);
   }
 };
+
+function trackControlFlowBranchOpen (commandName, commandIndex, stack, state) {
+  state.push({ command: commandName, index: commandIndex });
+}
+
+function verifyElse (commandName, commandIndex, stack, state) {
+  if (!isIf(topOf(state))) {
+    throw "An else / elseIf used outside of an if block";
+  }
+}
+
+function verifyEnd (commandName, commandIndex, stack, state) {
+  if (isLoop(topOf(state))) {
+    state.pop();
+  } else if (isIf(topOf(state))) {
+    const numberOfElse = stack.slice(topOf(state).index, commandIndex).filter(command => isElse(command)).length;
+    const allElses = stack.slice(topOf(state).index, commandIndex).filter(
+      command => (command.command === CommandName.else || command.command === CommandName.elseIf));
+    if (numberOfElse > 1) {
+      throw "Too many else commands used";
+    } else if (numberOfElse === 1 && !isElse(topOf(allElses))) {
+      throw "Incorrect command order of elseIf / else";
+    } else if (numberOfElse === 0 || isElse(topOf(allElses))) {
+      state.pop();
+    }
+  } else {
+    throw "Use of end without an opening keyword";
+  }
+}
+
+function verifyRepeatIf (commandName, commandIndex, stack, state) {
+  if (!isDo(topOf(state))) {
+    throw "A repeatIf used without a do block";
+  }
+  state.pop();
+}
 
 function deriveCommandLevels(commandStack) {
   let level = 0;
@@ -232,56 +257,69 @@ function connectCommandNodes(commandNodeStack) {
 
 let connectCommandNode = {
   default: function (commandNode, nextCommandNode, stack, state) {
+    let _nextCommandNode;
     if (isIf(topOf(state)) && (isElseOrElseIf(nextCommandNode.command))) {
-      commandNode.next = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
+      _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
     } else if (isLoop(topOf(state)) && isEnd(nextCommandNode.command)) {
-      commandNode.next = stack[topOf(state).index];
+      _nextCommandNode = stack[topOf(state).index];
     } else {
-      commandNode.next = nextCommandNode;
+      _nextCommandNode = nextCommandNode;
     }
+    connectNext(commandNode, _nextCommandNode);
   },
   do: function (commandNode, nextCommandNode, stack, state) {
     state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
-    commandNode.next = nextCommandNode;
+    connectNext(commandNode, nextCommandNode);
   },
   else: function (commandNode, nextCommandNode) {
-    commandNode.next = nextCommandNode;
+    connectNext(commandNode, nextCommandNode);
   },
   elseIf: function (commandNode, nextCommandNode, stack) {
-    commandNode.right = nextCommandNode;
-    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+    connectConditional(commandNode, nextCommandNode, stack);
   },
   end: function (commandNode, nextCommandNode, stack, state) {
     state.pop();
     if (!isEmpty(state)) {
+      let _nextCommandNode;
       if (isElseOrElseIf(nextCommandNode.command)) {
-        commandNode.next = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
+        _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
       } else {
-        commandNode.next = nextCommandNode;
+        _nextCommandNode = nextCommandNode;
       }
+      connectNext(commandNode, _nextCommandNode);
     }
   },
   if: function (commandNode, nextCommandNode, stack, state) {
     state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
-    commandNode.right = nextCommandNode;
-    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+    connectConditional(commandNode, nextCommandNode, stack, state);
   },
   repeatIf: function (commandNode, nextCommandNode, stack, state) {
-    commandNode.right = stack[topOf(state).index];
-    commandNode.left = nextCommandNode;
+    connectRepeatIf(commandNode, nextCommandNode, stack, state);
     state.pop();
   },
   times: function (commandNode, nextCommandNode, stack, state) {
     state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
-    commandNode.right = nextCommandNode;
-    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+    connectConditional(commandNode, nextCommandNode, stack);
   },
   while: function (commandNode, nextCommandNode, stack, state) {
     state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
-    commandNode.right = nextCommandNode;
-    commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+    connectConditional(commandNode, nextCommandNode, stack);
   }
 };
+
+function connectConditional (commandNode, nextCommandNode, stack) {
+  commandNode.right = nextCommandNode;
+  commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+}
+
+function connectNext (commandNode, nextCommandNode) {
+  commandNode.next = nextCommandNode;
+}
+
+function connectRepeatIf (commandNode, nextCommandNode, stack, state) {
+  commandNode.right = stack[topOf(state).index];
+  commandNode.left = nextCommandNode;
+}
 
 function findNextNodeBy(stack, index, level, commandName) {
   for(let i = index + 1; i < stack.length + 1; i++) {

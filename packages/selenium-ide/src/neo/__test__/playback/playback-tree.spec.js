@@ -15,14 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { createPlaybackTree } from "../../playback/playback-tree";
+import { deriveCommandLevels, verifyControlFlowSyntax, createPlaybackTree } from "../../playback/playback-tree";
 import Command from "../../models/Command";
 
 describe("Control Flow", () => {
   describe("Preprocess", () => {
     describe("Leveling", () => {
       test("returns leveled command stack", () => {
-        let stack = createPlaybackTree([
+        let stack = deriveCommandLevels([
           new Command(null, "if", "", ""),
           new Command(null, "command", "", ""),
           new Command(null, "else", "", ""),
@@ -37,31 +37,31 @@ describe("Control Flow", () => {
           new Command(null, "repeatIf", "", ""),
           new Command(null, "end", "", "")
         ]);
-        expect(stack[0].level).toEqual(0); //  if
-        expect(stack[1].level).toEqual(1); //    command
-        expect(stack[2].level).toEqual(0); //  else
-        expect(stack[3].level).toEqual(1); //    while
-        expect(stack[4].level).toEqual(2); //      command
-        expect(stack[5].level).toEqual(1); //    end
-        expect(stack[6].level).toEqual(1); //    do
-        expect(stack[7].level).toEqual(2); //      command
-        expect(stack[8].level).toEqual(2); //      while
-        expect(stack[9].level).toEqual(3); //        command
-        expect(stack[10].level).toEqual(2); //     end
-        expect(stack[11].level).toEqual(1); //   repeatIf
-        expect(stack[12].level).toEqual(0); //  end
+        expect(stack[0]).toEqual(0); //  if
+        expect(stack[1]).toEqual(1); //    command
+        expect(stack[2]).toEqual(0); //  else
+        expect(stack[3]).toEqual(1); //    while
+        expect(stack[4]).toEqual(2); //      command
+        expect(stack[5]).toEqual(1); //    end
+        expect(stack[6]).toEqual(1); //    do
+        expect(stack[7]).toEqual(2); //      command
+        expect(stack[8]).toEqual(2); //      while
+        expect(stack[9]).toEqual(3); //        command
+        expect(stack[10]).toEqual(2); //     end
+        expect(stack[11]).toEqual(1); //   repeatIf
+        expect(stack[12]).toEqual(0); //  end
       });
     });
     describe("Syntax Validation", () => {
       test("if, end", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "if", "", ""),
           new Command(null, "end", "", "")
         ]);
         expect(result).toBeTruthy();
       });
       test("if, else, end", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "if", "", ""),
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
@@ -69,7 +69,7 @@ describe("Control Flow", () => {
         expect(result).toBeTruthy();
       });
       test("if, elseIf, end", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "if", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "end", "", "")
@@ -77,7 +77,7 @@ describe("Control Flow", () => {
         expect(result).toBeTruthy();
       });
       test("if, elseIf, else, end", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "if", "", ""),
           new Command(null, "elseIf", "", ""),
           new Command(null, "else", "", ""),
@@ -86,28 +86,28 @@ describe("Control Flow", () => {
         expect(result).toBeTruthy();
       });
       test("while, end", () => {
-        let result = new createPlaybackTree([
+        let result = new verifyControlFlowSyntax([
           new Command(null, "while", "", ""),
           new Command(null, "end", "", "")
         ]);
         expect(result).toBeTruthy();
       });
       test("times, end", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "times", "", ""),
           new Command(null, "end", "", "")
         ]);
         expect(result).toBeTruthy();
       });
       test("do, repeatIf", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "do", "", ""),
           new Command(null, "repeatIf", "", "")
         ]);
         expect(result).toBeTruthy();
       });
       test("do, while, end, repeatIf", () => {
-        let result = createPlaybackTree([
+        let result = verifyControlFlowSyntax([
           new Command(null, "do", "", ""),
           new Command(null, "while", "", ""),
           new Command(null, "end", "", ""),
@@ -119,7 +119,7 @@ describe("Control Flow", () => {
     describe("Syntax Invalidation", () => {
       test("if", () => {
         let input = [new Command(null, "if", "", "")];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at if");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at if");
       });
       test("if, if, end", () => {
         let input = [
@@ -127,7 +127,7 @@ describe("Control Flow", () => {
           new Command(null, "if", "", ""),
           new Command(null, "end", "", "")
         ];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at if");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at if");
       });
       test("if, else, elseIf, end", () => {
         let input = [
@@ -136,7 +136,7 @@ describe("Control Flow", () => {
           new Command(null, "elseIf", "", ""),
           new Command(null, "end", "", "")
         ];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incorrect command order of elseIf / else");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incorrect command order of elseIf / else");
       });
       test("if, else, else, end", () => {
         let input = [
@@ -145,11 +145,11 @@ describe("Control Flow", () => {
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
         ];
-        expect(function() { createPlaybackTree(input); }).toThrow("Too many else commands used");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Too many else commands used");
       });
       test("while", () => {
         let input = [new Command(null, "while", "", "")];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at while");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at while");
       });
       test("if, while", () => {
         let input = [
@@ -158,7 +158,7 @@ describe("Control Flow", () => {
           new Command(null, "elseIf", "", ""),
           new Command(null, "while", "", "")
         ];
-        expect(function() {createPlaybackTree(input); }).toThrow("Incomplete block at while");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at while");
       });
       test("if, while, end", () => {
         let input = [
@@ -168,7 +168,7 @@ describe("Control Flow", () => {
           new Command(null, "while", "", ""),
           new Command(null, "end", "", "")
         ];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at if");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at if");
       });
       test("if, while, else, end", () => {
         let input = [
@@ -179,23 +179,23 @@ describe("Control Flow", () => {
           new Command(null, "else", "", ""),
           new Command(null, "end", "", "")
         ];
-        expect(function() { createPlaybackTree(input); }).toThrow("An else / elseIf used outside of an if block");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else / elseIf used outside of an if block");
       });
       test("times", () => {
         let input = [new Command(null, "times", "", "")];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at times");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at times");
       });
       test("repeatIf", () => {
         let input = [new Command(null, "repeatIf", "", "")];
-        expect(function() { createPlaybackTree(input); }).toThrow("A repeatIf used without a do block");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("A repeatIf used without a do block");
       });
       test("do", () => {
         let input = [new Command(null, "do", "", "")];
-        expect(function() { createPlaybackTree(input); }).toThrow("Incomplete block at do");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at do");
       });
       test("end", () => {
         let input = [new Command(null, "end", "", "")];
-        expect(function() { createPlaybackTree(input); }).toThrow("Use of end without an opening keyword");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Use of end without an opening keyword");
       });
     });
   });
@@ -203,11 +203,11 @@ describe("Control Flow", () => {
     describe("Linked List Validation", () => {
       test("nodes contain command references and levels", () => {
         let input = [ new Command(null, "command1", "", ""), new Command(null, "command2", "", "") ];
-        let stack = createPlaybackTree(input);
-        expect(stack[0].command).toEqual(input[0]);
-        expect(stack[0].level).toEqual(0);
-        expect(stack[1].command).toEqual(input[1]);
-        expect(stack[1].level).toEqual(0);
+        let automata = createPlaybackTree(input);
+        expect(automata[0].command).toEqual(input[0]);
+        expect(automata[0].level).toEqual(0);
+        expect(automata[1].command).toEqual(input[1]);
+        expect(automata[1].level).toEqual(0);
       });
       test("command-command", () => {
         let input = [
