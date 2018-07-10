@@ -167,7 +167,7 @@ describe("Project Store", () => {
     const projectRep = {
       id: "1",
       name: "my project",
-      url: "https://en.wikipedia.org",
+      url: "https://en.wikipedia.org/",
       tests: [
         {
           id: "1",
@@ -203,8 +203,8 @@ describe("Project Store", () => {
         }
       ],
       urls: [
-        "https://en.wikipedia.org",
-        "http://www.seleniumhq.org"
+        "https://en.wikipedia.org/",
+        "http://www.seleniumhq.org/"
       ].sort(),
       plugins: [
         {
@@ -241,6 +241,19 @@ describe("Project Store", () => {
     const project = new ProjectStore();
     project.fromJS(projectRep);
     expect(project.id).toBeDefined();
+  });
+  it("should remove duplicate urls when loaded", () => {
+    const projectRep = {
+      name: "my project",
+      url: "",
+      tests: [],
+      suites: [],
+      urls: ["https://seleniumhq.org/", "https://seleniumhq.org/"]
+    };
+
+    const project = new ProjectStore();
+    project.fromJS(projectRep);
+    expect(project.urls.length).toBe(1);
   });
   it("should have a list of loaded plugins", () => {
     const project = new ProjectStore();
