@@ -16,6 +16,7 @@
 // under the License.
 
 import { CommandNode } from "./command-node";
+import { PlaybackTree } from "./playback-tree";
 import { ControlFlowCommandNames } from "../../models/Command";
 export { createPlaybackTree }; // public API
 export { createCommandNodesFromCommandStack, verifyControlFlowSyntax, deriveCommandLevels }; // for testing
@@ -30,17 +31,6 @@ function createCommandNodesFromCommandStack(commandStack) {
   let levels = deriveCommandLevels(commandStack);
   let initNodes = initCommandNodes(commandStack, levels);
   return connectCommandNodes(initNodes);
-}
-
-class PlaybackTree {
-  constructor(initialCommandNode) {
-    this.startingCommandNode = initialCommandNode; // to prevent garbage collection of tree
-    this.currentCommandNode = initialCommandNode;
-  }
-
-  static create(commandNodeStack) {
-    return new PlaybackTree(commandNodeStack[0]);
-  }
 }
 
 function isDo(command) {
