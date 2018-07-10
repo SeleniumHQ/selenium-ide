@@ -86,6 +86,7 @@ export function migrateProject(files) {
   if (!suites.length) {
     project.suites.push({
       name: "Imported suite",
+      persistSession: true,
       tests
     });
     project.name = "Imported project";
