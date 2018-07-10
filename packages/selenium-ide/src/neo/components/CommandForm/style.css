@@ -2,10 +2,6 @@
     margin: 15px 8px;
 }
 
-.command-form form> * {
-    max-width: 480px;
-}
-
 .command-form .form-input:first-child> div {
     display: flex!important;
 }
