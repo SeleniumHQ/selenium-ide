@@ -16,6 +16,7 @@
 // under the License.
 
 import { CommandNode } from "./command-node";
+import { ControlFlowCommandNames } from "../../models/Command";
 export { createPlaybackTree }; // public API
 export { createCommandNodesFromCommandStack, verifyControlFlowSyntax, deriveCommandLevels }; // for testing
 
@@ -42,41 +43,30 @@ class PlaybackTree {
   }
 }
 
-const CommandName = {
-  do: "do",
-  else: "else",
-  elseIf: "elseIf",
-  end: "end",
-  if: "if",
-  repeatIf: "repeatIf",
-  times: "times",
-  while: "while"
-};
-
 function isDo(command) {
-  return (command.command === CommandName.do);
+  return (command.command === ControlFlowCommandNames.do);
 }
 
 function isElse(command) {
-  return (command.command === CommandName.else);
+  return (command.command === ControlFlowCommandNames.else);
 }
 
 function isElseOrElseIf(command) {
-  return (command.command === CommandName.else ||
-          command.command === CommandName.elseIf);
+  return (command.command === ControlFlowCommandNames.else ||
+          command.command === ControlFlowCommandNames.elseIf);
 }
 
 function isEnd(command) {
-  return (command.command === CommandName.end);
+  return (command.command === ControlFlowCommandNames.end);
 }
 
 function isIf(command) {
-  return (command.command === CommandName.if);
+  return (command.command === ControlFlowCommandNames.if);
 }
 
 function isLoop(command) {
-  return (command.command === CommandName.while ||
-          command.command === CommandName.times);
+  return (command.command === ControlFlowCommandNames.while ||
+          command.command === ControlFlowCommandNames.times);
 }
 
 function isEmpty(obj) {
@@ -111,14 +101,14 @@ function verifyControlFlowSyntax(commandStack) {
 }
 
 const verifyCommand = {
-  do: trackControlFlowBranchOpen,
-  else: verifyElse,
-  elseIf: verifyElse,
-  end: verifyEnd,
-  if: trackControlFlowBranchOpen,
-  repeatIf: verifyRepeatIf,
-  times: trackControlFlowBranchOpen,
-  while: trackControlFlowBranchOpen
+  [ControlFlowCommandNames.do]: trackControlFlowBranchOpen,
+  [ControlFlowCommandNames.else]: verifyElse,
+  [ControlFlowCommandNames.elseIf]: verifyElse,
+  [ControlFlowCommandNames.end]: verifyEnd,
+  [ControlFlowCommandNames.if]: trackControlFlowBranchOpen,
+  [ControlFlowCommandNames.repeatIf]: verifyRepeatIf,
+  [ControlFlowCommandNames.times]: trackControlFlowBranchOpen,
+  [ControlFlowCommandNames.while]: trackControlFlowBranchOpen
 };
 
 function trackControlFlowBranchOpen (commandName, commandIndex, stack, state) {
@@ -127,7 +117,7 @@ function trackControlFlowBranchOpen (commandName, commandIndex, stack, state) {
 
 function verifyElse (commandName, commandIndex, stack, state) {
   if (!isIf(topOf(state))) {
-    throw "An else / elseIf used outside of an if block";
+    throw "An else / else if used outside of an if block";
   }
 }
 
@@ -137,11 +127,11 @@ function verifyEnd (commandName, commandIndex, stack, state) {
   } else if (isIf(topOf(state))) {
     const numberOfElse = stack.slice(topOf(state).index, commandIndex).filter(command => isElse(command)).length;
     const allElses = stack.slice(topOf(state).index, commandIndex).filter(
-      command => (command.command === CommandName.else || command.command === CommandName.elseIf));
+      command => (command.command === ControlFlowCommandNames.else || command.command === ControlFlowCommandNames.elseIf));
     if (numberOfElse > 1) {
       throw "Too many else commands used";
     } else if (numberOfElse === 1 && !isElse(topOf(allElses))) {
-      throw "Incorrect command order of elseIf / else";
+      throw "Incorrect command order of else if / else";
     } else if (numberOfElse === 0 || isElse(topOf(allElses))) {
       state.pop();
     }
@@ -152,7 +142,7 @@ function verifyEnd (commandName, commandIndex, stack, state) {
 
 function verifyRepeatIf (commandName, commandIndex, stack, state) {
   if (!isDo(topOf(state))) {
-    throw "A repeatIf used without a do block";
+    throw "A repeat if used without a do block";
   }
   state.pop();
 }
@@ -164,22 +154,21 @@ function deriveCommandLevels(commandStack) {
     if (levelCommand[command.command]) {
       level = levelCommand[command.command](command, level, levels);
     } else {
-      levelCommand["default"](command, level, levels);
+      levelDefault(command, level, levels);
     }
   });
   return levels;
 }
 
 let levelCommand = {
-  default: levelDefault,
-  do: levelBranchOpen,
-  else: levelElse,
-  elseIf: levelElse,
-  end: levelBranchEnd,
-  if: levelBranchOpen,
-  repeatIf: levelBranchEnd,
-  times: levelBranchOpen,
-  while: levelBranchOpen
+  [ControlFlowCommandNames.do]: levelBranchOpen,
+  [ControlFlowCommandNames.else]: levelElse,
+  [ControlFlowCommandNames.elseIf]: levelElse,
+  [ControlFlowCommandNames.end]: levelBranchEnd,
+  [ControlFlowCommandNames.if]: levelBranchOpen,
+  [ControlFlowCommandNames.repeatIf]: levelBranchEnd,
+  [ControlFlowCommandNames.times]: levelBranchOpen,
+  [ControlFlowCommandNames.while]: levelBranchOpen
 };
 
 function levelDefault (command, level, levels) {
@@ -226,7 +215,7 @@ function connectCommandNodes(commandNodeStack) {
       if (connectCommandNode[commandNode.command.command]) {
         connectCommandNode[commandNode.command.command](commandNode, nextCommandNode, _commandNodeStack, state);
       } else {
-        connectCommandNode["default"](commandNode, nextCommandNode, _commandNodeStack, state);
+        connectDefault(commandNode, nextCommandNode, _commandNodeStack, state);
       }
     }
   });
@@ -234,21 +223,20 @@ function connectCommandNodes(commandNodeStack) {
 }
 
 let connectCommandNode = {
-  default: connectDefault,
-  do: connectNextForBranchOpen,
-  else: connectNext,
-  elseIf: connectConditional,
-  end: connectEnd,
-  if: connectConditionalForBranchOpen,
-  repeatIf: connectRepeatIf,
-  times: connectConditionalForBranchOpen,
-  while: connectConditionalForBranchOpen
+  [ControlFlowCommandNames.do]: connectNextForBranchOpen,
+  [ControlFlowCommandNames.else]: connectNext,
+  [ControlFlowCommandNames.elseIf]: connectConditional,
+  [ControlFlowCommandNames.end]: connectEnd,
+  [ControlFlowCommandNames.if]: connectConditionalForBranchOpen,
+  [ControlFlowCommandNames.repeatIf]: connectRepeatIf,
+  [ControlFlowCommandNames.times]: connectConditionalForBranchOpen,
+  [ControlFlowCommandNames.while]: connectConditionalForBranchOpen
 };
 
 function connectDefault (commandNode, nextCommandNode, stack, state) {
   let _nextCommandNode;
   if (isIf(topOf(state)) && (isElseOrElseIf(nextCommandNode.command))) {
-    _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
+    _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, ControlFlowCommandNames.end);
   } else if (isLoop(topOf(state)) && isEnd(nextCommandNode.command)) {
     _nextCommandNode = stack[topOf(state).index];
   } else {
@@ -287,7 +275,7 @@ function connectEnd (commandNode, nextCommandNode, stack, state) {
   if (!isEmpty(state)) {
     let _nextCommandNode;
     if (isElseOrElseIf(nextCommandNode.command)) {
-      _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, CommandName.end);
+      _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, ControlFlowCommandNames.end);
     } else {
       _nextCommandNode = nextCommandNode;
     }

@@ -16,26 +16,30 @@
 // under the License.
 
 import { createPlaybackTree, deriveCommandLevels, verifyControlFlowSyntax, createCommandNodesFromCommandStack } from "../../playback/playback-tree";
-import Command from "../../models/Command";
+import Command, { ControlFlowCommandNames } from "../../models/Command";
+
+function createCommand(name) {
+  return new Command(null, name, "", "");
+}
 
 describe("Control Flow", () => {
   describe("Preprocess", () => {
     describe("Leveling", () => {
       test("returns leveled command stack", () => {
         let stack = deriveCommandLevels([
-          new Command(null, "if", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "do", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "repeatIf", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.do),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.repeatIf),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(stack[0]).toEqual(0); //  if
         expect(stack[1]).toEqual(1); //    command
@@ -55,146 +59,146 @@ describe("Control Flow", () => {
     describe("Syntax Validation", () => {
       test("if, end", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "if", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
       });
       test("if, else, end", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "if", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
       });
       test("if, elseIf, end", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "if", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
       });
       test("if, elseIf, else, end", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "if", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
       });
       test("while, end", () => {
         let result = new verifyControlFlowSyntax([
-          new Command(null, "while", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.while),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
       });
       test("times, end", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "times", "", ""),
-          new Command(null, "end", "", "")
+          createCommand("times"),
+          createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
       });
       test("do, repeatIf", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "do", "", ""),
-          new Command(null, "repeatIf", "", "")
+          createCommand(ControlFlowCommandNames.do),
+          createCommand(ControlFlowCommandNames.repeatIf)
         ]);
         expect(result).toBeTruthy();
       });
       test("do, while, end, repeatIf", () => {
         let result = verifyControlFlowSyntax([
-          new Command(null, "do", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "repeatIf", "", "")
+          createCommand(ControlFlowCommandNames.do),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.repeatIf)
         ]);
         expect(result).toBeTruthy();
       });
     });
     describe("Syntax Invalidation", () => {
       test("if", () => {
-        let input = [new Command(null, "if", "", "")];
+        let input = [createCommand(ControlFlowCommandNames.if)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at if");
       });
       test("if, if, end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "if", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.end)
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at if");
       });
       test("if, else, elseIf, end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.end)
         ];
-        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incorrect command order of elseIf / else");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incorrect command order of else if / else");
       });
       test("if, else, else, end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.end)
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Too many else commands used");
       });
-      test("while", () => {
-        let input = [new Command(null, "while", "", "")];
+      test(ControlFlowCommandNames.while, () => {
+        let input = [createCommand(ControlFlowCommandNames.while)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at while");
       });
       test("if, while", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "while", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.while)
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at while");
       });
       test("if, while, end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand(ControlFlowCommandNames.end)
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at if");
       });
       test("if, while, else, end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.end)
         ];
-        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else / elseIf used outside of an if block");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else / else if used outside of an if block");
       });
       test("times", () => {
-        let input = [new Command(null, "times", "", "")];
+        let input = [createCommand("times")];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at times");
       });
-      test("repeatIf", () => {
-        let input = [new Command(null, "repeatIf", "", "")];
-        expect(function() { verifyControlFlowSyntax(input); }).toThrow("A repeatIf used without a do block");
+      test(ControlFlowCommandNames.repeatIf, () => {
+        let input = [createCommand(ControlFlowCommandNames.repeatIf)];
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("A repeat if used without a do block");
       });
-      test("do", () => {
-        let input = [new Command(null, "do", "", "")];
+      test(ControlFlowCommandNames.do, () => {
+        let input = [createCommand(ControlFlowCommandNames.do)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at do");
       });
-      test("end", () => {
-        let input = [new Command(null, "end", "", "")];
+      test(ControlFlowCommandNames.end, () => {
+        let input = [createCommand(ControlFlowCommandNames.end)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Use of end without an opening keyword");
       });
     });
@@ -202,7 +206,7 @@ describe("Control Flow", () => {
   describe("Process", () => {
     describe("Linked List Validation", () => {
       test("nodes contain command references and levels", () => {
-        let input = [ new Command(null, "command1", "", ""), new Command(null, "command2", "", "") ];
+        let input = [ createCommand("command1"), createCommand("command2") ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].command).toEqual(input[0]);
         expect(stack[0].level).toEqual(0);
@@ -211,8 +215,8 @@ describe("Control Flow", () => {
       });
       test("command-command", () => {
         let input = [
-          new Command(null, "command1", "", ""),
-          new Command(null, "command2", "", "")
+          createCommand("command1"),
+          createCommand("command2")
         ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toEqual(stack[1]);
@@ -224,13 +228,13 @@ describe("Control Flow", () => {
       });
       test("if-command-elseIf-command-else-command-end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "elseIf", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand("command"),
+          createCommand("elseIf"),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         // if
@@ -264,9 +268,9 @@ describe("Control Flow", () => {
       });
       test("while-command-end", () => {
         let input = [
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toBeUndefined();
@@ -281,10 +285,10 @@ describe("Control Flow", () => {
       });
       test("while-command-command-end", () => {
         let input = [
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toBeUndefined();
@@ -302,12 +306,12 @@ describe("Control Flow", () => {
       });
       test("if-command-while-command-end-end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.end)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         // if
@@ -337,14 +341,14 @@ describe("Control Flow", () => {
       });
       test("if-while-command-end-command-else-command-end", () => {
         let input = [
-          new Command(null, "if", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "else", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", "")
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.else),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         // if
@@ -382,10 +386,10 @@ describe("Control Flow", () => {
       });
       test("do-command-repeatIf-end", () => {
         let input = [
-          new Command(null, "do", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "repeatIf", "", ""),
-          new Command(null, "command", "", "")
+          createCommand(ControlFlowCommandNames.do),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.repeatIf),
+          createCommand("command")
         ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toEqual(stack[1]);
@@ -403,12 +407,12 @@ describe("Control Flow", () => {
       });
       test("do-command-while-end-repeatIf", () => {
         let input = [
-          new Command(null, "do", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "while", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", ""),
-          new Command(null, "repeatIf", "", "")
+          createCommand(ControlFlowCommandNames.do),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.while),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.repeatIf)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toEqual(stack[1]);
@@ -432,9 +436,9 @@ describe("Control Flow", () => {
       });
       test("times-command-end", () => {
         let input = [
-          new Command(null, "times", "", ""),
-          new Command(null, "command", "", ""),
-          new Command(null, "end", "", "")
+          createCommand("times"),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end)
         ];
         let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toBeUndefined();
@@ -452,19 +456,19 @@ describe("Control Flow", () => {
   describe("Processed", () => {
     it("populated tree exists with correct values", () => {
       let input = [
-        new Command(null, "if", "", ""),
-        new Command(null, "command", "", ""),
-        new Command(null, "else", "", ""),
-        new Command(null, "while", "", ""),
-        new Command(null, "command", "", ""),
-        new Command(null, "end", "", ""),
-        new Command(null, "do", "", ""),
-        new Command(null, "command", "", ""),
-        new Command(null, "while", "", ""),
-        new Command(null, "command", "", ""),
-        new Command(null, "end", "", ""),
-        new Command(null, "repeatIf", "", ""),
-        new Command(null, "end", "", "")
+        createCommand(ControlFlowCommandNames.if),
+        createCommand("command"),
+        createCommand(ControlFlowCommandNames.else),
+        createCommand(ControlFlowCommandNames.while),
+        createCommand("command"),
+        createCommand(ControlFlowCommandNames.end),
+        createCommand(ControlFlowCommandNames.do),
+        createCommand("command"),
+        createCommand(ControlFlowCommandNames.while),
+        createCommand("command"),
+        createCommand(ControlFlowCommandNames.end),
+        createCommand(ControlFlowCommandNames.repeatIf),
+        createCommand(ControlFlowCommandNames.end)
       ];
       let tree = createPlaybackTree(input);
       expect(tree.currentCommandNode.command).toEqual(input[0]); //                                                 if

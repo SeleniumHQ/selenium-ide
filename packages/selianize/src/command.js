@@ -93,7 +93,8 @@ const emitters = {
   chooseCancelOnNextConfirmation: skip,
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
-  setSpeed: skip
+  setSpeed: skip,
+  controlFlowIf: emitControlFlowIf
 };
 
 export function emit(command) {
@@ -337,3 +338,5 @@ async function emitSubmit(locator) {
 function skip() {
   return Promise.resolve();
 }
+
+function emitControlFlowIf() { }
