@@ -94,14 +94,14 @@ const emitters = {
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
   setSpeed: skip,
-  controlFlowDo: emitControlFlow,
-  controlFlowElse: emitControlFlow,
-  controlFlowElseIf: emitControlFlow,
-  controlFlowEnd: emitControlFlow,
-  controlFlowIf: emitControlFlow,
-  controlFlowRepeatIf: emitControlFlow,
-  controlFlowTimes: emitControlFlow,
-  controlFlowWhile: emitControlFlow
+  do: emitControlFlow,
+  else: emitControlFlow,
+  elseIf: emitControlFlow,
+  end: emitControlFlow,
+  if: emitControlFlow,
+  repeatIf: emitControlFlow,
+  times: emitControlFlow,
+  while: emitControlFlow
 };
 
 export function emit(command) {

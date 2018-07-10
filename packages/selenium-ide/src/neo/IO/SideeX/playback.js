@@ -23,6 +23,7 @@ import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 import ExtCommand, { isExtCommand } from "./ext-command";
 import { xlateArgument } from "./formatCommand";
+//import { createPlaybackTree } from "../../playback/playback-tree";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -37,10 +38,12 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
+//let playbackTree;
 
 function play(currUrl) {
   baseUrl = currUrl;
   ignoreBreakpoint = false;
+  //playbackTree = createPlaybackTree(PlaybackState.runningQueue);
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)

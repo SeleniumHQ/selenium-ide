@@ -365,55 +365,10 @@ class CommandList {
       description: "Check a toggle-button (checkbox/radio).",
       target: ArgTypes.locator
     }],
-    [ "controlFlowDo", {
+    [ "do", {
       name: "do",
       type: TargetTypes.LOCATOR,
       description: "Create a loop that executes the proceeding commands at least once. Terminate the branch with the repeat if command."
-    }],
-    [ "controlFlowElse", {
-      name: "else",
-      type: TargetTypes.LOCATOR,
-      description: "Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command."
-    }],
-    [ "controlFlowElseIf", {
-      name: "elseIf",
-      type: TargetTypes.LOCATOR,
-      description: "Part of an if block. Execute the commands in this branch when an if condition has not been met. Terminate the branch with the end command."
-    }],
-    [ "controlFlowEnd", {
-      name: "end",
-      type: TargetTypes.LOCATOR,
-      description: "Terminates a control flow block for if, while, and times."
-    }],
-    [ "controlFlowIf", {
-      name: "if",
-      type: TargetTypes.LOCATOR,
-      description: "Create a conditional branch in your test. Terminate the branch with the end command.",
-      target: ArgTypes.conditionalExpression
-    }],
-    [ "controlFlowRepeatIf", {
-      name: "repeatIf",
-      type: TargetTypes.LOCATOR,
-      description: "Terminate a do control flow branch conditionally. If the result of the provided conditional expression is true, it starts the do loop over. Otherwise it ends the loop.",
-      target: ArgTypes.conditionalExpression
-    }],
-    [ "controlFlowTimes", {
-      name: "times",
-      type: TargetTypes.LOCATOR,
-      description: "Create a loop that executes the proceeding commands n number of times.",
-      target: ArgTypes.times
-    }],
-    [ "controlFlowWhile", {
-      name: "while",
-      type: TargetTypes.LOCATOR,
-      description: "Create a loop that executes the proceeding commands repeatedly for as long as the provided conditional expression is true.",
-      target: ArgTypes.conditionalExpression
-    }],
-    [ "uncheck", {
-      name: "uncheck",
-      type: TargetTypes.LOCATOR,
-      description: "Uncheck a toggle-button (checkbox/radio).",
-      target: ArgTypes.locator
     }],
     [ "doubleClick", {
       name: "double click",
@@ -445,6 +400,21 @@ class CommandList {
                     Useful for debugging.",
       target: ArgTypes.message
     }],
+    [ "else", {
+      name: "else",
+      type: TargetTypes.LOCATOR,
+      description: "Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command."
+    }],
+    [ "elseIf", {
+      name: "elseIf",
+      type: TargetTypes.LOCATOR,
+      description: "Part of an if block. Execute the commands in this branch when an if condition has not been met. Terminate the branch with the end command."
+    }],
+    [ "end", {
+      name: "end",
+      type: TargetTypes.LOCATOR,
+      description: "Terminates a control flow block for if, while, and times."
+    }],
     [ "executeScript", {
       name: "execute script",
       description: "Executes a snippet of JavaScript in the context of the currently selected frame or \
@@ -465,6 +435,12 @@ class CommandList {
       description: "Sets the value of a content editable element as if you typed in it.",
       target: ArgTypes.locator,
       value: ArgTypes.value
+    }],
+    [ "if", {
+      name: "if",
+      type: TargetTypes.LOCATOR,
+      description: "Create a conditional branch in your test. Terminate the branch with the end command.",
+      target: ArgTypes.conditionalExpression
     }],
     [ "mouseDownAt", {
       name: "mouse down at",
@@ -520,6 +496,12 @@ class CommandList {
                     element using an option locator.",
       target: ArgTypes.locator,
       value: ArgTypes.optionLocator
+    }],
+    [ "repeatIf", {
+      name: "repeat if",
+      type: TargetTypes.LOCATOR,
+      description: "Terminate a do control flow branch conditionally. If the result of the provided conditional expression is true, it starts the do loop over. Otherwise it ends the loop.",
+      target: ArgTypes.conditionalExpression
     }],
     [ "run", {
       name: "run",
@@ -629,6 +611,12 @@ class CommandList {
                     for forms without submit buttons, e.g. single-input \"Search\" forms.",
       target: ArgTypes.formLocator
     }],
+    [ "times", {
+      name: "times",
+      type: TargetTypes.LOCATOR,
+      description: "Create a loop that executes the proceeding commands n number of times.",
+      target: ArgTypes.times
+    }],
     [ "type", {
       name: "type",
       type: TargetTypes.LOCATOR,
@@ -640,6 +628,12 @@ class CommandList {
                     NOTE: No XPath locators.",
       target: ArgTypes.locator,
       value: ArgTypes.value
+    }],
+    [ "uncheck", {
+      name: "uncheck",
+      type: TargetTypes.LOCATOR,
+      description: "Uncheck a toggle-button (checkbox/radio).",
+      target: ArgTypes.locator
     }],
     [ "verifyChecked", {
       name: "verify checked",
@@ -759,6 +753,12 @@ class CommandList {
                     instructs Selenium to accept it. If the alert has not \
                     appeared yet then use \"choose ok on next confirmation\" \
                     instead."
+    }],
+    [ "while", {
+      name: "while",
+      type: TargetTypes.LOCATOR,
+      description: "Create a loop that executes the proceeding commands repeatedly for as long as the provided conditional expression is true.",
+      target: ArgTypes.conditionalExpression
     }]
   ])
 
@@ -792,12 +792,12 @@ class CommandList {
 export const Commands = CommandList.instance;
 
 export const ControlFlowCommandNames = {
-  do: Commands.list.get("controlFlowDo").name,
-  else: Commands.list.get("controlFlowElse").name,
-  elseIf: Commands.list.get("controlFlowElseIf").name,
-  end: Commands.list.get("controlFlowEnd").name,
-  if: Commands.list.get("controlFlowIf").name,
-  repeatIf: Commands.list.get("controlFlowRepeatIf").name,
-  times: Commands.list.get("controlFlowTimes").name,
-  while: Commands.list.get("controlFlowWhile").name
+  do: Commands.list.get("do").name,
+  else: Commands.list.get("else").name,
+  elseIf: Commands.list.get("elseIf").name,
+  end: Commands.list.get("end").name,
+  if: Commands.list.get("if").name,
+  repeatIf: Commands.list.get("repeatIf").name,
+  times: Commands.list.get("times").name,
+  while: Commands.list.get("while").name
 };
