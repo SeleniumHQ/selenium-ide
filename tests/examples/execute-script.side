@@ -62,6 +62,7 @@
   "suites": [{
     "id": "ba455ffe-d194-4fed-810e-272522a7c874",
     "name": "execute script",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["d4059a41-89a5-4266-9cd6-ce6cffe0a683", "c065304c-a1d4-4a78-a8da-2e4c3e71adc5"]
@@ -72,7 +73,8 @@
   "code": {
     "suites": [{
       "name": "execute script",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80/';const vars = {};jest.setTimeout(300000);describe(\"execute script\", () => {it(\"execute async script\", async () => {await tests.execute_async_script(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"execute script\", async () => {await tests.execute_script(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80/';let vars = {};jest.setTimeout(300000);describe(\"execute script\", () => {it(\"execute async script\", async () => {await tests.execute_async_script(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"execute script\", async () => {await tests.execute_script(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "execute script",

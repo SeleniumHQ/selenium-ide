@@ -115,7 +115,8 @@ function runProject(project) {
   project.code.suites.forEach(suite => {
     if (!suite.tests) {
       // not parallel
-      writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${suite.code}`);
+      const cleanup = suite.persistSession ? "" : "beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));";
+      writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${suite.code}${cleanup}`);
     } else if (suite.tests.length) {
       fs.mkdirSync(path.join(projectPath, suite.name));
       // parallel suite

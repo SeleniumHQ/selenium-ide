@@ -80,6 +80,7 @@
   "suites": [{
     "id": "33487441-d469-4fe2-8f5e-893104aa2316",
     "name": "store",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b", "e68f3128-4bea-4a35-999f-31466d7b4340"]
@@ -90,7 +91,8 @@
   "code": {
     "suites": [{
       "name": "store",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"store\", () => {it(\"attributes\", async () => {await tests.attributes(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"xpath count\", async () => {await tests.xpath_count(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"store\", () => {it(\"attributes\", async () => {await tests.attributes(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"xpath count\", async () => {await tests.xpath_count(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "attributes",

@@ -28,6 +28,7 @@
   "suites": [{
     "id": "e7102959-f85f-4d57-9a39-846e52239b1b",
     "name": "select",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["6acbf258-048b-4493-8478-accfc444fb3d"]
@@ -38,7 +39,8 @@
   "code": {
     "suites": [{
       "name": "select",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {await tests.select_verify_labels(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {await tests.select_verify_labels(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "select-verify-labels",

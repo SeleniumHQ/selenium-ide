@@ -124,10 +124,12 @@ class ModalState {
     this.suiteSettingsState = {
       editing: true,
       isParallel: suite.isParallel,
+      persistSession: suite.persistSession,
       timeout: suite.timeout,
-      done: ({ isParallel, timeout }) => {
+      done: ({ isParallel, persistSession, timeout }) => {
         suite.setTimeout(timeout);
         suite.setParallel(isParallel);
+        suite.setPersistSession(persistSession);
         this.cancelSuiteSettings();
       }
     };

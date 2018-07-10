@@ -26,6 +26,7 @@ export default class Suite {
   @observable name = null;
   @observable timeout = DEFAULT_TIMEOUT;
   @observable isParallel = false;
+  @observable persistSession = false;
   @observable _tests = [];
 
   constructor(id = uuidv4(), name = "Untitled Suite") {
@@ -58,6 +59,16 @@ export default class Suite {
 
   @action.bound setParallel(parallel) {
     this.isParallel = !!parallel;
+    if (this.isParallel) {
+      // setting directly because setPersistSession is locked
+      this.persistSession = false;
+    }
+  }
+
+  @action.bound setPersistSession(persistSession) {
+    if (!this.isParallel) {
+      this.persistSession = persistSession;
+    }
   }
 
   @action.bound addTestCase(test) {
@@ -88,6 +99,7 @@ export default class Suite {
     return {
       id: this.id,
       name: this.name,
+      persistSession: this.persistSession,
       parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id)

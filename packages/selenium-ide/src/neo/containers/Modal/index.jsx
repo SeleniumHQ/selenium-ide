@@ -63,6 +63,7 @@ export default class Modal extends Component {
           isEditing={ModalState.suiteSettingsState.editing}
           timeout={ModalState.suiteSettingsState.timeout}
           isParallel={ModalState.suiteSettingsState.isParallel}
+          persistSession={ModalState.suiteSettingsState.persistSession}
           submit={ModalState.suiteSettingsState ? ModalState.suiteSettingsState.done : null}
           cancel={ModalState.cancelSuiteSettings}
         />
