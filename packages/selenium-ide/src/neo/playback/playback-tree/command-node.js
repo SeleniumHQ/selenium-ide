@@ -25,4 +25,24 @@ export class CommandNode {
     this.level;
     this.timesVisited = 0;
   }
+
+  isConditional() {
+    !!(this.left && this.right);
+  }
+
+  evaluate(playbackTree, extCommand) {
+    if (this.isConditional()) {
+      if (extCommand.evaluateConditional(this.command.target)) {
+        playbackTree.currentCommandNode = this.right;
+      } else {
+        playbackTree.currentCommandNode = this.left;
+      }
+    } else {
+      if (this.command.command === "end") {
+        playbackTree.currentCommandNode = this.next;
+      } else {
+        extCommand.sendMessage(this.command, this.command.target, this.command.value, false);
+      }
+    }
+  }
 }

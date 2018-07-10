@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { deriveCommandLevels, verifyControlFlowSyntax, createPlaybackTree } from "../../playback/playback-tree";
+import { createPlaybackTree, deriveCommandLevels, verifyControlFlowSyntax, createCommandNodesFromCommandStack } from "../../playback/playback-tree";
 import Command from "../../models/Command";
 
 describe("Control Flow", () => {
@@ -203,18 +203,18 @@ describe("Control Flow", () => {
     describe("Linked List Validation", () => {
       test("nodes contain command references and levels", () => {
         let input = [ new Command(null, "command1", "", ""), new Command(null, "command2", "", "") ];
-        let automata = createPlaybackTree(input);
-        expect(automata[0].command).toEqual(input[0]);
-        expect(automata[0].level).toEqual(0);
-        expect(automata[1].command).toEqual(input[1]);
-        expect(automata[1].level).toEqual(0);
+        let stack = createCommandNodesFromCommandStack(input);
+        expect(stack[0].command).toEqual(input[0]);
+        expect(stack[0].level).toEqual(0);
+        expect(stack[1].command).toEqual(input[1]);
+        expect(stack[1].level).toEqual(0);
       });
       test("command-command", () => {
         let input = [
           new Command(null, "command1", "", ""),
           new Command(null, "command2", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].left).toBeUndefined();
         expect(stack[0].right).toBeUndefined();
@@ -232,7 +232,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         // if
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -268,7 +268,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
         expect(stack[0].left).toEqual(stack[2]);
@@ -286,7 +286,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
         expect(stack[0].left).toEqual(stack[3]);
@@ -309,7 +309,7 @@ describe("Control Flow", () => {
           new Command(null, "end", "", ""),
           new Command(null, "end", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         // if
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -346,7 +346,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         // if
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
@@ -387,7 +387,7 @@ describe("Control Flow", () => {
           new Command(null, "repeatIf", "", ""),
           new Command(null, "command", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
@@ -410,7 +410,7 @@ describe("Control Flow", () => {
           new Command(null, "end", "", ""),
           new Command(null, "repeatIf", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toEqual(stack[1]);
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
@@ -436,7 +436,7 @@ describe("Control Flow", () => {
           new Command(null, "command", "", ""),
           new Command(null, "end", "", "")
         ];
-        let stack = createPlaybackTree(input);
+        let stack = createCommandNodesFromCommandStack(input);
         expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toEqual(stack[1]);
         expect(stack[0].left).toEqual(stack[2]);
@@ -447,6 +447,37 @@ describe("Control Flow", () => {
         expect(stack[2].right).toBeUndefined();
         expect(stack[2].left).toBeUndefined();
       });
+    });
+  });
+  describe("Processed", () => {
+    it("populated tree exists with correct values", () => {
+      let input = [
+        new Command(null, "if", "", ""),
+        new Command(null, "command", "", ""),
+        new Command(null, "else", "", ""),
+        new Command(null, "while", "", ""),
+        new Command(null, "command", "", ""),
+        new Command(null, "end", "", ""),
+        new Command(null, "do", "", ""),
+        new Command(null, "command", "", ""),
+        new Command(null, "while", "", ""),
+        new Command(null, "command", "", ""),
+        new Command(null, "end", "", ""),
+        new Command(null, "repeatIf", "", ""),
+        new Command(null, "end", "", "")
+      ];
+      let tree = createPlaybackTree(input);
+      expect(tree.currentCommandNode.command).toEqual(input[0]); //                                                 if
+      expect(tree.currentCommandNode.right.command).toEqual(input[1]); //                                           if -> command
+      expect(tree.currentCommandNode.right.next.command).toEqual(input[12]); //                                     if command -> end
+      expect(tree.currentCommandNode.left.command).toEqual(input[2]); //                                            if -> else
+      expect(tree.currentCommandNode.left.next.right.command).toEqual(input[4]); //                                 while -> command
+      expect(tree.currentCommandNode.left.next.left.command).toEqual(input[5]); //                                  while -> end
+      expect(tree.currentCommandNode.left.next.left.next.next.command).toEqual(input[7]); //                        do -> command
+      expect(tree.currentCommandNode.left.next.left.next.next.next.right.command).toEqual(input[9]); //             while -> command
+      expect(tree.currentCommandNode.left.next.left.next.next.next.left.command).toEqual(input[10]); //             while -> end
+      expect(tree.currentCommandNode.left.next.left.next.next.next.left.next.right.command).toEqual(input[6]); //   repeatIf -> do
+      expect(tree.currentCommandNode.left.next.left.next.next.next.left.next.left.command).toEqual(input[12]); //   repeatIf -> end
     });
   });
 });
