@@ -17,7 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { DragSource } from "react-dnd";
+import { DragSource, DropTarget} from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
 import RemoveButton from "../ActionButtons/Remove";
@@ -31,6 +31,7 @@ const testSource = {
   beginDrag(props) {
     return {
       id: props.test.id,
+      index: props.index,
       suite: props.suite.id
     };
   }
@@ -41,7 +42,59 @@ function collect(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-class Test extends React.Component {
+
+const testTarget = {
+  hover(props, monitor, component) {
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Determine rectangle on screen
+    const hoverBoundingRect = component.decoratedComponentInstance.node.getBoundingClientRect();
+
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
+
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    props.swapTestCases(dragIndex, hoverIndex);
+
+    // save time on index lookups
+    monitor.getItem().index = hoverIndex;
+  }
+};
+
+@DropTarget(Type, testTarget, connect => ({
+  connectDropTarget: connect.dropTarget()
+}))
+@DragSource(Type, testSource, (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging: monitor.isDragging()
+}))
+
+export class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     test: PropTypes.object.isRequired,
@@ -53,9 +106,13 @@ class Test extends React.Component {
     renameTest: PropTypes.func,
     removeTest: PropTypes.func.isRequired,
     connectDragSource: PropTypes.func,
+    connectDropTarget: PropTypes.func,
+    dragInProgress: PropTypes.bool,
+    setDrag: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
     setSectionFocus: PropTypes.func,
+    swapTestCases: PropTypes.func,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func
   };
@@ -117,17 +174,16 @@ class Test extends React.Component {
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.onContextMenu}
       style={{
-        display: this.props.isDragging ? "none" : "flex"
+        opacity: this.props.isDragging ? "0" : "1"
       }}>
       <span>{this.props.test.name}</span>
       {this.props.renameTest ?
         listMenu :
         <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
     </a>;
-    return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
+    return (this.props.suite && !this.props.suite.isParallel ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }
-
 export const DraggableTest = DragSource(Type, testSource, collect)(Test);
 
 export default withOnContextMenu(Test);

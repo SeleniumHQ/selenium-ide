@@ -42,7 +42,7 @@ export default class Modal extends Component {
         <TestSelector
           isEditing={!!ModalState.editedSuite}
           tests={this.props.project.tests}
-          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : []}
+          selectedTests={ModalState.editedSuite ? ModalState.editedSuite.tests : null}
           cancelSelection={() => {ModalState.editSuite(null);}}
           completeSelection={tests => this.selectTestsForSuite(ModalState.editedSuite, tests)}
         />

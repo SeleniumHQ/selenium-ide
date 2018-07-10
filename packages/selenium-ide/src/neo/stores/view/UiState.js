@@ -294,8 +294,8 @@ class UiState {
     return this.testStates[test.id];
   }
 
-  filterFunction({ name }) {
-    return (name.indexOf(this.filterTerm) !== -1);
+  filterFunction(test) {
+    return (test ? name.indexOf(this.filterTerm) !== -1 : false);
   }
 
   setUrl(url, addToCache) {

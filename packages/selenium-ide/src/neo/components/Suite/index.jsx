@@ -37,7 +37,7 @@ function containsTest(tests, test) {
 const testTarget = {
   canDrop(props, monitor) {
     const test = monitor.getItem();
-    return !containsTest(props.suite.tests, test);
+    return !containsTest(props.suite.tests.filter(UiState.filterFunction), test);
   },
   drop(props, monitor) {
     if (monitor.didDrop()) {
