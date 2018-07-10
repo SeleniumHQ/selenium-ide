@@ -57,11 +57,31 @@ describe("Suite model", () => {
   it("should initiate as a sequential suite", () => {
     const suite = new Suite();
     expect(suite.isParallel).toBeFalsy();
+    expect(suite.persistSession).toBeFalsy();
   });
   it("should set the suite to parallel", () => {
     const suite = new Suite();
     suite.setParallel(true);
     expect(suite.isParallel).toBeTruthy();
+  });
+  it("should set the suite to unsafe", () => {
+    const suite = new Suite();
+    suite.setPersistSession(true);
+    expect(suite.persistSession).toBeTruthy();
+  });
+  it("should not be able to set a parallel suite unsafe", () => {
+    const suite = new Suite();
+    suite.setParallel(true);
+    suite.setPersistSession(true);
+    expect(suite.persistSession).toBeFalsy();
+  });
+  it("should make a suite safe if it was made parallel", () => {
+    const suite = new Suite();
+    suite.setPersistSession(true);
+    expect(suite.persistSession).toBeTruthy();
+    suite.setParallel(true);
+    expect(suite.isParallel).toBeTruthy();
+    expect(suite.persistSession).toBeFalsy();
   });
   it("should add a new Test Case", () => {
     const store = new ProjectStore();

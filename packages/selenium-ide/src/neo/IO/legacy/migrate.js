@@ -86,6 +86,7 @@ export function migrateProject(files) {
   if (!suites.length) {
     project.suites.push({
       name: "Imported suite",
+      persistSession: true,
       tests
     });
     project.name = "Imported project";
@@ -117,9 +118,11 @@ export function migrateTestCase(data) {
   const sanitized = sanitizeXml(data);
   const result = JSON.parse(convert.xml2json(sanitized, { compact: true }));
   const baseUrl = result.html.head.link._attributes.href;
+  let tr = result.html.body.table.tbody.tr;
+  tr = Array.isArray(tr) ? tr : [tr];
   const test = {
     name: result.html.body.table.thead.tr.td._text,
-    commands: result.html.body.table.tbody.tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
+    commands: tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
       {
         command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
         target: xmlunescape(parseTarget(row.td[1])),

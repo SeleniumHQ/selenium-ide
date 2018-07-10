@@ -2479,9 +2479,9 @@ jest-environment-node@^23.1.0:
     jest-mock "^23.1.0"
     jest-util "^23.1.0"
 
-jest-environment-selenium@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-1.0.0.tgz#e5361f2078ffdbfa2b07dde41bbc3f73b3c9b861"
+jest-environment-selenium@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-1.1.0.tgz#f1b6ee16f5f21e61c4918c5f81d80b9c039339ab"
   dependencies:
     jest-environment-node "^23.1.0"
     selenium-webdriver "^3.6.0"

@@ -374,18 +374,21 @@
   "suites": [{
     "id": "33487441-d469-4fe2-8f5e-893104aa2316",
     "name": "inputs",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b", "22950f29-fb71-417f-9412-8c07466d0501", "d7a82bde-3223-4dd7-8aa1-7dc5c0589f35", "f641e948-8521-408c-9fde-ba85dad4bc5e"]
   }, {
     "id": "cb3c0325-5ffe-420e-82d8-969c2e6fdd5a",
     "name": "waits",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["4aa9c6dc-bb9e-4765-9359-e9a66acefda8"]
   }, {
     "id": "4e8580a2-5621-444f-b528-b1eb0306e1ee",
     "name": "popups",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["c720eabf-0c0a-4f6e-8aa6-9daca298d726", "4631cfbd-700c-42ea-add5-12e5a33d845e", "0d50f757-df05-4129-ab8b-ff52084c704d"]
@@ -396,13 +399,16 @@
   "code": {
     "suites": [{
       "name": "inputs",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"inputs\", () => {it(\"input editable\", async () => {await tests.input_editable(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"input type checkbox\", async () => {await tests.input_type_checkbox(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"input type text\", async () => {await tests.input_type_text(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"select\", async () => {await tests.select(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"inputs\", () => {it(\"input editable\", async () => {await tests.input_editable(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"input type checkbox\", async () => {await tests.input_type_checkbox(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"input type text\", async () => {await tests.input_type_text(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"select\", async () => {await tests.select(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }, {
       "name": "waits",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"waits\", () => {it(\"wait implicit\", async () => {await tests.wait_implicit(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"waits\", () => {it(\"wait implicit\", async () => {await tests.wait_implicit(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }, {
       "name": "popups",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"popups\", () => {it(\"popup alert\", async () => {await tests.popup_alert(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"popup confirmation\", async () => {await tests.popup_confirmation(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"popup prompt\", async () => {await tests.popup_prompt(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"popups\", () => {it(\"popup alert\", async () => {await tests.popup_alert(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"popup confirmation\", async () => {await tests.popup_confirmation(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"popup prompt\", async () => {await tests.popup_prompt(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "input type text",

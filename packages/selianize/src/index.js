@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import template from "./template";
 import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
 import TestCaseEmitter from "./testcase";
@@ -46,6 +45,7 @@ export default function Selianize(project) {
     const results = {
       suites: suites.map((suiteCode, index) => ({
         name: project.suites[index].name,
+        persistSession: project.suites[index].persistSession,
         code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
         tests: Array.isArray(suiteCode) ? suiteCode : undefined
       })),

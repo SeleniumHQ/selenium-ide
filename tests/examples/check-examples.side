@@ -64,6 +64,7 @@
   "suites": [{
     "id": "3d4775e5-d40b-4359-a098-fc05b297cfaa",
     "name": "checks",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["6039c6d8-87e9-4fa1-b785-fdeb385b218d"]
@@ -74,7 +75,8 @@
   "code": {
     "suites": [{
       "name": "checks",
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';const vars = {};jest.setTimeout(300000);describe(\"checks\", () => {it(\"check-examples\", async () => {await tests.check_examples(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"checks\", () => {it(\"check-examples\", async () => {await tests.check_examples(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "check-examples",

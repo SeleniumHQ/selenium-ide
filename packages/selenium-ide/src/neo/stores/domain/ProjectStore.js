@@ -140,7 +140,10 @@ export default class ProjectStore {
     this.setUrl(jsRep.url);
     this._tests.replace(jsRep.tests.map(TestCase.fromJS));
     this._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, this.tests)));
-    this._urls.replace(jsRep.urls);
+    this._urls.clear();
+    jsRep.urls.forEach((url) => {
+      this.addUrl(url);
+    });
     this.plugins.replace(jsRep.plugins);
     this.id = jsRep.id || uuidv4();
     this.setModified(false);
