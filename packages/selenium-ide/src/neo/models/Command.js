@@ -452,7 +452,7 @@ class CommandList {
     }],
     [ "open", {
       name: "open",
-      description: "Opens a URL and waits for teh page to load before proceeding. \
+      description: "Opens a URL and waits for the page to load before proceeding. \
                     This accepts both relative and absolute URLs.",
       target: ArgTypes.url
     }],
