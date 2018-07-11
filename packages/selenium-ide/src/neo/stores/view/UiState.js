@@ -94,11 +94,11 @@ class UiState {
     return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
-  @action.bound changeView(view) {
+  @action.bound changeView(view, ignoreCache) {
     this.lastViewSelection.set(this.selectedView, this.selectedTest);
     this.selectedView = view;
     const lastSelection = this.lastViewSelection.get(this.selectedView);
-    if (lastSelection) {
+    if (!ignoreCache && lastSelection) {
       this.selectTest(lastSelection.test, lastSelection.suite, lastSelection.stack);
     }
   }

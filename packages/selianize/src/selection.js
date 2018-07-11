@@ -39,17 +39,17 @@ export default {
 };
 
 function emitId(id) {
-  return Promise.resolve(`By.css("*[id=${id}]")`);
+  return Promise.resolve(`By.css(\`*[id=${id}]\`)`);
 }
 
 function emitValue(value) {
-  return Promise.resolve(`By.css("*[value=${value}]")`);
+  return Promise.resolve(`By.css(\`*[value=${value}]\`)`);
 }
 
 function emitLabel(label) {
-  return Promise.resolve(`By.xpath("//option[. = '${label}']")`);
+  return Promise.resolve(`By.xpath(\`//option[. = '${label}']\`)`);
 }
 
 function emitIndex(index) {
-  return Promise.resolve(`By.css("*:nth-child(${index})")`);
+  return Promise.resolve(`By.css(\`*:nth-child(${index})\`)`);
 }

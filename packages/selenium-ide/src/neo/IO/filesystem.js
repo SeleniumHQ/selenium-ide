@@ -140,17 +140,19 @@ export function loadProject(project, file) {
           });
         } else if (type === FileTypes.TestCase) {
           const { test, baseUrl } = migrateTestCase(contents);
-          if (project.url && project.url !== baseUrl) {
+          if (!project.urls.includes(baseUrl)) {
             ModalState.showAlert({
               title: "Migrate test case",
               description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
               confirmLabel: "Migrate",
               cancelLabel: "Discard"
-            }, (choseDownload) => {
-              if (choseDownload) {
+            }, (choseMigration) => {
+              if (choseMigration) {
                 project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl)));
               }
             });
+          } else {
+            project.addTestCase(TestCase.fromJS(test, baseUrl));
           }
         }
       } catch (error) {

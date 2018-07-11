@@ -24,21 +24,21 @@ describe("selection location code emitter", () => {
   it("should emit label locator", () => {
     const type = "label";
     const selector = "a label";
-    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath("//option[. = '${selector}']")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.xpath(\`//option[. = '${selector}']\`)`);
   });
   it("should emit id locator", () => {
     const type = "id";
     const selector = "someId";
-    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*[id=${selector}]")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css(\`*[id=${selector}]\`)`);
   });
   it("should emit value locator", () => {
     const type = "value";
     const selector = "someValue";
-    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*[value=${selector}]")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css(\`*[value=${selector}]\`)`);
   });
   it("should emit id locator", () => {
     const type = "index";
     const selector = "2";
-    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css("*:nth-child(${selector})")`);
+    return expect(SelectionEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.css(\`*:nth-child(${selector})\`)`);
   });
 });
