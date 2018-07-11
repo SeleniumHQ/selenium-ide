@@ -29,8 +29,8 @@ import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
-import modify from "../../side-effects/modify";
 import SuiteDropzone from "../../components/SuiteDropzone";
+import PauseBanner from "../../components/PauseBanner";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -43,7 +43,6 @@ import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
-import "../../styles/markdown.css";
 
 import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
@@ -73,8 +72,6 @@ if (process.env.NODE_ENV === "production") {
   seed(project, 0);
 }
 
-modify(project);
-
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
   // browser. windows. create () displays blank windows (panel, popup or detached_panel)
@@ -94,7 +91,9 @@ function firefox57WorkaroundForBlankPanel () {
   });
 }
 
-firefox57WorkaroundForBlankPanel();
+if (browser.windows) {
+  firefox57WorkaroundForBlankPanel();
+}
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
@@ -176,8 +175,13 @@ firefox57WorkaroundForBlankPanel();
             minSize={UiState.minContentHeight}
             maxSize={UiState.maxContentHeight}
             size={UiState.windowHeight - UiState.consoleHeight}
-            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
+            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}
+            style={{
+              position: "initial"
+            }}
+          >
             <div className="wrapper">
+              <PauseBanner />
               <ProjectHeader
                 title={this.state.project.name}
                 changed={this.state.project.modified}
@@ -207,7 +211,8 @@ firefox57WorkaroundForBlankPanel();
                     url={this.state.project.url}
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
-                    test={UiState.selectedTest.test}
+                    test={UiState.displayedTest}
+                    callstackIndex={UiState.selectedTest.stack}
                   />
                 </SplitPane>
               </div>

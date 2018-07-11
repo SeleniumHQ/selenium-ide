@@ -45,6 +45,11 @@ const RecordButton = styled.button`
     outline: 0;
   }
 
+  &:disabled {
+    background-color: #A9A9A9;
+    opacity: 0.6;
+  }
+
   &:before {
     content: '';
     position: absolute;
@@ -81,12 +86,13 @@ const RecordButton = styled.button`
 export default class Record extends React.Component {
   static propTypes = {
     isRecording: PropTypes.bool,
+    disabled: PropTypes.bool,
     onClick: PropTypes.func
   };
   render() {
     return (
       <div className="record" data-tip={this.props.isRecording ? "<p>Stop recording</p>" : "<p>Start recording</p>"}>
-        <RecordButton isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
+        <RecordButton disabled={this.props.disabled} isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
       </div>
     );
   }

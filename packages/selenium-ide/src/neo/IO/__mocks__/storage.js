@@ -15,10 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import template from "../src/template";
+const storage = {};
 
-describe("Code template", () => {
-  it("should return the export header", () => {
-    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\n");
-  });
-});
+export function get(...argv) {
+  return Promise.resolve(argv.reduce((data, key) => {
+    data[key] = storage[key];
+    return data;
+  }, {}));
+}
+
+export function set(keys) {
+  Object.assign(storage, keys);
+  return Promise.resolve();
+}
+
+export default { get, set };

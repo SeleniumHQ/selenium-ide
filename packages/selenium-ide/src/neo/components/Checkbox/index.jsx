@@ -32,10 +32,12 @@ export default class Checkbox extends React.Component {
     form: PropTypes.bool,
     width: PropTypes.number,
     checked: PropTypes.bool,
+    disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired
   };
   render() {
     const checked = (this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false));
+    const disabled = (this.props.disabled || (this.props.hasOwnProperty("disabled") && this.props.disabled !== false));
     return (
       <div className={classNames("control", { "form-input": this.props.form })}>
         <input
@@ -45,6 +47,7 @@ export default class Checkbox extends React.Component {
           id={this.id}
           name={this.props.name}
           checked={checked}
+          disabled={disabled}
           onChange={this.props.onChange}
         />
         {this.props.form ?

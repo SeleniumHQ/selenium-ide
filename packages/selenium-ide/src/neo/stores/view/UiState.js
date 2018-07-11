@@ -24,6 +24,9 @@ import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
 
 class UiState {
+  views = [ "Tests", "Test suites", "Executing" ];
+  @observable lastViewSelection = new Map();
+  @observable selectedView = "Tests";
   @observable selectedTest = {};
   @observable selectedCommand = null;
   @observable selectedCommands = [];
@@ -92,41 +95,61 @@ class UiState {
     return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
+  @action.bound changeView(view) {
+    this.lastViewSelection.set(this.selectedView, this.selectedTest);
+    this.selectedView = view;
+    const lastSelection = this.lastViewSelection.get(this.selectedView);
+    if (lastSelection) {
+      this.selectTest(lastSelection.test, lastSelection.suite, lastSelection.stack);
+    }
+  }
+
   @action.bound copyToClipboard() {
     // sorting by index
     this.clipboard.replace(this.selectedCommands.sort((c1, c2) => c1.index - c2.index));
   }
 
   @action.bound pasteFromClipboard(index) {
-    if (this.clipboard.length && this.selectedTest.test) {
+    if (this.clipboard.length && this.displayedTest) {
       this.clipboard.forEach((command, idx) => {
         const newCommand = command.clone();
-        this.selectedTest.test.insertCommandAt(newCommand, index + idx + 1);
+        this.displayedTest.insertCommandAt(newCommand, index + idx + 1);
       });
     }
   }
 
-  @action.bound selectTest(test, suite) {
-    if (test !== this.selectedTest.test) {
-      if (test && test.commands.length) {
-        this.selectCommand(test.commands[0]);
-      } else if (test && !test.commands.length) {
-        this.selectCommand(this.pristineCommand);
-      } else {
-        this.selectCommand(undefined);
+  @computed get displayedTest() {
+    return (this.selectedTest.stack !== undefined && this.selectedTest.stack >= 0 && this.selectedTest.stack < PlaybackState.callstack.length) ?
+      PlaybackState.callstack[this.selectedTest.stack].callee :
+      this.selectedTest.test;
+  }
+
+  @action.bound selectTest(test, suite, stack, override) {
+    if (!PlaybackState.isPlaying || PlaybackState.paused || override) {
+      const _test = (stack !== undefined && stack >= 0) ? PlaybackState.callstack[stack].callee : test;
+      if (_test !== this.displayedTest) {
+        if (PlaybackState.isPlaying && !PlaybackState.paused) {
+          this.selectCommand(undefined);
+        } else if (_test && _test.commands.length) {
+          this.selectCommand(_test.commands[0]);
+        } else if (_test && !_test.commands.length) {
+          this.selectCommand(this.pristineCommand);
+        } else {
+          this.selectCommand(undefined);
+        }
       }
+      this.selectedTest = { test, suite, stack: (stack >= 0) ? stack : undefined };
     }
-    this.selectedTest = { test, suite };
   }
 
   @action.bound selectTestByIndex(index, suite) {
     const selectTestInArray = (index, tests) => (
       (index >= 0 && index < tests.length) ? tests[index] : undefined
     );
-    if (!suite) {
+    if (this.selectedView === "Tests") {
       const test = selectTestInArray(index, this.filteredTests);
       if (test) this.selectTest(test);
-    } else {
+    } else if (this.selectedView === "Test suites") {
       const suiteState = this.getSuiteState(suite);
       const tests = suiteState.filteredTests.get();
       const test = selectTestInArray(index, tests);
@@ -141,16 +164,27 @@ class UiState {
         const nextSuite = this._project.suites[suiteIndex + 1];
         this.selectTestByIndex(0, nextSuite);
       }
+    } else if (this.selectedView === "Executing") {
+      const test = selectTestInArray(index, PlaybackState.testsToRun);
+      if (test) {
+        let stack = undefined;
+        if (PlaybackState.callstack.length && PlaybackState.stackCaller === test) {
+          stack = PlaybackState.callstack.length - 1;
+        }
+        this.selectTest(test, suite, stack);
+      }
     }
   }
 
   @action.bound selectCommand(command, index) {
-    this.selectedCommand = command;
-    this.addToSelectedCommands(command, index);
+    if (!PlaybackState.isPlaying || PlaybackState.paused) {
+      this.selectedCommand = command;
+      this.addToSelectedCommands(command, index);
+    }
   }
 
   @action.bound selectCommandByIndex(index) {
-    const { test } = this.selectedTest;
+    const test = this.displayedTest;
     if (index >= 0 && index < test.commands.length) {
       this.selectCommand(test.commands[index]);
     } else if (index === test.commands.length) {
@@ -159,7 +193,7 @@ class UiState {
   }
 
   @action.bound selectNextCommand() {
-    this.selectCommandByIndex(this.selectedTest.test.commands.indexOf(this.selectedCommand) + 1);
+    this.selectCommandByIndex(this.displayedTest.commands.indexOf(this.selectedCommand) + 1);
   }
 
   @action.bound changeFilter(term) {
@@ -261,7 +295,7 @@ class UiState {
   @action.bound observePristine() {
     this.pristineDisposer = observe(this.pristineCommand, () => {
       this.pristineDisposer();
-      this.selectedTest.test.addCommand(this.pristineCommand);
+      this.displayedTest.addCommand(this.pristineCommand);
       this.pristineCommand = new Command();
       this.observePristine();
     });
@@ -328,7 +362,7 @@ class UiState {
     Object.values(this.testStates).forEach(state => {
       state.modified = false;
     });
-    this._project.modified = false;
+    this._project.setModified(false);
   }
 
   @action.bound addToSelectedCommands(command, index){

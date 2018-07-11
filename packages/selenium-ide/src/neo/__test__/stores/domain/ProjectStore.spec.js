@@ -67,7 +67,7 @@ describe("Project Store", () => {
   });
   it("should not add duplicates to the url list", () => {
     const store = new ProjectStore();
-    const url = "http://www.seleniumhq.org/";
+    const url = new URL("http://www.seleniumhq.org/").href;
     store.addUrl(url);
     store.addUrl(url);
     expect(store.urls.length).toBe(1);
@@ -78,6 +78,12 @@ describe("Project Store", () => {
     expect(store.urls.length).toBe(0);
     store.addCurrentUrl();
     expect(store.urls.length).toBe(1);
+  });
+  it("should verify the current url is valid", () => {
+    const store = new ProjectStore();
+    expect(() => {
+      store.addUrl("test is not valid url");
+    }).toThrowError("Invalid URL");
   });
   it("should add a new TestCase", () => {
     const store = new ProjectStore();
@@ -161,7 +167,7 @@ describe("Project Store", () => {
     const projectRep = {
       id: "1",
       name: "my project",
-      url: "https://en.wikipedia.org",
+      url: "https://en.wikipedia.org/",
       tests: [
         {
           id: "1",
@@ -197,8 +203,8 @@ describe("Project Store", () => {
         }
       ],
       urls: [
-        "https://en.wikipedia.org",
-        "http://www.seleniumhq.org"
+        "https://en.wikipedia.org/",
+        "http://www.seleniumhq.org/"
       ].sort(),
       plugins: [
         {
@@ -235,6 +241,19 @@ describe("Project Store", () => {
     const project = new ProjectStore();
     project.fromJS(projectRep);
     expect(project.id).toBeDefined();
+  });
+  it("should remove duplicate urls when loaded", () => {
+    const projectRep = {
+      name: "my project",
+      url: "",
+      tests: [],
+      suites: [],
+      urls: ["https://seleniumhq.org/", "https://seleniumhq.org/"]
+    };
+
+    const project = new ProjectStore();
+    project.fromJS(projectRep);
+    expect(project.urls.length).toBe(1);
   });
   it("should have a list of loaded plugins", () => {
     const project = new ProjectStore();

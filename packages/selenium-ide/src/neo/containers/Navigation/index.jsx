@@ -27,6 +27,7 @@ import VerticalTabBar from "../../components/VerticalTabBar";
 import SearchBar from "../../components/SearchBar";
 import TestList from "../../components/TestList";
 import SuiteList from "../../components/SuiteList";
+import ExecutionPlan from "../../components/ExecutionPlan";
 import Runs from "../../components/Runs";
 import AddButton from "../../components/ActionButtons/Add";
 import "./style.css";
@@ -34,10 +35,6 @@ import "./style.css";
 @observer export default class Navigation extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showTests: true,
-      lastSelection: {}
-    };
     this.handleChangedTab = this.handleChangedTab.bind(this);
   }
   static propTypes = {
@@ -46,12 +43,21 @@ import "./style.css";
     moveTest: PropTypes.func.isRequired
   };
   handleChangedTab(tab) {
-    const lastSelection = this.state.lastSelection;
-    this.setState({
-      showTests: tab === "Tests",
-      lastSelection: UiState.selectedTest
-    });
-    UiState.selectTest(lastSelection.test, lastSelection.suite);
+    if (PlaybackState.isPlaying && !PlaybackState.paused) {
+      ModalState.showAlert({
+        title: "Playback is Running",
+        description: "Can't change the view while playback is running, pause the playback?",
+        confirmLabel: "Pause",
+        cancelLabel: "Cancel"
+      }, (choseChange) => {
+        if (choseChange) {
+          PlaybackState.pause();
+          UiState.changeView(tab);
+        }
+      });
+    } else {
+      UiState.changeView(tab);
+    }
   }
   handleKeyDown(event) {
     const e = event.nativeEvent;
@@ -72,30 +78,42 @@ import "./style.css";
         onMouseEnter={() => UiState.setNavigationHover(true)}
         onMouseLeave={() => UiState.setNavigationHover(false)}
       >
-        <VerticalTabBar tabs={["Tests", "Test suites"]} tabChanged={this.handleChangedTab}>
-          <AddButton data-tip={this.state.showTests ? "<p>Add new test</p>" : "<p>Add new test suite</p>"} onClick={this.state.showTests ? ModalState.createTest : ModalState.createSuite} />
+        <VerticalTabBar tabs={UiState.views} tab={UiState.selectedView} tabChanged={this.handleChangedTab}>
+          {UiState.selectedView === "Tests" && <AddButton data-tip={"<p>Add new test</p>"} onClick={ModalState.createTest} />}
+          {UiState.selectedView === "Test suites" && <AddButton data-tip={"<p>Add new test suite</p>"} onClick={ModalState.createSuite} />}
         </VerticalTabBar>
-        <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
         <Provider renameTest={ModalState.renameTest}>
-          { this.state.showTests
-            ? <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
-            : <SuiteList
-              suites={this.props.suites}
-              rename={ModalState.renameSuite}
-              editSettings={ModalState.editSuiteSettings}
-              selectTests={ModalState.editSuite}
-              removeSuite={ModalState.deleteSuite}
-              moveTest={this.props.moveTest}
-            />
-          }
+          <React.Fragment>
+            {UiState.selectedView === "Tests" && <React.Fragment>
+              <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
+              <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
+            </React.Fragment>
+            }
+            {UiState.selectedView === "Test suites" && <React.Fragment>
+              <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
+              <SuiteList
+                suites={this.props.suites}
+                rename={ModalState.renameSuite}
+                editSettings={ModalState.editSuiteSettings}
+                selectTests={ModalState.editSuite}
+                removeSuite={ModalState.deleteSuite}
+                moveTest={this.props.moveTest}
+              />
+            </React.Fragment>
+            }
+            {UiState.selectedView === "Executing" && <React.Fragment>
+              <ExecutionPlan />
+              <Runs
+                runs={PlaybackState.finishedTestsCount}
+                failures={PlaybackState.failures}
+                hasError={!!PlaybackState.failures}
+                progress={PlaybackState.finishedTestsCount}
+                totalProgress={PlaybackState.testsCount}
+              />
+            </React.Fragment>
+            }
+          </React.Fragment>
         </Provider>
-        <Runs
-          runs={PlaybackState.finishedTestsCount}
-          failures={PlaybackState.failures}
-          hasError={!!PlaybackState.failures}
-          progress={PlaybackState.finishedTestsCount}
-          totalProgress={PlaybackState.testsCount}
-        />
       </aside>
     );
   }

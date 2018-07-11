@@ -15,10 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function bootstrap() {
-  return "// This file was generated using Selenium IDE\n";
-}
+//import { registerCommand, canExecuteCommand, executeCommand } from "../../plugin/commandExecutor";
+//import { CommandHandler } from "../IO/commandHandler";
 
-export default {
-  bootstrap
-};
+describe("Command Handler", () => {
+  it.skip("should check for command type (e.g., extCommand, Selenium, Control Flow", () => { });
+  it.skip("should derive the correct command object from the provided type", () => { });
+  it.skip("should validate the test case (through delegation)", () => { });
+});

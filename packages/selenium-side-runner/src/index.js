@@ -27,7 +27,6 @@ import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
 import Capabilities from "./capabilities";
 import Config from "./config";
-import { install } from "./npm";
 import metadata from "../package.json";
 
 process.title = metadata.name;
@@ -89,15 +88,16 @@ if (program.params) {
 
 configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUrl;
 
+let projectPath;
+
 function runProject(project) {
   if (!project.code || project.version !== "1.0") {
     return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
   }
-  const projectPath = `side-suite-${project.name}`;
+  projectPath = `side-suite-${project.name}`;
   rimraf.sync(projectPath);
   fs.mkdirSync(projectPath);
-  process.chdir(projectPath);
-  fs.writeFileSync("package.json", JSON.stringify({
+  fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify({
     name: project.name,
     version: "0.0.0",
     jest: {
@@ -108,15 +108,20 @@ function runProject(project) {
     },
     dependencies: project.dependencies || {}
   }));
-  project.code.forEach(suite => {
+  const tests = project.code.tests.reduce((tests, test) => {
+    return tests += test.code;
+  }, "const tests = {};").concat("module.exports = tests;");
+  writeJSFile(path.join(projectPath, "commons"), tests, ".js");
+  project.code.suites.forEach(suite => {
     if (!suite.tests) {
       // not parallel
-      writeJSFile(suite.name, suite.code);
+      const cleanup = suite.persistSession ? "" : "beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));";
+      writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${suite.code}${cleanup}`);
     } else if (suite.tests.length) {
-      fs.mkdirSync(suite.name);
+      fs.mkdirSync(path.join(projectPath, suite.name));
       // parallel suite
       suite.tests.forEach(test => {
-        writeJSFile(path.join(suite.name, test.name), `${suite.code}${test.code}`);
+        writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${suite.code}${test.code}`);
       });
     }
   });
@@ -124,8 +129,17 @@ function runProject(project) {
 
   return new Promise((resolve, reject) => {
     let npmInstall;
-    if (project.dependencies && Object.keys(project.dependencies)) {
-      npmInstall = install();
+    if (project.dependencies && Object.keys(project.dependencies).length) {
+      npmInstall = new Promise((resolve, reject) => {
+        const child = fork(require.resolve("./npm"), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
+        child.on("exit", (code) => {
+          if (code) {
+            reject();
+          } else {
+            resolve();
+          }
+        });
+      });
     } else {
       npmInstall = Promise.resolve();
     }
@@ -133,11 +147,10 @@ function runProject(project) {
       const child = fork(require.resolve("./child"), [
         "--testMatch", "**/*.test.js"
       ].concat(program.filter ? ["-t", program.filter] : [])
-        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
+        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
 
       child.on("exit", (code) => {
         console.log("");
-        process.chdir("..");
         rimraf.sync(projectPath);
         if (code) {
           reject();
@@ -145,7 +158,7 @@ function runProject(project) {
           resolve();
         }
       });
-    });
+    }).catch(reject);
   });
 }
 
@@ -160,10 +173,18 @@ function runAll(projects, index = 0) {
   });
 }
 
-function writeJSFile(name, data) {
-  fs.writeFileSync(`${name}.test.js`, beautify(data, { indent_size: 2 }));
+function writeJSFile(name, data, postfix = ".test.js") {
+  fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
 }
 
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
+
+function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
+  rimraf.sync(projectPath);
+  process.exit(code);
+}
+
+process.on("SIGINT", handleQuit);
+process.on("SIGTERM", handleQuit);
 
 runAll(projects);

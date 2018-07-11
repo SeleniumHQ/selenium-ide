@@ -19,7 +19,7 @@
     margin: 3px 0;
 }
 
-.markdown a {
+.markdown a, .markdown a:visited {
     color: #40A6FF;
 }
 

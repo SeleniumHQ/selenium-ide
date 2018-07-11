@@ -16,7 +16,6 @@
 }
 
 .Resizer.horizontal {
-  height: 11px;
   margin: -5px 0;
   border-top: 5px solid rgba(255, 255, 255, 0);
   border-bottom: 5px solid rgba(255, 255, 255, 0);

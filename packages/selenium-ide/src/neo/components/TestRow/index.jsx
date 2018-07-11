@@ -93,18 +93,21 @@ const commandTarget = {
 class TestRow extends React.Component {
   constructor(props) {
     super(props);
+    this.addCommand = this.addCommand.bind(this);
     this.copy = this.copy.bind(this);
     this.cut = this.cut.bind(this);
     this.paste = this.paste.bind(this);
     this.select = this.select.bind(this);
     this.remove = this.remove.bind(this);
     this.focus = this.focus.bind(this);
+    this.clearAll = this.clearAll.bind(this);
   }
   static propTypes = {
     index: PropTypes.number,
     selected: PropTypes.bool,
     className: PropTypes.string,
     status: PropTypes.string,
+    readOnly: PropTypes.bool,
     command: PropTypes.object.isRequired,
     new: PropTypes.func,
     isPristine: PropTypes.bool,
@@ -181,15 +184,24 @@ class TestRow extends React.Component {
       this.props.clearSelectedCommands();
     }
   }
+  addCommand(index) {
+    if (!this.props.readOnly) {
+      this.props.addCommand(index);
+    }
+  }
   copy() {
     this.props.copyToClipboard();
   }
   cut() {
-    this.props.copyToClipboard();
-    this.props.remove(this.props.index);
+    if (!this.props.readOnly) {
+      this.props.copyToClipboard();
+      this.props.remove(this.props.index);
+    }
   }
   paste() {
-    this.props.pasteFromClipboard(this.props.index);
+    if (!this.props.readOnly) {
+      this.props.pasteFromClipboard(this.props.index);
+    }
   }
   select(event) {
     event.preventDefault();
@@ -210,29 +222,36 @@ class TestRow extends React.Component {
     this.props.select(this.props.command, this.props.index);
   }
   remove() {
-    this.props.remove(this.props.index);
+    if (!this.props.readOnly) {
+      this.props.remove(this.props.index);
+    }
+  }
+  clearAll() {
+    if (!this.props.readOnly) {
+      this.props.clearAllCommands();
+    }
   }
   render() {
-    const listMenu = <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
+    const listMenu = (!this.props.isPristine && !this.props.readOnly) ? <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
       <ListMenuItem label={parse("x", { primaryKey: true })} onClick={this.cut}>Cut</ListMenuItem>
       <ListMenuItem label={parse("c", { primaryKey: true })} onClick={this.copy}>Copy</ListMenuItem>
       <ListMenuItem label={parse("v", { primaryKey: true })} onClick={this.paste}>Paste</ListMenuItem>
       <ListMenuItem label="Del" onClick={this.remove}>Delete</ListMenuItem>
       <ListMenuSeparator />
-      <ListMenuItem onClick={() => { this.props.addCommand(this.props.index); }}>Insert new command</ListMenuItem>
+      <ListMenuItem onClick={() => { this.addCommand(this.props.index); }}>Insert new command</ListMenuItem>
       <ListMenuSeparator />
-      <ListMenuItem onClick={this.props.clearAllCommands}>Clear all</ListMenuItem>
+      <ListMenuItem onClick={this.clearAll}>Clear all</ListMenuItem>
       <ListMenuSeparator />
       <ListMenuItem label="B" onClick={this.props.command.toggleBreakpoint}>Toggle breakpoint</ListMenuItem>
       <ListMenuItem label="S" onClick={() => { this.props.startPlayingHere(this.props.command); }}>Play from here</ListMenuItem>
       <ListMenuItem label="X" onClick={() => { this.props.executeCommand(this.props.command); }}>Execute this command</ListMenuItem>
-    </ListMenu>;
+    </ListMenu> : null;
     //setting component of context menu.
     this.props.setContextMenu(listMenu);
 
     const rendered = <tr
       ref={node => {
-        if (node && this.props.new) {
+        if (node && this.props.new && !this.props.isDragging) {
           this.props.new();
           node.scrollIntoView();
         }
@@ -240,18 +259,20 @@ class TestRow extends React.Component {
       }}
       className={classNames(this.props.className, this.props.status, { "selected": this.props.selected }, { "break-point": this.props.command.isBreakpoint })}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.props.swapCommands ? this.props.onContextMenu : null}
+      onContextMenu={(!this.props.isPristine && !this.props.readOnly) ? this.props.onContextMenu : null}
       onClick={this.select}
-      onDoubleClick={() => { this.props.executeCommand(this.props.command); }}
+      onDoubleClick={() => { this.props.executeCommand && !this.props.readOnly ? this.props.executeCommand(this.props.command) : undefined; }}
       onKeyDown={this.handleKeyDown.bind(this)}
       onFocus={this.focus}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>
       <td>
-        <span></span>
-        {!this.props.isPristine ? <span className="index">{this.props.index + 1}.</span> : null}
-        {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
+        {!this.props.isPristine ? <a className="break-toggle" onClick={this.props.command.toggleBreakpoint} onDoubleClick={(e) => { e.stopPropagation(); }}>
+          <span className="code index">{this.props.index + 1}</span>
+          <span className="arrow"></span>
+          {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
+        </a> : null}
       </td>
       <td className={classNames("comment", { "cell__hidden": !this.props.command.comment })} colSpan="3">
         <MultilineEllipsis lines={1}>{this.props.command.comment}</MultilineEllipsis>
@@ -262,12 +283,12 @@ class TestRow extends React.Component {
       <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
       <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>
       <td className="buttons">
-        { !this.props.isPristine ?
+        { (!this.props.isPristine && !this.props.readOnly) ?
           listMenu
           : <div></div> }
       </td>
     </tr>;
-    return (!this.props.isPristine ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
+    return ((!this.props.isPristine && !this.props.readOnly) ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
   }
 }
 

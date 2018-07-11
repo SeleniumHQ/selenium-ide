@@ -39,12 +39,16 @@ class ModalState {
       return name === value || this.nameIsUnique(name, names);
     };
     this.renameState = {
+      original: value,
       value,
       type,
       verify: verifyName,
       done: (name) => {
         if (verifyName(name)) {
           cb(name);
+          if (type === Types.test) {
+            this.renameRunCommands(this.renameState.original, name);
+          }
           this.cancelRenaming();
         }
       }
@@ -120,10 +124,12 @@ class ModalState {
     this.suiteSettingsState = {
       editing: true,
       isParallel: suite.isParallel,
+      persistSession: suite.persistSession,
       timeout: suite.timeout,
-      done: ({ isParallel, timeout }) => {
+      done: ({ isParallel, persistSession, timeout }) => {
         suite.setTimeout(timeout);
         suite.setParallel(isParallel);
+        suite.setPersistSession(persistSession);
         this.cancelSuiteSettings();
       }
     };
@@ -135,6 +141,16 @@ class ModalState {
 
   nameIsUnique(value, list) {
     return !list.find(({ name }) => name === value);
+  }
+
+  renameRunCommands(original, newName) {
+    UiState._project.tests.forEach(test => {
+      test.commands.forEach(command => {
+        if (command.command === "run" && command.target === original) {
+          command.setTarget(newName);
+        }
+      });
+    });
   }
 }
 
