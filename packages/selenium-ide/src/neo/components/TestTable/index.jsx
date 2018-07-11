@@ -25,6 +25,7 @@ import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
 import "./style.css";
+import { deriveCommandLevels } from "../../playback/playback-tree/command-leveler";
 
 @observer
 export default class TestTable extends React.Component {
@@ -60,6 +61,7 @@ export default class TestTable extends React.Component {
     }
   }
   render() {
+    const commandLevels = deriveCommandLevels(this.props.commands);
     const commandStatePrefix = this.props.callstackIndex !== undefined ? `${this.props.callstackIndex}:` : "";
     return ([
       <div key="header" className="test-table test-table-header">
@@ -97,6 +99,7 @@ export default class TestTable extends React.Component {
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
+                level={commandLevels[index]}
               />
             )).concat(
               <TestRow

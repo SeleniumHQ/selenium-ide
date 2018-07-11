@@ -17,16 +17,17 @@
 
 import { ControlFlowCommandNames, ControlFlowCommandChecks } from "../../models/Command";
 import { State } from "./state";
+import { ControlFlowSyntaxError } from "./control-flow-syntax-error";
 
 export function validateControlFlowSyntax(commandStack) {
   let state = new State;
-  commandStack.forEach(function(command) {
+  commandStack.forEach(function(command, commandIndex) {
     if (validateCommand[command.command]) {
-      validateCommand[command.command](command.command, state);
+      validateCommand[command.command](command.command, commandIndex, state);
     }
   });
   if (!state.empty()) {
-    throw new SyntaxError("Incomplete block at " + state.top().command);
+    throw new ControlFlowSyntaxError("Incomplete block at " + state.top().command, state.top().index);
   } else {
     return true;
   }
@@ -43,44 +44,44 @@ const validateCommand = {
   [ControlFlowCommandNames.while]: trackControlFlowBranchOpen
 };
 
-function trackControlFlowBranchOpen (commandName, state) {
-  state.push({ command: commandName });
+function trackControlFlowBranchOpen (commandName, commandIndex, state) {
+  state.push({ command: commandName, index: commandIndex });
 }
 
-function validateElse (commandName, state) {
+function validateElse (commandName, commandIndex, state) {
   if (!ControlFlowCommandChecks.isConditional(state.top())) {
-    throw new SyntaxError("An else used outside of an if block");
+    throw new ControlFlowSyntaxError("An else used outside of an if block", commandIndex);
   }
   if (ControlFlowCommandChecks.isElse(state.top())) {
-    throw new SyntaxError("Too many else commands used");
+    throw new ControlFlowSyntaxError("Too many else commands used", commandIndex);
   }
-  state.push({ command: commandName });
+  state.push({ command: commandName, index: commandIndex });
 }
 
-function validateElseIf (commandName, state) {
+function validateElseIf (commandName, commandIndex, state) {
   if (!ControlFlowCommandChecks.isConditional(state.top())) {
-    throw new SyntaxError("An else if used outside of an if block");
+    throw new ControlFlowSyntaxError("An else if used outside of an if block", commandIndex);
   }
   if (ControlFlowCommandChecks.isElse(state.top())) {
-    throw new SyntaxError("Incorrect command order of else if / else");
+    throw new ControlFlowSyntaxError("Incorrect command order of else if / else", commandIndex);
   }
-  state.push({ command: commandName });
+  state.push({ command: commandName, index: commandIndex });
 }
 
-function validateEnd (command, state) {
+function validateEnd (commandName, commandIndex, state) {
   if (ControlFlowCommandChecks.isBlockOpen(state.top())) {
     state.pop();
   } else if (ControlFlowCommandChecks.isElseOrElseIf(state.top())) {
     state.pop();
-    validateEnd(command, state);
+    validateEnd(commandName, commandIndex, state);
   } else {
-    throw new SyntaxError("Use of end without an opening keyword");
+    throw new ControlFlowSyntaxError("Use of end without an opening keyword", commandIndex);
   }
 }
 
-function validateRepeatIf (commandName, state) {
+function validateRepeatIf (commandName, commandIndex, state) {
   if (!ControlFlowCommandChecks.isDo(state.top())) {
-    throw new SyntaxError("A repeat if used without a do block");
+    throw new ControlFlowSyntaxError("A repeat if used without a do block", commandIndex);
   }
   state.pop();
 }

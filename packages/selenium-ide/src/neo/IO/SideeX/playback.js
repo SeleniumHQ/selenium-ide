@@ -23,7 +23,7 @@ import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 import ExtCommand, { isExtCommand } from "./ext-command";
 import { xlateArgument } from "./formatCommand";
-//import { createPlaybackTree } from "../../playback/playback-tree";
+import { createPlaybackTree } from "../../playback/playback-tree";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -43,11 +43,19 @@ let ignoreBreakpoint = false;
 function play(currUrl) {
   baseUrl = currUrl;
   ignoreBreakpoint = false;
-  //playbackTree = createPlaybackTree(PlaybackState.runningQueue);
+  initPlaybackTree();
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
     .catch(catchPlayingError);
+}
+
+function initPlaybackTree() {
+  try {
+    createPlaybackTree(PlaybackState.runningQueue);
+  } catch (error) {
+    reportError(error.message, false, error.index);
+  }
 }
 
 function playAfterConnectionFailed() {
@@ -142,8 +150,13 @@ function catchPlayingError(message) {
   }
 }
 
-function reportError(error, nonFatal) {
-  const { id } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+function reportError(error, nonFatal, index) {
+  let id;
+  if (index) {
+    id = PlaybackState.runningQueue[index].id;
+  } else {
+    id = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex].id;
+  }
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";

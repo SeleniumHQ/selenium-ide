@@ -125,7 +125,8 @@ class TestRow extends React.Component {
     moveSelection: PropTypes.func,
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
-    setContextMenu: PropTypes.func
+    setContextMenu: PropTypes.func,
+    level: PropTypes.number
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -209,6 +210,7 @@ class TestRow extends React.Component {
     }
   }
   render() {
+    const commandIndentation = <span className="command-indentation" style={{ paddingRight: `${(this.props.level || 0) * 10}px` }}></span>;
     const listMenu = (!this.props.isPristine && !this.props.readOnly) ? <ListMenu width={300} padding={-5} opener={<MoreButton /> }>
       <ListMenuItem label={parse("x", { primaryKey: true })} onClick={this.cut}>Cut</ListMenuItem>
       <ListMenuItem label={parse("c", { primaryKey: true })} onClick={this.copy}>Copy</ListMenuItem>
@@ -255,6 +257,7 @@ class TestRow extends React.Component {
         <MultilineEllipsis lines={1}>{this.props.command.comment}</MultilineEllipsis>
       </td>
       <td className={classNames("command", { "cell__alternate": this.props.command.comment })}>
+        { commandIndentation }
         <CommandName>{this.props.command.command}</CommandName>
       </td>
       <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
