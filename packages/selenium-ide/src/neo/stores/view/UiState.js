@@ -103,6 +103,9 @@ class UiState {
     }
   }
 
+  @action.bound setCurrentTests() {
+    this.lastViewSelection.set("Executing", this.selectedTest);
+  }
   @action.bound copyToClipboard(item) {
     this.clipboard = item;
   }
