@@ -89,7 +89,7 @@ class PlaybackState {
     try {
       UiState._project.addCurrentUrl();
     } catch (e) {} // eslint-disable-line no-empty
-    UiState.changeView("Executing");
+    UiState.changeView("Executing", true);
     UiState.selectCommand(undefined);
     if (UiState.isRecording) {
       ModalState.showAlert({
