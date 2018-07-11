@@ -75,7 +75,7 @@ describe("Control Flow", () => {
       test("if, elseIf, end", () => {
         let result = verifyControlFlowSyntax([
           createCommand(ControlFlowCommandNames.if),
-          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.elseIf),
           createCommand(ControlFlowCommandNames.end)
         ]);
         expect(result).toBeTruthy();
@@ -83,7 +83,7 @@ describe("Control Flow", () => {
       test("if, elseIf, else, end", () => {
         let result = verifyControlFlowSyntax([
           createCommand(ControlFlowCommandNames.if),
-          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.elseIf),
           createCommand(ControlFlowCommandNames.else),
           createCommand(ControlFlowCommandNames.end)
         ]);
@@ -137,7 +137,7 @@ describe("Control Flow", () => {
         let input = [
           createCommand(ControlFlowCommandNames.if),
           createCommand(ControlFlowCommandNames.else),
-          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.elseIf),
           createCommand(ControlFlowCommandNames.end)
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incorrect command order of else if / else");
@@ -151,15 +151,21 @@ describe("Control Flow", () => {
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Too many else commands used");
       });
-      test(ControlFlowCommandNames.while, () => {
+      test("else", () => {
+        let input = [ createCommand(ControlFlowCommandNames.else) ];
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else used outside of an if block");
+      });
+      test("elseIf", () => {
+        let input = [ createCommand(ControlFlowCommandNames.elseIf) ];
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else if used outside of an if block");
+      });
+      test("while", () => {
         let input = [createCommand(ControlFlowCommandNames.while)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at while");
       });
       test("if, while", () => {
         let input = [
           createCommand(ControlFlowCommandNames.if),
-          createCommand(ControlFlowCommandNames.else),
-          createCommand("elseIf"),
           createCommand(ControlFlowCommandNames.while)
         ];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at while");
@@ -167,8 +173,6 @@ describe("Control Flow", () => {
       test("if, while, end", () => {
         let input = [
           createCommand(ControlFlowCommandNames.if),
-          createCommand(ControlFlowCommandNames.else),
-          createCommand("elseIf"),
           createCommand(ControlFlowCommandNames.while),
           createCommand(ControlFlowCommandNames.end)
         ];
@@ -177,13 +181,11 @@ describe("Control Flow", () => {
       test("if, while, else, end", () => {
         let input = [
           createCommand(ControlFlowCommandNames.if),
-          createCommand(ControlFlowCommandNames.else),
-          createCommand("elseIf"),
           createCommand(ControlFlowCommandNames.while),
           createCommand(ControlFlowCommandNames.else),
           createCommand(ControlFlowCommandNames.end)
         ];
-        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else / else if used outside of an if block");
+        expect(function() { verifyControlFlowSyntax(input); }).toThrow("An else used outside of an if block");
       });
       test("times", () => {
         let input = [createCommand("times")];
@@ -230,7 +232,7 @@ describe("Control Flow", () => {
         let input = [
           createCommand(ControlFlowCommandNames.if),
           createCommand("command"),
-          createCommand("elseIf"),
+          createCommand(ControlFlowCommandNames.elseIf),
           createCommand("command"),
           createCommand(ControlFlowCommandNames.else),
           createCommand("command"),

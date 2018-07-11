@@ -42,6 +42,10 @@ function commandNamesEqual(command, target) {
   }
 }
 
+function isConditional(command) {
+  return (isIf(command) || isElseOrElseIf(command));
+}
+
 function isDo(command) {
   return commandNamesEqual(command, ControlFlowCommandNames.do);
 }
@@ -68,20 +72,15 @@ function isLoop(command) {
           commandNamesEqual(command, ControlFlowCommandNames.times));
 }
 
-function topOf(array) {
-  let arr = array[array.length - 1];
-  if (arr) {
-    return arr;
-  } else {
-    return { };
-  }
+function isBlockOpen(command) {
+  return (isIf(command) || isLoop(command));
 }
 
 function verifyControlFlowSyntax(commandStack) {
   let state = new State;
-  commandStack.forEach(function(command, commandIndex) {
+  commandStack.forEach(function(command) {
     if (verifyCommand[command.command]) {
-      verifyCommand[command.command](command.command, commandIndex, commandStack, state);
+      verifyCommand[command.command](command.command, state);
     }
   });
   if (!state.empty()) {
@@ -94,7 +93,7 @@ function verifyControlFlowSyntax(commandStack) {
 const verifyCommand = {
   [ControlFlowCommandNames.do]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.else]: verifyElse,
-  [ControlFlowCommandNames.elseIf]: verifyElse,
+  [ControlFlowCommandNames.elseIf]: verifyElseIf,
   [ControlFlowCommandNames.end]: verifyEnd,
   [ControlFlowCommandNames.if]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.repeatIf]: verifyRepeatIf,
@@ -102,36 +101,42 @@ const verifyCommand = {
   [ControlFlowCommandNames.while]: trackControlFlowBranchOpen
 };
 
-function trackControlFlowBranchOpen (commandName, commandIndex, stack, state) {
-  state.push({ command: commandName, index: commandIndex });
+function trackControlFlowBranchOpen (commandName, state) {
+  state.push({ command: commandName });
 }
 
-function verifyElse (commandName, commandIndex, stack, state) {
-  if (!isIf(state.top())) {
-    throw new SyntaxError("An else / else if used outside of an if block");
+function verifyElse (commandName, state) {
+  if (!isConditional(state.top())) {
+    throw new SyntaxError("An else used outside of an if block");
   }
+  if (isElse(state.top())) {
+    throw new SyntaxError("Too many else commands used");
+  }
+  state.push({ command: commandName });
 }
 
-function verifyEnd (command, commandIndex, stack, state) {
-  if (isLoop(state.top())) {
+function verifyElseIf (commandName, state) {
+  if (!isConditional(state.top())) {
+    throw new SyntaxError("An else if used outside of an if block");
+  }
+  if (isElse(state.top())) {
+    throw new SyntaxError("Incorrect command order of else if / else");
+  }
+  state.push({ command: commandName });
+}
+
+function verifyEnd (command, state) {
+  if (isBlockOpen(state.top())) {
     state.pop();
-  } else if (isIf(state.top())) {
-    const numberOfElse = stack.slice(state.top().index, commandIndex).filter(command => isElse(command)).length;
-    const allElses = stack.slice(state.top().index, commandIndex).filter(
-      command => (command.command === ControlFlowCommandNames.else || command.command === ControlFlowCommandNames.elseIf));
-    if (numberOfElse > 1) {
-      throw new SyntaxError("Too many else commands used");
-    } else if (numberOfElse === 1 && !isElse(topOf(allElses))) {
-      throw new SyntaxError("Incorrect command order of else if / else");
-    } else if (numberOfElse === 0 || isElse(topOf(allElses))) {
-      state.pop();
-    }
+  } else if (isElseOrElseIf(state.top())) {
+    state.pop();
+    verifyEnd(command, state);
   } else {
     throw new SyntaxError("Use of end without an opening keyword");
   }
 }
 
-function verifyRepeatIf (commandName, commandIndex, stack, state) {
+function verifyRepeatIf (commandName, state) {
   if (!isDo(state.top())) {
     throw new SyntaxError("A repeat if used without a do block");
   }
