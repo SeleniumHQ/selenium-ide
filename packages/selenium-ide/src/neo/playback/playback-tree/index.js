@@ -33,30 +33,34 @@ function createCommandNodesFromCommandStack(commandStack) {
   return connectCommandNodes(initNodes);
 }
 
+function commandNamesEqual(command, target) {
+  return (command.command === target);
+}
+
 function isDo(command) {
-  return (command.command === ControlFlowCommandNames.do);
+  return commandNamesEqual(command, ControlFlowCommandNames.do);
 }
 
 function isElse(command) {
-  return (command.command === ControlFlowCommandNames.else);
+  return commandNamesEqual(command, ControlFlowCommandNames.else);
 }
 
 function isElseOrElseIf(command) {
-  return (command.command === ControlFlowCommandNames.else ||
-          command.command === ControlFlowCommandNames.elseIf);
+  return (commandNamesEqual(command, ControlFlowCommandNames.else) ||
+          commandNamesEqual(command, ControlFlowCommandNames.elseIf));
 }
 
 function isEnd(command) {
-  return (command.command === ControlFlowCommandNames.end);
+  return (commandNamesEqual(command, ControlFlowCommandNames.end));
 }
 
 function isIf(command) {
-  return (command.command === ControlFlowCommandNames.if);
+  return (commandNamesEqual(command, ControlFlowCommandNames.if));
 }
 
 function isLoop(command) {
-  return (command.command === ControlFlowCommandNames.while ||
-          command.command === ControlFlowCommandNames.times);
+  return (commandNamesEqual(command, ControlFlowCommandNames.while) ||
+          commandNamesEqual(command, ControlFlowCommandNames.times));
 }
 
 function isEmpty(obj) {
