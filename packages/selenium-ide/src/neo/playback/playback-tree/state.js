@@ -20,16 +20,16 @@ export class State {
     this._state = [];
   }
 
+  empty() {
+    return (this._state.length === 0);
+  }
+
   push(obj) {
     this._state.push(obj);
   }
 
   pop() {
     this._state.pop();
-  }
-
-  empty() {
-    return (this._state.length === 0);
   }
 
   top() {
