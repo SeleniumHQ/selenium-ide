@@ -17,6 +17,7 @@
 
 import { CommandNode } from "./command-node";
 import { PlaybackTree } from "./playback-tree";
+import { State } from "./state";
 import { ControlFlowCommandNames } from "../../models/Command";
 export { createPlaybackTree }; // public API
 export { createCommandNodesFromCommandStack, verifyControlFlowSyntax, deriveCommandLevels }; // for testing
@@ -34,7 +35,11 @@ function createCommandNodesFromCommandStack(commandStack) {
 }
 
 function commandNamesEqual(command, target) {
-  return (command.command === target);
+  if (command) {
+    return (command.command === target);
+  } else {
+    return false;
+  }
 }
 
 function isDo(command) {
@@ -63,14 +68,6 @@ function isLoop(command) {
           commandNamesEqual(command, ControlFlowCommandNames.times));
 }
 
-function isEmpty(obj) {
-  if (obj) {
-    return (obj.length === 0);
-  } else {
-    return false;
-  }
-}
-
 function topOf(array) {
   let arr = array[array.length - 1];
   if (arr) {
@@ -81,14 +78,14 @@ function topOf(array) {
 }
 
 function verifyControlFlowSyntax(commandStack) {
-  let state = [];
+  let state = new State;
   commandStack.forEach(function(command, commandIndex) {
     if (verifyCommand[command.command]) {
       verifyCommand[command.command](command.command, commandIndex, commandStack, state);
     }
   });
-  if (!isEmpty(state)) {
-    throw new SyntaxError("Incomplete block at " + topOf(state).command);
+  if (!state.empty()) {
+    throw new SyntaxError("Incomplete block at " + state.top().command);
   } else {
     return true;
   }
@@ -110,17 +107,17 @@ function trackControlFlowBranchOpen (commandName, commandIndex, stack, state) {
 }
 
 function verifyElse (commandName, commandIndex, stack, state) {
-  if (!isIf(topOf(state))) {
+  if (!isIf(state.top())) {
     throw new SyntaxError("An else / else if used outside of an if block");
   }
 }
 
-function verifyEnd (commandName, commandIndex, stack, state) {
-  if (isLoop(topOf(state))) {
+function verifyEnd (command, commandIndex, stack, state) {
+  if (isLoop(state.top())) {
     state.pop();
-  } else if (isIf(topOf(state))) {
-    const numberOfElse = stack.slice(topOf(state).index, commandIndex).filter(command => isElse(command)).length;
-    const allElses = stack.slice(topOf(state).index, commandIndex).filter(
+  } else if (isIf(state.top())) {
+    const numberOfElse = stack.slice(state.top().index, commandIndex).filter(command => isElse(command)).length;
+    const allElses = stack.slice(state.top().index, commandIndex).filter(
       command => (command.command === ControlFlowCommandNames.else || command.command === ControlFlowCommandNames.elseIf));
     if (numberOfElse > 1) {
       throw new SyntaxError("Too many else commands used");
@@ -135,7 +132,7 @@ function verifyEnd (commandName, commandIndex, stack, state) {
 }
 
 function verifyRepeatIf (commandName, commandIndex, stack, state) {
-  if (!isDo(topOf(state))) {
+  if (!isDo(state.top())) {
     throw new SyntaxError("A repeat if used without a do block");
   }
   state.pop();
@@ -209,7 +206,7 @@ function initCommandNodes(commandStack, levels) {
 
 function connectCommandNodes(commandNodeStack) {
   let _commandNodeStack = [ ...commandNodeStack ];
-  let state = [];
+  let state = new State;
   _commandNodeStack.forEach(function(commandNode) {
     let nextCommandNode = _commandNodeStack[commandNode.index + 1];
     if (nextCommandNode) {
@@ -236,10 +233,10 @@ let connectCommandNode = {
 
 function connectDefault (commandNode, nextCommandNode, stack, state) {
   let _nextCommandNode;
-  if (isIf(topOf(state)) && (isElseOrElseIf(nextCommandNode.command))) {
-    _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, ControlFlowCommandNames.end);
-  } else if (isLoop(topOf(state)) && isEnd(nextCommandNode.command)) {
-    _nextCommandNode = stack[topOf(state).index];
+  if (isIf(state.top()) && (isElseOrElseIf(nextCommandNode.command))) {
+    _nextCommandNode = findNextNodeBy(stack, commandNode.index, state.top().level, ControlFlowCommandNames.end);
+  } else if (isLoop(state.top()) && isEnd(nextCommandNode.command)) {
+    _nextCommandNode = stack[state.top().index];
   } else {
     _nextCommandNode = nextCommandNode;
   }
@@ -266,17 +263,17 @@ function connectNext (commandNode, nextCommandNode) {
 }
 
 function connectRepeatIf (commandNode, nextCommandNode, stack, state) {
-  commandNode.right = stack[topOf(state).index];
+  commandNode.right = stack[state.top().index];
   commandNode.left = nextCommandNode;
   state.pop();
 }
 
 function connectEnd (commandNode, nextCommandNode, stack, state) {
   state.pop();
-  if (!isEmpty(state)) {
+  if (!state.empty()) {
     let _nextCommandNode;
     if (isElseOrElseIf(nextCommandNode.command)) {
-      _nextCommandNode = findNextNodeBy(stack, commandNode.index, topOf(state).level, ControlFlowCommandNames.end);
+      _nextCommandNode = findNextNodeBy(stack, commandNode.index, state.top().level, ControlFlowCommandNames.end);
     } else {
       _nextCommandNode = nextCommandNode;
     }

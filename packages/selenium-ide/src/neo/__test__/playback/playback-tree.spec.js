@@ -189,15 +189,15 @@ describe("Control Flow", () => {
         let input = [createCommand("times")];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at times");
       });
-      test(ControlFlowCommandNames.repeatIf, () => {
+      test("repeatIf", () => {
         let input = [createCommand(ControlFlowCommandNames.repeatIf)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("A repeat if used without a do block");
       });
-      test(ControlFlowCommandNames.do, () => {
+      test("do", () => {
         let input = [createCommand(ControlFlowCommandNames.do)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Incomplete block at do");
       });
-      test(ControlFlowCommandNames.end, () => {
+      test("end", () => {
         let input = [createCommand(ControlFlowCommandNames.end)];
         expect(function() { verifyControlFlowSyntax(input); }).toThrow("Use of end without an opening keyword");
       });
