@@ -108,15 +108,20 @@ function runProject(project) {
     },
     dependencies: project.dependencies || {}
   }));
-  project.code.forEach(suite => {
+  const tests = project.code.tests.reduce((tests, test) => {
+    return tests += test.code;
+  }, "const tests = {};").concat("module.exports = tests;");
+  writeJSFile(path.join(projectPath, "commons"), tests, ".js");
+  project.code.suites.forEach(suite => {
     if (!suite.tests) {
       // not parallel
-      writeJSFile(path.join(projectPath, suite.name), suite.code);
+      const cleanup = suite.persistSession ? "" : "beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));";
+      writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${suite.code}${cleanup}`);
     } else if (suite.tests.length) {
-      fs.mkdirSync(suite.name);
+      fs.mkdirSync(path.join(projectPath, suite.name));
       // parallel suite
       suite.tests.forEach(test => {
-        writeJSFile(path.join(projectPath, suite.name, test.name), `${suite.code}${test.code}`);
+        writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${suite.code}${test.code}`);
       });
     }
   });
@@ -168,8 +173,8 @@ function runAll(projects, index = 0) {
   });
 }
 
-function writeJSFile(name, data) {
-  fs.writeFileSync(`${name}.test.js`, beautify(data, { indent_size: 2 }));
+function writeJSFile(name, data, postfix = ".test.js") {
+  fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
 }
 
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));

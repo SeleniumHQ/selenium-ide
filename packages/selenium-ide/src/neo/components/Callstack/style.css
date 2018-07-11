@@ -1,0 +1,11 @@
+.test > .stack-item:not(.name) {
+    display: block;
+}
+
+.test > .stack-item:not(.name).selected {
+}
+
+.test > .stack-item:not(.name) > span {
+    display: inline-block;
+    transform: scaleY(-1) rotate(270deg);
+}

@@ -19,6 +19,7 @@ import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { recorder } from "./editor";
 import Debugger from "../debugger";
+import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
 
 const parsedUA = parser(window.navigator.userAgent);
@@ -50,9 +51,10 @@ export default class ExtCommand {
       }
     };
 
-    this.frameLocationMessageHandler = (message, sender) => {
+    this.frameLocationMessageHandler = (message, sender, sendResponse) => {
       if (message.frameLocation) {
         this.setFrame(sender.tab.id, message.frameLocation, sender.frameId);
+        sendResponse(true);
       }
     };
 
@@ -247,6 +249,11 @@ export default class ExtCommand {
     return browser.tabs.remove(removingTabId);
   }
 
+  doRun(target) {
+    PlaybackState.callTestCase(target);
+    return Promise.resolve();
+  }
+
   doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
@@ -358,6 +365,11 @@ export default class ExtCommand {
     }
     return false;
   }
+
+  name(command) {
+    let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
+    return "do" + upperCase;
+  }
 }
 
 export function isExtCommand(command) {
@@ -366,6 +378,7 @@ export function isExtCommand(command) {
     case "open":
     case "selectFrame":
     case "selectWindow":
+    case "run":
     case "setSpeed":
     case "store":
     case "close":

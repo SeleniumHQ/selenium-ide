@@ -37,6 +37,7 @@ export default class TestTable extends React.Component {
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
+    callstackIndex: PropTypes.number,
     selectedCommand: PropTypes.string,
     selectCommand: PropTypes.func,
     addCommand: PropTypes.func,
@@ -59,6 +60,7 @@ export default class TestTable extends React.Component {
     }
   }
   render() {
+    const commandStatePrefix = this.props.callstackIndex !== undefined ? `${this.props.callstackIndex}:` : "";
     return ([
       <div key="header" className="test-table test-table-header">
         <table>
@@ -71,14 +73,15 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-      <div key="body" className="test-table test-table-body">
+      <div key="body" className={classNames("test-table", "test-table-body", { "paused": PlaybackState.paused }, { "breakpoints-disabled": PlaybackState.breakpointsDisabled })}>
         <table>
           <tbody>
             { this.props.commands ? this.props.commands.map((command, index) => (
               <TestRow
                 key={command.id}
-                status={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
+                status={classNames(PlaybackState.commandState.get(commandStatePrefix + command.id) ? PlaybackState.commandState.get(commandStatePrefix + command.id).state : "")}
                 selected={this.props.selectedCommand === command.id}
+                readOnly={(PlaybackState.isPlaying && !PlaybackState.paused)}
                 index={index}
                 command={command}
                 new={command === this.newCommand ? this.disposeNewCommand : undefined}
@@ -97,7 +100,7 @@ export default class TestTable extends React.Component {
               />
             )).concat(
               <TestRow
-                key={UiState.selectedTest.test.id}
+                key={UiState.displayedTest.id}
                 selected={this.props.selectedCommand === UiState.pristineCommand.id}
                 index={this.props.commands.length}
                 command={UiState.pristineCommand}

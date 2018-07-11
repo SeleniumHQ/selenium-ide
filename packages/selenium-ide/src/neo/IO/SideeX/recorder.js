@@ -229,9 +229,10 @@ export default class BackgroundRecorder {
     }
   }
 
-  addCommandMessageHandler(message, sender, sendRequest) { // eslint-disable-line no-unused-vars
+  addCommandMessageHandler(message, sender, sendResponse) {
     if (!message.command || this.openedWindowIds[sender.tab.windowId] == undefined)
       return;
+    sendResponse(true);
 
     let testCaseId = getSelectedCase().id;
 

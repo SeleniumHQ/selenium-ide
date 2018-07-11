@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import template from "./template";
 import ConfigurationEmitter from "./configuration";
 import SuiteEmitter from "./suite";
 import TestCaseEmitter from "./testcase";
@@ -24,25 +23,38 @@ import LocationEmitter from "./location";
 
 export default function Selianize(project) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = template.bootstrap();
+    let result = "";
 
     result += await ConfigurationEmitter.emit(project);
 
-    const testsHashmap = project.tests.reduce((map, test) => {
-      map[test.id] = test;
-      return map;
-    }, {});
     let errors = [];
-    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap).catch(e => {
+    const tests = (await Promise.all(project.tests.map((test) => TestCaseEmitter.emit(test).catch(e => {
       errors.push(e);
     }))));
 
-    const results = suites.map((suiteCode, index) => ({
-      name: project.suites[index].name,
-      code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
-      tests: Array.isArray(suiteCode) ? suiteCode : undefined
-    }));
-    errors.length ? rej({ name: project.name, suites: errors }) : res(results);
+    if (errors.length) {
+      return rej({ name: project.name, tests: errors });
+    }
+
+    const testsHashmap = project.tests.reduce((map, test, index) => {
+      map[test.id] = tests[index];
+      return map;
+    }, {});
+    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap))));
+
+    const results = {
+      suites: suites.map((suiteCode, index) => ({
+        name: project.suites[index].name,
+        persistSession: project.suites[index].persistSession,
+        code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
+        tests: Array.isArray(suiteCode) ? suiteCode : undefined
+      })),
+      tests: tests.map((test) => ({
+        name: test.name,
+        code: test.function
+      }))
+    };
+    return res(results);
   });
 }
 
@@ -63,12 +75,10 @@ export function RegisterEmitter(command, emitter) {
 }
 
 export function ParseError(error) {
-  return error.suites.map(suite => (
-    (`## ${suite.name}\n`).concat(suite.tests.map(test => (
-      (`### ${test.name}\n`).concat(test.commands.map(command => (
-        (`${command.index}. ${command.message}\n`)
-      )).join("").concat("\n"))
-    )).join(""))
+  return error.tests.map(test => (
+    (`## ${test.name}\n`).concat(test.commands.map(command => (
+      (`${command.index}. ${command.message}\n`)
+    )).join("").concat("\n"))
   )).join("");
 }
 

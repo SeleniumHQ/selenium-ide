@@ -46,21 +46,19 @@ export default class ImportDialog extends React.Component {
     }
   }
   onDrop(blobs) {
-    Promise.all(blobs.filter(blob => (
+    Promise.all(this.state.files.map((file) => {
       // Dont load files we dont need
-      !!this.state.files.find(({ name }) => (
-        name.includes(blob.name)
-      ))
-    )).map(loadAsText)).then(fileContents => {
-      const files = [...this.state.files];
-      fileContents.forEach((fileContents, index) => {
-        // Find the required file in the list
-        const fileIndex = files.findIndex(({ name }) => (
-          name.includes(blobs[index].name)
-        ));
-        // set it's contents
-        files[fileIndex].contents = fileContents;
+      const blob = blobs.find(({ name }) => {
+        return file.name.includes(name);
       });
+      if (blob) {
+        return loadAsText(blob).then(contents => {
+          file.contents = contents;
+          return file;
+        });
+      }
+      return Promise.resolve(file);
+    }, [])).then((files) => {
       this.setState({ files }, () => {
         // check if all files have been uploaded
         if (!this.state.files.find((file) => !file.contents)) {

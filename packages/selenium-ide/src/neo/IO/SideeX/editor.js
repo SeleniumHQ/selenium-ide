@@ -30,18 +30,20 @@ export function toggleRecord(isRecording) {
   isRecording ? recorder.attach() : recorder.detach();
 }
 
-function handleMessage(message, sender, sendResponse) { // eslint-disable-line no-unused-vars
+function handleMessage(message, sender, sendResponse) {
   if (message.selectTarget) {
     selectTarget(message.target);
+    sendResponse(true);
   }
   if (message.cancelSelectTarget) {
     endSelection(sender.tab.id);
+    sendResponse(true);
   }
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
 
-browser.runtime.onMessage.addListener(function contentWindowIdListener(message) {
+browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
   if (message.selfWindowId != undefined && message.commWindowId != undefined) {
     selfWindowId = message.selfWindowId;
     contentWindowId = message.commWindowId;
@@ -49,5 +51,6 @@ browser.runtime.onMessage.addListener(function contentWindowIdListener(message) 
     recorder.setOpenedWindow(contentWindowId);
     recorder.setSelfWindowId(selfWindowId);
     browser.runtime.onMessage.removeListener(contentWindowIdListener);
+    sendResponse(true);
   }
 });

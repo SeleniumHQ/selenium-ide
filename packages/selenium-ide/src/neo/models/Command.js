@@ -21,13 +21,16 @@ import uuidv4 from "uuid/v4";
 export default class Command {
   id = null;
   @observable comment = "";
-  @observable command = "";
-  @observable target = "";
-  @observable value = "";
+  @observable command;
+  @observable target;
+  @observable value;
   @observable isBreakpoint = false;
 
-  constructor(id = uuidv4()) {
+  constructor(id = uuidv4(), command, target, value) {
     this.id = id;
+    this.command = command || "";
+    this.target = target || "";
+    this.value = value || "";
     this.export = this.export.bind(this);
   }
 
@@ -104,6 +107,10 @@ export const ArgTypes = {
     name: "alert text",
     description: "text to check"
   },
+  attributeLocator: {
+    name: "attribute locator",
+    description: "An element locator followed by an @ sign and then the name of the attribute, e.g. \"foo@bar\"."
+  },
   coord: {
     name: "coord String",
     description: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
@@ -158,6 +165,10 @@ export const ArgTypes = {
     name: "select locator",
     description: "An element locator identifying a drop-down menu."
   },
+  testCase: {
+    name: "test case",
+    description: "Test case name from the project."
+  },
   text: {
     name: "text",
     description: "The text to verify."
@@ -181,6 +192,10 @@ export const ArgTypes = {
   window: {
     name: "window",
     description: "The id of the browser window to select."
+  },
+  xpath: {
+    name: "xpath",
+    description: "The xpath expression to evaluate."
   }
 };
 
@@ -454,6 +469,11 @@ class CommandList {
       target: ArgTypes.locator,
       value: ArgTypes.optionLocator
     }],
+    [ "run", {
+      name: "run",
+      description: "Runs a test case from the current project.",
+      target: ArgTypes.testCase
+    }],
     [ "runScript", {
       name: "run script",
       description: "Creates a new \"script\" tag in the body of the current test \
@@ -523,6 +543,14 @@ class CommandList {
       target: ArgTypes.expression,
       value: ArgTypes.variableName
     }],
+    [ "storeAttribute", {
+      name: "store attribute",
+      description: "Gets the value of an element attribute. \
+                    The value of the attribute may differ across browsers \
+                    (this is the case for the \"style\" attribute, for example).",
+      target: ArgTypes.attributeLocator,
+      value: ArgTypes.variableName
+    }],
     [ "storeText", {
       name: "store text",
       type: TargetTypes.LOCATOR,
@@ -534,6 +562,13 @@ class CommandList {
     [ "storeTitle", {
       name: "store title",
       description: "Gets the title of the current page."
+    }],
+    [ "storeXpathCount", {
+      name: "store xpath count",
+      description: "Gets the number of nodes that match the specified xpath, \
+                    eg. \"//table\" would give the number of tables.",
+      target: ArgTypes.xpath,
+      value: ArgTypes.variableName
     }],
     [ "submit", {
       name: "submit",

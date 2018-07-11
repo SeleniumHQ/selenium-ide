@@ -23,6 +23,8 @@ import Pause from "../../components/ActionButtons/Pause";
 import Stop from "../../components/ActionButtons/Stop";
 import StepInto from "../../components/ActionButtons/StepInto";
 import SpeedGauge from "../../components/ActionButtons/SpeedGauge";
+import DisableBreakpoints from "../../components/ActionButtons/DisableBreakpoints";
+import PauseExceptions from "../../components/ActionButtons/PauseExceptions";
 import Record from "../../components/ActionButtons/Record";
 import GaugeMenu from "../GaugeMenu";
 import UiState from "../../stores/view/UiState";
@@ -57,15 +59,11 @@ export default class ToolBar extends React.Component {
         <GaugeMenu opener={
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
-        <span style={{
-          float: "right",
-          marginRight: "3px"
-        }}>
-          { !PlaybackState.isPlaying && UiState.selectedTest.test ? <Record isRecording={UiState.isRecording} onClick={UiState.toggleRecord} /> : null }
-        </span>
-        <div style={{
-          clear: "right"
-        }}></div>
+        <div className="flexer"></div>
+        <DisableBreakpoints isActive={PlaybackState.breakpointsDisabled} onClick={PlaybackState.toggleDisableBreakpoints} />
+        <PauseExceptions isActive={PlaybackState.pauseOnExceptions} onClick={PlaybackState.togglePauseOnExceptions} />
+        <div className="sep"></div>
+        <Record disabled={PlaybackState.isPlaying || !UiState.selectedTest.test} isRecording={UiState.isRecording} onClick={UiState.toggleRecord} />
       </div>
     );
   }

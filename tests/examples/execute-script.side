@@ -62,6 +62,7 @@
   "suites": [{
     "id": "ba455ffe-d194-4fed-810e-272522a7c874",
     "name": "execute script",
+    "persistSession": false,
     "parallel": false,
     "timeout": 300,
     "tests": ["d4059a41-89a5-4266-9cd6-ce6cffe0a683", "c065304c-a1d4-4a78-a8da-2e4c3e71adc5"]
@@ -69,9 +70,19 @@
   "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
   "plugins": [],
   "version": "1.0",
-  "code": [{
-    "name": "execute script",
-    "code": "// This file was generated using Selenium IDE\nconst BASE_URL = configuration.baseUrl || 'http://nginx:80/';jest.setTimeout(300000);describe(\"execute script\", () => {it(\"execute async script\", async () => {driver.get(BASE_URL + \"/value.html\");var async = await driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];return new Promise((r) => {setTimeout(() => {r(\"async\")}, 500)}).then(callback).catch(callback);`);driver.wait(until.elementLocated(By.id(\"v\")));driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${async}`);});});driver.wait(until.elementLocated(By.id(\"v\")));expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"async\");await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"execute script\", async () => {driver.get(BASE_URL + \"/value.html\");var sync = await driver.executeScript(`return \"sync\"`);driver.wait(until.elementLocated(By.id(\"v\")));driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${sync}`);});});driver.wait(until.elementLocated(By.id(\"v\")));expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"sync\");await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-  }],
+  "code": {
+    "suites": [{
+      "name": "execute script",
+      "persistSession": false,
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80/';let vars = {};jest.setTimeout(300000);describe(\"execute script\", () => {it(\"execute async script\", async () => {await tests.execute_async_script(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"execute script\", async () => {await tests.execute_script(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+    }],
+    "tests": [{
+      "name": "execute script",
+      "code": "tests.execute_script = async function execute_script(driver, vars) {await driver.get(BASE_URL + \"/value.html\");vars[\"sync\"] = await driver.executeScript(`return \"sync\"`);await driver.wait(until.elementLocated(By.id(\"v\")));await driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.sync}`);});});await driver.wait(until.elementLocated(By.id(\"v\")));await expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"sync\");}"
+    }, {
+      "name": "execute async script",
+      "code": "tests.execute_async_script = async function execute_async_script(driver, vars) {await driver.get(BASE_URL + \"/value.html\");vars[\"async\"] = await driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];return new Promise((r) => {setTimeout(() => {r(\"async\")}, 500)}).then(callback).catch(callback);`);await driver.wait(until.elementLocated(By.id(\"v\")));await driver.findElement(By.id(\"v\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.async}`);});});await driver.wait(until.elementLocated(By.id(\"v\")));await expect(driver.findElement(By.id(\"v\"))).resolves.toHaveValue(\"async\");}"
+    }]
+  },
   "dependencies": {}
 }

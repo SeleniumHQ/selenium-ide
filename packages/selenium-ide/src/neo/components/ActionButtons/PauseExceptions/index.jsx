@@ -15,10 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import template from "../src/template";
+import React from "react";
+import ActionButton from "../ActionButton";
+import classNames from "classnames";
 
-describe("Code template", () => {
-  it("should return the export header", () => {
-    expect(template.bootstrap()).toBe("// This file was generated using Selenium IDE\n");
-  });
-});
+export default class PauseExceptionsButton extends React.Component {
+  render() {
+    return (
+      <ActionButton data-tip="<p>Pause on exceptions</p>" {...this.props} className={classNames("si-break-exceptions", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
+}

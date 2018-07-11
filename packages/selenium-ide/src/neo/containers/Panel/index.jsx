@@ -30,6 +30,7 @@ import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
 import SuiteDropzone from "../../components/SuiteDropzone";
+import PauseBanner from "../../components/PauseBanner";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -90,7 +91,9 @@ function firefox57WorkaroundForBlankPanel () {
   });
 }
 
-firefox57WorkaroundForBlankPanel();
+if (browser.windows) {
+  firefox57WorkaroundForBlankPanel();
+}
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
@@ -166,6 +169,7 @@ firefox57WorkaroundForBlankPanel();
             }}
           >
             <div className="wrapper">
+              <PauseBanner />
               <ProjectHeader
                 title={this.state.project.name}
                 changed={this.state.project.modified}
@@ -195,7 +199,8 @@ firefox57WorkaroundForBlankPanel();
                     url={this.state.project.url}
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
-                    test={UiState.selectedTest.test}
+                    test={UiState.displayedTest}
+                    callstackIndex={UiState.selectedTest.stack}
                   />
                 </SplitPane>
               </div>

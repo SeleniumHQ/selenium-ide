@@ -40,6 +40,7 @@ let ignoreBreakpoint = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
+  ignoreBreakpoint = false;
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
@@ -61,27 +62,41 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
-function executionLoop() {
-  (PlaybackState.currentPlayingIndex < 0) ? PlaybackState.setPlayingIndex(0) : PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  // reached the end
-  if (didFinishQueue() || isStopping()) return false;
-  const { id, command, target, value, isBreakpoint } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
-  // is command empty?
-  if (!command) {
-    return executionLoop();
+function incrementPlayingIndex() {
+  if (PlaybackState.currentPlayingIndex < 0) {
+    PlaybackState.setPlayingIndex(0);
+  } else {
+    PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
   }
+}
+
+function isCallStackEmpty() {
+  return !PlaybackState.callstack.length;
+}
+
+function executionLoop() {
+  incrementPlayingIndex();
+  if (didFinishQueue() && !isCallStackEmpty()) {
+    PlaybackState.unwindTestCase();
+    return executionLoop();
+  } else if (isStopping() || didFinishQueue()) {
+    return false;
+  }
+  const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
+  if (!command.command) return executionLoop();
   // breakpoint
-  PlaybackState.setCommandState(id, PlaybackStates.Pending);
-  if (!ignoreBreakpoint && isBreakpoint) PlaybackState.break();
-  else if (ignoreBreakpoint && isBreakpoint) ignoreBreakpoint = false;
+  PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
+  if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
+  else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  if (isExtCommand(command)) {
-    let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
+  if (isExtCommand(command.command)) {
     return doDelay().then(() => (
-      (extCommand["do" + upperCase](xlateArgument(target), xlateArgument(value)))
+      (extCommand[extCommand.name(command.command)](xlateArgument(command.target), xlateArgument(command.value)))
         .then(() => {
-          PlaybackState.setCommandState(id, PlaybackStates.Passed);
+          // we need to set the stackIndex manually because run command messes with that
+          PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
         }).then(executionLoop)
     ));
   } else if (isImplicitWait(command)) {
@@ -124,13 +139,13 @@ function catchPlayingError(message) {
   }
 }
 
-function reportError(error) {
+function reportError(error, nonFatal) {
   const { id } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
   }
-  PlaybackState.setCommandState(id, PlaybackStates.Failed, message);
+  PlaybackState.setCommandState(id, nonFatal ? PlaybackStates.Failed : PlaybackStates.Fatal, message);
 }
 
 reaction(
@@ -294,7 +309,10 @@ function isElementNotFound(error) {
 }
 
 function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
-  if (isElementNotFound(error)) {
+  if (isStopping()) {
+    PlaybackState.setCommandState(commandId, PlaybackStates.Fatal, "Playback aborted");
+    return false;
+  } else if (isElementNotFound(error)) {
     if (implicitTime && (Date.now() - implicitTime > 30000)) {
       reportError("Implicit Wait timed out after 30000ms");
       implicitCount = 0;
@@ -323,7 +341,7 @@ function doDelay() {
 }
 
 function notifyWaitDeprecation(command) {
-  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`);
+  reportError(`${command} is deprecated, Selenium IDE waits automatically instead`, true);
 }
 
 function isReceivingEndError(reason) {

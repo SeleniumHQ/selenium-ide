@@ -22,6 +22,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-download:before {
+  content: "\e901";
+}
+.si-filter:before {
+  content: "\e915";
+}
+.si-disable-breakpoints:before {
+  content: "\e91b";
+}
+.si-break-exceptions:before {
+  content: "\e91c";
+}
 .si-stop:before {
   content: "\e91d";
 }

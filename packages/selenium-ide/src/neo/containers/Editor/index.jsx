@@ -34,6 +34,7 @@ import "./style.css";
   }
   static propTypes = {
     test: PropTypes.object,
+    callstackIndex: PropTypes.number,
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired
@@ -79,6 +80,7 @@ import "./style.css";
         <UrlBar url={this.props.url} urls={this.props.urls} setUrl={this.props.setUrl} />
         <TestTable
           commands={this.props.test ? this.props.test.commands : null}
+          callstackIndex={this.props.callstackIndex}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
