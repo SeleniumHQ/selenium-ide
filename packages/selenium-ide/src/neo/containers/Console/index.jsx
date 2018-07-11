@@ -83,13 +83,13 @@ export default class Console extends React.Component {
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
         <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
-          {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clearLogs} /> }
+          {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clear} /> }
           {this.state.tab === "Variables" &&
             <div>
               <AddButton data-tip="<p>Add Variable</p>" onClick={() => this.addVariableClicked(true)} disabled={!variables.isStop} />
               <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} disabled={!variables.isStop}/>
             </div> }
-          {this.state.tab === "Reference" && <ClearButton onClick={output.clearLogs} /> }
+          {this.state.tab === "Reference" && <ClearButton onClick={output.clear} /> }
         </TabBar>
         <div className="viewport" ref={this.setViewportRef}>
           {this.state.tab === "Log" && <LogList output={output} scrollTo={this.scroll}/> }
