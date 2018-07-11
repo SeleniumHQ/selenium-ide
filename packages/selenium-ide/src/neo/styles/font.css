@@ -22,6 +22,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-stop:before {
+  content: "\e91d";
+}
 .si-open:before {
   content: "\e905";
 }
@@ -59,9 +62,12 @@
   content: "\e910";
 }
 .si-add:before {
-  content: "\e901";
+  content: "\e90d";
 }
 .si-clear:before {
+  content: "\e91a";
+}
+.si-delete:before {
   content: "\e902";
 }
 .si-step-into:before {
@@ -92,11 +98,5 @@
   content: "\e90b";
 }
 .si-select:before {
-  content: "\e90d";
-}
-.si-stop:before {
   content: "\e90f";
-}
-.si-delete:before {
-  content: "\e920";
 }
