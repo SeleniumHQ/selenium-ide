@@ -88,7 +88,7 @@ function verifyControlFlowSyntax(commandStack) {
     }
   });
   if (!isEmpty(state)) {
-    throw "Incomplete block at " + topOf(state).command;
+    throw new SyntaxError("Incomplete block at " + topOf(state).command);
   } else {
     return true;
   }
@@ -111,7 +111,7 @@ function trackControlFlowBranchOpen (commandName, commandIndex, stack, state) {
 
 function verifyElse (commandName, commandIndex, stack, state) {
   if (!isIf(topOf(state))) {
-    throw "An else / else if used outside of an if block";
+    throw new SyntaxError("An else / else if used outside of an if block");
   }
 }
 
@@ -123,20 +123,20 @@ function verifyEnd (commandName, commandIndex, stack, state) {
     const allElses = stack.slice(topOf(state).index, commandIndex).filter(
       command => (command.command === ControlFlowCommandNames.else || command.command === ControlFlowCommandNames.elseIf));
     if (numberOfElse > 1) {
-      throw "Too many else commands used";
+      throw new SyntaxError("Too many else commands used");
     } else if (numberOfElse === 1 && !isElse(topOf(allElses))) {
-      throw "Incorrect command order of else if / else";
+      throw new SyntaxError("Incorrect command order of else if / else");
     } else if (numberOfElse === 0 || isElse(topOf(allElses))) {
       state.pop();
     }
   } else {
-    throw "Use of end without an opening keyword";
+    throw new SyntaxError("Use of end without an opening keyword");
   }
 }
 
 function verifyRepeatIf (commandName, commandIndex, stack, state) {
   if (!isDo(topOf(state))) {
-    throw "A repeat if used without a do block";
+    throw new SyntaxError("A repeat if used without a do block");
   }
   state.pop();
 }
