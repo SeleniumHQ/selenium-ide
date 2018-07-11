@@ -146,9 +146,12 @@ function deriveCommandLevels(commandStack) {
   let levels = [];
   commandStack.forEach(function(command) {
     if (levelCommand[command.command]) {
-      level = levelCommand[command.command](command, level, levels);
+      let result = levelCommand[command.command](command, level, levels);
+      level = result.level;
+      levels = result.levels;
     } else {
-      levelDefault(command, level, levels);
+      let result = levelDefault(command, level, levels);
+      levels = result.levels;
     }
   });
   return levels;
@@ -165,28 +168,32 @@ let levelCommand = {
   [ControlFlowCommandNames.while]: levelBranchOpen
 };
 
-function levelDefault (command, level, levels) {
+function levelDefault (command, level, _levels) {
+  let levels = [ ..._levels ];
   levels.push(level);
-  return level;
+  return { level, levels };
 }
 
-function levelBranchOpen (command, level, levels) {
+function levelBranchOpen (command, level, _levels) {
+  let levels = [ ..._levels ];
   levels.push(level);
   level++;
-  return level;
+  return { level, levels };
 }
 
-function levelBranchEnd (command, level, levels) {
+function levelBranchEnd (command, level, _levels) {
+  let levels = [ ..._levels ];
   level--;
   levels.push(level);
-  return level;
+  return { level, levels };
 }
 
-function levelElse (command, level, levels) {
+function levelElse (command, level, _levels) {
+  let levels = [ ..._levels ];
   level--;
   levels.push(level);
   level++;
-  return level;
+  return { level, levels };
 }
 
 function initCommandNodes(commandStack, levels) {
