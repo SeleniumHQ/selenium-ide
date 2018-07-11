@@ -801,3 +801,57 @@ export const ControlFlowCommandNames = {
   times: Commands.list.get("times").name,
   while: Commands.list.get("while").name
 };
+
+function commandNamesEqual(command, target) {
+  if (command) {
+    return (command.command === target);
+  } else {
+    return false;
+  }
+}
+
+function isConditional(command) {
+  return (isIf(command) || isElseOrElseIf(command));
+}
+
+function isDo(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.do);
+}
+
+function isElse(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.else);
+}
+
+function isElseOrElseIf(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.else) ||
+          commandNamesEqual(command, ControlFlowCommandNames.elseIf));
+}
+
+function isEnd(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.end));
+}
+
+function isIf(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.if));
+}
+
+function isLoop(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.while) ||
+          commandNamesEqual(command, ControlFlowCommandNames.times));
+}
+
+function isBlockOpen(command) {
+  return (isIf(command) || isLoop(command));
+}
+
+export const ControlFlowCommandChecks = {
+  isConditional: isConditional,
+  isDo: isDo,
+  isElse: isElse,
+  isElseOrElseIf: isElseOrElseIf,
+  isEnd: isEnd,
+  isIf: isIf,
+  isLoop: isLoop,
+  isBlockOpen: isBlockOpen
+};
+

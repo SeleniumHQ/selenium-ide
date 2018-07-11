@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ControlFlowCommandNames } from "../../models/Command";
+import { ControlFlowCommandChecks } from "../../models/Command";
 
 export class CommandNode {
   constructor(command) {
@@ -40,7 +40,7 @@ export class CommandNode {
         playbackTree.currentCommandNode = this.left;
       }
     } else {
-      if (this.command.command === ControlFlowCommandNames.end) {
+      if (ControlFlowCommandChecks.isEnd(this.command)) {
         playbackTree.currentCommandNode = this.next;
       } else {
         extCommand.sendMessage(this.command, this.command.target, this.command.value, false);
