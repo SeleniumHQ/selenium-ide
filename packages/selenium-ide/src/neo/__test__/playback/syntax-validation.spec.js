@@ -123,6 +123,13 @@ describe("Control Flow", () => {
         let input = [ createCommand(ControlFlowCommandNames.else) ];
         expect(function() { validateControlFlowSyntax(input); }).toThrow("An else used outside of an if block");
       });
+      test("else, else", () => {
+        let input = [
+          createCommand(ControlFlowCommandNames.else),
+          createCommand(ControlFlowCommandNames.else)
+        ];
+        expect(function() { validateControlFlowSyntax(input); }).toThrow("An else used outside of an if block");
+      });
       test("elseIf", () => {
         let input = [ createCommand(ControlFlowCommandNames.elseIf) ];
         expect(function() { validateControlFlowSyntax(input); }).toThrow("An else if used outside of an if block");
