@@ -33,7 +33,7 @@ import "./style.css";
 const testTarget = {
   canDrop(props, monitor) {
     const test = monitor.getItem().test;
-    return !props.suite.containsTest(props.suite.tests, test);
+    return !props.suite.containsTest(test);
   },
   hover(props, monitor) {
     // check if they are different suites

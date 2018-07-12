@@ -39,7 +39,7 @@ const testSource = {
     };
   },
   isDragging(props, monitor) {
-    return (props.test.id === monitor.getItem().id);
+    return (props.test.id === monitor.getItem().id && props.suite.id === monitor.getItem().suite.id);
   }
 };
 
@@ -64,6 +64,9 @@ const testTarget = {
       props.suite.addTestCase(dragged.test);
       dragged.suite = props.suite;
       dragged.index = props.suite.tests.length - 1;
+      return;
+    } else if (!monitor.canDrop() && props.suite !== dragged.suite) {
+      // trying to move a duplicate
       return;
     }
     const dragIndex = dragged.index;
