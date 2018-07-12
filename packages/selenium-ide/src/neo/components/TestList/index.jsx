@@ -61,6 +61,7 @@ export default class TestList extends Component {
               this.props.suite ?
                 <DraggableTest
                   className={PlaybackState.testState.get(test.id)}
+                  index={index}
                   test={test}
                   suite={this.props.suite}
                   selected={UiState.selectedTest.test && test.id === UiState.selectedTest.test.id && this.props.suite.id === (UiState.selectedTest.suite ? UiState.selectedTest.suite.id : undefined)}
@@ -69,6 +70,7 @@ export default class TestList extends Component {
                   changed={UiState.getTestState(test).modified}
                   selectTest={UiState.selectTest}
                   removeTest={this.props.removeTest ? () => { this.props.removeTest(test); } : undefined}
+                  swapTests={this.props.suite.swapTestCases}
                   moveSelectionUp={() => { UiState.selectTestByIndex(index - 1, this.props.suite); }}
                   moveSelectionDown={() => { UiState.selectTestByIndex(index + 1, this.props.suite); }}
                   setSectionFocus={UiState.setSectionFocus}

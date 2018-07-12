@@ -13,10 +13,6 @@
   min-width: 0;
 }
 
-.project > a.hover {
-  border-bottom: 1px #40A6FF solid;
-}
-
 .project > a .title {
   padding: 0 6px;
   font-size: 14px;

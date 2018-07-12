@@ -30,28 +30,28 @@ import ListMenu, { ListMenuItem } from "../ListMenu";
 import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
-function containsTest(tests, test) {
-  return tests.find((currTest) => (currTest.id === test.id));
-}
-
 const testTarget = {
   canDrop(props, monitor) {
-    const test = monitor.getItem();
-    return !containsTest(props.suite.tests, test);
+    const test = monitor.getItem().test;
+    return !props.suite.containsTest(test);
   },
-  drop(props, monitor) {
-    if (monitor.didDrop()) {
+  hover(props, monitor) {
+    // check if they are different suites
+    const dragged = monitor.getItem();
+    if (monitor.canDrop() && props.suite !== dragged.suite) {
+      dragged.suite.removeTestCase(dragged.test);
+      props.suite.insertTestCaseAt(dragged.test, 0);
+      dragged.suite = props.suite;
+      dragged.index = 0;
       return;
     }
-
-    props.moveTest(monitor.getItem(), props.suite);
   }
 };
 
 function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
+    isOver: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop()
   };
 }
@@ -70,7 +70,6 @@ class Suite extends React.Component {
     rename: PropTypes.func.isRequired,
     editSettings: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
-    moveTest: PropTypes.func.isRequired,
     isOver: PropTypes.bool,
     canDrop: PropTypes.bool,
     onContextMenu: PropTypes.func,
@@ -101,13 +100,15 @@ class Suite extends React.Component {
     //setting component of context menu.
     this.props.setContextMenu(listMenu);
 
-    return this.props.connectDropTarget(
+    return (
       <div onKeyDown={this.handleKeyDown.bind(this)} >
         <div className="project" onContextMenu={this.props.onContextMenu} >
-          <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), { "hover": (this.props.isOver && this.props.canDrop) }, { "active": this.store.isOpen })} onClick={this.handleClick} >
-            <span className="si-caret"></span>
-            <span className="title">{this.props.suite.name}</span>
-          </a>
+          {this.props.connectDropTarget(
+            <a href="#" tabIndex="-1" className={classNames(PlaybackState.suiteState.get(this.props.suite.id), { "active": this.store.isOpen })} onClick={this.handleClick} >
+              <span className="si-caret"></span>
+              <span className="title">{this.props.suite.name}</span>
+            </a>
+          )}
           {listMenu}
         </div>
         <TestList collapsed={!this.store.isOpen} suite={this.props.suite} tests={this.store.filteredTests.get()} removeTest={(test) => {

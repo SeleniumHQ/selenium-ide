@@ -36,9 +36,9 @@ export default class Suite {
   }
 
   @computed get tests() {
-    return this._tests.sort((t1, t2) => (
+    return this.isParallel ? this._tests.sort((t1, t2) => (
       naturalCompare(t1.name, t2.name)
-    ));
+    )) : this._tests;
   }
 
   isTest(test) {
@@ -71,11 +71,23 @@ export default class Suite {
     }
   }
 
+  @action.bound containsTest(test) {
+    return this._tests.includes(test);
+  }
+
   @action.bound addTestCase(test) {
     if (!this.isTest(test)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this._tests.push(test);
+    }
+  }
+
+  @action.bound insertTestCaseAt(test, index) {
+    if (!this.isTest(test)) {
+      throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
+    } else {
+      this._tests.splice(index, 0, test);
     }
   }
 
@@ -85,6 +97,11 @@ export default class Suite {
     } else {
       this._tests.remove(test);
     }
+  }
+
+  @action.bound swapTestCases(from, to) {
+    const test = this._tests.splice(from, 1)[0];
+    this.insertTestCaseAt(test, to);
   }
 
   @action.bound replaceTestCases(tests) {

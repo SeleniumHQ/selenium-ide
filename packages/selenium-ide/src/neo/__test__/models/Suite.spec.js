@@ -120,6 +120,26 @@ describe("Suite model", () => {
     suite.removeTestCase(new TestCase());
     expect(suite.tests.length).toBe(1);
   });
+  it("shoul tell if a test exist in the suite", () => {
+    const suite = new Suite();
+    const exists = new TestCase();
+    const nonExistent = new TestCase();
+    suite.addTestCase(exists);
+    expect(suite.containsTest(exists)).toBeTruthy();
+    expect(suite.containsTest(nonExistent)).toBeFalsy();
+  });
+  it("should swap the test cases", () => {
+    const suite = new Suite();
+    const test1 = new TestCase();
+    const test2 = new TestCase();
+    suite.addTestCase(test1);
+    suite.addTestCase(test2);
+    expect(suite.tests[0]).toBe(test1);
+    expect(suite.tests[1]).toBe(test2);
+    suite.swapTestCases(0, 1);
+    expect(suite.tests[1]).toBe(test1);
+    expect(suite.tests[0]).toBe(test2);
+  });
   it("should replace the tests in the suite", () => {
     const store = new ProjectStore();
     const suite = new Suite();
