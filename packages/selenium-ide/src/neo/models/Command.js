@@ -491,7 +491,8 @@ class CommandList {
                     Option locators provide different ways of specifying a select \
                     element (e.g., label=, value=, id=, index=). If no option \
                     locator prefix is provided, a match on the label will be attempted.",
-      target: ArgTypes.selectLocator
+      target: ArgTypes.selectLocator,
+      value: ArgTypes.optionLocator
     }],
     [ "selectFrame", {
       name: "select frame",
