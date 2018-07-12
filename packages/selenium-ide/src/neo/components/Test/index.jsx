@@ -17,7 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { DragSource } from "react-dnd";
+import { DragSource, DropTarget } from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
 import Callstack from "../Callstack";
@@ -28,20 +28,89 @@ import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
 export const Type = "test";
+
 const testSource = {
   beginDrag(props) {
     return {
       id: props.test.id,
-      suite: props.suite.id
+      index: props.index,
+      test: props.test,
+      suite: props.suite
     };
+  },
+  isDragging(props, monitor) {
+    return (props.test.id === monitor.getItem().id);
   }
 };
-function collect(connect, monitor) {
+
+function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
     isDragging: monitor.isDragging()
   };
 }
+
+const testTarget = {
+  canDrop(props, monitor) {
+    const test = monitor.getItem().test;
+    const suite = props.suite;
+    return !suite.containsTest(test);
+  },
+  hover(props, monitor, component) {
+    // check if they are different suites
+    const dragged = monitor.getItem();
+    if (monitor.canDrop() && props.suite !== dragged.suite) {
+      dragged.suite.removeTestCase(dragged.test);
+      props.suite.addTestCase(dragged.test);
+      dragged.suite = props.suite;
+      dragged.index = props.suite.tests.length - 1;
+      return;
+    }
+    const dragIndex = dragged.index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Determine rectangle on screen
+    const hoverBoundingRect = component.decoratedComponentInstance.node.getBoundingClientRect();
+
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
+
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    props.swapTests(dragIndex, hoverIndex);
+
+    // save time on index lookups
+    monitor.getItem().index = hoverIndex;
+  }
+};
+
+const collectTarget = (connect) => ({
+  connectDropTarget: connect.dropTarget()
+});
+
 export default class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
@@ -58,6 +127,7 @@ export default class Test extends React.Component {
     selectTest: PropTypes.func.isRequired,
     renameTest: PropTypes.func,
     removeTest: PropTypes.func,
+    connectDropTarget: PropTypes.func,
     connectDragSource: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
@@ -127,7 +197,7 @@ export default class Test extends React.Component {
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.onContextMenu}
       style={{
-        display: this.props.isDragging ? "none" : "block"
+        opacity: this.props.isDragging ? "0" : "1"
       }}>
       <a
         ref={(button) => { this.button = button; }}
@@ -144,7 +214,7 @@ export default class Test extends React.Component {
         onClick={this.handleCallstackClick.bind(this, this.props.test, this.props.suite)}
       /> : undefined}
     </div>;
-    return (this.props.connectDragSource ? this.props.connectDragSource(rendered) : rendered);
+    return (this.props.connectDragSource ? this.props.connectDropTarget(this.props.connectDragSource(rendered)) : rendered);
   }
 }
 
@@ -164,4 +234,5 @@ export class MenuTest extends React.Component {
   }
 }
 
-export const DraggableTest = DragSource(Type, testSource, collect)(Test);
+
+export const DraggableTest = DropTarget(Type, testTarget, collectTarget)(DragSource(Type, testSource, collectSource)(Test));
