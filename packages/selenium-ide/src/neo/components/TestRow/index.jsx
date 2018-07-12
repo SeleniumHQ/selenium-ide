@@ -259,7 +259,7 @@ class TestRow extends React.Component {
       }}
       className={classNames(this.props.className, this.props.status, { "selected": this.props.selected }, { "break-point": this.props.command.isBreakpoint })}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={(!this.props.isPristine && !this.props.readOnly) ? this.props.onContextMenu : null}
+      onContextMenu={(!this.props.isPristine && !this.props.readOnly) ? ((e) => {this.props.clearSelectedCommands(); return this.props.onContextMenu(e)}) : null}
       onClick={this.select}
       onDoubleClick={() => { this.props.executeCommand && !this.props.readOnly ? this.props.executeCommand(this.props.command) : undefined; }}
       onKeyDown={this.handleKeyDown.bind(this)}
