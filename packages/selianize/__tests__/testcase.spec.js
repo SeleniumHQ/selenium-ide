@@ -118,4 +118,22 @@ describe("test case code emitter", () => {
     };
     return expect(TestCaseEmitter.emit(test)).rejects.toMatchObject(testErrors);
   });
+  it("should hardcode errors on silenceErrors option", () => {
+    const test = {
+      id: "1",
+      name: "silence",
+      commands: [
+        {
+          command: "doesntExist",
+          target: "",
+          value: ""
+        }
+      ]
+    };
+    return expect(TestCaseEmitter.emit(test, { silenceErrors: true })).resolves.toEqual({
+      name: "silence",
+      test: "it(\"silence\", async () => {await tests.silence(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});",
+      function: "tests.silence = async function silence(driver, vars) {throw new Error(\"Unknown command doesntExist\");}"
+    });
+  });
 });

@@ -16,10 +16,11 @@
 // under the License.
 
 import CommandEmitter from "./command";
+import config from "./config";
 
 const hooks = [];
 
-export function emit(test) {
+export function emit(test, options = config) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
 
@@ -33,11 +34,15 @@ export function emit(test) {
     let func = `tests.${convertToSnake(test.name)} = async function ${convertToSnake(test.name)}(driver, vars) {`;
     let errors = [];
     func += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
-      errors.push({
-        index: index + 1,
-        ...command,
-        message: e
-      });
+      if (options.silenceErrors) {
+        return `throw new Error("${e.message}");`;
+      } else {
+        errors.push({
+          index: index + 1,
+          ...command,
+          message: e
+        });
+      }
     }))))).join("");
     func += "}";
 
