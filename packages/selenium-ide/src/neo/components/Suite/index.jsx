@@ -112,7 +112,7 @@ class Suite extends React.Component {
           )}
           {listMenu}
         </div>
-        <TestList collapsed={this.store.isOpen} suite={this.props.suite} tests={this.store.filteredTests.get()} removeTest={(test) => {
+        <TestList collapsed={!this.store.isOpen} suite={this.props.suite} tests={this.store.filteredTests.get()} removeTest={(test) => {
           this.props.suite.removeTestCase(test);
           UiState.selectTest();
         }} />
