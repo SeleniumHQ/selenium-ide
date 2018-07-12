@@ -84,7 +84,7 @@ function downloadProject(project) {
 
 function exportProject(project) {
   return Manager.validatePluginExport(project).then(() => {
-    return Selianize(project).catch(err => {
+    return Selianize(project, { silenceErrors: true }).catch(err => {
       const markdown = ParseError(err && err.message || err);
       ModalState.showAlert({
         title: "Error saving project",

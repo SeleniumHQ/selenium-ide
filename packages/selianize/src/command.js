@@ -17,7 +17,7 @@
 
 import LocationEmitter from "./location";
 import SelectionEmitter from "./selection";
-import { convertToSnake } from "./testcase";
+import { convertToSnake } from "./utils";
 
 const emitters = {
   open: emitOpen,
