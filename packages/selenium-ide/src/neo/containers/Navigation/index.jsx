@@ -39,8 +39,7 @@ import "./style.css";
   }
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    moveTest: PropTypes.func.isRequired
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired
   };
   handleChangedTab(tab) {
     if (PlaybackState.isPlaying && !PlaybackState.paused) {
@@ -97,7 +96,6 @@ import "./style.css";
                 editSettings={ModalState.editSuiteSettings}
                 selectTests={ModalState.editSuite}
                 removeSuite={ModalState.deleteSuite}
-                moveTest={this.props.moveTest}
               />
             </React.Fragment>
             }
