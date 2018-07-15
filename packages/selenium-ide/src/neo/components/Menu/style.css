@@ -1,9 +1,9 @@
 .menu.content {
   position: absolute;
-	border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 2px;
-	background-color: #FFFFFF;
-	box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+  background-color: #fff;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
   overflow: hidden;
   outline: none;
   padding: 10px 0;

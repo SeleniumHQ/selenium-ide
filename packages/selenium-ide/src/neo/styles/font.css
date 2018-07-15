@@ -7,9 +7,10 @@
   font-style: normal;
 }
 
-[class^="si-"], [class*=" si-"] {
+[class^="si-"],
+[class*=" si-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'selenium-ide' !important;
+  font-family: 'selenium-ide', sans-serif !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -22,93 +23,122 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.si-download:before {
+.si-download::before {
   content: "\e901";
 }
-.si-filter:before {
+
+.si-filter::before {
   content: "\e915";
 }
-.si-disable-breakpoints:before {
+
+.si-disable-breakpoints::before {
   content: "\e91b";
 }
-.si-break-exceptions:before {
+
+.si-break-exceptions::before {
   content: "\e91c";
 }
-.si-stop:before {
+
+.si-stop::before {
   content: "\e91d";
 }
-.si-open:before {
+
+.si-open::before {
   content: "\e905";
 }
-.si-pencil:before {
+
+.si-pencil::before {
   content: "\e919";
 }
-.si-step-down:before {
+
+.si-step-down::before {
   content: "\e917";
 }
-.si-caret-wide:before {
+
+.si-caret-wide::before {
   content: "\e918";
 }
-.si-gauge-1:before {
+
+.si-gauge-1::before {
   content: "\e90c";
 }
-.si-gauge-2:before {
+
+.si-gauge-2::before {
   content: "\e90e";
 }
-.si-gauge-3:before {
+
+.si-gauge-3::before {
   content: "\e912";
 }
-.si-gauge-4:before {
+
+.si-gauge-4::before {
   content: "\e913";
 }
-.si-gauge-5:before {
+
+.si-gauge-5::before {
   content: "\e914";
 }
-.si-search:before {
+
+.si-search::before {
   content: "\e916";
 }
-.si-caret:before {
+
+.si-caret::before {
   content: "\e900";
 }
-.si-check:before {
+
+.si-check::before {
   content: "\e910";
 }
-.si-add:before {
+
+.si-add::before {
   content: "\e90d";
 }
-.si-clear:before {
+
+.si-clear::before {
   content: "\e91a";
 }
-.si-delete:before {
+
+.si-delete::before {
   content: "\e902";
 }
-.si-step-into:before {
+
+.si-step-into::before {
   content: "\e903";
 }
-.si-info:before {
+
+.si-info::before {
   content: "\e904";
 }
-.si-more:before {
+
+.si-more::before {
   content: "\e911";
 }
-.si-play-all:before {
+
+.si-play-all::before {
   content: "\e906";
 }
-.si-play:before {
+
+.si-play::before {
   content: "\e907";
 }
-.si-pause:before {
+
+.si-pause::before {
   content: "\e908";
 }
-.si-remove:before {
+
+.si-remove::before {
   content: "\e909";
 }
-.si-code:before {
+
+.si-code::before {
   content: "\e90a";
 }
-.si-save:before {
+
+.si-save::before {
   content: "\e90b";
 }
-.si-select:before {
+
+.si-select::before {
   content: "\e90f";
 }

@@ -16,7 +16,6 @@
 // under the License.
 
 import React from "react";
-import PropTypes from "prop-types";
 import { observer, Provider } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import { modifier } from "modifier-keys";

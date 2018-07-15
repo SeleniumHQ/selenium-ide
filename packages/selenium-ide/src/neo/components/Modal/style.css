@@ -11,9 +11,9 @@
   position: relative;
   left: -50%;
   background: white;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 4px;
-  box-shadow: 0 0 18px rgba(0,0,0,.7);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
   padding: 20px;
   opacity: 0;
   transform: scale(0, 0);
@@ -30,10 +30,10 @@
 
 .modal-overlay {
   position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px; 
-  background: rgba(0,0,0,0.65);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
   z-index: 1000;
 }

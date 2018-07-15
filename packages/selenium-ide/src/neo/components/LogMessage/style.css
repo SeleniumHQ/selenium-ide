@@ -12,27 +12,27 @@
 }
 
 .log.warn {
-  color: #DC9914;
+  color: #dc9914;
 }
 
 .log.error {
-  color: #E80600;
+  color: #e80600;
 }
 
-.log .message:after {
+.log .message::after {
   padding: 0 5px;
 }
 
 .log.success.notice {
-  color: #23843D;
+  color: #23843d;
 }
 
 .log.failure.notice {
-  color: #E80600;
+  color: #e80600;
 }
 
 .log.success .message .status {
-  color: #23843D;
+  color: #23843d;
 }
 
 .log.undetermined .message .status {
@@ -40,7 +40,7 @@
 }
 
 .log.failure .message .status {
-  color: #E80600;
+  color: #e80600;
 }
 
 .log .details {
@@ -48,7 +48,7 @@
 }
 
 .log.failure .details {
-  color: #E80600;
+  color: #e80600;
 }
 
 .log a:hover {

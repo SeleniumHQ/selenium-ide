@@ -5,7 +5,7 @@
 }
 
 .editor .toolbar {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .editor .test-table-body {

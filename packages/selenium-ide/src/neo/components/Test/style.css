@@ -1,11 +1,11 @@
 .test {
   font-size: 13px;
   line-height: 24px;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .test:focus {
-    outline: 0;
+  outline: 0;
 }
 
 .test .name {
@@ -41,31 +41,31 @@
 }
 
 .test > a:hover {
-  background-color: #F3F3F3
+  background-color: #f3f3f3;
 }
 
 .test > a.selected {
-  background-color: #E3F2FF;
+  background-color: #e3f2ff;
 }
 
 .test:focus > a.selected {
-  border-top: 1px solid #75BFFF;
-  border-bottom: 1px solid #75BFFF;
+  border-top: 1px solid #75bfff;
+  border-bottom: 1px solid #75bfff;
 }
 
 .test > a.executing {
-    background-color: #E3F2FF;
+  background-color: #e3f2ff;
 }
 
 .test.paused > a.executing {
-    background-color: #FFFCC5;
+  background-color: #fffcc5;
 }
 
 .test.paused:focus > a.selected.executing {
-    border-top: 1px solid #d3d622;
-    border-bottom: 1px solid #d3d622;
+  border-top: 1px solid #d3d622;
+  border-bottom: 1px solid #d3d622;
 }
 
-.test.changed .name > span:after {
+.test.changed .name > span::after {
   content: "*";
 }
