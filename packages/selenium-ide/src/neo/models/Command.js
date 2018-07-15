@@ -491,7 +491,8 @@ class CommandList {
                     Option locators provide different ways of specifying a select \
                     element (e.g., label=, value=, id=, index=). If no option \
                     locator prefix is provided, a match on the label will be attempted.",
-      target: ArgTypes.selectLocator
+      target: ArgTypes.selectLocator,
+      value: ArgTypes.optionLocator
     }],
     [ "selectFrame", {
       name: "select frame",
@@ -508,7 +509,7 @@ class CommandList {
     [ "selectWindow", {
       name: "select window",
       description: "Selects a popup window using a window locator. Once a popup \
-                    window has been selected, all commands wll go to that window. \
+                    window has been selected, all commands will go to that window. \
                     To select the main window again, use null as the target. \
                     Window locators provide different ways of specifying the window \
                     object: by title or by generated id.",
