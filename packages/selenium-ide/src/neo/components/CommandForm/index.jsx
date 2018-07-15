@@ -23,6 +23,7 @@ import { Commands } from "../../models/Command";
 import Input from "../FormInput";
 import TextArea from "../FormTextArea";
 import CommandInput from "../CommandInput";
+import TargetInput from "../TargetInput";
 import FlatButton from "../FlatButton";
 import { find, select } from "../../IO/SideeX/find-select";
 import "./style.css";
@@ -61,11 +62,12 @@ import "./style.css";
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setCommand : null} />
           <div className="target">
-            <Input
+            <TargetInput
               id="target"
               name="target"
               label="Target"
               value={this.props.command ? this.props.command.target : ""}
+              targets={this.props.command.targets}
               disabled={!this.props.command}
               onChange={this.props.command ? this.props.command.setTarget : null} />
             <FlatButton

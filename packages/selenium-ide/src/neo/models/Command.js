@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Command {
@@ -23,6 +23,7 @@ export default class Command {
   @observable comment = "";
   @observable command;
   @observable target;
+  @observable targets = [];
   @observable value;
   @observable isBreakpoint = false;
 
@@ -60,6 +61,10 @@ export default class Command {
     this.target = target || "";
   }
 
+  @action.bound setTargets(targets = []) {
+    this.targets.replace(targets);
+  }
+
   @action.bound setValue(value) {
     this.value = value ? value.replace(/\n/g, "\\n") : "";
   }
@@ -72,6 +77,7 @@ export default class Command {
     this.setComment(jsRep.comment);
     this.setCommand(jsRep.command);
     this.setTarget(jsRep.target);
+    this.setTargets(jsRep.targets);
     this.setValue(jsRep.value);
   }
 
@@ -81,6 +87,7 @@ export default class Command {
       comment: this.comment,
       command: this.command,
       target: this.target,
+      targets: toJS(this.targets),
       value: this.value
     };
   }

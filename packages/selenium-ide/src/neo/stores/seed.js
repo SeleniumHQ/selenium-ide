@@ -60,6 +60,9 @@ export default function seed(store, numberOfSuites = 5) {
   const firstClick = playbackTest.createCommand();
   firstClick.setCommand("click");
   firstClick.setTarget("link=enacted");
+  firstClick.setTargets([
+    ["//div[@id='mw-content-text']/div/p[7]", "xpath:idRelative"]
+  ]);
   const secondClick = playbackTest.createCommand();
   secondClick.setCommand("clickAt");
   secondClick.setTarget("link=parliamentary systems");
