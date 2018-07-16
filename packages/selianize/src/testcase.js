@@ -16,38 +16,41 @@
 // under the License.
 
 import CommandEmitter from "./command";
+import config from "./config";
+import { convertToSnake } from "./utils";
 
 const hooks = [];
 
-export function emit(test) {
+export function emit(test, options = config) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
+    const testName = convertToSnake(test.name);
 
     let emittedTest = `it("${test.name}", async () => {`;
     emittedTest += hookResults.map((hook) => hook.setup || "").join("");
-    emittedTest += `await tests.${convertToSnake(test.name)}(driver, vars);`;
+    emittedTest += `await tests.${testName}(driver, vars);`;
     emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
     emittedTest += hookResults.map((hook) => hook.teardown || "").join("");
     emittedTest += "});";
 
-    let func = `tests.${convertToSnake(test.name)} = async function ${convertToSnake(test.name)}(driver, vars) {`;
+    let func = `tests.${testName} = async function ${testName}(driver, vars) {`;
     let errors = [];
     func += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
-      errors.push({
-        index: index + 1,
-        ...command,
-        message: e
-      });
+      if (options.silenceErrors) {
+        return `throw new Error("${e.message}");`;
+      } else {
+        errors.push({
+          index: index + 1,
+          ...command,
+          message: e
+        });
+      }
     }))))).join("");
     func += "}";
 
 
     errors.length ? rej({ ...test, commands: errors }) : res({ name: test.name, test: emittedTest, function: func });
   });
-}
-
-export function convertToSnake(string) {
-  return string.replace(/(\s|-)/g, "_");
 }
 
 function registerHook(hook) {

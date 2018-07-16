@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Command {
@@ -23,6 +23,7 @@ export default class Command {
   @observable comment = "";
   @observable command;
   @observable target;
+  @observable targets = [];
   @observable value;
   @observable isBreakpoint = false;
 
@@ -60,6 +61,10 @@ export default class Command {
     this.target = target || "";
   }
 
+  @action.bound setTargets(targets = []) {
+    this.targets.replace(targets);
+  }
+
   @action.bound setValue(value) {
     this.value = value ? value.replace(/\n/g, "\\n") : "";
   }
@@ -72,6 +77,7 @@ export default class Command {
     this.setComment(jsRep.comment);
     this.setCommand(jsRep.command);
     this.setTarget(jsRep.target);
+    this.setTargets(jsRep.targets);
     this.setValue(jsRep.value);
   }
 
@@ -81,6 +87,7 @@ export default class Command {
       comment: this.comment,
       command: this.command,
       target: this.target,
+      targets: toJS(this.targets),
       value: this.value
     };
   }
@@ -452,7 +459,7 @@ class CommandList {
     }],
     [ "open", {
       name: "open",
-      description: "Opens a URL and waits for teh page to load before proceeding. \
+      description: "Opens a URL and waits for the page to load before proceeding. \
                     This accepts both relative and absolute URLs.",
       target: ArgTypes.url
     }],
@@ -491,7 +498,8 @@ class CommandList {
                     Option locators provide different ways of specifying a select \
                     element (e.g., label=, value=, id=, index=). If no option \
                     locator prefix is provided, a match on the label will be attempted.",
-      target: ArgTypes.selectLocator
+      target: ArgTypes.selectLocator,
+      value: ArgTypes.optionLocator
     }],
     [ "selectFrame", {
       name: "select frame",
@@ -508,7 +516,7 @@ class CommandList {
     [ "selectWindow", {
       name: "select window",
       description: "Selects a popup window using a window locator. Once a popup \
-                    window has been selected, all commands wll go to that window. \
+                    window has been selected, all commands will go to that window. \
                     To select the main window again, use null as the target. \
                     Window locators provide different ways of specifying the window \
                     object: by title or by generated id.",

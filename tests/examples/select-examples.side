@@ -10,18 +10,21 @@
       "comment": "",
       "command": "open",
       "target": "/select.html",
+      "targets": [],
       "value": ""
     }, {
       "id": "55847a24-c2e4-481a-b5ff-6e360d370151",
       "comment": "",
       "command": "assertSelectedLabel",
       "target": "id=select",
+      "targets": [],
       "value": "One"
     }, {
       "id": "71537b82-ff16-449e-8aa9-618ee22f5ccd",
       "comment": "",
       "command": "verifySelectedLabel",
       "target": "id=select",
+      "targets": [],
       "value": "One"
     }]
   }],
@@ -33,7 +36,7 @@
     "timeout": 300,
     "tests": ["6acbf258-048b-4493-8478-accfc444fb3d"]
   }],
-  "urls": ["https://en.wikipedia.org"],
+  "urls": ["https://en.wikipedia.org/"],
   "plugins": [],
   "version": "1.0",
   "code": {
@@ -44,7 +47,7 @@
     }],
     "tests": [{
       "name": "select-verify-labels",
-      "code": "tests.select_verify_labels = async function select_verify_labels(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});}"
+      "code": "tests.select_verify_labels = async function select_verify_labels(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(`One`);});});});});await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(`One`);});});});});}"
     }]
   },
   "dependencies": {}

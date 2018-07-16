@@ -1,6 +1,6 @@
 .btn {
   color: #656565;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   padding: 10px 20px;
   margin: 5px 8px;
   border: 1px solid transparent;
@@ -8,7 +8,7 @@
   outline: 0;
   text-transform: capitalize;
   box-shadow: inset -1px 1px 1px 0 transparent;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .btn:hover {
@@ -16,51 +16,50 @@
 }
 
 .btn:focus {
-  border-color: rgba(0,0,0,.25);
+  border-color: rgba(0, 0, 0, 0.25);
 }
 
 .btn:active {
-  background-color: #EEEEEE;
-  box-shadow: inset -1px 1px 1px 0 #CACACA;
+  background-color: #eee;
+  box-shadow: inset -1px 1px 1px 0 #cacaca;
 }
 
 .btn:disabled {
-  color: #A9A9A9;
+  color: #a9a9a9;
   cursor: not-allowed;
 }
 
 .btn.icon {
   font-size: 22px;
-  border: 1px solid #DCDCDC;
+  border: 1px solid #dcdcdc;
   background-color: white;
   padding: 5px 8px;
   border-radius: 2px;
 }
 
-.btn.icon:hover:not(:disabled) {
-  color: #40A6FF;
-}
-
 .btn.icon:focus {
-  border-color: #40A6FF;
+  border-color: #40a6ff;
 }
 
 .btn.icon:active {
   box-shadow: inset -1px 1px 1px 0 #ececec;
 }
 
+.btn.icon:hover:not(:disabled) {
+  color: #40a6ff;
+}
+
 .btn.icon.active {
-  border-color: #40A6FF;
-  background-color: #E3F2FF;
+  border-color: #40a6ff;
+  background-color: #e3f2ff;
 }
 
 .btn.icon.active:active {
-  box-shadow: inset -1px 1px 1px 0 #CACACA;
+  box-shadow: inset -1px 1px 1px 0 #cacaca;
 }
 
-
 .btn.primary {
-  color: #FFF;
+  color: #fff;
   background-color: #6fc8ea;
 }
 
@@ -78,11 +77,11 @@
 }
 
 .btn.secondary:hover {
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
 }
 
 .btn.danger {
-  color: #FFF;
+  color: #fff;
   background-color: #ff6b6b;
 }
 

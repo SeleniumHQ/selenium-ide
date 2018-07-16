@@ -20,15 +20,17 @@ import SuiteEmitter from "./suite";
 import TestCaseEmitter from "./testcase";
 import CommandEmitter from "./command";
 import LocationEmitter from "./location";
+import config from "./config";
 
-export default function Selianize(project) {
+export default function Selianize(project, _opts) {
+  const options = { ...config, ..._opts };
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     let result = "";
 
     result += await ConfigurationEmitter.emit(project);
 
     let errors = [];
-    const tests = (await Promise.all(project.tests.map((test) => TestCaseEmitter.emit(test).catch(e => {
+    const tests = (await Promise.all(project.tests.map((test) => TestCaseEmitter.emit(test, options).catch(e => {
       errors.push(e);
     }))));
 

@@ -41,6 +41,8 @@ export function recordCommand(command, target, value, index, select = false) {
   if (select) {
     UiState.selectCommand(newCommand);
   }
+
+  return newCommand;
 }
 
 // for record module
@@ -65,7 +67,8 @@ export default function record(command, targets, value, insertBeforeLastCommand 
       // double click removed the 2 clicks from before
       index -= 2;
     }
-    recordCommand(command, targets[0][0], value, index);
+    const newCommand = recordCommand(command, targets[0][0], value, index);
+    newCommand.setTargets(targets);
   }
 }
 

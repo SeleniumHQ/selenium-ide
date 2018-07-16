@@ -15,13 +15,13 @@
 }
 
 .rc-slider-rail {
-  background-color: #D8D8D8;
+  background-color: #d8d8d8;
 }
 
 .rc-slider-handle {
   background: #fff;
   border: 1px solid #979797;
-  box-shadow: 0 0 8px 0 rgba(0,0,0,0.17);
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.17);
 }
 
 .rc-slider-handle:focus {

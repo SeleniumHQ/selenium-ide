@@ -1,5 +1,5 @@
 .test-table {
-  border-bottom: 1px #CECECE solid;
+  border-bottom: 1px #cecece solid;
 }
 
 .test-table-body {
@@ -13,7 +13,8 @@
   border-spacing: 0;
 }
 
-.test-table td, th {
+.test-table td,
+.test-table th {
   padding: 5px 10px;
 }
 
@@ -25,18 +26,18 @@
 }
 
 .test-table th:first-child {
-    margin-left: 47px;
+  margin-left: 47px;
 }
 
 .test-table th:last-child {
-    margin-right: 22px;
+  margin-right: 22px;
 }
 
-.test-table th:not(:last-child):after {
+.test-table th:not(:last-child)::after {
   content: "";
   height: 10px;
   width: 1px;
-  background-color: #CECECE;
+  background-color: #cecece;
   position: absolute;
   right: 0;
   margin: auto;
@@ -45,7 +46,7 @@
 }
 
 .test-table .filler {
-  border-right: 1px #CECECE solid;
+  border-right: 1px #cecece solid;
   width: 37px;
   padding: 5px;
   flex-grow: 1;

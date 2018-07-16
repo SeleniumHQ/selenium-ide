@@ -100,7 +100,6 @@ if (browser.windows) {
   constructor(props) {
     super(props);
     this.state = { project };
-    this.moveTest = this.moveTest.bind(this);
     this.selectAllCommands = this.selectAllCommands.bind(this);
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
@@ -112,13 +111,6 @@ if (browser.windows) {
         return confirmationMessage;
       }
     });
-  }
-  moveTest(testItem, destination) {
-    const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
-    const test = origin.tests.find(test => (test.id === testItem.id));
-
-    destination.addTestCase(test);
-    origin.removeTestCase(test);
   }
   handleResize(currWindow) {
     UiState.setWindowHeight(currWindow.innerHeight);
@@ -204,7 +196,6 @@ if (browser.windows) {
                     createSuite={this.createSuite}
                     removeSuite={this.state.project.deleteSuite}
                     createTest={this.createTest}
-                    moveTest={this.moveTest}
                     deleteTest={this.deleteTest}
                   />
                   <Editor

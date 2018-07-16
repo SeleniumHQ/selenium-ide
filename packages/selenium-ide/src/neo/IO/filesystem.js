@@ -84,7 +84,7 @@ function downloadProject(project) {
 
 function exportProject(project) {
   return Manager.validatePluginExport(project).then(() => {
-    return Selianize(project).catch(err => {
+    return Selianize(project, { silenceErrors: true }).catch(err => {
       const markdown = ParseError(err && err.message || err);
       ModalState.showAlert({
         title: "Error saving project",
@@ -140,17 +140,19 @@ export function loadProject(project, file) {
           });
         } else if (type === FileTypes.TestCase) {
           const { test, baseUrl } = migrateTestCase(contents);
-          if (project.url && project.url !== baseUrl) {
+          if (!project.urls.includes(baseUrl)) {
             ModalState.showAlert({
               title: "Migrate test case",
               description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
               confirmLabel: "Migrate",
               cancelLabel: "Discard"
-            }, (choseDownload) => {
-              if (choseDownload) {
+            }, (choseMigration) => {
+              if (choseMigration) {
                 project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl)));
               }
             });
+          } else {
+            project.addTestCase(TestCase.fromJS(test, baseUrl));
           }
         }
       } catch (error) {

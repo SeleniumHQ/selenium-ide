@@ -10,24 +10,28 @@
       "comment": "",
       "command": "open",
       "target": "/store/attributes.html",
+      "targets": [],
       "value": ""
     }, {
       "id": "e3794da0-c506-4d85-a628-a8f6f92b12ce",
       "comment": "",
       "command": "storeAttribute",
       "target": "id=test-id-1@style",
+      "targets": [],
       "value": "var1"
     }, {
       "id": "ef2dd2cf-3ef5-4172-83e2-c2f24283046a",
       "comment": "",
       "command": "type",
       "target": "id=test",
+      "targets": [],
       "value": "${var1}"
     }, {
       "id": "8cf7cf82-1254-4da4-8af7-f8a674e381b8",
       "comment": "",
       "command": "assertValue",
       "target": "id=test",
+      "targets": [],
       "value": "color: blue;"
     }]
   }, {
@@ -38,42 +42,49 @@
       "comment": "",
       "command": "open",
       "target": "/store/nodes.html",
+      "targets": [],
       "value": ""
     }, {
       "id": "3ca83da5-71ac-44cd-91b4-0dff477a2969",
       "comment": "",
       "command": "storeXpathCount",
       "target": "xpath=//span",
+      "targets": [],
       "value": "span_count"
     }, {
       "id": "05de1848-f1d3-4c9b-9c2c-e6495e857b89",
       "comment": "",
       "command": "type",
       "target": "id=test",
+      "targets": [],
       "value": "${span_count}"
     }, {
       "id": "f84c1c30-510c-4268-a683-d223da0be9a8",
       "comment": "",
       "command": "assertValue",
       "target": "id=test",
+      "targets": [],
       "value": "10"
     }, {
       "id": "fe8b75e9-f193-4341-9cda-4ee743559acd",
       "comment": "",
       "command": "storeXpathCount",
       "target": "xpath=//div[contains(@class, \"testclass\")]",
+      "targets": [],
       "value": "div_count"
     }, {
       "id": "45f83e25-610b-47d5-bddc-79051e12e011",
       "comment": "",
       "command": "type",
       "target": "id=test",
+      "targets": [],
       "value": "${div_count}"
     }, {
       "id": "a4f1861d-6480-496f-bef1-649a396d93ac",
       "comment": "",
       "command": "assertValue",
       "target": "id=test",
+      "targets": [],
       "value": "6"
     }]
   }],
@@ -85,7 +96,7 @@
     "timeout": 300,
     "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b", "e68f3128-4bea-4a35-999f-31466d7b4340"]
   }],
-  "urls": ["https://en.wikipedia.org", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000", "http://localhost:5000"],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
   "plugins": [],
   "version": "1.0",
   "code": {
@@ -96,10 +107,10 @@
     }],
     "tests": [{
       "name": "attributes",
-      "code": "tests.attributes = async function attributes(driver, vars) {await driver.get(BASE_URL + \"/store/attributes.html\");await driver.wait(until.elementLocated(By.id(\"test-id-1\")));await driver.findElement(By.id(\"test-id-1\")).then(element => element.getAttribute(\"style\").then(attribute => {vars[\"var1\"] = attribute;}));await driver.wait(until.elementLocated(By.id(\"test\")));await driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.var1}`);});});await driver.wait(until.elementLocated(By.id(\"test\")));await expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"color: blue;\");}"
+      "code": "tests.attributes = async function attributes(driver, vars) {await driver.get(BASE_URL + \"/store/attributes.html\");await driver.wait(until.elementLocated(By.id(`test-id-1`)), configuration.timeout);await driver.findElement(By.id(`test-id-1`)).then(element => element.getAttribute(\"style\").then(attribute => {vars[\"var1\"] = attribute;}));await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await driver.findElement(By.id(`test`)).then(element => {element.clear().then(() => {element.sendKeys(`${vars.var1}`);});});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await expect(driver.findElement(By.id(`test`))).resolves.toHaveValue(`color: blue;`);}"
     }, {
       "name": "xpath count",
-      "code": "tests.xpath_count = async function xpath_count(driver, vars) {await driver.get(BASE_URL + \"/store/nodes.html\");await driver.wait(until.elementsLocated(By.xpath(\"//span\")));await driver.findElements(By.xpath(\"//span\")).then(elements => {vars[\"span_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(\"test\")));await driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.span_count}`);});});await driver.wait(until.elementLocated(By.id(\"test\")));await expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"10\");await driver.wait(until.elementsLocated(By.xpath(\"//div[contains(@class, \\\"testclass\\\")]\")));await driver.findElements(By.xpath(\"//div[contains(@class, \\\"testclass\\\")]\")).then(elements => {vars[\"div_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(\"test\")));await driver.findElement(By.id(\"test\")).then(element => {element.clear().then(() => {element.sendKeys(`${vars.div_count}`);});});await driver.wait(until.elementLocated(By.id(\"test\")));await expect(driver.findElement(By.id(\"test\"))).resolves.toHaveValue(\"6\");}"
+      "code": "tests.xpath_count = async function xpath_count(driver, vars) {await driver.get(BASE_URL + \"/store/nodes.html\");await driver.wait(until.elementsLocated(By.xpath(`//span`)), configuration.timeout);await driver.findElements(By.xpath(`//span`)).then(elements => {vars[\"span_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await driver.findElement(By.id(`test`)).then(element => {element.clear().then(() => {element.sendKeys(`${vars.span_count}`);});});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await expect(driver.findElement(By.id(`test`))).resolves.toHaveValue(`10`);await driver.wait(until.elementsLocated(By.xpath(`//div[contains(@class, \\\"testclass\\\")]`)), configuration.timeout);await driver.findElements(By.xpath(`//div[contains(@class, \\\"testclass\\\")]`)).then(elements => {vars[\"div_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await driver.findElement(By.id(`test`)).then(element => {element.clear().then(() => {element.sendKeys(`${vars.div_count}`);});});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await expect(driver.findElement(By.id(`test`))).resolves.toHaveValue(`6`);}"
     }]
   },
   "dependencies": {}
