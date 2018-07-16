@@ -112,6 +112,7 @@ export default class ProjectStore {
         test.name = `${test.name} (${foundNumber})`;
       }
       this._tests.push(test);
+      return test;
     }
   }
 
