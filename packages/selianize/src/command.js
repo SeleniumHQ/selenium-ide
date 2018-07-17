@@ -188,7 +188,7 @@ async function emitExecuteAsyncScript(script, varName) {
   return Promise.resolve(`vars["${varName}"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);\`);`);
 }
 
-async function emitPause(_, time) {
+async function emitPause(time) {
   return Promise.resolve(`await driver.sleep(${time});`);
 }
 

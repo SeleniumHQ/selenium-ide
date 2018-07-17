@@ -166,10 +166,10 @@ describe("command code emitter", () => {
   it("should emit `pause` command", () => {
     const command = {
       command: "pause",
-      target: "",
-      value: "300"
+      target: "300",
+      value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.sleep(${command.value});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.sleep(${command.target});`);
   });
   it("should emit `verify checked` command", () => {
     const command = {
