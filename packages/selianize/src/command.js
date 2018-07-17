@@ -173,7 +173,7 @@ async function emitUncheck(locator) {
 }
 
 async function emitRun(testCase) {
-  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars);`);
+  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
 }
 
 async function emitRunScript(script) {
