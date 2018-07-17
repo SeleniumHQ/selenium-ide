@@ -49,3 +49,14 @@ Running tests faster through the use of multiple workers
 The runner will automatically set the number of workers to the amount of cores available, for most cases this is the best result.  
 **Note:** unless you specified that a suite is parallel, it will still run the contained tests sequentially, though the runner will run suites in parallel by default.  
 To mark a suite's tests as parallel, set that in the suite's settings in the IDE.
+
+### FAQ
+
+#### I'm getting an error similar to `Unknown locator ${vars.something}`
+When running your projects make sure that the command is aware of the locator strategy **before** variables are evaluated.  
+For example `click | id=${myButton}` vs `click | ${idOfMyButton}`.  
+Always use the first one, since the strategy is hardcoded in the command, the second would yield an error.  
+
+>But it works in the IDE.  
+
+That is because the IDE calculates locator strategies differently than the runner, it is a known current issue.
