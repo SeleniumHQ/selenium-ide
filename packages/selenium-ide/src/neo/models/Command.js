@@ -845,6 +845,12 @@ function isBlockOpen(command) {
   return (isIf(command) || isLoop(command));
 }
 
+function isTerminal(command) {
+  return (isElse(command) ||
+          isDo(command) ||
+          isEnd(command));
+}
+
 export const ControlFlowCommandChecks = {
   isConditional: isConditional,
   isDo: isDo,
@@ -853,6 +859,7 @@ export const ControlFlowCommandChecks = {
   isEnd: isEnd,
   isIf: isIf,
   isLoop: isLoop,
-  isBlockOpen: isBlockOpen
+  isBlockOpen: isBlockOpen,
+  isTerminal: isTerminal
 };
 

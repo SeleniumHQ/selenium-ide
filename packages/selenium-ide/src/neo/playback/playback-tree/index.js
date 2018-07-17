@@ -52,12 +52,10 @@ function connectCommandNodes(_commandNodeStack) {
   let state = new State;
   commandNodeStack.forEach(function(commandNode) {
     let nextCommandNode = commandNodeStack[commandNode.index + 1];
-    if (nextCommandNode) {
-      if (connectCommandNode[commandNode.command.command]) {
-        connectCommandNode[commandNode.command.command](commandNode, nextCommandNode, commandNodeStack, state);
-      } else {
-        connectDefault(commandNode, nextCommandNode, commandNodeStack, state);
-      }
+    if (connectCommandNode[commandNode.command.command]) {
+      connectCommandNode[commandNode.command.command](commandNode, nextCommandNode, commandNodeStack, state);
+    } else {
+      connectDefault(commandNode, nextCommandNode, commandNodeStack, state);
     }
   });
   return commandNodeStack;
@@ -77,11 +75,12 @@ let connectCommandNode = {
 function connectDefault (commandNode, _nextCommandNode, stack, state) {
   let nextCommandNode;
   if (ControlFlowCommandChecks.isIf(state.top()) && (ControlFlowCommandChecks.isElseOrElseIf(_nextCommandNode.command))) {
-    nextCommandNode = findNextNodeBy(stack, commandNode.index, state.top().level, ControlFlowCommandNames.end);
+    let next = findNextNodeBy(stack, commandNode.index, state.top().level, ControlFlowCommandNames.end);
+    nextCommandNode = deriveNext(next, stack);
   } else if (ControlFlowCommandChecks.isLoop(state.top()) && ControlFlowCommandChecks.isEnd(_nextCommandNode.command)) {
     nextCommandNode = stack[state.top().index];
   } else {
-    nextCommandNode = _nextCommandNode;
+    nextCommandNode = deriveNext(_nextCommandNode, stack);
   }
   connectNext(commandNode, nextCommandNode);
 }
@@ -92,8 +91,9 @@ function connectConditionalForBranchOpen (commandNode, nextCommandNode, stack, s
 }
 
 function connectConditional (commandNode, nextCommandNode, stack) {
+  let left = findNextNodeBy(stack, commandNode.index, commandNode.level);
   commandNode.right = nextCommandNode;
-  commandNode.left = findNextNodeBy(stack, commandNode.index, commandNode.level);
+  commandNode.left = deriveNext(left, stack);
 }
 
 function connectNextForBranchOpen (commandNode, nextCommandNode, stack, state) {
@@ -106,22 +106,13 @@ function connectNext (commandNode, nextCommandNode) {
 }
 
 function connectRepeatIf (commandNode, nextCommandNode, stack, state) {
-  commandNode.right = stack[state.top().index];
-  commandNode.left = nextCommandNode;
+  commandNode.right = stack[state.top().index + 1];
+  commandNode.left = deriveNext(nextCommandNode, stack);
   state.pop();
 }
 
 function connectEnd (commandNode, _nextCommandNode, stack, state) {
   state.pop();
-  if (!state.empty()) {
-    let nextCommandNode;
-    if (ControlFlowCommandChecks.isElseOrElseIf(_nextCommandNode.command)) {
-      nextCommandNode = findNextNodeBy(stack, commandNode.index, state.top().level, ControlFlowCommandNames.end);
-    } else {
-      nextCommandNode = _nextCommandNode;
-    }
-    connectNext(commandNode, nextCommandNode);
-  }
 }
 
 function findNextNodeBy(stack, index, level, commandName) {
@@ -136,5 +127,18 @@ function findNextNodeBy(stack, index, level, commandName) {
         return stack[i];
       }
     }
+  }
+}
+
+function deriveNext (nextCommandNode, stack) {
+  if (nextCommandNode && ControlFlowCommandChecks.isTerminal(nextCommandNode.command)) {
+    let result = stack[nextCommandNode.index + 1];
+    if (result && ControlFlowCommandChecks.isTerminal(result.command)) {
+      return deriveNext(result, stack);
+    } else {
+      return result;
+    }
+  } else {
+    return nextCommandNode;
   }
 }
