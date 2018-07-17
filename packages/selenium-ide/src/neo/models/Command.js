@@ -218,7 +218,7 @@ class CommandList {
       name: "answer on next prompt",
       description: "Affects the next alert prompt. This command will send \
                     the specified answer string to it. If the alert is already \
-                    present, then use \"webdriver answer on next prompt\" instead.",
+                    present, then use \"webdriver answer on visible prompt\" instead.",
       target: ArgTypes.answer
     }],
     [ "assertAlert", {
@@ -327,19 +327,19 @@ class CommandList {
       name: "choose cancel on next confirmation",
       description: "Affects the next confirmation alert. This command will \
                     cancel it. If the alert is already present, then use \
-                    \"webdriver choose cancel on next confirmation\" instead."
+                    \"webdriver choose cancel on visible confirmation\" instead."
     }],
     [ "chooseCancelOnNextPrompt", {
       name: "choose cancel on next prompt",
       description: "Affects the next alert prompt. This command will cancel \
                     it. If the alert is already present, then use \"webdriver \
-                    choose cancel on next prompt\" instead."
+                    choose cancel on visible prompt\" instead."
     }],
     [ "chooseOkOnNextConfirmation", {
       name: "choose ok on next confirmation",
       description: "Affects the next confirmation alert. This command will accept \
                     it. If the alert is already present, then use \"webdriver \
-                    choose ok on next confirmation\" instead."
+                    choose ok on visible confirmation\" instead."
     }],
     [ "click", {
       name: "click",
@@ -687,30 +687,30 @@ class CommandList {
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern
     }],
-    [ "webdriverAnswerOnNextPrompt", {
-      name: "webdriver answer on next prompt",
+    [ "webdriverAnswerOnVisiblePrompt", {
+      name: "webdriver answer on visible prompt",
       description: "Affects a currently showing alert prompt. This command \
                     instructs Selenium to provide the specified answer to it. \
                     If the alert has not appeared yet then use \"answer on next \
                     prompt\" instead.",
       target: ArgTypes.answer
     }],
-    [ "webdriverChooseCancelOnNextConfirmation", {
-      name: "webdriver choose cancel on next confirmation",
+    [ "webdriverChooseCancelOnVisibleConfirmation", {
+      name: "webdriver choose cancel on visible confirmation",
       description: "Affects a currently showing confirmation alert. This command \
                     instructs Selenium to cancel it. If the alert has not \
                     appeared yet then use \"choose cancel on next confirmation\" \
                     instead."
     }],
-    [ "webdriverChooseCancelOnNextPrompt", {
-      name: "webdriver choose cancel on next prompt",
+    [ "webdriverChooseCancelOnVisiblePrompt", {
+      name: "webdriver choose cancel on visible prompt",
       description: "Affects a currently showing alert prompt. This command \
                     instructs Selenium to cancel it. If the alert has not \
                     appeared yet then use \"choose cancel on next prompt\" \
                     instead."
     }],
-    [ "webdriverChooseOkOnNextConfirmation", {
-      name: "webdriver choose ok on next confirmation",
+    [ "webdriverChooseOkOnVisibleConfirmation", {
+      name: "webdriver choose ok on visible confirmation",
       description: "Affects a currently showing confirmation alert. This command \
                     instructs Selenium to accept it. If the alert has not \
                     appeared yet then use \"choose ok on next confirmation\" \
