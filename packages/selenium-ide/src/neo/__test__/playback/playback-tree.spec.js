@@ -271,6 +271,47 @@ describe("Control Flow", () => {
         expect(stack[2].right).toBeUndefined();
         expect(stack[2].left).toBeUndefined();
       });
+      test("if-if-if-if-end-end-end-command-end", () => {
+        let input = [
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.if),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand(ControlFlowCommandNames.end),
+          createCommand("command"),
+          createCommand(ControlFlowCommandNames.end)
+        ];
+        let stack = createCommandNodesFromCommandStack(input);
+        expect(stack[0].next).toBeUndefined();
+        expect(stack[0].right).toEqual(stack[1]);
+        expect(stack[0].left).toBeUndefined();
+        expect(stack[1].next).toBeUndefined();
+        expect(stack[1].right).toEqual(stack[2]);
+        expect(stack[1].left).toEqual(stack[7]);
+        expect(stack[2].next).toBeUndefined();
+        expect(stack[2].right).toEqual(stack[3]);
+        expect(stack[2].left).toEqual(stack[7]);
+        expect(stack[3].next).toBeUndefined();
+        expect(stack[3].right).toEqual(stack[4]);
+        expect(stack[3].left).toEqual(stack[7]);
+        expect(stack[4].next).toBeUndefined();
+        expect(stack[4].right).toBeUndefined();
+        expect(stack[4].left).toBeUndefined();
+        expect(stack[5].next).toBeUndefined();
+        expect(stack[5].right).toBeUndefined();
+        expect(stack[5].left).toBeUndefined();
+        expect(stack[6].next).toBeUndefined();
+        expect(stack[6].right).toBeUndefined();
+        expect(stack[6].left).toBeUndefined();
+        expect(stack[7].next).toBeUndefined();
+        expect(stack[7].right).toBeUndefined();
+        expect(stack[7].left).toBeUndefined();
+        expect(stack[8].next).toBeUndefined();
+        expect(stack[8].right).toBeUndefined();
+        expect(stack[8].left).toBeUndefined();
+      });
     });
   });
   describe("Processed", () => {
