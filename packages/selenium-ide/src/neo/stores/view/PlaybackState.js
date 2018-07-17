@@ -48,6 +48,7 @@ class PlaybackState {
   @observable paused = false;
   @observable delay = 0;
   @observable callstack = [];
+  @observable currentExecutingCommandNode = null;
 
   constructor() {
     this.maxDelay = 3000;
@@ -196,7 +197,7 @@ class PlaybackState {
     this.currentRunningTest = this._testsToRun.shift();
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.clearStack();
-    this.currentPlayingIndex = 0;
+    //this.currentPlayingIndex = 0;
     this.errors = 0;
     PluginManager.emitMessage({
       action: "event",
@@ -277,9 +278,9 @@ class PlaybackState {
     this.aborted = true;
     this._testsToRun = [];
     if (this.paused) {
-      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
+      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
     } else {
-      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
     }
     this.stopPlayingGracefully();
   }
@@ -333,6 +334,10 @@ class PlaybackState {
     });
   }
 
+  @action.bound setCurrentExecutingCommandNode(node) {
+    this.currentExecutingCommandNode = node;
+  }
+
   @action.bound setPlayingIndex(index) {
     this.currentPlayingIndex = index;
   }
@@ -351,8 +356,8 @@ class PlaybackState {
         if (!this.pauseOnExceptions) {
           this.stopPlayingGracefully();
         } else if (this.pauseOnExceptions) {
-          this.break(this.runningQueue[this.currentPlayingIndex]);
-          this.setPlayingIndex(this.currentPlayingIndex - 1);
+          this.break(this.currentExecutingCommandNode.command);
+          //this.setPlayingIndex(this.currentPlayingIndex - 1);
         }
       }
     }

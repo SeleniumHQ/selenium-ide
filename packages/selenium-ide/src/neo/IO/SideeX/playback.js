@@ -38,7 +38,7 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
-//let playbackTree;
+let playbackTree;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -52,7 +52,8 @@ function play(currUrl) {
 
 function initPlaybackTree() {
   try {
-    createPlaybackTree(PlaybackState.runningQueue);
+    playbackTree = createPlaybackTree(PlaybackState.runningQueue);
+    PlaybackState.setCurrentExecutingCommandNode(playbackTree.currentCommandNode);
   } catch (error) {
     reportError(error.message, false, error.index);
   }
@@ -66,34 +67,18 @@ function playAfterConnectionFailed() {
 }
 
 function didFinishQueue() {
-  return (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying);
+  return !PlaybackState.currentExecutingCommandNode;
 }
 
 function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
-function incrementPlayingIndex() {
-  if (PlaybackState.currentPlayingIndex < 0) {
-    PlaybackState.setPlayingIndex(0);
-  } else {
-    PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  }
-}
-
-function isCallStackEmpty() {
-  return !PlaybackState.callstack.length;
-}
-
 function executionLoop() {
-  incrementPlayingIndex();
-  if (didFinishQueue() && !isCallStackEmpty()) {
-    PlaybackState.unwindTestCase();
-    return executionLoop();
-  } else if (isStopping() || didFinishQueue()) {
+  if (isStopping() || didFinishQueue()) {
     return false;
   }
-  const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const command = PlaybackState.currentExecutingCommandNode.command;
   const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
   if (!command.command) return executionLoop();
   // breakpoint
@@ -103,13 +88,13 @@ function executionLoop() {
   // paused
   if (isStopping()) return false;
   if (isExtCommand(command.command)) {
-    return doDelay().then(() => (
-      (extCommand[extCommand.name(command.command)](xlateArgument(command.target), xlateArgument(command.value)))
-        .then(() => {
-          // we need to set the stackIndex manually because run command messes with that
-          PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
-        }).then(executionLoop)
-    ));
+    return doDelay().then(() => {
+      return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
+        // we need to set the stackIndex manually because run command messes with that
+        PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
+        PlaybackState.setCurrentExecutingCommandNode(result.next);
+      }).then(executionLoop);
+    });
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
@@ -126,7 +111,6 @@ function executionLoop() {
 }
 
 function prepareToPlay() {
-  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
   return extCommand.init(baseUrl);
 }
 
@@ -141,7 +125,6 @@ function finishPlaying() {
 function catchPlayingError(message) {
   if (isReceivingEndError(message)) {
     setTimeout(function() {
-      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
       playAfterConnectionFailed();
     }, 100);
   } else {
@@ -155,7 +138,11 @@ function reportError(error, nonFatal, index) {
   if (index) {
     id = PlaybackState.runningQueue[index].id;
   } else {
-    id = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex].id;
+    if (PlaybackState.currentlyExecutingCommandNode) {
+      id = PlaybackState.currentlyExecutingCommandNode.command.id;
+    } else {
+      console.log(error);
+    }
   }
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
@@ -177,7 +164,6 @@ reaction(
   () => PlaybackState.paused,
   paused => {
     if (!paused) {
-      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
       ignoreBreakpoint = true;
       playAfterConnectionFailed();
     }
@@ -258,7 +244,7 @@ function doDomWait(res, domTime, domCount = 0) {
 
 function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   if (!PlaybackState.isPlaying || PlaybackState.paused) return;
-  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = PlaybackState.currentExecutingCommandNode.command;
 
   let p = new Promise(function(resolve, reject) {
     let count = 0;
@@ -286,7 +272,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
 function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
   return (command !== "type"
-    ? extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
+    ? PlaybackState.currentExecutingCommandNode.execute(extCommand)
     : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
@@ -296,6 +282,7 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
         PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
       }
     } else {
+      PlaybackState.setCurrentExecutingCommandNode(result.next);
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
     }
   });
@@ -346,7 +333,7 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
 
 function doDelay() {
   return new Promise((res) => {
-    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.runningQueue.length) {
+    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.runningQueue.length) { // TODO
       return res(true);
     } else {
       setTimeout(() => {

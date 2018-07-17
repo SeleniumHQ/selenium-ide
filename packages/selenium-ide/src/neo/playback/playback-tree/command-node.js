@@ -15,7 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ControlFlowCommandChecks } from "../../models/Command";
+import { isExtCommand } from "../../IO/SideeX/ext-command";
+import { xlateArgument } from "../../IO/SideeX/formatCommand";
 
 export class CommandNode {
   constructor(command) {
@@ -28,23 +29,43 @@ export class CommandNode {
     this.timesVisited = 0;
   }
 
-  isConditional() {
-    !!(this.left && this.right);
+  isControlFlow() {
+    !!(this.left || this.right);
   }
 
-  evaluate(playbackTree, extCommand) {
-    if (this.isConditional()) {
-      if (extCommand.evaluateConditional(this.command.target)) {
-        playbackTree.currentCommandNode = this.right;
-      } else {
-        playbackTree.currentCommandNode = this.left;
-      }
+  execute(extCommand) {
+    if (isExtCommand(this.command.command)) {
+      return extCommand[extCommand.name(this.command.command)](xlateArgument(this.command.target), xlateArgument(this.command.value)).then(() => {
+        return {
+          next: this.next
+        };
+      });
+    } else if (this.isControlFlow()) {
+      return this.evaluate();
     } else {
-      if (ControlFlowCommandChecks.isEnd(this.command)) {
-        playbackTree.currentCommandNode = this.next;
-      } else {
-        extCommand.sendMessage(this.command, this.command.target, this.command.value, false);
-      }
+      return extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false).then((result) => {
+        if (result.result === "success") {
+          return {
+            result: "success",
+            next: this.next
+          };
+        } else {
+          return result;
+        }
+      });
+    }
+  }
+
+  evaluate() {
+    let v = true;
+    if (v) {
+      return {
+        next: this.right
+      };
+    } else {
+      return {
+        next: this.left
+      };
     }
   }
 }
