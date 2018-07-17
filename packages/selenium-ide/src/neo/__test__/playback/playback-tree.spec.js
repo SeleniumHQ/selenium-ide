@@ -74,7 +74,7 @@ describe("Control Flow", () => {
         expect(stack[3].right).toBeUndefined();
         expect(stack[3].left).toBeUndefined();
         // else
-        expect(stack[4].next).toEqual(stack[5]);
+        expect(stack[4].next).toBeUndefined();
         expect(stack[4].right).toBeUndefined();
         expect(stack[4].left).toBeUndefined();
         // command
@@ -192,7 +192,7 @@ describe("Control Flow", () => {
         expect(stack[4].right).toBeUndefined();
         expect(stack[4].left).toBeUndefined();
         // else
-        expect(stack[5].next).toEqual(stack[6]); // TODO
+        expect(stack[5].next).toBeUndefined();
         expect(stack[5].right).toBeUndefined();
         expect(stack[5].left).toBeUndefined();
         // command
@@ -212,7 +212,7 @@ describe("Control Flow", () => {
           createCommand("command")
         ];
         let stack = createCommandNodesFromCommandStack(input);
-        expect(stack[0].next).toEqual(stack[1]);
+        expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
         expect(stack[1].next).toEqual(stack[2]);
@@ -235,7 +235,7 @@ describe("Control Flow", () => {
           createCommand(ControlFlowCommandNames.repeatIf)
         ];
         let stack = createCommandNodesFromCommandStack(input);
-        expect(stack[0].next).toEqual(stack[1]);
+        expect(stack[0].next).toBeUndefined();
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
         expect(stack[1].next).toEqual(stack[2]);
