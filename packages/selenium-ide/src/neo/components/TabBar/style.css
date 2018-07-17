@@ -1,5 +1,5 @@
 .tabbar {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
   padding: 0 5px;
   position: relative;
 }
@@ -19,29 +19,29 @@
 }
 
 .tabbar a:hover {
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
 }
 
 .tabbar a:focus {
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
   outline: 0;
 }
 
 .tabbar .underline {
   height: 2px;
-  background-color: #40A6FF;
+  background-color: #40a6ff;
   transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
   position: absolute;
   bottom: 0;
 }
 
-.tabbar .unread:after {
+.tabbar .unread::after {
   content: "";
   display: inline-block;
   height: 5px;
   width: 5px;
   margin: 2px 8px;
-  background-color: #40A6FF;
+  background-color: #40a6ff;
   border-radius: 50%;
 }
 

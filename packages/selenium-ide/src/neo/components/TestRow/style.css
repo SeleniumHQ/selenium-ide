@@ -1,9 +1,14 @@
-.test-table tbody tr {
-  cursor: pointer;
+.test-table tr {
+  display: flex;
+  background-color: white;
 }
 
-.test-table tr {
-  background-color: white;
+.test-table td {
+  font-size: 12px;
+}
+
+.test-table tbody tr {
+  cursor: pointer;
 }
 
 .test-table tbody tr td {
@@ -12,62 +17,74 @@
   word-break: break-all;
 }
 
+.test-table tr td:not(:last-child) {
+  flex: 0% 1 1;
+}
+
 .test-table tbody tr:hover {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
+}
+
+.test-table td .index {
+  display: inline-block;
+  word-break: keep-all;
+}
+
+.test-table tr .command {
+  font-style: italic;
 }
 
 .test-table tbody tr.selected {
-  background-color: #E3F2FF;
+  background-color: #e3f2ff;
 }
 
 .test-table tbody tr.pending {
-  background-color: #E3F2FF;
+  background-color: #e3f2ff;
 }
 
 .test-table.paused tbody tr.pending {
-  background-color: #FFFCC5;
+  background-color: #fffcc5;
 }
 
 .test-table tbody tr:focus {
   outline: 0;
 }
 
-.test-table tbody tr.selected:focus td {
-  border-top: 1px solid #75BFFF;
+.test-table tbody tr.passed td {
+  color: #008425;
 }
 
-.test-table.paused tbody tr.selected.pending:focus td {
-    border-top: 1px solid #d3d622;
+.test-table tbody tr.undetermined td {
+  color: #d49b2c;
+}
+
+.test-table tbody tr.failed td {
+  color: #e80600;
 }
 
 .test-table tbody tr td:first-child {
   position: relative;
-  width: 37px;
   flex: initial;
-  border-right: 1px transparent solid;
   padding: 5px;
-}
-
-.test-table tbody tr:not(:focus) td:first-child {
-    padding-top: 6px;
-    border-top: none;
-}
-
-.test-table tbody tr td:first-child {
-  border-right: 1px #CECECE solid;
+  border-right: 1px #cecece solid;
   padding-left: 0;
   width: 42px;
 }
 
+.test-table tbody tr:not(:focus) td:first-child {
+  padding-top: 6px;
+  border-top: none;
+}
+
 .test-table tbody tr td:first-child a.break-toggle {
-    display: block;
+  display: block;
 }
 
 .test-table tbody tr td:first-child span.index {
-    color: #8B8B8B;
-    line-height: 16px;
-    width: 22px;
-    text-align: right;
+  color: #8b8b8b;
+  line-height: 16px;
+  width: 22px;
+  text-align: right;
 }
 
 .test-table tbody tr td:first-child .arrow {
@@ -80,75 +97,50 @@
   border-left: 8px solid transparent;
 }
 
+.test-table tbody tr.selected:focus td {
+  border-top: 1px solid #75bfff;
+}
+
 .test-table tbody tr.break-point td:first-child .index {
-    background-color: #40A6FF;
-    color: white;
-}
-
-.test-table.breakpoints-disabled tbody tr.break-point td:first-child .index {
-    background-color: rgba(64, 166, 255, 0.5);
-}
-
-.test-table tbody tr.break-point td:first-child .arrow {
-    border-left-color: #40A6FF;
-}
-
-.test-table.breakpoints-disabled tbody tr.break-point td:first-child .arrow {
-    border-left-color: rgba(64, 166, 255, 0.5);
-}
-
-.test-table tbody tr td:first-child span.comment-icon {
-    float: right;
-}
-
-.test-table tbody tr.passed td {
-  color: #008425;
-}
-
-.test-table tbody tr.undetermined td {
-  color: #d49b2c;
-}
-
-.test-table tbody tr.failed td {
-  color: #E80600;
+  background-color: #40a6ff;
+  color: white;
 }
 
 .test-table tbody tr.fatal td:not(:first-child) {
-  color: #E80600;
+  color: #e80600;
   font-weight: bold;
 }
 
-.test-table tr {
-  display: flex;
+.test-table.paused tbody tr.selected.pending:focus td {
+  border-top: 1px solid #d3d622;
 }
 
-.test-table tr td:not(:last-child) {
-  flex: 0% 1 1;
+.test-table.breakpoints-disabled tbody tr.break-point td:first-child .index {
+  background-color: rgba(64, 166, 255, 0.5);
 }
 
-.test-table td {
-  font-size: 12px;
+.test-table tbody tr.break-point td:first-child .arrow {
+  border-left-color: #40a6ff;
 }
 
-.test-table td .index {
-  display: inline-block;
-  word-break: keep-all;
+.test-table.breakpoints-disabled tbody tr.break-point td:first-child .arrow {
+  border-left-color: rgba(64, 166, 255, 0.5);
 }
 
-.test-table tr .commenta, .command {
-    font-style: italic;
+.test-table tbody tr td:first-child span.comment-icon {
+  float: right;
 }
 
 .test-table .cell__hidden {
-    display: none;
+  display: none;
 }
 
 .test-table tr:hover .comment {
-    display: none;
+  display: none;
 }
 
 .test-table tr:not(:hover) .cell__alternate {
-    display: none;
+  display: none;
 }
 
 .test-table td.buttons {
@@ -168,7 +160,6 @@
 
 .test-table tr .buttons button {
   width: 22px;
-  height: 22px;
   font-size: 20px;
   height: 100%;
   margin: auto 0;

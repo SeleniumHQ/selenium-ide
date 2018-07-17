@@ -148,11 +148,11 @@ export function loadProject(project, file) {
               cancelLabel: "Discard"
             }, (choseMigration) => {
               if (choseMigration) {
-                project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl)));
+                UiState.selectTest(project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl))));
               }
             });
           } else {
-            project.addTestCase(TestCase.fromJS(test, baseUrl));
+            UiState.selectTest(project.addTestCase(TestCase.fromJS(test, baseUrl)));
           }
         }
       } catch (error) {

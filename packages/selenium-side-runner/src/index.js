@@ -29,6 +29,8 @@ import Capabilities from "./capabilities";
 import Config from "./config";
 import metadata from "../package.json";
 
+const DEFAULT_TIMEOUT = 15000;
+
 process.title = metadata.name;
 
 program
@@ -37,9 +39,10 @@ program
   .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("-s, --server [url]", "Webdriver remote server")
   .option("-p, --params [list]", "General parameters")
-  .option("-f, --filter [string]", "Filter test cases by name")
+  .option("-f, --filter [string]", "Run suites matching name")
   .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
+  .option("--timeout [number | undefined]", `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`)
   .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
   .option("--debug", "Print debug logs")
   .parse(process.argv);
@@ -68,7 +71,14 @@ try {
   winston.info("Could not load " + configurationFilePath);
 }
 
+program.filter = program.filter || "*";
 configuration.server = program.server ? program.server : configuration.server;
+
+configuration.timeout = program.timeout ? +program.timeout
+  : configuration.timeout ? +configuration.timeout
+  : DEFAULT_TIMEOUT; // eslint-disable-line indent
+
+if (configuration.timeout === "undefined") configuration.timeout = undefined;
 
 if (program.capabilities) {
   try {
@@ -145,9 +155,8 @@ function runProject(project) {
     }
     npmInstall.then(() => {
       const child = fork(require.resolve("./child"), [
-        "--testMatch", "**/*.test.js"
-      ].concat(program.filter ? ["-t", program.filter] : [])
-        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
+        "--testMatch", `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`
+      ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
 
       child.on("exit", (code) => {
         console.log("");

@@ -10,19 +10,54 @@
       "comment": "",
       "command": "open",
       "target": "/select.html",
+      "targets": [],
       "value": ""
     }, {
       "id": "55847a24-c2e4-481a-b5ff-6e360d370151",
       "comment": "",
       "command": "assertSelectedLabel",
       "target": "id=select",
+      "targets": [],
       "value": "One"
     }, {
       "id": "71537b82-ff16-449e-8aa9-618ee22f5ccd",
       "comment": "",
       "command": "verifySelectedLabel",
       "target": "id=select",
+      "targets": [],
       "value": "One"
+    }]
+  }, {
+    "id": "58c35d38-9091-4f2e-a42f-c85ff8fdb30e",
+    "name": "select strategies",
+    "commands": [{
+      "id": "ff2730d3-b18d-4425-9f9c-5f9364bfef1f",
+      "comment": "",
+      "command": "open",
+      "target": "/select.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "48d4aacc-418b-4684-bfe8-cbb75356adbb",
+      "comment": "",
+      "command": "store",
+      "target": "Two",
+      "targets": [],
+      "value": "label"
+    }, {
+      "id": "34c991ee-db67-4e15-be7d-9f84be17bdda",
+      "comment": "",
+      "command": "select",
+      "target": "id=select",
+      "targets": [],
+      "value": "${label}"
+    }, {
+      "id": "951c9516-0dda-4d66-82b2-59ffa9837c99",
+      "comment": "",
+      "command": "assertSelectedLabel",
+      "target": "id=select",
+      "targets": [],
+      "value": "Two"
     }]
   }],
   "suites": [{
@@ -31,20 +66,23 @@
     "persistSession": false,
     "parallel": false,
     "timeout": 300,
-    "tests": ["6acbf258-048b-4493-8478-accfc444fb3d"]
+    "tests": ["6acbf258-048b-4493-8478-accfc444fb3d", "58c35d38-9091-4f2e-a42f-c85ff8fdb30e"]
   }],
-  "urls": ["https://en.wikipedia.org"],
+  "urls": ["https://en.wikipedia.org/"],
   "plugins": [],
   "version": "1.0",
   "code": {
     "suites": [{
       "name": "select",
       "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {await tests.select_verify_labels(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
+      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"select\", () => {it(\"select-verify-labels\", async () => {await tests.select_verify_labels(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"select strategies\", async () => {await tests.select_strategies(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
     }],
     "tests": [{
       "name": "select-verify-labels",
-      "code": "tests.select_verify_labels = async function select_verify_labels(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});await driver.wait(until.elementLocated(By.id(\"select\")));await driver.findElement(By.id(\"select\")).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(\"One\");});});});});}"
+      "code": "tests.select_verify_labels = async function select_verify_labels(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(`One`);});});});});await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(`One`);});});});});}"
+    }, {
+      "name": "select strategies",
+      "code": "tests.select_strategies = async function select_strategies(driver, vars) {await driver.get(BASE_URL + \"/select.html\");vars[\"label\"] = `Two`;await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.findElement(By.xpath(`//option[. = '${vars.label}']`)).then(option => {option.click();});});await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.getAttribute(\"value\").then(selectedValue => {element.findElement(By.xpath('option[@value=\"'+selectedValue+'\"]')).then(selectedOption => {selectedOption.getText().then(selectedLabel => {expect(selectedLabel).toBe(`Two`);});});});});}"
     }]
   },
   "dependencies": {}

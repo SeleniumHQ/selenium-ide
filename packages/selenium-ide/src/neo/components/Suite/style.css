@@ -30,10 +30,9 @@
 }
 
 .project > a.active .si-caret {
-  color: #40A6FF;
+  color: #40a6ff;
   transform: rotate(90deg);
 }
-
 
 .project button {
   opacity: 0;

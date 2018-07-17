@@ -1,5 +1,5 @@
 .header {
-  border-bottom: 1px solid #CECECE;
+  border-bottom: 1px solid #cecece;
   padding: 7px 7px 7px 2px;
   display: flex;
   align-items: center;
@@ -25,36 +25,36 @@
   min-width: 143px;
 }
 
-.header .title~i {
-	font-weight: bold;
-	font-size: 16px;
-	margin-left: -20px;
+.header .title ~ i {
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: -20px;
   visibility: hidden;
 }
 
 .header:hover .title {
-  border-color: #F3F3F3;
+  border-color: #f3f3f3;
 }
 
 .header .title:focus {
-  border-color: #CECECE;
+  border-color: #cecece;
   cursor: initial;
   outline: 0;
 }
 
-.header:hover .title~i {
+.header:hover .title ~ i {
   visibility: visible;
 }
 
-.header:focus-within .title~i {
+.header:focus-within .title ~ i {
   visibility: hidden;
 }
 
-.header.changed .title:after {
+.header.changed .title::after {
   content: "*";
 }
 
-.header .title:focus:after {
+.header .title:focus::after {
   content: " ";
 }
 
