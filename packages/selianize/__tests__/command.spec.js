@@ -166,10 +166,10 @@ describe("command code emitter", () => {
   it("should emit `pause` command", () => {
     const command = {
       command: "pause",
-      target: "",
-      value: "300"
+      target: "300",
+      value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.sleep(${command.value});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.sleep(${command.target});`);
   });
   it("should emit `verify checked` command", () => {
     const command = {
@@ -571,33 +571,33 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(\`${command.target}\`);});});`);
   });
-  it("should emit `choose ok on next confirmation` command", () => {
+  it("should emit `choose ok on visible confirmation` command", () => {
     const command = {
-      command: "webdriverChooseOkOnNextConfirmation",
+      command: "webdriverChooseOkOnVisibleConfirmation",
       target: "",
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().alert().then(alert => {alert.accept();});");
   });
-  it("should emit `choose cancel on next confirmation` command", () => {
+  it("should emit `choose cancel on visible confirmation` command", () => {
     const command = {
-      command: "webdriverChooseCancelOnNextConfirmation",
+      command: "webdriverChooseCancelOnVisibleConfirmation",
       target: "",
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().alert().then(alert => {alert.dismiss();});");
   });
-  it("should emit `answer on next prompt` command", () => {
+  it("should emit `answer on visible prompt` command", () => {
     const command = {
-      command: "webdriverAnswerOnNextPrompt",
+      command: "webdriverAnswerOnVisiblePrompt",
       target: "an answer",
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.switchTo().alert().then(alert => {alert.sendKeys(\`${command.target}\`).then(() => {alert.accept();});});`);
   });
-  it("should emit `choose cancel on next prompt` command", () => {
+  it("should emit `choose cancel on visible prompt` command", () => {
     const command = {
-      command: "webdriverChooseCancelOnNextPrompt",
+      command: "webdriverChooseCancelOnVisiblePrompt",
       target: "",
       value: ""
     };
