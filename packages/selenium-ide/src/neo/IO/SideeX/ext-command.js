@@ -372,22 +372,18 @@ export default class ExtCommand {
   }
 
   isExtCommand(command) {
-    return isExtCommand(command);
-  }
-}
-
-export function isExtCommand(command) {
-  switch(command) {
-    case "pause":
-    case "open":
-    case "selectFrame":
-    case "selectWindow":
-    case "run":
-    case "setSpeed":
-    case "store":
-    case "close":
-      return true;
-    default:
-      return false;
+    switch(command) {
+      case "pause":
+      case "open":
+      case "selectFrame":
+      case "selectWindow":
+      case "run":
+      case "setSpeed":
+      case "store":
+      case "close":
+        return true;
+      default:
+        return false;
+    }
   }
 }

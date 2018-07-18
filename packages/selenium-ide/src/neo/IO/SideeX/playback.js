@@ -21,7 +21,7 @@ import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
-import ExtCommand, { isExtCommand } from "./ext-command";
+import ExtCommand from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 import { createPlaybackTree } from "../../playback/playback-tree";
 
@@ -91,7 +91,7 @@ function executionLoop() {
     return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
       PlaybackState.setCurrentExecutingCommandNode(result.next);
     }).then(executionLoop);
-  } else if (isExtCommand(command.command)) {
+  } else if (extCommand.isExtCommand(command.command)) {
     return doDelay().then(() => {
       return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
         .then((result) => {
