@@ -16,7 +16,7 @@
 
 import { MozillaBrowserBot } from "./selenium-browserbot";
 import { core } from "./closure-polyfill";
-const exactMatchPattern = window.global.exactMatchPattern;
+import { exactMatchPattern } from "./targetSelector";
 
 export default function LocatorBuilders(window) {
   this.window = window;
@@ -290,11 +290,6 @@ LocatorBuilders.prototype.preciseXPath = function(xpath, e) {
  * ===== builders =====
  */
 
-LocatorBuilders.add("ui", function(pageElement) {
-  return UIMap.getInstance().getUISpecifierString(pageElement,
-    this.window.document);
-});
-
 LocatorBuilders.add("id", function(e) {
   if (e.id) {
     return "id=" + e.id;
@@ -327,58 +322,6 @@ LocatorBuilders.add("css", function(e) {
     current = current.parentNode;
   }
   return "css=" + sub_path;
-});
-
-/*
- * This function is called from DOM locatorBuilders
- */
-LocatorBuilders.prototype.findDomFormLocator = function(form) {
-  if (form.hasAttribute("name")) {
-    let name = form.getAttribute("name");
-    let locator = "document." + name;
-    if (this.findElement(locator) == form) {
-      return locator;
-    }
-    locator = "document.forms['" + name + "']";
-    if (this.findElement(locator) == form) {
-      return locator;
-    }
-  }
-  let forms = this.window.document.forms;
-  for (let i = 0; i < forms.length; i++) {
-    if (form == forms[i]) {
-      return "document.forms[" + i + "]";
-    }
-  }
-  return null;
-};
-
-LocatorBuilders.add("dom:name", function(e) {
-  if (e.form && e.name) {
-    let formLocator = this.findDomFormLocator(e.form);
-    if (formLocator) {
-      let candidates = [formLocator + "." + e.name,
-        formLocator + ".elements['" + e.name + "']"
-      ];
-      for (let c = 0; c < candidates.length; c++) {
-        let locator = candidates[c];
-        let found = this.findElement(locator);
-        if (found) {
-          if (found == e) {
-            return locator;
-          } else if (found instanceof NodeList) {
-            // multiple elements with same name
-            for (let i = 0; i < found.length; i++) {
-              if (found[i] == e) {
-                return locator + "[" + i + "]";
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  return null;
 });
 
 LocatorBuilders.add("xpath:link", function(e) {
@@ -477,21 +420,6 @@ LocatorBuilders.add("xpath:href", function(e) {
   return null;
 });
 
-LocatorBuilders.add("dom:index", function(e) {
-  if (e.form) {
-    let formLocator = this.findDomFormLocator(e.form);
-    if (formLocator) {
-      let elements = e.form.elements;
-      for (let i = 0; i < elements.length; i++) {
-        if (elements[i] == e) {
-          return formLocator + ".elements[" + i + "]";
-        }
-      }
-    }
-  }
-  return null;
-});
-
 LocatorBuilders.add("xpath:position", function(e, opt_contextNode) {
   //this.log.debug("positionXPath: e=" + e);
   let path = "";
@@ -515,4 +443,4 @@ LocatorBuilders.add("xpath:position", function(e, opt_contextNode) {
 });
 // Samit: Warning: The old method of setting the order using LocatorBuilders.order is now deprecated
 // You can change the priority of builders by setting LocatorBuilders.order.
-//LocatorBuilders.order = ['ui', 'id', 'link', 'name', 'css', 'dom:name', 'xpath:link', 'xpath:img', 'xpath:attributes', 'xpath:idRelative', 'xpath:href', 'dom:index', 'xpath:position'];
+//LocatorBuilders.order = ['id', 'link', 'name', 'css', 'xpath:link', 'xpath:img', 'xpath:attributes', 'xpath:idRelative', 'xpath:href', 'xpath:position'];
