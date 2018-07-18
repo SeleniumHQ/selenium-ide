@@ -278,7 +278,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
   return (command !== "type"
     ? PlaybackState.currentExecutingCommandNode.execute(extCommand)
-    : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
+    : extCommand.doType(xlateArgument(target), xlateArgument(value), extCommand.isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {
@@ -360,16 +360,6 @@ function isReceivingEndError(reason) {
     // Google Chrome misspells "response"
     reason.message == "The message port closed before a reponse was received." ||
     reason.message == "The message port closed before a response was received." );
-}
-
-function isWindowMethodCommand(command) {
-  return (command == "answerOnNextPrompt"
-    || command == "chooseCancelOnNextPrompt"
-    || command == "assertPrompt"
-    || command == "chooseOkOnNextConfirmation"
-    || command == "chooseCancelOnNextConfirmation"
-    || command == "assertConfirmation"
-    || command == "assertAlert");
 }
 
 function isImplicitWait(command) {

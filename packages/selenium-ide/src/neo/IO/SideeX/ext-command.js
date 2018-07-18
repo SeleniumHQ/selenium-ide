@@ -386,4 +386,14 @@ export default class ExtCommand {
         return false;
     }
   }
+
+  isWindowMethodCommand(command) {
+    return (command == "answerOnNextPrompt"
+      || command == "chooseCancelOnNextPrompt"
+      || command == "assertPrompt"
+      || command == "chooseOkOnNextConfirmation"
+      || command == "chooseCancelOnNextConfirmation"
+      || command == "assertConfirmation"
+      || command == "assertAlert");
+  }
 }

@@ -46,7 +46,7 @@ export class CommandNode {
         };
       });
     } else {
-      return extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false).then((result) => {
+      return extCommand.sendMessage(this.command.command, this.command.target, this.command.value, extCommand.isWindowMethodCommand(this.command.command)).then((result) => {
         if (result.result === "success") {
           return {
             result: "success",
