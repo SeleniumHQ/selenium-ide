@@ -370,6 +370,10 @@ export default class ExtCommand {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return "do" + upperCase;
   }
+
+  isExtCommand(command) {
+    return isExtCommand(command);
+  }
 }
 
 export function isExtCommand(command) {

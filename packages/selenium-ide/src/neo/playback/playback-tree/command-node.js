@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { isExtCommand } from "../../IO/SideeX/ext-command";
 import { xlateArgument } from "../../IO/SideeX/formatCommand";
 
 export class CommandNode {
@@ -30,24 +29,22 @@ export class CommandNode {
   }
 
   isControlFlow() {
-    !!(this.left || this.right);
+    return !!(this.left || this.right);
   }
 
-  execute(extCommand) {
-    if (isExtCommand(this.command.command)) {
+  execute(extCommand, setNextNode) {
+    if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](xlateArgument(this.command.target), xlateArgument(this.command.value)).then(() => {
-        return {
-          next: this.next
-        };
+        setNextNode(this.next);
       });
     } else if (this.isControlFlow()) {
-      return this.evaluate();
+      setNextNode(this.evaluate().next);
     } else {
       return extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false).then((result) => {
         if (result.result === "success") {
+          setNextNode(this.next);
           return {
-            result: "success",
-            next: this.next
+            result: "success"
           };
         } else {
           return result;

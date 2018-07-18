@@ -87,13 +87,16 @@ function executionLoop() {
   else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  if (isExtCommand(command.command)) {
+  if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
+    PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.setCurrentExecutingCommandNode);
+    return executionLoop();
+  } else if (isExtCommand(command.command)) {
     return doDelay().then(() => {
-      return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
-        // we need to set the stackIndex manually because run command messes with that
-        PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
-        PlaybackState.setCurrentExecutingCommandNode(result.next);
-      }).then(executionLoop);
+      return (PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.setCurrentExecutingCommandNode))
+        .then(() => {
+          // we need to set the stackIndex manually because run command messes with that
+          PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
+        }).then(executionLoop);
     });
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
@@ -272,7 +275,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
 function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
   return (command !== "type"
-    ? PlaybackState.currentExecutingCommandNode.execute(extCommand)
+    ? PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.setCurrentExecutingCommandNode)
     : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
@@ -282,7 +285,6 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
         PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
       }
     } else {
-      PlaybackState.setCurrentExecutingCommandNode(result.next);
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
     }
   });
