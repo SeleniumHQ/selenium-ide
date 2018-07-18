@@ -66,6 +66,15 @@ export default function seed(store, numberOfSuites = 5) {
   const secondClick = playbackTest.createCommand();
   secondClick.setCommand("clickAt");
   secondClick.setTarget("link=parliamentary systems");
+  const ifCommand = playbackTest.createCommand();
+  ifCommand.setCommand("if");
+  ifCommand.setTarget("true");
+  playbackTest.createCommand(undefined, "echo", "foo");
+  playbackTest.createCommand().setCommand("else");
+  const leftCommand = playbackTest.createCommand();
+  leftCommand.setCommand("echo");
+  leftCommand.setTarget("bar");
+  playbackTest.createCommand().setCommand("end");
 
   const playbackTest2 = store.createTestCase("aab playback");
   const open2 = playbackTest2.createCommand();

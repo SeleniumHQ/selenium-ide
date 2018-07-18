@@ -32,19 +32,25 @@ export class CommandNode {
     return !!(this.left || this.right);
   }
 
-  execute(extCommand, setNextNode) {
+  execute(extCommand) {
     if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](xlateArgument(this.command.target), xlateArgument(this.command.value)).then(() => {
-        setNextNode(this.next);
+        return {
+          next: this.next
+        };
       });
     } else if (this.isControlFlow()) {
-      setNextNode(this.evaluate().next);
+      return this.evaluate(extCommand).then((result) => {
+        return {
+          next: result.next
+        };
+      });
     } else {
       return extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false).then((result) => {
         if (result.result === "success") {
-          setNextNode(this.next);
           return {
-            result: "success"
+            result: "success",
+            next: this.next
           };
         } else {
           return result;
@@ -53,16 +59,17 @@ export class CommandNode {
     }
   }
 
-  evaluate() {
-    let v = true;
-    if (v) {
-      return {
-        next: this.right
-      };
-    } else {
-      return {
-        next: this.left
-      };
-    }
+  evaluate(extCommand) {
+    return extCommand.sendMessage("evaluateConditional", this.command.target, "", false).then((result) => {
+      if (result.value) {
+        return {
+          next: this.right
+        };
+      } else {
+        return {
+          next: this.left
+        };
+      }
+    });
   }
 }

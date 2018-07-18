@@ -347,8 +347,16 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
-Selenium.prototype.eval = function(script, scoped = true) {
-  return window.eval(scoped ? `(() => {${script}})()` : script);
+Selenium.prototype.eval = function(script, scoped = true, isExpression = false) {
+  if (isExpression) {
+    return window.eval(scoped ? `(() => (${script}))()` : script);
+  } else {
+    return window.eval(scoped ? `(() => {${script}})()` : script);
+  }
+};
+
+Selenium.prototype.doEvaluateConditional = function(condition) {
+  return !!(this.eval(condition, undefined, true));
 };
 
 Selenium.prototype.doVerifyChecked = function(locator) {

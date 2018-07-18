@@ -42,6 +42,13 @@ function doCommands(request, sender, sendResponse) {
     } else if (request.commands == "domWait") {
       selenium["doDomWait"]("", selenium.preprocessParameter(""));
       sendResponse({ dom_time: window.sideex_new_page });
+    } else if (request.commands === "evaluateConditional") {
+      try {
+        let value = selenium["doEvaluateConditional"](request.target);
+        sendResponse({ result: "success", value });
+      } catch(e) {
+        sendResponse({ result: e.message });
+      }
     } else {
       const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
       if (selenium["do" + upperCase] != null) {
