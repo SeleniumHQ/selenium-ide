@@ -17,6 +17,14 @@
 
 // Modified in tools.js from selenium-IDE
 
+export function exactMatchPattern(string) {
+  if (string != null && (string.match(/^\w*:/) || string.indexOf("?") >= 0 || string.indexOf("*") >= 0)) {
+    return "exact:" + string;
+  } else {
+    return string;
+  }
+}
+
 function TargetSelector(callback, cleanupCallback) {
   this.callback = callback;
   this.cleanupCallback = cleanupCallback;
