@@ -24,18 +24,13 @@ const hooks = [];
 export function emit(test, options = config) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
+    const setupHooks = hookResults.map((hook) => hook.setup || "");
+    const teardownHooks = hookResults.map((hook) => hook.teardown || "");
     const testName = convertToSnake(test.name);
 
-    let emittedTest = `it("${test.name}", async () => {`;
-    emittedTest += hookResults.map((hook) => hook.setup || "").join("");
-    emittedTest += `await tests.${testName}(driver, vars);`;
-    emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
-    emittedTest += hookResults.map((hook) => hook.teardown || "").join("");
-    emittedTest += "});";
-
-    let func = `tests.${testName} = async function ${testName}(driver, vars, opts) {`;
     let errors = [];
-    func += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
+
+    const commands = (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command, options).catch(e => {
       if (options.silenceErrors) {
         return `throw new Error("${e.message}");`;
       } else {
@@ -45,19 +40,60 @@ export function emit(test, options = config) {
           message: e
         });
       }
-    }))))).join("");
-    func += "}";
+    })))));
 
+    if (errors.length) {
+      rej({ ...test, commands: errors });
+    }
 
-    errors.length ? rej({ ...test, commands: errors }) : res({ name: test.name, test: emittedTest, function: func });
+    if (!options.skipStdLibEmitting) {
+      // emit everything
+      let emittedTest = `it("${test.name}", async () => {`;
+      emittedTest += setupHooks.join("");
+      emittedTest += `await tests.${testName}(driver, vars);`;
+      emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
+      emittedTest += teardownHooks.join("");
+      emittedTest += "});";
+
+      let func = `tests.${testName} = async function ${testName}(driver, vars, opts) {`;
+      func += commands.join("");
+      func += "}";
+
+      res({ id: test.id, name: test.name, test: emittedTest, function: func });
+    } else {
+      // emit only additional hooks
+      let snapshot = {
+        commands: commands.reduce((snapshot, emittedCommand, index) => {
+          if (!emittedCommand.skipped) {
+            snapshot[test.commands[index].id] = emittedCommand;
+          }
+          return snapshot;
+        }, {}),
+        setupHooks,
+        teardownHooks
+      };
+
+      if (Object.keys(snapshot.commands).length || snapshot.setupHooks.length || snapshot.teardownHooks.length) {
+        // if we even snapshotted anything
+        res({ id: test.id, snapshot });
+      } else {
+        // resolve to nothing if there is no snapshot
+        res({});
+      }
+    }
   });
 }
 
-function registerHook(hook) {
+export function registerHook(hook) {
   hooks.push(hook);
+}
+
+export function clearHooks() {
+  hooks.length = 0;
 }
 
 export default {
   emit,
-  registerHook
+  registerHook,
+  clearHooks
 };
