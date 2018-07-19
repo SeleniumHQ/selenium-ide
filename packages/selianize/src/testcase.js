@@ -33,7 +33,7 @@ export function emit(test, options = config) {
     emittedTest += hookResults.map((hook) => hook.teardown || "").join("");
     emittedTest += "});";
 
-    let func = `tests.${testName} = async function ${testName}(driver, vars) {`;
+    let func = `tests.${testName} = async function ${testName}(driver, vars, opts) {`;
     let errors = [];
     func += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
       if (options.silenceErrors) {
