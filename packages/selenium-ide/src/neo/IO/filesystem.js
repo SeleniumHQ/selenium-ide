@@ -71,8 +71,10 @@ export function saveProject(_project) {
 
 function downloadProject(project) {
   return exportProject(project).then(code => {
-    project.code = code;
-    Object.assign(project, Manager.emitDependencies());
+    if (code) {
+      project.code = code;
+      Object.assign(project, Manager.emitDependencies());
+    }
     return browser.downloads.download({
       filename: project.name + ".side",
       url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
@@ -84,7 +86,7 @@ function downloadProject(project) {
 
 function exportProject(project) {
   return Manager.validatePluginExport(project).then(() => {
-    return Selianize(project, { silenceErrors: true }).catch(err => {
+    return Selianize(project, { silenceErrors: true, skipStdLibEmitting: true }).catch(err => {
       const markdown = ParseError(err && err.message || err);
       ModalState.showAlert({
         title: "Error saving project",
