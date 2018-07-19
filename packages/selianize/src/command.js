@@ -83,10 +83,10 @@ const emitters = {
   assertNotText: emitVerifyNotText,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
-  webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
-  webdriverChooseOkOnNextConfirmation: emitChooseOkOnNextConfirmation,
-  webdriverChooseCancelOnNextConfirmation: emitChooseCancelOnNextConfirmation,
-  webdriverChooseCancelOnNextPrompt: emitChooseCancelOnNextConfirmation,
+  webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
+  webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
+  webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
   editContent: emitEditContent,
   submit: emitSubmit,
   answerOnNextPrompt: skip,
@@ -173,7 +173,7 @@ async function emitUncheck(locator) {
 }
 
 async function emitRun(testCase) {
-  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars);`);
+  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
 }
 
 async function emitRunScript(script) {
@@ -188,7 +188,7 @@ async function emitExecuteAsyncScript(script, varName) {
   return Promise.resolve(`vars["${varName}"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);\`);`);
 }
 
-async function emitPause(_, time) {
+async function emitPause(time) {
   return Promise.resolve(`await driver.sleep(${time});`);
 }
 

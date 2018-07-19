@@ -288,6 +288,7 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
 function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
   return executeCommand(command, target, value, {
     commandId: id,
+    isNested: !!PlaybackState.callstack.length,
     runId: PlaybackState.runId,
     testId: PlaybackState.currentRunningTest.id,
     frameId: extCommand.getCurrentPlayingFrameId(),

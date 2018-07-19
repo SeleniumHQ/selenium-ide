@@ -17,11 +17,18 @@
 
 // Modified in tools.js from selenium-IDE
 
+export function exactMatchPattern(string) {
+  if (string != null && (string.match(/^\w*:/) || string.indexOf("?") >= 0 || string.indexOf("*") >= 0)) {
+    return "exact:" + string;
+  } else {
+    return string;
+  }
+}
+
 class TargetSelector {
   constructor(callback, cleanupCallback) {
     this.callback = callback;
     this.cleanupCallback = cleanupCallback;
-
     // This is for XPCOM/XUL addon and can't be used
     //var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
     //this.win = wm.getMostRecentWindow('navigator:browser').getBrowser().contentWindow;
