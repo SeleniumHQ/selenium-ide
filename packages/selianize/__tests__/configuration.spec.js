@@ -24,4 +24,21 @@ describe("configuration code emitter", () => {
     };
     return expect(ConfigurationEmitter.emit(project)).resolves.toBe(`global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};`);
   });
+  it("should skip emitting project configuration when skipStdLibEmitting is set and there are no config hooks", () => {
+    const project = {
+      url: "http://www.seleniumhq.org"
+    };
+    return expect(ConfigurationEmitter.emit(project, { skipStdLibEmitting: true })).resolves.toEqual({
+      skipped: true
+    });
+  });
+  it("should emit a snapshot of the hooks when skipStdLibEmitting is set", () => {
+    const project = {
+      url: "http://www.seleniumhq.org"
+    };
+    ConfigurationEmitter.registerHook(() => ("some config code"));
+    return expect(ConfigurationEmitter.emit(project, { skipStdLibEmitting: true })).resolves.toEqual({
+      snapshot: "some config code"
+    });
+  });
 });
