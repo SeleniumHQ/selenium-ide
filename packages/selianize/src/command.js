@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import config from "./config";
 import LocationEmitter from "./location";
 import SelectionEmitter from "./selection";
 import { convertToSnake } from "./utils";
@@ -96,9 +97,11 @@ const emitters = {
   setSpeed: skip
 };
 
-export function emit(command) {
+export function emit(command, options = config) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
+      if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
+        return res({ skipped: true });
       try {
         let result = await emitters[command.command](preprocessParameter(command.target), preprocessParameter(command.value));
         res(result);
@@ -123,9 +126,10 @@ function preprocessParameter(param) {
   return param ? param.replace(/\$\{/g, "${vars.") : param;
 }
 
-function registerEmitter(command, emitter) {
+export function registerEmitter(command, emitter) {
   if (!canEmit(command)) {
     emitters[command] = emitter;
+    emitters[command].isAdditional = true;
   }
 }
 

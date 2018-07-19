@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import CommandEmitter from "../src/command";
+import CommandEmitter, { registerEmitter } from "../src/command";
 import { Commands } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
@@ -636,5 +636,30 @@ describe("command code emitter", () => {
         }
       }).not.toThrow();
     });
+  });
+  it("should skip emitting stdlib command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "open",
+      target: "/",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
+  });
+  it("should emit a snapshot for a non-stdlib command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "aNewCommand",
+      target: "",
+      value: ""
+    };
+    registerEmitter(command.command, () => ("new command code"));
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toBe("new command code");
+  });
+  it("should throw an error for an invalid non-stdlib command even when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "doesntExist",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).rejects.toThrow(`Unknown command ${command.command}`);
   });
 });
