@@ -108,6 +108,8 @@ export function emit(command, options = config) {
       } catch (e) {
         rej(e);
       }
+    } else if (options.skipStdLibEmitting) {
+      res({ skipped: true });
     } else {
       if (!command.command) {
         res();

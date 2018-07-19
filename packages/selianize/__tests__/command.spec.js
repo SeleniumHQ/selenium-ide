@@ -656,10 +656,21 @@ describe("command code emitter", () => {
   });
   it("should throw an error for an invalid non-stdlib command even when skipStdLibEmitting is set", () => {
     const command = {
+      command: "errorCommand",
+      target: "",
+      value: ""
+    };
+    registerEmitter(command.command, () => {
+      throw new Error("an error occurred");
+    });
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).rejects.toThrow("an error occurred");
+  });
+  it("should not throw an error for an unknown command when skipStdLibEmitting is set", () => {
+    const command = {
       command: "doesntExist",
       target: "",
       value: ""
     };
-    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).rejects.toThrow(`Unknown command ${command.command}`);
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
   });
 });
