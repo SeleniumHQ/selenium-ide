@@ -25,9 +25,7 @@ import config from "./config";
 export default function Selianize(project, _opts) {
   const options = { ...config, ..._opts };
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    let result = "";
-
-    result += await ConfigurationEmitter.emit(project);
+    const configuration = await ConfigurationEmitter.emit(project, options);
 
     let errors = [];
     const tests = (await Promise.all(project.tests.map((test) => TestCaseEmitter.emit(test, options).catch(e => {
@@ -42,21 +40,33 @@ export default function Selianize(project, _opts) {
       map[test.id] = tests[index];
       return map;
     }, {});
-    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap))));
+    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap, options))));
 
+    const emittedTests = tests.filter((test) => (!!test.id)).map((test) => ({
+      id: test.id,
+      name: test.name,
+      code: test.function,
+      snapshot: test.snapshot
+    }));
+    const emittedSuites = suites.filter((suite) => (!suite.skipped)).map((suiteCode, index) => ({
+      name: project.suites[index].name,
+      persistSession: project.suites[index].persistSession,
+      code: !Array.isArray(suiteCode) ? suiteCode.code : undefined,
+      tests: Array.isArray(suiteCode) ? suiteCode : undefined,
+      snapshot: suiteCode.snapshot ? {
+        hook: suiteCode.snapshot.hook
+      } : undefined
+    }));
     const results = {
-      suites: suites.map((suiteCode, index) => ({
-        name: project.suites[index].name,
-        persistSession: project.suites[index].persistSession,
-        code: !Array.isArray(suiteCode) ? `${result}${suiteCode}` : result,
-        tests: Array.isArray(suiteCode) ? suiteCode : undefined
-      })),
-      tests: tests.map((test) => ({
-        name: test.name,
-        code: test.function
-      }))
+      globalConfig: !configuration.skipped ? configuration : undefined,
+      suites: emittedSuites.length ? emittedSuites : undefined,
+      tests: emittedTests.length ? emittedTests : undefined
     };
-    return res(results);
+    if (results.globalConfig || results.suites || results.tests) {
+      return res(results);
+    } else {
+      return res(undefined);
+    }
   });
 }
 
