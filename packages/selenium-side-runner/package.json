@@ -35,6 +35,7 @@
     "js-yaml": "^3.10.0",
     "rimraf": "^2.6.2",
     "selenium-webdriver": "^3.6.0",
+    "selianize": "*",
     "winston": "^2.4.0"
   },
   "devDependencies": {

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import CommandEmitter from "../src/command";
+import CommandEmitter, { registerEmitter } from "../src/command";
 import { Commands } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
@@ -41,7 +41,7 @@ describe("command code emitter", () => {
       target: "/",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.get(BASE_URL + "${command.target}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.get((new URL("${command.target}", BASE_URL)).href);`);
   });
   it("should emit `open` with absolute url", () => {
     const command = {
@@ -636,5 +636,50 @@ describe("command code emitter", () => {
         }
       }).not.toThrow();
     });
+  });
+  it("should skip emitting stdlib command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "open",
+      target: "/",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
+  });
+  it("should emit a snapshot for a non-stdlib command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "aNewCommand",
+      target: "",
+      value: ""
+    };
+    registerEmitter(command.command, () => ("new command code"));
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toBe("new command code");
+  });
+  it("should throw an error for an invalid non-stdlib command even when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "errorCommand",
+      target: "",
+      value: ""
+    };
+    registerEmitter(command.command, () => {
+      throw new Error("an error occurred");
+    });
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).rejects.toThrow("an error occurred");
+  });
+  it("should not throw an error for an unknown command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "doesntExist",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
+  });
+  it("should return the snapshot when an unknown command is being emitted with snapshot sent", () => {
+    const command = {
+      command: "doesntExist",
+      target: "",
+      value: ""
+    };
+    const snapshot = "this commands snapshot";
+    return expect(CommandEmitter.emit(command, undefined, snapshot)).resolves.toBe(snapshot);
   });
 });

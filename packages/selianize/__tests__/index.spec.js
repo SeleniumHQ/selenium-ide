@@ -29,7 +29,7 @@ describe("Selenium code serializer", () => {
     const hook = jest.fn();
     hook.mockReturnValue(Promise.resolve("some code the the top"));
     RegisterConfigurationHook(hook);
-    return expect((await Selianize(project)).suites[0].code).toMatch(/some code the the top/);
+    return expect((await Selianize(project)).globalConfig).toMatch(/some code the the top/);
   });
   it("should register a suite emitter hook", async () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));

@@ -16,6 +16,7 @@
 // under the License.
 
 export default {
-  silenceErrors: false
+  silenceErrors: false,
+  skipStdLibEmitting: false
 };
 
