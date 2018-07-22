@@ -52,17 +52,5 @@
   }],
   "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
   "plugins": [],
-  "version": "1.0",
-  "code": {
-    "suites": [{
-      "name": "text",
-      "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"text\", () => {it(\"text comparison\", async () => {await tests.text_comparison(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-    }],
-    "tests": [{
-      "name": "text comparison",
-      "code": "tests.text_comparison = async function text_comparison(driver, vars) {await driver.get(BASE_URL + \"/popup/alert.html\");await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await expect(driver.findElement(By.id(`b`))).resolves.toHaveText(`show alert`);await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await expect(driver.findElement(By.id(`b`))).resolves.toHaveText(`show alert`);await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {element.getText().then(text => {expect(text).not.toBe(`not show alert`)});});}"
-    }]
-  },
-  "dependencies": {}
+  "version": "1.0"
 }

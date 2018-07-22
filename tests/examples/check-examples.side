@@ -80,17 +80,5 @@
   }],
   "urls": ["https://en.wikipedia.org/"],
   "plugins": [],
-  "version": "1.0",
-  "code": {
-    "suites": [{
-      "name": "checks",
-      "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"checks\", () => {it(\"check-examples\", async () => {await tests.check_examples(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-    }],
-    "tests": [{
-      "name": "check-examples",
-      "code": "tests.check_examples = async function check_examples(driver, vars) {await driver.get(BASE_URL + \"/check.html\");await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await driver.findElement(By.id(`f`)).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await expect(driver.findElement(By.id(`f`))).resolves.toBeChecked();await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await driver.findElement(By.id(`f`)).then(element => { element.isSelected().then(selected => {if(!selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await expect(driver.findElement(By.id(`f`))).resolves.toBeChecked();await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await driver.findElement(By.id(`f`)).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await expect(driver.findElement(By.id(`f`))).resolves.not.toBeChecked();await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await driver.findElement(By.id(`f`)).then(element => { element.isSelected().then(selected => {if(selected) { element.click();}}); });await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await expect(driver.findElement(By.id(`f`))).resolves.not.toBeChecked();}"
-    }]
-  },
-  "dependencies": {}
+  "version": "1.0"
 }

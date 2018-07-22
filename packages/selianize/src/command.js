@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import config from "./config";
 import LocationEmitter from "./location";
 import SelectionEmitter from "./selection";
 import { convertToSnake } from "./utils";
@@ -104,18 +105,24 @@ const emitters = {
   while: emitControlFlow
 };
 
-export function emit(command) {
+export function emit(command, options = config, snapshot) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
+      if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
+        return res({ skipped: true });
       try {
         let result = await emitters[command.command](preprocessParameter(command.target), preprocessParameter(command.value));
         res(result);
       } catch (e) {
         rej(e);
       }
+    } else if (options.skipStdLibEmitting) {
+      res({ skipped: true });
     } else {
       if (!command.command) {
         res();
+      } else if (snapshot) {
+        res(snapshot);
       } else {
         rej(new Error(`Unknown command ${command.command}`));
       }
@@ -131,9 +138,10 @@ function preprocessParameter(param) {
   return param ? param.replace(/\$\{/g, "${vars.") : param;
 }
 
-function registerEmitter(command, emitter) {
+export function registerEmitter(command, emitter) {
   if (!canEmit(command)) {
     emitters[command] = emitter;
+    emitters[command].isAdditional = true;
   }
 }
 
@@ -144,7 +152,7 @@ export default {
 };
 
 function emitOpen(target) {
-  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `BASE_URL + "${target}"`;
+  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `(new URL("${target}", BASE_URL)).href`;
   return Promise.resolve(`await driver.get(${url});`);
 }
 
@@ -181,7 +189,7 @@ async function emitUncheck(locator) {
 }
 
 async function emitRun(testCase) {
-  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars);`);
+  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
 }
 
 async function emitRunScript(script) {
