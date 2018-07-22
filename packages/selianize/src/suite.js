@@ -19,7 +19,7 @@ const hooks = [];
 
 import config from "./config";
 
-export function emit(suite, tests, options = config) {
+export function emit(suite, tests, options = config, snapshot) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = (await Promise.all(hooks.map((hook) => hook({ name: suite.name })))).reduce((code, result) => (
       code
@@ -42,7 +42,7 @@ export function emit(suite, tests, options = config) {
         return res(testsCode);
       }
 
-      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}`;
+      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}${snapshot ? snapshot.hook : ""}`;
 
       result += testsCode.join("");
 

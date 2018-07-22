@@ -153,4 +153,18 @@ describe("suite emitter", () => {
       }
     });
   });
+  it("should append the snapshot to the normal hooks", () => {
+    const suite = {
+      id: "1",
+      name: "example suite",
+      timeout: "30",
+      tests: []
+    };
+    const snapshot = {
+      hook: "hook results"
+    };
+    return expect(SuiteEmitter.emit(suite, {}, undefined, snapshot)).resolves.toEqual({
+      code: "jest.setTimeout(30000);describe(\"example suite\", () => {beforeAll(async () => {beforeAll code});beforeEach(async () => {before code});afterEach(async () => {after code});afterAll(async () => {afterAll code});hook results});"
+    });
+  });
 });
