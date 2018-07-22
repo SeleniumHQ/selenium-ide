@@ -70,9 +70,9 @@ export function saveProject(_project) {
 }
 
 function downloadProject(project) {
-  return exportProject(project).then(code => {
-    if (code) {
-      project.code = code;
+  return exportProject(project).then(snapshot => {
+    if (snapshot) {
+      project.snapshot = snapshot;
       Object.assign(project, Manager.emitDependencies());
     }
     return browser.downloads.download({

@@ -120,7 +120,7 @@ function runProject(project) {
     dependencies: project.dependencies || {}
   }));
 
-  return Selianize(project, { silenceErrors: true }).then((code) => {
+  return Selianize(project, { silenceErrors: true }, project.snapshot).then((code) => {
     const tests = code.tests.reduce((tests, test) => {
       return tests += test.code;
     }, "const tests = {};").concat("module.exports = tests;");
