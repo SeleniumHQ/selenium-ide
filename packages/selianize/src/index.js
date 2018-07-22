@@ -22,15 +22,17 @@ import CommandEmitter from "./command";
 import LocationEmitter from "./location";
 import config from "./config";
 
-export default function Selianize(project, _opts) {
+export default function Selianize(project, _opts, snapshot = {}) {
   const options = { ...config, ..._opts };
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    const configuration = await ConfigurationEmitter.emit(project, options);
+    const configuration = await ConfigurationEmitter.emit(project, options, snapshot.globalConfig ? snapshot.globalConfig.snapshot : undefined);
 
     let errors = [];
-    const tests = (await Promise.all(project.tests.map((test) => TestCaseEmitter.emit(test, options).catch(e => {
-      errors.push(e);
-    }))));
+    const tests = (await Promise.all(project.tests.map((test) =>
+      TestCaseEmitter.emit(test, options, snapshot.tests ? snapshot.tests.find((snapshotTest) => (test.id === snapshotTest.id)).snapshot : undefined).catch(e => {
+        errors.push(e);
+      })
+    )));
 
     if (errors.length) {
       return rej({ name: project.name, tests: errors });
@@ -40,7 +42,9 @@ export default function Selianize(project, _opts) {
       map[test.id] = tests[index];
       return map;
     }, {});
-    const suites = (await Promise.all(project.suites.map((suite) => SuiteEmitter.emit(suite, testsHashmap, options))));
+    const suites = (await Promise.all(project.suites.map((suite) =>
+      SuiteEmitter.emit(suite, testsHashmap, options, snapshot.suites ? snapshot.suites.find((snapshotSuite) => (suite.name === snapshotSuite.name)).snapshot : undefined)
+    )));
 
     const emittedTests = tests.filter((test) => (!!test.id)).map((test) => ({
       id: test.id,
