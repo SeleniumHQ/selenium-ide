@@ -8,14 +8,19 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "postinstall": "yarn build"
+    "postinstall": "yarn build",
+    "prepublishOnly": "yarn build"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
-  "keywords": [],
+  "keywords": [
+    "selenium",
+    "ide",
+    "export"
+  ],
   "license": "Apache-2.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "js-string-escape": "^1.0.1"
   },
