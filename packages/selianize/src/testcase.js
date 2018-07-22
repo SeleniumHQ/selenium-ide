@@ -21,7 +21,7 @@ import { convertToSnake } from "./utils";
 
 const hooks = [];
 
-export function emit(test, options = config) {
+export function emit(test, options = config, snapshot) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
     const setupHooks = hookResults.map((hook) => hook.setup || "");
@@ -30,7 +30,7 @@ export function emit(test, options = config) {
 
     let errors = [];
 
-    const commands = (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command, options).catch(e => {
+    const commands = (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command, options, snapshot ? snapshot.commands[command.id] : undefined).catch(e => {
       if (options.silenceErrors) {
         return `throw new Error("${e.message}");`;
       } else {
@@ -49,10 +49,10 @@ export function emit(test, options = config) {
     if (!options.skipStdLibEmitting) {
       // emit everything
       let emittedTest = `it("${test.name}", async () => {`;
-      emittedTest += setupHooks.join("");
+      emittedTest += setupHooks.join("").concat(snapshot ? snapshot.setupHooks.join("") : "");
       emittedTest += `await tests.${testName}(driver, vars);`;
       emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
-      emittedTest += teardownHooks.join("");
+      emittedTest += teardownHooks.join("").concat(snapshot ? snapshot.teardownHooks.join("") : "");
       emittedTest += "});";
 
       let func = `tests.${testName} = async function ${testName}(driver, vars, opts) {`;

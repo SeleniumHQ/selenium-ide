@@ -188,6 +188,33 @@ describe("test case code emitter", () => {
       }
     });
   });
+  it("should send the snapshot to the command", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: [
+        {
+          id: "2",
+          command: "anUnknownCommand",
+          target: "",
+          value: ""
+        }
+      ]
+    };
+    const snapshot = {
+      commands: {
+        "2": "command code"
+      },
+      setupHooks: [],
+      teardownHooks: []
+    };
+    expect(TestCaseEmitter.emit(test, undefined, snapshot)).resolves.toEqual({
+      id: "1",
+      name: "example test case",
+      test: "it(\"example test case\", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});",
+      function: "tests.example_test_case = async function example_test_case(driver, vars, opts) {command code}"
+    });
+  });
   it("should emit a snapshot for a test case with setup and teardown hooks when skipStdLibEmitting is set", () => {
     const test = {
       id: "1",
@@ -205,6 +232,24 @@ describe("test case code emitter", () => {
         setupHooks: ["setup code"],
         teardownHooks: ["teardown code"]
       }
+    });
+  });
+  it("should append the snapshot of the setup and teardown hooks to the test case", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: []
+    };
+    const snapshot = {
+      commands: {},
+      setupHooks: ["more setup"],
+      teardownHooks: ["more teardown"]
+    };
+    expect(TestCaseEmitter.emit(test, undefined, snapshot)).resolves.toEqual({
+      id: "1",
+      name: "example test case",
+      test: "it(\"example test case\", async () => {setup codemore setupawait tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});teardown codemore teardown});",
+      function: "tests.example_test_case = async function example_test_case(driver, vars, opts) {}"
     });
   });
 });
