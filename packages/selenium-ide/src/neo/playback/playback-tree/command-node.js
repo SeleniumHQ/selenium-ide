@@ -34,7 +34,12 @@ export class CommandNode {
 
   execute(extCommand) {
     this.timesVisited++;
-    this.checkRetryLimit();
+    if (this.isRetryLimit()) {
+      return Promise.resolve({
+        result: "Max retry limit exceeded. To override it, specify a new limit\
+         in the value input field."
+      });
+    }
     if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](
         xlateArgument(this.command.target),
@@ -46,9 +51,14 @@ export class CommandNode {
         });
     } else if (this.isControlFlow()) {
       return this.evaluate(extCommand).then((result) => {
-        return {
-          next: result.next
-        };
+        if (result.result === "success") {
+          return {
+            result: "success",
+            next: result.next
+          };
+        } else {
+          return result;
+        }
       });
     } else {
       return extCommand.sendMessage(
@@ -73,7 +83,9 @@ export class CommandNode {
     let expression = this.command.target;
     if (this.command.command === "times") {
       if (isNaN(this.command.target)) {
-        throw Error("Number not provided in target input field of the times command.");
+        return Promise.resolve({
+          result: "Invalid number provided as a target."
+        });
       }
       expression = `${this.timesVisited} <= ${this.command.target}`;
     }
@@ -82,23 +94,23 @@ export class CommandNode {
       .then((result) => {
         if (result.value) {
           return {
+            result: "success",
             next: this.right
           };
         } else {
           return {
+            result: "success",
             next: this.left
           };
         }
       });
   }
 
-  checkRetryLimit() {
+  isRetryLimit() {
     let limit = 1000;
     if (this.command.value && !isNaN(this.command.value)) {
       limit = this.command.value;
     }
-    if (this.timesVisited > limit) {
-      throw new Error(`Max command retry limit (${limit}) exceeded. Potential infinite loop detected. To override the limit, specify an alternate number in the value input field of the looping command.`);
-    }
+    return (this.timesVisited > limit);
   }
 }

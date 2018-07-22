@@ -39,7 +39,6 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
-let playbackTree;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -55,9 +54,12 @@ function initPlaybackTree() {
   try {
     if (PlaybackState.runningQueue.length === 1 &&
         ControlFlowCommandChecks.isControlFlow(PlaybackState.runningQueue[0].command)) {
-      throw new Error("Unable to execute control flow command by itself. You can execute this command by running the entire test or right-clicking on the command and selecting 'Play from here'.");
+      reportError(
+        "Unable to execute control flow command by itself. You can execute this command by running the entire test or by right-clicking on the command and selecting 'Play from here'.",
+        false,
+        0);
     } else {
-      playbackTree = createPlaybackTree(PlaybackState.runningQueue);
+      let playbackTree = createPlaybackTree(PlaybackState.runningQueue);
       PlaybackState.setCurrentExecutingCommandNode(playbackTree.currentCommandNode);
     }
   } catch (error) {
@@ -104,6 +106,9 @@ function executionLoop() {
     });
   } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
     return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
+      if (result.result !== "success") {
+        reportError(result.result, false, undefined);
+      }
       PlaybackState.setCurrentExecutingCommandNode(result.next);
     }).then(executionLoop);
   } else if (isImplicitWait(command)) {
@@ -146,14 +151,10 @@ function catchPlayingError(message) {
 
 function reportError(error, nonFatal, index) {
   let id;
-  if (index) {
+  if (!isNaN(index)) {
     id = PlaybackState.runningQueue[index].id;
-  } else {
-    if (PlaybackState.currentlyExecutingCommandNode) {
-      id = PlaybackState.currentlyExecutingCommandNode.command.id;
-    } else {
-      console.log(error);
-    }
+  } else if (PlaybackState.currentExecutingCommandNode) {
+    id = PlaybackState.currentExecutingCommandNode.command.id;
   }
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
