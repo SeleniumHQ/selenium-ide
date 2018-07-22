@@ -35,6 +35,7 @@ export default class TestTable extends React.Component {
     this.detectNewCommand = this.detectNewCommand.bind(this);
     this.disposeNewCommand = this.disposeNewCommand.bind(this);
     this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
+    this.commandLevels = [];
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
@@ -61,7 +62,7 @@ export default class TestTable extends React.Component {
     }
   }
   render() {
-    const commandLevels = deriveCommandLevels(this.props.commands);
+    if (this.props.commands) this.commandLevels = deriveCommandLevels(this.props.commands);
     const commandStatePrefix = this.props.callstackIndex !== undefined ? `${this.props.callstackIndex}:` : "";
     return ([
       <div key="header" className="test-table test-table-header">
@@ -99,7 +100,7 @@ export default class TestTable extends React.Component {
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
-                level={commandLevels[index]}
+                level={this.commandLevels[index]}
               />
             )).concat(
               <TestRow
