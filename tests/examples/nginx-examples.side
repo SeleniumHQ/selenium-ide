@@ -263,7 +263,7 @@
     }, {
       "id": "62aba19e-1df8-453a-adf5-5b66d19efcc1",
       "comment": "",
-      "command": "webdriverChooseOkOnNextConfirmation",
+      "command": "webdriverChooseOkOnVisibleConfirmation",
       "target": "",
       "targets": [],
       "value": ""
@@ -298,7 +298,7 @@
     }, {
       "id": "f60f098f-ef36-4f35-9947-9dfc1d713d9f",
       "comment": "",
-      "command": "webdriverChooseCancelOnNextConfirmation",
+      "command": "webdriverChooseCancelOnVisibleConfirmation",
       "target": "",
       "targets": [],
       "value": ""
@@ -344,7 +344,7 @@
     }, {
       "id": "14904a55-9a9b-4982-8763-49563c849493",
       "comment": "",
-      "command": "webdriverChooseCancelOnNextPrompt",
+      "command": "webdriverChooseCancelOnVisiblePrompt",
       "target": "",
       "targets": [],
       "value": ""
@@ -379,7 +379,7 @@
     }, {
       "id": "879ac9d9-32da-4ae3-a124-75c09aae52b3",
       "comment": "",
-      "command": "webdriverAnswerOnNextPrompt",
+      "command": "webdriverAnswerOnVisiblePrompt",
       "target": "",
       "targets": [],
       "value": ""
@@ -414,7 +414,7 @@
     }, {
       "id": "f6ccc7a8-e6b1-43c4-b361-d1b7432ea83e",
       "comment": "",
-      "command": "webdriverAnswerOnNextPrompt",
+      "command": "webdriverAnswerOnVisiblePrompt",
       "target": "selenium",
       "targets": [],
       "value": ""
@@ -451,46 +451,5 @@
   }],
   "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
   "plugins": [],
-  "version": "1.0",
-  "code": {
-    "suites": [{
-      "name": "inputs",
-      "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"inputs\", () => {it(\"input editable\", async () => {await tests.input_editable(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"input type checkbox\", async () => {await tests.input_type_checkbox(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"input type text\", async () => {await tests.input_type_text(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"select\", async () => {await tests.select(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-    }, {
-      "name": "waits",
-      "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"waits\", () => {it(\"wait implicit\", async () => {await tests.wait_implicit(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-    }, {
-      "name": "popups",
-      "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"popups\", () => {it(\"popup alert\", async () => {await tests.popup_alert(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"popup confirmation\", async () => {await tests.popup_confirmation(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"popup prompt\", async () => {await tests.popup_prompt(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-    }],
-    "tests": [{
-      "name": "input type text",
-      "code": "tests.input_type_text = async function input_type_text(driver, vars) {await driver.get(BASE_URL + \"/value.html\");await driver.wait(until.elementLocated(By.id(`v`)), configuration.timeout);await expect(driver.findElement(By.id(`v`))).resolves.toHaveValue(`test`);await driver.wait(until.elementLocated(By.id(`v`)), configuration.timeout);await driver.findElement(By.id(`v`)).then(element => {element.clear().then(() => {element.sendKeys(`selenium`);});});await driver.wait(until.elementLocated(By.id(`v`)), configuration.timeout);await expect(driver.findElement(By.id(`v`))).resolves.toHaveValue(`selenium`);await driver.wait(until.elementLocated(By.id(`v`)), configuration.timeout);await driver.findElement(By.id(`v`)).then(element => {driver.actions().click(element).sendKeys(`-ide`).perform();});await driver.wait(until.elementLocated(By.id(`v`)), configuration.timeout);await expect(driver.findElement(By.id(`v`))).resolves.toHaveValue(`selenium-ide`);}"
-    }, {
-      "name": "input type checkbox",
-      "code": "tests.input_type_checkbox = async function input_type_checkbox(driver, vars) {await driver.get(BASE_URL + \"/check.html\");await driver.wait(until.elementLocated(By.id(`t`)), configuration.timeout);await expect(driver.findElement(By.id(`t`))).resolves.toBeChecked();await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await expect(driver.findElement(By.id(`f`))).resolves.not.toBeChecked();await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await driver.findElement(By.id(`f`)).then(element => {driver.actions().click(element).perform();});await driver.wait(until.elementLocated(By.id(`f`)), configuration.timeout);await expect(driver.findElement(By.id(`f`))).resolves.toBeChecked();}"
-    }, {
-      "name": "input editable",
-      "code": "tests.input_editable = async function input_editable(driver, vars) {await driver.get(BASE_URL + \"/editable.html\");await driver.wait(until.elementLocated(By.id(`d`)), configuration.timeout);await expect(driver.findElement(By.id(`d`))).resolves.not.toBeEditable();await driver.wait(until.elementLocated(By.id(`r`)), configuration.timeout);await expect(driver.findElement(By.id(`r`))).resolves.not.toBeEditable();await driver.wait(until.elementLocated(By.id(`e`)), configuration.timeout);await expect(driver.findElement(By.id(`e`))).resolves.toBeEditable();await driver.wait(until.elementLocated(By.id(`e`)), configuration.timeout);await driver.findElement(By.id(`e`)).then(element => {element.clear().then(() => {element.sendKeys(`selenium`);});});await driver.wait(until.elementLocated(By.id(`e`)), configuration.timeout);await expect(driver.findElement(By.id(`e`))).resolves.toHaveValue(`selenium`);}"
-    }, {
-      "name": "select",
-      "code": "tests.select = async function select(driver, vars) {await driver.get(BASE_URL + \"/select.html\");await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await expect(driver.findElement(By.id(`select`))).resolves.toHaveSelectedValue(`1`);await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await driver.findElement(By.id(`select`)).then(element => {element.findElement(By.xpath(`//option[. = 'Two']`)).then(option => {option.click();});});await driver.wait(until.elementLocated(By.id(`select`)), configuration.timeout);await expect(driver.findElement(By.id(`select`))).resolves.toHaveSelectedValue(`2`);}"
-    }, {
-      "name": "wait implicit",
-      "code": "tests.wait_implicit = async function wait_implicit(driver, vars) {await driver.get(BASE_URL + \"/wait/implicit.html\");await expect(driver.findElements(By.id(`t`))).resolves.not.toBePresent();await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.wait(until.elementLocated(By.id(`t`)), configuration.timeout);await expect(driver.findElement(By.id(`t`))).resolves.toHaveText(`selenium`);}"
-    }, {
-      "name": "popup alert",
-      "code": "tests.popup_alert = async function popup_alert(driver, vars) {await driver.get(BASE_URL + \"/popup/alert.html\");await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(`test`);alert.accept();});});await driver.getTitle().then(title => {expect(title).toBe(`changed`);});}"
-    }, {
-      "name": "popup confirmation",
-      "code": "tests.popup_confirmation = async function popup_confirmation(driver, vars) {await driver.get(BASE_URL + \"/popup/confirm.html\");await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(`test`);});});await driver.switchTo().alert().then(alert => {alert.accept();});await driver.getTitle().then(title => {expect(title).toBe(`ok`);});await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(`test`);});});await driver.switchTo().alert().then(alert => {alert.dismiss();});await driver.getTitle().then(title => {expect(title).toBe(`cancel`);});}"
-    }, {
-      "name": "popup prompt",
-      "code": "tests.popup_prompt = async function popup_prompt(driver, vars) {await driver.get(BASE_URL + \"/popup/prompt.html\");await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(`test`);});});await driver.switchTo().alert().then(alert => {alert.dismiss();});await driver.getTitle().then(title => {expect(title).toBe(`cancel`);});await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(`test`);});});await driver.switchTo().alert().then(alert => {alert.sendKeys(``).then(() => {alert.accept();});});await driver.getTitle().then(title => {expect(title).toBe(`empty`);});await driver.wait(until.elementLocated(By.id(`b`)), configuration.timeout);await driver.findElement(By.id(`b`)).then(element => {driver.actions().click(element).perform();});await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(`test`);});});await driver.switchTo().alert().then(alert => {alert.sendKeys(`selenium`).then(() => {alert.accept();});});await driver.getTitle().then(title => {expect(title).toBe(`selenium`);});}"
-    }]
-  },
-  "dependencies": {}
+  "version": "1.0"
 }
