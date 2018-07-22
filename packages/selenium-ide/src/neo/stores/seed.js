@@ -66,15 +66,6 @@ export default function seed(store, numberOfSuites = 5) {
   const secondClick = playbackTest.createCommand();
   secondClick.setCommand("clickAt");
   secondClick.setTarget("link=parliamentary systems");
-  const ifCommand = playbackTest.createCommand();
-  ifCommand.setCommand("if");
-  ifCommand.setTarget("true");
-  playbackTest.createCommand(undefined, "echo", "foo");
-  playbackTest.createCommand().setCommand("else");
-  const leftCommand = playbackTest.createCommand();
-  leftCommand.setCommand("echo");
-  leftCommand.setTarget("bar");
-  playbackTest.createCommand().setCommand("end");
 
   const playbackTest2 = store.createTestCase("aab playback");
   const open2 = playbackTest2.createCommand();
@@ -89,6 +80,32 @@ export default function seed(store, numberOfSuites = 5) {
   const thirdClick2 = playbackTest2.createCommand();
   thirdClick2.setCommand("clickAt");
   thirdClick2.setTarget("link=scapegoat");
+
+  const controlFlowIfTest = store.createTestCase("control flow if else");
+  controlFlowIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowIfTest.createCommand(undefined, "if", "true");
+  controlFlowIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowIfTest.createCommand(undefined, "else");
+  controlFlowIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowIfTest.createCommand(undefined, "end");
+
+  const controlFlowRepeatIfTest = store.createTestCase("control flow repeat if");
+  controlFlowRepeatIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowRepeatIfTest.createCommand(undefined, "do");
+  controlFlowRepeatIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowRepeatIfTest.createCommand(undefined, "repeat if", "true", "2");
+
+  const controlFlowTimesTest = store.createTestCase("control flow times");
+  controlFlowTimesTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowTimesTest.createCommand(undefined, "times", "2");
+  controlFlowTimesTest.createCommand(undefined, "echo", "foo");
+  controlFlowTimesTest.createCommand(undefined, "end");
+
+  const controlFlowWhileTest = store.createTestCase("control flow while");
+  controlFlowWhileTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
+  controlFlowWhileTest.createCommand(undefined, "echo", "foo");
+  controlFlowWhileTest.createCommand(undefined, "end");
 
   const typeTest = store.createTestCase("aab type");
   const open3 = typeTest.createCommand();
@@ -112,6 +129,12 @@ export default function seed(store, numberOfSuites = 5) {
   const suite2 = store.createSuite("aaab suite");
   suite2.addTestCase(typeTest);
   suite2.addTestCase(playbackTest2);
+
+  const suiteControlFlow = store.createSuite("control flow");
+  suiteControlFlow.addTestCase(controlFlowIfTest);
+  suiteControlFlow.addTestCase(controlFlowRepeatIfTest);
+  suiteControlFlow.addTestCase(controlFlowTimesTest);
+  suiteControlFlow.addTestCase(controlFlowWhileTest);
 
   UiState.selectTest(playbackTest);
 
