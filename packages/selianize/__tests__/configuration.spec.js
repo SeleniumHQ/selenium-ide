@@ -22,7 +22,7 @@ describe("configuration code emitter", () => {
     const project = {
       url: "http://www.seleniumhq.org"
     };
-    return expect(ConfigurationEmitter.emit(project)).resolves.toBe(`global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};`);
+    return expect(ConfigurationEmitter.emit(project)).resolves.toBe(`global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};`);
   });
   it("should skip emitting project configuration when skipStdLibEmitting is set and there are no config hooks", () => {
     const project = {
@@ -37,7 +37,7 @@ describe("configuration code emitter", () => {
       url: "http://www.seleniumhq.org"
     };
     const snapshot = "extra global config";
-    return expect(ConfigurationEmitter.emit(project, undefined, snapshot)).resolves.toBe(`global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${snapshot}`);
+    return expect(ConfigurationEmitter.emit(project, undefined, snapshot)).resolves.toBe(`global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${snapshot}`);
   });
   it("should emit a snapshot of the hooks when skipStdLibEmitting is set", () => {
     const project = {
