@@ -49,7 +49,7 @@ function trackControlFlowBranchOpen (commandName, commandIndex, state) {
 }
 
 function validateElse (commandName, commandIndex, state) {
-  if (!ControlFlowCommandChecks.isConditional(state.top())) {
+  if (!ControlFlowCommandChecks.isIfBlock(state.top())) {
     throw new ControlFlowSyntaxError("An else used outside of an if block", commandIndex);
   }
   if (ControlFlowCommandChecks.isElse(state.top())) {
@@ -59,7 +59,7 @@ function validateElse (commandName, commandIndex, state) {
 }
 
 function validateElseIf (commandName, commandIndex, state) {
-  if (!ControlFlowCommandChecks.isConditional(state.top())) {
+  if (!ControlFlowCommandChecks.isIfBlock(state.top())) {
     throw new ControlFlowSyntaxError("An else if used outside of an if block", commandIndex);
   }
   if (ControlFlowCommandChecks.isElse(state.top())) {

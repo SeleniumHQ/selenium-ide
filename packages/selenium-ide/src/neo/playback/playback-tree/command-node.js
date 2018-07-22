@@ -16,6 +16,7 @@
 // under the License.
 
 import { xlateArgument } from "../../IO/SideeX/formatCommand";
+import { ControlFlowCommandChecks } from "../../models/Command";
 
 export class CommandNode {
   constructor(command) {
@@ -29,7 +30,12 @@ export class CommandNode {
   }
 
   isControlFlow() {
-    return !!(this.left || this.right);
+    return !!(
+      this.left ||
+      this.right ||
+      // for cases where it is a conditional command, but no left/right is set
+      ControlFlowCommandChecks.isConditional(this.command.command)
+    );
   }
 
   execute(extCommand) {

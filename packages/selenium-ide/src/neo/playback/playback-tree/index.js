@@ -101,7 +101,8 @@ function connectConditionalForBranchOpen (commandNode, nextCommandNode, stack, s
 
 function connectConditional (commandNode, nextCommandNode, stack) {
   let left = findNextNodeBy(stack, commandNode.index, commandNode.level);
-  commandNode.right = nextCommandNode;
+  let right = ControlFlowCommandChecks.isEnd(nextCommandNode.command) ? undefined : nextCommandNode;
+  commandNode.right = right;
   commandNode.left = deriveNext(left, stack);
 }
 
