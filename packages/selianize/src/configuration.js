@@ -19,10 +19,10 @@ import config from "./config";
 
 const hooks = [];
 
-export async function emit(project, options = config) {
+export async function emit(project, options = config, snapshot) {
   const configHooks = (await Promise.all(hooks.map((hook) => hook({ name: project.name })))).join("");
   if (!options.skipStdLibEmitting) {
-    return `global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${configHooks}`;
+    return `global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${configHooks}${snapshot ? snapshot : ""}`;
   } else {
     if (configHooks) {
       return {

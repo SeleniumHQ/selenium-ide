@@ -32,6 +32,13 @@ describe("configuration code emitter", () => {
       skipped: true
     });
   });
+  it("should append the configuration snapshot to the config", () => {
+    const project = {
+      url: "http://www.seleniumhq.org"
+    };
+    const snapshot = "extra global config";
+    return expect(ConfigurationEmitter.emit(project, undefined, snapshot)).resolves.toBe(`global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${snapshot}`);
+  });
   it("should emit a snapshot of the hooks when skipStdLibEmitting is set", () => {
     const project = {
       url: "http://www.seleniumhq.org"
