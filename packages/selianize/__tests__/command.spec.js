@@ -41,7 +41,7 @@ describe("command code emitter", () => {
       target: "/",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.get(BASE_URL + "${command.target}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.get((new URL("${command.target}", BASE_URL)).href);`);
   });
   it("should emit `open` with absolute url", () => {
     const command = {

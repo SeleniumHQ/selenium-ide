@@ -46,7 +46,7 @@ describe("test case code emitter", () => {
       id: "1",
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get(BASE_URL + "${test.commands[0].target}");}`
+      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get((new URL("${test.commands[0].target}", BASE_URL)).href);}`
     });
   });
   it("should emit a test with multiple commands", () => {
@@ -75,7 +75,7 @@ describe("test case code emitter", () => {
       id: "1",
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get(BASE_URL + "${test.commands[0].target}");await driver.get(BASE_URL + "${test.commands[1].target}");await driver.get(BASE_URL + "${test.commands[2].target}");}`
+      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get((new URL("${test.commands[0].target}", BASE_URL)).href);await driver.get((new URL("${test.commands[1].target}", BASE_URL)).href);await driver.get((new URL("${test.commands[2].target}", BASE_URL)).href);}`
     });
   });
   it("should reject a test with failed commands", () => {

@@ -144,7 +144,7 @@ export default {
 };
 
 function emitOpen(target) {
-  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `BASE_URL + "${target}"`;
+  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `(new URL("${target}", BASE_URL)).href`;
   return Promise.resolve(`await driver.get(${url});`);
 }
 
