@@ -673,4 +673,13 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
   });
+  it("should return the snapshot when an unknown command is being emitted with snapshot sent", () => {
+    const command = {
+      command: "doesntExist",
+      target: "",
+      value: ""
+    };
+    const snapshot = "this commands snapshot";
+    return expect(CommandEmitter.emit(command, undefined, snapshot)).resolves.toBe(snapshot);
+  });
 });

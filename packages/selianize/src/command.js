@@ -97,7 +97,7 @@ const emitters = {
   setSpeed: skip
 };
 
-export function emit(command, options = config) {
+export function emit(command, options = config, snapshot) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
       if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
@@ -113,6 +113,8 @@ export function emit(command, options = config) {
     } else {
       if (!command.command) {
         res();
+      } else if (snapshot) {
+        res(snapshot);
       } else {
         rej(new Error(`Unknown command ${command.command}`));
       }
