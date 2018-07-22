@@ -858,6 +858,22 @@ function isTerminal(command) {
           isEnd(command));
 }
 
+function isControlFlow(command) {
+  switch(command) {
+    case ControlFlowCommandNames.if:
+    case ControlFlowCommandNames.elseIf:
+    case ControlFlowCommandNames.else:
+    case ControlFlowCommandNames.end:
+    case ControlFlowCommandNames.do:
+    case ControlFlowCommandNames.repeatIf:
+    case ControlFlowCommandNames.times:
+    case ControlFlowCommandNames.while:
+      return true;
+    default:
+      return false;
+  }
+}
+
 export const ControlFlowCommandChecks = {
   isConditional: isConditional,
   isDo: isDo,
@@ -867,6 +883,7 @@ export const ControlFlowCommandChecks = {
   isIf: isIf,
   isLoop: isLoop,
   isBlockOpen: isBlockOpen,
-  isTerminal: isTerminal
+  isTerminal: isTerminal,
+  isControlFlow: isControlFlow
 };
 

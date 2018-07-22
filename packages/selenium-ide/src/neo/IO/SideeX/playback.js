@@ -24,6 +24,7 @@ import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecut
 import ExtCommand from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 import { createPlaybackTree } from "../../playback/playback-tree";
+import { ControlFlowCommandChecks } from "../../models/Command";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -52,8 +53,13 @@ function play(currUrl) {
 
 function initPlaybackTree() {
   try {
-    playbackTree = createPlaybackTree(PlaybackState.runningQueue);
-    PlaybackState.setCurrentExecutingCommandNode(playbackTree.currentCommandNode);
+    if (PlaybackState.runningQueue.length === 1 &&
+        ControlFlowCommandChecks.isControlFlow(PlaybackState.runningQueue[0].command)) {
+      throw new Error("Unable to execute control flow command by itself. Instead, you can play the test from here by right-clicking and selecting 'Play from here'.");
+    } else {
+      playbackTree = createPlaybackTree(PlaybackState.runningQueue);
+      PlaybackState.setCurrentExecutingCommandNode(playbackTree.currentCommandNode);
+    }
   } catch (error) {
     reportError(error.message, false, error.index);
   }
@@ -87,11 +93,7 @@ function executionLoop() {
   else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
-    return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
-      PlaybackState.setCurrentExecutingCommandNode(result.next);
-    }).then(executionLoop);
-  } else if (extCommand.isExtCommand(command.command)) {
+  if (extCommand.isExtCommand(command.command)) {
     return doDelay().then(() => {
       return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
         .then((result) => {
@@ -100,6 +102,10 @@ function executionLoop() {
           PlaybackState.setCurrentExecutingCommandNode(result.next);
         }).then(executionLoop);
     });
+  } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
+    return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
+      PlaybackState.setCurrentExecutingCommandNode(result.next);
+    }).then(executionLoop);
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
