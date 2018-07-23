@@ -39,7 +39,10 @@ export default function Selianize(project, _opts, snapshot = {}) {
     }
 
     const testsHashmap = project.tests.reduce((map, test, index) => {
-      map[test.id] = tests[index];
+      map[test.id] = {
+        emitted: tests[index],
+        test
+      };
       return map;
     }, {});
     const suites = (await Promise.all(project.suites.map((suite) =>
