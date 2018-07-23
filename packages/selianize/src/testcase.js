@@ -24,8 +24,8 @@ const hooks = [];
 export function emit(test, options = config, snapshot) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
-    const setupHooks = hookResults.map((hook) => hook.setup || "");
-    const teardownHooks = hookResults.map((hook) => hook.teardown || "");
+    const setupHooks = hookResults.map((hook) => hook.setup || "").filter((hook) => (!!hook));
+    const teardownHooks = hookResults.map((hook) => hook.teardown || "").filter((hook) => (!!hook));
     const testName = convertToSnake(test.name);
 
     let errors = [];
