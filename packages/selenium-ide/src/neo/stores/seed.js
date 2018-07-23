@@ -81,19 +81,21 @@ export default function seed(store, numberOfSuites = 5) {
   thirdClick2.setCommand("clickAt");
   thirdClick2.setTarget("link=scapegoat");
 
-  const controlFlowIfTest = store.createTestCase("control flow if else");
+  const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowIfTest.createCommand(undefined, "if", "true");
   controlFlowIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowIfTest.createCommand(undefined, "else");
+  controlFlowIfTest.createCommand(undefined, "else if", "true");
   controlFlowIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowIfTest.createCommand(undefined, "else");
+  controlFlowIfTest.createCommand(undefined, "echo", "baz");
   controlFlowIfTest.createCommand(undefined, "end");
 
-  const controlFlowRepeatIfTest = store.createTestCase("control flow repeat if");
-  controlFlowRepeatIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
-  controlFlowRepeatIfTest.createCommand(undefined, "do");
-  controlFlowRepeatIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowRepeatIfTest.createCommand(undefined, "repeat if", "true", "2");
+  const controlFlowDoTest = store.createTestCase("control flow do");
+  controlFlowDoTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowDoTest.createCommand(undefined, "do");
+  controlFlowDoTest.createCommand(undefined, "echo", "foo");
+  controlFlowDoTest.createCommand(undefined, "repeat if", "true", "2");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
   controlFlowTimesTest.createCommand(undefined, "open", "/wiki/River_Chater");
@@ -132,7 +134,7 @@ export default function seed(store, numberOfSuites = 5) {
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
-  suiteControlFlow.addTestCase(controlFlowRepeatIfTest);
+  suiteControlFlow.addTestCase(controlFlowDoTest);
   suiteControlFlow.addTestCase(controlFlowTimesTest);
   suiteControlFlow.addTestCase(controlFlowWhileTest);
 

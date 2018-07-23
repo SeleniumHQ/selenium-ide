@@ -413,7 +413,7 @@ class CommandList {
       description: "Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command."
     }],
     [ "elseIf", {
-      name: "elseIf",
+      name: "else if",
       type: TargetTypes.LOCATOR,
       description: "Part of an if block. Execute the commands in this branch when an if condition has not been met. Terminate the branch with the end command."
     }],
