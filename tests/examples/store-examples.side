@@ -98,20 +98,5 @@
   }],
   "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
   "plugins": [],
-  "version": "1.0",
-  "code": {
-    "suites": [{
-      "name": "store",
-      "persistSession": false,
-      "code": "global.BASE_URL = configuration.baseUrl || 'http://nginx:80';let vars = {};jest.setTimeout(300000);describe(\"store\", () => {it(\"attributes\", async () => {await tests.attributes(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it(\"xpath count\", async () => {await tests.xpath_count(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});"
-    }],
-    "tests": [{
-      "name": "attributes",
-      "code": "tests.attributes = async function attributes(driver, vars) {await driver.get(BASE_URL + \"/store/attributes.html\");await driver.wait(until.elementLocated(By.id(`test-id-1`)), configuration.timeout);await driver.findElement(By.id(`test-id-1`)).then(element => element.getAttribute(\"style\").then(attribute => {vars[\"var1\"] = attribute;}));await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await driver.findElement(By.id(`test`)).then(element => {element.clear().then(() => {element.sendKeys(`${vars.var1}`);});});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await expect(driver.findElement(By.id(`test`))).resolves.toHaveValue(`color: blue;`);}"
-    }, {
-      "name": "xpath count",
-      "code": "tests.xpath_count = async function xpath_count(driver, vars) {await driver.get(BASE_URL + \"/store/nodes.html\");await driver.wait(until.elementsLocated(By.xpath(`//span`)), configuration.timeout);await driver.findElements(By.xpath(`//span`)).then(elements => {vars[\"span_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await driver.findElement(By.id(`test`)).then(element => {element.clear().then(() => {element.sendKeys(`${vars.span_count}`);});});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await expect(driver.findElement(By.id(`test`))).resolves.toHaveValue(`10`);await driver.wait(until.elementsLocated(By.xpath(`//div[contains(@class, \\\"testclass\\\")]`)), configuration.timeout);await driver.findElements(By.xpath(`//div[contains(@class, \\\"testclass\\\")]`)).then(elements => {vars[\"div_count\"] = elements.length;});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await driver.findElement(By.id(`test`)).then(element => {element.clear().then(() => {element.sendKeys(`${vars.div_count}`);});});await driver.wait(until.elementLocated(By.id(`test`)), configuration.timeout);await expect(driver.findElement(By.id(`test`))).resolves.toHaveValue(`6`);}"
-    }]
-  },
-  "dependencies": {}
+  "version": "1.0"
 }

@@ -17,7 +17,9 @@
 
 const hooks = [];
 
-export function emit(suite, tests) {
+import config from "./config";
+
+export function emit(suite, tests, options = config, snapshot) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = (await Promise.all(hooks.map((hook) => hook({ name: suite.name })))).reduce((code, result) => (
       code
@@ -26,28 +28,39 @@ export function emit(suite, tests) {
       + (result.after ? `afterEach(async () => {${result.after}});` : "")
       + (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : "")
     ), "");
-    let testsCode = (await Promise.all(suite.tests.map(testId => (
-      tests[testId]
-    )).map((test) => (test.test))));
 
-    if (suite.parallel) {
-      testsCode = testsCode.map((code, index) => ({
-        name: tests[suite.tests[index]].name,
-        code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
-      }));
-      return res(testsCode);
+    if (!options.skipStdLibEmitting) {
+      let testsCode = (await Promise.all(suite.tests.map(testId => (
+        tests[testId]
+      )).map((test) => (test.test))));
+
+      if (suite.parallel) {
+        testsCode = testsCode.map((code, index) => ({
+          name: tests[suite.tests[index]].name,
+          code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
+        }));
+        return res(testsCode);
+      }
+
+      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}${snapshot ? snapshot.hook : ""}`;
+
+      result += testsCode.join("");
+
+      result += "});";
+      res({
+        code: result
+      });
+    } else {
+      res(hookResults ? {
+        snapshot: {
+          hook: hookResults
+        }
+      } : { skipped: true });
     }
-
-    let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}`;
-
-    result += testsCode.join("");
-
-    result += "});";
-    res(result);
   });
 }
 
-function registerHook(hook) {
+export function registerHook(hook) {
   hooks.push(hook);
 }
 

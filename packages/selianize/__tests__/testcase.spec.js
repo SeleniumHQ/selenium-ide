@@ -16,6 +16,7 @@
 // under the License.
 
 import TestCaseEmitter from "../src/testcase";
+import CommandEmitter from "../src/command";
 
 describe("test case code emitter", () => {
   it("should emit an empty test case", () => {
@@ -25,6 +26,7 @@ describe("test case code emitter", () => {
       commands: []
     };
     return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
+      id: "1",
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
       function: "tests.example_test_case = async function example_test_case(driver, vars, opts) {}"
@@ -41,9 +43,10 @@ describe("test case code emitter", () => {
       }]
     };
     return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
+      id: "1",
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get(BASE_URL + "${test.commands[0].target}");}`
+      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get((new URL("${test.commands[0].target}", BASE_URL)).href);}`
     });
   });
   it("should emit a test with multiple commands", () => {
@@ -69,9 +72,10 @@ describe("test case code emitter", () => {
       ]
     };
     return expect(TestCaseEmitter.emit(test)).resolves.toEqual({
+      id: "1",
       name: "example test case",
       test: `it("${test.name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`,
-      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get(BASE_URL + "${test.commands[0].target}");await driver.get(BASE_URL + "${test.commands[1].target}");await driver.get(BASE_URL + "${test.commands[2].target}");}`
+      function: `tests.example_test_case = async function example_test_case(driver, vars, opts) {await driver.get((new URL("${test.commands[0].target}", BASE_URL)).href);await driver.get((new URL("${test.commands[1].target}", BASE_URL)).href);await driver.get((new URL("${test.commands[2].target}", BASE_URL)).href);}`
     });
   });
   it("should reject a test with failed commands", () => {
@@ -131,9 +135,121 @@ describe("test case code emitter", () => {
       ]
     };
     return expect(TestCaseEmitter.emit(test, { silenceErrors: true })).resolves.toEqual({
+      id: "1",
       name: "silence",
       test: "it(\"silence\", async () => {await tests.silence(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});",
       function: "tests.silence = async function silence(driver, vars, opts) {throw new Error(\"Unknown command doesntExist\");}"
+    });
+  });
+  it("should emit an empty snapshot for an empty test case when skipStdLibEmitting is set", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: []
+    };
+    expect(TestCaseEmitter.emit(test, { skipStdLibEmitting: true })).resolves.toEqual({});
+  });
+  it("should emit an empty snapshot for a test case when skipStdLibEmitting is set", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: [
+        {
+          command: "open",
+          target: "",
+          value: ""
+        }
+      ]
+    };
+    expect(TestCaseEmitter.emit(test, { skipStdLibEmitting: true })).resolves.toEqual({});
+  });
+  it("should emit a snapshot for a test case with an additional command emitter when skipStdLibEmitting is set", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: [
+        {
+          id: "2",
+          command: "aNewCommand",
+          target: "",
+          value: ""
+        }
+      ]
+    };
+    CommandEmitter.registerEmitter("aNewCommand", () => ("command code"));
+    expect(TestCaseEmitter.emit(test, { skipStdLibEmitting: true })).resolves.toEqual({
+      id: "1",
+      snapshot: {
+        commands: {
+          "2": "command code"
+        },
+        setupHooks: [],
+        teardownHooks: []
+      }
+    });
+  });
+  it("should send the snapshot to the command", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: [
+        {
+          id: "2",
+          command: "anUnknownCommand",
+          target: "",
+          value: ""
+        }
+      ]
+    };
+    const snapshot = {
+      commands: {
+        "2": "command code"
+      },
+      setupHooks: [],
+      teardownHooks: []
+    };
+    expect(TestCaseEmitter.emit(test, undefined, snapshot)).resolves.toEqual({
+      id: "1",
+      name: "example test case",
+      test: "it(\"example test case\", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});",
+      function: "tests.example_test_case = async function example_test_case(driver, vars, opts) {command code}"
+    });
+  });
+  it("should emit a snapshot for a test case with setup and teardown hooks when skipStdLibEmitting is set", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: []
+    };
+    TestCaseEmitter.registerHook(() => ({
+      setup: "setup code",
+      teardown: "teardown code"
+    }));
+    expect(TestCaseEmitter.emit(test, { skipStdLibEmitting: true })).resolves.toEqual({
+      id: "1",
+      snapshot: {
+        commands: {},
+        setupHooks: ["setup code"],
+        teardownHooks: ["teardown code"]
+      }
+    });
+  });
+  it("should append the snapshot of the setup and teardown hooks to the test case", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: []
+    };
+    const snapshot = {
+      commands: {},
+      setupHooks: ["more setup"],
+      teardownHooks: ["more teardown"]
+    };
+    expect(TestCaseEmitter.emit(test, undefined, snapshot)).resolves.toEqual({
+      id: "1",
+      name: "example test case",
+      test: "it(\"example test case\", async () => {setup codemore setupawait tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});teardown codemore teardown});",
+      function: "tests.example_test_case = async function example_test_case(driver, vars, opts) {}"
     });
   });
 });
