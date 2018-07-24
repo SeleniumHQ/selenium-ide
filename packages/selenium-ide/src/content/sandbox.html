@@ -3,25 +3,33 @@
   - Use of this source code is governed by a BSD-style license that can be
   - found in the LICENSE file.
   -->
-<script>
-  function evaluate(expression) {
-    try {
-      return { result: "success", value: !!(eval(expression)) ? "truthy" : "falsy" };
-    } catch(e) {
-      return { result: e.message };
-    }
-  }
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8"/>
+  </head>
+  <body>
+    <script>
+      function evaluate(expression) {
+        try {
+          return { result: "success", value: !!(eval(expression)) ? "truthy" : "falsy" };
+        } catch(e) {
+          return { result: e.message };
+        }
+      }
 
-  window.addEventListener('message', function(event) {
-    const command = event.data.command;
-    const name = event.data.name || 'hello';
-    switch(command) {
-      case 'evaluateConditional':
-        event.source.postMessage({
-          name: name,
-          result: evaluate(event.data.expression)
-        }, event.origin);
-        break;
-    }
-  });
-</script>
+      window.addEventListener('message', function(event) {
+        const command = event.data.command;
+        const name = event.data.name || 'hello';
+        switch(command) {
+          case 'evaluateConditional':
+            event.source.postMessage({
+              name: name,
+              result: evaluate(event.data.expression)
+            }, event.origin);
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>
