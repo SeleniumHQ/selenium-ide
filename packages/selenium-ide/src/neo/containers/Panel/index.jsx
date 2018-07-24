@@ -71,6 +71,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
   seed(project, 0);
 }
+project.setModified(false);
 
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
