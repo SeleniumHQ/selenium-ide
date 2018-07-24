@@ -104,9 +104,7 @@ function executionLoop() {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
           PlaybackState.setCurrentExecutingCommandNode(result.next);
-          if (command.command === "open") {
-            PlaybackState.isOpenCommandUsed = true;
-          }
+          if (command.command === "open") PlaybackState.isOpenCommandUsed = true;
         }).then(executionLoop);
     });
   } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
