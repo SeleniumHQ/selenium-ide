@@ -25,6 +25,7 @@ import ExtCommand from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
+//import { Sandbox } from "../../../content/sandbox";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -39,6 +40,7 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
+//const sandbox = new Sandbox;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -102,15 +104,22 @@ function executionLoop() {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
           PlaybackState.setCurrentExecutingCommandNode(result.next);
+          if (command.command === "open") {
+            PlaybackState.isOpenCommandUsed = true;
+          }
         }).then(executionLoop);
     });
   } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
-    return (PlaybackState.currentExecutingCommandNode.execute(extCommand)).then((result) => {
-      if (result.result !== "success") {
-        reportError(result.result, false, undefined);
-      }
-      PlaybackState.setCurrentExecutingCommandNode(result.next);
-    }).then(executionLoop);
+    return (PlaybackState.isOpenCommandUsed ?
+      PlaybackState.currentExecutingCommandNode.execute(extCommand)
+      :
+      PlaybackState.currentExecutingCommandNode.execute(extCommand, false))
+      .then((result) => {
+        if (result.result !== "success") {
+          reportError(result.result, false, undefined);
+        }
+        PlaybackState.setCurrentExecutingCommandNode(result.next);
+      }).then(executionLoop);
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();

@@ -49,6 +49,7 @@ class PlaybackState {
   @observable delay = 0;
   @observable callstack = [];
   @observable currentExecutingCommandNode = null;
+  @observable isOpenCommandUsed = false;
 
   constructor() {
     this.maxDelay = 3000;

@@ -17,6 +17,7 @@
 
 import { xlateArgument } from "../../IO/SideeX/formatCommand";
 import { ControlFlowCommandChecks } from "../../models/Command";
+import sandbox from "../../../content/sandbox";
 
 export class CommandNode {
   constructor(command) {
@@ -34,11 +35,12 @@ export class CommandNode {
       this.left ||
       this.right ||
       // for cases where it is a conditional command, but no left/right is set
+      // e.g., an empty conditional branch (e.g., while/end)
       ControlFlowCommandChecks.isConditional(this.command.command)
     );
   }
 
-  execute(extCommand) {
+  execute(extCommand, evalInContentWindow) {
     this.timesVisited++;
     if (this.isRetryLimit()) {
       return Promise.resolve({
@@ -56,7 +58,7 @@ export class CommandNode {
           };
         });
     } else if (this.isControlFlow()) {
-      return this.evaluate(extCommand).then((result) => {
+      return this.evaluate(extCommand, evalInContentWindow).then((result) => {
         if (result.result === "success") {
           return {
             result: "success",
@@ -85,7 +87,7 @@ export class CommandNode {
     }
   }
 
-  evaluate(extCommand) {
+  evaluate(extCommand, evalInContentWindow = true) {
     let expression = this.command.target;
     if (this.command.command === "times") {
       if (isNaN(this.command.target)) {
@@ -95,19 +97,25 @@ export class CommandNode {
       }
       expression = `${this.timesVisited} <= ${this.command.target}`;
     }
-    return extCommand.sendMessage(
-      "evaluateConditional", expression, "", false)
+    return (evalInContentWindow ?
+      extCommand.sendMessage("evaluateConditional", expression, "", false)
+      :
+      sandbox.eval(expression))
       .then((result) => {
-        if (result.value) {
-          return {
-            result: "success",
-            next: this.right
-          };
+        if (result.result === "success") {
+          if (result.value) {
+            return {
+              result: "success",
+              next: this.right
+            };
+          } else {
+            return {
+              result: "success",
+              next: this.left
+            };
+          }
         } else {
-          return {
-            result: "success",
-            next: this.left
-          };
+          return result;
         }
       });
   }
