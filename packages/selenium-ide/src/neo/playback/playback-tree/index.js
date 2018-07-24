@@ -58,6 +58,9 @@ function connectCommandNodes(_commandNodeStack) {
       connectDefault(commandNode, nextCommandNode, commandNodeStack, state);
     }
   });
+  if (ControlFlowCommandChecks.isTerminal(commandNodeStack[0].command)) {
+    commandNodeStack.shift();
+  }
   return commandNodeStack;
 }
 

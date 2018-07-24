@@ -225,18 +225,15 @@ describe("Control Flow", () => {
           createCommand("command")
         ];
         let stack = createCommandNodesFromCommandStack(input);
-        expect(stack[0].next).toBeUndefined();
+        expect(stack[0].next.command).toEqual(input[2]);
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
-        expect(stack[1].next).toEqual(stack[2]);
-        expect(stack[1].right).toBeUndefined();
-        expect(stack[1].left).toBeUndefined();
+        expect(stack[1].next).toBeUndefined();
+        expect(stack[1].right.command).toEqual(input[1]);
+        expect(stack[1].left.command).toEqual(input[3]);
         expect(stack[2].next).toBeUndefined();
-        expect(stack[2].right).toEqual(stack[1]);
-        expect(stack[2].left).toEqual(stack[3]);
-        expect(stack[3].next).toBeUndefined();
-        expect(stack[3].right).toBeUndefined();
-        expect(stack[3].left).toBeUndefined();
+        expect(stack[2].right).toBeUndefined();
+        expect(stack[2].left).toBeUndefined();
       });
       test("do-command-while-command-end-repeatIf", () => {
         let input = [
@@ -248,24 +245,21 @@ describe("Control Flow", () => {
           createCommand(ControlFlowCommandNames.repeatIf)
         ];
         let stack = createCommandNodesFromCommandStack(input);
-        expect(stack[0].next).toBeUndefined();
+        expect(stack[0].next.command).toEqual(input[2]);
         expect(stack[0].right).toBeUndefined();
         expect(stack[0].left).toBeUndefined();
-        expect(stack[1].next).toEqual(stack[2]);
-        expect(stack[1].right).toBeUndefined();
-        expect(stack[1].left).toBeUndefined();
-        expect(stack[2].next).toBeUndefined();
-        expect(stack[2].right).toEqual(stack[3]);
-        expect(stack[2].left).toEqual(stack[5]);
-        expect(stack[3].next).toEqual(stack[2]);
+        expect(stack[1].next).toBeUndefined();
+        expect(stack[1].right.command).toEqual(input[3]);
+        expect(stack[1].left.command).toEqual(input[5]);
+        expect(stack[2].next.command).toEqual(input[2]);
+        expect(stack[2].right).toBeUndefined();
+        expect(stack[2].left).toBeUndefined();
+        expect(stack[3].next).toBeUndefined();
         expect(stack[3].right).toBeUndefined();
         expect(stack[3].left).toBeUndefined();
         expect(stack[4].next).toBeUndefined();
-        expect(stack[4].right).toBeUndefined();
+        expect(stack[4].right.command).toEqual(input[1]);
         expect(stack[4].left).toBeUndefined();
-        expect(stack[5].next).toBeUndefined();
-        expect(stack[5].right).toEqual(stack[1]);
-        expect(stack[5].left).toBeUndefined();
       });
       test("times-command-end", () => {
         let input = [
@@ -328,6 +322,18 @@ describe("Control Flow", () => {
     });
   });
   describe("Processed", () => {
+    it("do-command-repeatIf-end skips do", () => {
+      let input = [
+        createCommand(ControlFlowCommandNames.do),
+        createCommand("command"),
+        createCommand(ControlFlowCommandNames.repeatIf)
+      ];
+      let tree = createPlaybackTree(input);
+      expect(tree.currentCommandNode.command).toEqual(input[1]);
+      expect(tree.currentCommandNode.next.command).toEqual(input[2]);
+      expect(tree.currentCommandNode.next.right.command).toEqual(input[1]);
+      expect(tree.currentCommandNode.next.left).toBeUndefined();
+    });
     it("populated tree exists with correct values", () => {
       let input = [
         createCommand(ControlFlowCommandNames.if),
