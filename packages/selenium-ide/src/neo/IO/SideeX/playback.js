@@ -25,7 +25,7 @@ import ExtCommand from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
-//import { Sandbox } from "../../../content/sandbox";
+import parser from "ua-parser-js";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -40,7 +40,7 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
-//const sandbox = new Sandbox;
+const browserName = parser(window.navigator.userAgent).browser.name;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -108,6 +108,9 @@ function executionLoop() {
         }).then(executionLoop);
     });
   } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
+    if (browserName === "Firefox" && !PlaybackState.isOpenCommandUsed) {
+      reportError("Expression evaluation prior to an 'open' command is not supported in Firefox.", false, undefined);
+    }
     return (PlaybackState.isOpenCommandUsed ?
       PlaybackState.currentExecutingCommandNode.execute(extCommand)
       :
@@ -134,6 +137,7 @@ function executionLoop() {
 }
 
 function prepareToPlay() {
+  PlaybackState.isOpenCommandUsed = false; // to support deleting an open command and re-running the test to trigger sandbox eval
   return extCommand.init(baseUrl);
 }
 
