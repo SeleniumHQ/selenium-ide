@@ -45,7 +45,7 @@ function doCommands(request, sender, sendResponse) {
     } else if (request.commands === "evaluateConditional") {
       try {
         let value = selenium["doEvaluateConditional"](request.target);
-        sendResponse({ result: "success", value });
+        sendResponse({ result: "success", value: value });
       } catch(e) {
         sendResponse({ result: e.message });
       }
