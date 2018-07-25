@@ -234,6 +234,25 @@ describe("test case code emitter", () => {
       }
     });
   });
+  it("should filter out empty hooks", () => {
+    const test = {
+      id: "1",
+      name: "example test case",
+      commands: []
+    };
+    TestCaseEmitter.registerHook(() => ({
+      setup: "",
+      teardown: ""
+    }));
+    expect(TestCaseEmitter.emit(test, { skipStdLibEmitting: true })).resolves.toEqual({
+      id: "1",
+      snapshot: {
+        commands: {},
+        setupHooks: ["setup code"],
+        teardownHooks: ["teardown code"]
+      }
+    });
+  });
   it("should append the snapshot of the setup and teardown hooks to the test case", () => {
     const test = {
       id: "1",

@@ -520,5 +520,5 @@ if (Recorder) {
     if (shouldAttach) {
       recorder.attach();
     }
-  }).catch();
+  }).catch(() => {});
 }

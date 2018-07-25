@@ -45,7 +45,9 @@ describe("suite emitter", () => {
       tests: ["1"]
     };
     return expect(SuiteEmitter.emit(suite, {
-      1: await TestCaseEmitter.emit(tests["1"])
+      1: {
+        emitted: await TestCaseEmitter.emit(tests["1"])
+      }
     })).resolves.toEqual({
       code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`
     });
@@ -75,9 +77,15 @@ describe("suite emitter", () => {
       tests: ["1", "2", "3"]
     };
     return expect(SuiteEmitter.emit(suite, {
-      1: await TestCaseEmitter.emit(tests["1"]),
-      2: await TestCaseEmitter.emit(tests["2"]),
-      3: await TestCaseEmitter.emit(tests["3"])
+      1: {
+        emitted: await TestCaseEmitter.emit(tests["1"])
+      },
+      2: {
+        emitted: await TestCaseEmitter.emit(tests["2"])
+      },
+      3: {
+        emitted: await TestCaseEmitter.emit(tests["3"])
+      }
     })).resolves.toEqual({
       code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await tests.second_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await tests.third_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`
     });
@@ -108,9 +116,15 @@ describe("suite emitter", () => {
       tests: ["1", "2", "3"]
     };
     return expect(SuiteEmitter.emit(suite, {
-      1: await TestCaseEmitter.emit(tests["1"]),
-      2: await TestCaseEmitter.emit(tests["2"]),
-      3: await TestCaseEmitter.emit(tests["3"])
+      1: {
+        emitted: await TestCaseEmitter.emit(tests["1"])
+      },
+      2: {
+        emitted: await TestCaseEmitter.emit(tests["2"])
+      },
+      3: {
+        emitted: await TestCaseEmitter.emit(tests["3"])
+      }
     })).resolves.toEqual([
       {
         name: tests["1"].name,

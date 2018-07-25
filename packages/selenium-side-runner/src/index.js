@@ -45,16 +45,26 @@ program
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
   .option("--timeout [number | undefined]", `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`)
   .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
-  .option("--debug", "Print debug logs")
-  .parse(process.argv);
+  .option("--debug", "Print debug logs");
 
-if (!program.args.length) {
+if (process.env.NODE_ENV === "development") {
+  program.option("-e, --extract", "Only extract the project file to code (this feature is for debugging purposes)");
+  program.option("-r, --run [directory]", "Run the extracted project files (this feature is for debugging purposes)");
+}
+
+program.parse(process.argv);
+
+if (!program.args.length && !program.run) {
   program.outputHelp();
   process.exit(1);
 }
 
 winston.cli();
 winston.level = program.debug ? "debug" : "warn";
+
+if (program.extract || program.run) {
+  winston.warn("This feature is used by Selenium IDE maintainers for debugging purposes, we hope you know what you're doing!");
+}
 
 const configuration = {
   capabilities: {
@@ -157,20 +167,38 @@ function runProject(project) {
         npmInstall = Promise.resolve();
       }
       npmInstall.then(() => {
-        const child = fork(require.resolve("./child"), [
-          "--testMatch", `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`
-        ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
-
-        child.on("exit", (code) => {
-          console.log("");
-          rimraf.sync(projectPath);
-          if (code) {
-            reject();
-          } else {
-            resolve();
-          }
-        });
+        if (program.extract) {
+          resolve();
+        } else {
+          runJest().then(resolve).catch(reject);
+        }
       }).catch(reject);
+    });
+  });
+}
+
+function runJest() {
+  return new Promise((resolve, reject) => {
+    const args = [
+      "--testMatch", `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`
+    ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : []);
+    const opts = { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" };
+    winston.debug("jest worker args");
+    winston.debug(args);
+    winston.debug("jest work opts");
+    winston.debug(opts);
+    const child = fork(require.resolve("./child"), args, opts);
+
+    child.on("exit", (code) => {
+      console.log("");
+      if (!program.run) {
+        rimraf.sync(projectPath);
+      }
+      if (code) {
+        reject();
+      } else {
+        resolve();
+      }
     });
   });
 }
@@ -193,11 +221,18 @@ function writeJSFile(name, data, postfix = ".test.js") {
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
 
 function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
-  rimraf.sync(projectPath);
+  if (!program.run) {
+    rimraf.sync(projectPath);
+  }
   process.exit(code);
 }
 
 process.on("SIGINT", handleQuit);
 process.on("SIGTERM", handleQuit);
 
-runAll(projects);
+if (program.run) {
+  projectPath = program.run;
+  runJest();
+} else {
+  runAll(projects);
+}
