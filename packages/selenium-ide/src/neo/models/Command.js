@@ -823,7 +823,7 @@ function isBlockOpen(command) {
 }
 
 function isConditional(command) {
-  switch(command) {
+  switch(command.command) {
     case ControlFlowCommandNames.elseIf:
     case ControlFlowCommandNames.if:
     case ControlFlowCommandNames.repeatIf:
@@ -836,7 +836,7 @@ function isConditional(command) {
 }
 
 function isControlFlow(command) {
-  switch(command) {
+  switch(command.command) {
     case ControlFlowCommandNames.if:
     case ControlFlowCommandNames.elseIf:
     case ControlFlowCommandNames.else:
@@ -881,7 +881,8 @@ function isIfBlock(command) {
 
 function isLoop(command) {
   return (commandNamesEqual(command, ControlFlowCommandNames.while) ||
-          commandNamesEqual(command, ControlFlowCommandNames.times));
+          commandNamesEqual(command, ControlFlowCommandNames.times) ||
+          commandNamesEqual(command, ControlFlowCommandNames.repeatIf));
 }
 
 function isTerminal(command) {
