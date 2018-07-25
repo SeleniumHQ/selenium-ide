@@ -36,12 +36,15 @@ export class CommandNode {
       this.right ||
       // for cases where it is a conditional command, but no left/right is set
       // e.g., an empty conditional branch (e.g., while/end)
-      ControlFlowCommandChecks.isConditional(this.command.command)
+      ControlFlowCommandChecks.isConditional(this.command)
     );
   }
 
+  incrementTimesVisited() {
+    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
+  }
+
   execute(extCommand, evalInContentWindow) {
-    this.timesVisited++;
     if (this.isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit\
@@ -53,13 +56,17 @@ export class CommandNode {
         xlateArgument(this.command.target),
         xlateArgument(this.command.value))
         .then(() => {
+          this.incrementTimesVisited();
           return {
             next: this.next
           };
         });
-    } else if (this.isControlFlow()) {
+    } else if (this.isControlFlow() ||
+               this.command.command === "executeScript" ||
+               this.command.command === "executeAsyncScript") {
       return this.evaluate(extCommand, evalInContentWindow).then((result) => {
         if (result.result === "success") {
+          this.incrementTimesVisited();
           return {
             result: "success",
             next: result.next
@@ -76,6 +83,7 @@ export class CommandNode {
         extCommand.isWindowMethodCommand(this.command.command))
         .then((result) => {
           if (result.result === "success") {
+            this.incrementTimesVisited();
             return {
               result: "success",
               next: this.next
@@ -96,7 +104,7 @@ export class CommandNode {
           result: "Invalid number provided as a target."
         });
       }
-      expression = `${this.timesVisited} <= ${expression}`;
+      expression = `${this.timesVisited} < ${expression}`;
     }
     return (evalInContentWindow ?
       extCommand.sendMessage("evaluateConditional", expression, "", false)
@@ -123,9 +131,10 @@ export class CommandNode {
 
   isRetryLimit() {
     let limit = 1000;
-    if (this.command.value && !isNaN(this.command.value)) {
-      limit = this.command.value;
+    let value = Math.floor(+this.command.value);
+    if (this.command.value && !isNaN(value)) {
+      limit = value;
     }
-    return (this.timesVisited > limit);
+    return (this.timesVisited >= limit);
   }
 }
