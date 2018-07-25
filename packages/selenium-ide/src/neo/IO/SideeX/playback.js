@@ -25,7 +25,6 @@ import ExtCommand from "./ext-command";
 import { xlateArgument } from "./formatCommand";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
-import parser from "ua-parser-js";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -40,7 +39,6 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
-const browserName = parser(window.navigator.userAgent).browser.name;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -84,6 +82,13 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
+function isValidOpen(command) {
+  return !!(
+    command.command === "open" &&
+    (baseUrl.match(/^https?/) || command.target.match(/^https?/))
+  );
+}
+
 function executionLoop() {
   if (isStopping() || didFinishQueue()) {
     return false;
@@ -104,17 +109,11 @@ function executionLoop() {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
           PlaybackState.setCurrentExecutingCommandNode(result.next);
-          if (command.command === "open") PlaybackState.isOpenCommandUsed = true;
+          if (isValidOpen(command)) PlaybackState.isOpenCommandUsed = true;
         }).then(executionLoop);
     });
   } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
-    if (browserName === "Firefox" && !PlaybackState.isOpenCommandUsed) {
-      reportError("Expression evaluation prior to an 'open' command is not supported in Firefox.", false, undefined);
-    }
-    return (PlaybackState.isOpenCommandUsed ?
-      PlaybackState.currentExecutingCommandNode.execute(extCommand)
-      :
-      PlaybackState.currentExecutingCommandNode.execute(extCommand, false))
+    return (PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.isOpenCommandUsed))
       .then((result) => {
         if (result.result !== "success") {
           reportError(result.result, false, undefined);
@@ -378,7 +377,8 @@ function isReceivingEndError(reason) {
     reason.message == "Could not establish connection. Receiving end does not exist." ||
     // Google Chrome misspells "response"
     reason.message == "The message port closed before a reponse was received." ||
-    reason.message == "The message port closed before a response was received." );
+    reason.message == "The message port closed before a response was received." ||
+    reason.message == "result is undefined"); // from command node eval
 }
 
 function isImplicitWait(command) {
