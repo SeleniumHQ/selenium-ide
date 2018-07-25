@@ -18,7 +18,6 @@
 class Sandbox {
   constructor() {
     this.result;
-    this.iframe = document.getElementById("sandbox");
     window.addEventListener("message", (event) => {
       if (event.data.result && this.resolve) {
         const result = this.stringToBool(event.data.result);
@@ -39,8 +38,13 @@ class Sandbox {
     const promise = new Promise(resolve => {
       this.resolve = resolve;
     });
-    this.iframe.contentWindow.postMessage(message, "*");
-    return promise;
+    const iframe = document.getElementById("sandbox");
+    if (iframe) {
+      iframe.contentWindow.postMessage(message, "*");
+      return promise;
+    } else {
+      return Promise.resolve({ result: "Expression evaluation prior to an 'open' command is not supported in Firefox." });
+    }
   }
 
   stringToBool(_input) {
