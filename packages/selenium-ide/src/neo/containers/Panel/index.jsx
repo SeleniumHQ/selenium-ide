@@ -96,6 +96,14 @@ if (browser.windows) {
   firefox57WorkaroundForBlankPanel();
 }
 
+if (parser(window.navigator.userAgent).browser.name !== "Firefox") {
+  const sandbox = document.createElement("iframe");
+  sandbox.setAttribute("id", "sandbox");
+  sandbox.setAttribute("src", "sandbox.html");
+  sandbox.setAttribute("style", "display: none");
+  document.body.appendChild(sandbox);
+}
+
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
   constructor(props) {
