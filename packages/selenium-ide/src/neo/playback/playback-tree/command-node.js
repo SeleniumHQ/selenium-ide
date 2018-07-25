@@ -90,12 +90,13 @@ export class CommandNode {
   evaluate(extCommand, evalInContentWindow = true) {
     let expression = this.command.target;
     if (this.command.command === "times") {
-      if (isNaN(this.command.target)) {
+      expression = Math.floor(+expression);
+      if (isNaN(expression)) {
         return Promise.resolve({
           result: "Invalid number provided as a target."
         });
       }
-      expression = `${this.timesVisited} <= ${this.command.target}`;
+      expression = `${this.timesVisited} <= ${expression}`;
     }
     return (evalInContentWindow ?
       extCommand.sendMessage("evaluateConditional", expression, "", false)

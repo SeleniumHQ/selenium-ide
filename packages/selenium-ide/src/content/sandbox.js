@@ -20,37 +20,32 @@ class Sandbox {
     this.result;
     this.iframe = document.getElementById("sandbox");
     window.addEventListener("message", (event) => {
-      if (event.data.result) {
-        this.result = event.data.result;
+      if (event.data.result && this.resolve) {
+        const result = this.stringToBool(event.data.result);
+        this.resolve(result);
+        this.resolve = undefined;
       }
     });
   }
 
   eval(expression) {
+    if (this.resolve) {
+      return Promise.resolve({ result: "Cannot eval while a different eval is taking place." });
+    }
     const message = {
       command: "evaluateConditional",
       expression: expression
     };
-    this.iframe.contentWindow.postMessage(message, "*");
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (this.result) {
-          resolve(this.stringToBool(this.result));
-        }
-      }, 50);
+    const promise = new Promise(resolve => {
+      this.resolve = resolve;
     });
+    this.iframe.contentWindow.postMessage(message, "*");
+    return promise;
   }
 
   stringToBool(_input) {
     let input = { ..._input };
-    switch(input.value) {
-      case "truthy":
-        input.value = true;
-        break;
-      case "falsy":
-        input.value = false;
-        break;
-    }
+    input.value = input.value === "truthy";
     return input;
   }
 }
