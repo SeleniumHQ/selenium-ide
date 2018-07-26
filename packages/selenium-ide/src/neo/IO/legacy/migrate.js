@@ -149,7 +149,7 @@ export function migrateUrls(test, url) {
 }
 
 function sanitizeXml(data) {
-  return data.replace(/<link(.*")\s*\/{0}>/g, (match, group) => (
+  return data.replace(/<br \/>/g, "\\n").replace(/<link(.*")\s*\/{0}>/g, (match, group) => (
     `<link${group} />`
   )).replace(/<td>(.*)<\/td>/g, (match, group) => (
     `<td>${xmlescape(group)}</td>`
@@ -159,7 +159,7 @@ function sanitizeXml(data) {
 function parseTarget(targetCell) {
   if (targetCell._text) {
     if (targetCell._text instanceof Array) {
-      return targetCell._text.join("<br />");
+      return targetCell._text.join("\\n");
     } else {
       return targetCell._text;
     }
