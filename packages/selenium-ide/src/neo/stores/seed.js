@@ -91,6 +91,26 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowIfTest.createCommand(undefined, "echo", "baz");
   controlFlowIfTest.createCommand(undefined, "end");
 
+  const controlFlowElseIfTest = store.createTestCase("control flow else if");
+  controlFlowElseIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowElseIfTest.createCommand(undefined, "if", "false");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowElseIfTest.createCommand(undefined, "else if", "true");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseIfTest.createCommand(undefined, "else");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseIfTest.createCommand(undefined, "end");
+
+  const controlFlowElseTest = store.createTestCase("control flow else");
+  controlFlowElseTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  controlFlowElseTest.createCommand(undefined, "if", "false");
+  controlFlowElseTest.createCommand(undefined, "echo", "foo");
+  controlFlowElseTest.createCommand(undefined, "else if", "false");
+  controlFlowElseTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseTest.createCommand(undefined, "else");
+  controlFlowElseTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseTest.createCommand(undefined, "end");
+
   const controlFlowDoTest = store.createTestCase("control flow do");
   controlFlowDoTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowDoTest.createCommand(undefined, "do");
@@ -134,9 +154,16 @@ export default function seed(store, numberOfSuites = 5) {
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
+  suiteControlFlow.addTestCase(controlFlowElseIfTest);
+  suiteControlFlow.addTestCase(controlFlowElseTest);
   suiteControlFlow.addTestCase(controlFlowDoTest);
   suiteControlFlow.addTestCase(controlFlowTimesTest);
   suiteControlFlow.addTestCase(controlFlowWhileTest);
+
+  const suiteAll = store.createSuite("_all tests");
+  store.tests.forEach(function(test) {
+    suiteAll.addTestCase(test);
+  });
 
   UiState.selectTest(playbackTest);
 
