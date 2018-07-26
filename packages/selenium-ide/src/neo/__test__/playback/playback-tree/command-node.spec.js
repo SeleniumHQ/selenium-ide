@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Command from "../../../models/Command";
+import Command, { ControlFlowCommandNames } from "../../../models/Command";
 import { CommandNode } from "../../../playback/playback-tree/command-node";
 
 describe("Command Node", () => {
@@ -33,7 +33,7 @@ describe("Command Node", () => {
     expect(node.isControlFlow()).toBeTruthy();
   });
   it("retry limit defaults to 1000", () => {
-    const command = new Command(undefined, "times", "", "");
+    const command = new Command(undefined, ControlFlowCommandNames.times, "", "");
     const node = new CommandNode(command);
     node.timesVisited = 999;
     expect(node._isRetryLimit()).toBeFalsy();
@@ -41,13 +41,13 @@ describe("Command Node", () => {
     expect(node._isRetryLimit()).toBeTruthy();
   });
   it("retry limit can be overriden", () => {
-    const command = new Command(undefined, "repeat if", "", 5);
+    const command = new Command(undefined, ControlFlowCommandNames.repeatIf, "", 5);
     const node = new CommandNode(command);
     node.timesVisited = 5;
     expect(node._isRetryLimit()).toBeTruthy();
   });
   it("execute resolves with an error message when too many retries attempted in a loop", () => {
-    const command = new Command(undefined, "while", "", 2);
+    const command = new Command(undefined, ControlFlowCommandNames.while, "", 2);
     const node = new CommandNode(command);
     node.timesVisited = 3;
     node.execute().then((result) => {
@@ -55,14 +55,14 @@ describe("Command Node", () => {
     });
   });
   it("evaluate resolves with an error message on 'times' when an invalid number is provided", () => {
-    const command = new Command(undefined, "times", "asdf", "");
+    const command = new Command(undefined, ControlFlowCommandNames.times, "asdf", "");
     const node = new CommandNode(command);
     node._evaluate().then((result) => {
       expect(result.result).toEqual("Invalid number provided as a target.");
     });
   });
   it("timesVisited only incremenrts for control flow commands", () => {
-    let command = new Command(undefined, "times", "", "");
+    let command = new Command(undefined, ControlFlowCommandNames.times, "", "");
     let node = new CommandNode(command);
     expect(node.timesVisited).toBe(0);
     node._incrementTimesVisited();
@@ -116,7 +116,7 @@ describe("Command Node", () => {
   });
   it("executionResult returns a 'next' node on control flow", () => {
     const extCommand = { isExtCommand: function() { return false; } };
-    const command = new Command(undefined, "if", "", "");
+    const command = new Command(undefined, ControlFlowCommandNames.if, "", "");
     let nodeA = new CommandNode(command);
     const nodeB = new CommandNode(command);
     expect(nodeA._executionResult(extCommand, { result: "success", next: nodeB }).next).toEqual(nodeB);
