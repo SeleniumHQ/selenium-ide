@@ -53,7 +53,7 @@ export class CommandNode {
           next: this.next
         };
       } else if (result.result === "success") {
-        this._incrementTimesVisited();
+        if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
         return {
           result: "success",
           next: this.isControlFlow() ? result.next : this.next
@@ -113,10 +113,6 @@ export class CommandNode {
           return result;
         }
       });
-  }
-
-  _incrementTimesVisited() {
-    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
   }
 
   _isRetryLimit() {
