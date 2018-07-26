@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Command, { ControlFlowCommandNames } from "../../models/Command";
-import { deriveCommandLevels } from "../../playback/playback-tree/command-leveler";
+import Command, { ControlFlowCommandNames } from "../../../models/Command";
+import { deriveCommandLevels } from "../../../playback/playback-tree/command-leveler";
 
 function createCommand(name) {
   return new Command(null, name, "", "");

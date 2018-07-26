@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { createPlaybackTree, createCommandNodesFromCommandStack } from "../../playback/playback-tree";
-import Command, { ControlFlowCommandNames } from "../../models/Command";
+import { createPlaybackTree, createCommandNodesFromCommandStack } from "../../../playback/playback-tree";
+import Command, { ControlFlowCommandNames } from "../../../models/Command";
 
 function createCommand(name) {
   return new Command(null, name, "", "");

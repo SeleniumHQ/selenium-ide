@@ -43,8 +43,7 @@ export class CommandNode {
   execute(extCommand, evalInContentWindow) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
-        result: "Max retry limit exceeded. To override it, specify a new limit\
-         in the value input field."
+        result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
       });
     }
     return this._executeCommand(extCommand, evalInContentWindow).then((result) => {
