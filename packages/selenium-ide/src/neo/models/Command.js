@@ -891,6 +891,10 @@ function isTerminal(command) {
           isEnd(command));
 }
 
+function isTimes(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.times);
+}
+
 export const ControlFlowCommandChecks = {
   isIfBlock: isIfBlock,
   isConditional: isConditional,
@@ -902,6 +906,7 @@ export const ControlFlowCommandChecks = {
   isLoop: isLoop,
   isBlockOpen: isBlockOpen,
   isTerminal: isTerminal,
-  isControlFlow: isControlFlow
+  isControlFlow: isControlFlow,
+  isTimes: isTimes
 };
 

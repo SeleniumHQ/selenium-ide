@@ -40,17 +40,38 @@ export class CommandNode {
     );
   }
 
-  incrementTimesVisited() {
-    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
+  execute(extCommand, evalInContentWindow) {
+    if (this._isRetryLimit()) {
+      return Promise.resolve({
+        result: "Max retry limit exceeded. To override it, specify a new limit\
+         in the value input field."
+      });
+    }
+    return this._executeCommand(extCommand, evalInContentWindow).then((result) => {
+      if (extCommand.isExtCommand(this.command.command)) {
+        return {
+          next: this.next
+        };
+      } else if (result.result === "success") {
+        this._incrementTimesVisited();
+        return {
+          result: "success",
+          next: this.isControlFlow() ? result.next : this.next
+        };
+      } else {
+        return result;
+      }
+    });
   }
 
-  executeCommand(extCommand, evalInContentWindow) {
+
+  _executeCommand(extCommand, evalInContentWindow) {
     if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](
         xlateArgument(this.command.target),
         xlateArgument(this.command.value));
     } else if (this.isControlFlow()) {
-      return this.evaluate(extCommand, evalInContentWindow);
+      return this._evaluate(extCommand, evalInContentWindow);
     } else {
       return extCommand.sendMessage(
         this.command.command,
@@ -60,82 +81,16 @@ export class CommandNode {
     }
   }
 
-  execute(extCommand, evalInContentWindow) {
-    if (this.isRetryLimit()) {
-      return Promise.resolve({
-        result: "Max retry limit exceeded. To override it, specify a new limit\
-         in the value input field."
-      });
-    }
-    return this.executeCommand(extCommand, evalInContentWindow).then((result) => {
-      if (extCommand.isExtCommand(this.command.command)) {
-        return {
-          next: this.next
-        };
-      } else if (result.result === "success") {
-        this.incrementTimesVisited();
-        return {
-          result: "success",
-          next: this.isControlFlow() ? result.next : this.next
-        };
-      } else {
-        return result;
-      }
-    });
-    //if (extCommand.isExtCommand(this.command.command)) {
-    //  return extCommand[extCommand.name(this.command.command)](
-    //    xlateArgument(this.command.target),
-    //    xlateArgument(this.command.value))
-    //    .then(() => {
-    //      this.incrementTimesVisited();
-    //      return {
-    //        next: this.next
-    //      };
-    //    });
-    //} else if (this.isControlFlow() ||
-    //           this.command.command === "executeScript" ||
-    //           this.command.command === "executeAsyncScript") {
-    //  return this.evaluate(extCommand, evalInContentWindow).then((result) => {
-    //    if (result.result === "success") {
-    //      this.incrementTimesVisited();
-    //      return {
-    //        result: "success",
-    //        next: result.next
-    //      };
-    //    } else {
-    //      return result;
-    //    }
-    //  });
-    //} else {
-    //  return extCommand.sendMessage(
-    //    this.command.command,
-    //    this.command.target,
-    //    this.command.value,
-    //    extCommand.isWindowMethodCommand(this.command.command))
-    //    .then((result) => {
-    //      if (result.result === "success") {
-    //        this.incrementTimesVisited();
-    //        return {
-    //          result: "success",
-    //          next: this.next
-    //        };
-    //      } else {
-    //        return result;
-    //      }
-    //    });
-    //}
-  }
-
-  evaluate(extCommand, evalInContentWindow = true) {
+  _evaluate(extCommand, evalInContentWindow = true) {
     let expression = this.command.target;
-    if (this.command.command === "times") {
-      expression = Math.floor(+expression);
-      if (isNaN(expression)) {
+    if (ControlFlowCommandChecks.isTimes(this.command)) {
+      const number = Math.floor(+expression);
+      if (isNaN(number)) {
         return Promise.resolve({
           result: "Invalid number provided as a target."
         });
       }
-      expression = `${this.timesVisited} < ${expression}`;
+      expression = `${this.timesVisited} < ${number}`;
     }
     return (evalInContentWindow ?
       extCommand.sendMessage("evaluateConditional", expression, "", false)
@@ -160,7 +115,11 @@ export class CommandNode {
       });
   }
 
-  isRetryLimit() {
+  _incrementTimesVisited() {
+    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
+  }
+
+  _isRetryLimit() {
     let limit = 1000;
     let value = Math.floor(+this.command.value);
     if (this.command.value && !isNaN(value)) {
