@@ -44,6 +44,22 @@ export class CommandNode {
     if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
   }
 
+  executeCommand(extCommand, evalInContentWindow) {
+    if (extCommand.isExtCommand(this.command.command)) {
+      return extCommand[extCommand.name(this.command.command)](
+        xlateArgument(this.command.target),
+        xlateArgument(this.command.value));
+    } else if (this.isControlFlow()) {
+      return this.evaluate(extCommand, evalInContentWindow);
+    } else {
+      return extCommand.sendMessage(
+        this.command.command,
+        this.command.target,
+        this.command.value,
+        extCommand.isWindowMethodCommand(this.command.command));
+    }
+  }
+
   execute(extCommand, evalInContentWindow) {
     if (this.isRetryLimit()) {
       return Promise.resolve({
@@ -51,48 +67,63 @@ export class CommandNode {
          in the value input field."
       });
     }
-    if (extCommand.isExtCommand(this.command.command)) {
-      return extCommand[extCommand.name(this.command.command)](
-        xlateArgument(this.command.target),
-        xlateArgument(this.command.value))
-        .then(() => {
-          this.incrementTimesVisited();
-          return {
-            next: this.next
-          };
-        });
-    } else if (this.isControlFlow() ||
-               this.command.command === "executeScript" ||
-               this.command.command === "executeAsyncScript") {
-      return this.evaluate(extCommand, evalInContentWindow).then((result) => {
-        if (result.result === "success") {
-          this.incrementTimesVisited();
-          return {
-            result: "success",
-            next: result.next
-          };
-        } else {
-          return result;
-        }
-      });
-    } else {
-      return extCommand.sendMessage(
-        this.command.command,
-        this.command.target,
-        this.command.value,
-        extCommand.isWindowMethodCommand(this.command.command))
-        .then((result) => {
-          if (result.result === "success") {
-            this.incrementTimesVisited();
-            return {
-              result: "success",
-              next: this.next
-            };
-          } else {
-            return result;
-          }
-        });
-    }
+    return this.executeCommand(extCommand, evalInContentWindow).then((result) => {
+      if (extCommand.isExtCommand(this.command.command)) {
+        return {
+          next: this.next
+        };
+      } else if (result.result === "success") {
+        this.incrementTimesVisited();
+        return {
+          result: "success",
+          next: this.isControlFlow() ? result.next : this.next
+        };
+      } else {
+        return result;
+      }
+    });
+    //if (extCommand.isExtCommand(this.command.command)) {
+    //  return extCommand[extCommand.name(this.command.command)](
+    //    xlateArgument(this.command.target),
+    //    xlateArgument(this.command.value))
+    //    .then(() => {
+    //      this.incrementTimesVisited();
+    //      return {
+    //        next: this.next
+    //      };
+    //    });
+    //} else if (this.isControlFlow() ||
+    //           this.command.command === "executeScript" ||
+    //           this.command.command === "executeAsyncScript") {
+    //  return this.evaluate(extCommand, evalInContentWindow).then((result) => {
+    //    if (result.result === "success") {
+    //      this.incrementTimesVisited();
+    //      return {
+    //        result: "success",
+    //        next: result.next
+    //      };
+    //    } else {
+    //      return result;
+    //    }
+    //  });
+    //} else {
+    //  return extCommand.sendMessage(
+    //    this.command.command,
+    //    this.command.target,
+    //    this.command.value,
+    //    extCommand.isWindowMethodCommand(this.command.command))
+    //    .then((result) => {
+    //      if (result.result === "success") {
+    //        this.incrementTimesVisited();
+    //        return {
+    //          result: "success",
+    //          next: this.next
+    //        };
+    //      } else {
+    //        return result;
+    //      }
+    //    });
+    //}
   }
 
   evaluate(extCommand, evalInContentWindow = true) {
