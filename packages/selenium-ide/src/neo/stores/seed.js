@@ -165,7 +165,10 @@ export default function seed(store, numberOfSuites = 5) {
     suiteAll.addTestCase(test);
   });
 
-  UiState.selectTest(playbackTest);
+  UiState.changeView("Test suites");
+  let suiteState = UiState.getSuiteState(suiteAll);
+  suiteState.setOpen(true);
+  UiState.selectTest(playbackTest, suiteAll);
 
   store.changeName("project");
 
