@@ -118,6 +118,7 @@ function executionLoop() {
         if (result.result !== "success") {
           reportError(result.result, false, undefined);
         }
+        PlaybackState.setCommandState(command.id, PlaybackStates.Passed);
         PlaybackState.setCurrentExecutingCommandNode(result.next);
       }).then(executionLoop);
   } else if (isImplicitWait(command)) {
