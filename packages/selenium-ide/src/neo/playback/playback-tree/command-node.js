@@ -40,6 +40,17 @@ export class CommandNode {
     );
   }
 
+  _isRetryLimit() {
+    if (ControlFlowCommandChecks.isLoop(this.command)) {
+      let limit = 1000;
+      let value = Math.floor(+this.command.value);
+      if (this.command.value && !isNaN(value)) {
+        limit = value;
+      }
+      return (this.timesVisited >= limit);
+    }
+  }
+
   execute(extCommand, evalInContentWindow) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
@@ -47,22 +58,9 @@ export class CommandNode {
       });
     }
     return this._executeCommand(extCommand, evalInContentWindow).then((result) => {
-      if (extCommand.isExtCommand(this.command.command)) {
-        return {
-          next: this.next
-        };
-      } else if (result.result === "success") {
-        if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
-        return {
-          result: "success",
-          next: this.isControlFlow() ? result.next : this.next
-        };
-      } else {
-        return result;
-      }
+      return this._executionResult(extCommand, result);
     });
   }
-
 
   _executeCommand(extCommand, evalInContentWindow) {
     if (extCommand.isExtCommand(this.command.command)) {
@@ -78,6 +76,26 @@ export class CommandNode {
         this.command.value,
         extCommand.isWindowMethodCommand(this.command.command));
     }
+  }
+
+  _executionResult(extCommand, result) {
+    if (extCommand.isExtCommand(this.command.command)) {
+      return {
+        next: this.next
+      };
+    } else if (result.result === "success") {
+      this._incrementTimesVisited();
+      return {
+        result: "success",
+        next: this.isControlFlow() ? result.next : this.next
+      };
+    } else {
+      return result;
+    }
+  }
+
+  _incrementTimesVisited() {
+    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
   }
 
   _evaluate(extCommand, evalInContentWindow = true) {
@@ -96,30 +114,25 @@ export class CommandNode {
       :
       sandbox.eval(expression))
       .then((result) => {
-        if (result.result === "success") {
-          if (result.value) {
-            return {
-              result: "success",
-              next: this.right
-            };
-          } else {
-            return {
-              result: "success",
-              next: this.left
-            };
-          }
-        } else {
-          return result;
-        }
+        return this._evaluationResult(result);
       });
   }
 
-  _isRetryLimit() {
-    let limit = 1000;
-    let value = Math.floor(+this.command.value);
-    if (this.command.value && !isNaN(value)) {
-      limit = value;
+  _evaluationResult(result) {
+    if (result.result === "success") {
+      if (result.value) {
+        return {
+          result: "success",
+          next: this.right
+        };
+      } else {
+        return {
+          result: "success",
+          next: this.left
+        };
+      }
+    } else {
+      return result;
     }
-    return (this.timesVisited >= limit);
   }
 }
