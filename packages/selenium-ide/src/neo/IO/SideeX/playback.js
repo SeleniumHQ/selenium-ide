@@ -116,7 +116,7 @@ function executionLoop() {
     return (PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.isOpenCommandUsed))
       .then((result) => {
         if (result.result !== "success") {
-          reportError(result.result, false, undefined);
+          return reportError(result.result, false, undefined);
         }
         PlaybackState.setCommandState(command.id, PlaybackStates.Passed);
         PlaybackState.setCurrentExecutingCommandNode(result.next);
