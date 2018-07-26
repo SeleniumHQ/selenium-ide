@@ -103,6 +103,10 @@ class UiState {
     }
   }
 
+  @action.bound clearViewCache() {
+    this.lastViewSelection.clear();
+  }
+
   @action.bound copyToClipboard(item) {
     this.clipboard = item;
   }

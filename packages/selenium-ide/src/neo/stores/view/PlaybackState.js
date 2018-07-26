@@ -108,6 +108,15 @@ class PlaybackState {
     }
   }
 
+  @action.bound clearPlayingCache() {
+    this.clearStack();
+    this.clearCommandStates();
+    this.testState.clear();
+    this.suiteState.clear();
+    this.currentRunningTest = undefined;
+    this.currentRunningSuite = undefined;
+  }
+
   @action.bound startPlayingSuite() {
     const playSuite = action(() => {
       const { suite } = UiState.selectedTest;
