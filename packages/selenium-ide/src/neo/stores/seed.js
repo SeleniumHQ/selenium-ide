@@ -79,8 +79,7 @@ export default function seed(store, numberOfSuites = 5) {
   secondClick2.setTarget("link=floods of 1947");
   const thirdClick2 = playbackTest2.createCommand();
   thirdClick2.setCommand("clickAt");
-  thirdClick2.setTarget("link=scapegoat");
-
+  thirdClick2.setTarget("link=scapegoat"); 
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowIfTest.createCommand(undefined, "if", "true");
@@ -145,6 +144,15 @@ export default function seed(store, numberOfSuites = 5) {
   submit.setCommand("clickAt");
   submit.setTarget("css=.mw-searchSuggest-link:first-child");
 
+  const executeScriptSandboxTest = store.createTestCase("execute script sandbox");
+  executeScriptSandboxTest.createCommand(undefined, "executeScript", "console.log(Math.random())", "blah");
+  executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
+
+  const executeScriptContentWindowTest = store.createTestCase("execute script content window");
+  executeScriptContentWindowTest.createCommand(undefined, "open", "/wiki/River_Chater");
+  executeScriptContentWindowTest.createCommand(undefined, "executeScript", "console.log(Math.random())", "blah");
+  executeScriptContentWindowTest.createCommand(undefined, "echo", "${blah}");
+
   const suite = store.createSuite("aaa suite");
   suite.addTestCase(playbackTest);
 
@@ -160,15 +168,19 @@ export default function seed(store, numberOfSuites = 5) {
   suiteControlFlow.addTestCase(controlFlowTimesTest);
   suiteControlFlow.addTestCase(controlFlowWhileTest);
 
+  const suiteExecuteScript = store.createSuite("execute script");
+  suiteExecuteScript.addTestCase(executeScriptSandboxTest);
+  suiteExecuteScript.addTestCase(executeScriptContentWindowTest);
+
   const suiteAll = store.createSuite("_all tests");
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test);
   });
 
   UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(suiteAll);
+  let suiteState = UiState.getSuiteState(suiteExecuteScript);
   suiteState.setOpen(true);
-  UiState.selectTest(playbackTest, suiteAll);
+  UiState.selectTest(executeScriptSandboxTest, suiteExecuteScript);
 
   store.changeName("project");
 
