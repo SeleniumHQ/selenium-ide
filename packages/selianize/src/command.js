@@ -157,7 +157,7 @@ function emitOpen(target) {
 }
 
 async function emitClick(target) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).perform();});`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.click();});`);
 }
 
 async function emitDoubleClick(target) {
@@ -173,7 +173,7 @@ async function emitType(target, value) {
 }
 
 async function emitSendKeys(target, value) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys(\`${value}\`).perform();});`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.sendKeys(\`${value}\`);});`);
 }
 
 async function emitEcho(message) {

@@ -21,6 +21,7 @@ import { js_beautify as beautify } from "js-beautify";
 import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
 import TestCase from "../models/TestCase";
 import UiState from "../stores/view/UiState";
+import PlaybackState from "../stores/view/PlaybackState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "selianize";
 import Manager from "../../plugin/manager";
@@ -132,13 +133,13 @@ export function loadProject(project, file) {
   }
   loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
-      loadJSONProject(project, contents);
+      loadJSProject(project, JSON.parse(contents));
     } else {
       try {
         const type = verifyFile(contents);
         if (type === FileTypes.Suite) {
           ModalState.importSuite(contents, (files) => {
-            project.fromJS(migrateProject(files));
+            loadJSProject(project, migrateProject(files));
           });
         } else if (type === FileTypes.TestCase) {
           const { test, baseUrl } = migrateTestCase(contents);
@@ -164,8 +165,11 @@ export function loadProject(project, file) {
   });
 }
 
-function loadJSONProject(project, data) {
-  project.fromJS(JSON.parse(data));
+function loadJSProject(project, data) {
+  UiState.changeView("Tests");
+  PlaybackState.clearPlayingCache();
+  UiState.clearViewCache();
+  project.fromJS(data);
   Manager.emitMessage({
     action: "event",
     event: "projectLoaded",

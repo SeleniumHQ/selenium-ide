@@ -45,6 +45,7 @@ program
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
   .option("--timeout [number | undefined]", `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`)
   .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
+  .option("--output-directory [directory]", "Write test results to files, results written in JSON")
   .option("--debug", "Print debug logs");
 
 if (process.env.NODE_ENV === "development") {
@@ -170,18 +171,19 @@ function runProject(project) {
         if (program.extract) {
           resolve();
         } else {
-          runJest().then(resolve).catch(reject);
+          runJest(project).then(resolve).catch(reject);
         }
       }).catch(reject);
     });
   });
 }
 
-function runJest() {
+function runJest(project) {
   return new Promise((resolve, reject) => {
     const args = [
       "--testMatch", `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`
-    ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : []);
+    ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : [])
+      .concat(program.outputDirectory ? ["--json", "--outputFile", path.join(program.outputDirectory, `${project.name}.json`)] : []);
     const opts = { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" };
     winston.debug("jest worker args");
     winston.debug(args);
@@ -232,7 +234,9 @@ process.on("SIGTERM", handleQuit);
 
 if (program.run) {
   projectPath = program.run;
-  runJest();
+  runJest({
+    name: "test"
+  }).catch(winston.error);
 } else {
   runAll(projects);
 }

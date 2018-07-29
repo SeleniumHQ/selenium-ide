@@ -57,7 +57,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {driver.actions().click(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {element.click();});");
   });
   it("should emit `click at` command", () => {
     const command = {
@@ -65,7 +65,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {driver.actions().click(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {element.click();});");
   });
   it("should emit `double click` command", () => {
     const command = {
@@ -105,7 +105,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {driver.actions().click(element).sendKeys(\`${command.value}\`).perform();});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {element.sendKeys(\`${command.value}\`);});`);
   });
   it("should emit `echo` command", () => {
     const command = {
