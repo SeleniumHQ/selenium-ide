@@ -295,7 +295,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
 function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
   return (command !== "type"
-    ? PlaybackState.currentExecutingCommandNode.execute(extCommand)
+    ? PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.isOpenCommandUsed)
     : extCommand.doType(xlateArgument(target), xlateArgument(value), extCommand.isWindowMethodCommand(command))).then(function(result) {
     if (result.result !== "success") {
       // implicit
