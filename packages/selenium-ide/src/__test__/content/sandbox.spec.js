@@ -20,13 +20,13 @@ import sandbox from "../../content/sandbox";
 describe("Sandbox", () => {
   it("eval resolves with an error message when another eval is taking place", () => {
     sandbox.resolve = true;
-    sandbox.eval().then((result) => {
+    sandbox.sendMessage().then((result) => {
       expect(result.result).toEqual("Cannot eval while a different eval is taking place.");
     });
   });
   it("eval resolves with an error message when the sandbox iframe is not present", () => {
     sandbox.resolve = undefined;
-    sandbox.eval().then((result) => {
+    sandbox.sendMessage().then((result) => {
       expect(result.result).toEqual("Expression evaluation prior to an 'open' command is not supported in Firefox.");
     });
   });

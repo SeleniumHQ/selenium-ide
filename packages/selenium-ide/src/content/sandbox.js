@@ -15,25 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
+
 class Sandbox {
   constructor() {
     this.result;
     window.addEventListener("message", (event) => {
       if (event.data.result && this.resolve) {
-        const result = this.stringToBool(event.data.result);
+        const result = this.command === "evaluateConditional" ?
+          this.stringToBool(event.data.result) : event.data.result;
+        if (result.varName) storeVariable(result).then(handleResponse, handleError);
         this.resolve(result);
         this.resolve = undefined;
       }
     });
   }
 
-  eval(expression) {
+  sendMessage(command, expression, varName) {
     if (this.resolve) {
       return Promise.resolve({ result: "Cannot eval while a different eval is taking place." });
     }
+    this.command = command;
+    if (varName === "") varName = undefined;
     const message = {
-      command: "evaluateConditional",
-      expression: expression
+      command: this.command,
+      expression: expression,
+      varName: varName
     };
     const promise = new Promise(resolve => {
       this.resolve = resolve;
@@ -50,8 +57,23 @@ class Sandbox {
   stringToBool(_input) {
     let input = { ..._input };
     input.value = input.value === "truthy";
-    return input;
-  }
+    return input; }
+}
+
+
+function storeVariable(result) {
+  return browser.runtime.sendMessage({
+    "storeStr": result.value,
+    "storeVar": result.varName
+  });
+}
+
+function handleResponse(message) {
+  console.log(`Result message:  ${message.response}`);
+}
+
+function handleError(error) {
+  console.log(`Error: ${error.message}`);
 }
 
 export default new Sandbox;

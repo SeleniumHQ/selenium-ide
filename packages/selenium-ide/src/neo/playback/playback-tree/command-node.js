@@ -51,7 +51,7 @@ export class CommandNode {
     }
   }
 
-  execute(extCommand, evalInContentWindow) {
+  execute(extCommand, evalInContentWindow = true) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
@@ -69,6 +69,12 @@ export class CommandNode {
         xlateArgument(this.command.value));
     } else if (this.isControlFlow()) {
       return this._evaluate(extCommand, evalInContentWindow);
+    } else if (this.command.command === "executeScript" ||
+               this.command.command === "executeAsyncScript") {
+      return (evalInContentWindow ?
+        extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false)
+        :
+        sandbox.sendMessage(this.command.command, this.command.target, this.command.value));
     } else {
       return extCommand.sendMessage(
         this.command.command,
@@ -98,7 +104,7 @@ export class CommandNode {
     if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
   }
 
-  _evaluate(extCommand, evalInContentWindow = true) {
+  _evaluate(extCommand, evalInContentWindow) {
     let expression = this.command.target;
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression);
@@ -112,7 +118,7 @@ export class CommandNode {
     return (evalInContentWindow ?
       extCommand.sendMessage("evaluateConditional", expression, "", false)
       :
-      sandbox.eval(expression))
+      sandbox.sendMessage("evaluateConditional", expression))
       .then((result) => {
         return this._evaluationResult(result);
       });

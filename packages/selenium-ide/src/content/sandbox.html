@@ -22,25 +22,72 @@
   </head>
   <body>
     <script>
-      function evaluate(expression) {
+      function evaluate(expression, isExpression = false) {
+          if (isExpression) {
+            return eval(`(() => (${expression}))()`);
+          } else {
+            return eval(`(() => {${expression}})()`);
+          }
+      }
+
+      function evaluateConditional(expression) {
         try {
-          const result = eval(`(() => (${expression}))()`);
+          const result = evaluate(expression, true);
           return { result: "success", value: !!(result) ? "truthy" : "falsy" };
         } catch(e) {
           return { result: e.message };
         }
       }
 
-      window.addEventListener('message', function(event) {
+      function executeScript(expression, varName) {
+        try {
+          const value = evaluate(expression, true);
+          if (value && value.constructor.name === "Promise") {
+            return { result: "Expected sync operation, instead received Promise" };
+          }
+          return { result: "success", value, varName };
+        } catch(e) {
+          return { result: e.message };
+        }
+      }
+
+      function executeAsyncScript(expression, varName) {
+        try {
+          const value = evaluate(expression, true);
+          if (value && value.constructor.name !== "Promise") {
+            result = `Expected async operation, instead received ${ value ? value.constructor.name : value }`;
+            return { result: result };
+          }
+          return Promise.resolve(value).then((v) => {
+            return { result: "success", value: v, varName };
+          });
+        } catch(e) {
+          return { result: e.message };
+        }
+      }
+
+      window.addEventListener("message", function(event) {
         const command = event.data.command;
-        const name = event.data.name || 'hello';
+        const name = event.data.name || "hello";
         switch(command) {
-          case 'evaluateConditional':
+          case "evaluateConditional":
             event.source.postMessage({
               name: name,
-              result: evaluate(event.data.expression)
+              result: evaluateConditional(event.data.expression)
             }, event.origin);
             break;
+          case "executeScript":
+            event.source.postMessage({
+              name: name,
+              result: executeScript(event.data.expression, event.data.varName)
+            }, event.origin);
+          break;
+          case "executeAsyncScript":
+            event.source.postMessage({
+              name: name,
+              result: executeAsyncScript(event.data.expression, event.data.varName)
+            }, event.origin);
+          break;
         }
       });
     </script>
