@@ -79,9 +79,8 @@ export default function seed(store, numberOfSuites = 5) {
   secondClick2.setTarget("link=floods of 1947");
   const thirdClick2 = playbackTest2.createCommand();
   thirdClick2.setCommand("clickAt");
-  thirdClick2.setTarget("link=scapegoat"); 
+  thirdClick2.setTarget("link=scapegoat");
   const controlFlowIfTest = store.createTestCase("control flow if");
-  controlFlowIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowIfTest.createCommand(undefined, "if", "true");
   controlFlowIfTest.createCommand(undefined, "echo", "foo");
   controlFlowIfTest.createCommand(undefined, "else if", "true");
@@ -178,9 +177,9 @@ export default function seed(store, numberOfSuites = 5) {
   });
 
   UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(suiteExecuteScript);
+  let suiteState = UiState.getSuiteState(suiteControlFlow);
   suiteState.setOpen(true);
-  UiState.selectTest(executeScriptSandboxTest, suiteExecuteScript);
+  UiState.selectTest(controlFlowIfTest, suiteControlFlow);
 
   store.changeName("project");
 
