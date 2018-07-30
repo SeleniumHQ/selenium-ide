@@ -95,14 +95,14 @@ const emitters = {
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
   setSpeed: skip,
-  do: emitControlFlow,
-  else: emitControlFlow,
-  elseIf: emitControlFlow,
-  end: emitControlFlow,
-  if: emitControlFlow,
-  repeatIf: emitControlFlow,
-  times: emitControlFlow,
-  while: emitControlFlow
+  do: emitControlFlowDo,
+  else: emitControlFlowElse,
+  elseIf: emitControlFlowElseIf,
+  end: emitControlFlowEnd,
+  if: emitControlFlowIf,
+  repeatIf: emitControlFlowRepeatIf,
+  times: emitControlFlowTimes,
+  while: emitControlFlowWhile
 };
 
 export function emit(command, options = config, snapshot) {
@@ -354,4 +354,34 @@ function skip() {
   return Promise.resolve();
 }
 
-function emitControlFlow() { }
+function emitControlFlowDo() {
+  return Promise.resolve("do {");
+}
+
+function emitControlFlowElse() {
+  return Promise.resolve(`} else {`);
+}
+
+function emitControlFlowElseIf(target) {
+  return Promise.resolve(`} else if (${target}) {`);
+}
+
+function emitControlFlowEnd() {
+  return Promise.resolve("}");
+}
+
+function emitControlFlowIf(target) {
+  return Promise.resolve(`if (${target}) {`);
+}
+
+function emitControlFlowRepeatIf(target) {
+  return Promise.resolve(`} while(${target});`);
+}
+
+function emitControlFlowTimes(target) {
+  return Promise.resolve(`const times = ${target};for(let i = 0; i < times; i++) {`);
+}
+
+function emitControlFlowWhile(target) {
+  return Promise.resolve(`while (${target}) {`);
+}

@@ -682,4 +682,68 @@ describe("command code emitter", () => {
     const snapshot = "this commands snapshot";
     return expect(CommandEmitter.emit(command, undefined, snapshot)).resolves.toBe(snapshot);
   });
+  it("should emit `if` command", () => {
+    const command = {
+      command: "if",
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`if (${command.target}) {`);
+  });
+  it("should emit `else if` command", () => {
+    const command = {
+      command: "elseIf",
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`} else if (${command.target}) {`);
+  });
+  it("should emit `else` command", () => {
+    const command = {
+      command: "else",
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("} else {");
+  });
+  it("should emit `times` command", () => {
+    const command = {
+      command: "times",
+      target: "5",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`const times = ${command.target};for(let i = 0; i < times; i++) {`);
+  });
+  it("should emit `while` command", () => {
+    const command = {
+      command: "while",
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`while (${command.target}) {`);
+  });
+  it("should emit `end` command", () => {
+    const command = {
+      command: "end",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("}");
+  });
+  it("should emit `do` command", () => {
+    const command = {
+      command: "do",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("do {");
+  });
+  it("should emit `repeatIf` command", () => {
+    const command = {
+      command: "repeatIf",
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`} while(${command.target});`);
+  });
 });
