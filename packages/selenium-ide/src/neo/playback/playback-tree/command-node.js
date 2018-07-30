@@ -69,12 +69,12 @@ export class CommandNode {
         xlateArgument(this.command.value));
     } else if (this.isControlFlow()) {
       return this._evaluate(extCommand, evalInContentWindow);
-    } else if (this.command.command === "executeScript" ||
-               this.command.command === "executeAsyncScript") {
-      return (evalInContentWindow ?
-        extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false)
-        :
-        sandbox.sendMessage(this.command.command, this.command.target, this.command.value));
+      //} else if (this.command.command === "executeScript" ||
+      //}          this.command.command === "executeAsyncScript") {
+      //} return (evalInContentWindow ?
+      //}   extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false)
+      //}   :
+      //}   sandbox.sendMessage(this.command.command, this.command.target, this.command.value));
     } else {
       return extCommand.sendMessage(
         this.command.command,
@@ -115,10 +115,14 @@ export class CommandNode {
       }
       expression = `${this.timesVisited} < ${number}`;
     }
-    return (evalInContentWindow ?
-      extCommand.sendMessage("evaluateConditional", expression, "", false)
-      :
-      sandbox.sendMessage("evaluateConditional", expression))
+    //return (evalInContentWindow ?
+    //  extCommand.sendMessage("evaluateConditional", expression, "", false)
+    //  :
+    //  sandbox.sendMessage("evaluateConditional", expression))
+    //  .then((result) => {
+    //    return this._evaluationResult(result);
+    //  });
+    return (extCommand.sendMessage("evaluateConditional", expression, "", false))
       .then((result) => {
         return this._evaluationResult(result);
       });

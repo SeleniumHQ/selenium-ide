@@ -42,7 +42,7 @@
     "assets/prompt.css",
     "assets/bootstrap.html"
   ],
-  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'sha256-xwpNteOvgDqJluuRVZmsCD8P57UOCOAsd1nDZTsFSgE=' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
     {
       "matches": [

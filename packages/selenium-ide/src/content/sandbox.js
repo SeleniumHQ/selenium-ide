@@ -60,7 +60,6 @@ class Sandbox {
     return input; }
 }
 
-
 function storeVariable(result) {
   return browser.runtime.sendMessage({
     "storeStr": result.value,
