@@ -41,8 +41,6 @@ export default class Alert extends React.Component {
       isOpen: true,
       options,
       cb
-    }, () => {
-      this.submit.focus();
     });
   }
   close(status) {
@@ -59,7 +57,7 @@ export default class Alert extends React.Component {
           <Markdown className="markdown">{this.state.options.description}</Markdown>
           <span className="right">
             {this.state.options.cancelLabel ? <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton> : null}
-            <FlatButton type="submit" buttonRef={(submit) => { this.submit = submit; }} onClick={this.close.bind(this, true)}>{this.state.options.confirmLabel || "OK"}</FlatButton>
+            <FlatButton type="submit" onClick={this.close.bind(this, true)} autoFocus >{this.state.options.confirmLabel || "OK"}</FlatButton>
           </span>
           <div className="clear"></div>
         </form>
