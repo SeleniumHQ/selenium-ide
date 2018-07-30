@@ -15,7 +15,7 @@
     "test": "jest",
     "test:webdriver": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
     "lint": "yarn lint:scripts && yarn lint:styles",
-    "lint:scripts": "eslint packages/selenium-ide/src/{neo,plugin,router,api}/ packages/selenium-side-runner/src/ packages/selianize/{__tests__,src}/ --ext .js --ext .jsx ",
+    "lint:scripts": "eslint packages/selenium-ide/src/neo/ packages/selenium-ide/src/plugin/ packages/selenium-ide/src/router/ packages/selenium-ide/src/api/ packages/selenium-side-runner/src/ packages/selianize/__tests__/ packages/selianize/src/ --ext .js --ext .jsx",
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap"
   },
