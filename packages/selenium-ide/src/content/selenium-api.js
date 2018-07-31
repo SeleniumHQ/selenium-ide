@@ -458,6 +458,12 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
   }
 };
 
+Selenium.prototype.doAssert = function(actual, expected) {
+  if (actual !== expected) {
+    throw new Error("Actual value '" + actual + "' did not match '" + expected + "'");
+  }
+};
+
 Selenium.prototype.doAssertChecked = function(locator) {
   let element = this.browserbot.findElement(locator);
   if (element.type !== "checkbox" && element.type !== "radio") {

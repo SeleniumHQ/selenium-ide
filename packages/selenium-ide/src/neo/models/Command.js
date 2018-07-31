@@ -127,6 +127,10 @@ export const ArgTypes = {
     description: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
                   relative to the element found from a locator."
   },
+  expectedValue: {
+    name: "expected value",
+    description: "The result you expect a variable to contain (e.g., true, false, or some other value)."
+  },
   expression: {
     name: "expression",
     description: "The value you'd like to store."
@@ -198,7 +202,7 @@ export const ArgTypes = {
   },
   variableName: {
     name: "variable name",
-    description: "The name of the variable you'd like to store the result of an expression in."
+    description: "The name of the variable you'd like to either store an expression's result in or reference in a check with 'assert' or 'verify'."
   },
   waitTime: {
     name: "wait time",
@@ -228,6 +232,13 @@ class CommandList {
                     the specified answer string to it. If the alert is already \
                     present, then use \"webdriver answer on visible prompt\" instead.",
       target: ArgTypes.answer
+    }],
+    [ "assert", {
+      name: "assert",
+      type: TargetTypes.LOCATOR,
+      description: "Check that a variable is true/false or some other value.",
+      target: ArgTypes.variableName,
+      value: ArgTypes.expectedValue
     }],
     [ "assertAlert", {
       name: "assert alert",
@@ -425,14 +436,18 @@ class CommandList {
     [ "executeScript", {
       name: "execute script",
       description: "Executes a snippet of JavaScript in the context of the currently selected frame or \
-                    window. The script fragment will be executed as the body of an anonymous function.",
-      target: ArgTypes.script
+                    window. The script fragment will be executed as the body of an anonymous function. \
+                    To store the return value, use the 'return' keyword and provide a variable name in \
+                    the value input field.",
+      target: ArgTypes.script,
+      value: ArgTypes.variableName
     }],
     [ "executeAsyncScript", {
       name: "execute async script",
       description: "Executes an async snippet of JavaScript in the context of the currently selected frame or \
-                    window. The script fragment will be executed as the body of an anonymous function and must return a Promise.\
-                    The Promise result will be saved on the variable.",
+                    window. The script fragment will be executed as the body of an anonymous function and must \
+                    return a Promise. The Promise result will be saved on the variable if you use the 'return' \
+                    keyword.",
       target: ArgTypes.script,
       value: ArgTypes.variableName
     }],

@@ -144,12 +144,13 @@ export default function seed(store, numberOfSuites = 5) {
   submit.setTarget("css=.mw-searchSuggest-link:first-child");
 
   const executeScriptSandboxTest = store.createTestCase("execute script sandbox");
-  executeScriptSandboxTest.createCommand(undefined, "executeScript", "console.log(Math.random())", "blah");
+  executeScriptSandboxTest.createCommand(undefined, "executeScript", "return true", "blah");
   executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
+  executeScriptSandboxTest.createCommand(undefined, "assert", "${blah}", "true");
 
   const executeScriptContentWindowTest = store.createTestCase("execute script content window");
   executeScriptContentWindowTest.createCommand(undefined, "open", "/wiki/River_Chater");
-  executeScriptContentWindowTest.createCommand(undefined, "executeScript", "console.log(Math.random())", "blah");
+  executeScriptContentWindowTest.createCommand(undefined, "executeScript", "return Math.random()", "blah");
   executeScriptContentWindowTest.createCommand(undefined, "echo", "${blah}");
 
   const suite = store.createSuite("aaa suite");

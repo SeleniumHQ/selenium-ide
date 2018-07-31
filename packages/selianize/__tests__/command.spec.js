@@ -746,4 +746,24 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`} while(${command.target});`);
   });
+  it("should emit `assert` command", () => {
+    const command = {
+      command: "assert",
+      target: "${varrrName}",
+      value: "true"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `expect(vars.varrrName === ${command.value});`
+    );
+  });
+  it.skip("should emit `verify` command", () => {
+    const command = {
+      command: "verify",
+      target: "${varrrName}",
+      value: "true"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `expect(vars.varrrName === ${command.value});`
+    );
+  });
 });

@@ -102,7 +102,8 @@ const emitters = {
   if: emitControlFlowIf,
   repeatIf: emitControlFlowRepeatIf,
   times: emitControlFlowTimes,
-  while: emitControlFlowWhile
+  while: emitControlFlowWhile,
+  assert: emitAssert
 };
 
 export function emit(command, options = config, snapshot) {
@@ -384,4 +385,8 @@ function emitControlFlowTimes(target) {
 
 function emitControlFlowWhile(target) {
   return Promise.resolve(`while (${target}) {`);
+}
+
+function emitAssert(varName, value) {
+  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} === ${value});`);
 }
