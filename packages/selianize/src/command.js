@@ -359,7 +359,7 @@ function emitControlFlowDo() {
 }
 
 function emitControlFlowElse() {
-  return Promise.resolve(`} else {`);
+  return Promise.resolve("} else {");
 }
 
 function emitControlFlowElseIf(target) {

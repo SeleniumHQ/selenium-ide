@@ -17,7 +17,6 @@
 
 import { xlateArgument } from "../../IO/SideeX/formatCommand";
 import { ControlFlowCommandChecks } from "../../models/Command";
-import sandbox from "../../../content/sandbox";
 
 export class CommandNode {
   constructor(command) {
