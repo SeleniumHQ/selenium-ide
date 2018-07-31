@@ -102,7 +102,6 @@ function executionLoop() {
   else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  console.log(command.command);
   if (extCommand.isExtCommand(command.command)) {
     return doDelay().then(() => {
       return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
@@ -373,7 +372,6 @@ function notifyWaitDeprecation(command) {
 }
 
 function isReceivingEndError(reason) {
-  console.log(reason);
   return (reason == "TypeError: response is undefined" ||
     reason == "Error: Could not establish connection. Receiving end does not exist." ||
     // Below message is for Google Chrome
