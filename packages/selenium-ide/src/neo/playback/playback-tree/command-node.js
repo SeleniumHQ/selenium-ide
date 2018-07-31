@@ -51,35 +51,29 @@ export class CommandNode {
     }
   }
 
-  execute(extCommand, evalInContentWindow = true) {
+  execute(extCommand) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
       });
     }
-    return this._executeCommand(extCommand, evalInContentWindow).then((result) => {
+    return this._executeCommand(extCommand).then((result) => {
       return this._executionResult(extCommand, result);
     });
   }
 
-  _executeCommand(extCommand, evalInContentWindow) {
+  _executeCommand(extCommand) {
     if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](
         xlateArgument(this.command.target),
         xlateArgument(this.command.value));
     } else if (this.isControlFlow()) {
-      return this._evaluate(extCommand, evalInContentWindow);
-      //} else if (this.command.command === "executeScript" ||
-      //}          this.command.command === "executeAsyncScript") {
-      //} return (evalInContentWindow ?
-      //}   extCommand.sendMessage(this.command.command, this.command.target, this.command.value, false)
-      //}   :
-      //}   sandbox.sendMessage(this.command.command, this.command.target, this.command.value));
+      return this._evaluate(extCommand);
     } else {
       return extCommand.sendMessage(
         this.command.command,
-        this.command.target,
-        this.command.value,
+        xlateArgument(this.command.target),
+        xlateArgument(this.command.value),
         extCommand.isWindowMethodCommand(this.command.command));
     }
   }
@@ -104,7 +98,7 @@ export class CommandNode {
     if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
   }
 
-  _evaluate(extCommand, evalInContentWindow) {
+  _evaluate(extCommand) {
     let expression = this.command.target;
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression);
@@ -115,13 +109,6 @@ export class CommandNode {
       }
       expression = `${this.timesVisited} < ${number}`;
     }
-    //return (evalInContentWindow ?
-    //  extCommand.sendMessage("evaluateConditional", expression, "", false)
-    //  :
-    //  sandbox.sendMessage("evaluateConditional", expression))
-    //  .then((result) => {
-    //    return this._evaluationResult(result);
-    //  });
     return (extCommand.sendMessage("evaluateConditional", expression, "", false))
       .then((result) => {
         return this._evaluationResult(result);
