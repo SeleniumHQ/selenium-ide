@@ -242,8 +242,7 @@ export default {
       { from: "content/prompt.css", to: "./" },
       { from: "content/bootstrap.html", to: "./" },
       { from: "manifest.json", to: "../" },
-      { from: "icons", to: "../icons" },
-      { from: "content/sandbox.html", to: "./" }
+      { from: "icons", to: "../icons" }
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

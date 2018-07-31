@@ -64,9 +64,5 @@
   "background":
   {
     "scripts": ["assets/background.js"]
-  },
-  "sandbox":
-  {
-    "pages": ["assets/sandbox.html"]
   }
 }
