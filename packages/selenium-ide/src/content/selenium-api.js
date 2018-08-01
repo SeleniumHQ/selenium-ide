@@ -458,6 +458,10 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
   }
 };
 
+Selenium.prototype.doVerify = function(actual, expected) {
+  this.doAssert(actual, expected);
+};
+
 Selenium.prototype.doAssert = function(actual, expected) {
   if (actual !== expected) {
     throw new Error("Actual value '" + actual + "' did not match '" + expected + "'");

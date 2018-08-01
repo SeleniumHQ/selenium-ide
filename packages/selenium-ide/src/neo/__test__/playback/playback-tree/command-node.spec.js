@@ -114,6 +114,14 @@ describe("Command Node", () => {
     nodeA.next = nodeB;
     expect(nodeA._executionResult(extCommand, { result: "success" }).next).toEqual(nodeB);
   });
+  it("executionResult returns the 'next' node and result message on verify command", () => {
+    const extCommand = { isExtCommand: function() { return false; } };
+    const command = new Command(undefined, "verify", "", "");
+    let nodeA = new CommandNode(command);
+    const nodeB = new CommandNode(command);
+    nodeA.next = nodeB;
+    expect(nodeA._executionResult(extCommand, { result: "failed with error" }).next).toEqual(nodeB);
+  });
   it("executionResult returns a 'next' node on control flow", () => {
     const extCommand = { isExtCommand: function() { return false; } };
     const command = new Command(undefined, ControlFlowCommandNames.if, "", "");

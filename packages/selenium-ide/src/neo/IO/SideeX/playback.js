@@ -302,7 +302,9 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
       if (isElementNotFound(result.result)) {
         return doImplicitWait(result.result, id, target, implicitTime, implicitCount);
       } else {
-        PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
+        let isVerify = /^verify/.test(command);
+        PlaybackState.setCommandState(id, isVerify ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
+        PlaybackState.setCurrentExecutingCommandNode(result.next);
       }
     } else {
       PlaybackState.setCommandState(id, PlaybackStates.Passed);

@@ -756,7 +756,7 @@ describe("command code emitter", () => {
       `expect(vars.varrrName === ${command.value});`
     );
   });
-  it.skip("should emit `verify` command", () => {
+  it("should emit `verify` command", () => {
     const command = {
       command: "verify",
       target: "${varrrName}",

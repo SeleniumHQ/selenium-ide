@@ -89,7 +89,14 @@ export class CommandNode {
         next: this.isControlFlow() ? result.next : this.next
       };
     } else {
-      return result;
+      if (this.command.command.match(/^verify/)) {
+        return {
+          result: result.result,
+          next: this.next
+        };
+      } else {
+        return result;
+      }
     }
   }
 

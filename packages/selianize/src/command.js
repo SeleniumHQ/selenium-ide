@@ -103,7 +103,8 @@ const emitters = {
   repeatIf: emitControlFlowRepeatIf,
   times: emitControlFlowTimes,
   while: emitControlFlowWhile,
-  assert: emitAssert
+  assert: emitAssert,
+  verify: emitAssert
 };
 
 export function emit(command, options = config, snapshot) {

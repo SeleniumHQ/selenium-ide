@@ -146,6 +146,7 @@ export default function seed(store, numberOfSuites = 5) {
   const executeScriptSandboxTest = store.createTestCase("execute script sandbox");
   executeScriptSandboxTest.createCommand(undefined, "executeScript", "return true", "blah");
   executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
+  executeScriptSandboxTest.createCommand(undefined, "verify", "${blah}", "false");
   executeScriptSandboxTest.createCommand(undefined, "assert", "${blah}", "true");
 
   const executeScriptContentWindowTest = store.createTestCase("execute script content window");
@@ -178,9 +179,9 @@ export default function seed(store, numberOfSuites = 5) {
   });
 
   UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(suiteControlFlow);
+  let suiteState = UiState.getSuiteState(suiteExecuteScript);
   suiteState.setOpen(true);
-  UiState.selectTest(controlFlowIfTest, suiteControlFlow);
+  UiState.selectTest(executeScriptSandboxTest, suiteExecuteScript);
 
   store.changeName("project");
 
