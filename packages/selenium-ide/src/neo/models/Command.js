@@ -116,11 +116,13 @@ export const ArgTypes = {
   },
   attributeLocator: {
     name: "attribute locator",
-    description: "An element locator followed by an @ sign and then the name of the attribute, e.g. \"foo@bar\"."
+    description: "An element locator followed by an @ sign and then the name \
+                  of the attribute, e.g. \"foo@bar\"."
   },
   conditionalExpression: {
     name: "conditional expression",
-    description: "JavaScript expression that returns a boolean result for use in control flow commands."
+    description: "JavaScript expression that returns a boolean result for use \
+                  in control flow commands."
   },
   coord: {
     name: "coord String",
@@ -129,7 +131,8 @@ export const ArgTypes = {
   },
   expectedValue: {
     name: "expected value",
-    description: "The result you expect a variable to contain (e.g., true, false, or some other value)."
+    description: "The result you expect a variable to contain (e.g., true, false,\
+                  or some other value)."
   },
   expression: {
     name: "expression",
@@ -190,7 +193,8 @@ export const ArgTypes = {
   },
   times: {
     name: "times",
-    description: "The number of attempts a times control flow loop will execute the commands within its block."
+    description: "The number of attempts a times control flow loop will execute \
+                  the commands within its block."
   },
   url: {
     name: "url",
@@ -202,7 +206,9 @@ export const ArgTypes = {
   },
   variableName: {
     name: "variable name",
-    description: "The name of the variable you'd like to either store an expression's result in or reference in a check with 'assert' or 'verify'."
+    description: "The name of the variable you'd like to either store an \
+                  expression's result in or reference in a check with \
+                  'assert' or 'verify'."
   },
   waitTime: {
     name: "wait time",
@@ -235,7 +241,6 @@ class CommandList {
     }],
     [ "assert", {
       name: "assert",
-      type: TargetTypes.LOCATOR,
       description: "Check that a variable is true/false or some other value.",
       target: ArgTypes.variableName,
       value: ArgTypes.expectedValue
@@ -386,7 +391,8 @@ class CommandList {
     [ "do", {
       name: "do",
       type: TargetTypes.LOCATOR,
-      description: "Create a loop that executes the proceeding commands at least once. Terminate the branch with the repeat if command."
+      description: "Create a loop that executes the proceeding commands at \
+                    least once. Terminate the branch with the repeat if command."
     }],
     [ "doubleClick", {
       name: "double click",
@@ -421,12 +427,16 @@ class CommandList {
     [ "else", {
       name: "else",
       type: TargetTypes.LOCATOR,
-      description: "Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command."
+      description: "Part of an if block. Execute the commands in this branch \
+                    when an if and/or else if condition are not met. Terminate \
+                    the branch with the end command."
     }],
     [ "elseIf", {
       name: "else if",
       type: TargetTypes.LOCATOR,
-      description: "Part of an if block. Execute the commands in this branch when an if condition has not been met. Terminate the branch with the end command."
+      description: "Part of an if block. Execute the commands in this branch \
+                    when an if condition has not been met. Terminate the branch \
+                    with the end command."
     }],
     [ "end", {
       name: "end",
@@ -522,7 +532,9 @@ class CommandList {
     [ "repeatIf", {
       name: "repeat if",
       type: TargetTypes.LOCATOR,
-      description: "Terminate a do control flow branch conditionally. If the result of the provided conditional expression is true, it starts the do loop over. Otherwise it ends the loop.",
+      description: "Terminate a 'do' control flow branch conditionally. If the result of the \
+                    provided conditional expression is true, it starts the do loop over. \
+                    Otherwise it ends the loop.",
       target: ArgTypes.conditionalExpression
     }],
     [ "run", {
@@ -647,8 +659,8 @@ class CommandList {
                     Can also be used to set the value of combo boxes, check boxes, \
                     etc. In these cases, value should be the value of the option \
                     selected, not the visible text. \
-                    Chrome only: If a file path is given it will be uploaded to the input (for type=file), \
-                    NOTE: No XPath locators.",
+                    Chrome only: If a file path is given it will be uploaded to \
+                    the input (for type=file), NOTE: XPath locators are not supported.",
       target: ArgTypes.locator,
       value: ArgTypes.value
     }],
@@ -780,7 +792,8 @@ class CommandList {
     [ "while", {
       name: "while",
       type: TargetTypes.LOCATOR,
-      description: "Create a loop that executes the proceeding commands repeatedly for as long as the provided conditional expression is true.",
+      description: "Create a loop that executes the proceeding commands repeatedly \
+                    for as long as the provided conditional expression is true.",
       target: ArgTypes.conditionalExpression
     }]
   ])
