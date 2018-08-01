@@ -55,7 +55,9 @@ function initPlaybackTree() {
     if (PlaybackState.runningQueue.length === 1 &&
         ControlFlowCommandChecks.isControlFlow(PlaybackState.runningQueue[0].command)) {
       reportError(
-        "Unable to execute control flow command by itself. You can execute this command by running the entire test or by right-clicking on the command and selecting 'Play from here'.",
+        "Unable to execute control flow command by itself. You can execute this \
+        command by running the entire test or by right-clicking on the command \
+        and selecting 'Play from here'.",
         false,
         0);
     } else {

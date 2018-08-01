@@ -16,7 +16,7 @@
 // under the License.
 
 import CommandEmitter, { registerEmitter } from "../src/command";
-import { Commands } from "../../selenium-ide/src/neo/models/Command";
+import { Commands, ControlFlowCommandNames } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
   it("should skip empty commands", () => {
@@ -684,7 +684,7 @@ describe("command code emitter", () => {
   });
   it("should emit `if` command", () => {
     const command = {
-      command: "if",
+      command: ControlFlowCommandNames.if,
       target: "true",
       value: ""
     };
@@ -692,7 +692,7 @@ describe("command code emitter", () => {
   });
   it("should emit `else if` command", () => {
     const command = {
-      command: "elseIf",
+      command: ControlFlowCommandNames.elseIf,
       target: "true",
       value: ""
     };
@@ -700,7 +700,7 @@ describe("command code emitter", () => {
   });
   it("should emit `else` command", () => {
     const command = {
-      command: "else",
+      command: ControlFlowCommandNames.else,
       target: "true",
       value: ""
     };
@@ -708,7 +708,7 @@ describe("command code emitter", () => {
   });
   it("should emit `times` command", () => {
     const command = {
-      command: "times",
+      command: ControlFlowCommandNames.times,
       target: "5",
       value: ""
     };
@@ -716,7 +716,7 @@ describe("command code emitter", () => {
   });
   it("should emit `while` command", () => {
     const command = {
-      command: "while",
+      command: ControlFlowCommandNames.while,
       target: "true",
       value: ""
     };
@@ -724,7 +724,7 @@ describe("command code emitter", () => {
   });
   it("should emit `end` command", () => {
     const command = {
-      command: "end",
+      command: ControlFlowCommandNames.end,
       target: "",
       value: ""
     };
@@ -732,7 +732,7 @@ describe("command code emitter", () => {
   });
   it("should emit `do` command", () => {
     const command = {
-      command: "do",
+      command: ControlFlowCommandNames.do,
       target: "",
       value: ""
     };
@@ -740,7 +740,7 @@ describe("command code emitter", () => {
   });
   it("should emit `repeatIf` command", () => {
     const command = {
-      command: "repeatIf",
+      command: ControlFlowCommandNames.repeatIf,
       target: "true",
       value: ""
     };

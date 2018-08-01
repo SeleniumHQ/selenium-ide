@@ -390,7 +390,6 @@ class CommandList {
     }],
     [ "do", {
       name: "do",
-      type: TargetTypes.LOCATOR,
       description: "Create a loop that executes the proceeding commands at \
                     least once. Terminate the branch with the repeat if command."
     }],
@@ -426,21 +425,18 @@ class CommandList {
     }],
     [ "else", {
       name: "else",
-      type: TargetTypes.LOCATOR,
       description: "Part of an if block. Execute the commands in this branch \
                     when an if and/or else if condition are not met. Terminate \
                     the branch with the end command."
     }],
     [ "elseIf", {
       name: "else if",
-      type: TargetTypes.LOCATOR,
       description: "Part of an if block. Execute the commands in this branch \
                     when an if condition has not been met. Terminate the branch \
                     with the end command."
     }],
     [ "end", {
       name: "end",
-      type: TargetTypes.LOCATOR,
       description: "Terminates a control flow block for if, while, and times."
     }],
     [ "executeScript", {
@@ -531,7 +527,6 @@ class CommandList {
     }],
     [ "repeatIf", {
       name: "repeat if",
-      type: TargetTypes.LOCATOR,
       description: "Terminate a 'do' control flow branch conditionally. If the result of the \
                     provided conditional expression is true, it starts the do loop over. \
                     Otherwise it ends the loop.",
@@ -648,7 +643,6 @@ class CommandList {
     }],
     [ "times", {
       name: "times",
-      type: TargetTypes.LOCATOR,
       description: "Create a loop that executes the proceeding commands n number of times.",
       target: ArgTypes.times
     }],
@@ -791,7 +785,6 @@ class CommandList {
     }],
     [ "while", {
       name: "while",
-      type: TargetTypes.LOCATOR,
       description: "Create a loop that executes the proceeding commands repeatedly \
                     for as long as the provided conditional expression is true.",
       target: ArgTypes.conditionalExpression

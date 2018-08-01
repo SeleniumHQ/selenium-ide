@@ -83,7 +83,7 @@ export default function seed(store, numberOfSuites = 5) {
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "if", "true");
   controlFlowIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowIfTest.createCommand(undefined, "else if", "true");
+  controlFlowIfTest.createCommand(undefined, "elseIf", "true");
   controlFlowIfTest.createCommand(undefined, "echo", "bar");
   controlFlowIfTest.createCommand(undefined, "else");
   controlFlowIfTest.createCommand(undefined, "echo", "baz");
@@ -93,7 +93,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowElseIfTest.createCommand(undefined, "if", "false");
   controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseIfTest.createCommand(undefined, "else if", "true");
+  controlFlowElseIfTest.createCommand(undefined, "elseIf", "true");
   controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
   controlFlowElseIfTest.createCommand(undefined, "else");
   controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
@@ -103,7 +103,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowElseTest.createCommand(undefined, "if", "false");
   controlFlowElseTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseTest.createCommand(undefined, "else if", "false");
+  controlFlowElseTest.createCommand(undefined, "elseIf", "false");
   controlFlowElseTest.createCommand(undefined, "echo", "bar");
   controlFlowElseTest.createCommand(undefined, "else");
   controlFlowElseTest.createCommand(undefined, "echo", "baz");
@@ -113,7 +113,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowDoTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowDoTest.createCommand(undefined, "do");
   controlFlowDoTest.createCommand(undefined, "echo", "foo");
-  controlFlowDoTest.createCommand(undefined, "repeat if", "true", "2");
+  controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
   controlFlowTimesTest.createCommand(undefined, "open", "/wiki/River_Chater");
