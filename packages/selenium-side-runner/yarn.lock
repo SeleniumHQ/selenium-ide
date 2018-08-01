@@ -2727,10 +2727,6 @@ js-beautify@^1.7.5:
     mkdirp "~0.5.0"
     nopt "~3.0.1"
 
-js-string-escape@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"
-
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -4608,12 +4604,6 @@ selenium-webdriver@^3.6.0:
     rimraf "^2.5.4"
     tmp "0.0.30"
     xml2js "^0.4.17"
-
-selianize@^0.1.0-beta.0:
-  version "0.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/selianize/-/selianize-0.1.0-beta.1.tgz#8e16bb5441fb5dd16681514ad6ffdf8da0b7ec56"
-  dependencies:
-    js-string-escape "^1.0.1"
 
 semver-diff@^2.0.0:
   version "2.1.0"
