@@ -39,17 +39,6 @@ export class CommandNode {
     );
   }
 
-  _isRetryLimit() {
-    if (ControlFlowCommandChecks.isLoop(this.command)) {
-      let limit = 1000;
-      let value = Math.floor(+this.command.value);
-      if (this.command.value && !isNaN(value)) {
-        limit = value;
-      }
-      return (this.timesVisited >= limit);
-    }
-  }
-
   execute(extCommand) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
@@ -68,6 +57,11 @@ export class CommandNode {
         xlateArgument(this.command.value));
     } else if (this.isControlFlow()) {
       return this._evaluate(extCommand);
+    } else if (this.command.command === "type") {
+      return extCommand.doType(
+        xlateArgument(this.command.target),
+        xlateArgument(this.command.value),
+        extCommand.isWindowMethodCommand(this.command.command));
     } else {
       return extCommand.sendMessage(
         this.command.command,
@@ -98,10 +92,6 @@ export class CommandNode {
         return result;
       }
     }
-  }
-
-  _incrementTimesVisited() {
-    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
   }
 
   _evaluate(extCommand) {
@@ -138,4 +128,20 @@ export class CommandNode {
       return result;
     }
   }
+
+  _incrementTimesVisited() {
+    if (ControlFlowCommandChecks.isLoop(this.command)) this.timesVisited++;
+  }
+
+  _isRetryLimit() {
+    if (ControlFlowCommandChecks.isLoop(this.command)) {
+      let limit = 1000;
+      let value = Math.floor(+this.command.value);
+      if (this.command.value && !isNaN(value)) {
+        limit = value;
+      }
+      return (this.timesVisited >= limit);
+    }
+  }
+
 }
