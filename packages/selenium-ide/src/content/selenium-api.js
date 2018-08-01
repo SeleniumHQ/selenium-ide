@@ -3101,7 +3101,9 @@ Selenium.prototype.doExecuteScript = function(script, varName) {
   if (value && value.constructor.name === "Promise") {
     throw new Error("Expected sync operation, instead received Promise");
   }
-  return browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+  if (varName) {
+    return browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+  }
 };
 
 Selenium.prototype.doExecuteAsyncScript = function(script, varName) {
@@ -3110,7 +3112,9 @@ Selenium.prototype.doExecuteAsyncScript = function(script, varName) {
     throw new Error(`Expected async operation, instead received ${value ? value.constructor.name : value}`);
   }
   return Promise.resolve(value).then((v) => {
-    return browser.runtime.sendMessage({ "storeStr": v, "storeVar": varName });
+    if (varName) {
+      return browser.runtime.sendMessage({ "storeStr": v, "storeVar": varName });
+    }
   });
 };
 
