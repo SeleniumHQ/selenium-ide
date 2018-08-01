@@ -828,14 +828,14 @@ class CommandList {
 export const Commands = CommandList.instance;
 
 export const ControlFlowCommandNames = {
-  do: Commands.list.get("do").name,
-  else: Commands.list.get("else").name,
-  elseIf: Commands.list.get("elseIf").name,
-  end: Commands.list.get("end").name,
-  if: Commands.list.get("if").name,
-  repeatIf: Commands.list.get("repeatIf").name,
-  times: Commands.list.get("times").name,
-  while: Commands.list.get("while").name
+  do: "do",
+  else: "else",
+  elseIf: "elseIf",
+  end: "end",
+  if: "if",
+  repeatIf: "repeatIf",
+  times: "times",
+  while: "while"
 };
 
 function commandNamesEqual(command, target) {
