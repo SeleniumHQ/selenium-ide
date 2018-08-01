@@ -22,7 +22,6 @@ import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 import ExtCommand from "./ext-command";
-import { xlateArgument } from "./formatCommand";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
 
