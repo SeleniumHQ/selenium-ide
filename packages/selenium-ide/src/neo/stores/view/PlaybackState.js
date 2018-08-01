@@ -367,7 +367,6 @@ class PlaybackState {
           this.stopPlayingGracefully();
         } else if (this.pauseOnExceptions) {
           this.break(this.currentExecutingCommandNode.command);
-          //this.setPlayingIndex(this.currentPlayingIndex - 1);
         }
       }
     }

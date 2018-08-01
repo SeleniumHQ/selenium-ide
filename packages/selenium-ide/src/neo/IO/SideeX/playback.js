@@ -358,7 +358,7 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
 
 function doDelay() {
   return new Promise((res) => {
-    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.runningQueue.length) { // TODO
+    if (PlaybackState.currentExecutingCommandNode.next === undefined) {
       return res(true);
     } else {
       setTimeout(() => {
