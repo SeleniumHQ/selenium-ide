@@ -23,7 +23,7 @@ import { escapeHTML } from "./escape";
 import BrowserBot, { browserVersion } from "./selenium-browserbot";
 import goog, { bot, core } from "./closure-polyfill";
 import PatternMatcher from "./PatternMatcher";
-import { getTagName, getTimeoutTime, extractExceptionMessage } from "./utils";
+import { getTagName, getTimeoutTime, extractExceptionMessage, lowerFirstChar } from "./utils";
 
 // TODO: remove
 
@@ -1198,8 +1198,6 @@ Selenium.prototype.doSelect = function(selectLocator, optionLocator) {
   let option = locator.findOption(element);
   this.browserbot.selectOption(element, option);
 };
-
-
 
 Selenium.prototype.doAddSelection = function(locator, optionLocator) {
   /**
@@ -3184,7 +3182,7 @@ OptionLocatorFactory.prototype.registerOptionLocators = function() {
   for (let functionName in this) {
     let result = /OptionLocatorBy([A-Z].+)$/.exec(functionName);
     if (result != null) {
-      let locatorName = result[1].lcfirst();
+      let locatorName = lowerFirstChar(result[1]);
       this.optionLocators[locatorName] = this[functionName];
     }
   }

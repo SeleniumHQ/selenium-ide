@@ -53,3 +53,12 @@ export function extractExceptionMessage(ex) {
   if (ex.message != null) return ex.message;
   if (ex.toString && ex.toString() != null) return ex.toString();
 }
+
+// Strings utilities
+export function lowerFirstChar(str) {
+  return str.charAt(0).toLowerCase() + str.substr(1);
+}
+
+export function upperFirstChar(str) {
+  return str.charAt(0).toUpperCase() + str.substr(1);
+}
