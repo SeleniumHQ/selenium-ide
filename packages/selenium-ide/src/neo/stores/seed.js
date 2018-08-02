@@ -61,9 +61,15 @@ export default function seed(store, numberOfSuites = 5) {
   checkTest.createCommand(undefined, "assertNotChecked", "css=input");
 
   const clickTest = store.createTestCase("click");
-  //clickTest.setComment("Open the wikipedia Legislation article");
   clickTest.createCommand(undefined, "open", "/");
-  clickTest.createCommand(undefined, "click", "css=a");
+  clickTest.createCommand(undefined, "click", "linkText=Dropdown");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "link=Dropdown");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "partialLinkText=ropd");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
 
   const clickAtTest = store.createTestCase("click at");
   clickAtTest.createCommand(undefined, "open", "/");
