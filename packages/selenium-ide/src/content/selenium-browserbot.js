@@ -48,11 +48,22 @@ function parse_locator(locator)
   }
   const result = locator.match(/^([A-Za-z]+)=.+/);
   if (result) {
-    const type = result[1].toLowerCase();
-    const actualLocator = locator.substring(type.length + 1);
+    let type = result[1];
+    const length = type.length;
+    if (type === "link") {
+      // deprecation control
+      browser.runtime.sendMessage({
+        log: {
+          type: "warn",
+          message: "link locators are deprecated in favor of linkText and partialLinkText, link is treated as linkText"
+        }
+      });
+      type = "linkText";
+    }
+    const actualLocator = locator.substring(length + 1);
     return { type: type, string: actualLocator };
   }
-  return { type: "implicit", string: locator };
+  return { type: "xpath", string: locator };
 }
 
 // The window to which the commands will be sent.  For example, to click on a
@@ -1474,30 +1485,6 @@ BrowserBot.prototype.recursivelyDeleteCookie = function(cookieName, domain, path
 };
 
 /*
- * Finds an element recursively in frames and nested frames
- * in the specified document, using various lookup protocols
- */
-BrowserBot.prototype.findElementRecursive = function(locatorType, locatorString, inDocument, inWindow) {
-
-  let element = this.findElementBy(locatorType, locatorString, inDocument, inWindow);
-  if (element != null) {
-    return element;
-  }
-
-  for (let i = 0; i < inWindow.frames.length; i++) {
-    // On some browsers, the document object is undefined for third-party
-    // frames.  Make sure the document is valid before continuing.
-    if (inWindow.frames[i].document) {
-      element = this.findElementRecursive(locatorType, locatorString, inWindow.frames[i].document, inWindow.frames[i]);
-
-      if (element != null) {
-        return element;
-      }
-    }
-  }
-};
-
-/*
  * Finds an element on the current page, using various lookup protocols
  */
 BrowserBot.prototype.findElementOrNull = function(locator, win) {
@@ -1506,7 +1493,7 @@ BrowserBot.prototype.findElementOrNull = function(locator, win) {
   if (win == null) {
     win = this.getCurrentWindow();
   }
-  let element = this.findElementRecursive(locator.type, locator.string, win.document, win);
+  let element = bot.locators.findElement({ [locator.type]: locator.string }, win.document);
   element = core.firefox.unwrap(element);
 
   // Element was not found by any locator function.
