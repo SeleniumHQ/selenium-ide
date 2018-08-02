@@ -1,7 +1,7 @@
 ---
 
 name: 💬 Questions / Help
-about: If you have questions, please check our Discord or StackOverflow
+about: If you have questions, please check our IRC or Slack
 ---
 
 ## 💬 Questions and Help
