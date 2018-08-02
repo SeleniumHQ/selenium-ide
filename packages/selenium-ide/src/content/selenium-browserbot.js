@@ -25,38 +25,34 @@
  */
 
 import Selenium from "./selenium-api";
+import SeleniumError from "./SeleniumError";
 import { selenium } from "./commands-api";
 import goog, { bot, core } from "./closure-polyfill";
+import { getTagName } from "./utils";
+import PatternMatcher from "./PatternMatcher";
 
-// TODO: utils
-const objectExtend = window.global.objectExtend;
-const SeleniumError = window.global.SeleniumError;
-const createEventObject = window.global.createEventObject;
-const absolutify = window.global.absolutify;
-const addLoadListener = window.global.addLoadListener;
-const highlight = window.global.highlight;
-const _parse_locator = window.global.parse_locator;
-const eval_xpath = window.global.eval_xpath;
-const eval_css = window.global.eval_css;
-const PatternMatcher = window.global.PatternMatcher;
-const getText = window.global.getText;
-const getTagName = window.global.getTagName;
-const elementFindFirstMatchingChild = window.global.elementFindFirstMatchingChild;
-const eval_locator = window.global.eval_locator;
-const is_ancestor = window.global.is_ancestor;
-const canonicalize = window.global.canonicalize;
-const parseUrl = window.global.parseUrl;
-const reassembleLocation = window.global.reassembleLocation;
-const serializeObject = window.global.serializeObject;
+export const browserVersion = new window.global.BrowserVersion();
+window.global.browserVersion = browserVersion;
 
-window.global.browserVersion = new window.global.BrowserVersion();
 
-function parse_locator(...args) {
-  if (!args[0]) {
+/**
+ * Parses a Selenium locator, returning its type and the unprefixed locator
+ * string as an object.
+ *
+ * @param locator  the locator to parse
+ */
+function parse_locator(locator)
+{
+  if (!locator) {
     throw new TypeError("Locator cannot be empty");
-  } else {
-    return _parse_locator(...args);
   }
+  const result = locator.match(/^([A-Za-z]+)=.+/);
+  if (result) {
+    const type = result[1].toLowerCase();
+    const actualLocator = locator.substring(type.length + 1);
+    return { type: type, string: actualLocator };
+  }
+  return { type: "implicit", string: locator };
 }
 
 // The window to which the commands will be sent.  For example, to click on a
@@ -66,6 +62,7 @@ export default class BrowserBot {
     this.topWindow = topLevelApplicationWindow;
     this.topFrame = this.topWindow;
     this.baseUrl = window.location.href;
+    bot.setWindow(window);
 
     //UnnamedWinIFrameExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/05/26
     this.count = 1;
@@ -119,7 +116,7 @@ export default class BrowserBot {
 
     let self = this;
 
-    objectExtend(this, PageBot.prototype);
+    Object.assign(this, PageBot.prototype);
     this._registerAllLocatorFunctions();
 
     this.recordPageLoad = function() {
@@ -214,7 +211,7 @@ BrowserBot.prototype.hasAlerts = function() {
 
 BrowserBot.prototype.relayBotToRC = function(s) {
   // DGF need to do this funny trick to see if we're in PI mode, because
-  // "this" might be the window, rather than the browserbot (e.g. during window.alert) 
+  // "this" might be the window, rather than the browserbot (e.g. during window.alert)
   let piMode = this.proxyInjectionMode;
   if (!piMode) {
     if (typeof(selenium) != "undefined") {
@@ -226,14 +223,8 @@ BrowserBot.prototype.relayBotToRC = function(s) {
   }
 };
 
-BrowserBot.prototype.relayToRC = function(name) {
-  //Evalinsandbox
-  let mySandbox = new Components.utils.Sandbox(this.currentWindow.location.href);
-  mySandbox.name = name;
-  let object = Components.utils.evalInSandbox(name, mySandbox);
-  //var object = eval(name);
-  let s = "state:" + serializeObject(name, object) + "\n";
-  sendToRC(s, "state=true"); // eslint-disable-line no-undef
+BrowserBot.prototype.relayToRC = function() {
+  return null;
 };
 
 BrowserBot.prototype.resetPopups = function() {
@@ -282,61 +273,29 @@ BrowserBot.prototype.triggerMouseEvent = function(element, eventType, canBubble,
   let screenY = 0;
 
   canBubble = (typeof(canBubble) == undefined) ? true : canBubble;
-  let evt;
-  if (element.fireEvent && element.ownerDocument && element.ownerDocument.createEventObject) { //IE
-    evt = createEventObject(element, this.controlKeyDown, this.altKeyDown, this.shiftKeyDown, this.metaKeyDown);
-    evt.detail = 0;
-    evt.button = button ? button : 1; // default will be the left mouse click ( http://www.javascriptkit.com/jsref/event.shtml )
-    evt.relatedTarget = null;
-    if (!screenX && !screenY && !clientX && !clientY && !this.controlKeyDown && !this.altKeyDown && !this.shiftKeyDown && !this.metaKeyDown) {
-      element.fireEvent("on" + eventType);
-    } else {
-      evt.screenX = screenX;
-      evt.screenY = screenY;
-      evt.clientX = clientX;
-      evt.clientY = clientY;
+  let doc = goog.dom.getOwnerDocument(element);
+  let view = goog.dom.getWindow(doc);
 
-      // when we go this route, window.event is never set to contain the event we have just created.
-      // ideally we could just slide it in as follows in the try-block below, but this normally
-      // doesn't work.  This is why I try to avoid this code path, which is only required if we need to
-      // set attributes on the event (e.g., clientX).
-      try {
-        window.event = evt;
-      } catch (e) {
-        // getting an "Object does not support this action or property" error.  Save the event away
-        // for future reference.
-        // TODO: is there a way to update window.event?
-
-        // work around for http://jira.openqa.org/browse/SEL-280 -- make the event available somewhere:
-        selenium.browserbot.getCurrentWindow().selenium_event = evt;
-      }
-      element.fireEvent("on" + eventType, evt);
-    }
+  let evt = doc.createEvent("MouseEvents");
+  if (evt.initMouseEvent) {
+    // see http://developer.mozilla.org/en/docs/DOM:event.button and
+    // http://developer.mozilla.org/en/docs/DOM:event.initMouseEvent for button ternary logic logic
+    //Safari
+    evt.initMouseEvent(eventType, canBubble, true, view, 1, screenX, screenY, clientX, clientY,
+      this.controlKeyDown, this.altKeyDown, this.shiftKeyDown, this.metaKeyDown, button ? button : 0, null);
   } else {
-    let doc = goog.dom.getOwnerDocument(element);
-    let view = goog.dom.getWindow(doc);
+    //LOG.warn("element doesn't have initMouseEvent; firing an event which should -- but doesn't -- have other mouse-event related attributes here, as well as controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown");
+    evt.initEvent(eventType, canBubble, true);
 
-    evt = doc.createEvent("MouseEvents");
-    if (evt.initMouseEvent) {
-      // see http://developer.mozilla.org/en/docs/DOM:event.button and
-      // http://developer.mozilla.org/en/docs/DOM:event.initMouseEvent for button ternary logic logic
-      //Safari
-      evt.initMouseEvent(eventType, canBubble, true, view, 1, screenX, screenY, clientX, clientY,
-        this.controlKeyDown, this.altKeyDown, this.shiftKeyDown, this.metaKeyDown, button ? button : 0, null);
-    } else {
-      //LOG.warn("element doesn't have initMouseEvent; firing an event which should -- but doesn't -- have other mouse-event related attributes here, as well as controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown");
-      evt.initEvent(eventType, canBubble, true);
-
-      evt.shiftKey = this.shiftKeyDown;
-      evt.metaKey = this.metaKeyDown;
-      evt.altKey = this.altKeyDown;
-      evt.ctrlKey = this.controlKeyDown;
-      if (button) {
-        evt.button = button;
-      }
+    evt.shiftKey = this.shiftKeyDown;
+    evt.metaKey = this.metaKeyDown;
+    evt.altKey = this.altKeyDown;
+    evt.ctrlKey = this.controlKeyDown;
+    if (button) {
+      evt.button = button;
     }
-    element.dispatchEvent(evt);
   }
+  element.dispatchEvent(evt);
 };
 
 //DragAndDropExt, Shuo-Heng Shih, SELAB, CSIE, NCKU, 2016/10/17
@@ -730,36 +689,6 @@ BrowserBot.prototype.onXhrStateChange = function(method) {
   }
 };
 
-BrowserBot.prototype.checkedOpen = function(target) {
-  let url = absolutify(target, this.baseUrl);
-  //LOG.debug("checkedOpen(): url = " + url);
-  this.isXhrDone = false;
-  this.abortXhr = false;
-  this.xhrResponseCode = null;
-  this.xhrOpenLocation = url;
-  try {
-    this.xhr = new XMLHttpRequest();
-  } catch (ex) {
-    //LOG.error("Your browser doesnt support Xml Http Request");
-    return;
-  }
-  this.xhr.onreadystatechange = this.onXhrStateChange.bind(this, "HEAD");
-  this.xhr.open("HEAD", url, true);
-  this.xhr.send("");
-  this.isXhrSent = true;
-};
-
-BrowserBot.prototype.openLocation = function(target) {
-  // We're moving to a new page - clear the current one
-  let win = this.getCurrentWindow();
-  //LOG.debug("openLocation newPageLoaded = false");
-  this.newPageLoaded = false;
-  if (!this.ignoreResponseCode) {
-    this.checkedOpen(target);
-  }
-  this.setOpenLocation(win, target);
-};
-
 BrowserBot.prototype.openWindow = function(url, windowID) {
   if (url != "") {
     url = "https://www.google.com";
@@ -778,47 +707,9 @@ BrowserBot.prototype.setIFrameLocation = function(iframe, location) {
   iframe.src = location;
 };
 
-BrowserBot.prototype.setOpenLocation = function(win, loc) {
-  loc = absolutify(loc, this.baseUrl);
-  if (browserVersion.isHTA) {
-    win.location.href = loc;
-    let marker = null;
-    try {
-      marker = this.isPollingForLoad(win);
-      if (marker && win.location[marker]) {
-        win.location[marker] = false;
-      }
-    } catch (e) {} // eslint-disable-line no-empty
-    // DGF don't know why, but this often fails
-  } else {
-    try {
-      // fix selenium's bug, Yu-Xian Chen, SELAB, CSIE, NCKU, 2016/11/07
-      // window.location.href = window.location.href will not reload the page if there's an anchor (#) in the URL
-      if (win.location.href === loc) {
-        win.location.reload();
-      } else {
-        win.location.href = loc;
-      }
-    } catch (err) {
-      //Samit: Fix: SeleniumIDE under Firefox 4 breaks if you try to open chrome URL on (XPCNativeWrapper) unwrapped window objects
-      if (err.name && err.name == "NS_ERROR_FAILURE") {
-        ////LOG.debug("wrapping and retrying");
-        try {
-          XPCNativeWrapper(win).location.href = loc; //wrap it and try again
-        } catch (e) {
-          throw err; //throw the original error, not this one
-        }
-      } else {
-        throw err; //throw the original error, since we cannot fix it
-      }
-    }
-  }
-};
-
 BrowserBot.prototype.getCurrentPage = function() {
   return this;
 };
-
 
 BrowserBot.prototype.windowNeedsModifying = function(win, uniqueId) {
   // On anything but Firefox, checking the unique id is enough.
@@ -957,7 +848,7 @@ BrowserBot.prototype.modifySeparateTestWindowToDetectPageLoads = function(window
   let htaSubFrame = this._isHTASubFrame(windowObject);
   if (frameElement && !htaSubFrame) {
     //LOG.debug("modifySeparateTestWindowToDetectPageLoads: this window is a frame; attaching a load listener");
-    addLoadListener(frameElement, this.recordPageLoad);
+    //addLoadListener(frameElement, this.recordPageLoad); TODO: check if this is necessary
     frameElement[marker] = true;
     frameElement["frame" + this.uniqueId] = marker;
     //LOG.debug("dgf this.uniqueId="+this.uniqueId);
@@ -1384,16 +1275,6 @@ BrowserBot.prototype._handleClosedSubFrame = function(testWindow, doNotModify) {
   return testWindow;
 };
 
-BrowserBot.prototype.highlight = function(element, force) {
-  if (force || this.shouldHighlightLocatedElement) {
-    try {
-      highlight(element);
-    } catch (e) {} // eslint-disable-line no-empty
-    // DGF element highlighting is low-priority and possibly dangerous
-  }
-  return element;
-};
-
 BrowserBot.prototype.setShouldHighlightElement = function(shouldHighlight) {
   this.shouldHighlightLocatedElement = shouldHighlight;
 };
@@ -1628,12 +1509,8 @@ BrowserBot.prototype.findElementOrNull = function(locator, win) {
   let element = this.findElementRecursive(locator.type, locator.string, win.document, win);
   element = core.firefox.unwrap(element);
 
-  if (element != null) {
-    return this.browserbot.highlight(element);
-  }
-
   // Element was not found by any locator function.
-  return null;
+  return element;
 };
 
 BrowserBot.prototype.findElement = function(locator, win) {
@@ -1817,11 +1694,8 @@ BrowserBot.prototype._namespaceResolver = function(prefix) {
  */
 BrowserBot.prototype.evaluateXPathCount = function(selector, inDocument) {
   let locator = parse_locator(selector);
-  let opts = {};
-  opts["namespaceResolver"] =
-    inDocument.createNSResolver ? inDocument.createNSResolver(inDocument.documentElement) : this._namespaceResolver;
   if (locator.type == "xpath" || locator.type == "implicit") {
-    return eval_xpath(locator.string, inDocument, opts).length;
+    return bot.locators.findElements({ xpath: locator.string }, inDocument).length;
   } else {
     //LOG.error("Locator does not use XPath strategy: " + selector);
     return 0;
@@ -1834,7 +1708,7 @@ BrowserBot.prototype.evaluateXPathCount = function(selector, inDocument) {
 BrowserBot.prototype.evaluateCssCount = function(selector, inDocument) {
   let locator = parse_locator(selector);
   if (locator.type == "css" || locator.type == "implicit") {
-    return eval_css(locator.string, inDocument).length;
+    return bot.locators.findElements({ css: locator.string }, inDocument).length;
   } else {
     //LOG.error("Locator does not use CSS strategy: " + selector);
     return 0;
@@ -1849,7 +1723,7 @@ BrowserBot.prototype.locateElementByLinkText = function(linkText, inDocument) {
   let links = inDocument.getElementsByTagName("a");
   for (let i = 0; i < links.length; i++) {
     let element = links[i];
-    if (PatternMatcher.matches(linkText, getText(element))) {
+    if (PatternMatcher.matches(linkText, bot.dom.getVisibleText(element))) {
       return element;
     }
   }
@@ -2093,7 +1967,7 @@ BrowserBot.prototype.bodyText = function() {
   if (!this.getDocument().body) {
     throw new SeleniumError("Couldn't access document.body.  Is this HTML page fully loaded?");
   }
-  return getText(this.getDocument().body);
+  return bot.dom.getVisibleText(this.getDocument().body);
 };
 
 BrowserBot.prototype.getAllButtons = function() {
@@ -2229,97 +2103,13 @@ BrowserBot.prototype.selectElements = function(filterExpr, elements, defaultFilt
 };
 
 /**
- * Find an element by class
- */
-BrowserBot.prototype.locateElementByClass = function(locator, document) {
-  return elementFindFirstMatchingChild(document,
-    function(element) {
-      return element.className == locator;
-    }
-  );
-};
-
-/**
- * Find an element by alt
- */
-BrowserBot.prototype.locateElementByAlt = function(locator, document) {
-  return elementFindFirstMatchingChild(document,
-    function(element) {
-      return element.alt == locator;
-    }
-  );
-};
-
-/**
  * Find an element by css selector
  */
 BrowserBot.prototype.locateElementByCss = function(locator, document) {
-  let elements = eval_css(locator, document);
+  let elements = bot.locators.findElements({ css: locator }, document);
   if (elements.length != 0)
     return elements[0];
   return null;
-};
-
-/**
- * This function is responsible for mapping a UI specifier string to an element
- * on the page, and returning it. If no element is found, null is returned.
- * Returning null on failure to locate the element is part of the undocumented
- * API for locator strategies.
- */
-BrowserBot.prototype.locateElementByUIElement = function(locator, inDocument) {
-  // offset locators are delimited by "->", which is much simpler than the
-  // previous scheme involving detecting the close-paren.
-  let locators = locator.split(/->/, 2);
-
-  let locatedElement = null;
-  let pageElements = UIMap.getInstance()
-    .getPageElements(locators[0], inDocument);
-
-  if (locators.length > 1) {
-    for (let i = 0; i < pageElements.length; ++i) {
-      let locatedElements = eval_locator(locators[1], inDocument,
-        pageElements[i]);
-      if (locatedElements.length) {
-        locatedElement = locatedElements[0];
-        break;
-      }
-    }
-  } else if (pageElements.length) {
-    locatedElement = pageElements[0];
-  }
-
-  return locatedElement;
-};
-
-BrowserBot.prototype.locateElementByUIElement.prefix = "ui";
-
-// define a function used to compare the result of a close UI element
-// match with the actual interacted element. If they are close enough
-// according to the heuristic, consider them a match.
-/**
- * A heuristic function for comparing a node with a target node. Typically the
- * node is specified in a UI element definition, while the target node is
- * returned by the recorder as the leaf element which had some event enacted
- * upon it. This particular heuristic covers the case where the anchor element
- * contains other inline tags, such as "em" or "img".
- *
- * @param node    the node being compared to the target node
- * @param target  the target node
- * @return        true if node equals target, or if node is a link
- *                element and target is its descendant, or if node has
- *                an onclick attribute and target is its descendant.
- *                False otherwise.
- */
-BrowserBot.prototype.locateElementByUIElement.is_fuzzy_match = function(node, target) {
-  try {
-    let isMatch = (
-      (node == target) ||
-      ((node.nodeName == "A" || node.onclick) && is_ancestor(node, target))
-    );
-    return isMatch;
-  } catch (e) {
-    return false;
-  }
 };
 
 /* prompt */
@@ -2484,34 +2274,6 @@ KonquerorBrowserBot.prototype.setIFrameLocation = function(iframe, location) {
   iframe.src = location;
 };
 
-KonquerorBrowserBot.prototype.setOpenLocation = function(win, loc) {
-  // Window doesn't fire onload event when setting src to the current value,
-  // so we just refresh in that case instead.
-  loc = absolutify(loc, this.baseUrl);
-  loc = canonicalize(loc);
-  let startUrl = win.location.href;
-  if ("about:blank" != win.location.href) {
-    let startLoc = parseUrl(win.location.href);
-    startLoc.hash = null;
-    startUrl = reassembleLocation(startLoc);
-  }
-  //LOG.debug("startUrl="+startUrl);
-  //LOG.debug("win.location.href="+win.location.href);
-  //LOG.debug("loc="+loc);
-  if (startUrl == loc) {
-    //LOG.debug("opening exact same location");
-    this.refresh();
-  } else {
-    //LOG.debug("locations differ");
-    win.location.href = loc;
-  }
-  // force the current polling thread to detect a page load
-  let marker = this.isPollingForLoad(win);
-  if (marker) {
-    delete win.location[marker];
-  }
-};
-
 KonquerorBrowserBot.prototype._isSameDocument = function(originalDocument, currentDocument) {
   // under Konqueror, there may be this case:
   // originalDocument and currentDocument are different objects
@@ -2530,7 +2292,6 @@ export class SafariBrowserBot extends BrowserBot {
 }
 
 SafariBrowserBot.prototype.setIFrameLocation = KonquerorBrowserBot.prototype.setIFrameLocation;
-SafariBrowserBot.prototype.setOpenLocation = KonquerorBrowserBot.prototype.setOpenLocation;
 
 export class OperaBrowserBot extends BrowserBot {
   constructor(frame) {

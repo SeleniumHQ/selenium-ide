@@ -17,27 +17,17 @@
 
 import browser from "webextension-polyfill";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
+import SeleniumError from "./SeleniumError";
 import { selenium } from "./commands-api";
 import { escapeHTML } from "./escape";
-import BrowserBot from "./selenium-browserbot";
+import BrowserBot, { browserVersion } from "./selenium-browserbot";
 import goog, { bot, core } from "./closure-polyfill";
+import PatternMatcher from "./PatternMatcher";
+import { getTagName, getTimeoutTime, extractExceptionMessage } from "./utils";
 
-// TODO: utils
-const eval_css = window.global.eval_css;
-const getTimeoutTime = window.global.getTimeoutTime;
-const SeleniumError = window.global.SeleniumError;
-const normalizeSpaces = window.global.normalizeSpaces;
-const getText = window.global.getText;
-const createEventObject = window.global.createEventObject;
-const triggerKeyEvent = window.global.triggerKeyEvent;
-const fnBind = window.global.fnBind;
-const browserVersion = window.global.browserVersion;
-const getInputValue = window.global.getInputValue;
-const extractExceptionMessage = window.global.extractExceptionMessage;
-const PatternMatcher = window.global.PatternMatcher;
-const parse_kwargs = window.global.parse_kwargs;
-const getTagName = window.global.getTagName;
+// TODO: remove
 
+//debugger;
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
 let storedVars = new Object();
@@ -286,28 +276,6 @@ export default class Selenium {
     };
     this.defaultTimeout = Selenium.DEFAULT_TIMEOUT;
     this.mouseSpeed = Selenium.DEFAULT_MOUSE_SPEED;
-
-
-    // TODO(simon): This guard should not be necessary. Remove it,
-    if (bot && bot.locators && bot.locators.add) {
-      bot.locators.add("xpath", {
-        single: function(target, opt_root) {
-          return browserbot.locateElementByXPath(target, opt_root);
-        },
-        many: function(target, opt_root) {
-          return browserbot.locateElementsByXPath(target, opt_root);
-        }
-      });
-
-      bot.locators.add("css", {
-        single: function(target, opt_root) {
-          return browserbot.locateElementByCss(target, opt_root);
-        },
-        many: function(target, opt_root) {
-          return eval_css(target, opt_root);
-        }
-      });
-    }
   }
 }
 
@@ -402,15 +370,15 @@ Selenium.prototype.doVerifyNotSelectedValue = function(locator, value) {
 
 Selenium.prototype.doVerifyText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
-  if (getText(element) !== value) {
-    throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  if (bot.dom.getVisibleText(element) !== value) {
+    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did not match '" + value + "'");
   }
 };
 
 Selenium.prototype.doVerifyNotText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
-  if (getText(element) === value) {
-    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
+  if (bot.dom.getVisibleText(element) === value) {
+    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did match '" + value + "'");
   }
 };
 
@@ -422,8 +390,8 @@ Selenium.prototype.doVerifyValue = function(locator, value) {
 };
 
 Selenium.prototype.doVerifyTitle = function(value) {
-  if (normalizeSpaces(this.getTitle()) !== value) {
-    throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
+  if (goog.string.normalizeSpaces(this.getTitle()) !== value) {
+    throw new Error("Actual value '" + goog.string.normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
   }
 };
 
@@ -514,15 +482,15 @@ Selenium.prototype.doAssertNotSelectedValue = function(locator, value) {
 
 Selenium.prototype.doAssertText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
-  if (getText(element) !== value) {
-    throw new Error("Actual value '" + getText(element) + "' did not match '" + value + "'");
+  if (bot.dom.getVisibleText(element) !== value) {
+    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did not match '" + value + "'");
   }
 };
 
 Selenium.prototype.doAssertNotText = function(locator, value) {
   let element = this.browserbot.findElement(locator);
-  if (getText(element) === value) {
-    throw new Error("Actual value '" + getText(element) + "' did match '" + value + "'");
+  if (bot.dom.getVisibleText(element) === value) {
+    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did match '" + value + "'");
   }
 };
 
@@ -534,8 +502,8 @@ Selenium.prototype.doAssertValue = function(locator, value) {
 };
 
 Selenium.prototype.doAssertTitle = function(value) {
-  if (normalizeSpaces(this.getTitle()) !== value) {
-    throw new Error("Actual value '" + normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
+  if (goog.string.normalizeSpaces(this.getTitle()) !== value) {
+    throw new Error("Actual value '" + goog.string.normalizeSpaces(this.getTitle()) + "' did not match '" + value + "'");
   }
 };
 
@@ -804,27 +772,6 @@ Selenium.prototype.doContextMenuAt = function(locator, coordString) {
   this.browserbot.contextMenuOnElement(element, clientXY[0], clientXY[1]);
 };
 
-Selenium.prototype.doFireEvent = function(locator, eventName) {
-  /**
-     * Explicitly simulate an event, to trigger the corresponding &quot;on<em>event</em>&quot;
-     * handler.
-     *
-     * @param locator an <a href="#locators">element locator</a>
-     * @param eventName the event name, e.g. "focus" or "blur"
-     */
-  let element = this.browserbot.findElement(locator);
-  let doc = goog.dom.getOwnerDocument(element);
-
-  if (element.fireEvent && element.ownerDocument && element.ownerDocument.createEventObject) { // IE
-    let ieEvent = createEventObject(element, false, false, false, false);
-    element.fireEvent("on" + eventName, ieEvent);
-  } else {
-    let evt = doc.createEvent("HTMLEvents");
-    evt.initEvent(eventName, true, true);
-    element.dispatchEvent(evt);
-  }
-};
-
 Selenium.prototype.doFocus = function(locator) {
   /** Move the focus to the specified element; for example, if the element is an input field, move the cursor to that field.
      *
@@ -836,23 +783,6 @@ Selenium.prototype.doFocus = function(locator) {
   } else {
     bot.events.fire(element, bot.events.EventType.FOCUS);
   }
-};
-
-Selenium.prototype.doKeyPress = function(locator, keySequence) {
-  /**
-     * Simulates a user pressing and releasing a key.
-     *
-     * @param locator an <a href="#locators">element locator</a>
-     * @param keySequence Either be a string("\" followed by the numeric keycode
-     *  of the key to be pressed, normally the ASCII value of that key), or a single
-     *  character. For example: "w", "\119".
-     */
-  let element = this.browserbot.findElement(locator);
-  triggerKeyEvent(element, "keypress", keySequence, true,
-    this.browserbot.controlKeyDown,
-    this.browserbot.altKeyDown,
-    this.browserbot.shiftKeyDown,
-    this.browserbot.metaKeyDown);
 };
 
 Selenium.prototype.doShiftKeyDown = function() {
@@ -925,40 +855,6 @@ Selenium.prototype.doControlKeyUp = function() {
      */
   this.browserbot.controlKeyDown = false;
   core.events.controlKeyDown_ = false;
-};
-
-Selenium.prototype.doKeyDown = function(locator, keySequence) {
-  /**
-     * Simulates a user pressing a key (without releasing it yet).
-     *
-     * @param locator an <a href="#locators">element locator</a>
-     * @param keySequence Either be a string("\" followed by the numeric keycode
-     *  of the key to be pressed, normally the ASCII value of that key), or a single
-     *  character. For example: "w", "\119".
-     */
-  let element = this.browserbot.findElement(locator);
-  triggerKeyEvent(element, "keydown", keySequence, true,
-    this.browserbot.controlKeyDown,
-    this.browserbot.altKeyDown,
-    this.browserbot.shiftKeyDown,
-    this.browserbot.metaKeyDown);
-};
-
-Selenium.prototype.doKeyUp = function(locator, keySequence) {
-  /**
-     * Simulates a user releasing a key.
-     *
-     * @param locator an <a href="#locators">element locator</a>
-     * @param keySequence Either be a string("\" followed by the numeric keycode
-     *  of the key to be pressed, normally the ASCII value of that key), or a single
-     *  character. For example: "w", "\119".
-     */
-  let element = this.browserbot.findElement(locator);
-  triggerKeyEvent(element, "keyup", keySequence, true,
-    this.browserbot.controlKeyDown,
-    this.browserbot.altKeyDown,
-    this.browserbot.shiftKeyDown,
-    this.browserbot.metaKeyDown);
 };
 
 function getClientXY(element, coordString) {
@@ -1151,33 +1047,6 @@ Selenium.prototype.doType = function(locator, value) {
   core.events.setValue(element, "");
   bot.action.type(element, value);
 };
-
-Selenium.prototype.doTypeKeys = function(locator, value) {
-  /**
-     * Simulates keystroke events on the specified element, as though you typed the value key-by-key.
-     *
-     * <p>This is a convenience method for calling keyDown, keyUp, keyPress for every character in the specified string;
-     * this is useful for dynamic UI widgets (like auto-completing combo boxes) that require explicit key events.</p>
-     *
-     * <p>Unlike the simple "type" command, which forces the specified value into the page directly, this command
-     * may or may not have any visible effect, even in cases where typing keys would normally have a visible effect.
-     * For example, if you use "typeKeys" on a form element, you may or may not see the results of what you typed in
-     * the field.</p>
-     * <p>In some cases, you may need to use the simple "type" command to set the value of the field and then the "typeKeys" command to
-     * send the keystroke events corresponding to what you just typed.</p>
-     *
-     * @param locator an <a href="#locators">element locator</a>
-     * @param value the value to type
-     */
-  let keys = new String(value).split("");
-  for (let i = 0; i < keys.length; i++) {
-    let c = keys[i];
-    this.doKeyDown(locator, c);
-    this.doKeyUp(locator, c);
-    this.doKeyPress(locator, c);
-  }
-};
-
 
 Selenium.prototype.doSendKeys = function(locator, value) {
   /**
@@ -1406,7 +1275,7 @@ Selenium.prototype.makePageLoadCondition = function(timeout) {
     this._abortXhrRequest();
     return;
   }
-  return Selenium.decorateFunctionWithTimeout(fnBind(this._isNewPageLoaded, this), timeout, fnBind(this._abortXhrRequest, this));
+  return Selenium.decorateFunctionWithTimeout(this._isNewPageLoaded.bind(this), timeout, this._abortXhrRequest.bind(this));
 };
 
 Selenium.prototype.doOpen = function(url, ignoreResponseCode) {
@@ -1905,7 +1774,7 @@ Selenium.prototype.getValue = function(locator) {
      * @return string the element value, or "on/off" for checkbox/radio elements
      */
   let element = this.browserbot.findElement(locator);
-  return getInputValue(element).trim();
+  return element.value.trim();
 };
 
 Selenium.prototype.getText = function(locator) {
@@ -1919,17 +1788,7 @@ Selenium.prototype.getText = function(locator) {
      * @return string the text of the element
      */
   let element = this.browserbot.findElement(locator);
-  return core.text.getElementText(element);
-};
-
-Selenium.prototype.doHighlight = function(locator) {
-  /**
-     * Briefly changes the backgroundColor of the specified element yellow.  Useful for debugging.
-     *
-     * @param locator an <a href="#locators">element locator</a>
-     */
-  let element = this.browserbot.findElement(locator);
-  this.browserbot.highlight(element, true);
+  return bot.dom.getVisibleText(element);
 };
 
 Selenium.prototype.getEval = function(script) {
@@ -1999,7 +1858,7 @@ Selenium.prototype.getTable = function(tableCellAddress) {
   } else if (col > table.rows[row].cells.length) {
     Assert.fail("Cannot access column " + col + " - table row has " + table.rows[row].cells.length + " columns");// eslint-disable-line no-undef
   } else {
-    let actualContent = getText(table.rows[row].cells[col]);
+    let actualContent = bot.dom.getVisibleText(table.rows[row].cells[col]);
     return actualContent.trim();
   }
   return null;
@@ -3113,290 +2972,6 @@ Selenium.prototype.doRunScript = function(script) {
   scriptTag.type = "text/javascript";
   scriptTag.text = script;
   doc.body.appendChild(scriptTag);
-};
-
-Selenium.prototype.doAddLocationStrategy = function(strategyName, functionDefinition) {
-  /**
-     * Defines a new function for Selenium to locate elements on the page.
-     * For example,
-     * if you define the strategy "foo", and someone runs click("foo=blah"), we'll
-     * run your function, passing you the string "blah", and click on the element
-     * that your function
-     * returns, or throw an "Element not found" error if your function returns null.
-     *
-     * We'll pass three arguments to your function:
-     * <ul>
-     * <li>locator: the string the user passed in</li>
-     * <li>inWindow: the currently selected window</li>
-     * <li>inDocument: the currently selected document</li>
-     * </ul>
-     * The function must return null if the element can't be found.
-     *
-     * @param strategyName the name of the strategy to define; this should use only
-     *   letters [a-zA-Z] with no spaces or other punctuation.
-     * @param functionDefinition a string defining the body of a function in JavaScript.
-     *   For example: <code>return inDocument.getElementById(locator);</code>
-     */
-  if (!/^[a-zA-Z]+$/.test(strategyName)) {
-    throw new SeleniumError("Invalid strategy name: " + strategyName);
-  }
-  let strategyFunction;
-  try {
-    strategyFunction = new Function("locator", "inDocument", "inWindow", functionDefinition);
-  } catch (ex) {
-    throw new SeleniumError("Error evaluating function definition: " + extractExceptionMessage(ex));
-  }
-  let safeStrategyFunction = function() {
-    try {
-      return strategyFunction.apply(this, arguments);
-    } catch (ex) {
-      throw new SeleniumError("Error executing strategy function " + strategyName + ": " + extractExceptionMessage(ex));
-    }
-  };
-  this.browserbot.locationStrategies[strategyName] = safeStrategyFunction;
-};
-
-Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
-  /**
-     * Saves the entire contents of the current window canvas to a PNG file.
-     * Contrast this with the captureScreenshot command, which captures the
-     * contents of the OS viewport (i.e. whatever is currently being displayed
-     * on the monitor), and is implemented in the RC only. Currently this only
-     * works in Firefox when running in chrome mode, and in IE non-HTA using
-     * the EXPERIMENTAL "Snapsie" utility. The Firefox implementation is mostly
-     * borrowed from the Screengrab! Firefox extension. Please see
-     * http://www.screengrab.org and http://snapsie.sourceforge.net/ for
-     * details.
-     *
-     * @param filename  the path to the file to persist the screenshot as. No
-     *                  filename extension will be appended by default.
-     *                  Directories will not be created if they do not exist,
-     *                  and an exception will be thrown, possibly by native
-     *                  code.
-     * @param kwargs    a kwargs string that modifies the way the screenshot
-     *                  is captured. Example: "background=#CCFFDD" .
-     *                  Currently valid options:
-     *                  <dl>
-     *                   <dt>background</dt>
-     *                     <dd>the background CSS for the HTML document. This
-     *                     may be useful to set for capturing screenshots of
-     *                     less-than-ideal layouts, for example where absolute
-     *                     positioning causes the calculation of the canvas
-     *                     dimension to fail and a black background is exposed
-     *                     (possibly obscuring black text).</dd>
-     *                  </dl>
-     */
-  function getFailureMessage(exceptionMessage) {
-    let msg = "Snapsie failed: ";
-    if (exceptionMessage) {
-      if (exceptionMessage ==
-        "Automation server can't create object") {
-        msg += "Is it installed? Does it have permission to run " + "as an add-on? See http://snapsie.sourceforge.net/";
-      } else {
-        msg += exceptionMessage;
-      }
-    } else {
-      msg += "Undocumented error";
-    }
-    return msg;
-  }
-
-  if (!browserVersion.isChrome &&
-    !(browserVersion.isIE && !browserVersion.isHTA)) {
-    throw new SeleniumError("captureEntirePageScreenshot is only " + "implemented for Firefox (\"firefox\" or \"chrome\", NOT " + "\"firefoxproxy\") and IE non-HTA (\"iexploreproxy\", NOT \"iexplore\" " + "or \"iehta\"). The current browser isn't one of them!");
-  }
-  // do or do not ... there is no try
-  if (browserVersion.isIE) {
-    // targeting snapsIE >= 0.2
-    if (typeof(runOptions) != "undefined" &&
-      runOptions.isMultiWindowMode() == false) {// eslint-disable-line no-undef
-      // framed mode
-      try {
-        new Snapsie().saveSnapshot(filename, "selenium_myiframe");// eslint-disable-line no-undef
-      } catch (e) {
-        throw new SeleniumError(getFailureMessage(e.message));
-      }
-    } else {
-      // multi-window mode
-      if (!this.snapsieSrc) {
-        // XXX - cache snapsie, and capture the screenshot as a
-        // callback. Definitely a hack, because we may be late taking
-        // the first screenshot, but saves us from polluting other code
-        // for now. I wish there were an easier way to get at the
-        // contents of a referenced script!
-        let snapsieUrl = (this.browserbot.buttonWindow.location.href)
-          .replace(/(Test|Remote)Runner\.html/, "lib/snapsie.js");
-        let self = this;
-        new Ajax.Request(snapsieUrl, {// eslint-disable-line no-undef
-          method: "get",
-          onSuccess: function(transport) {
-            self.snapsieSrc = transport.responseText;
-            self.doCaptureEntirePageScreenshot(filename, kwargs);
-          }
-        });
-        return;
-      }
-
-      // it's going into a string, so escape the backslashes
-      filename = filename.replace(/\\/g, "\\\\");
-
-      // this is sort of hackish. We insert a script into the document,
-      // and remove it before anyone notices.
-      let doc = selenium.browserbot.getDocument();
-      let script = doc.createElement("script");
-      let scriptContent = this.snapsieSrc + "try {" + "    new Snapsie().saveSnapshot(\"" + filename + "\");" + "}" + "catch (e) {" + "    document.getElementById(\"takeScreenshot\").failure =" + "        e.message;" + "}";
-      script.id = "takeScreenshot";
-      script.language = "javascript";
-      script.text = scriptContent;
-      doc.body.appendChild(script);
-      script.parentNode.removeChild(script);
-      if (script.failure) {
-        throw new SeleniumError(getFailureMessage(script.failure));
-      }
-    }
-    return;
-  }
-
-  let grabber = {
-    prepareCanvas: function(width, height) {
-      let styleWidth = width + "px";
-      let styleHeight = height + "px";
-
-      let grabCanvas = document.getElementById("screenshot_canvas");
-      if (!grabCanvas) {
-        // create the canvas
-        let ns = "http://www.w3.org/1999/xhtml";
-        grabCanvas = document.createElementNS(ns, "html:canvas");
-        grabCanvas.id = "screenshot_canvas";
-        grabCanvas.style.display = "none";
-        document.documentElement.appendChild(grabCanvas);
-      }
-
-      grabCanvas.width = width;
-      grabCanvas.style.width = styleWidth;
-      grabCanvas.style.maxWidth = styleWidth;
-      grabCanvas.height = height;
-      grabCanvas.style.height = styleHeight;
-      grabCanvas.style.maxHeight = styleHeight;
-
-      return grabCanvas;
-    },
-
-    prepareContext: function(canvas, box) {
-      let context = canvas.getContext("2d");
-      context.clearRect(box.x, box.y, box.width, box.height);
-      context.save();
-      return context;
-    }
-  };
-
-  let SGNsUtils = {
-    dataUrlToBinaryInputStream: function(dataUrl) {
-      let nsIoService = Components.classes["@mozilla.org/network/io-service;1"]
-        .getService(Components.interfaces.nsIIOService);
-      let channel = nsIoService
-        .newChannelFromURI(nsIoService.newURI(dataUrl, null, null));
-      let binaryInputStream = Components.classes["@mozilla.org/binaryinputstream;1"]
-        .createInstance(Components.interfaces.nsIBinaryInputStream);
-
-      binaryInputStream.setInputStream(channel.open());
-      return binaryInputStream;
-    },
-
-    newFileOutputStream: function(nsFile) {
-      let writeFlag = 0x02; // write only
-      let createFlag = 0x08; // create
-      let truncateFlag = 0x20; // truncate
-      let fileOutputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
-        .createInstance(Components.interfaces.nsIFileOutputStream);
-
-      // Apparently octal permissions are deprecated, but the suggested alternative is broken in Firefox (and not backwards-compatible from FF 4.0): https://bugzilla.mozilla.org/show_bug.cgi?id=433295
-      fileOutputStream.init(nsFile,
-        writeFlag | createFlag | truncateFlag,
-        0o0664,
-        null);
-      return fileOutputStream;
-    },
-
-    writeBinaryInputStreamToFileOutputStream: function(binaryInputStream, fileOutputStream) {
-      let numBytes = binaryInputStream.available();
-      let bytes = binaryInputStream.readBytes(numBytes);
-      fileOutputStream.write(bytes, numBytes);
-    }
-  };
-
-    // compute dimensions
-  let window = this.browserbot.getCurrentWindow();
-  let doc = window.document.documentElement;
-  let body = window.document.body;
-  let box = {
-    x: 0,
-    y: 0,
-    width: Math.max(doc.scrollWidth, body.scrollWidth),
-    height: Math.max(doc.scrollHeight, body.scrollHeight)
-  };
-
-    // CanvasRenderingContext2D::DrawWindow limits width and height up to 65535
-    //  > 65535 leads to NS_ERROR_FAILURE
-    //
-    // HTMLCanvasElement::ToDataURLImpl limits width and height up to 32767
-    //  >= 32769 leads to NS_ERROR_FAILURE
-    //  >= 32767 leads to transparent image (moz issue?).
-    //
-  let limit = 32766;
-  if (box.width > limit) {
-    box.width = limit;
-  }
-  if (box.height > limit) {
-    box.height = limit;
-  }
-  //LOG.debug('computed dimensions');
-
-  let originalBackground = doc.style.background;
-
-  if (kwargs) {
-    let args = parse_kwargs(kwargs);
-    if (args.background) {
-      doc.style.background = args.background;
-    }
-  }
-
-  // grab
-  let format = "png";
-  let canvas = grabber.prepareCanvas(box.width, box.height);
-  let context = grabber.prepareContext(canvas, box);
-  context.drawWindow(window, box.x, box.y, box.width, box.height,
-    "rgb(0, 0, 0)");
-  context.restore();
-  let dataUrl = canvas.toDataURL("image/" + format);
-  //LOG.debug('grabbed to canvas');
-
-  doc.style.background = originalBackground;
-
-  // save to file
-  let nsFile = Components.classes["@mozilla.org/file/local;1"]
-    .createInstance(Components.interfaces.nsILocalFile);
-  try {
-    nsFile.initWithPath(filename);
-  } catch (e) {
-    if (/NS_ERROR_FILE_UNRECOGNIZED_PATH/.test(e.message)) {
-      // try using the opposite file separator
-      if (filename.indexOf("/") != -1) {
-        filename = filename.replace(/\//g, "\\");
-      } else {
-        filename = filename.replace(/\\/g, "/");
-      }
-      nsFile.initWithPath(filename);
-    } else {
-      throw e;
-    }
-  }
-  let binaryInputStream = SGNsUtils.dataUrlToBinaryInputStream(dataUrl);
-  let fileOutputStream = SGNsUtils.newFileOutputStream(nsFile);
-  SGNsUtils.writeBinaryInputStreamToFileOutputStream(binaryInputStream,
-    fileOutputStream);
-  fileOutputStream.close();
-  //LOG.debug('saved to file');
 };
 
 Selenium.prototype.doRollup = function(rollupName, kwargs) {
