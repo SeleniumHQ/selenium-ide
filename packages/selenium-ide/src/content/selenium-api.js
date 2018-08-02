@@ -25,9 +25,6 @@ import goog, { bot, core } from "./closure-polyfill";
 import PatternMatcher from "./PatternMatcher";
 import { getTagName, getTimeoutTime, extractExceptionMessage, lowerFirstChar } from "./utils";
 
-// TODO: remove
-
-//debugger;
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
 let storedVars = new Object();
