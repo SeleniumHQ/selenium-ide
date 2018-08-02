@@ -16,7 +16,6 @@
 
 import { MozillaBrowserBot } from "./selenium-browserbot";
 import { core } from "./closure-polyfill";
-import { exactMatchPattern } from "./targetSelector";
 
 export default function LocatorBuilders(window) {
   this.window = window;
@@ -123,7 +122,7 @@ LocatorBuilders._orderChanged = function() {
   let changed = this._ensureAllPresent(this.order, this._preferredOrder);
   this._sortByRefOrder(this.order, this._preferredOrder);
   if (changed) {
-    // NOTE: for some reasons we does not use this part 
+    // NOTE: for some reasons we does not use this part
     // this.notify('preferredOrderChanged', this._preferredOrder);
   }
 };
@@ -297,11 +296,11 @@ LocatorBuilders.add("id", function(e) {
   return null;
 });
 
-LocatorBuilders.add("link", function(e) {
+LocatorBuilders.add("linkText", function(e) {
   if (e.nodeName == "A") {
     let text = e.textContent;
     if (!text.match(/^\s*$/)) {
-      return "link=" + exactMatchPattern(text.replace(/\xA0/g, " ").replace(/^\s*(.*?)\s*$/, "$1"));
+      return "linkText=" + text.replace(/\xA0/g, " ").replace(/^\s*(.*?)\s*$/, "$1");
     }
   }
   return null;
