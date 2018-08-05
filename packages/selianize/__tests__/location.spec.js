@@ -34,6 +34,16 @@ describe("location code emitter", () => {
     const selector = "someLink";
     return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.linkText(\`${selector}\`)`);
   });
+  it("should emit linkText locator", () => {
+    const type = "linkText";
+    const selector = "someLink";
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.linkText(\`${selector}\`)`);
+  });
+  it("should emit partialLinkText locator", () => {
+    const type = "partialLinkText";
+    const selector = "someLink";
+    return expect(LocationEmitter.emit(`${type}=${selector}`)).resolves.toBe(`By.partialLinkText(\`${selector}\`)`);
+  });
   it("should emit css locator", () => {
     const type = "css";
     const selector = "someCss";

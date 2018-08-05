@@ -21,7 +21,7 @@ import BrowserBot from "./selenium-browserbot";
 import { locatorBuilders } from "./record";
 import { editRegion, removeRegion } from "./region";
 
-export const selenium = new Selenium(BrowserBot.createForWindow(window));
+export const selenium = new Selenium(BrowserBot.createForWindow(window, true));
 let contentSideexTabId = window.contentSideexTabId;
 let targetSelector;
 

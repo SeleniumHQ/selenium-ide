@@ -49,37 +49,10 @@ export default function seed(store, numberOfSuites = 5) {
     }
   }
 
-  const url = "https://en.wikipedia.org";
+  const url = "http://the-internet.herokuapp.com";
   store.setUrl(url);
   store.addUrl(url);
-  const playbackTest = store.createTestCase("aa playback");
-  const open = playbackTest.createCommand();
-  open.setComment("Open the wikipedia Legislation article");
-  open.setCommand("open");
-  open.setTarget("/wiki/Legislation");
-  const firstClick = playbackTest.createCommand();
-  firstClick.setCommand("click");
-  firstClick.setTarget("link=enacted");
-  firstClick.setTargets([
-    ["//div[@id='mw-content-text']/div/p[7]", "xpath:idRelative"]
-  ]);
-  const secondClick = playbackTest.createCommand();
-  secondClick.setCommand("clickAt");
-  secondClick.setTarget("link=parliamentary systems");
 
-  const playbackTest2 = store.createTestCase("aab playback");
-  const open2 = playbackTest2.createCommand();
-  open2.setCommand("open");
-  open2.setTarget("/wiki/River_Chater");
-  const firstClick2 = playbackTest2.createCommand();
-  firstClick2.setCommand("clickAt");
-  firstClick2.setTarget("link=River Welland");
-  const secondClick2 = playbackTest2.createCommand();
-  secondClick2.setCommand("clickAt");
-  secondClick2.setTarget("link=floods of 1947");
-  const thirdClick2 = playbackTest2.createCommand();
-  thirdClick2.setCommand("clickAt");
-  thirdClick2.setTarget("link=scapegoat");
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "if", "true");
   controlFlowIfTest.createCommand(undefined, "echo", "foo");
@@ -127,22 +100,6 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowWhileTest.createCommand(undefined, "echo", "foo");
   controlFlowWhileTest.createCommand(undefined, "end");
 
-  const typeTest = store.createTestCase("aab type");
-  const open3 = typeTest.createCommand();
-  open3.setCommand("open");
-  open3.setTarget("/wiki/Main_Page");
-  const clickSearch = typeTest.createCommand();
-  clickSearch.setCommand("clickAt");
-  clickSearch.setTarget("id=searchInput");
-  const type = typeTest.createCommand();
-  type.setCommand("type");
-  type.setTarget("id=searchInput");
-  type.setValue("Selenium IDE");
-
-  const submit = typeTest.createCommand();
-  submit.setCommand("clickAt");
-  submit.setTarget("css=.mw-searchSuggest-link:first-child");
-
   const executeScriptSandboxTest = store.createTestCase("execute script sandbox");
   executeScriptSandboxTest.createCommand(undefined, "executeScript", "return true", "blah");
   executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
@@ -154,12 +111,65 @@ export default function seed(store, numberOfSuites = 5) {
   executeScriptContentWindowTest.createCommand(undefined, "executeScript", "return Math.random()", "blah");
   executeScriptContentWindowTest.createCommand(undefined, "echo", "${blah}");
 
-  const suite = store.createSuite("aaa suite");
-  suite.addTestCase(playbackTest);
+  const checkTest = store.createTestCase("check");
+  checkTest.createCommand(undefined, "open", "/checkboxes");
+  checkTest.createCommand(undefined, "check", "css=input");
+  checkTest.createCommand(undefined, "assertChecked", "css=input");
+  checkTest.createCommand(undefined, "uncheck", "css=input");
+  checkTest.createCommand(undefined, "assertNotChecked", "css=input");
 
-  const suite2 = store.createSuite("aaab suite");
-  suite2.addTestCase(typeTest);
-  suite2.addTestCase(playbackTest2);
+  const clickTest = store.createTestCase("click");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "linkText=Dropdown");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "link=Dropdown");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "partialLinkText=ropd");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+
+  const clickAtTest = store.createTestCase("click at");
+  clickAtTest.createCommand(undefined, "open", "/");
+  clickAtTest.createCommand(undefined, "clickAt", "css=a");
+
+  const framesTest = store.createTestCase("frames");
+  framesTest.createCommand(undefined, "open", "/iframe");
+  framesTest.createCommand(undefined, "selectFrame", "css=#mce_0_ifr");
+  framesTest.createCommand(undefined, "assertText", "css=#tinymce", "Your content goes here.");
+  framesTest.createCommand(undefined, "open", "/nested_frames");
+  framesTest.createCommand(undefined, "selectFrame", "frame-top");
+  framesTest.createCommand(undefined, "selectFrame", "frame-middle");
+  framesTest.createCommand(undefined, "assertText", "css=#content", "MIDDLE");
+
+  const selectTest = store.createTestCase("select");
+  selectTest.createCommand(undefined, "open", "/dropdown");
+  selectTest.createCommand(undefined, "select", "id=dropdown", "value=1");
+  selectTest.createCommand(undefined, "assertSelectedValue", "id=dropdown", "1");
+  selectTest.createCommand(undefined, "assertNotSelectedValue", "id=dropdown", "2");
+  selectTest.createCommand(undefined, "assertSelectedLabel", "id=dropdown", "Option 1");
+  selectTest.createCommand(undefined, "select", "id=dropdown", "Option 2");
+  selectTest.createCommand(undefined, "assertSelectedValue", "id=dropdown", "2");
+  selectTest.createCommand(undefined, "assertNotSelectedValue", "id=dropdown", "1");
+  selectTest.createCommand(undefined, "assertSelectedLabel", "id=dropdown", "Option 2");
+
+  const sendKeysTest = store.createTestCase("send keys");
+  sendKeysTest.createCommand(undefined, "open", "/login");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
+  sendKeysTest.createCommand(undefined, "assertValue", "css=#username", "blah");
+
+  const storeTextTest = store.createTestCase("store text");
+  storeTextTest.createCommand(undefined, "open", "/login");
+  storeTextTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
+  storeTextTest.createCommand(undefined, "storeValue", "css=#username", "aVar");
+  storeTextTest.createCommand(undefined, "echo", "${aVar}");
+
+  const submitTest = store.createTestCase("submit");
+  submitTest.createCommand(undefined, "open", "/login");
+  submitTest.createCommand(undefined, "sendKeys", "css=#username", "tomsmith");
+  submitTest.createCommand(undefined, "sendKeys", "css=#password", "SuperSecretPassword!");
+  submitTest.createCommand(undefined, "submit", "css=#login");
+  submitTest.createCommand(undefined, "assertElementPresent", "css=.flash.success");
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
@@ -173,17 +183,27 @@ export default function seed(store, numberOfSuites = 5) {
   suiteExecuteScript.addTestCase(executeScriptSandboxTest);
   suiteExecuteScript.addTestCase(executeScriptContentWindowTest);
 
-  const suiteAll = store.createSuite("_all tests");
+  const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test);
   });
 
-  UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(suiteExecuteScript);
-  suiteState.setOpen(true);
-  UiState.selectTest(executeScriptSandboxTest, suiteExecuteScript);
+  const smokeSuite = store.createSuite("smoke");
+  smokeSuite.addTestCase(checkTest);
+  smokeSuite.addTestCase(clickTest);
+  smokeSuite.addTestCase(clickAtTest);
+  smokeSuite.addTestCase(framesTest);
+  smokeSuite.addTestCase(selectTest);
+  smokeSuite.addTestCase(sendKeysTest);
+  smokeSuite.addTestCase(storeTextTest);
+  smokeSuite.addTestCase(submitTest);
 
-  store.changeName("project");
+  UiState.changeView("Test suites");
+  let suiteState = UiState.getSuiteState(smokeSuite);
+  suiteState.setOpen(true);
+  UiState.selectTest(checkTest, smokeSuite);
+
+  store.changeName("seed project");
 
   return store;
 }

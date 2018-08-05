@@ -1302,9 +1302,9 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
 
-closure-loader@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/closure-loader/-/closure-loader-0.4.0.tgz#1d37d7b1f27410499e8b9306dbac0af9d3b0f21d"
+closure-loader@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/closure-loader/-/closure-loader-0.6.0.tgz#0446e2e49b801ef0b6018e0ed8520ea8a48ebcf8"
   dependencies:
     bluebird "^3.5.0"
     chokidar "^1.7.0"
@@ -1759,8 +1759,8 @@ deep-equal@^1.0.1:
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
 
 deep-extend@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.5.0.tgz#6ef4a09b05f98b0e358d6d93d4ca3caec6672803"
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.5.1.tgz#b894a9dd90d3023fbf1c55a394fb858eb2066f1f"
 
 deep-extend@^0.6.0:
   version "0.6.0"
@@ -2597,9 +2597,9 @@ globby@^7.1.1:
     pify "^3.0.0"
     slash "^1.0.0"
 
-google-closure-library@^20170910.0.0:
-  version "20170910.0.0"
-  resolved "https://registry.yarnpkg.com/google-closure-library/-/google-closure-library-20170910.0.0.tgz#d6122ec24472672ee1347b19e8c4a43d18f57bef"
+google-closure-library@^20170521.0.0:
+  version "20170521.0.0"
+  resolved "https://registry.yarnpkg.com/google-closure-library/-/google-closure-library-20170521.0.0.tgz#06659ec07bb9042c5123dbb1568bcd6969df8f2b"
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"

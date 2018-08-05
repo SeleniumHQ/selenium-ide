@@ -15,6 +15,7 @@
  *
  */
 import browser from "webextension-polyfill";
+import "./closure-polyfill";
 import { record } from "./record-api";
 import { selenium } from "./commands-api";
 
