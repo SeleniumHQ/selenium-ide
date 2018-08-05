@@ -20,7 +20,7 @@ import FatalError from "../../../errors/fatal";
 import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
-import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
+import { canExecuteCommand } from "../../../plugin/commandExecutor";
 import ExtCommand from "./ext-command";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
