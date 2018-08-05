@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "Selenium IDE",
   "version": "3.2.0",
-  "version_name": "3.2.0-beta.4",
+  "version_name": "3.2.0-beta.5",
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
   "icons": {
     "16": "icons/icon16.png",
