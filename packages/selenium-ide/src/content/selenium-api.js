@@ -542,7 +542,7 @@ Selenium.prototype.doStoreText = function(locator, varName) {
 
 Selenium.prototype.doStoreValue = function(locator, varName) {
   let element = this.browserbot.findElement(locator);
-  return browser.runtime.sendMessage({ "storeStr": element.value, "storeVar": varName });
+  return browser.runtime.sendMessage({ "storeStr": element.value.trim(), "storeVar": varName });
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
@@ -674,11 +674,7 @@ Selenium.prototype.doClick = function(locator) {
      *
      */
   let element = this.browserbot.findElement(locator);
-
-  this.browserbot.clickElement(element);
-  //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
-  this.browserbot.triggerMouseEvent(element, "mousedown", true);
-  this.browserbot.triggerMouseEvent(element, "mouseup", true);
+  bot.action.click(element);
 };
 
 Selenium.prototype.doDoubleClick = function(locator) {
@@ -691,14 +687,7 @@ Selenium.prototype.doDoubleClick = function(locator) {
      *
      */
   let element = this.browserbot.findElement(locator);
-  //DoubleClickExt, Chen-Chieh Ping, SELAB, CSIE, NCKU, 2016/11/23
-  this.browserbot.clickElement(element);
-  this.browserbot.triggerMouseEvent(element, "mousedown", true);
-  this.browserbot.triggerMouseEvent(element, "mouseup", true);
-  this.browserbot.clickElement(element);
-  this.browserbot.triggerMouseEvent(element, "mousedown", true);
-  this.browserbot.triggerMouseEvent(element, "mouseup", true);
-  this.browserbot.doubleClickElement(element);
+  bot.action.doubleClick(element);
 };
 
 Selenium.prototype.doContextMenu = function(locator) {
@@ -709,7 +698,7 @@ Selenium.prototype.doContextMenu = function(locator) {
      *
      */
   let element = this.browserbot.findElement(locator);
-  this.browserbot.contextMenuOnElement(element);
+  bot.action.rightClick(element);
 };
 
 Selenium.prototype.doClickAt = function(locator, coordString) {
@@ -724,14 +713,8 @@ Selenium.prototype.doClickAt = function(locator, coordString) {
      *
      */
   let element = this.browserbot.findElement(locator);
-  let clientXY = getClientXY(element, coordString);
-  //ClickAtMouseDownUpExt, Jie-Lin You, SELAB, CSIE, NCKU, 2016/11/15
-  //this.doMouseMove(locator);
-  //this.doMouseDown(locator);
-  this.browserbot.clickElement(element, clientXY[0], clientXY[1]);
-  this.browserbot.triggerMouseEvent(element, "mousedown", true, clientXY[0], clientXY[1]);
-  this.browserbot.triggerMouseEvent(element, "mouseup", true, clientXY[0], clientXY[1]);
-  //this.doMouseUp(locator);
+  let coords = getCoords(element, coordString);
+  bot.action.click(element, coords);
 };
 
 Selenium.prototype.doDoubleClickAt = function(locator, coordString) {
@@ -746,18 +729,8 @@ Selenium.prototype.doDoubleClickAt = function(locator, coordString) {
      *
      */
   let element = this.browserbot.findElement(locator);
-  let clientXY = getClientXY(element, coordString);
-  //DoubleClickExt, Chen-Chieh Ping, SELAB, CSIE, NCKU, 2016/11/23
-  //this.doMouseMove(locator);
-  //this.doMouseDown(locator);
-  this.browserbot.triggerMouseEvent(element, "mousedown", true, clientXY[0], clientXY[1]);
-  this.browserbot.clickElement(element, clientXY[0], clientXY[1]);
-  this.browserbot.triggerMouseEvent(element, "mouseup", true, clientXY[0], clientXY[1]);
-  this.browserbot.triggerMouseEvent(element, "mousedown", true, clientXY[0], clientXY[1]);
-  this.browserbot.clickElement(element, clientXY[0], clientXY[1]);
-  this.browserbot.triggerMouseEvent(element, "mouseup", true, clientXY[0], clientXY[1]);
-  this.browserbot.doubleClickElement(element, clientXY[0], clientXY[1]);
-  //this.doMouseUp(locator);
+  let coords = getCoords(element, coordString);
+  bot.action.doubleClick(element, coords);
 };
 
 Selenium.prototype.doContextMenuAt = function(locator, coordString) {
@@ -770,8 +743,8 @@ Selenium.prototype.doContextMenuAt = function(locator, coordString) {
      *
      */
   let element = this.browserbot.findElement(locator);
-  let clientXY = getClientXY(element, coordString);
-  this.browserbot.contextMenuOnElement(element, clientXY[0], clientXY[1]);
+  let coords = getCoords(element, coordString);
+  bot.action.rightClick(element, coords);
 };
 
 Selenium.prototype.doFocus = function(locator) {
@@ -875,6 +848,22 @@ function getClientXY(element, coordString) {
   // Get position of element,
   // Return 2 item array with clientX and clientY
   return [Selenium.prototype.getElementPositionLeft(element) + x, Selenium.prototype.getElementPositionTop(element) + y];
+}
+
+function getCoords(element, coordString) {
+  // Parse coordString
+  let coords = null;
+  let x;
+  let y;
+  if (coordString) {
+    coords = coordString.split(/,/);
+    x = Number(coords[0]);
+    y = Number(coords[1]);
+  } else {
+    x = y = 0;
+  }
+
+  return new goog.math.Coordinate(x, y);
 }
 
 Selenium.prototype.doMouseOver = function(locator) {
