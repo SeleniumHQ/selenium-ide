@@ -387,6 +387,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {element.getText().then(text => {vars["${command.value}"] = text;});});`);
   });
+  it("should emit `store value` command", () => {
+    const command = {
+      command: "storeValue",
+      target: "id=someElement",
+      value: "myVar"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {element.getAttribute("value").then(value => {vars["${command.value}"] = value;});});`);
+  });
   it("should emit `store title` command", () => {
     const command = {
       command: "storeTitle",

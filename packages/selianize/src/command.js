@@ -64,6 +64,7 @@ const emitters = {
   assertSelectedLabel: emitVerifySelectedLabel,
   store: emitStore,
   storeText: emitStoreText,
+  storeValue: emitStoreValue,
   storeTitle: emitStoreTitle,
   storeXpathCount: emitStoreXpathCount,
   storeAttribute: emitStoreAttribute,
@@ -258,6 +259,10 @@ async function emitStore(value, varName) {
 
 async function emitStoreText(locator, varName) {
   return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {vars["${varName}"] = text;});});`);
+}
+
+async function emitStoreValue(locator, varName) {
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(value => {vars["${varName}"] = value;});});`);
 }
 
 async function emitStoreTitle(_, varName) {

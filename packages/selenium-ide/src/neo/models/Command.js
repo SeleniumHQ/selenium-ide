@@ -567,6 +567,14 @@ class CommandList {
       target: ArgTypes.locator,
       value: ArgTypes.variableName
     }],
+    [ "storeValue", {
+      name: "store value",
+      type: TargetTypes.LOCATOR,
+      description: "Gets the value of element and stores it for later use. \
+                    This works for any input type element.",
+      target: ArgTypes.locator,
+      value: ArgTypes.variableName
+    }],
     [ "storeTitle", {
       name: "store title",
       description: "Gets the title of the current page."

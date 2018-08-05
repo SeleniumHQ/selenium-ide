@@ -528,7 +528,7 @@ Selenium.prototype.doAssertElementNotPresent = function(locator) {
 };
 
 Selenium.prototype.doStore = function(value, varName) {
-  browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
+  return browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreEval = function() {
@@ -537,26 +537,31 @@ Selenium.prototype.doStoreEval = function() {
 
 Selenium.prototype.doStoreText = function(locator, varName) {
   let element = this.browserbot.findElement(locator);
-  browser.runtime.sendMessage({ "storeStr": element.textContent, "storeVar": varName });
+  return browser.runtime.sendMessage({ "storeStr": bot.dom.getVisibleText(element), "storeVar": varName });
+};
+
+Selenium.prototype.doStoreValue = function(locator, varName) {
+  let element = this.browserbot.findElement(locator);
+  return browser.runtime.sendMessage({ "storeStr": element.value, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
   let doc = selenium.browserbot.getDocument();
-  browser.runtime.sendMessage({ "storeStr": value || doc.title, "storeVar": varName });
+  return browser.runtime.sendMessage({ "storeStr": value || doc.title, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreXpathCount = function(xpath, varName) {
   let count = this.browserbot.evaluateXPathCount(xpath, this.browserbot.getDocument());
-  browser.runtime.sendMessage({ "storeStr": `${count}` || "0", "storeVar": varName });
+  return browser.runtime.sendMessage({ "storeStr": `${count}` || "0", "storeVar": varName });
 };
 
 Selenium.prototype.doStoreAttribute = function(locator, varName) {
   let attributeValue = this.browserbot.findAttribute(locator);
-  browser.runtime.sendMessage({ "storeStr": attributeValue, "storeVar": varName });
+  return browser.runtime.sendMessage({ "storeStr": attributeValue, "storeVar": varName });
 };
 
 Selenium.prototype.doEcho = function(value) {
-  browser.runtime.sendMessage({ "echoStr": value });
+  return browser.runtime.sendMessage({ "echoStr": value });
 };
 
 
