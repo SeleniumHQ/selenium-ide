@@ -27,90 +27,6 @@ import { getTagName, getTimeoutTime, extractExceptionMessage, lowerFirstChar } f
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
-let storedVars = new Object();
-
-let unicodeToKeys = {};
-
-function build_sendkeys_maps() {
-  //  add_sendkeys_key("NULL", '\uE000');
-  //  add_sendkeys_key("CANCEL", '\uE001'); // ^break
-  //  add_sendkeys_key("HELP", '\uE002');
-  add_sendkeys_key("BACKSPACE", "\uE003", "BKSP");
-  add_sendkeys_key("TAB", "\uE004");
-  //  add_sendkeys_key("CLEAR", '\uE005');
-  //  add_sendkeys_key("RETURN", '\uE006');
-  add_sendkeys_key("ENTER", "\uE007");
-  add_sendkeys_key("SHIFT", "\uE008");
-  add_sendkeys_key("CONTROL", "\uE009", "CTRL");
-  add_sendkeys_key("ALT", "\uE00A");
-  add_sendkeys_key("PAUSE", "\uE00B");
-  add_sendkeys_key("ESC", "\uE00C", "ESCAPE");
-  add_sendkeys_key("SPACE", "\uE00D");
-  add_sendkeys_key("PAGE_UP", "\uE00E", "PGUP");
-  add_sendkeys_key("PAGE_DOWN", "\uE00F", "PGDN");
-  add_sendkeys_key("END", "\uE010");
-  add_sendkeys_key("HOME", "\uE011");
-  add_sendkeys_key("LEFT", "\uE012");
-  add_sendkeys_key("UP", "\uE013");
-  add_sendkeys_key("RIGHT", "\uE014");
-  add_sendkeys_key("DOWN", "\uE015");
-  add_sendkeys_key("INSERT", "\uE016", "INS");
-  add_sendkeys_key("DELETE", "\uE017", "DEL");
-  add_sendkeys_key("SEMICOLON", "\uE018");
-  add_sendkeys_key("EQUALS", "\uE019");
-
-  add_sendkeys_key("NUMPAD0", "\uE01A", "N0", "NUM_ZERO"); // number pad keys
-  add_sendkeys_key("NUMPAD1", "\uE01B", "N1", "NUM_ONE");
-  add_sendkeys_key("NUMPAD2", "\uE01C", "N2", "NUM_TWO");
-  add_sendkeys_key("NUMPAD3", "\uE01D", "N3", "NUM_THREE");
-  add_sendkeys_key("NUMPAD4", "\uE01E", "N4", "NUM_FOUR");
-  add_sendkeys_key("NUMPAD5", "\uE01F", "N5", "NUM_FIVE");
-  add_sendkeys_key("NUMPAD6", "\uE020", "N6", "NUM_SIX");
-  add_sendkeys_key("NUMPAD7", "\uE021", "N7", "NUM_SEVEN");
-  add_sendkeys_key("NUMPAD8", "\uE022", "N8", "NUM_EIGHT");
-  add_sendkeys_key("NUMPAD9", "\uE023", "N9", "NUM_NINE");
-  add_sendkeys_key("MULTIPLY", "\uE024", "MUL", "NUM_MULTIPLY");
-  add_sendkeys_key("ADD", "\uE025", "PLUS", "NUM_PLUS");
-  add_sendkeys_key("SEPARATOR", "\uE026", "SEP");
-  add_sendkeys_key("SUBTRACT", "\uE027", "MINUS", "NUM_MINUS");
-  add_sendkeys_key("DECIMAL", "\uE028", "PERIOD", "NUM_PERIOD");
-  add_sendkeys_key("DIVIDE", "\uE029", "DIV", "NUM_DIVISION");
-
-  add_sendkeys_key("F1", "\uE031"); // function keys
-  add_sendkeys_key("F2", "\uE032");
-  add_sendkeys_key("F3", "\uE033");
-  add_sendkeys_key("F4", "\uE034");
-  add_sendkeys_key("F5", "\uE035");
-  add_sendkeys_key("F6", "\uE036");
-  add_sendkeys_key("F7", "\uE037");
-  add_sendkeys_key("F8", "\uE038");
-  add_sendkeys_key("F9", "\uE039");
-  add_sendkeys_key("F10", "\uE03A");
-  add_sendkeys_key("F11", "\uE03B");
-  add_sendkeys_key("F12", "\uE03C");
-
-  add_sendkeys_key("META", "\uE03D", "COMMAND");
-
-}
-
-function add_sendkeys_key(key, unicodeChar, alias, botKey) {
-  botKey = botKey || key;
-  if (bot.Keyboard.Keys[botKey]) {
-    unicodeToKeys[unicodeChar] = bot.Keyboard.Keys[botKey];
-
-    //From runner
-    storedVars["KEY_" + key] = unicodeChar;
-    if (alias) {
-      storedVars["KEY_" + alias] = unicodeChar;
-    }
-
-    return true;
-  }
-  return false;
-}
-
-build_sendkeys_maps();
-
 export default class Selenium {
   /**
      * Defines an object that runs Selenium commands.
@@ -1064,25 +980,9 @@ Selenium.prototype.doSendKeys = function(locator, value) {
   }
 
   let element = this.browserbot.findElement(locator);
-
-
-  if (value.match(/[\uE000-\uF8FF]/)) {
-    //we have special keys, process separately
-    let keysRa = value.split(/([\0-\uDFFF]+)|([\uE000-\uF8FF])/).filter(function(key) {
-      return (key && key.length > 0);
-    }).map(function(key) {
-      if (key.match(/[\uE000-\uF8FF]/) && unicodeToKeys.hasOwnProperty(key)) {
-        return unicodeToKeys[key];
-      }
-      return key;
-    });
-    console.log("value: " + keysRa);
-    bot.action.type(element, keysRa);
-  } else {
-    bot.action.type(element, value);
-  }
+  let keys = this.replaceKeys(value);
+  bot.action.type(element, keys);
 };
-
 
 Selenium.prototype.doSetSpeed = function() {
   /**
@@ -2723,35 +2623,45 @@ Selenium.prototype.preprocessParameter = function(value) {
     let result = this.eval(match[1]);
     return result == null ? null : result.toString();
   }
-  return this.replaceVariables(value);
+  return value;
 };
 
-/*
- * Search through str and replace all variable references ${varName} with their
- * value in storedVars.
- */
-Selenium.prototype.replaceVariables = function(str) {
-  let stringResult = str;
-
-  // Find all of the matching variable references
-  let match = stringResult.match(/\$\{\w+\}/g);
+Selenium.prototype.replaceKeys = function(str) {
+  let keys = [];
+  let match = str.match(/\$\{\w+\}/g);
   if (!match) {
-    return stringResult;
-  }
-
-  // For each match, lookup the variable value, and replace if found
-  for (let i = 0; match && i < match.length; i++) {
-    let variable = match[i]; // The replacement variable, with ${}
-    let name = variable.substring(2, variable.length - 1); // The replacement variable without ${}
-    let replacement = storedVars[name];
-    if (replacement && typeof(replacement) === "string" && replacement.indexOf("$") != -1) {
-      replacement = replacement.replace(/\$/g, "$$$$"); //double up on $'s because of the special meaning these have in 'replace'
+    keys.push(str);
+  } else {
+    let i = 0;
+    while (i < str.length) {
+      let currentKey = match.shift(), currentKeyIndex = str.indexOf(currentKey, i);
+      if (currentKeyIndex > i) {
+        // push the string before the current key
+        keys.push(str.substr(i, currentKeyIndex - i));
+        i = currentKeyIndex;
+      }
+      if (currentKey) {
+        if (/^\$\{KEY_\w+\}/.test(currentKey)) {
+          // is a key
+          let keyName = currentKey.match(/\$\{KEY_(\w+)\}/)[1];
+          let key = bot.Keyboard.Keys[keyName];
+          if (key) {
+            keys.push(key);
+          } else {
+            throw new Error(`Unrecognised key ${keyName}`);
+          }
+        } else {
+          // not a key, and not a stored variable, push it as-is
+          keys.push(currentKey);
+        }
+        i += currentKey.length;
+      } else if (i < str.length) {
+        // push the rest of the string
+        keys.push(str.substr(i, str.length));
+        i = str.length;
+      }
     }
-    if (replacement != undefined) {
-      stringResult = stringResult.replace(variable, replacement);
-    }
   }
-  return stringResult;
 };
 
 Selenium.prototype.getCookie = function() {
@@ -3327,7 +3237,6 @@ Selenium.prototype.doAssertConfirmation = function(value) {
   });
 };
 
-// Added show element by SideeX comitters (Copyright 2017)
 Selenium.prototype.doShowElement = function(locator){
   try{
     const highlightElement = document.createElement("div");
