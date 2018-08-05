@@ -98,7 +98,7 @@ export default function seed(store, numberOfSuites = 5) {
   const sendKeysTest = store.createTestCase("send keys");
   sendKeysTest.createCommand(undefined, "open", "/login");
   sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
-  sendKeysTest.createCommand(undefined, "assertText", "css=#username", "blah");
+  sendKeysTest.createCommand(undefined, "assertValue", "css=#username", "blah");
 
   const storeTextTest = store.createTestCase("store text");
   storeTextTest.createCommand(undefined, "open", "/login");
