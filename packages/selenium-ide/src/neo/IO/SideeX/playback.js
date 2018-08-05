@@ -313,7 +313,7 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
 }
 
 function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
-  return executeCommand(command, target, value, {
+  return PlaybackState.currentExecutingCommandNode.execute(extCommand, {
     commandId: id,
     isNested: !!PlaybackState.callstack.length,
     runId: PlaybackState.runId,
@@ -323,6 +323,7 @@ function doPluginCommand(id, command, target, value, implicitTime, implicitCount
     windowId: extCommand.currentPlayingWindowId
   }).then(res => {
     PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
+    PlaybackState.setCurrentExecutingCommandNode(res.next);
   }).catch(err => {
     if (isElementNotFound(err.message)) {
       return doImplicitWait(err.message, id, target, implicitTime, implicitCount);

@@ -17,6 +17,7 @@
 
 import { xlateArgument } from "../../IO/SideeX/formatCommand";
 import { ControlFlowCommandChecks } from "../../models/Command";
+import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 
 export class CommandNode {
   constructor(command) {
@@ -39,18 +40,18 @@ export class CommandNode {
     );
   }
 
-  execute(extCommand) {
+  execute(extCommand, options) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
       });
     }
-    return this._executeCommand(extCommand).then((result) => {
+    return this._executeCommand(extCommand, options).then((result) => {
       return this._executionResult(extCommand, result);
     });
   }
 
-  _executeCommand(extCommand) {
+  _executeCommand(extCommand, options) {
     if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](
         xlateArgument(this.command.target),
@@ -62,6 +63,12 @@ export class CommandNode {
         xlateArgument(this.command.target),
         xlateArgument(this.command.value),
         extCommand.isWindowMethodCommand(this.command.command));
+    } else if (canExecuteCommand(this.command.command)) {
+      return executeCommand(
+        this.command.command,
+        this.command.target,
+        this.command.value,
+        options);
     } else {
       return extCommand.sendMessage(
         this.command.command,
@@ -72,7 +79,8 @@ export class CommandNode {
   }
 
   _executionResult(extCommand, result) {
-    if (extCommand.isExtCommand(this.command.command)) {
+    if (extCommand.isExtCommand(this.command.command) ||
+        canExecuteCommand(this.command.command)) {
       return {
         next: this.next
       };
