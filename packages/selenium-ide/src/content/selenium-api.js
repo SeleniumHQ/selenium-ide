@@ -2665,6 +2665,7 @@ Selenium.prototype.replaceKeys = function(str) {
       }
     }
   }
+  return keys;
 };
 
 Selenium.prototype.getCookie = function() {
