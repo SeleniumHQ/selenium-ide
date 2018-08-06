@@ -949,10 +949,13 @@ Selenium.prototype.doType = function(locator, value) {
 
   let element = this.browserbot.findElement(locator);
 
-  //SuggestionDropDownExt, Chen-Chieh Ping, SELAB, CSIE, NCKU, 2016/11/10
-  //core.events.setValue(element, value);
   core.events.setValue(element, "");
-  bot.action.type(element, value);
+  const type = element.type;
+  if (type === "number" || type === "date") {
+    core.events.setValue(element, value);
+  } else {
+    bot.action.type(element, value);
+  }
 };
 
 Selenium.prototype.doSendKeys = function(locator, value) {
