@@ -83,13 +83,6 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
-function isValidOpen(command) {
-  return !!(
-    command.command === "open" &&
-    (baseUrl.match(/^https?/) || command.target.match(/^https?/))
-  );
-}
-
 function executionLoop() {
   if (isStopping() || didFinishQueue()) {
     return false;
@@ -110,11 +103,10 @@ function executionLoop() {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
           PlaybackState.setCurrentExecutingCommandNode(result.next);
-          if (isValidOpen(command)) PlaybackState.isOpenCommandUsed = true;
         }).then(executionLoop);
     });
   } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
-    return (PlaybackState.currentExecutingCommandNode.execute(extCommand, PlaybackState.isOpenCommandUsed))
+    return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
       .then((result) => {
         if (result.result !== "success") {
           return reportError(result.result, false, undefined);
@@ -138,7 +130,6 @@ function executionLoop() {
 }
 
 function prepareToPlay() {
-  PlaybackState.isOpenCommandUsed = false; // to support deleting an open command and re-running the test to trigger sandbox eval
   return extCommand.init(baseUrl);
 }
 
