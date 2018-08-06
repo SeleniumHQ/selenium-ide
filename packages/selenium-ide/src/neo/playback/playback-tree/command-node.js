@@ -79,8 +79,7 @@ export class CommandNode {
   }
 
   _executionResult(extCommand, result) {
-    if (extCommand.isExtCommand(this.command.command) ||
-        canExecuteCommand(this.command.command)) {
+    if (extCommand.isExtCommand(this.command.command)) {
       return {
         next: this.next
       };
@@ -90,6 +89,10 @@ export class CommandNode {
         result: "success",
         next: this.isControlFlow() ? result.next : this.next
       };
+    } else if (canExecuteCommand(this.command.command)) {
+      let _result = { ...result };
+      _result.next = this.next;
+      return _result;
     } else {
       if (this.command.command.match(/^verify/)) {
         return {
