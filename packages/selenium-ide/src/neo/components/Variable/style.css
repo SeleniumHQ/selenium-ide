@@ -6,7 +6,7 @@
 
 .variable .name, .variable .value {
   float: left;
-  padding: 5px;
+  padding: 4px 5px;
   width: 48%;
   text-align: left;
   border: 1px transparent solid;
