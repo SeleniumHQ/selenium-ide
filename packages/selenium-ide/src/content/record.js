@@ -16,11 +16,9 @@
 // under the License.
 
 import browser from "webextension-polyfill";
+import goog, { bot } from "./closure-polyfill";
 import { Recorder, recorder, record } from "./record-api";
 import LocatorBuilders from "./locatorBuilders";
-
-const getText = window.global.getText;
-const normalizeSpaces = window.global.normalizeSpaces;
 
 export const locatorBuilders = new LocatorBuilders(window);
 
@@ -476,9 +474,9 @@ if (Recorder) {
   Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
     let myPort = browser.runtime.connect();
     let tmpText = locatorBuilders.buildAll(event.target);
-    let tmpVal = getText(event.target);
+    let tmpVal = bot.dom.getVisibleText(event.target);
     let tmpTitle = [
-      [normalizeSpaces(event.target.ownerDocument.title)]
+      [goog.string.normalizeSpaces(event.target.ownerDocument.title)]
     ];
     myPort.onMessage.addListener(function(m) {
       if (m.cmd.includes("Text")) {
