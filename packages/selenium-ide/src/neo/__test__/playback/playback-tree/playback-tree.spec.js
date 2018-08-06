@@ -329,10 +329,10 @@ describe("Control Flow", () => {
         createCommand(ControlFlowCommandNames.repeatIf)
       ];
       let tree = createPlaybackTree(input);
-      expect(tree.currentCommandNode.command).toEqual(input[1]);
-      expect(tree.currentCommandNode.next.command).toEqual(input[2]);
-      expect(tree.currentCommandNode.next.right.command).toEqual(input[1]);
-      expect(tree.currentCommandNode.next.left).toBeUndefined();
+      expect(tree.startingCommandNode.command).toEqual(input[1]);
+      expect(tree.startingCommandNode.next.command).toEqual(input[2]);
+      expect(tree.startingCommandNode.next.right.command).toEqual(input[1]);
+      expect(tree.startingCommandNode.next.left).toBeUndefined();
     });
     it("populated tree exists with correct values", () => {
       let input = [
@@ -351,16 +351,16 @@ describe("Control Flow", () => {
         createCommand(ControlFlowCommandNames.end)
       ];
       let tree = createPlaybackTree(input);
-      expect(tree.currentCommandNode.command).toEqual(input[0]); //                                  if
-      expect(tree.currentCommandNode.right.command).toEqual(input[1]); //                            if -> command
-      expect(tree.currentCommandNode.right.next).toBeUndefined(); //                                 if command -> undefined (end + 1)
-      expect(tree.currentCommandNode.left.command).toEqual(input[3]); //                             if -> while (else + 1)
-      expect(tree.currentCommandNode.left.right.command).toEqual(input[4]); //                       while -> command
-      expect(tree.currentCommandNode.left.left.command).toEqual(input[7]); //                        while -> command (end + 1, do + 1)
-      expect(tree.currentCommandNode.left.left.next.right.command).toEqual(input[9]); //             do -> while -> command
-      expect(tree.currentCommandNode.left.left.next.left.command).toEqual(input[11]); //             do -> while -> repeatIf (end + 1)
-      expect(tree.currentCommandNode.left.left.next.left.right.command).toEqual(input[7]); //        repeatIf -> do command
-      expect(tree.currentCommandNode.left.left.next.left.left).toBeUndefined(); //                   repeatIf -> undefined (end + 1)
+      expect(tree.startingCommandNode.command).toEqual(input[0]); //                                  if
+      expect(tree.startingCommandNode.right.command).toEqual(input[1]); //                            if -> command
+      expect(tree.startingCommandNode.right.next).toBeUndefined(); //                                 if command -> undefined (end + 1)
+      expect(tree.startingCommandNode.left.command).toEqual(input[3]); //                             if -> while (else + 1)
+      expect(tree.startingCommandNode.left.right.command).toEqual(input[4]); //                       while -> command
+      expect(tree.startingCommandNode.left.left.command).toEqual(input[7]); //                        while -> command (end + 1, do + 1)
+      expect(tree.startingCommandNode.left.left.next.right.command).toEqual(input[9]); //             do -> while -> command
+      expect(tree.startingCommandNode.left.left.next.left.command).toEqual(input[11]); //             do -> while -> repeatIf (end + 1)
+      expect(tree.startingCommandNode.left.left.next.left.right.command).toEqual(input[7]); //        repeatIf -> do command
+      expect(tree.startingCommandNode.left.left.next.left.left).toBeUndefined(); //                   repeatIf -> undefined (end + 1)
     });
   });
 });

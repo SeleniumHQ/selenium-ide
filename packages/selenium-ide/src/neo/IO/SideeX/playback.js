@@ -61,7 +61,7 @@ function initPlaybackTree() {
         0);
     } else {
       let playbackTree = createPlaybackTree(PlaybackState.runningQueue);
-      PlaybackState.setCurrentExecutingCommandNode(playbackTree.currentCommandNode);
+      PlaybackState.setCurrentExecutingCommandNode(playbackTree.startingCommandNode);
     }
   } catch (error) {
     reportError(error.message, false, error.index);

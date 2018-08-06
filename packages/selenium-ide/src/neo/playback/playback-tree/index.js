@@ -16,7 +16,6 @@
 // under the License.
 
 import { CommandNode } from "./command-node";
-import { PlaybackTree } from "./playback-tree";
 import { State } from "./state";
 import { validateControlFlowSyntax } from "./syntax-validation";
 import { deriveCommandLevels } from "./command-leveler";
@@ -26,7 +25,7 @@ export { createCommandNodesFromCommandStack }; // for testing
 
 function createPlaybackTree(commandStack) {
   let nodes = createCommandNodesFromCommandStack(commandStack);
-  return PlaybackTree.create(nodes);
+  return { startingCommandNode: nodes[0] };
 }
 
 function createCommandNodesFromCommandStack(commandStack) {
