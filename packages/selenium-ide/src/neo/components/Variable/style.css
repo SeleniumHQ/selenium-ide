@@ -9,6 +9,7 @@
   padding: 5px;
   width: 48%;
   text-align: left;
+  border: 1px transparent solid;
 }
 
 .variable:not(.value-header):hover {
@@ -26,7 +27,6 @@
 .variable input:not(.isAdding) {
   cursor: initial;
   outline: 0;
-  border:none;
 }
 
 .variable .isAdding {
