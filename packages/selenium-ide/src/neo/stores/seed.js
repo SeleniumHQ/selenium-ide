@@ -63,7 +63,6 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowIfTest.createCommand(undefined, "end");
 
   const controlFlowElseIfTest = store.createTestCase("control flow else if");
-  controlFlowElseIfTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowElseIfTest.createCommand(undefined, "if", "false");
   controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
   controlFlowElseIfTest.createCommand(undefined, "elseIf", "true");
@@ -73,7 +72,6 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseIfTest.createCommand(undefined, "end");
 
   const controlFlowElseTest = store.createTestCase("control flow else");
-  controlFlowElseTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowElseTest.createCommand(undefined, "if", "false");
   controlFlowElseTest.createCommand(undefined, "echo", "foo");
   controlFlowElseTest.createCommand(undefined, "elseIf", "false");
@@ -83,33 +81,27 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseTest.createCommand(undefined, "end");
 
   const controlFlowDoTest = store.createTestCase("control flow do");
-  controlFlowDoTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowDoTest.createCommand(undefined, "do");
   controlFlowDoTest.createCommand(undefined, "echo", "foo");
   controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
-  controlFlowTimesTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowTimesTest.createCommand(undefined, "times", "2");
   controlFlowTimesTest.createCommand(undefined, "echo", "foo");
   controlFlowTimesTest.createCommand(undefined, "end");
 
   const controlFlowWhileTest = store.createTestCase("control flow while");
-  controlFlowWhileTest.createCommand(undefined, "open", "/wiki/River_Chater");
   controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
   controlFlowWhileTest.createCommand(undefined, "echo", "foo");
   controlFlowWhileTest.createCommand(undefined, "end");
 
-  const executeScriptSandboxTest = store.createTestCase("execute script sandbox");
+  const executeScriptSandboxTest = store.createTestCase("execute script");
   executeScriptSandboxTest.createCommand(undefined, "executeScript", "return true", "blah");
   executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
   executeScriptSandboxTest.createCommand(undefined, "verify", "${blah}", "false");
   executeScriptSandboxTest.createCommand(undefined, "assert", "${blah}", "true");
-
-  const executeScriptContentWindowTest = store.createTestCase("execute script content window");
-  executeScriptContentWindowTest.createCommand(undefined, "open", "/wiki/River_Chater");
-  executeScriptContentWindowTest.createCommand(undefined, "executeScript", "return Math.random()", "blah");
-  executeScriptContentWindowTest.createCommand(undefined, "echo", "${blah}");
+  executeScriptSandboxTest.createCommand(undefined, "executeScript", "true");
+  executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
 
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
@@ -179,10 +171,6 @@ export default function seed(store, numberOfSuites = 5) {
   suiteControlFlow.addTestCase(controlFlowTimesTest);
   suiteControlFlow.addTestCase(controlFlowWhileTest);
 
-  const suiteExecuteScript = store.createSuite("execute script");
-  suiteExecuteScript.addTestCase(executeScriptSandboxTest);
-  suiteExecuteScript.addTestCase(executeScriptContentWindowTest);
-
   const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test);
@@ -192,6 +180,7 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(checkTest);
   smokeSuite.addTestCase(clickTest);
   smokeSuite.addTestCase(clickAtTest);
+  smokeSuite.addTestCase(executeScriptSandboxTest);
   smokeSuite.addTestCase(framesTest);
   smokeSuite.addTestCase(selectTest);
   smokeSuite.addTestCase(sendKeysTest);
