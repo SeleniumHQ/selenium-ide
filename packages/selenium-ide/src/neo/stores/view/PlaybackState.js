@@ -45,6 +45,8 @@ class PlaybackState {
   // number of commands that failed
   @observable errors = 0;
   @observable aborted = false;
+  // for a test case to fail even if errors are 0
+  @observable forceTestCaseFailure = false;
   @observable paused = false;
   @observable delay = 0;
   @observable callstack = [];
@@ -61,7 +63,7 @@ class PlaybackState {
   }
 
   @computed get hasFinishedSuccessfully() {
-    return this.errors === 0;
+    return (this.errors === 0 && !this.forceTestCaseFailure);
   }
 
   @computed get testsToRun() {
@@ -190,6 +192,7 @@ class PlaybackState {
       this.paused = false;
       this.currentPlayingIndex = 0;
       this.errors = 0;
+      this.forceTestCaseFailure = false;
       this.aborted = false;
       this.currentRunningTest = UiState.selectedTest.test;
       this.runningQueue = [command];
@@ -207,6 +210,7 @@ class PlaybackState {
     this.clearStack();
     this.currentPlayingIndex = 0;
     this.errors = 0;
+    this.forceTestCaseFailure = false;
     PluginManager.emitMessage({
       action: "event",
       event: "playbackStarted",
@@ -263,6 +267,7 @@ class PlaybackState {
               if (result instanceof Error) {
                 if (!(result instanceof NoResponseError)) {
                   this.logger.error(result.message);
+                  this.forceFailure();
                   if (!this.hasFinishedSuccessfully) {
                     this.failures++;
                   }
@@ -291,6 +296,10 @@ class PlaybackState {
       this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
     }
     this.stopPlayingGracefully();
+  }
+
+  @action.bound forceFailure() {
+    this.forceTestCaseFailure = true;
   }
 
   @action.bound pause() {
@@ -417,6 +426,7 @@ class PlaybackState {
     this.noStatisticsEffects = false;
     this.failures = 0;
     this.errors = 0;
+    this.forceTestCaseFailure = false;
     this.aborted = false;
     this.paused = false;
   }
