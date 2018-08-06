@@ -36,6 +36,7 @@
 .variable .editable:focus {
   border: 1px #4ea1ff solid;
   outline: 0;
+  background-color: white;
 }
 
 .variable .deleteBtn {
