@@ -29,16 +29,16 @@ describe("<Console />", () => {
     const tabBar = container.querySelector(".tabbar");
     const viewPort = container.querySelector(".viewport");
     const logs = container.querySelector(".logs");
-    expect(console).toBeInTheDOM();
-    expect(tabBar).toBeInTheDOM();
-    expect(viewPort).toBeInTheDOM();
-    expect(logs).toBeInTheDOM();
+    expect(console).toBeInTheDocument();
+    expect(tabBar).toBeInTheDocument();
+    expect(viewPort).toBeInTheDocument();
+    expect(logs).toBeInTheDocument();
   });
   it("should not display an unread log notification when viewing the log tab", () => {
     const { container } = renderIntoDocument(<Console />);
     Logger.log("blah");
     const unreadLogNotification = container.querySelector(".log.unread");
-    expect(unreadLogNotification).not.toBeInTheDOM();
+    expect(unreadLogNotification).toBeNull();
   });
   it("should display an unread log notification when viewing the reference tab)", async () => {
     const { container } = renderIntoDocument(<Console />);
@@ -47,6 +47,6 @@ describe("<Console />", () => {
     await waitForElement(() => container.querySelector(".command-reference"));
     Logger.log("blah");
     const unreadLogNotification = container.querySelector(".log.unread");
-    expect(unreadLogNotification).toBeInTheDOM();
+    expect(unreadLogNotification).toBeInTheDocument();
   });
 });

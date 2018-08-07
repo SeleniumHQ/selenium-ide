@@ -67,7 +67,7 @@ import "./style.css";
               name="target"
               label="Target"
               value={this.props.command ? this.props.command.target : ""}
-              targets={this.props.command.targets}
+              targets={this.props.command ? this.props.command.targets : []}
               disabled={!this.props.command}
               onChange={this.props.command ? this.props.command.setTarget : null} />
             <FlatButton

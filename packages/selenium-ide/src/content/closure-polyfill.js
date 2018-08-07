@@ -17,9 +17,23 @@
 
 /*eslint-disable no-undef*/
 
+goog.require("goog.debug");
 goog.require("goog.dom");
+goog.require("goog.dom.DomHelper");
 
-export let bot = {};
+var _d = goog.dom.DomHelper;
+Object.defineProperty(goog.dom, "DomHelper", {
+  get: function () {
+    return _d;
+  },
+
+  set: function (value) {
+    // disallow setting of the DomHelper as it will be voided
+    //_d = value;
+  }
+});
+
+export var bot = {};
 goog.require("bot");
 goog.require("bot.action");
 goog.require("bot.events");
@@ -38,7 +52,7 @@ bot.getDocument = function() {
   return bot.window_.document;
 };
 
-export let core = {};
+export var core = {};
 goog.require("core.firefox");
 goog.require("core.events");
 goog.require("core.text");

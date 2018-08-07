@@ -212,7 +212,7 @@ export default class ExtCommand {
     });
   }
 
-  doPause(ignored, milliseconds) {
+  doPause(milliseconds) {
     return new Promise(function(resolve) {
       setTimeout(resolve, milliseconds);
     });

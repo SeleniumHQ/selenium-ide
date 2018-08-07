@@ -74,11 +74,12 @@ class Menu extends React.Component {
     direction: MenuDirections.Left,
     closeTimeoutMS: 300
   };
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.node) {
-      const boundingRect = nextProps.node ? findDOMNode(nextProps.node).getBoundingClientRect() : undefined; // eslint-disable-line react/no-find-dom-node
-      this.setState({ boundingRect });
+  static getDerivedStateFromProps(props) {
+    if (props.node) {
+      const boundingRect = props.node ? findDOMNode(props.node).getBoundingClientRect() : undefined; // eslint-disable-line react/no-find-dom-node
+      return { boundingRect };
     }
+    return null;
   }
   handleClosing(e) {
     this.props.requestClose(e);

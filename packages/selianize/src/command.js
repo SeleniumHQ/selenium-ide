@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import config from "./config";
 import LocationEmitter from "./location";
 import SelectionEmitter from "./selection";
 import { convertToSnake } from "./utils";
@@ -63,6 +64,7 @@ const emitters = {
   assertSelectedLabel: emitVerifySelectedLabel,
   store: emitStore,
   storeText: emitStoreText,
+  storeValue: emitStoreValue,
   storeTitle: emitStoreTitle,
   storeXpathCount: emitStoreXpathCount,
   storeAttribute: emitStoreAttribute,
@@ -83,10 +85,10 @@ const emitters = {
   assertNotText: emitVerifyNotText,
   assertPrompt: emitAssertAlert,
   assertConfirmation: emitAssertAlert,
-  webdriverAnswerOnNextPrompt: emitAnswerOnNextPrompt,
-  webdriverChooseOkOnNextConfirmation: emitChooseOkOnNextConfirmation,
-  webdriverChooseCancelOnNextConfirmation: emitChooseCancelOnNextConfirmation,
-  webdriverChooseCancelOnNextPrompt: emitChooseCancelOnNextConfirmation,
+  webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
+  webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
+  webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
   editContent: emitEditContent,
   submit: emitSubmit,
   answerOnNextPrompt: skip,
@@ -96,18 +98,24 @@ const emitters = {
   setSpeed: skip
 };
 
-export function emit(command) {
+export function emit(command, options = config, snapshot) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
+      if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
+        return res({ skipped: true });
       try {
         let result = await emitters[command.command](preprocessParameter(command.target), preprocessParameter(command.value));
         res(result);
       } catch (e) {
         rej(e);
       }
+    } else if (options.skipStdLibEmitting) {
+      res({ skipped: true });
     } else {
       if (!command.command) {
         res();
+      } else if (snapshot) {
+        res(snapshot);
       } else {
         rej(new Error(`Unknown command ${command.command}`));
       }
@@ -123,9 +131,10 @@ function preprocessParameter(param) {
   return param ? param.replace(/\$\{/g, "${vars.") : param;
 }
 
-function registerEmitter(command, emitter) {
+export function registerEmitter(command, emitter) {
   if (!canEmit(command)) {
     emitters[command] = emitter;
+    emitters[command].isAdditional = true;
   }
 }
 
@@ -136,12 +145,12 @@ export default {
 };
 
 function emitOpen(target) {
-  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `BASE_URL + "${target}"`;
+  const url = /^(file|http|https):\/\//.test(target) ? `"${target}"` : `(new URL("${target}", BASE_URL)).href`;
   return Promise.resolve(`await driver.get(${url});`);
 }
 
 async function emitClick(target) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).perform();});`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.click();});`);
 }
 
 async function emitDoubleClick(target) {
@@ -157,7 +166,7 @@ async function emitType(target, value) {
 }
 
 async function emitSendKeys(target, value) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {driver.actions().click(element).sendKeys(\`${value}\`).perform();});`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.sendKeys(\`${value}\`);});`);
 }
 
 async function emitEcho(message) {
@@ -173,7 +182,7 @@ async function emitUncheck(locator) {
 }
 
 async function emitRun(testCase) {
-  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars);`);
+  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
 }
 
 async function emitRunScript(script) {
@@ -188,7 +197,7 @@ async function emitExecuteAsyncScript(script, varName) {
   return Promise.resolve(`vars["${varName}"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);\`);`);
 }
 
-async function emitPause(_, time) {
+async function emitPause(time) {
   return Promise.resolve(`await driver.sleep(${time});`);
 }
 
@@ -250,6 +259,10 @@ async function emitStore(value, varName) {
 
 async function emitStoreText(locator, varName) {
   return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getText().then(text => {vars["${varName}"] = text;});});`);
+}
+
+async function emitStoreValue(locator, varName) {
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(locator)}).then(element => {element.getAttribute("value").then(value => {vars["${varName}"] = value;});});`);
 }
 
 async function emitStoreTitle(_, varName) {

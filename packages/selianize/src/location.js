@@ -21,6 +21,8 @@ const emitters = {
   id: emitId,
   name: emitName,
   link: emitLink,
+  linkText: emitLink,
+  partialLinkText: emitPartialLinkText,
   css: emitCss,
   xpath: emitXpath
 };
@@ -56,6 +58,10 @@ function emitName(selector) {
 
 function emitLink(selector) {
   return Promise.resolve(`By.linkText(\`${selector}\`)`);
+}
+
+function emitPartialLinkText(selector) {
+  return Promise.resolve(`By.partialLinkText(\`${selector}\`)`);
 }
 
 function emitCss(selector) {

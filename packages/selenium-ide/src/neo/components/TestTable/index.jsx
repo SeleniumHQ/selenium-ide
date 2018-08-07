@@ -55,11 +55,11 @@ export default class TestTable extends React.Component {
   disposeNewCommand() {
     this.newCommand = undefined;
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.commands !== this.props.commands) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.commands !== this.props.commands) {
       this.newObserverDisposer();
-      if (nextProps.commands) {
-        this.newObserverDisposer = observe(nextProps.commands, this.detectNewCommand);
+      if (this.props.commands) {
+        this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
       }
     }
   }

@@ -109,6 +109,10 @@ class UiState {
     this.clipboard.replace(this.selectedCommands.sort((c1, c2) => c1.index - c2.index));
   }
 
+  @action.bound clearViewCache() {
+    this.lastViewSelection.clear();
+  }
+
   @action.bound pasteFromClipboard(index) {
     if (this.clipboard.length && this.displayedTest) {
       this.clipboard.forEach((command, idx) => {

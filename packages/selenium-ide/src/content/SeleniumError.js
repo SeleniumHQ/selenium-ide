@@ -15,8 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default {
-  silenceErrors: false,
-  skipStdLibEmitting: false
-};
+export default class SeleniumError extends Error {
+  constructor(...argv) {
+    super(argv);
 
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, SeleniumError);
+    }
+  }
+}

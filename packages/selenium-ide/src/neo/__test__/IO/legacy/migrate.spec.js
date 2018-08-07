@@ -56,7 +56,7 @@ describe("selenium test case migration", () => {
   it("should join line breaks to <br /> in the target field", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_2.html")).toString();
     const { test } = migrateTestCase(file);
-    expect(test.commands[8].target).toBe("//a[contains(text(),'Most<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
+    expect(test.commands[8].target).toBe("//a[contains(text(),'Most\\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followers')]");
   });
   it("should sanitize the input prior to converting", () => {
     const file = fs.readFileSync(path.join(__dirname, "IDE_test_3.html")).toString();

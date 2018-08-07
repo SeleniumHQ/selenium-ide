@@ -26,7 +26,9 @@ describe("suite emitter", () => {
       timeout: "30",
       tests: []
     };
-    return expect(SuiteEmitter.emit(suite, {})).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {});`);
+    return expect(SuiteEmitter.emit(suite, {})).resolves.toEqual({
+      code: `jest.setTimeout(30000);describe("${suite.name}", () => {});`
+    });
   });
   it("should emit a suite with a single empty test", async () => {
     const tests = {
@@ -43,8 +45,12 @@ describe("suite emitter", () => {
       tests: ["1"]
     };
     return expect(SuiteEmitter.emit(suite, {
-      1: await TestCaseEmitter.emit(tests["1"])
-    })).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+      1: {
+        emitted: await TestCaseEmitter.emit(tests["1"])
+      }
+    })).resolves.toEqual({
+      code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`
+    });
   });
   it("should emit a suite with multiple empty tests", async () => {
     const tests = {
@@ -71,10 +77,18 @@ describe("suite emitter", () => {
       tests: ["1", "2", "3"]
     };
     return expect(SuiteEmitter.emit(suite, {
-      1: await TestCaseEmitter.emit(tests["1"]),
-      2: await TestCaseEmitter.emit(tests["2"]),
-      3: await TestCaseEmitter.emit(tests["3"])
-    })).resolves.toBe(`jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await tests.second_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await tests.third_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`);
+      1: {
+        emitted: await TestCaseEmitter.emit(tests["1"])
+      },
+      2: {
+        emitted: await TestCaseEmitter.emit(tests["2"])
+      },
+      3: {
+        emitted: await TestCaseEmitter.emit(tests["3"])
+      }
+    })).resolves.toEqual({
+      code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests["1"].name}", async () => {await tests.example_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["2"].name}", async () => {await tests.second_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});it("${tests["3"].name}", async () => {await tests.third_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});});`
+    });
   });
   it("should emit a parallel suite", async () => {
     const tests = {
@@ -102,9 +116,15 @@ describe("suite emitter", () => {
       tests: ["1", "2", "3"]
     };
     return expect(SuiteEmitter.emit(suite, {
-      1: await TestCaseEmitter.emit(tests["1"]),
-      2: await TestCaseEmitter.emit(tests["2"]),
-      3: await TestCaseEmitter.emit(tests["3"])
+      1: {
+        emitted: await TestCaseEmitter.emit(tests["1"])
+      },
+      2: {
+        emitted: await TestCaseEmitter.emit(tests["2"])
+      },
+      3: {
+        emitted: await TestCaseEmitter.emit(tests["3"])
+      }
     })).resolves.toEqual([
       {
         name: tests["1"].name,
@@ -118,5 +138,47 @@ describe("suite emitter", () => {
         name: tests["3"].name,
         code: `jest.setTimeout(30000);test("${tests["3"].name}", async () => {await tests.third_test_case(driver, vars);await driver.getTitle().then(title => {expect(title).toBeDefined();});});`
       }]);
+  });
+  it("should skip emitting when skipStdLibEmitting is set and no hooks are registered", () => {
+    const suite = {
+      id: "1",
+      name: "example suite",
+      timeout: "30",
+      tests: []
+    };
+    return expect(SuiteEmitter.emit(suite, {}, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
+  });
+  it("should emit a snapshot of the hooks when skipStdLibEmitting is set and hooks are registered", () => {
+    const suite = {
+      id: "1",
+      name: "example suite",
+      timeout: "30",
+      tests: []
+    };
+    SuiteEmitter.registerHook(() => ({
+      beforeAll: "beforeAll code",
+      before: "before code",
+      after: "after code",
+      afterAll: "afterAll code"
+    }));
+    return expect(SuiteEmitter.emit(suite, {}, { skipStdLibEmitting: true })).resolves.toEqual({
+      snapshot: {
+        hook: "beforeAll(async () => {beforeAll code});beforeEach(async () => {before code});afterEach(async () => {after code});afterAll(async () => {afterAll code});"
+      }
+    });
+  });
+  it("should append the snapshot to the normal hooks", () => {
+    const suite = {
+      id: "1",
+      name: "example suite",
+      timeout: "30",
+      tests: []
+    };
+    const snapshot = {
+      hook: "hook results"
+    };
+    return expect(SuiteEmitter.emit(suite, {}, undefined, snapshot)).resolves.toEqual({
+      code: "jest.setTimeout(30000);describe(\"example suite\", () => {beforeAll(async () => {beforeAll code});beforeEach(async () => {before code});afterEach(async () => {after code});afterAll(async () => {afterAll code});hook results});"
+    });
   });
 });

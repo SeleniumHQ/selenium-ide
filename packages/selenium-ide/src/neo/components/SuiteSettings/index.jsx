@@ -26,6 +26,24 @@ import Checkbox from "../Checkbox";
 import Markdown from "../Markdown";
 
 export default class SuiteSettings extends React.Component {
+  static propTypes = {
+    isEditing: PropTypes.bool,
+    timeout: PropTypes.number,
+    isParallel: PropTypes.bool,
+    persistSession: PropTypes.bool,
+    submit: PropTypes.func,
+    cancel: PropTypes.func
+  };
+  render() {
+    return (
+      <Modal className="suite-settings-dialog" isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
+        <SuiteSettingsContent {...this.props} />
+      </Modal>
+    );
+  }
+}
+
+class SuiteSettingsContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,15 +60,6 @@ export default class SuiteSettings extends React.Component {
     submit: PropTypes.func,
     cancel: PropTypes.func
   };
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.isEditing && nextProps.isEditing) {
-      this.setState({
-        timeout: nextProps.timeout,
-        isParallel: nextProps.isParallel,
-        persistSession: nextProps.persistSession
-      });
-    }
-  }
   onTimeoutChange(value) {
     this.setState({
       timeout: value
@@ -69,34 +78,32 @@ export default class SuiteSettings extends React.Component {
   render() {
     const persistSession = !this.state.isParallel && this.state.persistSession;
     return (
-      <Modal className="suite-settings-dialog" isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
-        <form onSubmit={(e) => { e.preventDefault(); }} style={{
-          minWidth: "300px"
-        }}>
-          <ModalHeader title="Suite properties" close={this.props.cancel} />
-          <div className="form-contents">
-            <Input name="suite-timeout" type="number" label="Timeout (seconds)" placeholder={DEFAULT_TIMEOUT} value={this.state.timeout} width={130} onChange={this.onTimeoutChange.bind(this)} />
-            <Checkbox label="Run in parallel" checked={this.state.isParallel} width={130} onChange={this.onIsParallelChange.bind(this)} />
-            <Checkbox label="Persist session" checked={persistSession} disabled={this.state.isParallel} width={130} onChange={this.onPersistSessionChange.bind(this)} />
-            <div>(not recommended)</div>
-            {persistSession && <Markdown className="markdown">
-              {"Persisting session will not reset the WebDriver session and variables between test run, which will result in [\"non-idempotent non-isolated\"](http://jasonpolites.github.io/tao-of-testing/ch4-1.1.html#rule-10-ensure-tests-are-isolated-and-idempotent) tests that are difficult to debug."}
-            </Markdown>}
-          </div>
-          <span className="right">
-            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-            <FlatButton type="submit" onClick={() => {this.props.submit({
-              timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
-              isParallel: this.state.isParallel,
-              persistSession: this.state.persistSession
-            });
-            }} style={{
-              marginRight: "0"
-            }}>Submit</FlatButton>
-          </span>
-          <div className="clear"></div>
-        </form>
-      </Modal>
+      <form onSubmit={(e) => { e.preventDefault(); }} style={{
+        minWidth: "300px"
+      }}>
+        <ModalHeader title="Suite properties" close={this.props.cancel} />
+        <div className="form-contents">
+          <Input name="suite-timeout" type="number" label="Timeout (seconds)" placeholder={DEFAULT_TIMEOUT} value={this.state.timeout} width={130} onChange={this.onTimeoutChange.bind(this)} />
+          <Checkbox label="Run in parallel" checked={this.state.isParallel} width={130} onChange={this.onIsParallelChange.bind(this)} />
+          <Checkbox label="Persist session" checked={persistSession} disabled={this.state.isParallel} width={130} onChange={this.onPersistSessionChange.bind(this)} />
+          <div>(not recommended)</div>
+          {persistSession && <Markdown className="markdown">
+            {"Persisting session will not reset the WebDriver session and variables between test run, which will result in [\"non-idempotent non-isolated\"](http://jasonpolites.github.io/tao-of-testing/ch4-1.1.html#rule-10-ensure-tests-are-isolated-and-idempotent) tests that are difficult to debug."}
+          </Markdown>}
+        </div>
+        <span className="right">
+          <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
+          <FlatButton type="submit" onClick={() => {this.props.submit({
+            timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
+            isParallel: this.state.isParallel,
+            persistSession: this.state.persistSession
+          });
+          }} style={{
+            marginRight: "0"
+          }}>Submit</FlatButton>
+        </span>
+        <div className="clear"></div>
+      </form>
     );
   }
 }

@@ -16,7 +16,7 @@ Markdown.propTypes = {
 };
 
 function Link(props) {
-  return (<a href={props.href} target="_blank">{props.children}</a>);
+  return (<a href={props.href} target="_blank" rel="noopener noreferrer">{props.children}</a>);
 }
 
 Link.propTypes = {

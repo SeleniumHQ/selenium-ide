@@ -26,27 +26,41 @@ import Checkbox from "../Checkbox";
 import "./style.css";
 
 export default class TestSelector extends React.Component {
+  static propTypes = {
+    isEditing: PropTypes.bool.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    selectedTests: MobxPropTypes.arrayOrObservableArray,
+    cancelSelection: PropTypes.func.isRequired,
+    completeSelection: PropTypes.func.isRequired
+  };
+  render() {
+    return (
+      <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
+        <TestSelectorContent {...this.props} />
+      </Modal>
+    );
+  }
+}
+
+class TestSelectorContent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = this.initialState(props);
-    this.selectTest = this.selectTest.bind(this);
-    this.filter = this.filter.bind(this);
-  }
-  initialState(props) {
-    return {
+    this.state = {
       selectedTests: props.selectedTests ? props.selectedTests.reduce((selections, selection) => { selections[selection.id] = selection; return selections; }, {}) : {},
       filterTerm: ""
     };
+    this.selectTest = this.selectTest.bind(this);
+    this.filter = this.filter.bind(this);
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.tests) {
-      this.setState(this.initialState(nextProps));
-    }
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.isEditing && !prevProps.isEditing) {
-      this.input.focus();
-    }
+  static propTypes = {
+    isEditing: PropTypes.bool.isRequired,
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    selectedTests: MobxPropTypes.arrayOrObservableArray,
+    cancelSelection: PropTypes.func.isRequired,
+    completeSelection: PropTypes.func.isRequired
+  };
+  componentDidMount() {
+    this.input.focus();
   }
   selectTest(isSelected, test) {
     this.setState({
@@ -58,30 +72,21 @@ export default class TestSelector extends React.Component {
   }
   render() {
     return (
-      <Modal className="test-selector" isOpen={this.props.isEditing} onRequestClose={this.props.cancelSelection}>
-        <form onSubmit={(e) => { e.preventDefault(); }}>
-          <ModalHeader title="Select tests" close={this.props.cancelSelection} />
-          <SearchBar inputRef={(input) => { this.input = input; }} filter={this.filter} value={this.state.filterTerm} />
-          <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
-          <hr />
-          <span className="right">
-            <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
-            <FlatButton type="submit" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests).filter(t => !!t));}} style={{
-              marginRight: "0"
-            }}>Select</FlatButton>
-          </span>
-          <div className="clear"></div>
-        </form>
-      </Modal>
+      <form onSubmit={(e) => { e.preventDefault(); }}>
+        <ModalHeader title="Select tests" close={this.props.cancelSelection} />
+        <SearchBar inputRef={(input) => { this.input = input; }} filter={this.filter} value={this.state.filterTerm} />
+        <TestSelectorList tests={this.props.tests} filterTerm={this.state.filterTerm} selectedTests={this.state.selectedTests} selectTest={this.selectTest} />
+        <hr />
+        <span className="right">
+          <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
+          <FlatButton type="submit" onClick={() => {this.props.completeSelection(Object.values(this.state.selectedTests).filter(t => !!t));}} style={{
+            marginRight: "0"
+          }}>Select</FlatButton>
+        </span>
+        <div className="clear"></div>
+      </form>
     );
   }
-  static propTypes = {
-    isEditing: PropTypes.bool.isRequired,
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
-    selectedTests: PropTypes.array,
-    cancelSelection: PropTypes.func.isRequired,
-    completeSelection: PropTypes.func.isRequired
-  };
 }
 
 class TestSelectorList extends React.Component {

@@ -28,9 +28,27 @@ import HtmlFile from "../../assets/images/html_file.png";
 import "./style.css";
 
 export default class ImportDialog extends React.Component {
+  static propTypes = {
+    isImporting: PropTypes.bool.isRequired,
+    cancel: PropTypes.func.isRequired,
+    suite: PropTypes.string,
+    onComplete: PropTypes.func
+  };
+  render() {
+    return (
+      <Modal className="import-dialog" isOpen={this.props.isImporting} onRequestClose={this.props.cancel}>
+        <ImportDialogContent {...this.props} />
+      </Modal>
+    );
+  }
+}
+
+class ImportDialogContent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      files: parseSuiteRequirements(props.suite).map(name => ({ name }))
+    };
   }
   static propTypes = {
     isImporting: PropTypes.bool.isRequired,
@@ -38,13 +56,6 @@ export default class ImportDialog extends React.Component {
     suite: PropTypes.string,
     onComplete: PropTypes.func
   };
-  componentWillReceiveProps(nextProps) {
-    if (this.props.suite !== nextProps.suite) {
-      this.setState({
-        files: parseSuiteRequirements(nextProps.suite).map(name => ({ name }))
-      });
-    }
-  }
   onDrop(blobs) {
     Promise.all(this.state.files.map((file) => {
       // Dont load files we dont need
@@ -69,34 +80,32 @@ export default class ImportDialog extends React.Component {
   }
   render() {
     return (
-      <Modal className="import-dialog" isOpen={this.props.isImporting} onRequestClose={this.props.cancel}>
-        <form onSubmit={(e) => { e.preventDefault(); }}>
-          <ModalHeader title="Import suite" close={this.props.cancel} />
-          <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests
-          </p>
-          <Dropzone className="dropzone" acceptClassName="accept" rejectClassName="reject" accept="text/html" onDropAccepted={this.onDrop.bind(this)}>
-            <div>
-              <div className="file-icon">
-                <img alt="html file" height="50" src={HtmlFile} />
-                <p>
-                  Drop files here, or{" "}
-                  <a className="link" href="#">browse</a>
-                </p>
-              </div>
+      <form onSubmit={(e) => { e.preventDefault(); }}>
+        <ModalHeader title="Import suite" close={this.props.cancel} />
+        <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests
+        </p>
+        <Dropzone className="dropzone" acceptClassName="accept" rejectClassName="reject" accept="text/html" onDropAccepted={this.onDrop.bind(this)}>
+          <div>
+            <div className="file-icon">
+              <img alt="html file" height="50" src={HtmlFile} />
+              <p>
+                Drop files here, or{" "}
+                <a className="link" href="#">browse</a>
+              </p>
             </div>
-          </Dropzone>
-          <ul>
-            {this.state.files && this.state.files.map(({ name, contents }) => (
-              <li key={name} className={classNames({ accepted: !!contents })}>{name}</li>
-            ))}
-          </ul>
-          <hr />
-          <span className="right">
-            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-          </span>
-          <div className="clear"></div>
-        </form>
-      </Modal>
+          </div>
+        </Dropzone>
+        <ul>
+          {this.state.files && this.state.files.map(({ name, contents }) => (
+            <li key={name} className={classNames({ accepted: !!contents })}>{name}</li>
+          ))}
+        </ul>
+        <hr />
+        <span className="right">
+          <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
+        </span>
+        <div className="clear"></div>
+      </form>
     );
   }
 }

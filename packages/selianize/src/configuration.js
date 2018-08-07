@@ -15,10 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import config from "./config";
+
 const hooks = [];
 
-export async function emit(project) {
-  return `global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${(await Promise.all(hooks.map((hook) => hook({ name: project.name })))).join("")}`;
+export async function emit(project, options = config, snapshot) {
+  const configHooks = (await Promise.all(hooks.map((hook) => hook({ name: project.name })))).join("");
+  if (!options.skipStdLibEmitting) {
+    return `global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${configHooks}${snapshot ? snapshot : ""}`;
+  } else {
+    if (configHooks) {
+      return {
+        snapshot: configHooks
+      };
+    } else {
+      return {
+        skipped: true
+      };
+    }
+  }
 }
 
 function registerHook(hook) {

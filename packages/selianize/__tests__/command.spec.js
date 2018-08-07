@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import CommandEmitter from "../src/command";
+import CommandEmitter, { registerEmitter } from "../src/command";
 import { Commands } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
@@ -41,7 +41,7 @@ describe("command code emitter", () => {
       target: "/",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.get(BASE_URL + "${command.target}");`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.get((new URL("${command.target}", BASE_URL)).href);`);
   });
   it("should emit `open` with absolute url", () => {
     const command = {
@@ -57,7 +57,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {driver.actions().click(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {element.click();});");
   });
   it("should emit `click at` command", () => {
     const command = {
@@ -65,7 +65,7 @@ describe("command code emitter", () => {
       target: "link=button",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {driver.actions().click(element).perform();});");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {element.click();});");
   });
   it("should emit `double click` command", () => {
     const command = {
@@ -105,7 +105,7 @@ describe("command code emitter", () => {
       target: "id=input",
       value: "example input"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {driver.actions().click(element).sendKeys(\`${command.value}\`).perform();});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {element.sendKeys(\`${command.value}\`);});`);
   });
   it("should emit `echo` command", () => {
     const command = {
@@ -137,7 +137,7 @@ describe("command code emitter", () => {
       target: "some test case",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await tests.some_test_case(driver, vars);");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await tests.some_test_case(driver, vars, { isNested: true });");
   });
   it("should emit `run script` command", () => {
     const command = {
@@ -166,10 +166,10 @@ describe("command code emitter", () => {
   it("should emit `pause` command", () => {
     const command = {
       command: "pause",
-      target: "",
-      value: "300"
+      target: "300",
+      value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.sleep(${command.value});`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.sleep(${command.target});`);
   });
   it("should emit `verify checked` command", () => {
     const command = {
@@ -387,6 +387,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {element.getText().then(text => {vars["${command.value}"] = text;});});`);
   });
+  it("should emit `store value` command", () => {
+    const command = {
+      command: "storeValue",
+      target: "id=someElement",
+      value: "myVar"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {element.getAttribute("value").then(value => {vars["${command.value}"] = value;});});`);
+  });
   it("should emit `store title` command", () => {
     const command = {
       command: "storeTitle",
@@ -571,33 +579,33 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.switchTo().alert().then(alert => {alert.getText().then(text => {expect(text).toBe(\`${command.target}\`);});});`);
   });
-  it("should emit `choose ok on next confirmation` command", () => {
+  it("should emit `choose ok on visible confirmation` command", () => {
     const command = {
-      command: "webdriverChooseOkOnNextConfirmation",
+      command: "webdriverChooseOkOnVisibleConfirmation",
       target: "",
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().alert().then(alert => {alert.accept();});");
   });
-  it("should emit `choose cancel on next confirmation` command", () => {
+  it("should emit `choose cancel on visible confirmation` command", () => {
     const command = {
-      command: "webdriverChooseCancelOnNextConfirmation",
+      command: "webdriverChooseCancelOnVisibleConfirmation",
       target: "",
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().alert().then(alert => {alert.dismiss();});");
   });
-  it("should emit `answer on next prompt` command", () => {
+  it("should emit `answer on visible prompt` command", () => {
     const command = {
-      command: "webdriverAnswerOnNextPrompt",
+      command: "webdriverAnswerOnVisiblePrompt",
       target: "an answer",
       value: ""
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(`await driver.switchTo().alert().then(alert => {alert.sendKeys(\`${command.target}\`).then(() => {alert.accept();});});`);
   });
-  it("should emit `choose cancel on next prompt` command", () => {
+  it("should emit `choose cancel on visible prompt` command", () => {
     const command = {
-      command: "webdriverChooseCancelOnNextPrompt",
+      command: "webdriverChooseCancelOnVisiblePrompt",
       target: "",
       value: ""
     };
@@ -636,5 +644,50 @@ describe("command code emitter", () => {
         }
       }).not.toThrow();
     });
+  });
+  it("should skip emitting stdlib command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "open",
+      target: "/",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
+  });
+  it("should emit a snapshot for a non-stdlib command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "aNewCommand",
+      target: "",
+      value: ""
+    };
+    registerEmitter(command.command, () => ("new command code"));
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toBe("new command code");
+  });
+  it("should throw an error for an invalid non-stdlib command even when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "errorCommand",
+      target: "",
+      value: ""
+    };
+    registerEmitter(command.command, () => {
+      throw new Error("an error occurred");
+    });
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).rejects.toThrow("an error occurred");
+  });
+  it("should not throw an error for an unknown command when skipStdLibEmitting is set", () => {
+    const command = {
+      command: "doesntExist",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command, { skipStdLibEmitting: true })).resolves.toEqual({ skipped: true });
+  });
+  it("should return the snapshot when an unknown command is being emitted with snapshot sent", () => {
+    const command = {
+      command: "doesntExist",
+      target: "",
+      value: ""
+    };
+    const snapshot = "this commands snapshot";
+    return expect(CommandEmitter.emit(command, undefined, snapshot)).resolves.toBe(snapshot);
   });
 });

@@ -52,7 +52,7 @@ export default class TargetInput extends React.Component {
         label={this.props.label}
         value={this.props.value}
         disabled={this.props.disabled}
-        onChange={(e) => { if (this.props.onChange) this.props.onChange(e.target.value); }} />
+        onChange={(value) => { if (this.props.onChange) this.props.onChange(value); }} />
     );
   }
 }

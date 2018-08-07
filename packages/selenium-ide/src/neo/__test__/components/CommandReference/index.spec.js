@@ -49,7 +49,7 @@ describe("<CommandReference />", () => {
   it("should not render a description unless a name is provided", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ description: "description" }}/>);
     const commandDescription = container.querySelector(".description");
-    expect(commandDescription).not.toBeInTheDOM();
+    expect(commandDescription).toBeNull();
   });
   it("should render a target argument", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", target: { name: "target name", description: "target value" } }}/>);
@@ -64,11 +64,11 @@ describe("<CommandReference />", () => {
   it("should not render an argument if one isn't provided", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name" }}/>);
     const commandArgument = container.querySelector(".argument");
-    expect(commandArgument).not.toBeInTheDOM();
+    expect(commandArgument).toBeNull();
   });
   it("should not render an argument if it is empty", () => {
     const { container } = renderIntoDocument(<CommandReference currentCommand={{ name: "name", value: { name: "", description: "" } }}/>);
     const commandArgument = container.querySelector(".argument");
-    expect(commandArgument).not.toBeInTheDOM();
+    expect(commandArgument).toBeNull();
   });
 });
