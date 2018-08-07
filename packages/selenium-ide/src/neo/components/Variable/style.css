@@ -4,7 +4,8 @@
   display: flex;
 }
 
-.variable .name, .variable .value {
+.variable .name,
+.variable .value {
   float: left;
   padding: 4px 5px;
   width: 48%;
@@ -13,14 +14,22 @@
 }
 
 .variable:not(.value-header):hover {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
+}
+
+.variable .deleteBtn {
+  width: 4%;
+  font-size: 15px;
+  opacity: 0;
+  height: 20px;
 }
 
 .variable:hover .deleteBtn {
   opacity: 1;
 }
 
-.variable input, .variable input:disabled{
+.variable input,
+.variable input:disabled {
   background-color: transparent;
 }
 
@@ -37,11 +46,4 @@
   border: 1px #4ea1ff solid;
   outline: 0;
   background-color: white;
-}
-
-.variable .deleteBtn {
-  width: 4%;
-  font-size: 15px;
-  opacity: 0;
-  height: 20px;
 }
