@@ -51,7 +51,7 @@ export function find(target) {
   }
 }
 
-export function select(type, rect) {
+export function select(type, rect, selectNext = false) {
   const tabConnectionFailure = () => {
     ModalState.showAlert({
       title: "Can't connect to tab",
@@ -81,22 +81,27 @@ export function select(type, rect) {
         UiState.setSelectingTarget(false);
       } else {
         if (type === TargetTypes.LOCATOR) {
-          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, element: true }).catch(tabConnectionFailure);
+          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, element: true, selectNext }).catch(tabConnectionFailure);
         } else if (type === TargetTypes.REGION) {
-          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS() }).catch(tabConnectionFailure);
+          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS(), selectNext }).catch(tabConnectionFailure);
         }
       }
     });
   }
 }
 
-export function selectTarget(target) {
+export function selectTarget(target, selectNext) {
   UiState.setSelectingTarget(false);
   if (UiState.selectedCommand) {
     UiState.selectedCommand.setTarget(target[0][0]);
+    UiState.selectedCommand.setTargets(target);
+    if (selectNext) {
+      UiState.selectNextCommand();
+    }
   } else if (UiState.selectedTest.test) {
     const command = UiState.selectedTest.test.createCommand();
     command.setTarget(target[0][0]);
+    command.setTargets(target);
   }
 }
 
