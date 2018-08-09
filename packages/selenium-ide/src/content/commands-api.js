@@ -107,7 +107,8 @@ function doCommands(request, sender, sendResponse) {
               //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
               browser.runtime.sendMessage({
                 selectTarget: true,
-                target: target
+                target: target,
+                selectNext: request.selectNext
               });
             }
           }

@@ -32,7 +32,7 @@ export function toggleRecord(isRecording) {
 
 function handleMessage(message, sender, sendResponse) {
   if (message.selectTarget) {
-    selectTarget(message.target);
+    selectTarget(message.target, message.selectNext);
     sendResponse(true);
   }
   if (message.cancelSelectTarget) {
