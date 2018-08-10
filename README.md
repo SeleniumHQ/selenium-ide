@@ -30,6 +30,8 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 
 ## Building
 
+`peru` requires a POSIX machine to work, for the time being you can only properly build the extension on macOS and Linux.
+
 - Install the dependencies
 ```peru sync```  
 ```yarn``` or if using Node 10 ```yarn --ignore-engines```
