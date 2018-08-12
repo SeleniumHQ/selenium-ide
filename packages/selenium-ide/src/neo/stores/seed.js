@@ -49,7 +49,7 @@ export default function seed(store, numberOfSuites = 5) {
     }
   }
 
-  const url = "http://the-internet.herokuapp.com";
+  const url = "http://the-internet.local";
   store.setUrl(url);
   store.addUrl(url);
 
@@ -188,9 +188,9 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(submitTest);
 
   UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(smokeSuite);
+  let suiteState = UiState.getSuiteState(suiteControlFlow);
   suiteState.setOpen(true);
-  UiState.selectTest(checkTest, smokeSuite);
+  UiState.selectTest(controlFlowIfTest, suiteControlFlow);
 
   store.changeName("seed project");
 
