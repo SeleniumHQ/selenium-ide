@@ -17,11 +17,13 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import "./style.css";
 
 export default class FormInput extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
+    className: PropTypes.string,
     label: PropTypes.string.isRequired,
     width: PropTypes.number,
     children: PropTypes.element,
@@ -33,7 +35,7 @@ export default class FormInput extends React.Component {
   render() {
     const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}, width: undefined });
     return (
-      <div className="form-input">
+      <div className={classNames("form-input", this.props.className)}>
         <label htmlFor={this.props.name} style={{
           width: `${this.props.width}px`
         }}>{this.props.label}</label>

@@ -1,0 +1,7 @@
+.target-input .code > pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  max-width: 180px;
+  white-space: pre-wrap;
+}
