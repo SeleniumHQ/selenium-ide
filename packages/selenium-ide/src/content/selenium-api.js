@@ -955,6 +955,9 @@ Selenium.prototype.doType = function(locator, value) {
     core.events.setValue(element, value);
   } else {
     bot.action.type(element, value);
+    if (element.value !== value) {
+      core.events.setValue(element, value);
+    }
   }
 };
 
