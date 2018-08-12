@@ -182,10 +182,7 @@ if (browser.windows) {
                   <Navigation
                     tests={UiState.filteredTests}
                     suites={this.state.project.suites}
-                    createSuite={this.createSuite}
-                    removeSuite={this.state.project.deleteSuite}
-                    createTest={this.createTest}
-                    deleteTest={this.deleteTest}
+                    duplicateTest={this.state.project.duplicateTestCase}
                   />
                   <Editor
                     url={this.state.project.url}

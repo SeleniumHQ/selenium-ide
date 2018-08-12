@@ -16,6 +16,7 @@
 // under the License.
 
 import React from "react";
+import { PropTypes } from "prop-types";
 import { observer, Provider } from "mobx-react";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import { modifier } from "modifier-keys";
@@ -38,7 +39,8 @@ import "./style.css";
   }
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
-    tests: MobxPropTypes.arrayOrObservableArray.isRequired
+    tests: MobxPropTypes.arrayOrObservableArray.isRequired,
+    duplicateTest: PropTypes.func
   };
   handleChangedTab(tab) {
     if (PlaybackState.isPlaying && !PlaybackState.paused) {
@@ -84,7 +86,7 @@ import "./style.css";
           <React.Fragment>
             {UiState.selectedView === "Tests" && <React.Fragment>
               <SearchBar value={UiState.filterTerm} filter={UiState.changeFilter} />
-              <TestList tests={this.props.tests} removeTest={ModalState.deleteTest} />
+              <TestList tests={this.props.tests} duplicateTest={this.props.duplicateTest} removeTest={ModalState.deleteTest} />
             </React.Fragment>
             }
             {UiState.selectedView === "Test suites" && <React.Fragment>
