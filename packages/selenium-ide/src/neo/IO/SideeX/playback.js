@@ -105,15 +105,6 @@ function executionLoop() {
           PlaybackState.setCurrentExecutingCommandNode(result.next);
         }).then(executionLoop);
     });
-  } else if (PlaybackState.currentExecutingCommandNode.isControlFlow()) {
-    return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
-      .then((result) => {
-        if (result.result !== "success") {
-          return reportError(result.result, false, undefined);
-        }
-        PlaybackState.setCommandState(command.id, PlaybackStates.Passed);
-        PlaybackState.setCurrentExecutingCommandNode(result.next);
-      }).then(executionLoop);
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();

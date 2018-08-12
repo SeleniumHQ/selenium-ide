@@ -237,7 +237,7 @@ Selenium.prototype.eval = function(script, scoped = true, isExpression = false) 
 };
 
 Selenium.prototype.doEvaluateConditional = function(condition) {
-  return !!(this.eval(condition, undefined, true));
+  return !!(this.eval(condition, true, true));
 };
 
 Selenium.prototype.doVerifyChecked = function(locator) {
