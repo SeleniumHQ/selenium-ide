@@ -282,7 +282,9 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
     canExecuteCommand(command) ?
       doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
       doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
-  ));
+  )).then(result => {
+    PlaybackState.setCurrentExecutingCommandNode(result.next);
+  });
 }
 
 function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
@@ -294,11 +296,11 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
       } else {
         let isVerify = /^verify/.test(command);
         PlaybackState.setCommandState(id, isVerify ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
-        PlaybackState.setCurrentExecutingCommandNode(result.next);
+        return result;
       }
     } else {
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
-      PlaybackState.setCurrentExecutingCommandNode(result.next);
+      return result;
     }
   });
 }
@@ -312,9 +314,13 @@ function doPluginCommand(id, command, target, value, implicitTime, implicitCount
     frameId: extCommand.getCurrentPlayingFrameId(),
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
-  }).then(res => {
-    PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
-    PlaybackState.setCurrentExecutingCommandNode(res.next);
+  }).then(result => {
+    PlaybackState.setCommandState(
+      id,
+      result.status ? result.status : PlaybackStates.Passed,
+      result && result.message || undefined
+    );
+    return result;
   }).catch(err => {
     if (isElementNotFound(err.message)) {
       return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
