@@ -129,6 +129,7 @@ export default class Test extends React.Component {
     isDragging: PropTypes.bool,
     selectTest: PropTypes.func.isRequired,
     renameTest: PropTypes.func,
+    duplicateTest: PropTypes.func,
     removeTest: PropTypes.func,
     connectDropTarget: PropTypes.func,
     connectDragSource: PropTypes.func,
@@ -227,6 +228,7 @@ export class MenuTest extends React.Component {
     /* eslint-disable react/prop-types */
     const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
       <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={this.props.duplicateTest}>Duplicate</ListMenuItem>
       <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
     </ListMenu>;
     //setting component of context menu.

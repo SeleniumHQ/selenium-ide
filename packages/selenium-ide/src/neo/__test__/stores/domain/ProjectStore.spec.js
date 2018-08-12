@@ -124,6 +124,18 @@ describe("Project Store", () => {
     const test2 = store.createTestCase("my test");
     expect(test2.name).toBe("my test (1)");
   });
+  it("should duplicate a test case", () => {
+    const store = new ProjectStore();
+    const test = store.createTestCase("first test");
+    test.createCommand(undefined, "open", "/");
+    store.duplicateTestCase(test);
+    const test2 = store.tests[1];
+    expect(store.tests.length).toBe(2);
+    expect(test).not.toBe(test2);
+    expect(test.id).not.toEqual(test2.id);
+    expect(test2.name).toBe("first test (1)");
+    expect(test.commands[0].id).not.toEqual(test2.commands[0].id);
+  });
   it("should create a suite", () => {
     const store = new ProjectStore();
     expect(store.suites.length).toBe(0);
