@@ -55,7 +55,19 @@ export default function seed(store, numberOfSuites = 5) {
 
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
-  checkTest.createCommand(undefined, "check", "css=input");
+  const command = checkTest.createCommand(undefined, "check", "css=input");
+  command.setTargets([
+    ["id=something", "id"],
+    ["name=something-else", "name"],
+    ["linkText=number density", "linkText"],
+    ["css=main .class > p a.link", "css"],
+    ["xpath=(//a[contains(text(),'number line')])[2]", "xpath:link"],
+    ["(//a[contains(text(),'number line')])[2]", "xpath:link"],
+    ["//a[contains(text(),'number density')]", "xpath:link"],
+    ["//div[@id='mw-content-text']/div/p[2]/a[5]", "xpath:idRelative"],
+    ["//a[contains(@href, '/wiki/Number_density')]", "xpath:href"],
+    ["//a[5]", "xpath:position"]
+  ]);
   checkTest.createCommand(undefined, "assertChecked", "css=input");
   checkTest.createCommand(undefined, "uncheck", "css=input");
   checkTest.createCommand(undefined, "assertNotChecked", "css=input");
