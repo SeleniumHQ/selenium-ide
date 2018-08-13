@@ -155,7 +155,7 @@ class PlaybackState {
       if (command && command.constructor.name === "Command") {
         this.currentPlayingIndex = test.commands.indexOf(command);
       }
-      this.runningQueue = test.commands.peek();
+      this.runningQueue = test.commands.peek().slice(this.currentPlayingIndex);
       const pluginsLogs = {};
       if (PluginManager.plugins.length) this.logger.log("Preparing plugins for test run...");
       PluginManager.emitMessage({
