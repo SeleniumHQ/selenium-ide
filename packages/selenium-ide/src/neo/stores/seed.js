@@ -176,6 +176,12 @@ export default function seed(store, numberOfSuites = 5) {
   submitTest.createCommand(undefined, "submit", "css=#login");
   submitTest.createCommand(undefined, "assertElementPresent", "css=.flash.success");
 
+  const waitTest = store.createTestCase("wait");
+  waitTest.createCommand(undefined, "open", "/dynamic_loading/2");
+  waitTest.createCommand(undefined, "clickAt", "css=#start button");
+  waitTest.createCommand(undefined, "storeText", "css=#finish", "blah");
+  waitTest.createCommand(undefined, "assert", "${blah}", "Hello World!");
+
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
   suiteControlFlow.addTestCase(controlFlowElseIfTest);
@@ -199,6 +205,7 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(sendKeysTest);
   smokeSuite.addTestCase(storeTextTest);
   smokeSuite.addTestCase(submitTest);
+  smokeSuite.addTestCase(waitTest);
 
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
