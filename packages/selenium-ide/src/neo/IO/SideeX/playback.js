@@ -274,7 +274,9 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
       doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
       doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
   )).then(result => {
-    PlaybackState.setCurrentExecutingCommandNode(result.next);
+    if (result) {
+      PlaybackState.setCurrentExecutingCommandNode(result.next);
+    }
   });
 }
 
