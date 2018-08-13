@@ -10,10 +10,10 @@ before_install:
 install:
   - yarn --ignore-engines
   - yarn build:webdriver
-  - cp packages/webdriver/build/webdriver.js tests/static/
   - yarn build:selianize
   - yarn build:runner
 script:
   - yarn lint
   - yarn test
-  - yarn test:webdriver --server http://localhost:4444/wd/hub
+  - yarn test:webdriver
+  - yarn test:runner --server http://localhost:4444/wd/hub
