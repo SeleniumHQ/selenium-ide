@@ -12,6 +12,7 @@ aside.test-cases h3 {
   margin: 0;
 }
 
+aside.test-cases .tabbar ~ .content,
 aside.test-cases .tabbar ~ ul {
   max-height: initial;
   flex-grow: 1;

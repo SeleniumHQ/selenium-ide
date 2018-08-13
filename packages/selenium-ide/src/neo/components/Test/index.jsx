@@ -17,9 +17,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { DragSource } from "react-dnd";
+import { DragSource, DropTarget } from "react-dnd";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
+import Callstack from "../Callstack";
 import RemoveButton from "../ActionButtons/Remove";
 import { withOnContextMenu } from "../ContextMenu";
 import ListMenu, { ListMenuItem } from "../ListMenu";
@@ -27,37 +28,119 @@ import MoreButton from "../ActionButtons/More";
 import "./style.css";
 
 export const Type = "test";
+
 const testSource = {
   beginDrag(props) {
     return {
       id: props.test.id,
-      suite: props.suite.id
+      index: props.index,
+      test: props.test,
+      suite: props.suite
     };
+  },
+  isDragging(props, monitor) {
+    return (props.test.id === monitor.getItem().id && props.suite.id === monitor.getItem().suite.id);
   }
 };
-function collect(connect, monitor) {
+
+function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
     isDragging: monitor.isDragging()
   };
 }
-class Test extends React.Component {
+
+const testTarget = {
+  canDrop(props, monitor) {
+    const test = monitor.getItem().test;
+    const suite = props.suite;
+    return !suite.containsTest(test);
+  },
+  hover(props, monitor, component) {
+    // check if they are different suites
+    const dragged = monitor.getItem();
+    if (monitor.canDrop() && props.suite !== dragged.suite) {
+      dragged.suite.removeTestCase(dragged.test);
+      props.suite.addTestCase(dragged.test);
+      dragged.suite = props.suite;
+      dragged.index = props.suite.tests.length - 1;
+      return;
+    } else if (!monitor.canDrop() && props.suite !== dragged.suite) {
+      // trying to move a duplicate
+      return;
+    }
+    const dragIndex = dragged.index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Determine rectangle on screen
+    const hoverBoundingRect = component.decoratedComponentInstance.node.getBoundingClientRect();
+
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
+
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    props.swapTests(dragIndex, hoverIndex);
+
+    // save time on index lookups
+    monitor.getItem().index = hoverIndex;
+  }
+};
+
+const collectTarget = (connect) => ({
+  connectDropTarget: connect.dropTarget()
+});
+
+export default class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    callstack: PropTypes.object,
     test: PropTypes.object.isRequired,
     suite: PropTypes.object,
+    menu: PropTypes.node,
     selected: PropTypes.bool,
+    isExecuting: PropTypes.bool,
+    paused: PropTypes.bool,
+    selectedStackIndex: PropTypes.number,
     changed: PropTypes.bool,
     isDragging: PropTypes.bool,
     selectTest: PropTypes.func.isRequired,
     renameTest: PropTypes.func,
-    removeTest: PropTypes.func.isRequired,
+    duplicateTest: PropTypes.func,
+    removeTest: PropTypes.func,
+    connectDropTarget: PropTypes.func,
     connectDragSource: PropTypes.func,
     moveSelectionUp: PropTypes.func,
     moveSelectionDown: PropTypes.func,
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func
+  };
+  static defaultProps = {
+    noMenu: false
   };
   componentDidMount() {
     if (this.props.selected) {
@@ -90,44 +173,71 @@ class Test extends React.Component {
     if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
       event.preventDefault();
       event.stopPropagation();
-      this.props.moveSelectionUp();
+      // if we have a stack, and the top test isnt selected
+      if (this.props.callstack && this.props.selectedStackIndex !== undefined) {
+        this.props.selectTest(this.props.test, this.props.suite, this.props.selectedStackIndex - 1);
+      } else {
+        this.props.moveSelectionUp();
+      }
     } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
       event.preventDefault();
       event.stopPropagation();
-      this.props.moveSelectionDown();
+      // if we have a stack and the bottom stack member isnt selected
+      if (this.props.callstack && (this.props.selectedStackIndex === undefined || this.props.selectedStackIndex + 1 < this.props.callstack.length)) {
+        this.props.selectTest(this.props.test, this.props.suite, this.props.selectedStackIndex !== undefined ? this.props.selectedStackIndex + 1 : 0);
+      } else {
+        this.props.moveSelectionDown();
+      }
     }
   }
+  handleCallstackClick(test, suite, index) {
+    this.props.selectTest(test, suite, index);
+  }
   render() {
-    const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
-      {this.props.suite ?
-        null :
-        <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem> }
-      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
-    </ListMenu>;
-    //setting component of context menu.
-    this.props.setContextMenu ? this.props.setContextMenu(listMenu) : null;
-
-    const rendered = <a
-      href="#"
+    const rendered = <div
       ref={(node) => { this.node = node; }}
-      className={classNames("test", this.props.className, { "changed": this.props.changed }, { "selected": this.props.selected })}
-      onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}
-      onFocus={this.handleClick.bind(this, this.props.test, this.props.suite)}
+      className={classNames("test", { "changed": this.props.changed }, { "selected": this.props.selected }, { "paused": this.props.paused })}
       onKeyDown={this.handleKeyDown.bind(this)}
       tabIndex={this.props.selected ? "0" : "-1"}
       onContextMenu={this.props.onContextMenu}
       style={{
-        display: this.props.isDragging ? "none" : "flex"
+        opacity: this.props.isDragging ? "0" : "1"
       }}>
-      <span>{this.props.test.name}</span>
-      {this.props.renameTest ?
-        listMenu :
-        <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-    </a>;
-    return (this.props.suite ? this.props.connectDragSource(rendered) : rendered);
+      <a
+        ref={(button) => { this.button = button; }}
+        className={classNames("name", this.props.className, { "selected": this.props.selected && this.props.selectedStackIndex === undefined }, { "executing": this.props.isExecuting && this.props.callstack && !this.props.callstack.length })}
+        onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}>
+        <span>{this.props.test.name}</span>
+        {this.props.menu}
+        {this.props.removeTest && !this.props.menu && <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
+      </a>
+      {this.props.callstack ? <Callstack
+        stack={this.props.callstack}
+        selectedIndex={this.props.selectedStackIndex}
+        isExecuting={this.props.isExecuting}
+        onClick={this.handleCallstackClick.bind(this, this.props.test, this.props.suite)}
+      /> : undefined}
+    </div>;
+    return (this.props.connectDragSource ? this.props.connectDropTarget(this.props.connectDragSource(rendered)) : rendered);
   }
 }
 
-export const DraggableTest = DragSource(Type, testSource, collect)(Test);
+@withOnContextMenu
+export class MenuTest extends React.Component {
+  render () {
+    /* eslint-disable react/prop-types */
+    const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+      <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={this.props.duplicateTest}>Duplicate</ListMenuItem>
+      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+    </ListMenu>;
+    //setting component of context menu.
+    this.props.setContextMenu ? this.props.setContextMenu(listMenu) : null;
+    return (
+      <Test {...this.props} menu={listMenu} />
+    );
+  }
+}
 
-export default withOnContextMenu(Test);
+
+export const DraggableTest = DropTarget(Type, testTarget, collectTarget)(DragSource(Type, testSource, collectSource)(Test));

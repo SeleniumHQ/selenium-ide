@@ -16,7 +16,7 @@
 // under the License.
 
 import { RegisterConfigurationHook, RegisterSuiteHook, RegisterTestHook, RegisterEmitter } from "selianize";
-import { Commands } from "../neo/models/Command";
+import { Commands, ArgTypes } from "../neo/models/Command";
 import { registerCommand } from "./commandExecutor";
 import { sendMessage } from "./communication";
 
@@ -46,6 +46,22 @@ class PluginManager {
     });
   }
 
+  useExistingArgTypesIfProvided(docs) {
+    const doks = {};
+    Object.assign(doks, docs);
+    ["target", "value"].forEach(function(target_type) {
+      if (typeof(docs[target_type]) === "string" && docs[target_type] in ArgTypes) {
+        Object.assign(doks, {
+          [target_type]: {
+            name: docs[target_type],
+            description: ArgTypes[docs[target_type]].description
+          }
+        });
+      }
+    });
+    return doks;
+  }
+
   registerPlugin(plugin) {
     if (!this.hasPlugin(plugin.id)) {
       plugin.canEmit = false;
@@ -53,8 +69,9 @@ class PluginManager {
       RegisterSuiteHook(this.emitSuite.bind(undefined, plugin));
       RegisterTestHook(this.emitTest.bind(undefined, plugin));
       if (plugin.commands) {
-        plugin.commands.forEach(({ id, name, type }) => {
-          Commands.addCommand(id, { name, type });
+        plugin.commands.forEach(({ id, name, type, docs }) => {
+          const doks = this.useExistingArgTypesIfProvided(docs);
+          Commands.addCommand(id, { name, type, ...doks });
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id));
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id));
         });
@@ -151,20 +168,24 @@ class PluginManager {
   }
 
   emitMessage(message, keepAliveCB) {
-    return Promise.all(this.plugins.map(plugin => {
-      let didReachTimeout = false;
-      const emitInterval = setInterval(() => {
-        didReachTimeout = true;
-        keepAliveCB(plugin);
-      }, TIMEOUT);
-      return sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err))).then(r => {
-        clearInterval(emitInterval);
-        if (didReachTimeout) {
-          keepAliveCB(plugin, true);
-        }
-        return r;
-      });
-    }));
+    if (this.plugins.length) {
+      return Promise.all(this.plugins.map(plugin => {
+        let didReachTimeout = false;
+        const emitInterval = setInterval(() => {
+          didReachTimeout = true;
+          keepAliveCB(plugin);
+        }, TIMEOUT);
+        return sendMessage(plugin.id, message).catch((err) => (Promise.resolve(err))).then(r => {
+          clearInterval(emitInterval);
+          if (didReachTimeout) {
+            keepAliveCB(plugin, true);
+          }
+          return r;
+        });
+      }));
+    } else {
+      return Promise.resolve([]);
+    }
   }
 }
 

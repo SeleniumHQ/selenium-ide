@@ -15,10 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function bootstrap() {
-  return "// This file was generated using Selenium IDE\n";
-}
-
 export default {
-  bootstrap
+  silenceErrors: false,
+  skipStdLibEmitting: false
 };
+

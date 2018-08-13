@@ -25,10 +25,12 @@ import program from "commander";
 import winston from "winston";
 import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
+import Selianize from "selianize";
 import Capabilities from "./capabilities";
 import Config from "./config";
-import { install } from "./npm";
 import metadata from "../package.json";
+
+const DEFAULT_TIMEOUT = 15000;
 
 process.title = metadata.name;
 
@@ -38,20 +40,32 @@ program
   .option("-c, --capabilities [list]", "Webdriver capabilities")
   .option("-s, --server [url]", "Webdriver remote server")
   .option("-p, --params [list]", "General parameters")
-  .option("-f, --filter [string]", "Filter test cases by name")
+  .option("-f, --filter [string]", "Run suites matching name")
   .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
   .option("--base-url [url]", "Override the base URL that was set in the IDE")
-  .option("--no-sideyml", "Disabled the use of .side.yml")
-  .option("--debug", "Print debug logs")
-  .parse(process.argv);
+  .option("--timeout [number | undefined]", `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`)
+  .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
+  .option("--output-directory [directory]", "Write test results to files, results written in JSON")
+  .option("--debug", "Print debug logs");
 
-if (!program.args.length) {
+if (process.env.NODE_ENV === "development") {
+  program.option("-e, --extract", "Only extract the project file to code (this feature is for debugging purposes)");
+  program.option("-r, --run [directory]", "Run the extracted project files (this feature is for debugging purposes)");
+}
+
+program.parse(process.argv);
+
+if (!program.args.length && !program.run) {
   program.outputHelp();
   process.exit(1);
 }
 
 winston.cli();
 winston.level = program.debug ? "debug" : "warn";
+
+if (program.extract || program.run) {
+  winston.warn("This feature is used by Selenium IDE maintainers for debugging purposes, we hope you know what you're doing!");
+}
 
 const configuration = {
   capabilities: {
@@ -61,15 +75,22 @@ const configuration = {
   runId: crypto.randomBytes(16).toString("hex"),
   path: path.join(__dirname, "../../")
 };
-if (program.sideyml) {
-  try {
-    Object.assign(configuration, Config.load(path.join(process.cwd(), ".side.yml")));
-  } catch (e) {
-    winston.info("Could not load .side.yml");
-  }
+
+const configurationFilePath = program.configurationFile || ".side.yml";
+try {
+  Object.assign(configuration, Config.load(path.join(process.cwd(), configurationFilePath)));
+} catch (e) {
+  winston.info("Could not load " + configurationFilePath);
 }
 
+program.filter = program.filter || "*";
 configuration.server = program.server ? program.server : configuration.server;
+
+configuration.timeout = program.timeout ? +program.timeout
+  : configuration.timeout ? +configuration.timeout
+  : DEFAULT_TIMEOUT; // eslint-disable-line indent
+
+if (configuration.timeout === "undefined") configuration.timeout = undefined;
 
 if (program.capabilities) {
   try {
@@ -89,15 +110,16 @@ if (program.params) {
 
 configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUrl;
 
+let projectPath;
+
 function runProject(project) {
-  if (!project.code || project.version !== "1.0") {
+  if (project.version !== "1.0") {
     return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
   }
-  const projectPath = `side-suite-${project.name}`;
+  projectPath = `side-suite-${project.name}`;
   rimraf.sync(projectPath);
   fs.mkdirSync(projectPath);
-  process.chdir(projectPath);
-  fs.writeFileSync("package.json", JSON.stringify({
+  fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify({
     name: project.name,
     version: "0.0.0",
     jest: {
@@ -108,43 +130,77 @@ function runProject(project) {
     },
     dependencies: project.dependencies || {}
   }));
-  project.code.forEach(suite => {
-    if (!suite.tests) {
-      // not parallel
-      writeJSFile(suite.name, suite.code);
-    } else if (suite.tests.length) {
-      fs.mkdirSync(suite.name);
-      // parallel suite
-      suite.tests.forEach(test => {
-        writeJSFile(path.join(suite.name, test.name), `${suite.code}${test.code}`);
-      });
-    }
-  });
-  winston.info(`Running ${project.name}`);
 
-  return new Promise((resolve, reject) => {
-    let npmInstall;
-    if (project.dependencies && Object.keys(project.dependencies)) {
-      npmInstall = install();
-    } else {
-      npmInstall = Promise.resolve();
-    }
-    npmInstall.then(() => {
-      const child = fork(require.resolve("./child"), [
-        "--testMatch", "**/*.test.js"
-      ].concat(program.filter ? ["-t", program.filter] : [])
-        .concat(program.maxWorkers ? ["-w", program.maxWorkers] : []), { stdio: "inherit" });
+  return Selianize(project, { silenceErrors: true }, project.snapshot).then((code) => {
+    const tests = code.tests.reduce((tests, test) => {
+      return tests += test.code;
+    }, "const tests = {};").concat("module.exports = tests;");
+    writeJSFile(path.join(projectPath, "commons"), tests, ".js");
+    code.suites.forEach(suite => {
+      if (!suite.tests) {
+        // not parallel
+        const cleanup = suite.persistSession ? "" : "beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));";
+        writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${code.globalConfig}${suite.code}${cleanup}`);
+      } else if (suite.tests.length) {
+        fs.mkdirSync(path.join(projectPath, suite.name));
+        // parallel suite
+        suite.tests.forEach(test => {
+          writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${suite.code}${test.code}`);
+        });
+      }
+    });
+    winston.info(`Running ${project.name}`);
 
-      child.on("exit", (code) => {
-        console.log("");
-        process.chdir("..");
-        rimraf.sync(projectPath);
-        if (code) {
-          reject();
-        } else {
+    return new Promise((resolve, reject) => {
+      let npmInstall;
+      if (project.dependencies && Object.keys(project.dependencies).length) {
+        npmInstall = new Promise((resolve, reject) => {
+          const child = fork(require.resolve("./npm"), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
+          child.on("exit", (code) => {
+            if (code) {
+              reject();
+            } else {
+              resolve();
+            }
+          });
+        });
+      } else {
+        npmInstall = Promise.resolve();
+      }
+      npmInstall.then(() => {
+        if (program.extract) {
           resolve();
+        } else {
+          runJest(project).then(resolve).catch(reject);
         }
-      });
+      }).catch(reject);
+    });
+  });
+}
+
+function runJest(project) {
+  return new Promise((resolve, reject) => {
+    const args = [
+      "--testMatch", `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`
+    ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : [])
+      .concat(program.outputDirectory ? ["--json", "--outputFile", path.join(program.outputDirectory, `${project.name}.json`)] : []);
+    const opts = { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" };
+    winston.debug("jest worker args");
+    winston.debug(args);
+    winston.debug("jest work opts");
+    winston.debug(opts);
+    const child = fork(require.resolve("./child"), args, opts);
+
+    child.on("exit", (code) => {
+      console.log("");
+      if (!program.run) {
+        rimraf.sync(projectPath);
+      }
+      if (code) {
+        reject();
+      } else {
+        resolve();
+      }
     });
   });
 }
@@ -160,10 +216,27 @@ function runAll(projects, index = 0) {
   });
 }
 
-function writeJSFile(name, data) {
-  fs.writeFileSync(`${name}.test.js`, beautify(data, { indent_size: 2 }));
+function writeJSFile(name, data, postfix = ".test.js") {
+  fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
 }
 
 const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
 
-runAll(projects);
+function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
+  if (!program.run) {
+    rimraf.sync(projectPath);
+  }
+  process.exit(code);
+}
+
+process.on("SIGINT", handleQuit);
+process.on("SIGTERM", handleQuit);
+
+if (program.run) {
+  projectPath = program.run;
+  runJest({
+    name: "test"
+  }).catch(winston.error);
+} else {
+  runAll(projects);
+}

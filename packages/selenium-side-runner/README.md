@@ -2,6 +2,9 @@
 Runs exported Selenium IDE tests in command line
 
 ## Installation
+Node.js is required to use `selenium-side-runner`.  
+The project guarantees support for the [active LTS major version](https://github.com/nodejs/Release) (e.g. [8](https://nodejs.org/en/download/) & [10](https://nodejs.org/en/download/current/)).  
+
 ```yarn global add selenium-side-runner```  
 or  
 ```npm install -g selenium-side-runner```  
@@ -49,3 +52,14 @@ Running tests faster through the use of multiple workers
 The runner will automatically set the number of workers to the amount of cores available, for most cases this is the best result.  
 **Note:** unless you specified that a suite is parallel, it will still run the contained tests sequentially, though the runner will run suites in parallel by default.  
 To mark a suite's tests as parallel, set that in the suite's settings in the IDE.
+
+### FAQ
+
+#### I'm getting an error similar to `Unknown locator ${vars.something}`
+When running your projects make sure that the command is aware of the locator strategy **before** variables are evaluated.  
+For example `click | id=${myButton}` vs `click | ${idOfMyButton}`.  
+Always use the first one, since the strategy is hardcoded in the command, the second would yield an error.  
+
+>But it works in the IDE.  
+
+That is because the IDE calculates locator strategies differently than the runner, it is a known current issue.

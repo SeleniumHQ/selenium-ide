@@ -26,6 +26,7 @@ export default class Suite {
   @observable name = null;
   @observable timeout = DEFAULT_TIMEOUT;
   @observable isParallel = false;
+  @observable persistSession = false;
   @observable _tests = [];
 
   constructor(id = uuidv4(), name = "Untitled Suite") {
@@ -35,9 +36,9 @@ export default class Suite {
   }
 
   @computed get tests() {
-    return this._tests.sort((t1, t2) => (
+    return this.isParallel ? this._tests.sort((t1, t2) => (
       naturalCompare(t1.name, t2.name)
-    ));
+    )) : this._tests;
   }
 
   isTest(test) {
@@ -58,6 +59,20 @@ export default class Suite {
 
   @action.bound setParallel(parallel) {
     this.isParallel = !!parallel;
+    if (this.isParallel) {
+      // setting directly because setPersistSession is locked
+      this.persistSession = false;
+    }
+  }
+
+  @action.bound setPersistSession(persistSession) {
+    if (!this.isParallel) {
+      this.persistSession = persistSession;
+    }
+  }
+
+  @action.bound containsTest(test) {
+    return this._tests.includes(test);
   }
 
   @action.bound addTestCase(test) {
@@ -68,12 +83,25 @@ export default class Suite {
     }
   }
 
+  @action.bound insertTestCaseAt(test, index) {
+    if (!this.isTest(test)) {
+      throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
+    } else {
+      this._tests.splice(index, 0, test);
+    }
+  }
+
   @action.bound removeTestCase(test) {
     if (!this.isTest(test)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this._tests.remove(test);
     }
+  }
+
+  @action.bound swapTestCases(from, to) {
+    const test = this._tests.splice(from, 1)[0];
+    this.insertTestCaseAt(test, to);
   }
 
   @action.bound replaceTestCases(tests) {
@@ -88,6 +116,7 @@ export default class Suite {
     return {
       id: this.id,
       name: this.name,
+      persistSession: this.persistSession,
       parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id)
@@ -100,6 +129,7 @@ export default class Suite {
     suite.setName(jsRep.name);
     suite.setTimeout(jsRep.timeout);
     suite.setParallel(jsRep.parallel);
+    suite.setPersistSession(jsRep.persistSession);
     suite._tests.replace(jsRep.tests.map((testId) => projectTests.find(({ id }) => id === testId)));
 
     return suite;

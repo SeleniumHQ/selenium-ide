@@ -50,11 +50,22 @@ describe("TestCase model", () => {
     const test = new TestCase();
     expect(() => test.addCommand(5)).toThrowError("Expected to receive Command instead received Number");
   });
-  it("Should create a command", () => {
+  it("should create a command", () => {
     const test = new TestCase();
     expect(test.commands.length).toBe(0);
     test.createCommand();
     expect(test.commands.length).toBe(1);
+  });
+  it ("should create a command with primitives intialized", () => {
+    const test = new TestCase();
+    const c = "click at";
+    const t = "button";
+    const v = "32, 21";
+    const command = test.createCommand(undefined, c, t, v);
+    expect(command.command).toBe(c);
+    expect(command.target).toBe(t);
+    expect(command.value).toBe(v);
+    expect(command.id).toBeDefined();
   });
   it("should create a command at the desired index", () => {
     const test = new TestCase();

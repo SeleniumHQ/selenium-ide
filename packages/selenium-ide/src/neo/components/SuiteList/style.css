@@ -8,6 +8,6 @@
   margin: 5px 0;
 }
 
-.projects .tests li > a {
+.projects .tests .test .name {
   padding-left: 30px;
 }

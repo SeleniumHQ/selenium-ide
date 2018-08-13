@@ -1,11 +1,12 @@
 {
   "name": "selenium-side-runner",
-  "version": "0.6.0",
+  "version": "3.2.0",
   "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
     "build": "babel -d dist src --ignore=__test__",
-    "pkg": "pkg package.json --targets=node9-linux-x64,node9-macos-x64,node9-windows-x64 --out-path=dist/bin"
+    "pkg": "pkg package.json --targets=node9-linux-x64,node9-macos-x64,node9-windows-x64 --out-path=dist/bin",
+    "prepublishOnly": "yarn build"
   },
   "bin": {
     "selenium-side-runner": "dist/index.js"
@@ -30,11 +31,12 @@
     "commander": "^2.12.2",
     "global-npm": "^0.3.0",
     "jest": "^23.1.0",
-    "jest-environment-selenium": "^1.0.0",
+    "jest-environment-selenium": "^1.1.0",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
     "rimraf": "^2.6.2",
     "selenium-webdriver": "^3.6.0",
+    "selianize": "^3.2.0",
     "winston": "^2.4.0"
   },
   "devDependencies": {

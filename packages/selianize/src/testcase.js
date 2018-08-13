@@ -16,37 +16,84 @@
 // under the License.
 
 import CommandEmitter from "./command";
+import config from "./config";
+import { convertToSnake } from "./utils";
 
 const hooks = [];
 
-export function emit(test) {
+export function emit(test, options = config, snapshot) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
-
-    let result = `it("${test.name}", async () => {`;
-    result += hookResults.map((hook) => hook.setup || "").join("");
+    const setupHooks = hookResults.map((hook) => hook.setup || "").filter((hook) => (!!hook));
+    const teardownHooks = hookResults.map((hook) => hook.teardown || "").filter((hook) => (!!hook));
+    const testName = convertToSnake(test.name);
 
     let errors = [];
-    result += (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command).catch(e => {
-      errors.push({
-        index: index + 1,
-        ...command,
-        message: e
-      });
-    }))))).join("");
 
-    result += hookResults.map((hook) => hook.teardown || "").join("");
-    result += "await driver.getTitle().then(title => {expect(title).toBeDefined();});});";
+    const commands = (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command, options, snapshot ? snapshot.commands[command.id] : undefined).catch(e => {
+      if (options.silenceErrors) {
+        return `throw new Error("${e.message}");`;
+      } else {
+        errors.push({
+          index: index + 1,
+          ...command,
+          message: e
+        });
+      }
+    })))));
 
-    errors.length ? rej({ ...test, commands: errors }) : res(result);
+    if (errors.length) {
+      rej({ ...test, commands: errors });
+    }
+
+    if (!options.skipStdLibEmitting) {
+      // emit everything
+      let emittedTest = `it("${test.name}", async () => {`;
+      emittedTest += setupHooks.join("").concat(snapshot ? snapshot.setupHooks.join("") : "");
+      emittedTest += `await tests.${testName}(driver, vars);`;
+      emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
+      emittedTest += teardownHooks.join("").concat(snapshot ? snapshot.teardownHooks.join("") : "");
+      emittedTest += "});";
+
+      let func = `tests.${testName} = async function ${testName}(driver, vars, opts) {`;
+      func += commands.join("");
+      func += "}";
+
+      res({ id: test.id, name: test.name, test: emittedTest, function: func });
+    } else {
+      // emit only additional hooks
+      let snapshot = {
+        commands: commands.reduce((snapshot, emittedCommand, index) => {
+          if (!emittedCommand.skipped) {
+            snapshot[test.commands[index].id] = emittedCommand;
+          }
+          return snapshot;
+        }, {}),
+        setupHooks,
+        teardownHooks
+      };
+
+      if (Object.keys(snapshot.commands).length || snapshot.setupHooks.length || snapshot.teardownHooks.length) {
+        // if we even snapshotted anything
+        res({ id: test.id, snapshot });
+      } else {
+        // resolve to nothing if there is no snapshot
+        res({});
+      }
+    }
   });
 }
 
-function registerHook(hook) {
+export function registerHook(hook) {
   hooks.push(hook);
+}
+
+export function clearHooks() {
+  hooks.length = 0;
 }
 
 export default {
   emit,
-  registerHook
+  registerHook,
+  clearHooks
 };

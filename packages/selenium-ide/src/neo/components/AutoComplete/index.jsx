@@ -39,17 +39,19 @@ export default class AutoComplete extends React.Component {
           }}>
             <input id={this.id} {...props} style={{
               width: "100%",
+              paddingRight: "22px",
               boxSizing: "border-box"
             }}/>
             <label htmlFor={this.id} className="si-caret-wide" style={{
               position: "absolute",
               top: "0",
               bottom: "0",
-              right: "8px",
+              right: "5px",
               margin: "auto 0",
               fontSize: "16px",
               height: "16px",
-              color: "#a3a3a3"
+              color: "#a3a3a3",
+              cursor: "pointer"
             }}></label>
           </span>
         )}

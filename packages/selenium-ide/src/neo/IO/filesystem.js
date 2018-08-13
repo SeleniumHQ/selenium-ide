@@ -21,6 +21,7 @@ import { js_beautify as beautify } from "js-beautify";
 import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
 import TestCase from "../models/TestCase";
 import UiState from "../stores/view/UiState";
+import PlaybackState from "../stores/view/PlaybackState";
 import ModalState from "../stores/view/ModalState";
 import Selianize, { ParseError } from "selianize";
 import Manager from "../../plugin/manager";
@@ -70,9 +71,11 @@ export function saveProject(_project) {
 }
 
 function downloadProject(project) {
-  return exportProject(project).then(code => {
-    project.code = code;
-    Object.assign(project, Manager.emitDependencies());
+  return exportProject(project).then(snapshot => {
+    if (snapshot) {
+      project.snapshot = snapshot;
+      Object.assign(project, Manager.emitDependencies());
+    }
     return browser.downloads.download({
       filename: project.name + ".side",
       url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
@@ -84,7 +87,7 @@ function downloadProject(project) {
 
 function exportProject(project) {
   return Manager.validatePluginExport(project).then(() => {
-    return Selianize(project).catch(err => {
+    return Selianize(project, { silenceErrors: true, skipStdLibEmitting: true }).catch(err => {
       const markdown = ParseError(err && err.message || err);
       ModalState.showAlert({
         title: "Error saving project",
@@ -130,27 +133,29 @@ export function loadProject(project, file) {
   }
   loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
-      loadJSONProject(project, contents);
+      loadJSProject(project, JSON.parse(contents));
     } else {
       try {
         const type = verifyFile(contents);
         if (type === FileTypes.Suite) {
           ModalState.importSuite(contents, (files) => {
-            project.fromJS(migrateProject(files));
+            loadJSProject(project, migrateProject(files));
           });
         } else if (type === FileTypes.TestCase) {
           const { test, baseUrl } = migrateTestCase(contents);
-          if (project.url && project.url !== baseUrl) {
+          if (!project.urls.includes(baseUrl)) {
             ModalState.showAlert({
               title: "Migrate test case",
               description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
               confirmLabel: "Migrate",
               cancelLabel: "Discard"
-            }, (choseDownload) => {
-              if (choseDownload) {
-                project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl)));
+            }, (choseMigration) => {
+              if (choseMigration) {
+                UiState.selectTest(project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl))));
               }
             });
+          } else {
+            UiState.selectTest(project.addTestCase(TestCase.fromJS(test, baseUrl)));
           }
         }
       } catch (error) {
@@ -160,13 +165,16 @@ export function loadProject(project, file) {
   });
 }
 
-function loadJSONProject(project, data) {
-  project.fromJS(JSON.parse(data));
+function loadJSProject(project, data) {
+  UiState.changeView("Tests");
+  PlaybackState.clearPlayingCache();
+  UiState.clearViewCache();
+  project.fromJS(data);
   Manager.emitMessage({
     action: "event",
     event: "projectLoaded",
-    project: {
-      name: project.name
+    options: {
+      projectName: project.name
     }
   });
 }

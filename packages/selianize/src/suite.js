@@ -15,47 +15,53 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import TestCaseEmitter from "./testcase";
-
 const hooks = [];
 
-export function emit(suite, tests) {
+import config from "./config";
+
+export function emit(suite, tests, options = config, snapshot) {
   return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    const hookResults = (await Promise.all(hooks.map((hook) => hook({ name: suite.name })))).reduce((code, result) => (
+    const suiteTests = suite.tests.map((testId => (tests[testId].test)));
+    const hookResults = (await Promise.all(hooks.map((hook) => hook({ id: suite.id, name: suite.name, tests: suiteTests })))).reduce((code, result) => (
       code
       + (result.beforeAll ? `beforeAll(async () => {${result.beforeAll}});` : "")
       + (result.before ? `beforeEach(async () => {${result.before}});` : "")
       + (result.after ? `afterEach(async () => {${result.after}});` : "")
       + (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : "")
     ), "");
-    let errors = [];
-    let testsCode = (await Promise.all(suite.tests.map(testId => (
-      tests[testId]
-    )).map((test) => (TestCaseEmitter.emit(test).catch(e => {
-      errors.push(e);
-    })))));
 
-    if (suite.parallel) {
-      testsCode = testsCode.map((code, index) => ({
-        name: tests[suite.tests[index]].name,
-        code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
-      }));
-      return res(testsCode);
+    if (!options.skipStdLibEmitting) {
+      let testsCode = (await Promise.all(suite.tests.map(testId => (
+        tests[testId].emitted
+      )).map((test) => (test.test))));
+
+      if (suite.parallel) {
+        testsCode = testsCode.map((code, index) => ({
+          name: tests[suite.tests[index]].emitted.name,
+          code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
+        }));
+        return res(testsCode);
+      }
+
+      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}${snapshot ? snapshot.hook : ""}`;
+
+      result += testsCode.join("");
+
+      result += "});";
+      res({
+        code: result
+      });
+    } else {
+      res(hookResults ? {
+        snapshot: {
+          hook: hookResults
+        }
+      } : { skipped: true });
     }
-
-    let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}`;
-
-    result += testsCode.join("");
-
-    result += "});";
-    errors.length ? rej({
-      ...suite,
-      tests: errors
-    }) : res(result);
   });
 }
 
-function registerHook(hook) {
+export function registerHook(hook) {
   hooks.push(hook);
 }
 

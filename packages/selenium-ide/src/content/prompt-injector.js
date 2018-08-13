@@ -15,6 +15,7 @@
  *
  */
 import browser from "webextension-polyfill";
+import "./closure-polyfill";
 import { record } from "./record-api";
 import { selenium } from "./commands-api";
 
@@ -40,9 +41,9 @@ if (window === window.top) {
             }
             record("assertPrompt", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
             if (event.data.recordedResult != null) {
-              record("webdriverAnswerOnNextPrompt", [[event.data.recordedResult]], "", false, event.data.frameLocation);
+              record("webdriverAnswerOnVisiblePrompt", [[event.data.recordedResult]], "", false, event.data.frameLocation);
             } else {
-              record("webdriverChooseCancelOnNextPrompt", [[""]], "", false, event.data.frameLocation);
+              record("webdriverChooseCancelOnVisiblePrompt", [[""]], "", false, event.data.frameLocation);
             }
             break;
           case "confirm":
@@ -53,9 +54,9 @@ if (window === window.top) {
             }
             record("assertConfirmation", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
             if (event.data.recordedResult == true) {
-              record("webdriverChooseOkOnNextConfirmation", [[""]], "", false, event.data.frameLocation);
+              record("webdriverChooseOkOnVisibleConfirmation", [[""]], "", false, event.data.frameLocation);
             } else {
-              record("webdriverChooseCancelOnNextConfirmation", [[""]], "", false, event.data.frameLocation);
+              record("webdriverChooseCancelOnVisibleConfirmation", [[""]], "", false, event.data.frameLocation);
             }
             break;
           case "alert":

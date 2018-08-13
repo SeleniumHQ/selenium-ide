@@ -7,9 +7,10 @@
   font-style: normal;
 }
 
-[class^="si-"], [class*=" si-"] {
+[class^="si-"],
+[class*=" si-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'selenium-ide' !important;
+  font-family: 'selenium-ide', sans-serif !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -22,78 +23,122 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.si-open:before {
-  content: "\e905";
-}
-.si-pencil:before {
-  content: "\e919";
-}
-.si-step-down:before {
-  content: "\e917";
-}
-.si-caret-wide:before {
-  content: "\e918";
-}
-.si-gauge-1:before {
-  content: "\e90c";
-}
-.si-gauge-2:before {
-  content: "\e90e";
-}
-.si-gauge-3:before {
-  content: "\e912";
-}
-.si-gauge-4:before {
-  content: "\e913";
-}
-.si-gauge-5:before {
-  content: "\e914";
-}
-.si-search:before {
-  content: "\e916";
-}
-.si-caret:before {
-  content: "\e900";
-}
-.si-check:before {
-  content: "\e910";
-}
-.si-add:before {
+.si-download::before {
   content: "\e901";
 }
-.si-clear:before {
-  content: "\e902";
+
+.si-filter::before {
+  content: "\e915";
 }
-.si-step-into:before {
-  content: "\e903";
+
+.si-disable-breakpoints::before {
+  content: "\e91b";
 }
-.si-info:before {
-  content: "\e904";
+
+.si-break-exceptions::before {
+  content: "\e91c";
 }
-.si-more:before {
-  content: "\e911";
+
+.si-stop::before {
+  content: "\e91d";
 }
-.si-play-all:before {
-  content: "\e906";
+
+.si-open::before {
+  content: "\e905";
 }
-.si-play:before {
-  content: "\e907";
+
+.si-pencil::before {
+  content: "\e919";
 }
-.si-pause:before {
-  content: "\e908";
+
+.si-step-down::before {
+  content: "\e917";
 }
-.si-remove:before {
-  content: "\e909";
+
+.si-caret-wide::before {
+  content: "\e918";
 }
-.si-code:before {
-  content: "\e90a";
+
+.si-gauge-1::before {
+  content: "\e90c";
 }
-.si-save:before {
-  content: "\e90b";
+
+.si-gauge-2::before {
+  content: "\e90e";
 }
-.si-select:before {
+
+.si-gauge-3::before {
+  content: "\e912";
+}
+
+.si-gauge-4::before {
+  content: "\e913";
+}
+
+.si-gauge-5::before {
+  content: "\e914";
+}
+
+.si-search::before {
+  content: "\e916";
+}
+
+.si-caret::before {
+  content: "\e900";
+}
+
+.si-check::before {
+  content: "\e910";
+}
+
+.si-add::before {
   content: "\e90d";
 }
-.si-stop:before {
+
+.si-clear::before {
+  content: "\e91a";
+}
+
+.si-delete::before {
+  content: "\e902";
+}
+
+.si-step-into::before {
+  content: "\e903";
+}
+
+.si-info::before {
+  content: "\e904";
+}
+
+.si-more::before {
+  content: "\e911";
+}
+
+.si-play-all::before {
+  content: "\e906";
+}
+
+.si-play::before {
+  content: "\e907";
+}
+
+.si-pause::before {
+  content: "\e908";
+}
+
+.si-remove::before {
+  content: "\e909";
+}
+
+.si-code::before {
+  content: "\e90a";
+}
+
+.si-save::before {
+  content: "\e90b";
+}
+
+.si-select::before {
   content: "\e90f";
 }

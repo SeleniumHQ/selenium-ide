@@ -16,10 +16,10 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-import { Logger, Channels } from "../../stores/view/Logs";
+import { Logger, Channels, output } from "../../stores/view/Logs";
+import variables from "../../stores/view/Variables";
 
 const logger = new Logger(Channels.PLAYBACK);
-const declaredVars = {};
 const nbsp = String.fromCharCode(160);
 
 export function xlateArgument(value) {
@@ -31,15 +31,15 @@ export function xlateArgument(value) {
     const regexp = /\$\{(.*?)\}/g;
     let lastIndex = 0;
     while ((r2 = regexp.exec(value))) {
-      if (declaredVars[r2[1]]) {
+      if (variables.get(r2[1])) {
         if (r2.index - lastIndex > 0) {
           parts.push(string(value.substring(lastIndex, r2.index)));
         }
-        parts.push(declaredVars[r2[1]]);
+        parts.push(variables.get(r2[1]));
         lastIndex = regexp.lastIndex;
       } else if (r2[1] == "nbsp") {
         if (r2.index - lastIndex > 0) {
-          parts.push(declaredVars[string(value.substring(lastIndex, r2.index))]);
+          parts.push(variables.get(string(value.substring(lastIndex, r2.index))));
         }
         parts.push(nbsp);
         lastIndex = regexp.lastIndex;
@@ -65,13 +65,18 @@ function string(value) {
   }
 }
 
-function handleFormatCommand(message) {
-  if (message.storeStr) {
-    declaredVars[message.storeVar] = message.storeStr;
+function handleFormatCommand(message, sender, sendResponse) {
+  if (message.storeVar) {
+    variables.addVariable(message.storeVar, message.storeStr);
+    return sendResponse(true);
   } else if (message.echoStr) {
     logger.log("echo: " + message.echoStr);
+    return sendResponse(true);
+  } else if (message.log && output.logs[output.logs.length - 1].message.indexOf(message.log.message) === -1) {
+    // this check may be dangerous, especially if something else is bombarding the logs
+    logger[message.log.type || "log"](message.log.message);
+    return sendResponse(true);
   }
 }
 
 browser.runtime.onMessage.addListener(handleFormatCommand);
-

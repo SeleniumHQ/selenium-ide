@@ -29,8 +29,8 @@ import Tooltip from "../../components/Tooltip";
 import storage from "../../IO/storage";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import seed from "../../stores/seed";
-import modify from "../../side-effects/modify";
 import SuiteDropzone from "../../components/SuiteDropzone";
+import PauseBanner from "../../components/PauseBanner";
 import ProjectHeader from "../../components/ProjectHeader";
 import Navigation from "../Navigation";
 import Editor from "../Editor";
@@ -43,7 +43,6 @@ import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
-import "../../styles/markdown.css";
 
 import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
@@ -72,8 +71,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
   seed(project, 0);
 }
-
-modify(project);
+project.setModified(false);
 
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
@@ -94,14 +92,15 @@ function firefox57WorkaroundForBlankPanel () {
   });
 }
 
-firefox57WorkaroundForBlankPanel();
+if (browser.windows) {
+  firefox57WorkaroundForBlankPanel();
+}
 
 @DragDropContext(HTML5Backend)
 @observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = { project };
-    this.moveTest = this.moveTest.bind(this);
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
     this.quitHandler = window.addEventListener("beforeunload", (e) => {
@@ -112,13 +111,14 @@ firefox57WorkaroundForBlankPanel();
         return confirmationMessage;
       }
     });
-  }
-  moveTest(testItem, destination) {
-    const origin = this.state.project.suites.find((suite) => (suite.id === testItem.suite));
-    const test = origin.tests.find(test => (test.id === testItem.id));
-
-    destination.addTestCase(test);
-    origin.removeTestCase(test);
+    this.moveInterval = setInterval(() => {
+      storage.set({
+        origin: {
+          top: window.screenY,
+          left: window.screenX
+        }
+      });
+    }, 3000);
   }
   handleResize(currWindow) {
     UiState.setWindowHeight(currWindow.innerHeight);
@@ -152,6 +152,7 @@ firefox57WorkaroundForBlankPanel();
     UiState.setNavigationHover(false);
   }
   componentWillUnmount() {
+    clearInterval(this.moveInterval);
     window.removeEventListener(this.resizeHandler);
     window.removeEventListener(this.quitHandler);
   }
@@ -164,8 +165,13 @@ firefox57WorkaroundForBlankPanel();
             minSize={UiState.minContentHeight}
             maxSize={UiState.maxContentHeight}
             size={UiState.windowHeight - UiState.consoleHeight}
-            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}>
+            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}
+            style={{
+              position: "initial"
+            }}
+          >
             <div className="wrapper">
+              <PauseBanner />
               <ProjectHeader
                 title={this.state.project.name}
                 changed={this.state.project.modified}
@@ -185,17 +191,14 @@ firefox57WorkaroundForBlankPanel();
                   <Navigation
                     tests={UiState.filteredTests}
                     suites={this.state.project.suites}
-                    createSuite={this.createSuite}
-                    removeSuite={this.state.project.deleteSuite}
-                    createTest={this.createTest}
-                    moveTest={this.moveTest}
-                    deleteTest={this.deleteTest}
+                    duplicateTest={this.state.project.duplicateTestCase}
                   />
                   <Editor
                     url={this.state.project.url}
                     urls={this.state.project.urls}
                     setUrl={this.state.project.setUrl}
-                    test={UiState.selectedTest.test}
+                    test={UiState.displayedTest}
+                    callstackIndex={UiState.selectedTest.stack}
                   />
                 </SplitPane>
               </div>

@@ -49,61 +49,163 @@ export default function seed(store, numberOfSuites = 5) {
     }
   }
 
-  const url = "https://en.wikipedia.org";
+  const url = "http://the-internet.herokuapp.com";
   store.setUrl(url);
   store.addUrl(url);
-  const playbackTest = store.createTestCase("aa playback");
-  const open = playbackTest.createCommand();
-  open.setComment("Open the wikipedia Legislation article");
-  open.setCommand("open");
-  open.setTarget("/wiki/Legislation");
-  const firstClick = playbackTest.createCommand();
-  firstClick.setCommand("click");
-  firstClick.setTarget("link=enacted");
-  const secondClick = playbackTest.createCommand();
-  secondClick.setCommand("clickAt");
-  secondClick.setTarget("link=parliamentary systems");
 
-  const playbackTest2 = store.createTestCase("aab playback");
-  const open2 = playbackTest2.createCommand();
-  open2.setCommand("open");
-  open2.setTarget("/wiki/River_Chater");
-  const firstClick2 = playbackTest2.createCommand();
-  firstClick2.setCommand("clickAt");
-  firstClick2.setTarget("link=River Welland");
-  const secondClick2 = playbackTest2.createCommand();
-  secondClick2.setCommand("clickAt");
-  secondClick2.setTarget("link=floods of 1947");
-  const thirdClick2 = playbackTest2.createCommand();
-  thirdClick2.setCommand("clickAt");
-  thirdClick2.setTarget("link=scapegoat");
+  const controlFlowIfTest = store.createTestCase("control flow if");
+  controlFlowIfTest.createCommand(undefined, "if", "true");
+  controlFlowIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowIfTest.createCommand(undefined, "elseIf", "true");
+  controlFlowIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowIfTest.createCommand(undefined, "else");
+  controlFlowIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowIfTest.createCommand(undefined, "end");
 
-  const typeTest = store.createTestCase("aab type");
-  const open3 = typeTest.createCommand();
-  open3.setCommand("open");
-  open3.setTarget("/wiki/Main_Page");
-  const clickSearch = typeTest.createCommand();
-  clickSearch.setCommand("clickAt");
-  clickSearch.setTarget("id=searchInput");
-  const type = typeTest.createCommand();
-  type.setCommand("type");
-  type.setTarget("id=searchInput");
-  type.setValue("Selenium IDE");
+  const controlFlowElseIfTest = store.createTestCase("control flow else if");
+  controlFlowElseIfTest.createCommand(undefined, "if", "false");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowElseIfTest.createCommand(undefined, "elseIf", "true");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseIfTest.createCommand(undefined, "else");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseIfTest.createCommand(undefined, "end");
 
-  const submit = typeTest.createCommand();
-  submit.setCommand("clickAt");
-  submit.setTarget("css=.mw-searchSuggest-link:first-child");
+  const controlFlowElseTest = store.createTestCase("control flow else");
+  controlFlowElseTest.createCommand(undefined, "if", "false");
+  controlFlowElseTest.createCommand(undefined, "echo", "foo");
+  controlFlowElseTest.createCommand(undefined, "elseIf", "false");
+  controlFlowElseTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseTest.createCommand(undefined, "else");
+  controlFlowElseTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseTest.createCommand(undefined, "end");
 
-  const suite = store.createSuite("aaa suite");
-  suite.addTestCase(playbackTest);
+  const controlFlowDoTest = store.createTestCase("control flow do");
+  controlFlowDoTest.createCommand(undefined, "do");
+  controlFlowDoTest.createCommand(undefined, "echo", "foo");
+  controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
 
-  const suite2 = store.createSuite("aaab suite");
-  suite2.addTestCase(typeTest);
-  suite2.addTestCase(playbackTest2);
+  const controlFlowTimesTest = store.createTestCase("control flow times");
+  controlFlowTimesTest.createCommand(undefined, "times", "2");
+  controlFlowTimesTest.createCommand(undefined, "echo", "foo");
+  controlFlowTimesTest.createCommand(undefined, "end");
 
-  UiState.selectTest(playbackTest);
+  const controlFlowWhileTest = store.createTestCase("control flow while");
+  controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
+  controlFlowWhileTest.createCommand(undefined, "echo", "foo");
+  controlFlowWhileTest.createCommand(undefined, "end");
 
-  store.changeName("project");
+  const executeScriptSandboxTest = store.createTestCase("execute script");
+  executeScriptSandboxTest.createCommand(undefined, "executeScript", "return true", "blah");
+  executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
+  executeScriptSandboxTest.createCommand(undefined, "verify", "${blah}", "false");
+  executeScriptSandboxTest.createCommand(undefined, "assert", "${blah}", "true");
+  executeScriptSandboxTest.createCommand(undefined, "executeScript", "true");
+  executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
+
+  const checkTest = store.createTestCase("check");
+  checkTest.createCommand(undefined, "open", "/checkboxes");
+  const command = checkTest.createCommand(undefined, "check", "css=input");
+  command.setTargets([
+    ["id=something", "id"],
+    ["name=something-else", "name"],
+    ["linkText=number density", "linkText"],
+    ["xpath=//a[contains(text(),'number density')]", "xpath:link"],
+    ["css=main .class > p a.link", "css"],
+    ["xpath=(//a[contains(text(),'number line')])[2]", "xpath:link"],
+    ["(//a[contains(text(),'number line')])[2]", "xpath:link"],
+    ["//a[contains(text(),'number density')]", "xpath:link"],
+    ["//div[@id='mw-content-text']/div/p[2]/a[5]", "xpath:idRelative"],
+    ["//a[contains(@href, '/wiki/Number_density')]", "xpath:href"],
+    ["//a[5]", "xpath:position"]
+  ]);
+  checkTest.createCommand(undefined, "assertChecked", "css=input");
+  checkTest.createCommand(undefined, "uncheck", "css=input");
+  checkTest.createCommand(undefined, "assertNotChecked", "css=input");
+
+  const clickTest = store.createTestCase("click");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "linkText=Dropdown");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "link=Dropdown");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+  clickTest.createCommand(undefined, "open", "/");
+  clickTest.createCommand(undefined, "click", "partialLinkText=ropd");
+  clickTest.createCommand(undefined, "assertText", "css=h3", "Dropdown List");
+
+  const clickAtTest = store.createTestCase("click at");
+  clickAtTest.createCommand(undefined, "open", "/");
+  clickAtTest.createCommand(undefined, "clickAt", "css=a");
+
+  const framesTest = store.createTestCase("frames");
+  framesTest.createCommand(undefined, "open", "/iframe");
+  framesTest.createCommand(undefined, "selectFrame", "css=#mce_0_ifr");
+  framesTest.createCommand(undefined, "assertText", "css=#tinymce", "Your content goes here.");
+  framesTest.createCommand(undefined, "open", "/nested_frames");
+  framesTest.createCommand(undefined, "selectFrame", "frame-top");
+  framesTest.createCommand(undefined, "selectFrame", "frame-middle");
+  framesTest.createCommand(undefined, "assertText", "css=#content", "MIDDLE");
+
+  const selectTest = store.createTestCase("select");
+  selectTest.createCommand(undefined, "open", "/dropdown");
+  selectTest.createCommand(undefined, "select", "id=dropdown", "value=1");
+  selectTest.createCommand(undefined, "assertSelectedValue", "id=dropdown", "1");
+  selectTest.createCommand(undefined, "assertNotSelectedValue", "id=dropdown", "2");
+  selectTest.createCommand(undefined, "assertSelectedLabel", "id=dropdown", "Option 1");
+  selectTest.createCommand(undefined, "select", "id=dropdown", "Option 2");
+  selectTest.createCommand(undefined, "assertSelectedValue", "id=dropdown", "2");
+  selectTest.createCommand(undefined, "assertNotSelectedValue", "id=dropdown", "1");
+  selectTest.createCommand(undefined, "assertSelectedLabel", "id=dropdown", "Option 2");
+
+  const sendKeysTest = store.createTestCase("send keys");
+  sendKeysTest.createCommand(undefined, "open", "/login");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
+  sendKeysTest.createCommand(undefined, "assertValue", "css=#username", "blah");
+
+  const storeTextTest = store.createTestCase("store text");
+  storeTextTest.createCommand(undefined, "open", "/login");
+  storeTextTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
+  storeTextTest.createCommand(undefined, "storeValue", "css=#username", "aVar");
+  storeTextTest.createCommand(undefined, "echo", "${aVar}");
+
+  const submitTest = store.createTestCase("submit");
+  submitTest.createCommand(undefined, "open", "/login");
+  submitTest.createCommand(undefined, "sendKeys", "css=#username", "tomsmith");
+  submitTest.createCommand(undefined, "sendKeys", "css=#password", "SuperSecretPassword!");
+  submitTest.createCommand(undefined, "submit", "css=#login");
+  submitTest.createCommand(undefined, "assertElementPresent", "css=.flash.success");
+
+  const suiteControlFlow = store.createSuite("control flow");
+  suiteControlFlow.addTestCase(controlFlowIfTest);
+  suiteControlFlow.addTestCase(controlFlowElseIfTest);
+  suiteControlFlow.addTestCase(controlFlowElseTest);
+  suiteControlFlow.addTestCase(controlFlowDoTest);
+  suiteControlFlow.addTestCase(controlFlowTimesTest);
+  suiteControlFlow.addTestCase(controlFlowWhileTest);
+
+  const suiteAll = store.createSuite("all tests");
+  store.tests.forEach(function(test) {
+    suiteAll.addTestCase(test);
+  });
+
+  const smokeSuite = store.createSuite("smoke");
+  smokeSuite.addTestCase(checkTest);
+  smokeSuite.addTestCase(clickTest);
+  smokeSuite.addTestCase(clickAtTest);
+  smokeSuite.addTestCase(executeScriptSandboxTest);
+  smokeSuite.addTestCase(framesTest);
+  smokeSuite.addTestCase(selectTest);
+  smokeSuite.addTestCase(sendKeysTest);
+  smokeSuite.addTestCase(storeTextTest);
+  smokeSuite.addTestCase(submitTest);
+
+  UiState.changeView("Test suites");
+  let suiteState = UiState.getSuiteState(suiteAll);
+  suiteState.setOpen(true);
+  UiState.selectTest(checkTest, suiteAll);
+
+  store.changeName("seed project");
 
   return store;
 }

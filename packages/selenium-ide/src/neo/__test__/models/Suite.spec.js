@@ -57,11 +57,31 @@ describe("Suite model", () => {
   it("should initiate as a sequential suite", () => {
     const suite = new Suite();
     expect(suite.isParallel).toBeFalsy();
+    expect(suite.persistSession).toBeFalsy();
   });
   it("should set the suite to parallel", () => {
     const suite = new Suite();
     suite.setParallel(true);
     expect(suite.isParallel).toBeTruthy();
+  });
+  it("should set the suite to unsafe", () => {
+    const suite = new Suite();
+    suite.setPersistSession(true);
+    expect(suite.persistSession).toBeTruthy();
+  });
+  it("should not be able to set a parallel suite unsafe", () => {
+    const suite = new Suite();
+    suite.setParallel(true);
+    suite.setPersistSession(true);
+    expect(suite.persistSession).toBeFalsy();
+  });
+  it("should make a suite safe if it was made parallel", () => {
+    const suite = new Suite();
+    suite.setPersistSession(true);
+    expect(suite.persistSession).toBeTruthy();
+    suite.setParallel(true);
+    expect(suite.isParallel).toBeTruthy();
+    expect(suite.persistSession).toBeFalsy();
   });
   it("should add a new Test Case", () => {
     const store = new ProjectStore();
@@ -99,6 +119,26 @@ describe("Suite model", () => {
     expect(suite.tests.length).toBe(1);
     suite.removeTestCase(new TestCase());
     expect(suite.tests.length).toBe(1);
+  });
+  it("shoul tell if a test exist in the suite", () => {
+    const suite = new Suite();
+    const exists = new TestCase();
+    const nonExistent = new TestCase();
+    suite.addTestCase(exists);
+    expect(suite.containsTest(exists)).toBeTruthy();
+    expect(suite.containsTest(nonExistent)).toBeFalsy();
+  });
+  it("should swap the test cases", () => {
+    const suite = new Suite();
+    const test1 = new TestCase();
+    const test2 = new TestCase();
+    suite.addTestCase(test1);
+    suite.addTestCase(test2);
+    expect(suite.tests[0]).toBe(test1);
+    expect(suite.tests[1]).toBe(test2);
+    suite.swapTestCases(0, 1);
+    expect(suite.tests[1]).toBe(test1);
+    expect(suite.tests[0]).toBe(test2);
   });
   it("should replace the tests in the suite", () => {
     const store = new ProjectStore();

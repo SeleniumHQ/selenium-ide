@@ -55,7 +55,7 @@ Recorder.prototype.attach = function() {
 
       const handlers = Recorder.eventHandlers[eventKey];
       this.eventListeners[eventKey] = [];
-      for (let i=0 ; i<handlers.length ; i++) {
+      for (let i = 0 ; i < handlers.length ; i++) {
         this.window.document.addEventListener(eventName, handlers[i], capture);
         this.eventListeners[eventKey].push(handlers[i]);
       }
@@ -81,7 +81,7 @@ Recorder.prototype.detach = function() {
 function startShowElement(message){
   if (message.showElement) {
     const result = selenium["doShowElement"](message.targetValue);
-    return Promise.resolve({result: result});
+    return Promise.resolve({ result: result });
   }
 }
 
@@ -113,6 +113,9 @@ if (!window._recordListener) {
   let currentParentWindow;
   while (currentWindow !== window.top) {
     currentParentWindow = currentWindow.parent;
+    if (!currentParentWindow.frames.length) {
+      break;
+    }
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
       if (currentParentWindow.frames[idx] === currentWindow) {
         frameLocation = ":" + idx + frameLocation;
@@ -123,7 +126,7 @@ if (!window._recordListener) {
   frameLocation = "root" + frameLocation;
 })();
 
-browser.runtime.sendMessage({ frameLocation: frameLocation });
+browser.runtime.sendMessage({ frameLocation: frameLocation }).catch(() => {});
 
 const recorder = new Recorder(window);
 window.recorder = recorder;

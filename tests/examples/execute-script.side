@@ -1,0 +1,81 @@
+{
+  "id": "001ed38f-530e-4651-855f-988dc5400012",
+  "name": "execute-script",
+  "url": "http://nginx:80/",
+  "tests": [{
+    "id": "c065304c-a1d4-4a78-a8da-2e4c3e71adc5",
+    "name": "execute script",
+    "commands": [{
+      "id": "afd88bba-e648-44b4-b74e-8f5fd55192b8",
+      "comment": "",
+      "command": "open",
+      "target": "/value.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e7140d2f-50a6-4a97-9f3e-7303d426b255",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"sync\"",
+      "targets": [],
+      "value": "sync"
+    }, {
+      "id": "f1bb7ae5-d546-43d2-a910-489c39afb123",
+      "comment": "",
+      "command": "type",
+      "target": "id=v",
+      "targets": [],
+      "value": "${sync}"
+    }, {
+      "id": "cdbdf862-553c-4366-a183-671a1b95ab94",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=v",
+      "targets": [],
+      "value": "sync"
+    }]
+  }, {
+    "id": "d4059a41-89a5-4266-9cd6-ce6cffe0a683",
+    "name": "execute async script",
+    "commands": [{
+      "id": "9e888f89-b272-4598-97be-0cc1e316d8a5",
+      "comment": "",
+      "command": "open",
+      "target": "/value.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e804bce2-5c87-47df-9a06-9b69f531418b",
+      "comment": "",
+      "command": "executeAsyncScript",
+      "target": "return new Promise((r) => {setTimeout(() => {r(\"async\")}, 500)})",
+      "targets": [],
+      "value": "async"
+    }, {
+      "id": "2a32d3be-1bc4-4a1c-8141-05ae3caf512e",
+      "comment": "",
+      "command": "type",
+      "target": "id=v",
+      "targets": [],
+      "value": "${async}"
+    }, {
+      "id": "dca922a2-cbf8-43c3-bba5-bf1ad1c94144",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=v",
+      "targets": [],
+      "value": "async"
+    }]
+  }],
+  "suites": [{
+    "id": "ba455ffe-d194-4fed-810e-272522a7c874",
+    "name": "execute script",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["d4059a41-89a5-4266-9cd6-ce6cffe0a683", "c065304c-a1d4-4a78-a8da-2e4c3e71adc5"]
+  }],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
+  "plugins": [],
+  "version": "1.0"
+}

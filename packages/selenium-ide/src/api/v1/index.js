@@ -17,6 +17,8 @@
 
 import Router from "../../router";
 import Manager from "../../plugin/manager";
+import logger from "../../neo/stores/view/Logs";
+import { LogTypes } from "../../neo/ui-models/Log";
 import playbackRouter from "./playback";
 import recordRouter from "./record";
 import exportRouter from "./export";
@@ -37,6 +39,17 @@ router.post("/register", (req, res) => {
     dependencies: req.dependencies
   };
   Manager.registerPlugin(plugin);
+  res(true);
+});
+
+router.post("/log", (req, res) => {
+  if (req.type === LogTypes.Error) {
+    logger.error(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
+  } else if (req.type === LogTypes.Warning) {
+    logger.warn(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
+  } else {
+    logger.log(`${Manager.getPlugin(req.sender).name}: ${req.message}`);
+  }
   res(true);
 });
 

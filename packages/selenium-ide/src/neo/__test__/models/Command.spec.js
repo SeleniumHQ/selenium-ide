@@ -21,6 +21,16 @@ describe("Command", () => {
   it("should generate and id", () => {
     expect((new Command()).id).toBeDefined();
   });
+  it("should set basic values in constructor", () => {
+    const c = "click at";
+    const t = "button";
+    const v = "32, 21";
+    const command = new Command(undefined, c, t, v);
+    expect(command.command).toBe(c);
+    expect(command.target).toBe(t);
+    expect(command.value).toBe(v);
+    expect(command.id).toBeDefined();
+  });
   it("should set a comment", () => {
     const command = new Command();
     command.setComment("test");
@@ -45,10 +55,12 @@ describe("Command", () => {
     const command = new Command();
     command.setCommand();
     command.setTarget();
+    command.setTargets();
     command.setValue();
     command.setComment();
     expect(command.command).toEqual("");
     expect(command.target).toEqual("");
+    expect(command.targets.length).toBe(0);
     expect(command.value).toEqual("");
     expect(command.comment).toEqual("");
   });
@@ -56,6 +68,14 @@ describe("Command", () => {
     const command = new Command();
     command.setTarget("a");
     expect(command.target).toBe("a");
+  });
+  it("should set the targets", () => {
+    const command = new Command();
+    command.setTargets([
+      ["button", "xpath"]
+    ]);
+    expect(command.targets[0][0]).toBe("button");
+    expect(command.targets[0][1]).toBe("xpath");
   });
   it("should set the value", () => {
     const command = new Command();
@@ -85,6 +105,9 @@ describe("Command", () => {
     command.setComment("test");
     command.setCommand("open");
     command.setTarget("a");
+    command.setTargets([
+      ["button", "xpath"]
+    ]);
     command.setValue("submit");
     command.toggleBreakpoint();
     const clone = command.clone();
@@ -93,6 +116,7 @@ describe("Command", () => {
     expect(clone.comment).toBe(command.comment);
     expect(clone.command).toBe(command.command);
     expect(clone.target).toBe(command.target);
+    expect(clone.targets).toEqual(command.targets);
     expect(clone.value).toBe(command.value);
     expect(clone.isBreakpoint).toBeFalsy();
   });
@@ -103,6 +127,9 @@ describe("Command", () => {
       comment: "test",
       command: "open",
       target: "/",
+      targets: [
+        ["button", "xpath"]
+      ],
       value: "test"
     };
     const command = Command.fromJS(jsRepresentation);
@@ -110,6 +137,8 @@ describe("Command", () => {
     expect(command.comment).toBe(jsRepresentation.comment);
     expect(command.command).toBe(jsRepresentation.command);
     expect(command.target).toBe(jsRepresentation.target);
+    expect(command.targets[0][0]).toBe("button");
+    expect(command.targets[0][1]).toBe("xpath");
     expect(command.value).toBe(jsRepresentation.value);
     expect(command.isBreakpoint).toBeFalsy();
     expect(command instanceof Command).toBeTruthy();

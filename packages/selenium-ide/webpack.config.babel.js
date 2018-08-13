@@ -236,7 +236,6 @@ export default {
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "content/global.js", to: "vendor" },
-      { from: "selenium-core-scripts/htmlutils.js", to: "vendor" },
       { from: "selenium-core-scripts/selenium-browserdetect.js", to: "vendor" },
       { from: "content/prompt.js", to: "./" },
       { from: "content/prompt.css", to: "./" },

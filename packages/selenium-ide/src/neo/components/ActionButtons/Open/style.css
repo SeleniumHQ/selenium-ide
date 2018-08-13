@@ -12,11 +12,6 @@
   left: -1000px;
 }
 
-.file-input > input:focus ~ label {
-  border-color: rgba(0,0,0,.25);
-  box-shadow: inset 0 0 0 1px hsla(0,0%,100%,.7);
-}
-
 .file-input > label {
   width: 22px;
   height: 22px;
@@ -24,6 +19,11 @@
   display: inline-block;
   position: relative;
   cursor: pointer;
+}
+
+.file-input > input:focus ~ label {
+  border-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.7);
 }
 
 .file-input > label > i {

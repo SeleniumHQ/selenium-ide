@@ -21,4 +21,25 @@
   <body>
       <h1>Preparing to run your test</h1>
   </body>
+  <script>
+    var scripts = [
+      "assets/vendor/global.js",
+      "assets/vendor/selenium-browserdetect.js",
+      "assets/polyfills.js",
+      "assets/escape.js",
+      "assets/injector.js",
+      "assets/record.js"
+    ];
+    var urls;
+    if (chrome) {
+      urls = scripts.map(script => (chrome.runtime.getURL(script)));
+    } else if (browser) {
+      urls = scripts.map(script => (browser.runtime.getURL(script)));
+    }
+    urls.forEach(url => {
+      var e = document.createElement("script");
+      e.src = url;
+      document.body.appendChild(e);
+    });
+  </script>
 </html>

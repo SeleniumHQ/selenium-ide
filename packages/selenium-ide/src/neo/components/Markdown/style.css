@@ -1,0 +1,36 @@
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  color: #727272;
+  margin: 7px 0;
+}
+
+.markdown p {
+  margin: 5px 0;
+}
+
+.markdown ol {
+  margin: 3px 0;
+  padding: 0 0 0 30px;
+}
+
+.markdown ol li {
+  margin: 3px 0;
+}
+
+.markdown a,
+.markdown a:visited {
+  color: #40a6ff;
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+}
+
+.markdown code {
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+}

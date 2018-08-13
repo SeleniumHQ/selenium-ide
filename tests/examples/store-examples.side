@@ -1,0 +1,102 @@
+{
+  "id": "b4675761-fdf4-4799-a7b0-989dd0f481f0",
+  "name": "store-examples",
+  "url": "http://nginx:80",
+  "tests": [{
+    "id": "1f270ca5-5a7c-4067-8f67-b4fc0dcea00b",
+    "name": "attributes",
+    "commands": [{
+      "id": "87af5840-26f1-4a35-8814-3d4e05c913a9",
+      "comment": "",
+      "command": "open",
+      "target": "/store/attributes.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e3794da0-c506-4d85-a628-a8f6f92b12ce",
+      "comment": "",
+      "command": "storeAttribute",
+      "target": "id=test-id-1@style",
+      "targets": [],
+      "value": "var1"
+    }, {
+      "id": "ef2dd2cf-3ef5-4172-83e2-c2f24283046a",
+      "comment": "",
+      "command": "type",
+      "target": "id=test",
+      "targets": [],
+      "value": "${var1}"
+    }, {
+      "id": "8cf7cf82-1254-4da4-8af7-f8a674e381b8",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=test",
+      "targets": [],
+      "value": "color: blue;"
+    }]
+  }, {
+    "id": "e68f3128-4bea-4a35-999f-31466d7b4340",
+    "name": "xpath count",
+    "commands": [{
+      "id": "f12b3e4b-0c12-4c20-9aa6-8d04d436b668",
+      "comment": "",
+      "command": "open",
+      "target": "/store/nodes.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3ca83da5-71ac-44cd-91b4-0dff477a2969",
+      "comment": "",
+      "command": "storeXpathCount",
+      "target": "xpath=//span",
+      "targets": [],
+      "value": "span_count"
+    }, {
+      "id": "05de1848-f1d3-4c9b-9c2c-e6495e857b89",
+      "comment": "",
+      "command": "type",
+      "target": "id=test",
+      "targets": [],
+      "value": "${span_count}"
+    }, {
+      "id": "f84c1c30-510c-4268-a683-d223da0be9a8",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=test",
+      "targets": [],
+      "value": "10"
+    }, {
+      "id": "fe8b75e9-f193-4341-9cda-4ee743559acd",
+      "comment": "",
+      "command": "storeXpathCount",
+      "target": "xpath=//div[contains(@class, \"testclass\")]",
+      "targets": [],
+      "value": "div_count"
+    }, {
+      "id": "45f83e25-610b-47d5-bddc-79051e12e011",
+      "comment": "",
+      "command": "type",
+      "target": "id=test",
+      "targets": [],
+      "value": "${div_count}"
+    }, {
+      "id": "a4f1861d-6480-496f-bef1-649a396d93ac",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=test",
+      "targets": [],
+      "value": "6"
+    }]
+  }],
+  "suites": [{
+    "id": "33487441-d469-4fe2-8f5e-893104aa2316",
+    "name": "store",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b", "e68f3128-4bea-4a35-999f-31466d7b4340"]
+  }],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
+  "plugins": [],
+  "version": "1.0"
+}

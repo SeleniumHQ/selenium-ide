@@ -4,7 +4,7 @@
   width: 100%;
   height: 8px;
   border-radius: 10px;
-  background-color: #E8E8E8;
+  background-color: #e8e8e8;
   border: 0;
   max-width: 160px;
 }
@@ -12,24 +12,24 @@
 .progress::-webkit-progress-bar {
   height: 8px;
   border-radius: 4px;
-  background-color: #E8E8E8;
+  background-color: #e8e8e8;
 }
 
 .progress::-webkit-progress-value {
   border-radius: 4px;
-  background-color: #159B41;
+  background-color: #159b41;
 }
 
 .progress.has-error::-webkit-progress-value {
-  background-color: #DF0006;
+  background-color: #df0006;
 }
 
 .progress::-moz-progress-bar {
   height: 8px;
   border-radius: 4px;
-  background-color: #159B41;
+  background-color: #159b41;
 }
 
 .progress.has-error::-moz-progress-bar {
-    background-color: #DF0006;
+  background-color: #df0006;
 }

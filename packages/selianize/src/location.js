@@ -21,6 +21,8 @@ const emitters = {
   id: emitId,
   name: emitName,
   link: emitLink,
+  linkText: emitLink,
+  partialLinkText: emitPartialLinkText,
   css: emitCss,
   xpath: emitXpath
 };
@@ -47,21 +49,25 @@ export default {
 };
 
 function emitId(selector) {
-  return Promise.resolve(`By.id("${selector}")`);
+  return Promise.resolve(`By.id(\`${selector}\`)`);
 }
 
 function emitName(selector) {
-  return Promise.resolve(`By.name("${selector}")`);
+  return Promise.resolve(`By.name(\`${selector}\`)`);
 }
 
 function emitLink(selector) {
-  return Promise.resolve(`By.linkText("${selector}")`);
+  return Promise.resolve(`By.linkText(\`${selector}\`)`);
+}
+
+function emitPartialLinkText(selector) {
+  return Promise.resolve(`By.partialLinkText(\`${selector}\`)`);
 }
 
 function emitCss(selector) {
-  return Promise.resolve(`By.css("${selector}")`);
+  return Promise.resolve(`By.css(\`${selector}\`)`);
 }
 
 function emitXpath(selector) {
-  return Promise.resolve(`By.xpath("${selector}")`);
+  return Promise.resolve(`By.xpath(\`${selector}\`)`);
 }

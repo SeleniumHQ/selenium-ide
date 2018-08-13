@@ -20,6 +20,7 @@ import uuidv4 from "uuid/v4";
 import naturalCompare from "string-natural-compare";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
+import modify from "../../side-effects/modify";
 
 export default class ProjectStore {
   @observable id = uuidv4();
@@ -33,6 +34,7 @@ export default class ProjectStore {
 
   constructor(name = "Untitled Project") {
     this.name = name;
+    modify(this);
     this.toJS = this.toJS.bind(this);
   }
 
@@ -56,7 +58,8 @@ export default class ProjectStore {
     this.url = url;
   }
 
-  @action.bound addUrl(url) {
+  @action.bound addUrl(urlToAdd) {
+    const url = (new URL(urlToAdd)).href;
     if (!this._urls.find((u) => (u === url)))
       this._urls.push(url);
   }
@@ -69,8 +72,11 @@ export default class ProjectStore {
     this.name = name.replace(/<[^>]*>/g, ""); // firefox adds unencoded html elements to the string, strip them
   }
 
-  @action.bound setModified() {
-    this.modified = true;
+  @action.bound setModified(modified = true) {
+    this.modified = modified;
+    if (!modified) {
+      modify(this);
+    }
   }
 
   @action.bound createSuite(...argv) {
@@ -106,7 +112,18 @@ export default class ProjectStore {
         test.name = `${test.name} (${foundNumber})`;
       }
       this._tests.push(test);
+      return test;
     }
+  }
+
+  @action.bound duplicateTestCase(test) {
+    const test2 = test.export();
+    delete test2.id;
+    test2.commands.forEach((cmd) => {
+      delete cmd.id;
+    });
+    const toBeAdded = TestCase.fromJS(test2);
+    this.addTestCase(toBeAdded);
   }
 
   @action.bound deleteTestCase(test) {
@@ -134,10 +151,13 @@ export default class ProjectStore {
     this.setUrl(jsRep.url);
     this._tests.replace(jsRep.tests.map(TestCase.fromJS));
     this._suites.replace(jsRep.suites.map((suite) => Suite.fromJS(suite, this.tests)));
-    this._urls.replace(jsRep.urls);
+    this._urls.clear();
+    jsRep.urls.forEach((url) => {
+      this.addUrl(url);
+    });
     this.plugins.replace(jsRep.plugins);
     this.id = jsRep.id || uuidv4();
-    this.modified = false;
+    this.setModified(false);
   }
 
   toJS() {

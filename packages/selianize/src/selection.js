@@ -25,9 +25,12 @@ const emitters = {
 export function emit(location) {
   return new Promise(async (res, rej) => {
     const [type, selector] = location.split("=");
-    if (emitters[type]) {
+    if (emitters[type] && selector) {
       let result = await emitters[type](selector);
       res(result);
+    } else if (!selector) {
+      // no selector strategy given, assuming label
+      res(await emitters["label"](type));
     } else {
       rej(new Error(`Unknown selection locator ${type}`));
     }
@@ -39,17 +42,17 @@ export default {
 };
 
 function emitId(id) {
-  return Promise.resolve(`By.css("*[id=${id}]")`);
+  return Promise.resolve(`By.css(\`*[id=${id}]\`)`);
 }
 
 function emitValue(value) {
-  return Promise.resolve(`By.css("*[value=${value}]")`);
+  return Promise.resolve(`By.css(\`*[value=${value}]\`)`);
 }
 
 function emitLabel(label) {
-  return Promise.resolve(`By.xpath("//option[. = '${label}']")`);
+  return Promise.resolve(`By.xpath(\`//option[. = '${label}']\`)`);
 }
 
 function emitIndex(index) {
-  return Promise.resolve(`By.css("*:nth-child(${index})")`);
+  return Promise.resolve(`By.css(\`*:nth-child(${index})\`)`);
 }

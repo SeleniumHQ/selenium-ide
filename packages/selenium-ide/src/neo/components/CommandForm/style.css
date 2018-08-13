@@ -1,56 +1,56 @@
 .command-form {
-    margin: 15px 8px;
+  margin: 15px 8px;
 }
 
-.command-form form> * {
-    max-width: 480px;
+.command-form form > * {
+  max-width: 480px;
 }
 
-.command-form .form-input:first-child> div {
-    display: flex!important;
+.command-form .form-input:first-child > div {
+  display: flex !important;
 }
 
-.command-form .form-input:first-child> div span {
-    flex-grow: 1;
+.command-form .form-input:first-child > div span {
+  flex-grow: 1;
 }
 
 .command-form input,
 .command-form textarea {
-    font-size: 13px;
-    padding: 4px 5px;
-    width: 100px;
+  font-size: 13px;
+  padding: 4px 5px;
+  width: 100px;
 }
 
 .command-form textarea {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: pre;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
 }
 
 .command-form .target {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
-.command-form .target> *:first-child {
-    flex-grow: 1;
+.command-form .target > *:first-child {
+  flex-grow: 1;
 }
 
 .command-form .target button {
-    margin: 0;
-    padding: 2px 4px;
-    margin-left: 5px;
+  margin: 0;
+  padding: 2px 4px;
+  margin-left: 5px;
 }
 
 .command-form .target button img {
-    height: 19px;
+  height: 19px;
 }
 
 .command-form input[type="submit"] {
-    position: absolute;
-    width: 0;
-    height: 0;
-    padding: 0;
-    border: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
 }
 

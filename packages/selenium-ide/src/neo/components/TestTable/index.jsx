@@ -25,6 +25,7 @@ import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
 import "./style.css";
+import { deriveCommandLevels } from "../../playback/playback-tree/command-leveler";
 
 @observer
 export default class TestTable extends React.Component {
@@ -34,9 +35,11 @@ export default class TestTable extends React.Component {
     this.detectNewCommand = this.detectNewCommand.bind(this);
     this.disposeNewCommand = this.disposeNewCommand.bind(this);
     this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
+    this.commandLevels = [];
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
+    callstackIndex: PropTypes.number,
     selectedCommand: PropTypes.string,
     selectCommand: PropTypes.func,
     addCommand: PropTypes.func,
@@ -50,15 +53,17 @@ export default class TestTable extends React.Component {
   disposeNewCommand() {
     this.newCommand = undefined;
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.commands !== this.props.commands) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.commands !== this.props.commands) {
       this.newObserverDisposer();
-      if (nextProps.commands) {
-        this.newObserverDisposer = observe(nextProps.commands, this.detectNewCommand);
+      if (this.props.commands) {
+        this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
       }
     }
   }
   render() {
+    if (this.props.commands) this.commandLevels = deriveCommandLevels(this.props.commands);
+    const commandStatePrefix = this.props.callstackIndex !== undefined ? `${this.props.callstackIndex}:` : "";
     return ([
       <div key="header" className="test-table test-table-header">
         <table>
@@ -71,14 +76,15 @@ export default class TestTable extends React.Component {
           </thead>
         </table>
       </div>,
-      <div key="body" className="test-table test-table-body">
+      <div key="body" className={classNames("test-table", "test-table-body", { "paused": PlaybackState.paused }, { "breakpoints-disabled": PlaybackState.breakpointsDisabled })}>
         <table>
           <tbody>
             { this.props.commands ? this.props.commands.map((command, index) => (
               <TestRow
                 key={command.id}
-                status={classNames(PlaybackState.commandState.get(command.id) ? PlaybackState.commandState.get(command.id).state : "")}
+                status={classNames(PlaybackState.commandState.get(commandStatePrefix + command.id) ? PlaybackState.commandState.get(commandStatePrefix + command.id).state : "")}
                 selected={this.props.selectedCommand === command.id}
+                readOnly={(PlaybackState.isPlaying && !PlaybackState.paused)}
                 index={index}
                 command={command}
                 new={command === this.newCommand ? this.disposeNewCommand : undefined}
@@ -94,10 +100,11 @@ export default class TestTable extends React.Component {
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
+                level={this.commandLevels[index]}
               />
             )).concat(
               <TestRow
-                key={UiState.selectedTest.test.id}
+                key={UiState.displayedTest.id}
                 selected={this.props.selectedCommand === UiState.pristineCommand.id}
                 index={this.props.commands.length}
                 command={UiState.pristineCommand}

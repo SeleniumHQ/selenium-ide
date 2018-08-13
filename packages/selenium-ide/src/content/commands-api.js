@@ -21,7 +21,7 @@ import BrowserBot from "./selenium-browserbot";
 import { locatorBuilders } from "./record";
 import { editRegion, removeRegion } from "./region";
 
-export const selenium = new Selenium(BrowserBot.createForWindow(window));
+export const selenium = new Selenium(BrowserBot.createForWindow(window, true));
 let contentSideexTabId = window.contentSideexTabId;
 let targetSelector;
 
@@ -42,32 +42,39 @@ function doCommands(request, sender, sendResponse) {
     } else if (request.commands == "domWait") {
       selenium["doDomWait"]("", selenium.preprocessParameter(""));
       sendResponse({ dom_time: window.sideex_new_page });
+    } else if (request.commands === "evaluateConditional") {
+      try {
+        let value = selenium["doEvaluateConditional"](request.target);
+        sendResponse({ result: "success", value: value });
+      } catch(e) {
+        sendResponse({ result: e.message });
+      }
     } else {
       const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
       if (selenium["do" + upperCase] != null) {
         try {
           document.body.setAttribute("SideeXPlayingFlag", true);
-          let returnValue = selenium["do"+upperCase](request.target,selenium.preprocessParameter(request.value));
+          let returnValue = selenium["do" + upperCase](selenium.preprocessParameter(request.target), selenium.preprocessParameter(request.value));
           if (returnValue instanceof Promise) {
             // The command is a asynchronous function
             returnValue.then(function() {
               // Asynchronous command completed successfully
               document.body.removeAttribute("SideeXPlayingFlag");
-              sendResponse({result: "success"});
+              sendResponse({ result: "success" });
             }).catch(function(reason) {
               // Asynchronous command failed
               document.body.removeAttribute("SideeXPlayingFlag");
-              sendResponse({result: reason});
+              sendResponse({ result: reason });
             });
           } else {
             // Synchronous command completed successfully
             document.body.removeAttribute("SideeXPlayingFlag");
-            sendResponse({result: "success"});
+            sendResponse({ result: "success" });
           }
         } catch(e) {
           // Synchronous command failed
           document.body.removeAttribute("SideeXPlayingFlag");
-          sendResponse({result: e.message});
+          sendResponse({ result: e.message });
         }
       } else {
         sendResponse({ result: "Unknown command: " + request.commands });
@@ -84,9 +91,9 @@ function doCommands(request, sender, sendResponse) {
     try {
       const element = selenium.browserbot.findElement(request.locator);
       const locator = locatorBuilders.buildAll(element).find(([loc, strat]) => (/^xpath/.test(strat)))[0]; //eslint-disable-line no-unused-vars
-      sendResponse({result: "success", locator});
+      sendResponse({ result: "success", locator });
     } catch(e) {
-      sendResponse({result: e.message});
+      sendResponse({ result: e.message });
     }
   }
   if (request.selectMode) {
@@ -100,7 +107,8 @@ function doCommands(request, sender, sendResponse) {
               //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
               browser.runtime.sendMessage({
                 selectTarget: true,
-                target: target
+                target: target,
+                selectNext: request.selectNext
               });
             }
           }

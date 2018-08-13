@@ -41,7 +41,7 @@ router.post("/command", (req, res) => {
   recordCommand(req.command, req.target, req.value, undefined, req.select);
   const type = Commands.list.has(req.command) && Commands.list.get(req.command).type;
   if (req.select && type) {
-    select(type);
+    select(type, undefined, true);
   }
   res(true);
 });
