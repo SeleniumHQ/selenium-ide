@@ -111,6 +111,14 @@ if (browser.windows) {
         return confirmationMessage;
       }
     });
+    this.moveInterval = setInterval(() => {
+      storage.set({
+        origin: {
+          top: window.screenY,
+          left: window.screenX
+        }
+      });
+    }, 3000);
   }
   handleResize(currWindow) {
     UiState.setWindowHeight(currWindow.innerHeight);
@@ -144,6 +152,7 @@ if (browser.windows) {
     UiState.setNavigationHover(false);
   }
   componentWillUnmount() {
+    clearInterval(this.moveInterval);
     window.removeEventListener(this.resizeHandler);
     window.removeEventListener(this.quitHandler);
   }
