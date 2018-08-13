@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { PropTypes as MobxPropTypes } from "mobx-react";
 import SyntaxHighlighter, { registerLanguage } from "react-syntax-highlighter/light";
-import livecodeserver from "react-syntax-highlighter/languages/hljs/livecodeserver";
+import fortran from "react-syntax-highlighter/languages/hljs/fortran";
 import stylus from "react-syntax-highlighter/languages/hljs/stylus";
 import ini from "react-syntax-highlighter/languages/hljs/ini";
 import { xcode } from "react-syntax-highlighter/styles/hljs";
@@ -27,7 +27,7 @@ import AutoComplete from "../AutoComplete";
 import Input from "../FormInput";
 import "./style.css";
 
-registerLanguage("livecodeserver", livecodeserver);
+registerLanguage("fortran", fortran);
 registerLanguage("stylus", stylus);
 registerLanguage("ini", ini);
 
@@ -77,7 +77,7 @@ class TargetSuggestion extends React.Component {
     if (this.props.strategy === "css") {
       language = "stylus";
     } else if (this.props.strategy.startsWith("xpath")) {
-      language = "livecodeserver";
+      language = "fortran";
     }
     return (
       <span style={{

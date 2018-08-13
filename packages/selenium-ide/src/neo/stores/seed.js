@@ -110,6 +110,7 @@ export default function seed(store, numberOfSuites = 5) {
     ["id=something", "id"],
     ["name=something-else", "name"],
     ["linkText=number density", "linkText"],
+    ["xpath=//a[contains(text(),'number density')]", "xpath:link"],
     ["css=main .class > p a.link", "css"],
     ["xpath=(//a[contains(text(),'number line')])[2]", "xpath:link"],
     ["(//a[contains(text(),'number line')])[2]", "xpath:link"],
@@ -200,9 +201,9 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(submitTest);
 
   UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(suiteControlFlow);
+  let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(controlFlowIfTest, suiteControlFlow);
+  UiState.selectTest(checkTest, suiteAll);
 
   store.changeName("seed project");
 

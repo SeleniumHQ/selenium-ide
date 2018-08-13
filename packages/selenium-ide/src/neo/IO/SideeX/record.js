@@ -62,8 +62,15 @@ export default function record(command, targets, value, insertBeforeLastCommand)
       // double click removed the 2 clicks from before
       index -= 2;
     }
-    const newCommand = recordCommand(command, targets[0][0], value, index);
-    newCommand.setTargets(targets);
+    const trgs = targets.map(([locator, strategy]) => {
+      // no more implicit things, make users specify exactly which selector to use
+      if (strategy.startsWith("xpath") && locator.startsWith("//")) {
+        return ["xpath=" + locator, strategy];
+      }
+      return [locator, strategy];
+    });
+    const newCommand = recordCommand(command, trgs[0][0], value, index);
+    newCommand.setTargets(trgs);
   }
 }
 
