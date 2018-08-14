@@ -40,6 +40,10 @@ export class CommandNode {
     );
   }
 
+  isValid() {
+    return !!(this.command.command || this.command.comment);
+  }
+
   execute(extCommand, options) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
@@ -69,16 +73,22 @@ export class CommandNode {
         this.command.target,
         this.command.value,
         options);
-    } else if (!this.command.command && this.command.comment) {
-      return Promise.resolve({
-        result: "success"
-      });
+    } else if (this.isValid()) {
+      if (!this.command.command && this.command.comment) {
+        return Promise.resolve({
+          result: "success"
+        });
+      } else {
+        return extCommand.sendMessage(
+          this.command.command,
+          xlateArgument(this.command.target),
+          xlateArgument(this.command.value),
+          extCommand.isWindowMethodCommand(this.command.command));
+      }
     } else {
-      return extCommand.sendMessage(
-        this.command.command,
-        xlateArgument(this.command.target),
-        xlateArgument(this.command.value),
-        extCommand.isWindowMethodCommand(this.command.command));
+      return Promise.resolve({
+        result: "Incomplete or unsupported command used."
+      });
     }
   }
 

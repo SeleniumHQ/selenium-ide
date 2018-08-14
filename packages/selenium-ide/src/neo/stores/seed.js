@@ -84,10 +84,10 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseTest.createCommand(undefined, "end");
 
   const controlFlowDoTest = store.createTestCase("control flow do");
+  controlFlowDoTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure infinite loop protection works.");
   controlFlowDoTest.createCommand(undefined, "do");
   controlFlowDoTest.createCommand(undefined, "echo", "foo");
   controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
-  controlFlowDoTest.createCommand(undefined, "echo", "OK! This is a forced failure to make sure infinite loop protection works. If you see this message it's a good thing.");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
   controlFlowTimesTest.createCommand(undefined, "times", "2");
@@ -95,10 +95,10 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowTimesTest.createCommand(undefined, "end");
 
   const controlFlowWhileTest = store.createTestCase("control flow while");
+  controlFlowWhileTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure that loop protection works.");
   controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
   controlFlowWhileTest.createCommand(undefined, "echo", "foo");
   controlFlowWhileTest.createCommand(undefined, "end");
-  controlFlowWhileTest.createCommand(undefined, "echo", "OK! This is a forced failure to make sure infinite loop protection works. If you see this message it's a good thing.");
 
   const executeScriptTest = store.createTestCase("execute script");
   executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
