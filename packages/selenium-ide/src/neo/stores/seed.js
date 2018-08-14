@@ -87,6 +87,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowDoTest.createCommand(undefined, "do");
   controlFlowDoTest.createCommand(undefined, "echo", "foo");
   controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
+  controlFlowDoTest.createCommand(undefined, "echo", "OK! This is a forced failure to make sure infinite loop protection works. If you see this message it's a good thing.");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
   controlFlowTimesTest.createCommand(undefined, "times", "2");
@@ -97,14 +98,16 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
   controlFlowWhileTest.createCommand(undefined, "echo", "foo");
   controlFlowWhileTest.createCommand(undefined, "end");
+  controlFlowWhileTest.createCommand(undefined, "echo", "OK! This is a forced failure to make sure infinite loop protection works. If you see this message it's a good thing.");
 
-  const executeScriptSandboxTest = store.createTestCase("execute script");
-  executeScriptSandboxTest.createCommand(undefined, "executeScript", "return true", "blah");
-  executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
-  executeScriptSandboxTest.createCommand(undefined, "verify", "${blah}", "false");
-  executeScriptSandboxTest.createCommand(undefined, "assert", "${blah}", "true");
-  executeScriptSandboxTest.createCommand(undefined, "executeScript", "true");
-  executeScriptSandboxTest.createCommand(undefined, "echo", "${blah}");
+  const executeScriptTest = store.createTestCase("execute script");
+  executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
+  executeScriptTest.createCommand(undefined, "echo", "${blah}");
+  executeScriptTest.createCommand(undefined, "verify", "${blah}", "false");
+  executeScriptTest.createCommand(undefined, "echo", "OK! This is a forced failure on verify to make sure the test proceeds. If you see this message it's a good thing.");
+  executeScriptTest.createCommand(undefined, "assert", "${blah}", "true");
+  executeScriptTest.createCommand(undefined, "executeScript", "true");
+  executeScriptTest.createCommand(undefined, "echo", "${blah}");
 
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
@@ -140,6 +143,10 @@ export default function seed(store, numberOfSuites = 5) {
   const clickAtTest = store.createTestCase("click at");
   clickAtTest.createCommand(undefined, "open", "/");
   clickAtTest.createCommand(undefined, "clickAt", "css=a");
+
+  const commentTest = store.createTestCase("comment");
+  commentTest.createCommand(undefined, "", "", "", "blah");
+  commentTest.createCommand(undefined, "open", "/", "", "also blah");
 
   const framesTest = store.createTestCase("frames");
   framesTest.createCommand(undefined, "open", "/iframe");
@@ -202,7 +209,7 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(checkTest);
   smokeSuite.addTestCase(clickTest);
   smokeSuite.addTestCase(clickAtTest);
-  smokeSuite.addTestCase(executeScriptSandboxTest);
+  smokeSuite.addTestCase(executeScriptTest);
   smokeSuite.addTestCase(framesTest);
   smokeSuite.addTestCase(selectTest);
   smokeSuite.addTestCase(sendKeysTest);

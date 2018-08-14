@@ -89,7 +89,6 @@ function executionLoop() {
   }
   const command = PlaybackState.currentExecutingCommandNode.command;
   const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
-  if (!command.command) return executionLoop();
   // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
   if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);

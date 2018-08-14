@@ -69,6 +69,10 @@ export class CommandNode {
         this.command.target,
         this.command.value,
         options);
+    } else if (!this.command.command && this.command.comment) {
+      return Promise.resolve({
+        result: "success"
+      });
     } else {
       return extCommand.sendMessage(
         this.command.command,
