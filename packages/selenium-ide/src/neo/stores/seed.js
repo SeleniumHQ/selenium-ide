@@ -54,27 +54,30 @@ export default function seed(store, numberOfSuites = 5) {
   store.addUrl(url);
 
   const controlFlowIfTest = store.createTestCase("control flow if");
-  controlFlowIfTest.createCommand(undefined, "if", "true");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
+  controlFlowIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
   controlFlowIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowIfTest.createCommand(undefined, "elseIf", "true");
+  controlFlowIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
   controlFlowIfTest.createCommand(undefined, "echo", "bar");
   controlFlowIfTest.createCommand(undefined, "else");
   controlFlowIfTest.createCommand(undefined, "echo", "baz");
   controlFlowIfTest.createCommand(undefined, "end");
 
   const controlFlowElseIfTest = store.createTestCase("control flow else if");
-  controlFlowElseIfTest.createCommand(undefined, "if", "false");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "myVar");
+  controlFlowElseIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
   controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseIfTest.createCommand(undefined, "elseIf", "true");
+  controlFlowElseIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
   controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
   controlFlowElseIfTest.createCommand(undefined, "else");
   controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
   controlFlowElseIfTest.createCommand(undefined, "end");
 
   const controlFlowElseTest = store.createTestCase("control flow else");
-  controlFlowElseTest.createCommand(undefined, "if", "false");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "myVar");
+  controlFlowElseTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
   controlFlowElseTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseTest.createCommand(undefined, "elseIf", "false");
+  controlFlowElseTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
   controlFlowElseTest.createCommand(undefined, "echo", "bar");
   controlFlowElseTest.createCommand(undefined, "else");
   controlFlowElseTest.createCommand(undefined, "echo", "baz");
