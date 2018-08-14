@@ -372,6 +372,7 @@ export default class ExtCommand {
   }
 
   isExtCommand(command) {
+    return true;
     switch(command) {
       case "pause":
       case "open":

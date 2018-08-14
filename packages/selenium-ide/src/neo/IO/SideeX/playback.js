@@ -22,6 +22,7 @@ import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
 import { canExecuteCommand } from "../../../plugin/commandExecutor";
 import ExtCommand from "./ext-command";
+import WebDriverExecutor from "../playback/webdriver";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
 
@@ -38,6 +39,8 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
+const browserDriver = new WebDriverExecutor();
+browserDriver.init();
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -98,7 +101,7 @@ function executionLoop() {
   if (isStopping()) return false;
   if (extCommand.isExtCommand(command.command)) {
     return doDelay().then(() => {
-      return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
+      return (PlaybackState.currentExecutingCommandNode.execute(browserDriver))
         .then((result) => {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
