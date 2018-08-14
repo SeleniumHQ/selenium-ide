@@ -143,6 +143,10 @@ class PlaybackState {
     this.beforePlaying(playSuite);
   }
 
+  runningQueueFromIndex(commands, index) {
+    return commands.slice(index);
+  }
+
   @action.bound startPlaying(command) {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
@@ -155,7 +159,7 @@ class PlaybackState {
       if (command && command.constructor.name === "Command") {
         this.currentPlayingIndex = test.commands.indexOf(command);
       }
-      this.runningQueue = test.commands.peek().slice(this.currentPlayingIndex);
+      this.runningQueue = this.runningQueueFromIndex(test.commands.peek(), this.currentPlayingIndex);
       const pluginsLogs = {};
       if (PluginManager.plugins.length) this.logger.log("Preparing plugins for test run...");
       PluginManager.emitMessage({
