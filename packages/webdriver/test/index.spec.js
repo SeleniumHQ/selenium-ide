@@ -75,4 +75,28 @@ describe("browser webdriver", () => {
 
     expect(result).toBe("Cheese - Wikipedia");
   });
+  it.skip("should perform file uploads", async () => {
+    const script = fs.readFileSync(path.join(__dirname, "fixtures/file.js")).toString();
+    const filePath = path.join(__dirname, "fixtures/file.txt");
+    const file = fs.readFileSync(filePath).toString();
+    let result = await driver.executeAsyncScript((...args) => {
+      const SERVER = args[0];
+      const script = args[1];
+      const filePath = args[2];
+      let done = args[args.length - 1];
+      let d = new window.browserWebdriver.Builder().forBrowser("chrome").usingServer(SERVER).build();
+      const By = window.browserWebdriver.By;
+      d.get('data:text/html,<input id="f" type="file" /><div id="r"></div>'); // eslint-disable-line
+      d.executeScript(script);
+      let up = d.findElement(By.id("f"));
+      up.sendKeys(filePath);
+      let result = d.findElement(By.id("r"));
+      result.getText().then(text => {
+        d.quit();
+        done(text);
+      });
+    }, SERVER, script, filePath);
+
+    expect(result).toBe(file.substr(0, file.length - 1)); // remove new line character
+  });
 });
