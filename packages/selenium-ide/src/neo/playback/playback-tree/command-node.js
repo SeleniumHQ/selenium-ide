@@ -106,7 +106,7 @@ export class CommandNode {
   }
 
   _evaluate(extCommand) {
-    let expression = this.command.target;
+    let expression = xlateArgument(this.command.target);
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression);
       if (isNaN(number)) {
