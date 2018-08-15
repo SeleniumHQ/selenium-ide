@@ -470,6 +470,9 @@ Selenium.prototype.doStoreEval = function() {
 };
 
 Selenium.prototype.doStoreText = function(locator, varName) {
+  if (!varName) {
+    throw new Error("No variable name provided.");
+  }
   let element = this.browserbot.findElement(locator);
   return browser.runtime.sendMessage({ "storeStr": bot.dom.getVisibleText(element), "storeVar": varName });
 };
