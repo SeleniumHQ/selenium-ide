@@ -18,6 +18,7 @@
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { js_beautify as beautify } from "js-beautify";
+import UpgradeProject from "./migrate";
 import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
 import TestCase from "../models/TestCase";
 import UiState from "../stores/view/UiState";
@@ -133,7 +134,7 @@ export function loadProject(project, file) {
   }
   loadAsText(file).then((contents) => {
     if (/\.side$/.test(file.name)) {
-      loadJSProject(project, JSON.parse(contents));
+      loadJSProject(project, UpgradeProject(JSON.parse(contents)));
     } else {
       try {
         const type = verifyFile(contents);
