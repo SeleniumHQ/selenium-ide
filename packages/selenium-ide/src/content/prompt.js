@@ -97,7 +97,7 @@ if (window !== window.top) {
       let result = originalAlert(text);
       let frameLocation = getFrameLocation();
       window.top.postMessage({
-        direction:"from-page-script",
+        direction: "from-page-script",
         recordedType: "alert",
         recordedMessage: text,
         recordedResult: result,
@@ -159,7 +159,7 @@ if (window !== window.top) {
       let result = originalAlert(text);
       let frameLocation = getFrameLocation();
       window.top.postMessage({
-        direction:"from-page-script",
+        direction: "from-page-script",
         recordedType: "alert",
         recordedMessage: text,
         recordedResult: result,

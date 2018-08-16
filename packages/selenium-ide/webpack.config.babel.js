@@ -29,7 +29,7 @@ export default {
   devtool: isProduction ? "source-map" : false,
   entry: {
     polyfills: ["./content/setup"],
-    injector: ["./content/prompt-injector"],
+    playback: ["./content/commands-api"],
     background: ["./background/background"],
     record: ["./content/record"],
     escape: ["./content/escape"],
@@ -270,6 +270,10 @@ export default {
       "process.env": {
         "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
       }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "atoms",
+      chunks: ["record", "playback"]
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({

@@ -18,6 +18,37 @@
 import SeleniumError from "./SeleniumError";
 
 /**
+ * Parses a Selenium locator, returning its type and the unprefixed locator
+ * string as an object.
+ *
+ * @param locator  the locator to parse
+ */
+export function parse_locator(locator)
+{
+  if (!locator) {
+    throw new TypeError("Locator cannot be empty");
+  }
+  const result = locator.match(/^([A-Za-z]+)=.+/);
+  if (result) {
+    let type = result[1];
+    const length = type.length;
+    if (type === "link") {
+      // deprecation control
+      browser.runtime.sendMessage({
+        log: {
+          type: "warn",
+          message: "link locators are deprecated in favor of linkText and partialLinkText, link is treated as linkText"
+        }
+      });
+      type = "linkText";
+    }
+    const actualLocator = locator.substring(length + 1);
+    return { type: type, string: actualLocator };
+  }
+  return { type: "xpath", string: locator };
+}
+
+/**
  * Returns the tag name of an element lowercased.
  *
  * @param element  an HTMLElement
