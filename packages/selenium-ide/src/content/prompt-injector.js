@@ -17,39 +17,50 @@
 
 import browser from "webextension-polyfill";
 
+let handler, elementForInjectingScript;
 export function attach(selenium) {
-  const elementForInjectingStyle = document.createElement("link");
-  elementForInjectingStyle.rel = "stylesheet";
-  elementForInjectingStyle.href = browser.runtime.getURL("/assets/prompt.css");
-  (document.head || document.documentElement).appendChild(elementForInjectingStyle);
-  const elementForInjectingScript = document.createElement("script");
+  elementForInjectingScript = document.createElement("script");
   elementForInjectingScript.src = browser.runtime.getURL("/assets/prompt.js");
   (document.head || document.documentElement).appendChild(elementForInjectingScript);
 
   if (window === window.top) {
-    window.addEventListener("message", function(event) {
-      if (event.source.top == window && event.data &&
-        event.data.direction == "from-page-script") {
-        if (event.data.response) {
-          switch (event.data.response) {
-            case "prompt":
-              selenium.browserbot.promptResponse = true;
-              if (event.data.value)
-                selenium.browserbot.promptMessage = event.data.value;
-              break;
-            case "confirm":
-              selenium.browserbot.confirmationResponse = true;
-              if (event.data.value)
-                selenium.browserbot.confirmationMessage = event.data.value;
-              break;
-            case "alert":
-              selenium.browserbot.alertResponse = true;
-              if(event.data.value)
-                selenium.browserbot.alertMessage = event.data.value;
-              break;
-          }
-        }
+    handler = (e) => {
+      return handleMessage(e, selenium);
+    };
+    window.addEventListener("message", handler);
+  }
+}
+
+export function detach() {
+  window.postMessage({
+    direction: "from-content-script",
+    detach: true
+  }, "*");
+  elementForInjectingScript.parentNode.removeChild(elementForInjectingScript);
+  window.removeEventListener("message", handler);
+}
+
+function handleMessage(event, selenium) {
+  if (event.source.top == window && event.data &&
+    event.data.direction == "from-page-script") {
+    if (event.data.response) {
+      switch (event.data.response) {
+        case "prompt":
+          selenium.browserbot.promptResponse = true;
+          if (event.data.value)
+            selenium.browserbot.promptMessage = event.data.value;
+          break;
+        case "confirm":
+          selenium.browserbot.confirmationResponse = true;
+          if (event.data.value)
+            selenium.browserbot.confirmationMessage = event.data.value;
+          break;
+        case "alert":
+          selenium.browserbot.alertResponse = true;
+          if(event.data.value)
+            selenium.browserbot.alertMessage = event.data.value;
+          break;
       }
-    });
+    }
   }
 }
