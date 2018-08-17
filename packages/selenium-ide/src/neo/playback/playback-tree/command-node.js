@@ -95,7 +95,7 @@ export class CommandNode {
   _executionResult(extCommand, result) {
     if (extCommand.isExtCommand(this.command.command)) {
       return {
-        next: this.next
+        next: this.command.command !== "run" ? this.next : result
       };
     } else if (result.result === "success") {
       this._incrementTimesVisited();

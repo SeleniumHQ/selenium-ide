@@ -250,8 +250,7 @@ export default class ExtCommand {
   }
 
   doRun(target) {
-    PlaybackState.callTestCase(target);
-    return Promise.resolve();
+    return Promise.resolve(PlaybackState.callTestCase(target));
   }
 
   doType(locator, value, top) {
