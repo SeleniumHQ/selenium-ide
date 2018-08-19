@@ -18,9 +18,13 @@
 import browser from "webextension-polyfill";
 import goog, { bot } from "./closure-polyfill";
 import { Recorder, recorder, record } from "./record-api";
+import { attach } from "./prompt-recorder";
 import LocatorBuilders from "./locatorBuilders";
 
+export { record as record };
 export const locatorBuilders = new LocatorBuilders(window);
+
+attach(record);
 
 let preventClickTwice = false;
 if (Recorder) {

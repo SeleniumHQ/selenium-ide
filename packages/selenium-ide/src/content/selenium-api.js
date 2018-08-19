@@ -3280,6 +3280,10 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 
 Selenium.prototype.doShowElement = function(locator){
   try{
+    const elementForInjectingStyle = document.createElement("link");
+    elementForInjectingStyle.rel = "stylesheet";
+    elementForInjectingStyle.href = browser.runtime.getURL("/assets/highlight.css");
+    (document.head || document.documentElement).appendChild(elementForInjectingStyle);
     const highlightElement = document.createElement("div");
     highlightElement.id = "selenium-highlight";
     document.body.appendChild(highlightElement);
@@ -3305,6 +3309,7 @@ Selenium.prototype.doShowElement = function(locator){
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
       document.body.removeChild(highlightElement);
+      elementForInjectingStyle.parentNode.removeChild(elementForInjectingStyle);
     }, 500);
     return "element found";
   } catch (e) {

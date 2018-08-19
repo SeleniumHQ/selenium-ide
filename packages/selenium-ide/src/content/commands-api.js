@@ -15,15 +15,20 @@
  *
  */
 import browser from "webextension-polyfill";
+import "./closure-polyfill";
 import TargetSelector from "./targetSelector";
 import Selenium from "./selenium-api";
 import BrowserBot from "./selenium-browserbot";
-import { locatorBuilders } from "./record";
+import LocatorBuilders from "./locatorBuilders";
 import { editRegion, removeRegion } from "./region";
+import { attach } from "./prompt-injector";
 
 export const selenium = new Selenium(BrowserBot.createForWindow(window, true));
+const locatorBuilders = new LocatorBuilders(window);
 let contentSideexTabId = window.contentSideexTabId;
 let targetSelector;
+
+attach(selenium);
 
 function doCommands(request, sender, sendResponse) {
   if (request.commands) {
@@ -146,7 +151,16 @@ function doCommands(request, sender, sendResponse) {
   }
 }
 
+// show element
+function startShowElement(message){
+  if (message.showElement) {
+    const result = selenium["doShowElement"](message.targetValue);
+    return Promise.resolve({ result: result });
+  }
+}
+
 if (!window._listener) {
   window._listener = doCommands;
+  browser.runtime.onMessage.addListener(startShowElement);
   browser.runtime.onMessage.addListener(doCommands);
 }

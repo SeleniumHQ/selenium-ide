@@ -83,8 +83,15 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
+function isCallStackEmpty() {
+  return !PlaybackState.callstack.length;
+}
+
 function executionLoop() {
-  if (isStopping() || didFinishQueue()) {
+  if (didFinishQueue() && !isCallStackEmpty()) {
+    PlaybackState.unwindTestCase();
+    return executionLoop();
+  } else if (isStopping() || didFinishQueue()) {
     return false;
   }
   const command = PlaybackState.currentExecutingCommandNode.command;

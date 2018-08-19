@@ -16,7 +16,6 @@
  */
 
 import browser from "webextension-polyfill";
-import { selenium } from "./commands-api";
 
 let contentSideexTabId = -1;
 let frameLocation = "";
@@ -77,14 +76,6 @@ Recorder.prototype.detach = function() {
   this.attached = false;
 };
 
-// show element
-function startShowElement(message){
-  if (message.showElement) {
-    const result = selenium["doShowElement"](message.targetValue);
-    return Promise.resolve({ result: result });
-  }
-}
-
 function attachRecorderHandler(message) {
   if (message.attachRecorder) {
     recorder.attach();
@@ -97,15 +88,9 @@ function detachRecorderHandler(message) {
   }
 }
 
-if (!window._recordListener) {
-  // injector event handlers
-  window._recordListener = startShowElement;
-  browser.runtime.onMessage.addListener(startShowElement);
-} else {
-  // recorder event handlers
-  browser.runtime.onMessage.addListener(attachRecorderHandler);
-  browser.runtime.onMessage.addListener(detachRecorderHandler);
-}
+// recorder event handlers
+browser.runtime.onMessage.addListener(attachRecorderHandler);
+browser.runtime.onMessage.addListener(detachRecorderHandler);
 
 // set frame id
 (function getframeLocation() {

@@ -64,7 +64,7 @@ export default function record(command, targets, value, insertBeforeLastCommand)
     }
     const trgs = targets.map(([locator, strategy]) => {
       // no more implicit things, make users specify exactly which selector to use
-      if (strategy.startsWith("xpath") && locator.startsWith("//")) {
+      if (strategy && locator && strategy.startsWith("xpath") && locator.startsWith("//")) {
         return ["xpath=" + locator, strategy];
       }
       return [locator, strategy];
