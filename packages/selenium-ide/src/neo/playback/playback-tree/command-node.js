@@ -31,17 +31,19 @@ export class CommandNode {
   }
 
   isControlFlow() {
-    return !!(
-      this.left ||
-      this.right ||
-      // for cases where it is a conditional command, but no left/right is set
-      // e.g., an empty conditional branch (e.g., while/end)
-      ControlFlowCommandChecks.isConditional(this.command)
-    );
+    return !!(this.left || this.right);
   }
 
   isValid() {
     return !!(this.command.command || this.command.comment);
+  }
+
+  isJustAComment() {
+    return !!(!this.command.command && this.command.comment);
+  }
+
+  isTerminalKeyword() {
+    return ControlFlowCommandChecks.isTerminal(this.command);
   }
 
   execute(extCommand, options) {
@@ -74,7 +76,7 @@ export class CommandNode {
         this.command.value,
         options);
     } else if (this.isValid()) {
-      if (!this.command.command && this.command.comment) {
+      if (this.isJustAComment() || this.isTerminalKeyword()) {
         return Promise.resolve({
           result: "success"
         });
