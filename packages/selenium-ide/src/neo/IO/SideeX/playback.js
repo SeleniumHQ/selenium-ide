@@ -38,6 +38,7 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
+let breakOnNextCommand = false;
 
 function play(currUrl) {
   baseUrl = currUrl;
@@ -98,8 +99,15 @@ function executionLoop() {
   const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
   // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
-  if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
+  if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && (command.isBreakpoint || breakOnNextCommand)) {
+    PlaybackState.break(command);
+    breakOnNextCommand = false;
+  }
   else if (ignoreBreakpoint) ignoreBreakpoint = false;
+  // we need to ignore breakOnNextCommand once, to make sure it actually hits the next command
+  if (PlaybackState.breakOnNextCommand) {
+    breakOnNextCommand = true;
+  }
   // paused
   if (isStopping()) return false;
   if (extCommand.isExtCommand(command.command)) {

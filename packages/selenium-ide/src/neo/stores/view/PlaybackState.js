@@ -32,6 +32,7 @@ class PlaybackState {
   @observable isPlaying = false;
   @observable isStopping = false;
   @observable breakpointsDisabled = false;
+  @observable breakOnNextCommand = false;
   @observable pauseOnExceptions = false;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
@@ -147,8 +148,9 @@ class PlaybackState {
     return commands.slice(index);
   }
 
-  @action.bound startPlaying(command) {
+  @action.bound startPlaying(command, breakOnNextCommand = false) {
     const playTest = action(() => {
+      this.breakOnNextCommand = breakOnNextCommand;
       const { test } = UiState.selectedTest;
       this.resetState();
       this.runId = uuidv4();
@@ -309,14 +311,16 @@ class PlaybackState {
     this.paused = true;
   }
 
-  @action.bound resume() {
+  @action.bound resume(breakOnNextCommand = false) {
     UiState.changeView("Executing");
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     UiState.selectCommand(undefined);
+    this.breakOnNextCommand = breakOnNextCommand;
     this.paused = false;
   }
 
   @action.bound break(command) {
+    this.breakOnNextCommand = false;
     this.paused = true;
     UiState.selectCommand(command);
     browser.windows.getCurrent().then(windowInfo => {

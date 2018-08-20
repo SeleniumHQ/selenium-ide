@@ -43,19 +43,26 @@ export default class ToolBar extends React.Component {
         <PlayAll
           isActive={!PlaybackState.paused && isPlayingSuite}
           disabled={!UiState.selectedTest.suite || isPlayingTest}
-          onClick={!PlaybackState.paused ? PlaybackState.startPlayingSuite : PlaybackState.resume}
+          onClick={() => (!PlaybackState.paused ? PlaybackState.startPlayingSuite() : PlaybackState.resume())}
         />
         <PlayCurrent
           isActive={!PlaybackState.paused && isPlayingTest}
           disabled={isTestEmpty || isPlayingSuite}
-          onClick={!PlaybackState.paused ? PlaybackState.startPlaying : PlaybackState.resume}
+          onClick={() => (!PlaybackState.paused ? PlaybackState.startPlaying() : PlaybackState.resume())}
         />
         { PlaybackState.isPlaying ? <Stop onClick={() => {PlaybackState.abortPlaying();}} /> : null }
         { PlaybackState.isPlaying ?
           <Pause isActive={PlaybackState.paused}
             data-tip={!PlaybackState.paused ? "<p>Pause test execution</p>" : "<p>Resume test execution</p>"}
-            onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
-        { !PlaybackState.isPlaying ? <StepInto disabled={!isCommandValid} onClick={() => PlaybackState.playCommand(UiState.selectedCommand, true)} /> : null }
+            onClick={() => (!PlaybackState.paused ? PlaybackState.pause() : PlaybackState.resume())} /> : null }
+        <StepInto disabled={!isCommandValid} onClick={() => {
+          if (!PlaybackState.paused) {
+            PlaybackState.startPlaying(UiState.selectedCommand, true);
+          } else {
+            PlaybackState.resume(true);
+          }
+        }}
+        />
         <GaugeMenu opener={
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
