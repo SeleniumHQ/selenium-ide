@@ -42,7 +42,7 @@
     "assets/highlight.css",
     "assets/bootstrap.html"
   ],
-  "content_security_policy": "script-src 'self' 'sha256-UUwVIygWwzdom+NTsGSMgQnlQ8Phnj5BIK5+S3HWX4Y=' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'sha256-RrWdu6/4gs/mcl8IXNkrSzFeGzDCH3E5vNKtAfUtphw=' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
     {
       "matches": [

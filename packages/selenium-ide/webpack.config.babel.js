@@ -273,7 +273,8 @@ export default {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: "atoms",
-      chunks: ["record", "playback"]
+      chunks: ["record", "playback"],
+      minChunks: Infinity
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
