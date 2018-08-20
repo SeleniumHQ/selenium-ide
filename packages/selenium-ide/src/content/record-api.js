@@ -127,6 +127,8 @@ export function record(command, target, value, insertBeforeLastCommand, actualFr
     insertBeforeLastCommand: insertBeforeLastCommand,
     frameLocation: (actualFrameLocation != undefined ) ? actualFrameLocation : frameLocation,
     commandSideexTabId: contentSideexTabId
+  }).catch(() => {
+    recorder.detach();
   });
 }
 
