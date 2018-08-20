@@ -115,6 +115,8 @@ let projectPath;
 function runProject(project) {
   if (project.version !== "1.0") {
     return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
+  } else if (!project.suites.length) {
+    return Promise.reject(new Error(`The project ${project.name} has no test suites defined, create a suite using the IDE.`));
   }
   projectPath = `side-suite-${project.name}`;
   rimraf.sync(projectPath);
