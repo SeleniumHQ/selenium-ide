@@ -112,6 +112,14 @@ if (browser.windows) {
         return confirmationMessage;
       }
     });
+    this.moveInterval = setInterval(() => {
+      storage.set({
+        origin: {
+          top: window.screenY,
+          left: window.screenX
+        }
+      });
+    }, 3000);
   }
   handleResize(currWindow) {
     UiState.setWindowHeight(currWindow.innerHeight);
@@ -148,6 +156,7 @@ if (browser.windows) {
     UiState.setNavigationHover(false);
   }
   componentWillUnmount() {
+    clearInterval(this.moveInterval);
     window.removeEventListener(this.resizeHandler);
     window.removeEventListener(this.quitHandler);
   }
@@ -194,10 +203,7 @@ if (browser.windows) {
                   <Navigation
                     tests={UiState.filteredTests}
                     suites={this.state.project.suites}
-                    createSuite={this.createSuite}
-                    removeSuite={this.state.project.deleteSuite}
-                    createTest={this.createTest}
-                    deleteTest={this.deleteTest}
+                    duplicateTest={this.state.project.duplicateTestCase}
                   />
                   <Editor
                     url={this.state.project.url}

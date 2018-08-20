@@ -95,7 +95,17 @@ const emitters = {
   chooseCancelOnNextConfirmation: skip,
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
-  setSpeed: skip
+  setSpeed: skip,
+  do: emitControlFlowDo,
+  else: emitControlFlowElse,
+  elseIf: emitControlFlowElseIf,
+  end: emitControlFlowEnd,
+  if: emitControlFlowIf,
+  repeatIf: emitControlFlowRepeatIf,
+  times: emitControlFlowTimes,
+  while: emitControlFlowWhile,
+  assert: emitAssert,
+  verify: emitAssert
 };
 
 export function emit(command, options = config, snapshot) {
@@ -349,4 +359,40 @@ async function emitSubmit(locator) {
 
 function skip() {
   return Promise.resolve();
+}
+
+function emitControlFlowDo() {
+  return Promise.resolve("do {");
+}
+
+function emitControlFlowElse() {
+  return Promise.resolve("} else {");
+}
+
+function emitControlFlowElseIf(target) {
+  return Promise.resolve(`} else if (${target}) {`);
+}
+
+function emitControlFlowEnd() {
+  return Promise.resolve("}");
+}
+
+function emitControlFlowIf(target) {
+  return Promise.resolve(`if (${target}) {`);
+}
+
+function emitControlFlowRepeatIf(target) {
+  return Promise.resolve(`} while(${target});`);
+}
+
+function emitControlFlowTimes(target) {
+  return Promise.resolve(`const times = ${target};for(let i = 0; i < times; i++) {`);
+}
+
+function emitControlFlowWhile(target) {
+  return Promise.resolve(`while (${target}) {`);
+}
+
+function emitAssert(varName, value) {
+  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} === ${value});`);
 }

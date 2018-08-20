@@ -25,6 +25,7 @@ import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import TestRow from "../TestRow";
 import "./style.css";
+import { deriveCommandLevels } from "../../playback/playback-tree/command-leveler";
 
 @observer
 export default class TestTable extends React.Component {
@@ -35,6 +36,7 @@ export default class TestTable extends React.Component {
     this.disposeNewCommand = this.disposeNewCommand.bind(this);
     this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
     this.selectCommandByRange = this.selectCommandByRange.bind(this);
+    this.commandLevels = [];
   }
   static propTypes = {
     commands: MobxPropTypes.arrayOrObservableArray,
@@ -76,6 +78,7 @@ export default class TestTable extends React.Component {
     }
   }
   render() {
+    if (this.props.commands) this.commandLevels = deriveCommandLevels(this.props.commands);
     const commandStatePrefix = this.props.callstackIndex !== undefined ? `${this.props.callstackIndex}:` : "";
     return ([
       <div key="header" className="test-table test-table-header">
@@ -116,6 +119,7 @@ export default class TestTable extends React.Component {
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
                 selectByRange={this.selectCommandByRange}
+                level={this.commandLevels[index]}
               />
             )).concat(
               <TestRow

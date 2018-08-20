@@ -53,9 +53,78 @@ export default function seed(store, numberOfSuites = 5) {
   store.setUrl(url);
   store.addUrl(url);
 
+  const controlFlowIfTest = store.createTestCase("control flow if");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
+  controlFlowIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
+  controlFlowIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
+  controlFlowIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowIfTest.createCommand(undefined, "else");
+  controlFlowIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowIfTest.createCommand(undefined, "end");
+
+  const controlFlowElseIfTest = store.createTestCase("control flow else if");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "myVar");
+  controlFlowElseIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
+  controlFlowElseIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseIfTest.createCommand(undefined, "else");
+  controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseIfTest.createCommand(undefined, "end");
+
+  const controlFlowElseTest = store.createTestCase("control flow else");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "myVar");
+  controlFlowElseTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
+  controlFlowElseTest.createCommand(undefined, "echo", "foo");
+  controlFlowElseTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
+  controlFlowElseTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseTest.createCommand(undefined, "else");
+  controlFlowElseTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseTest.createCommand(undefined, "end");
+
+  const controlFlowDoTest = store.createTestCase("control flow do");
+  controlFlowDoTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure infinite loop protection works.");
+  controlFlowDoTest.createCommand(undefined, "do");
+  controlFlowDoTest.createCommand(undefined, "echo", "foo");
+  controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
+
+  const controlFlowTimesTest = store.createTestCase("control flow times");
+  controlFlowTimesTest.createCommand(undefined, "times", "2");
+  controlFlowTimesTest.createCommand(undefined, "echo", "foo");
+  controlFlowTimesTest.createCommand(undefined, "end");
+
+  const controlFlowWhileTest = store.createTestCase("control flow while");
+  controlFlowWhileTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure that loop protection works.");
+  controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
+  controlFlowWhileTest.createCommand(undefined, "echo", "foo");
+  controlFlowWhileTest.createCommand(undefined, "end");
+
+  const executeScriptTest = store.createTestCase("execute script");
+  executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
+  executeScriptTest.createCommand(undefined, "echo", "${blah}");
+  executeScriptTest.createCommand(undefined, "verify", "${blah}", "false");
+  executeScriptTest.createCommand(undefined, "echo", "OK! This is a forced failure on verify to make sure the test proceeds. If you see this message it's a good thing.");
+  executeScriptTest.createCommand(undefined, "assert", "${blah}", "true");
+  executeScriptTest.createCommand(undefined, "executeScript", "true");
+  executeScriptTest.createCommand(undefined, "echo", "${blah}");
+
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
-  checkTest.createCommand(undefined, "check", "css=input");
+  const command = checkTest.createCommand(undefined, "check", "css=input");
+  command.setTargets([
+    ["id=something", "id"],
+    ["name=something-else", "name"],
+    ["linkText=number density", "linkText"],
+    ["xpath=//a[contains(text(),'number density')]", "xpath:link"],
+    ["css=main .class > p a.link", "css"],
+    ["xpath=(//a[contains(text(),'number line')])[2]", "xpath:link"],
+    ["(//a[contains(text(),'number line')])[2]", "xpath:link"],
+    ["//a[contains(text(),'number density')]", "xpath:link"],
+    ["//div[@id='mw-content-text']/div/p[2]/a[5]", "xpath:idRelative"],
+    ["//a[contains(@href, '/wiki/Number_density')]", "xpath:href"],
+    ["//a[5]", "xpath:position"]
+  ]);
   checkTest.createCommand(undefined, "assertChecked", "css=input");
   checkTest.createCommand(undefined, "uncheck", "css=input");
   checkTest.createCommand(undefined, "assertNotChecked", "css=input");
@@ -74,6 +143,10 @@ export default function seed(store, numberOfSuites = 5) {
   const clickAtTest = store.createTestCase("click at");
   clickAtTest.createCommand(undefined, "open", "/");
   clickAtTest.createCommand(undefined, "clickAt", "css=a");
+
+  const commentTest = store.createTestCase("comment");
+  commentTest.createCommand(undefined, "", "", "", "blah");
+  commentTest.createCommand(undefined, "open", "/", "", "also blah");
 
   const framesTest = store.createTestCase("frames");
   framesTest.createCommand(undefined, "open", "/iframe");
@@ -113,16 +186,41 @@ export default function seed(store, numberOfSuites = 5) {
   submitTest.createCommand(undefined, "submit", "css=#login");
   submitTest.createCommand(undefined, "assertElementPresent", "css=.flash.success");
 
-  const smokeSuite = store.createSuite("smoke");
+  const waitTest = store.createTestCase("wait");
+  waitTest.createCommand(undefined, "open", "/dynamic_loading/2");
+  waitTest.createCommand(undefined, "clickAt", "css=#start button");
+  waitTest.createCommand(undefined, "storeText", "css=#finish", "blah");
+  waitTest.createCommand(undefined, "assert", "${blah}", "Hello World!");
 
+  const suiteControlFlow = store.createSuite("control flow");
+  suiteControlFlow.addTestCase(controlFlowIfTest);
+  suiteControlFlow.addTestCase(controlFlowElseIfTest);
+  suiteControlFlow.addTestCase(controlFlowElseTest);
+  suiteControlFlow.addTestCase(controlFlowDoTest);
+  suiteControlFlow.addTestCase(controlFlowTimesTest);
+  suiteControlFlow.addTestCase(controlFlowWhileTest);
+
+  const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
-    smokeSuite.addTestCase(test);
+    suiteAll.addTestCase(test);
   });
 
+  const smokeSuite = store.createSuite("smoke");
+  smokeSuite.addTestCase(checkTest);
+  smokeSuite.addTestCase(clickTest);
+  smokeSuite.addTestCase(clickAtTest);
+  smokeSuite.addTestCase(executeScriptTest);
+  smokeSuite.addTestCase(framesTest);
+  smokeSuite.addTestCase(selectTest);
+  smokeSuite.addTestCase(sendKeysTest);
+  smokeSuite.addTestCase(storeTextTest);
+  smokeSuite.addTestCase(submitTest);
+  smokeSuite.addTestCase(waitTest);
+
   UiState.changeView("Test suites");
-  let suiteState = UiState.getSuiteState(smokeSuite);
+  let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(checkTest, smokeSuite);
+  UiState.selectTest(checkTest, suiteAll);
 
   store.changeName("seed project");
 

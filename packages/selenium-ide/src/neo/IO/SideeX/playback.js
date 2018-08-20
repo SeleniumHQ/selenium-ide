@@ -20,9 +20,10 @@ import FatalError from "../../../errors/fatal";
 import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import UiState from "../../stores/view/UiState";
-import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
-import ExtCommand, { isExtCommand } from "./ext-command";
-import { xlateArgument } from "./formatCommand";
+import { canExecuteCommand } from "../../../plugin/commandExecutor";
+import ExtCommand from "./ext-command";
+import { createPlaybackTree } from "../../playback/playback-tree";
+import { ControlFlowCommandChecks } from "../../models/Command";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -41,10 +42,30 @@ let ignoreBreakpoint = false;
 function play(currUrl) {
   baseUrl = currUrl;
   ignoreBreakpoint = false;
+  initPlaybackTree();
   prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
     .catch(catchPlayingError);
+}
+
+function initPlaybackTree() {
+  try {
+    if (PlaybackState.runningQueue.length === 1 &&
+        ControlFlowCommandChecks.isControlFlow(PlaybackState.runningQueue[0].command)) {
+      reportError(
+        "Unable to execute control flow command by itself. You can execute this \
+        command by running the entire test or by right-clicking on the command \
+        and selecting 'Play from here'.",
+        false,
+        0);
+    } else {
+      let playbackTree = createPlaybackTree(PlaybackState.runningQueue);
+      PlaybackState.setCurrentExecutingCommandNode(playbackTree.startingCommandNode);
+    }
+  } catch (error) {
+    reportError(error.message, false, error.index);
+  }
 }
 
 function playAfterConnectionFailed() {
@@ -55,19 +76,11 @@ function playAfterConnectionFailed() {
 }
 
 function didFinishQueue() {
-  return (PlaybackState.currentPlayingIndex >= PlaybackState.runningQueue.length && PlaybackState.isPlaying);
+  return !PlaybackState.currentExecutingCommandNode;
 }
 
 function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
-}
-
-function incrementPlayingIndex() {
-  if (PlaybackState.currentPlayingIndex < 0) {
-    PlaybackState.setPlayingIndex(0);
-  } else {
-    PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex + 1);
-  }
 }
 
 function isCallStackEmpty() {
@@ -75,30 +88,29 @@ function isCallStackEmpty() {
 }
 
 function executionLoop() {
-  incrementPlayingIndex();
   if (didFinishQueue() && !isCallStackEmpty()) {
     PlaybackState.unwindTestCase();
     return executionLoop();
   } else if (isStopping() || didFinishQueue()) {
     return false;
   }
-  const command = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const command = PlaybackState.currentExecutingCommandNode.command;
   const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
-  if (!command.command) return executionLoop();
   // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
   if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
   else if (ignoreBreakpoint) ignoreBreakpoint = false;
   // paused
   if (isStopping()) return false;
-  if (isExtCommand(command.command)) {
-    return doDelay().then(() => (
-      (extCommand[extCommand.name(command.command)](xlateArgument(command.target), xlateArgument(command.value)))
-        .then(() => {
+  if (extCommand.isExtCommand(command.command)) {
+    return doDelay().then(() => {
+      return (PlaybackState.currentExecutingCommandNode.execute(extCommand))
+        .then((result) => {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
-        }).then(executionLoop)
-    ));
+          PlaybackState.setCurrentExecutingCommandNode(result.next);
+        }).then(executionLoop);
+    });
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
     return executionLoop();
@@ -115,7 +127,6 @@ function executionLoop() {
 }
 
 function prepareToPlay() {
-  PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
   return extCommand.init(baseUrl);
 }
 
@@ -130,7 +141,6 @@ function finishPlaying() {
 function catchPlayingError(message) {
   if (isReceivingEndError(message)) {
     setTimeout(function() {
-      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
       playAfterConnectionFailed();
     }, 100);
   } else {
@@ -139,8 +149,13 @@ function catchPlayingError(message) {
   }
 }
 
-function reportError(error, nonFatal) {
-  const { id } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+function reportError(error, nonFatal, index) {
+  let id;
+  if (!isNaN(index)) {
+    id = PlaybackState.runningQueue[index].id;
+  } else if (PlaybackState.currentExecutingCommandNode) {
+    id = PlaybackState.currentExecutingCommandNode.command.id;
+  }
   let message = error;
   if (error.message === "this.playingFrameLocations[this.currentPlayingTabId] is undefined") {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
@@ -161,7 +176,6 @@ reaction(
   () => PlaybackState.paused,
   paused => {
     if (!paused) {
-      PlaybackState.setPlayingIndex(PlaybackState.currentPlayingIndex - 1);
       ignoreBreakpoint = true;
       playAfterConnectionFailed();
     }
@@ -242,7 +256,7 @@ function doDomWait(res, domTime, domCount = 0) {
 
 function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   if (!PlaybackState.isPlaying || PlaybackState.paused) return;
-  const { id, command, target, value } = PlaybackState.runningQueue[PlaybackState.currentPlayingIndex];
+  const { id, command, target, value } = PlaybackState.currentExecutingCommandNode.command;
 
   let p = new Promise(function(resolve, reject) {
     let count = 0;
@@ -265,28 +279,33 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
     canExecuteCommand(command) ?
       doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
       doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
-  ));
+  )).then(result => {
+    if (result) {
+      PlaybackState.setCurrentExecutingCommandNode(result.next);
+    }
+  });
 }
 
 function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
-  return (command !== "type"
-    ? extCommand.sendMessage(command, xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))
-    : extCommand.doType(xlateArgument(target), xlateArgument(value), isWindowMethodCommand(command))).then(function(result) {
+  return PlaybackState.currentExecutingCommandNode.execute(extCommand).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {
         return doImplicitWait(result.result, id, target, implicitTime, implicitCount);
       } else {
-        PlaybackState.setCommandState(id, /^verify/.test(command) ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
+        let isVerify = /^verify/.test(command);
+        PlaybackState.setCommandState(id, isVerify ? PlaybackStates.Failed : PlaybackStates.Fatal, result.result);
+        return result;
       }
     } else {
       PlaybackState.setCommandState(id, PlaybackStates.Passed);
+      return result;
     }
   });
 }
 
 function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
-  return executeCommand(command, target, value, {
+  return PlaybackState.currentExecutingCommandNode.execute(extCommand, {
     commandId: id,
     isNested: !!PlaybackState.callstack.length,
     runId: PlaybackState.runId,
@@ -294,8 +313,13 @@ function doPluginCommand(id, command, target, value, implicitTime, implicitCount
     frameId: extCommand.getCurrentPlayingFrameId(),
     tabId: extCommand.currentPlayingTabId,
     windowId: extCommand.currentPlayingWindowId
-  }).then(res => {
-    PlaybackState.setCommandState(id, res.status ? res.status : PlaybackStates.Passed, res && res.message || undefined);
+  }).then(result => {
+    PlaybackState.setCommandState(
+      id,
+      result.status ? result.status : PlaybackStates.Passed,
+      result && result.message || undefined
+    );
+    return result;
   }).catch(err => {
     if (isElementNotFound(err.message)) {
       return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
@@ -331,7 +355,7 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
 
 function doDelay() {
   return new Promise((res) => {
-    if (PlaybackState.currentPlayingIndex + 1 === PlaybackState.runningQueue.length) {
+    if (PlaybackState.currentExecutingCommandNode.next === undefined) {
       return res(true);
     } else {
       setTimeout(() => {
@@ -352,17 +376,8 @@ function isReceivingEndError(reason) {
     reason.message == "Could not establish connection. Receiving end does not exist." ||
     // Google Chrome misspells "response"
     reason.message == "The message port closed before a reponse was received." ||
-    reason.message == "The message port closed before a response was received." );
-}
-
-function isWindowMethodCommand(command) {
-  return (command == "answerOnNextPrompt"
-    || command == "chooseCancelOnNextPrompt"
-    || command == "assertPrompt"
-    || command == "chooseOkOnNextConfirmation"
-    || command == "chooseCancelOnNextConfirmation"
-    || command == "assertConfirmation"
-    || command == "assertAlert");
+    reason.message == "The message port closed before a response was received." ||
+    reason.message == "result is undefined"); // from command node eval
 }
 
 function isImplicitWait(command) {

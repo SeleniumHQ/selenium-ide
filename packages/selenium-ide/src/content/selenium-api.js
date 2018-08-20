@@ -228,8 +228,16 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
-Selenium.prototype.eval = function(script, scoped = true) {
-  return window.eval(scoped ? `(() => {${script}})()` : script);
+Selenium.prototype.eval = function(script, scoped = true, isExpression = false) {
+  if (isExpression) {
+    return window.eval(scoped ? `(() => (${script}))()` : script);
+  } else {
+    return window.eval(scoped ? `(() => {${script}})()` : script);
+  }
+};
+
+Selenium.prototype.doEvaluateConditional = function(condition) {
+  return !!(this.eval(condition, true, true));
 };
 
 Selenium.prototype.doVerifyChecked = function(locator) {
@@ -328,6 +336,16 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
     if (!error.message.match(/Element[\s\S]*?not found/)) {
       throw error;
     }
+  }
+};
+
+Selenium.prototype.doVerify = function(actual, expected) {
+  this.doAssert(actual, expected);
+};
+
+Selenium.prototype.doAssert = function(actual, expected) {
+  if (actual !== expected) {
+    throw new Error("Actual value '" + actual + "' did not match '" + expected + "'");
   }
 };
 
@@ -443,7 +461,14 @@ Selenium.prototype.doAssertElementNotPresent = function(locator) {
   }
 };
 
+function throwIfNoVarNameProvided(varName) {
+  if (!varName) {
+    throw new Error("No variable name provided.");
+  }
+}
+
 Selenium.prototype.doStore = function(value, varName) {
+  throwIfNoVarNameProvided(varName);
   return browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
 };
 
@@ -452,26 +477,31 @@ Selenium.prototype.doStoreEval = function() {
 };
 
 Selenium.prototype.doStoreText = function(locator, varName) {
+  throwIfNoVarNameProvided(varName);
   let element = this.browserbot.findElement(locator);
   return browser.runtime.sendMessage({ "storeStr": bot.dom.getVisibleText(element), "storeVar": varName });
 };
 
 Selenium.prototype.doStoreValue = function(locator, varName) {
+  throwIfNoVarNameProvided(varName);
   let element = this.browserbot.findElement(locator);
   return browser.runtime.sendMessage({ "storeStr": element.value.trim(), "storeVar": varName });
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
+  throwIfNoVarNameProvided(varName);
   let doc = selenium.browserbot.getDocument();
   return browser.runtime.sendMessage({ "storeStr": value || doc.title, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreXpathCount = function(xpath, varName) {
+  throwIfNoVarNameProvided(varName);
   let count = this.browserbot.evaluateXPathCount(xpath, this.browserbot.getDocument());
   return browser.runtime.sendMessage({ "storeStr": `${count}` || "0", "storeVar": varName });
 };
 
 Selenium.prototype.doStoreAttribute = function(locator, varName) {
+  throwIfNoVarNameProvided(varName);
   let attributeValue = this.browserbot.findAttribute(locator);
   return browser.runtime.sendMessage({ "storeStr": attributeValue, "storeVar": varName });
 };
@@ -955,6 +985,9 @@ Selenium.prototype.doType = function(locator, value) {
     core.events.setValue(element, value);
   } else {
     bot.action.type(element, value);
+    if (element.value !== value) {
+      core.events.setValue(element, value);
+    }
   }
 };
 
@@ -3247,6 +3280,10 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 
 Selenium.prototype.doShowElement = function(locator){
   try{
+    const elementForInjectingStyle = document.createElement("link");
+    elementForInjectingStyle.rel = "stylesheet";
+    elementForInjectingStyle.href = browser.runtime.getURL("/assets/highlight.css");
+    (document.head || document.documentElement).appendChild(elementForInjectingStyle);
     const highlightElement = document.createElement("div");
     highlightElement.id = "selenium-highlight";
     document.body.appendChild(highlightElement);
@@ -3272,6 +3309,7 @@ Selenium.prototype.doShowElement = function(locator){
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
       document.body.removeChild(highlightElement);
+      elementForInjectingStyle.parentNode.removeChild(elementForInjectingStyle);
     }, 500);
     return "element found";
   } catch (e) {

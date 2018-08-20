@@ -33,7 +33,7 @@ function isEmpty(commands, command) {
 // for plugins
 export function recordCommand(command, target, value, index, select = false) {
   const { test } = UiState.selectedTest;
-  const newCommand = test.createCommand(index);
+  const newCommand = test.createCommand(index ? index : getInsertionIndex(test));
   newCommand.setCommand(command);
   newCommand.setTarget(target);
   newCommand.setValue(value);
@@ -46,7 +46,7 @@ export function recordCommand(command, target, value, index, select = false) {
 }
 
 // for record module
-export default function record(command, targets, value, insertBeforeLastCommand = false) {
+export default function record(command, targets, value, insertBeforeLastCommand) {
   if (UiState.isSelectingTarget) return;
   const { test } = UiState.selectedTest;
   if (isEmpty(test.commands, command)) {
@@ -57,18 +57,20 @@ export default function record(command, targets, value, insertBeforeLastCommand 
     UiState.setUrl(url.origin, true);
     newCommand.setTarget(url.pathname);
   } else if (command !== "open") {
-    let index = test.commands.length;
-    if (insertBeforeLastCommand) {
-      index = test.commands.length - 1;
-    } else if (UiState.selectedCommand !== UiState.pristineCommand) {
-      index = test.commands.indexOf(UiState.selectedCommand);
-    }
+    let index = getInsertionIndex(test, insertBeforeLastCommand);
     if (preprocessDoubleClick(command, test, index)) {
       // double click removed the 2 clicks from before
       index -= 2;
     }
-    const newCommand = recordCommand(command, targets[0][0], value, index);
-    newCommand.setTargets(targets);
+    const trgs = targets.map(([locator, strategy]) => {
+      // no more implicit things, make users specify exactly which selector to use
+      if (strategy && locator && strategy.startsWith("xpath") && locator.startsWith("//")) {
+        return ["xpath=" + locator, strategy];
+      }
+      return [locator, strategy];
+    });
+    const newCommand = recordCommand(command, trgs[0][0], value, index);
+    newCommand.setTargets(trgs);
   }
 }
 
@@ -86,4 +88,15 @@ function preprocessDoubleClick(command, test, index) {
     }
   }
   return false;
+}
+
+function getInsertionIndex(test, insertBeforeLastCommand = false) {
+  let index = test.commands.length;
+  if (insertBeforeLastCommand) {
+    index = test.commands.length - 1;
+  } else if (UiState.selectedCommand !== UiState.pristineCommand) {
+    index = test.commands.indexOf(UiState.selectedCommand);
+  }
+
+  return index;
 }

@@ -116,6 +116,16 @@ export default class ProjectStore {
     }
   }
 
+  @action.bound duplicateTestCase(test) {
+    const test2 = test.export();
+    delete test2.id;
+    test2.commands.forEach((cmd) => {
+      delete cmd.id;
+    });
+    const toBeAdded = TestCase.fromJS(test2);
+    this.addTestCase(toBeAdded);
+  }
+
   @action.bound deleteTestCase(test) {
     if (!test || test.constructor.name !== "TestCase") {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);

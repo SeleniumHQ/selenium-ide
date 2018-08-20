@@ -18,8 +18,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { PropTypes as MobxPropTypes } from "mobx-react";
+import SyntaxHighlighter, { registerLanguage } from "react-syntax-highlighter/light";
+import fortran from "react-syntax-highlighter/languages/hljs/fortran";
+import stylus from "react-syntax-highlighter/languages/hljs/stylus";
+import ini from "react-syntax-highlighter/languages/hljs/ini";
+import { xcode } from "react-syntax-highlighter/styles/hljs";
 import AutoComplete from "../AutoComplete";
 import Input from "../FormInput";
+import "./style.css";
+
+registerLanguage("fortran", fortran);
+registerLanguage("stylus", stylus);
+registerLanguage("ini", ini);
 
 export default class TargetInput extends React.Component {
   static propTypes = {
@@ -32,7 +42,7 @@ export default class TargetInput extends React.Component {
   };
   render() {
     return (this.props.targets && this.props.targets.length ?
-      <Input name={this.props.name} label={this.props.label}>
+      <Input name={this.props.name} className="target-input" label={this.props.label}>
         <AutoComplete
           getItemValue={(item) => (
             item[0]
@@ -63,14 +73,20 @@ class TargetSuggestion extends React.Component {
     strategy: PropTypes.string
   };
   render() {
+    let language = "ini";
+    if (this.props.strategy === "css") {
+      language = "stylus";
+    } else if (this.props.strategy.startsWith("xpath")) {
+      language = "fortran";
+    }
     return (
       <span style={{
         display: "flex"
       }}>
-        <span style={{
+        <span className="code" style={{
           flexGrow: "1",
           wordBreak: "break-word"
-        }}>{this.props.locator}</span>
+        }}><SyntaxHighlighter language={language} style={xcode}>{this.props.locator}</SyntaxHighlighter></span>
         {this.props.strategy && <span style={{
           color: "#929292",
           flexGrow: "initial",

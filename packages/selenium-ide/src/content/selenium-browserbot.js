@@ -28,43 +28,11 @@ import Selenium from "./selenium-api";
 import SeleniumError from "./SeleniumError";
 import { selenium } from "./commands-api";
 import goog, { bot, core } from "./closure-polyfill";
-import { getTagName } from "./utils";
+import { getTagName, parse_locator } from "./utils";
 import PatternMatcher from "./PatternMatcher";
 
 export const browserVersion = new window.global.BrowserVersion();
 window.global.browserVersion = browserVersion;
-
-
-/**
- * Parses a Selenium locator, returning its type and the unprefixed locator
- * string as an object.
- *
- * @param locator  the locator to parse
- */
-function parse_locator(locator)
-{
-  if (!locator) {
-    throw new TypeError("Locator cannot be empty");
-  }
-  const result = locator.match(/^([A-Za-z]+)=.+/);
-  if (result) {
-    let type = result[1];
-    const length = type.length;
-    if (type === "link") {
-      // deprecation control
-      browser.runtime.sendMessage({
-        log: {
-          type: "warn",
-          message: "link locators are deprecated in favor of linkText and partialLinkText, link is treated as linkText"
-        }
-      });
-      type = "linkText";
-    }
-    const actualLocator = locator.substring(length + 1);
-    return { type: type, string: actualLocator };
-  }
-  return { type: "xpath", string: locator };
-}
 
 // The window to which the commands will be sent.  For example, to click on a
 // popup window, first select that window, and then do a normal click command.

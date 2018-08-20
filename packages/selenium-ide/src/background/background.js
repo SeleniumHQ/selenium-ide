@@ -79,25 +79,29 @@ function openPanel(tab) {
 }
 
 function openWindowFromStorageResolution() {
-  let size = {
+  let opts = {
     height: 690,
     width: 550
   };
   return browser.storage.local.get().then(storage => {
     if (sizeIsValid(storage.size)) {
-      size.height = storage.size.height;
-      size.width = storage.size.width;
+      opts.height = storage.size.height;
+      opts.width = storage.size.width;
+    }
+    if (originIsValid(storage.origin)) {
+      opts.top = storage.origin.top;
+      opts.left = storage.origin.left;
     }
     return browser.windows.create(Object.assign({
       url: browser.extension.getURL("assets/index.html"),
       type: "popup"
-    }, size));
+    }, opts));
   }).catch(e => {
     console.error(e);
     return browser.windows.create(Object.assign({
       url: browser.extension.getURL("assets/index.html"),
       type: "popup"
-    }, size));
+    }, opts));
   });
 }
 
@@ -107,6 +111,14 @@ function sizeIsValid(size) {
 
 function sideIsValid(number) {
   return number && number.constructor.name === "Number" && number > 50;
+}
+
+function originIsValid(origin) {
+  return (origin && pointIsValid(origin.top) && pointIsValid(origin.left));
+}
+
+function pointIsValid(point) {
+  return point >= 0 && point.constructor.name === "Number";
 }
 
 browser.browserAction.onClicked.addListener(openPanel);

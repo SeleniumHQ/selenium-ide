@@ -25,6 +25,7 @@ import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
+import { createPlaybackTree } from "../../playback/playback-tree";
 
 class PlaybackState {
   @observable runId = "";
@@ -32,7 +33,6 @@ class PlaybackState {
   @observable isStopping = false;
   @observable breakpointsDisabled = false;
   @observable pauseOnExceptions = false;
-  @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
   @observable commandState = new Map();
@@ -50,6 +50,7 @@ class PlaybackState {
   @observable paused = false;
   @observable delay = 0;
   @observable callstack = [];
+  @observable currentExecutingCommandNode = null;
 
   constructor() {
     this.maxDelay = 3000;
@@ -142,6 +143,10 @@ class PlaybackState {
     this.beforePlaying(playSuite);
   }
 
+  runningQueueFromIndex(commands, index) {
+    return commands.slice(index);
+  }
+
   @action.bound startPlaying(command) {
     const playTest = action(() => {
       const { test } = UiState.selectedTest;
@@ -150,11 +155,11 @@ class PlaybackState {
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
       this.testsCount = 1;
-      this.currentPlayingIndex = 0;
+      let currentPlayingIndex = 0;
       if (command && command.constructor.name === "Command") {
-        this.currentPlayingIndex = test.commands.indexOf(command);
+        currentPlayingIndex = test.commands.indexOf(command);
       }
-      this.runningQueue = test.commands.peek();
+      this.runningQueue = this.runningQueueFromIndex(test.commands.peek(), currentPlayingIndex);
       const pluginsLogs = {};
       if (PluginManager.plugins.length) this.logger.log("Preparing plugins for test run...");
       PluginManager.emitMessage({
@@ -190,7 +195,6 @@ class PlaybackState {
       this.noStatisticsEffects = true;
       this.jumpToNextCommand = jumpToNext;
       this.paused = false;
-      this.currentPlayingIndex = 0;
       this.errors = 0;
       this.forceTestCaseFailure = false;
       this.aborted = false;
@@ -208,7 +212,6 @@ class PlaybackState {
     this.currentRunningTest = this._testsToRun.shift();
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.clearStack();
-    this.currentPlayingIndex = 0;
     this.errors = 0;
     this.forceTestCaseFailure = false;
     PluginManager.emitMessage({
@@ -291,9 +294,9 @@ class PlaybackState {
     this.aborted = true;
     this._testsToRun = [];
     if (this.paused) {
-      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
+      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
     } else {
-      this.setCommandStateAtomically(this.runningQueue[this.currentPlayingIndex].id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
     }
     this.stopPlayingGracefully();
   }
@@ -351,8 +354,8 @@ class PlaybackState {
     });
   }
 
-  @action.bound setPlayingIndex(index) {
-    this.currentPlayingIndex = index;
+  @action.bound setCurrentExecutingCommandNode(node) {
+    this.currentExecutingCommandNode = node;
   }
 
   @action.bound setCommandStateAtomically(commandId, callstackIndex, state, message) {
@@ -369,8 +372,7 @@ class PlaybackState {
         if (!this.pauseOnExceptions) {
           this.stopPlayingGracefully();
         } else if (this.pauseOnExceptions) {
-          this.break(this.runningQueue[this.currentPlayingIndex]);
-          this.setPlayingIndex(this.currentPlayingIndex - 1);
+          this.break(this.currentExecutingCommandNode.command);
         }
       }
     }
@@ -392,18 +394,20 @@ class PlaybackState {
     this.callstack.push({
       caller: this.currentRunningTest,
       callee: testCase,
-      position: this.currentPlayingIndex
+      position: this.currentExecutingCommandNode
     });
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     this.currentRunningTest = testCase;
-    this.currentPlayingIndex = -1;
     this.runningQueue = testCase.commands.peek();
+    let playbackTree = createPlaybackTree(this.runningQueue);
+    this.setCurrentExecutingCommandNode(playbackTree.startingCommandNode);
+    return playbackTree.startingCommandNode;
   }
 
   @action.bound unwindTestCase() {
     const top = this.callstack.pop();
     this.currentRunningTest = top.caller;
-    this.currentPlayingIndex = top.position;
+    this.setCurrentExecutingCommandNode(top.position.next);
     this.runningQueue = top.caller.commands.peek();
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     return top;
@@ -421,7 +425,6 @@ class PlaybackState {
     this.clearCommandStates();
     this.clearStack();
     variables.clearVariables();
-    this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;
     this.noStatisticsEffects = false;
     this.failures = 0;

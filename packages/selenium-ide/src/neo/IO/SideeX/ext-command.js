@@ -250,8 +250,7 @@ export default class ExtCommand {
   }
 
   doRun(target) {
-    PlaybackState.callTestCase(target);
-    return Promise.resolve();
+    return Promise.resolve(PlaybackState.callTestCase(target));
   }
 
   doType(locator, value, top) {
@@ -370,20 +369,30 @@ export default class ExtCommand {
     let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
     return "do" + upperCase;
   }
-}
 
-export function isExtCommand(command) {
-  switch(command) {
-    case "pause":
-    case "open":
-    case "selectFrame":
-    case "selectWindow":
-    case "run":
-    case "setSpeed":
-    case "store":
-    case "close":
-      return true;
-    default:
-      return false;
+  isExtCommand(command) {
+    switch(command) {
+      case "pause":
+      case "open":
+      case "selectFrame":
+      case "selectWindow":
+      case "run":
+      case "setSpeed":
+      case "store":
+      case "close":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  isWindowMethodCommand(command) {
+    return (command == "answerOnNextPrompt"
+      || command == "chooseCancelOnNextPrompt"
+      || command == "assertPrompt"
+      || command == "chooseOkOnNextConfirmation"
+      || command == "chooseCancelOnNextConfirmation"
+      || command == "assertConfirmation"
+      || command == "assertAlert");
   }
 }

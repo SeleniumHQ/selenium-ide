@@ -32,6 +32,7 @@ export default class TestList extends Component {
     collapsed: PropTypes.bool,
     suite: PropTypes.object,
     renameTest: PropTypes.func,
+    duplicateTest: PropTypes.func,
     removeTest: PropTypes.func,
     noMenu: PropTypes.bool
   };
@@ -86,6 +87,7 @@ export default class TestList extends Component {
                   changed={UiState.getTestState(test).modified}
                   selectTest={UiState.selectTest}
                   renameTest={this.props.renameTest}
+                  duplicateTest={() => { this.props.duplicateTest(test); }}
                   removeTest={this.props.removeTest ? () => { this.props.removeTest(test); } : undefined}
                   moveSelectionUp={() => { UiState.selectTestByIndex(index - 1); }}
                   moveSelectionDown={() => { UiState.selectTestByIndex(index + 1); }}

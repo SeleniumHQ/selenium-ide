@@ -15,11 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//import { registerCommand, canExecuteCommand, executeCommand } from "../../plugin/commandExecutor";
-//import { CommandHandler } from "../IO/commandHandler";
+export default function UpgradeProject(project) {
+  return UpgradePause(project);
+}
 
-describe("Command Handler", () => {
-  it.skip("should check for command type (e.g., extCommand, Selenium, Control Flow", () => { });
-  it.skip("should derive the correct command object from the provided type", () => { });
-  it.skip("should validate the test case (through delegation)", () => { });
-});
+function UpgradePause(project) {
+  let r = Object.assign({}, project);
+  r.tests = r.tests.map((test) => {
+    return Object.assign({}, test, {
+      commands: test.commands.map((c) => {
+        if (c.command === "pause" && !c.target) {
+          return {
+            command: c.command,
+            target: c.value,
+            value: ""
+          };
+        }
+        return c;
+      })
+    });
+  });
+  return r;
+}

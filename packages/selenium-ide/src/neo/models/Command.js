@@ -116,12 +116,23 @@ export const ArgTypes = {
   },
   attributeLocator: {
     name: "attribute locator",
-    description: "An element locator followed by an @ sign and then the name of the attribute, e.g. \"foo@bar\"."
+    description: "An element locator followed by an @ sign and then the name \
+                  of the attribute, e.g. \"foo@bar\"."
+  },
+  conditionalExpression: {
+    name: "conditional expression",
+    description: "JavaScript expression that returns a boolean result for use \
+                  in control flow commands."
   },
   coord: {
     name: "coord String",
     description: "Specifies the x,y position (e.g., - 10,20) of the mouse event \
                   relative to the element found from a locator."
+  },
+  expectedValue: {
+    name: "expected value",
+    description: "The result you expect a variable to contain (e.g., true, false,\
+                  or some other value)."
   },
   expression: {
     name: "expression",
@@ -180,6 +191,11 @@ export const ArgTypes = {
     name: "text",
     description: "The text to verify."
   },
+  times: {
+    name: "times",
+    description: "The number of attempts a times control flow loop will execute \
+                  the commands within its block."
+  },
   url: {
     name: "url",
     description: "The URL to open (may be relative or absolute)."
@@ -190,7 +206,9 @@ export const ArgTypes = {
   },
   variableName: {
     name: "variable name",
-    description: "The name of the variable you'd like to store the result of an expression in."
+    description: "The name of the variable you'd like to either store an \
+                  expression's result in or reference in a check with \
+                  'assert' or 'verify'."
   },
   waitTime: {
     name: "wait time",
@@ -220,6 +238,12 @@ class CommandList {
                     the specified answer string to it. If the alert is already \
                     present, then use \"webdriver answer on visible prompt\" instead.",
       target: ArgTypes.answer
+    }],
+    [ "assert", {
+      name: "assert",
+      description: "Check that a variable is true/false or some other value.",
+      target: ArgTypes.variableName,
+      value: ArgTypes.expectedValue
     }],
     [ "assertAlert", {
       name: "assert alert",
@@ -364,11 +388,10 @@ class CommandList {
       description: "Check a toggle-button (checkbox/radio).",
       target: ArgTypes.locator
     }],
-    [ "uncheck", {
-      name: "uncheck",
-      type: TargetTypes.LOCATOR,
-      description: "Uncheck a toggle-button (checkbox/radio).",
-      target: ArgTypes.locator
+    [ "do", {
+      name: "do",
+      description: "Create a loop that executes the proceeding commands at \
+                    least once. Terminate the branch with the repeat if command."
     }],
     [ "doubleClick", {
       name: "double click",
@@ -400,17 +423,37 @@ class CommandList {
                     Useful for debugging.",
       target: ArgTypes.message
     }],
+    [ "else", {
+      name: "else",
+      description: "Part of an if block. Execute the commands in this branch \
+                    when an if and/or else if condition are not met. Terminate \
+                    the branch with the end command."
+    }],
+    [ "elseIf", {
+      name: "else if",
+      description: "Part of an if block. Execute the commands in this branch \
+                    when an if condition has not been met. Terminate the branch \
+                    with the end command."
+    }],
+    [ "end", {
+      name: "end",
+      description: "Terminates a control flow block for if, while, and times."
+    }],
     [ "executeScript", {
       name: "execute script",
       description: "Executes a snippet of JavaScript in the context of the currently selected frame or \
-                    window. The script fragment will be executed as the body of an anonymous function.",
-      target: ArgTypes.script
+                    window. The script fragment will be executed as the body of an anonymous function. \
+                    To store the return value, use the 'return' keyword and provide a variable name in \
+                    the value input field.",
+      target: ArgTypes.script,
+      value: ArgTypes.variableName
     }],
     [ "executeAsyncScript", {
       name: "execute async script",
       description: "Executes an async snippet of JavaScript in the context of the currently selected frame or \
-                    window. The script fragment will be executed as the body of an anonymous function and must return a Promise.\
-                    The Promise result will be saved on the variable.",
+                    window. The script fragment will be executed as the body of an anonymous function and must \
+                    return a Promise. The Promise result will be saved on the variable if you use the 'return' \
+                    keyword.",
       target: ArgTypes.script,
       value: ArgTypes.variableName
     }],
@@ -420,6 +463,12 @@ class CommandList {
       description: "Sets the value of a content editable element as if you typed in it.",
       target: ArgTypes.locator,
       value: ArgTypes.value
+    }],
+    [ "if", {
+      name: "if",
+      type: TargetTypes.LOCATOR,
+      description: "Create a conditional branch in your test. Terminate the branch with the end command.",
+      target: ArgTypes.conditionalExpression
     }],
     [ "mouseDownAt", {
       name: "mouse down at",
@@ -475,6 +524,13 @@ class CommandList {
                     element using an option locator.",
       target: ArgTypes.locator,
       value: ArgTypes.optionLocator
+    }],
+    [ "repeatIf", {
+      name: "repeat if",
+      description: "Terminate a 'do' control flow branch conditionally. If the result of the \
+                    provided conditional expression is true, it starts the do loop over. \
+                    Otherwise it ends the loop.",
+      target: ArgTypes.conditionalExpression
     }],
     [ "run", {
       name: "run",
@@ -593,6 +649,11 @@ class CommandList {
                     for forms without submit buttons, e.g. single-input \"Search\" forms.",
       target: ArgTypes.formLocator
     }],
+    [ "times", {
+      name: "times",
+      description: "Create a loop that executes the proceeding commands n number of times.",
+      target: ArgTypes.times
+    }],
     [ "type", {
       name: "type",
       type: TargetTypes.LOCATOR,
@@ -600,10 +661,16 @@ class CommandList {
                     Can also be used to set the value of combo boxes, check boxes, \
                     etc. In these cases, value should be the value of the option \
                     selected, not the visible text. \
-                    Chrome only: If a file path is given it will be uploaded to the input (for type=file), \
-                    NOTE: No XPath locators.",
+                    Chrome only: If a file path is given it will be uploaded to \
+                    the input (for type=file), NOTE: XPath locators are not supported.",
       target: ArgTypes.locator,
       value: ArgTypes.value
+    }],
+    [ "uncheck", {
+      name: "uncheck",
+      type: TargetTypes.LOCATOR,
+      description: "Uncheck a toggle-button (checkbox/radio).",
+      target: ArgTypes.locator
     }],
     [ "verifyChecked", {
       name: "verify checked",
@@ -723,6 +790,12 @@ class CommandList {
                     instructs Selenium to accept it. If the alert has not \
                     appeared yet then use \"choose ok on next confirmation\" \
                     instead."
+    }],
+    [ "while", {
+      name: "while",
+      description: "Create a loop that executes the proceeding commands repeatedly \
+                    for as long as the provided conditional expression is true.",
+      target: ArgTypes.conditionalExpression
     }]
   ])
 
@@ -754,3 +827,115 @@ class CommandList {
 }
 
 export const Commands = CommandList.instance;
+
+export const ControlFlowCommandNames = {
+  do: "do",
+  else: "else",
+  elseIf: "elseIf",
+  end: "end",
+  if: "if",
+  repeatIf: "repeatIf",
+  times: "times",
+  while: "while"
+};
+
+function commandNamesEqual(command, target) {
+  if (command) {
+    return (command.command === target);
+  } else {
+    return false;
+  }
+}
+
+function isBlockOpen(command) {
+  return (isIf(command) || isLoop(command));
+}
+
+function isConditional(command) {
+  switch(command.command) {
+    case ControlFlowCommandNames.elseIf:
+    case ControlFlowCommandNames.if:
+    case ControlFlowCommandNames.repeatIf:
+    case ControlFlowCommandNames.times:
+    case ControlFlowCommandNames.while:
+      return true;
+    default:
+      return false;
+  }
+}
+
+function isControlFlow(command) {
+  switch(command.command) {
+    case ControlFlowCommandNames.if:
+    case ControlFlowCommandNames.elseIf:
+    case ControlFlowCommandNames.else:
+    case ControlFlowCommandNames.end:
+    case ControlFlowCommandNames.do:
+    case ControlFlowCommandNames.repeatIf:
+    case ControlFlowCommandNames.times:
+    case ControlFlowCommandNames.while:
+      return true;
+    default:
+      return false;
+  }
+}
+
+function isDo(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.do);
+}
+
+function isElse(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.else);
+}
+
+function isElseIf(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.elseIf);
+}
+
+function isElseOrElseIf(command) {
+  return (isElseIf(command) || isElse(command));
+}
+
+function isEnd(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.end));
+}
+
+function isIf(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.if));
+}
+
+function isIfBlock(command) {
+  return (isIf(command) || isElseOrElseIf(command));
+}
+
+function isLoop(command) {
+  return (commandNamesEqual(command, ControlFlowCommandNames.while) ||
+          commandNamesEqual(command, ControlFlowCommandNames.times) ||
+          commandNamesEqual(command, ControlFlowCommandNames.repeatIf));
+}
+
+function isTerminal(command) {
+  return (isElse(command) ||
+          isDo(command) ||
+          isEnd(command));
+}
+
+function isTimes(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.times);
+}
+
+export const ControlFlowCommandChecks = {
+  isIfBlock: isIfBlock,
+  isConditional: isConditional,
+  isDo: isDo,
+  isElse: isElse,
+  isElseOrElseIf: isElseOrElseIf,
+  isEnd: isEnd,
+  isIf: isIf,
+  isLoop: isLoop,
+  isBlockOpen: isBlockOpen,
+  isTerminal: isTerminal,
+  isControlFlow: isControlFlow,
+  isTimes: isTimes
+};
+

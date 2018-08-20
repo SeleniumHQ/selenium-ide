@@ -16,7 +16,7 @@
 // under the License.
 
 import CommandEmitter, { registerEmitter } from "../src/command";
-import { Commands } from "../../selenium-ide/src/neo/models/Command";
+import { Commands, ControlFlowCommandNames } from "../../selenium-ide/src/neo/models/Command";
 
 describe("command code emitter", () => {
   it("should skip empty commands", () => {
@@ -689,5 +689,89 @@ describe("command code emitter", () => {
     };
     const snapshot = "this commands snapshot";
     return expect(CommandEmitter.emit(command, undefined, snapshot)).resolves.toBe(snapshot);
+  });
+  it("should emit `if` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.if,
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`if (${command.target}) {`);
+  });
+  it("should emit `else if` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.elseIf,
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`} else if (${command.target}) {`);
+  });
+  it("should emit `else` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.else,
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("} else {");
+  });
+  it("should emit `times` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.times,
+      target: "5",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`const times = ${command.target};for(let i = 0; i < times; i++) {`);
+  });
+  it("should emit `while` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.while,
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`while (${command.target}) {`);
+  });
+  it("should emit `end` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.end,
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("}");
+  });
+  it("should emit `do` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.do,
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("do {");
+  });
+  it("should emit `repeatIf` command", () => {
+    const command = {
+      command: ControlFlowCommandNames.repeatIf,
+      target: "true",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`} while(${command.target});`);
+  });
+  it("should emit `assert` command", () => {
+    const command = {
+      command: "assert",
+      target: "${varrrName}",
+      value: "true"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `expect(vars.varrrName === ${command.value});`
+    );
+  });
+  it("should emit `verify` command", () => {
+    const command = {
+      command: "verify",
+      target: "${varrrName}",
+      value: "true"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `expect(vars.varrrName === ${command.value});`
+    );
   });
 });
