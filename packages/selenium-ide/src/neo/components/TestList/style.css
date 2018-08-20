@@ -1,14 +1,13 @@
 .tests {
   max-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   transition: max-height 300ms linear;
   list-style: none;
 }
 
 .tests.active {
   max-height: 500px;
-  transition: max-height 400ms linear;
+  transition: max-height 300ms linear;
 }
 
 .tests li {
