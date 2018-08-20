@@ -389,21 +389,30 @@ let mouseoutLocator = undefined;
 // © Shuo-Heng Shih, SideeX Team
 Recorder.addEventHandler("mouseOut", "mouseout", function(event) {
   if (mouseoutLocator !== null && event.target === mouseoutLocator) {
-    record("mouseOut", locatorBuilders.buildAll(event.target), '');
+    record("mouseOut", locatorBuilders.buildAll(event.target), "");
   }
   mouseoutLocator = undefined;
 }, true);
 // END
 
-// © Shuo-Heng Shih, SideeX Team
-Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
+Recorder.addMutationObserver("DOMNodeInserted", function(mutations) {
   if (pageLoaded === true && window.document.documentElement.getElementsByTagName("*").length > nowNode) {
+    // Get list of inserted nodes from the mutations list to simulate 'DOMNodeInserted'.
+    const insertedNodes = mutations.reduce((nodes, mutation) => {
+      if (mutation.type === "childList") {
+        nodes.push.apply(nodes, mutation.addedNodes);
+      }
+      return nodes;
+    }, []);
+    // If no nodes inserted, just bail.
+    if (!insertedNodes.length) {
+      return;
+    }
+
     if (scrollDetector) {
       //TODO: fix target
       record("runScript", [
-        [
-          ["window.scrollTo(0," + window.scrollY + ")"]
-        ]
+        ["window.scrollTo(0," + window.scrollY + ")" ]
       ], "");
       pageLoaded = false;
       setTimeout(function() {
@@ -419,8 +428,7 @@ Recorder.addEventHandler("mouseOver", "DOMNodeInserted", function(event) {
       mouseoverLocator = undefined;
     }
   }
-}, true);
-// END
+}, { childList: true, subtree: true });
 
 // © Shuo-Heng Shih, SideeX Team
 let readyTimeOut = null;
