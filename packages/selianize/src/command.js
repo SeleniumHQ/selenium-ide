@@ -394,5 +394,5 @@ function emitControlFlowWhile(target) {
 }
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} === ${value});`);
+  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} == "${value}");`);
 }
