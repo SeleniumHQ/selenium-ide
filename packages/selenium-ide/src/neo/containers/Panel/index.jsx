@@ -138,6 +138,9 @@ if (browser.windows) {
     if (onlyPrimary && key === "S") {
       e.preventDefault();
       saveProject(project);
+    } else if (onlyPrimary && key === "O" && this.openFile) {
+      e.preventDefault();
+      this.openFile();
     } else if (noModifiers && key === "ESCAPE") {
       UiState.toggleConsole();
     }
@@ -176,6 +179,9 @@ if (browser.windows) {
                 title={this.state.project.name}
                 changed={this.state.project.modified}
                 changeName={this.state.project.changeName}
+                openFile={(openFile) => {
+                  this.openFile = openFile;
+                }}
                 load={loadProject.bind(undefined, project)}
                 save={() => saveProject(project)}
               />

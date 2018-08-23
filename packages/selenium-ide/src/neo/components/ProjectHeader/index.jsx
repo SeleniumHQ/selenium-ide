@@ -40,6 +40,7 @@ export default class ProjectHeader extends React.Component {
     title: PropTypes.string.isRequired,
     changed: PropTypes.bool,
     changeName: PropTypes.func.isRequired,
+    openFile: PropTypes.func,
     load: PropTypes.func,
     save: PropTypes.func
   };
@@ -58,7 +59,7 @@ export default class ProjectHeader extends React.Component {
           <i className="si-pencil"></i>
         </div>
         <span className="buttons">
-          <OpenButton onFileSelected={this.props.load} />
+          <OpenButton onFileSelected={this.props.load} openFile={this.props.openFile} />
           <SaveButton data-place="left" unsaved={this.props.changed} onClick={this.props.save} />
           <ListMenu width={250} padding={-5} opener={
             <MoreButton canFocus={true} />

@@ -26,6 +26,17 @@ export default class OpenButton extends React.Component {
     super(props);
     this.id = uuidv4();
     this.handleChange = this.handleChange.bind(this);
+    this.openFile = this.openFile.bind(this);
+    if (props.openFile) {
+      props.openFile(this.openFile);
+    }
+  }
+  openFile() {
+    if (this.input) {
+      this.input.click();
+    } else {
+      return false;
+    }
   }
   handleChange(e) {
     this.props.onFileSelected(e.target.files[0]);
@@ -40,6 +51,7 @@ export default class OpenButton extends React.Component {
     );
   }
   static propTypes = {
-    onFileSelected: PropTypes.func.isRequired
+    onFileSelected: PropTypes.func.isRequired,
+    openFile: PropTypes.func
   };
 }
