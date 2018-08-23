@@ -81,6 +81,18 @@ class PlaybackState {
     }, {});
   }
 
+  @computed get isPlayingSuite() {
+    return this.isPlaying && !!this.currentRunningSuite;
+  }
+
+  @computed get isPlayingTest() {
+    return this.isPlaying && this.currentRunningTest && !this.currentRunningSuite;
+  }
+
+  @computed get canPlaySuite() {
+    return UiState.selectedTest.suite && !this.isPlayingTest;
+  }
+
   @action.bound toggleDisableBreakpoints() {
     this.breakpointsDisabled = !this.breakpointsDisabled;
   }
@@ -119,6 +131,38 @@ class PlaybackState {
     this.suiteState.clear();
     this.currentRunningTest = undefined;
     this.currentRunningSuite = undefined;
+  }
+
+  @action.bound playSuiteOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (!this.isPlaying) {
+      this.startPlayingSuite();
+    }
+  }
+
+  @action.bound playTestOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (!this.isPlaying) {
+      return this.startPlaying();
+    }
+  }
+
+  @action.bound pauseOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (this.isPlaying) {
+      return this.pause();
+    }
+  }
+
+  @action.bound stepOver() {
+    if (this.paused) {
+      this.resume(true);
+    } else if (!this.isPlaying) {
+      this.startPlaying(UiState.selectedCommand, true);
+    }
   }
 
   @action.bound startPlayingSuite() {
@@ -293,14 +337,16 @@ class PlaybackState {
   }
 
   @action.bound abortPlaying() {
-    this.aborted = true;
-    this._testsToRun = [];
-    if (this.paused) {
-      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
-    } else {
-      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+    if (this.isPlaying) {
+      this.aborted = true;
+      this._testsToRun = [];
+      if (this.paused) {
+        this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
+      } else {
+        this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+      }
+      this.stopPlayingGracefully();
     }
-    this.stopPlayingGracefully();
   }
 
   @action.bound forceFailure() {
