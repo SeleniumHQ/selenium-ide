@@ -17,6 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { parse } from "modifier-keys";
 import ListMenu, { ListMenuItem } from "../ListMenu";
 import { MenuDirections } from "../Menu";
 import "./style.css";
@@ -55,13 +56,13 @@ export default class VerticalTabBar extends React.Component {
     return (
       <div className="tabbar vertical">
         <div>
-          <ListMenu direction={MenuDirections.Bottom} width={130} padding={5} opener={
+          <ListMenu direction={MenuDirections.Bottom} width={145} padding={5} opener={
             <VerticalTabBarItem focusable={true}>
               <span>{this.props.tab || this.state.activeTab.tab}</span>
             </VerticalTabBarItem>
           }>
-            {this.props.tabs.map(tab => (
-              <ListMenuItem key={tab} onClick={this.handleClick.bind(this, tab)}>{tab}</ListMenuItem>
+            {this.props.tabs.map((tab, i) => (
+              <ListMenuItem key={tab} label={parse(`${i + 1}`, { primaryKey: true })} onClick={this.handleClick.bind(this, tab)}>{tab}</ListMenuItem>
             ))}
           </ListMenu>
           {this.props.children ? <span className="buttons" style={{

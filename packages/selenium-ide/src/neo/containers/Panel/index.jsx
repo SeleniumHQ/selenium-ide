@@ -137,12 +137,25 @@ if (browser.windows) {
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
+    // when editing these, remember to edit the button's tooltip as well
     if (onlyPrimary && key === "S") {
       e.preventDefault();
       saveProject(project);
     } else if (onlyPrimary && key === "O" && this.openFile) {
       e.preventDefault();
       this.openFile();
+    } else if (onlyPrimary && key === "1") {
+      // test view
+      e.preventDefault();
+      UiState.changeView(UiState.views[+key - 1]);
+    } else if (onlyPrimary && key === "2") {
+      // suite view
+      e.preventDefault();
+      UiState.changeView(UiState.views[+key - 1]);
+    } else if (onlyPrimary && key === "3") {
+      // execution view
+      e.preventDefault();
+      UiState.changeView(UiState.views[+key - 1]);
     } else if (onlyPrimary && key === "R") {
       // run test
       e.preventDefault();
