@@ -147,7 +147,7 @@ function runProject(project) {
         fs.mkdirSync(path.join(projectPath, suite.name));
         // parallel suite
         suite.tests.forEach(test => {
-          writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${suite.code}${test.code}`);
+          writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${test.code}`);
         });
       }
     });
