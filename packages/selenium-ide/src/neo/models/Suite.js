@@ -32,6 +32,7 @@ export default class Suite {
   constructor(id = uuidv4(), name = "Untitled Suite") {
     this.id = id;
     this.name = name;
+    this.containsTest = this.containsTest.bind(this);
     this.export = this.export.bind(this);
   }
 
@@ -71,7 +72,8 @@ export default class Suite {
     }
   }
 
-  @action.bound containsTest(test) {
+  containsTest(test) {
+    // WARNING: do not turn this into a bound action, the observables it will set will cause react-dnd to fail!
     return this._tests.includes(test);
   }
 

@@ -50,7 +50,7 @@ const commandTarget = {
     }
 
     // Determine rectangle on screen
-    const hoverBoundingRect = component.decoratedComponentInstance.node.getBoundingClientRect();
+    const hoverBoundingRect = component.getDecoratedComponentInstance().node.getBoundingClientRect();
 
     // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -268,7 +268,7 @@ class TestRow extends React.Component {
           : <div></div> }
       </td>
     </tr>;
-    return ((!this.props.isPristine && !this.props.readOnly) ? this.props.connectDragSource(this.props.connectDropTarget(rendered)) : rendered);
+    return ((!this.props.isPristine && !this.props.readOnly) ? this.props.connectDropTarget(this.props.connectDragSource(rendered)) : rendered);
   }
 }
 

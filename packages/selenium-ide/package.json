@@ -57,7 +57,7 @@
     "react": "^16.0.0",
     "react-autocomplete": "^1.7.2",
     "react-contenteditable": "^2.0.5",
-    "react-dnd": "^2.5.4",
+    "react-dnd": "5.0.0",
     "react-dnd-html5-backend": "^2.5.4",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.0.0",
