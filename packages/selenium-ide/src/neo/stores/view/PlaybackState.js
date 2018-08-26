@@ -17,7 +17,7 @@
 
 import uuidv4 from "uuid/v4";
 import browser from "webextension-polyfill";
-import { action, computed, observable } from "mobx";
+import { action, reaction, computed, observable } from "mobx";
 import UiState from "./UiState";
 import ModalState from "./ModalState";
 import variables from "./Variables";
@@ -26,6 +26,7 @@ import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
 import { createPlaybackTree } from "../../playback/playback-tree";
+import { play, playSingleCommand, resumePlayback } from "../../IO/SideeX/playback";
 
 class PlaybackState {
   @observable runId = "";
@@ -36,6 +37,7 @@ class PlaybackState {
   @observable pauseOnExceptions = false;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
+  @observable isSingleCommandRunning = false;
   @observable commandState = new Map();
   @observable testState = new Map();
   @observable suiteState = new Map();
@@ -58,6 +60,24 @@ class PlaybackState {
     this._testsToRun = [];
     this.runningQueue = [];
     this.logger = new Logger(Channels.PLAYBACK);
+
+    reaction(
+      () => this.isPlaying,
+      isPlaying => {
+        if (isPlaying) {
+          play(UiState.baseUrl);
+        }
+      }
+    );
+
+    reaction(
+      () => this.paused,
+      paused => {
+        if (!paused) {
+          resumePlayback();
+        }
+      }
+    );
   }
 
   @computed get hasFailed() {
@@ -236,19 +256,30 @@ class PlaybackState {
   }
 
   @action.bound playCommand(command, jumpToNext) {
-    const playCommand = action(() => {
-      this.runId = "";
-      this.noStatisticsEffects = true;
-      this.jumpToNextCommand = jumpToNext;
-      this.paused = false;
-      this.errors = 0;
-      this.forceTestCaseFailure = false;
-      this.aborted = false;
-      this.currentRunningTest = UiState.selectedTest.test;
-      this.runningQueue = [command];
-      this.isPlaying = true;
-    });
-    this.beforePlaying(playCommand);
+    if (!this.isPlaying) {
+      const playCommand = action(() => {
+        this.runId = "";
+        this.noStatisticsEffects = true;
+        this.jumpToNextCommand = jumpToNext;
+        this.paused = false;
+        this.errors = 0;
+        this.forceTestCaseFailure = false;
+        this.aborted = false;
+        this.currentRunningTest = UiState.selectedTest.test;
+        this.runningQueue = [command];
+        this.isPlaying = true;
+      });
+      this.beforePlaying(playCommand);
+    } else {
+      const queue = this.runningQueue;
+      const currentExecutingCommandNode = this.currentExecutingCommandNode;
+      this.isSingleCommandRunning = true;
+      playSingleCommand(command).then(action(() => {
+        this.isSingleCommandRunning = false;
+        this.runningQueue = queue;
+        this.currentExecutingCommandNode = currentExecutingCommandNode;
+      }));
+    }
   }
 
   @action.bound playNext() {
@@ -418,7 +449,7 @@ class PlaybackState {
     }
     if (this.isPlaying) {
       this.setCommandStateAtomically(commandId, this.callstack.length ? this.callstack.length - 1 : undefined, state, message);
-      if (state === PlaybackStates.Fatal) {
+      if (state === PlaybackStates.Fatal && !this.isSingleCommandRunning) {
         if (!this.pauseOnExceptions) {
           this.stopPlayingGracefully();
         } else if (this.pauseOnExceptions) {
