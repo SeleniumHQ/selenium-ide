@@ -19,6 +19,7 @@ import React from "react";
 import ModalState from "../../stores/view/ModalState.js";
 import storage from "../../IO/storage";
 import changelog from "../../../../Changelog.md";
+import project from "../../../../package.json";
 
 export default class Changelog extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class Changelog extends React.Component {
     storage.get("updated").then(data => {
       if (data.updated) {
         ModalState.showAlert({
-          title: "What's new",
+          title: `What's new: ${project.version}`,
           description: changelog
         });
         storage.set({
@@ -43,7 +44,7 @@ export default class Changelog extends React.Component {
 
 export function showChangelog() {
   ModalState.showAlert({
-    title: "What's new",
+    title: `What's new: ${project.version}`,
     description: changelog
   });
 }
