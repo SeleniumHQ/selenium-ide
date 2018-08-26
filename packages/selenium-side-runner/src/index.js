@@ -23,6 +23,7 @@ import crypto from "crypto";
 import { fork } from "child_process";
 import program from "commander";
 import winston from "winston";
+import glob from "glob";
 import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
 import Selianize from "selianize";
@@ -222,7 +223,12 @@ function writeJSFile(name, data, postfix = ".test.js") {
   fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
 }
 
-const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
+const projects = [...program.args.reduce((projects, project) => {
+  glob.sync(project).forEach(p => {
+    projects.add(p);
+  });
+  return projects;
+}, new Set())].map(p => JSON.parse(fs.readFileSync(p)));
 
 function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
   if (!program.run) {
