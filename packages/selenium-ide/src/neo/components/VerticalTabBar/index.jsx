@@ -56,7 +56,7 @@ export default class VerticalTabBar extends React.Component {
     return (
       <div className="tabbar vertical">
         <div>
-          <ListMenu direction={MenuDirections.Bottom} width={145} padding={5} opener={
+          <ListMenu direction={MenuDirections.Bottom} width={165} padding={5} opener={
             <VerticalTabBarItem focusable={true}>
               <span>{this.props.tab || this.state.activeTab.tab}</span>
             </VerticalTabBarItem>
