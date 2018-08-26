@@ -761,7 +761,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName === ${command.value});`
+      `expect(vars.varrrName == "${command.value}");`
     );
   });
   it("should emit `verify` command", () => {
@@ -771,7 +771,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName === ${command.value});`
+      `expect(vars.varrrName == "${command.value}");`
     );
   });
 });
