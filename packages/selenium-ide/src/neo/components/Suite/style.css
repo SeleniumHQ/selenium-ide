@@ -46,3 +46,7 @@
 .projects .test > button {
   font-size: 18px;
 }
+
+.projects .tests {
+  overflow-y: hidden;
+}
