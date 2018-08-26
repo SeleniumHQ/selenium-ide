@@ -49,8 +49,6 @@ import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
 if (process.env.NODE_ENV !== "test") {
-  require("../../IO/SideeX/record");
-  require("../../IO/SideeX/playback");
   const api = require("../../../api");
   browser.runtime.onMessage.addListener(api.default);
 }
