@@ -138,7 +138,7 @@ export function canEmit(commandName) {
 }
 
 function preprocessParameter(param) {
-  return param ? param.replace(/\$\{/g, "${vars.") : param;
+  return param ? param.replace(/\$\{/g, "${vars.").replace(/\$\{vars\.KEY_/g, "${Key.") : param;
 }
 
 export function registerEmitter(command, emitter) {

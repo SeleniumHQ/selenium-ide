@@ -776,4 +776,20 @@ describe("command code emitter", () => {
       `expect(vars.varrrName == "${command.value}");`
     );
   });
+  it("should preprocess stored variables", () => {
+    const command = {
+      command: "assert",
+      target: "${name}",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(vars.name == \"test\");");
+  });
+  it("should preprocess special keys", () => {
+    const command = {
+      command: "assert",
+      target: "${KEY_ENTER}",
+      value: "enter"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(Key.ENTER == \"enter\");");
+  });
 });
