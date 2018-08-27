@@ -16,7 +16,6 @@
  */
 
 import browser from "webextension-polyfill";
-import { selenium } from "./commands-api";
 
 let contentSideexTabId = -1;
 let frameLocation = "";
@@ -28,6 +27,7 @@ function Recorder(window) {
 }
 
 Recorder.eventHandlers = {};
+Recorder.mutationObservers = {};
 Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
   handler.handlerName = handlerName;
   if (!options) options = false;
@@ -36,6 +36,13 @@ Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
     this.eventHandlers[key] = [];
   }
   this.eventHandlers[key].push(handler);
+};
+
+Recorder.addMutationObserver = function(observerName, callback, config) {
+  const observer = new MutationObserver(callback);
+  observer.observerName = observerName;
+  observer.config = config;
+  this.mutationObservers[observerName] = observer;
 };
 
 Recorder.prototype.parseEventKey = function(eventKey) {
@@ -60,6 +67,10 @@ Recorder.prototype.attach = function() {
         this.eventListeners[eventKey].push(handlers[i]);
       }
     }
+    for (let observerName in Recorder.mutationObservers) {
+      const observer = Recorder.mutationObservers[observerName];
+      observer.observe(this.window.document.body, observer.config);
+    }
     this.attached = true;
   }
 };
@@ -73,17 +84,13 @@ Recorder.prototype.detach = function() {
       this.window.document.removeEventListener(eventName, this.eventListeners[eventKey][i], capture);
     }
   }
+  for (let observerName in Recorder.mutationObservers) {
+    const observer = Recorder.mutationObservers[observerName];
+    observer.disconnect();
+  }
   this.eventListeners = {};
   this.attached = false;
 };
-
-// show element
-function startShowElement(message){
-  if (message.showElement) {
-    const result = selenium["doShowElement"](message.targetValue);
-    return Promise.resolve({ result: result });
-  }
-}
 
 function attachRecorderHandler(message) {
   if (message.attachRecorder) {
@@ -97,15 +104,9 @@ function detachRecorderHandler(message) {
   }
 }
 
-if (!window._recordListener) {
-  // injector event handlers
-  window._recordListener = startShowElement;
-  browser.runtime.onMessage.addListener(startShowElement);
-} else {
-  // recorder event handlers
-  browser.runtime.onMessage.addListener(attachRecorderHandler);
-  browser.runtime.onMessage.addListener(detachRecorderHandler);
-}
+// recorder event handlers
+browser.runtime.onMessage.addListener(attachRecorderHandler);
+browser.runtime.onMessage.addListener(detachRecorderHandler);
 
 // set frame id
 (function getframeLocation() {
@@ -142,6 +143,8 @@ export function record(command, target, value, insertBeforeLastCommand, actualFr
     insertBeforeLastCommand: insertBeforeLastCommand,
     frameLocation: (actualFrameLocation != undefined ) ? actualFrameLocation : frameLocation,
     commandSideexTabId: contentSideexTabId
+  }).catch(() => {
+    recorder.detach();
   });
 }
 

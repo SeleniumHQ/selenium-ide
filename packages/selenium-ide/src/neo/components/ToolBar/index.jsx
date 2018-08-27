@@ -17,6 +17,7 @@
 
 import React from "react";
 import { observer } from "mobx-react";
+import { parse } from "modifier-keys";
 import PlayAll from "../../components/ActionButtons/PlayAll";
 import PlayCurrent from "../../components/ActionButtons/PlayCurrent";
 import Pause from "../../components/ActionButtons/Pause";
@@ -34,28 +35,29 @@ import "./style.css";
 @observer
 export default class ToolBar extends React.Component {
   render() {
-    const isPlayingSuite = PlaybackState.isPlaying && !!PlaybackState.currentRunningSuite;
-    const isPlayingTest = PlaybackState.isPlaying && PlaybackState.currentRunningTest && !PlaybackState.currentRunningSuite;
     const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
     const isCommandValid = UiState.selectedCommand && UiState.selectedCommand.isValid;
     return (
       <div className="toolbar">
         <PlayAll
-          isActive={!PlaybackState.paused && isPlayingSuite}
-          disabled={!UiState.selectedTest.suite || isPlayingTest}
-          onClick={!PlaybackState.paused ? PlaybackState.startPlayingSuite : PlaybackState.resume}
+          isActive={!PlaybackState.paused && PlaybackState.isPlayingSuite}
+          disabled={!PlaybackState.canPlaySuite}
+          onClick={PlaybackState.playSuiteOrResume}
         />
         <PlayCurrent
-          isActive={!PlaybackState.paused && isPlayingTest}
-          disabled={isTestEmpty || isPlayingSuite}
-          onClick={!PlaybackState.paused ? PlaybackState.startPlaying : PlaybackState.resume}
+          isActive={!PlaybackState.paused && PlaybackState.isPlayingTest}
+          disabled={isTestEmpty || PlaybackState.isPlayingSuite}
+          onClick={PlaybackState.playTestOrResume}
         />
         { PlaybackState.isPlaying ? <Stop onClick={() => {PlaybackState.abortPlaying();}} /> : null }
         { PlaybackState.isPlaying ?
           <Pause isActive={PlaybackState.paused}
-            data-tip={!PlaybackState.paused ? "<p>Pause test execution</p>" : "<p>Resume test execution</p>"}
-            onClick={!PlaybackState.paused ? PlaybackState.pause : PlaybackState.resume} /> : null }
-        { !PlaybackState.isPlaying ? <StepInto disabled={!isCommandValid} onClick={() => PlaybackState.playCommand(UiState.selectedCommand, true)} /> : null }
+            data-tip={!PlaybackState.paused ?
+              `<p>Pause test execution <span style="color: #929292;padding-left: 5px;">${parse("p", { primaryKey: true })}</span></p>` :
+              `<p>Resume test execution <span style="color: #929292;padding-left: 5px;">${parse("p", { primaryKey: true })}</span></p>`
+            }
+            onClick={PlaybackState.pauseOrResume} /> : null }
+        <StepInto disabled={!isCommandValid} onClick={PlaybackState.stepOver} />
         <GaugeMenu opener={
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />

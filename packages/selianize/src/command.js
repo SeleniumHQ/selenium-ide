@@ -95,7 +95,7 @@ const emitters = {
   chooseCancelOnNextConfirmation: skip,
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
-  setSpeed: skip,
+  setSpeed: emitSetSpeed,
   do: emitControlFlowDo,
   else: emitControlFlowElse,
   elseIf: emitControlFlowElseIf,
@@ -394,5 +394,9 @@ function emitControlFlowWhile(target) {
 }
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} === ${value});`);
+  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} == "${value}");`);
+}
+
+function emitSetSpeed() {
+  return Promise.resolve("console.warn('`set speed` is a no-op in the runner, use `pause instead`');");
 }

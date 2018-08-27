@@ -97,7 +97,7 @@ if (window !== window.top) {
       let result = originalAlert(text);
       let frameLocation = getFrameLocation();
       window.top.postMessage({
-        direction:"from-page-script",
+        direction: "from-page-script",
         recordedType: "alert",
         recordedMessage: text,
         recordedResult: result,
@@ -159,7 +159,7 @@ if (window !== window.top) {
       let result = originalAlert(text);
       let frameLocation = getFrameLocation();
       window.top.postMessage({
-        direction:"from-page-script",
+        direction: "from-page-script",
         recordedType: "alert",
         recordedMessage: text,
         recordedResult: result,
@@ -172,59 +172,69 @@ if (window !== window.top) {
 
 //play window methods
 if (window == window.top) {
-  window.addEventListener("message", function(event) {
-    if (event.source == window && event.data &&
-      event.data.direction == "from-content-script") {
-      let result = undefined;
-      switch (event.data.command) {
-        case "setNextPromptResult":
-          nextPromptResult = event.data.target;
-          document.body.setAttribute("setPrompt", true);
+  window.addEventListener("message", handler);
+}
+
+function handler(event) {
+  if (event.source == window && event.data &&
+    event.data.direction == "from-content-script") {
+    if (event.data.detach) {
+      console.log("detaching...");
+      window.removeEventListener("message", handler);
+      window.prompt = originalPrompt;
+      window.confirm = originalConfirmation;
+      window.alert = originalAlert;
+      return;
+    }
+    let result = undefined;
+    switch (event.data.command) {
+      case "setNextPromptResult":
+        nextPromptResult = event.data.target;
+        document.body.setAttribute("setPrompt", true);
+        window.postMessage({
+          direction: "from-page-script",
+          response: "prompt"
+        }, "*");
+        break;
+      case "getPromptMessage":
+        result = recordedPrompt;
+        recordedPrompt = null;
+        window.postMessage({
+          direction: "from-page-script",
+          response: "prompt",
+          value: result
+        }, "*");
+        break;
+      case "setNextConfirmationResult":
+        nextConfirmationResult = event.data.target;
+        document.body.setAttribute("setConfirm", true);
+        window.postMessage({
+          direction: "from-page-script",
+          response: "confirm"
+        }, "*");
+        break;
+      case "getConfirmationMessage":
+        result = recordedConfirmation;
+        recordedConfirmation = null;
+        try{
+          console.error("no");
           window.postMessage({
             direction: "from-page-script",
-            response: "prompt"
-          }, "*");
-          break;
-        case "getPromptMessage":
-          result = recordedPrompt;
-          recordedPrompt = null;
-          window.postMessage({
-            direction: "from-page-script",
-            response: "prompt",
+            response: "confirm",
             value: result
           }, "*");
-          break;
-        case "setNextConfirmationResult":
-          nextConfirmationResult = event.data.target;
-          document.body.setAttribute("setConfirm", true);
-          window.postMessage({
-            direction: "from-page-script",
-            response: "confirm"
-          }, "*");
-          break;
-        case "getConfirmationMessage":
-          result = recordedConfirmation;
-          recordedConfirmation = null;
-          try{
-            console.error("no");
-            window.postMessage({
-              direction: "from-page-script",
-              response: "confirm",
-              value: result
-            }, "*");
-          } catch (e) {
-            console.error(e);
-          }
-          break;
+        } catch (e) {
+          console.error(e);
+        }
+        break;
 
-        case "setNextAlertResult":
-          document.body.setAttribute("setAlert", true);
-          window.postMessage({
-            direction: "from-page-script",
-            response: "alert"
-          }, "*");
-          break;
-      }
+      case "setNextAlertResult":
+        document.body.setAttribute("setAlert", true);
+        window.postMessage({
+          direction: "from-page-script",
+          response: "alert"
+        }, "*");
+        break;
     }
-  });
+  }
 }

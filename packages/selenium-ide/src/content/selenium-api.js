@@ -461,7 +461,14 @@ Selenium.prototype.doAssertElementNotPresent = function(locator) {
   }
 };
 
+function throwIfNoVarNameProvided(varName) {
+  if (!varName) {
+    throw new Error("No variable name provided.");
+  }
+}
+
 Selenium.prototype.doStore = function(value, varName) {
+  throwIfNoVarNameProvided(varName);
   return browser.runtime.sendMessage({ "storeStr": value, "storeVar": varName });
 };
 
@@ -470,26 +477,31 @@ Selenium.prototype.doStoreEval = function() {
 };
 
 Selenium.prototype.doStoreText = function(locator, varName) {
+  throwIfNoVarNameProvided(varName);
   let element = this.browserbot.findElement(locator);
   return browser.runtime.sendMessage({ "storeStr": bot.dom.getVisibleText(element), "storeVar": varName });
 };
 
 Selenium.prototype.doStoreValue = function(locator, varName) {
+  throwIfNoVarNameProvided(varName);
   let element = this.browserbot.findElement(locator);
   return browser.runtime.sendMessage({ "storeStr": element.value.trim(), "storeVar": varName });
 };
 
 Selenium.prototype.doStoreTitle = function(value, varName) {
+  throwIfNoVarNameProvided(varName);
   let doc = selenium.browserbot.getDocument();
   return browser.runtime.sendMessage({ "storeStr": value || doc.title, "storeVar": varName });
 };
 
 Selenium.prototype.doStoreXpathCount = function(xpath, varName) {
+  throwIfNoVarNameProvided(varName);
   let count = this.browserbot.evaluateXPathCount(xpath, this.browserbot.getDocument());
   return browser.runtime.sendMessage({ "storeStr": `${count}` || "0", "storeVar": varName });
 };
 
 Selenium.prototype.doStoreAttribute = function(locator, varName) {
+  throwIfNoVarNameProvided(varName);
   let attributeValue = this.browserbot.findAttribute(locator);
   return browser.runtime.sendMessage({ "storeStr": attributeValue, "storeVar": varName });
 };
@@ -3268,6 +3280,10 @@ Selenium.prototype.doAssertConfirmation = function(value) {
 
 Selenium.prototype.doShowElement = function(locator){
   try{
+    const elementForInjectingStyle = document.createElement("link");
+    elementForInjectingStyle.rel = "stylesheet";
+    elementForInjectingStyle.href = browser.runtime.getURL("/assets/highlight.css");
+    (document.head || document.documentElement).appendChild(elementForInjectingStyle);
     const highlightElement = document.createElement("div");
     highlightElement.id = "selenium-highlight";
     document.body.appendChild(highlightElement);
@@ -3293,6 +3309,7 @@ Selenium.prototype.doShowElement = function(locator){
     highlightElement.className = "active-selenium-highlight";
     setTimeout(() => {
       document.body.removeChild(highlightElement);
+      elementForInjectingStyle.parentNode.removeChild(elementForInjectingStyle);
     }, 500);
     return "element found";
   } catch (e) {

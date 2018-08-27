@@ -598,7 +598,8 @@ class CommandList {
       name: "set speed",
       description: "Set execution speed (e.g., set the millisecond length of a \
                     delay which will follow each Selenium operation). By default, \
-                    there is no such delay, e.g., the delay is 0 milliseconds.",
+                    there is no such delay, e.g., the delay is 0 milliseconds. \
+                    This setting is global, and will affect all test runs, until changed.",
       target: ArgTypes.waitTime
     }],
     [ "store", {

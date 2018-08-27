@@ -15,18 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
-import { parse } from "modifier-keys";
+export default function UpgradeProject(project) {
+  return UpgradePause(project);
+}
 
-export default class StopButton extends React.Component {
-  render() {
-    return (
-      <ActionButton
-        data-tip={`<p>Stop test execution <span style="color: #929292;padding-left: 5px;">${parse(".", { primaryKey: true })}</span></p>`}
-        {...this.props}
-        className={classNames("si-stop", this.props.className)} />// eslint-disable-line react/prop-types
-    );
-  }
+function UpgradePause(project) {
+  let r = Object.assign({}, project);
+  r.tests = r.tests.map((test) => {
+    return Object.assign({}, test, {
+      commands: test.commands.map((c) => {
+        if (c.command === "pause" && !c.target) {
+          return {
+            command: c.command,
+            target: c.value,
+            value: ""
+          };
+        }
+        return c;
+      })
+    });
+  });
+  return r;
 }

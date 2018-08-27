@@ -23,6 +23,7 @@ import crypto from "crypto";
 import { fork } from "child_process";
 import program from "commander";
 import winston from "winston";
+import glob from "glob";
 import rimraf from "rimraf";
 import { js_beautify as beautify } from "js-beautify";
 import Selianize from "selianize";
@@ -115,6 +116,8 @@ let projectPath;
 function runProject(project) {
   if (project.version !== "1.0") {
     return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
+  } else if (!project.suites.length) {
+    return Promise.reject(new Error(`The project ${project.name} has no test suites defined, create a suite using the IDE.`));
   }
   projectPath = `side-suite-${project.name}`;
   rimraf.sync(projectPath);
@@ -145,7 +148,7 @@ function runProject(project) {
         fs.mkdirSync(path.join(projectPath, suite.name));
         // parallel suite
         suite.tests.forEach(test => {
-          writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${suite.code}${test.code}`);
+          writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${test.code}`);
         });
       }
     });
@@ -220,7 +223,12 @@ function writeJSFile(name, data, postfix = ".test.js") {
   fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
 }
 
-const projects = program.args.map(p => JSON.parse(fs.readFileSync(p)));
+const projects = [...program.args.reduce((projects, project) => {
+  glob.sync(project).forEach(p => {
+    projects.add(p);
+  });
+  return projects;
+}, new Set())].map(p => JSON.parse(fs.readFileSync(p)));
 
 function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
   if (!program.run) {

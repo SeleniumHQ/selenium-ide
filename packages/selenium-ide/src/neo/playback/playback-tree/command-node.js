@@ -31,13 +31,19 @@ export class CommandNode {
   }
 
   isControlFlow() {
-    return !!(
-      this.left ||
-      this.right ||
-      // for cases where it is a conditional command, but no left/right is set
-      // e.g., an empty conditional branch (e.g., while/end)
-      ControlFlowCommandChecks.isConditional(this.command)
-    );
+    return !!(this.left || this.right);
+  }
+
+  isValid() {
+    return !!(this.command.command || this.command.comment);
+  }
+
+  isJustAComment() {
+    return !!(!this.command.command && this.command.comment);
+  }
+
+  isTerminalKeyword() {
+    return ControlFlowCommandChecks.isTerminal(this.command);
   }
 
   execute(extCommand, options) {
@@ -69,19 +75,29 @@ export class CommandNode {
         this.command.target,
         this.command.value,
         options);
+    } else if (this.isValid()) {
+      if (this.isJustAComment() || this.isTerminalKeyword()) {
+        return Promise.resolve({
+          result: "success"
+        });
+      } else {
+        return extCommand.sendMessage(
+          this.command.command,
+          xlateArgument(this.command.target),
+          xlateArgument(this.command.value),
+          extCommand.isWindowMethodCommand(this.command.command));
+      }
     } else {
-      return extCommand.sendMessage(
-        this.command.command,
-        xlateArgument(this.command.target),
-        xlateArgument(this.command.value),
-        extCommand.isWindowMethodCommand(this.command.command));
+      return Promise.resolve({
+        result: "Incomplete or unsupported command used."
+      });
     }
   }
 
   _executionResult(extCommand, result) {
     if (extCommand.isExtCommand(this.command.command)) {
       return {
-        next: this.next
+        next: this.command.command !== "run" ? this.next : result
       };
     } else if (result.result === "success") {
       this._incrementTimesVisited();
@@ -106,7 +122,7 @@ export class CommandNode {
   }
 
   _evaluate(extCommand) {
-    let expression = this.command.target;
+    let expression = xlateArgument(this.command.target);
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression);
       if (isNaN(number)) {

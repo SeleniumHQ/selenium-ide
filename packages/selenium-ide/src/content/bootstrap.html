@@ -25,9 +25,10 @@
     var scripts = [
       "assets/vendor/global.js",
       "assets/vendor/selenium-browserdetect.js",
+      "assets/atoms.js",
       "assets/polyfills.js",
       "assets/escape.js",
-      "assets/injector.js",
+      "assets/playback.js",
       "assets/record.js"
     ];
     var urls;
@@ -36,10 +37,25 @@
     } else if (browser) {
       urls = scripts.map(script => (browser.runtime.getURL(script)));
     }
-    urls.forEach(url => {
-      var e = document.createElement("script");
-      e.src = url;
-      document.body.appendChild(e);
-    });
+
+    function loadScript(url) {
+      return new Promise(res => {
+        var e = document.createElement("script");
+        e.type = "text/javascript";
+        e.async = true;
+        e.onload = res;
+        e.src = url;
+        document.body.appendChild(e);
+      });
+    }
+
+    (function loadAll(i) {
+      loadScript(urls[i]).then(() => {
+        const n = i + 1;
+        if (n < urls.length) {
+          loadAll(n);
+        }
+      });
+    })(0);
   </script>
 </html>

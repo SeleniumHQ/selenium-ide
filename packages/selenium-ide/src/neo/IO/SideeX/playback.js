@@ -15,11 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { reaction } from "mobx";
 import FatalError from "../../../errors/fatal";
 import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
-import UiState from "../../stores/view/UiState";
 import { canExecuteCommand } from "../../../plugin/commandExecutor";
 import ExtCommand from "./ext-command";
 import WebDriverExecutor from "../playback/webdriver";
@@ -39,23 +37,35 @@ extCommand.doSetSpeed = (speed) => {
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
+let breakOnNextCommand = false;
 const browserDriver = new WebDriverExecutor();
 browserDriver.init();
 
-function play(currUrl) {
+export function play(currUrl) {
   baseUrl = currUrl;
   ignoreBreakpoint = false;
   initPlaybackTree();
-  prepareToPlay()
+  return prepareToPlay()
     .then(executionLoop)
     .then(finishPlaying)
     .catch(catchPlayingError);
 }
 
-function initPlaybackTree() {
+export function playSingleCommand(command) {
+  initPlaybackTree(command);
+  return runNextCommand().catch(catchPlayingError);
+}
+
+export function resumePlayback() {
+  ignoreBreakpoint = true;
+  playAfterConnectionFailed();
+}
+
+function initPlaybackTree(command) {
+  const queue = command ? [command] : PlaybackState.runningQueue;
   try {
     if (PlaybackState.runningQueue.length === 1 &&
-        ControlFlowCommandChecks.isControlFlow(PlaybackState.runningQueue[0].command)) {
+        ControlFlowCommandChecks.isControlFlow(queue[0].command)) {
       reportError(
         "Unable to execute control flow command by itself. You can execute this \
         command by running the entire test or by right-clicking on the command \
@@ -63,7 +73,7 @@ function initPlaybackTree() {
         false,
         0);
     } else {
-      let playbackTree = createPlaybackTree(PlaybackState.runningQueue);
+      let playbackTree = createPlaybackTree(queue);
       PlaybackState.setCurrentExecutingCommandNode(playbackTree.startingCommandNode);
     }
   } catch (error) {
@@ -72,10 +82,16 @@ function initPlaybackTree() {
 }
 
 function playAfterConnectionFailed() {
-  prepareToPlayAfterConnectionFailed()
-    .then(executionLoop)
-    .then(finishPlaying)
-    .catch(catchPlayingError);
+  if (PlaybackState.isSingleCommandRunning) {
+    prepareToPlayAfterConnectionFailed()
+      .then(runNextCommand)
+      .catch(catchPlayingError);
+  } else {
+    prepareToPlayAfterConnectionFailed()
+      .then(executionLoop)
+      .then(finishPlaying)
+      .catch(catchPlayingError);
+  }
 }
 
 function didFinishQueue() {
@@ -86,19 +102,39 @@ function isStopping() {
   return (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping);
 }
 
+function isCallStackEmpty() {
+  return !PlaybackState.callstack.length;
+}
+
 function executionLoop() {
-  if (isStopping() || didFinishQueue()) {
+  if (didFinishQueue() && !isCallStackEmpty()) {
+    PlaybackState.unwindTestCase();
+    return executionLoop();
+  } else if (isStopping() || didFinishQueue()) {
     return false;
   }
+
+  return runNextCommand();
+}
+
+function runNextCommand() {
   const command = PlaybackState.currentExecutingCommandNode.command;
   const stackIndex = PlaybackState.callstack.length ? PlaybackState.callstack.length - 1 : undefined;
-  if (!command.command) return executionLoop();
-  // breakpoint
   PlaybackState.setCommandState(command.id, PlaybackStates.Pending);
-  if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && command.isBreakpoint) PlaybackState.break(command);
-  else if (ignoreBreakpoint) ignoreBreakpoint = false;
-  // paused
-  if (isStopping()) return false;
+  if (!PlaybackState.isSingleCommandRunning) {
+    // breakpoint
+    if (!PlaybackState.breakpointsDisabled && !ignoreBreakpoint && (command.isBreakpoint || breakOnNextCommand)) {
+      PlaybackState.break(command);
+      breakOnNextCommand = false;
+    }
+    else if (ignoreBreakpoint) ignoreBreakpoint = false;
+    // we need to ignore breakOnNextCommand once, to make sure it actually hits the next command
+    if (PlaybackState.breakOnNextCommand) {
+      breakOnNextCommand = true;
+    }
+    // paused
+    if (isStopping()) return false;
+  }
   if (extCommand.isExtCommand(command.command)) {
     return doDelay().then(() => {
       return (PlaybackState.currentExecutingCommandNode.execute(browserDriver))
@@ -106,11 +142,11 @@ function executionLoop() {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
           PlaybackState.setCurrentExecutingCommandNode(result.next);
-        }).then(executionLoop);
+        }).then(PlaybackState.isSingleCommandRunning ? () => {} : executionLoop);
     });
   } else if (isImplicitWait(command)) {
     notifyWaitDeprecation(command);
-    return executionLoop();
+    return PlaybackState.isSingleCommandRunning ? Promise.resolve() : executionLoop();
   } else {
     return doPreparation()
       .then(doPrePageWait)
@@ -119,7 +155,7 @@ function executionLoop() {
       .then(doDomWait)
       .then(doDelay)
       .then(doCommand)
-      .then(executionLoop);
+      .then(PlaybackState.isSingleCommandRunning ? () => {} : executionLoop);
   }
 }
 
@@ -159,25 +195,6 @@ function reportError(error, nonFatal, index) {
   }
   PlaybackState.setCommandState(id, nonFatal ? PlaybackStates.Failed : PlaybackStates.Fatal, message);
 }
-
-reaction(
-  () => PlaybackState.isPlaying,
-  isPlaying => {
-    if (isPlaying) {
-      play(UiState.baseUrl);
-    }
-  }
-);
-
-reaction(
-  () => PlaybackState.paused,
-  paused => {
-    if (!paused) {
-      ignoreBreakpoint = true;
-      playAfterConnectionFailed();
-    }
-  }
-);
 
 function doPreparation() {
   return extCommand.sendMessage("waitPreparation", "", "")
@@ -252,8 +269,8 @@ function doDomWait(res, domTime, domCount = 0) {
 }
 
 function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
-  if (!PlaybackState.isPlaying || PlaybackState.paused) return;
-  const { id, command, target, value } = PlaybackState.currentExecutingCommandNode.command;
+  if (!PlaybackState.isSingleCommandRunning && (!PlaybackState.isPlaying || PlaybackState.paused)) return;
+  const { command } = PlaybackState.currentExecutingCommandNode.command;
 
   let p = new Promise(function(resolve, reject) {
     let count = 0;
@@ -274,15 +291,18 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
   return p.then(() => (
     canExecuteCommand(command) ?
-      doPluginCommand(id, command, target, value, implicitTime, implicitCount) :
-      doSeleniumCommand(id, command, target, value, implicitTime, implicitCount)
+      doPluginCommand(PlaybackState.currentExecutingCommandNode, implicitTime, implicitCount) :
+      doSeleniumCommand(PlaybackState.currentExecutingCommandNode, implicitTime, implicitCount)
   )).then(result => {
-    PlaybackState.setCurrentExecutingCommandNode(result.next);
+    if (result) {
+      PlaybackState.setCurrentExecutingCommandNode(result.next);
+    }
   });
 }
 
-function doSeleniumCommand(id, command, target, value, implicitTime, implicitCount) {
-  return PlaybackState.currentExecutingCommandNode.execute(extCommand).then(function(result) {
+function doSeleniumCommand(commandNode, implicitTime, implicitCount) {
+  const { id, command, target } = commandNode.command;
+  return commandNode.execute(extCommand).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {
@@ -299,7 +319,8 @@ function doSeleniumCommand(id, command, target, value, implicitTime, implicitCou
   });
 }
 
-function doPluginCommand(id, command, target, value, implicitTime, implicitCount) {
+function doPluginCommand(commandNode, implicitTime, implicitCount) {
+  const { id, target } = commandNode.command;
   return PlaybackState.currentExecutingCommandNode.execute(extCommand, {
     commandId: id,
     isNested: !!PlaybackState.callstack.length,

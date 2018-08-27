@@ -2,8 +2,8 @@
   "description": "Selenium Record and Playback tool for ease of getting acquainted with Selenium WebDriver.",
   "manifest_version": 2,
   "name": "Selenium IDE",
-  "version": "3.2.0",
-  "version_name": "3.2.0",
+  "version": "3.2.5",
+  "version_name": "3.2.5",
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
   "icons": {
     "16": "icons/icon16.png",
@@ -39,10 +39,10 @@
   "web_accessible_resources": [
     "icons/icon128.png",
     "assets/prompt.js",
-    "assets/prompt.css",
+    "assets/highlight.css",
     "assets/bootstrap.html"
   ],
-  "content_security_policy": "script-src 'self' 'sha256-UUwVIygWwzdom+NTsGSMgQnlQ8Phnj5BIK5+S3HWX4Y=' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'sha256-W7QWmGne6B9hjKtOqoGmUFOPgpFcUo4Nr/yyMqtgXcU=' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
     {
       "matches": [
@@ -51,9 +51,10 @@
       "js": [
         "assets/vendor/global.js",
         "assets/vendor/selenium-browserdetect.js",
+        "assets/atoms.js",
         "assets/polyfills.js",
         "assets/escape.js",
-        "assets/injector.js",
+        "assets/playback.js",
         "assets/record.js"
       ],
       "match_about_blank": true,

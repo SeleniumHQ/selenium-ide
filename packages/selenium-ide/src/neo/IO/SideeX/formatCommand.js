@@ -79,4 +79,6 @@ function handleFormatCommand(message, sender, sendResponse) {
   }
 }
 
-browser.runtime.onMessage.addListener(handleFormatCommand);
+try {
+  browser.runtime.onMessage.addListener(handleFormatCommand);
+} catch(e) {} // eslint-disable-line

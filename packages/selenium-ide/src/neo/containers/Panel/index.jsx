@@ -38,6 +38,7 @@ import Console from "../Console";
 import Modal from "../Modal";
 import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
+import PlaybackState from "../../stores/view/PlaybackState";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
@@ -48,8 +49,6 @@ import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
 if (process.env.NODE_ENV !== "test") {
-  require("../../IO/SideeX/record");
-  require("../../IO/SideeX/playback");
   const api = require("../../../api");
   browser.runtime.onMessage.addListener(api.default);
 }
@@ -132,12 +131,63 @@ if (browser.windows) {
   handleKeyDown(e) {
     modifier(e);
     const key = e.key.toUpperCase();
+    const bothModifiers = (e.primaryKey && e.secondaryKey);
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
+    // when editing these, remember to edit the button's tooltip as well
     if (onlyPrimary && key === "S") {
       e.preventDefault();
       saveProject(project);
+    } else if (onlyPrimary && key === "O" && this.openFile) {
+      e.preventDefault();
+      this.openFile();
+    } else if (onlyPrimary && key === "1") {
+      // test view
+      e.preventDefault();
+      UiState.changeView(UiState.views[+key - 1]);
+    } else if (onlyPrimary && key === "2") {
+      // suite view
+      e.preventDefault();
+      UiState.changeView(UiState.views[+key - 1]);
+    } else if (onlyPrimary && key === "3") {
+      // execution view
+      e.preventDefault();
+      UiState.changeView(UiState.views[+key - 1]);
+    } else if (onlyPrimary && key === "R") {
+      // run test
+      e.preventDefault();
+      if (!PlaybackState.isPlayingSuite) {
+        PlaybackState.playTestOrResume();
+      }
+    } else if (bothModifiers && e.code === "KeyR") {
+      // run suite
+      e.preventDefault();
+      if (PlaybackState.canPlaySuite) {
+        PlaybackState.playSuiteOrResume();
+      }
+    } else if (onlyPrimary && key === "P") {
+      // pause
+      e.preventDefault();
+      PlaybackState.pauseOrResume();
+    } else if (onlyPrimary && key === ".") {
+      // stop
+      e.preventDefault();
+      PlaybackState.abortPlaying();
+    } else if (onlyPrimary && key === "'") {
+      // step over
+      e.preventDefault();
+      PlaybackState.stepOver();
+    } else if (onlyPrimary && key === "Y") {
+      // disable breakpoints
+      e.preventDefault();
+      PlaybackState.toggleDisableBreakpoints();
+    } else if (onlyPrimary && key === "U") {
+      // record
+      e.preventDefault();
+      if (!PlaybackState.isPlaying) {
+        UiState.toggleRecord();
+      }
     } else if (noModifiers && key === "ESCAPE") {
       UiState.toggleConsole();
     }
@@ -176,6 +226,9 @@ if (browser.windows) {
                 title={this.state.project.name}
                 changed={this.state.project.modified}
                 changeName={this.state.project.changeName}
+                openFile={(openFile) => {
+                  this.openFile = openFile;
+                }}
                 load={loadProject.bind(undefined, project)}
                 save={() => saveProject(project)}
               />

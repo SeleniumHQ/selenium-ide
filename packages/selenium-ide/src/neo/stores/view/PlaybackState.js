@@ -17,7 +17,7 @@
 
 import uuidv4 from "uuid/v4";
 import browser from "webextension-polyfill";
-import { action, computed, observable } from "mobx";
+import { action, reaction, computed, observable } from "mobx";
 import UiState from "./UiState";
 import ModalState from "./ModalState";
 import variables from "./Variables";
@@ -25,16 +25,19 @@ import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
+import { createPlaybackTree } from "../../playback/playback-tree";
+import { play, playSingleCommand, resumePlayback } from "../../IO/SideeX/playback";
 
 class PlaybackState {
   @observable runId = "";
   @observable isPlaying = false;
   @observable isStopping = false;
   @observable breakpointsDisabled = false;
+  @observable breakOnNextCommand = false;
   @observable pauseOnExceptions = false;
-  @observable currentPlayingIndex = 0;
   @observable currentRunningTest = null;
   @observable currentRunningSuite = null;
+  @observable isSingleCommandRunning = false;
   @observable commandState = new Map();
   @observable testState = new Map();
   @observable suiteState = new Map();
@@ -57,6 +60,24 @@ class PlaybackState {
     this._testsToRun = [];
     this.runningQueue = [];
     this.logger = new Logger(Channels.PLAYBACK);
+
+    reaction(
+      () => this.isPlaying,
+      isPlaying => {
+        if (isPlaying) {
+          play(UiState.baseUrl);
+        }
+      }
+    );
+
+    reaction(
+      () => this.paused,
+      paused => {
+        if (!paused) {
+          resumePlayback();
+        }
+      }
+    );
   }
 
   @computed get hasFailed() {
@@ -78,6 +99,18 @@ class PlaybackState {
       testMap[test.name] = test;
       return testMap;
     }, {});
+  }
+
+  @computed get isPlayingSuite() {
+    return this.isPlaying && !!this.currentRunningSuite;
+  }
+
+  @computed get isPlayingTest() {
+    return this.isPlaying && this.currentRunningTest && !this.currentRunningSuite;
+  }
+
+  @computed get canPlaySuite() {
+    return UiState.selectedTest.suite && !this.isPlayingTest;
   }
 
   @action.bound toggleDisableBreakpoints() {
@@ -120,6 +153,38 @@ class PlaybackState {
     this.currentRunningSuite = undefined;
   }
 
+  @action.bound playSuiteOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (!this.isPlaying) {
+      this.startPlayingSuite();
+    }
+  }
+
+  @action.bound playTestOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (!this.isPlaying) {
+      return this.startPlaying();
+    }
+  }
+
+  @action.bound pauseOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (this.isPlaying) {
+      return this.pause();
+    }
+  }
+
+  @action.bound stepOver() {
+    if (this.paused) {
+      this.resume(true);
+    } else if (!this.isPlaying) {
+      this.startPlaying(UiState.selectedCommand, true);
+    }
+  }
+
   @action.bound startPlayingSuite() {
     const playSuite = action(() => {
       const { suite } = UiState.selectedTest;
@@ -143,19 +208,24 @@ class PlaybackState {
     this.beforePlaying(playSuite);
   }
 
-  @action.bound startPlaying(command) {
+  runningQueueFromIndex(commands, index) {
+    return commands.slice(index);
+  }
+
+  @action.bound startPlaying(command, breakOnNextCommand = false) {
     const playTest = action(() => {
+      this.breakOnNextCommand = breakOnNextCommand;
       const { test } = UiState.selectedTest;
       this.resetState();
       this.runId = uuidv4();
       this.currentRunningSuite = undefined;
       this.currentRunningTest = test;
       this.testsCount = 1;
-      this.currentPlayingIndex = 0;
+      let currentPlayingIndex = 0;
       if (command && command.constructor.name === "Command") {
-        this.currentPlayingIndex = test.commands.indexOf(command);
+        currentPlayingIndex = test.commands.indexOf(command);
       }
-      this.runningQueue = test.commands.peek();
+      this.runningQueue = this.runningQueueFromIndex(test.commands.peek(), currentPlayingIndex);
       const pluginsLogs = {};
       if (PluginManager.plugins.length) this.logger.log("Preparing plugins for test run...");
       PluginManager.emitMessage({
@@ -186,20 +256,30 @@ class PlaybackState {
   }
 
   @action.bound playCommand(command, jumpToNext) {
-    const playCommand = action(() => {
-      this.runId = "";
-      this.noStatisticsEffects = true;
-      this.jumpToNextCommand = jumpToNext;
-      this.paused = false;
-      this.currentPlayingIndex = 0;
-      this.errors = 0;
-      this.forceTestCaseFailure = false;
-      this.aborted = false;
-      this.currentRunningTest = UiState.selectedTest.test;
-      this.runningQueue = [command];
-      this.isPlaying = true;
-    });
-    this.beforePlaying(playCommand);
+    if (!this.isPlaying) {
+      const playCommand = action(() => {
+        this.runId = "";
+        this.noStatisticsEffects = true;
+        this.jumpToNextCommand = jumpToNext;
+        this.paused = false;
+        this.errors = 0;
+        this.forceTestCaseFailure = false;
+        this.aborted = false;
+        this.currentRunningTest = UiState.selectedTest.test;
+        this.runningQueue = [command];
+        this.isPlaying = true;
+      });
+      this.beforePlaying(playCommand);
+    } else {
+      const queue = this.runningQueue;
+      const currentExecutingCommandNode = this.currentExecutingCommandNode;
+      this.isSingleCommandRunning = true;
+      playSingleCommand(command).then(action(() => {
+        this.isSingleCommandRunning = false;
+        this.runningQueue = queue;
+        this.currentExecutingCommandNode = currentExecutingCommandNode;
+      }));
+    }
   }
 
   @action.bound playNext() {
@@ -209,7 +289,6 @@ class PlaybackState {
     this.currentRunningTest = this._testsToRun.shift();
     this.runningQueue = this.currentRunningTest.commands.peek();
     this.clearStack();
-    //this.currentPlayingIndex = 0;
     this.errors = 0;
     this.forceTestCaseFailure = false;
     PluginManager.emitMessage({
@@ -289,14 +368,16 @@ class PlaybackState {
   }
 
   @action.bound abortPlaying() {
-    this.aborted = true;
-    this._testsToRun = [];
-    if (this.paused) {
-      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
-    } else {
-      this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+    if (this.isPlaying) {
+      this.aborted = true;
+      this._testsToRun = [];
+      if (this.paused) {
+        this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Fatal, "Playback aborted");
+      } else {
+        this.setCommandStateAtomically(this.currentExecutingCommandNode.command.id, this.callstack.length ? this.callstack.length - 1 : undefined, PlaybackStates.Undetermined, "Aborting...");
+      }
+      this.stopPlayingGracefully();
     }
-    this.stopPlayingGracefully();
   }
 
   @action.bound forceFailure() {
@@ -307,14 +388,16 @@ class PlaybackState {
     this.paused = true;
   }
 
-  @action.bound resume() {
+  @action.bound resume(breakOnNextCommand = false) {
     UiState.changeView("Executing");
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     UiState.selectCommand(undefined);
+    this.breakOnNextCommand = breakOnNextCommand;
     this.paused = false;
   }
 
   @action.bound break(command) {
+    this.breakOnNextCommand = false;
     this.paused = true;
     UiState.selectCommand(command);
     browser.windows.getCurrent().then(windowInfo => {
@@ -356,10 +439,6 @@ class PlaybackState {
     this.currentExecutingCommandNode = node;
   }
 
-  @action.bound setPlayingIndex(index) {
-    this.currentPlayingIndex = index;
-  }
-
   @action.bound setCommandStateAtomically(commandId, callstackIndex, state, message) {
     this.commandState.set(`${callstackIndex !== undefined ? callstackIndex + ":" : ""}${commandId}`, { state, message });
   }
@@ -370,7 +449,7 @@ class PlaybackState {
     }
     if (this.isPlaying) {
       this.setCommandStateAtomically(commandId, this.callstack.length ? this.callstack.length - 1 : undefined, state, message);
-      if (state === PlaybackStates.Fatal) {
+      if (state === PlaybackStates.Fatal && !this.isSingleCommandRunning) {
         if (!this.pauseOnExceptions) {
           this.stopPlayingGracefully();
         } else if (this.pauseOnExceptions) {
@@ -396,18 +475,20 @@ class PlaybackState {
     this.callstack.push({
       caller: this.currentRunningTest,
       callee: testCase,
-      position: this.currentPlayingIndex
+      position: this.currentExecutingCommandNode
     });
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     this.currentRunningTest = testCase;
-    this.currentPlayingIndex = -1;
     this.runningQueue = testCase.commands.peek();
+    let playbackTree = createPlaybackTree(this.runningQueue);
+    this.setCurrentExecutingCommandNode(playbackTree.startingCommandNode);
+    return playbackTree.startingCommandNode;
   }
 
   @action.bound unwindTestCase() {
     const top = this.callstack.pop();
     this.currentRunningTest = top.caller;
-    this.currentPlayingIndex = top.position;
+    this.setCurrentExecutingCommandNode(top.position.next);
     this.runningQueue = top.caller.commands.peek();
     UiState.selectTest(this.stackCaller, this.currentRunningSuite, this.callstack.length - 1, true);
     return top;
@@ -425,7 +506,6 @@ class PlaybackState {
     this.clearCommandStates();
     this.clearStack();
     variables.clearVariables();
-    this.currentPlayingIndex = 0;
     this.finishedTestsCount = 0;
     this.noStatisticsEffects = false;
     this.failures = 0;

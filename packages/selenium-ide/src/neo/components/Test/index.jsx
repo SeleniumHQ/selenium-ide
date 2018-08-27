@@ -78,7 +78,7 @@ const testTarget = {
     }
 
     // Determine rectangle on screen
-    const hoverBoundingRect = component.decoratedComponentInstance.node.getBoundingClientRect();
+    const hoverBoundingRect = component.getDecoratedComponentInstance().node.getBoundingClientRect();
 
     // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;

@@ -18,6 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { parse } from "modifier-keys";
 import "./style.css";
 
 const RecordButton = styled.button`
@@ -91,7 +92,12 @@ export default class Record extends React.Component {
   };
   render() {
     return (
-      <div className="record" data-tip={this.props.isRecording ? "<p>Stop recording</p>" : "<p>Start recording</p>"}>
+      <div
+        className="record"
+        data-tip={this.props.isRecording ?
+          `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse("u", { primaryKey: true })}</span></p>` :
+          `<p>Start recording <span style="color: #929292;padding-left: 5px;">${parse("u", { primaryKey: true })}</span></p>`
+        }>
         <RecordButton disabled={this.props.disabled} isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
       </div>
     );

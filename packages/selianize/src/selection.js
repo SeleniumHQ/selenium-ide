@@ -42,11 +42,11 @@ export default {
 };
 
 function emitId(id) {
-  return Promise.resolve(`By.css(\`*[id=${id}]\`)`);
+  return Promise.resolve(`By.css(\`*[id="${id}"]\`)`);
 }
 
 function emitValue(value) {
-  return Promise.resolve(`By.css(\`*[value=${value}]\`)`);
+  return Promise.resolve(`By.css(\`*[value="${value}"]\`)`);
 }
 
 function emitLabel(label) {

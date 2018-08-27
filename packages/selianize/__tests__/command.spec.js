@@ -632,9 +632,11 @@ describe("command code emitter", () => {
       expect(CommandEmitter.emit({ command: "answerOnNextPrompt" })).resolves.toBeUndefined(),
       expect(CommandEmitter.emit({ command: "chooseCancelOnNextConfirmation" })).resolves.toBeUndefined(),
       expect(CommandEmitter.emit({ command: "chooseCancelOnNextPrompt" })).resolves.toBeUndefined(),
-      expect(CommandEmitter.emit({ command: "chooseOkOnNextConfirmation" })).resolves.toBeUndefined(),
-      expect(CommandEmitter.emit({ command: "setSpeed" })).resolves.toBeUndefined()
+      expect(CommandEmitter.emit({ command: "chooseOkOnNextConfirmation" })).resolves.toBeUndefined()
     ]);
+  });
+  it("should emit `set speed`", () => {
+    expect(CommandEmitter.emit({ command: "setSpeed" })).resolves.toBe("console.warn('`set speed` is a no-op in the runner, use `pause instead`');");
   });
   it("should emit all known commands", () => {
     Commands.array.forEach(command => {
@@ -761,7 +763,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName === ${command.value});`
+      `expect(vars.varrrName == "${command.value}");`
     );
   });
   it("should emit `verify` command", () => {
@@ -771,7 +773,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName === ${command.value});`
+      `expect(vars.varrrName == "${command.value}");`
     );
   });
 });

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { MozillaBrowserBot } from "./selenium-browserbot";
-import { core } from "./closure-polyfill";
+//import { MozillaBrowserBot } from "./selenium-browserbot";
+import { bot, core } from "./closure-polyfill";
+import { parse_locator } from "./utils";
 
 export default function LocatorBuilders(window) {
   this.window = window;
@@ -24,24 +25,6 @@ export default function LocatorBuilders(window) {
 window.LocatorBuilders = LocatorBuilders;
 
 LocatorBuilders.prototype.detach = function() {
-  if (this.window._locator_pageBot) {
-    this.window._locator_pageBot = undefined;
-    // Firefox 3 (beta 5) throws "Security Manager vetoed action" when we use delete operator like this:
-    // delete this.window._locator_pageBot;
-  }
-};
-
-LocatorBuilders.prototype.pageBot = function() {
-  let pageBot = this.window._locator_pageBot;
-  if (pageBot == null) {
-    pageBot = new MozillaBrowserBot(this.window);
-    let self = this;
-    pageBot.getCurrentWindow = function() {
-      return self.window;
-    };
-    this.window._locator_pageBot = pageBot;
-  }
-  return pageBot;
 };
 
 LocatorBuilders.prototype.buildWith = function(name, e, opt_contextNode) {
@@ -67,7 +50,6 @@ LocatorBuilders.prototype.buildAll = function(el) {
   let e = core.firefox.unwrap(el); //Samit: Fix: Do the magic to get it to work in Firefox 4
   let locator;
   let locators = [];
-  let coreLocatorStrategies = this.pageBot().locationStrategies;
   for (let i = 0; i < LocatorBuilders.order.length; i++) {
     let finderName = LocatorBuilders.order[i];
     try {
@@ -78,7 +60,7 @@ LocatorBuilders.prototype.buildAll = function(el) {
         //TODO: the builderName should NOT be used as a strategy name, create a feature to allow locatorBuilders to specify this kind of behaviour
         //TODO: Useful if a builder wants to capture a different element like a parent. Use the this.elementEquals
         let fe = this.findElement(locator);
-        if ((e == fe) || (coreLocatorStrategies[finderName] && coreLocatorStrategies[finderName].is_fuzzy_match && coreLocatorStrategies[finderName].is_fuzzy_match(fe, e))) {
+        if (e == fe) {
           locators.push([locator, finderName]);
         }
       }
@@ -90,9 +72,10 @@ LocatorBuilders.prototype.buildAll = function(el) {
   return locators;
 };
 
-LocatorBuilders.prototype.findElement = function(locator) {
+LocatorBuilders.prototype.findElement = function(loc) {
   try {
-    return this.pageBot().findElement(locator);
+    const locator = parse_locator(loc);
+    return bot.locators.findElement({ [locator.type]: locator.string }, this.window.document);
   } catch (error) {
     //this.log.debug("findElement failed: " + error + ", locator=" + locator);
     return null;

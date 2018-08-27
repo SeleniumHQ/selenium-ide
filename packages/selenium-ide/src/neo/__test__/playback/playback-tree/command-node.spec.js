@@ -20,15 +20,10 @@ import { CommandNode } from "../../../playback/playback-tree/command-node";
 
 describe("Command Node", () => {
   it("control flow check returns correct result", () => {
-    let command = new Command(undefined, "if", "", "");
-    let node = new CommandNode(command);
+    let node = new CommandNode(undefined);
+    node.right = "asdf";
     expect(node.isControlFlow()).toBeTruthy();
-    command = new Command(undefined, "command", "", "");
-    node = new CommandNode(command);
-    node.left = "asdf";
-    expect(node.isControlFlow()).toBeTruthy();
-    command = new Command(undefined, "command", "", "");
-    node = new CommandNode(command);
+    node.left = undefined;
     node.right = "asdf";
     expect(node.isControlFlow()).toBeTruthy();
   });
@@ -126,6 +121,7 @@ describe("Command Node", () => {
     const extCommand = { isExtCommand: function() { return false; } };
     const command = new Command(undefined, ControlFlowCommandNames.if, "", "");
     let nodeA = new CommandNode(command);
+    nodeA.left = "asdf";
     const nodeB = new CommandNode(command);
     expect(nodeA._executionResult(extCommand, { result: "success", next: nodeB }).next).toEqual(nodeB);
   });
@@ -136,5 +132,13 @@ describe("Command Node", () => {
     const result = node._executionResult(extCommand, { result: "no dice" });
     expect(result.next).toBeUndefined();
     expect(result.result).toEqual("no dice");
+  });
+  it("returns an error on an invalid command", () => {
+    const extCommand = { isExtCommand: function() { return false; } };
+    const command = new Command(undefined, "", "", "");
+    const node = new CommandNode(command);
+    node._executeCommand(extCommand).then(result => {
+      expect(result.result).toEqual("Incomplete or unsupported command used.");
+    });
   });
 });
