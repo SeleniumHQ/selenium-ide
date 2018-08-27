@@ -16,6 +16,7 @@
 // under the License.
 
 import webdriver from "browser-webdriver";
+import { absolutifyUrl } from "./utils";
 
 const By = webdriver.By;
 const until = webdriver.until;
@@ -33,7 +34,8 @@ export default class WebDriverExecutor {
     this.server = server || DEFAULT_SERVER;
   }
 
-  async init() {
+  async init(baseUrl) {
+    this.baseUrl = baseUrl;
     this.driver = await new webdriver.Builder().withCapabilities(this.capabilities).usingServer(this.server).build();
   }
 
@@ -54,14 +56,45 @@ export default class WebDriverExecutor {
 
   // Commands go after this line
 
+  // window commands
+
   async doOpen(url) {
-    await this.driver.get(url);
+    await this.driver.get(absolutifyUrl(url, this.baseUrl));
   }
+
+  // mouse commands
 
   async doClick(locator) {
     const element = await waitForElement(locator, this.driver);
     await element.click();
   }
+
+  async doDoubleClick(locator) {
+    const element = await waitForElement(locator, this.driver);
+    await this.driver.actions().doubleClick(element).perform();
+  }
+
+  async doCheck(locator) {
+    const element = await waitForElement(locator, this.driver);
+    if (!(await element.isSelected())) {
+      await element.click();
+    }
+  }
+
+  async doUncheck(locator) {
+    const element = await waitForElement(locator, this.driver);
+    if (await element.isSelected()) {
+      await element.click();
+    }
+  }
+
+  async doSelect(locator, optionLocator) {
+    const element = await waitForElement(locator, this.driver);
+    const option = await element.findElement(parseOptionLocator(optionLocator));
+    await option.click();
+  }
+
+  // keyboard commands
 
   async doType(locator, value) {
     const element = await waitForElement(locator, this.driver);
@@ -72,6 +105,89 @@ export default class WebDriverExecutor {
   async doSendKeys(locator, value) {
     const element = await waitForElement(locator, this.driver);
     await element.sendKeys(...preprocessKeys(value));
+  }
+
+  // script commands
+
+  async doRunScript(script) {
+    await this.driver.executeScript(script);
+  }
+
+  // assertions
+
+  async doAssertText(locator, value) {
+    const element = await waitForElement(locator, this.driver);
+    const text = await element.getText();
+    if (text !== value) {
+      throw new Error("Actual value '" + text + "' did not match '" + value + "'");
+    }
+  }
+
+  async doAssertNotText(locator, value) {
+    const element = await waitForElement(locator, this.driver);
+    const text = await element.getText();
+    if (text === value) {
+      throw new Error("Actual value '" + text + "' did match '" + value + "'");
+    }
+  }
+
+  async doAssertValue(locator, value) {
+    const element = await waitForElement(locator, this.driver);
+    const elementValue = await element.getAttribute("value");
+    if (elementValue !== value) {
+      throw new Error("Actual value '" + elementValue + "' did not match '" + value + "'");
+    }
+  }
+
+  // not generally implemented
+  async doAssertNotValue(locator, value) {
+    const element = await waitForElement(locator, this.driver);
+    const elementValue = await element.getAttribute("value");
+    if (elementValue === value) {
+      throw new Error("Actual value '" + elementValue + "' did match '" + value + "'");
+    }
+  }
+
+  async doAssertSelectedValue(locator, value) {
+    const element = await waitForElement(locator, this.driver);
+    const elementValue = await element.getAttribute("value");
+    if (elementValue !== value) {
+      throw new Error("Actual value '" + elementValue + "' did not match '" + value + "'");
+    }
+  }
+
+  async doAssertNotSelectedValue(locator, value) {
+    const element = await waitForElement(locator, this.driver);
+    const elementValue = await element.getAttribute("value");
+    if (elementValue === value) {
+      throw new Error("Actual value '" + elementValue + "' did match '" + value + "'");
+    }
+  }
+
+  async doAssertSelectedLabel(locator, label) {
+    const element = await waitForElement(locator, this.driver);
+    const selectedValue = await element.getAttribute("value");
+    const selectedOption = await element.findElement(By.xpath(`option[@value="${selectedValue}"]`));
+    const selectedOptionLabel = await selectedOption.getText();
+    if (selectedOptionLabel !== label) {
+      throw new Error("Actual value '" + selectedOptionLabel + "' did not match '" + label + "'");
+    }
+  }
+
+  async doAssertNotSelectedLabel(locator, label) {
+    const element = await waitForElement(locator, this.driver);
+    const selectedValue = await element.getAttribute("value");
+    const selectedOption = await element.findElement(By.xpath(`option[@value="${selectedValue}"]`));
+    const selectedOptionLabel = await selectedOption.getText();
+    if (selectedOptionLabel === label) {
+      throw new Error("Actual value '" + selectedOptionLabel + "' not match '" + label + "'");
+    }
+  }
+
+  // other commands
+
+  async doPause(time) {
+    await this.driver.sleep(time);
   }
 }
 
@@ -90,10 +206,24 @@ function parseLocator(locator) {
   const fragments = locator.split("=");
   const type = fragments.shift();
   const selector = fragments.join("=");
-  if (LOCATORS[type]) {
+  if (LOCATORS[type] && selector) {
     return LOCATORS[type](selector);
   } else {
     throw new Error(type ? `Unknown locator ${type}` : "Locator can't be empty");
+  }
+}
+
+function parseOptionLocator(locator) {
+  const fragments = locator.split("=");
+  const type = fragments.shift();
+  const selector = fragments.join("=");
+  if (OPTIONS_LOCATORS[type] && selector) {
+    return OPTIONS_LOCATORS[type](selector);
+  } else if (!selector) {
+    // no selector strategy given, assuming label
+    return OPTIONS_LOCATORS["label"](type);
+  } else {
+    throw new Error(type ? `Unknown selection locator ${type}` : "Locator can't be empty");
   }
 }
 
@@ -144,4 +274,19 @@ const LOCATORS = {
   "partialLinkText": By.partialLinkText,
   "css": By.css,
   "xpath": By.xpath
+};
+
+const OPTIONS_LOCATORS = {
+  "id": (id) => (
+    By.css(`*[id="${id}"]`)
+  ),
+  "value": (value) => (
+    By.css(`*[value="${value}"]`)
+  ),
+  "label": (label) => (
+    By.xpath(`//option[. = '${label}']`)
+  ),
+  "index": (index) => (
+    By.css(`*:nth-child(${index})`)
+  )
 };
