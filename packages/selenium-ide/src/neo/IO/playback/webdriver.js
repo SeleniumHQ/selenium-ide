@@ -37,6 +37,9 @@ export default class WebDriverExecutor {
     this.driver = await new webdriver.Builder().withCapabilities(this.capabilities).usingServer(this.server).build();
   }
 
+  async cleanup() {
+    await this.driver.quit();
+  }
 
   // to fool the command nodes
   // TODO: remove

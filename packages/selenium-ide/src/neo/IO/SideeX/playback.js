@@ -20,7 +20,6 @@ import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import { canExecuteCommand } from "../../../plugin/commandExecutor";
 import ExtCommand from "./ext-command";
-import WebDriverExecutor from "../playback/webdriver";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
 
@@ -38,12 +37,12 @@ extCommand.doSetSpeed = (speed) => {
 let baseUrl = "";
 let ignoreBreakpoint = false;
 let breakOnNextCommand = false;
-const browserDriver = new WebDriverExecutor();
-browserDriver.init();
+let executor = undefined;
 
-export function play(currUrl) {
+export function play(currUrl, exec) {
   baseUrl = currUrl;
   ignoreBreakpoint = false;
+  executor = exec;
   initPlaybackTree();
   return prepareToPlay()
     .then(executionLoop)
@@ -135,9 +134,9 @@ function runNextCommand() {
     // paused
     if (isStopping()) return false;
   }
-  if (extCommand.isExtCommand(command.command)) {
+  if (executor.isExtCommand(command.command)) {
     return doDelay().then(() => {
-      return (PlaybackState.currentExecutingCommandNode.execute(browserDriver))
+      return (PlaybackState.currentExecutingCommandNode.execute(executor))
         .then((result) => {
           // we need to set the stackIndex manually because run command messes with that
           PlaybackState.setCommandStateAtomically(command.id, stackIndex, PlaybackStates.Passed);
@@ -160,15 +159,20 @@ function runNextCommand() {
 }
 
 function prepareToPlay() {
-  return extCommand.init(baseUrl);
+  return executor.init(baseUrl);
 }
 
 function prepareToPlayAfterConnectionFailed() {
   return Promise.resolve(true);
 }
 
-function finishPlaying() {
-  if (!PlaybackState.paused) PlaybackState.finishPlaying();
+async function finishPlaying() {
+  if (!PlaybackState.paused) {
+    if (executor.cleanup) {
+      await executor.cleanup();
+    }
+    PlaybackState.finishPlaying();
+  }
 }
 
 function catchPlayingError(message) {

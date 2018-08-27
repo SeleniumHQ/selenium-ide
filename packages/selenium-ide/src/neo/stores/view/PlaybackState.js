@@ -27,6 +27,9 @@ import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { play, playSingleCommand, resumePlayback } from "../../IO/SideeX/playback";
+import WebDriverExecutor from "../../IO/playback/webdriver";
+
+const browserDriver = new WebDriverExecutor();
 
 class PlaybackState {
   @observable runId = "";
@@ -65,7 +68,7 @@ class PlaybackState {
       () => this.isPlaying,
       isPlaying => {
         if (isPlaying) {
-          play(UiState.baseUrl);
+          play(UiState.baseUrl, browserDriver);
         }
       }
     );
