@@ -56,7 +56,8 @@ export default function seed(store, numberOfSuites = 5) {
   const yeeOldTest = store.createTestCase("yee old wiki");
   yeeOldTest.createCommand(undefined, "open", "https://en.wikipedia.org/wiki/Main_Page");
   yeeOldTest.createCommand(undefined, "type", "id=searchInput", "selenium");
-  yeeOldTest.createCommand(undefined, "click", "id=searchButton");
+  yeeOldTest.createCommand(undefined, "sendKeys", "id=searchInput", "${KEY_ENTER}");
+  //yeeOldTest.createCommand(undefined, "click", "id=searchButton");
 
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
