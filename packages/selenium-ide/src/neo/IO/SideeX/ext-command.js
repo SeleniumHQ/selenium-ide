@@ -21,6 +21,7 @@ import { recorder } from "./editor";
 import Debugger from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
+import { absolutifyUrl } from "../playback/utils";
 
 const parsedUA = parser(window.navigator.userAgent);
 
@@ -201,12 +202,7 @@ export default class ExtCommand {
   }
 
   doOpen(targetUrl) {
-    let url = targetUrl;
-    try {
-      url = (new URL(targetUrl)).href;
-    } catch (e) {
-      url = (new URL(targetUrl, this.baseUrl)).href;
-    }
+    const url = absolutifyUrl(targetUrl, this.baseUrl);
     return browser.tabs.update(this.currentPlayingTabId, {
       url: url
     });

@@ -53,6 +53,12 @@ export default function seed(store, numberOfSuites = 5) {
   store.setUrl(url);
   store.addUrl(url);
 
+  const yeeOldTest = store.createTestCase("yee old wiki");
+  yeeOldTest.createCommand(undefined, "open", "https://en.wikipedia.org/wiki/Main_Page");
+  yeeOldTest.createCommand(undefined, "type", "id=searchInput", "selenium");
+  yeeOldTest.createCommand(undefined, "sendKeys", "id=searchInput", "${KEY_ENTER}");
+  //yeeOldTest.createCommand(undefined, "click", "id=searchButton");
+
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
   controlFlowIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
@@ -220,7 +226,7 @@ export default function seed(store, numberOfSuites = 5) {
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(checkTest, suiteAll);
+  UiState.selectTest(yeeOldTest);
 
   store.changeName("seed project");
 

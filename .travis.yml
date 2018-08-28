@@ -9,9 +9,11 @@ before_install:
   - docker-compose up -d
 install:
   - yarn --ignore-engines
+  - yarn build:webdriver
   - yarn build:selianize
   - yarn build:runner
 script:
   - yarn lint
   - yarn test
-  - yarn test:webdriver --server http://localhost:4444/wd/hub
+  - yarn test:webdriver
+  - yarn test:runner --server http://localhost:4444/wd/hub
