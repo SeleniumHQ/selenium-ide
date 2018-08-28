@@ -17,6 +17,8 @@
 
 import webdriver from "browser-webdriver";
 import { absolutifyUrl } from "./utils";
+import variables from "../../stores/view/Variables";
+import { Logger, Channels } from "../../stores/view/Logs";
 
 const By = webdriver.By;
 const until = webdriver.until;
@@ -32,6 +34,7 @@ export default class WebDriverExecutor {
   constructor(capabilities, server) {
     this.capabilities = capabilities || DEFAULT_CAPABILITIES;
     this.server = server || DEFAULT_SERVER;
+    this.logger = new Logger(Channels.PLAYBACK);
   }
 
   async init(baseUrl) {
@@ -50,16 +53,47 @@ export default class WebDriverExecutor {
   }
 
   name(command) {
-    let upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    return "do" + upperCase;
+    if (!command) {
+      return "skip";
+    }
+
+    const upperCase = command.charAt(0).toUpperCase() + command.slice(1);
+    const func = ("do" + upperCase).replace("Verify", "Assert");
+    if (!this[func]) {
+      throw new Error(`Unknown command ${command}`);
+    }
+    return func;
   }
 
   // Commands go after this line
+
+  async skip() {
+    return Promise.resolve();
+  }
 
   // window commands
 
   async doOpen(url) {
     await this.driver.get(absolutifyUrl(url, this.baseUrl));
+  }
+
+  async doSelectFrame(locator) {
+    const targetLocator = this.driver.switchTo();
+    if (locator === "relative=top") {
+      await targetLocator.defaultContent();
+    } else if (locator === "relative=parent") {
+      await targetLocator.parentFrame();
+    } else if (locator.startsWith("index=")) {
+      await targetLocator.frame(+locator.substr("index=".length));
+    } else {
+      const element = await waitForElement(locator, this.driver);
+      await targetLocator.frame(element);
+    }
+  }
+
+  async doSubmit(locator) {
+    const element = await waitForElement(locator, this.driver);
+    await element.submit();
   }
 
   // mouse commands
@@ -113,7 +147,57 @@ export default class WebDriverExecutor {
     await this.driver.executeScript(script);
   }
 
+  async doExecuteScript(script, optionalVariable) {
+    const result = await this.driver.executeScript(script);
+    if (optionalVariable) {
+      variables.addVariable(optionalVariable, result);
+    }
+  }
+
+  async doExecuteAsyncScript(script, optionalVariable) {
+    const result = await this.driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);`);
+    if (optionalVariable) {
+      variables.addVariable(optionalVariable, result);
+    }
+  }
+
+  // store commands
+
+  async doStore(string, variable) {
+    variables.addVariable(variable, string);
+    return Promise.resolve();
+  }
+
+  async doStoreText(locator, variable) {
+    const element = await waitForElement(locator, this.driver);
+    const text = await element.getText();
+    variables.addVariable(variable, text);
+  }
+
+  async doStoreValue(locator, variable) {
+    const element = await waitForElement(locator, this.driver);
+    const value = await element.getAttribute("value");
+    variables.addVariable(variable, value);
+  }
+
   // assertions
+
+  async doAssert(variable, value) {
+    if (variable != value) {
+      throw new Error("Actual value '" + variable + "' did not match '" + value + "'");
+    }
+  }
+
+  async doAssertElementPresent(locator) {
+    await waitForElement(locator, this.driver);
+  }
+
+  async doAssertElementNotPresent(locator) {
+    const elements = this.driver.findElements(parseLocator(locator));
+    if (elements.length) {
+      throw new Error("Unexpected element was found in page");
+    }
+  }
 
   async doAssertText(locator, value) {
     const element = await waitForElement(locator, this.driver);
@@ -145,6 +229,20 @@ export default class WebDriverExecutor {
     const elementValue = await element.getAttribute("value");
     if (elementValue === value) {
       throw new Error("Actual value '" + elementValue + "' did match '" + value + "'");
+    }
+  }
+
+  async doAssertChecked(locator) {
+    const element = await waitForElement(locator, this.driver);
+    if (!(await element.isSelected())) {
+      throw new Error("Element is not checked, expected to be checked");
+    }
+  }
+
+  async doAssertNotChecked(locator) {
+    const element = await waitForElement(locator, this.driver);
+    if (await element.isSelected()) {
+      throw new Error("Element is checked, expected to be unchecked");
     }
   }
 
@@ -185,6 +283,11 @@ export default class WebDriverExecutor {
   }
 
   // other commands
+
+  async doEcho(string) {
+    this.logger.log(string);
+    return Promise.resolve();
+  }
 
   async doPause(time) {
     await this.driver.sleep(time);
