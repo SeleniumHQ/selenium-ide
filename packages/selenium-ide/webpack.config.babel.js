@@ -268,7 +268,8 @@ export default {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin({
       "process.env": {
-        "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
+        "NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+        "USE_WEBDRIVER": JSON.stringify(process.env.USE_WEBDRIVER)
       }
     }),
     new webpack.optimize.CommonsChunkPlugin({
