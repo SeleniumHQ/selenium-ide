@@ -67,7 +67,7 @@ function string(value) {
 
 function handleFormatCommand(message, sender, sendResponse) {
   if (message.storeVar) {
-    variables.addVariable(message.storeVar, message.storeStr);
+    variables.set(message.storeVar, message.storeStr);
     return sendResponse(true);
   } else if (message.echoStr) {
     logger.log("echo: " + message.echoStr);

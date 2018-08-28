@@ -21,30 +21,30 @@ import Variables from "../../../stores/view/Variables";
 useStrict(true);
 
 afterEach(() => {
-  Variables.clearVariables();
+  Variables.clear();
 });
 
 describe("Variables", () => {
   it("should clear the map", () => {
     const key = "key1";
     const value = "value1";
-    Variables.addVariable(key, value);
+    Variables.set(key, value);
     expect(Variables.storedVars.size).toBe(1);
-    Variables.clearVariables();
+    Variables.clear();
     expect(Variables.storedVars.size).toBe(0);
   });
   it("should add new key and value to the map", () => {
     const key = "key1";
     const value = "value1";
-    Variables.addVariable(key, value);
+    Variables.set(key, value);
     expect(Variables.storedVars.size).toBe(1);
   });
   it("should not add duplicates to the map", () => {
     const key = "key1";
     const value = "value1";
     const value2 = "value2";
-    Variables.addVariable(key, value);
-    Variables.addVariable(key, value2);
+    Variables.set(key, value);
+    Variables.set(key, value2);
     expect(Variables.storedVars.size).toBe(1);
   });
   it("should get the value correctly from the map", () => {
@@ -52,16 +52,16 @@ describe("Variables", () => {
     const value1 = "value1";
     const key2 = "key2";
     const value2 = "value2";
-    Variables.addVariable(key1, value1);
-    Variables.addVariable(key2, value2);
-    expect(Variables.get(key1)).toBe(value1);
+    Variables.set(key1, value1);
+    Variables.set(key2, value2);
+    expect(JSON.parse(Variables.get(key1))).toBe(value1);
   });
   it("should delete the key and the value from the map", () => {
     const key = "key1";
     const value = "value1";
-    Variables.addVariable(key, value);
+    Variables.set(key, value);
     expect(Variables.storedVars.size).toBe(1);
-    Variables.deleteVariable(key);
+    Variables.delete(key);
     expect(Variables.storedVars.size).toBe(0);
   });
 });

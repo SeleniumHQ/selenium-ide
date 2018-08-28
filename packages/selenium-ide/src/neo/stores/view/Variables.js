@@ -24,16 +24,16 @@ class Variables {
     return this.storedVars.get(key);
   }
 
-  @action.bound addVariable(key, value) {
-    this.storedVars.set(key, value);
+  @action.bound set(key, value) {
+    this.storedVars.set(key, JSON.stringify(value));
   }
 
-  @action.bound deleteVariable(key) {
+  @action.bound delete(key) {
     if(this.storedVars.has(key))
       this.storedVars.delete(key);
   }
 
-  @action.bound clearVariables() {
+  @action.bound clear() {
     this.storedVars.clear();
   }
 }

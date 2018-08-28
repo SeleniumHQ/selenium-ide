@@ -271,7 +271,7 @@ export default class ExtCommand {
   }
 
   doStore(string, varName) {
-    variables.addVariable(varName, string);
+    variables.get(varName, string);
     return Promise.resolve();
   }
 

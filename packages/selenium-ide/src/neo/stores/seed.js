@@ -53,11 +53,10 @@ export default function seed(store, numberOfSuites = 5) {
   store.setUrl(url);
   store.addUrl(url);
 
-  const yeeOldTest = store.createTestCase("yee old wiki");
+  const yeeOldTest = store.createTestCase("send KEY_ENTER");
   yeeOldTest.createCommand(undefined, "open", "https://en.wikipedia.org/wiki/Main_Page");
   yeeOldTest.createCommand(undefined, "type", "id=searchInput", "selenium");
   yeeOldTest.createCommand(undefined, "sendKeys", "id=searchInput", "${KEY_ENTER}");
-  //yeeOldTest.createCommand(undefined, "click", "id=searchButton");
 
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
@@ -114,6 +113,16 @@ export default function seed(store, numberOfSuites = 5) {
   executeScriptTest.createCommand(undefined, "assert", "${blah}", "true");
   executeScriptTest.createCommand(undefined, "executeScript", "true");
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
+
+  const executeScriptArray = store.createTestCase("execute script array");
+  executeScriptArray.createCommand(undefined, "executeScript", "return [1,2,3]", "x");
+  executeScriptArray.createCommand(undefined, "executeScript", "return ${x}[0] + 1", "y");
+  executeScriptArray.createCommand(undefined, "assert", "${y}", "2");
+
+  const executeScriptObject = store.createTestCase("execute script object");
+  executeScriptObject.createCommand(undefined, "executeScript", "return { x: 3 }", "x");
+  executeScriptObject.createCommand(undefined, "executeScript", "return ${x}.x + 2", "y");
+  executeScriptObject.createCommand(undefined, "assert", "${y}", "5");
 
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
@@ -216,6 +225,7 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(clickTest);
   smokeSuite.addTestCase(clickAtTest);
   smokeSuite.addTestCase(executeScriptTest);
+  smokeSuite.addTestCase(executeScriptArray);
   smokeSuite.addTestCase(framesTest);
   smokeSuite.addTestCase(selectTest);
   smokeSuite.addTestCase(sendKeysTest);
@@ -226,7 +236,7 @@ export default function seed(store, numberOfSuites = 5) {
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(yeeOldTest);
+  UiState.selectTest(executeScriptObject);
 
   store.changeName("seed project");
 
