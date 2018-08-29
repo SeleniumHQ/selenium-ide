@@ -279,14 +279,18 @@ async function emitRun(testCase) {
   return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
 }
 
+function generateScript(script) {
+  return `await driver.executeScript(\`${script.script}\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`;
+}
+
 async function emitRunScript(script) {
-  return Promise.resolve(`await driver.executeScript(\`${script.script}\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`);
+  return Promise.resolve(generateScript(script));
 }
 
 emitRunScript.target = scriptPreprocessor;
 
 async function emitExecuteScript(script, varName) {
-  return Promise.resolve((varName ? `vars["${varName}"] = ` : "") + `await driver.executeScript(\`${script.script}\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`);
+  return Promise.resolve((varName ? `vars["${varName}"] = ` : "") + generateScript(script));
 }
 
 emitExecuteScript.target = scriptPreprocessor;
@@ -459,29 +463,37 @@ function emitControlFlowElse() {
   return Promise.resolve("} else {");
 }
 
-function emitControlFlowElseIf(target) {
-  return Promise.resolve(`} else if (${target}) {`);
+function emitControlFlowElseIf(script) {
+  return Promise.resolve(`} else if (${generateScript(script).slice(0, -1)}) {`);
 }
+
+emitControlFlowElseIf.target = scriptPreprocessor;
 
 function emitControlFlowEnd() {
   return Promise.resolve("}");
 }
 
-function emitControlFlowIf(target) {
-  return Promise.resolve(`if (${target}) {`);
+function emitControlFlowIf(script) {
+  return Promise.resolve(`if (${generateScript(script).slice(0, -1)}) {`);
 }
 
+emitControlFlowIf.target = scriptPreprocessor;
+
 function emitControlFlowRepeatIf(target) {
-  return Promise.resolve(`} while(${target});`);
+  return Promise.resolve(`} while (${generateScript(target).slice(0, -1)});`);
 }
+
+emitControlFlowRepeatIf.target = scriptPreprocessor;
 
 function emitControlFlowTimes(target) {
   return Promise.resolve(`const times = ${target};for(let i = 0; i < times; i++) {`);
 }
 
 function emitControlFlowWhile(target) {
-  return Promise.resolve(`while (${target}) {`);
+  return Promise.resolve(`while (${generateScript(target).slice(0, -1)}) {`);
 }
+
+emitControlFlowWhile.target = scriptPreprocessor;
 
 function emitAssert(varName, value) {
   return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} == "${value}").toBeTruthy();`);

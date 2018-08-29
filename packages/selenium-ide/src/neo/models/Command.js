@@ -433,7 +433,8 @@ class CommandList {
       name: "else if",
       description: "Part of an if block. Execute the commands in this branch \
                     when an if condition has not been met. Terminate the branch \
-                    with the end command."
+                    with the end command.",
+      target: ArgTypes.conditionalExpression
     }],
     [ "end", {
       name: "end",
