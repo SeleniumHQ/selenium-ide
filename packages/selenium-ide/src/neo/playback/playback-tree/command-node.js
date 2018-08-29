@@ -15,7 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { xlateArgument } from "../../IO/SideeX/formatCommand";
+import { Commands, ArgTypes } from "../../models/Command";
+import { xlateArgument, interpolateScript } from "../../IO/SideeX/formatCommand";
 import { ControlFlowCommandChecks } from "../../models/Command";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
 
@@ -57,23 +58,40 @@ export class CommandNode {
     });
   }
 
+  _interpolateTarget() {
+    const type = Commands.list.get(this.command.command).target;
+    if (type && type.name === ArgTypes.script.name) {
+      return interpolateScript(this.command.target);
+    }
+    return xlateArgument(this.command.target);
+  }
+
+  _interpolateValue() {
+    const type = Commands.list.get(this.command.command).value;
+    if (type && type.name === ArgTypes.script.name) {
+      return interpolateScript(this.command.value);
+    }
+    return xlateArgument(this.command.value);
+  }
+
   _executeCommand(extCommand, options) {
     if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](
-        xlateArgument(this.command.target),
-        xlateArgument(this.command.value));
+        this._interpolateTarget(),
+        this._interpolateValue()
+      );
     } else if (this.isControlFlow()) {
       return this._evaluate(extCommand);
     } else if (this.command.command === "type") {
       return extCommand.doType(
-        xlateArgument(this.command.target),
-        xlateArgument(this.command.value),
+        this._interpolateTarget(),
+        this._interpolateValue(),
         extCommand.isWindowMethodCommand(this.command.command));
     } else if (canExecuteCommand(this.command.command)) {
       return executeCommand(
         this.command.command,
-        this.command.target,
-        this.command.value,
+        this._interpolateTarget(),
+        this._interpolateValue(),
         options);
     } else if (this.isValid()) {
       if (this.isJustAComment() || this.isTerminalKeyword()) {
@@ -83,8 +101,8 @@ export class CommandNode {
       } else {
         return extCommand.sendMessage(
           this.command.command,
-          xlateArgument(this.command.target),
-          xlateArgument(this.command.value),
+          this._interpolateTarget(),
+          this._interpolateValue(),
           extCommand.isWindowMethodCommand(this.command.command));
       }
     } else {

@@ -18,6 +18,84 @@
 import CommandEmitter, { registerEmitter } from "../src/command";
 import { Commands, ControlFlowCommandNames } from "../../selenium-ide/src/neo/models/Command";
 
+describe("keys preprocessor", () => {
+  it("should not affect hardcoded strings", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=t",
+      value: "test"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`test`)");
+  });
+  it("should convert a single key", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=t",
+      value: "${KEY_ENTER}"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(Key[\"ENTER\"])");
+  });
+  it("should convert a string and a key", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=t",
+      value: "test${KEY_ENTER}"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`test`,Key[\"ENTER\"])");
+  });
+  it("should convert multiple strings and keys", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=t",
+      value: "test${KEY_ENTER}foo${KEY_DOWN}bar"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`test`,Key[\"ENTER\"],`foo`,Key[\"DOWN\"],`bar`)");
+  });
+  it("should interpolate stored variables", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=t",
+      value: "test${var}"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`test`,`${vars.var}`)");
+  });
+  it("should convert keys and interpolate vars", () => {
+    const command = {
+      command: "sendKeys",
+      target: "id=t",
+      value: "test${var}foo${KEY_ENTER}"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`test`,`${vars.var}`,`foo`,Key[\"ENTER\"])");
+  });
+});
+
+describe("script preprocessor", () => {
+  it("should not affect hardcoded strings", () => {
+    const command = {
+      command: "executeScript",
+      target: "return {}",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("executeScript(`return {}`)");
+  });
+  it("should pass a single argument", () => {
+    const command = {
+      command: "executeScript",
+      target: "return ${x}",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("executeScript(`return arguments[0]`,vars[\"x\"])");
+  });
+  it("should pass multiple arguments", () => {
+    const command = {
+      command: "executeScript",
+      target: "return ${x} + ${y} + ${x}",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("executeScript(`return arguments[0] + arguments[1] + arguments[0]`,vars[\"x\"],vars[\"y\"])");
+  });
+});
+
 describe("command code emitter", () => {
   it("should skip empty commands", () => {
     const command = {
@@ -763,7 +841,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName == "${command.value}");`
+      `expect(vars.varrrName == "${command.value}").toBeTruthy();`
     );
   });
   it("should emit `verify` command", () => {
@@ -773,7 +851,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName == "${command.value}");`
+      `expect(vars.varrrName == "${command.value}").toBeTruthy();`
     );
   });
   it("should preprocess stored variables", () => {
@@ -782,14 +860,6 @@ describe("command code emitter", () => {
       target: "${name}",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(vars.name == \"test\");");
-  });
-  it("should preprocess special keys", () => {
-    const command = {
-      command: "assert",
-      target: "${KEY_ENTER}",
-      value: "enter"
-    };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(Key.ENTER == \"enter\");");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(vars.name == \"test\").toBeTruthy();");
   });
 });

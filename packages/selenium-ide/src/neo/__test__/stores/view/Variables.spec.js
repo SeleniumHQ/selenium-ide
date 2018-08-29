@@ -54,7 +54,7 @@ describe("Variables", () => {
     const value2 = "value2";
     Variables.set(key1, value1);
     Variables.set(key2, value2);
-    expect(JSON.parse(Variables.get(key1))).toBe(value1);
+    expect(Variables.get(key1)).toBe(value1);
   });
   it("should delete the key and the value from the map", () => {
     const key = "key1";

@@ -54,6 +54,46 @@ export function xlateArgument(value) {
   }
 }
 
+export function interpolateScript(script) {
+  let value = script.replace(/^\s+/, "").replace(/\s+$/, "");
+  let r2;
+  let parts = [];
+  const variablesUsed = {};
+  const argv = [];
+  let argl = 0; // length of arguments
+  if (/\$\{/.exec(value)) {
+    const regexp = /\$\{(.*?)\}/g;
+    let lastIndex = 0;
+    while ((r2 = regexp.exec(value))) {
+      const variableName = r2[1];
+      if (variables.has(variableName)) {
+        if (r2.index - lastIndex > 0) {
+          parts.push(string(value.substring(lastIndex, r2.index)));
+        }
+        if (!variablesUsed.hasOwnProperty(variableName)) {
+          variablesUsed[variableName] = argl;
+          argv.push(variables.get(variableName));
+          argl++;
+        }
+        parts.push(`arguments[${variablesUsed[variableName]}]`);
+        lastIndex = regexp.lastIndex;
+      }
+    }
+    if (lastIndex < value.length) {
+      parts.push(string(value.substring(lastIndex, value.length)));
+    }
+    return {
+      script: parts.join(""),
+      argv
+    };
+  } else {
+    return {
+      script: string(value),
+      argv
+    };
+  }
+}
+
 function string(value) {
   if (value != null) {
     value = value.replace(/\\\\/g, "\\");

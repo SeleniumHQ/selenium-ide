@@ -124,6 +124,14 @@ export default function seed(store, numberOfSuites = 5) {
   executeScriptObject.createCommand(undefined, "executeScript", "return ${x}.x + 2", "y");
   executeScriptObject.createCommand(undefined, "assert", "${y}", "5");
 
+  const executeScriptPrimitives = store.createTestCase("execute script primitives");
+  executeScriptPrimitives.createCommand(undefined, "executeScript", "return true", "bool");
+  executeScriptPrimitives.createCommand(undefined, "assert", "${bool}", "true");
+  executeScriptPrimitives.createCommand(undefined, "executeScript", "return 3.14", "float");
+  executeScriptPrimitives.createCommand(undefined, "assert", "${float}", "3.14");
+  executeScriptPrimitives.createCommand(undefined, "executeScript", "return \"test\"", "string");
+  executeScriptPrimitives.createCommand(undefined, "assert", "${string}", "test");
+
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
   const command = checkTest.createCommand(undefined, "check", "css=input");
@@ -185,8 +193,9 @@ export default function seed(store, numberOfSuites = 5) {
 
   const sendKeysTest = store.createTestCase("send keys");
   sendKeysTest.createCommand(undefined, "open", "/login");
-  sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
-  sendKeysTest.createCommand(undefined, "assertValue", "css=#username", "blah");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "tomsmith");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#password", "SuperSecretPassword!${KEY_ENTER}");
+  sendKeysTest.createCommand(undefined, "assertText", "id=flash", "You logged into a secure area!\\n×");
 
   const storeTextTest = store.createTestCase("store text");
   storeTextTest.createCommand(undefined, "open", "/login");
@@ -226,6 +235,7 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(clickAtTest);
   smokeSuite.addTestCase(executeScriptTest);
   smokeSuite.addTestCase(executeScriptArray);
+  smokeSuite.addTestCase(executeScriptPrimitives);
   smokeSuite.addTestCase(framesTest);
   smokeSuite.addTestCase(selectTest);
   smokeSuite.addTestCase(sendKeysTest);
