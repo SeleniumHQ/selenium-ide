@@ -1,0 +1,217 @@
+{
+  "id": "50f71302-170d-4ef4-b54e-bb78edf9853d",
+  "name": "seed project",
+  "url": "http://the-internet.herokuapp.com",
+  "tests": [{
+    "id": "b2baf643-63af-4c47-820e-a215d79d6f2d",
+    "name": "control flow if",
+    "commands": [{
+      "id": "06a49f39-c64d-48bd-a7e8-b3b592e926fe",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"a\"",
+      "targets": [],
+      "value": "myVar"
+    }, {
+      "id": "87d91e6e-369f-4d6e-9869-80feec5e8a1e",
+      "comment": "",
+      "command": "if",
+      "target": "${myVar} === \"a\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "46e5ef5d-ec77-4e42-84de-96a4ac3ce172",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"a\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
+      "comment": "",
+      "command": "elseIf",
+      "target": "${myVar} === \"b\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0825a261-7ecc-4521-b7de-d8648aca6e8a",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"b\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "1412686c-5810-419a-993b-7a31cd1cf2ab",
+      "comment": "",
+      "command": "else",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "59f3907f-012a-4e5f-aaeb-ce409ff46838",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"c\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "9cd2ad99-68c3-477c-afd3-20038fdd296c",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "dc00ed01-eb5c-4a7b-a63e-28025f3272a6",
+      "comment": "",
+      "command": "assert",
+      "target": "${output}",
+      "targets": [],
+      "value": "a"
+    }]
+  }, {
+    "id": "60310586-ec9f-47bb-a5f7-3b1783631d57",
+    "name": "control flow else if",
+    "commands": [{
+      "id": "b56284b2-0153-48f5-bd14-06ff5f581002",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"b\"",
+      "targets": [],
+      "value": "myVar"
+    }, {
+      "id": "b3f540aa-c353-4c98-9d1e-9bff6c2996c2",
+      "comment": "",
+      "command": "if",
+      "target": "${myVar} === \"a\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f3e8f559-26f3-46bc-860d-e988da58403d",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"a\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "68e7be06-f7b2-4f88-9fec-fae0e3e656cb",
+      "comment": "",
+      "command": "elseIf",
+      "target": "${myVar} === \"b\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6c5f9ffb-807c-4ff7-9ebd-c504a91f69db",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"b\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "ad5204e7-a5de-4b5b-9287-1f4bca885c8d",
+      "comment": "",
+      "command": "else",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a8dc4bda-8670-4b32-9964-602b77d6f1be",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"c\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "fd5d11b2-96ef-4da7-a38b-c5b2007d8077",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b66b3370-8159-4014-8640-10f9f676f4f3",
+      "comment": "",
+      "command": "assert",
+      "target": "${output}",
+      "targets": [],
+      "value": "b"
+    }]
+  }, {
+    "id": "5331e98c-e2f0-4ea2-9f6a-bd8542f50ade",
+    "name": "control flow else",
+    "commands": [{
+      "id": "9fbdebd9-e776-40f3-9228-d8e80207fe77",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"c\"",
+      "targets": [],
+      "value": "myVar"
+    }, {
+      "id": "5d77c8a9-d7c6-4631-90e0-633bbaf82075",
+      "comment": "",
+      "command": "if",
+      "target": "${myVar} === \"a\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e25c19a5-2fe9-439a-854c-b92b5bc7b055",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"a\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "56417bee-aec4-482c-9c32-0755df35d2a3",
+      "comment": "",
+      "command": "elseIf",
+      "target": "${myVar} === \"b\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "42aff052-a686-4950-b6f1-c526ea0c2fe1",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"b\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "b83a32fc-50b6-4547-a2d2-d7b849633f08",
+      "comment": "",
+      "command": "else",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c299fdb1-3038-4181-8865-9a9448b6957e",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"c\"",
+      "targets": [],
+      "value": "output"
+    }, {
+      "id": "8da12e57-f036-41a0-b88c-27548e8672c4",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "16813507-cdae-49c8-976c-bd1984899cec",
+      "comment": "",
+      "command": "assert",
+      "target": "${output}",
+      "targets": [],
+      "value": "c"
+    }]
+  }],
+  "suites": [{
+    "id": "ee5ed249-db27-45ab-9ef0-296e983d799c",
+    "name": "control flow",
+    "parallel": false,
+    "timeout": 3000,
+    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d", "60310586-ec9f-47bb-a5f7-3b1783631d57", "5331e98c-e2f0-4ea2-9f6a-bd8542f50ade"]
+  }],
+  "urls": ["http://the-internet.herokuapp.com/"],
+  "plugins": [],
+  "version": "1.0"
+}
