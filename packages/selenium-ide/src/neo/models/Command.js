@@ -241,7 +241,7 @@ class CommandList {
     }],
     [ "assert", {
       name: "assert",
-      description: "Check that a variable is true/false or some other value.",
+      description: "Check that a variable is an expected value. The variable's value will be converted to a string for comparison.",
       target: ArgTypes.variableName,
       value: ArgTypes.expectedValue
     }],
@@ -673,6 +673,12 @@ class CommandList {
       type: TargetTypes.LOCATOR,
       description: "Uncheck a toggle-button (checkbox/radio).",
       target: ArgTypes.locator
+    }],
+    [ "verify", {
+      name: "verify",
+      description: "Soft assert that a variable is an expected value. The variable's value will be converted to a string for comparison.",
+      target: ArgTypes.variableName,
+      value: ArgTypes.expectedValue
     }],
     [ "verifyChecked", {
       name: "verify checked",
