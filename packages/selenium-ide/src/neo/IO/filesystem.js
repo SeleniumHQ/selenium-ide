@@ -66,7 +66,6 @@ export function loadAsText(blob) {
 
 export function saveProject(_project) {
   const project = _project.toJS();
-  project.version = "1.0";
   downloadProject(project);
   UiState.saved();
 }
