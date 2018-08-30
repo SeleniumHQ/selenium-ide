@@ -21,11 +21,11 @@ export default function migrate(project) {
     return Object.assign({}, test, {
       commands: test.commands.map((c) => {
         if (c.command === "pause" && !c.target) {
-          return {
+          return Object.assign({}, c, {
             command: c.command,
             target: c.value,
             value: ""
-          };
+          });
         }
         return c;
       })
