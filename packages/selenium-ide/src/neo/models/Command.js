@@ -142,6 +142,11 @@ export const ArgTypes = {
     name: "form locator",
     description: "An element locator for the form you want to submit."
   },
+  keySequence: {
+    name: "key sequence",
+    description: "A sequence of keys to type, can be used to send key strokes (e.g.\
+                  ${KEY_ENTER})."
+  },
   locator: {
     name: "locator",
     description: "An element locator."
@@ -593,7 +598,7 @@ class CommandList {
                     into the page directly, this command will not replace the \
                     existing content.",
       target: ArgTypes.locator,
-      value: ArgTypes.value
+      value: ArgTypes.keySequence
     }],
     [ "setSpeed", {
       name: "set speed",
@@ -605,8 +610,8 @@ class CommandList {
     }],
     [ "store", {
       name: "store",
-      description: "Save a target expression as a variable for easy re-use.",
-      target: ArgTypes.expression,
+      description: "Save a target string as a variable for easy re-use.",
+      target: ArgTypes.text,
       value: ArgTypes.variableName
     }],
     [ "storeAttribute", {
