@@ -42,18 +42,14 @@
       ],
       "value": "${KEY_ENTER}"
     }, {
-      "id": "51439752-5f80-4a89-991c-f2deb42c26d2",
+      "id": "5628fe89-f130-40cb-b52e-244a41cd6516",
       "comment": "",
       "command": "click",
-      "target": "css=h3.r > a > span",
-      "targets": [
-        ["css=h3.r > a > span", "css"],
-        ["xpath=//div[@id='rso']/div/div/div/div/div/h3/a/span", "xpath:idRelative"],
-        ["xpath=//h3/a/span", "xpath:position"]
-      ],
+      "target": "linkText=Selenium IDE",
+      "targets": [],
       "value": ""
     }, {
-      "id": "d2bedac4-515d-4be8-95e0-eb43bdbfcecc",
+      "id": "fa9bae47-4a7e-4e92-9e02-e6863c13aaf1",
       "comment": "",
       "command": "assertTitle",
       "target": "Selenium IDE",
