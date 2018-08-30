@@ -60,33 +60,36 @@ export default function seed(store, numberOfSuites = 5) {
 
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
-  controlFlowIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
-  controlFlowIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
-  controlFlowIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowIfTest.createCommand(undefined, "if", "${myVar} === \"a\"");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "output");
+  controlFlowIfTest.createCommand(undefined, "elseIf", "${myVar} === \"b\"");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"b\"", "output");
   controlFlowIfTest.createCommand(undefined, "else");
-  controlFlowIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowIfTest.createCommand(undefined, "end");
+  controlFlowIfTest.createCommand(undefined, "assert", "${output}", "a");
 
   const controlFlowElseIfTest = store.createTestCase("control flow else if");
   controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "myVar");
-  controlFlowElseIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
-  controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
-  controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseIfTest.createCommand(undefined, "if", "${myVar} === \"a\"");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"a\"", "output");
+  controlFlowElseIfTest.createCommand(undefined, "elseIf", "${myVar} === \"b\"");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "output");
   controlFlowElseIfTest.createCommand(undefined, "else");
-  controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowElseIfTest.createCommand(undefined, "end");
+  controlFlowElseIfTest.createCommand(undefined, "assert", "${output}", "b");
 
   const controlFlowElseTest = store.createTestCase("control flow else");
   controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "myVar");
-  controlFlowElseTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
-  controlFlowElseTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
-  controlFlowElseTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseTest.createCommand(undefined, "if", "${myVar} === \"a\"");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"a\"", "output");
+  controlFlowElseTest.createCommand(undefined, "elseIf", "${myVar} === \"b\"");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"b\"", "output");
   controlFlowElseTest.createCommand(undefined, "else");
-  controlFlowElseTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowElseTest.createCommand(undefined, "end");
+  controlFlowElseTest.createCommand(undefined, "assert", "${output}", "c");
 
   const controlFlowDoTest = store.createTestCase("control flow do");
   controlFlowDoTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure infinite loop protection works.");
