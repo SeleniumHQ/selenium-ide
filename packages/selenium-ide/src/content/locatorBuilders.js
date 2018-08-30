@@ -74,7 +74,7 @@ LocatorBuilders.prototype.buildAll = function(el) {
 
 LocatorBuilders.prototype.findElement = function(loc) {
   try {
-    const locator = parse_locator(loc);
+    const locator = parse_locator(loc, true);
     return bot.locators.findElement({ [locator.type]: locator.string }, this.window.document);
   } catch (error) {
     //this.log.debug("findElement failed: " + error + ", locator=" + locator);
