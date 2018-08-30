@@ -77,13 +77,13 @@ export class CommandNode {
   }
 
   _executeCommand(extCommand, options) {
-    if (extCommand.isExtCommand(this.command.command)) {
+    if (this.isControlFlow()) {
+      return this._evaluate(extCommand);
+    } else if (extCommand.isExtCommand(this.command.command)) {
       return extCommand[extCommand.name(this.command.command)](
         this._interpolateTarget(),
         this._interpolateValue()
       );
-    } else if (this.isControlFlow()) {
-      return this._evaluate(extCommand);
     } else if (this.command.command === "type") {
       return extCommand.doType(
         this._interpolateTarget(),
@@ -142,7 +142,7 @@ export class CommandNode {
   }
 
   _evaluate(extCommand) {
-    let expression = xlateArgument(this.command.target);
+    let expression = this._interpolateTarget();
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression);
       if (isNaN(number)) {
