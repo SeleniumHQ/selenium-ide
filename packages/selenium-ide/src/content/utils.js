@@ -45,7 +45,14 @@ export function parse_locator(locator)
     const actualLocator = locator.substring(length + 1);
     return { type: type, string: actualLocator };
   }
-  return { type: "xpath", string: locator };
+  const implicitType = locator.indexOf("//") === -1 ? "id" : "xpath";
+  browser.runtime.sendMessage({
+    log: {
+      type: "warn",
+      message: `implicit locators are deprecated, please change the locator to ${implicitType}=${locator}`
+    }
+  });
+  return { type: implicitType, string: locator };
 }
 
 /**

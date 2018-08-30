@@ -18,6 +18,7 @@
 import { reaction } from "mobx";
 import UiState from "../../stores/view/UiState";
 import { toggleRecord } from "./editor";
+import { Commands, ArgTypes } from "../../models/Command";
 
 reaction(
   () => UiState.isRecording,
@@ -70,7 +71,12 @@ export default function record(command, targets, value, insertBeforeLastCommand)
       return [locator, strategy];
     });
     const newCommand = recordCommand(command, trgs[0][0], value, index);
-    newCommand.setTargets(trgs);
+    if (Commands.list.has(command)) {
+      const type = Commands.list.get(command).target;
+      if (type && type.name === ArgTypes.locator.name) {
+        newCommand.setTargets(trgs);
+      }
+    }
   }
 }
 

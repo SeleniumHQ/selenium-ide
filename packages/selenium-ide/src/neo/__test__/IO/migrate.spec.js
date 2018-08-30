@@ -15,48 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import UpgradeProject from "../../IO/migrate";
+import UpgradeProject, { VERSIONS } from "../../IO/migrate";
 
 describe("project migrator", () => {
-  it("should migrate pause commands", () => {
+  it("should migrate a project to the latest version", () => {
     const project = {
-      tests: [
-        {
-          id: "1",
-          commands: [
-            {
-              command: "pause",
-              target: "",
-              value: "100"
-            },
-            {
-              command: "pause",
-              target: "100",
-              value: ""
-            }
-          ]
-        }
-      ]
+      tests: [],
+      suites: [],
+      version: "1.0"
     };
-    const upgraded = UpgradeProject(project);
-    expect(upgraded).toEqual({
-      tests: [
-        {
-          id: "1",
-          commands: [
-            {
-              command: "pause",
-              target: "100",
-              value: ""
-            },
-            {
-              command: "pause",
-              target: "100",
-              value: ""
-            }
-          ]
-        }
-      ]
-    });
+    expect(UpgradeProject(project).version).toBe(VERSIONS[VERSIONS.length - 1]);
   });
 });
