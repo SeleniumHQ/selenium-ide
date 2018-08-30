@@ -287,7 +287,7 @@ class PlaybackState {
 
   @action.bound playNext() {
     if (UiState.selectedTest.suite.isParallel) {
-      variables.clearVariables();
+      variables.clear();
     }
     this.currentRunningTest = this._testsToRun.shift();
     this.runningQueue = this.currentRunningTest.commands.peek();
@@ -508,7 +508,7 @@ class PlaybackState {
   @action.bound resetState() {
     this.clearCommandStates();
     this.clearStack();
-    variables.clearVariables();
+    variables.clear();
     this.finishedTestsCount = 0;
     this.noStatisticsEffects = false;
     this.failures = 0;

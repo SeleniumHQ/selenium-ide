@@ -114,7 +114,10 @@ export function emit(command, options = config, snapshot) {
       if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
         return res({ skipped: true });
       try {
-        let result = await emitters[command.command](preprocessParameter(command.target), preprocessParameter(command.value));
+        let result = await emitters[command.command](
+          preprocessParameter(command.target, emitters[command.command].target),
+          preprocessParameter(command.value, emitters[command.command].value)
+        );
         res(result);
       } catch (e) {
         rej(e);
@@ -137,8 +140,91 @@ export function canEmit(commandName) {
   return !!(emitters[commandName]);
 }
 
-function preprocessParameter(param) {
-  return param ? param.replace(/\$\{/g, "${vars.").replace(/\$\{vars\.KEY_/g, "${Key.") : param;
+function preprocessParameter(param, preprocessor) {
+  if (preprocessor) {
+    return preprocessor(param);
+  }
+  return defaultPreprocessor(param);
+}
+
+function defaultPreprocessor(param) {
+  return param ? param.replace(/\$\{/g, "${vars.") : param;
+}
+
+export function scriptPreprocessor(script) {
+  let value = script.replace(/^\s+/, "").replace(/\s+$/, "");
+  let r2;
+  let parts = [];
+  const variablesUsed = {};
+  const argv = [];
+  let argl = 0; // length of arguments
+  if (/\$\{/.exec(value)) {
+    const regexp = /\$\{(.*?)\}/g;
+    let lastIndex = 0;
+    while ((r2 = regexp.exec(value))) {
+      const variableName = r2[1];
+      if (r2.index - lastIndex > 0) {
+        parts.push(value.substring(lastIndex, r2.index));
+      }
+      if (!variablesUsed.hasOwnProperty(variableName)) {
+        variablesUsed[variableName] = argl;
+        argv.push(variableName);
+        argl++;
+      }
+      parts.push(`arguments[${variablesUsed[variableName]}]`);
+      lastIndex = regexp.lastIndex;
+    }
+    if (lastIndex < value.length) {
+      parts.push(value.substring(lastIndex, value.length));
+    }
+    return {
+      script: parts.join(""),
+      argv
+    };
+  } else {
+    return {
+      script: value,
+      argv
+    };
+  }
+}
+
+function keysPreprocessor(str) {
+  let keys = [];
+  let match = str.match(/\$\{\w+\}/g);
+  if (!match) {
+    keys.push(str);
+  } else {
+    let i = 0;
+    while (i < str.length) {
+      let currentKey = match.shift(), currentKeyIndex = str.indexOf(currentKey, i);
+      if (currentKeyIndex > i) {
+        // push the string before the current key
+        keys.push(str.substr(i, currentKeyIndex - i));
+        i = currentKeyIndex;
+      }
+      if (currentKey) {
+        if (/^\$\{KEY_\w+\}/.test(currentKey)) {
+          // is a key
+          let keyName = currentKey.match(/\$\{KEY_(\w+)\}/)[1];
+          keys.push(`Key["${keyName}"]`);
+        } else {
+          // not a key, assume stored variables interpolation
+          keys.push(defaultPreprocessor(currentKey));
+        }
+        i += currentKey.length;
+      } else if (i < str.length) {
+        // push the rest of the string
+        keys.push(str.substr(i, str.length));
+        i = str.length;
+      }
+    }
+  }
+  return keys;
+}
+
+function generateScript(script, isExpression = false) {
+  return `await driver.executeScript(\`${isExpression ? `return (${script.script})` : script.script }\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`;
 }
 
 export function registerEmitter(command, emitter) {
@@ -176,8 +262,10 @@ async function emitType(target, value) {
 }
 
 async function emitSendKeys(target, value) {
-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.sendKeys(\`${value}\`);});`);
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {element.sendKeys(${value.map((s) => (s.startsWith("Key[") ? s : `\`${s}\``)).join(",")});});`);
 }
+
+emitSendKeys.value = keysPreprocessor;
 
 async function emitEcho(message) {
   return Promise.resolve(`console.log(\`${message}\`);`);
@@ -196,16 +284,22 @@ async function emitRun(testCase) {
 }
 
 async function emitRunScript(script) {
-  return Promise.resolve(`await driver.executeScript(\`${script}\`);`);
+  return Promise.resolve(generateScript(script));
 }
+
+emitRunScript.target = scriptPreprocessor;
 
 async function emitExecuteScript(script, varName) {
-  return Promise.resolve(`vars["${varName}"] = await driver.executeScript(\`${script}\`);`);
+  return Promise.resolve((varName ? `vars["${varName}"] = ` : "") + generateScript(script));
 }
 
+emitExecuteScript.target = scriptPreprocessor;
+
 async function emitExecuteAsyncScript(script, varName) {
-  return Promise.resolve(`vars["${varName}"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);\`);`);
+  return Promise.resolve((varName ? `vars["${varName}"] = ` : "") + `await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${script.script}.then(callback).catch(callback);\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`);
 }
+
+emitExecuteAsyncScript.target = scriptPreprocessor;
 
 async function emitPause(time) {
   return Promise.resolve(`await driver.sleep(${time});`);
@@ -369,32 +463,40 @@ function emitControlFlowElse() {
   return Promise.resolve("} else {");
 }
 
-function emitControlFlowElseIf(target) {
-  return Promise.resolve(`} else if (${target}) {`);
+function emitControlFlowElseIf(script) {
+  return Promise.resolve(`} else if (!!${generateScript(script, true).slice(0, -1)}) {`);
 }
+
+emitControlFlowElseIf.target = scriptPreprocessor;
 
 function emitControlFlowEnd() {
   return Promise.resolve("}");
 }
 
-function emitControlFlowIf(target) {
-  return Promise.resolve(`if (${target}) {`);
+function emitControlFlowIf(script) {
+  return Promise.resolve(`if (!!${generateScript(script, true).slice(0, -1)}) {`);
 }
 
+emitControlFlowIf.target = scriptPreprocessor;
+
 function emitControlFlowRepeatIf(target) {
-  return Promise.resolve(`} while(${target});`);
+  return Promise.resolve(`} while (!!${generateScript(target, true).slice(0, -1)});`);
 }
+
+emitControlFlowRepeatIf.target = scriptPreprocessor;
 
 function emitControlFlowTimes(target) {
   return Promise.resolve(`const times = ${target};for(let i = 0; i < times; i++) {`);
 }
 
 function emitControlFlowWhile(target) {
-  return Promise.resolve(`while (${target}) {`);
+  return Promise.resolve(`while (!!${generateScript(target, true).slice(0, -1)}) {`);
 }
 
+emitControlFlowWhile.target = scriptPreprocessor;
+
 function emitAssert(varName, value) {
-  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} == "${value}");`);
+  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")}.toString() == "${value}").toBeTruthy();`);
 }
 
 function emitSetSpeed() {

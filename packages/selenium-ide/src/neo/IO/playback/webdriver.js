@@ -144,40 +144,40 @@ export default class WebDriverExecutor {
   // script commands
 
   async doRunScript(script) {
-    await this.driver.executeScript(script);
+    await this.driver.executeScript(script.script, ...script.argv);
   }
 
   async doExecuteScript(script, optionalVariable) {
-    const result = await this.driver.executeScript(script);
+    const result = await this.driver.executeScript(script.script, ...script.argv);
     if (optionalVariable) {
-      variables.addVariable(optionalVariable, result);
+      variables.set(optionalVariable, result);
     }
   }
 
   async doExecuteAsyncScript(script, optionalVariable) {
-    const result = await this.driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];${script}.then(callback).catch(callback);`);
+    const result = await this.driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];${script.script}.then(callback).catch(callback);`, ...script.argv);
     if (optionalVariable) {
-      variables.addVariable(optionalVariable, result);
+      variables.set(optionalVariable, result);
     }
   }
 
   // store commands
 
   async doStore(string, variable) {
-    variables.addVariable(variable, string);
+    variables.set(variable, string);
     return Promise.resolve();
   }
 
   async doStoreText(locator, variable) {
     const element = await waitForElement(locator, this.driver);
     const text = await element.getText();
-    variables.addVariable(variable, text);
+    variables.set(variable, text);
   }
 
   async doStoreValue(locator, variable) {
     const element = await waitForElement(locator, this.driver);
     const value = await element.getAttribute("value");
-    variables.addVariable(variable, value);
+    variables.set(variable, value);
   }
 
   // assertions
@@ -185,6 +185,13 @@ export default class WebDriverExecutor {
   async doAssert(variable, value) {
     if (variable != value) {
       throw new Error("Actual value '" + variable + "' did not match '" + value + "'");
+    }
+  }
+
+  async doAssertTitle(title) {
+    const actualTitle = await this.driver.getTitle();
+    if (title != actualTitle) {
+      throw new Error("Actual value '" + actualTitle + "' did not match '" + title + "'");
     }
   }
 

@@ -53,41 +53,43 @@ export default function seed(store, numberOfSuites = 5) {
   store.setUrl(url);
   store.addUrl(url);
 
-  const yeeOldTest = store.createTestCase("yee old wiki");
+  const yeeOldTest = store.createTestCase("send KEY_ENTER");
   yeeOldTest.createCommand(undefined, "open", "https://en.wikipedia.org/wiki/Main_Page");
   yeeOldTest.createCommand(undefined, "type", "id=searchInput", "selenium");
   yeeOldTest.createCommand(undefined, "sendKeys", "id=searchInput", "${KEY_ENTER}");
-  //yeeOldTest.createCommand(undefined, "click", "id=searchButton");
 
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
-  controlFlowIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
-  controlFlowIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
-  controlFlowIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowIfTest.createCommand(undefined, "if", "${myVar} === \"a\"");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "output");
+  controlFlowIfTest.createCommand(undefined, "elseIf", "${myVar} === \"b\"");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"b\"", "output");
   controlFlowIfTest.createCommand(undefined, "else");
-  controlFlowIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowIfTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowIfTest.createCommand(undefined, "end");
+  controlFlowIfTest.createCommand(undefined, "assert", "${output}", "a");
 
   const controlFlowElseIfTest = store.createTestCase("control flow else if");
   controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "myVar");
-  controlFlowElseIfTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
-  controlFlowElseIfTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseIfTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
-  controlFlowElseIfTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseIfTest.createCommand(undefined, "if", "${myVar} === \"a\"");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"a\"", "output");
+  controlFlowElseIfTest.createCommand(undefined, "elseIf", "${myVar} === \"b\"");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "output");
   controlFlowElseIfTest.createCommand(undefined, "else");
-  controlFlowElseIfTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowElseIfTest.createCommand(undefined, "end");
+  controlFlowElseIfTest.createCommand(undefined, "assert", "${output}", "b");
 
   const controlFlowElseTest = store.createTestCase("control flow else");
   controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "myVar");
-  controlFlowElseTest.createCommand(undefined, "if", "\"${myVar}\" === \"a\"");
-  controlFlowElseTest.createCommand(undefined, "echo", "foo");
-  controlFlowElseTest.createCommand(undefined, "elseIf", "\"${myVar}\" === \"b\"");
-  controlFlowElseTest.createCommand(undefined, "echo", "bar");
+  controlFlowElseTest.createCommand(undefined, "if", "${myVar} === \"a\"");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"a\"", "output");
+  controlFlowElseTest.createCommand(undefined, "elseIf", "${myVar} === \"b\"");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"b\"", "output");
   controlFlowElseTest.createCommand(undefined, "else");
-  controlFlowElseTest.createCommand(undefined, "echo", "baz");
+  controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowElseTest.createCommand(undefined, "end");
+  controlFlowElseTest.createCommand(undefined, "assert", "${output}", "c");
 
   const controlFlowDoTest = store.createTestCase("control flow do");
   controlFlowDoTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure infinite loop protection works.");
@@ -114,6 +116,24 @@ export default function seed(store, numberOfSuites = 5) {
   executeScriptTest.createCommand(undefined, "assert", "${blah}", "true");
   executeScriptTest.createCommand(undefined, "executeScript", "true");
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
+
+  const executeScriptArray = store.createTestCase("execute script array");
+  executeScriptArray.createCommand(undefined, "executeScript", "return [1,2,3]", "x");
+  executeScriptArray.createCommand(undefined, "executeScript", "return ${x}[0] + 1", "y");
+  executeScriptArray.createCommand(undefined, "assert", "${y}", "2");
+
+  const executeScriptObject = store.createTestCase("execute script object");
+  executeScriptObject.createCommand(undefined, "executeScript", "return { x: 3 }", "x");
+  executeScriptObject.createCommand(undefined, "executeScript", "return ${x}.x + 2", "y");
+  executeScriptObject.createCommand(undefined, "assert", "${y}", "5");
+
+  const executeScriptPrimitives = store.createTestCase("execute script primitives");
+  executeScriptPrimitives.createCommand(undefined, "executeScript", "return true", "bool");
+  executeScriptPrimitives.createCommand(undefined, "assert", "${bool}", "true");
+  executeScriptPrimitives.createCommand(undefined, "executeScript", "return 3.14", "float");
+  executeScriptPrimitives.createCommand(undefined, "assert", "${float}", "3.14");
+  executeScriptPrimitives.createCommand(undefined, "executeScript", "return \"test\"", "string");
+  executeScriptPrimitives.createCommand(undefined, "assert", "${string}", "test");
 
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
@@ -176,8 +196,9 @@ export default function seed(store, numberOfSuites = 5) {
 
   const sendKeysTest = store.createTestCase("send keys");
   sendKeysTest.createCommand(undefined, "open", "/login");
-  sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
-  sendKeysTest.createCommand(undefined, "assertValue", "css=#username", "blah");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "tomsmith");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#password", "SuperSecretPassword!${KEY_ENTER}");
+  sendKeysTest.createCommand(undefined, "assertText", "id=flash", "You logged into a secure area!\\n×");
 
   const storeTextTest = store.createTestCase("store text");
   storeTextTest.createCommand(undefined, "open", "/login");
@@ -216,6 +237,8 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(clickTest);
   smokeSuite.addTestCase(clickAtTest);
   smokeSuite.addTestCase(executeScriptTest);
+  smokeSuite.addTestCase(executeScriptArray);
+  smokeSuite.addTestCase(executeScriptPrimitives);
   smokeSuite.addTestCase(framesTest);
   smokeSuite.addTestCase(selectTest);
   smokeSuite.addTestCase(sendKeysTest);
@@ -226,7 +249,7 @@ export default function seed(store, numberOfSuites = 5) {
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(yeeOldTest);
+  UiState.selectTest(executeScriptObject);
 
   store.changeName("seed project");
 

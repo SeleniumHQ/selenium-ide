@@ -228,16 +228,18 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups();
 };
 
-Selenium.prototype.eval = function(script, scoped = true, isExpression = false) {
+Selenium.prototype.eval = function(script, argv = [], scoped = true, isExpression = false) {
+  // we are still stringifying here, but we are not supporting passing HTMLElements anyway :)
+  // Single quotes are important! JSON.stringifies uses double quotes, to avoid syntax error we use single quotes!!
   if (isExpression) {
-    return window.eval(scoped ? `(() => (${script}))()` : script);
+    return window.eval(scoped ? `((...arguments) => (${script}))(...JSON.parse('${JSON.stringify(argv)}'))` : script);
   } else {
-    return window.eval(scoped ? `(() => {${script}})()` : script);
+    return window.eval(scoped ? `((...arguments) => {${script}})(...JSON.parse('${JSON.stringify(argv)}'))` : script);
   }
 };
 
-Selenium.prototype.doEvaluateConditional = function(condition) {
-  return !!(this.eval(condition, true, true));
+Selenium.prototype.doEvaluateConditional = function(script) {
+  return !!(this.eval(script.script, script.argv, true, true));
 };
 
 Selenium.prototype.doVerifyChecked = function(locator) {
@@ -556,11 +558,11 @@ Selenium.prototype.doWaitPreparation = function() {
                 _win.addEventListener(\"DOMNodeInsertedIntoDocument\", setDOMModifiedTime, false);\
                 _win.addEventListener(\"DOMNodeRemoved\", setDOMModifiedTime, false);\
                 _win.addEventListener(\"DOMNodeRemovedFromDocument\", setDOMModifiedTime, false);\
-                _win.addEventListener(\"DOMSubtreeModified\", setDOMModifiedTime, false);", false);
+                _win.addEventListener(\"DOMSubtreeModified\", setDOMModifiedTime, false);", [], false);
 };
 
 Selenium.prototype.doPrePageWait = function() {
-  window.sideex_new_page = this.eval("(function() {return window.new_page;}())", false);
+  window.sideex_new_page = this.eval("(function() {return window.new_page;}())", [], false);
 };
 
 Selenium.prototype.doPageWait = function() {
@@ -571,7 +573,7 @@ Selenium.prototype.doPageWait = function() {
   // }
 
   let expression = "if(window.document.readyState==\"complete\"){return true;}else{return false;}";
-  window.sideex_page_done = this.eval("(function() {" + expression + "}())", false);
+  window.sideex_page_done = this.eval("(function() {" + expression + "}())", [], false);
 };
 
 Selenium.prototype.doAjaxWait = function() {
@@ -603,11 +605,11 @@ Selenium.prototype.doAjaxWait = function() {
                       window.ajax_obj[index].readyState !== undefined &&\
                       window.ajax_obj[index].readyState !== 0) {return false;}}return true;}}\
                       else {if (window.origXMLHttpRequest) {window.origXMLHttpRequest = \"\";}return true;}";
-  window.sideex_ajax_done = this.eval("(function() {" + expression + "}())", false);
+  window.sideex_ajax_done = this.eval("(function() {" + expression + "}())", [], false);
 };
 
 Selenium.prototype.doDomWait = function() {
-  window.sideex_dom_time = this.eval("(function() {return window.domModifiedTime;}())", false);
+  window.sideex_dom_time = this.eval("(function() {return window.domModifiedTime;}())", [], false);
 };
 
 Selenium.prototype.doClick = function(locator) {
@@ -2648,16 +2650,18 @@ Selenium.prototype.doWaitForPageToLoad.dontCheckAlertsAndConfirms = true;
  * If the string matches the pattern "javascript{ ... }", evaluate the string between the braces.
  */
 Selenium.prototype.preprocessParameter = function(value) {
-  let match = value.match(/^javascript\{((.|\r?\n)+)\}$/);
-  if (match && match[1]) {
-    browser.runtime.sendMessage({
-      log: {
-        type: "warn",
-        message: "parameter preprocessing using javascript{} tag is deprecated, please use execute script"
-      }
-    });
-    let result = this.eval(match[1]);
-    return result == null ? null : result.toString();
+  if (!value.script) { // only for non-scripts
+    let match = value.match(/^javascript\{((.|\r?\n)+)\}$/);
+    if (match && match[1]) {
+      browser.runtime.sendMessage({
+        log: {
+          type: "warn",
+          message: "parameter preprocessing using javascript{} tag is deprecated, please use execute script"
+        }
+      });
+      let result = this.eval(match[1]);
+      return result == null ? null : result.toString();
+    }
   }
   return value;
 };
@@ -2874,7 +2878,7 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
 }*/
 
 Selenium.prototype.doExecuteScript = function(script, varName) {
-  const value = this.eval(script);
+  const value = this.eval(script.script, script.argv);
   if (value && value.constructor.name === "Promise") {
     throw new Error("Expected sync operation, instead received Promise");
   }
@@ -2884,7 +2888,7 @@ Selenium.prototype.doExecuteScript = function(script, varName) {
 };
 
 Selenium.prototype.doExecuteAsyncScript = function(script, varName) {
-  const value = this.eval(script);
+  const value = this.eval(script.script, script.argv);
   if (value && value.constructor.name !== "Promise") {
     throw new Error(`Expected async operation, instead received ${value ? value.constructor.name : value}`);
   }
@@ -2906,12 +2910,7 @@ Selenium.prototype.doRunScript = function(script) {
      * an exception.
      * @param script the JavaScript snippet to run
      */
-  let win = this.browserbot.getCurrentWindow();
-  let doc = win.document;
-  let scriptTag = doc.createElement("script");
-  scriptTag.type = "text/javascript";
-  scriptTag.text = script;
-  doc.body.appendChild(scriptTag);
+  this.eval(script.script, script.argv);
 };
 
 Selenium.prototype.doRollup = function(rollupName, kwargs) {

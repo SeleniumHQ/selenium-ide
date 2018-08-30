@@ -23,7 +23,7 @@ import SeleniumError from "./SeleniumError";
  *
  * @param locator  the locator to parse
  */
-export function parse_locator(locator)
+export function parse_locator(locator, silent = false)
 {
   if (!locator) {
     throw new TypeError("Locator cannot be empty");
@@ -46,12 +46,14 @@ export function parse_locator(locator)
     return { type: type, string: actualLocator };
   }
   const implicitType = locator.indexOf("//") === -1 ? "id" : "xpath";
-  browser.runtime.sendMessage({
-    log: {
-      type: "warn",
-      message: `implicit locators are deprecated, please change the locator to ${implicitType}=${locator}`
-    }
-  });
+  if (!silent) {
+    browser.runtime.sendMessage({
+      log: {
+        type: "warn",
+        message: `implicit locators are deprecated, please change the locator to ${implicitType}=${locator}`
+      }
+    });
+  }
   return { type: implicitType, string: locator };
 }
 

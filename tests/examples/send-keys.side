@@ -1,0 +1,73 @@
+{
+  "id": "8e43685a-112a-455b-a6b2-748a19071100",
+  "version": "1.1",
+  "name": "send-keys",
+  "url": "https://www.google.com",
+  "tests": [{
+    "id": "58cc1d1f-7920-47ee-a0eb-336a3ebdf069",
+    "name": "send keys",
+    "commands": [{
+      "id": "161321ce-3c63-4283-989e-d20117a97eb8",
+      "comment": "",
+      "command": "open",
+      "target": "/webhp",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d6702ef2-8787-4252-9861-5aa28d65ab4e",
+      "comment": "",
+      "command": "type",
+      "target": "id=lst-ib",
+      "targets": [
+        ["id=lst-ib", "id"],
+        ["name=q", "name"],
+        ["css=#lst-ib", "css"],
+        ["xpath=//input[@id='lst-ib']", "xpath:attributes"],
+        ["xpath=//div[@id='gs_lc0']/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "selenium ide"
+    }, {
+      "id": "1b4d1d17-2e2e-4557-9cfa-260189c4b6a7",
+      "comment": "",
+      "command": "sendKeys",
+      "target": "id=lst-ib",
+      "targets": [
+        ["id=lst-ib", "id"],
+        ["name=q", "name"],
+        ["css=#lst-ib", "css"],
+        ["xpath=//input[@id='lst-ib']", "xpath:attributes"],
+        ["xpath=//div[@id='gs_lc0']/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "${KEY_ENTER}"
+    }, {
+      "id": "5628fe89-f130-40cb-b52e-244a41cd6516",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Selenium IDE",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "fa9bae47-4a7e-4e92-9e02-e6863c13aaf1",
+      "comment": "",
+      "command": "assertTitle",
+      "target": "Selenium IDE",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "87b889f7-70eb-4a6c-a97b-297c27cbad73",
+    "name": "checks",
+    "parallel": false,
+    "timeout": 3000,
+    "tests": ["58cc1d1f-7920-47ee-a0eb-336a3ebdf069"]
+  }],
+  "urls": ["https://en.wikipedia.org/", "https://www.google.com/"],
+  "plugins": [{
+    "id": "nknickobkcecmkiiefhjmiaihliikohm",
+    "name": "Applitools",
+    "version": "1.0.0"
+  }]
+}

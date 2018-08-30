@@ -1,0 +1,116 @@
+{
+  "id": "8e43685a-112a-455b-a6b2-748a19071100",
+  "name": "executescript",
+  "url": "https://en.wikipedia.org",
+  "tests": [{
+    "id": "c01d1c80-48af-431f-846a-220086a8d9ee",
+    "name": "execute script array",
+    "commands": [{
+      "id": "4003bbb5-a558-428d-afcc-9feca6bb7204",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return [1,2,3]",
+      "targets": [],
+      "value": "x"
+    }, {
+      "id": "a62db114-f655-403e-86ce-501bd35b4130",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return ${x}[0] + 2",
+      "targets": [],
+      "value": "y"
+    }, {
+      "id": "93db74e6-391f-445f-b61e-0e79130accf5",
+      "comment": "",
+      "command": "assert",
+      "target": "${y}",
+      "targets": [],
+      "value": "3"
+    }]
+  }, {
+    "id": "36a5c9ed-cee8-4463-9613-f0d6a70b4c6c",
+    "name": "execute script object",
+    "commands": [{
+      "id": "31d73787-8d99-4fde-8b94-78dd0b8abe80",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return {a:1}",
+      "targets": [],
+      "value": "x"
+    }, {
+      "id": "b5b2b0e4-0121-481e-97a0-76c64049683e",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return ${x}.a + 2",
+      "targets": [],
+      "value": "y"
+    }, {
+      "id": "0b54ce0f-4189-4098-8298-7850223a58d5",
+      "comment": "",
+      "command": "assert",
+      "target": "${y}",
+      "targets": [],
+      "value": "3"
+    }]
+  }, {
+    "id": "2db19339-f720-44eb-8f0d-7b2e8868972e",
+    "name": "execute script primitives",
+    "commands": [{
+      "id": "fff22deb-92ef-4e85-8cef-96b675cb6179",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return \"test\"",
+      "targets": [],
+      "value": "string"
+    }, {
+      "id": "64ff1187-0ee1-4aea-954d-ff0fb0b3effd",
+      "comment": "",
+      "command": "assert",
+      "target": "${string}",
+      "targets": [],
+      "value": "test"
+    }, {
+      "id": "e68361d0-92a4-4e0b-8ad6-6f661a9eafb8",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return 3.14",
+      "targets": [],
+      "value": "float"
+    }, {
+      "id": "d900a277-6046-403e-b9a4-f0a88a4a419e",
+      "comment": "",
+      "command": "assert",
+      "target": "${float}",
+      "targets": [],
+      "value": "3.14"
+    }, {
+      "id": "ce5cf714-7fa1-4839-9e97-df75aeb1e91f",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return true",
+      "targets": [],
+      "value": "bool"
+    }, {
+      "id": "d727b32c-73d3-4695-8b92-74871da374ab",
+      "comment": "",
+      "command": "assert",
+      "target": "${bool}",
+      "targets": [],
+      "value": "true"
+    }]
+  }],
+  "suites": [{
+    "id": "87b889f7-70eb-4a6c-a97b-297c27cbad73",
+    "name": "checks",
+    "parallel": false,
+    "timeout": 3000,
+    "tests": ["c01d1c80-48af-431f-846a-220086a8d9ee", "36a5c9ed-cee8-4463-9613-f0d6a70b4c6c", "2db19339-f720-44eb-8f0d-7b2e8868972e"]
+  }],
+  "urls": ["https://en.wikipedia.org/"],
+  "plugins": [{
+    "id": "nknickobkcecmkiiefhjmiaihliikohm",
+    "name": "Applitools",
+    "version": "1.0.0"
+  }],
+  "version": "1.0"
+}

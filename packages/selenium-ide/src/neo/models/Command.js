@@ -142,6 +142,11 @@ export const ArgTypes = {
     name: "form locator",
     description: "An element locator for the form you want to submit."
   },
+  keySequence: {
+    name: "key sequence",
+    description: "A sequence of keys to type, can be used to send key strokes (e.g.\
+                  ${KEY_ENTER})."
+  },
   locator: {
     name: "locator",
     description: "An element locator."
@@ -241,7 +246,7 @@ class CommandList {
     }],
     [ "assert", {
       name: "assert",
-      description: "Check that a variable is true/false or some other value.",
+      description: "Check that a variable is an expected value. The variable's value will be converted to a string for comparison.",
       target: ArgTypes.variableName,
       value: ArgTypes.expectedValue
     }],
@@ -433,7 +438,8 @@ class CommandList {
       name: "else if",
       description: "Part of an if block. Execute the commands in this branch \
                     when an if condition has not been met. Terminate the branch \
-                    with the end command."
+                    with the end command.",
+      target: ArgTypes.conditionalExpression
     }],
     [ "end", {
       name: "end",
@@ -592,7 +598,7 @@ class CommandList {
                     into the page directly, this command will not replace the \
                     existing content.",
       target: ArgTypes.locator,
-      value: ArgTypes.value
+      value: ArgTypes.keySequence
     }],
     [ "setSpeed", {
       name: "set speed",
@@ -604,8 +610,8 @@ class CommandList {
     }],
     [ "store", {
       name: "store",
-      description: "Save a target expression as a variable for easy re-use.",
-      target: ArgTypes.expression,
+      description: "Save a target string as a variable for easy re-use.",
+      target: ArgTypes.text,
       value: ArgTypes.variableName
     }],
     [ "storeAttribute", {
@@ -672,6 +678,12 @@ class CommandList {
       type: TargetTypes.LOCATOR,
       description: "Uncheck a toggle-button (checkbox/radio).",
       target: ArgTypes.locator
+    }],
+    [ "verify", {
+      name: "verify",
+      description: "Soft assert that a variable is an expected value. The variable's value will be converted to a string for comparison.",
+      target: ArgTypes.variableName,
+      value: ArgTypes.expectedValue
     }],
     [ "verifyChecked", {
       name: "verify checked",

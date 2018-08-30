@@ -18,22 +18,26 @@
 import { action, observable } from "mobx";
 
 class Variables {
-  @observable storedVars = new Map();
+  @observable.shallow storedVars = new Map();
 
   @action.bound get(key) {
     return this.storedVars.get(key);
   }
 
-  @action.bound addVariable(key, value) {
+  @action.bound set(key, value) {
     this.storedVars.set(key, value);
   }
 
-  @action.bound deleteVariable(key) {
+  @action.bound has(key) {
+    return this.storedVars.has(key);
+  }
+
+  @action.bound delete(key) {
     if(this.storedVars.has(key))
       this.storedVars.delete(key);
   }
 
-  @action.bound clearVariables() {
+  @action.bound clear() {
     this.storedVars.clear();
   }
 }
