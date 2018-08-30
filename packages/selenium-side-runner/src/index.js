@@ -29,6 +29,7 @@ import { js_beautify as beautify } from "js-beautify";
 import Selianize from "selianize";
 import Capabilities from "./capabilities";
 import Config from "./config";
+import Satisfies from "./versioner";
 import metadata from "../package.json";
 
 const DEFAULT_TIMEOUT = 15000;
@@ -62,7 +63,7 @@ if (!program.args.length && !program.run) {
 }
 
 winston.cli();
-winston.level = program.debug ? "debug" : "warn";
+winston.level = program.debug ? "debug" : "info";
 
 if (program.extract || program.run) {
   winston.warn("This feature is used by Selenium IDE maintainers for debugging purposes, we hope you know what you're doing!");
@@ -81,7 +82,7 @@ const configurationFilePath = program.configurationFile || ".side.yml";
 try {
   Object.assign(configuration, Config.load(path.join(process.cwd(), configurationFilePath)));
 } catch (e) {
-  winston.info("Could not load " + configurationFilePath);
+  winston.debug("Could not load " + configurationFilePath);
 }
 
 program.filter = program.filter || "*";
@@ -97,7 +98,7 @@ if (program.capabilities) {
   try {
     Object.assign(configuration.capabilities, Capabilities.parseString(program.capabilities));
   } catch (e) {
-    winston.info("Failed to parse inline capabilities");
+    winston.debug("Failed to parse inline capabilities");
   }
 }
 
@@ -105,7 +106,7 @@ if (program.params) {
   try {
     Object.assign(configuration.params, Capabilities.parseString(program.params));
   } catch (e) {
-    winston.info("Failed to parse additional params");
+    winston.debug("Failed to parse additional params");
   }
 }
 
@@ -114,9 +115,17 @@ configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUr
 let projectPath;
 
 function runProject(project) {
-  if (project.version !== "1.0") {
-    return Promise.reject(new TypeError(`The project ${project.name} is of older format, open and save it again using the IDE.`));
-  } else if (!project.suites.length) {
+  winston.info(`Running ${project.path}`);
+  let warning;
+  try {
+    warning = Satisfies(project.version, "1.1");
+  } catch(e) {
+    return Promise.reject(e);
+  }
+  if (warning) {
+    winston.warn(warning);
+  }
+  if (!project.suites.length) {
     return Promise.reject(new Error(`The project ${project.name} has no test suites defined, create a suite using the IDE.`));
   }
   projectPath = `side-suite-${project.name}`;
@@ -152,7 +161,6 @@ function runProject(project) {
         });
       }
     });
-    winston.info(`Running ${project.name}`);
 
     return new Promise((resolve, reject) => {
       let npmInstall;
@@ -228,7 +236,11 @@ const projects = [...program.args.reduce((projects, project) => {
     projects.add(p);
   });
   return projects;
-}, new Set())].map(p => JSON.parse(fs.readFileSync(p)));
+}, new Set())].map(p => {
+  const project = JSON.parse(fs.readFileSync(p));
+  project.path = p;
+  return project;
+});
 
 function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
   if (!program.run) {
