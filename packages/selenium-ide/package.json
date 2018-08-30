@@ -46,6 +46,7 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
+    "browser-webdriver": "*",
     "classnames": "^2.2.5",
     "js-beautify": "^1.7.5",
     "mobx": "^3.3.1",
