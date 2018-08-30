@@ -24,7 +24,7 @@ export default class PlayAllButton extends React.Component {
   render() {
     return (
       <ActionButton
-        data-tip={`<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse("r", { primaryKey: true, secondaryKey: true })}</span></p>`}
+        data-tip={`<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse("r", { primaryKey: true, shiftKey: true })}</span></p>`}
         {...this.props}
         className={classNames("si-play-all", this.props.className)} />// eslint-disable-line react/prop-types
     );

@@ -131,7 +131,7 @@ if (browser.windows) {
   handleKeyDown(e) {
     modifier(e);
     const key = e.key.toUpperCase();
-    const bothModifiers = (e.primaryKey && e.secondaryKey);
+    const primaryAndShift = (e.primaryKey && e.shiftKey);
     const onlyPrimary = (e.primaryKey && !e.secondaryKey);
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
@@ -154,17 +154,17 @@ if (browser.windows) {
       // execution view
       e.preventDefault();
       UiState.changeView(UiState.views[+key - 1]);
+    } else if (primaryAndShift && e.code === "KeyR") {
+      // run suite
+      e.preventDefault();
+      if (PlaybackState.canPlaySuite) {
+        PlaybackState.playSuiteOrResume();
+      }
     } else if (onlyPrimary && key === "R") {
       // run test
       e.preventDefault();
       if (!PlaybackState.isPlayingSuite) {
         PlaybackState.playTestOrResume();
-      }
-    } else if (bothModifiers && e.code === "KeyR") {
-      // run suite
-      e.preventDefault();
-      if (PlaybackState.canPlaySuite) {
-        PlaybackState.playSuiteOrResume();
       }
     } else if (onlyPrimary && key === "P") {
       // pause

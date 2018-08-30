@@ -3785,9 +3785,9 @@ mobx@^3.3.1:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.6.2.tgz#fb9f5ff5090539a1ad54e75dc4c098b602693320"
 
-modifier-keys@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/modifier-keys/-/modifier-keys-1.1.2.tgz#c2cc25e74958f6c22afe20fb0c73938a23fdd398"
+modifier-keys@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/modifier-keys/-/modifier-keys-1.2.1.tgz#f4b8dedd27247628cf9c79d48327c48a9fd9d72f"
   dependencies:
     ua-parser-js "^0.7.14"
 
