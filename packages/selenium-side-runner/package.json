@@ -38,6 +38,7 @@
     "rimraf": "^2.6.2",
     "selenium-webdriver": "^3.6.0",
     "selianize": "^3.2.5",
+    "semver": "^5.5.1",
     "winston": "^2.4.0"
   },
   "devDependencies": {
