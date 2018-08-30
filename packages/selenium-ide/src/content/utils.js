@@ -45,7 +45,7 @@ export function parse_locator(locator)
     const actualLocator = locator.substring(length + 1);
     return { type: type, string: actualLocator };
   }
-  const implicitType = locator.startsWith("//") ? "xpath" : "id";
+  const implicitType = locator.indexOf("//") === -1 ? "id" : "xpath";
   browser.runtime.sendMessage({
     log: {
       type: "warn",

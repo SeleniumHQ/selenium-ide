@@ -16,9 +16,11 @@
 // under the License.
 
 import pause from "./pause";
+import implicitLocators from "./implicit-locators";
 
 export const migrators = {
-  pause
+  pause,
+  implicitLocators
 };
 
 export default Object.keys(migrators).reduce((migs, migName) => {
