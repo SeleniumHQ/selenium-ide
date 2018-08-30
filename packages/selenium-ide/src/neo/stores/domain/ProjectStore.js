@@ -21,6 +21,7 @@ import naturalCompare from "string-natural-compare";
 import TestCase from "../../models/TestCase";
 import Suite from "../../models/Suite";
 import modify from "../../side-effects/modify";
+import { VERSIONS } from "../../IO/migrate";
 
 export default class ProjectStore {
   @observable id = uuidv4();
@@ -31,6 +32,7 @@ export default class ProjectStore {
   @observable _tests = [];
   @observable _suites = [];
   @observable _urls = [];
+  @observable version = VERSIONS[VERSIONS.length - 1];
 
   constructor(name = "Untitled Project") {
     this.name = name;
@@ -156,6 +158,7 @@ export default class ProjectStore {
       this.addUrl(url);
     });
     this.plugins.replace(jsRep.plugins);
+    this.version = jsRep.version;
     this.id = jsRep.id || uuidv4();
     this.setModified(false);
   }
@@ -163,6 +166,7 @@ export default class ProjectStore {
   toJS() {
     return toJS({
       id: this.id,
+      version: this.version,
       name: this.name,
       url: this.url,
       tests: this._tests.map(t => t.export()),

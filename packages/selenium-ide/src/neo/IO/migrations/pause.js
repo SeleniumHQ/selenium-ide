@@ -15,22 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrations from "./migrations";
-
-export const VERSIONS = [ "1.0", "1.1" ];
-
-export default function UpgradeProject(project) {
-  let r = project;
-  VERSIONS.forEach(ver => {
-    // if the project's version is the same as the migration, it means we've already completed that migration
-    // TODO: switch to semver checks if we ever react an x.10 release
-    if (+project.version < +ver) {
-      Object.values(migrations[ver]).forEach(migrate => {
-        r = migrate(r);
-      });
-      r.version = ver;
-    }
+export default function migrate(project) {
+  let r = Object.assign({}, project);
+  r.tests = r.tests.map((test) => {
+    return Object.assign({}, test, {
+      commands: test.commands.map((c) => {
+        if (c.command === "pause" && !c.target) {
+          return Object.assign({}, c, {
+            command: c.command,
+            target: c.value,
+            value: ""
+          });
+        }
+        return c;
+      })
+    });
   });
-
   return r;
 }
+
+migrate.version = "1.1";
