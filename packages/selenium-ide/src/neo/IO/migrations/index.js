@@ -17,10 +17,12 @@
 
 import pause from "./pause";
 import implicitLocators from "./implicit-locators";
+import scriptInterpolation from "./script-interpolation";
 
 export const migrators = {
   pause,
-  implicitLocators
+  implicitLocators,
+  scriptInterpolation
 };
 
 export default Object.keys(migrators).reduce((migs, migName) => {
