@@ -223,6 +223,10 @@ function keysPreprocessor(str) {
   return keys;
 }
 
+function generateScript(script, isExpression = false) {
+  return `await driver.executeScript(\`${isExpression ? `return (${script.script})` : script.script }\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`;
+}
+
 export function registerEmitter(command, emitter) {
   if (!canEmit(command)) {
     emitters[command] = emitter;
@@ -277,10 +281,6 @@ async function emitUncheck(locator) {
 
 async function emitRun(testCase) {
   return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
-}
-
-function generateScript(script, isExpression = false) {
-  return `await driver.executeScript(\`${isExpression ? "return " + (script.script) : script.script }\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`;
 }
 
 async function emitRunScript(script) {
