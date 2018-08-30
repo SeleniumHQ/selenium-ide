@@ -776,7 +776,7 @@ describe("command code emitter", () => {
       target: "true",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`if (await driver.executeScript(\`${command.target}\`)) {`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`if (!!await driver.executeScript(\`return ${command.target}\`)) {`);
   });
   it("should emit `else if` command", () => {
     const command = {
@@ -784,7 +784,7 @@ describe("command code emitter", () => {
       target: "true",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`} else if (await driver.executeScript(\`${command.target}\`)) {`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`} else if (!!await driver.executeScript(\`return ${command.target}\`)) {`);
   });
   it("should emit `else` command", () => {
     const command = {
@@ -808,7 +808,7 @@ describe("command code emitter", () => {
       target: "true",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`while (await driver.executeScript(\`${command.target}\`)) {`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`while (!!await driver.executeScript(\`return ${command.target}\`)) {`);
   });
   it("should emit `end` command", () => {
     const command = {
@@ -832,7 +832,7 @@ describe("command code emitter", () => {
       target: "true",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe(`} while (await driver.executeScript(\`${command.target}\`));`);
+    return expect(CommandEmitter.emit(command)).resolves.toBe(`} while (!!await driver.executeScript(\`return ${command.target}\`));`);
   });
   it("should emit `assert` command", () => {
     const command = {
@@ -841,7 +841,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName == "${command.value}").toBeTruthy();`
+      `expect(vars.varrrName.toString() == "${command.value}").toBeTruthy();`
     );
   });
   it("should emit `verify` command", () => {
@@ -851,7 +851,7 @@ describe("command code emitter", () => {
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName == "${command.value}").toBeTruthy();`
+      `expect(vars.varrrName.toString() == "${command.value}").toBeTruthy();`
     );
   });
   it("should preprocess stored variables", () => {
@@ -860,6 +860,6 @@ describe("command code emitter", () => {
       target: "${name}",
       value: "test"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(vars.name == \"test\").toBeTruthy();");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(vars.name.toString() == \"test\").toBeTruthy();");
   });
 });

@@ -279,8 +279,8 @@ async function emitRun(testCase) {
   return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
 }
 
-function generateScript(script) {
-  return `await driver.executeScript(\`${script.script}\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`;
+function generateScript(script, isExpression = false) {
+  return `await driver.executeScript(\`${isExpression ? "return " + (script.script) : script.script }\`${script.argv.length ? "," : ""}${script.argv.map((n) => (`vars["${n}"]`)).join(",")});`;
 }
 
 async function emitRunScript(script) {
@@ -464,7 +464,7 @@ function emitControlFlowElse() {
 }
 
 function emitControlFlowElseIf(script) {
-  return Promise.resolve(`} else if (${generateScript(script).slice(0, -1)}) {`);
+  return Promise.resolve(`} else if (!!${generateScript(script, true).slice(0, -1)}) {`);
 }
 
 emitControlFlowElseIf.target = scriptPreprocessor;
@@ -474,13 +474,13 @@ function emitControlFlowEnd() {
 }
 
 function emitControlFlowIf(script) {
-  return Promise.resolve(`if (${generateScript(script).slice(0, -1)}) {`);
+  return Promise.resolve(`if (!!${generateScript(script, true).slice(0, -1)}) {`);
 }
 
 emitControlFlowIf.target = scriptPreprocessor;
 
 function emitControlFlowRepeatIf(target) {
-  return Promise.resolve(`} while (${generateScript(target).slice(0, -1)});`);
+  return Promise.resolve(`} while (!!${generateScript(target, true).slice(0, -1)});`);
 }
 
 emitControlFlowRepeatIf.target = scriptPreprocessor;
@@ -490,13 +490,13 @@ function emitControlFlowTimes(target) {
 }
 
 function emitControlFlowWhile(target) {
-  return Promise.resolve(`while (${generateScript(target).slice(0, -1)}) {`);
+  return Promise.resolve(`while (!!${generateScript(target, true).slice(0, -1)}) {`);
 }
 
 emitControlFlowWhile.target = scriptPreprocessor;
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")} == "${value}").toBeTruthy();`);
+  return Promise.resolve(`expect(${varName.replace(/\$\{/, "").replace(/\}/, "")}.toString() == "${value}").toBeTruthy();`);
 }
 
 function emitSetSpeed() {
