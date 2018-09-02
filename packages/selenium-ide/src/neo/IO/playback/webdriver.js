@@ -52,6 +52,10 @@ export default class WebDriverExecutor {
     return true;
   }
 
+  isWebDriverCommand() {
+    return true;
+  }
+
   name(command) {
     if (!command) {
       return "skip";
@@ -298,6 +302,20 @@ export default class WebDriverExecutor {
 
   async doPause(time) {
     await this.driver.sleep(time);
+  }
+
+  async evaluateConditional(script) {
+    try {
+      const result = await this.driver.executeScript(`return (${script.script})`, ...script.argv);
+      return Promise.resolve({
+        result: "success",
+        value: !!result
+      });
+    } catch(error) {
+      return Promise.resolve({
+        result: error.message
+      });
+    }
   }
 }
 

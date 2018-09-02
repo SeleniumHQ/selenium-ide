@@ -133,12 +133,4 @@ describe("Command Node", () => {
     expect(result.next).toBeUndefined();
     expect(result.result).toEqual("no dice");
   });
-  it("returns an error on an invalid command", () => {
-    const extCommand = { isExtCommand: function() { return false; } };
-    const command = new Command(undefined, "", "", "");
-    const node = new CommandNode(command);
-    node._executeCommand(extCommand).then(result => {
-      expect(result.result).toEqual("Incomplete or unsupported command used.");
-    });
-  });
 });
