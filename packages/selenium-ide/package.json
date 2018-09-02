@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide-extension",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
   "private": true,
@@ -72,7 +72,7 @@
     "react-tooltip": "^3.4.0",
     "react-transition-group": "^2.2.1",
     "scroll-into-view-if-needed": "^1.4.0",
-    "selianize": "^3.3.0",
+    "selianize": "^3.3.1",
     "string-natural-compare": "^2.0.2",
     "styled-components": "^2.1.2",
     "ua-parser-js": "^0.7.17",
