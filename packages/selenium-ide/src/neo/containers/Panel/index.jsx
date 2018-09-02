@@ -266,7 +266,3 @@ if (browser.windows) {
     );
   }
 }
-
-window.d = () => {
-  throw new Error("stop");
-};
