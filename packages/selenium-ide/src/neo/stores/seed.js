@@ -67,7 +67,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowIfTest.createCommand(undefined, "else");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowIfTest.createCommand(undefined, "end");
-  controlFlowIfTest.createCommand(undefined, "assert", "${output}", "a");
+  controlFlowIfTest.createCommand(undefined, "assert", "output", "a");
 
   const controlFlowElseIfTest = store.createTestCase("control flow else if");
   controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"b\"", "myVar");
@@ -78,7 +78,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseIfTest.createCommand(undefined, "else");
   controlFlowElseIfTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowElseIfTest.createCommand(undefined, "end");
-  controlFlowElseIfTest.createCommand(undefined, "assert", "${output}", "b");
+  controlFlowElseIfTest.createCommand(undefined, "assert", "output", "b");
 
   const controlFlowElseTest = store.createTestCase("control flow else");
   controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "myVar");
@@ -89,7 +89,7 @@ export default function seed(store, numberOfSuites = 5) {
   controlFlowElseTest.createCommand(undefined, "else");
   controlFlowElseTest.createCommand(undefined, "executeScript", "return \"c\"", "output");
   controlFlowElseTest.createCommand(undefined, "end");
-  controlFlowElseTest.createCommand(undefined, "assert", "${output}", "c");
+  controlFlowElseTest.createCommand(undefined, "assert", "output", "c");
 
   const controlFlowDoTest = store.createTestCase("control flow do");
   controlFlowDoTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure infinite loop protection works.");
@@ -113,27 +113,27 @@ export default function seed(store, numberOfSuites = 5) {
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
   executeScriptTest.createCommand(undefined, "verify", "${blah}", "false");
   executeScriptTest.createCommand(undefined, "echo", "OK! This is a forced failure on verify to make sure the test proceeds. If you see this message it's a good thing.");
-  executeScriptTest.createCommand(undefined, "assert", "${blah}", "true");
+  executeScriptTest.createCommand(undefined, "assert", "blah", "true");
   executeScriptTest.createCommand(undefined, "executeScript", "true");
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
 
   const executeScriptArray = store.createTestCase("execute script array");
   executeScriptArray.createCommand(undefined, "executeScript", "return [1,2,3]", "x");
   executeScriptArray.createCommand(undefined, "executeScript", "return ${x}[0] + 1", "y");
-  executeScriptArray.createCommand(undefined, "assert", "${y}", "2");
+  executeScriptArray.createCommand(undefined, "assert", "y", "2");
 
   const executeScriptObject = store.createTestCase("execute script object");
   executeScriptObject.createCommand(undefined, "executeScript", "return { x: 3 }", "x");
   executeScriptObject.createCommand(undefined, "executeScript", "return ${x}.x + 2", "y");
-  executeScriptObject.createCommand(undefined, "assert", "${y}", "5");
+  executeScriptObject.createCommand(undefined, "assert", "y", "5");
 
   const executeScriptPrimitives = store.createTestCase("execute script primitives");
   executeScriptPrimitives.createCommand(undefined, "executeScript", "return true", "bool");
-  executeScriptPrimitives.createCommand(undefined, "assert", "${bool}", "true");
+  executeScriptPrimitives.createCommand(undefined, "assert", "bool", "true");
   executeScriptPrimitives.createCommand(undefined, "executeScript", "return 3.14", "float");
-  executeScriptPrimitives.createCommand(undefined, "assert", "${float}", "3.14");
+  executeScriptPrimitives.createCommand(undefined, "assert", "float", "3.14");
   executeScriptPrimitives.createCommand(undefined, "executeScript", "return \"test\"", "string");
-  executeScriptPrimitives.createCommand(undefined, "assert", "${string}", "test");
+  executeScriptPrimitives.createCommand(undefined, "assert", "string", "test");
 
   const checkTest = store.createTestCase("check");
   checkTest.createCommand(undefined, "open", "/checkboxes");
@@ -217,7 +217,7 @@ export default function seed(store, numberOfSuites = 5) {
   waitTest.createCommand(undefined, "open", "/dynamic_loading/2");
   waitTest.createCommand(undefined, "clickAt", "css=#start button");
   waitTest.createCommand(undefined, "storeText", "css=#finish", "blah");
-  waitTest.createCommand(undefined, "assert", "${blah}", "Hello World!");
+  waitTest.createCommand(undefined, "assert", "blah", "Hello World!");
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);

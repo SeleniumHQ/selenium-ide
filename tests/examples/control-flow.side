@@ -65,7 +65,7 @@
       "id": "dc00ed01-eb5c-4a7b-a63e-28025f3272a6",
       "comment": "",
       "command": "assert",
-      "target": "${output}",
+      "target": "output",
       "targets": [],
       "value": "a"
     }]
@@ -132,7 +132,7 @@
       "id": "b66b3370-8159-4014-8640-10f9f676f4f3",
       "comment": "",
       "command": "assert",
-      "target": "${output}",
+      "target": "output",
       "targets": [],
       "value": "b"
     }]
@@ -199,7 +199,7 @@
       "id": "16813507-cdae-49c8-976c-bd1984899cec",
       "comment": "",
       "command": "assert",
-      "target": "${output}",
+      "target": "output",
       "targets": [],
       "value": "c"
     }]

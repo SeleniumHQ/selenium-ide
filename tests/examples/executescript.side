@@ -23,7 +23,7 @@
       "id": "93db74e6-391f-445f-b61e-0e79130accf5",
       "comment": "",
       "command": "assert",
-      "target": "${y}",
+      "target": "y",
       "targets": [],
       "value": "3"
     }]
@@ -48,7 +48,7 @@
       "id": "0b54ce0f-4189-4098-8298-7850223a58d5",
       "comment": "",
       "command": "assert",
-      "target": "${y}",
+      "target": "y",
       "targets": [],
       "value": "3"
     }]
@@ -66,7 +66,7 @@
       "id": "64ff1187-0ee1-4aea-954d-ff0fb0b3effd",
       "comment": "",
       "command": "assert",
-      "target": "${string}",
+      "target": "string",
       "targets": [],
       "value": "test"
     }, {
@@ -80,7 +80,7 @@
       "id": "d900a277-6046-403e-b9a4-f0a88a4a419e",
       "comment": "",
       "command": "assert",
-      "target": "${float}",
+      "target": "float",
       "targets": [],
       "value": "3.14"
     }, {
@@ -94,7 +94,7 @@
       "id": "d727b32c-73d3-4695-8b92-74871da374ab",
       "comment": "",
       "command": "assert",
-      "target": "${bool}",
+      "target": "bool",
       "targets": [],
       "value": "true"
     }]

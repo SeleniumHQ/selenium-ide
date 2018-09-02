@@ -19,6 +19,7 @@ import { Commands, ArgTypes } from "../../models/Command";
 import { xlateArgument, interpolateScript } from "../../IO/SideeX/formatCommand";
 import { ControlFlowCommandChecks } from "../../models/Command";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
+import variables from "../../stores/view/Variables";
 
 export class CommandNode {
   constructor(command) {
@@ -59,6 +60,10 @@ export class CommandNode {
   }
 
   _interpolateTarget() {
+    // TODO: think of a better way to do this
+    if (this.command.command === "assert" || this.command.command === "verify") {
+      return `${variables.get(this.command.target)}`;
+    }
     const type = Commands.list.get(this.command.command).target;
     if (type &&
         type.name === ArgTypes.script.name ||
