@@ -116,9 +116,6 @@ export class CommandNode {
       return Promise.resolve({
         result: "success"
       });
-      //return Promise.resolve({
-      //  result: "Incomplete or unsupported command used."
-      //});
     }
   }
 
