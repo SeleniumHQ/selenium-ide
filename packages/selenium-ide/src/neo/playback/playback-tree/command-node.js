@@ -114,8 +114,11 @@ export class CommandNode {
       }
     } else {
       return Promise.resolve({
-        result: "Incomplete or unsupported command used."
+        result: "success"
       });
+      //return Promise.resolve({
+      //  result: "Incomplete or unsupported command used."
+      //});
     }
   }
 

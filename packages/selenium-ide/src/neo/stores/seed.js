@@ -172,6 +172,7 @@ export default function seed(store, numberOfSuites = 5) {
 
   const commentTest = store.createTestCase("comment");
   commentTest.createCommand(undefined, "", "", "", "blah");
+  commentTest.createCommand(undefined, "", "", "");
   commentTest.createCommand(undefined, "open", "/", "", "also blah");
 
   const framesTest = store.createTestCase("frames");
