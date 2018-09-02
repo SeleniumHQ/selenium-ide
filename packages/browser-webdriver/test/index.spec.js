@@ -59,7 +59,7 @@ describe("browser webdriver", () => {
       const Key = window.browserWebdriver.Key;
       const until = window.browserWebdriver.until;
       d.get("https://google.com");
-      let searchInput = d.findElement(By.id("lst-ib"));
+      let searchInput = d.findElement(By.name("q"));
       searchInput.sendKeys("cheese");
       searchInput.sendKeys(Key.ENTER);
       d.wait(until.elementLocated(By.linkText("Cheese - Wikipedia")));

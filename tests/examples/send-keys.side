@@ -17,7 +17,7 @@
       "id": "d6702ef2-8787-4252-9861-5aa28d65ab4e",
       "comment": "",
       "command": "type",
-      "target": "id=lst-ib",
+      "target": "name=q",
       "targets": [
         ["id=lst-ib", "id"],
         ["name=q", "name"],
@@ -31,7 +31,7 @@
       "id": "1b4d1d17-2e2e-4557-9cfa-260189c4b6a7",
       "comment": "",
       "command": "sendKeys",
-      "target": "id=lst-ib",
+      "target": "name=q",
       "targets": [
         ["id=lst-ib", "id"],
         ["name=q", "name"],
