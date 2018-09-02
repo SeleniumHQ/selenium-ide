@@ -496,7 +496,7 @@ function emitControlFlowWhile(target) {
 emitControlFlowWhile.target = scriptPreprocessor;
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`expect(\`$\{vars["${varName}"]}\` == "${value}").toBeTruthy();`);
+  return Promise.resolve("expect(`${vars[\"" + varName + "\"]}` == \"" + value + "\").toBeTruthy();");
 }
 
 function emitSetSpeed() {

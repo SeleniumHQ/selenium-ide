@@ -837,29 +837,29 @@ describe("command code emitter", () => {
   it("should emit `assert` command", () => {
     const command = {
       command: "assert",
-      target: "${varrrName}",
+      target: "varrrName",
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName.toString() == "${command.value}").toBeTruthy();`
+      "expect(`${vars[\"" + command.target + "\"]}` == \"" + command.value + "\").toBeTruthy();"
     );
   });
   it("should emit `verify` command", () => {
     const command = {
       command: "verify",
-      target: "${varrrName}",
+      target: "varrrName",
       value: "true"
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.varrrName.toString() == "${command.value}").toBeTruthy();`
+      "expect(`${vars[\"" + command.target + "\"]}` == \"" + command.value + "\").toBeTruthy();"
     );
   });
   it("should preprocess stored variables", () => {
     const command = {
-      command: "assert",
-      target: "${name}",
-      value: "test"
+      command: "type",
+      target: "id=test",
+      value: "${test}"
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("expect(vars.name.toString() == \"test\").toBeTruthy();");
+    return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`${vars.test}`);");
   });
 });
