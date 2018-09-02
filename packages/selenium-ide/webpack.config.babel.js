@@ -20,6 +20,7 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
+import UglifyJsPlugin from "uglifyjs-webpack-plugin";
 import autoprefixer from "autoprefixer";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -227,25 +228,43 @@ export default {
       }
     ]
   },
-  plugins: [
+  plugins: (isProduction ? [
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        warnings: false, // Suppress uglification warnings
+        ecma: 6,
+        compress: {
+          ecma: 6,
+          evaluate: false
+        },
+        output: {
+          ecma: 6,
+          comments: false,
+          beautify: false,
+          ascii_only: true
+        }
+      },
+      sourceMap: true,
+      exclude: [/\.min\.js$/gi] // skip pre-minified libs
+    })
+  ] : []).concat([
     // globally add google closure library
     new webpack.ProvidePlugin({
       goog: "google-closure-library/closure/goog/base"
     }),
-    new webpack.NamedModulesPlugin(),
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "content/global.js", to: "vendor" },
       { from: "selenium-core-scripts/selenium-browserdetect.js", to: "vendor" },
       { from: "content/prompt.js", to: "./" },
       { from: "content/highlight.css", to: "./" },
-      { from: "content/bootstrap.html", to: "./" },
+      { from: "content/bootstrap.html", to: "../" },
       { from: "manifest.json", to: "../" },
       { from: "icons", to: "../icons" }
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
-      filename: "index.html",
+      filename: "../index.html",
       inject: true,
       template: path.resolve(__dirname, "src/neo/index.html"),
       chunks: ["neo"],
@@ -286,5 +305,5 @@ export default {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-  ]
+  ])
 };

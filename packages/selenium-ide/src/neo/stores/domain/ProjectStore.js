@@ -100,7 +100,7 @@ export default class ProjectStore {
   }
 
   @action.bound addTestCase(test) {
-    if (!test || test.constructor.name !== "TestCase") {
+    if (!test || !(test instanceof TestCase)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       let foundNumber = 0;
@@ -129,7 +129,7 @@ export default class ProjectStore {
   }
 
   @action.bound deleteTestCase(test) {
-    if (!test || test.constructor.name !== "TestCase") {
+    if (!test || !(test instanceof TestCase)) {
       throw new Error(`Expected to receive TestCase instead received ${test ? test.constructor.name : test}`);
     } else {
       this.suites.forEach(suite => {

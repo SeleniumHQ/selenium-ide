@@ -46,7 +46,7 @@ export default class TestCase {
   }
 
   @action.bound addCommand(command) {
-    if (!command || command.constructor.name !== "Command") {
+    if (!command || !(command instanceof Command)) {
       throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);
     } else {
       this.commands.push(command);
@@ -54,7 +54,7 @@ export default class TestCase {
   }
 
   @action.bound insertCommandAt(command, index) {
-    if (!command || command.constructor.name !== "Command") {
+    if (!command || !(command instanceof Command)) {
       throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);
     } else if (index === undefined || index.constructor.name !== "Number") {
       throw new Error(`Expected to receive Number instead received ${index !== undefined ? index.constructor.name : index}`);

@@ -16,13 +16,17 @@
 // under the License.
 
 import { spy } from "mobx";
+import ProjectStore from "../stores/domain/ProjectStore";
+import Suite from "../models/Suite";
+import TestCase from "../models/TestCase";
+import Command from "../models/Command";
 
 function isDomainModel(object) {
   return (object && (
-    object.constructor.name === "ProjectStore" ||
-    object.constructor.name === "Suite" ||
-    object.constructor.name === "TestCase" ||
-    object.constructor.name === "Command"
+    object instanceof ProjectStore ||
+    object instanceof Suite ||
+    object instanceof TestCase ||
+    object instanceof Command
   ));
 }
 

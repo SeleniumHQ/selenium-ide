@@ -20,6 +20,7 @@ import browser from "webextension-polyfill";
 import { action, reaction, computed, observable } from "mobx";
 import UiState from "./UiState";
 import ModalState from "./ModalState";
+import Command from "../../models/Command";
 import variables from "./Variables";
 import PluginManager from "../../../plugin/manager";
 import NoResponseError from "../../../errors/no-response";
@@ -225,7 +226,7 @@ class PlaybackState {
       this.currentRunningTest = test;
       this.testsCount = 1;
       let currentPlayingIndex = 0;
-      if (command && command.constructor.name === "Command") {
+      if (command && command instanceof Command) {
         currentPlayingIndex = test.commands.indexOf(command);
       }
       this.runningQueue = this.runningQueueFromIndex(test.commands.peek(), currentPlayingIndex);

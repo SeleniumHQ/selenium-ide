@@ -18,6 +18,7 @@
 import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
 import naturalCompare from "string-natural-compare";
+import TestCase from "./TestCase";
 
 export const DEFAULT_TIMEOUT = 300;
 
@@ -43,7 +44,7 @@ export default class Suite {
   }
 
   isTest(test) {
-    return (test && test.constructor.name === "TestCase");
+    return (test && test instanceof TestCase);
   }
 
   @action.bound setName(name) {

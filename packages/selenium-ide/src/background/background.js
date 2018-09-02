@@ -93,13 +93,13 @@ function openWindowFromStorageResolution() {
       opts.left = storage.origin.left;
     }
     return browser.windows.create(Object.assign({
-      url: browser.extension.getURL("assets/index.html"),
+      url: browser.extension.getURL("index.html"),
       type: "popup"
     }, opts));
   }).catch(e => {
     console.error(e);
     return browser.windows.create(Object.assign({
-      url: browser.extension.getURL("assets/index.html"),
+      url: browser.extension.getURL("index.html"),
       type: "popup"
     }, opts));
   });

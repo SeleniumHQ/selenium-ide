@@ -311,7 +311,7 @@ export default class ExtCommand {
     }).then(function(tabs) {
       if (tabs.length === 0) {
         return browser.windows.create({
-          url: browser.runtime.getURL("/assets/bootstrap.html")
+          url: browser.runtime.getURL("/bootstrap.html")
         }).then(function (window) {
           self.setFirstTab(window.tabs[0]);
           self.contentWindowId = window.id;
@@ -324,14 +324,14 @@ export default class ExtCommand {
       } else {
         let tabInfo = null;
         return browser.tabs.update(tabs[0].id, {
-          url: browser.runtime.getURL("/assets/bootstrap.html")
+          url: browser.runtime.getURL("/bootstrap.html")
         }).then(function(tab) {
           tabInfo = tab;
           return self.wait("playingTabStatus", tab.id);
         }).then(function() {
           // Firefox did not update url information when tab is updated
           // We assign url manually and go to set first tab
-          tabInfo.url = browser.runtime.getURL("/assets/bootstrap.html");
+          tabInfo.url = browser.runtime.getURL("/bootstrap.html");
           self.setFirstTab(tabInfo);
         });
       }
