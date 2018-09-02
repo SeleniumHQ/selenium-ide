@@ -60,12 +60,10 @@ export class CommandNode {
   }
 
   _interpolateTarget() {
-    // TODO: think of a better way to do this
-    if (this.command.command === "assert" || this.command.command === "verify") {
-      return `${variables.get(this.command.target)}`;
-    }
     const type = Commands.list.get(this.command.command).target;
-    if (type &&
+    if (type && type.name === ArgTypes.variableName.name) {
+      return `${variables.get(this.command.target)}`;
+    } else if (type &&
         type.name === ArgTypes.script.name ||
         type.name === ArgTypes.conditionalExpression.name) {
       return interpolateScript(this.command.target);
