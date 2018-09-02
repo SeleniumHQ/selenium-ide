@@ -186,7 +186,8 @@ export default class WebDriverExecutor {
 
   // assertions
 
-  async doAssert(variable, value) {
+  async doAssert(variableName, value) {
+    const variable = `${variables.get(variableName)}`;
     if (variable != value) {
       throw new Error("Actual value '" + variable + "' did not match '" + value + "'");
     }

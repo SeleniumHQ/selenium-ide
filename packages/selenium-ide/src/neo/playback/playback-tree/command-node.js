@@ -19,7 +19,6 @@ import { Commands, ArgTypes } from "../../models/Command";
 import { xlateArgument, interpolateScript } from "../../IO/SideeX/formatCommand";
 import { ControlFlowCommandChecks } from "../../models/Command";
 import { canExecuteCommand, executeCommand } from "../../../plugin/commandExecutor";
-import variables from "../../stores/view/Variables";
 
 export class CommandNode {
   constructor(command) {
@@ -54,9 +53,7 @@ export class CommandNode {
 
   _interpolateTarget() {
     const type = Commands.list.get(this.command.command).target;
-    if (type && type.name === ArgTypes.variableName.name) {
-      return `${variables.get(this.command.target)}`;
-    } else if (type &&
+    if (type &&
         type.name === ArgTypes.script.name ||
         type.name === ArgTypes.conditionalExpression.name) {
       return interpolateScript(this.command.target);
