@@ -17,6 +17,7 @@
 //import { MozillaBrowserBot } from "./selenium-browserbot";
 import { bot, core } from "./closure-polyfill";
 import { parse_locator } from "./utils";
+import finder from "@medv/finder";
 
 export default function LocatorBuilders(window) {
   this.window = window;
@@ -304,6 +305,10 @@ LocatorBuilders.add("css", function(e) {
     current = current.parentNode;
   }
   return "css=" + sub_path;
+});
+
+LocatorBuilders.add("css:finder", function(e) {
+  return "css=" + finder(e);
 });
 
 LocatorBuilders.add("xpath:link", function(e) {
