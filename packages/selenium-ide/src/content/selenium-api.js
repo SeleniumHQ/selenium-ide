@@ -341,14 +341,22 @@ Selenium.prototype.doVerifyElementNotPresent = function(locator) {
   }
 };
 
-Selenium.prototype.doVerify = function(actual, expected) {
-  this.doAssert(actual, expected);
+Selenium.prototype.doVerify = function(variableName, expected) {
+  return this.doAssert(variableName, expected);
 };
 
-Selenium.prototype.doAssert = function(actual, expected) {
-  if (actual !== expected) {
-    throw new Error("Actual value '" + actual + "' did not match '" + expected + "'");
-  }
+Selenium.prototype.doAssert = function(variableName, expected) {
+  return new Promise((res, rej) => {
+    browser.runtime.sendMessage({
+      getVar: true,
+      variable: variableName
+    }).then(actual => {
+      if (`${actual}` != expected) {
+        return rej("Actual value '" + actual + "' did not match '" + expected + "'");
+      }
+      return res();
+    });
+  });
 };
 
 Selenium.prototype.doAssertChecked = function(locator) {
