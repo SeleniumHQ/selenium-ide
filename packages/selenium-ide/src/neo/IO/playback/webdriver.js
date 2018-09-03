@@ -99,6 +99,9 @@ export default class WebDriverExecutor {
   // doStoreAttribute
   // doStoreTitle
   // doStoreXpathCount
+  // doWebDriverChooseOkOnVisibleConfirmation
+  // doChooseCancelOnNextConfirmation
+  // doChooseCancelOnNextPrompt
 
   async skip() {
     return Promise.resolve();
