@@ -180,8 +180,8 @@ export default function seed(store, numberOfSuites = 5) {
   framesTest.createCommand(undefined, "selectFrame", "css=#mce_0_ifr");
   framesTest.createCommand(undefined, "assertText", "css=#tinymce", "Your content goes here.");
   framesTest.createCommand(undefined, "open", "/nested_frames");
-  framesTest.createCommand(undefined, "selectFrame", "frame-top");
-  framesTest.createCommand(undefined, "selectFrame", "frame-middle");
+  framesTest.createCommand(undefined, "selectFrame", "name=frame-top");
+  framesTest.createCommand(undefined, "selectFrame", "name=frame-middle");
   framesTest.createCommand(undefined, "assertText", "css=#content", "MIDDLE");
 
   const selectTest = store.createTestCase("select");
@@ -205,7 +205,7 @@ export default function seed(store, numberOfSuites = 5) {
   storeTextTest.createCommand(undefined, "open", "/login");
   storeTextTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
   storeTextTest.createCommand(undefined, "storeValue", "css=#username", "aVar");
-  storeTextTest.createCommand(undefined, "echo", "${aVar}");
+  storeTextTest.createCommand(undefined, "assert", "aVar", "blah");
 
   const submitTest = store.createTestCase("submit");
   submitTest.createCommand(undefined, "open", "/login");
