@@ -382,10 +382,6 @@ export default class ExtCommand {
     }
   }
 
-  isWebDriverCommand() {
-    return false;
-  }
-
   isWindowMethodCommand(command) {
     return (command == "answerOnNextPrompt"
       || command == "chooseCancelOnNextPrompt"

@@ -31,6 +31,16 @@ export class CommandNode {
     this.timesVisited = 0;
   }
 
+  isWebDriverCommand(executor) {
+    return !!(typeof executor.isWebDriverCommand === "function" &&
+      executor.isWebDriverCommand());
+  }
+
+  isExtCommand(executor) {
+    return !!(typeof executor.isExtCommand === "function" &&
+      executor.isExtCommand(this.command.command));
+  }
+
   isControlFlow() {
     return !!(this.left || this.right);
   }
@@ -40,14 +50,14 @@ export class CommandNode {
            this.command.command === "";
   }
 
-  execute(extCommand, options) {
+  execute(commandExecutor, options) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
       });
     }
-    return this._executeCommand(extCommand, options).then((result) => {
-      return this._executionResult(extCommand, result);
+    return this._executeCommand(commandExecutor, options).then((result) => {
+      return this._executionResult(commandExecutor, result);
     });
   }
 
@@ -69,46 +79,48 @@ export class CommandNode {
     return xlateArgument(this.command.value);
   }
 
-  _executeCommand(extCommand, options) {
+  _executeCommand(commandExecutor, options) {
     if (this.isControlFlow()) {
-      return this._evaluate(extCommand);
+      return this._evaluate(commandExecutor);
     } else if (this.isTerminal()) {
       return Promise.resolve({
         result: "success"
       });
-    } else if (extCommand.isExtCommand(this.command.command)) {
-      return extCommand[extCommand.name(this.command.command)](
+    } else if (this.isWebDriverCommand(commandExecutor) ||
+               this.isExtCommand(commandExecutor)) {
+      return commandExecutor[commandExecutor.name(this.command.command)](
         this._interpolateTarget(),
         this._interpolateValue()
       );
-    } else if (this.command.command === "type") {
-      return extCommand.doType(
-        this._interpolateTarget(),
-        this._interpolateValue(),
-        extCommand.isWindowMethodCommand(this.command.command));
     } else if (canExecuteCommand(this.command.command)) {
       return executeCommand(
         this.command.command,
         this._interpolateTarget(),
         this._interpolateValue(),
         options);
+    } else if (this.command.command === "type") {
+      return commandExecutor.doType(
+        this._interpolateTarget(),
+        this._interpolateValue(),
+        commandExecutor.isWindowMethodCommand(this.command.command));
     } else {
-      return extCommand.sendMessage(
+      return commandExecutor.sendMessage(
         this.command.command,
         this._interpolateTarget(),
         this._interpolateValue(),
-        extCommand.isWindowMethodCommand(this.command.command));
+        commandExecutor.isWindowMethodCommand(this.command.command));
     }
   }
 
-  _executionResult(extCommand, result) {
+  _executionResult(commandExecutor, result) {
     if (result && result.result === "success") {
       this._incrementTimesVisited();
       return {
         result: "success",
         next: this.isControlFlow() ? result.next : this.next
       };
-    } else if (extCommand.isExtCommand(this.command.command)) {
+    } else if (this.isWebDriverCommand(commandExecutor) ||
+               this.isExtCommand(commandExecutor)) {
       return {
         next: this.command.command !== "run" ? this.next : result
       };
@@ -128,14 +140,6 @@ export class CommandNode {
     }
   }
 
-  _sendEvaluate(commandExecutor, expression) {
-    if (commandExecutor.isWebDriverCommand()) {
-      return (commandExecutor.evaluateConditional(expression));
-    } else {
-      return (commandExecutor.sendMessage("evaluateConditional", expression, "", false));
-    }
-  }
-
   _evaluate(commandExecutor) {
     let expression = this._interpolateTarget();
     if (ControlFlowCommandChecks.isTimes(this.command)) {
@@ -147,8 +151,10 @@ export class CommandNode {
       }
       expression = `${this.timesVisited} < ${number}`;
     }
-    return this._sendEvaluate(commandExecutor, expression)
-      .then((result) => {
+    return (this.isWebDriverCommand(commandExecutor)
+      ? commandExecutor.evaluateConditional(expression)
+      : commandExecutor.sendMessage("evaluateConditional", expression, "", false) )
+      .then(result => {
         return this._evaluationResult(result);
       });
   }

@@ -94,43 +94,45 @@ describe("Command Node", () => {
     expect(result.result).toEqual("no dice");
   });
   it("executionResult returns the 'next' node on extCommand", () => {
-    const extCommand = { isExtCommand: function() { return true; } };
     const command = new Command(undefined, "open", "", "");
     let nodeA = new CommandNode(command);
     const nodeB = new CommandNode(command);
     nodeA.next = nodeB;
-    expect(nodeA._executionResult(extCommand).next).toEqual(nodeB);
+    expect(nodeA._executionResult(commandExecutor(true, false)).next).toEqual(nodeB);
   });
   it("executionResult returns the 'next' node on Selenium command", () => {
-    const extCommand = { isExtCommand: function() { return false; } };
     const command = new Command(undefined, "click", "", "");
     let nodeA = new CommandNode(command);
     const nodeB = new CommandNode(command);
     nodeA.next = nodeB;
-    expect(nodeA._executionResult(extCommand, { result: "success" }).next).toEqual(nodeB);
+    expect(nodeA._executionResult(commandExecutor(), { result: "success" }).next).toEqual(nodeB);
   });
   it("executionResult returns the 'next' node and result message on verify command", () => {
-    const extCommand = { isExtCommand: function() { return false; } };
     const command = new Command(undefined, "verify", "", "");
     let nodeA = new CommandNode(command);
     const nodeB = new CommandNode(command);
     nodeA.next = nodeB;
-    expect(nodeA._executionResult(extCommand, { result: "failed with error" }).next).toEqual(nodeB);
+    expect(nodeA._executionResult(commandExecutor(), { result: "failed with error" }).next).toEqual(nodeB);
   });
   it("executionResult returns a 'next' node on control flow", () => {
-    const extCommand = { isExtCommand: function() { return false; } };
     const command = new Command(undefined, ControlFlowCommandNames.if, "", "");
     let nodeA = new CommandNode(command);
     nodeA.left = "asdf";
     const nodeB = new CommandNode(command);
-    expect(nodeA._executionResult(extCommand, { result: "success", next: nodeB }).next).toEqual(nodeB);
+    expect(nodeA._executionResult(commandExecutor(), { result: "success", next: nodeB }).next).toEqual(nodeB);
   });
   it("executionResult returns a message when unsuccessful", () => {
-    const extCommand = { isExtCommand: function() { return false; } };
     const command = new Command(undefined, "command", "", "");
     const node = new CommandNode(command);
-    const result = node._executionResult(extCommand, { result: "no dice" });
+    const result = node._executionResult(commandExecutor(), { result: "no dice" });
     expect(result.next).toBeUndefined();
     expect(result.result).toEqual("no dice");
   });
 });
+
+function commandExecutor(extCommand = false, webDriverCommand = false) {
+  return {
+    isExtCommand: function() { return extCommand; },
+    isWebDriverCommand: function() { return webDriverCommand; }
+  };
+}

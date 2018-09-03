@@ -19,6 +19,7 @@ import webdriver from "browser-webdriver";
 import { absolutifyUrl } from "./utils";
 import variables from "../../stores/view/Variables";
 import { Logger, Channels } from "../../stores/view/Logs";
+import PlaybackState from "../../stores/view/PlaybackState";
 
 const By = webdriver.By;
 const until = webdriver.until;
@@ -44,12 +45,6 @@ export default class WebDriverExecutor {
 
   async cleanup() {
     await this.driver.quit();
-  }
-
-  // to fool the command nodes
-  // TODO: remove
-  isExtCommand() {
-    return true;
   }
 
   isWebDriverCommand() {
@@ -105,6 +100,15 @@ export default class WebDriverExecutor {
   async doClick(locator) {
     const element = await waitForElement(locator, this.driver);
     await element.click();
+  }
+
+  async doClickAt(locator, coordString) {
+    const coords = coordString.split(",");
+    const element = await waitForElement(locator, this.driver);
+    await this.driver.actions()
+      .mouseMove(element, { x: coords[0], y: coords[1] })
+      .click()
+      .perform();
   }
 
   async doDoubleClick(locator) {
@@ -317,6 +321,10 @@ export default class WebDriverExecutor {
         result: error.message
       });
     }
+  }
+
+  async doRun(target) {
+    return Promise.resolve(PlaybackState.callTestCase(target));
   }
 }
 
