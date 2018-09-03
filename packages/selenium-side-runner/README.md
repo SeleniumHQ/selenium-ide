@@ -32,9 +32,9 @@ Will only run tests matching the filter
 Change the base URL that the tests were recorded with, note that it will not affect tests that used absolute URLs.
 ```selenium-side-runner --base-url https://www.seleniumhq.org```
 
-### .side.yml
-All of the configuration can be written in the `.side.yml` file, the runner will load it from the current working directory automatically.
-You can disable that behavior with `--no-sideyml`.  
+### Configuration 
+All of the configuration can be written in a YAML-file. Per default, the runner expects a file named `.side.yml`, located in the current working directory. Otherwise, it can be specified with ```selenium-side-runner --configuration-file [filepath] ```. 
+ 
 
 #### Example usage
 ```yaml
