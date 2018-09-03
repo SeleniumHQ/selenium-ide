@@ -58,6 +58,11 @@ export default function seed(store, numberOfSuites = 5) {
   yeeOldTest.createCommand(undefined, "type", "id=searchInput", "selenium");
   yeeOldTest.createCommand(undefined, "sendKeys", "id=searchInput", "${KEY_ENTER}");
 
+  const assertsTest = store.createTestCase("asserts");
+  assertsTest.createCommand(undefined, "open", "/javascript_alerts");
+  assertsTest.createCommand(undefined, "click", "css=button");
+  assertsTest.createCommand(undefined, "assertAlert", "I am a JS Alert");
+
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
   controlFlowIfTest.createCommand(undefined, "if", "${myVar} === \"a\"");

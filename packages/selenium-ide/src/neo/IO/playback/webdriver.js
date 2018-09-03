@@ -66,6 +66,40 @@ export default class WebDriverExecutor {
 
   // Commands go after this line
 
+  // TODO
+  // doAssertConfirmation
+  // doAssertEditable
+  // doAssertNotEditable
+  // doAssertPrompt
+  // doVerify
+  // doVerifyChecked
+  // doVerifyNotChecked
+  // doVerifyEditable
+  // doVerifyNotEditable
+  // doVerifyElementPresent
+  // doVerifyElementNotPresent
+  // doVerifySelectedValue
+  // doVerifyNotSelectedValue
+  // doVerifyText
+  // doVerifyNotText
+  // doVerifyTitle
+  // doVerifyValue
+  // doVerifySelectedLabel
+  // doDoubleClickAt
+  // doDragAndDropToObject
+  // doEditContent
+  // doMouseMoveAt
+  // doMouseDownAt
+  // doMouseOut
+  // doMouseOver
+  // doMouseUpAt
+  // doRemoveSelection
+  // doSelectWindow
+  // setSpeed
+  // doStoreAttribute
+  // doStoreTitle
+  // doStoreXpathCount
+
   async skip() {
     return Promise.resolve();
   }
@@ -194,6 +228,13 @@ export default class WebDriverExecutor {
     const variable = `${variables.get(variableName)}`;
     if (variable != value) {
       throw new Error("Actual value '" + variable + "' did not match '" + value + "'");
+    }
+  }
+
+  async doAssertAlert(expectedText) {
+    const actualText = await this.driver.switchTo().alert().getText();
+    if (actualText !== expectedText) {
+      throw new Error("Actual alert text '" + actualText + "' did not match '" + expectedText + "'");
     }
   }
 
