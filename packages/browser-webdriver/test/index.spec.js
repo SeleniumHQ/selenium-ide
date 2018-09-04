@@ -62,10 +62,10 @@ describe("browser webdriver", () => {
       let searchInput = d.findElement(By.name("q"));
       searchInput.sendKeys("cheese");
       searchInput.sendKeys(Key.ENTER);
-      d.wait(until.elementLocated(By.linkText("Cheese - Wikipedia")));
+      d.wait(until.elementLocated(By.linkText("Cheese - Wikipedia")), 15000);
       let link = d.findElement(By.linkText("Cheese - Wikipedia"));
       link.click();
-      d.wait(until.titleIs("Cheese - Wikipedia"));
+      d.wait(until.titleIs("Cheese - Wikipedia"), 15000);
 
       d.getTitle().then(title => {
         d.quit();

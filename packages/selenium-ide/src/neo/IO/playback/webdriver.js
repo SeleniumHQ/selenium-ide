@@ -19,6 +19,7 @@ import webdriver from "browser-webdriver";
 import { absolutifyUrl } from "./utils";
 import variables from "../../stores/view/Variables";
 import { Logger, Channels } from "../../stores/view/Logs";
+import PlaybackState from "../../stores/view/PlaybackState";
 
 const By = webdriver.By;
 const until = webdriver.until;
@@ -46,9 +47,7 @@ export default class WebDriverExecutor {
     await this.driver.quit();
   }
 
-  // to fool the command nodes
-  // TODO: remove
-  isExtCommand() {
+  isWebDriverCommand() {
     return true;
   }
 
@@ -66,6 +65,43 @@ export default class WebDriverExecutor {
   }
 
   // Commands go after this line
+
+  // TODO
+  // doAssertConfirmation
+  // doAssertEditable
+  // doAssertNotEditable
+  // doAssertPrompt
+  // doVerify
+  // doVerifyChecked
+  // doVerifyNotChecked
+  // doVerifyEditable
+  // doVerifyNotEditable
+  // doVerifyElementPresent
+  // doVerifyElementNotPresent
+  // doVerifySelectedValue
+  // doVerifyNotSelectedValue
+  // doVerifyText
+  // doVerifyNotText
+  // doVerifyTitle
+  // doVerifyValue
+  // doVerifySelectedLabel
+  // doDoubleClickAt
+  // doDragAndDropToObject
+  // doEditContent
+  // doMouseMoveAt
+  // doMouseDownAt
+  // doMouseOut
+  // doMouseOver
+  // doMouseUpAt
+  // doRemoveSelection
+  // doSelectWindow
+  // setSpeed
+  // doStoreAttribute
+  // doStoreTitle
+  // doStoreXpathCount
+  // doWebDriverChooseOkOnVisibleConfirmation
+  // doChooseCancelOnNextConfirmation
+  // doChooseCancelOnNextPrompt
 
   async skip() {
     return Promise.resolve();
@@ -101,6 +137,15 @@ export default class WebDriverExecutor {
   async doClick(locator) {
     const element = await waitForElement(locator, this.driver);
     await element.click();
+  }
+
+  async doClickAt(locator, coordString) {
+    const coords = coordString.split(",");
+    const element = await waitForElement(locator, this.driver);
+    await this.driver.actions()
+      .mouseMove(element, { x: coords[0], y: coords[1] })
+      .click()
+      .perform();
   }
 
   async doDoubleClick(locator) {
@@ -186,6 +231,13 @@ export default class WebDriverExecutor {
     const variable = `${variables.get(variableName)}`;
     if (variable != value) {
       throw new Error("Actual value '" + variable + "' did not match '" + value + "'");
+    }
+  }
+
+  async doAssertAlert(expectedText) {
+    const actualText = await this.driver.switchTo().alert().getText();
+    if (actualText !== expectedText) {
+      throw new Error("Actual alert text '" + actualText + "' did not match '" + expectedText + "'");
     }
   }
 
@@ -299,6 +351,24 @@ export default class WebDriverExecutor {
 
   async doPause(time) {
     await this.driver.sleep(time);
+  }
+
+  async evaluateConditional(script) {
+    try {
+      const result = await this.driver.executeScript(`return (${script.script})`, ...script.argv);
+      return Promise.resolve({
+        result: "success",
+        value: !!result
+      });
+    } catch(error) {
+      return Promise.resolve({
+        result: error.message
+      });
+    }
+  }
+
+  async doRun(target) {
+    return Promise.resolve(PlaybackState.callTestCase(target));
   }
 }
 

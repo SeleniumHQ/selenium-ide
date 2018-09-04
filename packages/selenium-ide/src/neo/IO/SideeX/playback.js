@@ -134,7 +134,8 @@ function runNextCommand() {
     // paused
     if (isStopping()) return false;
   }
-  if (executor.isExtCommand(command.command)) {
+  if (PlaybackState.currentExecutingCommandNode.isWebDriverCommand(executor) ||
+      PlaybackState.currentExecutingCommandNode.isExtCommand(executor)) {
     return doDelay().then(() => {
       return (PlaybackState.currentExecutingCommandNode.execute(executor))
         .then((result) => {

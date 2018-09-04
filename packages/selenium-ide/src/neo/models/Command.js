@@ -211,9 +211,9 @@ export const ArgTypes = {
   },
   variableName: {
     name: "variable name",
-    description: "The name of the variable you'd like to either store an \
-                  expression's result in or reference in a check with \
-                  'assert' or 'verify'."
+    description: "The name of a variable (without brackets). Used to either store an \
+                  expression's result in or reference for a check (e.g., \
+                  with 'assert' or 'verify')."
   },
   waitTime: {
     name: "wait time",

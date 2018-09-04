@@ -58,6 +58,11 @@ export default function seed(store, numberOfSuites = 5) {
   yeeOldTest.createCommand(undefined, "type", "id=searchInput", "selenium");
   yeeOldTest.createCommand(undefined, "sendKeys", "id=searchInput", "${KEY_ENTER}");
 
+  const assertsTest = store.createTestCase("asserts");
+  assertsTest.createCommand(undefined, "open", "/javascript_alerts");
+  assertsTest.createCommand(undefined, "click", "css=button");
+  assertsTest.createCommand(undefined, "assertAlert", "I am a JS Alert");
+
   const controlFlowIfTest = store.createTestCase("control flow if");
   controlFlowIfTest.createCommand(undefined, "executeScript", "return \"a\"", "myVar");
   controlFlowIfTest.createCommand(undefined, "if", "${myVar} === \"a\"");
@@ -111,7 +116,7 @@ export default function seed(store, numberOfSuites = 5) {
   const executeScriptTest = store.createTestCase("execute script");
   executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
-  executeScriptTest.createCommand(undefined, "verify", "${blah}", "false");
+  executeScriptTest.createCommand(undefined, "verify", "blah", "false");
   executeScriptTest.createCommand(undefined, "echo", "OK! This is a forced failure on verify to make sure the test proceeds. If you see this message it's a good thing.");
   executeScriptTest.createCommand(undefined, "assert", "blah", "true");
   executeScriptTest.createCommand(undefined, "executeScript", "true");
@@ -180,8 +185,8 @@ export default function seed(store, numberOfSuites = 5) {
   framesTest.createCommand(undefined, "selectFrame", "css=#mce_0_ifr");
   framesTest.createCommand(undefined, "assertText", "css=#tinymce", "Your content goes here.");
   framesTest.createCommand(undefined, "open", "/nested_frames");
-  framesTest.createCommand(undefined, "selectFrame", "frame-top");
-  framesTest.createCommand(undefined, "selectFrame", "frame-middle");
+  framesTest.createCommand(undefined, "selectFrame", "name=frame-top");
+  framesTest.createCommand(undefined, "selectFrame", "name=frame-middle");
   framesTest.createCommand(undefined, "assertText", "css=#content", "MIDDLE");
 
   const selectTest = store.createTestCase("select");
@@ -206,7 +211,7 @@ export default function seed(store, numberOfSuites = 5) {
   storeTextTest.createCommand(undefined, "open", "/login");
   storeTextTest.createCommand(undefined, "sendKeys", "css=#username", "blah");
   storeTextTest.createCommand(undefined, "storeValue", "css=#username", "aVar");
-  storeTextTest.createCommand(undefined, "echo", "${aVar}");
+  storeTextTest.createCommand(undefined, "assert", "aVar", "blah");
 
   const submitTest = store.createTestCase("submit");
   submitTest.createCommand(undefined, "open", "/login");

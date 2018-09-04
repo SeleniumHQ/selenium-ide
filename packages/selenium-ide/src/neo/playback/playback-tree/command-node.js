@@ -31,30 +31,33 @@ export class CommandNode {
     this.timesVisited = 0;
   }
 
+  isWebDriverCommand(executor) {
+    return !!(typeof executor.isWebDriverCommand === "function" &&
+      executor.isWebDriverCommand());
+  }
+
+  isExtCommand(executor) {
+    return !!(typeof executor.isExtCommand === "function" &&
+      executor.isExtCommand(this.command.command));
+  }
+
   isControlFlow() {
     return !!(this.left || this.right);
   }
 
-  isValid() {
-    return !!(this.command.command || this.command.comment);
+  isTerminal() {
+    return ControlFlowCommandChecks.isTerminal(this.command) ||
+           this.command.command === "";
   }
 
-  isJustAComment() {
-    return !!(!this.command.command && this.command.comment);
-  }
-
-  isTerminalKeyword() {
-    return ControlFlowCommandChecks.isTerminal(this.command);
-  }
-
-  execute(extCommand, options) {
+  execute(commandExecutor, options) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
       });
     }
-    return this._executeCommand(extCommand, options).then((result) => {
-      return this._executionResult(extCommand, result);
+    return this._executeCommand(commandExecutor, options).then((result) => {
+      return this._executionResult(commandExecutor, result);
     });
   }
 
@@ -76,59 +79,55 @@ export class CommandNode {
     return xlateArgument(this.command.value);
   }
 
-  _executeCommand(extCommand, options) {
+  _executeCommand(commandExecutor, options) {
     if (this.isControlFlow()) {
-      return this._evaluate(extCommand);
-    } else if (extCommand.isExtCommand(this.command.command)) {
-      return extCommand[extCommand.name(this.command.command)](
+      return this._evaluate(commandExecutor);
+    } else if (this.isTerminal()) {
+      return Promise.resolve({
+        result: "success"
+      });
+    } else if (this.isWebDriverCommand(commandExecutor) ||
+               this.isExtCommand(commandExecutor)) {
+      return commandExecutor[commandExecutor.name(this.command.command)](
         this._interpolateTarget(),
         this._interpolateValue()
       );
-    } else if (this.command.command === "sendKeys") {
-      return extCommand.doSendKeys(
-        this._interpolateTarget(),
-        this._interpolateValue()
-      );
-    } else if (this.command.command === "type") {
-      return extCommand.doType(
-        this._interpolateTarget(),
-        this._interpolateValue(),
-        extCommand.isWindowMethodCommand(this.command.command));
     } else if (canExecuteCommand(this.command.command)) {
       return executeCommand(
         this.command.command,
         this._interpolateTarget(),
         this._interpolateValue(),
         options);
-    } else if (this.isValid()) {
-      if (this.isJustAComment() || this.isTerminalKeyword()) {
-        return Promise.resolve({
-          result: "success"
-        });
-      } else {
-        return extCommand.sendMessage(
-          this.command.command,
-          this._interpolateTarget(),
-          this._interpolateValue(),
-          extCommand.isWindowMethodCommand(this.command.command));
-      }
+    } else if (this.command.command === "sendKeys") {
+      return commandExecutor.doSendKeys(
+        this._interpolateTarget(),
+        this._interpolateValue()
+      );
+    } else if (this.command.command === "type") {
+      return commandExecutor.doType(
+        this._interpolateTarget(),
+        this._interpolateValue(),
+        commandExecutor.isWindowMethodCommand(this.command.command));
     } else {
-      return Promise.resolve({
-        result: "success"
-      });
+      return commandExecutor.sendMessage(
+        this.command.command,
+        this._interpolateTarget(),
+        this._interpolateValue(),
+        commandExecutor.isWindowMethodCommand(this.command.command));
     }
   }
 
-  _executionResult(extCommand, result) {
-    if (extCommand.isExtCommand(this.command.command)) {
-      return {
-        next: this.command.command !== "run" ? this.next : result
-      };
-    } else if (result.result === "success") {
+  _executionResult(commandExecutor, result) {
+    if (result && result.result === "success") {
       this._incrementTimesVisited();
       return {
         result: "success",
         next: this.isControlFlow() ? result.next : this.next
+      };
+    } else if (this.isWebDriverCommand(commandExecutor) ||
+               this.isExtCommand(commandExecutor)) {
+      return {
+        next: this.command.command !== "run" ? this.next : result
       };
     } else if (canExecuteCommand(this.command.command)) {
       let _result = { ...result };
@@ -146,7 +145,7 @@ export class CommandNode {
     }
   }
 
-  _evaluate(extCommand) {
+  _evaluate(commandExecutor) {
     let expression = this._interpolateTarget();
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression);
@@ -157,8 +156,10 @@ export class CommandNode {
       }
       expression = `${this.timesVisited} < ${number}`;
     }
-    return (extCommand.sendMessage("evaluateConditional", expression, "", false))
-      .then((result) => {
+    return (this.isWebDriverCommand(commandExecutor)
+      ? commandExecutor.evaluateConditional(expression)
+      : commandExecutor.sendMessage("evaluateConditional", expression, "", false) )
+      .then(result => {
         return this._evaluationResult(result);
       });
   }
