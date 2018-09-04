@@ -198,7 +198,8 @@ export default function seed(store, numberOfSuites = 5) {
   const sendKeysTest = store.createTestCase("send keys");
   sendKeysTest.createCommand(undefined, "open", "/login");
   sendKeysTest.createCommand(undefined, "sendKeys", "css=#username", "tomsmith");
-  sendKeysTest.createCommand(undefined, "sendKeys", "css=#password", "SuperSecretPassword!${KEY_ENTER}");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#password", "SuperSecretPassword!");
+  sendKeysTest.createCommand(undefined, "sendKeys", "css=#password", "${KEY_ENTER}");
   sendKeysTest.createCommand(undefined, "assertText", "id=flash", "You logged into a secure area!\\n×");
 
   const storeTextTest = store.createTestCase("store text");
@@ -250,7 +251,7 @@ export default function seed(store, numberOfSuites = 5) {
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(executeScriptObject);
+  UiState.selectTest(sendKeysTest);
 
   store.changeName("seed project");
 
