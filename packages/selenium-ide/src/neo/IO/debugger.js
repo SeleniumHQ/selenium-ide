@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const DEBUGGER_PROTOCOL_VERSION = "1.2";
+const DEBUGGER_PROTOCOL_VERSION = "1.3";
 
 export default class Debugger {
   constructor(tabId) {
@@ -69,23 +69,23 @@ export default class Debugger {
     return this.sendCommand("DOM.getDocument").then(doc => (doc.root));
   }
 
-  querySelector(locator, nodeId) {
-    return this.sendCommand("DOM.querySelector", { selector: this.convertLocator(locator), nodeId }).then(res => res && res.nodeId);
+  querySelector(selector, nodeId) {
+    return this.sendCommand("DOM.querySelector", { selector, nodeId }).then(res => res && res.nodeId);
   }
+}
 
-  convertLocator(locator) {
-    const [type, selector] = locator.split("=");
-    switch (type) {
-      case "id": {
-        return `#${selector}`;
-      }
-      case "name": {
-        return `*[name=${selector}]`;
-      }
-      case "css": {
-        return selector;
-      }
+export function convertLocator(locator) {
+  const [type, selector] = locator.split("=");
+  switch (type) {
+    case "id": {
+      return `#${selector}`;
     }
-    throw new Error("This locator type is unavailable with this command");
+    case "name": {
+      return `*[name="${selector}"]`;
+    }
+    case "css": {
+      return selector;
+    }
   }
+  throw new Error("This locator type is unavailable with this command");
 }

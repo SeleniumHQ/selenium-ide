@@ -11,6 +11,17 @@ reaction(
 
 function createContextMenus() {
   browser.contextMenus.create({
+    id: "mouseOver",
+    title: "Mouse Over",
+    documentUrlPatterns: ["<all_urls>"],
+    contexts: ["all"]
+  });
+  browser.contextMenus.create({
+    type: "separator",
+    documentUrlPatterns: ["<all_urls>"],
+    contexts: ["all"]
+  });
+  browser.contextMenus.create({
     id: "verifyText",
     title: "Verify Text",
     documentUrlPatterns: ["<all_urls>"],

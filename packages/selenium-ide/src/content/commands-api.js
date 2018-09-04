@@ -92,6 +92,15 @@ function doCommands(request, sender, sendResponse) {
     }
     return true;
   }
+  if (request.buildLocators) {
+    try {
+      const element = selenium.browserbot.findElement(request.locator);
+      const locators = locatorBuilders.buildAll(element);
+      sendResponse({ result: "success", locators });
+    } catch(e) {
+      sendResponse({ result: e.message });
+    }
+  }
   if (request.resolveLocator) {
     try {
       const element = selenium.browserbot.findElement(request.locator);

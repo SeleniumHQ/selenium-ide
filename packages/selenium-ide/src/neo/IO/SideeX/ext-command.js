@@ -18,7 +18,7 @@
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
 import { recorder } from "./editor";
-import Debugger from "../debugger";
+import Debugger, { convertLocator } from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
 import { absolutifyUrl } from "../playback/utils";
@@ -162,9 +162,10 @@ export default class ExtCommand {
     }, { frameId: top ? 0 : frameId });
   }
 
-  sendPayload(payload) {
+  sendPayload(payload, top) {
     let tabId = this.getCurrentPlayingTabId();
-    return browser.tabs.sendMessage(tabId, payload);
+    let frameId = this.getCurrentPlayingFrameId();
+    return browser.tabs.sendMessage(tabId, payload, { frameId: top ? 0 : frameId });
   }
 
   setLoading(tabId) {
@@ -256,8 +257,10 @@ export default class ExtCommand {
       const connection = new Debugger(this.currentPlayingTabId);
       return connection.attach().then(() => (
         connection.getDocument().then(docNode => (
-          connection.querySelector(locator, docNode.nodeId).then(nodeId => (
-            connection.sendCommand("DOM.setFileInputFiles", { nodeId, files: value.split(",") }).then(connection.detach).then(() => ({ result: "success" }))
+          this.convertToQuerySelector(locator).then(selector => (
+            connection.querySelector(selector, docNode.nodeId).then(nodeId => (
+              connection.sendCommand("DOM.setFileInputFiles", { nodeId, files: value.split(",") }).then(connection.detach).then(() => ({ result: "success" }))
+            ))
           ))
         ))
       )).catch(e => {
@@ -270,9 +273,74 @@ export default class ExtCommand {
     }
   }
 
+  async doSendKeys(locator, value, top) {
+    const browserName = parsedUA.browser.name;
+    if (browserName === "Chrome" && value === "${KEY_ENTER}") {
+      const connection = new Debugger(this.currentPlayingTabId);
+      try {
+        await connection.attach();
+        const docNode = await connection.getDocument();
+        const selector = await this.convertToQuerySelector(locator);
+        const nodeId = await connection.querySelector(selector, docNode.nodeId);
+        await connection.sendCommand("DOM.focus", { nodeId });
+        await connection.sendCommand("Input.dispatchKeyEvent", {
+          type: "keyDown",
+          keyCode: 13,
+          key: "Enter",
+          code: "Enter",
+          text: "\r"
+        });
+        await connection.sendCommand("Input.dispatchKeyEvent", {
+          type: "keyDown",
+          keyCode: 13,
+          key: "Enter",
+          code: "Enter",
+          text: "\r"
+        });
+        await connection.detach();
+        return {
+          result: "success"
+        };
+      } catch (e) {
+        await connection.detach();
+        throw e;
+      }
+    } else {
+      return this.sendMessage("sendKeys", locator, value, top);
+    }
+  }
+
   doStore(string, varName) {
     variables.set(varName, string);
     return Promise.resolve();
+  }
+
+  async convertToQuerySelector(locator) {
+    let querySelector;
+    try {
+      querySelector = convertLocator(locator);
+    } catch (e) {
+      try {
+        const locators = await this.buildLocators(locator);
+        for (let loc of locators) {
+          try {
+            querySelector = convertLocator(loc[0]);
+            break;
+          } catch (err) {} // eslint-disable-line
+        }
+      } catch (err) {
+        throw e;
+      }
+    }
+
+    return querySelector;
+  }
+
+  async buildLocators(locator) {
+    return await this.sendPayload({
+      buildlocators: true,
+      locator
+    }).locators;
   }
 
   wait(...properties) {

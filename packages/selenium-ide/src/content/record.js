@@ -459,6 +459,8 @@ Recorder.addEventHandler("contextMenu", "contextmenu", function(event) {
       record(m.cmd, [[tmpTitle]], "");
     } else if (m.cmd.includes("Value")) {
       record(m.cmd, tmpText, event.target.value);
+    } else if (m.cmd === "mouseOver") {
+      record("mouseOver", locatorBuilders.buildAll(event.target), "");
     }
     myPort.onMessage.removeListener(this);
   });

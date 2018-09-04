@@ -98,6 +98,11 @@ export class CommandNode {
         this._interpolateTarget(),
         this._interpolateValue(),
         options);
+    } else if (this.command.command === "sendKeys") {
+      return commandExecutor.doSendKeys(
+        this._interpolateTarget(),
+        this._interpolateValue()
+      );
     } else if (this.command.command === "type") {
       return commandExecutor.doType(
         this._interpolateTarget(),
