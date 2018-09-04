@@ -72,6 +72,7 @@ Recorder.prototype.attach = function() {
       observer.observe(this.window.document.body, observer.config);
     }
     this.attached = true;
+    addRecordingIndicator();
   }
 };
 
@@ -90,6 +91,7 @@ Recorder.prototype.detach = function() {
   }
   this.eventListeners = {};
   this.attached = false;
+  removeRecordingIndicator();
 };
 
 function attachRecorderHandler(message) {
@@ -101,6 +103,39 @@ function attachRecorderHandler(message) {
 function detachRecorderHandler(message) {
   if (message.detachRecorder) {
     recorder.detach();
+  }
+}
+
+function findRecordingIndicator() {
+  return document.getElementById("recording-indicator");
+}
+
+function addRecordingIndicator() {
+  if (!findRecordingIndicator() && frameLocation === "root") {
+    let recordingIndicator = window.document.createElement("iframe");
+    const html = "<html><body><div style='text-align: center;'>Selenium IDE is recording.<body></html>";
+    recordingIndicator.id = "recording-indicator";
+    recordingIndicator.src = "data:text/html;charset=utf-8," + encodeURI(html);
+    recordingIndicator.style.display = "inline-block";
+    recordingIndicator.style.position = "fixed";
+    recordingIndicator.style.bottom = "50px";
+    recordingIndicator.style.right = "50px";
+    recordingIndicator.style.width = "230px";
+    recordingIndicator.style.height = "40px";
+    recordingIndicator.addEventListener("mouseenter", function(event) {
+      event.target.style.visibility = "hidden";
+      setTimeout(function() {
+        event.target.style.visibility = "visible";
+      }, 1000);
+    }, false);
+    window.document.body.appendChild(recordingIndicator);
+  }
+}
+
+function removeRecordingIndicator() {
+  let element = findRecordingIndicator();
+  if (element) {
+    element.parentElement.removeChild(element);
   }
 }
 
