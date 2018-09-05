@@ -215,7 +215,7 @@ describe("command code emitter", () => {
       target: "some test case",
       value: ""
     };
-    return expect(CommandEmitter.emit(command)).resolves.toBe("await tests.some_test_case(driver, vars, { isNested: true });");
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await tests[\"some test case\"](driver, vars, { isNested: true });");
   });
   it("should emit `run script` command", () => {
     const command = {
