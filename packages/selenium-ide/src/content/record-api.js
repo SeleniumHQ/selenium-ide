@@ -121,11 +121,13 @@ function addRecordingIndicator() {
     recordingIndicator.style.right = "30px";
     recordingIndicator.style.width = "200px";
     recordingIndicator.style.height = "85px";
+    recordingIndicator.addEventListener("mouseenter", function(event) {
+      event.target.style.visibility = "hidden";
+      setTimeout(function() {
+        event.target.style.visibility = "visible";
+      }, 1000);
+    }, false);
     window.document.body.appendChild(recordingIndicator);
-    let hover = window.document.createElement("style");
-    hover.appendChild(document.createTextNode("#selenium-ide-indicator { opacity: 1; transition: opacity linear 400ms; }"));
-    hover.appendChild(document.createTextNode("#selenium-ide-indicator:hover { opacity: 0; pointer-events: none; }"));
-    window.document.head.appendChild(hover);
   }
 }
 
