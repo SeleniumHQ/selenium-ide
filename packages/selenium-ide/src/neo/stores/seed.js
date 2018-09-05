@@ -217,8 +217,10 @@ export default function seed(store, numberOfSuites = 5) {
   const waitTest = store.createTestCase("wait");
   waitTest.createCommand(undefined, "open", "/dynamic_loading/2");
   waitTest.createCommand(undefined, "clickAt", "css=#start button");
-  waitTest.createCommand(undefined, "storeText", "css=#finish", "blah");
-  waitTest.createCommand(undefined, "assert", "blah", "Hello World!");
+  waitTest.createCommand(undefined, "waitForElementPresent", "css=#finish", "5000");
+  waitTest.createCommand(undefined, "assertText", "css=#finish", "Hello World!");
+  //waitTest.createCommand(undefined, "storeText", "css=#finish", "blah");
+  //waitTest.createCommand(undefined, "assert", "blah", "Hello World!");
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);

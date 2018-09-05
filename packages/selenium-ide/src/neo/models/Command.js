@@ -775,6 +775,13 @@ class CommandList {
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern
     }],
+    [ "waitForElementPresent", {
+      name: "wait for element present",
+      type: TargetTypes.LOCATOR,
+      description: "Wait for a target element to be present on the page.",
+      target: ArgTypes.locator,
+      value: ArgTypes.waitTime
+    }],
     [ "webdriverAnswerOnVisiblePrompt", {
       name: "webdriver answer on visible prompt",
       description: "Affects a currently showing alert prompt. This command \

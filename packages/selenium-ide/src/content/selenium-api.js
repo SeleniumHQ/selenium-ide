@@ -520,6 +520,37 @@ Selenium.prototype.doEcho = function(value) {
   return browser.runtime.sendMessage({ "echoStr": value });
 };
 
+function waitUntil(condition, locator, timeout, failureMessage) {
+  if (!locator) {
+    throw new Error("Locator not provided.");
+  }
+  if (!timeout) {
+    throw new Error("Timeout not specified.");
+  }
+  return new Promise(function(resolve, reject) {
+    let count = 0;
+    let retryInterval = 500;
+    setInterval(function() {
+      if (count > timeout) {
+        return reject(failureMessage);
+      }
+      if (!condition(locator)) {
+        count += retryInterval;
+      } else {
+        return resolve();
+      }
+    }, retryInterval);
+  });
+}
+
+Selenium.prototype.doWaitForElementPresent = function(locator, timeout) {
+  return waitUntil(
+    this.isElementPresent.bind(this),
+    locator,
+    timeout,
+    `Unable to find the target element within the timeout specified (${timeout}ms).`
+  );
+};
 
 // xian
 Selenium.prototype.doWaitPreparation = function() {
