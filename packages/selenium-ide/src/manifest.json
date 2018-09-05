@@ -40,7 +40,8 @@
     "icons/icon128.png",
     "assets/prompt.js",
     "assets/highlight.css",
-    "bootstrap.html"
+    "bootstrap.html",
+    "indicator.html"
   ],
   "content_security_policy": "script-src 'self' 'sha256-W7QWmGne6B9hjKtOqoGmUFOPgpFcUo4Nr/yyMqtgXcU=' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
