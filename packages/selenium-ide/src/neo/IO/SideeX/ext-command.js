@@ -250,6 +250,35 @@ export default class ExtCommand {
     return Promise.resolve(PlaybackState.callTestCase(target));
   }
 
+  async doMouseOver(locator, _, top) {
+    const browserName = parsedUA.browser.name;
+    if (browserName === "Chrome") {
+      // handle scrolling through Selenium atoms
+      const { rect } = await this.sendPayload({
+        prepareToInteract: true,
+        locator
+      }, top);
+      const connection = new Debugger(this.currentPlayingTabId);
+      try {
+        await connection.attach();
+        await connection.sendCommand("Input.dispatchMouseEvent", {
+          type: "mouseMoved",
+          x: rect.x + (rect.width / 2),
+          y: rect.y + (rect.height / 2)
+        });
+        await connection.detach();
+        return {
+          result: "success"
+        };
+      } catch (e) {
+        await connection.detach();
+        throw e;
+      }
+    } else {
+      return this.sendMessage("mouseOver", locator, _, top);
+    }
+  }
+
   doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;

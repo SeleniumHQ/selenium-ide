@@ -92,6 +92,12 @@ function doCommands(request, sender, sendResponse) {
     }
     return true;
   }
+  if (request.prepareToInteract) {
+    sendResponse({
+      result: "success",
+      rect: selenium.prepareToInteract_(request.locator)
+    });
+  }
   if (request.buildLocators) {
     try {
       const element = selenium.browserbot.findElement(request.locator);
