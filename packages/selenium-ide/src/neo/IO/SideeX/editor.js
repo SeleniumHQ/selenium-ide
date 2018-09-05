@@ -41,16 +41,17 @@ function handleMessage(message, sender, sendResponse) {
   }
 }
 
-browser.runtime.onMessage.addListener(handleMessage);
-
-browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
-  if (message.selfWindowId != undefined && message.commWindowId != undefined) {
-    selfWindowId = message.selfWindowId;
-    contentWindowId = message.commWindowId;
-    extCommand.setContentWindowId(contentWindowId);
-    recorder.setOpenedWindow(contentWindowId);
-    recorder.setSelfWindowId(selfWindowId);
-    browser.runtime.onMessage.removeListener(contentWindowIdListener);
-    sendResponse(true);
-  }
-});
+if (browser && browser.runtime && browser.runtime.onMessage) {
+  browser.runtime.onMessage.addListener(handleMessage);
+  browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
+    if (message.selfWindowId != undefined && message.commWindowId != undefined) {
+      selfWindowId = message.selfWindowId;
+      contentWindowId = message.commWindowId;
+      extCommand.setContentWindowId(contentWindowId);
+      recorder.setOpenedWindow(contentWindowId);
+      recorder.setSelfWindowId(selfWindowId);
+      browser.runtime.onMessage.removeListener(contentWindowIdListener);
+      sendResponse(true);
+    }
+  });
+}
