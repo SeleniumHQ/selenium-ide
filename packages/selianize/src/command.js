@@ -105,7 +105,8 @@ const emitters = {
   while: emitControlFlowWhile,
   assert: emitAssert,
   verify: emitAssert,
-  waitForElementPresent: emitWaitForElementPresent
+  waitForElementPresent: emitWaitForElementPresent,
+  waitForElementNotPresent: emitWaitForElementNotPresent
 };
 
 export function emit(command, options = config, snapshot) {
@@ -505,4 +506,8 @@ function emitSetSpeed() {
 
 async function emitWaitForElementPresent(locator, timeout) {
   return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}), ${Math.floor(timeout)});`);
+}
+
+async function emitWaitForElementNotPresent(locator, timeout) {
+  return Promise.resolve(`await driver.wait(until.stalenessOf(await driver.findElement(${await LocationEmitter.emit(locator)})), ${Math.floor(timeout)});`);
 }

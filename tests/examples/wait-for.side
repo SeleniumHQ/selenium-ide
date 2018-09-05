@@ -34,13 +34,45 @@
       "targets": [],
       "value": "Hello World!"
     }]
+  }, {
+    "id": "b2baf643-63af-4c47-820e-a215d79d6f2e",
+    "name": "wait for element not present",
+    "commands": [{
+      "id": "06a49f39-c64d-48bd-a7e8-b3b592e926fe",
+      "comment": "",
+      "command": "open",
+      "target": "/dynamic_controls",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "87d91e6e-369f-4d6e-9869-80feec5e8a1e",
+      "comment": "",
+      "command": "click",
+      "target": "css=#btn",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "46e5ef5d-ec77-4e42-84de-96a4ac3ce172",
+      "comment": "",
+      "command": "waitForElementNotPresent",
+      "target": "css=#checkbox",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
+      "comment": "",
+      "command": "assertElementNotPresent",
+      "target": "css=#checkbox",
+      "targets": [],
+      "value": ""
+    }]
   }],
   "suites": [{
     "id": "ee5ed249-db27-45ab-9ef0-296e983d799c",
-    "name": "control flow",
+    "name": "wait for",
     "parallel": false,
     "timeout": 3000,
-    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d"]
+    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e"]
   }],
   "urls": ["http://the-internet.herokuapp.com/"],
   "plugins": [],

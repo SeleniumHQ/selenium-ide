@@ -214,13 +214,17 @@ export default function seed(store, numberOfSuites = 5) {
   submitTest.createCommand(undefined, "submit", "css=#login");
   submitTest.createCommand(undefined, "assertElementPresent", "css=.flash.success");
 
-  const waitTest = store.createTestCase("wait");
-  waitTest.createCommand(undefined, "open", "/dynamic_loading/2");
-  waitTest.createCommand(undefined, "clickAt", "css=#start button");
-  waitTest.createCommand(undefined, "waitForElementPresent", "css=#finish", "5000");
-  waitTest.createCommand(undefined, "assertText", "css=#finish", "Hello World!");
-  //waitTest.createCommand(undefined, "storeText", "css=#finish", "blah");
-  //waitTest.createCommand(undefined, "assert", "blah", "Hello World!");
+  const waitTest1 = store.createTestCase("wait for element present");
+  waitTest1.createCommand(undefined, "open", "/dynamic_loading/2");
+  waitTest1.createCommand(undefined, "clickAt", "css=#start button");
+  waitTest1.createCommand(undefined, "waitForElementPresent", "css=#finish", "5000");
+  waitTest1.createCommand(undefined, "assertText", "css=#finish", "Hello World!");
+
+  const waitTest2 = store.createTestCase("wait for element not present");
+  waitTest2.createCommand(undefined, "open", "/dynamic_controls");
+  waitTest2.createCommand(undefined, "clickAt", "css=#btn");
+  waitTest2.createCommand(undefined, "waitForElementNotPresent", "css=#checkbox", "5000");
+  waitTest2.createCommand(undefined, "assertElementNotPresent", "css=#checkbox");
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
@@ -247,7 +251,8 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(sendKeysTest);
   smokeSuite.addTestCase(storeTextTest);
   smokeSuite.addTestCase(submitTest);
-  smokeSuite.addTestCase(waitTest);
+  smokeSuite.addTestCase(waitTest1);
+  smokeSuite.addTestCase(waitTest2);
 
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);

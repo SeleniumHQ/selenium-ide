@@ -552,6 +552,15 @@ Selenium.prototype.doWaitForElementPresent = function(locator, timeout) {
   );
 };
 
+Selenium.prototype.doWaitForElementNotPresent = function(locator, timeout) {
+  return waitUntil(
+    isElementNotPresent.bind(this),
+    locator,
+    timeout,
+    `Element still present on the page within the timeout specified (${timeout}ms).`
+  );
+};
+
 // xian
 Selenium.prototype.doWaitPreparation = function() {
   // function setNewPageValue(e) {
@@ -2011,6 +2020,10 @@ Selenium.prototype.isTextPresent = function(pattern) {
   }
   return patternMatcher.matches(allText);
 };
+
+function isElementNotPresent(locator) {
+  return !this.isElementPresent(locator);
+}
 
 Selenium.prototype.isElementPresent = function(locator) {
   /**

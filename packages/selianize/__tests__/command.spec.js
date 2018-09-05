@@ -870,4 +870,12 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.css(`#blah`)), 5000);");
   });
+  it("should emit `waitForElementNotPresent` command", () => {
+    const command = {
+      command: "waitForElementNotPresent",
+      target: "css=#blah",
+      value: "5000"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.stalenessOf(await driver.findElement(By.css(`#blah`))), 5000);");
+  });
 });
