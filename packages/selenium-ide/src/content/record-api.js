@@ -72,6 +72,7 @@ Recorder.prototype.attach = function() {
       observer.observe(this.window.document.body, observer.config);
     }
     this.attached = true;
+    addRecordingIndicator();
   }
 };
 
@@ -90,6 +91,7 @@ Recorder.prototype.detach = function() {
   }
   this.eventListeners = {};
   this.attached = false;
+  removeRecordingIndicator();
 };
 
 function attachRecorderHandler(message) {
@@ -101,6 +103,41 @@ function attachRecorderHandler(message) {
 function detachRecorderHandler(message) {
   if (message.detachRecorder) {
     recorder.detach();
+  }
+}
+
+function findRecordingIndicator() {
+  return document.getElementById("recording-indicator");
+}
+
+function addRecordingIndicator() {
+  if (!findRecordingIndicator() && frameLocation === "root") {
+    let recordingIndicator = window.document.createElement("iframe");
+    const html = "<html><body><div style='text-align: center; padding-top: 20px; padding-bottom: 20px; font-family: Sans-Serif; font-size: small; color: white;'>Selenium IDE is recording.</div><body></html>";
+    recordingIndicator.id = "recording-indicator";
+    recordingIndicator.src = "data:text/html;charset=utf-8," + encodeURI(html);
+    recordingIndicator.style.border = "none";
+    recordingIndicator.style.background = "#EE4841";
+    recordingIndicator.style.position = "fixed";
+    recordingIndicator.style.bottom = "30px";
+    recordingIndicator.style.right = "30px";
+    recordingIndicator.style.width = "185px";
+    recordingIndicator.style.height = "75px";
+    recordingIndicator.style["box-shadow"] = "0 14px 19px 0 rgba(0,0,0,.2)";
+    recordingIndicator.addEventListener("mouseenter", function(event) {
+      event.target.style.visibility = "hidden";
+      setTimeout(function() {
+        event.target.style.visibility = "visible";
+      }, 500);
+    }, false);
+    window.document.body.appendChild(recordingIndicator);
+  }
+}
+
+function removeRecordingIndicator() {
+  let element = findRecordingIndicator();
+  if (element) {
+    element.parentElement.removeChild(element);
   }
 }
 
