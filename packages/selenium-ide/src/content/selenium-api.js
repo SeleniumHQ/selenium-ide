@@ -822,14 +822,23 @@ function getCoords(element, coordString) {
   return new goog.math.Coordinate(x, y);
 }
 
+Selenium.prototype.prepareToInteract_ = function(locator) {
+  let element = this.browserbot.findElement(locator);
+  let rect = element.getBoundingClientRect();
+  bot.action.prepareToInteractWith_(element, new goog.math.Coordinate(rect.width / 2, rect.height / 2));
+  return element.getBoundingClientRect();
+};
+
 Selenium.prototype.doMouseOver = function(locator) {
   /**
      * Simulates a user hovering a mouse over the specified element.
      *
      * @param locator an <a href="#locators">element locator</a>
      */
+
   let element = this.browserbot.findElement(locator);
-  this.browserbot.triggerMouseEvent(element, "mouseover", true);
+  let rect = element.getBoundingClientRect();
+  bot.action.moveMouse(element, new goog.math.Coordinate(rect.width / 2, rect.height / 2));
 };
 
 Selenium.prototype.doMouseOut = function(locator) {

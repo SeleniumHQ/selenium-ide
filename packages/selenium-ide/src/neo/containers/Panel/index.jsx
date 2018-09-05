@@ -48,6 +48,8 @@ import "../../styles/resizer.css";
 import { loadProject, saveProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 if (process.env.NODE_ENV !== "test") {
   const api = require("../../../api");
   browser.runtime.onMessage.addListener(api.default);
@@ -62,7 +64,7 @@ const project = observable(new ProjectStore());
 
 UiState.setProject(project);
 
-if (process.env.NODE_ENV === "production") {
+if (isProduction) {
   const suite = project.createSuite("Default Suite");
   const test = project.createTestCase("Untitled");
   suite.addTestCase(test);
@@ -101,23 +103,25 @@ if (browser.windows) {
     super(props);
     this.state = { project };
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
-    this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
-    this.quitHandler = window.addEventListener("beforeunload", (e) => {
-      if (project.modified) {
-        const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
+    if (isProduction) {
+      this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
+      this.quitHandler = window.addEventListener("beforeunload", (e) => {
+        if (project.modified) {
+          const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
 
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
-      }
-    });
-    this.moveInterval = setInterval(() => {
-      storage.set({
-        origin: {
-          top: window.screenY,
-          left: window.screenX
+          e.returnValue = confirmationMessage;
+          return confirmationMessage;
         }
       });
-    }, 3000);
+      this.moveInterval = setInterval(() => {
+        storage.set({
+          origin: {
+            top: window.screenY,
+            left: window.screenX
+          }
+        });
+      }, 3000);
+    }
   }
   handleResize(currWindow) {
     UiState.setWindowHeight(currWindow.innerHeight);
@@ -154,13 +158,13 @@ if (browser.windows) {
       // execution view
       e.preventDefault();
       UiState.changeView(UiState.views[+key - 1]);
-    } else if (primaryAndShift && e.code === "KeyR") {
+    } else if (primaryAndShift && e.code === "KeyR" && isProduction) {
       // run suite
       e.preventDefault();
       if (PlaybackState.canPlaySuite) {
         PlaybackState.playSuiteOrResume();
       }
-    } else if (onlyPrimary && key === "R") {
+    } else if (onlyPrimary && key === "R" && isProduction) {
       // run test
       e.preventDefault();
       if (!PlaybackState.isPlayingSuite) {
@@ -202,9 +206,11 @@ if (browser.windows) {
     UiState.setNavigationHover(false);
   }
   componentWillUnmount() {
-    clearInterval(this.moveInterval);
-    window.removeEventListener(this.resizeHandler);
-    window.removeEventListener(this.quitHandler);
+    if (isProduction) {
+      clearInterval(this.moveInterval);
+      window.removeEventListener("resize", this.resizeHandler);
+      window.removeEventListener("beforeunload", this.quitHandler);
+    }
   }
   render() {
     return (

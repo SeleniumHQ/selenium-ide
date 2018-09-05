@@ -17,7 +17,6 @@
 
 import CommandEmitter from "./command";
 import config from "./config";
-import { convertToSnake } from "./utils";
 
 const hooks = [];
 
@@ -26,7 +25,6 @@ export function emit(test, options = config, snapshot) {
     const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
     const setupHooks = hookResults.map((hook) => hook.setup || "").filter((hook) => (!!hook));
     const teardownHooks = hookResults.map((hook) => hook.teardown || "").filter((hook) => (!!hook));
-    const testName = convertToSnake(test.name);
 
     let errors = [];
 
@@ -50,12 +48,12 @@ export function emit(test, options = config, snapshot) {
       // emit everything
       let emittedTest = `it("${test.name}", async () => {`;
       emittedTest += setupHooks.join("").concat(snapshot ? snapshot.setupHooks.join("") : "");
-      emittedTest += `await tests.${testName}(driver, vars);`;
+      emittedTest += `await tests["${test.name}"](driver, vars);`;
       emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
       emittedTest += teardownHooks.join("").concat(snapshot ? snapshot.teardownHooks.join("") : "");
       emittedTest += "});";
 
-      let func = `tests.${testName} = async function ${testName}(driver, vars, opts) {`;
+      let func = `tests["${test.name}"] = async (driver, vars, opts) => {`;
       func += commands.join("");
       func += "}";
 

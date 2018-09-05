@@ -18,7 +18,6 @@
 import config from "./config";
 import LocationEmitter from "./location";
 import SelectionEmitter from "./selection";
-import { convertToSnake } from "./utils";
 
 const emitters = {
   open: emitOpen,
@@ -280,7 +279,7 @@ async function emitUncheck(locator) {
 }
 
 async function emitRun(testCase) {
-  return Promise.resolve(`await tests.${convertToSnake(testCase)}(driver, vars, { isNested: true });`);
+  return Promise.resolve(`await tests["${testCase}"](driver, vars, { isNested: true });`);
 }
 
 async function emitRunScript(script) {

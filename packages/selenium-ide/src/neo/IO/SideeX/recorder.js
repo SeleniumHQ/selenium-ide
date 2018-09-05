@@ -51,7 +51,9 @@ export default class BackgroundRecorder {
     this.selfWindowId = -1;
     this.attached = false;
     this.rebind();
-    browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler);
+    if (browser && browser.runtime && browser.runtime.onMessage) {
+      browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler);
+    }
   }
 
   attachToTab(tabId) {

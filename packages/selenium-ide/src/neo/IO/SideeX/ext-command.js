@@ -250,6 +250,35 @@ export default class ExtCommand {
     return Promise.resolve(PlaybackState.callTestCase(target));
   }
 
+  async doMouseOver(locator, _, top) {
+    const browserName = parsedUA.browser.name;
+    if (browserName === "Chrome") {
+      // handle scrolling through Selenium atoms
+      const { rect } = await this.sendPayload({
+        prepareToInteract: true,
+        locator
+      }, top);
+      const connection = new Debugger(this.currentPlayingTabId);
+      try {
+        await connection.attach();
+        await connection.sendCommand("Input.dispatchMouseEvent", {
+          type: "mouseMoved",
+          x: rect.x + (rect.width / 2),
+          y: rect.y + (rect.height / 2)
+        });
+        await connection.detach();
+        return {
+          result: "success"
+        };
+      } catch (e) {
+        await connection.detach();
+        throw e;
+      }
+    } else {
+      return this.sendMessage("mouseOver", locator, _, top);
+    }
+  }
+
   doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
@@ -275,13 +304,9 @@ export default class ExtCommand {
 
   async doSendKeys(locator, value, top) {
     const browserName = parsedUA.browser.name;
-    if (browserName === "Chrome" && value === "${KEY_ENTER}") {
+    if (browserName === "Chrome" && value.indexOf("${KEY_ENTER}") !== -1) {
       const connection = new Debugger(this.currentPlayingTabId);
-      try {
-        await connection.attach();
-        const docNode = await connection.getDocument();
-        const selector = await this.convertToQuerySelector(locator);
-        const nodeId = await connection.querySelector(selector, docNode.nodeId);
+      const sendEnter = async (nodeId) => {
         await connection.sendCommand("DOM.focus", { nodeId });
         await connection.sendCommand("Input.dispatchKeyEvent", {
           type: "keyDown",
@@ -297,6 +322,24 @@ export default class ExtCommand {
           code: "Enter",
           text: "\r"
         });
+      };
+      try {
+        await connection.attach();
+        const docNode = await connection.getDocument();
+        const selector = await this.convertToQuerySelector(locator);
+        const nodeId = await connection.querySelector(selector, docNode.nodeId);
+        const parts = value.split("${KEY_ENTER}");
+        let n = 0;
+        while (n < parts.length) {
+          const part = parts[n];
+          if (part) {
+            await this.sendMessage("sendKeys", locator, value, top);
+          }
+          if (n < parts.length - 1) {
+            await sendEnter(nodeId);
+          }
+          n++;
+        }
         await connection.detach();
         return {
           result: "success"
@@ -337,10 +380,11 @@ export default class ExtCommand {
   }
 
   async buildLocators(locator) {
-    return await this.sendPayload({
-      buildlocators: true,
+    const { locators } = await this.sendPayload({
+      buildLocators: true,
       locator
-    }).locators;
+    });
+    return locators;
   }
 
   wait(...properties) {
