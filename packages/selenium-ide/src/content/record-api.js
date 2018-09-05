@@ -107,14 +107,14 @@ function detachRecorderHandler(message) {
 }
 
 function findRecordingIndicator() {
-  return document.getElementById("recording-indicator");
+  return document.getElementById("selenium-ide-indicator");
 }
 
 function addRecordingIndicator() {
   if (!findRecordingIndicator() && frameLocation === "root") {
     let recordingIndicator = window.document.createElement("iframe");
     recordingIndicator.src = browser.runtime.getURL("/indicator.html");
-    recordingIndicator.id = "recording-indicator";
+    recordingIndicator.id = "selenium-ide-indicator";
     recordingIndicator.style.border = "none";
     recordingIndicator.style.position = "fixed";
     recordingIndicator.style.bottom = "20px";
@@ -122,6 +122,10 @@ function addRecordingIndicator() {
     recordingIndicator.style.width = "200px";
     recordingIndicator.style.height = "85px";
     window.document.body.appendChild(recordingIndicator);
+    let hover = window.document.createElement("style");
+    hover.appendChild(document.createTextNode("#selenium-ide-indicator { opacity: 1; transition: opacity linear 400ms; }"));
+    hover.appendChild(document.createTextNode("#selenium-ide-indicator:hover { opacity: 0; pointer-events: none; }"));
+    window.document.head.appendChild(hover);
   }
 }
 
