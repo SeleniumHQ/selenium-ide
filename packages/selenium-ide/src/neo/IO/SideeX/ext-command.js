@@ -337,10 +337,11 @@ export default class ExtCommand {
   }
 
   async buildLocators(locator) {
-    return await this.sendPayload({
-      buildlocators: true,
+    const { locators } = await this.sendPayload({
+      buildLocators: true,
       locator
-    }).locators;
+    });
+    return locators;
   }
 
   wait(...properties) {
