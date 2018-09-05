@@ -789,6 +789,20 @@ class CommandList {
       target: ArgTypes.locator,
       value: ArgTypes.waitTime
     }],
+    [ "waitForElementVisible", {
+      name: "wait for element visible",
+      type: TargetTypes.LOCATOR,
+      description: "Wait for a target element to be visible on the page.",
+      target: ArgTypes.locator,
+      value: ArgTypes.waitTime
+    }],
+    [ "waitForElementNotVisible", {
+      name: "wait for element not visible",
+      type: TargetTypes.LOCATOR,
+      description: "Wait for a target element to not be visible on the page.",
+      target: ArgTypes.locator,
+      value: ArgTypes.waitTime
+    }],
     [ "webdriverAnswerOnVisiblePrompt", {
       name: "webdriver answer on visible prompt",
       description: "Affects a currently showing alert prompt. This command \

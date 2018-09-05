@@ -106,7 +106,9 @@ const emitters = {
   assert: emitAssert,
   verify: emitAssert,
   waitForElementPresent: emitWaitForElementPresent,
-  waitForElementNotPresent: emitWaitForElementNotPresent
+  waitForElementNotPresent: emitWaitForElementNotPresent,
+  waitForElementVisible: emitWaitForElementVisible,
+  waitForElementNotVisible: emitWaitForElementNotVisible
 };
 
 export function emit(command, options = config, snapshot) {
@@ -510,4 +512,12 @@ async function emitWaitForElementPresent(locator, timeout) {
 
 async function emitWaitForElementNotPresent(locator, timeout) {
   return Promise.resolve(`await driver.wait(until.stalenessOf(await driver.findElement(${await LocationEmitter.emit(locator)})), ${Math.floor(timeout)});`);
+}
+
+async function emitWaitForElementVisible(locator, timeout) {
+  return Promise.resolve(`await driver.wait(until.elementIsVisible(await driver.findElement(${await LocationEmitter.emit(locator)})), ${Math.floor(timeout)});`);
+}
+
+async function emitWaitForElementNotVisible(locator, timeout) {
+  return Promise.resolve(`await driver.wait(until.elementIsNotVisible(await driver.findElement(${await LocationEmitter.emit(locator)})), ${Math.floor(timeout)});`);
 }

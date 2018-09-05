@@ -561,6 +561,24 @@ Selenium.prototype.doWaitForElementNotPresent = function(locator, timeout) {
   );
 };
 
+Selenium.prototype.doWaitForElementVisible = function(locator, timeout) {
+  return waitUntil(
+    isDisplayed.bind(this),
+    locator,
+    timeout,
+    `Element not visible on the page within the timeout specified (${timeout}ms).`
+  );
+};
+
+Selenium.prototype.doWaitForElementNotVisible = function(locator, timeout) {
+  return waitUntil(
+    isNotDisplayed.bind(this),
+    locator,
+    timeout,
+    `Element still visible on the page within the timeout specified (${timeout}ms).`
+  );
+};
+
 // xian
 Selenium.prototype.doWaitPreparation = function() {
   // function setNewPageValue(e) {
@@ -2037,6 +2055,22 @@ Selenium.prototype.isElementPresent = function(locator) {
   }
   return true;
 };
+
+function isNotDisplayed(locator) {
+  try {
+    return !this.isVisible(locator);
+  } catch(error) {
+    return false;
+  }
+}
+
+function isDisplayed(locator) {
+  try {
+    return this.isVisible(locator);
+  } catch(error) {
+    return false;
+  }
+}
 
 Selenium.prototype.isVisible = function(locator) {
   /**

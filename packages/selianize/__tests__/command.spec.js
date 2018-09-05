@@ -878,4 +878,20 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.stalenessOf(await driver.findElement(By.css(`#blah`))), 5000);");
   });
+  it("should emit `waitForElementVisible` command", () => {
+    const command = {
+      command: "waitForElementVisible",
+      target: "css=#blah",
+      value: "5000"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementIsVisible(await driver.findElement(By.css(`#blah`))), 5000);");
+  });
+  it("should emit `waitForElementNotVisible` command", () => {
+    const command = {
+      command: "waitForElementNotVisible",
+      target: "css=#blah",
+      value: "5000"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementIsNotVisible(await driver.findElement(By.css(`#blah`))), 5000);");
+  });
 });

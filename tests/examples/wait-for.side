@@ -66,13 +66,77 @@
       "targets": [],
       "value": ""
     }]
+  },{
+    "id": "b2baf643-63af-4c47-820e-a215d79d6f2f",
+    "name": "wait for element visible",
+    "commands": [{
+      "id": "06a49f39-c64d-48bd-a7e8-b3b592e926fe",
+      "comment": "",
+      "command": "open",
+      "target": "dynamic_loading/1",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "87d91e6e-369f-4d6e-9869-80feec5e8a1e",
+      "comment": "",
+      "command": "click",
+      "target": "css=#start button",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "46e5ef5d-ec77-4e42-84de-96a4ac3ce172",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=#finish",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=#finish",
+      "targets": [],
+      "value": "Hello World!"
+    }]
+  },{
+    "id": "b2baf643-63af-4c47-820e-a215d79d6f2g",
+    "name": "wait for element not visible",
+    "commands": [{
+      "id": "06a49f39-c64d-48bd-a7e8-b3b592e926fe",
+      "comment": "",
+      "command": "open",
+      "target": "dynamic_loading/1",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "87d91e6e-369f-4d6e-9869-80feec5e8a1e",
+      "comment": "",
+      "command": "click",
+      "target": "css=#start button",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "46e5ef5d-ec77-4e42-84de-96a4ac3ce172",
+      "comment": "",
+      "command": "waitForElementNotVisible",
+      "target": "css=#loading",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=#finish",
+      "targets": [],
+      "value": "Hello World!"
+    }]
   }],
   "suites": [{
     "id": "ee5ed249-db27-45ab-9ef0-296e983d799c",
     "name": "wait for",
     "parallel": false,
     "timeout": 3000,
-    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e"]
+    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e","b2baf643-63af-4c47-820e-a215d79d6f2f","b2baf643-63af-4c47-820e-a215d79d6f2g"]
   }],
   "urls": ["http://the-internet.herokuapp.com/"],
   "plugins": [],
