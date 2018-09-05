@@ -87,24 +87,10 @@ describe("Selenium code serializer", () => {
           ],
           id: "33399e09-f96c-4b7c-801c-f8ff9567b8a5",
           name: "aaba failure"
-        },
-        {
-          commands: [
-            {
-              command: "waitForElementPresent",
-              id: "0a0b6a3e-c1e9-4ef7-9748-dee1586be715",
-              index: 1,
-              message: new Error("Unknown command waitForElementPresent"),
-              target: "",
-              value: ""
-            }
-          ],
-          id: "44955d17-a69d-4d1a-967d-05fd70b51905",
-          name: "aabb failure"
         }
       ]
     };
-    return expect(Selianize(project)).rejects.toMatchObject(failure);
+    expect(Selianize(project)).rejects.toMatchObject(failure);
   });
   it("should parse the error to markdown", () => {
     const failure = {
@@ -123,23 +109,9 @@ describe("Selenium code serializer", () => {
           ],
           id: "33399e09-f96c-4b7c-801c-f8ff9567b8a5",
           name: "aaba failure"
-        },
-        {
-          commands: [
-            {
-              command: "waitForElementPresent",
-              id: "0a0b6a3e-c1e9-4ef7-9748-dee1586be715",
-              index: 1,
-              message: new Error("Unknown command waitForElementPresent"),
-              target: "",
-              value: ""
-            }
-          ],
-          id: "44955d17-a69d-4d1a-967d-05fd70b51905",
-          name: "aabb failure"
         }
       ]
     };
-    expect(ParseError(failure)).toBe(`## aaba failure\n${failure.tests[0].commands[0].index}. ${failure.tests[0].commands[0].message}\n\n## aabb failure\n${failure.tests[1].commands[0].index}. ${failure.tests[1].commands[0].message}\n\n`);
+    expect(ParseError(failure)).toBe(`## aaba failure\n${failure.tests[0].commands[0].index}. ${failure.tests[0].commands[0].message}\n\n`);
   });
 });

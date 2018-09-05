@@ -862,4 +862,12 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toMatch("element.sendKeys(`${vars.test}`);");
   });
+  it("should emit `waitForElementPresent` command", () => {
+    const command = {
+      command: "waitForElementPresent",
+      target: "css=#blah",
+      value: "5000"
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.wait(until.elementLocated(By.css(`#blah`)), 5000);");
+  });
 });

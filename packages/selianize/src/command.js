@@ -104,7 +104,8 @@ const emitters = {
   times: emitControlFlowTimes,
   while: emitControlFlowWhile,
   assert: emitAssert,
-  verify: emitAssert
+  verify: emitAssert,
+  waitForElementPresent: emitWaitForElementPresent
 };
 
 export function emit(command, options = config, snapshot) {
@@ -500,4 +501,8 @@ function emitAssert(varName, value) {
 
 function emitSetSpeed() {
   return Promise.resolve("console.warn('`set speed` is a no-op in the runner, use `pause instead`');");
+}
+
+async function emitWaitForElementPresent(locator, timeout) {
+  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(locator)}), ${Math.floor(timeout)});`);
 }
