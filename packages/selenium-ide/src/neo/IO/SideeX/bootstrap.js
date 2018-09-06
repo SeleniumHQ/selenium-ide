@@ -16,33 +16,14 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-import BackgroundRecorder from "./recorder";
-import { selectTarget, endSelection } from "./find-select";
+import { recorder } from "./recorder";
 import { extCommand } from "./playback";
 
 /* recording */
 let selfWindowId = -1;
 let contentWindowId;
 
-const recorder = new BackgroundRecorder();
-
-export function toggleRecord(isRecording) {
-  isRecording ? recorder.attach() : recorder.detach();
-}
-
-function handleMessage(message, sender, sendResponse) {
-  if (message.selectTarget) {
-    selectTarget(message.target, message.selectNext);
-    sendResponse(true);
-  }
-  if (message.cancelSelectTarget) {
-    endSelection(sender.tab.id);
-    sendResponse(true);
-  }
-}
-
 if (browser && browser.runtime && browser.runtime.onMessage) {
-  browser.runtime.onMessage.addListener(handleMessage);
   browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
     if (message.selfWindowId != undefined && message.commWindowId != undefined) {
       selfWindowId = message.selfWindowId;

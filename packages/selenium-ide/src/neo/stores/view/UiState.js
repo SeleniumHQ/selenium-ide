@@ -22,6 +22,7 @@ import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
 import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
+import { recorder } from "../../IO/SideeX/recorder";
 
 class UiState {
   views = [ "Tests", "Test suites", "Executing" ];
@@ -199,14 +200,25 @@ class UiState {
     this.filterTerm = term;
   }
 
-  @action.bound toggleRecord() {
-    this.isRecording = !this.isRecording;
-    this.emitRecordingState();
+  @action.bound async toggleRecord() {
+    await (this.isRecording ? this.stopRecording() : this.startRecording());
   }
 
-  @action.bound stopRecording() {
-    this.isRecording = false;
-    this.emitRecordingState();
+  @action.bound async startRecording() {
+    await recorder.attach();
+    this._setRecordingState(true);
+    await this.emitRecordingState();
+  }
+
+  @action.bound async stopRecording() {
+    await recorder.detach();
+    this._setRecordingState(false);
+    await this.emitRecordingState();
+  }
+
+  // Do not call this method directly, use start and stop
+  @action.bound _setRecordingState(isRecording) {
+    this.isRecording = isRecording;
   }
 
   @action.bound emitRecordingState() {

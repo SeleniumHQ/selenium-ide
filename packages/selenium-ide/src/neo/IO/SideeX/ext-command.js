@@ -17,11 +17,12 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
-import { recorder } from "./editor";
+import { recorder } from "./recorder";
 import Debugger, { convertLocator } from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
 import { absolutifyUrl } from "../playback/utils";
+import "./bootstrap";
 
 const parsedUA = parser(window.navigator.userAgent);
 

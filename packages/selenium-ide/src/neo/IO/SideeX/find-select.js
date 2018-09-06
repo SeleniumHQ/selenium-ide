@@ -109,3 +109,18 @@ export function endSelection(tabId) {
   UiState.setSelectingTarget(false);
   browser.tabs.sendMessage(tabId, { selectMode: true, selecting: false });
 }
+
+function handleContentScriptResponse(message, sender, sendResponse) {
+  if (message.selectTarget) {
+    selectTarget(message.target, message.selectNext);
+    sendResponse(true);
+  }
+  if (message.cancelSelectTarget) {
+    endSelection(sender.tab.id);
+    sendResponse(true);
+  }
+}
+
+if (browser && browser.runtime && browser.runtime.onMessage) {
+  browser.runtime.onMessage.addListener(handleContentScriptResponse);
+}
