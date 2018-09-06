@@ -589,7 +589,7 @@ Selenium.prototype.doWaitForElementNotVisible = function(locator, timeout) {
 
 Selenium.prototype.doWaitForElementEditable = function(locator, timeout) {
   return waitUntil(
-    isEditable.bind(this),
+    this.isEditable.bind(this),
     locator,
     timeout,
     "Element not editable within the timeout specified."
@@ -2166,10 +2166,6 @@ Selenium.prototype.findEffectiveStyle = function(element) {
 
   throw new SeleniumError("cannot determine effective stylesheet in this browser");
 };
-
-function isEditable(locator) {
-  return this.isEditable(locator);
-}
 
 function isNotEditable(locator) {
   return !this.isEditable(locator);
