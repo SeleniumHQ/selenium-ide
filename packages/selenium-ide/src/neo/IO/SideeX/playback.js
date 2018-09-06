@@ -277,22 +277,37 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
   if (!PlaybackState.isSingleCommandRunning && (!PlaybackState.isPlaying || PlaybackState.paused)) return;
   const { command } = PlaybackState.currentExecutingCommandNode.command;
 
-  let p = new Promise(function(resolve, reject) {
-    let count = 0;
-    let interval = setInterval(function() {
-      if (count > 60) {
-        reportError("Timed out after 30000ms");
-        reject("Window not Found");
+  let count = 0;
+  function checkPageStatus(resolve, reject) {
+    if (count > 60) {
+      reportError("Timed out after 30000ms");
+      reject("Window not Found");
+    }
+    if (!extCommand.getPageStatus()) {
+      count++;
+    } else {
+      resolve();
+    }
+  }
+
+  let p = Promise.resolve();
+
+  if (!extCommand.getPageStatus()) {
+    p = new Promise(function(resolve, reject) {
+      let interval;
+      let res = () => {
         clearInterval(interval);
-      }
-      if (!extCommand.getPageStatus()) {
-        count++;
-      } else {
-        resolve();
+        return resolve();
+      };
+      let rej = () => {
         clearInterval(interval);
-      }
-    }, 500);
-  });
+        return reject();
+      };
+      interval = setInterval(() => (checkPageStatus(res, rej))(), 500);
+    });
+  }
+
+  p = Promise.resolve();
 
   return p.then(() => (
     canExecuteCommand(command) ?
