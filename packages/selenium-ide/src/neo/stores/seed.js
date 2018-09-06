@@ -278,6 +278,13 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(waitTest4);
   smokeSuite.addTestCase(waitTest5);
 
+  const waitSuite = store.createSuite("waits");
+  waitSuite.addTestCase(waitTest1);
+  waitSuite.addTestCase(waitTest2);
+  waitSuite.addTestCase(waitTest3);
+  waitSuite.addTestCase(waitTest4);
+  waitSuite.addTestCase(waitTest5);
+
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
