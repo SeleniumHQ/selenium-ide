@@ -527,14 +527,25 @@ function waitUntil(condition, target, timeout, failureMessage) {
   return new Promise(function(resolve, reject) {
     let count = 0;
     let retryInterval = 500;
-    setInterval(function() {
+    let result;
+    let interval = setInterval(function() {
       if (count > timeout) {
-        return reject(failureMessage);
+        clearInterval(interval);
+        reject(failureMessage);
       }
-      if (!condition(target)) {
+      try {
+        result = condition(target);
+      } catch(error) {
+        result = "Unable to locate target element.";
+      }
+      if (typeof result === "boolean" && !result) {
         count += retryInterval;
+      } else if (typeof result !== "boolean") {
+        clearInterval(interval);
+        reject(result);
       } else {
-        return resolve();
+        clearInterval(interval);
+        resolve();
       }
     }, retryInterval);
   });
@@ -545,7 +556,7 @@ Selenium.prototype.doWaitForElementPresent = function(locator, timeout) {
     this.isElementPresent.bind(this),
     locator,
     timeout,
-    `Unable to find the target element within the timeout specified (${timeout}ms).`
+    "Unable to find the target element within the timeout specified."
   );
 };
 
@@ -554,7 +565,7 @@ Selenium.prototype.doWaitForElementNotPresent = function(locator, timeout) {
     isElementNotPresent.bind(this),
     locator,
     timeout,
-    `Element still present on the page within the timeout specified (${timeout}ms).`
+    "Element still present on the page within the timeout specified."
   );
 };
 
@@ -563,7 +574,7 @@ Selenium.prototype.doWaitForElementVisible = function(locator, timeout) {
     isDisplayed.bind(this),
     locator,
     timeout,
-    `Element not visible on the page within the timeout specified (${timeout}ms).`
+    "Element not visible on the page within the timeout specified."
   );
 };
 
@@ -572,7 +583,7 @@ Selenium.prototype.doWaitForElementNotVisible = function(locator, timeout) {
     isNotDisplayed.bind(this),
     locator,
     timeout,
-    `Element still visible on the page within the timeout specified (${timeout}ms).`
+    "Element still visible on the page within the timeout specified."
   );
 };
 
@@ -581,7 +592,7 @@ Selenium.prototype.doWaitForElementEditable = function(locator, timeout) {
     isEditable.bind(this),
     locator,
     timeout,
-    `Element not editable within the timeout specified (${timeout}ms).`
+    "Element not editable within the timeout specified."
   );
 };
 
@@ -590,7 +601,7 @@ Selenium.prototype.doWaitForElementNotEditable = function(locator, timeout) {
     isNotEditable.bind(this),
     locator,
     timeout,
-    `Element still editable within the timeout specified (${timeout}ms).`
+    "Element still editable within the timeout specified."
   );
 };
 
@@ -2072,17 +2083,7 @@ Selenium.prototype.isElementPresent = function(locator) {
 };
 
 function isNotDisplayed(locator) {
-  try {
-    return !this.isVisible(locator);
-  } catch(error) {
-    // TODO: DH 06, Sept. 2018
-    // An `Uncaught Error` throws from `isVisible` when no element is found.
-    // Catching and throwing here also leads to an `Uncaught Error`.
-    // For now returning `false` to prevent an infinite loop and give
-    // the intended benefit of this function.
-    // Also had to follow the same pattern for isEditable & isNotEditable.
-    return false;
-  }
+  return !this.isVisible(locator);
 }
 
 function isDisplayed(locator) {
@@ -2167,19 +2168,11 @@ Selenium.prototype.findEffectiveStyle = function(element) {
 };
 
 function isEditable(locator) {
-  try {
-    return this.isEditable(locator);
-  } catch(error) {
-    return false;
-  }
+  return this.isEditable(locator);
 }
 
 function isNotEditable(locator) {
-  try {
-    return !this.isEditable(locator);
-  } catch(error) {
-    return false;
-  }
+  return !this.isEditable(locator);
 }
 
 Selenium.prototype.isEditable = function(locator) {
