@@ -25,7 +25,7 @@
       "command": "waitForElementPresent",
       "target": "css=#finish",
       "targets": [],
-      "value": "5000"
+      "value": "10000"
     }, {
       "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
       "comment": "",
@@ -57,7 +57,7 @@
       "command": "waitForElementNotPresent",
       "target": "css=#checkbox",
       "targets": [],
-      "value": "5000"
+      "value": "10000"
     }, {
       "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
       "comment": "",
@@ -89,7 +89,7 @@
       "command": "waitForElementVisible",
       "target": "css=#finish",
       "targets": [],
-      "value": "5000"
+      "value": "10000"
     }, {
       "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
       "comment": "",
@@ -121,7 +121,7 @@
       "command": "waitForElementNotVisible",
       "target": "css=#loading",
       "targets": [],
-      "value": "5000"
+      "value": "10000"
     }, {
       "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
       "comment": "",
@@ -153,7 +153,7 @@
       "command": "waitForElementEditable",
       "target": "css=#input-example input",
       "targets": [],
-      "value": "5000"
+      "value": "10000"
     }, {
       "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c251",
       "comment": "",
@@ -174,7 +174,7 @@
       "command": "waitForElementNotEditable",
       "target": "css=#input-example input",
       "targets": [],
-      "value": "5000"
+      "value": "10000"
     }, {
       "id": "80e0bc3a-0fde-4238-9083-b6a0cac7c252",
       "comment": "",
