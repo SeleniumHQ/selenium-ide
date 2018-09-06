@@ -2061,10 +2061,11 @@ function isNotDisplayed(locator) {
     return !this.isVisible(locator);
   } catch(error) {
     // TODO: Fix
-    // Uncaught Error here when throwing, or if no catch specified,
-    // when no element found on the page to perform a visual check)
-    // returning false to prevent an infinite loop
-    return false
+    // An `Uncaught Error` throws from `isVisible` when no element is found.
+    // Catching and throwing here also leads to an `Uncaught Error`.
+    // For now returning `false` to prevent an infinite loop and give
+    // the intended benefit of this function.
+    return false;
   }
 }
 
