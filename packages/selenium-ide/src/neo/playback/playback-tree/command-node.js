@@ -63,9 +63,8 @@ export class CommandNode {
 
   _interpolateTarget() {
     const type = Commands.list.get(this.command.command).target;
-    if (type &&
-        type.name === ArgTypes.script.name ||
-        type.name === ArgTypes.conditionalExpression.name) {
+    if (type && (type.name === ArgTypes.script.name ||
+        type.name === ArgTypes.conditionalExpression.name)) {
       return interpolateScript(this.command.target);
     }
     return xlateArgument(this.command.target);
