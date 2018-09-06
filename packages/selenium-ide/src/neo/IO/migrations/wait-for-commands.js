@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands } from "../../models/Command";
-
 export default function migrate(project) {
   let r = Object.assign({}, project);
   r.tests = r.tests.map((test) => {
