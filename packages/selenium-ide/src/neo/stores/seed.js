@@ -177,11 +177,10 @@ export default function seed(store, numberOfSuites = 5) {
 
   const framesTest = store.createTestCase("frames");
   framesTest.createCommand(undefined, "open", "/iframe");
-  framesTest.createCommand(undefined, "selectFrame", "css=#mce_0_ifr");
+  framesTest.createCommand(undefined, "selectFrame", "index=0");
   framesTest.createCommand(undefined, "assertText", "css=#tinymce", "Your content goes here.");
   framesTest.createCommand(undefined, "open", "/nested_frames");
-  framesTest.createCommand(undefined, "selectFrame", "frame-top");
-  framesTest.createCommand(undefined, "selectFrame", "frame-middle");
+  framesTest.createCommand(undefined, "selectFrame", "index=1");
   framesTest.createCommand(undefined, "assertText", "css=#content", "MIDDLE");
 
   const selectTest = store.createTestCase("select");
