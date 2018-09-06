@@ -520,10 +520,7 @@ Selenium.prototype.doEcho = function(value) {
   return browser.runtime.sendMessage({ "echoStr": value });
 };
 
-function waitUntil(condition, locator, timeout, failureMessage) {
-  if (!locator) {
-    throw new Error("Locator not provided.");
-  }
+function waitUntil(condition, target, timeout, failureMessage) {
   if (!timeout) {
     throw new Error("Timeout not specified.");
   }
@@ -534,7 +531,7 @@ function waitUntil(condition, locator, timeout, failureMessage) {
       if (count > timeout) {
         return reject(failureMessage);
       }
-      if (!condition(locator)) {
+      if (!condition(target)) {
         count += retryInterval;
       } else {
         return resolve();
@@ -576,6 +573,24 @@ Selenium.prototype.doWaitForElementNotVisible = function(locator, timeout) {
     locator,
     timeout,
     `Element still visible on the page within the timeout specified (${timeout}ms).`
+  );
+};
+
+Selenium.prototype.doWaitForElementEditable = function(locator, timeout) {
+  return waitUntil(
+    isEditable.bind(this),
+    locator,
+    timeout,
+    `Element not editable within the timeout specified (${timeout}ms).`
+  );
+};
+
+Selenium.prototype.doWaitForElementNotEditable = function(locator, timeout) {
+  return waitUntil(
+    isNotEditable.bind(this),
+    locator,
+    timeout,
+    `Element still editable within the timeout specified (${timeout}ms).`
   );
 };
 
@@ -2060,11 +2075,12 @@ function isNotDisplayed(locator) {
   try {
     return !this.isVisible(locator);
   } catch(error) {
-    // TODO: Fix
+    // TODO: DH 06, Sept. 2018
     // An `Uncaught Error` throws from `isVisible` when no element is found.
     // Catching and throwing here also leads to an `Uncaught Error`.
     // For now returning `false` to prevent an infinite loop and give
     // the intended benefit of this function.
+    // Also had to follow the same pattern for isEditable & isNotEditable.
     return false;
   }
 }
@@ -2149,6 +2165,22 @@ Selenium.prototype.findEffectiveStyle = function(element) {
 
   throw new SeleniumError("cannot determine effective stylesheet in this browser");
 };
+
+function isEditable(locator) {
+  try {
+    return this.isEditable(locator);
+  } catch(error) {
+    return false;
+  }
+}
+
+function isNotEditable(locator) {
+  try {
+    return !this.isEditable(locator);
+  } catch(error) {
+    return false;
+  }
+}
 
 Selenium.prototype.isEditable = function(locator) {
   /**

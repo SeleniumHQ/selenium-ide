@@ -222,7 +222,7 @@ export default function seed(store, numberOfSuites = 5) {
 
   const waitTest2 = store.createTestCase("wait for element not present");
   waitTest2.createCommand(undefined, "open", "/dynamic_controls");
-  waitTest2.createCommand(undefined, "clickAt", "css=#btn");
+  waitTest2.createCommand(undefined, "clickAt", "css=#checkbox-example button");
   waitTest2.createCommand(undefined, "waitForElementNotPresent", "css=#checkbox", "5000");
   waitTest2.createCommand(undefined, "assertElementNotPresent", "css=#checkbox");
 
@@ -237,6 +237,15 @@ export default function seed(store, numberOfSuites = 5) {
   waitTest4.createCommand(undefined, "clickAt", "css=#start button");
   waitTest4.createCommand(undefined, "waitForElementNotVisible", "css=#loading", "5000");
   waitTest4.createCommand(undefined, "assertText", "css=#finish", "Hello World!");
+
+  const waitTest5 = store.createTestCase("wait for element editable (and not editable)");
+  waitTest5.createCommand(undefined, "open", "/dynamic_controls");
+  waitTest5.createCommand(undefined, "clickAt", "css=#input-example button");
+  waitTest5.createCommand(undefined, "waitForElementEditable", "css=#input-example input", "5000");
+  waitTest5.createCommand(undefined, "assertEditable", "css=#input-example input");
+  waitTest5.createCommand(undefined, "clickAt", "css=#input-example button");
+  waitTest5.createCommand(undefined, "waitForElementNotEditable", "css=#input-example input", "5000");
+  waitTest5.createCommand(undefined, "assertNotEditable", "css=#input-example input");
 
   const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
@@ -267,6 +276,7 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(waitTest2);
   smokeSuite.addTestCase(waitTest3);
   smokeSuite.addTestCase(waitTest4);
+  smokeSuite.addTestCase(waitTest5);
 
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
