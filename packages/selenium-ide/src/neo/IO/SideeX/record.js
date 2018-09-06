@@ -15,17 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { reaction } from "mobx";
 import UiState from "../../stores/view/UiState";
-import { toggleRecord } from "./editor";
 import { Commands, ArgTypes } from "../../models/Command";
-
-reaction(
-  () => UiState.isRecording,
-  isRecording => {
-    toggleRecord(isRecording);
-  }
-);
 
 function isEmpty(commands, command) {
   return (commands.length === 0 && command === "open");

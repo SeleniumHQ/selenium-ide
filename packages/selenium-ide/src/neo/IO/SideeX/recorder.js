@@ -377,3 +377,5 @@ export default class BackgroundRecorder {
     return this.selfWindowId;
   }
 }
+
+export const recorder = new BackgroundRecorder();
