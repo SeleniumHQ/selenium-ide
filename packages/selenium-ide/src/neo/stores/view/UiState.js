@@ -20,6 +20,7 @@ import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
+import ModalState from "./ModalState";
 import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
 import { recorder } from "../../IO/SideeX/recorder";
@@ -205,9 +206,16 @@ class UiState {
   }
 
   @action.bound async startRecording() {
-    await recorder.attach(this.baseUrl);
-    this._setRecordingState(true);
-    await this.emitRecordingState();
+    try {
+      await recorder.attach(this.baseUrl);
+      this._setRecordingState(true);
+      await this.emitRecordingState();
+    } catch (err) {
+      ModalState.showAlert({
+        title: "Could not start recording",
+        description: err.message
+      });
+    }
   }
 
   @action.bound async stopRecording() {

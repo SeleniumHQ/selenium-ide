@@ -49,6 +49,7 @@ export default class BackgroundRecorder {
     this.openedWindowIds = {};
     this.contentWindowId = -1;
     this.selfWindowId = -1;
+    this.isAttaching = false;
     this.attached = false;
     this.rebind();
     if (browser && browser.runtime && browser.runtime.onMessage) {
@@ -57,11 +58,13 @@ export default class BackgroundRecorder {
   }
 
   async attachToTab(tabId) {
-    await browser.tabs.sendMessage(tabId, { attachRecorder: true }).catch();
+    await browser.tabs.sendMessage(tabId, { attachRecorder: true });
   }
 
   async detachFromTab(tabId) {
-    await browser.tabs.sendMessage(tabId, { detachRecorder: true }).catch();
+    await browser.tabs.sendMessage(tabId, { detachRecorder: true }).catch(() => {
+      // the tab was deleted during the test, ignoring
+    });
   }
 
   async reattachToTab(tabId) {
@@ -332,31 +335,39 @@ export default class BackgroundRecorder {
   }
 
   async attach(startUrl) {
-    if (this.attached) {
+    if (this.attached || this.isAttaching) {
       return;
     }
-    this.attached = true;
-    browser.tabs.onActivated.addListener(this.tabsOnActivatedHandler);
-    browser.windows.onFocusChanged.addListener(this.windowsOnFocusChangedHandler);
-    browser.tabs.onRemoved.addListener(this.tabsOnRemovedHandler);
-    browser.webNavigation.onCreatedNavigationTarget.addListener(this.webNavigationOnCreatedNavigationTargetHandler);
-    browser.runtime.onMessage.addListener(this.addCommandMessageHandler);
-    const win = await browser.windows.create({
-      url: startUrl
-    });
-    const tab = win.tabs[0];
-    let testCaseId = getSelectedCase().id;
-    this.lastAttachedTabId = tab.id;
-    this.setOpenedWindow(tab.windowId);
-    this.openedTabIds[testCaseId] = {};
-    this.openedTabNames[testCaseId] = {};
+    try {
+      this.isAttaching = true;
+      browser.tabs.onActivated.addListener(this.tabsOnActivatedHandler);
+      browser.windows.onFocusChanged.addListener(this.windowsOnFocusChangedHandler);
+      browser.tabs.onRemoved.addListener(this.tabsOnRemovedHandler);
+      browser.webNavigation.onCreatedNavigationTarget.addListener(this.webNavigationOnCreatedNavigationTargetHandler);
+      browser.runtime.onMessage.addListener(this.addCommandMessageHandler);
+      const win = await browser.windows.create({
+        url: startUrl
+      });
+      const tab = win.tabs[0];
+      let testCaseId = getSelectedCase().id;
+      this.lastAttachedTabId = tab.id;
+      this.setOpenedWindow(tab.windowId);
+      this.openedTabIds[testCaseId] = {};
+      this.openedTabNames[testCaseId] = {};
 
-    this.currentRecordingFrameLocation[testCaseId] = "root";
-    this.currentRecordingTabId[testCaseId] = tab.id;
-    this.currentRecordingWindowId[testCaseId] = tab.windowId;
-    this.openedTabNames[testCaseId]["win_ser_local"] = tab.id;
-    this.openedTabIds[testCaseId][tab.id] = "win_ser_local";
-    this.openedTabCount[testCaseId] = 1;
+      this.currentRecordingFrameLocation[testCaseId] = "root";
+      this.currentRecordingTabId[testCaseId] = tab.id;
+      this.currentRecordingWindowId[testCaseId] = tab.windowId;
+      this.openedTabNames[testCaseId]["win_ser_local"] = tab.id;
+      this.openedTabIds[testCaseId][tab.id] = "win_ser_local";
+      this.openedTabCount[testCaseId] = 1;
+
+      this.attached = true;
+      this.isAttaching = false;
+    } catch(err) {
+      this.isAttaching = false;
+      throw err;
+    }
   }
 
   async detach() {
