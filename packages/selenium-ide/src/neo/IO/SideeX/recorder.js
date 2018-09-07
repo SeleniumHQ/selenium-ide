@@ -345,22 +345,8 @@ export default class BackgroundRecorder {
       browser.tabs.onRemoved.addListener(this.tabsOnRemovedHandler);
       browser.webNavigation.onCreatedNavigationTarget.addListener(this.webNavigationOnCreatedNavigationTargetHandler);
       browser.runtime.onMessage.addListener(this.addCommandMessageHandler);
-      const win = await browser.windows.create({
-        url: startUrl
-      });
-      const tab = win.tabs[0];
-      let testCaseId = getSelectedCase().id;
-      this.lastAttachedTabId = tab.id;
-      this.setOpenedWindow(tab.windowId);
-      this.openedTabIds[testCaseId] = {};
-      this.openedTabNames[testCaseId] = {};
 
-      this.currentRecordingFrameLocation[testCaseId] = "root";
-      this.currentRecordingTabId[testCaseId] = tab.id;
-      this.currentRecordingWindowId[testCaseId] = tab.windowId;
-      this.openedTabNames[testCaseId]["win_ser_local"] = tab.id;
-      this.openedTabIds[testCaseId][tab.id] = "win_ser_local";
-      this.openedTabCount[testCaseId] = 1;
+      await this.attachToExistingRecording(startUrl);
 
       this.attached = true;
       this.isAttaching = false;
@@ -382,6 +368,33 @@ export default class BackgroundRecorder {
     browser.tabs.onRemoved.removeListener(this.tabsOnRemovedHandler);
     browser.webNavigation.onCreatedNavigationTarget.removeListener(this.webNavigationOnCreatedNavigationTargetHandler);
     browser.runtime.onMessage.removeListener(this.addCommandMessageHandler);
+  }
+
+  // this will attempt to connect to a previous recording
+  // else it will create a new window for recording
+  async attachToExistingRecording(url) {
+    let testCaseId = getSelectedCase().id;
+    try {
+      await browser.windows.update(this.currentRecordingWindowId[testCaseId], {
+        focused: true
+      });
+    } catch(e) {
+      const win = await browser.windows.create({
+        url
+      });
+      const tab = win.tabs[0];
+      this.lastAttachedTabId = tab.id;
+      this.setOpenedWindow(tab.windowId);
+      this.openedTabIds[testCaseId] = {};
+      this.openedTabNames[testCaseId] = {};
+
+      this.currentRecordingFrameLocation[testCaseId] = "root";
+      this.currentRecordingTabId[testCaseId] = tab.id;
+      this.currentRecordingWindowId[testCaseId] = tab.windowId;
+      this.openedTabNames[testCaseId]["win_ser_local"] = tab.id;
+      this.openedTabIds[testCaseId][tab.id] = "win_ser_local";
+      this.openedTabCount[testCaseId] = 1;
+    }
   }
 
   setOpenedWindow(windowId) {
