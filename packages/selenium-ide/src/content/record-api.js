@@ -94,15 +94,17 @@ Recorder.prototype.detach = function() {
   removeRecordingIndicator();
 };
 
-function attachRecorderHandler(message) {
+function attachRecorderHandler(message, sender, sendResponse) {
   if (message.attachRecorder) {
     recorder.attach();
+    sendResponse(true);
   }
 }
 
-function detachRecorderHandler(message) {
+function detachRecorderHandler(message, sender, sendResponse) {
   if (message.detachRecorder) {
     recorder.detach();
+    sendResponse(true);
   }
 }
 

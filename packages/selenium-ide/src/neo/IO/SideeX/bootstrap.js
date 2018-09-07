@@ -29,7 +29,6 @@ if (browser && browser.runtime && browser.runtime.onMessage) {
       selfWindowId = message.selfWindowId;
       contentWindowId = message.commWindowId;
       extCommand.setContentWindowId(contentWindowId);
-      recorder.setOpenedWindow(contentWindowId);
       recorder.setSelfWindowId(selfWindowId);
       browser.runtime.onMessage.removeListener(contentWindowIdListener);
       sendResponse(true);

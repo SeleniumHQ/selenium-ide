@@ -56,25 +56,27 @@ export default class BackgroundRecorder {
     }
   }
 
-  attachToTab(tabId) {
-    browser.tabs.sendMessage(tabId, { attachRecorder: true }).catch();
+  async attachToTab(tabId) {
+    await browser.tabs.sendMessage(tabId, { attachRecorder: true }).catch();
   }
 
-  detachFromTab(tabId) {
-    browser.tabs.sendMessage(tabId, { detachRecorder: true }).catch();
+  async detachFromTab(tabId) {
+    await browser.tabs.sendMessage(tabId, { detachRecorder: true }).catch();
   }
 
-  reattachToTab(tabId) {
-    if (this.lastAttachedTabId && this.lastAttachedTabId !== tabId) {
-      this.detachFromTab(this.lastAttachedTabId);
+  async reattachToTab(tabId) {
+    if (tabId !== this.lastAttachedTabId) {
+      if (this.lastAttachedTabId && this.lastAttachedTabId !== tabId) {
+        await this.detachFromTab(this.lastAttachedTabId);
+      }
+      await this.attachToTab(tabId);
+      this.lastAttachedTabId = tabId;
     }
-    this.attachToTab(tabId);
-    this.lastAttachedTabId = tabId;
   }
 
   // TODO: rename method
   tabsOnActivatedHandler(activeInfo) {
-    this.reattachToTab(activeInfo.tabId);
+    console.log("tabs.onActivated");
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -82,6 +84,10 @@ export default class BackgroundRecorder {
     let testCaseId = testCase.id;
     if (!this.openedTabIds[testCaseId]) {
       return;
+    }
+
+    if (this.openedTabIds[testCaseId] && this.doesTabBelongToRecording(activeInfo.tabId)) {
+      this.reattachToTab(activeInfo.tabId);
     }
 
     let self = this;
@@ -108,14 +114,7 @@ export default class BackgroundRecorder {
   }
 
   windowsOnFocusChangedHandler(windowId) {
-    browser.tabs.query({
-      active: true,
-      windowId
-    }).then((tabs) => {
-      if (tabs.length) {
-        this.reattachToTab(tabs[0].id);
-      }
-    });
+    console.log("windows.onFocusChanged");
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -132,24 +131,32 @@ export default class BackgroundRecorder {
       return;
     }
 
+    browser.tabs.query({
+      windowId: windowId,
+      active: true
+    }).then((tabs) => {
+      const tab = tabs[0];
+      if (this.openedTabIds[testCaseId] && this.doesTabBelongToRecording(tab.id)) {
+        this.reattachToTab(tab.id);
+      }
+    });
+
     // If the activated window is the same as the last, just do nothing
     // selectWindow command will be handled by tabs.onActivated listener
     // if there also has a event of switching a activated tab
     if (this.currentRecordingWindowId[testCaseId] === windowId)
       return;
 
-    let self = this;
-
     browser.tabs.query({
       windowId: windowId,
       active: true
-    }).then(function(tabs) {
-      if(tabs.length === 0 || self.isPrivilegedPage(tabs[0].url)) {
+    }).then((tabs) => {
+      if(tabs.length === 0 || this.isPrivilegedPage(tabs[0].url)) {
         return;
       }
 
       // The activated tab is not the same as the last
-      if (tabs[0].id !== self.currentRecordingTabId[testCaseId]) {
+      if (tabs[0].id !== this.currentRecordingTabId[testCaseId]) {
         // If no command has been recorded, ignore selectWindow command
         // until the user has select a starting page to record commands
         if (!hasRecorded())
@@ -157,19 +164,20 @@ export default class BackgroundRecorder {
 
         // Ignore all unknown tabs, the activated tab may not derived from
         // other opened tabs, or it may managed by other SideeX panels
-        if (self.openedTabIds[testCaseId][tabs[0].id] == undefined)
+        if (this.openedTabIds[testCaseId][tabs[0].id] == undefined)
           return;
 
         // Tab information has existed, add selectWindow command
-        self.currentRecordingWindowId[testCaseId] = windowId;
-        self.currentRecordingTabId[testCaseId] = tabs[0].id;
-        self.currentRecordingFrameLocation[testCaseId] = "root";
-        record("selectWindow", [[self.openedTabIds[testCaseId][tabs[0].id]]], "");
+        this.currentRecordingWindowId[testCaseId] = windowId;
+        this.currentRecordingTabId[testCaseId] = tabs[0].id;
+        this.currentRecordingFrameLocation[testCaseId] = "root";
+        record("selectWindow", [[this.openedTabIds[testCaseId][tabs[0].id]]], "");
       }
     });
   }
 
   tabsOnRemovedHandler(tabId, removeInfo) { // eslint-disable-line no-unused-vars
+    console.log("tabs.onRemoved");
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -202,7 +210,7 @@ export default class BackgroundRecorder {
   }
 
   webNavigationOnCreatedNavigationTargetHandler(details) {
-    this.reattachToTab(details.tabId);
+    console.log("webNavigation.OnCreatedNavigationTarget");
     let testCase = getSelectedCase();
     if (!testCase)
       return;
@@ -226,7 +234,7 @@ export default class BackgroundRecorder {
   }
 
   attachRecorderRequestHandler(message, sender, sendResponse) {
-    if (message.attachRecorderRequest) {
+    if (message.attachRecorderRequest && this.doesTabBelongToRecording(sender.tab.id)) {
       return sendResponse(this.attached);
     }
   }
@@ -238,22 +246,6 @@ export default class BackgroundRecorder {
     sendResponse(true);
 
     let testCaseId = getSelectedCase().id;
-
-    if (!this.openedTabIds[testCaseId]) {
-      this.openedTabIds[testCaseId] = {};
-      this.openedTabNames[testCaseId] = {};
-      this.currentRecordingFrameLocation[testCaseId] = "root";
-      this.currentRecordingTabId[testCaseId] = sender.tab.id;
-      this.currentRecordingWindowId[testCaseId] = sender.tab.windowId;
-      this.openedTabCount[testCaseId] = 1;
-    }
-
-    if (Object.keys(this.openedTabIds[testCaseId]).length === 0) {
-      this.currentRecordingTabId[testCaseId] = sender.tab.id;
-      this.currentRecordingWindowId[testCaseId] = sender.tab.windowId;
-      this.openedTabNames[testCaseId]["win_ser_local"] = sender.tab.id;
-      this.openedTabIds[testCaseId][sender.tab.id] = "win_ser_local";
-    }
 
     if (!hasRecorded()) {
       record("open", [
@@ -339,7 +331,7 @@ export default class BackgroundRecorder {
     this.attachRecorderRequestHandler = this.attachRecorderRequestHandler.bind(this);
   }
 
-  attach() {
+  async attach(startUrl) {
     if (this.attached) {
       return;
     }
@@ -349,13 +341,29 @@ export default class BackgroundRecorder {
     browser.tabs.onRemoved.addListener(this.tabsOnRemovedHandler);
     browser.webNavigation.onCreatedNavigationTarget.addListener(this.webNavigationOnCreatedNavigationTargetHandler);
     browser.runtime.onMessage.addListener(this.addCommandMessageHandler);
+    const win = await browser.windows.create({
+      url: startUrl
+    });
+    const tab = win.tabs[0];
+    let testCaseId = getSelectedCase().id;
+    this.lastAttachedTabId = tab.id;
+    this.setOpenedWindow(tab.windowId);
+    this.openedTabIds[testCaseId] = {};
+    this.openedTabNames[testCaseId] = {};
+
+    this.currentRecordingFrameLocation[testCaseId] = "root";
+    this.currentRecordingTabId[testCaseId] = tab.id;
+    this.currentRecordingWindowId[testCaseId] = tab.windowId;
+    this.openedTabNames[testCaseId]["win_ser_local"] = tab.id;
+    this.openedTabIds[testCaseId][tab.id] = "win_ser_local";
+    this.openedTabCount[testCaseId] = 1;
   }
 
-  detach() {
+  async detach() {
     if (!this.attached) {
       return;
     }
-    this.detachFromTab(this.lastAttachedTabId);
+    await this.detachFromTab(this.lastAttachedTabId);
     this.lastAttachedTabId = undefined;
     this.attached = false;
     browser.tabs.onActivated.removeListener(this.tabsOnActivatedHandler);
@@ -375,6 +383,11 @@ export default class BackgroundRecorder {
 
   getSelfWindowId() {
     return this.selfWindowId;
+  }
+
+  doesTabBelongToRecording(tabId) {
+    let testCaseId = getSelectedCase().id;
+    return Object.keys(this.openedTabIds[testCaseId]).includes(`${tabId}`);
   }
 }
 

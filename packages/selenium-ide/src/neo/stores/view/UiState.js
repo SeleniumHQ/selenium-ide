@@ -205,7 +205,7 @@ class UiState {
   }
 
   @action.bound async startRecording() {
-    await recorder.attach();
+    await recorder.attach(this.baseUrl);
     this._setRecordingState(true);
     await this.emitRecordingState();
   }
