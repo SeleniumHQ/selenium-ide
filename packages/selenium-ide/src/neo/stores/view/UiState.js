@@ -30,8 +30,9 @@ class UiState {
   @observable selectedView = "Tests";
   @observable selectedTest = {};
   @observable selectedCommand = null;
+  @observable selectedCommands = [];
   @observable filterTerm = "";
-  @observable clipboard = null;
+  @observable clipboard = [];
   @observable isRecording = false;
   @observable isSelectingTarget = false;
   @observable windowHeight = window.innerHeight;
@@ -104,18 +105,21 @@ class UiState {
     }
   }
 
+  @action.bound copyToClipboard() {
+    // sorting by index
+    this.clipboard.replace(this.selectedCommands.sort((c1, c2) => c1.index - c2.index));
+  }
+
   @action.bound clearViewCache() {
     this.lastViewSelection.clear();
   }
 
-  @action.bound copyToClipboard(item) {
-    this.clipboard = item;
-  }
-
   @action.bound pasteFromClipboard(index) {
-    if (this.clipboard && this.displayedTest) {
-      const newCommand = this.clipboard.clone();
-      this.displayedTest.insertCommandAt(newCommand, index);
+    if (this.clipboard.length && this.displayedTest) {
+      this.clipboard.forEach((command, idx) => {
+        const newCommand = command.clone();
+        this.displayedTest.insertCommandAt(newCommand, index + idx + 1);
+      });
     }
   }
 
@@ -177,9 +181,10 @@ class UiState {
     }
   }
 
-  @action.bound selectCommand(command) {
+  @action.bound selectCommand(command, index) {
     if (!PlaybackState.isPlaying || PlaybackState.paused) {
       this.selectedCommand = command;
+      this.addToSelectedCommands(command, index);
     }
   }
 
@@ -356,8 +361,8 @@ class UiState {
   @action.bound projectChanged() {
     this.selectedTest = {};
     this.selectedCommand = null;
+    this.selectedCommands = [];
     this.filterTerm = "";
-    this.clipboard = null;
     this.isRecording = false;
     this.suiteStates = {};
     this.clearTestStates();
@@ -374,6 +379,26 @@ class UiState {
       state.modified = false;
     });
     this._project.setModified(false);
+  }
+
+  @action.bound addToSelectedCommands(command, index){
+    if (!PlaybackState.isPlaying || PlaybackState.paused) {
+      if(command){
+        command.index = index ? index : 0;
+        if (!this.selectedCommands.find((c) => (c === command)))
+          this.selectedCommands.push(command);
+      }
+    }
+  }
+
+  @action.bound clearSelectedCommands(){
+    this.selectedCommands.clear();
+  }
+
+  @action.bound selectAllCommands(){
+    this.selectedTest.test.commands.forEach((command, index) => {
+      this.selectCommand(command, index + 1);
+    });
   }
 }
 

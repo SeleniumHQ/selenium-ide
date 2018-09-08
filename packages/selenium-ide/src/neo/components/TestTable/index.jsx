@@ -35,6 +35,7 @@ export default class TestTable extends React.Component {
     this.detectNewCommand = this.detectNewCommand.bind(this);
     this.disposeNewCommand = this.disposeNewCommand.bind(this);
     this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
+    this.selectCommandByRange = this.selectCommandByRange.bind(this);
     this.commandLevels = [];
   }
   static propTypes = {
@@ -45,7 +46,10 @@ export default class TestTable extends React.Component {
     addCommand: PropTypes.func,
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
-    clearAllCommands: PropTypes.func
+    clearAllCommands: PropTypes.func,
+    clearSelectedCommands: PropTypes.func,
+    addToSelectedCommands: PropTypes.func,
+    selectedCommands: PropTypes.object
   };
   detectNewCommand(change) {
     this.newCommand = change.added[0];
@@ -58,6 +62,18 @@ export default class TestTable extends React.Component {
       this.newObserverDisposer();
       if (this.props.commands) {
         this.newObserverDisposer = observe(this.props.commands, this.detectNewCommand);
+      }
+    }
+  }
+  selectCommandByRange(lastCommandSelected){
+    if(this.props.selectedCommands.length > 1){
+      const fromIndex = this.props.selectedCommands[this.props.selectedCommands.length - 2].index;
+      const toIndex = lastCommandSelected.index;
+      const from = fromIndex > toIndex ? toIndex : fromIndex;
+      const to = fromIndex > toIndex ? fromIndex : toIndex;
+
+      for(let i = from; i <= to; i++){
+        UiState.selectCommand(this.props.commands[i], i);
       }
     }
   }
@@ -83,8 +99,10 @@ export default class TestTable extends React.Component {
               <TestRow
                 key={command.id}
                 status={classNames(PlaybackState.commandState.get(commandStatePrefix + command.id) ? PlaybackState.commandState.get(commandStatePrefix + command.id).state : "")}
-                selected={this.props.selectedCommand === command.id}
+                selected={this.props.selectedCommand === command.id || !!this.props.selectedCommands.find((cmd) => (cmd.id === command.id))}
                 readOnly={(PlaybackState.isPlaying && !PlaybackState.paused)}
+                addToSelectedCommands={this.props.addToSelectedCommands}
+                clearSelectedCommands={this.props.clearSelectedCommands}
                 index={index}
                 command={command}
                 new={command === this.newCommand ? this.disposeNewCommand : undefined}
@@ -100,6 +118,7 @@ export default class TestTable extends React.Component {
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 clearAllCommands={this.props.clearAllCommands}
                 setSectionFocus={UiState.setSectionFocus}
+                selectByRange={this.selectCommandByRange}
                 level={this.commandLevels[index]}
               />
             )).concat(
@@ -114,6 +133,9 @@ export default class TestTable extends React.Component {
                 moveSelection={UiState.selectCommandByIndex}
                 pasteFromClipboard={UiState.pasteFromClipboard}
                 setSectionFocus={UiState.setSectionFocus}
+                addToSelectedCommands={this.props.addToSelectedCommands}
+                clearSelectedCommands={this.props.clearSelectedCommands}
+                selectByRange={this.selectCommandByRange}
               />) : null }
           </tbody>
         </table>

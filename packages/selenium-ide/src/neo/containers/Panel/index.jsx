@@ -102,6 +102,7 @@ if (browser.windows) {
   constructor(props) {
     super(props);
     this.state = { project };
+    this.selectAllCommands = this.selectAllCommands.bind(this);
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     if (isProduction) {
       this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
@@ -194,6 +195,9 @@ if (browser.windows) {
       }
     } else if (noModifiers && key === "ESCAPE") {
       UiState.toggleConsole();
+    } else if (onlyPrimary && key === "A" && e.target.localName !== "input" && e.target.localName !== "textarea") {
+      e.preventDefault();
+      this.selectAllCommands();
     }
   }
   navigationDragStart() {
@@ -212,9 +216,17 @@ if (browser.windows) {
       window.removeEventListener("beforeunload", this.quitHandler);
     }
   }
+  onClick(){
+    UiState.clearSelectedCommands();
+  }
+  selectAllCommands(){
+    UiState.clearSelectedCommands();
+    UiState.selectCommandByIndex(0);
+    UiState.selectAllCommands();
+  }
   render() {
     return (
-      <div className="container">
+      <div className="container" onClick={this.onClick.bind(this)}>
         <SuiteDropzone loadProject={loadProject.bind(undefined, project)}>
           <SplitPane
             split="horizontal"

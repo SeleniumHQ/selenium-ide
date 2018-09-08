@@ -99,6 +99,7 @@ class TestRow extends React.Component {
     this.paste = this.paste.bind(this);
     this.select = this.select.bind(this);
     this.remove = this.remove.bind(this);
+    this.focus = this.focus.bind(this);
     this.clearAll = this.clearAll.bind(this);
   }
   static propTypes = {
@@ -126,6 +127,9 @@ class TestRow extends React.Component {
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func,
+    addToSelectedCommands: PropTypes.func,
+    clearSelectedCommands: PropTypes.func,
+    selectByRange: PropTypes.func,
     level: PropTypes.number
   };
   componentDidMount() {
@@ -166,8 +170,10 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && noModifiers && key === "X") {
       this.props.executeCommand(this.props.command);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowUp") {
+      this.props.clearSelectedCommands();
       this.props.moveSelection(this.props.index - 1);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowDown") {
+      this.props.clearSelectedCommands();
       this.props.moveSelection(this.props.index + 1);
     } else if (!this.props.isPristine && onlyPrimary && key === "X") {
       this.cut();
@@ -175,6 +181,8 @@ class TestRow extends React.Component {
       this.copy();
     } else if (onlyPrimary && key === "V") {
       this.paste();
+    } else if (key === "TAB" ) {
+      this.props.clearSelectedCommands();
     }
   }
   addCommand(index) {
@@ -183,12 +191,12 @@ class TestRow extends React.Component {
     }
   }
   copy() {
-    this.props.copyToClipboard(this.props.command);
+    this.props.copyToClipboard();
   }
   cut() {
     if (!this.props.readOnly) {
-      this.props.copyToClipboard(this.props.command);
-      this.props.remove(this.props.index, this.props.command);
+      this.props.copyToClipboard();
+      this.props.remove(this.props.index);
     }
   }
   paste() {
@@ -196,12 +204,27 @@ class TestRow extends React.Component {
       this.props.pasteFromClipboard(this.props.index);
     }
   }
-  select() {
-    this.props.select(this.props.command);
+  select(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if((event.ctrlKey || event.metaKey || event.shiftKey) == false) {
+      // call from onClick while don't holding clicking ctrl key
+      this.props.clearSelectedCommands();
+    }
+
+    if(event.shiftKey){
+      this.props.selectByRange(this.props.command);
+    }
+
+    this.props.addToSelectedCommands(this.props.command, this.props.index);
+  }
+  focus(){
+    //call from onFocus
+    this.props.select(this.props.command, this.props.index);
   }
   remove() {
     if (!this.props.readOnly) {
-      this.props.remove(this.props.index, this.props.command);
+      this.props.remove(this.props.index);
     }
   }
   clearAll() {
@@ -238,11 +261,11 @@ class TestRow extends React.Component {
       }}
       className={classNames(this.props.className, this.props.status, { "selected": this.props.selected }, { "break-point": this.props.command.isBreakpoint })}
       tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={(!this.props.isPristine && !this.props.readOnly) ? this.props.onContextMenu : null}
+      onContextMenu={(!this.props.isPristine && !this.props.readOnly) ? ((e) => {this.props.clearSelectedCommands(); return this.props.onContextMenu(e)}) : null}
       onClick={this.select}
       onDoubleClick={() => { this.props.executeCommand && !this.props.readOnly ? this.props.executeCommand(this.props.command) : undefined; }}
       onKeyDown={this.handleKeyDown.bind(this)}
-      onFocus={this.select}
+      onFocus={this.focus}
       style={{
         opacity: this.props.isDragging ? "0" : "1"
       }}>

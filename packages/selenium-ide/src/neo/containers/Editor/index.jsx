@@ -49,10 +49,12 @@ import "./style.css";
       return newCommand;
     }
   }
-  removeCommand(index, command) {
+  removeCommand(index) {
     const { test } = this.props;
-    test.removeCommand(command);
-    if (UiState.selectedCommand === command) {
+    UiState.selectedCommands.forEach((command) =>
+      test.removeCommand(command)
+    );
+    if (UiState.selectedCommands.indexOf(UiState.selectedCommand) > -1) {
       if (test.commands.length > index) {
         UiState.selectCommand(test.commands[index]);
       } else if (test.commands.length) {
@@ -82,6 +84,9 @@ import "./style.css";
           commands={this.props.test ? this.props.test.commands : null}
           callstackIndex={this.props.callstackIndex}
           selectedCommand={UiState.selectedCommand ? UiState.selectedCommand.id : null}
+          selectedCommands={UiState.selectedCommands}
+          addToSelectedCommands={UiState.addToSelectedCommands}
+          clearSelectedCommands={UiState.clearSelectedCommands}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}
