@@ -536,14 +536,12 @@ function waitUntil(condition, target, timeout, failureMessage) {
       try {
         result = condition(target);
       } catch(error) {
-        result = "Unable to locate target element.";
-      }
-      if (typeof result === "boolean" && !result) {
-        count += retryInterval;
-      } else if (typeof result !== "boolean") {
         clearInterval(interval);
-        reject(result);
-      } else {
+        reject(error.message);
+      }
+      if (!result) {
+        count += retryInterval;
+      } else if (result) {
         clearInterval(interval);
         resolve();
       }
@@ -589,7 +587,7 @@ Selenium.prototype.doWaitForElementNotVisible = function(locator, timeout) {
 
 Selenium.prototype.doWaitForElementEditable = function(locator, timeout) {
   return waitUntil(
-    this.isEditable.bind(this),
+    isEditable.bind(this),
     locator,
     timeout,
     "Element not editable within the timeout specified."
@@ -2082,8 +2080,16 @@ Selenium.prototype.isElementPresent = function(locator) {
   return true;
 };
 
+function unableToLocateTargetElementError() {
+  throw new Error("Unable to locate target element.");
+}
+
 function isNotDisplayed(locator) {
-  return !this.isVisible(locator);
+  try {
+    return !this.isVisible(locator);
+  } catch(error) {
+    unableToLocateTargetElementError();
+  }
 }
 
 function isDisplayed(locator) {
@@ -2167,8 +2173,20 @@ Selenium.prototype.findEffectiveStyle = function(element) {
   throw new SeleniumError("cannot determine effective stylesheet in this browser");
 };
 
+function isEditable(locator) {
+  try {
+    return this.isEditable(locator);
+  } catch(error) {
+    unableToLocateTargetElementError();
+  }
+}
+
 function isNotEditable(locator) {
-  return !this.isEditable(locator);
+  try {
+    return !this.isEditable(locator);
+  } catch(error) {
+    unableToLocateTargetElementError();
+  }
 }
 
 Selenium.prototype.isEditable = function(locator) {
