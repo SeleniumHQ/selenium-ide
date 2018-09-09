@@ -18,11 +18,13 @@
 import pause from "./pause";
 import implicitLocators from "./implicit-locators";
 import scriptInterpolation from "./script-interpolation";
+import waitForCommands from "./wait-for-commands";
 
 export const migrators = {
   pause,
   implicitLocators,
-  scriptInterpolation
+  scriptInterpolation,
+  waitForCommands
 };
 
 export default Object.keys(migrators).reduce((migs, migName) => {
