@@ -26,10 +26,7 @@ export default class Changelog extends React.Component {
     super(props);
     storage.get("updated").then(data => {
       if (data.updated) {
-        ModalState.showAlert({
-          title: `What's new: ${project.version}`,
-          description: changelog
-        });
+        // TODO: menu entry-indication
         storage.set({
           updated: false
         });

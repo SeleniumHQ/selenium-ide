@@ -48,6 +48,7 @@ class UiState {
   @observable options = {
     recordNotifications: true
   };
+  @observable completedWelcome = false;
 
   constructor() {
     this.suiteStates = {};
@@ -374,6 +375,10 @@ class UiState {
       state.modified = false;
     });
     this._project.setModified(false);
+  }
+
+  @action.bound completeWelcome() {
+    this.completedWelcome = true;
   }
 }
 

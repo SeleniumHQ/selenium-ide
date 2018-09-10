@@ -19,7 +19,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { useStrict } from "mobx";
-import Panel from "../Panel";
+//import Panel from "../Panel";
+import WelcomeDialog from "../WelcomeDialog";
 
 useStrict(true);
 
@@ -32,11 +33,12 @@ const render = Component => {
   );
 };
 
-render(Panel);
+//render(Panel);
+render(WelcomeDialog);
 
-if (module.hot) {
-  module.hot.accept("../Panel/index.jsx", () => {
-    const NextRootContainer = require("../Panel").default;
-    render(NextRootContainer);
-  });
-}
+//if (module.hot) {
+//  module.hot.accept("../Panel/index.jsx", () => {
+//    const NextRootContainer = require("../Panel").default;
+//    render(NextRootContainer);
+//  });
+//}
