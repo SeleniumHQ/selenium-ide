@@ -18,11 +18,14 @@
 import React from "react";
 import OpenButton from "../../components/ActionButtons/Open";
 import Record from "../../components/ActionButtons/Record";
+import DismissButton from "../../components/ActionButtons/Dismiss";
 import ProjectStore from "../../stores/domain/ProjectStore";
 import { loadProject } from "../../IO/filesystem";
 import Panel from "../Panel";
 import { observer } from "mobx-react";
 import UiState from "../../stores/view/UiState";
+import project from "../../../../package.json";
+import "./style.css";
 
 @observer
 export default class WelcomeDialog extends React.Component {
@@ -33,9 +36,13 @@ export default class WelcomeDialog extends React.Component {
 
   openProject(file) {
     let project = new ProjectStore();
-    loadProject.bind(undefined, project)(file);
-    UiState.completeWelcome();
+    loadProject(project, file);
     UiState.setProject(project);
+    UiState.completeWelcome();
+  }
+
+  dismiss() {
+    UiState.completeWelcome();
   }
 
   render() {
@@ -43,9 +50,14 @@ export default class WelcomeDialog extends React.Component {
       return (<Panel />);
     } else {
       return (
-        <div>
-          <Record disabled={ false } isRecording={ false } onClick={ this.startRecording }/>
-          <OpenButton onFileSelected={ this.openProject } />
+        <div id="welcome-dialog">
+          <div className="intro"><h2>Selenium IDE</h2></div>
+          <div className="intro"><p>Version {project.version}</p></div>
+          <ul>
+            <li><div className="icon"><Record disabled={ false } isRecording={ false } onClick={ this.startRecording } /></div> <div className="description">Record your first test</div></li>
+            <li><div className="icon"><OpenButton onFileSelected={ this.openProject } className="icon" /></div><div className="description">Open existing project</div></li>
+            <li><div className="icon"><DismissButton onClick={ this.dismiss } /></div><div className="description">Dismiss this window</div></li>
+          </ul>
         </div>
       );
     }

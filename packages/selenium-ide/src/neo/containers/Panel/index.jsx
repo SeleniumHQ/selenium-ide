@@ -60,19 +60,25 @@ if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/conditional/button-direction.css");
 }
 
-const project = observable(new ProjectStore());
-
-UiState.setProject(project);
-
-if (isProduction) {
-  const suite = project.createSuite("Default Suite");
-  const test = project.createTestCase("Untitled");
-  suite.addTestCase(test);
-  UiState.selectTest(test);
-} else {
-  seed(project, 0);
+function initProject() {
+  const loadedProject = UiState._project;
+  const project = loadedProject ? observable(loadedProject) : observable(new ProjectStore());
+  UiState.setProject(project);
+  if (!loadedProject) {
+    if (isProduction) {
+      const suite = project.createSuite("Default Suite");
+      const test = project.createTestCase("Untitled");
+      suite.addTestCase(test);
+      UiState.selectTest(test);
+    } else {
+      seed(project, 0);
+    }
+  }
+  project.setModified(false);
+  return project;
 }
-project.setModified(false);
+
+initProject();
 
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
@@ -101,6 +107,7 @@ if (browser.windows) {
 @observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
+    const project = initProject();
     this.state = { project };
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     if (isProduction) {
@@ -142,7 +149,7 @@ if (browser.windows) {
     // when editing these, remember to edit the button's tooltip as well
     if (onlyPrimary && key === "S") {
       e.preventDefault();
-      saveProject(project);
+      saveProject(this.state.project);
     } else if (onlyPrimary && key === "O" && this.openFile) {
       e.preventDefault();
       this.openFile();
@@ -215,7 +222,7 @@ if (browser.windows) {
   render() {
     return (
       <div className="container">
-        <SuiteDropzone loadProject={loadProject.bind(undefined, project)}>
+        <SuiteDropzone loadProject={loadProject.bind(undefined, this.state.project)}>
           <SplitPane
             split="horizontal"
             minSize={UiState.minContentHeight}
@@ -235,8 +242,8 @@ if (browser.windows) {
                 openFile={(openFile) => {
                   this.openFile = openFile;
                 }}
-                load={loadProject.bind(undefined, project)}
-                save={() => saveProject(project)}
+                load={loadProject.bind(undefined, this.state.project)}
+                save={() => saveProject(this.state.project)}
               />
               <div className={classNames("content", { dragging: UiState.navigationDragging })}>
                 <SplitPane

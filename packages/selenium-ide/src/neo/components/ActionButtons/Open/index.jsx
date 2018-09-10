@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import uuidv4 from "uuid/v4";
 import { supportedFileFormats } from "../../../IO/filesystem";
 import "./style.css";
-import UiState from "../../../stores/view/UiState";
 
 export default class OpenButton extends React.Component {
   constructor(props) {
