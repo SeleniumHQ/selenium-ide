@@ -370,6 +370,10 @@ class UiState {
     this.testStates = {};
   }
 
+  isSaved() {
+    return this._project.modified === false;
+  }
+
   @action.bound saved() {
     Object.values(this.testStates).forEach(state => {
       state.modified = false;

@@ -39,6 +39,7 @@ import Modal from "../Modal";
 import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ModalState from "../../stores/view/ModalState";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
@@ -219,6 +220,22 @@ if (browser.windows) {
     UiState.setNavigationHover(false);
   }
   loadNewProject() {
+    if (!UiState.isSaved()) {
+      ModalState.showAlert({
+        title: "Create without saving",
+        description: "Are you sure you would like to create a new project without saving the current one?",
+        confirmLabel: "Proceed",
+        cancelLabel: "Cancel"
+      }, (choseProceed) => {
+        if (choseProceed) {
+          this.createNewProject();
+        }
+      });
+    } else {
+      this.createNewProject();
+    }
+  }
+  createNewProject() {
     const project = observable(new ProjectStore());
     UiState.setProject(project);
     createDefaultSuite(project);
