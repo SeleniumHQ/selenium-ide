@@ -66,12 +66,9 @@ function initProject() {
   UiState.setProject(project);
   if (!loadedProject) {
     if (isProduction) {
-      const suite = project.createSuite("Default Suite");
-      const test = project.createTestCase("Untitled");
-      suite.addTestCase(test);
-      UiState.selectTest(test);
+      createDefaultSuite(project);
     } else {
-      seed(project, 0);
+      seed(project);
     }
   }
   project.setModified(false);
@@ -79,6 +76,15 @@ function initProject() {
 }
 
 initProject();
+
+function createDefaultSuite(project) {
+  const suite = project.createSuite("Default Suite");
+  const test = project.createTestCase("Untitled");
+  let suiteState = UiState.getSuiteState(suite);
+  suite.addTestCase(test);
+  suiteState.setOpen(true);
+  UiState.selectTest(test, suite);
+}
 
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
@@ -212,6 +218,13 @@ if (browser.windows) {
     UiState.setNavigationDragging(false);
     UiState.setNavigationHover(false);
   }
+  loadNewProject() {
+    const project = observable(new ProjectStore());
+    UiState.setProject(project);
+    createDefaultSuite(project);
+    project.setModified(false);
+    this.setState({ project });
+  }
   componentWillUnmount() {
     if (isProduction) {
       clearInterval(this.moveInterval);
@@ -244,6 +257,7 @@ if (browser.windows) {
                 }}
                 load={loadProject.bind(undefined, this.state.project)}
                 save={() => saveProject(this.state.project)}
+                new={this.loadNewProject.bind(this)}
               />
               <div className={classNames("content", { dragging: UiState.navigationDragging })}>
                 <SplitPane
