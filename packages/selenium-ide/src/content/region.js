@@ -50,9 +50,9 @@ export function editRegion(rect, cb) {
   const buttonContainer = createButtons(cb);
   buttonContainer.style.zIndex = "10002";
   if (rect) {
-    region.style.left   = `${rect.x}px`;
-    region.style.top    = `${rect.y}px`;
-    region.style.width  = `${rect.width}px`;
+    region.style.left = `${rect.x}px`;
+    region.style.top = `${rect.y}px`;
+    region.style.width = `${rect.width}px`;
     region.style.height = `${rect.height}px`;
   }
   container.appendChild(buttonContainer);
@@ -91,6 +91,7 @@ function setEvents(container) {
 }
 
 function mousedown(e) {
+  hideButtons();
   const container = document.getElementById("selenium-container");
   const canvas = document.getElementById("selenium-canvas");
   const region = document.getElementById("selenium-region");
@@ -129,12 +130,13 @@ function mouseup(e) {
   region.style.cursor = "move";
   canvas.style.cursor = "crosshair";
   container.removeEventListener("mousemove", mousemove);
+  displayButtons();
 }
 
 function calculateRectFromCoords(coords) {
   return calculateRect(
-    {x: coords.startX, y: coords.startY},
-    {x: coords.endX, y: coords.endY}
+    { x: coords.startX, y: coords.startY },
+    { x: coords.endX, y: coords.endY }
   );
 }
 
@@ -162,9 +164,9 @@ function updateRegion(startX, startY, endX, endY) {
     coords.endY = endY;
   }
   const rect = calculateRectFromCoords(coords);
-  region.style.left   = `${rect.left}px`;
-  region.style.top    = `${rect.top}px`;
-  region.style.width  = `${rect.width}px`;
+  region.style.left = `${rect.left}px`;
+  region.style.top = `${rect.top}px`;
+  region.style.width = `${rect.width}px`;
   region.style.height = `${rect.height}px`;
 }
 
@@ -280,8 +282,25 @@ function createHotCorner(size) {
   return c;
 }
 
+function displayButtons() {
+  const buttonContainer = document.getElementById("region-control-panel");
+  buttonContainer.style.position = "absolute";
+  buttonContainer.style.top = coords.endY + "px";
+  buttonContainer.style.left = coords.startX + "px";
+  buttonContainer.style.right = coords.endX + "px";
+  buttonContainer.style.width = coords.endX - coords.startX + "px";
+  buttonContainer.style.backgroundColor = "rgba(0, 0, 0, 0.55)";
+  buttonContainer.style.visibility = "visible";
+}
+
+function hideButtons() {
+  const buttonContainer = document.getElementById("region-control-panel");
+  buttonContainer.style.visibility = "hidden";
+}
+
 function createButtons(cb) {
   const container = document.createElement("div");
+  container.id = "region-control-panel";
   const buttons = document.createElement("div");
   const confirm = document.createElement("button");
   confirm.innerText = "Confirm";
@@ -297,13 +316,7 @@ function createButtons(cb) {
     cb(false);
   });
 
-  container.style.position = "fixed";
-  container.style.top = 0;
-  container.style.left = 0;
-  container.style.right = 0;
-  container.style.height = "45px";
-  container.style.backgroundColor = "rgba(0, 0, 0, 0.55)";
-
+  container.style.visibility = "hidden";
   buttons.style.display = "flex";
   buttons.style.alignItems = "center";
   buttons.style.justifyContent = "center";
