@@ -39,6 +39,7 @@ import Modal from "../Modal";
 import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ModalState from "../../stores/view/ModalState";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
@@ -60,19 +61,31 @@ if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/conditional/button-direction.css");
 }
 
-const project = observable(new ProjectStore());
+function initProject() {
+  const loadedProject = UiState._project;
+  const project = loadedProject ? observable(loadedProject) : observable(new ProjectStore());
+  UiState.setProject(project);
+  if (!loadedProject) {
+    if (isProduction) {
+      createDefaultSuite(project);
+    } else {
+      seed(project);
+    }
+  }
+  project.setModified(false);
+  return project;
+}
 
-UiState.setProject(project);
+initProject();
 
-if (isProduction) {
+function createDefaultSuite(project) {
   const suite = project.createSuite("Default Suite");
   const test = project.createTestCase("Untitled");
+  let suiteState = UiState.getSuiteState(suite);
   suite.addTestCase(test);
-  UiState.selectTest(test);
-} else {
-  seed(project, 0);
+  suiteState.setOpen(true);
+  UiState.selectTest(test, suite);
 }
-project.setModified(false);
 
 function firefox57WorkaroundForBlankPanel () {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
@@ -101,6 +114,7 @@ if (browser.windows) {
 @observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
+    const project = initProject();
     this.state = { project };
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     if (isProduction) {
@@ -142,7 +156,7 @@ if (browser.windows) {
     // when editing these, remember to edit the button's tooltip as well
     if (onlyPrimary && key === "S") {
       e.preventDefault();
-      saveProject(project);
+      saveProject(this.state.project);
     } else if (onlyPrimary && key === "O" && this.openFile) {
       e.preventDefault();
       this.openFile();
@@ -205,6 +219,29 @@ if (browser.windows) {
     UiState.setNavigationDragging(false);
     UiState.setNavigationHover(false);
   }
+  loadNewProject() {
+    if (!UiState.isSaved()) {
+      ModalState.showAlert({
+        title: "Create without saving",
+        description: "Are you sure you would like to create a new project without saving the current one?",
+        confirmLabel: "Proceed",
+        cancelLabel: "Cancel"
+      }, (choseProceed) => {
+        if (choseProceed) {
+          this.createNewProject();
+        }
+      });
+    } else {
+      this.createNewProject();
+    }
+  }
+  createNewProject() {
+    const project = observable(new ProjectStore());
+    UiState.setProject(project);
+    createDefaultSuite(project);
+    project.setModified(false);
+    this.setState({ project });
+  }
   componentWillUnmount() {
     if (isProduction) {
       clearInterval(this.moveInterval);
@@ -215,7 +252,7 @@ if (browser.windows) {
   render() {
     return (
       <div className="container">
-        <SuiteDropzone loadProject={loadProject.bind(undefined, project)}>
+        <SuiteDropzone loadProject={loadProject.bind(undefined, this.state.project)}>
           <SplitPane
             split="horizontal"
             minSize={UiState.minContentHeight}
@@ -235,8 +272,9 @@ if (browser.windows) {
                 openFile={(openFile) => {
                   this.openFile = openFile;
                 }}
-                load={loadProject.bind(undefined, project)}
-                save={() => saveProject(project)}
+                load={loadProject.bind(undefined, this.state.project)}
+                save={() => saveProject(this.state.project)}
+                new={this.loadNewProject.bind(this)}
               />
               <div className={classNames("content", { dragging: UiState.navigationDragging })}>
                 <SplitPane

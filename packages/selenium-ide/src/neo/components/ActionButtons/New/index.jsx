@@ -16,29 +16,21 @@
 // under the License.
 
 import React from "react";
-import ReactDOM from "react-dom";
-import { AppContainer } from "react-hot-loader";
-import { useStrict } from "mobx";
-//import Panel from "../Panel";
-import WelcomeDialog from "../WelcomeDialog";
+import PropTypes from "prop-types";
+import ActionButton from "../ActionButton";
+import classNames from "classnames";
+import "./style.css";
 
-useStrict(true);
+export default class NewButton extends React.Component {
+  render() {
+    const props = { ...this.props };
+    delete props.unsaved;
+    return (
+      <ActionButton data-tip="<p>Create new project</p>" {...props} className={classNames("si-add", { pulse: this.props.unsaved }, this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
 
-const render = Component => {
-  ReactDOM.render(
-    <AppContainer>
-      <Component />
-    </AppContainer>,
-    document.getElementById("root")
-  );
-};
-
-//render(Panel);
-render(WelcomeDialog);
-
-//if (module.hot) {
-//  module.hot.accept("../Panel/index.jsx", () => {
-//    const NextRootContainer = require("../Panel").default;
-//    render(NextRootContainer);
-//  });
-//}
+  static propTypes = {
+    unsaved: PropTypes.bool
+  };
+}

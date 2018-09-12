@@ -21,6 +21,7 @@ import classNames from "classnames";
 import Title from "react-document-title";
 import ContentEditable from "react-contenteditable";
 import { observer } from "mobx-react";
+import NewButton from "../ActionButtons/New";
 import OpenButton from "../ActionButtons/Open";
 import SaveButton from "../ActionButtons/Save";
 import MoreButton from "../ActionButtons/More";
@@ -42,7 +43,8 @@ export default class ProjectHeader extends React.Component {
     changeName: PropTypes.func.isRequired,
     openFile: PropTypes.func,
     load: PropTypes.func,
-    save: PropTypes.func
+    save: PropTypes.func,
+    new: PropTypes.func
   };
   handleKeyDown(e) {
     if (e.key === "Enter") e.preventDefault();
@@ -59,6 +61,7 @@ export default class ProjectHeader extends React.Component {
           <i className="si-pencil"></i>
         </div>
         <span className="buttons">
+          <NewButton onClick={ this.props.new } />
           <OpenButton onFileSelected={this.props.load} openFile={this.props.openFile} />
           <SaveButton data-place="left" unsaved={this.props.changed} onClick={this.props.save} />
           <ListMenu width={250} padding={-5} opener={

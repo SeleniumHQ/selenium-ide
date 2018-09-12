@@ -19,7 +19,7 @@ import generate from "project-name-generator";
 import { CommandsArray } from "../models/Command";
 import UiState from "./view/UiState";
 
-export default function seed(store, numberOfSuites = 5) {
+export default function seed(store, numberOfSuites = 0) {
   function generateSuite() {
     return store.createSuite(generate({ words: 2 }).spaced);
   }
@@ -287,7 +287,7 @@ export default function seed(store, numberOfSuites = 5) {
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(sendKeysTest);
+  UiState.selectTest(suiteAll.tests[0], suiteAll);
 
   store.changeName("seed project");
 

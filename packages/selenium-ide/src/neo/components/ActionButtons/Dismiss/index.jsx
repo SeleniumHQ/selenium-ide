@@ -16,29 +16,13 @@
 // under the License.
 
 import React from "react";
-import ReactDOM from "react-dom";
-import { AppContainer } from "react-hot-loader";
-import { useStrict } from "mobx";
-//import Panel from "../Panel";
-import WelcomeDialog from "../WelcomeDialog";
+import ActionButton from "../ActionButton";
+import classNames from "classnames";
 
-useStrict(true);
-
-const render = Component => {
-  ReactDOM.render(
-    <AppContainer>
-      <Component />
-    </AppContainer>,
-    document.getElementById("root")
-  );
-};
-
-//render(Panel);
-render(WelcomeDialog);
-
-//if (module.hot) {
-//  module.hot.accept("../Panel/index.jsx", () => {
-//    const NextRootContainer = require("../Panel").default;
-//    render(NextRootContainer);
-//  });
-//}
+export default class DismissButton extends React.Component {
+  render() {
+    return (
+      <ActionButton tabIndex="-1" {...this.props} className={classNames("si-remove", this.props.className)} />// eslint-disable-line react/prop-types
+    );
+  }
+}
