@@ -48,6 +48,7 @@ class UiState {
   @observable options = {
     recordNotifications: true
   };
+  @observable pauseNotificationSent = false;
 
   constructor() {
     this.suiteStates = {};

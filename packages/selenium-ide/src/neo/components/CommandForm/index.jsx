@@ -26,8 +26,9 @@ import CommandInput from "../CommandInput";
 import TargetInput from "../TargetInput";
 import FlatButton from "../FlatButton";
 import { find, select } from "../../IO/SideeX/find-select";
+import ModalState from "../../stores/view/ModalState";
+import UiState from "../../stores/view/UiState";
 import "./style.css";
-
 @observer export default class CommandForm extends React.Component {
   constructor(props) {
     super(props);
@@ -38,8 +39,21 @@ import "./style.css";
     isSelecting: PropTypes.bool,
     onSubmit: PropTypes.func
   };
+  getCommandName(command) {
+    const commandName = Commands.list.get(command).name;
+    if (commandName === "pause" && !UiState.pauseNotificationSent) {
+      ModalState.showAlert({
+        title: "Hard coded sleeps are old hat.",
+        description: "There are implicit waits built into the IDE commands.\n\n" +
+        "If that doesn't get the job done for you then check out the explicit wait commands. " +
+        "They start with the words `wait for element` (e.g., `wait for element visible`)."
+      });
+      UiState.pauseNotificationSent = true;
+    }
+    return commandName;
+  }
   parseCommandName(command) {
-    return Commands.list.has(command) ? Commands.list.get(command).name : command;
+    return Commands.list.has(command) ? this.getCommandName(command) : command;
   }
   parseCommandTargetType(command) {
     return Commands.list.has(command) ? Commands.list.get(command).type : undefined;
