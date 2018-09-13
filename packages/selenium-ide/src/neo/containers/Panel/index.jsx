@@ -40,6 +40,7 @@ import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
+import WelcomeDialog from "../../components/WelcomeDialog";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
@@ -61,22 +62,16 @@ if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/conditional/button-direction.css");
 }
 
-function initProject() {
-  const loadedProject = UiState._project;
-  const project = loadedProject ? observable(loadedProject) : observable(new ProjectStore());
-  UiState.setProject(project);
-  if (!loadedProject) {
-    if (isProduction) {
-      createDefaultSuite(project);
-    } else {
-      seed(project);
-    }
-  }
-  project.setModified(false);
-  return project;
-}
+const project = observable(new ProjectStore());
 
-initProject();
+UiState.setProject(project);
+
+if (isProduction) {
+  createDefaultSuite(project);
+} else {
+  seed(project);
+}
+project.setModified(false);
 
 function createDefaultSuite(project) {
   const suite = project.createSuite("Default Suite");
@@ -114,7 +109,6 @@ if (browser.windows) {
 @observer export default class Panel extends React.Component {
   constructor(props) {
     super(props);
-    const project = initProject();
     this.state = { project };
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     if (isProduction) {
@@ -305,6 +299,7 @@ if (browser.windows) {
           <Modal project={this.state.project} />
           <Changelog />
           <Tooltip />
+          <WelcomeDialog project={this.state.project} />
         </SuiteDropzone>
       </div>
     );

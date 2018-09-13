@@ -24,8 +24,6 @@ import "./style.css";
 export default class OpenButton extends React.Component {
   constructor(props) {
     super(props);
-    this.id = uuidv4();
-    this.handleChange = this.handleChange.bind(this);
     this.openFile = this.openFile.bind(this);
     if (props.openFile) {
       props.openFile(this.openFile);
@@ -38,20 +36,39 @@ export default class OpenButton extends React.Component {
       return false;
     }
   }
-  handleChange(e) {
-    this.props.onFileSelected(e.target.files[0]);
-    this.input.value = "";
-  }
   render() {
     return (
       <span className="file-input">
-        <input id={this.id} ref={(input) => { this.input = input; }} type="file" accept={supportedFileFormats} onChange={this.handleChange} />
-        <label data-tip="<p>Open project</p>" htmlFor={this.id} onFocus={() => {this.input.focus();}}><i className="btn-action si-open" /></label>
+        <OpenInput onFileSelected={this.props.onFileSelected} labelMarkup={<i className="btn-action si-open" />}/>
       </span>
     );
   }
   static propTypes = {
     onFileSelected: PropTypes.func.isRequired,
     openFile: PropTypes.func
+  };
+}
+
+export class OpenInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id = uuidv4();
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    this.props.onFileSelected(e.target.files[0]);
+    this.input.value = "";
+  }
+  render() {
+    return (
+      <React.Fragment>
+        <input id={this.id} ref={(input) => { this.input = input; }} type="file" accept={supportedFileFormats} onChange={this.handleChange} />
+        <label data-tip="<p>Open project</p>" htmlFor={this.id} onFocus={() => {this.input.focus();}}>{this.props.labelMarkup}</label>
+      </React.Fragment>
+    );
+  }
+  static propTypes = {
+    onFileSelected: PropTypes.func.isRequired,
+    labelMarkup: PropTypes.object
   };
 }

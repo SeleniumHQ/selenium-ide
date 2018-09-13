@@ -19,8 +19,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { useStrict } from "mobx";
-//import Panel from "../Panel";
-import WelcomeDialog from "../WelcomeDialog";
+import Panel from "../Panel";
 
 useStrict(true);
 
@@ -33,12 +32,11 @@ const render = Component => {
   );
 };
 
-//render(Panel);
-render(WelcomeDialog);
+render(Panel);
 
-//if (module.hot) {
-//  module.hot.accept("../Panel/index.jsx", () => {
-//    const NextRootContainer = require("../Panel").default;
-//    render(NextRootContainer);
-//  });
-//}
+if (module.hot) {
+  module.hot.accept("../Panel/index.jsx", () => {
+    const NextRootContainer = require("../Panel").default;
+    render(NextRootContainer);
+  });
+}

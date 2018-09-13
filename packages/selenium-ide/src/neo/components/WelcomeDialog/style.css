@@ -1,0 +1,83 @@
+.welcome-dialog {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  list-style: none;
+  width: 300px;
+  height: 340px;
+}
+
+.welcome-dialog .intro {
+  height: 75px;
+  background-color: #40a6ff;
+}
+
+.welcome-dialog .intro .copy {
+  color: #fff;
+  padding-top: 22px;
+  padding-left: 70px;
+  line-height: 18px;
+}
+
+.welcome-dialog .intro .copy .welcome {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.welcome-dialog .intro .copy .version {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.welcome-dialog .intro .logo {
+  position: relative;
+  float: left;
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.welcome-dialog .intro .logo img {
+  height: 35px;
+  width: 35px;
+}
+
+.welcome-dialog .main-body {
+  line-height: 21px;
+  padding-left: 21px;
+  position: relative;
+  top: 18px;
+}
+
+.welcome-dialog .main-body .options {
+  position: relative;
+  top: 8px;
+  height: 92px;
+}
+
+.welcome-dialog .footer {
+  position: relative;
+  top: 42px;
+  padding-right: 22px;
+}
+
+.welcome-dialog a,
+.welcome-dialog a:visited,
+.welcome-dialog .file-open label {
+  text-decoration: none;
+  color: #48aaff;
+  cursor: pointer;
+}
+
+.welcome-dialog li {
+  line-height: 27px;
+}
+
+.welcome-dialog .file-open input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
+  top: -1000px;
+  left: -1000px;
+}
