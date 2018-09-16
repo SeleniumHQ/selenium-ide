@@ -91,7 +91,6 @@ function setEvents(container) {
 }
 
 function mousedown(e) {
-  hideButtons();
   const container = document.getElementById("selenium-container");
   const canvas = document.getElementById("selenium-canvas");
   const region = document.getElementById("selenium-region");
@@ -130,7 +129,6 @@ function mouseup(e) {
   region.style.cursor = "move";
   canvas.style.cursor = "crosshair";
   container.removeEventListener("mousemove", mousemove);
-  displayButtons();
 }
 
 function calculateRectFromCoords(coords) {
@@ -150,6 +148,7 @@ function calculateRect(p1, p2) {
 }
 
 function updateRegion(startX, startY, endX, endY) {
+  hideButtons();
   const region = document.getElementById("selenium-region");
   if (startX) {
     coords.startX = startX;
@@ -168,6 +167,7 @@ function updateRegion(startX, startY, endX, endY) {
   region.style.top = `${rect.top}px`;
   region.style.width = `${rect.width}px`;
   region.style.height = `${rect.height}px`;
+  showButtons();
 }
 
 function moveRegion(mouseX, mouseY) {
@@ -282,13 +282,22 @@ function createHotCorner(size) {
   return c;
 }
 
-function displayButtons() {
+function showButtons() {
+  const canvasRect = document.getElementById("selenium-canvas").getBoundingClientRect();
   const buttonContainer = document.getElementById("region-control-panel");
+  let top = coords.startY;
+  let bottom = coords.endY;
+  let left = coords.startX;
+  let right = coords.endX;
+  let width = right - left;
+  if ((canvasRect.bottom - bottom) <= 100) bottom = top;
+  if (width < 0) left = coords.endX; right = coords.startX; width = Math.abs(width);
+  if (width < 225) width = 225;
   buttonContainer.style.position = "absolute";
-  buttonContainer.style.top = coords.endY + "px";
-  buttonContainer.style.left = coords.startX + "px";
-  buttonContainer.style.right = coords.endX + "px";
-  buttonContainer.style.width = coords.endX - coords.startX + "px";
+  buttonContainer.style.top = bottom + "px";
+  buttonContainer.style.left = left + "px";
+  buttonContainer.style.right = right + "px";
+  buttonContainer.style.width = width + "px";
   buttonContainer.style.backgroundColor = "rgba(0, 0, 0, 0.55)";
   buttonContainer.style.visibility = "visible";
 }
@@ -305,6 +314,7 @@ function createButtons(cb) {
   const confirm = document.createElement("button");
   confirm.innerText = "Confirm";
   confirm.addEventListener("click", () => {
+    hideButtons();
     removeRegion();
     const rect = calculateRectFromCoords(coords);
     cb(`x: ${rect.left}, y: ${rect.top}, width: ${rect.width}, height: ${rect.height}`);
@@ -312,6 +322,7 @@ function createButtons(cb) {
   const cancel = document.createElement("button");
   cancel.innerText = "Cancel";
   cancel.addEventListener("click", () => {
+    hideButtons();
     removeRegion();
     cb(false);
   });
