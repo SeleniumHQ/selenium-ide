@@ -23,6 +23,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-new::before {
+  content: "\e91e";
+}
+
+.si-record-outer::before {
+  content: "\e91f";
+}
+
+.si-record-inner::before {
+  content: "\e920";
+}
+
 .si-download::before {
   content: "\e901";
 }

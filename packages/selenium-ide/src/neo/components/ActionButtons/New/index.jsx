@@ -16,21 +16,14 @@
 // under the License.
 
 import React from "react";
-import PropTypes from "prop-types";
 import ActionButton from "../ActionButton";
 import classNames from "classnames";
-import "./style.css";
 
 export default class NewButton extends React.Component {
   render() {
     const props = { ...this.props };
-    delete props.unsaved;
     return (
-      <ActionButton data-tip="<p>Create new project</p>" {...props} className={classNames("si-add", { pulse: this.props.unsaved }, this.props.className)} />// eslint-disable-line react/prop-types
+      <ActionButton data-tip="<p>Create new project</p>" {...props} className={classNames("si-new", this.props.className)} />// eslint-disable-line react/prop-types
     );
   }
-
-  static propTypes = {
-    unsaved: PropTypes.bool
-  };
 }
