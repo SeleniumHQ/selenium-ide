@@ -1,10 +1,20 @@
-.record {
-  display: inline-block;
-  border: 1px solid transparent;
-  margin: 2px;
+.si-record {
+  color: #ec2f2a;
+  animation: none;
 }
 
-.record:focus-within {
-  border-color: rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.7);
+.si-record:hover {
+  color: #f56660;
+}
+
+.si-record.active {
+  background-color: transparent;
+}
+
+.si-record.active::before {
+  animation: fadeIn 1s infinite alternate;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
 }

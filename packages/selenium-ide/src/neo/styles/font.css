@@ -27,12 +27,19 @@
   content: "\e91e";
 }
 
-.si-record-outer::before {
-  content: "\e91f";
+.si-record {
+  position: relative;
 }
 
-.si-record-inner::before {
+.si-record::before {
   content: "\e920";
+}
+
+.si-record::after {
+  content: "\e91f";
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .si-download::before {
