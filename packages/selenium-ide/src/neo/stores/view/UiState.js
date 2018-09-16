@@ -49,6 +49,7 @@ class UiState {
     recordNotifications: true
   };
   @observable completedWelcome = false;
+  @observable pauseNotificationSent = false;
 
   constructor() {
     this.suiteStates = {};
