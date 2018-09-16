@@ -6,25 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Selenium IDE Recording Indicator</title>
     <style>
-    </style>
-    <style>
         body {
-            font-family: Sans-Serif;
-            font-size: small;
+            font-family: Helvetica;
+            font-size: 18px;
+            font-weight: bold;
         }
         #content {
-          background: #EE4841;
-          color: white;
+          color: #FFFFFF;
           text-align: center;
-          padding-top: 25px;
-          padding-bottom: 25px;
-          box-shadow: 0 10px 15px 0 #ccc;
+          padding-top: 20px;
+          animation: fadeIn 1s infinite alternate;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
         }
     </style>
   </head>
   <body>
       <div id="content">
-        Selenium IDE is recording
+        Selenium IDE is recording...
       </div>
   </body>
 </html>
