@@ -1,6 +1,7 @@
 .si-record {
   color: #ec2f2a;
   animation: none;
+  padding-right: 29px;
 }
 
 .si-record:hover {
