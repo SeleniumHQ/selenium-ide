@@ -129,6 +129,7 @@ function mouseup(e) {
   region.style.cursor = "move";
   canvas.style.cursor = "crosshair";
   container.removeEventListener("mousemove", mousemove);
+  showButtons();
 }
 
 function calculateRectFromCoords(coords) {
@@ -167,7 +168,6 @@ function updateRegion(startX, startY, endX, endY) {
   region.style.top = `${rect.top}px`;
   region.style.width = `${rect.width}px`;
   region.style.height = `${rect.height}px`;
-  showButtons();
 }
 
 function moveRegion(mouseX, mouseY) {
