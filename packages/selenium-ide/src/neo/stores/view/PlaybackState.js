@@ -27,10 +27,10 @@ import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
 import { createPlaybackTree } from "../../playback/playback-tree";
-import { play, playSingleCommand, resumePlayback, extCommand } from "../../IO/SideeX/playback";
+import { play, playSingleCommand, resumePlayback } from "../../IO/SideeX/playback";
+import WindowSession from "../../IO/window-session";
+import ExtCommand from "../../IO/SideeX/ext-command";
 import WebDriverExecutor from "../../IO/playback/webdriver";
-
-const browserDriver = new WebDriverExecutor();
 
 class PlaybackState {
   @observable runId = "";
@@ -65,11 +65,13 @@ class PlaybackState {
     this.runningQueue = [];
     this.logger = new Logger(Channels.PLAYBACK);
 
+    this.extCommand = new ExtCommand(WindowSession);
+    this.browserDriver = new WebDriverExecutor();
     reaction(
       () => this.isPlaying,
       isPlaying => {
         if (isPlaying) {
-          play(UiState.baseUrl, process.env.USE_WEBDRIVER ? browserDriver : extCommand);
+          play(UiState.baseUrl, process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand);
         }
       }
     );

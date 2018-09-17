@@ -17,7 +17,6 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
-import { recorder } from "./recorder";
 import Debugger, { convertLocator } from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
@@ -27,14 +26,15 @@ import "./bootstrap";
 const parsedUA = parser(window.navigator.userAgent);
 
 export default class ExtCommand {
-  constructor(contentWindowId) {
+  constructor(windowSession) {
+    this.windowSession = windowSession;
     this.playingTabNames = {};
     this.playingTabIds = {};
     this.playingTabStatus = {};
     this.playingFrameLocations = {};
     this.playingTabCount = 1;
     this.currentPlayingTabId = -1;
-    this.contentWindowId = contentWindowId ? contentWindowId : -1;
+    this.currentPlayingWindowId = -1;
     this.currentPlayingFrameLocation = "root";
     // TODO: flexible wait
     this.waitInterval = 500;
@@ -67,18 +67,20 @@ export default class ExtCommand {
     };
   }
 
-  init(baseUrl) {
+  async init(baseUrl, testCaseId) {
     this.attach();
     this.playingTabNames = {};
     this.playingTabIds = {};
     this.playingTabStatus = {};
     this.playingFrameLocations = {};
     this.playingTabCount = 1;
-    this.currentPlayingWindowId = this.contentWindowId;
     this.currentPlayingFrameLocation = "root";
     this.baseUrl = baseUrl;
-    return this.queryActiveTab(this.currentPlayingWindowId)
-      .then(this.setFirstTab.bind(this));
+    try {
+      await this.attachToRecordingWindow(testCaseId);
+    } catch(e) {
+      await this.updateOrCreateTab();
+    }
   }
 
   clear() {
@@ -88,7 +90,6 @@ export default class ExtCommand {
     this.playingTabStatus = {};
     this.playingFrameLocations = {};
     this.playingTabCount = 1;
-    this.currentPlayingWindowId = undefined;
   }
 
   attach() {
@@ -111,12 +112,8 @@ export default class ExtCommand {
     browser.webNavigation.onCreatedNavigationTarget.removeListener(this.newTabHandler);
   }
 
-  setContentWindowId(contentWindowId) {
-    this.contentWindowId = contentWindowId;
-  }
-
-  getContentWindowId() {
-    return this.contentWindowId;
+  getCurrentPlayingWindowId() {
+    return this.currentPlayingWindowId;
   }
 
   getCurrentPlayingTabId() {
@@ -141,13 +138,6 @@ export default class ExtCommand {
 
   getPageStatus() {
     return this.playingTabStatus[this.getCurrentPlayingTabId()];
-  }
-
-  queryActiveTab(windowId) {
-    return browser.tabs.query({ windowId: windowId, active: true, url: ["http://*/*", "https://*/*"] })
-      .then(function(tabs) {
-        return tabs[0];
-      });
   }
 
   sendMessage(command, target, value, top) {
@@ -359,6 +349,14 @@ export default class ExtCommand {
     return Promise.resolve();
   }
 
+  doSetSpeed(speed) {
+    if (speed < 0) speed = 0;
+    if (speed > PlaybackState.maxDelay) speed = PlaybackState.maxDelay;
+
+    PlaybackState.setDelay(speed);
+    return Promise.resolve();
+  }
+
   async convertToQuerySelector(locator) {
     let querySelector;
     try {
@@ -416,54 +414,67 @@ export default class ExtCommand {
     });
   }
 
-  updateOrCreateTab() {
-    let self = this;
-    return browser.tabs.query({
-      windowId: self.currentPlayingWindowId,
-      active: true
-    }).then(function(tabs) {
-      if (tabs.length === 0) {
-        return browser.windows.create({
-          url: browser.runtime.getURL("/bootstrap.html")
-        }).then(function (window) {
-          self.setFirstTab(window.tabs[0]);
-          self.contentWindowId = window.id;
-          recorder.setOpenedWindow(window.id);
-          browser.runtime.getBackgroundPage()
-            .then(function(backgroundWindow) {
-              backgroundWindow.master[window.id] = recorder.getSelfWindowId();
-            });
+  async attachToRecordingWindow(testCaseId) {
+    if (this.windowSession.currentRecordingWindowId[testCaseId]) {
+      const tabs = await browser.tabs.query({
+        windowId: this.windowSession.currentRecordingWindowId[testCaseId]
+      });
+      await this.attachToTab(tabs[0].id);
+    } else {
+      throw new Error("No matching window found");
+    }
+  }
+
+  async updateOrCreateTab() {
+    if (!this.windowSession.generalUsePlayingWindowId) {
+      await this.createPlaybackWindow();
+    } else {
+      try {
+        const tabs = await browser.tabs.query({
+          windowId: this.windowSession.generalUsePlayingWindowId
         });
-      } else {
-        let tabInfo = null;
-        return browser.tabs.update(tabs[0].id, {
-          url: browser.runtime.getURL("/bootstrap.html")
-        }).then(function(tab) {
-          tabInfo = tab;
-          return self.wait("playingTabStatus", tab.id);
-        }).then(function() {
-          // Firefox did not update url information when tab is updated
-          // We assign url manually and go to set first tab
-          tabInfo.url = browser.runtime.getURL("/bootstrap.html");
-          self.setFirstTab(tabInfo);
-        });
+        await this.attachToTab(tabs[0].id);
+      } catch(e) {
+        await this.createPlaybackWindow();
       }
+    }
+  }
+
+  async attachToTab(tabId) {
+    const tab = await browser.tabs.update(tabId, {
+      url: browser.runtime.getURL("/bootstrap.html")
     });
+    await browser.windows.update(tab.windowId, {
+      focused: true
+    });
+    await this.wait("playingTabStatus", tab.id);
+    // Firefox did not update url information when tab is updated
+    // We assign url manually and go to set first tab
+    tab.url = browser.runtime.getURL("/bootstrap.html");
+    this.setFirstTab(tab);
+  }
+
+  async createPlaybackWindow() {
+    const win = await browser.windows.create({
+      url: browser.runtime.getURL("/bootstrap.html")
+    });
+    this.setFirstTab(win.tabs[0]);
+    this.windowSession.generalUsePlayingWindowId = win.id;
+    this.windowSession.setOpenedWindow(win.id);
+    const backgroundWindow = await browser.runtime.getBackgroundPage();
+    backgroundWindow.master[win.id] = this.windowSession.ideWindowId;
   }
 
   setFirstTab(tab) {
-    if (!tab || (tab.url && this.isAddOnPage(tab.url))) {
-      return this.updateOrCreateTab();
-    } else {
-      this.currentPlayingTabId = tab.id;
-      this.playingTabNames["win_ser_local"] = this.currentPlayingTabId;
-      this.playingTabIds[this.currentPlayingTabId] = "win_ser_local";
-      this.playingFrameLocations[this.currentPlayingTabId] = {};
-      this.playingFrameLocations[this.currentPlayingTabId]["root"] = 0;
-      // we assume that there has an "open" command
-      // select Frame directly will cause failed
-      this.playingTabStatus[this.currentPlayingTabId] = true;
-    }
+    this.currentPlayingWindowId = tab.windowId;
+    this.currentPlayingTabId = tab.id;
+    this.playingTabNames["win_ser_local"] = this.currentPlayingTabId;
+    this.playingTabIds[this.currentPlayingTabId] = "win_ser_local";
+    this.playingFrameLocations[this.currentPlayingTabId] = {};
+    this.playingFrameLocations[this.currentPlayingTabId]["root"] = 0;
+    // we assume that there has an "open" command
+    // select Frame directly will cause failed
+    this.playingTabStatus[this.currentPlayingTabId] = true;
   }
 
   isAddOnPage(url) {

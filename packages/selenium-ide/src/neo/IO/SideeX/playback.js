@@ -19,20 +19,8 @@ import FatalError from "../../../errors/fatal";
 import NoResponseError from "../../../errors/no-response";
 import PlaybackState, { PlaybackStates } from "../../stores/view/PlaybackState";
 import { canExecuteCommand } from "../../../plugin/commandExecutor";
-import ExtCommand from "./ext-command";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
-
-export const extCommand = new ExtCommand();
-// In order to not break the separation of the execution loop from the state of the playback
-// I will set doSetSpeed here so that extCommand will not be aware of the state
-extCommand.doSetSpeed = (speed) => {
-  if (speed < 0) speed = 0;
-  if (speed > PlaybackState.maxDelay) speed = PlaybackState.maxDelay;
-
-  PlaybackState.setDelay(speed);
-  return Promise.resolve();
-};
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
@@ -160,7 +148,7 @@ function runNextCommand() {
 }
 
 function prepareToPlay() {
-  return executor.init(baseUrl);
+  return executor.init(baseUrl, PlaybackState.currentRunningTest.id);
 }
 
 function prepareToPlayAfterConnectionFailed() {
@@ -202,14 +190,14 @@ function reportError(error, nonFatal, index) {
 }
 
 function doPreparation() {
-  return extCommand.sendMessage("waitPreparation", "", "")
+  return executor.sendMessage("waitPreparation", "", "")
     .then(function() {
       return true;
     });
 }
 
 function doPrePageWait() {
-  return extCommand.sendMessage("prePageWait", "", "")
+  return executor.sendMessage("prePageWait", "", "")
     .then(function(response) {
       if (response && response.new_page) {
         return doPrePageWait();
@@ -220,7 +208,7 @@ function doPrePageWait() {
 }
 
 function doPageWait(res, pageTime, pageCount = 0) {
-  return extCommand.sendMessage("pageWait", "", "")
+  return executor.sendMessage("pageWait", "", "")
     .then(function(response) {
       if (pageTime && (Date.now() - pageTime) > 30000) {
         reportError("Page Wait timed out after 30000ms");
@@ -238,7 +226,7 @@ function doPageWait(res, pageTime, pageCount = 0) {
 }
 
 function doAjaxWait(res, ajaxTime, ajaxCount = 0) {
-  return extCommand.sendMessage("ajaxWait", "", "")
+  return executor.sendMessage("ajaxWait", "", "")
     .then(function(response) {
       if (ajaxTime && (Date.now() - ajaxTime) > 30000) {
         reportError("Ajax Wait timed out after 30000ms");
@@ -256,7 +244,7 @@ function doAjaxWait(res, ajaxTime, ajaxCount = 0) {
 }
 
 function doDomWait(res, domTime, domCount = 0) {
-  return extCommand.sendMessage("domWait", "", "")
+  return executor.sendMessage("domWait", "", "")
     .then(function(response) {
       if (domTime && (Date.now() - domTime) > 30000) {
         reportError("DOM Wait timed out after 30000ms");
@@ -283,7 +271,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
       reportError("Timed out after 30000ms");
       reject("Window not Found");
     }
-    if (!extCommand.getPageStatus()) {
+    if (!executor.getPageStatus()) {
       count++;
     } else {
       resolve();
@@ -292,7 +280,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
   let p = Promise.resolve();
 
-  if (!extCommand.getPageStatus()) {
+  if (!executor.getPageStatus()) {
     p = new Promise(function(resolve, reject) {
       let interval;
       let res = () => {
@@ -322,7 +310,7 @@ function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
 
 function doSeleniumCommand(commandNode, implicitTime, implicitCount) {
   const { id, command, target } = commandNode.command;
-  return commandNode.execute(extCommand).then(function(result) {
+  return commandNode.execute(executor).then(function(result) {
     if (result.result !== "success") {
       // implicit
       if (isElementNotFound(result.result)) {
@@ -341,14 +329,14 @@ function doSeleniumCommand(commandNode, implicitTime, implicitCount) {
 
 function doPluginCommand(commandNode, implicitTime, implicitCount) {
   const { id, target } = commandNode.command;
-  return PlaybackState.currentExecutingCommandNode.execute(extCommand, {
+  return PlaybackState.currentExecutingCommandNode.execute(executor, {
     commandId: id,
     isNested: !!PlaybackState.callstack.length,
     runId: PlaybackState.runId,
     testId: PlaybackState.currentRunningTest.id,
-    frameId: extCommand.getCurrentPlayingFrameId(),
-    tabId: extCommand.currentPlayingTabId,
-    windowId: extCommand.currentPlayingWindowId
+    frameId: executor.getCurrentPlayingFrameId(),
+    tabId: executor.getCurrentPlayingTabId(),
+    windowId: executor.getCurrentPlayingWindowId()
   }).then(result => {
     PlaybackState.setCommandState(
       id,

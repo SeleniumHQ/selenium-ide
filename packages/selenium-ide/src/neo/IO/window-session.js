@@ -15,15 +15,30 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import WindowSession from "../window-session";
+export class WindowSession {
+  // tabs opened during IDE session
+  openedTabIds = {};
+  // number of tabs opened during IDE session (for select window #)
+  openedTabCount = {};
+  // windows opened during IDE session
+  openedWindowIds = {};
 
-if (browser && browser.runtime && browser.runtime.onMessage) {
-  browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
-    if (message.selfWindowId != undefined && message.commWindowId != undefined) {
-      WindowSession.ideWindowId = message.selfWindowId;
-      browser.runtime.onMessage.removeListener(contentWindowIdListener);
-      sendResponse(true);
-    }
-  });
+  currentRecordingTabId = {};
+  currentRecordingWindowId = {};
+  currentRecordingFrameLocation = {};
+
+  // window to use for general playback (not dedicated to a specific test)
+  generalUsePlayingWindowId = undefined;
+
+  // IDE panel id
+  ideWindowId = undefined;
+
+  // set window as opened in the session
+  setOpenedWindow(windowId) {
+    this.openedWindowIds[windowId] = true;
+  }
 }
+
+if (!window._windowSession) window._windowSession = new WindowSession();
+
+export default window._windowSession;

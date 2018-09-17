@@ -23,7 +23,8 @@ import PlaybackState from "./PlaybackState";
 import ModalState from "./ModalState";
 import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
-import { recorder } from "../../IO/SideeX/recorder";
+import WindowSession from "../../IO/window-session";
+import BackgroundRecorder from "../../IO/SideeX/recorder";
 
 class UiState {
   views = [ "Tests", "Test suites", "Executing" ];
@@ -67,6 +68,7 @@ class UiState {
         this.setOptions(data.options);
       }
     });
+    this.recorder = new BackgroundRecorder(WindowSession);
   }
 
   @action.bound setProject(project) {
@@ -246,7 +248,7 @@ class UiState {
 
   @action.bound async startRecording() {
     try {
-      await recorder.attach(this.baseUrl);
+      await this.recorder.attach(this.baseUrl);
       this._setRecordingState(true);
       await this.emitRecordingState();
     } catch (err) {
@@ -258,7 +260,7 @@ class UiState {
   }
 
   @action.bound async stopRecording() {
-    await recorder.detach();
+    await this.recorder.detach();
     this._setRecordingState(false);
     await this.emitRecordingState();
   }
