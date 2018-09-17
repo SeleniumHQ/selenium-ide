@@ -29,10 +29,8 @@ export default class ExtCommand {
   constructor(windowSession) {
     this.windowSession = windowSession;
     this.playingTabNames = {};
-    this.playingTabIds = {};
     this.playingTabStatus = {};
     this.playingFrameLocations = {};
-    this.playingTabCount = 1;
     this.currentPlayingTabId = -1;
     this.currentPlayingWindowId = -1;
     this.currentPlayingFrameLocation = "root";
@@ -68,14 +66,15 @@ export default class ExtCommand {
   }
 
   async init(baseUrl, testCaseId) {
-    this.attach();
-    this.playingTabNames = {};
-    this.playingTabIds = {};
-    this.playingTabStatus = {};
-    this.playingFrameLocations = {};
-    this.playingTabCount = 1;
-    this.currentPlayingFrameLocation = "root";
+    this.testCaseId = testCaseId;
     this.baseUrl = baseUrl;
+    this.playingTabNames = {};
+    this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()] = {};
+    this.playingTabStatus = {};
+    this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()] = 1;
+    this.playingFrameLocations = {};
+    this.currentPlayingFrameLocation = "root";
+    this.attach();
     try {
       await this.attachToRecordingWindow(testCaseId);
     } catch(e) {
@@ -86,10 +85,8 @@ export default class ExtCommand {
   clear() {
     this.detach();
     this.playingTabNames = {};
-    this.playingTabIds = {};
     this.playingTabStatus = {};
     this.playingFrameLocations = {};
-    this.playingTabCount = 1;
   }
 
   attach() {
@@ -110,6 +107,10 @@ export default class ExtCommand {
     browser.tabs.onUpdated.removeListener(this.tabsOnUpdatedHandler);
     browser.runtime.onMessage.removeListener(this.frameLocationMessageHandler);
     browser.webNavigation.onCreatedNavigationTarget.removeListener(this.newTabHandler);
+  }
+
+  getCurrentPlayingWindowSessionIdentifier() {
+    return this.windowSession.currentRecordingWindowId[this.testCaseId] ? this.testCaseId : this.windowSession.generalUseIdentifier;
   }
 
   getCurrentPlayingWindowId() {
@@ -184,13 +185,13 @@ export default class ExtCommand {
   }
 
   hasTab(tabId) {
-    return this.playingTabIds[tabId];
+    return this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][tabId];
   }
 
   setNewTab(tabId) {
-    this.playingTabNames["win_ser_" + this.playingTabCount] = tabId;
-    this.playingTabIds[tabId] = "win_ser_" + this.playingTabCount;
-    this.playingTabCount++;
+    this.playingTabNames["win_ser_" + this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()]] = tabId;
+    this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][tabId] = "win_ser_" + this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()];
+    this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()]++;
   }
 
   doOpen(targetUrl) {
@@ -470,7 +471,7 @@ export default class ExtCommand {
     this.currentPlayingWindowId = tab.windowId;
     this.currentPlayingTabId = tab.id;
     this.playingTabNames["win_ser_local"] = this.currentPlayingTabId;
-    this.playingTabIds[this.currentPlayingTabId] = "win_ser_local";
+    this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][this.currentPlayingTabId] = "win_ser_local";
     this.playingFrameLocations[this.currentPlayingTabId] = {};
     this.playingFrameLocations[this.currentPlayingTabId]["root"] = 0;
     // we assume that there has an "open" command

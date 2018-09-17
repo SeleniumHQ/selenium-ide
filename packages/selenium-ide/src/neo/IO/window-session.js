@@ -29,6 +29,7 @@ export class WindowSession {
 
   // window to use for general playback (not dedicated to a specific test)
   generalUsePlayingWindowId = undefined;
+  generalUseIdentifier = "GENERAL_USE_IDENTIFIER";
 
   // IDE panel id
   ideWindowId = undefined;
