@@ -87,7 +87,7 @@ export default class BackgroundRecorder {
     // Because event listener is so fast that selectWindow command is added
     // before other commands like clicking a link to browse in new tab.
     // Delay a little time to add command in order.
-    setTimeout(function() {
+    setTimeout(() => {
       if (this.windowSession.currentRecordingTabId[testCaseId] === activeInfo.tabId && this.windowSession.currentRecordingWindowId[testCaseId] === activeInfo.windowId)
         return;
       // If no command has been recorded, ignore selectWindow command
