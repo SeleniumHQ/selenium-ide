@@ -54,8 +54,10 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 * Playback in a way that's consistent with web drivers
 * Open for extensions
 
-## Want to chat?
+## Questions or want to chat?
 
-We coordinate work on the [#selenium](irc://freenode.net/selenium) IRC
+If you have questions, check out [our FAQ](https://github.com/SeleniumHQ/selenium-ide/wiki/Frequently-Asked-Questions).
+
+You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC
 channel, which is also available on
 [Slack](https://seleniumhq.herokuapp.com).
