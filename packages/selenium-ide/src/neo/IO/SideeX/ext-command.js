@@ -442,7 +442,8 @@ export default class ExtCommand {
 
   async attachToTab(tabId) {
     const tab = await browser.tabs.update(tabId, {
-      url: browser.runtime.getURL("/bootstrap.html")
+      url: browser.runtime.getURL("/bootstrap.html"),
+      active: true
     });
     await browser.windows.update(tab.windowId, {
       focused: true
