@@ -249,6 +249,13 @@ export default class BackgroundRecorder {
     if (this.windowSession.openedTabIds[testCaseId][sender.tab.id] == undefined)
       return;
 
+    if (this.windowSession.currentUsedTabId[testCaseId] != sender.tab.id) {
+      this.windowSession.currentUsedTabId[testCaseId] = sender.tab.id;
+      this.windowSession.currentUsedWindowId[testCaseId] = sender.tab.windowId;
+      this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
+      record("selectWindow", [[this.windowSession.openedTabIds[testCaseId][sender.tab.id]]], "");
+    }
+
     if (message.frameLocation !== this.windowSession.currentUsedFrameLocation[testCaseId]) {
       let newFrameLevels = message.frameLocation.split(":");
       let oldFrameLevels = this.windowSession.currentUsedFrameLocation[testCaseId].split(":");
