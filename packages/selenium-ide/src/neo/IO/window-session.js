@@ -84,6 +84,12 @@ export class WindowSession {
       };
     }
   }
+
+  async focusIDEWindow() {
+    await browser.windows.update(this.ideWindowId, {
+      focused: true
+    });
+  }
 }
 
 if (!window._windowSession) window._windowSession = new WindowSession();

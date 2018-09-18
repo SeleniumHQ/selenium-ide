@@ -420,6 +420,9 @@ class PlaybackState {
         this.failures++;
       }
     }
+    if (!this._testsToRun.length) {
+      WindowSession.focusIDEWindow();
+    }
     this.stopPlaying().then(() => {
       if (this.jumpToNextCommand) {
         UiState.selectNextCommand();
