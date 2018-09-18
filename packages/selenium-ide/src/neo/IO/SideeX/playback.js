@@ -22,6 +22,7 @@ import { canExecuteCommand } from "../../../plugin/commandExecutor";
 import ExtCommand from "./ext-command";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
+import Logger from "../../stores/view/Logs";
 
 export const extCommand = new ExtCommand();
 // In order to not break the separation of the execution loop from the state of the playback
@@ -369,15 +370,38 @@ function isElementNotFound(error) {
   return error.match(/Element[\s\S]*?not found/);
 }
 
+async function doLocatorFallback() {
+  const node = PlaybackState.currentExecutingCommandNode;
+  const targets = node.command.targets;
+  let isSuccessful = false;
+
+  for (let i = 0; i < targets.length; i++) {
+    const target = targets[i][0];
+    const result = await node.execute(extCommand, { target: target });
+    if (result.result === "success") {
+      PlaybackState.setCommandState(node.command.id, PlaybackStates.Passed);
+      Logger.warn(`Element found with secondary locator ${target}. To use it by default, update the test step to use it as the primary locator.`);
+      PlaybackState.setCurrentExecutingCommandNode(result.next);
+      isSuccessful = true;
+      break;
+    }
+  }
+
+  return isSuccessful;
+}
+
 function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
   if (isStopping()) {
     PlaybackState.setCommandState(commandId, PlaybackStates.Fatal, "Playback aborted");
     return false;
   } else if (isElementNotFound(error)) {
     if (implicitTime && (Date.now() - implicitTime > 30000)) {
-      reportError("Implicit Wait timed out after 30000ms");
-      implicitCount = 0;
-      implicitTime = "";
+      doLocatorFallback().then(result => {
+        if (result) return;
+        reportError("Implicit Wait timed out after 30000ms");
+        implicitCount = 0;
+        implicitTime = "";
+      });
     } else {
       implicitCount++;
       if (implicitCount == 1) {
