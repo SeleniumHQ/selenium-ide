@@ -365,24 +365,41 @@ export default class BackgroundRecorder {
   async attachToExistingRecording(url) {
     let testCaseId = getSelectedCase().id;
     try {
-      await browser.windows.update(this.windowSession.currentUsedWindowId[testCaseId], {
-        focused: true
-      });
+      if (this.windowSession.currentUsedWindowId[testCaseId]) {
+        // test was recorded before and has a dedicated window
+        await browser.windows.update(this.windowSession.currentUsedWindowId[testCaseId], {
+          focused: true
+        });
+      } else if (this.windowSession.generalUseLastPlayedTestCaseId === testCaseId) {
+        // the last played test was the one the user wishes to record now
+        this.windowSession.dedicateGeneralUseSession(testCaseId);
+        await browser.windows.update(this.windowSession.currentUsedWindowId[testCaseId], {
+          focused: true
+        });
+      } else {
+        // the test was never recorded before, nor it was the last test ran
+        await this.createNewRecordingWindow(testCaseId, url);
+      }
     } catch(e) {
-      const win = await browser.windows.create({
-        url
-      });
-      const tab = win.tabs[0];
-      this.lastAttachedTabId = tab.id;
-      this.windowSession.setOpenedWindow(tab.windowId);
-      this.windowSession.openedTabIds[testCaseId] = {};
-
-      this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
-      this.windowSession.currentUsedTabId[testCaseId] = tab.id;
-      this.windowSession.currentUsedWindowId[testCaseId] = tab.windowId;
-      this.windowSession.openedTabIds[testCaseId][tab.id] = "win_ser_local";
-      this.windowSession.openedTabCount[testCaseId] = 1;
+      // window was deleted at some point by the user, creating a new one
+      await this.createNewRecordingWindow(testCaseId, url);
     }
+  }
+
+  async createNewRecordingWindow(testCaseId, url) {
+    const win = await browser.windows.create({
+      url
+    });
+    const tab = win.tabs[0];
+    this.lastAttachedTabId = tab.id;
+    this.windowSession.setOpenedWindow(tab.windowId);
+    this.windowSession.openedTabIds[testCaseId] = {};
+
+    this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
+    this.windowSession.currentUsedTabId[testCaseId] = tab.id;
+    this.windowSession.currentUsedWindowId[testCaseId] = tab.windowId;
+    this.windowSession.openedTabIds[testCaseId][tab.id] = "win_ser_local";
+    this.windowSession.openedTabCount[testCaseId] = 1;
   }
 
   doesTabBelongToRecording(tabId) {

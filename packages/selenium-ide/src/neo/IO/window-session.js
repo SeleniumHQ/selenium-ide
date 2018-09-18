@@ -33,6 +33,9 @@ export class WindowSession {
   generalUsePlayingWindowId = undefined;
   generalUseIdentifier = "GENERAL_USE_IDENTIFIER";
 
+  // the last test case id that was played back using the general use window
+  generalUseLastPlayedTestCaseId = undefined;
+
   // IDE panel id
   ideWindowId = undefined;
 
@@ -43,6 +46,21 @@ export class WindowSession {
 
   getTabIdsByIdentifier(identifier) {
     return Object.keys(this.openedTabIds[identifier]).map(i => parseInt(i));
+  }
+
+  // dedicates all the general used tabs to a specific identifier
+  dedicateGeneralUseSession(identifier) {
+    this.openedTabIds[identifier] = this.openedTabIds[this.generalUseIdentifier];
+    delete this.openedTabIds[this.generalUseIdentifier];
+    this.openedTabCount[identifier] = this.openedTabCount[this.generalUseIdentifier];
+    delete this.openedTabCount[this.generalUseIdentifier];
+    this.currentUsedTabId[identifier] = this.currentUsedTabId[this.generalUseIdentifier];
+    delete this.currentUsedTabId[this.generalUseIdentifier];
+    this.currentUsedWindowId[identifier] = this.currentUsedWindowId[this.generalUseIdentifier];
+    delete this.currentUsedWindowId[this.generalUseIdentifier];
+    this.currentUsedFrameLocation[identifier] = this.currentUsedFrameLocation[this.generalUseIdentifier];
+    delete this.currentUsedFrameLocation[this.generalUseIdentifier];
+    this.generalUseLastPlayedTestCaseId = undefined;
   }
 
   // removes all tabs from test case except the first one available

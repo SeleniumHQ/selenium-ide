@@ -65,6 +65,7 @@ export default class ExtCommand {
   async init(baseUrl, testCaseId) {
     this.testCaseId = testCaseId;
     this.baseUrl = baseUrl;
+    this.windowSession.generalUseLastPlayedTestCaseId = testCaseId;
     this.playingFrameLocations = {};
     this.playingTabNames = {};
     this.playingTabStatus = {};
