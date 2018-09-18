@@ -69,12 +69,12 @@ export default class ExtCommand {
     this.playingTabNames = {};
     this.playingTabStatus = {};
     this.setCurrentPlayingFrameLocation("root");
+    this.attach();
     try {
       await this.attachToRecordingWindow(testCaseId);
     } catch(e) {
       await this.updateOrCreateTab();
     }
-    this.attach();
   }
 
   cleanup() {
