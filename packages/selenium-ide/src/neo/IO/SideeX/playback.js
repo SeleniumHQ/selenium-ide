@@ -373,21 +373,19 @@ function isElementNotFound(error) {
 async function doLocatorFallback() {
   const node = PlaybackState.currentExecutingCommandNode;
   const targets = node.command.targets;
-  let isSuccessful = false;
+  let result;
 
   for (let i = 0; i < targets.length; i++) {
     const target = targets[i][0];
-    const result = await node.execute(extCommand, { target: target });
+    result = await node.execute(extCommand, { target: target });
     if (result.result === "success") {
       PlaybackState.setCommandState(node.command.id, PlaybackStates.Passed);
       Logger.warn(`Element found with secondary locator ${target}. To use it by default, update the test step to use it as the primary locator.`);
-      PlaybackState.setCurrentExecutingCommandNode(result.next);
-      isSuccessful = true;
       break;
     }
   }
 
-  return isSuccessful;
+  return result;
 }
 
 function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
@@ -396,8 +394,8 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
     return false;
   } else if (isElementNotFound(error)) {
     if (implicitTime && (Date.now() - implicitTime > 30000)) {
-      doLocatorFallback().then(result => {
-        if (result) return;
+      return doLocatorFallback().then(result => {
+        if (result && result.result === "success") return result;
         reportError("Implicit Wait timed out after 30000ms");
         implicitCount = 0;
         implicitTime = "";
