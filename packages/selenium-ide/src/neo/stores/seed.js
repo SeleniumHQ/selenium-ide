@@ -246,10 +246,17 @@ export default function seed(store, numberOfSuites = 0) {
   waitTest5.createCommand(undefined, "waitForElementNotEditable", "css=#input-example input", "5000");
   waitTest5.createCommand(undefined, "assertNotEditable", "css=#input-example input");
 
+  const locatorFallbackTest = store.createTestCase("locator fallback template");
+  locatorFallbackTest.createCommand(undefined, "open", "/dynamic_loading/2");
+  locatorFallbackTest.createCommand(undefined, "click", "css=button");
+  locatorFallbackTest.createCommand(undefined, "clickAt", "css=#finis > h4");
+  locatorFallbackTest.createCommand(undefined, "assertText", "css=#finish > h4", "Hello World!");
+
   const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test);
   });
+  suiteAll.removeTestCase(locatorFallbackTest);
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
