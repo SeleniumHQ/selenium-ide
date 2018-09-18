@@ -91,7 +91,7 @@ function getInsertionIndex(test, insertBeforeLastCommand = false) {
   let index = test.commands.length;
   if (insertBeforeLastCommand) {
     index = test.commands.length - 1;
-  } else if (UiState.selectedCommand !== UiState.pristineCommand) {
+  } else if (UiState.selectedCommand && UiState.selectedCommand !== UiState.pristineCommand) {
     index = test.commands.indexOf(UiState.selectedCommand);
   }
 
