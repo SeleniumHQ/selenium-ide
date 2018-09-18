@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
+
 export class WindowSession {
   // tabs opened during IDE session
   openedTabIds = {};
@@ -23,9 +25,9 @@ export class WindowSession {
   // windows opened during IDE session
   openedWindowIds = {};
 
-  currentRecordingTabId = {};
-  currentRecordingWindowId = {};
-  currentRecordingFrameLocation = {};
+  currentUsedTabId = {};
+  currentUsedWindowId = {};
+  currentUsedFrameLocation = {};
 
   // window to use for general playback (not dedicated to a specific test)
   generalUsePlayingWindowId = undefined;
@@ -37,6 +39,32 @@ export class WindowSession {
   // set window as opened in the session
   setOpenedWindow(windowId) {
     this.openedWindowIds[windowId] = true;
+  }
+
+  getTabIdsByIdentifier(identifier) {
+    return Object.keys(this.openedTabIds[identifier]).map(i => parseInt(i));
+  }
+
+  // removes all tabs from test case except the first one available
+  async removeSecondaryTabs(identifier) {
+    const tabsIds = this.getTabIdsByIdentifier(identifier);
+    const tabs = [];
+    for (let tabId of tabsIds) {
+      try {
+        tabs.push(await browser.tabs.get(tabId));
+      } catch(e) { // eslint-disable-line no-empty
+      }
+    }
+    if (tabs.length) {
+      // remove all tabs except the first in the window
+      await browser.tabs.remove(tabs.map(tab => tab.id).slice(1));
+      this.currentUsedTabId[identifier] = tabs[0].id;
+      this.currentUsedFrameLocation[identifier] = "root";
+      this.openedTabCount[identifier] = 1;
+      this.openedTabIds[identifier] = {
+        [tabs[0].id]: "win_ser_local"
+      };
+    }
   }
 }
 

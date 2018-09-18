@@ -88,7 +88,7 @@ export default class BackgroundRecorder {
     // before other commands like clicking a link to browse in new tab.
     // Delay a little time to add command in order.
     setTimeout(() => {
-      if (this.windowSession.currentRecordingTabId[testCaseId] === activeInfo.tabId && this.windowSession.currentRecordingWindowId[testCaseId] === activeInfo.windowId)
+      if (this.windowSession.currentUsedTabId[testCaseId] === activeInfo.tabId && this.windowSession.currentUsedWindowId[testCaseId] === activeInfo.windowId)
         return;
       // If no command has been recorded, ignore selectWindow command
       // until the user has select a starting page to record the commands
@@ -99,9 +99,9 @@ export default class BackgroundRecorder {
       if (this.windowSession.openedTabIds[testCaseId][activeInfo.tabId] == undefined)
         return;
       // Tab information has existed, add selectWindow command
-      this.windowSession.currentRecordingTabId[testCaseId] = activeInfo.tabId;
-      this.windowSession.currentRecordingWindowId[testCaseId] = activeInfo.windowId;
-      this.windowSession.currentRecordingFrameLocation[testCaseId] = "root";
+      this.windowSession.currentUsedTabId[testCaseId] = activeInfo.tabId;
+      this.windowSession.currentUsedWindowId[testCaseId] = activeInfo.windowId;
+      this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
       record("selectWindow", [[this.windowSession.openedTabIds[testCaseId][activeInfo.tabId]]], "");
     }, 150);
   }
@@ -137,7 +137,7 @@ export default class BackgroundRecorder {
     // If the activated window is the same as the last, just do nothing
     // selectWindow command will be handled by tabs.onActivated listener
     // if there also has a event of switching a activated tab
-    if (this.windowSession.currentRecordingWindowId[testCaseId] === windowId)
+    if (this.windowSession.currentUsedWindowId[testCaseId] === windowId)
       return;
 
     browser.tabs.query({
@@ -149,7 +149,7 @@ export default class BackgroundRecorder {
       }
 
       // The activated tab is not the same as the last
-      if (tabs[0].id !== this.windowSession.currentRecordingTabId[testCaseId]) {
+      if (tabs[0].id !== this.windowSession.currentUsedTabId[testCaseId]) {
         // If no command has been recorded, ignore selectWindow command
         // until the user has select a starting page to record commands
         if (!hasRecorded())
@@ -161,9 +161,9 @@ export default class BackgroundRecorder {
           return;
 
         // Tab information has existed, add selectWindow command
-        this.windowSession.currentRecordingWindowId[testCaseId] = windowId;
-        this.windowSession.currentRecordingTabId[testCaseId] = tabs[0].id;
-        this.windowSession.currentRecordingFrameLocation[testCaseId] = "root";
+        this.windowSession.currentUsedWindowId[testCaseId] = windowId;
+        this.windowSession.currentUsedTabId[testCaseId] = tabs[0].id;
+        this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
         record("selectWindow", [[this.windowSession.openedTabIds[testCaseId][tabs[0].id]]], "");
       }
     });
@@ -181,7 +181,7 @@ export default class BackgroundRecorder {
     }
 
     if (this.windowSession.openedTabIds[testCaseId][tabId] != undefined) {
-      if (this.windowSession.currentRecordingTabId[testCaseId] !== tabId) {
+      if (this.windowSession.currentUsedTabId[testCaseId] !== tabId) {
         record("selectWindow", [
           [this.windowSession.openedTabIds[testCaseId][tabId]]
         ], "");
@@ -189,7 +189,7 @@ export default class BackgroundRecorder {
           [this.windowSession.openedTabIds[testCaseId][tabId]]
         ], "");
         record("selectWindow", [
-          [this.windowSession.openedTabIds[testCaseId][this.windowSession.currentRecordingTabId[testCaseId]]]
+          [this.windowSession.openedTabIds[testCaseId][this.windowSession.currentUsedTabId[testCaseId]]]
         ], "");
       } else {
         record("close", [
@@ -197,7 +197,7 @@ export default class BackgroundRecorder {
         ], "");
       }
       delete this.windowSession.openedTabIds[testCaseId][tabId];
-      this.windowSession.currentRecordingFrameLocation[testCaseId] = "root";
+      this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
     }
   }
 
@@ -246,9 +246,9 @@ export default class BackgroundRecorder {
     if (this.windowSession.openedTabIds[testCaseId][sender.tab.id] == undefined)
       return;
 
-    if (message.frameLocation !== this.windowSession.currentRecordingFrameLocation[testCaseId]) {
+    if (message.frameLocation !== this.windowSession.currentUsedFrameLocation[testCaseId]) {
       let newFrameLevels = message.frameLocation.split(":");
-      let oldFrameLevels = this.windowSession.currentRecordingFrameLocation[testCaseId].split(":");
+      let oldFrameLevels = this.windowSession.currentUsedFrameLocation[testCaseId].split(":");
       while (oldFrameLevels.length > newFrameLevels.length) {
         record("selectFrame", [
           ["relative=parent"]
@@ -267,7 +267,7 @@ export default class BackgroundRecorder {
         ], "");
         oldFrameLevels.push(newFrameLevels[oldFrameLevels.length]);
       }
-      this.windowSession.currentRecordingFrameLocation[testCaseId] = message.frameLocation;
+      this.windowSession.currentUsedFrameLocation[testCaseId] = message.frameLocation;
     }
     if (message.command.includes("Value") && typeof message.value === "undefined") {
       logger.error("This element does not have property 'value'. Please change to use storeText command.");
@@ -362,7 +362,7 @@ export default class BackgroundRecorder {
   async attachToExistingRecording(url) {
     let testCaseId = getSelectedCase().id;
     try {
-      await browser.windows.update(this.windowSession.currentRecordingWindowId[testCaseId], {
+      await browser.windows.update(this.windowSession.currentUsedWindowId[testCaseId], {
         focused: true
       });
     } catch(e) {
@@ -374,9 +374,9 @@ export default class BackgroundRecorder {
       this.windowSession.setOpenedWindow(tab.windowId);
       this.windowSession.openedTabIds[testCaseId] = {};
 
-      this.windowSession.currentRecordingFrameLocation[testCaseId] = "root";
-      this.windowSession.currentRecordingTabId[testCaseId] = tab.id;
-      this.windowSession.currentRecordingWindowId[testCaseId] = tab.windowId;
+      this.windowSession.currentUsedFrameLocation[testCaseId] = "root";
+      this.windowSession.currentUsedTabId[testCaseId] = tab.id;
+      this.windowSession.currentUsedWindowId[testCaseId] = tab.windowId;
       this.windowSession.openedTabIds[testCaseId][tab.id] = "win_ser_local";
       this.windowSession.openedTabCount[testCaseId] = 1;
     }
