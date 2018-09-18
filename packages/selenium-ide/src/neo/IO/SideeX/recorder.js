@@ -224,8 +224,11 @@ export default class BackgroundRecorder {
   }
 
   attachRecorderRequestHandler(message, sender, sendResponse) {
-    if (message.attachRecorderRequest && this.doesTabBelongToRecording(sender.tab.id)) {
-      return sendResponse(this.attached);
+    if (message.attachRecorderRequest) {
+      if (this.doesTabBelongToRecording(sender.tab.id)) {
+        return sendResponse(this.attached);
+      }
+      return sendResponse(false);
     }
   }
 
@@ -384,6 +387,6 @@ export default class BackgroundRecorder {
 
   doesTabBelongToRecording(tabId) {
     let testCaseId = getSelectedCase().id;
-    return Object.keys(this.windowSession.openedTabIds[testCaseId]).includes(`${tabId}`);
+    return this.windowSession.openedTabIds[testCaseId] && Object.keys(this.windowSession.openedTabIds[testCaseId]).includes(`${tabId}`);
   }
 }
