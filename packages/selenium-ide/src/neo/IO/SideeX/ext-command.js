@@ -77,7 +77,7 @@ export default class ExtCommand {
     this.attach();
   }
 
-  clear() {
+  cleanup() {
     this.detach();
     this.playingTabNames = {};
     this.playingTabStatus = {};
