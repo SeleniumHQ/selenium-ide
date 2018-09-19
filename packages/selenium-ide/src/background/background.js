@@ -17,10 +17,12 @@
 
 import browser from "webextension-polyfill";
 
+let ideWindowId = undefined;
 let master = {};
 let clickEnabled = true;
 
 window.master = master;
+window.openedWindowIds = [];
 
 function openPanel(tab) {
 
@@ -68,6 +70,7 @@ function openPanel(tab) {
       }, 200);
     });
   }).then(function bridge(panelWindowInfo){
+    ideWindowId = panelWindowInfo.id;
     return browser.tabs.sendMessage(panelWindowInfo.tabs[0].id, {
       selfWindowId: panelWindowInfo.id,
       commWindowId: contentWindowId
@@ -132,6 +135,14 @@ browser.windows.onRemoved.addListener(function(windowId) {
         browser.contextMenus.removeAll();
       }
     }
+  }
+  if (windowId === ideWindowId) {
+    ideWindowId = undefined;
+    Promise.all(window.openedWindowIds.map(windowId => (
+      browser.windows.remove(windowId).catch(() => {/* Window was removed previously by the user */})
+    ))).then(() => {
+      window.openedWindowIds = [];
+    });
   }
 });
 

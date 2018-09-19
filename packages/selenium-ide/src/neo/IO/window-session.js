@@ -42,6 +42,9 @@ export class WindowSession {
   // set window as opened in the session
   setOpenedWindow(windowId) {
     this.openedWindowIds[windowId] = true;
+    browser.runtime.getBackgroundPage().then(backgroundWindow => {
+      backgroundWindow.openedWindowIds.push(windowId);
+    });
   }
 
   getTabIdsByIdentifier(identifier) {
@@ -83,6 +86,17 @@ export class WindowSession {
         [tabs[0].id]: "win_ser_local"
       };
     }
+  }
+
+  async closeAllOpenedWindows() {
+    const windowIds = Object.keys(this.openedWindowIds).map(id => parseInt(id));
+    for (let windowId of windowIds) {
+      await browser.windows.remove(windowId);
+    }
+    this.openedWindowIds = {};
+    browser.runtime.getBackgroundPage().then(backgroundWindow => {
+      backgroundWindow.openedWindowIds = [];
+    });
   }
 
   async focusIDEWindow() {

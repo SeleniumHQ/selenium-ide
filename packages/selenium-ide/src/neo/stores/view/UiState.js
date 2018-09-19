@@ -411,6 +411,7 @@ class UiState {
     this.suiteStates = {};
     this.clearTestStates();
     this.selectTest(this._project.tests[0]);
+    WindowSession.closeAllOpenedWindows();
   }
 
   @action.bound clearTestStates() {
