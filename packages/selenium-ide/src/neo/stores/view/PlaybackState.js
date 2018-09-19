@@ -67,14 +67,6 @@ class PlaybackState {
 
     this.extCommand = new ExtCommand(WindowSession);
     this.browserDriver = new WebDriverExecutor();
-    reaction(
-      () => this.isPlaying,
-      isPlaying => {
-        if (isPlaying) {
-          play(UiState.baseUrl, process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand);
-        }
-      }
-    );
 
     reaction(
       () => this.paused,
@@ -148,6 +140,11 @@ class PlaybackState {
     } else {
       play();
     }
+  }
+
+  @action.bound play() {
+    this.isPlaying = true;
+    return play(UiState.baseUrl, process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand);
   }
 
   @action.bound clearPlayingCache() {
@@ -254,9 +251,7 @@ class PlaybackState {
         if (resolved) {
           log.setStatus(LogTypes.Success);
         }
-      }).then(action(() => {
-        this.isPlaying = true;
-      }));
+      }).then(this.play);
     });
     this.beforePlaying(playTest);
   }
@@ -273,7 +268,10 @@ class PlaybackState {
         this.aborted = false;
         this.currentRunningTest = UiState.selectedTest.test;
         this.runningQueue = [command];
-        this.isPlaying = true;
+        this.isSingleCommandRunning = true;
+        this.play().then(() => {
+          this.isSingleCommandRunning = false;
+        });
       });
       this.beforePlaying(playCommand);
     } else {
@@ -308,8 +306,9 @@ class PlaybackState {
         projectName: UiState._project.name
       }
     }).then(action(() => {
-      this.isPlaying = true;
       UiState.selectTest(this.currentRunningTest, this.currentRunningSuite, undefined, true);
+      UiState.selectCommand(undefined);
+      this.play();
     }));
   }
 
