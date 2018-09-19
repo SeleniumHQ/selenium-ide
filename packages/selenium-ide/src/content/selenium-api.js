@@ -526,7 +526,7 @@ function waitUntil(condition, target, timeout, failureMessage) {
   }
   return new Promise(function(resolve, reject) {
     let count = 0;
-    let retryInterval = 500;
+    let retryInterval = 100;
     let result;
     let interval = setInterval(function() {
       if (count > timeout) {
