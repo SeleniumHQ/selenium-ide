@@ -38,7 +38,13 @@ export default class WelcomeDialog extends React.Component {
 }
 
 class WelcomeDialogContents extends React.Component {
-  startRecording() {
+  constructor(props) {
+    super(props);
+    this.startRecordingInNewProject = this.startRecordingInNewProject.bind(this);
+  }
+
+  startRecordingInNewProject() {
+    this.props.createNewProject();
     UiState.completeWelcome();
     UiState.toggleRecord();
   }
@@ -69,7 +75,7 @@ class WelcomeDialogContents extends React.Component {
         <div className="main-body">
           <div>What would you like to do?</div>
           <ul className="options">
-            <li><a onClick={this.startRecording}>Record a new test in a new project</a></li>
+            <li><a onClick={this.startRecordingInNewProject}>Record a new test in a new project</a></li>
             <li className="file-open">
               <OpenInput onFileSelected={this.openProject.bind(this)} labelMarkup={<div>Open an existing project</div>} />
             </li>
@@ -83,6 +89,7 @@ class WelcomeDialogContents extends React.Component {
     );
   }
   static propTypes = {
-    project: PropTypes.object.isRequired
+    project: PropTypes.object.isRequired,
+    createNewProject: PropTypes.func.isRequired
   }
 }
