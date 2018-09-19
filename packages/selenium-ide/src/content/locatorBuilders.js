@@ -266,7 +266,7 @@ LocatorBuilders.prototype.preciseXPath = function(xpath, e) {
       }
     }
   }
-  return xpath;
+  return "xpath=" + xpath;
 };
 
 /*
@@ -408,7 +408,6 @@ LocatorBuilders.add("xpath:href", function(e) {
 });
 
 LocatorBuilders.add("xpath:position", function(e, opt_contextNode) {
-  //this.log.debug("positionXPath: e=" + e);
   let path = "";
   let current = e;
   while (current != null && current != opt_contextNode) {
@@ -421,10 +420,9 @@ LocatorBuilders.add("xpath:position", function(e, opt_contextNode) {
     path = currentPath + path;
     let locator = "/" + path;
     if (e == this.findElement(locator)) {
-      return locator;
+      return "xpath=" + locator;
     }
     current = current.parentNode;
-    //this.log.debug("positionXPath: current=" + current);
   }
   return null;
 });
