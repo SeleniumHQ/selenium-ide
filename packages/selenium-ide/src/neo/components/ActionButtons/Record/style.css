@@ -1,7 +1,6 @@
 .si-record {
   color: #ec2f2a;
   animation: none;
-  padding-right: 29px;
 }
 
 .si-record:hover {
@@ -18,4 +17,8 @@
 
 @keyframes fadeIn {
   from { opacity: 0; }
+}
+
+.record {
+  padding-right: 5px;
 }
