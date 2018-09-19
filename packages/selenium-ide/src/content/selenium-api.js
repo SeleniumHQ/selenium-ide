@@ -292,17 +292,11 @@ Selenium.prototype.doVerifyNotSelectedValue = function(locator, value) {
 };
 
 Selenium.prototype.doVerifyText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) !== value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did not match '" + value + "'");
-  }
+  this.doAssertText(locator, value);
 };
 
 Selenium.prototype.doVerifyNotText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) === value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did match '" + value + "'");
-  }
+  this.doAssertNotText(locator, value);
 };
 
 Selenium.prototype.doVerifyValue = function(locator, value) {
@@ -421,17 +415,25 @@ Selenium.prototype.doAssertNotSelectedValue = function(locator, value) {
   }
 };
 
+Selenium.prototype.findElementVisible = function(locator) {
+  const element = this.browserbot.findElement(locator);
+  if (!bot.dom.isShown(element)) throw new Error(`Element ${locator} not visible`);
+  return element;
+};
+
 Selenium.prototype.doAssertText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) !== value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did not match '" + value + "'");
+  const element = this.findElementVisible(locator);
+  const visibleText = bot.dom.getVisibleText(element);
+  if (visibleText !== value) {
+    throw new Error(`Actual value "${visibleText}" did not match "${value}"`);
   }
 };
 
 Selenium.prototype.doAssertNotText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) === value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did match '" + value + "'");
+  const element = this.findElementVisible(locator);
+  const visibleText = bot.dom.getVisibleText(element);
+  if (visibleText === value) {
+    throw new Error(`Actual value "${visibleText}" did match "${value}"`);
   }
 };
 
@@ -488,7 +490,7 @@ Selenium.prototype.doStoreEval = function() {
 
 Selenium.prototype.doStoreText = function(locator, varName) {
   throwIfNoVarNameProvided(varName);
-  let element = this.browserbot.findElement(locator);
+  const element = this.findElementVisible(locator);
   return browser.runtime.sendMessage({ "storeStr": bot.dom.getVisibleText(element), "storeVar": varName });
 };
 

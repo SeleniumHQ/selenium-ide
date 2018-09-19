@@ -367,7 +367,7 @@ function doPluginCommand(commandNode, implicitTime, implicitCount) {
 }
 
 function isElementNotFound(error) {
-  return error.match(/Element[\s\S]*?not found/);
+  return error.match(/Element[\s\S]*?not (found|visible)/);
 }
 
 async function doLocatorFallback() {
