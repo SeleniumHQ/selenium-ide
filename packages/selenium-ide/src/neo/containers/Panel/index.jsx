@@ -77,6 +77,7 @@ function createDefaultSuite(aProject) {
   const suite = aProject.createSuite("Default Suite");
   const test = aProject.createTestCase("Untitled");
   suite.addTestCase(test);
+  UiState.selectTest(test);
 }
 
 function firefox57WorkaroundForBlankPanel () {
