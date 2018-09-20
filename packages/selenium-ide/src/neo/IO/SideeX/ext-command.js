@@ -17,7 +17,6 @@
 
 import browser from "webextension-polyfill";
 import parser from "ua-parser-js";
-import { recorder } from "./recorder";
 import Debugger, { convertLocator } from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
@@ -27,15 +26,12 @@ import "./bootstrap";
 const parsedUA = parser(window.navigator.userAgent);
 
 export default class ExtCommand {
-  constructor(contentWindowId) {
+  constructor(windowSession) {
+    this.options = {};
+    this.windowSession = windowSession;
     this.playingTabNames = {};
-    this.playingTabIds = {};
     this.playingTabStatus = {};
     this.playingFrameLocations = {};
-    this.playingTabCount = 1;
-    this.currentPlayingTabId = -1;
-    this.contentWindowId = contentWindowId ? contentWindowId : -1;
-    this.currentPlayingFrameLocation = "root";
     // TODO: flexible wait
     this.waitInterval = 500;
     this.waitTimes = 60;
@@ -61,34 +57,32 @@ export default class ExtCommand {
     };
 
     this.newTabHandler = (details) => {
-      if (this.hasTab(details.sourceTabId)) {
+      if (this.tabBelongsToPlayback(details.sourceTabId)) {
         this.setNewTab(details.tabId);
       }
     };
   }
 
-  init(baseUrl) {
-    this.attach();
-    this.playingTabNames = {};
-    this.playingTabIds = {};
-    this.playingTabStatus = {};
-    this.playingFrameLocations = {};
-    this.playingTabCount = 1;
-    this.currentPlayingWindowId = this.contentWindowId;
-    this.currentPlayingFrameLocation = "root";
+  async init(baseUrl, testCaseId, options = {}) {
     this.baseUrl = baseUrl;
-    return this.queryActiveTab(this.currentPlayingWindowId)
-      .then(this.setFirstTab.bind(this));
+    this.testCaseId = testCaseId;
+    this.options = options;
+    if (!this.options.softInit) {
+      this.windowSession.generalUseLastPlayedTestCaseId = testCaseId;
+      this.setCurrentPlayingFrameLocation("root");
+    } else if (!this.getCurrentPlayingFrameLocation()) {
+      this.setCurrentPlayingFrameLocation("root");
+    }
+    this.attach();
+    try {
+      await this.attachToRecordingWindow(testCaseId);
+    } catch(e) {
+      await this.updateOrCreateTab();
+    }
   }
 
-  clear() {
+  cleanup() {
     this.detach();
-    this.playingTabNames = {};
-    this.playingTabIds = {};
-    this.playingTabStatus = {};
-    this.playingFrameLocations = {};
-    this.playingTabCount = 1;
-    this.currentPlayingWindowId = undefined;
   }
 
   attach() {
@@ -111,43 +105,48 @@ export default class ExtCommand {
     browser.webNavigation.onCreatedNavigationTarget.removeListener(this.newTabHandler);
   }
 
-  setContentWindowId(contentWindowId) {
-    this.contentWindowId = contentWindowId;
+  getCurrentPlayingWindowSessionIdentifier() {
+    return this.windowSession.currentUsedWindowId[this.testCaseId] ? this.testCaseId : this.windowSession.generalUseIdentifier;
   }
 
-  getContentWindowId() {
-    return this.contentWindowId;
+  getCurrentPlayingWindowId() {
+    return this.windowSession.currentUsedWindowId[this.getCurrentPlayingWindowSessionIdentifier()];
+  }
+
+  setCurrentPlayingWindowId(windowId) {
+    this.windowSession.currentUsedWindowId[this.getCurrentPlayingWindowSessionIdentifier()] = windowId;
   }
 
   getCurrentPlayingTabId() {
-    return this.currentPlayingTabId;
+    return this.windowSession.currentUsedTabId[this.getCurrentPlayingWindowSessionIdentifier()];
+  }
+
+  setCurrentPlayingTabId(tabId) {
+    this.windowSession.currentUsedTabId[this.getCurrentPlayingWindowSessionIdentifier()] = tabId;
   }
 
   getCurrentPlayingFrameLocation() {
-    return this.currentPlayingFrameLocation;
+    return this.windowSession.currentUsedFrameLocation[this.getCurrentPlayingWindowSessionIdentifier()];
+  }
+
+  setCurrentPlayingFrameLocation(frameLocation) {
+    this.windowSession.currentUsedFrameLocation[this.getCurrentPlayingWindowSessionIdentifier()] = frameLocation;
   }
 
   getFrameId(tabId) {
     if (tabId >= 0) {
-      return this.playingFrameLocations[tabId][this.currentPlayingFrameLocation];
+      return this.playingFrameLocations[tabId][this.getCurrentPlayingFrameLocation()];
     } else {
-      return this.playingFrameLocations[this.currentPlayingTabId][this.currentPlayingFrameLocation];
+      return this.playingFrameLocations[this.getCurrentPlayingTabId()][this.getCurrentPlayingFrameLocation()];
     }
   }
 
   getCurrentPlayingFrameId() {
-    return this.getFrameId(this.currentPlayingTabId);
+    return this.getFrameId(this.getCurrentPlayingTabId());
   }
 
   getPageStatus() {
     return this.playingTabStatus[this.getCurrentPlayingTabId()];
-  }
-
-  queryActiveTab(windowId) {
-    return browser.tabs.query({ windowId: windowId, active: true, url: ["http://*/*", "https://*/*"] })
-      .then(function(tabs) {
-        return tabs[0];
-      });
   }
 
   sendMessage(command, target, value, top) {
@@ -193,19 +192,22 @@ export default class ExtCommand {
     this.playingFrameLocations[tabId][frameLocation] = frameId;
   }
 
-  hasTab(tabId) {
-    return this.playingTabIds[tabId];
+  tabBelongsToPlayback(tabId) {
+    return this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][tabId];
   }
 
-  setNewTab(tabId) {
-    this.playingTabNames["win_ser_" + this.playingTabCount] = tabId;
-    this.playingTabIds[tabId] = "win_ser_" + this.playingTabCount;
-    this.playingTabCount++;
+  async setNewTab(tabId) {
+    this.playingTabNames["win_ser_" + this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()]] = tabId;
+    this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][tabId] = "win_ser_" + this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()];
+    this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()]++;
+    this.initTabInfo(tabId);
+    const tab = await browser.tabs.get(tabId);
+    this.windowSession.setOpenedWindow(tab.windowId);
   }
 
   doOpen(targetUrl) {
     const url = absolutifyUrl(targetUrl, this.baseUrl);
-    return browser.tabs.update(this.currentPlayingTabId, {
+    return browser.tabs.update(this.getCurrentPlayingTabId(), {
       url: url
     });
   }
@@ -221,29 +223,28 @@ export default class ExtCommand {
     if (result && result[2]) {
       let position = result[2];
       if (position == "parent") {
-        this.currentPlayingFrameLocation = this.currentPlayingFrameLocation.slice(0, this.currentPlayingFrameLocation.lastIndexOf(":"));
+        this.setCurrentPlayingFrameLocation(this.getCurrentPlayingFrameLocation().slice(0, this.getCurrentPlayingFrameLocation().lastIndexOf(":")));
       } else {
-        this.currentPlayingFrameLocation += ":" + position;
+        this.setCurrentPlayingFrameLocation(this.getCurrentPlayingFrameLocation() + ":" + position);
       }
-      return this.wait("playingFrameLocations", this.currentPlayingTabId, this.currentPlayingFrameLocation);
+      return this.wait("playingFrameLocations", this.getCurrentPlayingTabId(), this.getCurrentPlayingFrameLocation());
     } else {
       return Promise.reject("Invalid argument");
     }
   }
 
-  doSelectWindow(serialNumber) {
-    let self = this;
-    return this.wait("playingTabNames", serialNumber)
-      .then(function() {
-        self.currentPlayingTabId = self.playingTabNames[serialNumber];
-        browser.tabs.update(self.currentPlayingTabId, { active: true });
-      });
+  async doSelectWindow(serialNumber) {
+    await this.wait("playingTabNames", serialNumber);
+    this.setCurrentPlayingTabId(this.playingTabNames[serialNumber]);
+    const tab = await browser.tabs.update(this.getCurrentPlayingTabId(), { active: true });
+    this.setCurrentPlayingWindowId(tab.windowId);
   }
 
   doClose() {
-    let removingTabId = this.currentPlayingTabId;
-    this.currentPlayingTabId = -1;
+    let removingTabId = this.getCurrentPlayingTabId();
+    this.setCurrentPlayingTabId(-1);
     delete this.playingFrameLocations[removingTabId];
+    delete this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][removingTabId];
     return browser.tabs.remove(removingTabId);
   }
 
@@ -259,7 +260,7 @@ export default class ExtCommand {
         prepareToInteract: true,
         locator
       }, top);
-      const connection = new Debugger(this.currentPlayingTabId);
+      const connection = new Debugger(this.getCurrentPlayingTabId());
       try {
         await connection.attach();
         await connection.sendCommand("Input.dispatchMouseEvent", {
@@ -284,7 +285,7 @@ export default class ExtCommand {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name;
       if (browserName !== "Chrome") return Promise.reject(new Error("File uploading is only support in Chrome at this time"));
-      const connection = new Debugger(this.currentPlayingTabId);
+      const connection = new Debugger(this.getCurrentPlayingTabId());
       return connection.attach().then(() => (
         connection.getDocument().then(docNode => (
           this.convertToQuerySelector(locator).then(selector => (
@@ -306,7 +307,7 @@ export default class ExtCommand {
   async doSendKeys(locator, value, top) {
     const browserName = parsedUA.browser.name;
     if (browserName === "Chrome" && value.indexOf("${KEY_ENTER}") !== -1) {
-      const connection = new Debugger(this.currentPlayingTabId);
+      const connection = new Debugger(this.getCurrentPlayingTabId());
       const sendEnter = async (nodeId) => {
         await connection.sendCommand("DOM.focus", { nodeId });
         await connection.sendCommand("Input.dispatchKeyEvent", {
@@ -356,6 +357,14 @@ export default class ExtCommand {
 
   doStore(string, varName) {
     variables.set(varName, string);
+    return Promise.resolve();
+  }
+
+  doSetSpeed(speed) {
+    if (speed < 0) speed = 0;
+    if (speed > PlaybackState.maxDelay) speed = PlaybackState.maxDelay;
+
+    PlaybackState.setDelay(speed);
     return Promise.resolve();
   }
 
@@ -416,54 +425,97 @@ export default class ExtCommand {
     });
   }
 
-  updateOrCreateTab() {
-    let self = this;
-    return browser.tabs.query({
-      windowId: self.currentPlayingWindowId,
-      active: true
-    }).then(function(tabs) {
-      if (tabs.length === 0) {
-        return browser.windows.create({
-          url: browser.runtime.getURL("/bootstrap.html")
-        }).then(function (window) {
-          self.setFirstTab(window.tabs[0]);
-          self.contentWindowId = window.id;
-          recorder.setOpenedWindow(window.id);
-          browser.runtime.getBackgroundPage()
-            .then(function(backgroundWindow) {
-              backgroundWindow.master[window.id] = recorder.getSelfWindowId();
-            });
-        });
-      } else {
-        let tabInfo = null;
-        return browser.tabs.update(tabs[0].id, {
-          url: browser.runtime.getURL("/bootstrap.html")
-        }).then(function(tab) {
-          tabInfo = tab;
-          return self.wait("playingTabStatus", tab.id);
-        }).then(function() {
-          // Firefox did not update url information when tab is updated
-          // We assign url manually and go to set first tab
-          tabInfo.url = browser.runtime.getURL("/bootstrap.html");
-          self.setFirstTab(tabInfo);
-        });
+  async attachToRecordingWindow(testCaseId) {
+    if (this.windowSession.currentUsedWindowId[testCaseId]) {
+      if (!this.options.softInit) {
+        await this.windowSession.removeSecondaryTabs(this.testCaseId);
       }
+      const tabs = await browser.tabs.query({
+        windowId: this.windowSession.currentUsedWindowId[testCaseId]
+      });
+      await this.attachToTab(tabs[0].id);
+    } else {
+      throw new Error("No matching window found");
+    }
+  }
+
+  async updateOrCreateTab() {
+    if (!this.windowSession.generalUsePlayingWindowId) {
+      await this.createPlaybackWindow();
+    } else {
+      try {
+        if (!this.options.softInit) {
+          await this.windowSession.removeSecondaryTabs(this.windowSession.generalUseIdentifier);
+        }
+        const tabs = await browser.tabs.query({
+          windowId: this.windowSession.generalUsePlayingWindowId
+        });
+        await this.attachToTab(tabs[0].id);
+      } catch(e) {
+        await this.createPlaybackWindow();
+      }
+    }
+  }
+
+  async attachToTab(tabId) {
+    if (!this.options.softInit) {
+      const tab = await browser.tabs.update(tabId, {
+        url: browser.runtime.getURL("/bootstrap.html"),
+        active: true
+      });
+      await browser.windows.update(tab.windowId, {
+        focused: true
+      });
+      await this.wait("playingTabStatus", tab.id);
+      // Firefox did not update url information when tab is updated
+      // We assign url manually and go to set first tab
+      tab.url = browser.runtime.getURL("/bootstrap.html");
+      this.setFirstTab(tab);
+    } else {
+      const tab = await browser.tabs.update(tabId, {
+        active: true
+      });
+      await browser.windows.update(tab.windowId, {
+        focused: true
+      });
+      if (tab.status === "loading") {
+        await this.wait("playingTabStatus", tab.id);
+      }
+      this.setPlayingTab(tab);
+    }
+  }
+
+  async createPlaybackWindow() {
+    const win = await browser.windows.create({
+      url: browser.runtime.getURL("/bootstrap.html")
     });
+    this.setFirstTab(win.tabs[0]);
+    this.windowSession.generalUsePlayingWindowId = win.id;
+    this.windowSession.setOpenedWindow(win.id);
+    const backgroundWindow = await browser.runtime.getBackgroundPage();
+    backgroundWindow.master[win.id] = this.windowSession.ideWindowId;
   }
 
   setFirstTab(tab) {
-    if (!tab || (tab.url && this.isAddOnPage(tab.url))) {
-      return this.updateOrCreateTab();
-    } else {
-      this.currentPlayingTabId = tab.id;
-      this.playingTabNames["win_ser_local"] = this.currentPlayingTabId;
-      this.playingTabIds[this.currentPlayingTabId] = "win_ser_local";
-      this.playingFrameLocations[this.currentPlayingTabId] = {};
-      this.playingFrameLocations[this.currentPlayingTabId]["root"] = 0;
-      // we assume that there has an "open" command
-      // select Frame directly will cause failed
-      this.playingTabStatus[this.currentPlayingTabId] = true;
+    this.setCurrentPlayingWindowId(tab.windowId);
+    this.setCurrentPlayingTabId(tab.id);
+    this.playingTabNames["win_ser_local"] = this.getCurrentPlayingTabId();
+    if (!this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()]) {
+      this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()] = {};
     }
+    this.windowSession.openedTabIds[this.getCurrentPlayingWindowSessionIdentifier()][this.getCurrentPlayingTabId()] = "win_ser_local";
+    this.windowSession.openedTabCount[this.getCurrentPlayingWindowSessionIdentifier()] = 1;
+    this.playingFrameLocations[this.getCurrentPlayingTabId()] = {};
+    this.playingFrameLocations[this.getCurrentPlayingTabId()]["root"] = 0;
+    // we assume that there has an "open" command
+    // select Frame directly will cause failed
+    this.playingTabStatus[this.getCurrentPlayingTabId()] = true;
+  }
+
+  setPlayingTab(tab) {
+    this.setCurrentPlayingWindowId(tab.windowId);
+    this.setCurrentPlayingTabId(tab.id);
+    this.playingTabStatus[this.getCurrentPlayingTabId()] = true;
   }
 
   isAddOnPage(url) {

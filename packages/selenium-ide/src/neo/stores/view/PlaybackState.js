@@ -27,10 +27,10 @@ import NoResponseError from "../../../errors/no-response";
 import { Logger, Channels } from "./Logs";
 import { LogTypes } from "../../ui-models/Log";
 import { createPlaybackTree } from "../../playback/playback-tree";
-import { play, playSingleCommand, resumePlayback, extCommand } from "../../IO/SideeX/playback";
+import { play, playSingleCommand, resumePlayback } from "../../IO/SideeX/playback";
+import WindowSession from "../../IO/window-session";
+import ExtCommand from "../../IO/SideeX/ext-command";
 import WebDriverExecutor from "../../IO/playback/webdriver";
-
-const browserDriver = new WebDriverExecutor();
 
 class PlaybackState {
   @observable runId = "";
@@ -65,14 +65,8 @@ class PlaybackState {
     this.runningQueue = [];
     this.logger = new Logger(Channels.PLAYBACK);
 
-    reaction(
-      () => this.isPlaying,
-      isPlaying => {
-        if (isPlaying) {
-          play(UiState.baseUrl, process.env.USE_WEBDRIVER ? browserDriver : extCommand);
-        }
-      }
-    );
+    this.extCommand = new ExtCommand(WindowSession);
+    this.browserDriver = new WebDriverExecutor();
 
     reaction(
       () => this.paused,
@@ -146,6 +140,11 @@ class PlaybackState {
     } else {
       play();
     }
+  }
+
+  @action.bound play() {
+    this.isPlaying = true;
+    return play(UiState.baseUrl, process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand);
   }
 
   @action.bound clearPlayingCache() {
@@ -252,9 +251,7 @@ class PlaybackState {
         if (resolved) {
           log.setStatus(LogTypes.Success);
         }
-      }).then(action(() => {
-        this.isPlaying = true;
-      }));
+      }).then(this.play);
     });
     this.beforePlaying(playTest);
   }
@@ -271,7 +268,10 @@ class PlaybackState {
         this.aborted = false;
         this.currentRunningTest = UiState.selectedTest.test;
         this.runningQueue = [command];
-        this.isPlaying = true;
+        this.isSingleCommandRunning = true;
+        this.play().then(() => {
+          this.isSingleCommandRunning = false;
+        });
       });
       this.beforePlaying(playCommand);
     } else {
@@ -306,8 +306,9 @@ class PlaybackState {
         projectName: UiState._project.name
       }
     }).then(action(() => {
-      this.isPlaying = true;
       UiState.selectTest(this.currentRunningTest, this.currentRunningSuite, undefined, true);
+      UiState.selectCommand(undefined);
+      this.play();
     }));
   }
 
@@ -417,6 +418,9 @@ class PlaybackState {
       if (!this.hasFinishedSuccessfully) {
         this.failures++;
       }
+    }
+    if (!this._testsToRun.length) {
+      WindowSession.focusIDEWindow();
     }
     this.stopPlaying().then(() => {
       if (this.jumpToNextCommand) {

@@ -15,26 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
 import Router from "../../router";
+import UiState from "../../neo/stores/view/UiState";
 import { Commands } from "../../neo/models/Command";
 import { recordCommand } from "../../neo/IO/SideeX/record";
 import { select } from "../../neo/IO/SideeX/find-select";
-import { extCommand } from "../../neo/IO/SideeX/playback";
 
 const router = new Router();
 
 router.get("/tab", (req, res) => {
-  browser.tabs.query({
-    active: true,
-    windowId: extCommand.getContentWindowId()
-  }).then((tabs) => {
-    if (!tabs.length) {
-      res({ error: "No active tab found" });
-    } else {
-      res({ id: tabs[0].id });
-    }
-  });
+  if (!UiState.recorder.lastAttachedTabId) {
+    res({ error: "No active tab found" });
+  } else {
+    res({ id: UiState.recorder.lastAttachedTabId });
+  }
 });
 
 router.post("/command", (req, res) => {

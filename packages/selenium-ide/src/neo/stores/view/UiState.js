@@ -20,9 +20,11 @@ import storage from "../../IO/storage";
 import SuiteState from "./SuiteState";
 import TestState from "./TestState";
 import PlaybackState from "./PlaybackState";
+import ModalState from "./ModalState";
 import Command from "../../models/Command";
 import Manager from "../../../plugin/manager";
-import { recorder } from "../../IO/SideeX/recorder";
+import WindowSession from "../../IO/window-session";
+import BackgroundRecorder from "../../IO/SideeX/recorder";
 
 class UiState {
   views = [ "Tests", "Test suites", "Executing" ];
@@ -68,6 +70,7 @@ class UiState {
         this.setOptions(data.options);
       }
     });
+    this.recorder = new BackgroundRecorder(WindowSession);
   }
 
   @action.bound setProject(project) {
@@ -97,12 +100,30 @@ class UiState {
     return this.navigationHover ? this._navigationWidth : this.minNavigationWidth;
   }
 
-  @action.bound changeView(view, ignoreCache) {
+  @action.bound _changeView(view, ignoreCache) {
     this.lastViewSelection.set(this.selectedView, this.selectedTest);
-    this.selectedView = view;
-    const lastSelection = this.lastViewSelection.get(this.selectedView);
+    const lastSelection = this.lastViewSelection.get(view);
     if (!ignoreCache && lastSelection) {
       this.selectTest(lastSelection.test, lastSelection.suite, lastSelection.stack);
+    }
+    this.selectedView = view;
+  }
+
+  @action.bound async changeView(view, ignoreCache) {
+    if (this.isRecording && view !== this.selectedView) {
+      ModalState.showAlert({
+        title: "Stop recording",
+        description: "Are you sure you would like to stop recording, and change views?",
+        confirmLabel: "Stop recording",
+        cancelLabel: "cancel"
+      }, async (choseChange) => {
+        if (choseChange) {
+          await this.stopRecording();
+          this._changeView(view, ignoreCache);
+        }
+      });
+    } else {
+      this._changeView(view, ignoreCache);
     }
   }
 
@@ -127,7 +148,7 @@ class UiState {
       this.selectedTest.test;
   }
 
-  @action.bound selectTest(test, suite, stack, override) {
+  @action.bound _selectTest(test, suite, stack, override) {
     if (!PlaybackState.isPlaying || PlaybackState.paused || override) {
       const _test = (stack !== undefined && stack >= 0) ? PlaybackState.callstack[stack].callee : test;
       if (_test !== this.displayedTest) {
@@ -142,6 +163,24 @@ class UiState {
         }
       }
       this.selectedTest = { test, suite, stack: (stack >= 0) ? stack : undefined };
+    }
+  }
+
+  @action.bound selectTest(test, suite, stack, override) {
+    if (this.isRecording && test !== this.selectedTest.test) {
+      ModalState.showAlert({
+        title: "Stop recording",
+        description: "Are you sure you would like to stop recording, and select a different test?",
+        confirmLabel: "Stop recording",
+        cancelLabel: "cancel"
+      }, async (choseSelect) => {
+        if (choseSelect) {
+          await this.stopRecording();
+          this._selectTest(test, suite, stack, override);
+        }
+      });
+    } else {
+      this._selectTest(test, suite, stack, override);
     }
   }
 
@@ -206,14 +245,28 @@ class UiState {
     await (this.isRecording ? this.stopRecording() : this.startRecording());
   }
 
+  @action.bound beforeRecording() {
+  }
+
   @action.bound async startRecording() {
-    await recorder.attach();
-    this._setRecordingState(true);
-    await this.emitRecordingState();
+    try {
+      let startingUrl = this.baseUrl;
+      if (!startingUrl) {
+        startingUrl = await ModalState.selectBaseUrl();
+      }
+      await this.recorder.attach(startingUrl);
+      this._setRecordingState(true);
+      await this.emitRecordingState();
+    } catch (err) {
+      ModalState.showAlert({
+        title: "Could not start recording",
+        description: err.message
+      });
+    }
   }
 
   @action.bound async stopRecording() {
-    await recorder.detach();
+    await this.recorder.detach();
     this._setRecordingState(false);
     await this.emitRecordingState();
   }
@@ -364,6 +417,7 @@ class UiState {
     this.suiteStates = {};
     this.clearTestStates();
     this.selectTest(this._project.tests[0]);
+    WindowSession.closeAllOpenedWindows();
   }
 
   @action.bound clearTestStates() {

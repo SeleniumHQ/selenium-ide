@@ -24,7 +24,7 @@ function isEmpty(commands, command) {
 
 // for plugins
 export function recordCommand(command, target, value, index, select = false) {
-  const { test } = UiState.selectedTest;
+  const test = UiState.displayedTest;
   const newCommand = test.createCommand(index ? index : getInsertionIndex(test));
   newCommand.setCommand(command);
   newCommand.setTarget(target);
@@ -40,7 +40,7 @@ export function recordCommand(command, target, value, index, select = false) {
 // for record module
 export default function record(command, targets, value, insertBeforeLastCommand) {
   if (UiState.isSelectingTarget) return;
-  const { test } = UiState.selectedTest;
+  const test = UiState.displayedTest;
   if (isEmpty(test.commands, command)) {
     const newCommand = test.createCommand();
     newCommand.setCommand(command);
@@ -91,7 +91,7 @@ function getInsertionIndex(test, insertBeforeLastCommand = false) {
   let index = test.commands.length;
   if (insertBeforeLastCommand) {
     index = test.commands.length - 1;
-  } else if (UiState.selectedCommand !== UiState.pristineCommand) {
+  } else if (UiState.selectedCommand && UiState.selectedCommand !== UiState.pristineCommand) {
     index = test.commands.indexOf(UiState.selectedCommand);
   }
 

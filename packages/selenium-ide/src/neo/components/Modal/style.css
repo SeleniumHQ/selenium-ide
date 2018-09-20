@@ -20,6 +20,12 @@
   transition: opacity 287ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 191ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
+.modal.stripped {
+  border: 0;
+  border-radius: 2px;
+  padding: 0;
+}
+
 .modal input {
   color: #4d4d4d;
 }

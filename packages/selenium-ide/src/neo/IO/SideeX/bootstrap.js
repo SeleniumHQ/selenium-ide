@@ -16,21 +16,12 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-import { recorder } from "./recorder";
-import { extCommand } from "./playback";
-
-/* recording */
-let selfWindowId = -1;
-let contentWindowId;
+import WindowSession from "../window-session";
 
 if (browser && browser.runtime && browser.runtime.onMessage) {
   browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
     if (message.selfWindowId != undefined && message.commWindowId != undefined) {
-      selfWindowId = message.selfWindowId;
-      contentWindowId = message.commWindowId;
-      extCommand.setContentWindowId(contentWindowId);
-      recorder.setOpenedWindow(contentWindowId);
-      recorder.setSelfWindowId(selfWindowId);
+      WindowSession.ideWindowId = message.selfWindowId;
       browser.runtime.onMessage.removeListener(contentWindowIdListener);
       sendResponse(true);
     }
