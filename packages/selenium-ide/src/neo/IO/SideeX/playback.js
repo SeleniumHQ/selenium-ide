@@ -370,7 +370,7 @@ async function doLocatorFallback() {
 
   for (let i = 0; i < targets.length; i++) {
     const target = targets[i][0];
-    result = await node.execute(extCommand, { target: target });
+    result = await node.execute(executor, { target: target });
     if (result.result === "success") {
       PlaybackState.setCommandState(node.command.id, PlaybackStates.Passed);
       Logger.warn(`Element found with secondary locator ${target}. To use it by default, update the test step to use it as the primary locator.`);
