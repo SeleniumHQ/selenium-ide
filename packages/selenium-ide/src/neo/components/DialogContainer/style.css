@@ -1,0 +1,56 @@
+.dialog {
+  width: 300px;
+  height: 340px;
+  color: #505050;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog .dialog__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  flex: 0 0 75px;
+  border-radius: 2px 2px 0 0;
+}
+
+.dialog.dialog--info .dialog__header {
+  background-color: #40a6ff;
+}
+
+.dialog.dialog--warn .dialog__header {
+  background-color: #ff5f7b;
+}
+
+.dialog .dialog__title {
+  padding-left: 15px;
+  color: #fff;
+}
+
+.dialog .dialog__title h2 {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.dialog .dialog__contents {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog .dialog__contents > div:first-child {
+  flex-grow: 1;
+}
+
+.dialog .dialog__footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.dialog p {
+  font-size: 14px;
+  line-height: 19px;
+}

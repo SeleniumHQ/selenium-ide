@@ -23,11 +23,24 @@ class ModalState {
   @observable renameState = {};
   @observable importSuiteState = {};
   @observable suiteSettingsState = {};
+  @observable baseUrlState = {};
 
   constructor() {
     this.renameTest = this.rename.bind(this, Types.test);
     this.renameSuite = this.rename.bind(this, Types.suite);
     this.rename = this.rename.bind(this);
+  }
+
+  @action.bound selectBaseUrl() {
+    return new Promise((res) => {
+      this.baseUrlState = {
+        selecting: true,
+        done: action((url) => {
+          res(url);
+          this.baseUrlState = {};
+        })
+      };
+    });
   }
 
   @action rename(type, value, cb) {

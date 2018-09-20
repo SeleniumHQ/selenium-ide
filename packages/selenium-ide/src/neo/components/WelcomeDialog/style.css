@@ -1,63 +1,20 @@
 .welcome-dialog {
-  border: 0;
-  border-radius: 0;
-  padding: 0;
   list-style: none;
-  width: 300px;
-  height: 340px;
 }
 
-.welcome-dialog .intro {
-  height: 75px;
-  background-color: #40a6ff;
-}
-
-.welcome-dialog .intro .copy {
-  color: #fff;
-  padding-top: 22px;
-  padding-left: 70px;
-  line-height: 18px;
-}
-
-.welcome-dialog .intro .copy .welcome {
+.welcome-dialog .welcome-dialog__title {
   font-size: 14px;
   font-weight: bold;
 }
 
-.welcome-dialog .intro .copy .version {
+.welcome-dialog .welcome-dialog__subtitle {
   font-size: 12px;
   font-weight: normal;
 }
 
-.welcome-dialog .intro .logo {
+.welcome-dialog .welcome-dialog__options {
   position: relative;
-  float: left;
-  padding-top: 20px;
-  padding-left: 20px;
-}
-
-.welcome-dialog .intro .logo img {
-  height: 35px;
-  width: 35px;
-}
-
-.welcome-dialog .main-body {
-  line-height: 21px;
-  padding-left: 21px;
-  position: relative;
-  top: 18px;
-}
-
-.welcome-dialog .main-body .options {
-  position: relative;
-  top: 8px;
-  height: 92px;
-}
-
-.welcome-dialog .footer {
-  position: relative;
-  top: 42px;
-  padding-right: 22px;
+  padding: 8px 0;
 }
 
 .welcome-dialog a,

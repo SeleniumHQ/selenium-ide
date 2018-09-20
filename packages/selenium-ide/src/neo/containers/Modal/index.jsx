@@ -23,6 +23,7 @@ import TestSelector from "../../components/TestSelector";
 import RenameDialog from "../../components/RenameDialog";
 import ImportDialog from "../../components/ImportDialog";
 import SuiteSettings from "../../components/SuiteSettings";
+import BaseUrlDialog from "../../components/BaseUrlDialog";
 import ModalState from "../../stores/view/ModalState";
 
 @observer
@@ -66,6 +67,10 @@ export default class Modal extends Component {
           persistSession={ModalState.suiteSettingsState.persistSession}
           submit={ModalState.suiteSettingsState ? ModalState.suiteSettingsState.done : null}
           cancel={ModalState.cancelSuiteSettings}
+        />
+        <BaseUrlDialog
+          isSelectingUrl={ModalState.baseUrlState.selecting}
+          onUrlSelection={ModalState.baseUrlState.done}
         />
       </div>
     );
