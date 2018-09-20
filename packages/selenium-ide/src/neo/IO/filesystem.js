@@ -165,7 +165,7 @@ export function loadProject(project, file) {
   });
 }
 
-function loadJSProject(project, data) {
+export function loadJSProject(project, data) {
   UiState.changeView("Tests");
   PlaybackState.clearPlayingCache();
   UiState.clearViewCache();

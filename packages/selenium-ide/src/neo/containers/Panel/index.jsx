@@ -47,7 +47,7 @@ import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
 
-import { loadProject, saveProject } from "../../IO/filesystem";
+import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -73,13 +73,10 @@ if (isProduction) {
 }
 project.setModified(false);
 
-function createDefaultSuite(project) {
-  const suite = project.createSuite("Default Suite");
-  const test = project.createTestCase("Untitled");
-  let suiteState = UiState.getSuiteState(suite);
+function createDefaultSuite(aProject) {
+  const suite = aProject.createSuite("Default Suite");
+  const test = aProject.createTestCase("Untitled");
   suite.addTestCase(test);
-  suiteState.setOpen(true);
-  UiState.selectTest(test, suite);
 }
 
 function firefox57WorkaroundForBlankPanel () {
@@ -230,11 +227,10 @@ if (browser.windows) {
     }
   }
   createNewProject() {
-    const project = observable(new ProjectStore());
-    UiState.setProject(project);
-    createDefaultSuite(project);
-    project.setModified(false);
-    this.setState({ project });
+    const newProject = observable(new ProjectStore());
+    createDefaultSuite(newProject);
+    loadJSProject(this.state.project, newProject.toJS());
+    newProject.setModified(false);
   }
   componentWillUnmount() {
     if (isProduction) {
