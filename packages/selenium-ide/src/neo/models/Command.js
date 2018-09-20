@@ -775,6 +775,20 @@ class CommandList {
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern
     }],
+    [ "waitForElementEditable", {
+      name: "wait for element editable",
+      type: TargetTypes.LOCATOR,
+      description: "Wait for an element to be editable.",
+      target: ArgTypes.locator,
+      value: ArgTypes.waitTime
+    }],
+    [ "waitForElementNotEditable", {
+      name: "wait for element not editable",
+      type: TargetTypes.LOCATOR,
+      description: "Wait for an element to not be editable.",
+      target: ArgTypes.locator,
+      value: ArgTypes.waitTime
+    }],
     [ "waitForElementPresent", {
       name: "wait for element present",
       type: TargetTypes.LOCATOR,

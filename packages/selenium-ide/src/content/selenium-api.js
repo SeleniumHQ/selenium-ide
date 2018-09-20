@@ -292,17 +292,11 @@ Selenium.prototype.doVerifyNotSelectedValue = function(locator, value) {
 };
 
 Selenium.prototype.doVerifyText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) !== value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did not match '" + value + "'");
-  }
+  this.doAssertText(locator, value);
 };
 
 Selenium.prototype.doVerifyNotText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) === value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did match '" + value + "'");
-  }
+  this.doAssertNotText(locator, value);
 };
 
 Selenium.prototype.doVerifyValue = function(locator, value) {
@@ -421,17 +415,25 @@ Selenium.prototype.doAssertNotSelectedValue = function(locator, value) {
   }
 };
 
+Selenium.prototype.findElementVisible = function(locator) {
+  const element = this.browserbot.findElement(locator);
+  if (!bot.dom.isShown(element)) throw new Error(`Element ${locator} not visible`);
+  return element;
+};
+
 Selenium.prototype.doAssertText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) !== value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did not match '" + value + "'");
+  const element = this.findElementVisible(locator);
+  const visibleText = bot.dom.getVisibleText(element);
+  if (visibleText !== value) {
+    throw new Error(`Actual value "${visibleText}" did not match "${value}"`);
   }
 };
 
 Selenium.prototype.doAssertNotText = function(locator, value) {
-  let element = this.browserbot.findElement(locator);
-  if (bot.dom.getVisibleText(element) === value) {
-    throw new Error("Actual value '" + bot.dom.getVisibleText(element) + "' did match '" + value + "'");
+  const element = this.findElementVisible(locator);
+  const visibleText = bot.dom.getVisibleText(element);
+  if (visibleText === value) {
+    throw new Error(`Actual value "${visibleText}" did match "${value}"`);
   }
 };
 
@@ -488,7 +490,7 @@ Selenium.prototype.doStoreEval = function() {
 
 Selenium.prototype.doStoreText = function(locator, varName) {
   throwIfNoVarNameProvided(varName);
-  let element = this.browserbot.findElement(locator);
+  const element = this.findElementVisible(locator);
   return browser.runtime.sendMessage({ "storeStr": bot.dom.getVisibleText(element), "storeVar": varName });
 };
 
@@ -520,24 +522,30 @@ Selenium.prototype.doEcho = function(value) {
   return browser.runtime.sendMessage({ "echoStr": value });
 };
 
-function waitUntil(condition, locator, timeout, failureMessage) {
-  if (!locator) {
-    throw new Error("Locator not provided.");
-  }
+function waitUntil(condition, target, timeout, failureMessage) {
   if (!timeout) {
     throw new Error("Timeout not specified.");
   }
   return new Promise(function(resolve, reject) {
     let count = 0;
-    let retryInterval = 500;
-    setInterval(function() {
+    let retryInterval = 100;
+    let result;
+    let interval = setInterval(function() {
       if (count > timeout) {
-        return reject(failureMessage);
+        clearInterval(interval);
+        reject(failureMessage);
       }
-      if (!condition(locator)) {
+      try {
+        result = condition(target);
+      } catch(error) {
+        clearInterval(interval);
+        reject(error.message);
+      }
+      if (!result) {
         count += retryInterval;
-      } else {
-        return resolve();
+      } else if (result) {
+        clearInterval(interval);
+        resolve();
       }
     }, retryInterval);
   });
@@ -548,7 +556,7 @@ Selenium.prototype.doWaitForElementPresent = function(locator, timeout) {
     this.isElementPresent.bind(this),
     locator,
     timeout,
-    `Unable to find the target element within the timeout specified (${timeout}ms).`
+    "Unable to find the target element within the timeout specified."
   );
 };
 
@@ -557,7 +565,7 @@ Selenium.prototype.doWaitForElementNotPresent = function(locator, timeout) {
     isElementNotPresent.bind(this),
     locator,
     timeout,
-    `Element still present on the page within the timeout specified (${timeout}ms).`
+    "Element still present on the page within the timeout specified."
   );
 };
 
@@ -566,7 +574,7 @@ Selenium.prototype.doWaitForElementVisible = function(locator, timeout) {
     isDisplayed.bind(this),
     locator,
     timeout,
-    `Element not visible on the page within the timeout specified (${timeout}ms).`
+    "Element not visible on the page within the timeout specified."
   );
 };
 
@@ -575,7 +583,25 @@ Selenium.prototype.doWaitForElementNotVisible = function(locator, timeout) {
     isNotDisplayed.bind(this),
     locator,
     timeout,
-    `Element still visible on the page within the timeout specified (${timeout}ms).`
+    "Element still visible on the page within the timeout specified."
+  );
+};
+
+Selenium.prototype.doWaitForElementEditable = function(locator, timeout) {
+  return waitUntil(
+    isEditable.bind(this),
+    locator,
+    timeout,
+    "Element not editable within the timeout specified."
+  );
+};
+
+Selenium.prototype.doWaitForElementNotEditable = function(locator, timeout) {
+  return waitUntil(
+    isNotEditable.bind(this),
+    locator,
+    timeout,
+    "Element still editable within the timeout specified."
   );
 };
 
@@ -2056,15 +2082,15 @@ Selenium.prototype.isElementPresent = function(locator) {
   return true;
 };
 
+function unableToLocateTargetElementError() {
+  throw new Error("Unable to locate target element.");
+}
+
 function isNotDisplayed(locator) {
   try {
     return !this.isVisible(locator);
   } catch(error) {
-    // TODO: Fix
-    // Uncaught Error here when throwing, or if no catch specified,
-    // when no element found on the page to perform a visual check)
-    // returning false to prevent an infinite loop
-    return false
+    unableToLocateTargetElementError();
   }
 }
 
@@ -2148,6 +2174,22 @@ Selenium.prototype.findEffectiveStyle = function(element) {
 
   throw new SeleniumError("cannot determine effective stylesheet in this browser");
 };
+
+function isEditable(locator) {
+  try {
+    return this.isEditable(locator);
+  } catch(error) {
+    unableToLocateTargetElementError();
+  }
+}
+
+function isNotEditable(locator) {
+  try {
+    return !this.isEditable(locator);
+  } catch(error) {
+    unableToLocateTargetElementError();
+  }
+}
 
 Selenium.prototype.isEditable = function(locator) {
   /**

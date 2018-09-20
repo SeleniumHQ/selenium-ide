@@ -15,26 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import pause from "./pause";
-import implicitLocators from "./implicit-locators";
-import scriptInterpolation from "./script-interpolation";
-import waitForCommands from "./wait-for-commands";
-import variableName from "./variable-name";
+import React from "react";
+import ActionButton from "../ActionButton";
+import classNames from "classnames";
 
-export const migrators = {
-  pause,
-  implicitLocators,
-  scriptInterpolation,
-  waitForCommands,
-  variableName
-};
-
-export default Object.keys(migrators).reduce((migs, migName) => {
-  const mig = migrators[migName];
-  if (!migs[mig.version]) {
-    migs[mig.version] = {};
+export default class DismissButton extends React.Component {
+  render() {
+    return (
+      <ActionButton tabIndex="-1" {...this.props} className={classNames("si-remove", this.props.className)} />// eslint-disable-line react/prop-types
+    );
   }
-  migs[mig.version][migName] = mig;
-
-  return migs;
-}, {});
+}

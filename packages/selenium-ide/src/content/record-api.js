@@ -119,10 +119,12 @@ function addRecordingIndicator() {
     recordingIndicator.id = "selenium-ide-indicator";
     recordingIndicator.style.border = "none";
     recordingIndicator.style.position = "fixed";
-    recordingIndicator.style.bottom = "20px";
-    recordingIndicator.style.right = "30px";
-    recordingIndicator.style.width = "200px";
-    recordingIndicator.style.height = "85px";
+    recordingIndicator.style.bottom = "36px";
+    recordingIndicator.style.right = "36px";
+    recordingIndicator.style.width = "280px";
+    recordingIndicator.style.height = "80px";
+    recordingIndicator.style["background-color"] = "#E80600";
+    recordingIndicator.style["box-shadow"] = "7px 7px 10px 0 rgba(0,0,0,0.3)";
     recordingIndicator.addEventListener("mouseenter", function(event) {
       event.target.style.visibility = "hidden";
       setTimeout(function() {

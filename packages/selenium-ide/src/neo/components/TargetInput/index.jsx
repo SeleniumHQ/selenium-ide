@@ -74,10 +74,12 @@ class TargetSuggestion extends React.Component {
   };
   render() {
     let language = "ini";
-    if (this.props.strategy === "css") {
-      language = "stylus";
-    } else if (this.props.strategy.startsWith("xpath")) {
-      language = "fortran";
+    if (this.props.strategy) {
+      if (this.props.strategy === "css") {
+        language = "stylus";
+      } else if (this.props.strategy.startsWith("xpath")) {
+        language = "fortran";
+      }
     }
     return (
       <span style={{

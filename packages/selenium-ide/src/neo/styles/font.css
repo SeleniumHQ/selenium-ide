@@ -23,6 +23,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-new::before {
+  content: "\e91e";
+}
+
+.si-record {
+  position: relative;
+}
+
+.si-record::before {
+  content: "\e920";
+}
+
+.si-record::after {
+  content: "\e91f";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 .si-download::before {
   content: "\e901";
 }

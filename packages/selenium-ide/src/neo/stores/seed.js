@@ -19,7 +19,7 @@ import generate from "project-name-generator";
 import { CommandsArray } from "../models/Command";
 import UiState from "./view/UiState";
 
-export default function seed(store, numberOfSuites = 5) {
+export default function seed(store, numberOfSuites = 0) {
   function generateSuite() {
     return store.createSuite(generate({ words: 2 }).spaced);
   }
@@ -111,7 +111,7 @@ export default function seed(store, numberOfSuites = 5) {
   const executeScriptTest = store.createTestCase("execute script");
   executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
-  executeScriptTest.createCommand(undefined, "verify", "${blah}", "false");
+  executeScriptTest.createCommand(undefined, "verify", "blah", "false");
   executeScriptTest.createCommand(undefined, "echo", "OK! This is a forced failure on verify to make sure the test proceeds. If you see this message it's a good thing.");
   executeScriptTest.createCommand(undefined, "assert", "blah", "true");
   executeScriptTest.createCommand(undefined, "executeScript", "true");
@@ -177,11 +177,10 @@ export default function seed(store, numberOfSuites = 5) {
 
   const framesTest = store.createTestCase("frames");
   framesTest.createCommand(undefined, "open", "/iframe");
-  framesTest.createCommand(undefined, "selectFrame", "css=#mce_0_ifr");
+  framesTest.createCommand(undefined, "selectFrame", "index=0");
   framesTest.createCommand(undefined, "assertText", "css=#tinymce", "Your content goes here.");
   framesTest.createCommand(undefined, "open", "/nested_frames");
-  framesTest.createCommand(undefined, "selectFrame", "frame-top");
-  framesTest.createCommand(undefined, "selectFrame", "frame-middle");
+  framesTest.createCommand(undefined, "selectFrame", "index=1");
   framesTest.createCommand(undefined, "assertText", "css=#content", "MIDDLE");
 
   const selectTest = store.createTestCase("select");
@@ -222,7 +221,7 @@ export default function seed(store, numberOfSuites = 5) {
 
   const waitTest2 = store.createTestCase("wait for element not present");
   waitTest2.createCommand(undefined, "open", "/dynamic_controls");
-  waitTest2.createCommand(undefined, "clickAt", "css=#btn");
+  waitTest2.createCommand(undefined, "clickAt", "css=#checkbox-example button");
   waitTest2.createCommand(undefined, "waitForElementNotPresent", "css=#checkbox", "5000");
   waitTest2.createCommand(undefined, "assertElementNotPresent", "css=#checkbox");
 
@@ -238,10 +237,26 @@ export default function seed(store, numberOfSuites = 5) {
   waitTest4.createCommand(undefined, "waitForElementNotVisible", "css=#loading", "5000");
   waitTest4.createCommand(undefined, "assertText", "css=#finish", "Hello World!");
 
+  const waitTest5 = store.createTestCase("wait for element editable (and not editable)");
+  waitTest5.createCommand(undefined, "open", "/dynamic_controls");
+  waitTest5.createCommand(undefined, "clickAt", "css=#input-example button");
+  waitTest5.createCommand(undefined, "waitForElementEditable", "css=#input-example input", "5000");
+  waitTest5.createCommand(undefined, "assertEditable", "css=#input-example input");
+  waitTest5.createCommand(undefined, "clickAt", "css=#input-example button");
+  waitTest5.createCommand(undefined, "waitForElementNotEditable", "css=#input-example input", "5000");
+  waitTest5.createCommand(undefined, "assertNotEditable", "css=#input-example input");
+
+  const locatorFallbackTest = store.createTestCase("locator fallback template");
+  locatorFallbackTest.createCommand(undefined, "open", "/dynamic_loading/2");
+  locatorFallbackTest.createCommand(undefined, "click", "css=button");
+  locatorFallbackTest.createCommand(undefined, "clickAt", "css=#finis > h4");
+  locatorFallbackTest.createCommand(undefined, "assertText", "css=#finish > h4", "Hello World!");
+
   const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test);
   });
+  suiteAll.removeTestCase(locatorFallbackTest);
 
   const suiteControlFlow = store.createSuite("control flow");
   suiteControlFlow.addTestCase(controlFlowIfTest);
@@ -267,11 +282,19 @@ export default function seed(store, numberOfSuites = 5) {
   smokeSuite.addTestCase(waitTest2);
   smokeSuite.addTestCase(waitTest3);
   smokeSuite.addTestCase(waitTest4);
+  smokeSuite.addTestCase(waitTest5);
+
+  const waitSuite = store.createSuite("waits");
+  waitSuite.addTestCase(waitTest1);
+  waitSuite.addTestCase(waitTest2);
+  waitSuite.addTestCase(waitTest3);
+  waitSuite.addTestCase(waitTest4);
+  waitSuite.addTestCase(waitTest5);
 
   UiState.changeView("Test suites");
   let suiteState = UiState.getSuiteState(suiteAll);
   suiteState.setOpen(true);
-  UiState.selectTest(sendKeysTest);
+  UiState.selectTest(suiteAll.tests[0], suiteAll);
 
   store.changeName("seed project");
 

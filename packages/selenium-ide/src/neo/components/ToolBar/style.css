@@ -16,4 +16,5 @@
 .toolbar > .sep {
   border-left: 1px solid #f3f3f3;
   height: 22px;
+  padding-right: 4px;
 }

@@ -37,6 +37,7 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 ```yarn``` or if using Node 10 ```yarn --ignore-engines```
 - Build the extension  
 ```yarn build``` and then
+```yarn build:webdriver``` and then
 ```yarn build:ext:prod``` or ```yarn build:ext``` for faster development build (also includes beta features)
 - Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
 
@@ -53,8 +54,10 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 * Playback in a way that's consistent with web drivers
 * Open for extensions
 
-## Want to chat?
+## Questions or want to chat?
 
-We coordinate work on the [#selenium](irc://freenode.net/selenium) IRC
+If you have questions, check out [our FAQ](https://github.com/SeleniumHQ/selenium-ide/wiki/Frequently-Asked-Questions).
+
+You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC
 channel, which is also available on
 [Slack](https://seleniumhq.herokuapp.com).

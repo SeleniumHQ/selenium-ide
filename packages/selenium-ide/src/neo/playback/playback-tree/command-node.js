@@ -61,12 +61,13 @@ export class CommandNode {
     });
   }
 
-  _interpolateTarget() {
+  _interpolateTarget(options) {
     const type = Commands.list.get(this.command.command).target;
-    if (type &&
-        type.name === ArgTypes.script.name ||
-        type.name === ArgTypes.conditionalExpression.name) {
+    if (type && (type.name === ArgTypes.script.name ||
+        type.name === ArgTypes.conditionalExpression.name)) {
       return interpolateScript(this.command.target);
+    } else if (options && options.target) {
+      return xlateArgument(options.target);
     }
     return xlateArgument(this.command.target);
   }
@@ -116,7 +117,7 @@ export class CommandNode {
     } else {
       return commandExecutor.sendMessage(
         this.command.command,
-        this._interpolateTarget(),
+        this._interpolateTarget(options),
         this._interpolateValue(),
         commandExecutor.isWindowMethodCommand(this.command.command));
     }

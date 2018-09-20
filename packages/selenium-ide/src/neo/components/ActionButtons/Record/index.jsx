@@ -17,72 +17,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import ActionButton from "../ActionButton";
 import { parse } from "modifier-keys";
 import "./style.css";
-
-const RecordButton = styled.button`
-  height: 14px;
-  width: 14px;
-  margin: 4px 5px;
-  background-color: #EE4841;
-  border-style: none;
-  border-radius: ${props => props.isActive ? "10%" : "50%"};
-  position: relative;
-  overflow: hidden;
-  outline: 0;
-  transition: border-radius 250ms ease-out;
-  padding: 0 6px;
-
-  &:hover {
-    background-color: #F56660;
-  }
-  
-  &:active {
-    background-color: #EE4841;
-  }
-
-  &:focus {
-    outline: 0;
-  }
-
-  &:disabled {
-    background-color: #A9A9A9;
-    opacity: 0.6;
-  }
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: calc(50% - 1px);
-    left: calc(50% - 1px);
-    width: 2px;
-    height: 2px;
-    background: rgba(255, 255, 255, .5);
-    opacity: 0;
-    border-radius: 20%;
-    transform: scale(16, 16);
-    transform-origin: 50% 50%;
-    animation: ${props => props.isActive ? "ripple 1s ease-out infinite" : "none"};
-  }
-
-
-  @keyframes ripple {
-    0% {
-      transform: scale(0, 0);
-      opacity: 1;
-    }
-    20% {
-      transform: scale(5, 5);
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: scale(16, 16);
-    }
-  }
-`;
-
 
 export default class Record extends React.Component {
   static propTypes = {
@@ -98,7 +35,7 @@ export default class Record extends React.Component {
           `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse("u", { primaryKey: true })}</span></p>` :
           `<p>Start recording <span style="color: #929292;padding-left: 5px;">${parse("u", { primaryKey: true })}</span></p>`
         }>
-        <RecordButton disabled={this.props.disabled} isActive={this.props.isRecording} onClick={this.props.onClick}></RecordButton>
+        <ActionButton disabled={this.props.disabled} isActive={this.props.isRecording} onClick={this.props.onClick} className="si-record"></ActionButton>
       </div>
     );
   }
