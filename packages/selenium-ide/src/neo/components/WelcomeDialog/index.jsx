@@ -22,7 +22,7 @@ import { observer } from "mobx-react";
 import UiState from "../../stores/view/UiState";
 import project from "../../../../package.json";
 import Modal from "../Modal";
-import logoFile from "../../assets/images/selenume_blue_white32@3x.svg";
+import logoFile from "../../assets/images/selenium_blue_white32@3x.svg";
 import { OpenInput } from "../ActionButtons/Open";
 import "./style.css";
 
@@ -58,10 +58,6 @@ class WelcomeDialogContents extends React.Component {
     UiState.completeWelcome();
   }
 
-  openDocs() {
-    window.open("https://www.seleniumhq.org/docs/02_selenium_ide.jsp", "_blank");
-  }
-
   render() {
     return (
       <React.Fragment>
@@ -82,7 +78,7 @@ class WelcomeDialogContents extends React.Component {
             <li><a onClick={this.dismiss}>Close this dialog</a></li>
           </ul>
           <div className="footer">
-            To learn more on Selenium IDE and how to use it visit the <a onClick={this.openDocs}>the Selenium IDE project page</a>.
+            To learn more on Selenium IDE and how to use it visit the <a href="https://www.seleniumhq.org/docs/02_selenium_ide.jsp" target="_blank" rel="noopener noreferrer">the Selenium IDE project page</a>.
           </div>
         </div>
       </React.Fragment>
