@@ -296,7 +296,7 @@ if (browser.windows) {
           <Modal project={this.state.project} />
           <Changelog />
           <Tooltip />
-          <WelcomeDialog project={this.state.project} createNewProject={this.createNewProject.bind(this)} />
+          {isProduction ? <WelcomeDialog project={this.state.project} createNewProject={this.createNewProject.bind(this)} /> : null}
         </SuiteDropzone>
       </div>
     );
