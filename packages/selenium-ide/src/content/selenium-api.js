@@ -1148,7 +1148,7 @@ Selenium.prototype.getSpeed = function() {
 Selenium.prototype.findToggleButton = function(locator) {
   let element = this.browserbot.findElement(locator);
   if (element.checked == null) {
-    Assert.fail("Element " + locator + " is not a toggle-button."); // eslint-disable-line no-undef
+    throw new Error("Element " + locator + " is not a toggle-button."); // eslint-disable-line no-undef
   }
   return element;
 };
