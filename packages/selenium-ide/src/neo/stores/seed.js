@@ -49,7 +49,7 @@ export default function seed(store, numberOfSuites = 0) {
     }
   }
 
-  const url = "http://localhost:7080";
+  const url = "http://the-internet.herokuapp.com";
   store.setUrl(url);
   store.addUrl(url);
 
