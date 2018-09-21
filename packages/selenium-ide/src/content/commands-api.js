@@ -117,6 +117,7 @@ function doCommands(request, sender, sendResponse) {
     }
   }
   if (request.selectMode) {
+    sendResponse(true);
     if (request.selecting && request.element) {
       targetSelector = new TargetSelector(function (element, win) {
         if (element && win) {
@@ -162,7 +163,6 @@ function doCommands(request, sender, sendResponse) {
         return;
       }
     }
-    sendResponse(true);
   }
 }
 

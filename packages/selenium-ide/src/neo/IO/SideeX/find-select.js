@@ -19,78 +19,68 @@ import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
+import WindowSession from "../../IO/window-session";
 import { TargetTypes } from "../../models/Command";
 import Region from "../../models/Region";
 
-export function find(target) {
-  try{
-    browser.tabs.query({
-      active: true,
-      windowId: window.contentWindowId
-    }).then((tabs) => {
-      if (!tabs.length) {
-        console.log("No match tabs");
-      } else {
-        const region = new Region(target);
-        browser.tabs.sendMessage(tabs[0].id, {
-          showElement: true,
-          targetValue: region.isValid() ? region.toJS() : target
-        }).then((response) => {
-          if (response && response.result === "element not found") {
-            ModalState.showAlert({
-              title: "Element not found",
-              description: `Could not find ${target} on the page`,
-              confirmLabel: "Close"
-            });
-          }
+async function getActiveTabForTest() {
+  const identifier = WindowSession.currentUsedWindowId[UiState.selectedTest.test.id] ? UiState.selectedTest.test.id : WindowSession.generalUseIdentifier;
+  const lastUsedWindowId = WindowSession.currentUsedWindowId[identifier];
+  const tabs = await browser.tabs.query({
+    active: true,
+    windowId: lastUsedWindowId
+  });
+  return tabs[0];
+}
+
+export async function find(target) {
+  try {
+    const tab = await getActiveTabForTest();
+    const region = new Region(target);
+    await browser.windows.update(tab.windowId, {
+      focused: true
+    });
+    await browser.tabs.sendMessage(tab.id, {
+      showElement: true,
+      targetValue: region.isValid() ? region.toJS() : target
+    }).then((response) => {
+      if (response && response.result === "element not found") {
+        ModalState.showAlert({
+          title: "Element not found",
+          description: `Could not find ${target} on the page`,
+          confirmLabel: "Close"
         });
       }
     });
-  } catch (e) {
-    console.error(e);
+  } catch(e) {
+    showNoTabAvailableDialog();
   }
 }
 
-export function select(type, rect, selectNext = false) {
-  const tabConnectionFailure = () => {
-    ModalState.showAlert({
-      title: "Can't connect to tab",
-      description: "Make sure the tab begins with `http://`, or try to refresh the tab.",
-      confirmLabel: "Close"
-    });
-    UiState.setSelectingTarget(false);
-  };
+export async function select(type, rect, selectNext = false) {
   UiState.setSelectingTarget(!UiState.isSelectingTarget);
-  if (!UiState.isSelectingTarget) {
-    browser.tabs.query({
-      active: true,
-      windowId: window.contentWindowId
-    }).then(function(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: false });
-    }).catch(function(reason) {
-      console.log(reason);
-    });
-  } else {
-    PlaybackState.stopPlaying();
-    browser.tabs.query({
-      active: true,
-      windowId: window.contentWindowId
-    }).then(function(tabs) {
-      if (tabs.length === 0) {
-        console.log("No match tabs");
-        UiState.setSelectingTarget(false);
-      } else {
-        if (type === TargetTypes.LOCATOR) {
-          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, element: true, selectNext }).catch(tabConnectionFailure);
-        } else if (type === TargetTypes.REGION) {
-          browser.tabs.sendMessage(tabs[0].id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS(), selectNext }).catch(tabConnectionFailure);
-        }
+  try {
+    const tab = await getActiveTabForTest();
+    if (!UiState.isSelectingTarget) {
+      browser.tabs.sendMessage(tab.id, { selectMode: true, selecting: false }).catch(() => {});
+    } else {
+      PlaybackState.stopPlaying();
+      await browser.windows.update(tab.windowId, {
+        focused: true
+      });
+      if (type === TargetTypes.LOCATOR) {
+        await browser.tabs.sendMessage(tab.id, { selectMode: true, selecting: true, element: true, selectNext });
+      } else if (type === TargetTypes.REGION) {
+        await browser.tabs.sendMessage(tab.id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS(), selectNext });
       }
-    });
+    }
+  } catch(e) {
+    UiState.setSelectingTarget(false);
+    showNoTabAvailableDialog();
   }
 }
 
-export function selectTarget(target, selectNext) {
+function selectTarget(target, selectNext) {
   UiState.setSelectingTarget(false);
   if (UiState.selectedCommand) {
     UiState.selectedCommand.setTarget(target[0][0]);
@@ -105,9 +95,9 @@ export function selectTarget(target, selectNext) {
   }
 }
 
-export function endSelection(tabId) {
+function endSelection(tabId) {
   UiState.setSelectingTarget(false);
-  browser.tabs.sendMessage(tabId, { selectMode: true, selecting: false });
+  browser.tabs.sendMessage(tabId, { selectMode: true, selecting: false }).catch(() => {});
 }
 
 function handleContentScriptResponse(message, sender, sendResponse) {
@@ -119,6 +109,14 @@ function handleContentScriptResponse(message, sender, sendResponse) {
     endSelection(sender.tab.id);
     sendResponse(true);
   }
+}
+
+function showNoTabAvailableDialog() {
+  ModalState.showAlert({
+    title: "Tab not found",
+    description: "No tab is available for this test case, either continue recording it, or play it back.",
+    confirmLabel: "Close"
+  });
 }
 
 if (browser && browser.runtime && browser.runtime.onMessage) {
