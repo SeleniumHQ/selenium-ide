@@ -18,6 +18,7 @@
 import convert from "xml-js";
 import xmlescape from "xml-escape";
 import xmlunescape from "unescape";
+import { Commands } from "../../models/Command";
 
 export const FileTypes = {
   Suite: "suite",
@@ -122,7 +123,7 @@ export function migrateTestCase(data) {
   tr = Array.isArray(tr) ? tr : [tr];
   const test = {
     name: result.html.body.table.thead.tr.td._text,
-    commands: tr.filter(row => (row.td[0]._text && !/^wait/.test(row.td[0]._text))).map(row => (
+    commands: tr.filter(row => (row.td[0]._text && isImplementedWait(row.td[0]._text))).map(row => (
       {
         command: row.td[0]._text && row.td[0]._text.replace("AndWait", ""),
         target: xmlunescape(parseTarget(row.td[1])),
@@ -165,5 +166,14 @@ function parseTarget(targetCell) {
     }
   } else {
     return "";
+  }
+}
+
+function isImplementedWait(command) {
+  if (/^wait/.test(command)) {
+    return Commands.list.has(command);
+  } else {
+    // not a wait command
+    return true;
   }
 }

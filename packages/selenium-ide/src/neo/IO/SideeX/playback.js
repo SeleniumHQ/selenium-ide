@@ -432,6 +432,5 @@ function isReceivingEndError(reason) {
 }
 
 function isImplicitWait(command) {
-  return (command == "waitForPageToLoad"
-    || command == "waitForElementPresent");
+  return (command == "waitForPageToLoad");
 }

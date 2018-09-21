@@ -79,6 +79,12 @@ describe("selenium test case migration", () => {
     const { test } = migrateTestCase(file);
     expect(test.commands.length).toBe(1);
   });
+  it("should remove unimplemented wait commands from the test case", () => {
+    const file = fs.readFileSync(path.join(__dirname, "IDE_test_wait.html")).toString();
+    const { test } = migrateTestCase(file);
+    expect(test.commands.length).toBe(1);
+    expect(test.commands[0].command).toBe("waitForElementPresent");
+  });
 });
 
 describe("selenium suite migration", () => {
