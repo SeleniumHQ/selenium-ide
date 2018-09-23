@@ -110,6 +110,7 @@ if (browser.windows) {
     this.state = { project };
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
     if (isProduction) {
+      // the handler writes the size to the extension storage, which throws in development
       this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
       this.quitHandler = window.addEventListener("beforeunload", (e) => {
         if (project.modified) {
