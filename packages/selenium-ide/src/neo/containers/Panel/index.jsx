@@ -225,6 +225,18 @@ if (browser.windows) {
           this.createNewProject();
         }
       });
+    } else if (UiState.isRecording) {
+      ModalState.showAlert({
+        title: "Stop recording",
+        description: "Are you sure you would to stop recording and create a new project?",
+        confirmLabel: "Proceed",
+        cancelLabel: "Cancel"
+      }, async (choseProceed) => {
+        if (choseProceed) {
+          await UiState.stopRecording();
+          this.createNewProject();
+        }
+      });
     } else {
       this.createNewProject();
     }
