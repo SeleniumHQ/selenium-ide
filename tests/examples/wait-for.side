@@ -187,7 +187,7 @@
   "suites": [{
     "id": "ee5ed249-db27-45ab-9ef0-296e983d799c",
     "name": "wait for",
-    "parallel": false,
+    "parallel": true,
     "timeout": 3000,
     "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e","b2baf643-63af-4c47-820e-a215d79d6f2f","b2baf643-63af-4c47-820e-a215d79d6f2g","b2baf643-63af-4c47-820e-a215d79d6f2h"]
   }],
