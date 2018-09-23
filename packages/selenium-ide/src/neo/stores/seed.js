@@ -252,6 +252,13 @@ export default function seed(store, numberOfSuites = 0) {
   locatorFallbackTest.createCommand(undefined, "clickAt", "css=#finis > h4");
   locatorFallbackTest.createCommand(undefined, "assertText", "css=#finish > h4", "Hello World!");
 
+  const confirmationDialogTest = store.createTestCase("confirmation dialog");
+  confirmationDialogTest.createCommand(undefined, "open", "/javascript_alerts");
+  confirmationDialogTest.createCommand(undefined, "chooseOkOnNextConfirmation", "");
+  confirmationDialogTest.createCommand(undefined, "click", "css=li:nth-child(2) > button");
+  confirmationDialogTest.createCommand(undefined, "assertConfirmation", "I am a JS Confirm");
+  confirmationDialogTest.createCommand(undefined, "webdriverChooseOkOnVisibleConfirmation", "");
+
   const suiteAll = store.createSuite("all tests");
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test);
@@ -278,11 +285,7 @@ export default function seed(store, numberOfSuites = 0) {
   smokeSuite.addTestCase(sendKeysTest);
   smokeSuite.addTestCase(storeTextTest);
   smokeSuite.addTestCase(submitTest);
-  smokeSuite.addTestCase(waitTest1);
-  smokeSuite.addTestCase(waitTest2);
-  smokeSuite.addTestCase(waitTest3);
-  smokeSuite.addTestCase(waitTest4);
-  smokeSuite.addTestCase(waitTest5);
+  smokeSuite.addTestCase(confirmationDialogTest);
 
   const waitSuite = store.createSuite("waits");
   waitSuite.addTestCase(waitTest1);
