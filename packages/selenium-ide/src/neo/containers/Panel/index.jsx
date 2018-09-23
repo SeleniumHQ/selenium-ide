@@ -219,8 +219,9 @@ if (browser.windows) {
         description: "Are you sure you would like to create a new project without saving the current one?",
         confirmLabel: "Proceed",
         cancelLabel: "Cancel"
-      }, (choseProceed) => {
+      }, async (choseProceed) => {
         if (choseProceed) {
+          await UiState.stopRecording();
           this.createNewProject();
         }
       });
