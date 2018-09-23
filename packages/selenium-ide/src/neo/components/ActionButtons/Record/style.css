@@ -8,7 +8,7 @@
 }
 
 .si-record.active {
-  background-color: transparent;
+  background-color: #e3f2ff;
 }
 
 .si-record.active::before {
