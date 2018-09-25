@@ -34,7 +34,7 @@ export default class GaugeMenu extends React.Component {
   }
   render() {
     return (
-      <Menu opener={this.props.opener} direction={MenuDirections.Bottom} closeOnClick={false} width={40} padding={0}>
+      <Menu opener={this.props.opener} direction={MenuDirections.Bottom} closeOnClick={false} width={40}>
         <div className="speed-gauge">
           <span>Fast</span>
           <Slider vertical included={false} min={0} max={this.props.maxDelay} value={this.props.maxDelay - this.props.value} onChange={this.handleChange.bind(this)} />

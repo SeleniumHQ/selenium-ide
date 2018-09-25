@@ -168,3 +168,7 @@
 .test-table tr:hover .buttons > * {
   opacity: 1;
 }
+
+.test-table tr .buttons > .active {
+  opacity: 1;
+}

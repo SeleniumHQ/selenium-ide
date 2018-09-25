@@ -26,6 +26,7 @@ import "./style.css";
 export const MenuDirections = {
   Left: "left",
   Bottom: "bottom",
+  BottomLeft: "bottomLeft",
   Cursor: "cursor"
 };
 
@@ -71,7 +72,7 @@ class Menu extends React.Component {
   static defaultProps = {
     width: 200,
     padding: 5,
-    direction: MenuDirections.Left,
+    direction: MenuDirections.BottomLeft,
     closeTimeoutMS: 300
   };
   static getDerivedStateFromProps(props) {
@@ -94,32 +95,44 @@ class Menu extends React.Component {
     let directionStyles = {};
     if (this.props.direction === MenuDirections.Left) {
       directionStyles = {
-        top: `${this.state.boundingRect ? this.state.boundingRect.top : "40"}px`,
-        left: `${this.state.boundingRect ? this.state.boundingRect.left - this.props.width - this.props.padding : "40"}px`,
+        top: this.state.boundingRect ? this.state.boundingRect.top : 40,
+        left: this.state.boundingRect ? this.state.boundingRect.left - this.props.width - this.props.padding : 40,
         transformOrigin: `${this.props.width}px 0px 0px`
       };
     } else if (this.props.direction === MenuDirections.Bottom) {
       directionStyles = {
-        top: `${this.state.boundingRect ? this.state.boundingRect.bottom + this.props.padding : "40"}px`,
-        left: `${this.state.boundingRect ? Math.max(this.state.boundingRect.left + (this.state.boundingRect.width - this.props.width) / 2, this.props.padding || 2) : "40"}px`,
+        top: this.state.boundingRect ? this.state.boundingRect.bottom + this.props.padding : 40,
+        left: this.state.boundingRect ? Math.max(this.state.boundingRect.left + (this.state.boundingRect.width - this.props.width) / 2, this.props.padding || 2) : 40,
         transformOrigin: `${this.props.width / 2}px 0px 0px`
+      };
+    } else if (this.props.direction === MenuDirections.BottomLeft) {
+      directionStyles = {
+        top: this.state.boundingRect ? this.state.boundingRect.top + this.state.boundingRect.height - this.props.padding : 40,
+        left: this.state.boundingRect ? this.state.boundingRect.left - this.props.width + this.state.boundingRect.width : 40,
+        transformOrigin: `${this.props.width}px 0px 0px`
       };
     } else if (this.props.direction === MenuDirections.Cursor) {
       let topPosition = 40, leftPosition = 40;
       if (this.props.position) {
         topPosition = this.props.position.y;
         leftPosition = this.props.position.x;
-        //if context menu is over test row's right
-        if (this.state.boundingRect && this.state.boundingRect.right < this.props.width + this.props.position.x) {
-          leftPosition = this.state.boundingRect.right - this.props.width - 5;
-        }
       }
+
       directionStyles = {
-        top: topPosition + "px",
-        left: leftPosition + "px",
+        top: topPosition,
+        left: leftPosition,
         transformOrigin: `${this.props.width / 2}px 0px 0px`
       };
     }
+
+    if (window.innerWidth < directionStyles.left + this.props.width + 2) {
+      directionStyles.left = window.innerWidth - this.props.width - 5;
+    }
+
+    Object.assign(directionStyles, {
+      left: directionStyles.left + "px",
+      top: directionStyles.top + "px"
+    });
     return (
       <Transition in={this.props.isOpen} timeout={duration}>
         {(status) => (
@@ -193,7 +206,7 @@ export default class MenuContainer extends React.Component {
   render() {
     return ([
       (this.props.opener ?
-        React.cloneElement(this.props.opener, { key: "opener", ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : null),
+        React.cloneElement(this.props.opener, { key: "opener", isMenuOpen: this.state.isOpen, ref: (node) => {return(this.node = node || this.node);}, onClick: this.handleClick }) : null),
       <Menu
         key="menu"
         isOpen={this.props.isOpenContextMenu || this.state.isOpen}

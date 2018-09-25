@@ -66,3 +66,7 @@
 .header .buttons > *:not(:last-child) {
   margin-left: 10px;
 }
+
+.header .buttons > *:last-child {
+  margin-left: 4px;
+}
