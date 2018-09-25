@@ -7,10 +7,6 @@
   color: #f56660;
 }
 
-.si-record.active {
-  background-color: #e3f2ff;
-}
-
 .si-record.active::before {
   animation: fadeIn 1s infinite alternate;
 }
