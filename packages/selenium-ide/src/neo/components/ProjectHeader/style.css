@@ -70,3 +70,8 @@
 .header .buttons > *:last-child {
   margin-left: 4px;
 }
+
+.header .title-prefix {
+  font-weight: bold;
+  padding-left: 6px;
+}

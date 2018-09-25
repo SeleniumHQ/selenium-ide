@@ -47,7 +47,10 @@ export default class ProjectHeader extends React.Component {
     new: PropTypes.func
   };
   handleKeyDown(e) {
-    if (e.key === "Enter") e.preventDefault();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.target.blur();
+    }
   }
   handleChange(e) {
     this.props.changeName(e.target.value);
@@ -57,6 +60,7 @@ export default class ProjectHeader extends React.Component {
       <div className={classNames("header", { "changed": this.props.changed })}>
         <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
         <div>
+          <span className="title-prefix">Project: </span>
           <ContentEditable className="title" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.title} />
           <i className="si-pencil"></i>
         </div>
