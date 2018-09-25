@@ -31,13 +31,22 @@ class ModalState {
     this.rename = this.rename.bind(this);
   }
 
-  @action.bound selectBaseUrl() {
-    return new Promise((res) => {
+  @action.bound selectBaseUrl(isInvalid = true) {
+    return new Promise((res, rej) => {
       this.baseUrlState = {
         selecting: true,
+        isInvalid,
         done: action((url) => {
           res(url);
-          this.baseUrlState = {};
+          this.baseUrlState = {
+            isInvalid
+          };
+        }),
+        cancel: action(() => {
+          rej();
+          this.baseUrlState = {
+            isInvalid
+          };
         })
       };
     });

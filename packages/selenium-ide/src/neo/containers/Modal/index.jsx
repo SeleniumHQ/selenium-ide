@@ -70,7 +70,9 @@ export default class Modal extends Component {
         />
         <BaseUrlDialog
           isSelectingUrl={ModalState.baseUrlState.selecting}
+          isInvalid={ModalState.baseUrlState.isInvalid}
           onUrlSelection={ModalState.baseUrlState.done}
+          cancel={ModalState.baseUrlState.cancel}
         />
       </div>
     );

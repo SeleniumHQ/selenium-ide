@@ -24,7 +24,8 @@ import FlatButton from "../FlatButton";
 
 export default class BaseUrlDialog extends React.Component {
   static propTypes = {
-    isSelectingUrl: PropTypes.bool
+    isSelectingUrl: PropTypes.bool,
+    isInvalid: PropTypes.bool
   };
   render() {
     return (
@@ -45,7 +46,9 @@ class BaseUrlDialogContents extends React.Component {
     this.onUrlChange = this.onUrlChange.bind(this);
   }
   static propTypes = {
-    onUrlSelection: PropTypes.func
+    isInvalid: PropTypes.bool,
+    onUrlSelection: PropTypes.func,
+    cancel: PropTypes.func
   };
   onUrlChange(url) {
     this.setState({ url });
@@ -53,19 +56,21 @@ class BaseUrlDialogContents extends React.Component {
   render() {
     return (
       <DialogContainer
-        title="Project base URL is missing or invalid!"
-        type="warn"
+        title={this.props.isInvalid ? "Project base URL is invalid!" : "Set your project's base URL"}
+        type={this.props.isInvalid ? "warn" : "info"}
         renderFooter={() => (
-          <FlatButton
-            type="submit"
-            disabled={!this.urlRegex.test(this.state.url)}
-            onClick={() => {this.props.onUrlSelection(this.state.url);}}
-            style={{
-              margin: 0,
-              float: "right"
-            }}
-          >Start recording</FlatButton>
+          <div className="right">
+            <FlatButton
+              onClick={this.props.cancel}
+            >Cancel</FlatButton>
+            <FlatButton
+              type="submit"
+              disabled={!this.urlRegex.test(this.state.url)}
+              onClick={() => {this.props.onUrlSelection(this.state.url);}}
+            >Start recording</FlatButton>
+          </div>
         )}
+        onRequestClose={this.props.cancel}
       >
         <p>
           Before you can start recording, you must specify a valid base URL for your project. Your tests will start by navigating
