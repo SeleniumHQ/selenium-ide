@@ -64,6 +64,7 @@ class PlaybackState {
     this._testsToRun = [];
     this.runningQueue = [];
     this.logger = new Logger(Channels.PLAYBACK);
+    this.lastSelectedView = undefined;
 
     this.extCommand = new ExtCommand(WindowSession);
     this.browserDriver = new WebDriverExecutor();
@@ -123,6 +124,7 @@ class PlaybackState {
     try {
       UiState._project.addCurrentUrl();
     } catch (e) {} // eslint-disable-line no-empty
+    this.lastSelectedView = UiState.selectedView;
     UiState.changeView("Executing", true);
     UiState.selectCommand(undefined);
     if (UiState.isRecording) {
@@ -428,17 +430,23 @@ class PlaybackState {
       }
       if (this._testsToRun.length) {
         this.playNext();
-      } else if (this.currentRunningSuite) {
-        PluginManager.emitMessage({
-          action: "event",
-          event: "suitePlaybackStopped",
-          options: {
-            runId: this.runId,
-            suiteName: this.currentRunningSuite.name,
-            projectName: UiState._project.name
-          }
-        });
-        this.suiteState.set(this.currentRunningSuite.id, this.hasFailed ? PlaybackStates.Failed : PlaybackStates.Passed);
+      } else {
+        if (!this.hasFailed && this.lastSelectedView) {
+          UiState.changeView(this.lastSelectedView);
+        }
+        this.lastSelectedView = undefined;
+        if (this.currentRunningSuite) {
+          PluginManager.emitMessage({
+            action: "event",
+            event: "suitePlaybackStopped",
+            options: {
+              runId: this.runId,
+              suiteName: this.currentRunningSuite.name,
+              projectName: UiState._project.name
+            }
+          });
+          this.suiteState.set(this.currentRunningSuite.id, this.hasFailed ? PlaybackStates.Failed : PlaybackStates.Passed);
+        }
       }
     });
   }

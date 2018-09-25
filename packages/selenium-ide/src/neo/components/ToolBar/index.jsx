@@ -34,6 +34,9 @@ import "./style.css";
 
 @observer
 export default class ToolBar extends React.Component {
+  toggleRecord() {
+    UiState.toggleRecord();
+  }
   render() {
     const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
     const isCommandValid = UiState.selectedCommand && UiState.selectedCommand.isValid;
@@ -65,7 +68,7 @@ export default class ToolBar extends React.Component {
         <DisableBreakpoints isActive={PlaybackState.breakpointsDisabled} onClick={PlaybackState.toggleDisableBreakpoints} />
         <PauseExceptions isActive={PlaybackState.pauseOnExceptions} onClick={PlaybackState.togglePauseOnExceptions} />
         <div className="sep"></div>
-        <Record disabled={PlaybackState.isPlaying || !UiState.selectedTest.test} isRecording={UiState.isRecording} onClick={UiState.toggleRecord} />
+        <Record disabled={PlaybackState.isPlaying || !UiState.selectedTest.test} isRecording={UiState.isRecording} onClick={this.toggleRecord} />
       </div>
     );
   }

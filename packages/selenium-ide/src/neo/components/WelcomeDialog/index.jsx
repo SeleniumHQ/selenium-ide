@@ -47,7 +47,7 @@ class WelcomeDialogContents extends React.Component {
   startRecordingInNewProject() {
     this.props.createNewProject();
     UiState.completeWelcome();
-    UiState.toggleRecord();
+    UiState.toggleRecord(false);
   }
 
   openProject(file) {
@@ -77,6 +77,7 @@ class WelcomeDialogContents extends React.Component {
         renderFooter={() => (
           <p>To learn more on Selenium IDE and how to use it visit the <a href="https://www.seleniumhq.org/docs/02_selenium_ide.jsp" target="_blank" rel="noopener noreferrer">the Selenium IDE project page</a>.</p>
         )}
+        onRequestClose={this.dismiss}
       >
         <div>
           <div>What would you like to do?</div>

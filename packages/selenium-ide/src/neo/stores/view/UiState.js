@@ -241,18 +241,18 @@ class UiState {
     this.filterTerm = term;
   }
 
-  @action.bound async toggleRecord() {
-    await (this.isRecording ? this.stopRecording() : this.startRecording());
+  @action.bound async toggleRecord(isInvalid) {
+    await (this.isRecording ? this.stopRecording() : this.startRecording(isInvalid));
   }
 
   @action.bound beforeRecording() {
   }
 
-  @action.bound async startRecording() {
+  @action.bound async startRecording(isInvalid) {
     try {
       let startingUrl = this.baseUrl;
       if (!startingUrl) {
-        startingUrl = await ModalState.selectBaseUrl();
+        startingUrl = await ModalState.selectBaseUrl(isInvalid);
       }
       await this.recorder.attach(startingUrl);
       this._setRecordingState(true);
