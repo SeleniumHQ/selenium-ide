@@ -265,10 +265,16 @@ class UiState {
     }
   }
 
+  async nameNewTest() {
+    const name = this.selectedTest.test.name;
+    if (name === "Untitled") await ModalState.renameTest(name, this.selectedTest.test.setName);
+  }
+
   @action.bound async stopRecording() {
     await this.recorder.detach();
     this._setRecordingState(false);
     await this.emitRecordingState();
+    await this.nameNewTest();
   }
 
   // Do not call this method directly, use start and stop

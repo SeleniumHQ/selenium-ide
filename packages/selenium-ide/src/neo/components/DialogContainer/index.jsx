@@ -37,7 +37,7 @@ export default class DialogContainer extends React.Component {
     renderTitle: PropTypes.func,
     renderImage: PropTypes.func,
     renderFooter: PropTypes.func,
-    onRequestClose: PropTypes.func.isRequired
+    onRequestClose: PropTypes.func
   };
   render() {
     return (
