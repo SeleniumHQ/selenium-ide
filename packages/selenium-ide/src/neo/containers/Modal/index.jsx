@@ -53,7 +53,8 @@ export default class Modal extends Component {
           value={ModalState.renameState.value}
           verify={ModalState.renameState.verify}
           setValue={ModalState.renameState ? ModalState.renameState.done : null}
-          cancel={ModalState.cancelRenaming} />
+          cancel={ModalState.renameState.cancel}
+          isNewTest={ModalState.renameState.isNewTest} />
         <ImportDialog
           isImporting={!!ModalState.importSuiteState.suite}
           suite={ModalState.importSuiteState.suite}

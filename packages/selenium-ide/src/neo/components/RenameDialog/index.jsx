@@ -59,25 +59,34 @@ class RenameDialogContents extends React.Component {
     });
   }
   render() {
+    const content = {
+      title: this.props.isNewTest ? "Name your new test" : `${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`,
+      submitButton: this.props.isNewTest ? "OK" : (this.state.isRenaming ? "Rename" : "Add"),
+      cancelButton: this.props.isNewTest ? "LATER" : "Cancel",
+      inputLabel: this.props.isNewTest ? "test name" : this.state.type
+    };
     return (
       <DialogContainer
-        title={`${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`}
+        title={content.title}
         type={this.state.valid ? "info" : "warn"}
         renderFooter={() => (
           <span className="right">
-            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
+            <FlatButton onClick={this.props.cancel}>{content.cancelButton}</FlatButton>
             <FlatButton type="submit" disabled={!this.state.value || !this.state.valid} onClick={() => {this.props.setValue(this.state.value);}} style={{
               marginRight: "0"
-            }}>{this.state.isRenaming ? "Rename" : "Add"}</FlatButton>
+            }}>{content.submitButton}</FlatButton>
           </span>
         )}
         onRequestClose={this.props.cancel}
       >
+        { this.props.isNewTest &&
+            <p>Please provide a name for your new test. You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name.</p> }
         <LabelledInput
           name={this.state.type + "Name"}
-          label={this.state.type}
+          label={content.inputLabel}
           value={this.state.value}
           onChange={this.handleChange.bind(this)}
+          autoFocus
         />
         { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
       </DialogContainer>
@@ -89,6 +98,7 @@ class RenameDialogContents extends React.Component {
     value: PropTypes.string,
     verify: PropTypes.func,
     cancel: PropTypes.func,
-    setValue: PropTypes.func
+    setValue: PropTypes.func,
+    isNewTest: PropTypes.bool
   };
 }

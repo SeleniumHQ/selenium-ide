@@ -265,9 +265,14 @@ class UiState {
     }
   }
 
-  async nameNewTest() {
-    const name = this.selectedTest.test.name;
-    if (name === "Untitled") await ModalState.renameTest(name, this.selectedTest.test.setName);
+  nameNewTest() {
+    const test = this.selectedTest.test;
+    const isNewTest = true;
+    if (test.name === "Untitled") {
+      ModalState.renameTest(test.name, isNewTest).then(name => {
+        test.setName(name);
+      });
+    }
   }
 
   @action.bound async stopRecording() {
