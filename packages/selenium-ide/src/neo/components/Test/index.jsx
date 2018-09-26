@@ -227,7 +227,7 @@ export class MenuTest extends React.Component {
   render () {
     /* eslint-disable react/prop-types */
     const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
-      <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name, this.props.test.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name).then(name => { this.props.test.setName(name); })}>Rename</ListMenuItem>
       <ListMenuItem onClick={this.props.duplicateTest}>Duplicate</ListMenuItem>
       <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
     </ListMenu>;
