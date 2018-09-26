@@ -17,14 +17,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { loadProject } from "../../IO/filesystem";
+import { loadProject } from "../../../IO/filesystem";
 import { observer } from "mobx-react";
-import UiState from "../../stores/view/UiState";
-import project from "../../../../package.json";
-import Modal from "../Modal";
-import DialogContainer from "../DialogContainer";
-import logoFile from "../../assets/images/selenium_blue_white32@3x.svg";
-import { OpenInput } from "../ActionButtons/Open";
+import UiState from "../../../stores/view/UiState";
+import project from "../../../../../package.json";
+import Modal from "../../Modal";
+import DialogContainer from "../Dialog";
+import logoFile from "../../../assets/images/selenium_blue_white32@3x.svg";
+import { OpenInput } from "../../ActionButtons/Open";
 import "./style.css";
 
 @observer

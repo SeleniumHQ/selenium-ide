@@ -20,12 +20,12 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
-import RenameDialog from "../../components/RenameDialog";
 import ImportDialog from "../../components/ImportDialog";
 import SuiteSettings from "../../components/SuiteSettings";
-import BaseUrlDialog from "../../components/BaseUrlDialog";
+import RenameDialog from "../../components/Dialogs/Rename";
+import BaseUrlDialog from "../../components/Dialogs/BaseUrl";
+import WelcomeDialog from "../../components/Dialogs/Welcome";
 import ModalState from "../../stores/view/ModalState";
-import WelcomeDialog from "../../components/WelcomeDialog";
 import { isProduction } from "../../../content/utils";
 
 @observer

@@ -17,10 +17,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Modal from "../Modal";
-import FlatButton from "../FlatButton";
-import LabelledInput from "../LabelledInput";
-import DialogContainer from "../DialogContainer";
+import Modal from "../../Modal";
+import FlatButton from "../../FlatButton";
+import LabelledInput from "../../LabelledInput";
+import DialogContainer from "../Dialog";
 import classNames from "classnames";
 import "./style.css";
 
