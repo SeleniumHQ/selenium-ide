@@ -44,12 +44,12 @@ export default class ToolBar extends React.Component {
       <div className="toolbar">
         <PlayAll
           isActive={!PlaybackState.paused && PlaybackState.isPlayingSuite}
-          disabled={!PlaybackState.canPlaySuite}
+          disabled={!PlaybackState.canPlaySuite || UiState.isRecording}
           onClick={PlaybackState.playSuiteOrResume}
         />
         <PlayCurrent
           isActive={!PlaybackState.paused && PlaybackState.isPlayingTest}
-          disabled={isTestEmpty || PlaybackState.isPlayingSuite}
+          disabled={isTestEmpty || PlaybackState.isPlayingSuite || UiState.isRecording}
           onClick={PlaybackState.playTestOrResume}
         />
         { PlaybackState.isPlaying ? <Stop onClick={() => {PlaybackState.abortPlaying();}} /> : null }
@@ -60,7 +60,7 @@ export default class ToolBar extends React.Component {
               `<p>Resume test execution <span style="color: #929292;padding-left: 5px;">${parse("p", { primaryKey: true })}</span></p>`
             }
             onClick={PlaybackState.pauseOrResume} /> : null }
-        <StepInto disabled={!isCommandValid} onClick={PlaybackState.stepOver} />
+        <StepInto disabled={!isCommandValid || UiState.isRecording} onClick={PlaybackState.stepOver} />
         <GaugeMenu opener={
           <SpeedGauge speed={UiState.gaugeSpeed} />
         } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
