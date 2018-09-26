@@ -147,7 +147,12 @@ if (browser.windows) {
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
     // when editing these, remember to edit the button's tooltip as well
-    if (onlyPrimary && key === "S") {
+    if (primaryAndShift && key === "N") {
+      e.preventDefault();
+      this.loadNewProject();
+    } else if (onlyPrimary && key === "N") {
+      e.preventDefault();
+    } else if (onlyPrimary && key === "S") {
       e.preventDefault();
       saveProject(this.state.project);
     } else if (onlyPrimary && key === "O" && this.openFile) {
