@@ -35,6 +35,10 @@ export default class Command {
     this.export = this.export.bind(this);
   }
 
+  @computed get enabled() {
+    return (this.command && !this.command.startsWith("//"));
+  }
+
   @computed get isValid() {
     return Commands.array.includes(this.command);
   }
@@ -71,6 +75,14 @@ export default class Command {
 
   @action.bound toggleBreakpoint() {
     this.isBreakpoint = !this.isBreakpoint;
+  }
+
+  @action.bound toggleEnabled() {
+    if (this.enabled) {
+      this.setCommand("//" + this.command);
+    } else {
+      this.setCommand(this.command.substr(2));
+    }
   }
 
   @action.bound setData(jsRep){

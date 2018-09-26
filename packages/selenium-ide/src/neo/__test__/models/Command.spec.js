@@ -100,6 +100,21 @@ describe("Command", () => {
     command.toggleBreakpoint();
     expect(command.isBreakpoint).toBeTruthy();
   });
+  it("should be enabled by default", () => {
+    const command = new Command(undefined, "open");
+    expect(command.enabled).toBeTruthy();
+  });
+  it("should toggle command between enabled and disabled", () => {
+    const command = new Command(undefined, "open");
+    expect(command.enabled).toBeTruthy();
+    command.toggleEnabled();
+    expect(command.enabled).toBeFalsy();
+  });
+  it("should prefix command with '//' when disabled", () => {
+    const command = new Command(undefined, "open");
+    command.toggleEnabled();
+    expect(command.command).toBe("//open");
+  });
   it("shouls clone itself, creating a new id", () => {
     const command = new Command();
     command.setComment("test");
