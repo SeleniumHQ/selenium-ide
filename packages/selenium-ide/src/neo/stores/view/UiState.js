@@ -50,7 +50,6 @@ class UiState {
   @observable options = {
     recordNotifications: true
   };
-  @observable completedWelcome = false;
   @observable pauseNotificationSent = false;
 
   constructor() {
@@ -260,7 +259,7 @@ class UiState {
     } catch (err) {
       ModalState.showAlert({
         title: "Could not start recording",
-        description: err.message
+        description: err ? err.message : undefined
       });
     }
   }
@@ -445,10 +444,6 @@ class UiState {
       state.modified = false;
     });
     this._project.setModified(false);
-  }
-
-  @action.bound completeWelcome() {
-    this.completedWelcome = true;
   }
 }
 
