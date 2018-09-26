@@ -24,6 +24,9 @@ class ModalState {
   @observable importSuiteState = {};
   @observable suiteSettingsState = {};
   @observable baseUrlState = {};
+  @observable welcomeState = {
+    completed: false
+  };
 
   constructor() {
     this.renameTest = this.rename.bind(this, Types.test);
@@ -179,6 +182,10 @@ class ModalState {
         }
       });
     });
+  }
+
+  @action.bound completeWelcome() {
+    this.welcomeState = { completed: true };
   }
 }
 

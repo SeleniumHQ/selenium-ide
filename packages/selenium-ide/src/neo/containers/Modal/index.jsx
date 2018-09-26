@@ -25,6 +25,8 @@ import ImportDialog from "../../components/ImportDialog";
 import SuiteSettings from "../../components/SuiteSettings";
 import BaseUrlDialog from "../../components/BaseUrlDialog";
 import ModalState from "../../stores/view/ModalState";
+import WelcomeDialog from "../../components/WelcomeDialog";
+import { isProduction } from "../../../content/utils";
 
 @observer
 export default class Modal extends Component {
@@ -75,10 +77,18 @@ export default class Modal extends Component {
           onUrlSelection={ModalState.baseUrlState.done}
           cancel={ModalState.baseUrlState.cancel}
         />
+        { isProduction ?
+          <WelcomeDialog
+            isWelcomed={ModalState.welcomeState.completed}
+            project={this.props.project}
+            createNewProject={this.props.createNewProject}
+            completeWelcome={ModalState.completeWelcome} />
+          : null }
       </div>
     );
   }
   static propTypes = {
-    project: PropTypes.object.isRequired
+    project: PropTypes.object.isRequired,
+    createNewProject: PropTypes.func.isRequired
   };
 }
