@@ -18,8 +18,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Modal from "../Modal";
-import ModalHeader from "../ModalHeader";
 import FlatButton from "../FlatButton";
+import LabelledInput from "../LabelledInput";
+import DialogContainer from "../DialogContainer";
+import classNames from "classnames";
 import "./style.css";
 
 export default class RenameDialog extends React.Component {
@@ -33,7 +35,7 @@ export default class RenameDialog extends React.Component {
   };
   render() {
     return (
-      <Modal className="rename-dialog" isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
+      <Modal className={classNames("stripped", "rename-dialog")} isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
         <RenameDialogContents {...this.props} />
       </Modal>
     );
@@ -50,26 +52,35 @@ class RenameDialogContents extends React.Component {
       type: props.type
     };
   }
-  handleChange(e) {
+  handleChange(inputValue) {
     this.setState({
-      value: e.target.value,
-      valid: this.props.verify(e.target.value)
+      value: inputValue,
+      valid: this.props.verify(inputValue)
     });
   }
   render() {
     return (
-      <form onSubmit={(e) => { e.preventDefault(); }}>
-        <ModalHeader title={`${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`} close={this.props.cancel} />
-        <input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} autoFocus />
+      <DialogContainer
+        title={`${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`}
+        type={this.state.valid ? "info" : "warn"}
+        renderFooter={() => (
+          <span className="right">
+            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
+            <FlatButton type="submit" disabled={!this.state.value || !this.state.valid} onClick={() => {this.props.setValue(this.state.value);}} style={{
+              marginRight: "0"
+            }}>{this.state.isRenaming ? "Rename" : "Add"}</FlatButton>
+          </span>
+        )}
+        onRequestClose={this.props.cancel}
+      >
+        <LabelledInput
+          name={this.state.type + "Name"}
+          label={this.state.type}
+          value={this.state.value}
+          onChange={this.handleChange.bind(this)}
+        />
         { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
-        <span className="right">
-          <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-          <FlatButton type="submit" disabled={!this.state.value || !this.state.valid} onClick={() => {this.props.setValue(this.state.value);}} style={{
-            marginRight: "0"
-          }}>{this.state.isRenaming ? "Rename" : "Add"}</FlatButton>
-        </span>
-        <div className="clear"></div>
-      </form>
+      </DialogContainer>
     );
   }
   static propTypes = {
