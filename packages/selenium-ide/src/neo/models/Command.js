@@ -35,6 +35,10 @@ export default class Command {
     this.export = this.export.bind(this);
   }
 
+  @computed get displayedName() {
+    return (this.enabled ? this.command : this.command.substr(2));
+  }
+
   @computed get enabled() {
     return (this.command && !this.command.startsWith("//"));
   }

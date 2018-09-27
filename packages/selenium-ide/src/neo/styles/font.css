@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'selenium-ide';
   src:
-    url('../assets/fonts/selenium-ide.ttf?2o2c1h') format('truetype'),
-    url('../assets/fonts/selenium-ide.svg?2o2c1h#selenium-ide') format('svg');
+    url('../assets/fonts/selenium-ide.ttf?xyc7ya') format('truetype'),
+    url('../assets/fonts/selenium-ide.svg?xyc7ya#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,7 +23,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.si-new::before {
+.si-remove-comment::before {
+  content: "\e900";
+}
+
+.si-comment::before {
+  content: "\e925";
+}
+
+.si-new-project::before {
   content: "\e91e";
 }
 
@@ -31,15 +39,17 @@
   position: relative;
 }
 
-.si-record::before {
-  content: "\e920";
-}
-
-.si-record::after {
+.si-record::after,
+.si-record-circle::before {
   content: "\e91f";
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+}
+
+.si-record::before,
+.si-record-out::before {
+  content: "\e920";
 }
 
 .si-download::before {
@@ -98,12 +108,16 @@
   content: "\e914";
 }
 
+.si-gauge-12::before {
+  content: "\e91a";
+}
+
 .si-search::before {
   content: "\e916";
 }
 
 .si-caret::before {
-  content: "\e900";
+  content: "\e902";
 }
 
 .si-check::before {
@@ -114,20 +128,24 @@
   content: "\e90d";
 }
 
-.si-clear::before {
-  content: "\e91a";
-}
-
-.si-delete::before {
-  content: "\e902";
-}
-
-.si-step-into::before {
+.si-ic_arrow_down::before {
   content: "\e903";
 }
 
-.si-info::before {
+.si-clear::before {
+  content: "\e921";
+}
+
+.si-delete::before {
   content: "\e904";
+}
+
+.si-step-into::before {
+  content: "\e906";
+}
+
+.si-info::before {
+  content: "\e907";
 }
 
 .si-more::before {
@@ -135,29 +153,33 @@
 }
 
 .si-play-all::before {
-  content: "\e906";
-}
-
-.si-play::before {
-  content: "\e907";
-}
-
-.si-pause::before {
   content: "\e908";
 }
 
-.si-remove::before {
+.si-play::before {
   content: "\e909";
 }
 
-.si-code::before {
+.si-pause::before {
   content: "\e90a";
 }
 
-.si-save::before {
+.si-remove::before {
   content: "\e90b";
 }
 
-.si-select::before {
+.si-code::before {
   content: "\e90f";
+}
+
+.si-save::before {
+  content: "\e922";
+}
+
+.si-select::before {
+  content: "\e923";
+}
+
+.si-stop1::before {
+  content: "\e924";
 }

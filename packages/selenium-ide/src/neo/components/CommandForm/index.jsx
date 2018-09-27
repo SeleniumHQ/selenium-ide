@@ -78,9 +78,9 @@ import "./style.css";
               onChange={this.props.command ? this.props.command.setCommand : null} />
             <FlatButton
               data-tip="<p>Enable/Disable command</p>"
-              className="icon si-search"
+              className={classNames("icon", this.props.command && this.props.command.command && !this.props.command.enabled ? "si-remove-comment" : "si-comment")}
               disabled={!this.props.command || (this.props.command && !this.props.command.command)}
-              onClick={this.props.command.toggleEnabled}
+              onClick={this.props.command ? this.props.command.toggleEnabled : null}
             />
           </div>
           <div className="target">

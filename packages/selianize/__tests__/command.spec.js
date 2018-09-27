@@ -105,6 +105,14 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBeUndefined();
   });
+  it("should skip commented commands", () => {
+    const command = {
+      command: "//commented code",
+      target: "",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBeUndefined();
+  });
   it("should fail to emit unknown command", () => {
     const command = {
       command: "doesntExist",

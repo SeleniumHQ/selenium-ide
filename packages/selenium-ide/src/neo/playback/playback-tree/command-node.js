@@ -47,7 +47,8 @@ export class CommandNode {
 
   isTerminal() {
     return ControlFlowCommandChecks.isTerminal(this.command) ||
-           this.command.command === "";
+      this.command.command === "" ||
+      this.command.command.startsWith("//");
   }
 
   execute(commandExecutor, options) {

@@ -130,7 +130,7 @@ export function emit(command, options = config, snapshot) {
     } else if (options.skipStdLibEmitting) {
       res({ skipped: true });
     } else {
-      if (!command.command) {
+      if (!command.command || command.command.startsWith("//")) {
         res();
       } else if (snapshot) {
         res(snapshot);
