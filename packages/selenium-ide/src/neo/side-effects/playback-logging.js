@@ -89,7 +89,7 @@ export default class PlaybackLogger {
   }
 
   logCommandState(command, status) {
-    if (status && command && this.shouldLogCommand(command.command)) {
+    if (status && command && this.shouldLogCommand(command)) {
       const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
       let log = this.findCorrespondingLog(command.id);
       let shouldAddLog = false;
@@ -125,7 +125,7 @@ export default class PlaybackLogger {
   }
 
   shouldLogCommand(command) {
-    return (command !== "echo" && command !== "run");
+    return (command.enabled && command.command !== "echo" && command.command !== "run");
   }
 
   findCorrespondingLog(commandId) {
