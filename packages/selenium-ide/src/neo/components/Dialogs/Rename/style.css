@@ -4,4 +4,9 @@
 
 .rename-dialog .more-icon {
   font-size: 16px;
+  vertical-align: middle;
+}
+
+.rename-dialog .right {
+  padding-top: 15px;
 }
