@@ -60,7 +60,7 @@ export class OpenInput extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <input id={this.id} ref={(input) => { console.log(input);console.log(this); this.input = input; }} type="file" accept={supportedFileFormats} onChange={this.handleChange} />
+        <input id={this.id} ref={(input) => { this.input = input; }} type="file" accept={supportedFileFormats} onChange={this.handleChange} />
         <label
           data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse("o", { primaryKey: true })}</span></p>`}
           htmlFor={this.id}

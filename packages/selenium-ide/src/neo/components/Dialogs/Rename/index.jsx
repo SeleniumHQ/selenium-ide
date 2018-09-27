@@ -47,7 +47,7 @@ class RenameDialogContents extends React.Component {
     super(props);
     this.state = {
       isRenaming: !!props.value,
-      value: props.value ? props.value : "",
+      value: props.isNewTest ? "" : (props.value ? props.value : ""),
       valid: true,
       type: props.type
     };
@@ -71,7 +71,7 @@ class RenameDialogContents extends React.Component {
         type={this.state.valid ? "info" : "warn"}
         renderFooter={() => (
           <span className="right">
-            <FlatButton onClick={this.props.cancel}>{content.cancelButton}</FlatButton>
+            <FlatButton disabled={this.props.isNewTest && !!this.state.value} onClick={this.props.cancel}>{content.cancelButton}</FlatButton>
             <FlatButton type="submit" disabled={!this.state.value || !this.state.valid} onClick={() => {this.props.setValue(this.state.value);}} style={{
               marginRight: "0"
             }}>{content.submitButton}</FlatButton>
@@ -79,8 +79,7 @@ class RenameDialogContents extends React.Component {
         )}
         onRequestClose={this.props.cancel}
       >
-        { this.props.isNewTest &&
-            <p>Please provide a name for your new test. You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name.</p> }
+        { this.props.isNewTest && <span>Please provide a name for your new test.</span> }
         <LabelledInput
           name={this.state.type + "Name"}
           label={content.inputLabel}
@@ -89,6 +88,8 @@ class RenameDialogContents extends React.Component {
           autoFocus
         />
         { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
+        { this.props.isNewTest &&
+            <span>You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name in the tests panel.</span> }
       </DialogContainer>
     );
   }
