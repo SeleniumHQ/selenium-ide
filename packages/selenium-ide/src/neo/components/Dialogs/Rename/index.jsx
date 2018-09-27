@@ -47,7 +47,7 @@ class RenameDialogContents extends React.Component {
     super(props);
     this.state = {
       isRenaming: !!props.value,
-      value: props.isNewTest ? "" : (props.value ? props.value : ""),
+      value: (props.isNewTest || props.type === "project") ? "" : (props.value ? props.value : ""),
       valid: true,
       type: props.type
     };
@@ -60,10 +60,32 @@ class RenameDialogContents extends React.Component {
   }
   render() {
     const content = {
-      title: this.props.isNewTest ? "Name your new test" : `${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`,
-      submitButton: this.props.isNewTest ? "OK" : (this.state.isRenaming ? "Rename" : "Add"),
-      cancelButton: this.props.isNewTest ? "LATER" : "Cancel",
-      inputLabel: this.props.isNewTest ? "test name" : this.state.type
+      title: this.props.isNewTest ?
+        "Name your new test"
+        :
+        (this.props.type === "project" ?
+          "Name your new project"
+          :
+          `${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`),
+      bodyTop:
+        this.props.isNewTest ?
+          <span>Please provide a name for your new test.</span>
+          :
+          (this.props.type === "project" ?
+            <span>Please provide a name for your new project.</span>
+            :
+            undefined),
+      bodyBottom:
+        this.props.isNewTest ?
+          <span>You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name in the tests panel.</span>
+          :
+          (this.props.type === "project" ?
+            <span>You can change the name of your project at any time by clicking it and entering a new name.</span>
+            :
+            undefined),
+      submitButton: (this.props.isNewTest || this.props.type === "project") ? "OK" : (this.state.isRenaming ? "Rename" : "Add"),
+      cancelButton: (this.props.isNewTest || this.props.type === "project") ? "LATER" : "Cancel",
+      inputLabel: this.props.isNewTest ? "test name" : this.state.type + " name"
     };
     return (
       <DialogContainer
@@ -79,7 +101,7 @@ class RenameDialogContents extends React.Component {
         )}
         onRequestClose={this.props.cancel}
       >
-        { this.props.isNewTest && <span>Please provide a name for your new test.</span> }
+        { content.bodyTop }
         <LabelledInput
           name={this.state.type + "Name"}
           label={content.inputLabel}
@@ -88,8 +110,7 @@ class RenameDialogContents extends React.Component {
           autoFocus
         />
         { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
-        { this.props.isNewTest &&
-            <span>You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name in the tests panel.</span> }
+        { content.bodyBottom }
       </DialogContainer>
     );
   }

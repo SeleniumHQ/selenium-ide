@@ -266,9 +266,8 @@ class UiState {
 
   nameNewTest() {
     const test = this.selectedTest.test;
-    const isNewTest = true;
     if (test.name === "Untitled") {
-      ModalState.renameTest(test.name, isNewTest).then(name => {
+      ModalState.renameTest(test.name, { isNewTest: true }).then(name => {
         test.setName(name);
       });
     }
