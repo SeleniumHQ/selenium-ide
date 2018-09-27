@@ -18,9 +18,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import RemoveButton from "../ActionButtons/Remove";
-import info from "../../assets/images/tick.png";
-import warn from "../../assets/images/warning.png";
+import RemoveButton from "../../ActionButtons/Remove";
+import info from "../../../assets/images/tick.png";
+import warn from "../../../assets/images/warning.png";
 import "./style.css";
 
 const images = {
@@ -37,7 +37,7 @@ export default class DialogContainer extends React.Component {
     renderTitle: PropTypes.func,
     renderImage: PropTypes.func,
     renderFooter: PropTypes.func,
-    onRequestClose: PropTypes.func.isRequired
+    onRequestClose: PropTypes.func
   };
   render() {
     return (

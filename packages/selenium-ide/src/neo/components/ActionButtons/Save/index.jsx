@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ActionButton from "../ActionButton";
 import classNames from "classnames";
+import { parse } from "modifier-keys";
 import "./style.css";
 
 export default class SaveButton extends React.Component {
@@ -26,7 +27,10 @@ export default class SaveButton extends React.Component {
     const props = { ...this.props };
     delete props.unsaved;
     return (
-      <ActionButton data-tip="<p>Save project</p>" {...props} className={classNames("si-save", { pulse: this.props.unsaved }, this.props.className)} />// eslint-disable-line react/prop-types
+      <ActionButton
+        data-tip={`<p>Save project <span style="color: #929292;padding-left: 5px;">${parse("s", { primaryKey: true })}</span></p>`}
+        {...props}
+        className={classNames("si-save", { pulse: this.props.unsaved }, this.props.className)} />// eslint-disable-line react/prop-types
     );
   }
 

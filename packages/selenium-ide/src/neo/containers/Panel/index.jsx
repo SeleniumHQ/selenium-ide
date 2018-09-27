@@ -40,17 +40,17 @@ import Changelog from "../../components/Changelog";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
 import ModalState from "../../stores/view/ModalState";
-import WelcomeDialog from "../../components/WelcomeDialog";
 import "../../side-effects/contextMenu";
 import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
+import { isProduction } from "../../../content/utils";
 
 import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
 import "../../IO/notifications";
 
-const isProduction = process.env.NODE_ENV === "production";
+//const isProduction = process.env.NODE_ENV === "production";
 
 if (process.env.NODE_ENV !== "test") {
   const api = require("../../../api");
@@ -147,7 +147,12 @@ if (browser.windows) {
     const noModifiers = (!e.primaryKey && !e.secondaryKey);
 
     // when editing these, remember to edit the button's tooltip as well
-    if (onlyPrimary && key === "S") {
+    if (primaryAndShift && key === "N") {
+      e.preventDefault();
+      this.loadNewProject();
+    } else if (onlyPrimary && key === "N") {
+      e.preventDefault();
+    } else if (onlyPrimary && key === "S") {
       e.preventDefault();
       saveProject(this.state.project);
     } else if (onlyPrimary && key === "O" && this.openFile) {
@@ -307,10 +312,9 @@ if (browser.windows) {
             </div>
             <Console height={UiState.consoleHeight} restoreSize={UiState.restoreConsoleSize} />
           </SplitPane>
-          <Modal project={this.state.project} />
+          <Modal project={this.state.project} createNewProject={this.createNewProject.bind(this)} />
           <Changelog />
           <Tooltip />
-          {isProduction ? <WelcomeDialog project={this.state.project} createNewProject={this.createNewProject.bind(this)} /> : null}
         </SuiteDropzone>
       </div>
     );

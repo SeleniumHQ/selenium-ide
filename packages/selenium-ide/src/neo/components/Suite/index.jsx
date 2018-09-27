@@ -93,7 +93,7 @@ class Suite extends React.Component {
   render() {
     const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
       <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
-      <ListMenuItem onClick={() => this.props.rename(this.props.suite.name, this.props.suite.setName)}>Rename</ListMenuItem>
+      <ListMenuItem onClick={() => this.props.rename(this.props.suite.name).then(name => { this.props.suite.setName(name); })}>Rename</ListMenuItem>
       <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
       <ListMenuItem onClick={this.props.editSettings}>Settings</ListMenuItem>
     </ListMenu>;

@@ -17,24 +17,27 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { loadProject } from "../../IO/filesystem";
+import { loadProject } from "../../../IO/filesystem";
 import { observer } from "mobx-react";
-import UiState from "../../stores/view/UiState";
-import project from "../../../../package.json";
-import Modal from "../Modal";
-import DialogContainer from "../DialogContainer";
-import logoFile from "../../assets/images/selenium_blue_white32@3x.svg";
-import { OpenInput } from "../ActionButtons/Open";
+import UiState from "../../../stores/view/UiState";
+import project from "../../../../../package.json";
+import Modal from "../../Modal";
+import DialogContainer from "../Dialog";
+import logoFile from "../../../assets/images/selenium_blue_white32@3x.svg";
+import { OpenInput } from "../../ActionButtons/Open";
 import "./style.css";
 
 @observer
 export default class WelcomeDialog extends React.Component {
   render() {
     return (
-      <Modal className="stripped" isOpen={!UiState.completedWelcome} >
+      <Modal className="stripped" isOpen={!this.props.isWelcomed} >
         <WelcomeDialogContents {...this.props} />
       </Modal>
     );
+  }
+  static propTypes = {
+    isWelcomed: PropTypes.bool.isRequired
   }
 }
 
@@ -42,21 +45,23 @@ class WelcomeDialogContents extends React.Component {
   constructor(props) {
     super(props);
     this.startRecordingInNewProject = this.startRecordingInNewProject.bind(this);
+    this.openProject = this.openProject.bind(this);
+    this.dismiss = this.dismiss.bind(this);
   }
 
   startRecordingInNewProject() {
     this.props.createNewProject();
-    UiState.completeWelcome();
+    this.props.completeWelcome();
     UiState.toggleRecord(false);
   }
 
   openProject(file) {
     loadProject(this.props.project, file);
-    UiState.completeWelcome();
+    this.props.completeWelcome();
   }
 
   dismiss() {
-    UiState.completeWelcome();
+    this.props.completeWelcome();
   }
 
   render() {
@@ -84,7 +89,7 @@ class WelcomeDialogContents extends React.Component {
           <ul className="welcome-dialog__options">
             <li><a onClick={this.startRecordingInNewProject}>Record a new test in a new project</a></li>
             <li className="file-open">
-              <OpenInput onFileSelected={this.openProject.bind(this)} labelMarkup={<div>Open an existing project</div>} />
+              <OpenInput onFileSelected={this.openProject} labelMarkup={<div>Open an existing project</div>} />
             </li>
             <li><a onClick={this.dismiss}>Close this dialog</a></li>
           </ul>
@@ -94,6 +99,7 @@ class WelcomeDialogContents extends React.Component {
   }
   static propTypes = {
     project: PropTypes.object.isRequired,
-    createNewProject: PropTypes.func.isRequired
+    createNewProject: PropTypes.func.isRequired,
+    completeWelcome: PropTypes.func.isRequired
   }
 }

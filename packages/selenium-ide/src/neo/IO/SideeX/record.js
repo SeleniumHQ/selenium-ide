@@ -45,27 +45,27 @@ export default function record(command, targets, value, insertBeforeLastCommand)
     const newCommand = test.createCommand();
     newCommand.setCommand(command);
     newCommand.setValue(value);
-    const url = new URL(targets);
-    UiState.setUrl(url.origin, true);
-    newCommand.setTarget(url.pathname);
+    const recordedUrl = targets[0][0];
+    const url = new URL(recordedUrl);
+    if (!UiState.baseUrl) {
+      UiState.setUrl(url.origin, true);
+      newCommand.setTarget(url.pathname);
+    } else if (url.origin === UiState.baseUrl) {
+      newCommand.setTarget(url.pathname);
+    } else {
+      newCommand.setTarget(recordedUrl);
+    }
   } else if (command !== "open") {
     let index = getInsertionIndex(test, insertBeforeLastCommand);
     if (preprocessDoubleClick(command, test, index)) {
       // double click removed the 2 clicks from before
       index -= 2;
     }
-    const trgs = targets.map(([locator, strategy]) => {
-      // no more implicit things, make users specify exactly which selector to use
-      if (strategy && locator && strategy.startsWith("xpath") && locator.startsWith("//")) {
-        return ["xpath=" + locator, strategy];
-      }
-      return [locator, strategy];
-    });
-    const newCommand = recordCommand(command, trgs[0][0], value, index);
+    const newCommand = recordCommand(command, targets[0][0], value, index);
     if (Commands.list.has(command)) {
       const type = Commands.list.get(command).target;
       if (type && type.name === ArgTypes.locator.name) {
-        newCommand.setTargets(trgs);
+        newCommand.setTargets(targets);
       }
     }
   }
