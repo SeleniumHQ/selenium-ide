@@ -171,6 +171,7 @@ export default function seed(store, numberOfSuites = 0) {
   clickAtTest.createCommand(undefined, "clickAt", "css=a");
 
   const commentTest = store.createTestCase("comment");
+  commentTest.createCommand(undefined, "//commented code");
   commentTest.createCommand(undefined, "", "", "", "blah");
   commentTest.createCommand(undefined, "", "", "");
   commentTest.createCommand(undefined, "open", "/", "", "also blah");

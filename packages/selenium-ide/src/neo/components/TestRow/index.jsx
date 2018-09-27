@@ -250,7 +250,7 @@ class TestRow extends React.Component {
         {!this.props.isPristine ? <a className="break-toggle" onClick={this.props.command.toggleBreakpoint} onDoubleClick={(e) => { e.stopPropagation(); }}>
           <span className="code index">{this.props.index + 1}</span>
           <span className="arrow"></span>
-          {this.props.command.comment ? <span className="comment-icon">{"//"}</span> : null}
+          {!this.props.command.enabled ? <span className="comment-icon">{"//"}</span> : null}
         </a> : null}
       </td>
       <td className={classNames("comment", { "cell__hidden": !this.props.command.comment })} colSpan="3">
@@ -258,7 +258,7 @@ class TestRow extends React.Component {
       </td>
       <td className={classNames("command", { "cell__alternate": this.props.command.comment })}>
         { commandIndentation }
-        <CommandName>{this.props.command.command}</CommandName>
+        <CommandName>{this.props.command.displayedName}</CommandName>
       </td>
       <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.target}</MultilineEllipsis></td>
       <td className={classNames({ "cell__alternate": this.props.command.comment })}><MultilineEllipsis lines={3}>{this.props.command.value}</MultilineEllipsis></td>

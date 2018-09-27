@@ -68,13 +68,21 @@ import "./style.css";
     return (
       <div className="command-form">
         <form onSubmit={(e) => { e.preventDefault(); }}>
-          <CommandInput
-            id="command"
-            name="command"
-            label="Command"
-            value={this.props.command ? this.parseCommandName(this.props.command.command) : ""}
-            disabled={!this.props.command}
-            onChange={this.props.command ? this.props.command.setCommand : null} />
+          <div className="target">
+            <CommandInput
+              id="command"
+              name="command"
+              label="Command"
+              value={this.props.command ? this.parseCommandName(this.props.command.command) : ""}
+              disabled={!this.props.command}
+              onChange={this.props.command ? this.props.command.setCommand : null} />
+            <FlatButton
+              data-tip="<p>Enable/Disable command</p>"
+              className={classNames("icon", this.props.command && this.props.command.command && !this.props.command.enabled ? "si-remove-comment" : "si-comment")}
+              disabled={!this.props.command || (this.props.command && !this.props.command.command)}
+              onClick={this.props.command ? this.props.command.toggleEnabled : null}
+            />
+          </div>
           <div className="target">
             <TargetInput
               id="target"
@@ -107,7 +115,7 @@ import "./style.css";
           <Input
             id="comment"
             name="comment"
-            label="Comment"
+            label="Description"
             value={this.props.command ? this.props.command.comment : ""}
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setComment : null} />
