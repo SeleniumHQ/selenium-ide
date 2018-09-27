@@ -65,6 +65,7 @@ class PlaybackState {
     this.runningQueue = [];
     this.logger = new Logger(Channels.PLAYBACK);
     this.lastSelectedView = undefined;
+    this.filteredTests = [];
 
     this.extCommand = new ExtCommand(WindowSession);
     this.browserDriver = new WebDriverExecutor();
@@ -88,7 +89,7 @@ class PlaybackState {
   }
 
   @computed get testsToRun() {
-    return this.currentRunningSuite ? this.currentRunningSuite.tests
+    return this.currentRunningSuite ? (this.currentRunningSuite.name === "__filteredTests__" + this.runId ? this.filteredTests : this.currentRunningSuite.tests)
            : this.currentRunningTest ? [this.stackCaller] // eslint-disable-line indent
            : undefined; // eslint-disable-line indent
   }
@@ -174,6 +175,14 @@ class PlaybackState {
     }
   }
 
+  @action.bound playFilteredTestsOrResume() {
+    if (this.paused) {
+      return this.resume();
+    } else if (!this.isPlaying) {
+      return this.startPlayingFilteredTests();
+    }
+  }
+
   @action.bound pauseOrResume() {
     if (this.paused) {
       return this.resume();
@@ -190,19 +199,18 @@ class PlaybackState {
     }
   }
 
-  @action.bound startPlayingSuite() {
+  @action.bound _startPlayingCollection(suite, tests, eventMessage, runId = uuidv4()) {
     const playSuite = action(() => {
-      const { suite } = UiState.selectedTest;
+      this.runId = runId;
       this.resetState();
-      this.runId = uuidv4();
       this.currentRunningSuite = suite;
-      this._testsToRun = [...suite.tests];
+      this._testsToRun = [...tests];
       this.testsCount = this._testsToRun.length;
       PluginManager.emitMessage({
         action: "event",
-        event: "suitePlaybackStarted",
+        event: eventMessage,
         options: {
-          runId: this.runId,
+          runId: runId,
           suiteName: this.currentRunningSuite.name,
           projectName: UiState._project.name
         }
@@ -211,6 +219,18 @@ class PlaybackState {
       });
     });
     this.beforePlaying(playSuite);
+  }
+
+  startPlayingFilteredTests() {
+    this.filteredTests = UiState.filteredTests;
+    const runId = uuidv4();
+    const suite = { id: runId, name: "__filteredTests__" + runId };
+    this._startPlayingCollection(suite, this.filteredTests, "filteredTestsPlaybackStarted", runId);
+  }
+
+  startPlayingSuite() {
+    const { suite } = UiState.selectedTest;
+    this._startPlayingCollection(suite, suite.tests, "suitePlayackStarted");
   }
 
   runningQueueFromIndex(commands, index) {
@@ -289,7 +309,7 @@ class PlaybackState {
   }
 
   @action.bound playNext() {
-    if (UiState.selectedTest.suite.isParallel) {
+    if (UiState.selectedTest.suite && UiState.selectedTest.suite.isParallel) {
       variables.clear();
     }
     this.currentRunningTest = this._testsToRun.shift();

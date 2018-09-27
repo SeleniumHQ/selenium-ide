@@ -226,7 +226,7 @@ if (browser.windows) {
         cancelLabel: "Cancel"
       }, async (choseProceed) => {
         if (choseProceed) {
-          await UiState.stopRecording();
+          await UiState.stopRecording({ nameNewTest: false });
           this.createNewProject();
         }
       });
@@ -238,7 +238,7 @@ if (browser.windows) {
         cancelLabel: "Cancel"
       }, async (choseProceed) => {
         if (choseProceed) {
-          await UiState.stopRecording();
+          await UiState.stopRecording({ nameNewTest: false });
           this.createNewProject();
         }
       });

@@ -264,20 +264,20 @@ class UiState {
     }
   }
 
-  nameNewTest() {
+  nameNewTest(isEnabled = true) {
     const test = this.selectedTest.test;
-    if (test.name === "Untitled") {
+    if (isEnabled && test.name === "Untitled") {
       ModalState.renameTest(test.name, { isNewTest: true }).then(name => {
         test.setName(name);
       });
     }
   }
 
-  @action.bound async stopRecording() {
+  @action.bound async stopRecording(opts = { nameNewTest: true }) {
     await this.recorder.detach();
     this._setRecordingState(false);
     await this.emitRecordingState();
-    await this.nameNewTest();
+    await this.nameNewTest(opts.nameNewTest);
   }
 
   // Do not call this method directly, use start and stop
