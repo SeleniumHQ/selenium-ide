@@ -17,10 +17,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Modal from "../Modal";
-import DialogContainer from "../DialogContainer";
-import LabelledInput from "../LabelledInput";
-import FlatButton from "../FlatButton";
+import Modal from "../../Modal";
+import DialogContainer from "../Dialog";
+import LabelledInput from "../../LabelledInput";
+import FlatButton from "../../FlatButton";
 
 export default class BaseUrlDialog extends React.Component {
   static propTypes = {

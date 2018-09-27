@@ -102,3 +102,5 @@ export function lowerFirstChar(str) {
 export function upperFirstChar(str) {
   return str.charAt(0).toUpperCase() + str.substr(1);
 }
+
+export const isProduction = process.env.NODE_ENV === "production";

@@ -20,11 +20,13 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Alert from "../../components/Alert";
 import TestSelector from "../../components/TestSelector";
-import RenameDialog from "../../components/RenameDialog";
 import ImportDialog from "../../components/ImportDialog";
 import SuiteSettings from "../../components/SuiteSettings";
-import BaseUrlDialog from "../../components/BaseUrlDialog";
+import RenameDialog from "../../components/Dialogs/Rename";
+import BaseUrlDialog from "../../components/Dialogs/BaseUrl";
+import WelcomeDialog from "../../components/Dialogs/Welcome";
 import ModalState from "../../stores/view/ModalState";
+import { isProduction } from "../../../content/utils";
 
 @observer
 export default class Modal extends Component {
@@ -53,7 +55,8 @@ export default class Modal extends Component {
           value={ModalState.renameState.value}
           verify={ModalState.renameState.verify}
           setValue={ModalState.renameState ? ModalState.renameState.done : null}
-          cancel={ModalState.cancelRenaming} />
+          cancel={ModalState.renameState.cancel}
+          isNewTest={ModalState.renameState.isNewTest} />
         <ImportDialog
           isImporting={!!ModalState.importSuiteState.suite}
           suite={ModalState.importSuiteState.suite}
@@ -74,10 +77,18 @@ export default class Modal extends Component {
           onUrlSelection={ModalState.baseUrlState.done}
           cancel={ModalState.baseUrlState.cancel}
         />
+        { isProduction ?
+          <WelcomeDialog
+            isWelcomed={ModalState.welcomeState.completed}
+            project={this.props.project}
+            createNewProject={this.props.createNewProject}
+            completeWelcome={ModalState.completeWelcome} />
+          : null }
       </div>
     );
   }
   static propTypes = {
-    project: PropTypes.object.isRequired
+    project: PropTypes.object.isRequired,
+    createNewProject: PropTypes.func.isRequired
   };
 }
