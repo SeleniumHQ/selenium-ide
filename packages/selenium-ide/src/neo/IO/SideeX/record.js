@@ -45,9 +45,16 @@ export default function record(command, targets, value, insertBeforeLastCommand)
     const newCommand = test.createCommand();
     newCommand.setCommand(command);
     newCommand.setValue(value);
-    const url = new URL(targets);
-    UiState.setUrl(url.origin, true);
-    newCommand.setTarget(url.pathname);
+    const recordedUrl = targets[0][0];
+    const url = new URL(recordedUrl);
+    if (!UiState.baseUrl) {
+      UiState.setUrl(url.origin, true);
+      newCommand.setTarget(url.pathname);
+    } else if (url.origin === UiState.baseUrl) {
+      newCommand.setTarget(url.pathname);
+    } else {
+      newCommand.setTarget(recordedUrl);
+    }
   } else if (command !== "open") {
     let index = getInsertionIndex(test, insertBeforeLastCommand);
     if (preprocessDoubleClick(command, test, index)) {

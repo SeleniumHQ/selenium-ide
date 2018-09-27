@@ -248,11 +248,11 @@ class UiState {
   }
 
   @action.bound async startRecording(isInvalid) {
+    let startingUrl = this.baseUrl;
+    if (!startingUrl) {
+      startingUrl = await ModalState.selectBaseUrl(isInvalid);
+    }
     try {
-      let startingUrl = this.baseUrl;
-      if (!startingUrl) {
-        startingUrl = await ModalState.selectBaseUrl(isInvalid);
-      }
       await this.recorder.attach(startingUrl);
       this._setRecordingState(true);
       await this.emitRecordingState();
