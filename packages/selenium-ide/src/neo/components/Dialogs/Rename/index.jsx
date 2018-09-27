@@ -89,7 +89,7 @@ class RenameDialogContents extends React.Component {
         />
         { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
         { this.props.isNewTest &&
-            <span>You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name in the Tests menu.</span> }
+            <span>You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name in the tests panel.</span> }
       </DialogContainer>
     );
   }
