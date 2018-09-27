@@ -55,7 +55,7 @@ class ModalState {
     });
   }
 
-  @action rename(type, value, isNewTest = false) {
+  @action rename(type, value, opts = { isNewTest: false }) {
     const verifyName = (name) => {
       let names;
       if (type === Types.test) names = UiState._project.tests;
@@ -69,7 +69,7 @@ class ModalState {
         value,
         type,
         verify: verifyName,
-        isNewTest,
+        isNewTest: opts.isNewTest,
         done: (name) => {
           if (verifyName(name)) {
             res(name);
@@ -171,7 +171,11 @@ class ModalState {
   }
 
   nameIsUnique(value, list) {
-    return !list.find(({ name }) => name === value);
+    if (list) {
+      return !list.find(({ name }) => name === value);
+    } else {
+      return true;
+    }
   }
 
   renameRunCommands(original, newName) {
@@ -187,11 +191,18 @@ class ModalState {
   @action.bound completeWelcome() {
     this.welcomeState = { completed: true };
   }
+
+  @action.bound renameProject() {
+    this.rename(Types.project, this._project.name).then(name => {
+      this._project.changeName(name);
+    });
+  }
 }
 
 const Types = {
   test: "test case",
-  suite: "suite"
+  suite: "suite",
+  project: "project"
 };
 
 if (!window._modalState) window._modalState = new ModalState();
