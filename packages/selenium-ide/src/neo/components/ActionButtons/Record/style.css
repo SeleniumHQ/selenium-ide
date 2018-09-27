@@ -1,3 +1,7 @@
+.record {
+  padding-right: 5px;
+}
+
 .si-record {
   color: #ec2f2a;
   animation: none;
@@ -8,13 +12,15 @@
 }
 
 .si-record.active::before {
-  animation: fadeIn 1s infinite alternate;
+  animation: fadeIn 500ms infinite alternate;
+  background: red;
+  width: 8px;
+  height: 8px;
+  display: block;
+  margin: auto;
+  content: "";
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-}
-
-.record {
-  padding-right: 5px;
+  from { opacity: 0.3; }
 }
