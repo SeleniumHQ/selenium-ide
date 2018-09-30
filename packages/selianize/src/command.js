@@ -95,6 +95,7 @@ const emitters = {
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
   setSpeed: emitSetSpeed,
+  setWindowSize: emitSetWindowSize,
   do: emitControlFlowDo,
   else: emitControlFlowElse,
   elseIf: emitControlFlowElseIf,
@@ -506,6 +507,11 @@ function emitAssert(varName, value) {
 
 function emitSetSpeed() {
   return Promise.resolve("console.warn('`set speed` is a no-op in the runner, use `pause instead`');");
+}
+
+function emitSetWindowSize(size) {
+  // not this is not the case with WebDriver 4.0, it is driver.manage().window().setRect({ width, height })
+  return Promise.resolve(`await driver.manage().window().setSize(...(\`${size}\`.split("x").map((s) => parseInt(s))))`);
 }
 
 async function emitWaitForElementPresent(locator, timeout) {
