@@ -360,6 +360,18 @@ export default class ExtCommand {
     return Promise.resolve();
   }
 
+  async doSetWindowSize(size) {
+    if (/\d+x\d+/.test(size)) {
+      const [ width, height ] = size.split("x").map((s) => parseInt(s));
+      await browser.windows.update(this.getCurrentPlayingWindowId(), {
+        width,
+        height
+      });
+    } else {
+      throw new Error(`Invalid resolution given ${size}, resolution is of the form WidthxHeight: 1280x800.`);
+    }
+  }
+
   doSetSpeed(speed) {
     if (speed < 0) speed = 0;
     if (speed > PlaybackState.maxDelay) speed = PlaybackState.maxDelay;
@@ -538,6 +550,7 @@ export default class ExtCommand {
       case "selectFrame":
       case "selectWindow":
       case "run":
+      case "setWindowSize":
       case "setSpeed":
       case "store":
       case "close":
