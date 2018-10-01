@@ -424,7 +424,7 @@ Selenium.prototype.findElementVisible = function(locator) {
 Selenium.prototype.doAssertText = function(locator, value) {
   const element = this.findElementVisible(locator);
   const visibleText = bot.dom.getVisibleText(element);
-  if (visibleText !== value) {
+  if (!PatternMatcher.matches(value, visibleText)) {
     throw new Error(`Actual value "${visibleText}" did not match "${value}"`);
   }
 };
@@ -432,7 +432,7 @@ Selenium.prototype.doAssertText = function(locator, value) {
 Selenium.prototype.doAssertNotText = function(locator, value) {
   const element = this.findElementVisible(locator);
   const visibleText = bot.dom.getVisibleText(element);
-  if (visibleText === value) {
+  if (PatternMatcher.matches(value, visibleText)) {
     throw new Error(`Actual value "${visibleText}" did match "${value}"`);
   }
 };

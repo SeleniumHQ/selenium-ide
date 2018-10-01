@@ -20,6 +20,7 @@ import { absolutifyUrl } from "./utils";
 import variables from "../../stores/view/Variables";
 import { Logger, Channels } from "../../stores/view/Logs";
 import PlaybackState from "../../stores/view/PlaybackState";
+import PatternMatcher from "../../../content/PatternMatcher";
 
 const By = webdriver.By;
 const until = webdriver.until;
@@ -262,7 +263,7 @@ export default class WebDriverExecutor {
   async doAssertText(locator, value) {
     const element = await waitForElement(locator, this.driver);
     const text = await element.getText();
-    if (text !== value) {
+    if (!PatternMatcher.matches(value, text)) {
       throw new Error("Actual value '" + text + "' did not match '" + value + "'");
     }
   }
@@ -270,7 +271,7 @@ export default class WebDriverExecutor {
   async doAssertNotText(locator, value) {
     const element = await waitForElement(locator, this.driver);
     const text = await element.getText();
-    if (text === value) {
+    if (PatternMatcher.matches(value, text)) {
       throw new Error("Actual value '" + text + "' did match '" + value + "'");
     }
   }
