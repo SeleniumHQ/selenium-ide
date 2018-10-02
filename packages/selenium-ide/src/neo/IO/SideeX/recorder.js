@@ -18,7 +18,6 @@
 import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
 import record from "./record";
-import { sendRecordNotification } from "../notifications";
 import { Logger, Channels } from "../../stores/view/Logs";
 
 const logger = new Logger(Channels.PLAYBACK);
@@ -300,7 +299,7 @@ export default class BackgroundRecorder {
             if (message.insertBeforeLastCommand) {
               record(message.command, message.target, message.value, true);
             } else {
-              sendRecordNotification(message.command, message.target, message.value);
+              this.sendRecordNotification(message.command, message.target, message.value);
               record(message.command, message.target, message.value);
             }
           }, 100);
@@ -312,9 +311,21 @@ export default class BackgroundRecorder {
     if (message.insertBeforeLastCommand) {
       record(message.command, message.target, message.value, true);
     } else {
-      sendRecordNotification(message.command, message.target, message.value);
+      this.sendRecordNotification(message.command, message.target, message.value);
       record(message.command, message.target, message.value);
     }
+  }
+
+  sendRecordNotification(command, target, value) {
+    browser.tabs.sendMessage(this.lastAttachedTabId, {
+      recordNotification: true,
+      command,
+      target,
+      value
+    },
+    {
+      frameId: 0
+    }).catch(() => {});
   }
 
   isPrivilegedPage (url) {
