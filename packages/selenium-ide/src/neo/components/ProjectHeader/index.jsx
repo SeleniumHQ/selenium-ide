@@ -25,8 +25,7 @@ import NewButton from "../ActionButtons/New";
 import OpenButton from "../ActionButtons/Open";
 import SaveButton from "../ActionButtons/Save";
 import MoreButton from "../ActionButtons/More";
-import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
-import UiState from "../../stores/view/UiState";
+import ListMenu, { ListMenuItem } from "../ListMenu";
 import { showChangelog } from "../Changelog";
 import "./style.css";
 
@@ -71,10 +70,6 @@ export default class ProjectHeader extends React.Component {
           <ListMenu width={250} padding={-5} opener={
             <MoreButton canFocus={true} />
           }>
-            <ListMenuItem onClick={() => { UiState.setOptions({ recordNotifications: !UiState.options.recordNotifications }); }}>
-              {UiState.options.recordNotifications ? "Disable record notifications" : "Enable record notifications"}
-            </ListMenuItem>
-            <ListMenuSeparator />
             <ListMenuItem onClick={showChangelog}>
               {"What's new"}
             </ListMenuItem>

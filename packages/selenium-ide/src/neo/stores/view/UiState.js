@@ -48,7 +48,6 @@ class UiState {
   @observable pristineCommand = new Command();
   @observable lastFocus = {};
   @observable options = {
-    recordNotifications: true
   };
   @observable pauseNotificationSent = false;
 
