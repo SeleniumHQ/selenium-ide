@@ -117,13 +117,13 @@ function addRecordingIndicator() {
     let recordingIndicator = window.document.createElement("iframe");
     recordingIndicator.src = browser.runtime.getURL("/indicator.html");
     recordingIndicator.id = "selenium-ide-indicator";
-    recordingIndicator.style.border = "none";
+    recordingIndicator.style.border = "1px solid white";
     recordingIndicator.style.position = "fixed";
     recordingIndicator.style.bottom = "36px";
     recordingIndicator.style.right = "36px";
     recordingIndicator.style.width = "280px";
     recordingIndicator.style.height = "80px";
-    recordingIndicator.style["background-color"] = "#E80600";
+    recordingIndicator.style["background-color"] = "whitesmoke";
     recordingIndicator.style["box-shadow"] = "7px 7px 10px 0 rgba(0,0,0,0.3)";
     recordingIndicator.style.transition = "bottom 100ms linear";
     recordingIndicator.addEventListener("mouseenter", function(event) {
@@ -141,23 +141,11 @@ function addRecordingIndicator() {
           target: message.target,
           value: message.value
         }, "*");
-        bumpRecordingIndicator(recordingIndicator);
         sendResponse(true);
       }
     });
   }
 }
-
-const bumpRecordingIndicator = (function() {
-  let lastTimeoutHandle = 0;
-  return (indicator) => {
-    clearTimeout(lastTimeoutHandle);
-    indicator.style.bottom = "50px";
-    lastTimeoutHandle = setTimeout(() => {
-      indicator.style.bottom = "36px";
-    }, 100);
-  };
-})();
 
 function removeRecordingIndicator() {
   let element = findRecordingIndicator();
