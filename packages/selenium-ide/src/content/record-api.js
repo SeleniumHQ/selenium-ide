@@ -125,6 +125,7 @@ function addRecordingIndicator() {
     recordingIndicator.style.height = "80px";
     recordingIndicator.style["background-color"] = "#E80600";
     recordingIndicator.style["box-shadow"] = "7px 7px 10px 0 rgba(0,0,0,0.3)";
+    recordingIndicator.style.transition = "bottom 100ms linear";
     recordingIndicator.addEventListener("mouseenter", function(event) {
       event.target.style.visibility = "hidden";
       setTimeout(function() {
@@ -132,8 +133,31 @@ function addRecordingIndicator() {
       }, 1000);
     }, false);
     window.document.body.appendChild(recordingIndicator);
+    browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+      if (message.recordNotification) {
+        recordingIndicator.contentWindow.postMessage({
+          direction: "from-recording-module",
+          command: message.command,
+          target: message.target,
+          value: message.value
+        }, "*");
+        bumpRecordingIndicator(recordingIndicator);
+        sendResponse(true);
+      }
+    });
   }
 }
+
+const bumpRecordingIndicator = (function() {
+  let lastTimeoutHandle = 0;
+  return (indicator) => {
+    clearTimeout(lastTimeoutHandle);
+    indicator.style.bottom = "50px";
+    lastTimeoutHandle = setTimeout(() => {
+      indicator.style.bottom = "36px";
+    }, 100);
+  };
+})();
 
 function removeRecordingIndicator() {
   let element = findRecordingIndicator();

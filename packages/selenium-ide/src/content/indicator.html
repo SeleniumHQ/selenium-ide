@@ -26,5 +26,13 @@
       <div id="content">
         Selenium IDE is recording...
       </div>
+      <script>
+          var url = (chrome || browser).runtime.getURL("assets/indicator.js");
+          var e = document.createElement("script");
+          e.type = "text/javascript";
+          e.async = true;
+          e.src = url;
+          document.body.appendChild(e);
+      </script>
   </body>
 </html>

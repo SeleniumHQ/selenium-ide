@@ -48,7 +48,6 @@ import "../../styles/resizer.css";
 import { isProduction } from "../../../content/utils";
 
 import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
-import "../../IO/notifications";
 
 //const isProduction = process.env.NODE_ENV === "production";
 
