@@ -30,6 +30,7 @@ import Record from "../../components/ActionButtons/Record";
 import GaugeMenu from "../GaugeMenu";
 import UiState from "../../stores/view/UiState";
 import PlaybackState from "../../stores/view/PlaybackState";
+import ModalState from "../../stores/view/ModalState";
 import "./style.css";
 
 @observer
@@ -37,17 +38,30 @@ export default class ToolBar extends React.Component {
   toggleRecord() {
     UiState.toggleRecord();
   }
+  playAll() {
+    const isInSuiteView = UiState.selectedView === "Test suites";
+
+    if (PlaybackState.canPlaySuite) {
+      PlaybackState.playSuiteOrResume();
+    } else if (isInSuiteView) {
+
+      ModalState.showAlert({
+        title: "Select a test case",
+        description: "To play a suite you must select a test case from within that suite."
+      });
+    } else {
+      PlaybackState.playFilteredTestsOrResume();
+    }
+  }
   render() {
     const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
     const isCommandValid = UiState.selectedCommand && UiState.selectedCommand.isValid;
-    const isSelectionValid = ((UiState.selectedView === "Test suites" && PlaybackState.canPlaySuite) ||
-                              UiState.selectedView === "Tests");
     return (
       <div className="toolbar">
         <PlayAll
           isActive={!PlaybackState.paused && PlaybackState.isPlayingSuite}
-          disabled={UiState.isRecording || isTestEmpty || !isSelectionValid}
-          onClick={PlaybackState.canPlaySuite ? PlaybackState.playSuiteOrResume : PlaybackState.playFilteredTestsOrResume}
+          disabled={UiState.isRecording}
+          onClick={this.playAll}
           data-tip={PlaybackState.canPlaySuite ?
             `<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse("r", { primaryKey: true, shiftKey: true })}</span></p>` :
             `<p>Run all tests <span style="color: #929292;padding-left: 5px;">${parse("r", { primaryKey: true, shiftKey: true })}</span></p>`
