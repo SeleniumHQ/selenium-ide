@@ -92,10 +92,11 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowElseTest.createCommand(undefined, "assert", "output", "c");
 
   const controlFlowDoTest = store.createTestCase("control flow do");
-  controlFlowDoTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure infinite loop protection works.");
+  controlFlowDoTest.createCommand(undefined, "executeScript", "return 1", "check");
   controlFlowDoTest.createCommand(undefined, "do");
-  controlFlowDoTest.createCommand(undefined, "echo", "foo");
-  controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
+  controlFlowDoTest.createCommand(undefined, "executeScript", "return ${check} + 1", "check");
+  controlFlowDoTest.createCommand(undefined, "repeatIf", "${check} < 3");
+  controlFlowDoTest.createCommand(undefined, "assert", "check", "3");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
   controlFlowTimesTest.createCommand(undefined, "executeScript", "return 1", "check");
@@ -105,10 +106,11 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowTimesTest.createCommand(undefined, "assert", "check", "3");
 
   const controlFlowWhileTest = store.createTestCase("control flow while");
-  controlFlowWhileTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure that loop protection works.");
-  controlFlowWhileTest.createCommand(undefined, "while", "true", "2");
-  controlFlowWhileTest.createCommand(undefined, "echo", "foo");
+  controlFlowWhileTest.createCommand(undefined, "executeScript", "return 1", "check");
+  controlFlowWhileTest.createCommand(undefined, "while", "${check} < 3");
+  controlFlowWhileTest.createCommand(undefined, "executeScript", "return ${check} + 1", "check");
   controlFlowWhileTest.createCommand(undefined, "end");
+  controlFlowWhileTest.createCommand(undefined, "assert", "check", "3");
 
   const executeScriptTest = store.createTestCase("execute script");
   executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
