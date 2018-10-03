@@ -39,6 +39,7 @@ export default class BackgroundRecorder {
     // remove it, even if it's in a priviledged tab
     this.windowSession = windowSession;
     this.lastAttachedTabId = undefined;
+    this.lastActivatedTabId = undefined;
     this.isAttaching = false;
     this.attached = false;
     this.rebind();
@@ -62,7 +63,14 @@ export default class BackgroundRecorder {
       if (this.lastAttachedTabId && this.lastAttachedTabId !== tabId) {
         await this.detachFromTab(this.lastAttachedTabId);
       }
-      await this.attachToTab(tabId);
+      try {
+        await this.attachToTab(tabId);
+      } catch (e) {
+        // tab was created by onCreatedNavigationTarget
+        // its not in ready state, but we know it will
+        // bootstrap once it is ready
+        // so we set the last attached tabId anyway
+      }
       this.lastAttachedTabId = tabId;
     }
   }
@@ -70,6 +78,7 @@ export default class BackgroundRecorder {
   // TODO: rename method
   tabsOnActivatedHandler(activeInfo) {
     console.log("tabs.onActivated");
+    this.lastActivatedTabId = activeInfo.tabId;
     let testCase = getSelectedCase();
     if (!testCase) {
       return;
@@ -128,6 +137,7 @@ export default class BackgroundRecorder {
       active: true
     }).then((tabs) => {
       const tab = tabs[0];
+      this.lastActivatedTabId = tab.id;
       if (this.windowSession.openedTabIds[testCaseId] && this.doesTabBelongToRecording(tab.id)) {
         this.reattachToTab(tab.id);
       }
@@ -201,6 +211,8 @@ export default class BackgroundRecorder {
   }
 
   webNavigationOnCreatedNavigationTargetHandler(details) {
+    // we can't necessarily know that this will indicate a tab being
+    // activated, and we hope tabs.onActivated will get called for us
     console.log("webNavigation.OnCreatedNavigationTarget");
     let testCase = getSelectedCase();
     if (!testCase)
@@ -219,6 +231,9 @@ export default class BackgroundRecorder {
           });
       }
       this.windowSession.openedTabCount[testCaseId]++;
+      if (this.lastAttachedTabId !== this.lastActivatedTabId && this.lastActivatedTabId === details.tabId) {
+        this.reattachToTab(details.tabId);
+      }
     }
   }
 
@@ -299,7 +314,7 @@ export default class BackgroundRecorder {
             if (message.insertBeforeLastCommand) {
               record(message.command, message.target, message.value, true);
             } else {
-              this.sendRecordNotification(message.command, message.target, message.value);
+              this.sendRecordNotification(sender.tab.id, message.command, message.target, message.value);
               record(message.command, message.target, message.value);
             }
           }, 100);
@@ -311,13 +326,13 @@ export default class BackgroundRecorder {
     if (message.insertBeforeLastCommand) {
       record(message.command, message.target, message.value, true);
     } else {
-      this.sendRecordNotification(message.command, message.target, message.value);
+      this.sendRecordNotification(sender.tab.id, message.command, message.target, message.value);
       record(message.command, message.target, message.value);
     }
   }
 
-  sendRecordNotification(command, target, value) {
-    browser.tabs.sendMessage(this.lastAttachedTabId, {
+  sendRecordNotification(tabId, command, target, value) {
+    browser.tabs.sendMessage(tabId, {
       recordNotification: true,
       command,
       target,
