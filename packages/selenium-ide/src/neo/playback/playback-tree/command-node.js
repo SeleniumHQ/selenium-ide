@@ -161,7 +161,9 @@ export class CommandNode {
           result: "Invalid number provided as a target."
         });
       }
-      expression = `${this.timesVisited} < ${number}`;
+      expression = {
+        script: `${this.timesVisited} < ${number}`
+      };
     }
     return (this.isWebDriverCommand(commandExecutor)
       ? commandExecutor.evaluateConditional(expression)

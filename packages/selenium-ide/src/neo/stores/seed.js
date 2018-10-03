@@ -98,9 +98,11 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowDoTest.createCommand(undefined, "repeatIf", "true", "2");
 
   const controlFlowTimesTest = store.createTestCase("control flow times");
+  controlFlowTimesTest.createCommand(undefined, "executeScript", "return 1", "check");
   controlFlowTimesTest.createCommand(undefined, "times", "2");
-  controlFlowTimesTest.createCommand(undefined, "echo", "foo");
+  controlFlowTimesTest.createCommand(undefined, "executeScript", "return ${check} + 1", "check");
   controlFlowTimesTest.createCommand(undefined, "end");
+  controlFlowTimesTest.createCommand(undefined, "assert", "check", "3");
 
   const controlFlowWhileTest = store.createTestCase("control flow while");
   controlFlowWhileTest.createCommand(undefined, "echo", "You will see a forced failure in this test. It's to make sure that loop protection works.");
