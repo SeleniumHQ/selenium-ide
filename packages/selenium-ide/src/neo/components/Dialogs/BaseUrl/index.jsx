@@ -82,6 +82,7 @@ class BaseUrlDialogContents extends React.Component {
           placeholder="https://www.seleniumhq.org/"
           value={this.state.url}
           onChange={this.onUrlChange}
+          autoFocus
         />
       </DialogContainer>
     );
