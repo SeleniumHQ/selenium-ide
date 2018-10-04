@@ -193,9 +193,7 @@ class ModalState {
   }
 
   @action.bound renameProject() {
-    this.rename(Types.project, this._project.name).then(name => {
-      this._project.changeName(name);
-    });
+    return this.rename(Types.project, this._project.name);
   }
 }
 
