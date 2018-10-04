@@ -40,18 +40,18 @@ export async function find(target) {
     await browser.windows.update(tab.windowId, {
       focused: true
     });
-    await browser.tabs.sendMessage(tab.id, {
-      showElement: true,
-      targetValue: region.isValid() ? region.toJS() : target
-    }).then((response) => {
-      if (response && response.result === "element not found") {
-        ModalState.showAlert({
-          title: "Element not found",
-          description: `Could not find ${target} on the page`,
-          confirmLabel: "Close"
-        });
-      }
-    });
+    try {
+      await browser.tabs.sendMessage(tab.id, {
+        showElement: true,
+        targetValue: region.isValid() ? region.toJS() : target
+      });
+    } catch(e) {
+      ModalState.showAlert({
+        title: "Element not found",
+        description: `Could not find ${target} on the page`,
+        confirmLabel: "Close"
+      });
+    }
   } catch(e) {
     showNoTabAvailableDialog();
   }
