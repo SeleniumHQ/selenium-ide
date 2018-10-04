@@ -23,6 +23,7 @@ export default class TestCase {
   id = null;
   @observable name = null;
   @observable commands = [];
+  nameDialogShown = false;
 
   constructor(id = uuidv4(), name = "Untitled Test") {
     this.id = id;
