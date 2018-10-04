@@ -569,6 +569,22 @@ describe("command code emitter", () => {
     };
     return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().window(`window`);");
   });
+  it("should emit `select window` to select a window by the local keyword", () => {
+    const command = {
+      command: "selectWindow",
+      target: "win_ser_local",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().window((await driver.getAllWindowHandles())[0]);");
+  });
+  it("should emit `select window` to select a window by implicit index", () => {
+    const command = {
+      command: "selectWindow",
+      target: "win_ser_12",
+      value: ""
+    };
+    return expect(CommandEmitter.emit(command)).resolves.toBe("await driver.switchTo().window((await driver.getAllWindowHandles())[12]);");
+  });
   it("should emit `mouse down` event", () => {
     const command = {
       command: "mouseDown",

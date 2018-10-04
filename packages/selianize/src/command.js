@@ -408,6 +408,13 @@ async function emitSelectFrame(frameLocation) {
 function emitSelectWindow(windowLocation) {
   if (/^name=/.test(windowLocation)) {
     return Promise.resolve(`await driver.switchTo().window(\`${windowLocation.split("name=")[1]}\`);`);
+  } else if (/^win_ser_/.test(windowLocation)) {
+    if (windowLocation === "win_ser_local") {
+      return Promise.resolve("await driver.switchTo().window((await driver.getAllWindowHandles())[0]);");
+    } else {
+      const index = parseInt(windowLocation.substr("win_ser_".length));
+      return Promise.resolve(`await driver.switchTo().window((await driver.getAllWindowHandles())[${index}]);`);
+    }
   } else {
     return Promise.reject(new Error("Can only emit `select window` using name locator"));
   }
@@ -511,7 +518,7 @@ function emitSetSpeed() {
 
 function emitSetWindowSize(size) {
   // not this is not the case with WebDriver 4.0, it is driver.manage().window().setRect({ width, height })
-  return Promise.resolve(`await driver.manage().window().setSize(...(\`${size}\`.split("x").map((s) => parseInt(s))))`);
+  return Promise.resolve(`await driver.manage().window().setSize(...(\`${size}\`.split("x").map((s) => parseInt(s))));`);
 }
 
 async function emitWaitForElementPresent(locator, timeout) {
