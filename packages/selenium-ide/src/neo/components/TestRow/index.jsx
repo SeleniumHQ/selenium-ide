@@ -21,6 +21,7 @@ import { observer } from "mobx-react";
 import classNames from "classnames";
 import { DragSource, DropTarget } from "react-dnd";
 import { modifier, parse } from "modifier-keys";
+import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 import CommandName from "../CommandName";
 import MoreButton from "../ActionButtons/More";
 import ListMenu, { ListMenuItem, ListMenuSeparator } from "../ListMenu";
@@ -137,12 +138,13 @@ class TestRow extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.selected && !prevProps.selected) {
+      this.scrollToRowIfNeeded(this.node);
       this.node.focus();
       this.props.setSectionFocus("editor", () => {
         this.node.focus();
       });
     } else if (this.props.status === "pending") {
-      this.node.scrollIntoView();
+      this.scrollToRowIfNeeded(this.node);
     }
   }
   componentWillUnmount() {
@@ -166,8 +168,10 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && noModifiers && key === "X") {
       this.props.executeCommand(this.props.command);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowUp") {
+      e.preventDefault();
       this.props.moveSelection(this.props.index - 1);
     } else if (this.props.moveSelection && noModifiers && e.key === "ArrowDown") {
+      e.preventDefault();
       this.props.moveSelection(this.props.index + 1);
     } else if (!this.props.isPristine && onlyPrimary && key === "X") {
       this.cut();
@@ -176,6 +180,13 @@ class TestRow extends React.Component {
     } else if (onlyPrimary && key === "V") {
       this.paste();
     }
+  }
+  scrollToRowIfNeeded(rowNode) {
+    scrollIntoViewIfNeeded(rowNode, {
+      scrollMode: "if-needed",
+      block: "nearest",
+      inline: "nearest"
+    });
   }
   addCommand(index) {
     if (!this.props.readOnly) {
@@ -232,7 +243,7 @@ class TestRow extends React.Component {
       ref={node => {
         if (node && this.props.new && !this.props.isDragging) {
           this.props.new();
-          node.scrollIntoView();
+          this.scrollToRowIfNeeded(node);
         }
         return (this.node = node || this.node);
       }}
