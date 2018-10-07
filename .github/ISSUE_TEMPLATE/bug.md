@@ -10,6 +10,9 @@ A clear and concise description of what the bug is.
 
 <!--
 Please be sure to include an SSCCE (Short, Self Contained, Correct [compilable] example) http://sscce.org/
+
+DO NOT OPEN AN ISSUE ABOUT FILE SAVING: https://github.com/SeleniumHQ/selenium-ide/issues/363
+We will close all issues automatically.
 -->
 
 ## To Reproduce
