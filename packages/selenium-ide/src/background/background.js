@@ -25,13 +25,12 @@ window.master = master;
 window.openedWindowIds = [];
 
 function openPanel(tab) {
-
   let contentWindowId = tab.windowId;
-  if (master[contentWindowId] != undefined) {
-    browser.windows.update(master[contentWindowId], {
+  if (ideWindowId) {
+    browser.windows.update(ideWindowId, {
       focused: true
     }).catch(function() {
-      master[contentWindowId] == undefined;
+      ideWindowId == undefined;
       openPanel(tab);
     });
     return;
