@@ -258,9 +258,6 @@ export default class BackgroundRecorder {
       record("open", [
         [sender.tab.url]
       ], "");
-      record("setWindowSize", [
-        [`${sender.tab.width}x${sender.tab.height}`]
-      ], "");
     }
 
     if (this.windowSession.openedTabIds[testCaseId][sender.tab.id] == undefined)

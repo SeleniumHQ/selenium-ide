@@ -15,16 +15,45 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import UiState from "../../stores/view/UiState";
+import WindowSession from "../window-session";
 import { Commands, ArgTypes } from "../../models/Command";
 
-function isEmpty(commands, command) {
-  return (commands.length === 0 && command === "open");
+function isEmpty(commands) {
+  return (commands.length === 0);
+}
+
+async function addInitialCommands(recordedUrl) {
+  const { test } = UiState.selectedTest;
+  if (WindowSession.openedTabIds[test.id]) {
+    const open = test.createCommand(0);
+    open.setCommand("open");
+    const setSize = test.createCommand(1);
+    setSize.setCommand("setWindowSize");
+
+    const tab = await browser.tabs.get(WindowSession.currentUsedTabId[test.id]);
+    const win = await browser.windows.get(tab.windowId);
+
+    const url = new URL(recordedUrl ? recordedUrl : tab.url);
+    if (!UiState.baseUrl) {
+      UiState.setUrl(url.origin, true);
+      open.setTarget(url.pathname);
+    } else if (url.origin === UiState.baseUrl) {
+      open.setTarget(url.pathname);
+    } else {
+      open.setTarget(recordedUrl);
+    }
+    setSize.setTarget(`${win.width}x${win.height}`);
+  }
 }
 
 // for plugins
 export function recordCommand(command, target, value, index, select = false) {
   const test = UiState.displayedTest;
+  if (isEmpty(test.commands)) {
+    addInitialCommands();
+  }
   const newCommand = test.createCommand(index ? index : getInsertionIndex(test));
   newCommand.setCommand(command);
   newCommand.setTarget(target);
@@ -41,20 +70,8 @@ export function recordCommand(command, target, value, index, select = false) {
 export default function record(command, targets, value, insertBeforeLastCommand) {
   if (UiState.isSelectingTarget) return;
   const test = UiState.displayedTest;
-  if (isEmpty(test.commands, command)) {
-    const newCommand = test.createCommand();
-    newCommand.setCommand(command);
-    newCommand.setValue(value);
-    const recordedUrl = targets[0][0];
-    const url = new URL(recordedUrl);
-    if (!UiState.baseUrl) {
-      UiState.setUrl(url.origin, true);
-      newCommand.setTarget(url.pathname);
-    } else if (url.origin === UiState.baseUrl) {
-      newCommand.setTarget(url.pathname);
-    } else {
-      newCommand.setTarget(recordedUrl);
-    }
+  if (isEmpty(test.commands) && command === "open") {
+    addInitialCommands(targets[0][0]);
   } else if (command !== "open") {
     let index = getInsertionIndex(test, insertBeforeLastCommand);
     if (preprocessDoubleClick(command, test, index)) {
