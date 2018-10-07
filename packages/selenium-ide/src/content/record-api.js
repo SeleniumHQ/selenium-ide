@@ -126,6 +126,7 @@ function addRecordingIndicator() {
     recordingIndicator.style["background-color"] = "whitesmoke";
     recordingIndicator.style["box-shadow"] = "7px 7px 10px 0 rgba(0,0,0,0.3)";
     recordingIndicator.style.transition = "bottom 100ms linear";
+    recordingIndicator.style["z-index"] = 1000000000000000;
     recordingIndicator.addEventListener("mouseenter", function(event) {
       event.target.style.visibility = "hidden";
       setTimeout(function() {
