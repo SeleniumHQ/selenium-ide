@@ -181,6 +181,17 @@ export default class ExtCommand {
     this.playingTabStatus[tabId] = true;
   }
 
+  waitForPageToLoad() {
+    return new Promise((res) => {
+      const interval = setInterval(() => {
+        if (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping || this.playingTabStatus[this.getCurrentPlayingTabId()]) {
+          clearInterval(interval);
+          res();
+        }
+      }, 100);
+    });
+  }
+
   initTabInfo(tabId, forced) {
     if (!this.playingFrameLocations[tabId] | forced) {
       this.playingFrameLocations[tabId] = {};
@@ -209,6 +220,10 @@ export default class ExtCommand {
     const url = absolutifyUrl(targetUrl, this.baseUrl);
     return browser.tabs.update(this.getCurrentPlayingTabId(), {
       url: url
+    }).then((tab) => {
+      if (tab.status === "loading") {
+        this.setLoading(this.getCurrentPlayingTabId());
+      }
     });
   }
 

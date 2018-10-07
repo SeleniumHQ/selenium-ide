@@ -139,7 +139,8 @@ function runNextCommand() {
     notifyWaitDeprecation(command);
     return PlaybackState.isSingleCommandRunning ? Promise.resolve() : executionLoop();
   } else {
-    return doPreparation()
+    return doPreWait()
+      .then(doPreparation)
       .then(doPrePageWait)
       .then(doPageWait)
       .then(doAjaxWait)
@@ -193,6 +194,11 @@ function reportError(error, nonFatal, index) {
     message = "The current tab is invalid for testing (e.g. about:home), surf to a webpage before using the extension";
   }
   PlaybackState.setCommandState(id, nonFatal ? PlaybackStates.Failed : PlaybackStates.Fatal, message);
+}
+
+
+function doPreWait() {
+  return executor.waitForPageToLoad().then(() => true);
 }
 
 function doPreparation() {
@@ -268,7 +274,7 @@ function doDomWait(res, domTime, domCount = 0) {
 }
 
 function doCommand(res, implicitTime = Date.now(), implicitCount = 0) {
-  if (!PlaybackState.isSingleCommandRunning && (!PlaybackState.isPlaying || PlaybackState.paused)) return;
+  if (!PlaybackState.isSingleCommandRunning && (!PlaybackState.isPlaying || PlaybackState.isStopping || PlaybackState.paused)) return;
   const { command } = PlaybackState.currentExecutingCommandNode.command;
 
   let count = 0;
