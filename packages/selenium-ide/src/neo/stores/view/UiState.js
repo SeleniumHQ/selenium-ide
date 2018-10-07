@@ -290,7 +290,7 @@ class UiState {
       action: "event",
       event: this.isRecording ? "recordingStarted" : "recordingStopped",
       options: {
-        testName: this.selectedTest.test.name
+        testName: this.selectedTest.test ? this.selectedTest.test.name : undefined
       }
     });
   }
