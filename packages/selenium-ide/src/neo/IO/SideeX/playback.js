@@ -339,17 +339,21 @@ function doSeleniumCommand(commandNode, implicitTime, implicitCount) {
   });
 }
 
-function doPluginCommand(commandNode, implicitTime, implicitCount) {
-  const { id, target } = commandNode.command;
-  return PlaybackState.currentExecutingCommandNode.execute(executor, {
-    commandId: id,
+function getPluginOptions(node) {
+  return {
+    commandId: node.command.id,
     isNested: !!PlaybackState.callstack.length,
     runId: PlaybackState.runId,
     testId: PlaybackState.currentRunningTest.id,
     frameId: executor.getCurrentPlayingFrameId(),
     tabId: executor.getCurrentPlayingTabId(),
     windowId: executor.getCurrentPlayingWindowId()
-  }).then(result => {
+  };
+}
+
+function doPluginCommand(commandNode, implicitTime, implicitCount) {
+  const { id, target } = commandNode.command;
+  return PlaybackState.currentExecutingCommandNode.execute(executor, getPluginOptions(commandNode)).then(result => {
     PlaybackState.setCommandState(
       id,
       result.status ? result.status : PlaybackStates.Passed,
@@ -374,11 +378,12 @@ async function doLocatorFallback() {
   const node = PlaybackState.currentExecutingCommandNode;
   const targets = node.command.targets;
   let result;
+  const options = canExecuteCommand(node.command.command) ? getPluginOptions(node) : undefined;
 
   for (let i = 0; i < targets.length; i++) {
     const target = targets[i][0];
-    result = await node.execute(executor, { target: target });
-    if (result.result === "success") {
+    result = await node.execute(executor, options, target);
+    if (result.hasOwnProperty("next")) {
       PlaybackState.setCommandState(node.command.id, PlaybackStates.Passed);
       Logger.warn(`Element found with secondary locator ${target}. To use it by default, update the test step to use it as the primary locator.`);
       break;
@@ -393,7 +398,7 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
     PlaybackState.setCommandState(commandId, PlaybackStates.Fatal, "Playback aborted");
     return false;
   } else if (isElementNotFound(error)) {
-    if (implicitTime && (Date.now() - implicitTime > 30000)) {
+    if (implicitTime && (Date.now() - implicitTime > 300)) {
       return doLocatorFallback().then(result => {
         if (result && result.result === "success") return result;
         reportError("Implicit Wait timed out after 30000ms");

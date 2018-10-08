@@ -51,24 +51,24 @@ export class CommandNode {
       this.command.command.startsWith("//");
   }
 
-  execute(commandExecutor, options) {
+  execute(commandExecutor, options, targetOverride) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result: "Max retry limit exceeded. To override it, specify a new limit in the value input field."
       });
     }
-    return this._executeCommand(commandExecutor, options).then((result) => {
+    return this._executeCommand(commandExecutor, options, targetOverride).then((result) => {
       return this._executionResult(commandExecutor, result);
     });
   }
 
-  _interpolateTarget(options) {
+  _interpolateTarget(target) {
     const type = Commands.list.get(this.command.command).target;
     if (type && (type.name === ArgTypes.script.name ||
         type.name === ArgTypes.conditionalExpression.name)) {
       return interpolateScript(this.command.target);
-    } else if (options && options.target) {
-      return xlateArgument(options.target);
+    } else if (target) {
+      return xlateArgument(target);
     }
     return xlateArgument(this.command.target);
   }
@@ -81,7 +81,7 @@ export class CommandNode {
     return xlateArgument(this.command.value);
   }
 
-  _executeCommand(commandExecutor, options) {
+  _executeCommand(commandExecutor, options, targetOverride) {
     if (this.isControlFlow()) {
       return this._evaluate(commandExecutor);
     } else if (this.isTerminal()) {
@@ -97,7 +97,7 @@ export class CommandNode {
     } else if (canExecuteCommand(this.command.command)) {
       return executeCommand(
         this.command.command,
-        this._interpolateTarget(),
+        this._interpolateTarget(targetOverride),
         this._interpolateValue(),
         options);
     } else if (this.command.command === "mouseOver") {
@@ -118,7 +118,7 @@ export class CommandNode {
     } else {
       return commandExecutor.sendMessage(
         this.command.command,
-        this._interpolateTarget(options),
+        this._interpolateTarget(targetOverride),
         this._interpolateValue(),
         commandExecutor.isWindowMethodCommand(this.command.command));
     }
