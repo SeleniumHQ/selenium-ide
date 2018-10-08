@@ -70,6 +70,9 @@ export default class ProjectHeader extends React.Component {
           <ListMenu width={250} padding={-5} opener={
             <MoreButton canFocus={true} />
           }>
+            <ListMenuItem href="https://www.npmjs.com/package/selenium-side-runner">
+              {"Running in CI"}
+            </ListMenuItem>
             <ListMenuItem onClick={showChangelog}>
               {"What's new"}
             </ListMenuItem>
