@@ -49,8 +49,6 @@ import { isProduction } from "../../../content/utils";
 
 import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
 
-//const isProduction = process.env.NODE_ENV === "production";
-
 if (process.env.NODE_ENV !== "test") {
   const api = require("../../../api");
   browser.runtime.onMessage.addListener(api.default);

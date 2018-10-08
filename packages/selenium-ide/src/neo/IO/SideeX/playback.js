@@ -22,6 +22,7 @@ import { canExecuteCommand } from "../../../plugin/commandExecutor";
 import { createPlaybackTree } from "../../playback/playback-tree";
 import { ControlFlowCommandChecks } from "../../models/Command";
 import Logger from "../../stores/view/Logs";
+import { isProduction } from "../../../content/utils";
 
 let baseUrl = "";
 let ignoreBreakpoint = false;
@@ -393,15 +394,20 @@ async function doLocatorFallback() {
   return result;
 }
 
+function getImplicitTimeout() {
+  return isProduction ? 30000 : 5000;
+}
+
 function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
+  const timeout = getImplicitTimeout();
   if (isStopping()) {
     PlaybackState.setCommandState(commandId, PlaybackStates.Fatal, "Playback aborted");
     return false;
   } else if (isElementNotFound(error)) {
-    if (implicitTime && (Date.now() - implicitTime > 300)) {
+    if (implicitTime && (Date.now() - implicitTime > timeout)) {
       return doLocatorFallback().then(result => {
         if (result && result.result === "success") return result;
-        reportError("Implicit Wait timed out after 30000ms");
+        reportError(`Implicit Wait timed out after ${timeout}ms`);
         implicitCount = 0;
         implicitTime = "";
       });
