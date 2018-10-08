@@ -45,7 +45,7 @@
       "id": "5628fe89-f130-40cb-b52e-244a41cd6516",
       "comment": "",
       "command": "click",
-      "target": "linkText=Selenium IDE",
+      "target": "css=.g a",
       "targets": [],
       "value": ""
     }, {
