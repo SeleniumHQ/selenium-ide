@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from "webextension-polyfill";
 import React from "react";
 import PropTypes from "prop-types";
 import Menu from "../Menu";
@@ -40,15 +41,27 @@ export default class ListMenu extends React.Component {
 }
 
 export class ListMenuItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.openLink = this.openLink.bind(this);
+  }
   static propTypes = {
     children: PropTypes.node,
     label: PropTypes.string,
+    href: PropTypes.string,
     onClick: PropTypes.func
   };
+  openLink() {
+    if (this.props.href) {
+      browser.tabs.create({ url: this.props.href });
+    }
+  }
   render() {
     return (
       <li>
-        <a onClick={this.props.onClick}>
+        <a
+          onClick={this.props.href ? this.openLink : this.props.onClick}
+        >
           {this.props.children}
           {this.props.label ? <span className="label">{this.props.label}</span> : null}
         </a>
