@@ -30,7 +30,7 @@ router.get("/location", (req, res) => {
     locator: req.location
   }).then(result => {
     if (result.result === "success") {
-      res(result.locator);
+      res(result.locator.startsWith("xpath=") ? result.locator.substr("xpath=".length) : result.locator);
     } else {
       res({ error: result.result });
     }
