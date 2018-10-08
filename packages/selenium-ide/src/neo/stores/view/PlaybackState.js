@@ -508,6 +508,9 @@ class PlaybackState {
     if (typeof testCase === "string") {
       testCase = this.testMap[testCase];
     }
+    if (!testCase) {
+      throw new Error(`No test case named ${_testCase}`);
+    }
     this.callstack.push({
       caller: this.currentRunningTest,
       callee: testCase,

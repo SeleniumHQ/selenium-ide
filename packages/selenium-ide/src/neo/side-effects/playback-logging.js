@@ -89,7 +89,7 @@ export default class PlaybackLogger {
   }
 
   logCommandState(command, status) {
-    if (status && command && this.shouldLogCommand(command)) {
+    if (status && command && this.shouldLogCommand(command, status.state)) {
       const index = PlaybackState.currentRunningTest.commands.indexOf(command) + 1;
       let log = this.findCorrespondingLog(command.id);
       let shouldAddLog = false;
@@ -117,6 +117,9 @@ export default class PlaybackLogger {
       if (status.state !== PlaybackStates.Pending) {
         // In pending the description is used as the message
         log.setDescription(status.message);
+        if (command.command === "run") {
+          log.setMessage(`run ${command.target}`);
+        }
       }
       if (shouldAddLog) {
         this.logger.log(log);
@@ -124,8 +127,16 @@ export default class PlaybackLogger {
     }
   }
 
-  shouldLogCommand(command) {
-    return (command.enabled && command.command !== "echo" && command.command !== "run");
+  shouldLogCommand(command, state) {
+    if (!command.enabled) {
+      return false;
+    } else if (command.command === "echo") {
+      return false;
+    } else if (command.command === "run" && state !== PlaybackStates.Fatal) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   findCorrespondingLog(commandId) {

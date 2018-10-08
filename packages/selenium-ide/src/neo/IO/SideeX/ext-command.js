@@ -263,8 +263,8 @@ export default class ExtCommand {
     return browser.tabs.remove(removingTabId);
   }
 
-  doRun(target) {
-    return Promise.resolve(PlaybackState.callTestCase(target));
+  async doRun(target) {
+    return PlaybackState.callTestCase(target);
   }
 
   async doMouseOver(locator, _, top) {
