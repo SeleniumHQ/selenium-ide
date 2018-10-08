@@ -361,6 +361,7 @@ function doPluginCommand(commandNode, implicitTime, implicitCount) {
       return doImplicitWait(err.message, id, target, implicitTime, implicitCount);
     } else {
       PlaybackState.setCommandState(id, (err instanceof FatalError || err instanceof NoResponseError) ? PlaybackStates.Fatal : PlaybackStates.Failed, err.message);
+      return { next: undefined };
     }
   });
 }
