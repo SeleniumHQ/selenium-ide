@@ -145,11 +145,13 @@ function doCommands(request, sender, sendResponse) {
         if (target) {
           browser.runtime.sendMessage({
             selectTarget: true,
-            target: [[target]]
+            target: [[target]],
+            selectNext: request.selectNext
           });
         } else {
           browser.runtime.sendMessage({
-            cancelSelectTarget: true
+            cancelSelectTarget: true,
+            selectNext: request.selectNext
           });
         }
       });
