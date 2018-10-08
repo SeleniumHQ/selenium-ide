@@ -398,7 +398,7 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
     PlaybackState.setCommandState(commandId, PlaybackStates.Fatal, "Playback aborted");
     return false;
   } else if (isElementNotFound(error)) {
-    if (implicitTime && (Date.now() - implicitTime > 300)) {
+    if (implicitTime && (Date.now() - implicitTime > 30000)) {
       return doLocatorFallback().then(result => {
         if (result && result.result === "success") return result;
         reportError("Implicit Wait timed out after 30000ms");
