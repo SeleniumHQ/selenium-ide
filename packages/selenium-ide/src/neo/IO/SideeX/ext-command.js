@@ -271,12 +271,13 @@ export default class ExtCommand {
     const browserName = parsedUA.browser.name;
     if (browserName === "Chrome") {
       // handle scrolling through Selenium atoms
-      const { rect } = await this.sendPayload({
-        prepareToInteract: true,
-        locator
-      }, top);
-      const connection = new Debugger(this.getCurrentPlayingTabId());
+      let connection;
       try {
+        const { rect } = await this.sendPayload({
+          prepareToInteract: true,
+          locator
+        }, top);
+        connection = new Debugger(this.getCurrentPlayingTabId());
         await connection.attach();
         await connection.sendCommand("Input.dispatchMouseEvent", {
           type: "mouseMoved",
@@ -288,8 +289,8 @@ export default class ExtCommand {
           result: "success"
         };
       } catch (e) {
-        await connection.detach();
-        throw e;
+        if (connection) await connection.detach();
+        return Promise.resolve({ result: `Element ${locator} not found` });
       }
     } else {
       return this.sendMessage("mouseOver", locator, _, top);
