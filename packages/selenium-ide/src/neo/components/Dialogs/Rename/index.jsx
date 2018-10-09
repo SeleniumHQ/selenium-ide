@@ -83,8 +83,8 @@ class RenameDialogContents extends React.Component {
             <span>You can change the name of your project at any time by clicking it and entering a new name.</span>
             :
             undefined),
-      submitButton: (this.props.isNewTest || this.props.type === "project") ? "OK" : (this.state.isRenaming ? "Rename" : "Add"),
-      cancelButton: (this.props.isNewTest || this.props.type === "project") ? "LATER" : "Cancel",
+      submitButton: (this.props.isNewTest || this.props.type === "project") ? "OK" : (this.state.isRenaming ? "RENAME" : "ADD"),
+      cancelButton: (this.props.isNewTest) ? "LATER" : "CANCEL",
       inputLabel: this.props.isNewTest ? "test name" : this.state.type + " name"
     };
     return (

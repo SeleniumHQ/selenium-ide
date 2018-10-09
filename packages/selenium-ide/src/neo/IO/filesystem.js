@@ -64,12 +64,7 @@ export function loadAsText(blob) {
   });
 }
 
-export async function saveProject(_project) {
-  if (_project.name === "Untitled Project") {
-    await ModalState.renameProject().then(name => {
-      _project.changeName(name);
-    });
-  }
+export function saveProject(_project) {
   const project = _project.toJS();
   downloadProject(project);
   UiState.saved();

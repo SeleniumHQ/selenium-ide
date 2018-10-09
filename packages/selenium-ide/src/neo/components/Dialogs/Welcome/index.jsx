@@ -49,8 +49,9 @@ class WelcomeDialogContents extends React.Component {
     this.dismiss = this.dismiss.bind(this);
   }
 
-  startRecordingInNewProject() {
-    this.props.createNewProject();
+  async startRecordingInNewProject() {
+    this.props.hideWelcome();
+    await this.props.createNewProject();
     this.props.completeWelcome();
     UiState.toggleRecord(false);
   }
@@ -61,7 +62,7 @@ class WelcomeDialogContents extends React.Component {
   }
 
   dismiss() {
-    this.props.completeWelcome();
+    window.close();
   }
 
   render() {
@@ -91,7 +92,7 @@ class WelcomeDialogContents extends React.Component {
             <li className="file-open">
               <OpenInput onFileSelected={this.openProject} labelMarkup={<div>Open an existing project</div>} />
             </li>
-            <li><a onClick={this.dismiss}>Close this dialog</a></li>
+            <li><a onClick={this.dismiss}>Close the IDE</a></li>
           </ul>
         </div>
       </DialogContainer>
@@ -100,6 +101,7 @@ class WelcomeDialogContents extends React.Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     createNewProject: PropTypes.func.isRequired,
+    hideWelcome: PropTypes.func.isRequired,
     completeWelcome: PropTypes.func.isRequired
   }
 }
