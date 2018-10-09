@@ -605,6 +605,11 @@ class CommandList {
                     object: by title or by generated id.",
       target: ArgTypes.window
     }],
+    [ "close", {
+      name: "close",
+      description: "Closes a window using a window locator.",
+      target: ArgTypes.window
+    }],
     [ "sendKeys", {
       name: "send keys",
       type: TargetTypes.LOCATOR,
