@@ -38,9 +38,9 @@ async function addInitialCommands(recordedUrl) {
     const url = new URL(recordedUrl ? recordedUrl : tab.url);
     if (!UiState.baseUrl) {
       UiState.setUrl(url.origin, true);
-      open.setTarget(url.pathname);
+      open.setTarget(`${url.pathname}${url.search}`);
     } else if (url.origin === UiState.baseUrl) {
-      open.setTarget(url.pathname);
+      open.setTarget(`${url.pathname}${url.search}`);
     } else {
       open.setTarget(recordedUrl);
     }
