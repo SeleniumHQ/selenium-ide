@@ -28,11 +28,12 @@ export default function Selianize(project, _opts, snapshot = {}) {
     const configuration = await ConfigurationEmitter.emit(project, options, snapshot.globalConfig ? snapshot.globalConfig.snapshot : undefined);
 
     let errors = [];
-    const tests = (await Promise.all(project.tests.map((test) =>
-      TestCaseEmitter.emit(test, options, snapshot.tests ? snapshot.tests.find((snapshotTest) => (test.id === snapshotTest.id)).snapshot : undefined).catch(e => {
+    const tests = (await Promise.all(project.tests.map((test) => {
+      const testSnapshot = snapshot.tests ? snapshot.tests.find((snapshotTest) => (test.id === snapshotTest.id)) : undefined;
+      return TestCaseEmitter.emit(test, options, testSnapshot ? testSnapshot.snapshot : undefined).catch(e => {
         errors.push(e);
-      })
-    )));
+      });
+    })));
 
     if (errors.length) {
       return rej({ name: project.name, tests: errors });

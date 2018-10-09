@@ -1,0 +1,125 @@
+{
+  "id": "6c2cd450-d5bd-4505-8487-75ca3d0e4c3a",
+  "version": "1.1",
+  "name": "proj1",
+  "url": "https://www.google.com",
+  "tests": [{
+    "id": "0256ca3d-3f9c-4efd-a76d-bf5a2fc2e465",
+    "name": "My first test",
+    "commands": [{
+      "id": "21a4a3e2-1dbd-41c2-be58-37e184a849c9",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5a560dbb-cca6-4ad3-9ddc-d2c589088440",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1128x1027",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "07bf2e8b-0291-4fd4-8fc3-6575cad6f94e",
+      "comment": "",
+      "command": "snapshotCommand",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bfcfe1ab-1399-4041-a6c1-2ab3df1dbc47",
+      "comment": "",
+      "command": "click",
+      "target": "css=div.logo.clickable",
+      "targets": [
+        ["css=div.logo.clickable", "css"],
+        ["css=.logo", "css:finder"],
+        ["xpath=//div[@id='wrapper']/div/div/div", "xpath:idRelative"],
+        ["xpath=//div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b9d5aa51-401b-41bf-a8be-52c07043a92a",
+      "comment": "",
+      "command": "snapshotCommand2",
+      "target": "css=div.main-top-section.batch-details",
+      "targets": [
+        ["css=div.main-top-section.batch-details", "css"],
+        ["css=.main-top-section", "css:finder"],
+        ["xpath=//div[@id='wrapper']/div/div[2]/div[2]/div", "xpath:idRelative"],
+        ["xpath=//div[2]/div[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "42c852b5-471b-4472-a17e-6fb3f21a9b52",
+      "comment": "",
+      "command": "snapshotCommand3",
+      "target": "x: 4, y: 58, width: 263, height: 125",
+      "targets": [
+        ["x: 4, y: 58, width: 263, height: 125"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "7cf842e0-40b2-415d-8459-a8577542579f",
+    "name": "WAT",
+    "commands": [{
+      "id": "b09a1fcb-939a-44e1-b831-d193b693a1d6",
+      "comment": "",
+      "command": "open",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7671c5c5-7947-495a-80a0-e5caee95fc3d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f56d5163-e398-42d0-a45a-27e183b01fee",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "win_ser_local",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "3480b755-68e8-4c7b-8334-9239d7841317",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["0256ca3d-3f9c-4efd-a76d-bf5a2fc2e465"]
+  }],
+  "urls": ["https://www.google.com/"],
+  "plugins": [],
+  "snapshot": {
+    "globalConfig": {
+      "snapshot": "global code"
+    },
+    "suites": [{
+      "name": "Default Suite",
+      "persistSession": false,
+      "snapshot": {
+        "hook": "suite code"
+      }
+    }],
+    "tests": [{
+      "id": "0256ca3d-3f9c-4efd-a76d-bf5a2fc2e465",
+      "snapshot": {
+        "commands": {
+          "07bf2e8b-0291-4fd4-8fc3-6575cad6f94e": "first command snapshot",
+          "b9d5aa51-401b-41bf-a8be-52c07043a92a": "second command snapshot",
+          "42c852b5-471b-4472-a17e-6fb3f21a9b52": "third command snapshot"
+        },
+        "setupHooks": ["test setup"],
+        "teardownHooks": ["test teardown"]
+      }
+    }]
+  },
+  "dependencies": {}
+}

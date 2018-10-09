@@ -24,6 +24,11 @@ describe("Selenium code serializer", () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-1.side")));
     return expect(Selianize(project)).resolves.toBeDefined();
   });
+  it("should resolve to snapshots on snapshotted tests", async () => {
+    const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-5-partial-snapshot.side")));
+    const result = await Selianize(project, undefined, project.snapshot);
+    return expect(result).toBeDefined();
+  });
   it("hook should add configuration code", async () => {
     const project = JSON.parse(fs.readFileSync(path.join(__dirname, "test-files", "project-3-single-test.side")));
     const hook = jest.fn();
