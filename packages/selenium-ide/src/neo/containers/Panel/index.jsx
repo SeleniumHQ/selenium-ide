@@ -46,6 +46,7 @@ import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
 import { isProduction } from "../../../content/utils";
+import Logger from "../../stores/view/Logs";
 
 import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
 
@@ -248,6 +249,7 @@ if (browser.windows) {
     const newProject = observable(new ProjectStore(name));
     createDefaultSuite(newProject);
     loadJSProject(this.state.project, newProject.toJS());
+    Logger.clearLogs();
     newProject.setModified(false);
   }
   componentWillUnmount() {
