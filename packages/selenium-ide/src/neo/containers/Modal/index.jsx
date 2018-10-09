@@ -79,9 +79,10 @@ export default class Modal extends Component {
         />
         { isProduction ?
           <WelcomeDialog
-            isWelcomed={ModalState.welcomeState.completed}
+            isWelcomed={ModalState.welcomeState.started}
             project={this.props.project}
             createNewProject={this.props.createNewProject}
+            hideWelcome={ModalState.hideWelcome}
             completeWelcome={ModalState.completeWelcome} />
           : null }
       </div>

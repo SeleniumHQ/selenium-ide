@@ -59,20 +59,20 @@ if (parser(window.navigator.userAgent).os.name === "Windows") {
   require("../../styles/conditional/button-direction.css");
 }
 
-const project = observable(new ProjectStore());
+const project = observable(new ProjectStore(""));
 
 UiState.setProject(project);
 
 if (isProduction) {
-  createDefaultSuite(project);
+  createDefaultSuite(project, { suite: "", test: "" });
 } else {
   seed(project);
 }
 project.setModified(false);
 
-function createDefaultSuite(aProject) {
-  const suite = aProject.createSuite("Default Suite");
-  const test = aProject.createTestCase("Untitled");
+function createDefaultSuite(aProject, name = { suite: "Default Suite", test: "Untitled" }) {
+  const suite = aProject.createSuite(name.suite);
+  const test = aProject.createTestCase(name.test);
   suite.addTestCase(test);
   UiState.selectTest(test);
 }
@@ -243,8 +243,9 @@ if (browser.windows) {
       this.createNewProject();
     }
   }
-  createNewProject() {
-    const newProject = observable(new ProjectStore());
+  async createNewProject() {
+    const name = await ModalState.renameProject();
+    const newProject = observable(new ProjectStore(name));
     createDefaultSuite(newProject);
     loadJSProject(this.state.project, newProject.toJS());
     newProject.setModified(false);

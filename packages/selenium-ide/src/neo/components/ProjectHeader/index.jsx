@@ -57,7 +57,7 @@ export default class ProjectHeader extends React.Component {
   render() {
     return (
       <div className={classNames("header", { "changed": this.props.changed })}>
-        <Title title={`Selenium IDE - ${this.props.title}${this.props.changed ? "*" : ""}`} />
+        <Title title={`Selenium IDE ${this.props.title === "" ? "" : "-"} ${this.props.title}${this.props.changed ? "*" : ""}`} />
         <div>
           <span className="title-prefix">Project: </span>
           <ContentEditable className="title" onKeyDown={this.handleKeyDown} onChange={this.handleChange} html={this.props.title} />

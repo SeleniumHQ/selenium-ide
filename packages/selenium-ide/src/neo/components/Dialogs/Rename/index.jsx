@@ -84,7 +84,7 @@ class RenameDialogContents extends React.Component {
             :
             undefined),
       submitButton: (this.props.isNewTest || this.props.type === "project") ? "OK" : (this.state.isRenaming ? "Rename" : "Add"),
-      cancelButton: (this.props.isNewTest || this.props.type === "project") ? "LATER" : "Cancel",
+      cancelButton: (this.props.isNewTest) ? "LATER" : "Cancel",
       inputLabel: this.props.isNewTest ? "test name" : this.state.type + " name"
     };
     return (
