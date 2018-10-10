@@ -162,7 +162,7 @@ export default class ExtCommand {
     }, { frameId: top ? 0 : frameId }).then(r => {
       return r;
     }).catch(error => {
-      if (isReceivingEndError(error) && frameId && command !== "waitPreparation") {
+      if (this.isReceivingEndError(error) && frameId && command !== "waitPreparation") {
         return this.waitForFrameToRespond(command, target, value, implicitTime);
       }
       throw error;
