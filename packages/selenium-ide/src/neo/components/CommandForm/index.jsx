@@ -28,6 +28,7 @@ import FlatButton from "../FlatButton";
 import { find, select } from "../../IO/SideeX/find-select";
 import ModalState from "../../stores/view/ModalState";
 import UiState from "../../stores/view/UiState";
+import PlaybackState from "../../stores/view/PlaybackState";
 import "./style.css";
 @observer export default class CommandForm extends React.Component {
   constructor(props) {
@@ -74,12 +75,12 @@ import "./style.css";
               name="command"
               label="Command"
               value={this.props.command ? this.parseCommandName(this.props.command.command) : ""}
-              disabled={!this.props.command}
+              disabled={!this.props.command || PlaybackState.isPlaying}
               onChange={this.props.command ? this.props.command.setCommand : null} />
             <FlatButton
               data-tip="<p>Enable/Disable command</p>"
               className={classNames("icon", this.props.command && this.props.command.command && !this.props.command.enabled ? "si-remove-comment" : "si-comment")}
-              disabled={!this.props.command || (this.props.command && !this.props.command.command)}
+              disabled={!this.props.command || (this.props.command && !this.props.command.command) || PlaybackState.isPlaying}
               onClick={this.props.command ? this.props.command.toggleEnabled : null}
             />
           </div>

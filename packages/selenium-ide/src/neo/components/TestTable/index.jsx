@@ -84,7 +84,7 @@ export default class TestTable extends React.Component {
                 key={command.id}
                 status={classNames(PlaybackState.commandState.get(commandStatePrefix + command.id) ? PlaybackState.commandState.get(commandStatePrefix + command.id).state : "")}
                 selected={this.props.selectedCommand === command.id}
-                readOnly={(PlaybackState.isPlaying && !PlaybackState.paused)}
+                readOnly={(PlaybackState.isPlaying)}
                 index={index}
                 command={command}
                 new={command === this.newCommand ? this.disposeNewCommand : undefined}
