@@ -92,7 +92,7 @@ class WelcomeDialogContents extends React.Component {
             <li className="file-open">
               <OpenInput onFileSelected={this.openProject} labelMarkup={<div>Open an existing project</div>} />
             </li>
-            <li><a onClick={this.dismiss}>Close the IDE</a></li>
+            <li><a onClick={this.dismiss}>Close Selenium IDE</a></li>
           </ul>
         </div>
       </DialogContainer>
