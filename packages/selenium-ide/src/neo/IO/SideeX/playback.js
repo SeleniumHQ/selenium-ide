@@ -372,7 +372,7 @@ function doPluginCommand(commandNode, implicitTime, implicitCount) {
 }
 
 function isElementNotFound(error) {
-  return error.match(/Element[\s\S]*?not (found|visible)/);
+  return (error.match(/Element[\s\S]*?not (found|visible)/) || error.match === "Element is not currently visible and may not be manipulated");
 }
 
 async function doLocatorFallback() {
