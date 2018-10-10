@@ -168,12 +168,25 @@ browser.runtime.onMessage.addListener(detachRecorderHandler);
     if (!currentParentWindow.frames.length) {
       break;
     }
-    for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-      if (currentParentWindow.frames[idx] === currentWindow) {
-        frameLocation = ":" + idx + frameLocation;
+
+    let indicator;
+    try {
+      indicator = currentParentWindow.document.getElementById("selenium-ide-indicator");
+    } catch(e) {
+      indicator = true;
+    }
+
+
+    for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
+      const frame = currentParentWindow.frames[idx];
+
+      if (frame === currentWindow) {
+        const index = (indicator && idx !== 0) ? idx - 1 : idx;
+        frameLocation = ":" + index + frameLocation;
         currentWindow = currentParentWindow;
         break;
       }
+    }
   }
   frameLocation = "root" + frameLocation;
 })();
