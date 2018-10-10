@@ -149,7 +149,7 @@ export default class ExtCommand {
     return this.playingTabStatus[this.getCurrentPlayingTabId()];
   }
 
-  sendMessage(command, target, value, top) {
+  sendMessage(command, target, value, top, implicitTime) {
     if (/^webdriver/.test(command)) {
       return Promise.resolve({ result: "success" });
     }
@@ -159,7 +159,28 @@ export default class ExtCommand {
       commands: command,
       target: target,
       value: value
-    }, { frameId: top ? 0 : frameId });
+    }, { frameId: top ? 0 : frameId }).then(r => {
+      return r;
+    }).catch(error => {
+      if (isReceivingEndError(error) && frameId && command !== "waitPreparation") {
+        return this.waitForFrameToRespond(command, target, value, implicitTime);
+      }
+      throw error;
+    });
+  }
+
+  waitForFrameToRespond(command, target, value, implicitTime = Date.now()) {
+    return new Promise((res, rej) => {
+      if (Date.now() - implicitTime >= 5000) {
+        rej(new Error("frame no longer exists"));
+      } else if (!PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping) {
+        res();
+      } else {
+        setTimeout(() => {
+          res(this.sendMessage(command, target, value, undefined, implicitTime));
+        }, 100);
+      }
+    });
   }
 
   sendPayload(payload, top) {
@@ -584,5 +605,16 @@ export default class ExtCommand {
       || command == "chooseCancelOnNextConfirmation"
       || command == "assertConfirmation"
       || command == "assertAlert");
+  }
+
+  isReceivingEndError(reason) {
+    return (reason == "TypeError: response is undefined" ||
+      reason == "Error: Could not establish connection. Receiving end does not exist." ||
+      // Below message is for Google Chrome
+      reason.message == "Could not establish connection. Receiving end does not exist." ||
+      // Google Chrome misspells "response"
+      reason.message == "The message port closed before a reponse was received." ||
+      reason.message == "The message port closed before a response was received." ||
+      reason.message == "result is undefined"); // from command node eval
   }
 }

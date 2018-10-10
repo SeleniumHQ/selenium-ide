@@ -173,7 +173,7 @@ async function finishPlaying() {
 }
 
 function catchPlayingError(message) {
-  if (isReceivingEndError(message)) {
+  if (executor.isReceivingEndError(message)) {
     setTimeout(function() {
       playAfterConnectionFailed();
     }, 100);
@@ -372,7 +372,7 @@ function doPluginCommand(commandNode, implicitTime, implicitCount) {
 }
 
 function isElementNotFound(error) {
-  return error.match(/Element[\s\S]*?not (found|visible)/);
+  return (error.match(/Element[\s\S]*?not (found|visible)/) || error === "Element is not currently visible and may not be manipulated");
 }
 
 async function doLocatorFallback() {
@@ -436,17 +436,6 @@ function doDelay() {
 
 function notifyWaitDeprecation(command) {
   reportError(`${command} is deprecated, Selenium IDE waits automatically instead`, true);
-}
-
-function isReceivingEndError(reason) {
-  return (reason == "TypeError: response is undefined" ||
-    reason == "Error: Could not establish connection. Receiving end does not exist." ||
-    // Below message is for Google Chrome
-    reason.message == "Could not establish connection. Receiving end does not exist." ||
-    // Google Chrome misspells "response"
-    reason.message == "The message port closed before a reponse was received." ||
-    reason.message == "The message port closed before a response was received." ||
-    reason.message == "result is undefined"); // from command node eval
 }
 
 function isImplicitWait(command) {
