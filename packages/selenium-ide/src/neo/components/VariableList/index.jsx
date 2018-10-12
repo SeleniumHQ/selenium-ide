@@ -44,12 +44,11 @@ export default class VariableList extends React.Component {
     return (
       <form onSubmit={(e) => { e.preventDefault(); }}>
         <ul className="value-list">
-          {variables.storedVars.size == 0 ? null :
-            <li className="value-header variable">
-              <strong className="name">Name</strong>
-              <strong className="value">Value</strong>
-              <div className="deleteBtn"/>
-            </li>}
+          <li className="value-header variable">
+            <strong className="name">Name</strong>
+            <strong className="value">Value</strong>
+            <div className="deleteBtn"/>
+          </li>
           {variables.getEntries.map((storedMap) => (
             <Variable
               key={Math.random()}
