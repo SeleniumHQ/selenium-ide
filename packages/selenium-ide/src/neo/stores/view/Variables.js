@@ -38,8 +38,12 @@ class Variables {
     this.storedVars.clear();
   }
 
-  @computed get isStop(){
+  @computed get isStop() {
     return !PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping;
+  }
+
+  @computed get getEntries() {
+    return this.storedVars.entries().sort();
   }
 }
 

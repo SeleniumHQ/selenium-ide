@@ -48,7 +48,7 @@ export default class VariableList extends React.Component {
               <strong className="value">Value</strong>
               <div className="deleteBtn"/>
             </li>}
-          {variables.storedVars.entries().sort().map((storedMap) => (
+          {variables.getEntries.map((storedMap) => (
             <Variable
               key={Math.random()}
               keyVar={storedMap[0]}
