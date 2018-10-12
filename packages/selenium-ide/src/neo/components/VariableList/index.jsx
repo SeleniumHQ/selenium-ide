@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Variable from "../Variable";
 import { observer } from "mobx-react";
+import PlaybackState from "../../stores/view/PlaybackState";
 import "./style.css";
 
 @observer
@@ -39,6 +40,7 @@ export default class VariableList extends React.Component {
 
   render() {
     const variables = this.props.variables;
+    const readOnly = (PlaybackState.isPlaying && !PlaybackState.paused);
     return (
       <form onSubmit={(e) => { e.preventDefault(); }}>
         <ul className="value-list">
@@ -55,7 +57,7 @@ export default class VariableList extends React.Component {
               value={storedMap[1]}
               add={this.addVariable}
               delete={this.deleteVariable}
-              isStop={variables.isStop}
+              readOnly={readOnly}
             />
           ))}
           { this.props.isAdding ?
@@ -64,7 +66,7 @@ export default class VariableList extends React.Component {
               delete={this.deleteVariable}
               isAdding={this.props.isAdding}
               setIsAdding={this.props.setIsAdding}
-              isStop={variables.isStop}
+              readOnly={readOnly}
             /> : null}
         </ul>
       </form>

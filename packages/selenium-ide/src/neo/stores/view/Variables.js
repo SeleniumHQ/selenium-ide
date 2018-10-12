@@ -16,7 +16,6 @@
 // under the License.
 
 import { action, observable, computed } from "mobx";
-import PlaybackState from "./PlaybackState";
 
 class Variables {
   @observable storedVars = new Map();
@@ -36,10 +35,6 @@ class Variables {
 
   @action.bound clearVariables() {
     this.storedVars.clear();
-  }
-
-  @computed get isStop() {
-    return !PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping;
   }
 
   @computed get getEntries() {

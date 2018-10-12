@@ -82,8 +82,8 @@ export default class Variable extends React.Component {
             onBlur={this.handleChanged}/>
           :
           <input
-            className={classNames("name", { "editable": this.props.isStop })}
-            disabled={this.props.isStop ? false : true}
+            className={classNames("name", { "editable": !this.props.readOnly })}
+            disabled={this.props.readOnly ? true : false}
             onChange={this.keyChanged}
             value={this.state.key || this.props.keyVar}
             onKeyDown={this.handleKeyDown}
@@ -96,13 +96,13 @@ export default class Variable extends React.Component {
             onBlur={this.handleChanged} />
           :
           <input
-            className={classNames("value", { "editable": this.props.isStop })}
-            disabled={this.props.isStop ? false : true}
+            className={classNames("value", { "editable": !this.props.readOnly })}
+            disabled={this.props.readOnly ? true : false}
             onChange={this.valueChanged}
             value={this.state.value || this.props.value}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged} />}
-        <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={!this.props.isStop}/>
+        <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={this.props.readOnly}/>
       </li>
     );
   }
@@ -112,7 +112,7 @@ export default class Variable extends React.Component {
     delete: PropTypes.func,
     add: PropTypes.func,
     isAdding: PropTypes.bool,
-    isStop: PropTypes.bool,
+    readOnly: PropTypes.bool,
     setIsAdding: PropTypes.func
   };
 }
