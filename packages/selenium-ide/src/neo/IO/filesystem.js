@@ -170,6 +170,7 @@ export function loadJSProject(project, data) {
   PlaybackState.clearPlayingCache();
   UiState.clearViewCache();
   project.fromJS(data);
+  UiState.projectChanged();
   Manager.emitMessage({
     action: "event",
     event: "projectLoaded",

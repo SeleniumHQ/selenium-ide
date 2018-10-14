@@ -73,7 +73,6 @@ class UiState {
 
   @action.bound setProject(project) {
     this._project = project;
-    observe(this._project, "id", this.projectChanged);
   }
 
   @computed get filteredTests() {
