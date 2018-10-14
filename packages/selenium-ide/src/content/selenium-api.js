@@ -1289,8 +1289,7 @@ Selenium.prototype.doSubmit = function(formLocator) {
      * @param formLocator an <a href="#locators">element locator</a> for the form you want to submit
      */
   let form = this.browserbot.findElement(formLocator);
-  return this.browserbot.submit(form);
-
+  return bot.action.submit(form);
 };
 
 Selenium.prototype.makePageLoadCondition = function(timeout) {

@@ -1785,44 +1785,6 @@ BrowserBot.prototype.replaceText = function(element, stringValue) {
   } catch (e) {} // eslint-disable-line no-empty
 };
 
-BrowserBot.prototype.submit = function(formElement) {
-  let actuallySubmit = true;
-  this._modifyElementTarget(formElement);
-
-  if (formElement.onsubmit) {
-    if (browserVersion.isHTA) {
-      // run the code in the correct window so alerts are handled correctly even in HTA mode
-      let win = this.browserbot.getCurrentWindow();
-      let now = new Date().getTime();
-      let marker = "marker" + now;
-      win[marker] = formElement;
-      win.setTimeout("var actuallySubmit = " + marker + ".onsubmit();" +
-        "if (actuallySubmit) { " +
-        marker + ".submit(); " +
-        "if (" + marker + ".target && !/^_/.test(" + marker + ".target)) {" +
-        "window.open('', " + marker + ".target);" +
-        "}" +
-        "};" +
-        marker + "=null", 0);
-      // pause for up to 2s while this command runs
-      let terminationCondition = function() {
-        return !win[marker];
-      };
-      return Selenium.decorateFunctionWithTimeout(terminationCondition, 2000);
-    } else {
-      actuallySubmit = formElement.onsubmit();
-      if (actuallySubmit) {
-        formElement.submit();
-        if (formElement.target && !/^_/.test(formElement.target)) {
-          this.browserbot.openWindow("", formElement.target);
-        }
-      }
-    }
-  } else {
-    formElement.submit();
-  }
-};
-
 BrowserBot.prototype.clickElement = function(element, clientX, clientY) {
   this._fireEventOnElement("click", element, clientX, clientY);
 };
