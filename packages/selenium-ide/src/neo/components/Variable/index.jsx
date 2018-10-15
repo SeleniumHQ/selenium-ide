@@ -52,7 +52,7 @@ export default class Variable extends React.Component {
     }
   }
   delete() {
-    this.props.delete(this.state.key);
+    this.props.delete(this.props.keyVar);
   }
   edit(key, value){
     this.delete();
