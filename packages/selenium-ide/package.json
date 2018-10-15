@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide-extension",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
   "private": true,
