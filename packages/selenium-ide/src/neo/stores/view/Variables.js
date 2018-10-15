@@ -38,7 +38,7 @@ class Variables {
   }
 
   @computed get getEntries() {
-    return this.storedVars.entries().sort();
+    return this.storedVars.entries();
   }
 }
 
