@@ -6,6 +6,15 @@
   flex-direction: column;
 }
 
+.variable .name,
+.variable .value {
+  float: left;
+  padding: 4px 5px;
+  width: 48%;
+  text-align: left;
+  border: 1px transparent solid;
+}
+
 .value-list li:last-child {
   margin-bottom: 3px;
 }

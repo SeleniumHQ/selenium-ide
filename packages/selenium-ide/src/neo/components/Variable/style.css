@@ -4,10 +4,8 @@
   display: flex;
 }
 
-.variable .name,
-.variable .value {
+.variable .form-input {
   float: left;
-  padding: 4px 5px;
   width: 48%;
   text-align: left;
   border: 1px transparent solid;
@@ -19,30 +17,22 @@
 
 .variable .deleteBtn {
   width: 4%;
-  font-size: 15px;
   opacity: 0;
-  height: 20px;
+  height: 100%;
 }
 
 .variable:hover .deleteBtn {
   opacity: 1;
 }
 
-.variable input,
-.variable input:disabled {
+.variable .form-input input,
+.variable .form-input input:disabled {
   background-color: transparent;
+  border: 1px transparent solid;
+  margin: 0;
 }
 
-.variable input:not(.isAdding) {
-  cursor: initial;
-  outline: 0;
-}
-
-.variable .isAdding {
-  margin: 0 2px;
-}
-
-.variable .editable:focus {
+.variable .form-input input:focus {
   border: 1px #4ea1ff solid;
   outline: 0;
   background-color: white;

@@ -18,8 +18,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import DeleteButton from "../ActionButtons/Delete";
 import { observer } from "mobx-react";
+import DeleteButton from "../ActionButtons/Delete";
+import Input from "../FormInput";
 import "./style.css";
 
 @observer
@@ -59,44 +60,33 @@ export default class Variable extends React.Component {
     this.delete();
     this.props.add(key, value);
   }
-  keyChanged(e) {
-    this.setState({ key: e.target.value });
+  keyChanged(key) {
+    this.setState({ key: key });
   }
-  valueChanged(e) {
-    this.setState({ value: e.target.value });
+  valueChanged(value) {
+    this.setState({ value: value });
   }
   render() {
     return (
       <li className="variable">
-        {this.props.isPristine ?
-          <input
-            ref={(input) => { this.input = input; }}
-            className="name isAdding"
-            onChange={this.keyChanged}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleChanged}/>
-          :
-          <input
-            className={classNames("name", { "editable": !this.props.readOnly })}
-            disabled={this.props.readOnly ? true : false}
-            onChange={this.keyChanged}
-            value={this.state.key || this.props.keyVar}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleChanged}/>}
-        {this.props.isPristine ?
-          <input
-            className="value isAdding"
-            onChange={this.valueChanged}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleChanged} />
-          :
-          <input
-            className={classNames("value", { "editable": !this.props.readOnly })}
-            disabled={this.props.readOnly ? true : false}
-            onChange={this.valueChanged}
-            value={this.state.value || this.props.value}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleChanged} />}
+        <Input
+          name={classNames("name", { "editable": !this.props.readOnly }, {"isAdding": this.props.isPristine })}
+          label=" "
+          width={0}
+          disabled={this.props.readOnly ? true : false}
+          onChange={this.keyChanged}
+          value={this.props.isPristine ? this.state.key :this.state.key || this.props.keyVar}
+          onKeyDown={this.handleKeyDown}
+          onBlur={this.handleChanged}/>
+        <Input
+          name={classNames("value", { "editable": !this.props.readOnly }, {"isAdding": this.props.isPristine })}
+          label=" "
+          width={0}
+          disabled={this.props.readOnly ? true : false}
+          onChange={this.valueChanged}
+          value={this.props.isPristine ? this.state.value : this.state.value || this.props.value}
+          onKeyDown={this.handleKeyDown}
+          onBlur={this.handleChanged} />
         <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={this.props.readOnly}/>
       </li>
     );
