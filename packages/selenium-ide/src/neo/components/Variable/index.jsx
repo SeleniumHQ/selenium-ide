@@ -85,7 +85,7 @@ export default class Variable extends React.Component {
           value={this.state.value}
           onKeyDown={this.handleKeyDown}
           onBlur={this.handleChanged} />
-        <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={this.props.readOnly}/>
+        { this.props.isPristine ? null : <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={this.props.readOnly}/> }
       </li>
     );
   }
