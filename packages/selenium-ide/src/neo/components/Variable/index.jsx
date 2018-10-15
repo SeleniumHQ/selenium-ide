@@ -39,24 +39,21 @@ export default class Variable extends React.Component {
   handleKeyDown(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      const validKey = this.state.key;
-      if (validKey) {
-        this.edit(validKey, this.state.value);
-      }
+      this.edit();
     }
   }
-  handleChanged() {
-    const validKey = this.state.key;
-    if (validKey) {
-      this.edit(validKey, this.state.value);
-    }
+  handleChanged(e) {
+    this.edit();
   }
   delete() {
     this.props.delete(this.props.keyVar);
   }
-  edit(key, value){
-    this.delete();
-    this.props.add(key, value);
+  edit(){
+    const validKey = this.state.key;
+    if (validKey) {
+      this.delete();
+      this.props.add(validKey, this.state.value);
+    }
   }
   keyChanged(key) {
     this.setState({ key: key });
@@ -75,7 +72,7 @@ export default class Variable extends React.Component {
           onChange={this.keyChanged}
           value={this.state.key}
           onKeyDown={this.handleKeyDown}
-          onBlur={this.handleChanged}/>
+          onBlur={this.handleChanged} />
         <Input
           name={classNames("value", { "editable": !this.props.readOnly }, {"isAdding": this.props.isPristine })}
           label=""
