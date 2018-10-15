@@ -34,10 +34,7 @@ export default class Variable extends React.Component {
     this.edit = this.edit.bind(this);
     this.state = { key: "", value: "" };
   }
-  componentDidMount() {
-    if (this.input)
-      this.input.focus();
-  }
+
   handleKeyDown(e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -53,8 +50,6 @@ export default class Variable extends React.Component {
     const isValidValue = this.state.value || this.props.value;
     if (isValidKey && isValidValue) {
       this.edit(isValidKey, isValidValue);
-    } else if (!(isValidKey || isValidValue)) {
-      this.props.setIsAdding(false);
     }
   }
   delete() {
@@ -73,7 +68,7 @@ export default class Variable extends React.Component {
   render() {
     return (
       <li className="variable">
-        {this.props.isAdding ?
+        {this.props.isPristine ?
           <input
             ref={(input) => { this.input = input; }}
             className="name isAdding"
@@ -88,7 +83,7 @@ export default class Variable extends React.Component {
             value={this.state.key || this.props.keyVar}
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleChanged}/>}
-        {this.props.isAdding ?
+        {this.props.isPristine ?
           <input
             className="value isAdding"
             onChange={this.valueChanged}
@@ -111,8 +106,7 @@ export default class Variable extends React.Component {
     value: PropTypes.string,
     delete: PropTypes.func,
     add: PropTypes.func,
-    isAdding: PropTypes.bool,
-    readOnly: PropTypes.bool,
-    setIsAdding: PropTypes.func
+    isPristine: PropTypes.bool,
+    readOnly: PropTypes.bool
   };
 }

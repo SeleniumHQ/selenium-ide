@@ -23,7 +23,6 @@ import TabBar from "../../components/TabBar";
 import LogList from "../../components/LogList";
 import VariableList from "../../components/VariableList";
 import ClearButton from "../../components/ActionButtons/Clear";
-import AddButton from "../../components/ActionButtons/Add";
 import { output } from "../../stores/view/Logs";
 import PlaybackLogger from "../../side-effects/playback-logging";
 import CommandReference from "../../components/CommandReference";
@@ -36,9 +35,8 @@ import "./style.css";
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tab: "Log", logsUnread: false, isAddingVariable: false };
+    this.state = { tab: "Log", logsUnread: false };
     this.tabClicked = this.tabClicked.bind(this);
-    this.addVariableClicked = this.addVariableClicked.bind(this);
     this.playbackLogger = new PlaybackLogger();
     this.loggerDisposer = observe(output.logs, () => {
       this.setState({ logsUnread: this.state.tab === "Log" ? false : true });
@@ -67,11 +65,6 @@ export default class Console extends React.Component {
     });
     if(this.props.restoreSize) this.props.restoreSize();
   }
-  addVariableClicked(isAdding) {
-    this.setState({
-      isAddingVariable: isAdding
-    });
-  }
   scroll(to) {
     this.viewport.scrollTo(0, to);
   }
@@ -84,16 +77,12 @@ export default class Console extends React.Component {
       }}>
         <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
           {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clear} /> }
-          {this.state.tab === "Variables" &&
-            <div>
-              <AddButton data-tip="<p>Add Variable</p>" onClick={() => this.addVariableClicked(true)} disabled={!variables.isStop} />
-              <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} disabled={!variables.isStop}/>
-            </div> }
+          {this.state.tab === "Variables" && <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} /> }
           {this.state.tab === "Reference" && <ClearButton onClick={output.clear} /> }
         </TabBar>
         <div className="viewport" ref={this.setViewportRef}>
           {this.state.tab === "Log" && <LogList output={output} scrollTo={this.scroll}/> }
-          {this.state.tab === "Variables" && <VariableList variables={variables} isAdding={this.state.isAddingVariable} setIsAdding={this.addVariableClicked}/> }
+          {this.state.tab === "Variables" && <VariableList variables={variables}/> }
           {this.state.tab === "Reference" && <CommandReference currentCommand={command}/> }
         </div>
       </footer>

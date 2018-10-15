@@ -31,11 +31,9 @@ export default class VariableList extends React.Component {
   }
   deleteVariable(key){
     this.props.variables.deleteVariable(key);
-    this.props.setIsAdding(false);
   }
   addVariable(key, value){
     this.props.variables.addVariable(key, value);
-    this.props.setIsAdding(false);
   }
 
   render() {
@@ -57,23 +55,22 @@ export default class VariableList extends React.Component {
               add={this.addVariable}
               delete={this.deleteVariable}
               readOnly={readOnly}
+              isPristine={false}
             />
-          ))}
-          { this.props.isAdding ?
+          ))
+          .concat(
             <Variable
+              key={Math.random()}
               add={this.addVariable}
               delete={this.deleteVariable}
-              isAdding={this.props.isAdding}
-              setIsAdding={this.props.setIsAdding}
+              isPristine={true}
               readOnly={readOnly}
-            /> : null}
+          />)}
         </ul>
       </form>
     );
   }
   static propTypes = {
-    variables: PropTypes.object,
-    isAdding: PropTypes.bool,
-    setIsAdding: PropTypes.func
+    variables: PropTypes.object
   };
 }
