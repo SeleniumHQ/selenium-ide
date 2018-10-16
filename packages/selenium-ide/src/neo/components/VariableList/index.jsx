@@ -28,6 +28,7 @@ export default class VariableList extends React.Component {
     super(props);
     this.deleteVariable = this.deleteVariable.bind(this);
     this.addVariable = this.addVariable.bind(this);
+    this._OnSubmit = this._OnSubmit.bind(this);
   }
   deleteVariable(key){
     this.props.variables.deleteVariable(key);
@@ -35,12 +36,17 @@ export default class VariableList extends React.Component {
   addVariable(key, value){
     this.props.variables.addVariable(key, value);
   }
-
+  _OnSubmit(e) {
+    e.preventDefault();
+    // This set focus at deleteBtn for calling onBlur event that is to save value.
+    e.target[e.target.length-1].focus();
+  }
   render() {
     const variables = this.props.variables;
     const readOnly = (PlaybackState.isPlaying && !PlaybackState.paused);
+    const pristineID = Math.random();
     return (
-      <form onSubmit={(e) => { e.preventDefault(); }}>
+      <form onSubmit={this._OnSubmit}>
         <ul className="value-list">
           <li className="value-header variable">
             <strong className="name">Name</strong>
@@ -57,15 +63,15 @@ export default class VariableList extends React.Component {
               readOnly={readOnly}
               isPristine={false}
             />
-          ))
-          .concat(
+          )).concat(
             <Variable
-              key={Math.random()}
+              key={pristineID}
               add={this.addVariable}
               delete={this.deleteVariable}
               isPristine={true}
               readOnly={readOnly}
-          />)}
+            />)}
+          <input tabIndex="-1" type="submit"/>
         </ul>
       </form>
     );

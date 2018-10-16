@@ -27,22 +27,15 @@ import "./style.css";
 export default class Variable extends React.Component {
   constructor(props){
     super(props);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChanged = this.handleChanged.bind(this);
     this.keyChanged = this.keyChanged.bind(this);
     this.valueChanged = this.valueChanged.bind(this);
     this.delete = this.delete.bind(this);
     this.edit = this.edit.bind(this);
-    this.state = { key: this.props.keyVar || "", value: this.props.value || ""};
+    this.state = { key: this.props.keyVar || "", value: this.props.value || undefined };
   }
 
-  handleKeyDown(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      this.edit();
-    }
-  }
-  handleChanged(e) {
+  handleChanged() {
     this.edit();
   }
   delete() {
@@ -50,7 +43,7 @@ export default class Variable extends React.Component {
   }
   edit(){
     const validKey = this.state.key;
-    if (validKey) {
+    if (validKey && this.state.value != undefined) {
       this.delete();
       this.props.add(validKey, this.state.value);
     }
@@ -65,22 +58,20 @@ export default class Variable extends React.Component {
     return (
       <li className="variable">
         <Input
-          name={classNames("name", { "editable": !this.props.readOnly }, {"isAdding": this.props.isPristine })}
+          name={classNames("name", { "editable": !this.props.readOnly }, { "isAdding": this.props.isPristine })}
           label=""
           width={0}
           disabled={this.props.readOnly ? true : false}
           onChange={this.keyChanged}
           value={this.state.key}
-          onKeyDown={this.handleKeyDown}
           onBlur={this.handleChanged} />
         <Input
-          name={classNames("value", { "editable": !this.props.readOnly }, {"isAdding": this.props.isPristine })}
+          name={classNames("value", { "editable": !this.props.readOnly }, { "isAdding": this.props.isPristine })}
           label=""
           width={0}
           disabled={this.props.readOnly ? true : false}
           onChange={this.valueChanged}
-          value={this.state.value}
-          onKeyDown={this.handleKeyDown}
+          value={this.state.value || ""}
           onBlur={this.handleChanged} />
         { this.props.isPristine ? null : <DeleteButton className="deleteBtn" data-place="left" onClick={this.delete} disabled={this.props.readOnly}/> }
       </li>
