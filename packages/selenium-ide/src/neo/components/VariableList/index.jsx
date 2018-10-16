@@ -19,7 +19,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Variable from "../Variable";
 import { observer } from "mobx-react";
-import PlaybackState from "../../stores/view/PlaybackState";
 import "./style.css";
 
 @observer
@@ -39,11 +38,10 @@ export default class VariableList extends React.Component {
   _OnSubmit(e) {
     e.preventDefault();
     // This set focus at deleteBtn for calling onBlur event that is to save value.
-    e.target[e.target.length-1].focus();
+    e.target[e.target.length - 1].focus();
   }
   render() {
     const variables = this.props.variables;
-    const readOnly = (PlaybackState.isPlaying && !PlaybackState.paused);
     const pristineID = Math.random();
     return (
       <form onSubmit={this._OnSubmit}>
@@ -60,7 +58,7 @@ export default class VariableList extends React.Component {
               value={storedMap[1]}
               add={this.addVariable}
               delete={this.deleteVariable}
-              readOnly={readOnly}
+              readOnly={this.props.readOnly}
               isPristine={false}
             />
           )).concat(
@@ -69,7 +67,7 @@ export default class VariableList extends React.Component {
               add={this.addVariable}
               delete={this.deleteVariable}
               isPristine={true}
-              readOnly={readOnly}
+              readOnly={this.props.readOnly}
             />)}
           <input tabIndex="-1" type="submit"/>
         </ul>
