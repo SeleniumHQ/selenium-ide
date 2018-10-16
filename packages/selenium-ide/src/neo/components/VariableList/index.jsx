@@ -75,6 +75,7 @@ export default class VariableList extends React.Component {
     );
   }
   static propTypes = {
-    variables: PropTypes.object
+    variables: PropTypes.object,
+    readOnly: PropTypes.bool
   };
 }
