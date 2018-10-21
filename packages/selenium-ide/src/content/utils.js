@@ -104,3 +104,8 @@ export function upperFirstChar(str) {
 }
 
 export const isProduction = process.env.NODE_ENV === "production";
+
+export function calculateFrameIndex(indicatorIndex, targetFrameIndex) {
+  if (indicatorIndex < 0) return targetFrameIndex;
+  return (indicatorIndex < targetFrameIndex) ? targetFrameIndex - 1 : targetFrameIndex;
+}

@@ -439,4 +439,5 @@ export default class BackgroundRecorder {
     let testCaseId = getSelectedCase().id;
     return this.windowSession.openedTabIds[testCaseId] && Object.keys(this.windowSession.openedTabIds[testCaseId]).includes(`${tabId}`);
   }
+
 }

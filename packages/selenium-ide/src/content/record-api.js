@@ -16,6 +16,8 @@
  */
 
 import browser from "webextension-polyfill";
+import storage from "../neo/IO/storage";
+import { isProduction, calculateFrameIndex } from "./utils";
 
 let contentSideexTabId = -1;
 let frameLocation = "";
@@ -108,12 +110,23 @@ function detachRecorderHandler(message, sender, sendResponse) {
   }
 }
 
+// recorder event handlers
+browser.runtime.onMessage.addListener(attachRecorderHandler);
+browser.runtime.onMessage.addListener(detachRecorderHandler);
+
 function findRecordingIndicator() {
   return document.getElementById("selenium-ide-indicator");
 }
 
+function storeRecordingIndicatorIndex(index) {
+  if (isProduction) {
+    storage.set({ recordingIndicatorIndex: index });
+  }
+}
+
 function addRecordingIndicator() {
   if (!findRecordingIndicator() && frameLocation === "root") {
+    storeRecordingIndicatorIndex(window.parent.frames.length);
     let recordingIndicator = window.document.createElement("iframe");
     recordingIndicator.src = browser.runtime.getURL("/indicator.html");
     recordingIndicator.id = "selenium-ide-indicator";
@@ -152,37 +165,30 @@ function removeRecordingIndicator() {
   let element = findRecordingIndicator();
   if (element) {
     element.parentElement.removeChild(element);
+    storeRecordingIndicatorIndex(undefined);
   }
 }
 
-// recorder event handlers
-browser.runtime.onMessage.addListener(attachRecorderHandler);
-browser.runtime.onMessage.addListener(detachRecorderHandler);
-
 // set frame id
-(function getframeLocation() {
+(async function getframeLocation() {
   let currentWindow = window;
   let currentParentWindow;
+  let recordingIndicatorIndex;
+
+  const data = await storage.get("recordingIndicatorIndex");
+  recordingIndicatorIndex = data.recordingIndicatorIndex;
+
   while (currentWindow !== window.top) {
     currentParentWindow = currentWindow.parent;
     if (!currentParentWindow.frames.length) {
       break;
     }
 
-    let indicator;
-    try {
-      indicator = currentParentWindow.document.getElementById("selenium-ide-indicator");
-    } catch(e) {
-      indicator = true;
-    }
-
-
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
       const frame = currentParentWindow.frames[idx];
 
       if (frame === currentWindow) {
-        const index = (indicator && idx !== 0) ? idx - 1 : idx;
-        frameLocation = ":" + index + frameLocation;
+        frameLocation = ":" + calculateFrameIndex(recordingIndicatorIndex, idx) + frameLocation;
         currentWindow = currentParentWindow;
         break;
       }
