@@ -25,6 +25,9 @@ export class WindowSession {
   // windows opened during IDE session
   openedWindowIds = {};
 
+  // tab count for the recording indicator
+  frameCountForTab = {};
+
   currentUsedTabId = {};
   currentUsedWindowId = {};
   currentUsedFrameLocation = {};

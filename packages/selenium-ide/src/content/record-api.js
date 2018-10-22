@@ -16,8 +16,7 @@
  */
 
 import browser from "webextension-polyfill";
-import storage from "../neo/IO/storage";
-import { isProduction, calculateFrameIndex } from "./utils";
+import { calculateFrameIndex } from "./utils";
 
 let contentSideexTabId = -1;
 let frameLocation = "";
@@ -122,15 +121,9 @@ function findRecordingIndicator() {
   }
 }
 
-function storeRecordingIndicatorIndex(index) {
-  if (isProduction) {
-    storage.set({ recordingIndicatorIndex: index });
-  }
-}
-
 function addRecordingIndicator() {
   if (!findRecordingIndicator() && frameLocation === "root") {
-    storeRecordingIndicatorIndex(window.parent.frames.length);
+    browser.runtime.sendMessage({ setFrameNumberForTab: true, length: window.parent.frames.length });
     let recordingIndicator = window.document.createElement("iframe");
     recordingIndicator.src = browser.runtime.getURL("/indicator.html");
     recordingIndicator.id = "selenium-ide-indicator";
@@ -168,7 +161,6 @@ function addRecordingIndicator() {
 function removeRecordingIndicator() {
   let element = findRecordingIndicator();
   if (element) {
-    storeRecordingIndicatorIndex(-1);
     element.parentElement.removeChild(element);
   }
 }
@@ -198,8 +190,9 @@ function removeRecordingIndicator() {
     }
 
     if (recordingIndicator) {
-      const data = await storage.get("recordingIndicatorIndex");
-      recordingIndicatorIndex = data.recordingIndicatorIndex ? data.recordingIndicatorIndex : -1;
+      recordingIndicatorIndex = await browser.runtime.sendMessage({
+        requestFrameIndex: true
+      });
     }
 
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
