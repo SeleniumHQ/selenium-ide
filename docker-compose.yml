@@ -10,3 +10,5 @@ services:
     image: "selenium/standalone-chrome:3.11.0-antimony"
     ports:
       - "4444:4444"
+    volumes:
+      - "./packages/selenium-ide/build:/ext-build"
