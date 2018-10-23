@@ -16,6 +16,7 @@
     "pack:firefox": "cd packages/selenium-ide && yarn build-firefox",
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",
+    "test:ext": "jest --testMatch \"**/packages/selenium-ide/tests/**/*.spec.js\"",
     "test:runner": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
     "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/test/**/*.spec.js\"",
     "lint": "yarn lint:scripts && yarn lint:styles",
