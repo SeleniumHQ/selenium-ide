@@ -35,6 +35,16 @@ export default class Extension {
     if (this.browserName === Browsers.CHROME) {
       this.driver = await CreateChromeSession();
     }
+    const d = this.driver;
+    async function waitForIDEToOpen() {
+      const handles = await d.getAllWindowHandles();
+      if (handles.length < 2) {
+        await new Promise(res => {
+          setTimeout(res, 100);
+        }).then(waitForIDEToOpen);
+      }
+    }
+    await waitForIDEToOpen();
     // close the initial window the browser opens
     await this.driver.close();
     const handles = await this.driver.getAllWindowHandles();
