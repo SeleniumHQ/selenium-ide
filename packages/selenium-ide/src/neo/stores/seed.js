@@ -114,9 +114,6 @@ export default function seed(store, numberOfSuites = 0) {
 
   const executeScriptTest = store.createTestCase("execute script");
   executeScriptTest.createCommand(undefined, "executeScript", "return true", "blah");
-  executeScriptTest.createCommand(undefined, "echo", "${blah}");
-  executeScriptTest.createCommand(undefined, "verify", "blah", "false");
-  executeScriptTest.createCommand(undefined, "echo", "OK! This is a forced failure on verify to make sure the test proceeds. If you see this message it's a good thing.");
   executeScriptTest.createCommand(undefined, "assert", "blah", "true");
   executeScriptTest.createCommand(undefined, "executeScript", "true");
   executeScriptTest.createCommand(undefined, "echo", "${blah}");
