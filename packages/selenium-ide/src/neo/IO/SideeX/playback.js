@@ -173,7 +173,7 @@ async function finishPlaying() {
 }
 
 function catchPlayingError(message) {
-  if (executor.isReceivingEndError(message)) {
+  if (executor.isReceivingEndError && executor.isReceivingEndError(message)) {
     setTimeout(function() {
       playAfterConnectionFailed();
     }, 100);

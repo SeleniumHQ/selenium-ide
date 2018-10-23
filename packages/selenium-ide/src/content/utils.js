@@ -109,3 +109,5 @@ export function calculateFrameIndex(indicatorIndex, targetFrameIndex) {
   if (indicatorIndex < 0) return targetFrameIndex;
   return (indicatorIndex < targetFrameIndex) ? targetFrameIndex - 1 : targetFrameIndex;
 }
+
+export const isStaging = process.env.NODE_ENV === "staging";

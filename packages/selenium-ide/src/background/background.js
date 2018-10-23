@@ -16,6 +16,7 @@
  */
 
 import browser from "webextension-polyfill";
+import { isStaging } from "../content/utils";
 
 let ideWindowId = undefined;
 let master = {};
@@ -23,6 +24,8 @@ let clickEnabled = true;
 
 window.master = master;
 window.openedWindowIds = [];
+
+if (isStaging) openPanel({ windowId: 0 });
 
 function openPanel(tab) {
   let contentWindowId = tab.windowId;

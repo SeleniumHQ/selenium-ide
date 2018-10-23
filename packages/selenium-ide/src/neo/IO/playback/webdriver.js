@@ -113,6 +113,11 @@ export default class WebDriverExecutor {
     await this.driver.get(absolutifyUrl(url, this.baseUrl));
   }
 
+  async doSetWindowSize(widthXheight) {
+    const [width, height] = widthXheight.split("x");
+    await this.driver.manage().window().setSize(parseInt(width), parseInt(height));
+  }
+
   async doSelectFrame(locator) {
     const targetLocator = this.driver.switchTo();
     if (locator === "relative=top") {
@@ -253,7 +258,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertElementNotPresent(locator) {
-    const elements = this.driver.findElements(parseLocator(locator));
+    const elements = await this.driver.findElements(parseLocator(locator));
     if (elements.length) {
       throw new Error("Unexpected element was found in page");
     }
