@@ -377,7 +377,7 @@ class PlaybackState {
                   this.logger.error(result.message);
                   this.forceFailure();
                   if (!this.hasFinishedSuccessfully) {
-                    if (isStaging) this.failureMessages.push(result.message);
+                    this.failureMessages.push(result.message);
                     this.failures++;
                   }
                 }
@@ -440,7 +440,6 @@ class PlaybackState {
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
       if (!this.hasFinishedSuccessfully) {
-        this.failureMessages.push(this.currentRunningTest);
         this.failures++;
       }
     }
