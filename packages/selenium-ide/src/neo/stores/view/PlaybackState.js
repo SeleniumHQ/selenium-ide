@@ -67,6 +67,7 @@ class PlaybackState {
     this.logger = new Logger(Channels.PLAYBACK);
     this.lastSelectedView = undefined;
     this.filteredTests = [];
+    this.failureMessages = [];
 
     this.extCommand = new ExtCommand(WindowSession);
     this.browserDriver = new WebDriverExecutor();
@@ -377,7 +378,7 @@ class PlaybackState {
                   this.logger.error(result.message);
                   this.forceFailure();
                   if (!this.hasFinishedSuccessfully) {
-                    if (isStaging) console.log(result.message);
+                    if (isStaging) this.failureMessages.push(result.message);
                     this.failures++;
                   }
                 }
