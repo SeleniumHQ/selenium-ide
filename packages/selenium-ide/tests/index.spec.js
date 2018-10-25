@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { By } from "selenium-webdriver";
 import Extension from "./extension";
 
 jest.setTimeout(300000);
@@ -27,5 +28,16 @@ describe("Selenium IDE", () => {
   it("should load", async () => {
     ext = await new Extension().init();
     expect(await ext.driver.getTitle()).toBe("Selenium IDE - seed project");
+  });
+  it("should run the smoke suite", async () => {
+    ext = await new Extension().init();
+    const playAllButton = await ext.driver.findElement(By.css(".si-play-all"));
+    await playAllButton.click();
+    await ext.driver.wait(() => (
+      ext.driver.executeScript(() => (
+        !window._playbackState.isPlaying
+      ))
+    ));
+    expect(await ext.driver.executeScript(() => (window._playbackState.failures))).toBe(0);
   });
 });
