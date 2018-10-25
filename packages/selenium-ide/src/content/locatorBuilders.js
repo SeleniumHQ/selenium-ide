@@ -297,6 +297,10 @@ LocatorBuilders.add("name", function(e) {
   return null;
 });
 
+LocatorBuilders.add("css:finder", function(e) {
+  return "css=" + finder(e);
+});
+
 LocatorBuilders.add("css", function(e) {
   let current = e;
   let sub_path = this.getCSSSubPath(e);
@@ -305,10 +309,6 @@ LocatorBuilders.add("css", function(e) {
     current = current.parentNode;
   }
   return "css=" + sub_path;
-});
-
-LocatorBuilders.add("css:finder", function(e) {
-  return "css=" + finder(e);
 });
 
 LocatorBuilders.add("xpath:link", function(e) {
