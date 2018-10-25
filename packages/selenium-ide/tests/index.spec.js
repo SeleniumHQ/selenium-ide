@@ -38,8 +38,11 @@ describe("Selenium IDE", () => {
         !window._playbackState.isPlaying
       ))
     ));
-    console.log(await ext.driver.executeScript(() => (window._playbackState.failedTests)));
-    expect(await ext.driver.executeScript(() => (window._playbackState.failureMessages))).toEqual([]);
-    expect(await ext.driver.executeScript(() => (window._playbackState.failures))).toBe(0);
+    const failureCount = await ext.driver.executeScript(() => (window._playbackState.failures));
+    if (failureCount > 0) {
+      console.log(`FAILING TESTS: ${await ext.driver.executeScript(() => (window._playbackState.failedTests))}`);
+      console.log(`FAILURE MESSAGES: ${await ext.driver.executeScript(() => (window._playbackState.failureMessages))}`);
+    }
+    expect(failureCount).toBe(0);
   });
 });
