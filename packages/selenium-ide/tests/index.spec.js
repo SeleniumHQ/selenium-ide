@@ -38,7 +38,7 @@ describe("Selenium IDE", () => {
         !window._playbackState.isPlaying
       ))
     ));
-    expect(await ext.driver.executeScript(() => (window._playbackState.failuresMessage))).toEqual([]);
+    expect(await ext.driver.executeScript(() => (window._playbackState.failureMessages))).toEqual([]);
     expect(await ext.driver.executeScript(() => (window._playbackState.failures))).toBe(0);
   });
 });
