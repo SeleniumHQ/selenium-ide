@@ -31,7 +31,6 @@ import { play, playSingleCommand, resumePlayback } from "../../IO/SideeX/playbac
 import WindowSession from "../../IO/window-session";
 import ExtCommand from "../../IO/SideeX/ext-command";
 import WebDriverExecutor from "../../IO/playback/webdriver";
-import { isStaging } from "../../../content/utils";
 
 class PlaybackState {
   @observable runId = "";
@@ -441,6 +440,7 @@ class PlaybackState {
     if (!this.noStatisticsEffects) {
       this.finishedTestsCount++;
       if (!this.hasFinishedSuccessfully) {
+        this.failureMessages.push(this.currentRunningTest);
         this.failures++;
       }
     }
