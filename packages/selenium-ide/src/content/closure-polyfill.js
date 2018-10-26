@@ -17,6 +17,8 @@
 
 /*eslint-disable no-undef*/
 
+goog.global = window;
+
 goog.require("goog.debug");
 goog.require("goog.dom");
 goog.require("goog.dom.DomHelper");
@@ -51,10 +53,6 @@ bot.setWindow = function(win) {
 bot.getDocument = function() {
   return bot.window_.document;
 };
-// TODO: this is a temporary fix to make the atoms treat it as an extension
-// we should implement bot.userAgent.WEBEXTENSION instead to account for more use cases
-// than the old extension had to
-bot.userAgent.FIREFOX_EXTENSION = true;
 
 export var core = {};
 goog.require("core.firefox");
