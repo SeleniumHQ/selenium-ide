@@ -17,26 +17,27 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import TabBar from "../../components/TabBar";
-import LogList from "../../components/LogList";
-import ClearButton from "../../components/ActionButtons/Clear";
-import { output } from "../../stores/view/Logs";
-import PlaybackLogger from "../../side-effects/playback-logging";
-import "./style.css";
-import CommandReference from "../../components/CommandReference";
-import UiState from "../../stores/view/UiState";
 import { observer } from "mobx-react";
 import { observe } from "mobx";
+import TabBar from "../../components/TabBar";
+import LogList from "../../components/LogList";
+import VariableList from "../../components/VariableList";
+import ClearButton from "../../components/ActionButtons/Clear";
+import { output } from "../../stores/view/Logs";
+import PlaybackState from "../../stores/view/PlaybackState";
+import PlaybackLogger from "../../side-effects/playback-logging";
+import CommandReference from "../../components/CommandReference";
+import variables from "../../stores/view/Variables";
+import UiState from "../../stores/view/UiState";
 import { Commands } from "../../models/Command";
+import "./style.css";
 
 @observer
 export default class Console extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tab: "Log",
-      logsUnread: false
-    };
+    this.state = { tab: "Log", logsUnread: false };
+    this.tabClicked = this.tabClicked.bind(this);
     this.playbackLogger = new PlaybackLogger();
     this.loggerDisposer = observe(output.logs, () => {
       this.setState({ logsUnread: this.state.tab === "Log" ? false : true });
@@ -58,24 +59,32 @@ export default class Console extends React.Component {
       logsUnread: tab === "Log" ? false : this.state.logsUnread
     });
   }
-  tabClicked(){
-    this.props.restoreSize();
+  //create different object which stores name and read status (e.g., unread boolean)
+  tabClicked(tab) {
+    this.setState({
+      tab
+    });
+    if(this.props.restoreSize) this.props.restoreSize();
   }
   scroll(to) {
     this.viewport.scrollTo(0, to);
   }
   render() {
     const command = UiState.selectedCommand ? Commands.list.get(UiState.selectedCommand.command) : undefined;
-    const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }];
+    const tabs = [{ name: "Log", unread: this.state.logsUnread }, { name: "Reference", unread: false }, { name: "Variables", unread: false }];
+    const readOnly = (PlaybackState.isPlaying && !PlaybackState.paused);
     return (
       <footer className="console" style={{
         height: this.props.height ? `${this.props.height}px` : "initial"
       }}>
-        <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler}>
-          <ClearButton onClick={output.clear} />
+        <TabBar tabs={tabs} tabWidth={90} buttonsMargin={0} tabChanged={this.tabChangedHandler} tabClicked={this.tabClicked}>
+          {this.state.tab === "Log" && <ClearButton data-tip="<p>Clear log</p>" onClick={output.clear} /> }
+          {this.state.tab === "Variables" && <ClearButton data-tip="<p>Clear Variable</p>" onClick={variables.clearVariables} disabled={readOnly}/> }
+          {this.state.tab === "Reference" && <ClearButton onClick={output.clear} /> }
         </TabBar>
         <div className="viewport" ref={this.setViewportRef}>
           {this.state.tab === "Log" && <LogList output={output} scrollTo={this.scroll}/> }
+          {this.state.tab === "Variables" && <VariableList variables={variables} readOnly={readOnly}/> }
           {this.state.tab === "Reference" && <CommandReference currentCommand={command}/> }
         </div>
       </footer>

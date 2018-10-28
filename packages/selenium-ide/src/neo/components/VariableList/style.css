@@ -1,0 +1,28 @@
+.value-list {
+  text-align: left;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.variable .name,
+.variable .value {
+  float: left;
+  padding: 4px 5px;
+  width: 48%;
+  text-align: left;
+  border: 1px transparent solid;
+}
+
+.value-list li:last-child {
+  margin-bottom: 3px;
+}
+
+.value-list input[type="submit"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
+}

@@ -1,0 +1,39 @@
+.variable {
+  font-size: 12px;
+  word-break: break-all;
+  display: flex;
+}
+
+.variable .form-input {
+  float: left;
+  width: 48%;
+  text-align: left;
+  border: 1px transparent solid;
+}
+
+.variable:not(.value-header):hover {
+  background-color: #f3f3f3;
+}
+
+.variable .deleteBtn {
+  width: 4%;
+  opacity: 0;
+  height: 100%;
+}
+
+.variable:hover .deleteBtn {
+  opacity: 1;
+}
+
+.variable .form-input input,
+.variable .form-input input:disabled {
+  background-color: transparent;
+  border: 1px transparent solid;
+  margin: 0;
+}
+
+.variable .form-input input:focus {
+  border: 1px #4ea1ff solid;
+  outline: 0;
+  background-color: white;
+}

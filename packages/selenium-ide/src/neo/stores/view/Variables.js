@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from "mobx";
+import { action, observable, computed } from "mobx";
 
 class Variables {
   @observable.shallow storedVars = new Map();
@@ -39,6 +39,10 @@ class Variables {
 
   @action.bound clear() {
     this.storedVars.clear();
+  }
+
+  @computed get getEntries() {
+    return this.storedVars.entries().sort();
   }
 }
 

@@ -49,4 +49,13 @@ describe("<Console />", () => {
     const unreadLogNotification = container.querySelector(".log.unread");
     expect(unreadLogNotification).toBeInTheDocument();
   });
+  it("should display an unread log notification when viewing the variables tab)", async () => {
+    const { container } = renderIntoDocument(<Console />);
+    const variablesTab = container.querySelector(".variables");
+    fireEvent.click(variablesTab);
+    await waitForElement(() => container.querySelector(".value-list"));
+    Logger.log("blah");
+    const unreadLogNotification = container.querySelector(".log.unread");
+    expect(unreadLogNotification).toBeInTheDOM();
+  });
 });
