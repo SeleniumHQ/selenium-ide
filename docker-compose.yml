@@ -7,7 +7,7 @@ services:
     volumes:
       - "./tests/static:/usr/share/nginx/html:ro"
   selenium:
-    image: "selenium/standalone-chrome:3.11.0-antimony"
+    image: "selenium/standalone-chrome:3.14.0-krypton"
     ports:
       - "4444:4444"
     volumes:
