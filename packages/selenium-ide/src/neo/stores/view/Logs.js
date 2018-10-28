@@ -28,6 +28,18 @@ class Output {
   @action.bound clear() {
     this.logs.clear();
   }
+
+  print(std) {
+    if (!std) {
+      return this.logs.join("\r\n");
+    } else if (std === 1) {
+      return this.logs.filter((log) => (log.status === LogTypes.Success)).join("\r\n");
+    } else if (std === 2) {
+      return this.logs.filter((log) => (log.status !== LogTypes.Success)).join("\r\n");
+    } else {
+      throw new Error("No such standard");
+    }
+  }
 }
 
 export const output = new Output();
@@ -68,6 +80,10 @@ export class Logger {
   clearLogs() {
     output.clear();
   }
+
+  printLogs(std) {
+    return output.print(std);
+  }
 }
 
 export const Channels = {
@@ -75,4 +91,7 @@ export const Channels = {
   SYSTEM: "sys"
 };
 
-export default new Logger;
+if (!window._logger) {
+  window._logger = new Logger;
+}
+export default window._logger;

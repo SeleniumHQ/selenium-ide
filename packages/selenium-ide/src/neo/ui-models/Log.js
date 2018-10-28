@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from "mobx";
+import { action, observable, computed } from "mobx";
 import uuidv4 from "uuid/v4";
 
 export default class Log {
@@ -63,6 +63,14 @@ export default class Log {
 
   @action.bound isEqual(otherLog) {
     return (this.message === otherLog.message && this.commandId === otherLog.commandId);
+  }
+
+  @computed get _str() {
+    return `${this.index ? this.index + ". " : ""}${this.message}${this.description ? "\n\r  " + this.description : ""}`;
+  }
+
+  toString() {
+    return this._str;
   }
 }
 

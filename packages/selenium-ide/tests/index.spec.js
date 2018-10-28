@@ -40,8 +40,7 @@ describe("Selenium IDE", () => {
     ));
     const failureCount = await ext.driver.executeScript(() => (window._playbackState.failures));
     if (failureCount > 0) {
-      console.log(`FAILING TESTS: ${await ext.driver.executeScript(() => (window._playbackState.failedTests))}`);
-      console.log(`FAILURE MESSAGES: ${await ext.driver.executeScript(() => (window._playbackState.failureMessages))}`);
+      console.log(await ext.driver.executeScript(() => (window._logger.printLogs(2))));
     }
     expect(failureCount).toBe(0);
   });
