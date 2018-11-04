@@ -20,6 +20,7 @@ import goog, { bot } from "./closure-polyfill";
 import { Recorder, recorder, record } from "./record-api";
 import { attach } from "./prompt-recorder";
 import LocatorBuilders from "./locatorBuilders";
+import { isTest } from "./utils";
 
 export { record as record };
 export const locatorBuilders = new LocatorBuilders(window);
@@ -32,6 +33,31 @@ let focusTarget = null;
 let focusValue = null;
 let tempValue = null;
 let preventType = false;
+
+export function resetHelperVariables() {
+  typeTarget = undefined;
+  typeLock = 0;
+  focusTarget = null;
+  focusValue = null;
+  tempValue = null;
+  preventType = false;
+}
+
+export function _isValidForm(tagName, target) {
+  return (tagName == "form" && (target.hasAttribute("id") || target.hasAttribute("name")) && (!target.hasAttribute("onsubmit")));
+}
+
+export function _recordFormAction(target) {
+  const nextButton = target.querySelector("button:not([type='submit'])");
+  if (nextButton && !nextButton.hidden) {
+    record("click", locatorBuilders.buildAll(nextButton), "");
+  } else {
+    if (target.hasAttribute("id"))
+      record("submit", [["id=" + target.id, "id"]], "");
+    else if (target.hasAttribute("name"))
+      record("submit", [["name=" + target.name, "name"]], "");
+  }
+}
 
 Recorder.inputTypes = ["text", "password", "file", "datetime", "datetime-local", "date", "month", "time", "week", "number", "range", "email", "url", "search", "tel", "color"];
 Recorder.addEventHandler("type", "change", function(event) {
@@ -52,15 +78,9 @@ Recorder.addEventHandler("type", "change", function(event) {
             tempTarget = tempTarget.parentElement;
             formChk = tempTarget.tagName.toLowerCase();
           }
-          if (formChk == "form" && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
-            if (tempTarget.hasAttribute("id"))
-              record("submit", [
-                ["id=" + tempTarget.id, "id"]
-              ], "");
-            else if (tempTarget.hasAttribute("name"))
-              record("submit", [
-                ["name=" + tempTarget.name, "name"]
-              ], "");
+
+          if (_isValidForm(formChk, tempTarget)) {
+            _recordFormAction(tempTarget);
           } else
             record("sendKeys", locatorBuilders.buildAll(enterTarget), "${KEY_ENTER}");
           enterTarget = null;
@@ -77,14 +97,15 @@ Recorder.addEventHandler("type", "change", function(event) {
 });
 
 Recorder.addEventHandler("type", "input", function(event) {
-  //console.log(event.target);
   typeTarget = event.target;
 });
+
+function eventIsTrusted(event) { return isTest ? true : event.isTrusted; }
 
 // © Jie-Lin You, SideeX Team
 let preventClickTwice = false;
 Recorder.addEventHandler("clickAt", "click", function(event) {
-  if (event.button == 0 && !preventClick && event.isTrusted) {
+  if (event.button == 0 && !preventClick && eventIsTrusted(event)) {
     if (!preventClickTwice) {
       record("click", locatorBuilders.buildAll(event.target), "");
       preventClickTwice = true;
@@ -135,9 +156,6 @@ Recorder.addEventHandler("sendKeys", "keydown", function(event) {
         enterValue = enterTarget.value;
         let tempTarget = event.target.parentElement;
         let formChk = tempTarget.tagName.toLowerCase();
-        //console.log(tempValue + " " + enterTarget.value + " " + tabCheck + " " + enterTarget + " " + focusValue);
-        // console.log(focusValue);
-        // console.log(enterTarget.value);
         if (tempValue == enterTarget.value && tabCheck == enterTarget) {
           record("sendKeys", locatorBuilders.buildAll(enterTarget), "${KEY_ENTER}");
           enterTarget = null;
@@ -147,16 +165,13 @@ Recorder.addEventHandler("sendKeys", "keydown", function(event) {
             tempTarget = tempTarget.parentElement;
             formChk = tempTarget.tagName.toLowerCase();
           }
-          if (formChk == "form" && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
-            if (tempTarget.hasAttribute("id"))
-              record("submit", [["id=" + tempTarget.id]], "");
-            else if (tempTarget.hasAttribute("name"))
-              record("submit", [["name=" + tempTarget.name]], "");
+          if (_isValidForm(formChk, tempTarget)) {
+            _recordFormAction(tempTarget);
           } else
             record("sendKeys", locatorBuilders.buildAll(enterTarget), "${KEY_ENTER}");
           enterTarget = null;
         }
-        if (typeTarget.tagName && !preventType && (typeLock = 1)) {
+        if (typeTarget && typeTarget.tagName && !preventType && (typeLock = 1)) {
           // END
           tagName = typeTarget.tagName.toLowerCase();
           type = typeTarget.type;
@@ -172,15 +187,8 @@ Recorder.addEventHandler("sendKeys", "keydown", function(event) {
                   tempTarget = tempTarget.parentElement;
                   formChk = tempTarget.tagName.toLowerCase();
                 }
-                if (formChk == "form" && (tempTarget.hasAttribute("id") || tempTarget.hasAttribute("name")) && (!tempTarget.hasAttribute("onsubmit"))) {
-                  if (tempTarget.hasAttribute("id"))
-                    record("submit", [
-                      ["id=" + tempTarget.id, "id"]
-                    ], "");
-                  else if (tempTarget.hasAttribute("name"))
-                    record("submit", [
-                      ["name=" + tempTarget.name, "name"]
-                    ], "");
+                if (_isValidForm(formChk, tempTarget)) {
+                  _recordFormAction(tempTarget);
                 } else
                   record("sendKeys", locatorBuilders.buildAll(enterTarget), "${KEY_ENTER}");
                 enterTarget = null;
