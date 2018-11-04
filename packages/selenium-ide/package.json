@@ -29,6 +29,7 @@
     "closure-loader": "0.6.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
+    "dom-testing-library": "^3.12.0",
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
