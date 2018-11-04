@@ -17,6 +17,5 @@
 
 export default {
   silenceErrors: false,
-  skipStdLibEmitting: false
-};
-
+  skipStdLibEmitting: false,
+}

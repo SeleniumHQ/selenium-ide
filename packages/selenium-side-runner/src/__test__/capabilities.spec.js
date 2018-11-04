@@ -15,72 +15,75 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Capabilities from "../capabilities";
+import Capabilities from '../capabilities'
 
-describe("capabilities string parser", () => {
-  it("should parse capability key", () => {
-    const capabilities = "browserName=chrome";
+describe('capabilities string parser', () => {
+  it('should parse capability key', () => {
+    const capabilities = 'browserName=chrome'
     expect(Capabilities.parseString(capabilities)).toEqual({
-      browserName: "chrome"
-    });
-  });
-  it("should parse multiple capabilities keys", () => {
-    const capabilities = "browserName=chrome platform=MAC unexpectedAlertBehaviour=ignore";
+      browserName: 'chrome',
+    })
+  })
+  it('should parse multiple capabilities keys', () => {
+    const capabilities =
+      'browserName=chrome platform=MAC unexpectedAlertBehaviour=ignore'
     expect(Capabilities.parseString(capabilities)).toEqual({
-      browserName: "chrome",
-      platform: "MAC",
-      unexpectedAlertBehaviour: "ignore"
-    });
-  });
-  it("should parse quoted capability key", () => {
-    const capabilities = "browserName=\"chrome\"";
+      browserName: 'chrome',
+      platform: 'MAC',
+      unexpectedAlertBehaviour: 'ignore',
+    })
+  })
+  it('should parse quoted capability key', () => {
+    const capabilities = 'browserName="chrome"'
     expect(Capabilities.parseString(capabilities)).toEqual({
-      browserName: "chrome"
-    });
-  });
-  it("should parse multiword capability key", () => {
-    const capabilities = "binary=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\"";
+      browserName: 'chrome',
+    })
+  })
+  it('should parse multiword capability key', () => {
+    const capabilities =
+      'binary="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"'
     expect(Capabilities.parseString(capabilities)).toEqual({
-      binary: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-    });
-  });
-  it("should parse boolean capability key", () => {
-    const capabilities = "javascriptEnabled=false databaseEnabled=true";
+      binary: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    })
+  })
+  it('should parse boolean capability key', () => {
+    const capabilities = 'javascriptEnabled=false databaseEnabled=true'
     expect(Capabilities.parseString(capabilities)).toEqual({
       javascriptEnabled: false,
-      databaseEnabled: true
-    });
-  });
-  it("should parse integer capability key", () => {
-    const capabilities = "elementScrollBehavior=1";
+      databaseEnabled: true,
+    })
+  })
+  it('should parse integer capability key', () => {
+    const capabilities = 'elementScrollBehavior=1'
     expect(Capabilities.parseString(capabilities)).toEqual({
-      elementScrollBehavior: 1
-    });
-  });
-  it("should parse dot-notation capability key", () => {
-    const capabilities = "webdriver.remote.sessionid=someId";
+      elementScrollBehavior: 1,
+    })
+  })
+  it('should parse dot-notation capability key', () => {
+    const capabilities = 'webdriver.remote.sessionid=someId'
     expect(Capabilities.parseString(capabilities)).toEqual({
       webdriver: {
         remote: {
-          sessionid: "someId"
-        }
-      }
-    });
-  });
-  it("should parse dot-notation arrays", () => {
-    const capabilities = "chromeOptions.args=[disable-infobars]";
+          sessionid: 'someId',
+        },
+      },
+    })
+  })
+  it('should parse dot-notation arrays', () => {
+    const capabilities = 'chromeOptions.args=[disable-infobars]'
     expect(Capabilities.parseString(capabilities)).toEqual({
       chromeOptions: {
-        args: [ "disable-infobars" ]
-      }
-    });
-  });
-  it("should parse space separated capability keys", () => {
-    const capabilities = "browserName =chrome platform= MAC unexpectedAlertBehaviour = ignore";
+        args: ['disable-infobars'],
+      },
+    })
+  })
+  it('should parse space separated capability keys', () => {
+    const capabilities =
+      'browserName =chrome platform= MAC unexpectedAlertBehaviour = ignore'
     expect(Capabilities.parseString(capabilities)).toEqual({
-      browserName: "chrome",
-      platform: "MAC",
-      unexpectedAlertBehaviour: "ignore"
-    });
-  });
-});
+      browserName: 'chrome',
+      platform: 'MAC',
+      unexpectedAlertBehaviour: 'ignore',
+    })
+  })
+})

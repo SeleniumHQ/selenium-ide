@@ -16,22 +16,24 @@
 // under the License.
 
 export default class Region {
-  constructor(region = "") {
-    this.x = (region.match(/x:\s*(\d*)/) || [])[1];
-    this.y = (region.match(/y:\s*(\d*)/) || [])[1];
-    this.width = (region.match(/width:\s*(\d*)/) || [])[1];
-    this.height = (region.match(/height:\s*(\d*)/) || [])[1];
-    this.isValid = this.isValid.bind(this);
+  constructor(region = '') {
+    this.x = (region.match(/x:\s*(\d*)/) || [])[1]
+    this.y = (region.match(/y:\s*(\d*)/) || [])[1]
+    this.width = (region.match(/width:\s*(\d*)/) || [])[1]
+    this.height = (region.match(/height:\s*(\d*)/) || [])[1]
+    this.isValid = this.isValid.bind(this)
   }
   isValid() {
-    return !!(this.x + 1 && this.y + 1 && this.width + 1 && this.height + 1);
+    return !!(this.x + 1 && this.y + 1 && this.width + 1 && this.height + 1)
   }
   toJS() {
-    return this.isValid ? {
-      x: this.x,
-      y: this.y,
-      width: this.width,
-      height: this.height
-    } : undefined;
+    return this.isValid
+      ? {
+          x: this.x,
+          y: this.y,
+          width: this.width,
+          height: this.height,
+        }
+      : undefined
   }
 }

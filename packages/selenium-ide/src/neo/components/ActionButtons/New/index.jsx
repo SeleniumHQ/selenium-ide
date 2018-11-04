@@ -15,19 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
-import { parse } from "modifier-keys";
+import React from 'react'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
+import { parse } from 'modifier-keys'
 
 export default class NewButton extends React.Component {
   render() {
-    const props = { ...this.props };
+    const props = { ...this.props }
     return (
       <ActionButton
-        data-tip={`<p>Create new project <span style="color: #929292;padding-left: 5px;">${parse("n", { primaryKey: true, shiftKey: true })}</span></p>`}
+        data-tip={`<p>Create new project <span style="color: #929292;padding-left: 5px;">${parse(
+          'n',
+          { primaryKey: true, shiftKey: true }
+        )}</span></p>`}
         {...props}
-        className={classNames("si-new-project", this.props.className)} />// eslint-disable-line react/prop-types
-    );
+        className={classNames('si-new-project', this.props.className)}
+      /> // eslint-disable-line react/prop-types
+    )
   }
 }

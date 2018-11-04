@@ -15,23 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import './style.css'
 
 export default class TabBar extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      activeTab: props.defaultTab ? {
-        tab: props.defaultTab,
-        index: props.tabs.indexOf(props.defaultTab)
-      } : {
-        tab: props.tabs[0],
-        index: 0
-      }
-    };
+      activeTab: props.defaultTab
+        ? {
+            tab: props.defaultTab,
+            index: props.tabs.indexOf(props.defaultTab),
+          }
+        : {
+            tab: props.tabs[0],
+            index: 0,
+          },
+    }
   }
   static propTypes = {
     children: PropTypes.node,
@@ -40,41 +42,63 @@ export default class TabBar extends React.Component {
     tabWidth: PropTypes.number,
     buttonsMargin: PropTypes.number,
     tabChanged: PropTypes.func,
-    tabClicked: PropTypes.func
-  };
+    tabClicked: PropTypes.func,
+  }
   static defaultProps = {
     tabWidth: 80,
-    buttonsMargin: 5
-  };
+    buttonsMargin: 5,
+  }
   handleClick(tab, index) {
     if (tab !== this.state.activeTab.tab) {
       this.setState({
-        activeTab: { tab, index }
-      });
-      if (this.props.tabChanged) this.props.tabChanged(tab);
+        activeTab: { tab, index },
+      })
+      if (this.props.tabChanged) this.props.tabChanged(tab)
     }
-    if (this.props.tabClicked) this.props.tabClicked(tab);
+    if (this.props.tabClicked) this.props.tabClicked(tab)
   }
   render() {
     return (
       <div className="tabbar">
         <ul>
           {this.props.tabs.map((tab, index) => (
-            <li key={tab.name} style={{
-              width: `${this.props.tabWidth}px`
-            }}>
-              <a className={classNames(tab.name.toLowerCase(), { "unread": tab.unread })} href="#" onClick={this.handleClick.bind(this, tab.name, index)}>{tab.name}</a>
+            <li
+              key={tab.name}
+              style={{
+                width: `${this.props.tabWidth}px`,
+              }}
+            >
+              <a
+                className={classNames(tab.name.toLowerCase(), {
+                  unread: tab.unread,
+                })}
+                href="#"
+                onClick={this.handleClick.bind(this, tab.name, index)}
+              >
+                {tab.name}
+              </a>
             </li>
           ))}
-          {this.props.children ? <li className="buttons" style={{
-            marginRight: `${this.props.buttonsMargin}px`
-          }}>{this.props.children}</li> : null}
+          {this.props.children ? (
+            <li
+              className="buttons"
+              style={{
+                marginRight: `${this.props.buttonsMargin}px`,
+              }}
+            >
+              {this.props.children}
+            </li>
+          ) : null}
         </ul>
-        <div className="underline" style={{
-          transform: `translateX(${this.state.activeTab.index * this.props.tabWidth}px)`,
-          width: `${this.props.tabWidth}px`
-        }}></div>
+        <div
+          className="underline"
+          style={{
+            transform: `translateX(${this.state.activeTab.index *
+              this.props.tabWidth}px)`,
+            width: `${this.props.tabWidth}px`,
+          }}
+        />
       </div>
-    );
+    )
   }
 }

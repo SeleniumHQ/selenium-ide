@@ -15,16 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import uuidv4 from "uuid/v4";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import uuidv4 from 'uuid/v4'
+import './style.css'
 
 export default class Checkbox extends React.Component {
   constructor(props) {
-    super(props);
-    this.id = uuidv4();
+    super(props)
+    this.id = uuidv4()
   }
   static propTypes = {
     name: PropTypes.string,
@@ -33,13 +33,17 @@ export default class Checkbox extends React.Component {
     width: PropTypes.number,
     checked: PropTypes.bool,
     disabled: PropTypes.bool,
-    onChange: PropTypes.func.isRequired
-  };
+    onChange: PropTypes.func.isRequired,
+  }
   render() {
-    const checked = (this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false));
-    const disabled = (this.props.disabled || (this.props.hasOwnProperty("disabled") && this.props.disabled !== false));
+    const checked =
+      this.props.checked ||
+      (this.props.hasOwnProperty('checked') && this.props.checked !== false)
+    const disabled =
+      this.props.disabled ||
+      (this.props.hasOwnProperty('disabled') && this.props.disabled !== false)
     return (
-      <div className={classNames("control", { "form-input": this.props.form })}>
+      <div className={classNames('control', { 'form-input': this.props.form })}>
         <input
           key="checkbox"
           type="checkbox"
@@ -50,11 +54,20 @@ export default class Checkbox extends React.Component {
           disabled={disabled}
           onChange={this.props.onChange}
         />
-        {this.props.form ?
-          <label key="label" htmlFor={this.id}><span>{checked ? "✓" : ""}</span>{this.props.label}</label> :
-          <label key="label" htmlFor={this.id}><div style={{ width: `${this.props.width}px` }}>{this.props.label}</div><span>{checked ? "✓" : ""}</span></label>
-        }
+        {this.props.form ? (
+          <label key="label" htmlFor={this.id}>
+            <span>{checked ? '✓' : ''}</span>
+            {this.props.label}
+          </label>
+        ) : (
+          <label key="label" htmlFor={this.id}>
+            <div style={{ width: `${this.props.width}px` }}>
+              {this.props.label}
+            </div>
+            <span>{checked ? '✓' : ''}</span>
+          </label>
+        )}
       </div>
-    );
+    )
   }
 }

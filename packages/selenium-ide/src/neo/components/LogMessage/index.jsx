@@ -15,40 +15,53 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { observer } from "mobx-react";
-import classNames from "classnames";
-import Linkify from "react-linkify";
-import { LogTypes } from "../../ui-models/Log";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import classNames from 'classnames'
+import Linkify from 'react-linkify'
+import { LogTypes } from '../../ui-models/Log'
+import './style.css'
 
 @observer
 export default class LogMessage extends React.Component {
   render() {
-    let statusMessage = "";
+    let statusMessage = ''
     if (this.props.log.status && !this.props.log.isNotice) {
       if (this.props.log.status === LogTypes.Success) {
-        statusMessage = "OK";
+        statusMessage = 'OK'
       } else if (this.props.log.status === LogTypes.Failure) {
-        statusMessage = `Failed${this.props.log.description ? ":" : ""}`;
+        statusMessage = `Failed${this.props.log.description ? ':' : ''}`
       } else if (this.props.log.status === LogTypes.Undetermined) {
-        statusMessage = "Undetermined";
+        statusMessage = 'Undetermined'
       }
     }
     return (
-      <li className={classNames("log", this.props.log.status, { notice: this.props.log.isNotice })}>
-        <Linkify properties={{
-          target: "_blank"
-        }}>
-          {this.props.log.index && <span className="index">{this.props.log.index}.</span>}
-          <span className="message">{this.props.log.message}<span className="status"> {statusMessage}</span></span>
-          {this.props.log.description && <div className="details">{this.props.log.description}</div>}
+      <li
+        className={classNames('log', this.props.log.status, {
+          notice: this.props.log.isNotice,
+        })}
+      >
+        <Linkify
+          properties={{
+            target: '_blank',
+          }}
+        >
+          {this.props.log.index && (
+            <span className="index">{this.props.log.index}.</span>
+          )}
+          <span className="message">
+            {this.props.log.message}
+            <span className="status"> {statusMessage}</span>
+          </span>
+          {this.props.log.description && (
+            <div className="details">{this.props.log.description}</div>
+          )}
         </Linkify>
       </li>
-    );
+    )
   }
   static propTypes = {
-    log: PropTypes.object
-  };
+    log: PropTypes.object,
+  }
 }

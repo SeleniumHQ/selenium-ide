@@ -17,11 +17,14 @@
 
 export default class Route {
   constructor(verb, uri, cb) {
-    this.verb = verb && verb.toLowerCase();
-    this.uri = uri.toLowerCase();
-    this.run = cb;
+    this.verb = verb && verb.toLowerCase()
+    this.uri = uri.toLowerCase()
+    this.run = cb
   }
   test(verb, uri) {
-    return (!this.verb || verb.toLowerCase() === this.verb) && uri.toLowerCase() === this.uri;
+    return (
+      (!this.verb || verb.toLowerCase() === this.verb) &&
+      uri.toLowerCase() === this.uri
+    )
   }
 }

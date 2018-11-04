@@ -15,33 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from "../../models/Command";
+import { Commands, ArgTypes } from '../../models/Command'
 
 export default function migrate(project) {
-  let r = Object.assign({}, project);
-  r.tests = r.tests.map((test) => {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
-      commands: test.commands.map((c) => {
+      commands: test.commands.map(c => {
         if (Commands.list.has(c.command)) {
-          let newCmd = Object.assign({}, c);
-          const type = Commands.list.get(c.command);
+          let newCmd = Object.assign({}, c)
+          const type = Commands.list.get(c.command)
           if (type.target && type.target.name === ArgTypes.variableName.name) {
-            newCmd.target = migrateVariableName(newCmd.target);
+            newCmd.target = migrateVariableName(newCmd.target)
           }
           if (type.value && type.value.name === ArgTypes.variableName.name) {
-            newCmd.value = migrateVariableName(newCmd.value);
+            newCmd.value = migrateVariableName(newCmd.value)
           }
-          return newCmd;
+          return newCmd
         }
-        return c;
-      })
-    });
-  });
-  return r;
+        return c
+      }),
+    })
+  })
+  return r
 }
 
 function migrateVariableName(target) {
-  return target.replace(/\$\{(\w+)\}/g, "$1");
+  return target.replace(/\$\{(\w+)\}/g, '$1')
 }
 
-migrate.version = "1.1";
+migrate.version = '1.1'

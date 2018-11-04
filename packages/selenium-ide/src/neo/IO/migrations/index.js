@@ -15,26 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import pause from "./pause";
-import implicitLocators from "./implicit-locators";
-import scriptInterpolation from "./script-interpolation";
-import waitForCommands from "./wait-for-commands";
-import variableName from "./variable-name";
+import pause from './pause'
+import implicitLocators from './implicit-locators'
+import scriptInterpolation from './script-interpolation'
+import waitForCommands from './wait-for-commands'
+import variableName from './variable-name'
 
 export const migrators = {
   pause,
   implicitLocators,
   scriptInterpolation,
   waitForCommands,
-  variableName
-};
+  variableName,
+}
 
 export default Object.keys(migrators).reduce((migs, migName) => {
-  const mig = migrators[migName];
+  const mig = migrators[migName]
   if (!migs[mig.version]) {
-    migs[mig.version] = {};
+    migs[mig.version] = {}
   }
-  migs[mig.version][migName] = mig;
+  migs[mig.version][migName] = mig
 
-  return migs;
-}, {});
+  return migs
+}, {})

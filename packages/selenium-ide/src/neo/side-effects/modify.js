@@ -15,27 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { spy } from "mobx";
-import ProjectStore from "../stores/domain/ProjectStore";
-import Suite from "../models/Suite";
-import TestCase from "../models/TestCase";
-import Command from "../models/Command";
+import { spy } from 'mobx'
+import ProjectStore from '../stores/domain/ProjectStore'
+import Suite from '../models/Suite'
+import TestCase from '../models/TestCase'
+import Command from '../models/Command'
 
 function isDomainModel(object) {
-  return (object && (
-    object instanceof ProjectStore ||
-    object instanceof Suite ||
-    object instanceof TestCase ||
-    object instanceof Command
-  ));
+  return (
+    object &&
+    (object instanceof ProjectStore ||
+      object instanceof Suite ||
+      object instanceof TestCase ||
+      object instanceof Command)
+  )
 }
 
 export default function(project) {
-  let disposer = spy((event) => {
-    if (!project.modified && isDomainModel(event.object) && event.type === "action" && event.name !== "setModified") {
-      project.setModified(true);
+  let disposer = spy(event => {
+    if (
+      !project.modified &&
+      isDomainModel(event.object) &&
+      event.type === 'action' &&
+      event.name !== 'setModified'
+    ) {
+      project.setModified(true)
     } else if (project.modified) {
-      setTimeout(disposer, 0);
+      setTimeout(disposer, 0)
     }
-  });
+  })
 }

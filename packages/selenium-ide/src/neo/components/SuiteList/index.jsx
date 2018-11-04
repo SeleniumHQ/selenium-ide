@@ -15,21 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { observer } from "mobx-react";
-import { PropTypes as MobxPropTypes } from "mobx-react";
-import Suite from "../Suite";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import { PropTypes as MobxPropTypes } from 'mobx-react'
+import Suite from '../Suite'
+import './style.css'
 
-@observer export default class SuiteList extends React.Component {
+@observer
+export default class SuiteList extends React.Component {
   static propTypes = {
     suites: MobxPropTypes.arrayOrObservableArray.isRequired,
     selectTests: PropTypes.func.isRequired,
     rename: PropTypes.func.isRequired,
     editSettings: PropTypes.func.isRequired,
-    removeSuite: PropTypes.func.isRequired
-  };
+    removeSuite: PropTypes.func.isRequired,
+  }
   render() {
     return (
       <ul className="projects">
@@ -37,14 +38,20 @@ import "./style.css";
           <li key={suite.id}>
             <Suite
               suite={suite}
-              selectTests={() => {this.props.selectTests(suite);}}
+              selectTests={() => {
+                this.props.selectTests(suite)
+              }}
               rename={this.props.rename}
-              editSettings={() => {this.props.editSettings(suite);}}
-              remove={() => {this.props.removeSuite(suite);}}
+              editSettings={() => {
+                this.props.editSettings(suite)
+              }}
+              remove={() => {
+                this.props.removeSuite(suite)
+              }}
             />
           </li>
         ))}
       </ul>
-    );
+    )
   }
 }

@@ -15,110 +15,130 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import UiState from "../../stores/view/UiState";
-import PlaybackState from "../../stores/view/PlaybackState";
-import ModalState from "../../stores/view/ModalState";
-import WindowSession from "../../IO/window-session";
-import { TargetTypes } from "../../models/Command";
-import Region from "../../models/Region";
+import browser from 'webextension-polyfill'
+import UiState from '../../stores/view/UiState'
+import PlaybackState from '../../stores/view/PlaybackState'
+import ModalState from '../../stores/view/ModalState'
+import WindowSession from '../../IO/window-session'
+import { TargetTypes } from '../../models/Command'
+import Region from '../../models/Region'
 
 async function getActiveTabForTest() {
-  const identifier = WindowSession.currentUsedWindowId[UiState.selectedTest.test.id] ? UiState.selectedTest.test.id : WindowSession.generalUseIdentifier;
-  const lastUsedWindowId = WindowSession.currentUsedWindowId[identifier];
+  const identifier = WindowSession.currentUsedWindowId[
+    UiState.selectedTest.test.id
+  ]
+    ? UiState.selectedTest.test.id
+    : WindowSession.generalUseIdentifier
+  const lastUsedWindowId = WindowSession.currentUsedWindowId[identifier]
   const tabs = await browser.tabs.query({
     active: true,
-    windowId: lastUsedWindowId
-  });
-  return tabs[0];
+    windowId: lastUsedWindowId,
+  })
+  return tabs[0]
 }
 
 export async function find(target) {
   try {
-    const tab = await getActiveTabForTest();
-    const region = new Region(target);
+    const tab = await getActiveTabForTest()
+    const region = new Region(target)
     await browser.windows.update(tab.windowId, {
-      focused: true
-    });
+      focused: true,
+    })
     try {
       await browser.tabs.sendMessage(tab.id, {
         showElement: true,
-        targetValue: region.isValid() ? region.toJS() : target
-      });
-    } catch(e) {
+        targetValue: region.isValid() ? region.toJS() : target,
+      })
+    } catch (e) {
       ModalState.showAlert({
-        title: "Element not found",
+        title: 'Element not found',
         description: `Could not find ${target} on the page`,
-        confirmLabel: "Close"
-      });
+        confirmLabel: 'Close',
+      })
     }
-  } catch(e) {
-    showNoTabAvailableDialog();
+  } catch (e) {
+    showNoTabAvailableDialog()
   }
 }
 
 export async function select(type, rect, selectNext = false) {
-  UiState.setSelectingTarget(!UiState.isSelectingTarget);
+  UiState.setSelectingTarget(!UiState.isSelectingTarget)
   try {
-    const tab = await getActiveTabForTest();
+    const tab = await getActiveTabForTest()
     if (!UiState.isSelectingTarget) {
-      browser.tabs.sendMessage(tab.id, { selectMode: true, selecting: false }).catch(() => {});
+      browser.tabs
+        .sendMessage(tab.id, { selectMode: true, selecting: false })
+        .catch(() => {})
     } else {
-      PlaybackState.stopPlaying();
+      PlaybackState.stopPlaying()
       await browser.windows.update(tab.windowId, {
-        focused: true
-      });
+        focused: true,
+      })
       if (type === TargetTypes.LOCATOR) {
-        await browser.tabs.sendMessage(tab.id, { selectMode: true, selecting: true, element: true, selectNext });
+        await browser.tabs.sendMessage(tab.id, {
+          selectMode: true,
+          selecting: true,
+          element: true,
+          selectNext,
+        })
       } else if (type === TargetTypes.REGION) {
-        await browser.tabs.sendMessage(tab.id, { selectMode: true, selecting: true, region: true, rect: new Region(rect).toJS(), selectNext });
+        await browser.tabs.sendMessage(tab.id, {
+          selectMode: true,
+          selecting: true,
+          region: true,
+          rect: new Region(rect).toJS(),
+          selectNext,
+        })
       }
     }
-  } catch(e) {
-    UiState.setSelectingTarget(false);
-    showNoTabAvailableDialog();
+  } catch (e) {
+    UiState.setSelectingTarget(false)
+    showNoTabAvailableDialog()
   }
 }
 
 function selectTarget(target) {
-  UiState.setSelectingTarget(false);
+  UiState.setSelectingTarget(false)
   if (UiState.selectedCommand) {
-    UiState.selectedCommand.setTarget(target[0][0]);
-    UiState.selectedCommand.setTargets(target);
+    UiState.selectedCommand.setTarget(target[0][0])
+    UiState.selectedCommand.setTargets(target)
   } else if (UiState.selectedTest.test) {
-    const command = UiState.selectedTest.test.createCommand();
-    command.setTarget(target[0][0]);
-    command.setTargets(target);
+    const command = UiState.selectedTest.test.createCommand()
+    command.setTarget(target[0][0])
+    command.setTargets(target)
   }
 }
 
 function endSelection(tabId) {
-  UiState.setSelectingTarget(false);
-  browser.tabs.sendMessage(tabId, { selectMode: true, selecting: false }).catch(() => {});
+  UiState.setSelectingTarget(false)
+  browser.tabs
+    .sendMessage(tabId, { selectMode: true, selecting: false })
+    .catch(() => {})
 }
 
 function handleContentScriptResponse(message, sender, sendResponse) {
   if (message.selectTarget) {
-    selectTarget(message.target);
-    sendResponse(true);
+    selectTarget(message.target)
+    sendResponse(true)
   }
   if (message.cancelSelectTarget) {
-    endSelection(sender.tab.id);
-    sendResponse(true);
+    endSelection(sender.tab.id)
+    sendResponse(true)
   }
   if (message.selectNext) {
-    UiState.selectNextCommand();
+    UiState.selectNextCommand()
   }
 }
 
 function showNoTabAvailableDialog() {
   ModalState.showAlert({
-    title: "Tab not found",
-    description: "No tab is available for this test case, either continue recording it, or play it back.",
-    confirmLabel: "Close"
-  });
+    title: 'Tab not found',
+    description:
+      'No tab is available for this test case, either continue recording it, or play it back.',
+    confirmLabel: 'Close',
+  })
 }
 
 if (browser && browser.runtime && browser.runtime.onMessage) {
-  browser.runtime.onMessage.addListener(handleContentScriptResponse);
+  browser.runtime.onMessage.addListener(handleContentScriptResponse)
 }

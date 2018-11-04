@@ -15,112 +15,118 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import { Logger, Channels, output } from "../../stores/view/Logs";
-import variables from "../../stores/view/Variables";
+import browser from 'webextension-polyfill'
+import { Logger, Channels, output } from '../../stores/view/Logs'
+import variables from '../../stores/view/Variables'
 
-const logger = new Logger(Channels.PLAYBACK);
-const nbsp = String.fromCharCode(160);
+const logger = new Logger(Channels.PLAYBACK)
+const nbsp = String.fromCharCode(160)
 
 export function xlateArgument(value) {
-  value = value.replace(/^\s+/, "");
-  value = value.replace(/\s+$/, "");
-  let r2;
-  let parts = [];
+  value = value.replace(/^\s+/, '')
+  value = value.replace(/\s+$/, '')
+  let r2
+  let parts = []
   if (/\$\{/.exec(value)) {
-    const regexp = /\$\{(.*?)\}/g;
-    let lastIndex = 0;
+    const regexp = /\$\{(.*?)\}/g
+    let lastIndex = 0
     while ((r2 = regexp.exec(value))) {
       if (variables.get(r2[1])) {
         if (r2.index - lastIndex > 0) {
-          parts.push(string(value.substring(lastIndex, r2.index)));
+          parts.push(string(value.substring(lastIndex, r2.index)))
         }
-        parts.push(variables.get(r2[1]));
-        lastIndex = regexp.lastIndex;
-      } else if (r2[1] == "nbsp") {
+        parts.push(variables.get(r2[1]))
+        lastIndex = regexp.lastIndex
+      } else if (r2[1] == 'nbsp') {
         if (r2.index - lastIndex > 0) {
-          parts.push(variables.get(string(value.substring(lastIndex, r2.index))));
+          parts.push(
+            variables.get(string(value.substring(lastIndex, r2.index)))
+          )
         }
-        parts.push(nbsp);
-        lastIndex = regexp.lastIndex;
+        parts.push(nbsp)
+        lastIndex = regexp.lastIndex
       }
     }
     if (lastIndex < value.length) {
-      parts.push(string(value.substring(lastIndex, value.length)));
+      parts.push(string(value.substring(lastIndex, value.length)))
     }
-    return parts.join("");
+    return parts.join('')
   } else {
-    return string(value);
+    return string(value)
   }
 }
 
 export function interpolateScript(script) {
-  let value = script.replace(/^\s+/, "").replace(/\s+$/, "");
-  let r2;
-  let parts = [];
-  const variablesUsed = {};
-  const argv = [];
-  let argl = 0; // length of arguments
+  let value = script.replace(/^\s+/, '').replace(/\s+$/, '')
+  let r2
+  let parts = []
+  const variablesUsed = {}
+  const argv = []
+  let argl = 0 // length of arguments
   if (/\$\{/.exec(value)) {
-    const regexp = /\$\{(.*?)\}/g;
-    let lastIndex = 0;
+    const regexp = /\$\{(.*?)\}/g
+    let lastIndex = 0
     while ((r2 = regexp.exec(value))) {
-      const variableName = r2[1];
+      const variableName = r2[1]
       if (variables.has(variableName)) {
         if (r2.index - lastIndex > 0) {
-          parts.push(string(value.substring(lastIndex, r2.index)));
+          parts.push(string(value.substring(lastIndex, r2.index)))
         }
         if (!variablesUsed.hasOwnProperty(variableName)) {
-          variablesUsed[variableName] = argl;
-          argv.push(variables.get(variableName));
-          argl++;
+          variablesUsed[variableName] = argl
+          argv.push(variables.get(variableName))
+          argl++
         }
-        parts.push(`arguments[${variablesUsed[variableName]}]`);
-        lastIndex = regexp.lastIndex;
+        parts.push(`arguments[${variablesUsed[variableName]}]`)
+        lastIndex = regexp.lastIndex
       }
     }
     if (lastIndex < value.length) {
-      parts.push(string(value.substring(lastIndex, value.length)));
+      parts.push(string(value.substring(lastIndex, value.length)))
     }
     return {
-      script: parts.join(""),
-      argv
-    };
+      script: parts.join(''),
+      argv,
+    }
   } else {
     return {
       script: string(value),
-      argv
-    };
+      argv,
+    }
   }
 }
 
 function string(value) {
   if (value != null) {
-    value = value.replace(/\\\\/g, "\\");
-    value = value.replace(/\\r/g, "\r");
-    value = value.replace(/\\n/g, "\n");
-    return value;
+    value = value.replace(/\\\\/g, '\\')
+    value = value.replace(/\\r/g, '\r')
+    value = value.replace(/\\n/g, '\n')
+    return value
   } else {
-    return "";
+    return ''
   }
 }
 
-function handleFormatCommand(message, sender, sendResponse) {
+function handleFormatCommand(message, _sender, sendResponse) {
   if (message.getVar) {
-    return sendResponse(variables.get(message.variable));
+    return sendResponse(variables.get(message.variable))
   } else if (message.storeVar) {
-    variables.set(message.storeVar, message.storeStr);
-    return sendResponse(true);
+    variables.set(message.storeVar, message.storeStr)
+    return sendResponse(true)
   } else if (message.echoStr) {
-    logger.log("echo: " + message.echoStr);
-    return sendResponse(true);
-  } else if (message.log && output.logs[output.logs.length - 1].message.indexOf(message.log.message) === -1) {
+    logger.log('echo: ' + message.echoStr)
+    return sendResponse(true)
+  } else if (
+    message.log &&
+    output.logs[output.logs.length - 1].message.indexOf(message.log.message) ===
+      -1
+  ) {
     // this check may be dangerous, especially if something else is bombarding the logs
-    logger[message.log.type || "log"](message.log.message);
-    return sendResponse(true);
+    logger[message.log.type || 'log'](message.log.message)
+    return sendResponse(true)
   }
 }
 
 try {
-  browser.runtime.onMessage.addListener(handleFormatCommand);
+  browser.runtime.onMessage.addListener(handleFormatCommand)
 } catch(e) {} // eslint-disable-line

@@ -15,22 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ControlFlowCommandNames } from "../../models/Command";
+import { ControlFlowCommandNames } from '../../models/Command'
 
 export function deriveCommandLevels(commandStack) {
-  let level = 0;
-  let levels = [];
+  let level = 0
+  let levels = []
   commandStack.forEach(function(command) {
     if (levelCommand[command.command]) {
-      let result = levelCommand[command.command](command, level, levels);
-      level = result.level;
-      levels = result.levels;
+      let result = levelCommand[command.command](command, level, levels)
+      level = result.level
+      levels = result.levels
     } else {
-      let result = levelDefault(command, level, levels);
-      levels = result.levels;
+      let result = levelDefault(command, level, levels)
+      levels = result.levels
     }
-  });
-  return levels;
+  })
+  return levels
 }
 
 let levelCommand = {
@@ -41,33 +41,33 @@ let levelCommand = {
   [ControlFlowCommandNames.if]: levelBranchOpen,
   [ControlFlowCommandNames.repeatIf]: levelBranchEnd,
   [ControlFlowCommandNames.times]: levelBranchOpen,
-  [ControlFlowCommandNames.while]: levelBranchOpen
-};
-
-function levelDefault (command, level, _levels) {
-  let levels = [ ..._levels ];
-  levels.push(level);
-  return { level, levels };
+  [ControlFlowCommandNames.while]: levelBranchOpen,
 }
 
-function levelBranchOpen (command, level, _levels) {
-  let levels = [ ..._levels ];
-  levels.push(level);
-  level++;
-  return { level, levels };
+function levelDefault(_command, level, _levels) {
+  let levels = [..._levels]
+  levels.push(level)
+  return { level, levels }
 }
 
-function levelBranchEnd (command, level, _levels) {
-  let levels = [ ..._levels ];
-  level--;
-  levels.push(level);
-  return { level, levels };
+function levelBranchOpen(_command, level, _levels) {
+  let levels = [..._levels]
+  levels.push(level)
+  level++
+  return { level, levels }
 }
 
-function levelElse (command, level, _levels) {
-  let levels = [ ..._levels ];
-  level--;
-  levels.push(level);
-  level++;
-  return { level, levels };
+function levelBranchEnd(_command, level, _levels) {
+  let levels = [..._levels]
+  level--
+  levels.push(level)
+  return { level, levels }
+}
+
+function levelElse(_command, level, _levels) {
+  let levels = [..._levels]
+  level--
+  levels.push(level)
+  level++
+  return { level, levels }
 }

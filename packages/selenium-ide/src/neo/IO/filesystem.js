@@ -15,167 +15,193 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import parser from "ua-parser-js";
-import { js_beautify as beautify } from "js-beautify";
-import UpgradeProject from "./migrate";
-import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
-import TestCase from "../models/TestCase";
-import UiState from "../stores/view/UiState";
-import PlaybackState from "../stores/view/PlaybackState";
-import ModalState from "../stores/view/ModalState";
-import Selianize, { ParseError } from "selianize";
-import Manager from "../../plugin/manager";
-import chromeGetFile from "./filesystem/chrome";
-import firefoxGetFile from "./filesystem/firefox";
+import browser from 'webextension-polyfill'
+import parser from 'ua-parser-js'
+import { js_beautify as beautify } from 'js-beautify'
+import UpgradeProject from './migrate'
+import {
+  verifyFile,
+  FileTypes,
+  migrateTestCase,
+  migrateProject,
+  migrateUrls,
+} from './legacy/migrate'
+import TestCase from '../models/TestCase'
+import UiState from '../stores/view/UiState'
+import PlaybackState from '../stores/view/PlaybackState'
+import ModalState from '../stores/view/ModalState'
+import Selianize, { ParseError } from 'selianize'
+import Manager from '../../plugin/manager'
+import chromeGetFile from './filesystem/chrome'
+import firefoxGetFile from './filesystem/firefox'
 
-export const supportedFileFormats = ".side, text/html";
-const parsedUA = parser(window.navigator.userAgent);
+export const supportedFileFormats = '.side, text/html'
+const parsedUA = parser(window.navigator.userAgent)
 
 export function getFile(path) {
-  const browserName = parsedUA.browser.name;
+  const browserName = parsedUA.browser.name
   return (() => {
-    if (browserName === "Chrome") {
-      return chromeGetFile(path);
-    } else if (browserName === "Firefox") {
-      return firefoxGetFile(path);
+    if (browserName === 'Chrome') {
+      return chromeGetFile(path)
+    } else if (browserName === 'Firefox') {
+      return firefoxGetFile(path)
     } else {
-      return Promise.reject(new Error("Operation is not supported in this browser"));
+      return Promise.reject(
+        new Error('Operation is not supported in this browser')
+      )
     }
   })().then(blob => {
-    return new Promise((res) => {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        res(reader.result);
-      });
-      reader.readAsDataURL(blob);
-    });
-  });
+    return new Promise(res => {
+      const reader = new FileReader()
+      reader.addEventListener('load', () => {
+        res(reader.result)
+      })
+      reader.readAsDataURL(blob)
+    })
+  })
 }
 
 export function loadAsText(blob) {
-  return new Promise((res) => {
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      res(e.target.result);
-    };
+  return new Promise(res => {
+    const fileReader = new FileReader()
+    fileReader.onload = e => {
+      res(e.target.result)
+    }
 
-    fileReader.readAsText(blob);
-  });
+    fileReader.readAsText(blob)
+  })
 }
 
 export function saveProject(_project) {
-  const project = _project.toJS();
-  downloadProject(project);
-  UiState.saved();
+  const project = _project.toJS()
+  downloadProject(project)
+  UiState.saved()
 }
 
 function downloadProject(project) {
   return exportProject(project).then(snapshot => {
     if (snapshot) {
-      project.snapshot = snapshot;
-      Object.assign(project, Manager.emitDependencies());
+      project.snapshot = snapshot
+      Object.assign(project, Manager.emitDependencies())
     }
     return browser.downloads.download({
-      filename: project.name + ".side",
-      url: createBlob("application/json", beautify(JSON.stringify(project), { indent_size: 2 })),
+      filename: project.name + '.side',
+      url: createBlob(
+        'application/json',
+        beautify(JSON.stringify(project), { indent_size: 2 })
+      ),
       saveAs: true,
-      conflictAction: "overwrite"
-    });
-  });
+      conflictAction: 'overwrite',
+    })
+  })
 }
 
 function exportProject(project) {
   return Manager.validatePluginExport(project).then(() => {
-    return Selianize(project, { silenceErrors: true, skipStdLibEmitting: true }).catch(err => {
-      const markdown = ParseError(err && err.message || err);
-      ModalState.showAlert({
-        title: "Error saving project",
-        description: markdown,
-        confirmLabel: "Download log",
-        cancelLabel: "Close"
-      }, (choseDownload) => {
-        if (choseDownload) {
-          browser.downloads.download({
-            filename: project.name + "-logs.md",
-            url: createBlob("text/markdown", markdown),
-            saveAs: true,
-            conflictAction: "overwrite"
-          });
+    return Selianize(project, {
+      silenceErrors: true,
+      skipStdLibEmitting: true,
+    }).catch(err => {
+      const markdown = ParseError((err && err.message) || err)
+      ModalState.showAlert(
+        {
+          title: 'Error saving project',
+          description: markdown,
+          confirmLabel: 'Download log',
+          cancelLabel: 'Close',
+        },
+        choseDownload => {
+          if (choseDownload) {
+            browser.downloads.download({
+              filename: project.name + '-logs.md',
+              url: createBlob('text/markdown', markdown),
+              saveAs: true,
+              conflictAction: 'overwrite',
+            })
+          }
         }
-      });
-      return Promise.reject();
-    });
-  });
+      )
+      return Promise.reject()
+    })
+  })
 }
 
-let previousFile = null;
-function createBlob(mimeType, data) {
+let previousFile = null
+function createBlob(_mimeType, data) {
   const blob = new Blob([data], {
-    type: "text/plain"
-  });
+    type: 'text/plain',
+  })
   // If we are replacing a previously generated file we need to
   // manually revoke the object URL to avoid memory leaks.
   if (previousFile !== null) {
-    window.URL.revokeObjectURL(previousFile);
+    window.URL.revokeObjectURL(previousFile)
   }
-  previousFile = window.URL.createObjectURL(blob);
-  return previousFile;
+  previousFile = window.URL.createObjectURL(blob)
+  return previousFile
 }
 
 export function loadProject(project, file) {
   function displayError(error) {
     ModalState.showAlert({
-      title: "Error migrating project",
+      title: 'Error migrating project',
       description: error.message,
-      confirmLabel: "Close"
-    });
+      confirmLabel: 'Close',
+    })
   }
-  loadAsText(file).then((contents) => {
+  loadAsText(file).then(contents => {
     if (/\.side$/.test(file.name)) {
-      loadJSProject(project, UpgradeProject(JSON.parse(contents)));
+      loadJSProject(project, UpgradeProject(JSON.parse(contents)))
     } else {
       try {
-        const type = verifyFile(contents);
+        const type = verifyFile(contents)
         if (type === FileTypes.Suite) {
-          ModalState.importSuite(contents, (files) => {
-            loadJSProject(project, migrateProject(files));
-          });
+          ModalState.importSuite(contents, files => {
+            loadJSProject(project, migrateProject(files))
+          })
         } else if (type === FileTypes.TestCase) {
-          const { test, baseUrl } = migrateTestCase(contents);
+          const { test, baseUrl } = migrateTestCase(contents)
           if (!project.urls.includes(baseUrl)) {
-            ModalState.showAlert({
-              title: "Migrate test case",
-              description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
-              confirmLabel: "Migrate",
-              cancelLabel: "Discard"
-            }, (choseMigration) => {
-              if (choseMigration) {
-                UiState.selectTest(project.addTestCase(TestCase.fromJS(migrateUrls(test, baseUrl))));
+            ModalState.showAlert(
+              {
+                title: 'Migrate test case',
+                description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
+                confirmLabel: 'Migrate',
+                cancelLabel: 'Discard',
+              },
+              choseMigration => {
+                if (choseMigration) {
+                  UiState.selectTest(
+                    project.addTestCase(
+                      TestCase.fromJS(migrateUrls(test, baseUrl))
+                    )
+                  )
+                }
               }
-            });
+            )
           } else {
-            UiState.selectTest(project.addTestCase(TestCase.fromJS(test, baseUrl)));
+            UiState.selectTest(
+              project.addTestCase(TestCase.fromJS(test, baseUrl))
+            )
           }
         }
       } catch (error) {
-        displayError(error);
+        displayError(error)
       }
     }
-  });
+  })
 }
 
 export function loadJSProject(project, data) {
-  UiState.changeView("Tests");
-  PlaybackState.clearPlayingCache();
-  UiState.clearViewCache();
-  project.fromJS(data);
-  UiState.projectChanged();
+  UiState.changeView('Tests')
+  PlaybackState.clearPlayingCache()
+  UiState.clearViewCache()
+  project.fromJS(data)
+  UiState.projectChanged()
   Manager.emitMessage({
-    action: "event",
-    event: "projectLoaded",
+    action: 'event',
+    event: 'projectLoaded',
     options: {
-      projectName: project.name
-    }
-  });
+      projectName: project.name,
+    },
+  })
 }

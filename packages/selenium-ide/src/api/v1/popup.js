@@ -15,20 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Router from "../../router";
-import Manager from "../../plugin/manager";
-import ModalState from "../../neo/stores/view/ModalState";
+import Router from '../../router'
+import Manager from '../../plugin/manager'
+import ModalState from '../../neo/stores/view/ModalState'
 
-const router = new Router();
+const router = new Router()
 
-router.post("/alert", (req, res) => {
-  const plugin = Manager.getPlugin(req.sender);
-  ModalState.showAlert({
-    title: `${plugin.name} says`,
-    description: req.message,
-    cancelLabel: req.cancel,
-    confirmLabel: req.confirm
-  }, res);
-});
+router.post('/alert', (req, res) => {
+  const plugin = Manager.getPlugin(req.sender)
+  ModalState.showAlert(
+    {
+      title: `${plugin.name} says`,
+      description: req.message,
+      cancelLabel: req.cancel,
+      confirmLabel: req.confirm,
+    },
+    res
+  )
+})
 
-export default router;
+export default router

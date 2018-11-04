@@ -15,30 +15,30 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { observer } from "mobx-react";
-import LogMessage from "../LogMessage";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import LogMessage from '../LogMessage'
+import './style.css'
 
 @observer
 export default class LogList extends React.Component {
   componentDidUpdate() {
-    this.props.scrollTo(10000);
+    this.props.scrollTo(10000)
   }
   render() {
     return (
       <div className="logs">
         <ul>
-          {this.props.output.logs.map((log) => (
+          {this.props.output.logs.map(log => (
             <LogMessage key={log.id} log={log} />
           ))}
         </ul>
       </div>
-    );
+    )
   }
   static propTypes = {
     output: PropTypes.object,
-    scrollTo: PropTypes.func
-  };
+    scrollTo: PropTypes.func,
+  }
 }

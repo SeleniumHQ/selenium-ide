@@ -15,15 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import WindowSession from "../window-session";
+import browser from 'webextension-polyfill'
+import WindowSession from '../window-session'
 
 if (browser && browser.runtime && browser.runtime.onMessage) {
-  browser.runtime.onMessage.addListener(function contentWindowIdListener(message, sender, sendResponse) {
-    if (message.selfWindowId != undefined && message.commWindowId != undefined) {
-      WindowSession.ideWindowId = message.selfWindowId;
-      browser.runtime.onMessage.removeListener(contentWindowIdListener);
-      sendResponse(true);
+  browser.runtime.onMessage.addListener(function contentWindowIdListener(
+    message,
+    _sender,
+    sendResponse
+  ) {
+    if (
+      message.selfWindowId != undefined &&
+      message.commWindowId != undefined
+    ) {
+      WindowSession.ideWindowId = message.selfWindowId
+      browser.runtime.onMessage.removeListener(contentWindowIdListener)
+      sendResponse(true)
     }
-  });
+  })
 }

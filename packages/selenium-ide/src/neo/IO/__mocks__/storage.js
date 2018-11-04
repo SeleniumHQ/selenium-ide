@@ -15,18 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const storage = {};
+const storage = {}
 
 export function get(...argv) {
-  return Promise.resolve(argv.reduce((data, key) => {
-    data[key] = storage[key];
-    return data;
-  }, {}));
+  return Promise.resolve(
+    argv.reduce((data, key) => {
+      data[key] = storage[key]
+      return data
+    }, {})
+  )
 }
 
 export function set(keys) {
-  Object.assign(storage, keys);
-  return Promise.resolve();
+  Object.assign(storage, keys)
+  return Promise.resolve()
 }
 
-export default { get, set };
+export default { get, set }

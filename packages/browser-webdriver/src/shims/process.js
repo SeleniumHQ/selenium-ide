@@ -32,10 +32,10 @@ process.versions = JSON.parse(`
     "cldr": "33.0",
     "tz": "2018c"
 }
-`);
+`)
 
-process.binding = (name) => {
-  if (name === "constants") {
+process.binding = name => {
+  if (name === 'constants') {
     return JSON.parse(`
     {
     "os": {
@@ -324,6 +324,6 @@ process.binding = (name) => {
         "Z_DEFAULT_LEVEL": -1
     }
     }
-    `);
+    `)
   }
-};
+}

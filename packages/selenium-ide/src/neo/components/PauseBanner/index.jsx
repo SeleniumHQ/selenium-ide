@@ -15,22 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import { observer } from "mobx-react";
-import PlaybackState from "../../stores/view/PlaybackState";
-import "./style.css";
+import React from 'react'
+import { observer } from 'mobx-react'
+import PlaybackState from '../../stores/view/PlaybackState'
+import './style.css'
 
 @observer
 export default class PauseBanner extends React.Component {
   render() {
-    return (
-      (PlaybackState.isPlaying && PlaybackState.paused) ? (
-        <div className="pause-banner">
-          <div className="debug-toolbar">
-            <span>Paused in debugger</span>
-          </div>
+    return PlaybackState.isPlaying && PlaybackState.paused ? (
+      <div className="pause-banner">
+        <div className="debug-toolbar">
+          <span>Paused in debugger</span>
         </div>
-      ) : <div></div>
-    );
+      </div>
+    ) : (
+      <div />
+    )
   }
 }

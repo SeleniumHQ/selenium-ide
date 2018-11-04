@@ -15,33 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ModalState from "../../stores/view/ModalState.js";
-import storage from "../../IO/storage";
-import changelog from "../../../../Changelog.md";
-import project from "../../../../package.json";
+import React from 'react'
+import ModalState from '../../stores/view/ModalState.js'
+import storage from '../../IO/storage'
+import changelog from '../../../../Changelog.md'
+import project from '../../../../package.json'
 
 export default class Changelog extends React.Component {
   constructor(props) {
-    super(props);
-    storage.get("updated").then(data => {
+    super(props)
+    storage.get('updated').then(data => {
       if (data.updated) {
         // TODO: menu entry-indication
         storage.set({
-          updated: false
-        });
+          updated: false,
+        })
       }
-    });
+    })
   }
 
   render() {
-    return null;
+    return null
   }
 }
 
 export function showChangelog() {
   ModalState.showAlert({
     title: `What's new: ${project.version}`,
-    description: changelog
-  });
+    description: changelog,
+  })
 }

@@ -16,49 +16,49 @@
 // under the License.
 
 export function parseString(input) {
-  const capabilities = {};
+  const capabilities = {}
 
   matchStringPairs(input).forEach(({ key, value }) => {
-    Object.assign(capabilities, assignStringKey(key, parseStringValue(value)));
-  });
+    Object.assign(capabilities, assignStringKey(key, parseStringValue(value)))
+  })
 
-  return capabilities;
+  return capabilities
 }
 
 export default {
-  parseString
-};
+  parseString,
+}
 
 function matchStringPairs(input) {
-  const regex = /([^ =]*) ?= ?(".*"|[^ ]*)/g;
-  let result;
-  const splitCapabilities = [];
+  const regex = /([^ =]*) ?= ?(".*"|[^ ]*)/g
+  let result
+  const splitCapabilities = []
   while ((result = regex.exec(input)) !== null) {
-    splitCapabilities.push({ key: result[1], value: result[2] });
+    splitCapabilities.push({ key: result[1], value: result[2] })
   }
 
-  return splitCapabilities;
+  return splitCapabilities
 }
 
 function assignStringKey(key, value) {
-  const keyObject = {};
-  key.split(".").reduce((objectKey, currKey, index, keys) => {
-    const ref = {};
-    objectKey[currKey] = keys.length === index + 1 ? value : ref;
-    return ref;
-  }, keyObject);
+  const keyObject = {}
+  key.split('.').reduce((objectKey, currKey, index, keys) => {
+    const ref = {}
+    objectKey[currKey] = keys.length === index + 1 ? value : ref
+    return ref
+  }, keyObject)
 
-  return keyObject;
+  return keyObject
 }
 
 function parseStringValue(value) {
   // is array
   if (/^\[.*\]$/.test(value)) {
-    return value.match(/((\w|-)*)/g).filter(s => !!s);
+    return value.match(/((\w|-)*)/g).filter(s => !!s)
   }
   try {
-    return JSON.parse(value);
+    return JSON.parse(value)
   } catch (e) {
-    return value;
+    return value
   }
 }

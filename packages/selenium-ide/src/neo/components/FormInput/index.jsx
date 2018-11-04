@@ -15,10 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import './style.css'
 
 export default class FormInput extends React.Component {
   static propTypes = {
@@ -27,22 +27,30 @@ export default class FormInput extends React.Component {
     label: PropTypes.string.isRequired,
     width: PropTypes.number,
     children: PropTypes.element,
-    onChange: PropTypes.func
-  };
+    onChange: PropTypes.func,
+  }
   static defaultProps = {
-    type: "text"
-  };
+    type: 'text',
+  }
   render() {
-    const props = Object.assign({}, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);}, width: undefined });
+    const props = Object.assign({}, this.props, {
+      onChange: e => {
+        if (this.props.onChange) this.props.onChange(e.target.value)
+      },
+      width: undefined,
+    })
     return (
-      <div className={classNames("form-input", this.props.className)}>
-        <label htmlFor={this.props.name} style={{
-          width: `${this.props.width}px`
-        }}>{this.props.label}</label>
-        { this.props.children
-          ? this.props.children
-          : <input {...props} /> }
+      <div className={classNames('form-input', this.props.className)}>
+        <label
+          htmlFor={this.props.name}
+          style={{
+            width: `${this.props.width}px`,
+          }}
+        >
+          {this.props.label}
+        </label>
+        {this.props.children ? this.props.children : <input {...props} />}
       </div>
-    );
+    )
   }
 }

@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Router from "../../router";
-import { Location } from "selianize";
+import Router from '../../router'
+import { Location } from 'selianize'
 
-const router = new Router();
+const router = new Router()
 
-router.get("/location", (req, res) => {
-  Location.emit(req.location).then(res);
-});
+router.get('/location', (req, res) => {
+  Location.emit(req.location).then(res)
+})
 
-export default router;
+export default router

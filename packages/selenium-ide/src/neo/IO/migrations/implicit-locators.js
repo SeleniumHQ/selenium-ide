@@ -15,41 +15,44 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from "../../models/Command";
+import { Commands, ArgTypes } from '../../models/Command'
 
 export default function migrate(project) {
-  let r = Object.assign({}, project);
-  r.tests = r.tests.map((test) => {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
-      commands: test.commands.map((c) => {
+      commands: test.commands.map(c => {
         if (Commands.list.has(c.command)) {
-          let newCmd = Object.assign({}, c);
-          const type = Commands.list.get(c.command);
+          let newCmd = Object.assign({}, c)
+          const type = Commands.list.get(c.command)
           if (type.target && type.target.name === ArgTypes.locator.name) {
-            newCmd.target = migrateLocator(newCmd.target);
+            newCmd.target = migrateLocator(newCmd.target)
           }
           if (type.value && type.value.name === ArgTypes.locator.name) {
-            newCmd.value = migrateLocator(newCmd.value);
+            newCmd.value = migrateLocator(newCmd.value)
           }
           if (newCmd.targets) {
-            newCmd.targets = newCmd.targets.map((targetTuple) => ([migrateLocator(targetTuple[0]), targetTuple[1]]));
+            newCmd.targets = newCmd.targets.map(targetTuple => [
+              migrateLocator(targetTuple[0]),
+              targetTuple[1],
+            ])
           }
-          return newCmd;
+          return newCmd
         }
-        return c;
-      })
-    });
-  });
-  return r;
+        return c
+      }),
+    })
+  })
+  return r
 }
 
 function migrateLocator(locator) {
-  const result = locator.match(/^([A-Za-z]+)=.+/);
+  const result = locator.match(/^([A-Za-z]+)=.+/)
   if (!result) {
-    const implicitType = locator.indexOf("//") === -1 ? "id" : "xpath";
-    return `${implicitType}=${locator}`;
+    const implicitType = locator.indexOf('//') === -1 ? 'id' : 'xpath'
+    return `${implicitType}=${locator}`
   }
-  return locator;
+  return locator
 }
 
-migrate.version = "1.1";
+migrate.version = '1.1'

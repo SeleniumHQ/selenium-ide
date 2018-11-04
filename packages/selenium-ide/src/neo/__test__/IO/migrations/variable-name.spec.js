@@ -15,51 +15,51 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from "../../../IO/migrations/variable-name";
+import migrate from '../../../IO/migrations/variable-name'
 
-describe("project migrator", () => {
-  it("should be included in 1.1", () => {
-    expect(migrate.version).toBe("1.1");
-  });
-  it("should migrate variable reference by interpolation into variable reference by name", () => {
+describe('project migrator', () => {
+  it('should be included in 1.1', () => {
+    expect(migrate.version).toBe('1.1')
+  })
+  it('should migrate variable reference by interpolation into variable reference by name', () => {
     const project = {
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "assert",
-              target: "${x}",
-              value: ""
+              command: 'assert',
+              target: '${x}',
+              value: '',
             },
             {
-              command: "verify",
-              target: "${x}",
-              value: ""
-            }
-          ]
-        }
-      ]
-    };
-    const upgraded = migrate(project);
+              command: 'verify',
+              target: '${x}',
+              value: '',
+            },
+          ],
+        },
+      ],
+    }
+    const upgraded = migrate(project)
     expect(upgraded).toEqual({
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "assert",
-              target: "x",
-              value: ""
+              command: 'assert',
+              target: 'x',
+              value: '',
             },
             {
-              command: "verify",
-              target: "x",
-              value: ""
-            }
-          ]
-        }
-      ]
-    });
-  });
-});
+              command: 'verify',
+              target: 'x',
+              value: '',
+            },
+          ],
+        },
+      ],
+    })
+  })
+})

@@ -15,6 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-require("./shims/process");
-require("./shims/fs");
-module.exports = require("selenium-webdriver");
+require('./shims/process')
+require('./shims/fs')
+module.exports = require('selenium-webdriver')

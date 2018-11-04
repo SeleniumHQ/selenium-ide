@@ -15,21 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { PropTypes as MobxPropTypes } from "mobx-react";
-import SyntaxHighlighter, { registerLanguage } from "react-syntax-highlighter/light";
-import fortran from "react-syntax-highlighter/languages/hljs/fortran";
-import stylus from "react-syntax-highlighter/languages/hljs/stylus";
-import ini from "react-syntax-highlighter/languages/hljs/ini";
-import { xcode } from "react-syntax-highlighter/styles/hljs";
-import AutoComplete from "../AutoComplete";
-import Input from "../FormInput";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { PropTypes as MobxPropTypes } from 'mobx-react'
+import SyntaxHighlighter, {
+  registerLanguage,
+} from 'react-syntax-highlighter/light'
+import fortran from 'react-syntax-highlighter/languages/hljs/fortran'
+import stylus from 'react-syntax-highlighter/languages/hljs/stylus'
+import ini from 'react-syntax-highlighter/languages/hljs/ini'
+import { xcode } from 'react-syntax-highlighter/styles/hljs'
+import AutoComplete from '../AutoComplete'
+import Input from '../FormInput'
+import './style.css'
 
-registerLanguage("fortran", fortran);
-registerLanguage("stylus", stylus);
-registerLanguage("ini", ini);
+registerLanguage('fortran', fortran)
+registerLanguage('stylus', stylus)
+registerLanguage('ini', ini)
 
 export default class TargetInput extends React.Component {
   static propTypes = {
@@ -38,63 +40,88 @@ export default class TargetInput extends React.Component {
     targets: MobxPropTypes.arrayOrObservableArray,
     disabled: PropTypes.bool,
     value: PropTypes.string,
-    onChange: PropTypes.func
-  };
+    onChange: PropTypes.func,
+  }
   render() {
-    return (this.props.targets && this.props.targets.length ?
-      <Input name={this.props.name} className="target-input" label={this.props.label}>
+    return this.props.targets && this.props.targets.length ? (
+      <Input
+        name={this.props.name}
+        className="target-input"
+        label={this.props.label}
+      >
         <AutoComplete
-          getItemValue={(item) => (
-            item[0]
-          )}
+          getItemValue={item => item[0]}
           items={this.props.targets.peek()}
-          renderDefaultStyledItem={(item) =>
+          renderDefaultStyledItem={item => (
             <TargetSuggestion locator={item[0]} strategy={item[1]} />
-          }
+          )}
           value={this.props.value}
           inputProps={{ disabled: this.props.disabled }}
-          onChange={(e) => { if (this.props.onChange) this.props.onChange(e.target.value); }}
-          onSelect={(value) => { if (this.props.onChange) this.props.onChange(value); }}
+          onChange={e => {
+            if (this.props.onChange) this.props.onChange(e.target.value)
+          }}
+          onSelect={value => {
+            if (this.props.onChange) this.props.onChange(value)
+          }}
         />
-      </Input> :
+      </Input>
+    ) : (
       <Input
         name={this.props.name}
         label={this.props.label}
         value={this.props.value}
         disabled={this.props.disabled}
-        onChange={(value) => { if (this.props.onChange) this.props.onChange(value); }} />
-    );
+        onChange={value => {
+          if (this.props.onChange) this.props.onChange(value)
+        }}
+      />
+    )
   }
 }
 
 class TargetSuggestion extends React.Component {
   static propTypes = {
     locator: PropTypes.string.isRequired,
-    strategy: PropTypes.string
-  };
+    strategy: PropTypes.string,
+  }
   render() {
-    let language = "ini";
+    let language = 'ini'
     if (this.props.strategy) {
-      if (this.props.strategy === "css") {
-        language = "stylus";
-      } else if (this.props.strategy.startsWith("xpath")) {
-        language = "fortran";
+      if (this.props.strategy === 'css') {
+        language = 'stylus'
+      } else if (this.props.strategy.startsWith('xpath')) {
+        language = 'fortran'
       }
     }
     return (
-      <span style={{
-        display: "flex"
-      }}>
-        <span className="code" style={{
-          flexGrow: "1",
-          wordBreak: "break-word"
-        }}><SyntaxHighlighter language={language} style={xcode}>{this.props.locator}</SyntaxHighlighter></span>
-        {this.props.strategy && <span style={{
-          color: "#929292",
-          flexGrow: "initial",
-          paddingLeft: "10px"
-        }}>{this.props.strategy}</span>}
+      <span
+        style={{
+          display: 'flex',
+        }}
+      >
+        <span
+          className="code"
+          style={{
+            flexGrow: '1',
+            wordBreak: 'break-word',
+          }}
+        >
+          <SyntaxHighlighter language={language} style={xcode}>
+            {this.props.locator}
+          </SyntaxHighlighter>
+        </span>
+        {this.props.strategy && (
+          <span
+            style={{
+              color: '#929292',
+              flexGrow: 'initial',
+              paddingLeft: '10px',
+            }}
+          >
+            {this.props.strategy}
+          </span>
+        )}
       </span>
-    );
+    )
   }
 }

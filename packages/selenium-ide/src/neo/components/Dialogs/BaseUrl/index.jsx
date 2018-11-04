@@ -15,66 +15,72 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import Modal from "../../Modal";
-import DialogContainer from "../Dialog";
-import LabelledInput from "../../LabelledInput";
-import FlatButton from "../../FlatButton";
+import React from 'react'
+import PropTypes from 'prop-types'
+import Modal from '../../Modal'
+import DialogContainer from '../Dialog'
+import LabelledInput from '../../LabelledInput'
+import FlatButton from '../../FlatButton'
 
 export default class BaseUrlDialog extends React.Component {
   static propTypes = {
     isSelectingUrl: PropTypes.bool,
-    isInvalid: PropTypes.bool
-  };
+    isInvalid: PropTypes.bool,
+  }
   render() {
     return (
       <Modal className="stripped" isOpen={this.props.isSelectingUrl}>
         <BaseUrlDialogContents {...this.props} />
       </Modal>
-    );
+    )
   }
 }
 
 class BaseUrlDialogContents extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      url: ""
-    };
-    this.urlRegex = /^https?:\/\//;
-    this.onUrlChange = this.onUrlChange.bind(this);
+      url: '',
+    }
+    this.urlRegex = /^https?:\/\//
+    this.onUrlChange = this.onUrlChange.bind(this)
   }
   static propTypes = {
     isInvalid: PropTypes.bool,
     onUrlSelection: PropTypes.func,
-    cancel: PropTypes.func
-  };
+    cancel: PropTypes.func,
+  }
   onUrlChange(url) {
-    this.setState({ url });
+    this.setState({ url })
   }
   render() {
     return (
       <DialogContainer
-        title={this.props.isInvalid ? "Project base URL is invalid!" : "Set your project's base URL"}
-        type={this.props.isInvalid ? "warn" : "info"}
+        title={
+          this.props.isInvalid
+            ? 'Project base URL is invalid!'
+            : "Set your project's base URL"
+        }
+        type={this.props.isInvalid ? 'warn' : 'info'}
         renderFooter={() => (
           <div className="right">
-            <FlatButton
-              onClick={this.props.cancel}
-            >Cancel</FlatButton>
+            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
             <FlatButton
               type="submit"
               disabled={!this.urlRegex.test(this.state.url)}
-              onClick={() => {this.props.onUrlSelection(this.state.url);}}
-            >Start recording</FlatButton>
+              onClick={() => {
+                this.props.onUrlSelection(this.state.url)
+              }}
+            >
+              Start recording
+            </FlatButton>
           </div>
         )}
         onRequestClose={this.props.cancel}
       >
         <p>
-          Before you can start recording, you must specify a valid base URL for your project. Your tests will start by navigating
-          to this URL.
+          Before you can start recording, you must specify a valid base URL for
+          your project. Your tests will start by navigating to this URL.
         </p>
         <LabelledInput
           name="baseUrl"
@@ -85,6 +91,6 @@ class BaseUrlDialogContents extends React.Component {
           autoFocus
         />
       </DialogContainer>
-    );
+    )
   }
 }

@@ -16,22 +16,22 @@
 // under the License.
 
 export default function migrate(project) {
-  let r = Object.assign({}, project);
-  r.tests = r.tests.map((test) => {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
-      commands: test.commands.map((c) => {
-        if (c.command === "pause" && !c.target) {
+      commands: test.commands.map(c => {
+        if (c.command === 'pause' && !c.target) {
           return Object.assign({}, c, {
             command: c.command,
             target: c.value,
-            value: ""
-          });
+            value: '',
+          })
         }
-        return c;
-      })
-    });
-  });
-  return r;
+        return c
+      }),
+    })
+  })
+  return r
 }
 
-migrate.version = "1.1";
+migrate.version = '1.1'

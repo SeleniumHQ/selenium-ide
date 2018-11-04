@@ -15,18 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import Input from "../FormInput";
+import React from 'react'
+import PropTypes from 'prop-types'
+import Input from '../FormInput'
 
 export default class FormTextArea extends React.Component {
   static propTypes = {
-    onChange: PropTypes.func
-  };
+    onChange: PropTypes.func,
+  }
   render() {
-    const props = Object.assign({ rows: "1" }, this.props, { onChange: (e) => {if (this.props.onChange) this.props.onChange(e.target.value);} });
+    const props = Object.assign({ rows: '1' }, this.props, {
+      onChange: e => {
+        if (this.props.onChange) this.props.onChange(e.target.value)
+      },
+    })
     return (
-      <Input {...props}><textarea {...props}></textarea></Input>
-    );
+      <Input {...props}>
+        <textarea {...props} />
+      </Input>
+    )
   }
 }

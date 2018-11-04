@@ -15,81 +15,124 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import { observer } from "mobx-react";
-import { parse } from "modifier-keys";
-import PlayAll from "../../components/ActionButtons/PlayAll";
-import PlayCurrent from "../../components/ActionButtons/PlayCurrent";
-import Pause from "../../components/ActionButtons/Pause";
-import Stop from "../../components/ActionButtons/Stop";
-import StepInto from "../../components/ActionButtons/StepInto";
-import SpeedGauge from "../../components/ActionButtons/SpeedGauge";
-import DisableBreakpoints from "../../components/ActionButtons/DisableBreakpoints";
-import PauseExceptions from "../../components/ActionButtons/PauseExceptions";
-import Record from "../../components/ActionButtons/Record";
-import GaugeMenu from "../GaugeMenu";
-import UiState from "../../stores/view/UiState";
-import PlaybackState from "../../stores/view/PlaybackState";
-import ModalState from "../../stores/view/ModalState";
-import "./style.css";
+import React from 'react'
+import { observer } from 'mobx-react'
+import { parse } from 'modifier-keys'
+import PlayAll from '../../components/ActionButtons/PlayAll'
+import PlayCurrent from '../../components/ActionButtons/PlayCurrent'
+import Pause from '../../components/ActionButtons/Pause'
+import Stop from '../../components/ActionButtons/Stop'
+import StepInto from '../../components/ActionButtons/StepInto'
+import SpeedGauge from '../../components/ActionButtons/SpeedGauge'
+import DisableBreakpoints from '../../components/ActionButtons/DisableBreakpoints'
+import PauseExceptions from '../../components/ActionButtons/PauseExceptions'
+import Record from '../../components/ActionButtons/Record'
+import GaugeMenu from '../GaugeMenu'
+import UiState from '../../stores/view/UiState'
+import PlaybackState from '../../stores/view/PlaybackState'
+import ModalState from '../../stores/view/ModalState'
+import './style.css'
 
 @observer
 export default class ToolBar extends React.Component {
   toggleRecord() {
-    UiState.toggleRecord();
+    UiState.toggleRecord()
   }
   playAll() {
-    const isInSuiteView = UiState.selectedView === "Test suites";
+    const isInSuiteView = UiState.selectedView === 'Test suites'
 
     if (PlaybackState.canPlaySuite) {
-      PlaybackState.playSuiteOrResume();
+      PlaybackState.playSuiteOrResume()
     } else if (isInSuiteView) {
-
       ModalState.showAlert({
-        title: "Select a test case",
-        description: "To play a suite you must select a test case from within that suite."
-      });
+        title: 'Select a test case',
+        description:
+          'To play a suite you must select a test case from within that suite.',
+      })
     } else {
-      PlaybackState.playFilteredTestsOrResume();
+      PlaybackState.playFilteredTestsOrResume()
     }
   }
   render() {
-    const isTestEmpty = UiState.selectedTest.test && !UiState.selectedTest.test.commands.length;
-    const isCommandValid = UiState.selectedCommand && UiState.selectedCommand.isValid;
+    const isTestEmpty =
+      UiState.selectedTest.test && !UiState.selectedTest.test.commands.length
+    const isCommandValid =
+      UiState.selectedCommand && UiState.selectedCommand.isValid
     return (
       <div className="toolbar">
         <PlayAll
           isActive={!PlaybackState.paused && PlaybackState.isPlayingSuite}
           disabled={UiState.isRecording}
           onClick={this.playAll}
-          data-tip={PlaybackState.canPlaySuite ?
-            `<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse("r", { primaryKey: true, shiftKey: true })}</span></p>` :
-            `<p>Run all tests <span style="color: #929292;padding-left: 5px;">${parse("r", { primaryKey: true, shiftKey: true })}</span></p>`
+          data-tip={
+            PlaybackState.canPlaySuite
+              ? `<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse(
+                  'r',
+                  { primaryKey: true, shiftKey: true }
+                )}</span></p>`
+              : `<p>Run all tests <span style="color: #929292;padding-left: 5px;">${parse(
+                  'r',
+                  { primaryKey: true, shiftKey: true }
+                )}</span></p>`
           }
         />
         <PlayCurrent
           isActive={!PlaybackState.paused && PlaybackState.isPlayingTest}
-          disabled={isTestEmpty || PlaybackState.isPlayingSuite || UiState.isRecording}
+          disabled={
+            isTestEmpty || PlaybackState.isPlayingSuite || UiState.isRecording
+          }
           onClick={PlaybackState.playTestOrResume}
         />
-        { PlaybackState.isPlaying ? <Stop onClick={() => {PlaybackState.abortPlaying();}} /> : null }
-        { PlaybackState.isPlaying ?
-          <Pause isActive={PlaybackState.paused}
-            data-tip={!PlaybackState.paused ?
-              `<p>Pause test execution <span style="color: #929292;padding-left: 5px;">${parse("p", { primaryKey: true })}</span></p>` :
-              `<p>Resume test execution <span style="color: #929292;padding-left: 5px;">${parse("p", { primaryKey: true })}</span></p>`
+        {PlaybackState.isPlaying ? (
+          <Stop
+            onClick={() => {
+              PlaybackState.abortPlaying()
+            }}
+          />
+        ) : null}
+        {PlaybackState.isPlaying ? (
+          <Pause
+            isActive={PlaybackState.paused}
+            data-tip={
+              !PlaybackState.paused
+                ? `<p>Pause test execution <span style="color: #929292;padding-left: 5px;">${parse(
+                    'p',
+                    { primaryKey: true }
+                  )}</span></p>`
+                : `<p>Resume test execution <span style="color: #929292;padding-left: 5px;">${parse(
+                    'p',
+                    { primaryKey: true }
+                  )}</span></p>`
             }
-            onClick={PlaybackState.pauseOrResume} /> : null }
-        <StepInto disabled={!isCommandValid || UiState.isRecording} onClick={PlaybackState.stepOver} />
-        <GaugeMenu opener={
-          <SpeedGauge speed={UiState.gaugeSpeed} />
-        } value={PlaybackState.delay} maxDelay={PlaybackState.maxDelay} onChange={PlaybackState.setDelay} />
-        <div className="flexer"></div>
-        <DisableBreakpoints isActive={PlaybackState.breakpointsDisabled} onClick={PlaybackState.toggleDisableBreakpoints} />
-        <PauseExceptions isActive={PlaybackState.pauseOnExceptions} onClick={PlaybackState.togglePauseOnExceptions} />
-        <div className="sep"></div>
-        <Record disabled={PlaybackState.isPlaying || !UiState.selectedTest.test} isRecording={UiState.isRecording} onClick={this.toggleRecord} />
+            onClick={PlaybackState.pauseOrResume}
+          />
+        ) : null}
+        <StepInto
+          disabled={!isCommandValid || UiState.isRecording}
+          onClick={PlaybackState.stepOver}
+        />
+        <GaugeMenu
+          opener={<SpeedGauge speed={UiState.gaugeSpeed} />}
+          value={PlaybackState.delay}
+          maxDelay={PlaybackState.maxDelay}
+          onChange={PlaybackState.setDelay}
+        />
+        <div className="flexer" />
+        <DisableBreakpoints
+          isActive={PlaybackState.breakpointsDisabled}
+          onClick={PlaybackState.toggleDisableBreakpoints}
+        />
+        <PauseExceptions
+          isActive={PlaybackState.pauseOnExceptions}
+          onClick={PlaybackState.togglePauseOnExceptions}
+        />
+        <div className="sep" />
+        <Record
+          disabled={PlaybackState.isPlaying || !UiState.selectedTest.test}
+          isRecording={UiState.isRecording}
+          onClick={this.toggleRecord}
+        />
       </div>
-    );
+    )
   }
 }

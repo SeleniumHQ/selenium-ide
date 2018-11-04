@@ -15,83 +15,90 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from "mobx";
-import Log, { LogTypes } from "../../ui-models/Log";
+import { action, observable } from 'mobx'
+import Log, { LogTypes } from '../../ui-models/Log'
 
 class Output {
-  @observable logs = [];
+  @observable
+  logs = []
 
-  @action.bound log(log) {
-    this.logs.push(log);
+  @action.bound
+  log(log) {
+    this.logs.push(log)
   }
 
-  @action.bound clear() {
-    this.logs.clear();
+  @action.bound
+  clear() {
+    this.logs.clear()
   }
 
   print(std) {
     if (!std) {
-      return this.logs.join("\r\n");
+      return this.logs.join('\r\n')
     } else if (std === 1) {
-      return this.logs.filter((log) => (log.status === LogTypes.Success)).join("\r\n");
+      return this.logs
+        .filter(log => log.status === LogTypes.Success)
+        .join('\r\n')
     } else if (std === 2) {
-      return this.logs.filter((log) => (log.status !== LogTypes.Success)).join("\r\n");
+      return this.logs
+        .filter(log => log.status !== LogTypes.Success)
+        .join('\r\n')
     } else {
-      throw new Error("No such standard");
+      throw new Error('No such standard')
     }
   }
 }
 
-export const output = new Output();
+export const output = new Output()
 
 export class Logger {
   constructor(channel = Channels.SYSTEM) {
-    this.channel = channel;
+    this.channel = channel
 
-    this.log = this.log.bind(this, this.channel);
-    this.warn = this.warn.bind(this);
-    this.error = this.error.bind(this);
+    this.log = this.log.bind(this, this.channel)
+    this.warn = this.warn.bind(this)
+    this.error = this.error.bind(this)
   }
 
   log(channel, log) {
-    if (typeof log === "string") {
-      log = new Log(log);
+    if (typeof log === 'string') {
+      log = new Log(log)
     }
-    log.setChannel(channel);
-    output.log(log);
+    log.setChannel(channel)
+    output.log(log)
 
-    return log;
+    return log
   }
 
   warn(log) {
-    const warnLog = this.log(typeof log === "string" ? `Warning ${log}` : log);
-    warnLog.setStatus(LogTypes.Warning);
+    const warnLog = this.log(typeof log === 'string' ? `Warning ${log}` : log)
+    warnLog.setStatus(LogTypes.Warning)
   }
 
   error(log) {
-    const errorLog = this.log(log);
-    errorLog.setStatus(LogTypes.Error);
+    const errorLog = this.log(log)
+    errorLog.setStatus(LogTypes.Error)
   }
 
   get(channel) {
-    return new Logger(channel);
+    return new Logger(channel)
   }
 
   clearLogs() {
-    output.clear();
+    output.clear()
   }
 
   printLogs(std) {
-    return output.print(std);
+    return output.print(std)
   }
 }
 
 export const Channels = {
-  PLAYBACK: "playback",
-  SYSTEM: "sys"
-};
+  PLAYBACK: 'playback',
+  SYSTEM: 'sys',
+}
 
 if (!window._logger) {
-  window._logger = new Logger;
+  window._logger = new Logger()
 }
-export default window._logger;
+export default window._logger

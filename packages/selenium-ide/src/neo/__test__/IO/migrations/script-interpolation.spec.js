@@ -15,101 +15,101 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from "../../../IO/migrations/script-interpolation";
+import migrate from '../../../IO/migrations/script-interpolation'
 
-describe("project migrator", () => {
-  it("should be included in 1.1", () => {
-    expect(migrate.version).toBe("1.1");
-  });
-  it("should migrate variables that are interpolated into strings in scripts and expressions", () => {
+describe('project migrator', () => {
+  it('should be included in 1.1', () => {
+    expect(migrate.version).toBe('1.1')
+  })
+  it('should migrate variables that are interpolated into strings in scripts and expressions', () => {
     const project = {
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "executeScript",
-              target: "return \"${x}\"",
-              value: ""
+              command: 'executeScript',
+              target: 'return "${x}"',
+              value: '',
             },
             {
-              command: "executeScript",
+              command: 'executeScript',
               target: "return '${x}'",
-              value: ""
+              value: '',
             },
             {
-              command: "executeScript",
-              target: "return `${x}`",
-              value: ""
+              command: 'executeScript',
+              target: 'return `${x}`',
+              value: '',
             },
             {
-              command: "executeScript",
+              command: 'executeScript',
               target: "return '${x}'.substr(0, 1);",
-              value: ""
+              value: '',
             },
             {
-              command: "executeScript",
+              command: 'executeScript',
               target: "return '${x}' + '${xyz}'",
-              value: ""
+              value: '',
             },
             {
-              command: "executeScript",
+              command: 'executeScript',
               target: "return '${xyz2}'",
-              value: ""
+              value: '',
             },
             {
-              command: "if",
+              command: 'if',
               target: "'${x}' == '2'",
-              value: ""
-            }
-          ]
-        }
-      ]
-    };
-    const upgraded = migrate(project);
+              value: '',
+            },
+          ],
+        },
+      ],
+    }
+    const upgraded = migrate(project)
     expect(upgraded).toEqual({
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "executeScript",
-              target: "return ${x}",
-              value: ""
+              command: 'executeScript',
+              target: 'return ${x}',
+              value: '',
             },
             {
-              command: "executeScript",
-              target: "return ${x}",
-              value: ""
+              command: 'executeScript',
+              target: 'return ${x}',
+              value: '',
             },
             {
-              command: "executeScript",
-              target: "return ${x}",
-              value: ""
+              command: 'executeScript',
+              target: 'return ${x}',
+              value: '',
             },
             {
-              command: "executeScript",
-              target: "return ${x}.substr(0, 1);",
-              value: ""
+              command: 'executeScript',
+              target: 'return ${x}.substr(0, 1);',
+              value: '',
             },
             {
-              command: "executeScript",
-              target: "return ${x} + ${xyz}",
-              value: ""
+              command: 'executeScript',
+              target: 'return ${x} + ${xyz}',
+              value: '',
             },
             {
-              command: "executeScript",
-              target: "return ${xyz2}",
-              value: ""
+              command: 'executeScript',
+              target: 'return ${xyz2}',
+              value: '',
             },
             {
-              command: "if",
+              command: 'if',
               target: "${x} == '2'",
-              value: ""
-            }
-          ]
-        }
-      ]
-    });
-  });
-});
+              value: '',
+            },
+          ],
+        },
+      ],
+    })
+  })
+})

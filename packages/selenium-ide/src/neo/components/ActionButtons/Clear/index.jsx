@@ -15,14 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
+import React from 'react'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
 
 export default class ClearButton extends React.Component {
   render() {
     return (
-      <ActionButton data-tip="<p>Clear log</p>" {...this.props} className={classNames("si-clear", this.props.className)} />// eslint-disable-line react/prop-types
-    );
+      <ActionButton
+        data-tip="<p>Clear log</p>"
+        {...this.props}
+        className={classNames('si-clear', this.props.className)}
+      /> // eslint-disable-line react/prop-types
+    )
   }
 }

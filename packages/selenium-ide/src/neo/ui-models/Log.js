@@ -15,69 +15,89 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable, computed } from "mobx";
-import uuidv4 from "uuid/v4";
+import { action, observable, computed } from 'mobx'
+import uuidv4 from 'uuid/v4'
 
 export default class Log {
-  id = uuidv4();
-  @observable index = null;
-  @observable commandId = null;
-  @observable message = null;
-  @observable description = null;
-  @observable status = null;
-  @observable channel = null;
-  @observable isNotice = false;
+  id = uuidv4()
+  @observable
+  index = null
+  @observable
+  commandId = null
+  @observable
+  message = null
+  @observable
+  description = null
+  @observable
+  status = null
+  @observable
+  channel = null
+  @observable
+  isNotice = false
 
   constructor(message, status) {
-    this.message = message;
-    this.status = status;
+    this.message = message
+    this.status = status
   }
 
-  @action.bound setIndex(index) {
-    this.index = index;
+  @action.bound
+  setIndex(index) {
+    this.index = index
   }
 
-  @action.bound setCommandId(commandId) {
-    this.commandId = commandId;
+  @action.bound
+  setCommandId(commandId) {
+    this.commandId = commandId
   }
 
-  @action.bound setMessage(message) {
-    this.message = message;
+  @action.bound
+  setMessage(message) {
+    this.message = message
   }
 
-  @action.bound setDescription(desc) {
-    this.description = desc;
+  @action.bound
+  setDescription(desc) {
+    this.description = desc
   }
 
-  @action.bound setStatus(status) {
-    this.status = status;
+  @action.bound
+  setStatus(status) {
+    this.status = status
   }
 
-  @action.bound setChannel(channel) {
-    this.channel = channel;
+  @action.bound
+  setChannel(channel) {
+    this.channel = channel
   }
 
-  @action.bound setNotice() {
-    this.isNotice = true;
+  @action.bound
+  setNotice() {
+    this.isNotice = true
   }
 
-  @action.bound isEqual(otherLog) {
-    return (this.message === otherLog.message && this.commandId === otherLog.commandId);
+  @action.bound
+  isEqual(otherLog) {
+    return (
+      this.message === otherLog.message && this.commandId === otherLog.commandId
+    )
   }
 
-  @computed get _str() {
-    return `${this.index ? this.index + ". " : ""}${this.message}${this.description ? "\n\r  " + this.description : ""}`;
+  @computed
+  get _str() {
+    return `${this.index ? this.index + '. ' : ''}${this.message}${
+      this.description ? '\n\r  ' + this.description : ''
+    }`
   }
 
   toString() {
-    return this._str;
+    return this._str
   }
 }
 
 export const LogTypes = {
-  Success: "success",
-  Warning: "warn",
-  Error: "error",
-  Failure: "failure",
-  Undetermined: "undetermined"
-};
+  Success: 'success',
+  Warning: 'warn',
+  Error: 'error',
+  Failure: 'failure',
+  Undetermined: 'undetermined',
+}

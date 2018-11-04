@@ -15,262 +15,282 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
-import { DragDropContext } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
-import SplitPane from "react-split-pane";
-import parser from "ua-parser-js";
-import classNames from "classnames";
-import { modifier } from "modifier-keys";
-import Tooltip from "../../components/Tooltip";
-import storage from "../../IO/storage";
-import ProjectStore from "../../stores/domain/ProjectStore";
-import seed from "../../stores/seed";
-import SuiteDropzone from "../../components/SuiteDropzone";
-import PauseBanner from "../../components/PauseBanner";
-import ProjectHeader from "../../components/ProjectHeader";
-import Navigation from "../Navigation";
-import Editor from "../Editor";
-import Console from "../Console";
-import Modal from "../Modal";
-import Changelog from "../../components/Changelog";
-import UiState from "../../stores/view/UiState";
-import PlaybackState from "../../stores/view/PlaybackState";
-import ModalState from "../../stores/view/ModalState";
-import "../../side-effects/contextMenu";
-import "../../styles/app.css";
-import "../../styles/font.css";
-import "../../styles/layout.css";
-import "../../styles/resizer.css";
-import { isProduction } from "../../../content/utils";
-import Logger from "../../stores/view/Logs";
+import browser from 'webextension-polyfill'
+import React from 'react'
+import { observable } from 'mobx'
+import { observer } from 'mobx-react'
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+import SplitPane from 'react-split-pane'
+import parser from 'ua-parser-js'
+import classNames from 'classnames'
+import { modifier } from 'modifier-keys'
+import Tooltip from '../../components/Tooltip'
+import storage from '../../IO/storage'
+import ProjectStore from '../../stores/domain/ProjectStore'
+import seed from '../../stores/seed'
+import SuiteDropzone from '../../components/SuiteDropzone'
+import PauseBanner from '../../components/PauseBanner'
+import ProjectHeader from '../../components/ProjectHeader'
+import Navigation from '../Navigation'
+import Editor from '../Editor'
+import Console from '../Console'
+import Modal from '../Modal'
+import Changelog from '../../components/Changelog'
+import UiState from '../../stores/view/UiState'
+import PlaybackState from '../../stores/view/PlaybackState'
+import ModalState from '../../stores/view/ModalState'
+import '../../side-effects/contextMenu'
+import '../../styles/app.css'
+import '../../styles/font.css'
+import '../../styles/layout.css'
+import '../../styles/resizer.css'
+import { isProduction } from '../../../content/utils'
+import Logger from '../../stores/view/Logs'
 
-import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
+import { loadProject, saveProject, loadJSProject } from '../../IO/filesystem'
 
-if (process.env.NODE_ENV !== "test") {
-  const api = require("../../../api");
-  browser.runtime.onMessage.addListener(api.default);
+if (process.env.NODE_ENV !== 'test') {
+  const api = require('../../../api')
+  browser.runtime.onMessage.addListener(api.default)
 }
 
-if (parser(window.navigator.userAgent).os.name === "Windows") {
-  require("../../styles/conditional/scrollbar.css");
-  require("../../styles/conditional/button-direction.css");
+if (parser(window.navigator.userAgent).os.name === 'Windows') {
+  require('../../styles/conditional/scrollbar.css')
+  require('../../styles/conditional/button-direction.css')
 }
 
-const project = observable(new ProjectStore(""));
+const project = observable(new ProjectStore(''))
 
-UiState.setProject(project);
+UiState.setProject(project)
 
 if (isProduction) {
-  createDefaultSuite(project, { suite: "", test: "" });
+  createDefaultSuite(project, { suite: '', test: '' })
 } else {
-  seed(project);
+  seed(project)
 }
-project.setModified(false);
+project.setModified(false)
 
-function createDefaultSuite(aProject, name = { suite: "Default Suite", test: "Untitled" }) {
-  const suite = aProject.createSuite(name.suite);
-  const test = aProject.createTestCase(name.test);
-  suite.addTestCase(test);
-  UiState.selectTest(test);
+function createDefaultSuite(
+  aProject,
+  name = { suite: 'Default Suite', test: 'Untitled' }
+) {
+  const suite = aProject.createSuite(name.suite)
+  const test = aProject.createTestCase(name.test)
+  suite.addTestCase(test)
+  UiState.selectTest(test)
 }
 
-function firefox57WorkaroundForBlankPanel () {
+function firefox57WorkaroundForBlankPanel() {
   // TODO: remove this as soon as Mozilla fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1425829
   // browser. windows. create () displays blank windows (panel, popup or detached_panel)
   // The trick to display content is to resize the window...
   // We do not check the browser since this doesn't affect chrome at all
 
-  function getCurrentWindow () {
-    return browser.windows.getCurrent();
+  function getCurrentWindow() {
+    return browser.windows.getCurrent()
   }
 
-  getCurrentWindow().then((currentWindow) => {
+  getCurrentWindow().then(currentWindow => {
     const updateInfo = {
       width: currentWindow.width,
-      height: currentWindow.height + 1 // 1 pixel more than original size...
-    };
-    browser.windows.update(currentWindow.id, updateInfo);
-  });
+      height: currentWindow.height + 1, // 1 pixel more than original size...
+    }
+    browser.windows.update(currentWindow.id, updateInfo)
+  })
 }
 
 if (browser.windows) {
-  firefox57WorkaroundForBlankPanel();
+  firefox57WorkaroundForBlankPanel()
 }
 
 @DragDropContext(HTML5Backend)
-@observer export default class Panel extends React.Component {
+@observer
+export default class Panel extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { project };
-    this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(this);
+    super(props)
+    this.state = { project }
+    this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(
+      this
+    )
     if (isProduction) {
       // the handler writes the size to the extension storage, which throws in development
-      this.resizeHandler = window.addEventListener("resize", this.handleResize.bind(this, window));
-      this.quitHandler = window.addEventListener("beforeunload", (e) => {
+      this.resizeHandler = window.addEventListener(
+        'resize',
+        this.handleResize.bind(this, window)
+      )
+      this.quitHandler = window.addEventListener('beforeunload', e => {
         if (project.modified) {
-          const confirmationMessage = "You have some unsaved changes, are you sure you want to leave?";
+          const confirmationMessage =
+            'You have some unsaved changes, are you sure you want to leave?'
 
-          e.returnValue = confirmationMessage;
-          return confirmationMessage;
+          e.returnValue = confirmationMessage
+          return confirmationMessage
         }
-      });
+      })
       this.moveInterval = setInterval(() => {
         storage.set({
           origin: {
             top: window.screenY,
-            left: window.screenX
-          }
-        });
-      }, 3000);
+            left: window.screenX,
+          },
+        })
+      }, 3000)
     }
   }
   handleResize(currWindow) {
-    UiState.setWindowHeight(currWindow.innerHeight);
+    UiState.setWindowHeight(currWindow.innerHeight)
     storage.set({
       size: {
         height: currWindow.outerHeight,
-        width: currWindow.outerWidth
-      }
-    });
+        width: currWindow.outerWidth,
+      },
+    })
   }
   handleKeyDown(e) {
-    modifier(e);
-    const key = e.key.toUpperCase();
-    const primaryAndShift = (e.primaryKey && e.shiftKey);
-    const onlyPrimary = (e.primaryKey && !e.secondaryKey);
-    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+    modifier(e)
+    const key = e.key.toUpperCase()
+    const primaryAndShift = e.primaryKey && e.shiftKey
+    const onlyPrimary = e.primaryKey && !e.secondaryKey
+    const noModifiers = !e.primaryKey && !e.secondaryKey
 
     // when editing these, remember to edit the button's tooltip as well
-    if (primaryAndShift && key === "N") {
-      e.preventDefault();
-      this.loadNewProject();
-    } else if (onlyPrimary && key === "N") {
-      e.preventDefault();
-    } else if (onlyPrimary && key === "S") {
-      e.preventDefault();
-      saveProject(this.state.project);
-    } else if (onlyPrimary && key === "O" && this.openFile) {
-      e.preventDefault();
-      this.openFile();
-    } else if (onlyPrimary && key === "1") {
+    if (primaryAndShift && key === 'N') {
+      e.preventDefault()
+      this.loadNewProject()
+    } else if (onlyPrimary && key === 'N') {
+      e.preventDefault()
+    } else if (onlyPrimary && key === 'S') {
+      e.preventDefault()
+      saveProject(this.state.project)
+    } else if (onlyPrimary && key === 'O' && this.openFile) {
+      e.preventDefault()
+      this.openFile()
+    } else if (onlyPrimary && key === '1') {
       // test view
-      e.preventDefault();
-      UiState.changeView(UiState.views[+key - 1]);
-    } else if (onlyPrimary && key === "2") {
+      e.preventDefault()
+      UiState.changeView(UiState.views[+key - 1])
+    } else if (onlyPrimary && key === '2') {
       // suite view
-      e.preventDefault();
-      UiState.changeView(UiState.views[+key - 1]);
-    } else if (onlyPrimary && key === "3") {
+      e.preventDefault()
+      UiState.changeView(UiState.views[+key - 1])
+    } else if (onlyPrimary && key === '3') {
       // execution view
-      e.preventDefault();
-      UiState.changeView(UiState.views[+key - 1]);
-    } else if (primaryAndShift && e.code === "KeyR" && isProduction) {
+      e.preventDefault()
+      UiState.changeView(UiState.views[+key - 1])
+    } else if (primaryAndShift && e.code === 'KeyR' && isProduction) {
       // run suite
-      e.preventDefault();
+      e.preventDefault()
       if (PlaybackState.canPlaySuite) {
-        PlaybackState.playSuiteOrResume();
+        PlaybackState.playSuiteOrResume()
       }
-    } else if (onlyPrimary && key === "R" && isProduction) {
+    } else if (onlyPrimary && key === 'R' && isProduction) {
       // run test
-      e.preventDefault();
+      e.preventDefault()
       if (!PlaybackState.isPlayingSuite) {
-        PlaybackState.playTestOrResume();
+        PlaybackState.playTestOrResume()
       }
-    } else if (onlyPrimary && key === "P") {
+    } else if (onlyPrimary && key === 'P') {
       // pause
-      e.preventDefault();
-      PlaybackState.pauseOrResume();
-    } else if (onlyPrimary && key === ".") {
+      e.preventDefault()
+      PlaybackState.pauseOrResume()
+    } else if (onlyPrimary && key === '.') {
       // stop
-      e.preventDefault();
-      PlaybackState.abortPlaying();
+      e.preventDefault()
+      PlaybackState.abortPlaying()
     } else if (onlyPrimary && key === "'") {
       // step over
-      e.preventDefault();
-      PlaybackState.stepOver();
-    } else if (onlyPrimary && key === "Y") {
+      e.preventDefault()
+      PlaybackState.stepOver()
+    } else if (onlyPrimary && key === 'Y') {
       // disable breakpoints
-      e.preventDefault();
-      PlaybackState.toggleDisableBreakpoints();
-    } else if (onlyPrimary && key === "U") {
+      e.preventDefault()
+      PlaybackState.toggleDisableBreakpoints()
+    } else if (onlyPrimary && key === 'U') {
       // record
-      e.preventDefault();
+      e.preventDefault()
       if (!PlaybackState.isPlaying) {
-        UiState.toggleRecord();
+        UiState.toggleRecord()
       }
-    } else if (noModifiers && key === "ESCAPE") {
-      UiState.toggleConsole();
+    } else if (noModifiers && key === 'ESCAPE') {
+      UiState.toggleConsole()
     }
   }
   navigationDragStart() {
-    UiState.setNavigationDragging(true);
-    UiState.resizeNavigation(UiState.navigationWidth);
-    UiState.setNavigationHover(true);
+    UiState.setNavigationDragging(true)
+    UiState.resizeNavigation(UiState.navigationWidth)
+    UiState.setNavigationHover(true)
   }
   navigationDragEnd() {
-    UiState.setNavigationDragging(false);
-    UiState.setNavigationHover(false);
+    UiState.setNavigationDragging(false)
+    UiState.setNavigationHover(false)
   }
   loadNewProject() {
     if (!UiState.isSaved()) {
-      ModalState.showAlert({
-        title: "Create without saving",
-        description: "Are you sure you would like to create a new project without saving the current one?",
-        confirmLabel: "Proceed",
-        cancelLabel: "Cancel"
-      }, async (choseProceed) => {
-        if (choseProceed) {
-          await UiState.stopRecording({ nameNewTest: false });
-          this.createNewProject();
+      ModalState.showAlert(
+        {
+          title: 'Create without saving',
+          description:
+            'Are you sure you would like to create a new project without saving the current one?',
+          confirmLabel: 'Proceed',
+          cancelLabel: 'Cancel',
+        },
+        async choseProceed => {
+          if (choseProceed) {
+            await UiState.stopRecording({ nameNewTest: false })
+            this.createNewProject()
+          }
         }
-      });
+      )
     } else if (UiState.isRecording) {
-      ModalState.showAlert({
-        title: "Stop recording",
-        description: "Are you sure you would to stop recording and create a new project?",
-        confirmLabel: "Proceed",
-        cancelLabel: "Cancel"
-      }, async (choseProceed) => {
-        if (choseProceed) {
-          await UiState.stopRecording({ nameNewTest: false });
-          this.createNewProject();
+      ModalState.showAlert(
+        {
+          title: 'Stop recording',
+          description:
+            'Are you sure you would to stop recording and create a new project?',
+          confirmLabel: 'Proceed',
+          cancelLabel: 'Cancel',
+        },
+        async choseProceed => {
+          if (choseProceed) {
+            await UiState.stopRecording({ nameNewTest: false })
+            this.createNewProject()
+          }
         }
-      });
+      )
     } else {
-      this.createNewProject();
+      this.createNewProject()
     }
   }
   async createNewProject() {
-    const name = await ModalState.renameProject();
-    const newProject = observable(new ProjectStore(name));
-    createDefaultSuite(newProject);
-    loadJSProject(this.state.project, newProject.toJS());
-    Logger.clearLogs();
-    newProject.setModified(false);
+    const name = await ModalState.renameProject()
+    const newProject = observable(new ProjectStore(name))
+    createDefaultSuite(newProject)
+    loadJSProject(this.state.project, newProject.toJS())
+    Logger.clearLogs()
+    newProject.setModified(false)
   }
   componentWillUnmount() {
     if (isProduction) {
-      clearInterval(this.moveInterval);
-      window.removeEventListener("resize", this.resizeHandler);
-      window.removeEventListener("beforeunload", this.quitHandler);
+      clearInterval(this.moveInterval)
+      window.removeEventListener('resize', this.resizeHandler)
+      window.removeEventListener('beforeunload', this.quitHandler)
     }
   }
   render() {
     return (
       <div className="container">
-        <SuiteDropzone loadProject={loadProject.bind(undefined, this.state.project)}>
+        <SuiteDropzone
+          loadProject={loadProject.bind(undefined, this.state.project)}
+        >
           <SplitPane
             split="horizontal"
             minSize={UiState.minContentHeight}
             maxSize={UiState.maxContentHeight}
             size={UiState.windowHeight - UiState.consoleHeight}
-            onChange={(size) => UiState.resizeConsole(window.innerHeight - size)}
+            onChange={size => UiState.resizeConsole(window.innerHeight - size)}
             style={{
-              position: "initial"
+              position: 'initial',
             }}
           >
             <div className="wrapper">
@@ -279,14 +299,18 @@ if (browser.windows) {
                 title={this.state.project.name}
                 changed={this.state.project.modified}
                 changeName={this.state.project.changeName}
-                openFile={(openFile) => {
-                  this.openFile = openFile;
+                openFile={openFile => {
+                  this.openFile = openFile
                 }}
                 load={loadProject.bind(undefined, this.state.project)}
                 save={() => saveProject(this.state.project)}
                 new={this.loadNewProject.bind(this)}
               />
-              <div className={classNames("content", { dragging: UiState.navigationDragging })}>
+              <div
+                className={classNames('content', {
+                  dragging: UiState.navigationDragging,
+                })}
+              >
                 <SplitPane
                   split="vertical"
                   minSize={UiState.minNavigationWidth}
@@ -294,7 +318,8 @@ if (browser.windows) {
                   size={UiState.navigationWidth}
                   onChange={UiState.resizeNavigation}
                   onDragStarted={this.navigationDragStart}
-                  onDragFinished={this.navigationDragEnd}>
+                  onDragFinished={this.navigationDragEnd}
+                >
                   <Navigation
                     tests={UiState.filteredTests}
                     suites={this.state.project.suites}
@@ -310,13 +335,19 @@ if (browser.windows) {
                 </SplitPane>
               </div>
             </div>
-            <Console height={UiState.consoleHeight} restoreSize={UiState.restoreConsoleSize} />
+            <Console
+              height={UiState.consoleHeight}
+              restoreSize={UiState.restoreConsoleSize}
+            />
           </SplitPane>
-          <Modal project={this.state.project} createNewProject={this.createNewProject.bind(this)} />
+          <Modal
+            project={this.state.project}
+            createNewProject={this.createNewProject.bind(this)}
+          />
           <Changelog />
           <Tooltip />
         </SuiteDropzone>
       </div>
-    );
+    )
   }
 }

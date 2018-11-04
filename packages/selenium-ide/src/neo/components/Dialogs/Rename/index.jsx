@@ -15,14 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import Modal from "../../Modal";
-import FlatButton from "../../FlatButton";
-import LabelledInput from "../../LabelledInput";
-import DialogContainer from "../Dialog";
-import classNames from "classnames";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import Modal from '../../Modal'
+import FlatButton from '../../FlatButton'
+import LabelledInput from '../../LabelledInput'
+import DialogContainer from '../Dialog'
+import classNames from 'classnames'
+import './style.css'
 
 export default class RenameDialog extends React.Component {
   static propTypes = {
@@ -31,88 +31,127 @@ export default class RenameDialog extends React.Component {
     value: PropTypes.string,
     verify: PropTypes.func,
     cancel: PropTypes.func,
-    setValue: PropTypes.func
-  };
+    setValue: PropTypes.func,
+  }
   render() {
     return (
-      <Modal className={classNames("stripped", "rename-dialog")} isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
+      <Modal
+        className={classNames('stripped', 'rename-dialog')}
+        isOpen={this.props.isEditing}
+        onRequestClose={this.props.cancel}
+      >
         <RenameDialogContents {...this.props} />
       </Modal>
-    );
+    )
   }
 }
 
 class RenameDialogContents extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isRenaming: !!props.value,
-      value: (props.isNewTest || props.type === "project") ? "" : (props.value ? props.value : ""),
+      value:
+        props.isNewTest || props.type === 'project'
+          ? ''
+          : props.value
+            ? props.value
+            : '',
       valid: true,
-      type: props.type
-    };
+      type: props.type,
+    }
   }
   handleChange(inputValue) {
     this.setState({
       value: inputValue,
-      valid: this.props.verify(inputValue)
-    });
+      valid: this.props.verify(inputValue),
+    })
   }
   render() {
     const content = {
-      title: this.props.isNewTest ?
-        "Name your new test"
-        :
-        (this.props.type === "project" ?
-          "Name your new project"
-          :
-          `${this.state.isRenaming ? "Rename" : "Add new"} ${this.state.type}`),
-      bodyTop:
-        this.props.isNewTest ?
-          <span>Please provide a name for your new test.</span>
-          :
-          (this.props.type === "project" ?
-            <span>Please provide a name for your new project.</span>
-            :
-            undefined),
-      bodyBottom:
-        this.props.isNewTest ?
-          <span>You can change it at any time by clicking the <span className={classNames("si-more", "more-icon")}/> icon next to its name in the tests panel.</span>
-          :
-          (this.props.type === "project" ?
-            <span>You can change the name of your project at any time by clicking it and entering a new name.</span>
-            :
-            undefined),
-      submitButton: (this.props.isNewTest || this.props.type === "project") ? "OK" : (this.state.isRenaming ? "RENAME" : "ADD"),
-      cancelButton: (this.props.isNewTest) ? "LATER" : "CANCEL",
-      inputLabel: this.props.isNewTest ? "test name" : this.state.type + " name"
-    };
+      title: this.props.isNewTest
+        ? 'Name your new test'
+        : this.props.type === 'project'
+          ? 'Name your new project'
+          : `${this.state.isRenaming ? 'Rename' : 'Add new'} ${
+              this.state.type
+            }`,
+      bodyTop: this.props.isNewTest ? (
+        <span>Please provide a name for your new test.</span>
+      ) : this.props.type === 'project' ? (
+        <span>Please provide a name for your new project.</span>
+      ) : (
+        undefined
+      ),
+      bodyBottom: this.props.isNewTest ? (
+        <span>
+          You can change it at any time by clicking the{' '}
+          <span className={classNames('si-more', 'more-icon')} /> icon next to
+          its name in the tests panel.
+        </span>
+      ) : this.props.type === 'project' ? (
+        <span>
+          You can change the name of your project at any time by clicking it and
+          entering a new name.
+        </span>
+      ) : (
+        undefined
+      ),
+      submitButton:
+        this.props.isNewTest || this.props.type === 'project'
+          ? 'OK'
+          : this.state.isRenaming
+            ? 'RENAME'
+            : 'ADD',
+      cancelButton: this.props.isNewTest ? 'LATER' : 'CANCEL',
+      inputLabel: this.props.isNewTest
+        ? 'test name'
+        : this.state.type + ' name',
+    }
     return (
       <DialogContainer
         title={content.title}
-        type={this.state.valid ? "info" : "warn"}
+        type={this.state.valid ? 'info' : 'warn'}
         renderFooter={() => (
           <span className="right">
-            <FlatButton disabled={this.props.isNewTest && !!this.state.value} onClick={this.props.cancel}>{content.cancelButton}</FlatButton>
-            <FlatButton type="submit" disabled={!this.state.value || !this.state.valid} onClick={() => {this.props.setValue(this.state.value);}} style={{
-              marginRight: "0"
-            }}>{content.submitButton}</FlatButton>
+            <FlatButton
+              disabled={this.props.isNewTest && !!this.state.value}
+              onClick={this.props.cancel}
+            >
+              {content.cancelButton}
+            </FlatButton>
+            <FlatButton
+              type="submit"
+              disabled={!this.state.value || !this.state.valid}
+              onClick={() => {
+                this.props.setValue(this.state.value)
+              }}
+              style={{
+                marginRight: '0',
+              }}
+            >
+              {content.submitButton}
+            </FlatButton>
           </span>
         )}
         onRequestClose={this.props.cancel}
       >
-        { content.bodyTop }
+        {content.bodyTop}
         <LabelledInput
-          name={this.state.type + "Name"}
+          name={this.state.type + 'Name'}
           label={content.inputLabel}
           value={this.state.value}
           onChange={this.handleChange.bind(this)}
           autoFocus
         />
-        { !this.state.valid && <span className="message">A {this.props.type} with this name already exists</span> }
-        { content.bodyBottom }
+        {!this.state.valid && (
+          <span className="message">
+            A {this.props.type} with this name already exists
+          </span>
+        )}
+        {content.bodyBottom}
       </DialogContainer>
-    );
+    )
   }
   static propTypes = {
     isEditing: PropTypes.bool,
@@ -121,6 +160,6 @@ class RenameDialogContents extends React.Component {
     verify: PropTypes.func,
     cancel: PropTypes.func,
     setValue: PropTypes.func,
-    isNewTest: PropTypes.bool
-  };
+    isNewTest: PropTypes.bool,
+  }
 }

@@ -15,19 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import TestList from "../TestList";
-import PlaybackState from "../../stores/view/PlaybackState";
-import "./style.css";
+import React from 'react'
+import TestList from '../TestList'
+import PlaybackState from '../../stores/view/PlaybackState'
+import './style.css'
 
 export default class ExecutionPlan extends React.Component {
-  render () {
-    return (
-      PlaybackState.testsToRun
-        ? <TestList tests={PlaybackState.testsToRun} suite={PlaybackState.currentRunningSuite} noMenu={true} />
-        : <div className="content no-session">
-          <span>No Tests Running</span>
-        </div>
-    );
+  render() {
+    return PlaybackState.testsToRun ? (
+      <TestList
+        tests={PlaybackState.testsToRun}
+        suite={PlaybackState.currentRunningSuite}
+        noMenu={true}
+      />
+    ) : (
+      <div className="content no-session">
+        <span>No Tests Running</span>
+      </div>
+    )
   }
 }

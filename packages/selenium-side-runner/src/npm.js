@@ -15,34 +15,34 @@
 // specific language governing permissions and limitations
 // under the License.
 
-let npm;
+let npm
 
 try {
-  npm = require("global-npm");
+  npm = require('global-npm')
 } catch (err) {
-  if (err.code === "MODULE_NOT_FOUND") {
-    npm = require("npm");
+  if (err.code === 'MODULE_NOT_FOUND') {
+    npm = require('npm')
   } else {
-    throw err;
+    throw err
   }
 }
 
 function install() {
   return new Promise((res, rej) => {
-    npm.load({ progress: false, loglevel: "silent" }, (e) => {
+    npm.load({ progress: false, loglevel: 'silent' }, e => {
       if (e) {
-        rej(e);
+        rej(e)
       } else {
-        npm.commands.install((e) => {
+        npm.commands.install(e => {
           if (e) {
-            rej(e);
+            rej(e)
           } else {
-            res();
+            res()
           }
-        });
+        })
       }
-    });
-  });
+    })
+  })
 }
 
-install();
+install()

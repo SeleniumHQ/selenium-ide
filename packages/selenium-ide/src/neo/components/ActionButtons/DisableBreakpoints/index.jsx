@@ -15,18 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
-import { parse } from "modifier-keys";
+import React from 'react'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
+import { parse } from 'modifier-keys'
 
 export default class DisableBreakpointsButton extends React.Component {
   render() {
     return (
       <ActionButton
-        data-tip={`<p>Disable breakpoints <span style="color: #929292;padding-left: 5px;">${parse("y", { primaryKey: true })}</span></p>`}
+        data-tip={`<p>Disable breakpoints <span style="color: #929292;padding-left: 5px;">${parse(
+          'y',
+          { primaryKey: true }
+        )}</span></p>`}
         {...this.props}
-        className={classNames("si-disable-breakpoints", this.props.className)} />// eslint-disable-line react/prop-types
-    );
+        className={classNames('si-disable-breakpoints', this.props.className)}
+      /> // eslint-disable-line react/prop-types
+    )
   }
 }

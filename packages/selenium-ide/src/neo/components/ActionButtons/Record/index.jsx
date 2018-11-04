@@ -15,28 +15,41 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import ActionButton from "../ActionButton";
-import { parse } from "modifier-keys";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import ActionButton from '../ActionButton'
+import { parse } from 'modifier-keys'
+import './style.css'
 
 export default class Record extends React.Component {
   static propTypes = {
     isRecording: PropTypes.bool,
     disabled: PropTypes.bool,
-    onClick: PropTypes.func
-  };
+    onClick: PropTypes.func,
+  }
   render() {
     return (
       <div
         className="record"
-        data-tip={this.props.isRecording ?
-          `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse("u", { primaryKey: true })}</span></p>` :
-          `<p>Start recording <span style="color: #929292;padding-left: 5px;">${parse("u", { primaryKey: true })}</span></p>`
-        }>
-        <ActionButton disabled={this.props.disabled} isActive={this.props.isRecording} onClick={this.props.onClick} className="si-record"></ActionButton>
+        data-tip={
+          this.props.isRecording
+            ? `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse(
+                'u',
+                { primaryKey: true }
+              )}</span></p>`
+            : `<p>Start recording <span style="color: #929292;padding-left: 5px;">${parse(
+                'u',
+                { primaryKey: true }
+              )}</span></p>`
+        }
+      >
+        <ActionButton
+          disabled={this.props.disabled}
+          isActive={this.props.isRecording}
+          onClick={this.props.onClick}
+          className="si-record"
+        />
       </div>
-    );
+    )
   }
 }
