@@ -32,11 +32,11 @@
     "glob": "^7.1.2",
     "global-npm": "^0.3.0",
     "jest": "23.4.2",
-    "jest-environment-selenium": "^1.1.0",
+    "jest-environment-selenium": "2.0.0",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
     "rimraf": "^2.6.2",
-    "selenium-webdriver": "^3.6.0",
+    "selenium-webdriver": "4.0.0-alpha.1",
     "selianize": "^3.4.2",
     "semver": "^5.5.1",
     "winston": "^2.4.0"
