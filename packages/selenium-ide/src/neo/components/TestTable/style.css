@@ -34,7 +34,7 @@
 }
 
 .test-table th:not(:last-child)::after {
-  content: "";
+  content: '';
   height: 10px;
   width: 1px;
   background-color: #cecece;

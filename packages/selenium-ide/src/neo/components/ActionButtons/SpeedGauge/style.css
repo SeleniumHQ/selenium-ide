@@ -1,11 +1,11 @@
-.btn-action[class*="si-gauge-"] {
+.btn-action[class*='si-gauge-'] {
   position: relative;
   width: 40px;
   text-align: left;
   padding-left: 4px;
 }
 
-.btn-action[class*="si-gauge-"] i {
+.btn-action[class*='si-gauge-'] i {
   transform: rotate(90deg);
   position: absolute;
   font-size: 8px;

@@ -51,11 +51,11 @@
 }
 
 .header.changed .title::after {
-  content: "*";
+  content: '*';
 }
 
 .header .title:focus::after {
-  content: " ";
+  content: ' ';
 }
 
 .header .buttons {

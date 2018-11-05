@@ -1,5 +1,5 @@
 .rename-dialog .message::before {
-  content: "*";
+  content: '*';
 }
 
 .rename-dialog .more-icon {

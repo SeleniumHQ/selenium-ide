@@ -46,7 +46,7 @@
   height: 19px;
 }
 
-.command-form input[type="submit"] {
+.command-form input[type='submit'] {
   position: absolute;
   width: 0;
   height: 0;

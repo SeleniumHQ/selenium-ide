@@ -1,14 +1,13 @@
 @font-face {
   font-family: 'selenium-ide';
-  src:
-    url('../assets/fonts/selenium-ide.ttf?xyc7ya') format('truetype'),
+  src: url('../assets/fonts/selenium-ide.ttf?xyc7ya') format('truetype'),
     url('../assets/fonts/selenium-ide.svg?xyc7ya#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
-[class^="si-"],
-[class*=" si-"] {
+[class^='si-'],
+[class*=' si-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'selenium-ide', sans-serif !important;
   speak: none;
@@ -24,15 +23,15 @@
 }
 
 .si-remove-comment::before {
-  content: "\e900";
+  content: '\e900';
 }
 
 .si-comment::before {
-  content: "\e925";
+  content: '\e925';
 }
 
 .si-new-project::before {
-  content: "\e91e";
+  content: '\e91e';
 }
 
 .si-record {
@@ -41,7 +40,7 @@
 
 .si-record::after,
 .si-record-circle::before {
-  content: "\e91f";
+  content: '\e91f';
   position: absolute;
   top: 0;
   left: 0;
@@ -49,137 +48,137 @@
 
 .si-record::before,
 .si-record-out::before {
-  content: "\e920";
+  content: '\e920';
 }
 
 .si-download::before {
-  content: "\e901";
+  content: '\e901';
 }
 
 .si-filter::before {
-  content: "\e915";
+  content: '\e915';
 }
 
 .si-disable-breakpoints::before {
-  content: "\e91b";
+  content: '\e91b';
 }
 
 .si-break-exceptions::before {
-  content: "\e91c";
+  content: '\e91c';
 }
 
 .si-stop::before {
-  content: "\e91d";
+  content: '\e91d';
 }
 
 .si-open::before {
-  content: "\e905";
+  content: '\e905';
 }
 
 .si-pencil::before {
-  content: "\e919";
+  content: '\e919';
 }
 
 .si-step-down::before {
-  content: "\e917";
+  content: '\e917';
 }
 
 .si-caret-wide::before {
-  content: "\e918";
+  content: '\e918';
 }
 
 .si-gauge-1::before {
-  content: "\e90c";
+  content: '\e90c';
 }
 
 .si-gauge-2::before {
-  content: "\e90e";
+  content: '\e90e';
 }
 
 .si-gauge-3::before {
-  content: "\e912";
+  content: '\e912';
 }
 
 .si-gauge-4::before {
-  content: "\e913";
+  content: '\e913';
 }
 
 .si-gauge-5::before {
-  content: "\e914";
+  content: '\e914';
 }
 
 .si-gauge-12::before {
-  content: "\e91a";
+  content: '\e91a';
 }
 
 .si-search::before {
-  content: "\e916";
+  content: '\e916';
 }
 
 .si-caret::before {
-  content: "\e902";
+  content: '\e902';
 }
 
 .si-check::before {
-  content: "\e910";
+  content: '\e910';
 }
 
 .si-add::before {
-  content: "\e90d";
+  content: '\e90d';
 }
 
 .si-ic_arrow_down::before {
-  content: "\e903";
+  content: '\e903';
 }
 
 .si-clear::before {
-  content: "\e921";
+  content: '\e921';
 }
 
 .si-delete::before {
-  content: "\e904";
+  content: '\e904';
 }
 
 .si-step-into::before {
-  content: "\e906";
+  content: '\e906';
 }
 
 .si-info::before {
-  content: "\e907";
+  content: '\e907';
 }
 
 .si-more::before {
-  content: "\e911";
+  content: '\e911';
 }
 
 .si-play-all::before {
-  content: "\e908";
+  content: '\e908';
 }
 
 .si-play::before {
-  content: "\e909";
+  content: '\e909';
 }
 
 .si-pause::before {
-  content: "\e90a";
+  content: '\e90a';
 }
 
 .si-remove::before {
-  content: "\e90b";
+  content: '\e90b';
 }
 
 .si-code::before {
-  content: "\e90f";
+  content: '\e90f';
 }
 
 .si-save::before {
-  content: "\e922";
+  content: '\e922';
 }
 
 .si-select::before {
-  content: "\e923";
+  content: '\e923';
 }
 
 .si-stop1::before {
-  content: "\e924";
+  content: '\e924';
 }

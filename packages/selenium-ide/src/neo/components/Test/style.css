@@ -67,5 +67,5 @@
 }
 
 .test.changed .name > span::after {
-  content: "*";
+  content: '*';
 }
