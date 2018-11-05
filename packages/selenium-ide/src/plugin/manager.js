@@ -46,8 +46,7 @@ class PluginManager {
       return new Promise(res => {
         Promise.all(
           this.plugins.map(plugin =>
-            this.emitConfiguration(plugin, project).catch(e => {
-              console.log(e)
+            this.emitConfiguration(plugin, project).catch(_e => {
               return ''
             })
           )

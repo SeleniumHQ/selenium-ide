@@ -6,7 +6,7 @@ module.exports = {
     jest: true,
     webextensions: true,
   },
-  extends: ['plugin:react/recommended'],
+  extends: ['eslint:recommended', 'plugin:react/recommended', 'prettier'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaFeatures: {
@@ -16,7 +16,7 @@ module.exports = {
     },
     sourceType: 'module',
   },
-  plugins: ['react', 'prettier'],
+  plugins: ['jest', 'react', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
     'react/prop-types': [0],
@@ -26,9 +26,9 @@ module.exports = {
     'no-unreachable': 'error',
     'no-unused-vars': [
       'error',
-      {varsIgnorePattern: '^_', args: 'all', argsIgnorePattern: '^_'},
+      { varsIgnorePattern: '^_', args: 'all', argsIgnorePattern: '^_' },
     ],
     'constructor-super': 'error',
     'valid-typeof': 'error',
   },
-};
+}

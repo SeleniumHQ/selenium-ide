@@ -16,7 +16,6 @@
 // under the License.
 
 const fs = require('fs')
-fs.existsSync = file => {
-  console.log('fs.existsSync: ' + file)
+fs.existsSync = _file => {
   return false
 }

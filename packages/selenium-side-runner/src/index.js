@@ -283,7 +283,7 @@ function runJest(project) {
     const child = fork(require.resolve('./child'), args, opts)
 
     child.on('exit', code => {
-      console.log('')
+      console.log('') // eslint-disable-line no-console
       if (!program.run) {
         rimraf.sync(projectPath)
       }

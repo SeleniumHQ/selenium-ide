@@ -79,7 +79,6 @@ export default class BackgroundRecorder {
 
   // TODO: rename method
   tabsOnActivatedHandler(activeInfo) {
-    console.log('tabs.onActivated')
     this.lastActivatedTabId = activeInfo.tabId
     let testCase = getSelectedCase()
     if (!testCase) {
@@ -130,7 +129,6 @@ export default class BackgroundRecorder {
   }
 
   windowsOnFocusChangedHandler(windowId) {
-    console.log('windows.onFocusChanged')
     let testCase = getSelectedCase()
     if (!testCase) {
       return
@@ -206,7 +204,6 @@ export default class BackgroundRecorder {
 
   tabsOnRemovedHandler(tabId, _removeInfo) {
     // eslint-disable-line no-unused-vars
-    console.log('tabs.onRemoved')
     let testCase = getSelectedCase()
     if (!testCase) {
       return
@@ -254,7 +251,6 @@ export default class BackgroundRecorder {
   webNavigationOnCreatedNavigationTargetHandler(details) {
     // we can't necessarily know that this will indicate a tab being
     // activated, and we hope tabs.onActivated will get called for us
-    console.log('webNavigation.OnCreatedNavigationTarget')
     let testCase = getSelectedCase()
     if (!testCase) return
     let testCaseId = testCase.id
