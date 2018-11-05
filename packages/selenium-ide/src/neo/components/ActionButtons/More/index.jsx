@@ -15,17 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
+import React from 'react'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
 
 export default class MoreButton extends React.Component {
   render() {
-    const props = { ...this.props };
-    delete props.canFocus;
-    delete props.isMenuOpen;
+    const props = { ...this.props }
+    delete props.canFocus
+    delete props.isMenuOpen
     return (
-      <ActionButton tabIndex={this.props.canFocus ? "0" : "-1"} {...props} className={classNames({ "no-focus": !this.props.canFocus }, "si-more", { "active": this.props.isMenuOpen }, this.props.className)} />// eslint-disable-line react/prop-types
-    );
+      <ActionButton
+        tabIndex={this.props.canFocus ? '0' : '-1'}
+        {...props}
+        className={classNames(
+          { 'no-focus': !this.props.canFocus },
+          'si-more',
+          { active: this.props.isMenuOpen },
+          this.props.className
+        )}
+      /> // eslint-disable-line react/prop-types
+    )
   }
 }

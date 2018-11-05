@@ -52,7 +52,7 @@
 }
 
 .import-dialog ul li::before {
-  content: "✓";
+  content: '✓';
   text-align: center;
   line-height: 14px;
   font-size: 14px;

@@ -15,33 +15,38 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from "mobx";
+import { action, observable } from 'mobx'
 
 class Variables {
-  @observable.shallow storedVars = new Map();
+  @observable.shallow
+  storedVars = new Map()
 
-  @action.bound get(key) {
-    return this.storedVars.get(key);
+  @action.bound
+  get(key) {
+    return this.storedVars.get(key)
   }
 
-  @action.bound set(key, value) {
-    this.storedVars.set(key, value);
+  @action.bound
+  set(key, value) {
+    this.storedVars.set(key, value)
   }
 
-  @action.bound has(key) {
-    return this.storedVars.has(key);
+  @action.bound
+  has(key) {
+    return this.storedVars.has(key)
   }
 
-  @action.bound delete(key) {
-    if(this.storedVars.has(key))
-      this.storedVars.delete(key);
+  @action.bound
+  delete(key) {
+    if (this.storedVars.has(key)) this.storedVars.delete(key)
   }
 
-  @action.bound clear() {
-    this.storedVars.clear();
+  @action.bound
+  clear() {
+    this.storedVars.clear()
   }
 }
 
-if (!window._variables) window._variables = new Variables();
+if (!window._variables) window._variables = new Variables()
 
-export default window._variables;
+export default window._variables

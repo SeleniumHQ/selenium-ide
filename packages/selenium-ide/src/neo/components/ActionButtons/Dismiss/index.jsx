@@ -15,14 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
+import React from 'react'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
 
 export default class DismissButton extends React.Component {
   render() {
     return (
-      <ActionButton tabIndex="-1" {...this.props} className={classNames("si-remove", this.props.className)} />// eslint-disable-line react/prop-types
-    );
+      <ActionButton
+        tabIndex="-1"
+        {...this.props}
+        className={classNames('si-remove', this.props.className)}
+      /> // eslint-disable-line react/prop-types
+    )
   }
 }

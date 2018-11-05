@@ -15,53 +15,76 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import Modal from "../Modal";
-import ModalHeader from "../ModalHeader";
-import Markdown from "../Markdown";
-import FlatButton from "../FlatButton";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import Modal from '../Modal'
+import ModalHeader from '../ModalHeader'
+import Markdown from '../Markdown'
+import FlatButton from '../FlatButton'
+import './style.css'
 
 export default class Alert extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isOpen: false,
-      options: {}
-    };
-    this.show = this.show.bind(this);
-    this.props.show(this.show);
+      options: {},
+    }
+    this.show = this.show.bind(this)
+    this.props.show(this.show)
   }
   static propTypes = {
-    show: PropTypes.func.isRequired
-  };
+    show: PropTypes.func.isRequired,
+  }
   show(options, cb) {
     this.setState({
       isOpen: true,
       options,
-      cb
-    });
+      cb,
+    })
   }
   close(status) {
     this.setState({
-      isOpen: false
-    });
-    if (this.state.cb) this.state.cb(status);
+      isOpen: false,
+    })
+    if (this.state.cb) this.state.cb(status)
   }
   render() {
     return (
-      <Modal className="alert" isOpen={this.state.isOpen} onRequestClose={this.close.bind(this, false)}>
-        <form onSubmit={(e) => { e.preventDefault(); }}>
-          <ModalHeader title={this.state.options.title} close={this.close.bind(this, false)} />
-          <Markdown className="markdown">{this.state.options.description}</Markdown>
+      <Modal
+        className="alert"
+        isOpen={this.state.isOpen}
+        onRequestClose={this.close.bind(this, false)}
+      >
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+          }}
+        >
+          <ModalHeader
+            title={this.state.options.title}
+            close={this.close.bind(this, false)}
+          />
+          <Markdown className="markdown">
+            {this.state.options.description}
+          </Markdown>
           <span className="right">
-            {this.state.options.cancelLabel ? <FlatButton onClick={this.close.bind(this, false)}>{this.state.options.cancelLabel}</FlatButton> : null}
-            <FlatButton type="submit" onClick={this.close.bind(this, true)} autoFocus >{this.state.options.confirmLabel || "OK"}</FlatButton>
+            {this.state.options.cancelLabel ? (
+              <FlatButton onClick={this.close.bind(this, false)}>
+                {this.state.options.cancelLabel}
+              </FlatButton>
+            ) : null}
+            <FlatButton
+              type="submit"
+              onClick={this.close.bind(this, true)}
+              autoFocus
+            >
+              {this.state.options.confirmLabel || 'OK'}
+            </FlatButton>
           </span>
-          <div className="clear"></div>
+          <div className="clear" />
         </form>
       </Modal>
-    );
+    )
   }
 }

@@ -15,29 +15,30 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Router from "../../router";
-import UiState from "../../neo/stores/view/UiState";
-import { Commands } from "../../neo/models/Command";
-import { recordCommand } from "../../neo/IO/SideeX/record";
-import { select } from "../../neo/IO/SideeX/find-select";
+import Router from '../../router'
+import UiState from '../../neo/stores/view/UiState'
+import { Commands } from '../../neo/models/Command'
+import { recordCommand } from '../../neo/IO/SideeX/record'
+import { select } from '../../neo/IO/SideeX/find-select'
 
-const router = new Router();
+const router = new Router()
 
-router.get("/tab", (req, res) => {
+router.get('/tab', (_req, res) => {
   if (!UiState.recorder.lastAttachedTabId) {
-    res({ error: "No active tab found" });
+    res({ error: 'No active tab found' })
   } else {
-    res({ id: UiState.recorder.lastAttachedTabId });
+    res({ id: UiState.recorder.lastAttachedTabId })
   }
-});
+})
 
-router.post("/command", (req, res) => {
-  recordCommand(req.command, req.target, req.value, undefined, req.select);
-  const type = Commands.list.has(req.command) && Commands.list.get(req.command).type;
+router.post('/command', (req, res) => {
+  recordCommand(req.command, req.target, req.value, undefined, req.select)
+  const type =
+    Commands.list.has(req.command) && Commands.list.get(req.command).type
   if (req.select && type) {
-    select(type, undefined, true);
+    select(type, undefined, true)
   }
-  res(true);
-});
+  res(true)
+})
 
-export default router;
+export default router

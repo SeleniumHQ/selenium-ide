@@ -15,31 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { interpolateScript } from "../../../IO/SideeX/formatCommand";
-import variables from "../../../stores/view/Variables";
+import { interpolateScript } from '../../../IO/SideeX/formatCommand'
+import variables from '../../../stores/view/Variables'
 
-describe("interpolate script", () => {
+describe('interpolate script', () => {
   afterEach(() => {
-    variables.clear();
-  });
-  it("should not interpolate a script without variables", () => {
-    const script = "return 1";
-    expect(interpolateScript(script).script).toEqual(script);
-  });
-  it("should interpolate a script with a single argument", () => {
-    variables.set("a", 1);
-    const script = "return ${a}";
-    const r = interpolateScript(script);
-    expect(r.script).toEqual("return arguments[0]");
-    expect(r.argv[0]).toBe(1);
-  });
-  it("should interpolate a script with multiple arguments", () => {
-    variables.set("a", 1);
-    variables.set("b", false);
-    const script = "return ${a} + ${a} || ${b}";
-    const r = interpolateScript(script);
-    expect(r.script).toEqual("return arguments[0] + arguments[0] || arguments[1]");
-    expect(r.argv[0]).toBe(1);
-    expect(r.argv[1]).toBe(false);
-  });
-});
+    variables.clear()
+  })
+  it('should not interpolate a script without variables', () => {
+    const script = 'return 1'
+    expect(interpolateScript(script).script).toEqual(script)
+  })
+  it('should interpolate a script with a single argument', () => {
+    variables.set('a', 1)
+    const script = 'return ${a}'
+    const r = interpolateScript(script)
+    expect(r.script).toEqual('return arguments[0]')
+    expect(r.argv[0]).toBe(1)
+  })
+  it('should interpolate a script with multiple arguments', () => {
+    variables.set('a', 1)
+    variables.set('b', false)
+    const script = 'return ${a} + ${a} || ${b}'
+    const r = interpolateScript(script)
+    expect(r.script).toEqual(
+      'return arguments[0] + arguments[0] || arguments[1]'
+    )
+    expect(r.argv[0]).toBe(1)
+    expect(r.argv[1]).toBe(false)
+  })
+})

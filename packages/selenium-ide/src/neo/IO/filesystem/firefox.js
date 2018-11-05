@@ -16,7 +16,5 @@
 // under the License.
 
 export default function getFile(path) {
-  return fetch(path, { mode: "same-origin" }).then(res => (
-    res.blob()
-  ));
+  return fetch(path, { mode: 'same-origin' }).then(res => res.blob())
 }

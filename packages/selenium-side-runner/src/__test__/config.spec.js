@@ -15,12 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import path from "path";
-import Config from "../config";
+import path from 'path'
+import Config from '../config'
 
-describe("configuration loader", () => {
-  it("should load the config from a file", () => {
-    const configuration = Config.load(path.join(__dirname, "config_1.yml"));
-    expect(configuration.capabilities).toBeDefined();
-  });
-});
+describe('configuration loader', () => {
+  it('should load the config from a file', () => {
+    const configuration = Config.load(path.join(__dirname, 'config_1.yml'))
+    expect(configuration.capabilities).toBeDefined()
+  })
+})

@@ -15,26 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Route from "../route";
+import Route from '../route'
 
-describe("function route", () => {
-  it("should test against verb", () => {
-    const route = new Route("get", "/", new Function());
-    expect(route.test("get", "/")).toBeTruthy();
-    expect(route.test("post", "/")).toBeFalsy();
-  });
-  it("should match test case insesitively", () => {
-    const route = new Route("get", "/", new Function());
-    expect(route.test("get", "/")).toBeTruthy();
-    expect(route.test("GET", "/")).toBeTruthy();
-    expect(route.test("GeT", "/")).toBeTruthy();
-  });
-  it("should match against uri", () => {
-    const route = new Route("get", "/people", new Function());
-    expect(route.test("get", "/people")).toBeTruthy();
-    expect(route.test("post", "/people")).toBeFalsy();
-    expect(route.test("post", "people")).toBeFalsy();
-    expect(route.test("post", "/peop")).toBeFalsy();
-    expect(route.test("get", "/peop")).toBeFalsy();
-  });
-});
+describe('function route', () => {
+  it('should test against verb', () => {
+    const route = new Route('get', '/', new Function())
+    expect(route.test('get', '/')).toBeTruthy()
+    expect(route.test('post', '/')).toBeFalsy()
+  })
+  it('should match test case insesitively', () => {
+    const route = new Route('get', '/', new Function())
+    expect(route.test('get', '/')).toBeTruthy()
+    expect(route.test('GET', '/')).toBeTruthy()
+    expect(route.test('GeT', '/')).toBeTruthy()
+  })
+  it('should match against uri', () => {
+    const route = new Route('get', '/people', new Function())
+    expect(route.test('get', '/people')).toBeTruthy()
+    expect(route.test('post', '/people')).toBeFalsy()
+    expect(route.test('post', 'people')).toBeFalsy()
+    expect(route.test('post', '/peop')).toBeFalsy()
+    expect(route.test('get', '/peop')).toBeFalsy()
+  })
+})

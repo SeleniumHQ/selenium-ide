@@ -15,31 +15,31 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import ReactModal from "react-modal";
-import { Transition } from "react-transition-group";
-import classNames from "classnames";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import ReactModal from 'react-modal'
+import { Transition } from 'react-transition-group'
+import classNames from 'classnames'
+import './style.css'
 
 const transitionStyles = {
   entering: {
     opacity: 0,
-    transform: "scale(0, 0)"
+    transform: 'scale(0, 0)',
   },
   entered: {
     opacity: 1,
-    transform: "scale(1, 1)"
+    transform: 'scale(1, 1)',
   },
   exiting: {
     opacity: 0,
-    transform: "scale(0, 0)"
+    transform: 'scale(0, 0)',
   },
   exited: {
     opacity: 0,
-    transform: "scale(0, 0)"
-  }
-};
+    transform: 'scale(0, 0)',
+  },
+}
 
 export default class Modal extends React.Component {
   static propTypes = {
@@ -48,16 +48,16 @@ export default class Modal extends React.Component {
     duration: PropTypes.number,
     children: PropTypes.node,
     transitionStyles: PropTypes.object,
-    onRequestClose: PropTypes.func
-  };
+    onRequestClose: PropTypes.func,
+  }
   static defaultProps = {
     duration: 100,
-    transitionStyles: transitionStyles
-  };
+    transitionStyles: transitionStyles,
+  }
   render() {
     return (
       <Transition in={this.props.isOpen} timeout={this.props.duration}>
-        {(status) => (
+        {status => (
           <ReactModal
             className="modal-content"
             isOpen={this.props.isOpen}
@@ -67,12 +67,15 @@ export default class Modal extends React.Component {
             onRequestClose={this.props.onRequestClose}
             overlayClassName="modal-overlay"
           >
-            <div className={classNames("modal", this.props.className)} style={this.props.transitionStyles[status]}>
+            <div
+              className={classNames('modal', this.props.className)}
+              style={this.props.transitionStyles[status]}
+            >
               {this.props.children}
             </div>
           </ReactModal>
         )}
       </Transition>
-    );
+    )
   }
 }

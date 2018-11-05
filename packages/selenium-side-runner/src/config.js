@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import fs from "fs";
-import yaml from "js-yaml";
+import fs from 'fs'
+import yaml from 'js-yaml'
 
 export function load(config) {
-  return yaml.safeLoad(fs.readFileSync(config));
+  return yaml.safeLoad(fs.readFileSync(config))
 }
 
 export default {
-  load
-};
+  load,
+}

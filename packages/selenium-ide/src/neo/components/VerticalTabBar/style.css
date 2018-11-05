@@ -52,7 +52,7 @@
   font-size: 14px;
   margin: auto 3px auto 5px;
   height: 14px;
-  content: "\e918";
+  content: '\e918';
 }
 
 .tabbar.vertical a:hover > span::after {

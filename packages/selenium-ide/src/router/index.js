@@ -15,33 +15,35 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Route from "./route";
+import Route from './route'
 
 export default class Router {
   constructor() {
-    this.routes = [];
-    this.get = this._registerRoute.bind(this, "get");
-    this.post = this._registerRoute.bind(this, "post");
-    this.put = this._registerRoute.bind(this, "put");
-    this.patch = this._registerRoute.bind(this, "patch");
-    this.delete = this._registerRoute.bind(this, "delete");
-    this.all = this._registerRoute.bind(this, undefined);
-    this.run = this.run.bind(this);
-    this.use = this.use.bind(this);
+    this.routes = []
+    this.get = this._registerRoute.bind(this, 'get')
+    this.post = this._registerRoute.bind(this, 'post')
+    this.put = this._registerRoute.bind(this, 'put')
+    this.patch = this._registerRoute.bind(this, 'patch')
+    this.delete = this._registerRoute.bind(this, 'delete')
+    this.all = this._registerRoute.bind(this, undefined)
+    this.run = this.run.bind(this)
+    this.use = this.use.bind(this)
   }
   _registerRoute(verb, uri, cb) {
-    this.routes.push(new Route(verb, uri, cb));
+    this.routes.push(new Route(verb, uri, cb))
   }
   _mount(prefix) {
-    return this.routes.map(r => new Route(r.verb, prefix + r.uri, r.run));
+    return this.routes.map(r => new Route(r.verb, prefix + r.uri, r.run))
   }
   run({ verb, uri, ...request }) {
     return new Promise((res, rej) => {
-      const route = this.routes.find(r => r.test(verb, uri));
-      route ? route.run(request.payload, res) : rej(new Error("No compliant route found"));
-    });
+      const route = this.routes.find(r => r.test(verb, uri))
+      route
+        ? route.run(request.payload, res)
+        : rej(new Error('No compliant route found'))
+    })
   }
-  use(prefix = "", router) {
-    this.routes = [...this.routes, ...router._mount(prefix)];
+  use(prefix = '', router) {
+    this.routes = [...this.routes, ...router._mount(prefix)]
   }
 }

@@ -16,15 +16,15 @@
 // under the License.
 
 export default function getFile(path) {
-  return new Promise((res) => {
-    const xhr = new XMLHttpRequest();
+  return new Promise(res => {
+    const xhr = new XMLHttpRequest()
 
     xhr.onload = () => {
-      res(xhr.response);
-    };
+      res(xhr.response)
+    }
 
-    xhr.responseType = "blob";
-    xhr.open("GET", path, true);
-    xhr.send();
-  });
+    xhr.responseType = 'blob'
+    xhr.open('GET', path, true)
+    xhr.send()
+  })
 }

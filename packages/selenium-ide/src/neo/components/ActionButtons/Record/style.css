@@ -18,9 +18,11 @@
   height: 8px;
   display: block;
   margin: auto;
-  content: "";
+  content: '';
 }
 
 @keyframes fadeIn {
-  from { opacity: 0.3; }
+  from {
+    opacity: 0.3;
+  }
 }

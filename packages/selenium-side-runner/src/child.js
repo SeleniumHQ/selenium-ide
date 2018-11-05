@@ -1,3 +1,3 @@
-import jest from "jest";
+import jest from 'jest'
 
-jest.run(process.argv.slice(2));
+jest.run(process.argv.slice(2))

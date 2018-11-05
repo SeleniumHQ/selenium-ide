@@ -15,22 +15,30 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Satisfies from "../versioner";
+import Satisfies from '../versioner'
 
-describe("semantic versioner", () => {
-  it("should return `undefined` for exact version match", () => {
-    expect(Satisfies("2.1", "2.1")).toBeUndefined();
-  });
-  it("should return a runner upgrade warning for upper minor version mismatch", () => {
-    expect(Satisfies("2.1", "2.0")).toEqual("runner is older than project file, in case of issues upgrade the runner using: `npm i -g selenium-side-runner@latest`");
-  });
-  it("should return an IDE upgrade warning for lower minor version mismatch", () => {
-    expect(Satisfies("2.1", "2.2")).toEqual("project file is older than recommended, in case of issues upgrade the project via the IDE");
-  });
-  it("should throw a runner upgrade error for upper major version mismatch", () => {
-    expect(() => (Satisfies("2.1", "1.1"))).toThrow("runner is too old to run the project file, upgrade the runner using: `npm i -g selenium-side-runner@latest`");
-  });
-  it("should throw an IDE upgrade error for lower major version mismatch", () => {
-    expect(() => (Satisfies("2.1", "3.1"))).toThrow("project file is too old for the runner, upgrade the project via the IDE");
-  });
-});
+describe('semantic versioner', () => {
+  it('should return `undefined` for exact version match', () => {
+    expect(Satisfies('2.1', '2.1')).toBeUndefined()
+  })
+  it('should return a runner upgrade warning for upper minor version mismatch', () => {
+    expect(Satisfies('2.1', '2.0')).toEqual(
+      'runner is older than project file, in case of issues upgrade the runner using: `npm i -g selenium-side-runner@latest`'
+    )
+  })
+  it('should return an IDE upgrade warning for lower minor version mismatch', () => {
+    expect(Satisfies('2.1', '2.2')).toEqual(
+      'project file is older than recommended, in case of issues upgrade the project via the IDE'
+    )
+  })
+  it('should throw a runner upgrade error for upper major version mismatch', () => {
+    expect(() => Satisfies('2.1', '1.1')).toThrow(
+      'runner is too old to run the project file, upgrade the runner using: `npm i -g selenium-side-runner@latest`'
+    )
+  })
+  it('should throw an IDE upgrade error for lower major version mismatch', () => {
+    expect(() => Satisfies('2.1', '3.1')).toThrow(
+      'project file is too old for the runner, upgrade the project via the IDE'
+    )
+  })
+})

@@ -17,7 +17,7 @@
 
 export class ControlFlowSyntaxError extends SyntaxError {
   constructor(message, index) {
-    super(message);
-    this.index = index;
+    super(message)
+    this.index = index
   }
 }

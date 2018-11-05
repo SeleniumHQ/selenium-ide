@@ -15,11 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import React from "react";
-import PropTypes from "prop-types";
-import Menu from "../Menu";
-import "./style.css";
+import browser from 'webextension-polyfill'
+import React from 'react'
+import PropTypes from 'prop-types'
+import Menu from '../Menu'
+import './style.css'
 
 export default class ListMenu extends React.Component {
   static propTypes = {
@@ -27,47 +27,54 @@ export default class ListMenu extends React.Component {
     opener: PropTypes.element,
     width: PropTypes.number,
     padding: PropTypes.number,
-    direction: PropTypes.string
-  };
+    direction: PropTypes.string,
+  }
   render() {
     return (
-      <Menu opener={this.props.opener} width={this.props.width} padding={this.props.padding} direction={this.props.direction}>
-        <ul className="buttons">
-          {this.props.children}
-        </ul>
+      <Menu
+        opener={this.props.opener}
+        width={this.props.width}
+        padding={this.props.padding}
+        direction={this.props.direction}
+      >
+        <ul className="buttons">{this.props.children}</ul>
       </Menu>
-    );
+    )
   }
 }
 
 export class ListMenuItem extends React.Component {
   constructor(props) {
-    super(props);
-    this.openLink = this.openLink.bind(this);
+    super(props)
+    this.openLink = this.openLink.bind(this)
   }
   static propTypes = {
     children: PropTypes.node,
     label: PropTypes.string,
     href: PropTypes.string,
-    onClick: PropTypes.func
-  };
+    onClick: PropTypes.func,
+  }
   openLink() {
     if (this.props.href) {
-      browser.tabs.create({ url: this.props.href });
+      browser.tabs.create({ url: this.props.href })
     }
   }
   render() {
     return (
       <li>
-        <a
-          onClick={this.props.href ? this.openLink : this.props.onClick}
-        >
+        <a onClick={this.props.href ? this.openLink : this.props.onClick}>
           {this.props.children}
-          {this.props.label ? <span className="label">{this.props.label}</span> : null}
+          {this.props.label ? (
+            <span className="label">{this.props.label}</span>
+          ) : null}
         </a>
       </li>
-    );
+    )
   }
 }
 
-export const ListMenuSeparator = () => (<li><hr /></li>);
+export const ListMenuSeparator = () => (
+  <li>
+    <hr />
+  </li>
+)

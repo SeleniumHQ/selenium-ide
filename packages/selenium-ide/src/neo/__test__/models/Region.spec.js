@@ -15,23 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Region from "../../models/Region";
+import Region from '../../models/Region'
 
-describe("Region", () => {
-  it("should have x, y, width and height", () => {
-    const region = new Region("x: 293, y: 621, width: 315, height: 492");
-    expect(region.isValid()).toBeTruthy();
-  });
-  it("should verify a valid region", () => {
-    const region = new Region("x: 293, y: 621, width: 315, height: 492");
-    expect(region.isValid()).toBeTruthy();
-  });
-  it("should fail to verify a region with no width", () => {
-    const region = new Region("x: 293, y: 621, height: 492");
-    expect(region.isValid()).toBeFalsy();
-  });
-  it("should be valid for 0", () => {
-    const region = new Region("x: 0, y: 621, width: 123, height: 492");
-    expect(region.isValid()).toBeTruthy();
-  });
-});
+describe('Region', () => {
+  it('should have x, y, width and height', () => {
+    const region = new Region('x: 293, y: 621, width: 315, height: 492')
+    expect(region.isValid()).toBeTruthy()
+  })
+  it('should verify a valid region', () => {
+    const region = new Region('x: 293, y: 621, width: 315, height: 492')
+    expect(region.isValid()).toBeTruthy()
+  })
+  it('should fail to verify a region with no width', () => {
+    const region = new Region('x: 293, y: 621, height: 492')
+    expect(region.isValid()).toBeFalsy()
+  })
+  it('should be valid for 0', () => {
+    const region = new Region('x: 0, y: 621, width: 123, height: 492')
+    expect(region.isValid()).toBeTruthy()
+  })
+})

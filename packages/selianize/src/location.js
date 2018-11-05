@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import StringEscape from "js-string-escape";
+import StringEscape from 'js-string-escape'
 
 const emitters = {
   id: emitId,
@@ -24,50 +24,52 @@ const emitters = {
   linkText: emitLink,
   partialLinkText: emitPartialLinkText,
   css: emitCss,
-  xpath: emitXpath
-};
+  xpath: emitXpath,
+}
 
 export function emit(location) {
   return new Promise(async (res, rej) => {
     if (/^\/\//.test(location)) {
-      return res(await emitters.xpath(location));
+      return res(await emitters.xpath(location))
     }
-    const fragments = location.split("=");
-    const type = fragments.shift();
-    const selector = StringEscape(fragments.join("="));
+    const fragments = location.split('=')
+    const type = fragments.shift()
+    const selector = StringEscape(fragments.join('='))
     if (emitters[type]) {
-      let result = await emitters[type](selector);
-      res(result);
+      let result = await emitters[type](selector)
+      res(result)
     } else {
-      rej(new Error(type ? `Unknown locator ${type}` : "Locator can't be empty"));
+      rej(
+        new Error(type ? `Unknown locator ${type}` : "Locator can't be empty")
+      )
     }
-  });
+  })
 }
 
 export default {
-  emit
-};
+  emit,
+}
 
 function emitId(selector) {
-  return Promise.resolve(`By.id(\`${selector}\`)`);
+  return Promise.resolve(`By.id(\`${selector}\`)`)
 }
 
 function emitName(selector) {
-  return Promise.resolve(`By.name(\`${selector}\`)`);
+  return Promise.resolve(`By.name(\`${selector}\`)`)
 }
 
 function emitLink(selector) {
-  return Promise.resolve(`By.linkText(\`${selector}\`)`);
+  return Promise.resolve(`By.linkText(\`${selector}\`)`)
 }
 
 function emitPartialLinkText(selector) {
-  return Promise.resolve(`By.partialLinkText(\`${selector}\`)`);
+  return Promise.resolve(`By.partialLinkText(\`${selector}\`)`)
 }
 
 function emitCss(selector) {
-  return Promise.resolve(`By.css(\`${selector}\`)`);
+  return Promise.resolve(`By.css(\`${selector}\`)`)
 }
 
 function emitXpath(selector) {
-  return Promise.resolve(`By.xpath(\`${selector}\`)`);
+  return Promise.resolve(`By.xpath(\`${selector}\`)`)
 }

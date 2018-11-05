@@ -16,26 +16,34 @@
 // under the License.
 
 /*eslint-disable react/prop-types*/
-import React from "react";
-import PropTypes from "prop-types";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
+import './style.css'
 
 export default class SpeedGaugeButton extends React.Component {
   static propTypes = {
-    speed: PropTypes.number
-  };
+    speed: PropTypes.number,
+  }
   static defaultProps = {
-    speed: 5
-  };
+    speed: 5,
+  }
   render() {
-    const props = { ...this.props };
-    delete props.isMenuOpen;
+    const props = { ...this.props }
+    delete props.isMenuOpen
     return (
-      <ActionButton data-tip="<p>Test execution speed</p>" {...props} className={classNames(`si-gauge-${this.props.speed}`, { "active": this.props.isMenuOpen }, this.props.className)}>
+      <ActionButton
+        data-tip="<p>Test execution speed</p>"
+        {...props}
+        className={classNames(
+          `si-gauge-${this.props.speed}`,
+          { active: this.props.isMenuOpen },
+          this.props.className
+        )}
+      >
         <i className="si-caret" />
       </ActionButton>
-    );
+    )
   }
 }

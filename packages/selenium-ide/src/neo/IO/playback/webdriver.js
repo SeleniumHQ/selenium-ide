@@ -15,53 +15,56 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import webdriver from "browser-webdriver";
-import { absolutifyUrl } from "./utils";
-import variables from "../../stores/view/Variables";
-import { Logger, Channels } from "../../stores/view/Logs";
-import PlaybackState from "../../stores/view/PlaybackState";
+import webdriver from 'browser-webdriver'
+import { absolutifyUrl } from './utils'
+import variables from '../../stores/view/Variables'
+import { Logger, Channels } from '../../stores/view/Logs'
+import PlaybackState from '../../stores/view/PlaybackState'
 
-const By = webdriver.By;
-const until = webdriver.until;
-const Key = webdriver.Key;
+const By = webdriver.By
+const until = webdriver.until
+const Key = webdriver.Key
 
-const IMPLICIT_WAIT = 30 * 1000;
+const IMPLICIT_WAIT = 30 * 1000
 const DEFAULT_CAPABILITIES = {
-  browserName: "chrome"
-};
-const DEFAULT_SERVER = "http://localhost:4444/wd/hub";
+  browserName: 'chrome',
+}
+const DEFAULT_SERVER = 'http://localhost:4444/wd/hub'
 
 export default class WebDriverExecutor {
   constructor(capabilities, server) {
-    this.capabilities = capabilities || DEFAULT_CAPABILITIES;
-    this.server = server || DEFAULT_SERVER;
-    this.logger = new Logger(Channels.PLAYBACK);
+    this.capabilities = capabilities || DEFAULT_CAPABILITIES
+    this.server = server || DEFAULT_SERVER
+    this.logger = new Logger(Channels.PLAYBACK)
   }
 
   async init(baseUrl) {
-    this.baseUrl = baseUrl;
-    this.driver = await new webdriver.Builder().withCapabilities(this.capabilities).usingServer(this.server).build();
+    this.baseUrl = baseUrl
+    this.driver = await new webdriver.Builder()
+      .withCapabilities(this.capabilities)
+      .usingServer(this.server)
+      .build()
   }
 
   async cleanup() {
-    await this.driver.quit();
+    await this.driver.quit()
   }
 
   isWebDriverCommand() {
-    return true;
+    return true
   }
 
   name(command) {
     if (!command) {
-      return "skip";
+      return 'skip'
     }
 
-    const upperCase = command.charAt(0).toUpperCase() + command.slice(1);
-    const func = ("do" + upperCase).replace("Verify", "Assert");
+    const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
+    const func = ('do' + upperCase).replace('Verify', 'Assert')
     if (!this[func]) {
-      throw new Error(`Unknown command ${command}`);
+      throw new Error(`Unknown command ${command}`)
     }
-    return func;
+    return func
   }
 
   // Commands go after this line
@@ -104,375 +107,423 @@ export default class WebDriverExecutor {
   // doChooseCancelOnNextPrompt
 
   async skip() {
-    return Promise.resolve();
+    return Promise.resolve()
   }
 
   // window commands
 
   async doOpen(url) {
-    await this.driver.get(absolutifyUrl(url, this.baseUrl));
+    await this.driver.get(absolutifyUrl(url, this.baseUrl))
   }
 
   async doSetWindowSize(widthXheight) {
-    const [width, height] = widthXheight.split("x");
-    await this.driver.manage().window().setSize(parseInt(width), parseInt(height));
+    const [width, height] = widthXheight.split('x')
+    await this.driver
+      .manage()
+      .window()
+      .setSize(parseInt(width), parseInt(height))
   }
 
   async doSelectFrame(locator) {
-    const targetLocator = this.driver.switchTo();
-    if (locator === "relative=top") {
-      await targetLocator.defaultContent();
-    } else if (locator === "relative=parent") {
-      await targetLocator.parentFrame();
-    } else if (locator.startsWith("index=")) {
-      await targetLocator.frame(+locator.substr("index=".length));
+    const targetLocator = this.driver.switchTo()
+    if (locator === 'relative=top') {
+      await targetLocator.defaultContent()
+    } else if (locator === 'relative=parent') {
+      await targetLocator.parentFrame()
+    } else if (locator.startsWith('index=')) {
+      await targetLocator.frame(+locator.substr('index='.length))
     } else {
-      const element = await waitForElement(locator, this.driver);
-      await targetLocator.frame(element);
+      const element = await waitForElement(locator, this.driver)
+      await targetLocator.frame(element)
     }
   }
 
   async doSubmit(locator) {
-    const element = await waitForElement(locator, this.driver);
-    await element.submit();
+    const element = await waitForElement(locator, this.driver)
+    await element.submit()
   }
 
   // mouse commands
 
   async doClick(locator) {
-    const element = await waitForElement(locator, this.driver);
-    await element.click();
+    const element = await waitForElement(locator, this.driver)
+    await element.click()
   }
 
   async doClickAt(locator, coordString) {
-    const coords = coordString.split(",");
-    const element = await waitForElement(locator, this.driver);
-    await this.driver.actions()
+    const coords = coordString.split(',')
+    const element = await waitForElement(locator, this.driver)
+    await this.driver
+      .actions()
       .mouseMove(element, { x: coords[0], y: coords[1] })
       .click()
-      .perform();
+      .perform()
   }
 
   async doDoubleClick(locator) {
-    const element = await waitForElement(locator, this.driver);
-    await this.driver.actions().doubleClick(element).perform();
+    const element = await waitForElement(locator, this.driver)
+    await this.driver
+      .actions()
+      .doubleClick(element)
+      .perform()
   }
 
   async doCheck(locator) {
-    const element = await waitForElement(locator, this.driver);
+    const element = await waitForElement(locator, this.driver)
     if (!(await element.isSelected())) {
-      await element.click();
+      await element.click()
     }
   }
 
   async doUncheck(locator) {
-    const element = await waitForElement(locator, this.driver);
+    const element = await waitForElement(locator, this.driver)
     if (await element.isSelected()) {
-      await element.click();
+      await element.click()
     }
   }
 
   async doSelect(locator, optionLocator) {
-    const element = await waitForElement(locator, this.driver);
-    const option = await element.findElement(parseOptionLocator(optionLocator));
-    await option.click();
+    const element = await waitForElement(locator, this.driver)
+    const option = await element.findElement(parseOptionLocator(optionLocator))
+    await option.click()
   }
 
   // keyboard commands
 
   async doType(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    await element.clear();
-    await element.sendKeys(value);
+    const element = await waitForElement(locator, this.driver)
+    await element.clear()
+    await element.sendKeys(value)
   }
 
   async doSendKeys(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    await element.sendKeys(...preprocessKeys(value));
+    const element = await waitForElement(locator, this.driver)
+    await element.sendKeys(...preprocessKeys(value))
   }
 
   // script commands
 
   async doRunScript(script) {
-    await this.driver.executeScript(script.script, ...script.argv);
+    await this.driver.executeScript(script.script, ...script.argv)
   }
 
   async doExecuteScript(script, optionalVariable) {
-    const result = await this.driver.executeScript(script.script, ...script.argv);
+    const result = await this.driver.executeScript(
+      script.script,
+      ...script.argv
+    )
     if (optionalVariable) {
-      variables.set(optionalVariable, result);
+      variables.set(optionalVariable, result)
     }
   }
 
   async doExecuteAsyncScript(script, optionalVariable) {
-    const result = await this.driver.executeAsyncScript(`var callback = arguments[arguments.length - 1];${script.script}.then(callback).catch(callback);`, ...script.argv);
+    const result = await this.driver.executeAsyncScript(
+      `var callback = arguments[arguments.length - 1];${
+        script.script
+      }.then(callback).catch(callback);`,
+      ...script.argv
+    )
     if (optionalVariable) {
-      variables.set(optionalVariable, result);
+      variables.set(optionalVariable, result)
     }
   }
 
   // store commands
 
   async doStore(string, variable) {
-    variables.set(variable, string);
-    return Promise.resolve();
+    variables.set(variable, string)
+    return Promise.resolve()
   }
 
   async doStoreText(locator, variable) {
-    const element = await waitForElement(locator, this.driver);
-    const text = await element.getText();
-    variables.set(variable, text);
+    const element = await waitForElement(locator, this.driver)
+    const text = await element.getText()
+    variables.set(variable, text)
   }
 
   async doStoreValue(locator, variable) {
-    const element = await waitForElement(locator, this.driver);
-    const value = await element.getAttribute("value");
-    variables.set(variable, value);
+    const element = await waitForElement(locator, this.driver)
+    const value = await element.getAttribute('value')
+    variables.set(variable, value)
   }
 
   // assertions
 
   async doAssert(variableName, value) {
-    const variable = `${variables.get(variableName)}`;
+    const variable = `${variables.get(variableName)}`
     if (variable != value) {
-      throw new Error("Actual value '" + variable + "' did not match '" + value + "'");
+      throw new Error(
+        "Actual value '" + variable + "' did not match '" + value + "'"
+      )
     }
   }
 
   async doAssertAlert(expectedText) {
-    const actualText = await this.driver.switchTo().alert().getText();
+    const actualText = await this.driver
+      .switchTo()
+      .alert()
+      .getText()
     if (actualText !== expectedText) {
-      throw new Error("Actual alert text '" + actualText + "' did not match '" + expectedText + "'");
+      throw new Error(
+        "Actual alert text '" +
+          actualText +
+          "' did not match '" +
+          expectedText +
+          "'"
+      )
     }
   }
 
   async doAssertTitle(title) {
-    const actualTitle = await this.driver.getTitle();
+    const actualTitle = await this.driver.getTitle()
     if (title != actualTitle) {
-      throw new Error("Actual value '" + actualTitle + "' did not match '" + title + "'");
+      throw new Error(
+        "Actual value '" + actualTitle + "' did not match '" + title + "'"
+      )
     }
   }
 
   async doAssertElementPresent(locator) {
-    await waitForElement(locator, this.driver);
+    await waitForElement(locator, this.driver)
   }
 
   async doAssertElementNotPresent(locator) {
-    const elements = await this.driver.findElements(parseLocator(locator));
+    const elements = await this.driver.findElements(parseLocator(locator))
     if (elements.length) {
-      throw new Error("Unexpected element was found in page");
+      throw new Error('Unexpected element was found in page')
     }
   }
 
   async doAssertText(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    const text = await element.getText();
+    const element = await waitForElement(locator, this.driver)
+    const text = await element.getText()
     if (text !== value) {
-      throw new Error("Actual value '" + text + "' did not match '" + value + "'");
+      throw new Error(
+        "Actual value '" + text + "' did not match '" + value + "'"
+      )
     }
   }
 
   async doAssertNotText(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    const text = await element.getText();
+    const element = await waitForElement(locator, this.driver)
+    const text = await element.getText()
     if (text === value) {
-      throw new Error("Actual value '" + text + "' did match '" + value + "'");
+      throw new Error("Actual value '" + text + "' did match '" + value + "'")
     }
   }
 
   async doAssertValue(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    const elementValue = await element.getAttribute("value");
+    const element = await waitForElement(locator, this.driver)
+    const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
-      throw new Error("Actual value '" + elementValue + "' did not match '" + value + "'");
+      throw new Error(
+        "Actual value '" + elementValue + "' did not match '" + value + "'"
+      )
     }
   }
 
   // not generally implemented
   async doAssertNotValue(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    const elementValue = await element.getAttribute("value");
+    const element = await waitForElement(locator, this.driver)
+    const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
-      throw new Error("Actual value '" + elementValue + "' did match '" + value + "'");
+      throw new Error(
+        "Actual value '" + elementValue + "' did match '" + value + "'"
+      )
     }
   }
 
   async doAssertChecked(locator) {
-    const element = await waitForElement(locator, this.driver);
+    const element = await waitForElement(locator, this.driver)
     if (!(await element.isSelected())) {
-      throw new Error("Element is not checked, expected to be checked");
+      throw new Error('Element is not checked, expected to be checked')
     }
   }
 
   async doAssertNotChecked(locator) {
-    const element = await waitForElement(locator, this.driver);
+    const element = await waitForElement(locator, this.driver)
     if (await element.isSelected()) {
-      throw new Error("Element is checked, expected to be unchecked");
+      throw new Error('Element is checked, expected to be unchecked')
     }
   }
 
   async doAssertSelectedValue(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    const elementValue = await element.getAttribute("value");
+    const element = await waitForElement(locator, this.driver)
+    const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
-      throw new Error("Actual value '" + elementValue + "' did not match '" + value + "'");
+      throw new Error(
+        "Actual value '" + elementValue + "' did not match '" + value + "'"
+      )
     }
   }
 
   async doAssertNotSelectedValue(locator, value) {
-    const element = await waitForElement(locator, this.driver);
-    const elementValue = await element.getAttribute("value");
+    const element = await waitForElement(locator, this.driver)
+    const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
-      throw new Error("Actual value '" + elementValue + "' did match '" + value + "'");
+      throw new Error(
+        "Actual value '" + elementValue + "' did match '" + value + "'"
+      )
     }
   }
 
   async doAssertSelectedLabel(locator, label) {
-    const element = await waitForElement(locator, this.driver);
-    const selectedValue = await element.getAttribute("value");
-    const selectedOption = await element.findElement(By.xpath(`option[@value="${selectedValue}"]`));
-    const selectedOptionLabel = await selectedOption.getText();
+    const element = await waitForElement(locator, this.driver)
+    const selectedValue = await element.getAttribute('value')
+    const selectedOption = await element.findElement(
+      By.xpath(`option[@value="${selectedValue}"]`)
+    )
+    const selectedOptionLabel = await selectedOption.getText()
     if (selectedOptionLabel !== label) {
-      throw new Error("Actual value '" + selectedOptionLabel + "' did not match '" + label + "'");
+      throw new Error(
+        "Actual value '" +
+          selectedOptionLabel +
+          "' did not match '" +
+          label +
+          "'"
+      )
     }
   }
 
   async doAssertNotSelectedLabel(locator, label) {
-    const element = await waitForElement(locator, this.driver);
-    const selectedValue = await element.getAttribute("value");
-    const selectedOption = await element.findElement(By.xpath(`option[@value="${selectedValue}"]`));
-    const selectedOptionLabel = await selectedOption.getText();
+    const element = await waitForElement(locator, this.driver)
+    const selectedValue = await element.getAttribute('value')
+    const selectedOption = await element.findElement(
+      By.xpath(`option[@value="${selectedValue}"]`)
+    )
+    const selectedOptionLabel = await selectedOption.getText()
     if (selectedOptionLabel === label) {
-      throw new Error("Actual value '" + selectedOptionLabel + "' not match '" + label + "'");
+      throw new Error(
+        "Actual value '" + selectedOptionLabel + "' not match '" + label + "'"
+      )
     }
   }
 
   // other commands
 
   async doEcho(string) {
-    this.logger.log(string);
-    return Promise.resolve();
+    this.logger.log(string)
+    return Promise.resolve()
   }
 
   async doPause(time) {
-    await this.driver.sleep(time);
+    await this.driver.sleep(time)
   }
 
   async evaluateConditional(script) {
     try {
-      const result = await this.driver.executeScript(`return (${script.script})`, ...script.argv);
+      const result = await this.driver.executeScript(
+        `return (${script.script})`,
+        ...script.argv
+      )
       return Promise.resolve({
-        result: "success",
-        value: !!result
-      });
-    } catch(error) {
+        result: 'success',
+        value: !!result,
+      })
+    } catch (error) {
       return Promise.resolve({
-        result: error.message
-      });
+        result: error.message,
+      })
     }
   }
 
   async doRun(target) {
-    return Promise.resolve(PlaybackState.callTestCase(target));
+    return Promise.resolve(PlaybackState.callTestCase(target))
   }
 }
 
 async function waitForElement(locator, driver) {
-  const elementLocator = parseLocator(locator);
-  await driver.wait(until.elementLocated(elementLocator), IMPLICIT_WAIT);
-  const element = await driver.findElement(elementLocator);
+  const elementLocator = parseLocator(locator)
+  await driver.wait(until.elementLocated(elementLocator), IMPLICIT_WAIT)
+  const element = await driver.findElement(elementLocator)
 
-  return element;
+  return element
 }
 
 function parseLocator(locator) {
   if (/^\/\//.test(locator)) {
-    return By.xpath(locator);
+    return By.xpath(locator)
   }
-  const fragments = locator.split("=");
-  const type = fragments.shift();
-  const selector = fragments.join("=");
+  const fragments = locator.split('=')
+  const type = fragments.shift()
+  const selector = fragments.join('=')
   if (LOCATORS[type] && selector) {
-    return LOCATORS[type](selector);
+    return LOCATORS[type](selector)
   } else {
-    throw new Error(type ? `Unknown locator ${type}` : "Locator can't be empty");
+    throw new Error(type ? `Unknown locator ${type}` : "Locator can't be empty")
   }
 }
 
 function parseOptionLocator(locator) {
-  const fragments = locator.split("=");
-  const type = fragments.shift();
-  const selector = fragments.join("=");
+  const fragments = locator.split('=')
+  const type = fragments.shift()
+  const selector = fragments.join('=')
   if (OPTIONS_LOCATORS[type] && selector) {
-    return OPTIONS_LOCATORS[type](selector);
+    return OPTIONS_LOCATORS[type](selector)
   } else if (!selector) {
     // no selector strategy given, assuming label
-    return OPTIONS_LOCATORS["label"](type);
+    return OPTIONS_LOCATORS['label'](type)
   } else {
-    throw new Error(type ? `Unknown selection locator ${type}` : "Locator can't be empty");
+    throw new Error(
+      type ? `Unknown selection locator ${type}` : "Locator can't be empty"
+    )
   }
 }
 
 function preprocessKeys(str) {
-  let keys = [];
-  let match = str.match(/\$\{\w+\}/g);
+  let keys = []
+  let match = str.match(/\$\{\w+\}/g)
   if (!match) {
-    keys.push(str);
+    keys.push(str)
   } else {
-    let i = 0;
+    let i = 0
     while (i < str.length) {
-      let currentKey = match.shift(), currentKeyIndex = str.indexOf(currentKey, i);
+      let currentKey = match.shift(),
+        currentKeyIndex = str.indexOf(currentKey, i)
       if (currentKeyIndex > i) {
         // push the string before the current key
-        keys.push(str.substr(i, currentKeyIndex - i));
-        i = currentKeyIndex;
+        keys.push(str.substr(i, currentKeyIndex - i))
+        i = currentKeyIndex
       }
       if (currentKey) {
         if (/^\$\{KEY_\w+\}/.test(currentKey)) {
           // is a key
-          let keyName = currentKey.match(/\$\{KEY_(\w+)\}/)[1];
-          let key = Key[keyName];
+          let keyName = currentKey.match(/\$\{KEY_(\w+)\}/)[1]
+          let key = Key[keyName]
           if (key) {
-            keys.push(key);
+            keys.push(key)
           } else {
-            throw new Error(`Unrecognised key ${keyName}`);
+            throw new Error(`Unrecognised key ${keyName}`)
           }
         } else {
           // not a key, and not a stored variable, push it as-is
-          keys.push(currentKey);
+          keys.push(currentKey)
         }
-        i += currentKey.length;
+        i += currentKey.length
       } else if (i < str.length) {
         // push the rest of the string
-        keys.push(str.substr(i, str.length));
-        i = str.length;
+        keys.push(str.substr(i, str.length))
+        i = str.length
       }
     }
   }
-  return keys;
+  return keys
 }
 
 const LOCATORS = {
-  "id": By.id,
-  "name": By.name,
-  "link": By.linkText,
-  "linkText": By.linkText,
-  "partialLinkText": By.partialLinkText,
-  "css": By.css,
-  "xpath": By.xpath
-};
+  id: By.id,
+  name: By.name,
+  link: By.linkText,
+  linkText: By.linkText,
+  partialLinkText: By.partialLinkText,
+  css: By.css,
+  xpath: By.xpath,
+}
 
 const OPTIONS_LOCATORS = {
-  "id": (id) => (
-    By.css(`*[id="${id}"]`)
-  ),
-  "value": (value) => (
-    By.css(`*[value="${value}"]`)
-  ),
-  "label": (label) => (
-    By.xpath(`//option[. = '${label}']`)
-  ),
-  "index": (index) => (
-    By.css(`*:nth-child(${index})`)
-  )
-};
+  id: id => By.css(`*[id="${id}"]`),
+  value: value => By.css(`*[value="${value}"]`),
+  label: label => By.xpath(`//option[. = '${label}']`),
+  index: index => By.css(`*:nth-child(${index})`),
+}

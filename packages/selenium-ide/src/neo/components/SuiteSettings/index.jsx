@@ -15,15 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { DEFAULT_TIMEOUT } from "../../models/Suite";
-import Modal from "../Modal";
-import ModalHeader from "../ModalHeader";
-import Input from "../FormInput";
-import FlatButton from "../FlatButton";
-import Checkbox from "../Checkbox";
-import Markdown from "../Markdown";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { DEFAULT_TIMEOUT } from '../../models/Suite'
+import Modal from '../Modal'
+import ModalHeader from '../ModalHeader'
+import Input from '../FormInput'
+import FlatButton from '../FlatButton'
+import Checkbox from '../Checkbox'
+import Markdown from '../Markdown'
 
 export default class SuiteSettings extends React.Component {
   static propTypes = {
@@ -32,25 +32,29 @@ export default class SuiteSettings extends React.Component {
     isParallel: PropTypes.bool,
     persistSession: PropTypes.bool,
     submit: PropTypes.func,
-    cancel: PropTypes.func
-  };
+    cancel: PropTypes.func,
+  }
   render() {
     return (
-      <Modal className="suite-settings-dialog" isOpen={this.props.isEditing} onRequestClose={this.props.cancel}>
+      <Modal
+        className="suite-settings-dialog"
+        isOpen={this.props.isEditing}
+        onRequestClose={this.props.cancel}
+      >
         <SuiteSettingsContent {...this.props} />
       </Modal>
-    );
+    )
   }
 }
 
 class SuiteSettingsContent extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      timeout: props.timeout ? props.timeout : "",
+      timeout: props.timeout ? props.timeout : '',
       isParallel: !!props.isParallel,
-      persistSession: !!props.persistSession
-    };
+      persistSession: !!props.persistSession,
+    }
   }
   static propTypes = {
     isEditing: PropTypes.bool,
@@ -58,52 +62,87 @@ class SuiteSettingsContent extends React.Component {
     isParallel: PropTypes.bool,
     persistSession: PropTypes.bool,
     submit: PropTypes.func,
-    cancel: PropTypes.func
-  };
+    cancel: PropTypes.func,
+  }
   onTimeoutChange(value) {
     this.setState({
-      timeout: value
-    });
+      timeout: value,
+    })
   }
   onIsParallelChange(e) {
     this.setState({
-      isParallel: e.target.checked
-    });
+      isParallel: e.target.checked,
+    })
   }
   onPersistSessionChange(e) {
     this.setState({
-      persistSession: e.target.checked
-    });
+      persistSession: e.target.checked,
+    })
   }
   render() {
-    const persistSession = !this.state.isParallel && this.state.persistSession;
+    const persistSession = !this.state.isParallel && this.state.persistSession
     return (
-      <form onSubmit={(e) => { e.preventDefault(); }} style={{
-        minWidth: "300px"
-      }}>
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+        }}
+        style={{
+          minWidth: '300px',
+        }}
+      >
         <ModalHeader title="Suite properties" close={this.props.cancel} />
         <div className="form-contents">
-          <Input name="suite-timeout" type="number" label="Timeout (seconds)" placeholder={DEFAULT_TIMEOUT} value={this.state.timeout} width={130} onChange={this.onTimeoutChange.bind(this)} />
-          <Checkbox label="Run in parallel" checked={this.state.isParallel} width={130} onChange={this.onIsParallelChange.bind(this)} />
-          <Checkbox label="Persist session" checked={persistSession} disabled={this.state.isParallel} width={130} onChange={this.onPersistSessionChange.bind(this)} />
+          <Input
+            name="suite-timeout"
+            type="number"
+            label="Timeout (seconds)"
+            placeholder={DEFAULT_TIMEOUT}
+            value={this.state.timeout}
+            width={130}
+            onChange={this.onTimeoutChange.bind(this)}
+          />
+          <Checkbox
+            label="Run in parallel"
+            checked={this.state.isParallel}
+            width={130}
+            onChange={this.onIsParallelChange.bind(this)}
+          />
+          <Checkbox
+            label="Persist session"
+            checked={persistSession}
+            disabled={this.state.isParallel}
+            width={130}
+            onChange={this.onPersistSessionChange.bind(this)}
+          />
           <div>(not recommended)</div>
-          {persistSession && <Markdown className="markdown">
-            {"Persisting session will not reset the WebDriver session and variables between test run, which will result in [\"non-idempotent non-isolated\"](http://jasonpolites.github.io/tao-of-testing/ch4-1.1.html#rule-10-ensure-tests-are-isolated-and-idempotent) tests that are difficult to debug."}
-          </Markdown>}
+          {persistSession && (
+            <Markdown className="markdown">
+              {
+                'Persisting session will not reset the WebDriver session and variables between test run, which will result in ["non-idempotent non-isolated"](http://jasonpolites.github.io/tao-of-testing/ch4-1.1.html#rule-10-ensure-tests-are-isolated-and-idempotent) tests that are difficult to debug.'
+              }
+            </Markdown>
+          )}
         </div>
         <span className="right">
           <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-          <FlatButton type="submit" onClick={() => {this.props.submit({
-            timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
-            isParallel: this.state.isParallel,
-            persistSession: this.state.persistSession
-          });
-          }} style={{
-            marginRight: "0"
-          }}>Submit</FlatButton>
+          <FlatButton
+            type="submit"
+            onClick={() => {
+              this.props.submit({
+                timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
+                isParallel: this.state.isParallel,
+                persistSession: this.state.persistSession,
+              })
+            }}
+            style={{
+              marginRight: '0',
+            }}
+          >
+            Submit
+          </FlatButton>
         </span>
-        <div className="clear"></div>
+        <div className="clear" />
       </form>
-    );
+    )
   }
 }

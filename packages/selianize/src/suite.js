@@ -15,57 +15,75 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const hooks = [];
+const hooks = []
 
-import config from "./config";
+import config from './config'
 
 export function emit(suite, tests, options = config, snapshot) {
-  return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    const suiteTests = suite.tests.map((testId => (tests[testId].test)));
-    const hookResults = (await Promise.all(hooks.map((hook) => hook({ id: suite.id, name: suite.name, tests: suiteTests })))).reduce((code, result) => (
-      code
-      + (result.beforeAll ? `beforeAll(async () => {${result.beforeAll}});` : "")
-      + (result.before ? `beforeEach(async () => {${result.before}});` : "")
-      + (result.after ? `afterEach(async () => {${result.after}});` : "")
-      + (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : "")
-    ), "");
+  return new Promise(async (res, _rej) => {
+    // eslint-disable-line no-unused-vars
+    const suiteTests = suite.tests.map(testId => tests[testId].test)
+    const hookResults = (await Promise.all(
+      hooks.map(hook =>
+        hook({ id: suite.id, name: suite.name, tests: suiteTests })
+      )
+    )).reduce(
+      (code, result) =>
+        code +
+        (result.beforeAll
+          ? `beforeAll(async () => {${result.beforeAll}});`
+          : '') +
+        (result.before ? `beforeEach(async () => {${result.before}});` : '') +
+        (result.after ? `afterEach(async () => {${result.after}});` : '') +
+        (result.afterAll ? `afterAll(async () => {${result.afterAll}});` : ''),
+      ''
+    )
 
     if (!options.skipStdLibEmitting) {
-      let testsCode = (await Promise.all(suite.tests.map(testId => (
-        tests[testId].emitted
-      )).map((test) => (test.test))));
+      let testsCode = await Promise.all(
+        suite.tests.map(testId => tests[testId].emitted).map(test => test.test)
+      )
 
       if (suite.parallel) {
         testsCode = testsCode.map((code, index) => ({
           name: tests[suite.tests[index]].emitted.name,
-          code: code.replace(/^it/, `jest.setTimeout(${suite.timeout * 1000});test`)
-        }));
-        return res(testsCode);
+          code: code.replace(
+            /^it/,
+            `jest.setTimeout(${suite.timeout * 1000});test`
+          ),
+        }))
+        return res(testsCode)
       }
 
-      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${suite.name}", () => {${hookResults}${snapshot ? snapshot.hook : ""}`;
+      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${
+        suite.name
+      }", () => {${hookResults}${snapshot ? snapshot.hook : ''}`
 
-      result += testsCode.join("");
+      result += testsCode.join('')
 
-      result += "});";
+      result += '});'
       res({
-        code: result
-      });
+        code: result,
+      })
     } else {
-      res(hookResults ? {
-        snapshot: {
-          hook: hookResults
-        }
-      } : { skipped: true });
+      res(
+        hookResults
+          ? {
+              snapshot: {
+                hook: hookResults,
+              },
+            }
+          : { skipped: true }
+      )
     }
-  });
+  })
 }
 
 export function registerHook(hook) {
-  hooks.push(hook);
+  hooks.push(hook)
 }
 
 export default {
   emit,
-  registerHook
-};
+  registerHook,
+}

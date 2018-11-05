@@ -15,18 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable } from 'mobx'
 
 export default class SuiteState {
-  @observable isOpen = false;
+  @observable
+  isOpen = false
 
   constructor(UiState, suite) {
     this.filteredTests = computed(() =>
       suite.tests.filter(UiState.filterFunction)
-    );
+    )
   }
 
-  @action.bound setOpen(isOpen) {
-    this.isOpen = isOpen;
+  @action.bound
+  setOpen(isOpen) {
+    this.isOpen = isOpen
   }
 }

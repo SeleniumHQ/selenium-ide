@@ -15,51 +15,51 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from "../../../IO/migrations/pause";
+import migrate from '../../../IO/migrations/pause'
 
-describe("project migrator", () => {
-  it("should be included in 1.1", () => {
-    expect(migrate.version).toBe("1.1");
-  });
-  it("should migrate pause commands", () => {
+describe('project migrator', () => {
+  it('should be included in 1.1', () => {
+    expect(migrate.version).toBe('1.1')
+  })
+  it('should migrate pause commands', () => {
     const project = {
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "pause",
-              target: "",
-              value: "100"
+              command: 'pause',
+              target: '',
+              value: '100',
             },
             {
-              command: "pause",
-              target: "100",
-              value: ""
-            }
-          ]
-        }
-      ]
-    };
-    const upgraded = migrate(project);
+              command: 'pause',
+              target: '100',
+              value: '',
+            },
+          ],
+        },
+      ],
+    }
+    const upgraded = migrate(project)
     expect(upgraded).toEqual({
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "pause",
-              target: "100",
-              value: ""
+              command: 'pause',
+              target: '100',
+              value: '',
             },
             {
-              command: "pause",
-              target: "100",
-              value: ""
-            }
-          ]
-        }
-      ]
-    });
-  });
-});
+              command: 'pause',
+              target: '100',
+              value: '',
+            },
+          ],
+        },
+      ],
+    })
+  })
+})

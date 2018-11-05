@@ -15,52 +15,60 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { CommandNode } from "./command-node";
-import { State } from "./state";
-import { validateControlFlowSyntax } from "./syntax-validation";
-import { deriveCommandLevels } from "./command-leveler";
-import { ControlFlowCommandNames, ControlFlowCommandChecks } from "../../models/Command";
-export { createPlaybackTree }; // public API
-export { createCommandNodesFromCommandStack }; // for testing
+import { CommandNode } from './command-node'
+import { State } from './state'
+import { validateControlFlowSyntax } from './syntax-validation'
+import { deriveCommandLevels } from './command-leveler'
+import {
+  ControlFlowCommandNames,
+  ControlFlowCommandChecks,
+} from '../../models/Command'
+export { createPlaybackTree } // public API
+export { createCommandNodesFromCommandStack } // for testing
 
 function createPlaybackTree(commandStack) {
-  let nodes = createCommandNodesFromCommandStack(commandStack);
-  return { startingCommandNode: nodes[0] };
+  let nodes = createCommandNodesFromCommandStack(commandStack)
+  return { startingCommandNode: nodes[0] }
 }
 
 function createCommandNodesFromCommandStack(commandStack) {
-  validateControlFlowSyntax(commandStack);
-  let levels = deriveCommandLevels(commandStack);
-  let nodes = createCommandNodes(commandStack, levels);
-  return connectCommandNodes(nodes);
+  validateControlFlowSyntax(commandStack)
+  let levels = deriveCommandLevels(commandStack)
+  let nodes = createCommandNodes(commandStack, levels)
+  return connectCommandNodes(nodes)
 }
 
 function createCommandNodes(commandStack, levels) {
-  let commandNodes = [];
+  let commandNodes = []
   commandStack.forEach(function(command, index) {
-    let node = new CommandNode(command);
-    node.index = index;
-    node.level = levels[index];
-    commandNodes.push(node);
-  });
-  return commandNodes;
+    let node = new CommandNode(command)
+    node.index = index
+    node.level = levels[index]
+    commandNodes.push(node)
+  })
+  return commandNodes
 }
 
 function connectCommandNodes(_commandNodeStack) {
-  let commandNodeStack = [ ..._commandNodeStack ];
-  let state = new State;
+  let commandNodeStack = [..._commandNodeStack]
+  let state = new State()
   commandNodeStack.forEach(function(commandNode) {
-    let nextCommandNode = commandNodeStack[commandNode.index + 1];
+    let nextCommandNode = commandNodeStack[commandNode.index + 1]
     if (connectCommandNode[commandNode.command.command]) {
-      connectCommandNode[commandNode.command.command](commandNode, nextCommandNode, commandNodeStack, state);
+      connectCommandNode[commandNode.command.command](
+        commandNode,
+        nextCommandNode,
+        commandNodeStack,
+        state
+      )
     } else {
-      connectDefault(commandNode, nextCommandNode, commandNodeStack, state);
+      connectDefault(commandNode, nextCommandNode, commandNodeStack, state)
     }
-  });
+  })
   //if (ControlFlowCommandChecks.isTerminal(commandNodeStack[0].command)) {
   //  commandNodeStack.shift();
   //}
-  return commandNodeStack;
+  return commandNodeStack
 }
 
 let connectCommandNode = {
@@ -71,63 +79,86 @@ let connectCommandNode = {
   [ControlFlowCommandNames.if]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.repeatIf]: connectDo,
   [ControlFlowCommandNames.times]: connectConditionalForBranchOpen,
-  [ControlFlowCommandNames.while]: connectConditionalForBranchOpen
-};
+  [ControlFlowCommandNames.while]: connectConditionalForBranchOpen,
+}
 
-function connectDefault (commandNode, _nextCommandNode, stack, state) {
-  let nextCommandNode;
-  if (ControlFlowCommandChecks.isIf(state.top()) && ControlFlowCommandChecks.isElseOrElseIf(_nextCommandNode.command)) {
-    nextCommandNode = findNextNodeBy(stack, commandNode.index, state.top().level, ControlFlowCommandNames.end);
-  } else if (ControlFlowCommandChecks.isLoop(state.top()) && ControlFlowCommandChecks.isEnd(_nextCommandNode.command)) {
-    nextCommandNode = stack[state.top().index];
+function connectDefault(commandNode, _nextCommandNode, stack, state) {
+  let nextCommandNode
+  if (
+    ControlFlowCommandChecks.isIf(state.top()) &&
+    ControlFlowCommandChecks.isElseOrElseIf(_nextCommandNode.command)
+  ) {
+    nextCommandNode = findNextNodeBy(
+      stack,
+      commandNode.index,
+      state.top().level,
+      ControlFlowCommandNames.end
+    )
+  } else if (
+    ControlFlowCommandChecks.isLoop(state.top()) &&
+    ControlFlowCommandChecks.isEnd(_nextCommandNode.command)
+  ) {
+    nextCommandNode = stack[state.top().index]
   } else {
-    nextCommandNode = _nextCommandNode;
+    nextCommandNode = _nextCommandNode
   }
-  connectNext(commandNode, nextCommandNode);
+  connectNext(commandNode, nextCommandNode)
 }
 
-function trackBranchOpen (commandNode, nextCommandNode, stack, state) {
-  state.push({ command: commandNode.command.command, level: commandNode.level, index: commandNode.index });
-  if (ControlFlowCommandChecks.isDo(commandNode.command)) connectNext(commandNode, nextCommandNode, stack, state);
+function trackBranchOpen(commandNode, nextCommandNode, stack, state) {
+  state.push({
+    command: commandNode.command.command,
+    level: commandNode.level,
+    index: commandNode.index,
+  })
+  if (ControlFlowCommandChecks.isDo(commandNode.command))
+    connectNext(commandNode, nextCommandNode, stack, state)
 }
 
-function trackBranchClose (commandNode, nextCommandNode, stack, state) {
-  state.pop();
-  connectNext(commandNode, nextCommandNode, stack, state);
+function trackBranchClose(commandNode, nextCommandNode, stack, state) {
+  state.pop()
+  connectNext(commandNode, nextCommandNode, stack, state)
 }
 
-function connectConditionalForBranchOpen (commandNode, nextCommandNode, stack, state) {
-  trackBranchOpen(commandNode, nextCommandNode, stack, state);
-  connectConditional(commandNode, nextCommandNode, stack);
+function connectConditionalForBranchOpen(
+  commandNode,
+  nextCommandNode,
+  stack,
+  state
+) {
+  trackBranchOpen(commandNode, nextCommandNode, stack, state)
+  connectConditional(commandNode, nextCommandNode, stack)
 }
 
-function connectConditional (commandNode, nextCommandNode, stack) {
-  let left = findNextNodeBy(stack, commandNode.index, commandNode.level);
-  let right = nextCommandNode;
-  commandNode.right = right;
-  commandNode.left = left;
+function connectConditional(commandNode, nextCommandNode, stack) {
+  let left = findNextNodeBy(stack, commandNode.index, commandNode.level)
+  let right = nextCommandNode
+  commandNode.right = right
+  commandNode.left = left
 }
 
-function connectNext (commandNode, nextCommandNode) {
-  commandNode.next = nextCommandNode;
+function connectNext(commandNode, nextCommandNode) {
+  commandNode.next = nextCommandNode
 }
 
-function connectDo (commandNode, nextCommandNode, stack, state) {
-  commandNode.right = stack[state.top().index];
-  commandNode.left = nextCommandNode;
-  state.pop();
+function connectDo(commandNode, nextCommandNode, stack, state) {
+  commandNode.right = stack[state.top().index]
+  commandNode.left = nextCommandNode
+  state.pop()
 }
 
 function findNextNodeBy(stack, index, level, commandName) {
-  for(let i = index + 1; i < stack.length + 1; i++) {
+  for (let i = index + 1; i < stack.length + 1; i++) {
     if (commandName) {
-      if (stack[i].level === level &&
-          stack[i].command.command === commandName) {
-        return stack[i];
+      if (
+        stack[i].level === level &&
+        stack[i].command.command === commandName
+      ) {
+        return stack[i]
       }
     } else {
       if (stack[i].level === level) {
-        return stack[i];
+        return stack[i]
       }
     }
   }

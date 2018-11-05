@@ -15,83 +15,105 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import CommandEmitter from "./command";
-import config from "./config";
+import CommandEmitter from './command'
+import config from './config'
 
-const hooks = [];
+const hooks = []
 
 export function emit(test, options = config, snapshot) {
-  return new Promise(async (res, rej) => { // eslint-disable-line no-unused-vars
-    const hookResults = await Promise.all(hooks.map((hook) => hook(test)));
-    const setupHooks = hookResults.map((hook) => hook.setup || "").filter((hook) => (!!hook));
-    const teardownHooks = hookResults.map((hook) => hook.teardown || "").filter((hook) => (!!hook));
+  return new Promise(async (res, rej) => {
+    // eslint-disable-line no-unused-vars
+    const hookResults = await Promise.all(hooks.map(hook => hook(test)))
+    const setupHooks = hookResults
+      .map(hook => hook.setup || '')
+      .filter(hook => !!hook)
+    const teardownHooks = hookResults
+      .map(hook => hook.teardown || '')
+      .filter(hook => !!hook)
 
-    let errors = [];
+    let errors = []
 
-    const commands = (await Promise.all(test.commands.map((command, index) => (CommandEmitter.emit(command, options, snapshot ? snapshot.commands[command.id] : undefined).catch(e => {
-      if (options.silenceErrors) {
-        return `throw new Error("${e.message}");`;
-      } else {
-        errors.push({
-          index: index + 1,
-          ...command,
-          message: e
-        });
-      }
-    })))));
+    const commands = await Promise.all(
+      test.commands.map((command, index) =>
+        CommandEmitter.emit(
+          command,
+          options,
+          snapshot ? snapshot.commands[command.id] : undefined
+        ).catch(e => {
+          if (options.silenceErrors) {
+            return `throw new Error("${e.message}");`
+          } else {
+            errors.push({
+              index: index + 1,
+              ...command,
+              message: e,
+            })
+          }
+        })
+      )
+    )
 
     if (errors.length) {
-      rej({ ...test, commands: errors });
+      rej({ ...test, commands: errors })
     }
 
     if (!options.skipStdLibEmitting) {
       // emit everything
-      let emittedTest = `it("${test.name}", async () => {`;
-      emittedTest += setupHooks.join("").concat(snapshot ? snapshot.setupHooks.join("") : "");
-      emittedTest += `await tests["${test.name}"](driver, vars);`;
-      emittedTest += "await driver.getTitle().then(title => {expect(title).toBeDefined();});";
-      emittedTest += teardownHooks.join("").concat(snapshot ? snapshot.teardownHooks.join("") : "");
-      emittedTest += "});";
+      let emittedTest = `it("${test.name}", async () => {`
+      emittedTest += setupHooks
+        .join('')
+        .concat(snapshot ? snapshot.setupHooks.join('') : '')
+      emittedTest += `await tests["${test.name}"](driver, vars);`
+      emittedTest +=
+        'await driver.getTitle().then(title => {expect(title).toBeDefined();});'
+      emittedTest += teardownHooks
+        .join('')
+        .concat(snapshot ? snapshot.teardownHooks.join('') : '')
+      emittedTest += '});'
 
-      let func = `tests["${test.name}"] = async (driver, vars, opts) => {`;
-      func += commands.join("");
-      func += "}";
+      let func = `tests["${test.name}"] = async (driver, vars, opts) => {`
+      func += commands.join('')
+      func += '}'
 
-      res({ id: test.id, name: test.name, test: emittedTest, function: func });
+      res({ id: test.id, name: test.name, test: emittedTest, function: func })
     } else {
       // emit only additional hooks
       let snapshot = {
         commands: commands.reduce((snapshot, emittedCommand, index) => {
           if (!emittedCommand.skipped) {
-            snapshot[test.commands[index].id] = emittedCommand;
+            snapshot[test.commands[index].id] = emittedCommand
           }
-          return snapshot;
+          return snapshot
         }, {}),
         setupHooks,
-        teardownHooks
-      };
+        teardownHooks,
+      }
 
-      if (Object.keys(snapshot.commands).length || snapshot.setupHooks.length || snapshot.teardownHooks.length) {
+      if (
+        Object.keys(snapshot.commands).length ||
+        snapshot.setupHooks.length ||
+        snapshot.teardownHooks.length
+      ) {
         // if we even snapshotted anything
-        res({ id: test.id, snapshot });
+        res({ id: test.id, snapshot })
       } else {
         // resolve to nothing if there is no snapshot
-        res({});
+        res({})
       }
     }
-  });
+  })
 }
 
 export function registerHook(hook) {
-  hooks.push(hook);
+  hooks.push(hook)
 }
 
 export function clearHooks() {
-  hooks.length = 0;
+  hooks.length = 0
 }
 
 export default {
   emit,
   registerHook,
-  clearHooks
-};
+  clearHooks,
+}

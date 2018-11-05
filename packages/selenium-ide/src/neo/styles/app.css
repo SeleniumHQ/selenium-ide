@@ -3,7 +3,8 @@ html {
 }
 
 body {
-  font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+  font-family: system, -apple-system, BlinkMacSystemFont, 'Helvetica Neue',
+    Arial, sans-serif !important;
   font-size: 14px;
   color: #505050;
   margin: 0;
@@ -93,7 +94,7 @@ form .form-contents {
 
 code,
 .code {
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: 'Lucida Console', Monaco, monospace;
 }
 
 .right {
@@ -120,4 +121,3 @@ code,
 ::-moz-focus-inner {
   border: 0;
 }
-

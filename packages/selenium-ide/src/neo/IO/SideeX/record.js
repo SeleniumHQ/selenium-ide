@@ -15,102 +15,112 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import UiState from "../../stores/view/UiState";
-import WindowSession from "../window-session";
-import { Commands, ArgTypes } from "../../models/Command";
+import browser from 'webextension-polyfill'
+import UiState from '../../stores/view/UiState'
+import WindowSession from '../window-session'
+import { Commands, ArgTypes } from '../../models/Command'
 
 function isEmpty(commands) {
-  return (commands.length === 0);
+  return commands.length === 0
 }
 
 async function addInitialCommands(recordedUrl) {
-  const { test } = UiState.selectedTest;
+  const { test } = UiState.selectedTest
   if (WindowSession.openedTabIds[test.id]) {
-    const open = test.createCommand(0);
-    open.setCommand("open");
-    const setSize = test.createCommand(1);
-    setSize.setCommand("setWindowSize");
+    const open = test.createCommand(0)
+    open.setCommand('open')
+    const setSize = test.createCommand(1)
+    setSize.setCommand('setWindowSize')
 
-    const tab = await browser.tabs.get(WindowSession.currentUsedTabId[test.id]);
-    const win = await browser.windows.get(tab.windowId);
+    const tab = await browser.tabs.get(WindowSession.currentUsedTabId[test.id])
+    const win = await browser.windows.get(tab.windowId)
 
-    const url = new URL(recordedUrl ? recordedUrl : tab.url);
+    const url = new URL(recordedUrl ? recordedUrl : tab.url)
     if (!UiState.baseUrl) {
-      UiState.setUrl(url.origin, true);
-      open.setTarget(`${url.pathname}${url.search}`);
+      UiState.setUrl(url.origin, true)
+      open.setTarget(`${url.pathname}${url.search}`)
     } else if (url.origin === UiState.baseUrl) {
-      open.setTarget(`${url.pathname}${url.search}`);
+      open.setTarget(`${url.pathname}${url.search}`)
     } else {
-      open.setTarget(recordedUrl);
+      open.setTarget(recordedUrl)
     }
-    setSize.setTarget(`${win.width}x${win.height}`);
+    setSize.setTarget(`${win.width}x${win.height}`)
   }
 }
 
 // for plugins
 export function recordCommand(command, target, value, index, select = false) {
-  const test = UiState.displayedTest;
+  const test = UiState.displayedTest
   if (isEmpty(test.commands)) {
-    addInitialCommands();
+    addInitialCommands()
   }
-  const newCommand = test.createCommand(index ? index : getInsertionIndex(test));
-  newCommand.setCommand(command);
-  newCommand.setTarget(target);
-  newCommand.setValue(value);
+  const newCommand = test.createCommand(index ? index : getInsertionIndex(test))
+  newCommand.setCommand(command)
+  newCommand.setTarget(target)
+  newCommand.setValue(value)
 
   if (select) {
-    UiState.selectCommand(newCommand);
+    UiState.selectCommand(newCommand)
   }
 
-  return newCommand;
+  return newCommand
 }
 
 // for record module
-export default function record(command, targets, value, insertBeforeLastCommand) {
-  if (UiState.isSelectingTarget) return;
-  const test = UiState.displayedTest;
-  if (isEmpty(test.commands) && command === "open") {
-    addInitialCommands(targets[0][0]);
-  } else if (command !== "open") {
-    let index = getInsertionIndex(test, insertBeforeLastCommand);
+export default function record(
+  command,
+  targets,
+  value,
+  insertBeforeLastCommand
+) {
+  if (UiState.isSelectingTarget) return
+  const test = UiState.displayedTest
+  if (isEmpty(test.commands) && command === 'open') {
+    addInitialCommands(targets[0][0])
+  } else if (command !== 'open') {
+    let index = getInsertionIndex(test, insertBeforeLastCommand)
     if (preprocessDoubleClick(command, test, index)) {
       // double click removed the 2 clicks from before
-      index -= 2;
+      index -= 2
     }
-    const newCommand = recordCommand(command, targets[0][0], value, index);
+    const newCommand = recordCommand(command, targets[0][0], value, index)
     if (Commands.list.has(command)) {
-      const type = Commands.list.get(command).target;
+      const type = Commands.list.get(command).target
       if (type && type.name === ArgTypes.locator.name) {
-        newCommand.setTargets(targets);
+        newCommand.setTargets(targets)
       }
     }
   }
 }
 
 function preprocessDoubleClick(command, test, index) {
-  if (command === "doubleClickAt" && test.commands.length >= 1) {
-    const lastCommand = test.commands[index - 1];
-    const beforeLastCommand = test.commands[index - 2];
-    if (lastCommand.command === "clickAt" &&
+  if (command === 'doubleClickAt' && test.commands.length >= 1) {
+    const lastCommand = test.commands[index - 1]
+    const beforeLastCommand = test.commands[index - 2]
+    if (
+      lastCommand.command === 'clickAt' &&
       lastCommand.command === beforeLastCommand.command &&
       lastCommand.target === beforeLastCommand.target &&
-      lastCommand.value === beforeLastCommand.value) {
-      test.removeCommand(lastCommand);
-      test.removeCommand(beforeLastCommand);
-      return true;
+      lastCommand.value === beforeLastCommand.value
+    ) {
+      test.removeCommand(lastCommand)
+      test.removeCommand(beforeLastCommand)
+      return true
     }
   }
-  return false;
+  return false
 }
 
 function getInsertionIndex(test, insertBeforeLastCommand = false) {
-  let index = test.commands.length;
+  let index = test.commands.length
   if (insertBeforeLastCommand) {
-    index = test.commands.length - 1;
-  } else if (UiState.selectedCommand && UiState.selectedCommand !== UiState.pristineCommand) {
-    index = test.commands.indexOf(UiState.selectedCommand);
+    index = test.commands.length - 1
+  } else if (
+    UiState.selectedCommand &&
+    UiState.selectedCommand !== UiState.pristineCommand
+  ) {
+    index = test.commands.indexOf(UiState.selectedCommand)
   }
 
-  return index;
+  return index
 }

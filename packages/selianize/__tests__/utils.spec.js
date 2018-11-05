@@ -15,49 +15,49 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { convertToSnake } from "../src/utils";
+import { convertToSnake } from '../src/utils'
 
-describe("convert test names to snake_case", () => {
-  it("should convert spaces to _", () => {
-    expect(convertToSnake(" ")).toBe("_");
-  });
-  it("should convert arithmetic signs to _", () => {
-    expect(convertToSnake("+")).toBe("_");
-    expect(convertToSnake("-")).toBe("_");
-    expect(convertToSnake("/")).toBe("_");
-    expect(convertToSnake("*")).toBe("_");
-    expect(convertToSnake("%")).toBe("_");
-  });
-  it("should convert boolean signs to _", () => {
-    expect(convertToSnake("!")).toBe("_");
-    expect(convertToSnake("=")).toBe("_");
-    expect(convertToSnake("&")).toBe("_");
-    expect(convertToSnake("|")).toBe("_");
-    expect(convertToSnake(">")).toBe("_");
-    expect(convertToSnake("<")).toBe("_");
-    expect(convertToSnake("?")).toBe("_");
-  });
-  it("should convert other illegal entities to _", () => {
-    expect(convertToSnake("\\")).toBe("_");
-    expect(convertToSnake("@")).toBe("_");
-    expect(convertToSnake("#")).toBe("_");
-    expect(convertToSnake("^")).toBe("_");
-    expect(convertToSnake(";")).toBe("_");
-    expect(convertToSnake(":")).toBe("_");
-    expect(convertToSnake(".")).toBe("_");
-    expect(convertToSnake(",")).toBe("_");
-  });
-  it("should convert all braces signs to _", () => {
-    expect(convertToSnake("(")).toBe("_");
-    expect(convertToSnake(")")).toBe("_");
-    expect(convertToSnake("[")).toBe("_");
-    expect(convertToSnake("]")).toBe("_");
-    expect(convertToSnake("{")).toBe("_");
-    expect(convertToSnake("}")).toBe("_");
-  });
-  it("should convert all string literals", () => {
-    expect(convertToSnake("'")).toBe("_");
-    expect(convertToSnake("\"")).toBe("_");
-    expect(convertToSnake("`")).toBe("_");
-  });
-});
+describe('convert test names to snake_case', () => {
+  it('should convert spaces to _', () => {
+    expect(convertToSnake(' ')).toBe('_')
+  })
+  it('should convert arithmetic signs to _', () => {
+    expect(convertToSnake('+')).toBe('_')
+    expect(convertToSnake('-')).toBe('_')
+    expect(convertToSnake('/')).toBe('_')
+    expect(convertToSnake('*')).toBe('_')
+    expect(convertToSnake('%')).toBe('_')
+  })
+  it('should convert boolean signs to _', () => {
+    expect(convertToSnake('!')).toBe('_')
+    expect(convertToSnake('=')).toBe('_')
+    expect(convertToSnake('&')).toBe('_')
+    expect(convertToSnake('|')).toBe('_')
+    expect(convertToSnake('>')).toBe('_')
+    expect(convertToSnake('<')).toBe('_')
+    expect(convertToSnake('?')).toBe('_')
+  })
+  it('should convert other illegal entities to _', () => {
+    expect(convertToSnake('\\')).toBe('_')
+    expect(convertToSnake('@')).toBe('_')
+    expect(convertToSnake('#')).toBe('_')
+    expect(convertToSnake('^')).toBe('_')
+    expect(convertToSnake(';')).toBe('_')
+    expect(convertToSnake(':')).toBe('_')
+    expect(convertToSnake('.')).toBe('_')
+    expect(convertToSnake(',')).toBe('_')
+  })
+  it('should convert all braces signs to _', () => {
+    expect(convertToSnake('(')).toBe('_')
+    expect(convertToSnake(')')).toBe('_')
+    expect(convertToSnake('[')).toBe('_')
+    expect(convertToSnake(']')).toBe('_')
+    expect(convertToSnake('{')).toBe('_')
+    expect(convertToSnake('}')).toBe('_')
+  })
+  it('should convert all string literals', () => {
+    expect(convertToSnake("'")).toBe('_')
+    expect(convertToSnake('"')).toBe('_')
+    expect(convertToSnake('`')).toBe('_')
+  })
+})

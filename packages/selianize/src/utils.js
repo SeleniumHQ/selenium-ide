@@ -16,5 +16,8 @@
 // under the License.
 
 export function convertToSnake(string) {
-  return string.replace(/(\s|\+|-|\*|\/|\\|%|!|\||&|=|\?|>|<|\(|\)|\[|\]|{|}|@|#|\^|:|;|'|"|`|\.|,)/g, "_");
+  return string.replace(
+    /(\s|\+|-|\*|\/|\\|%|!|\||&|=|\?|>|<|\(|\)|\[|\]|{|}|@|#|\^|:|;|'|"|`|\.|,)/g,
+    '_'
+  )
 }

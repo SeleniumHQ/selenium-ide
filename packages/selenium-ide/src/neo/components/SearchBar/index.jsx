@@ -15,35 +15,48 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import './style.css'
 
 export default class SearchBar extends React.Component {
   constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
   }
   static propTypes = {
     value: PropTypes.string,
     filter: PropTypes.func,
-    inputRef: PropTypes.func
-  };
+    inputRef: PropTypes.func,
+  }
   handleChange(e) {
-    if (this.props.filter) this.props.filter(e.target.value);
+    if (this.props.filter) this.props.filter(e.target.value)
   }
   render() {
     return (
-      <div style={{
-        position: "relative",
-        display: "flex",
-        flexShrink: "0"
-      }}>
-        <input ref={this.props.inputRef} className="search" type="search" placeholder="Search tests..." value={this.props.value} onChange={this.handleChange} />
-        <label htmlFor={this.id} className="si-search" style={{
-          display: !this.props.value ? "block" : "none"
-        }}></label>
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexShrink: '0',
+        }}
+      >
+        <input
+          ref={this.props.inputRef}
+          className="search"
+          type="search"
+          placeholder="Search tests..."
+          value={this.props.value}
+          onChange={this.handleChange}
+        />
+        <label
+          htmlFor={this.id}
+          className="si-search"
+          style={{
+            display: !this.props.value ? 'block' : 'none',
+          }}
+        />
       </div>
-    );
+    )
   }
 }

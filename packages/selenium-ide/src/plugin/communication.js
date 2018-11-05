@@ -15,41 +15,56 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
-import FatalError from "../errors/fatal";
-import NoResponseError from "../errors/no-response";
-import Manager from "./manager";
+import browser from 'webextension-polyfill'
+import FatalError from '../errors/fatal'
+import NoResponseError from '../errors/no-response'
+import Manager from './manager'
 
 export function sendMessage(id, payload) {
-  return browser.runtime.sendMessage(id, payload).then((response) => {
-    if (response.error) {
-      const error = response.status === "fatal" ? new FatalError(response.error) : new Error(response.error);
-      error.sender = id;
-      return Promise.reject(error);
-    } else {
-      const r = {};
-      if (typeof response === "string") {
-        r.message = response;
-      } else if (response instanceof Object) {
-        Object.assign(r, response);
+  return browser.runtime
+    .sendMessage(id, payload)
+    .then(response => {
+      if (response.error) {
+        const error =
+          response.status === 'fatal'
+            ? new FatalError(response.error)
+            : new Error(response.error)
+        error.sender = id
+        return Promise.reject(error)
+      } else {
+        const r = {}
+        if (typeof response === 'string') {
+          r.message = response
+        } else if (response instanceof Object) {
+          Object.assign(r, response)
+        }
+        r.sender = id
+        return Promise.resolve(r)
       }
-      r.sender = id;
-      return Promise.resolve(r);
-    }
-  }).catch((response) => {
-    if (isReceivingEndError(response)) {
-      return Promise.reject(new NoResponseError(`${Manager.getPlugin(id).name} plugin did not respond`));
-    } else {
-      return Promise.reject(response);
-    }
-  });
+    })
+    .catch(response => {
+      if (isReceivingEndError(response)) {
+        return Promise.reject(
+          new NoResponseError(
+            `${Manager.getPlugin(id).name} plugin did not respond`
+          )
+        )
+      } else {
+        return Promise.reject(response)
+      }
+    })
 }
 
 function isReceivingEndError(reason) {
-  return (reason == "Error: Could not establish connection. Receiving end does not exist." ||
+  return (
+    reason ==
+      'Error: Could not establish connection. Receiving end does not exist.' ||
     // Below message is for Google Chrome
-    reason.message == "Could not establish connection. Receiving end does not exist." ||
+    reason.message ==
+      'Could not establish connection. Receiving end does not exist.' ||
     // Google Chrome misspells "response"
-    reason.message == "The message port closed before a reponse was received." ||
-    reason.message == "The message port closed before a response was received." );
+    reason.message ==
+      'The message port closed before a reponse was received.' ||
+    reason.message == 'The message port closed before a response was received.'
+  )
 }

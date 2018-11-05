@@ -16,25 +16,25 @@
 // under the License.
 
 export default function migrate(project) {
-  let r = Object.assign({}, project);
-  r.tests = r.tests.map((test) => {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
-      commands: test.commands.map((c) => {
-        let newCmd = Object.assign({}, c);
-        if (c.command === "waitForVisible" || c.command === "waitForEditable") {
-          newCmd.command = migrateCommand(newCmd.command);
-          return newCmd;
+      commands: test.commands.map(c => {
+        let newCmd = Object.assign({}, c)
+        if (c.command === 'waitForVisible' || c.command === 'waitForEditable') {
+          newCmd.command = migrateCommand(newCmd.command)
+          return newCmd
         } else {
-          return c;
+          return c
         }
-      })
-    });
-  });
-  return r;
+      }),
+    })
+  })
+  return r
 }
 
 function migrateCommand(command) {
-  return command.replace(/waitFor/g, "waitForElement");
+  return command.replace(/waitFor/g, 'waitForElement')
 }
 
-migrate.version = "1.1";
+migrate.version = '1.1'

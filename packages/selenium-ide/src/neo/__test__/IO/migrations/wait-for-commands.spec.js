@@ -15,61 +15,61 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from "../../../IO/migrations/wait-for-commands";
+import migrate from '../../../IO/migrations/wait-for-commands'
 
-describe("project migrator", () => {
-  it("should be included in 1.1", () => {
-    expect(migrate.version).toBe("1.1");
-  });
-  it("should migrate legacy element based waitFor commands to the new naming convention", () => {
+describe('project migrator', () => {
+  it('should be included in 1.1', () => {
+    expect(migrate.version).toBe('1.1')
+  })
+  it('should migrate legacy element based waitFor commands to the new naming convention', () => {
     const project = {
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "waitForVisible",
-              target: "css=blah",
-              value: ""
+              command: 'waitForVisible',
+              target: 'css=blah',
+              value: '',
             },
             {
-              command: "waitForEditable",
-              target: "css=blah",
-              value: ""
+              command: 'waitForEditable',
+              target: 'css=blah',
+              value: '',
             },
             {
-              command: "waitForElementPresent",
-              target: "css=blah",
-              value: ""
-            }
-          ]
-        }
-      ]
-    };
-    const upgraded = migrate(project);
+              command: 'waitForElementPresent',
+              target: 'css=blah',
+              value: '',
+            },
+          ],
+        },
+      ],
+    }
+    const upgraded = migrate(project)
     expect(upgraded).toEqual({
       tests: [
         {
-          id: "1",
+          id: '1',
           commands: [
             {
-              command: "waitForElementVisible",
-              target: "css=blah",
-              value: ""
+              command: 'waitForElementVisible',
+              target: 'css=blah',
+              value: '',
             },
             {
-              command: "waitForElementEditable",
-              target: "css=blah",
-              value: ""
+              command: 'waitForElementEditable',
+              target: 'css=blah',
+              value: '',
             },
             {
-              command: "waitForElementPresent",
-              target: "css=blah",
-              value: ""
-            }
-          ]
-        }
-      ]
-    });
-  });
-});
+              command: 'waitForElementPresent',
+              target: 'css=blah',
+              value: '',
+            },
+          ],
+        },
+      ],
+    })
+  })
+})

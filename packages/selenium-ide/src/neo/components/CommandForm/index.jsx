@@ -15,73 +15,101 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { observer } from "mobx-react";
-import classNames from "classnames";
-import { Commands } from "../../models/Command";
-import Input from "../FormInput";
-import TextArea from "../FormTextArea";
-import CommandInput from "../CommandInput";
-import TargetInput from "../TargetInput";
-import FlatButton from "../FlatButton";
-import { find, select } from "../../IO/SideeX/find-select";
-import ModalState from "../../stores/view/ModalState";
-import UiState from "../../stores/view/UiState";
-import PlaybackState from "../../stores/view/PlaybackState";
-import "./style.css";
-@observer export default class CommandForm extends React.Component {
+import React from 'react'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import classNames from 'classnames'
+import { Commands } from '../../models/Command'
+import Input from '../FormInput'
+import TextArea from '../FormTextArea'
+import CommandInput from '../CommandInput'
+import TargetInput from '../TargetInput'
+import FlatButton from '../FlatButton'
+import { find, select } from '../../IO/SideeX/find-select'
+import ModalState from '../../stores/view/ModalState'
+import UiState from '../../stores/view/UiState'
+import PlaybackState from '../../stores/view/PlaybackState'
+import './style.css'
+@observer
+export default class CommandForm extends React.Component {
   constructor(props) {
-    super(props);
-    this.handleSelect = this.handleSelect.bind(this);
+    super(props)
+    this.handleSelect = this.handleSelect.bind(this)
   }
   static propTypes = {
     command: PropTypes.object,
     isSelecting: PropTypes.bool,
-    onSubmit: PropTypes.func
-  };
+    onSubmit: PropTypes.func,
+  }
   getCommandName(command) {
-    const commandName = Commands.list.get(command).name;
-    if (commandName === "pause" && !UiState.pauseNotificationSent) {
+    const commandName = Commands.list.get(command).name
+    if (commandName === 'pause' && !UiState.pauseNotificationSent) {
       ModalState.showAlert({
-        title: "Hard coded sleeps are old hat.",
-        description: "There are implicit waits built into the IDE commands.\n\n" +
-        "If that doesn't get the job done for you then check out the explicit wait commands. " +
-        "They start with the words `wait for element` (e.g., `wait for element visible`)."
-      });
-      UiState.pauseNotificationSent = true;
+        title: 'Hard coded sleeps are old hat.',
+        description:
+          'There are implicit waits built into the IDE commands.\n\n' +
+          "If that doesn't get the job done for you then check out the explicit wait commands. " +
+          'They start with the words `wait for element` (e.g., `wait for element visible`).',
+      })
+      UiState.pauseNotificationSent = true
     }
-    return commandName;
+    return commandName
   }
   parseCommandName(command) {
-    return Commands.list.has(command) ? this.getCommandName(command) : command;
+    return Commands.list.has(command) ? this.getCommandName(command) : command
   }
   parseCommandTargetType(command) {
-    return Commands.list.has(command) ? Commands.list.get(command).type : undefined;
+    return Commands.list.has(command)
+      ? Commands.list.get(command).type
+      : undefined
   }
   handleSelect() {
-    const type = this.parseCommandTargetType(this.props.command.command);
+    const type = this.parseCommandTargetType(this.props.command.command)
     if (type) {
-      select(type, this.props.command.target);
+      select(type, this.props.command.target)
     }
   }
   render() {
     return (
       <div className="command-form">
-        <form onSubmit={(e) => { e.preventDefault(); }}>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+          }}
+        >
           <div className="target">
             <CommandInput
               id="command"
               name="command"
               label="Command"
-              value={this.props.command ? this.parseCommandName(this.props.command.command) : ""}
+              value={
+                this.props.command
+                  ? this.parseCommandName(this.props.command.command)
+                  : ''
+              }
               disabled={!this.props.command || PlaybackState.isPlaying}
-              onChange={this.props.command ? this.props.command.setCommand : null} />
+              onChange={
+                this.props.command ? this.props.command.setCommand : null
+              }
+            />
             <FlatButton
               data-tip="<p>Enable/Disable command</p>"
-              className={classNames("icon", this.props.command && this.props.command.command && !this.props.command.enabled ? "si-remove-comment" : "si-comment")}
-              disabled={!this.props.command || (this.props.command && !this.props.command.command) || PlaybackState.isPlaying}
-              onClick={this.props.command ? this.props.command.toggleEnabled : null}
+              className={classNames(
+                'icon',
+                this.props.command &&
+                this.props.command.command &&
+                !this.props.command.enabled
+                  ? 'si-remove-comment'
+                  : 'si-comment'
+              )}
+              disabled={
+                !this.props.command ||
+                (this.props.command && !this.props.command.command) ||
+                PlaybackState.isPlaying
+              }
+              onClick={
+                this.props.command ? this.props.command.toggleEnabled : null
+              }
             />
           </div>
           <div className="target">
@@ -89,40 +117,57 @@ import "./style.css";
               id="target"
               name="target"
               label="Target"
-              value={this.props.command ? this.props.command.target : ""}
+              value={this.props.command ? this.props.command.target : ''}
               targets={this.props.command ? this.props.command.targets : []}
               disabled={!this.props.command}
-              onChange={this.props.command ? this.props.command.setTarget : null} />
+              onChange={
+                this.props.command ? this.props.command.setTarget : null
+              }
+            />
             <FlatButton
               data-tip="<p>Select target in page</p>"
-              className={classNames("icon", "si-select", { "active": this.props.isSelecting })}
-              disabled={this.props.command ? !this.parseCommandTargetType(this.props.command.command) : true}
+              className={classNames('icon', 'si-select', {
+                active: this.props.isSelecting,
+              })}
+              disabled={
+                this.props.command
+                  ? !this.parseCommandTargetType(this.props.command.command)
+                  : true
+              }
               onClick={this.handleSelect}
             />
             <FlatButton
               data-tip="<p>Find target in page</p>"
               className="icon si-search"
-              disabled={this.props.command ? !this.parseCommandTargetType(this.props.command.command) : true}
-              onClick={() => {find(this.props.command.target);}}
+              disabled={
+                this.props.command
+                  ? !this.parseCommandTargetType(this.props.command.command)
+                  : true
+              }
+              onClick={() => {
+                find(this.props.command.target)
+              }}
             />
           </div>
           <TextArea
             id="value"
             name="value"
             label="Value"
-            value={this.props.command ? this.props.command.value : ""}
+            value={this.props.command ? this.props.command.value : ''}
             disabled={!this.props.command}
-            onChange={this.props.command ? this.props.command.setValue : null} />
+            onChange={this.props.command ? this.props.command.setValue : null}
+          />
           <Input
             id="comment"
             name="comment"
             label="Description"
-            value={this.props.command ? this.props.command.comment : ""}
+            value={this.props.command ? this.props.command.comment : ''}
             disabled={!this.props.command}
-            onChange={this.props.command ? this.props.command.setComment : null} />
+            onChange={this.props.command ? this.props.command.setComment : null}
+          />
           <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
         </form>
       </div>
-    );
+    )
   }
 }

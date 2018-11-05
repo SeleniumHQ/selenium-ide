@@ -15,18 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import ActionButton from "../ActionButton";
-import classNames from "classnames";
-import { parse } from "modifier-keys";
+import React from 'react'
+import ActionButton from '../ActionButton'
+import classNames from 'classnames'
+import { parse } from 'modifier-keys'
 
 export default class StepIntoButton extends React.Component {
   render() {
     return (
       <ActionButton
-        data-tip={`<p>Step over current command <span style="color: #929292;padding-left: 5px;">${parse("'", { primaryKey: true })}</span></p>`}
+        data-tip={`<p>Step over current command <span style="color: #929292;padding-left: 5px;">${parse(
+          "'",
+          { primaryKey: true }
+        )}</span></p>`}
         {...this.props}
-        className={classNames("si-step-down", this.props.className)} />// eslint-disable-line react/prop-types
-    );
+        className={classNames('si-step-down', this.props.className)}
+      /> // eslint-disable-line react/prop-types
+    )
   }
 }

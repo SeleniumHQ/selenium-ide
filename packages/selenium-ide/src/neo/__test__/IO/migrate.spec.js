@@ -15,15 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import UpgradeProject, { VERSIONS } from "../../IO/migrate";
+import UpgradeProject, { VERSIONS } from '../../IO/migrate'
 
-describe("project migrator", () => {
-  it("should migrate a project to the latest version", () => {
+describe('project migrator', () => {
+  it('should migrate a project to the latest version', () => {
     const project = {
       tests: [],
       suites: [],
-      version: "1.0"
-    };
-    expect(UpgradeProject(project).version).toBe(VERSIONS[VERSIONS.length - 1]);
-  });
-});
+      version: '1.0',
+    }
+    expect(UpgradeProject(project).version).toBe(VERSIONS[VERSIONS.length - 1])
+  })
+})

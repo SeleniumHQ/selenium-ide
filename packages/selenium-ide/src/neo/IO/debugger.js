@@ -15,77 +15,79 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const DEBUGGER_PROTOCOL_VERSION = "1.3";
+const DEBUGGER_PROTOCOL_VERSION = '1.3'
 
 export default class Debugger {
   constructor(tabId) {
-    this.tabId = tabId;
-    this.attach = this.attach.bind(this);
-    this.detach = this.detach.bind(this);
-    this.sendCommand = this.sendCommand.bind(this);
-    this.getDocument = this.getDocument.bind(this);
-    this.querySelector = this.querySelector.bind(this);
+    this.tabId = tabId
+    this.attach = this.attach.bind(this)
+    this.detach = this.detach.bind(this)
+    this.sendCommand = this.sendCommand.bind(this)
+    this.getDocument = this.getDocument.bind(this)
+    this.querySelector = this.querySelector.bind(this)
   }
   attach() {
     return new Promise(res => {
       if (!this.connection) {
-        const target = { tabId: this.tabId };
+        const target = { tabId: this.tabId }
         chrome.debugger.attach(target, DEBUGGER_PROTOCOL_VERSION, () => {
-          this.connection = target;
-          res(this.connection);
-        });
+          this.connection = target
+          res(this.connection)
+        })
       } else {
-        res(this.connection);
+        res(this.connection)
       }
-    });
+    })
   }
 
   detach() {
     return new Promise(res => {
       if (this.connection) {
         chrome.debugger.detach(this.connection, () => {
-          this.connection = undefined;
-          res();
-        });
+          this.connection = undefined
+          res()
+        })
       } else {
-        res();
+        res()
       }
-    });
+    })
   }
 
   sendCommand(command, params) {
     return new Promise((res, rej) => {
-      chrome.debugger.sendCommand(this.connection, command, params, (r) => {
+      chrome.debugger.sendCommand(this.connection, command, params, r => {
         if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
-          rej(new Error(chrome.runtime.lastError.message));
+          rej(new Error(chrome.runtime.lastError.message))
         } else {
-          res(r);
+          res(r)
         }
-      });
-    });
+      })
+    })
   }
 
   getDocument() {
-    return this.sendCommand("DOM.getDocument").then(doc => (doc.root));
+    return this.sendCommand('DOM.getDocument').then(doc => doc.root)
   }
 
   querySelector(selector, nodeId) {
-    return this.sendCommand("DOM.querySelector", { selector, nodeId }).then(res => res && res.nodeId);
+    return this.sendCommand('DOM.querySelector', { selector, nodeId }).then(
+      res => res && res.nodeId
+    )
   }
 }
 
 export function convertLocator(locator) {
-  const [type, selector] = locator.split("=");
+  const [type, selector] = locator.split('=')
   switch (type) {
-    case "id": {
-      return `#${selector}`;
+    case 'id': {
+      return `#${selector}`
     }
-    case "name": {
-      return `*[name="${selector}"]`;
+    case 'name': {
+      return `*[name="${selector}"]`
     }
-    case "css": {
-      return selector;
+    case 'css': {
+      return selector
     }
   }
-  throw new Error("This locator type is unavailable with this command");
+  throw new Error('This locator type is unavailable with this command')
 }

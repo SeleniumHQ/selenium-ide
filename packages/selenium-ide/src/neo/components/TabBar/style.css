@@ -36,7 +36,7 @@
 }
 
 .tabbar .unread::after {
-  content: "";
+  content: '';
   display: inline-block;
   height: 5px;
   width: 5px;
@@ -44,4 +44,3 @@
   background-color: #40a6ff;
   border-radius: 50%;
 }
-

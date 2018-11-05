@@ -15,58 +15,73 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { observer } from "mobx-react";
-import "./style.css";
-import classNames from "classnames";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import './style.css'
+import classNames from 'classnames'
 
 @observer
 export default class CommandReference extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    currentCommand: PropTypes.object
-  };
+    currentCommand: PropTypes.object,
+  }
   unknownCommand() {
     return (
-      <div className={classNames("command-reference", "unknown-command")}>
+      <div className={classNames('command-reference', 'unknown-command')}>
         <strong>Unknown command name provided.</strong>
       </div>
-    );
+    )
   }
   argument(param) {
-    if (param.name !== "" || param.description !== "") {
-      return(
+    if (param.name !== '' || param.description !== '') {
+      return (
         <li className="argument">
-          { param.name } - { param.description }
+          {param.name} - {param.description}
         </li>
-      );
+      )
     }
   }
   commandSignature() {
-    return(
+    return (
       <li className="signature">
-        { this.props.currentCommand.name && <strong className="name">{this.props.currentCommand.name}</strong> }{" "}
-        { this.props.currentCommand.target && <em className="target">{this.props.currentCommand.target.name }</em>}
-        { this.props.currentCommand.value && <em className="value">, {this.props.currentCommand.value.name }</em>}
+        {this.props.currentCommand.name && (
+          <strong className="name">{this.props.currentCommand.name}</strong>
+        )}{' '}
+        {this.props.currentCommand.target && (
+          <em className="target">{this.props.currentCommand.target.name}</em>
+        )}
+        {this.props.currentCommand.value && (
+          <em className="value">, {this.props.currentCommand.value.name}</em>
+        )}
       </li>
-    );
+    )
   }
   render() {
     if (!(this.props.currentCommand && this.props.currentCommand.name)) {
-      return this.unknownCommand();
+      return this.unknownCommand()
     } else {
       return (
         <div className="command-reference">
           <ul>
-            { this.props.currentCommand.name && this.commandSignature() }
-            { this.props.currentCommand.description && <li className="description">{this.props.currentCommand.description}</li> }
-            { (this.props.currentCommand.target || this.props.currentCommand.value) && <li className="arguments">arguments:</li> }
-            { this.props.currentCommand.target && this.argument(this.props.currentCommand.target) }
-            { this.props.currentCommand.value && this.argument(this.props.currentCommand.value) }
+            {this.props.currentCommand.name && this.commandSignature()}
+            {this.props.currentCommand.description && (
+              <li className="description">
+                {this.props.currentCommand.description}
+              </li>
+            )}
+            {(this.props.currentCommand.target ||
+              this.props.currentCommand.value) && (
+              <li className="arguments">arguments:</li>
+            )}
+            {this.props.currentCommand.target &&
+              this.argument(this.props.currentCommand.target)}
+            {this.props.currentCommand.value &&
+              this.argument(this.props.currentCommand.value)}
           </ul>
         </div>
-      );
+      )
     }
   }
 }

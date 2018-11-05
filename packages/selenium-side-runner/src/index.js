@@ -17,246 +17,330 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import fs from "fs";
-import path from "path";
-import crypto from "crypto";
-import { fork } from "child_process";
-import program from "commander";
-import winston from "winston";
-import glob from "glob";
-import rimraf from "rimraf";
-import { js_beautify as beautify } from "js-beautify";
-import Selianize from "selianize";
-import Capabilities from "./capabilities";
-import Config from "./config";
-import Satisfies from "./versioner";
-import metadata from "../package.json";
+import fs from 'fs'
+import path from 'path'
+import crypto from 'crypto'
+import { fork } from 'child_process'
+import program from 'commander'
+import winston from 'winston'
+import glob from 'glob'
+import rimraf from 'rimraf'
+import { js_beautify as beautify } from 'js-beautify'
+import Selianize from 'selianize'
+import Capabilities from './capabilities'
+import Config from './config'
+import Satisfies from './versioner'
+import metadata from '../package.json'
 
-const DEFAULT_TIMEOUT = 15000;
+const DEFAULT_TIMEOUT = 15000
 
-process.title = metadata.name;
+process.title = metadata.name
 
 program
-  .usage("[options] project.side [project.side] [*.side]")
+  .usage('[options] project.side [project.side] [*.side]')
   .version(metadata.version)
-  .option("-c, --capabilities [list]", "Webdriver capabilities")
-  .option("-s, --server [url]", "Webdriver remote server")
-  .option("-p, --params [list]", "General parameters")
-  .option("-f, --filter [string]", "Run suites matching name")
-  .option("-w, --max-workers [number]", "Maximum amount of workers that will run your tests, defaults to number of cores")
-  .option("--base-url [url]", "Override the base URL that was set in the IDE")
-  .option("--timeout [number | undefined]", `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`)
-  .option("--configuration-file [filepath]", "Use specified YAML file for configuration. (default: .side.yml)")
-  .option("--output-directory [directory]", "Write test results to files, results written in JSON")
-  .option("--debug", "Print debug logs");
+  .option('-c, --capabilities [list]', 'Webdriver capabilities')
+  .option('-s, --server [url]', 'Webdriver remote server')
+  .option('-p, --params [list]', 'General parameters')
+  .option('-f, --filter [string]', 'Run suites matching name')
+  .option(
+    '-w, --max-workers [number]',
+    'Maximum amount of workers that will run your tests, defaults to number of cores'
+  )
+  .option('--base-url [url]', 'Override the base URL that was set in the IDE')
+  .option(
+    '--timeout [number | undefined]',
+    `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`
+  )
+  .option(
+    '--configuration-file [filepath]',
+    'Use specified YAML file for configuration. (default: .side.yml)'
+  )
+  .option(
+    '--output-directory [directory]',
+    'Write test results to files, results written in JSON'
+  )
+  .option('--debug', 'Print debug logs')
 
-if (process.env.NODE_ENV === "development") {
-  program.option("-e, --extract", "Only extract the project file to code (this feature is for debugging purposes)");
-  program.option("-r, --run [directory]", "Run the extracted project files (this feature is for debugging purposes)");
+if (process.env.NODE_ENV === 'development') {
+  program.option(
+    '-e, --extract',
+    'Only extract the project file to code (this feature is for debugging purposes)'
+  )
+  program.option(
+    '-r, --run [directory]',
+    'Run the extracted project files (this feature is for debugging purposes)'
+  )
 }
 
-program.parse(process.argv);
+program.parse(process.argv)
 
 if (!program.args.length && !program.run) {
-  program.outputHelp();
-  process.exit(1);
+  program.outputHelp()
+  process.exit(1)
 }
 
-winston.cli();
-winston.level = program.debug ? "debug" : "info";
+winston.cli()
+winston.level = program.debug ? 'debug' : 'info'
 
 if (program.extract || program.run) {
-  winston.warn("This feature is used by Selenium IDE maintainers for debugging purposes, we hope you know what you're doing!");
+  winston.warn(
+    "This feature is used by Selenium IDE maintainers for debugging purposes, we hope you know what you're doing!"
+  )
 }
 
 const configuration = {
   capabilities: {
-    browserName: "chrome"
+    browserName: 'chrome',
   },
   params: {},
-  runId: crypto.randomBytes(16).toString("hex"),
-  path: path.join(__dirname, "../../")
-};
-
-const configurationFilePath = program.configurationFile || ".side.yml";
-try {
-  Object.assign(configuration, Config.load(path.join(process.cwd(), configurationFilePath)));
-} catch (e) {
-  winston.debug("Could not load " + configurationFilePath);
+  runId: crypto.randomBytes(16).toString('hex'),
+  path: path.join(__dirname, '../../'),
 }
 
-program.filter = program.filter || "*";
-configuration.server = program.server ? program.server : configuration.server;
+const configurationFilePath = program.configurationFile || '.side.yml'
+try {
+  Object.assign(
+    configuration,
+    Config.load(path.join(process.cwd(), configurationFilePath))
+  )
+} catch (e) {
+  winston.debug('Could not load ' + configurationFilePath)
+}
 
-configuration.timeout = program.timeout ? +program.timeout
-  : configuration.timeout ? +configuration.timeout
-  : DEFAULT_TIMEOUT; // eslint-disable-line indent
+program.filter = program.filter || '*'
+configuration.server = program.server ? program.server : configuration.server
 
-if (configuration.timeout === "undefined") configuration.timeout = undefined;
+configuration.timeout = program.timeout
+  ? +program.timeout
+  : configuration.timeout
+    ? +configuration.timeout
+    : DEFAULT_TIMEOUT // eslint-disable-line indent
+
+if (configuration.timeout === 'undefined') configuration.timeout = undefined
 
 if (program.capabilities) {
   try {
-    Object.assign(configuration.capabilities, Capabilities.parseString(program.capabilities));
+    Object.assign(
+      configuration.capabilities,
+      Capabilities.parseString(program.capabilities)
+    )
   } catch (e) {
-    winston.debug("Failed to parse inline capabilities");
+    winston.debug('Failed to parse inline capabilities')
   }
 }
 
 if (program.params) {
   try {
-    Object.assign(configuration.params, Capabilities.parseString(program.params));
+    Object.assign(
+      configuration.params,
+      Capabilities.parseString(program.params)
+    )
   } catch (e) {
-    winston.debug("Failed to parse additional params");
+    winston.debug('Failed to parse additional params')
   }
 }
 
-configuration.baseUrl = program.baseUrl ? program.baseUrl : configuration.baseUrl;
+configuration.baseUrl = program.baseUrl
+  ? program.baseUrl
+  : configuration.baseUrl
 
-let projectPath;
+let projectPath
 
 function runProject(project) {
-  winston.info(`Running ${project.path}`);
-  let warning;
+  winston.info(`Running ${project.path}`)
+  let warning
   try {
-    warning = Satisfies(project.version, "1.1");
-  } catch(e) {
-    return Promise.reject(e);
+    warning = Satisfies(project.version, '1.1')
+  } catch (e) {
+    return Promise.reject(e)
   }
   if (warning) {
-    winston.warn(warning);
+    winston.warn(warning)
   }
   if (!project.suites.length) {
-    return Promise.reject(new Error(`The project ${project.name} has no test suites defined, create a suite using the IDE.`));
+    return Promise.reject(
+      new Error(
+        `The project ${
+          project.name
+        } has no test suites defined, create a suite using the IDE.`
+      )
+    )
   }
-  projectPath = `side-suite-${project.name}`;
-  rimraf.sync(projectPath);
-  fs.mkdirSync(projectPath);
-  fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify({
-    name: project.name,
-    version: "0.0.0",
-    jest: {
-      modulePaths: [path.join(__dirname, "../node_modules")],
-      setupTestFrameworkScriptFile: require.resolve("jest-environment-selenium/dist/setup.js"),
-      testEnvironment: "jest-environment-selenium",
-      testEnvironmentOptions: configuration
-    },
-    dependencies: project.dependencies || {}
-  }));
+  projectPath = `side-suite-${project.name}`
+  rimraf.sync(projectPath)
+  fs.mkdirSync(projectPath)
+  fs.writeFileSync(
+    path.join(projectPath, 'package.json'),
+    JSON.stringify({
+      name: project.name,
+      version: '0.0.0',
+      jest: {
+        modulePaths: [path.join(__dirname, '../node_modules')],
+        setupTestFrameworkScriptFile: require.resolve(
+          'jest-environment-selenium/dist/setup.js'
+        ),
+        testEnvironment: 'jest-environment-selenium',
+        testEnvironmentOptions: configuration,
+      },
+      dependencies: project.dependencies || {},
+    })
+  )
 
-  return Selianize(project, { silenceErrors: true }, project.snapshot).then((code) => {
-    const tests = code.tests.reduce((tests, test) => {
-      return tests += test.code;
-    }, "const tests = {};").concat("module.exports = tests;");
-    writeJSFile(path.join(projectPath, "commons"), tests, ".js");
-    code.suites.forEach(suite => {
-      if (!suite.tests) {
-        // not parallel
-        const cleanup = suite.persistSession ? "" : "beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));";
-        writeJSFile(path.join(projectPath, suite.name), `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${code.globalConfig}${suite.code}${cleanup}`);
-      } else if (suite.tests.length) {
-        fs.mkdirSync(path.join(projectPath, suite.name));
-        // parallel suite
-        suite.tests.forEach(test => {
-          writeJSFile(path.join(projectPath, suite.name, test.name), `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${test.code}`);
-        });
-      }
-    });
-
-    return new Promise((resolve, reject) => {
-      let npmInstall;
-      if (project.dependencies && Object.keys(project.dependencies).length) {
-        npmInstall = new Promise((resolve, reject) => {
-          const child = fork(require.resolve("./npm"), { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" });
-          child.on("exit", (code) => {
-            if (code) {
-              reject();
-            } else {
-              resolve();
-            }
-          });
-        });
-      } else {
-        npmInstall = Promise.resolve();
-      }
-      npmInstall.then(() => {
-        if (program.extract) {
-          resolve();
-        } else {
-          runJest(project).then(resolve).catch(reject);
+  return Selianize(project, { silenceErrors: true }, project.snapshot).then(
+    code => {
+      const tests = code.tests
+        .reduce((tests, test) => {
+          return (tests += test.code)
+        }, 'const tests = {};')
+        .concat('module.exports = tests;')
+      writeJSFile(path.join(projectPath, 'commons'), tests, '.js')
+      code.suites.forEach(suite => {
+        if (!suite.tests) {
+          // not parallel
+          const cleanup = suite.persistSession
+            ? ''
+            : 'beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));'
+          writeJSFile(
+            path.join(projectPath, suite.name),
+            `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${
+              code.globalConfig
+            }${suite.code}${cleanup}`
+          )
+        } else if (suite.tests.length) {
+          fs.mkdirSync(path.join(projectPath, suite.name))
+          // parallel suite
+          suite.tests.forEach(test => {
+            writeJSFile(
+              path.join(projectPath, suite.name, test.name),
+              `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${
+                code.globalConfig
+              }${test.code}`
+            )
+          })
         }
-      }).catch(reject);
-    });
-  });
+      })
+
+      return new Promise((resolve, reject) => {
+        let npmInstall
+        if (project.dependencies && Object.keys(project.dependencies).length) {
+          npmInstall = new Promise((resolve, reject) => {
+            const child = fork(require.resolve('./npm'), {
+              cwd: path.join(process.cwd(), projectPath),
+              stdio: 'inherit',
+            })
+            child.on('exit', code => {
+              if (code) {
+                reject()
+              } else {
+                resolve()
+              }
+            })
+          })
+        } else {
+          npmInstall = Promise.resolve()
+        }
+        npmInstall
+          .then(() => {
+            if (program.extract) {
+              resolve()
+            } else {
+              runJest(project)
+                .then(resolve)
+                .catch(reject)
+            }
+          })
+          .catch(reject)
+      })
+    }
+  )
 }
 
 function runJest(project) {
   return new Promise((resolve, reject) => {
     const args = [
-      "--testMatch", `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`
-    ].concat(program.maxWorkers ? ["-w", program.maxWorkers] : [])
-      .concat(program.outputDirectory ? ["--json", "--outputFile", path.join(program.outputDirectory, `${project.name}.json`)] : []);
-    const opts = { cwd: path.join(process.cwd(), projectPath), stdio: "inherit" };
-    winston.debug("jest worker args");
-    winston.debug(args);
-    winston.debug("jest work opts");
-    winston.debug(opts);
-    const child = fork(require.resolve("./child"), args, opts);
+      '--testMatch',
+      `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`,
+    ]
+      .concat(program.maxWorkers ? ['-w', program.maxWorkers] : [])
+      .concat(
+        program.outputDirectory
+          ? [
+              '--json',
+              '--outputFile',
+              path.join(program.outputDirectory, `${project.name}.json`),
+            ]
+          : []
+      )
+    const opts = {
+      cwd: path.join(process.cwd(), projectPath),
+      stdio: 'inherit',
+    }
+    winston.debug('jest worker args')
+    winston.debug(args)
+    winston.debug('jest work opts')
+    winston.debug(opts)
+    const child = fork(require.resolve('./child'), args, opts)
 
-    child.on("exit", (code) => {
-      console.log("");
+    child.on('exit', code => {
+      console.log('') // eslint-disable-line no-console
       if (!program.run) {
-        rimraf.sync(projectPath);
+        rimraf.sync(projectPath)
       }
       if (code) {
-        reject();
+        reject()
       } else {
-        resolve();
+        resolve()
       }
-    });
-  });
+    })
+  })
 }
 
 function runAll(projects, index = 0) {
-  if (index >= projects.length) return Promise.resolve();
-  return runProject(projects[index]).then(() => {
-    return runAll(projects, ++index);
-  }).catch((error) => {
-    process.exitCode = 1;
-    error && winston.error(error.message + "\n");
-    return runAll(projects, ++index);
-  });
+  if (index >= projects.length) return Promise.resolve()
+  return runProject(projects[index])
+    .then(() => {
+      return runAll(projects, ++index)
+    })
+    .catch(error => {
+      process.exitCode = 1
+      error && winston.error(error.message + '\n')
+      return runAll(projects, ++index)
+    })
 }
 
-function writeJSFile(name, data, postfix = ".test.js") {
-  fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }));
+function writeJSFile(name, data, postfix = '.test.js') {
+  fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }))
 }
 
-const projects = [...program.args.reduce((projects, project) => {
-  glob.sync(project).forEach(p => {
-    projects.add(p);
-  });
-  return projects;
-}, new Set())].map(p => {
-  const project = JSON.parse(fs.readFileSync(p));
-  project.path = p;
-  return project;
-});
+const projects = [
+  ...program.args.reduce((projects, project) => {
+    glob.sync(project).forEach(p => {
+      projects.add(p)
+    })
+    return projects
+  }, new Set()),
+].map(p => {
+  const project = JSON.parse(fs.readFileSync(p))
+  project.path = p
+  return project
+})
 
-function handleQuit(signal, code) { // eslint-disable-line no-unused-vars
+function handleQuit(_signal, code) {
   if (!program.run) {
-    rimraf.sync(projectPath);
+    rimraf.sync(projectPath)
   }
-  process.exit(code);
+  process.exit(code)
 }
 
-process.on("SIGINT", handleQuit);
-process.on("SIGTERM", handleQuit);
+process.on('SIGINT', handleQuit)
+process.on('SIGTERM', handleQuit)
 
 if (program.run) {
-  projectPath = program.run;
+  projectPath = program.run
   runJest({
-    name: "test"
-  }).catch(winston.error);
+    name: 'test',
+  }).catch(winston.error)
 } else {
-  runAll(projects);
+  runAll(projects)
 }

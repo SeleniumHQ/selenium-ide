@@ -15,20 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import semver from "semver";
+import semver from 'semver'
 
 export default function Satisfies(strGolden, strVersion) {
-  const golden = semver.coerce(strGolden);
-  const version = semver.coerce(strVersion);
+  const golden = semver.coerce(strGolden)
+  const version = semver.coerce(strVersion)
   if (strGolden === strVersion) {
-    return;
+    return
   } else if (semver.satisfies(version, `^${semver.major(golden)}`)) {
-    return semver.gt(version, golden) ?
-      "project file is older than recommended, in case of issues upgrade the project via the IDE" :
-      "runner is older than project file, in case of issues upgrade the runner using: `npm i -g selenium-side-runner@latest`";
+    return semver.gt(version, golden)
+      ? 'project file is older than recommended, in case of issues upgrade the project via the IDE'
+      : 'runner is older than project file, in case of issues upgrade the runner using: `npm i -g selenium-side-runner@latest`'
   } else {
-    throw new Error(semver.gt(version, golden) ?
-      "project file is too old for the runner, upgrade the project via the IDE" :
-      "runner is too old to run the project file, upgrade the runner using: `npm i -g selenium-side-runner@latest`");
+    throw new Error(
+      semver.gt(version, golden)
+        ? 'project file is too old for the runner, upgrade the project via the IDE'
+        : 'runner is too old to run the project file, upgrade the runner using: `npm i -g selenium-side-runner@latest`'
+    )
   }
 }

@@ -15,33 +15,37 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from "../../models/Command";
+import { Commands, ArgTypes } from '../../models/Command'
 
 export default function migrate(project) {
-  let r = Object.assign({}, project);
-  r.tests = r.tests.map((test) => {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
-      commands: test.commands.map((c) => {
+      commands: test.commands.map(c => {
         if (Commands.list.has(c.command)) {
-          let newCmd = Object.assign({}, c);
-          const type = Commands.list.get(c.command);
-          if (type.target && (type.target.name === ArgTypes.script.name || type.target.name === ArgTypes.conditionalExpression.name)) {
-            newCmd.target = migrateScript(newCmd.target);
+          let newCmd = Object.assign({}, c)
+          const type = Commands.list.get(c.command)
+          if (
+            type.target &&
+            (type.target.name === ArgTypes.script.name ||
+              type.target.name === ArgTypes.conditionalExpression.name)
+          ) {
+            newCmd.target = migrateScript(newCmd.target)
           }
-          return newCmd;
+          return newCmd
         }
-        return c;
-      })
-    });
-  });
-  return r;
+        return c
+      }),
+    })
+  })
+  return r
 }
 
 function migrateScript(script) {
   return script
-    .replace(/'\$\{(\w+)\}'/g, "${$1}")
-    .replace(/`\$\{(\w+)\}`/g, "${$1}")
-    .replace(/"\$\{(\w+)\}"/g, "${$1}");
+    .replace(/'\$\{(\w+)\}'/g, '${$1}')
+    .replace(/`\$\{(\w+)\}`/g, '${$1}')
+    .replace(/"\$\{(\w+)\}"/g, '${$1}')
 }
 
-migrate.version = "1.1";
+migrate.version = '1.1'

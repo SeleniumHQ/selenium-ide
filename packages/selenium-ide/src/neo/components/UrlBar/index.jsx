@@ -15,17 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import AutoComplete from "../AutoComplete";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import AutoComplete from '../AutoComplete'
+import './style.css'
 
 export default class UrlBar extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
-    setUrl: PropTypes.func.isRequired
-  };
+    setUrl: PropTypes.func.isRequired,
+  }
   render() {
     return (
       <div className="url">
@@ -34,14 +34,16 @@ export default class UrlBar extends React.Component {
             items={this.props.urls ? this.props.urls : []}
             value={this.props.url}
             inputProps={{
-              type: "url",
-              placeholder: "Playback base URL"
+              type: 'url',
+              placeholder: 'Playback base URL',
             }}
-            onChange={(e) => {this.props.setUrl(e.target.value);}}
+            onChange={e => {
+              this.props.setUrl(e.target.value)
+            }}
             onSelect={this.props.setUrl}
           />
         </div>
       </div>
-    );
+    )
   }
 }

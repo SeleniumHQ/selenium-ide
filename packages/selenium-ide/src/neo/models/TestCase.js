@@ -15,82 +15,109 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from "mobx";
-import uuidv4 from "uuid/v4";
-import Command from "./Command";
+import { action, observable } from 'mobx'
+import uuidv4 from 'uuid/v4'
+import Command from './Command'
 
 export default class TestCase {
-  id = null;
-  @observable name = null;
-  @observable commands = [];
-  nameDialogShown = false;
+  id = null
+  @observable
+  name = null
+  @observable
+  commands = []
+  nameDialogShown = false
 
-  constructor(id = uuidv4(), name = "Untitled Test") {
-    this.id = id;
-    this.name = name;
-    this.export = this.export.bind(this);
+  constructor(id = uuidv4(), name = 'Untitled Test') {
+    this.id = id
+    this.name = name
+    this.export = this.export.bind(this)
   }
 
-  @action.bound setName(name) {
-    this.name = name;
+  @action.bound
+  setName(name) {
+    this.name = name
   }
 
-  @action.bound createCommand(index, c, t, v, comment) {
-    if (index !== undefined && index.constructor.name !== "Number") {
-      throw new Error(`Expected to receive Number instead received ${index !== undefined ? index.constructor.name : index}`);
+  @action.bound
+  createCommand(index, c, t, v, comment) {
+    if (index !== undefined && index.constructor.name !== 'Number') {
+      throw new Error(
+        `Expected to receive Number instead received ${
+          index !== undefined ? index.constructor.name : index
+        }`
+      )
     } else {
-      const command = new Command(undefined, c, t, v);
-      if (comment) command.setComment(comment);
-      index !== undefined ? this.commands.splice(index, 0, command) : this.commands.push(command);
-      return command;
+      const command = new Command(undefined, c, t, v)
+      if (comment) command.setComment(comment)
+      index !== undefined
+        ? this.commands.splice(index, 0, command)
+        : this.commands.push(command)
+      return command
     }
   }
 
-  @action.bound addCommand(command) {
+  @action.bound
+  addCommand(command) {
     if (!command || !(command instanceof Command)) {
-      throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);
+      throw new Error(
+        `Expected to receive Command instead received ${
+          command ? command.constructor.name : command
+        }`
+      )
     } else {
-      this.commands.push(command);
+      this.commands.push(command)
     }
   }
 
-  @action.bound insertCommandAt(command, index) {
+  @action.bound
+  insertCommandAt(command, index) {
     if (!command || !(command instanceof Command)) {
-      throw new Error(`Expected to receive Command instead received ${command ? command.constructor.name : command}`);
-    } else if (index === undefined || index.constructor.name !== "Number") {
-      throw new Error(`Expected to receive Number instead received ${index !== undefined ? index.constructor.name : index}`);
+      throw new Error(
+        `Expected to receive Command instead received ${
+          command ? command.constructor.name : command
+        }`
+      )
+    } else if (index === undefined || index.constructor.name !== 'Number') {
+      throw new Error(
+        `Expected to receive Number instead received ${
+          index !== undefined ? index.constructor.name : index
+        }`
+      )
     } else {
-      this.commands.splice(index, 0, command);
+      this.commands.splice(index, 0, command)
     }
   }
 
-  @action.bound swapCommands(from, to) {
-    const command = this.commands.splice(from, 1)[0];
-    this.insertCommandAt(command, to);
+  @action.bound
+  swapCommands(from, to) {
+    const command = this.commands.splice(from, 1)[0]
+    this.insertCommandAt(command, to)
   }
 
-  @action.bound removeCommand(command) {
-    this.commands.remove(command);
+  @action.bound
+  removeCommand(command) {
+    this.commands.remove(command)
   }
 
-  @action.bound clearAllCommands() {
-    this.commands.clear();
+  @action.bound
+  clearAllCommands() {
+    this.commands.clear()
   }
 
   export() {
     return {
       id: this.id,
       name: this.name,
-      commands: this.commands.map(c => c.export())
-    };
+      commands: this.commands.map(c => c.export()),
+    }
   }
 
   @action
   static fromJS = function(jsRep) {
-    const test = new TestCase(jsRep.id);
-    test.setName(jsRep.name);
-    test.commands.replace(jsRep.commands.map(Command.fromJS));
+    const test = new TestCase(jsRep.id)
+    test.setName(jsRep.name)
+    test.commands.replace(jsRep.commands.map(Command.fromJS))
 
-    return test;
-  };
+    return test
+  }
 }

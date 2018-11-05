@@ -15,15 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { Commands } from "../../models/Command";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Commands } from '../../models/Command'
 
 export default class CommandName extends React.Component {
   static propTypes = {
-    children: PropTypes.string
-  };
+    children: PropTypes.string,
+  }
   render() {
-    return Commands.list.has(this.props.children) ? Commands.list.get(this.props.children).name : this.props.children;
+    return Commands.list.has(this.props.children)
+      ? Commands.list.get(this.props.children).name
+      : this.props.children
   }
 }

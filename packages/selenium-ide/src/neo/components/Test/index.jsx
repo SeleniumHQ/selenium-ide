@@ -15,19 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import { DragSource, DropTarget } from "react-dnd";
-import classNames from "classnames";
-import { modifier } from "modifier-keys";
-import Callstack from "../Callstack";
-import RemoveButton from "../ActionButtons/Remove";
-import { withOnContextMenu } from "../ContextMenu";
-import ListMenu, { ListMenuItem } from "../ListMenu";
-import MoreButton from "../ActionButtons/More";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { DragSource, DropTarget } from 'react-dnd'
+import classNames from 'classnames'
+import { modifier } from 'modifier-keys'
+import Callstack from '../Callstack'
+import RemoveButton from '../ActionButtons/Remove'
+import { withOnContextMenu } from '../ContextMenu'
+import ListMenu, { ListMenuItem } from '../ListMenu'
+import MoreButton from '../ActionButtons/More'
+import './style.css'
 
-export const Type = "test";
+export const Type = 'test'
 
 const testSource = {
   beginDrag(props) {
@@ -35,59 +35,64 @@ const testSource = {
       id: props.test.id,
       index: props.index,
       test: props.test,
-      suite: props.suite
-    };
+      suite: props.suite,
+    }
   },
   isDragging(props, monitor) {
-    return (props.test.id === monitor.getItem().id && props.suite.id === monitor.getItem().suite.id);
-  }
-};
+    return (
+      props.test.id === monitor.getItem().id &&
+      props.suite.id === monitor.getItem().suite.id
+    )
+  },
+}
 
 function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  };
+    isDragging: monitor.isDragging(),
+  }
 }
 
 const testTarget = {
   canDrop(props, monitor) {
-    const test = monitor.getItem().test;
-    const suite = props.suite;
-    return !suite.containsTest(test);
+    const test = monitor.getItem().test
+    const suite = props.suite
+    return !suite.containsTest(test)
   },
   hover(props, monitor, component) {
     // check if they are different suites
-    const dragged = monitor.getItem();
+    const dragged = monitor.getItem()
     if (monitor.canDrop() && props.suite !== dragged.suite) {
-      dragged.suite.removeTestCase(dragged.test);
-      props.suite.addTestCase(dragged.test);
-      dragged.suite = props.suite;
-      dragged.index = props.suite.tests.length - 1;
-      return;
+      dragged.suite.removeTestCase(dragged.test)
+      props.suite.addTestCase(dragged.test)
+      dragged.suite = props.suite
+      dragged.index = props.suite.tests.length - 1
+      return
     } else if (!monitor.canDrop() && props.suite !== dragged.suite) {
       // trying to move a duplicate
-      return;
+      return
     }
-    const dragIndex = dragged.index;
-    const hoverIndex = props.index;
+    const dragIndex = dragged.index
+    const hoverIndex = props.index
 
     // Don't replace items with themselves
     if (dragIndex === hoverIndex) {
-      return;
+      return
     }
 
     // Determine rectangle on screen
-    const hoverBoundingRect = component.getDecoratedComponentInstance().node.getBoundingClientRect();
+    const hoverBoundingRect = component
+      .getDecoratedComponentInstance()
+      .node.getBoundingClientRect()
 
     // Get vertical middle
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
 
     // Determine mouse position
-    const clientOffset = monitor.getClientOffset();
+    const clientOffset = monitor.getClientOffset()
 
     // Get pixels to the top
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top
 
     // Only perform the move when the mouse has crossed half of the items height
     // When dragging downwards, only move when the cursor is below 50%
@@ -95,24 +100,24 @@ const testTarget = {
 
     // Dragging downwards
     if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-      return;
+      return
     }
 
     // Dragging upwards
     if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-      return;
+      return
     }
 
-    props.swapTests(dragIndex, hoverIndex);
+    props.swapTests(dragIndex, hoverIndex)
 
     // save time on index lookups
-    monitor.getItem().index = hoverIndex;
-  }
-};
+    monitor.getItem().index = hoverIndex
+  },
+}
 
-const collectTarget = (connect) => ({
-  connectDropTarget: connect.dropTarget()
-});
+const collectTarget = connect => ({
+  connectDropTarget: connect.dropTarget(),
+})
 
 export default class Test extends React.Component {
   static propTypes = {
@@ -137,107 +142,185 @@ export default class Test extends React.Component {
     moveSelectionDown: PropTypes.func,
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
-    setContextMenu: PropTypes.func
-  };
+    setContextMenu: PropTypes.func,
+  }
   static defaultProps = {
-    noMenu: false
-  };
+    noMenu: false,
+  }
   componentDidMount() {
     if (this.props.selected) {
-      this.props.setSectionFocus("navigation", () => {
-        this.node.focus();
-      });
+      this.props.setSectionFocus('navigation', () => {
+        this.node.focus()
+      })
     }
   }
   componentDidUpdate(prevProps) {
     if (this.props.selected && !prevProps.selected) {
-      this.node.focus();
-      this.props.setSectionFocus("navigation", () => {
-        this.node.focus();
-      });
+      this.node.focus()
+      this.props.setSectionFocus('navigation', () => {
+        this.node.focus()
+      })
     }
   }
   componentWillUnmount() {
     if (this.props.selected) {
-      this.props.setSectionFocus("navigation", undefined);
+      this.props.setSectionFocus('navigation', undefined)
     }
   }
   handleClick(test, suite) {
-    this.props.selectTest(test, suite);
+    this.props.selectTest(test, suite)
   }
   handleKeyDown(event) {
-    const e = event.nativeEvent;
-    modifier(e);
-    const noModifiers = (!e.primaryKey && !e.secondaryKey);
+    const e = event.nativeEvent
+    modifier(e)
+    const noModifiers = !e.primaryKey && !e.secondaryKey
 
-    if (this.props.moveSelectionUp && noModifiers && e.key === "ArrowUp") {
-      event.preventDefault();
-      event.stopPropagation();
+    if (this.props.moveSelectionUp && noModifiers && e.key === 'ArrowUp') {
+      event.preventDefault()
+      event.stopPropagation()
       // if we have a stack, and the top test isnt selected
       if (this.props.callstack && this.props.selectedStackIndex !== undefined) {
-        this.props.selectTest(this.props.test, this.props.suite, this.props.selectedStackIndex - 1);
+        this.props.selectTest(
+          this.props.test,
+          this.props.suite,
+          this.props.selectedStackIndex - 1
+        )
       } else {
-        this.props.moveSelectionUp();
+        this.props.moveSelectionUp()
       }
-    } else if (this.props.moveSelectionDown && noModifiers && e.key === "ArrowDown") {
-      event.preventDefault();
-      event.stopPropagation();
+    } else if (
+      this.props.moveSelectionDown &&
+      noModifiers &&
+      e.key === 'ArrowDown'
+    ) {
+      event.preventDefault()
+      event.stopPropagation()
       // if we have a stack and the bottom stack member isnt selected
-      if (this.props.callstack && (this.props.selectedStackIndex === undefined || this.props.selectedStackIndex + 1 < this.props.callstack.length)) {
-        this.props.selectTest(this.props.test, this.props.suite, this.props.selectedStackIndex !== undefined ? this.props.selectedStackIndex + 1 : 0);
+      if (
+        this.props.callstack &&
+        (this.props.selectedStackIndex === undefined ||
+          this.props.selectedStackIndex + 1 < this.props.callstack.length)
+      ) {
+        this.props.selectTest(
+          this.props.test,
+          this.props.suite,
+          this.props.selectedStackIndex !== undefined
+            ? this.props.selectedStackIndex + 1
+            : 0
+        )
       } else {
-        this.props.moveSelectionDown();
+        this.props.moveSelectionDown()
       }
     }
   }
   handleCallstackClick(test, suite, index) {
-    this.props.selectTest(test, suite, index);
+    this.props.selectTest(test, suite, index)
   }
   render() {
-    const rendered = <div
-      ref={(node) => { this.node = node; }}
-      className={classNames("test", { "changed": this.props.changed }, { "selected": this.props.selected }, { "paused": this.props.paused })}
-      onKeyDown={this.handleKeyDown.bind(this)}
-      tabIndex={this.props.selected ? "0" : "-1"}
-      onContextMenu={this.props.onContextMenu}
-      style={{
-        opacity: this.props.isDragging ? "0" : "1"
-      }}>
-      <a
-        ref={(button) => { this.button = button; }}
-        className={classNames("name", this.props.className, { "selected": this.props.selected && this.props.selectedStackIndex === undefined }, { "executing": this.props.isExecuting && this.props.callstack && !this.props.callstack.length })}
-        onClick={this.handleClick.bind(this, this.props.test, this.props.suite)}>
-        <span>{this.props.test.name}</span>
-        {this.props.menu}
-        {this.props.removeTest && !this.props.menu && <RemoveButton onClick={(e) => {e.stopPropagation(); this.props.removeTest();}} />}
-      </a>
-      {this.props.callstack ? <Callstack
-        stack={this.props.callstack}
-        selectedIndex={this.props.selectedStackIndex}
-        isExecuting={this.props.isExecuting}
-        onClick={this.handleCallstackClick.bind(this, this.props.test, this.props.suite)}
-      /> : undefined}
-    </div>;
-    return (this.props.connectDragSource ? this.props.connectDropTarget(this.props.connectDragSource(rendered)) : rendered);
+    const rendered = (
+      <div
+        ref={node => {
+          this.node = node
+        }}
+        className={classNames(
+          'test',
+          { changed: this.props.changed },
+          { selected: this.props.selected },
+          { paused: this.props.paused }
+        )}
+        onKeyDown={this.handleKeyDown.bind(this)}
+        tabIndex={this.props.selected ? '0' : '-1'}
+        onContextMenu={this.props.onContextMenu}
+        style={{
+          opacity: this.props.isDragging ? '0' : '1',
+        }}
+      >
+        <a
+          ref={button => {
+            this.button = button
+          }}
+          className={classNames(
+            'name',
+            this.props.className,
+            {
+              selected:
+                this.props.selected &&
+                this.props.selectedStackIndex === undefined,
+            },
+            {
+              executing:
+                this.props.isExecuting &&
+                this.props.callstack &&
+                !this.props.callstack.length,
+            }
+          )}
+          onClick={this.handleClick.bind(
+            this,
+            this.props.test,
+            this.props.suite
+          )}
+        >
+          <span>{this.props.test.name}</span>
+          {this.props.menu}
+          {this.props.removeTest &&
+            !this.props.menu && (
+              <RemoveButton
+                onClick={e => {
+                  e.stopPropagation()
+                  this.props.removeTest()
+                }}
+              />
+            )}
+        </a>
+        {this.props.callstack ? (
+          <Callstack
+            stack={this.props.callstack}
+            selectedIndex={this.props.selectedStackIndex}
+            isExecuting={this.props.isExecuting}
+            onClick={this.handleCallstackClick.bind(
+              this,
+              this.props.test,
+              this.props.suite
+            )}
+          />
+        ) : (
+          undefined
+        )}
+      </div>
+    )
+    return this.props.connectDragSource
+      ? this.props.connectDropTarget(this.props.connectDragSource(rendered))
+      : rendered
   }
 }
 
 @withOnContextMenu
 export class MenuTest extends React.Component {
-  render () {
+  render() {
     /* eslint-disable react/prop-types */
-    const listMenu = <ListMenu width={130} padding={-5} opener={<MoreButton />}>
-      <ListMenuItem onClick={() => this.props.renameTest(this.props.test.name).then(name => { this.props.test.setName(name); })}>Rename</ListMenuItem>
-      <ListMenuItem onClick={this.props.duplicateTest}>Duplicate</ListMenuItem>
-      <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
-    </ListMenu>;
+    const listMenu = (
+      <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+        <ListMenuItem
+          onClick={() =>
+            this.props.renameTest(this.props.test.name).then(name => {
+              this.props.test.setName(name)
+            })
+          }
+        >
+          Rename
+        </ListMenuItem>
+        <ListMenuItem onClick={this.props.duplicateTest}>
+          Duplicate
+        </ListMenuItem>
+        <ListMenuItem onClick={this.props.removeTest}>Delete</ListMenuItem>
+      </ListMenu>
+    )
     //setting component of context menu.
-    this.props.setContextMenu ? this.props.setContextMenu(listMenu) : null;
-    return (
-      <Test {...this.props} menu={listMenu} />
-    );
+    this.props.setContextMenu ? this.props.setContextMenu(listMenu) : null
+    return <Test {...this.props} menu={listMenu} />
   }
 }
 
-
-export const DraggableTest = DropTarget(Type, testTarget, collectTarget)(DragSource(Type, testSource, collectSource)(Test));
+export const DraggableTest = DropTarget(Type, testTarget, collectTarget)(
+  DragSource(Type, testSource, collectSource)(Test)
+)

@@ -15,32 +15,36 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import config from "./config";
+import config from './config'
 
-const hooks = [];
+const hooks = []
 
 export async function emit(project, options = config, snapshot) {
-  const configHooks = (await Promise.all(hooks.map((hook) => hook({ name: project.name })))).join("");
+  const configHooks = (await Promise.all(
+    hooks.map(hook => hook({ name: project.name }))
+  )).join('')
   if (!options.skipStdLibEmitting) {
-    return `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${configHooks}${snapshot ? snapshot : ""}`;
+    return `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${
+      project.url
+    }';let vars = {};${configHooks}${snapshot ? snapshot : ''}`
   } else {
     if (configHooks) {
       return {
-        snapshot: configHooks
-      };
+        snapshot: configHooks,
+      }
     } else {
       return {
-        skipped: true
-      };
+        skipped: true,
+      }
     }
   }
 }
 
 function registerHook(hook) {
-  hooks.push(hook);
+  hooks.push(hook)
 }
 
 export default {
   emit,
-  registerHook
-};
+  registerHook,
+}

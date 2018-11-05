@@ -15,97 +15,120 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import React from "react";
-import PropTypes from "prop-types";
-import Dropzone from "react-dropzone";
-import classNames from "classnames";
-import Modal from "../Modal";
-import ModalHeader from "../ModalHeader";
-import FlatButton from "../FlatButton";
-import { parseSuiteRequirements } from "../../IO/legacy/migrate";
-import { loadAsText } from "../../IO/filesystem";
-import HtmlFile from "../../assets/images/html_file.png";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import Dropzone from 'react-dropzone'
+import classNames from 'classnames'
+import Modal from '../Modal'
+import ModalHeader from '../ModalHeader'
+import FlatButton from '../FlatButton'
+import { parseSuiteRequirements } from '../../IO/legacy/migrate'
+import { loadAsText } from '../../IO/filesystem'
+import HtmlFile from '../../assets/images/html_file.png'
+import './style.css'
 
 export default class ImportDialog extends React.Component {
   static propTypes = {
     isImporting: PropTypes.bool.isRequired,
     cancel: PropTypes.func.isRequired,
     suite: PropTypes.string,
-    onComplete: PropTypes.func
-  };
+    onComplete: PropTypes.func,
+  }
   render() {
     return (
-      <Modal className="import-dialog" isOpen={this.props.isImporting} onRequestClose={this.props.cancel}>
+      <Modal
+        className="import-dialog"
+        isOpen={this.props.isImporting}
+        onRequestClose={this.props.cancel}
+      >
         <ImportDialogContent {...this.props} />
       </Modal>
-    );
+    )
   }
 }
 
 class ImportDialogContent extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      files: parseSuiteRequirements(props.suite).map(name => ({ name }))
-    };
+      files: parseSuiteRequirements(props.suite).map(name => ({ name })),
+    }
   }
   static propTypes = {
     isImporting: PropTypes.bool.isRequired,
     cancel: PropTypes.func.isRequired,
     suite: PropTypes.string,
-    onComplete: PropTypes.func
-  };
+    onComplete: PropTypes.func,
+  }
   onDrop(blobs) {
-    Promise.all(this.state.files.map((file) => {
-      // Dont load files we dont need
-      const blob = blobs.find(({ name }) => {
-        return file.name.includes(name);
-      });
-      if (blob) {
-        return loadAsText(blob).then(contents => {
-          file.contents = contents;
-          return file;
-        });
-      }
-      return Promise.resolve(file);
-    }, [])).then((files) => {
+    Promise.all(
+      this.state.files.map(file => {
+        // Dont load files we dont need
+        const blob = blobs.find(({ name }) => {
+          return file.name.includes(name)
+        })
+        if (blob) {
+          return loadAsText(blob).then(contents => {
+            file.contents = contents
+            return file
+          })
+        }
+        return Promise.resolve(file)
+      }, [])
+    ).then(files => {
       this.setState({ files }, () => {
         // check if all files have been uploaded
-        if (!this.state.files.find((file) => !file.contents)) {
-          this.props.onComplete(this.state.files);
+        if (!this.state.files.find(file => !file.contents)) {
+          this.props.onComplete(this.state.files)
         }
-      });
-    });
+      })
+    })
   }
   render() {
     return (
-      <form onSubmit={(e) => { e.preventDefault(); }}>
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+        }}
+      >
         <ModalHeader title="Import suite" close={this.props.cancel} />
-        <p>In order to fully import your legacy Selenium IDE suite, you need to individually import the following tests
+        <p>
+          In order to fully import your legacy Selenium IDE suite, you need to
+          individually import the following tests
         </p>
-        <Dropzone className="dropzone" acceptClassName="accept" rejectClassName="reject" accept="text/html" onDropAccepted={this.onDrop.bind(this)}>
+        <Dropzone
+          className="dropzone"
+          acceptClassName="accept"
+          rejectClassName="reject"
+          accept="text/html"
+          onDropAccepted={this.onDrop.bind(this)}
+        >
           <div>
             <div className="file-icon">
               <img alt="html file" height="50" src={HtmlFile} />
               <p>
-                Drop files here, or{" "}
-                <a className="link" href="#">browse</a>
+                Drop files here, or{' '}
+                <a className="link" href="#">
+                  browse
+                </a>
               </p>
             </div>
           </div>
         </Dropzone>
         <ul>
-          {this.state.files && this.state.files.map(({ name, contents }) => (
-            <li key={name} className={classNames({ accepted: !!contents })}>{name}</li>
-          ))}
+          {this.state.files &&
+            this.state.files.map(({ name, contents }) => (
+              <li key={name} className={classNames({ accepted: !!contents })}>
+                {name}
+              </li>
+            ))}
         </ul>
         <hr />
         <span className="right">
           <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
         </span>
-        <div className="clear"></div>
+        <div className="clear" />
       </form>
-    );
+    )
   }
 }

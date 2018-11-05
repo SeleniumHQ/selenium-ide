@@ -15,9 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const fs = require("fs");
-fs.existsSync = (file) => {
-  console.log("fs.existsSync: " + file);
-  return false;
-};
-
+const fs = require('fs')
+fs.existsSync = _file => {
+  return false
+}

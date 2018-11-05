@@ -16,12 +16,12 @@
 // under the License.
 
 export function absolutifyUrl(targetUrl, baseUrl) {
-  let url = targetUrl;
+  let url = targetUrl
   try {
-    url = (new URL(targetUrl)).href;
+    url = new URL(targetUrl).href
   } catch (e) {
-    url = (new URL(targetUrl, baseUrl)).href;
+    url = new URL(targetUrl, baseUrl).href
   }
 
-  return url;
+  return url
 }
