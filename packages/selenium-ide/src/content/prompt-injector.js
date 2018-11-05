@@ -15,51 +15,59 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill'
 
-let handler, elementForInjectingScript;
+let handler, elementForInjectingScript
 export function attach(selenium) {
-  elementForInjectingScript = document.createElement("script");
-  elementForInjectingScript.src = browser.runtime.getURL("/assets/prompt.js");
-  (document.head || document.documentElement).appendChild(elementForInjectingScript);
+  elementForInjectingScript = document.createElement('script')
+  elementForInjectingScript.src = browser.runtime.getURL('/assets/prompt.js')
+  ;(document.head || document.documentElement).appendChild(
+    elementForInjectingScript
+  )
 
   if (window === window.top) {
-    handler = (e) => {
-      return handleMessage(e, selenium);
-    };
-    window.addEventListener("message", handler);
+    handler = e => {
+      return handleMessage(e, selenium)
+    }
+    window.addEventListener('message', handler)
   }
 }
 
 export function detach() {
-  window.postMessage({
-    direction: "from-content-script",
-    detach: true
-  }, "*");
-  elementForInjectingScript.parentNode.removeChild(elementForInjectingScript);
-  window.removeEventListener("message", handler);
+  window.postMessage(
+    {
+      direction: 'from-content-script',
+      detach: true,
+    },
+    '*'
+  )
+  elementForInjectingScript.parentNode.removeChild(elementForInjectingScript)
+  window.removeEventListener('message', handler)
 }
 
 function handleMessage(event, selenium) {
-  if (event.source.top == window && event.data &&
-    event.data.direction == "from-page-script") {
+  if (
+    event.source.top == window &&
+    event.data &&
+    event.data.direction == 'from-page-script'
+  ) {
     if (event.data.response) {
       switch (event.data.response) {
-        case "prompt":
-          selenium.browserbot.promptResponse = true;
+        case 'prompt':
+          selenium.browserbot.promptResponse = true
           if (event.data.value)
-            selenium.browserbot.promptMessage = event.data.value;
-          break;
-        case "confirm":
-          selenium.browserbot.confirmationResponse = true;
+            selenium.browserbot.promptMessage = event.data.value
+          break
+        case 'confirm':
+          selenium.browserbot.confirmationResponse = true
           if (event.data.value)
-            selenium.browserbot.confirmationMessage = event.data.value;
-          break;
-        case "alert":
-          selenium.browserbot.alertResponse = true;
-          if(event.data.value)
-            selenium.browserbot.alertMessage = event.data.value;
-          break;
+            selenium.browserbot.confirmationMessage = event.data.value
+          break
+        case 'alert':
+          selenium.browserbot.alertResponse = true
+          if (event.data.value)
+            selenium.browserbot.alertMessage = event.data.value
+          break
       }
     }
   }

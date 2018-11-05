@@ -14,167 +14,178 @@
  *  limitations under the License.
  *
  */
-import browser from "webextension-polyfill";
-import "./closure-polyfill";
-import TargetSelector from "./targetSelector";
-import Selenium from "./selenium-api";
-import BrowserBot from "./selenium-browserbot";
-import LocatorBuilders from "./locatorBuilders";
-import { editRegion, removeRegion } from "./region";
-import { attach } from "./prompt-injector";
+import browser from 'webextension-polyfill'
+import './closure-polyfill'
+import TargetSelector from './targetSelector'
+import Selenium from './selenium-api'
+import BrowserBot from './selenium-browserbot'
+import LocatorBuilders from './locatorBuilders'
+import { editRegion, removeRegion } from './region'
+import { attach } from './prompt-injector'
 
-export const selenium = new Selenium(BrowserBot.createForWindow(window, true));
-const locatorBuilders = new LocatorBuilders(window);
-let contentSideexTabId = window.contentSideexTabId;
-let targetSelector;
+export const selenium = new Selenium(BrowserBot.createForWindow(window, true))
+const locatorBuilders = new LocatorBuilders(window)
+let contentSideexTabId = window.contentSideexTabId
+let targetSelector
 
-attach(selenium);
+attach(selenium)
 
-function doCommands(request, sender, sendResponse) {
+function doCommands(request, _sender, sendResponse) {
   if (request.commands) {
-    if (request.commands == "waitPreparation") {
-      selenium["doWaitPreparation"]("", selenium.preprocessParameter(""));
-      sendResponse({});
-    } else if (request.commands == "prePageWait") {
-      selenium["doPrePageWait"]("", selenium.preprocessParameter(""));
-      sendResponse({ new_page: window.sideex_new_page });
-    } else if (request.commands == "pageWait") {
-      selenium["doPageWait"]("", selenium.preprocessParameter(""));
-      sendResponse({ page_done: window.sideex_page_done });
-    } else if (request.commands == "ajaxWait") {
-      selenium["doAjaxWait"]("", selenium.preprocessParameter(""));
-      sendResponse({ ajax_done: window.sideex_ajax_done });
-    } else if (request.commands == "domWait") {
-      selenium["doDomWait"]("", selenium.preprocessParameter(""));
-      sendResponse({ dom_time: window.sideex_new_page });
-    } else if (request.commands === "evaluateConditional") {
+    if (request.commands == 'waitPreparation') {
+      selenium['doWaitPreparation']('', selenium.preprocessParameter(''))
+      sendResponse({})
+    } else if (request.commands == 'prePageWait') {
+      selenium['doPrePageWait']('', selenium.preprocessParameter(''))
+      sendResponse({ new_page: window.sideex_new_page })
+    } else if (request.commands == 'pageWait') {
+      selenium['doPageWait']('', selenium.preprocessParameter(''))
+      sendResponse({ page_done: window.sideex_page_done })
+    } else if (request.commands == 'ajaxWait') {
+      selenium['doAjaxWait']('', selenium.preprocessParameter(''))
+      sendResponse({ ajax_done: window.sideex_ajax_done })
+    } else if (request.commands == 'domWait') {
+      selenium['doDomWait']('', selenium.preprocessParameter(''))
+      sendResponse({ dom_time: window.sideex_new_page })
+    } else if (request.commands === 'evaluateConditional') {
       try {
-        let value = selenium["doEvaluateConditional"](request.target);
-        sendResponse({ result: "success", value: value });
-      } catch(e) {
-        sendResponse({ result: e.message });
+        let value = selenium['doEvaluateConditional'](request.target)
+        sendResponse({ result: 'success', value: value })
+      } catch (e) {
+        sendResponse({ result: e.message })
       }
     } else {
-      const upperCase = request.commands.charAt(0).toUpperCase() + request.commands.slice(1);
-      if (selenium["do" + upperCase] != null) {
+      const upperCase =
+        request.commands.charAt(0).toUpperCase() + request.commands.slice(1)
+      if (selenium['do' + upperCase] != null) {
         try {
-          document.body.setAttribute("SideeXPlayingFlag", true);
-          let returnValue = selenium["do" + upperCase](selenium.preprocessParameter(request.target), selenium.preprocessParameter(request.value));
+          document.body.setAttribute('SideeXPlayingFlag', true)
+          let returnValue = selenium['do' + upperCase](
+            selenium.preprocessParameter(request.target),
+            selenium.preprocessParameter(request.value)
+          )
           if (returnValue instanceof Promise) {
             // The command is a asynchronous function
-            returnValue.then(function() {
-              // Asynchronous command completed successfully
-              document.body.removeAttribute("SideeXPlayingFlag");
-              sendResponse({ result: "success" });
-            }).catch(function(reason) {
-              // Asynchronous command failed
-              document.body.removeAttribute("SideeXPlayingFlag");
-              sendResponse({ result: reason });
-            });
+            returnValue
+              .then(function() {
+                // Asynchronous command completed successfully
+                document.body.removeAttribute('SideeXPlayingFlag')
+                sendResponse({ result: 'success' })
+              })
+              .catch(function(reason) {
+                // Asynchronous command failed
+                document.body.removeAttribute('SideeXPlayingFlag')
+                sendResponse({ result: reason })
+              })
           } else {
             // Synchronous command completed successfully
-            document.body.removeAttribute("SideeXPlayingFlag");
-            sendResponse({ result: "success" });
+            document.body.removeAttribute('SideeXPlayingFlag')
+            sendResponse({ result: 'success' })
           }
-        } catch(e) {
+        } catch (e) {
           // Synchronous command failed
-          document.body.removeAttribute("SideeXPlayingFlag");
-          sendResponse({ result: e.message });
+          document.body.removeAttribute('SideeXPlayingFlag')
+          sendResponse({ result: e.message })
         }
       } else {
-        sendResponse({ result: "Unknown command: " + request.commands });
+        sendResponse({ result: 'Unknown command: ' + request.commands })
       }
     }
 
     //do every command need giving sideex id
     if (contentSideexTabId === -1) {
-      contentSideexTabId = request.mySideexTabId;
+      contentSideexTabId = request.mySideexTabId
     }
-    return true;
+    return true
   }
   if (request.prepareToInteract) {
     sendResponse({
-      result: "success",
-      rect: selenium.prepareToInteract_(request.locator)
-    });
+      result: 'success',
+      rect: selenium.prepareToInteract_(request.locator),
+    })
   }
   if (request.buildLocators) {
     try {
-      const element = selenium.browserbot.findElement(request.locator);
-      const locators = locatorBuilders.buildAll(element);
-      sendResponse({ result: "success", locators });
-    } catch(e) {
-      sendResponse({ result: e.message });
+      const element = selenium.browserbot.findElement(request.locator)
+      const locators = locatorBuilders.buildAll(element)
+      sendResponse({ result: 'success', locators })
+    } catch (e) {
+      sendResponse({ result: e.message })
     }
   }
   if (request.resolveLocator) {
     try {
-      const element = selenium.browserbot.findElement(request.locator);
-      const locator = locatorBuilders.buildAll(element).find(([loc, strat]) => (/^xpath/.test(strat)))[0]; //eslint-disable-line no-unused-vars
-      sendResponse({ result: "success", locator });
-    } catch(e) {
-      sendResponse({ result: e.message });
+      const element = selenium.browserbot.findElement(request.locator)
+      const locator = locatorBuilders
+        .buildAll(element)
+        .find(([loc, strat]) => /^xpath/.test(strat))[0] //eslint-disable-line no-unused-vars
+      sendResponse({ result: 'success', locator })
+    } catch (e) {
+      sendResponse({ result: e.message })
     }
   }
   if (request.selectMode) {
-    sendResponse(true);
+    sendResponse(true)
     if (request.selecting && request.element) {
-      targetSelector = new TargetSelector(function (element, win) {
-        if (element && win) {
-          const target = locatorBuilders.buildAll(element);
-          locatorBuilders.detach();
-          if (target != null && target instanceof Array) {
-            if (target) {
-              //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
-              browser.runtime.sendMessage({
-                selectTarget: true,
-                target: target,
-                selectNext: request.selectNext
-              });
+      targetSelector = new TargetSelector(
+        function(element, win) {
+          if (element && win) {
+            const target = locatorBuilders.buildAll(element)
+            locatorBuilders.detach()
+            if (target != null && target instanceof Array) {
+              if (target) {
+                //self.editor.treeView.updateCurrentCommand('targetCandidates', target);
+                browser.runtime.sendMessage({
+                  selectTarget: true,
+                  target: target,
+                  selectNext: request.selectNext,
+                })
+              }
             }
           }
+          targetSelector = null
+        },
+        function() {
+          browser.runtime.sendMessage({
+            cancelSelectTarget: true,
+          })
         }
-        targetSelector = null;
-      }, function () {
-        browser.runtime.sendMessage({
-          cancelSelectTarget: true
-        });
-      });
+      )
     } else if (request.selecting && request.region) {
-      editRegion(request.rect, (target) => {
+      editRegion(request.rect, target => {
         if (target) {
           browser.runtime.sendMessage({
             selectTarget: true,
             target: [[target]],
-            selectNext: request.selectNext
-          });
+            selectNext: request.selectNext,
+          })
         } else {
           browser.runtime.sendMessage({
             cancelSelectTarget: true,
-            selectNext: request.selectNext
-          });
+            selectNext: request.selectNext,
+          })
         }
-      });
+      })
     } else {
       if (targetSelector) {
-        targetSelector.cleanup();
-        targetSelector = null;
-        return;
+        targetSelector.cleanup()
+        targetSelector = null
+        return
       } else {
-        removeRegion();
-        return;
+        removeRegion()
+        return
       }
     }
   }
 }
 
 // show element
-function startShowElement(message){
+function startShowElement(message) {
   if (message.showElement) {
     try {
-      const result = selenium["doShowElement"](message.targetValue);
-      return Promise.resolve({ result: result });
-    } catch(e) {
+      const result = selenium['doShowElement'](message.targetValue)
+      return Promise.resolve({ result: result })
+    } catch (e) {
       // If we didn't find the element, it means that another frame might have found it,
       // so we don't resolve the promise. If no frame finds it, then the promise will
       // get rejected.
@@ -183,7 +194,7 @@ function startShowElement(message){
 }
 
 if (!window._listener) {
-  window._listener = doCommands;
-  browser.runtime.onMessage.addListener(startShowElement);
-  browser.runtime.onMessage.addListener(doCommands);
+  window._listener = doCommands
+  browser.runtime.onMessage.addListener(startShowElement)
+  browser.runtime.onMessage.addListener(doCommands)
 }

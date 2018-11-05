@@ -18,12 +18,12 @@
 /**
  * This file will put everything we need on window so that we can use it from within the extension
  */
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill'
 
 window.LOG = {
   debug: () => {},
   error: () => {},
-  exception: () => {}
-};
+  exception: () => {},
+}
 
-window.browser = browser;
+window.browser = browser

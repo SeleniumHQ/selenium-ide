@@ -15,4 +15,4 @@
 // specific language governing permissions and limitations
 // under the License.
 
-window.global = this;
+window.global = this

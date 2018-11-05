@@ -15,71 +15,95 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { registerCommand, canExecuteCommand, executeCommand } from "../../plugin/commandExecutor";
+import {
+  registerCommand,
+  canExecuteCommand,
+  executeCommand,
+} from '../../plugin/commandExecutor'
 
-describe("command executor", () => {
-  it("should register a command", () => {
-    expect(registerCommand("test", new Function())).toBeUndefined();
-  });
-  it("should fail to register a command with no key", () => {
-    expect(() => registerCommand()).toThrowError("Expected to receive string instead received undefined");
-  });
-  it("should fail to register a command with a key that is not string", () => {
-    expect(() => registerCommand(5, new Function())).toThrowError("Expected to receive string instead received number");
-  });
-  it("should fail to register a command with no callback", () => {
-    expect(() => registerCommand("command")).toThrowError("Expected to receive function instead received undefined");
-  });
-  it("should fail to register a command with a callback that is not a function", () => {
-    expect(() => registerCommand("command", 1)).toThrowError("Expected to receive function instead received number");
-  });
-  it("should fail to register a command with the same key as a previous one", () => {
-    const key = "command";
-    registerCommand(key, new Function());
-    expect(() => registerCommand(key, new Function())).toThrowError(`A command named ${key} already exists`);
-  });
-  it("should check if a command may be executed", () => {
-    registerCommand("exists", new Function());
-    expect(canExecuteCommand("exists")).toBeTruthy();
-    expect(canExecuteCommand("nonExistent")).toBeFalsy();
-  });
-  it("should throw when executing a command that does not exist", () => {
-    const commandName = "nonExistent";
-    expect(() => executeCommand(commandName)).toThrowError(`The command ${commandName} is not registered with any plugin`);
-  });
-  it("should successfully execute a sync command", () => {
-    const cb = jest.fn();
-    registerCommand("syncCommand", cb);
-    executeCommand("syncCommand");
-    expect(cb).toHaveBeenCalled();
-  });
-  it("should fail to execute a sync command", () => {
-    const command = "syncFail";
+describe('command executor', () => {
+  it('should register a command', () => {
+    expect(registerCommand('test', new Function())).toBeUndefined()
+  })
+  it('should fail to register a command with no key', () => {
+    expect(() => registerCommand()).toThrowError(
+      'Expected to receive string instead received undefined'
+    )
+  })
+  it('should fail to register a command with a key that is not string', () => {
+    expect(() => registerCommand(5, new Function())).toThrowError(
+      'Expected to receive string instead received number'
+    )
+  })
+  it('should fail to register a command with no callback', () => {
+    expect(() => registerCommand('command')).toThrowError(
+      'Expected to receive function instead received undefined'
+    )
+  })
+  it('should fail to register a command with a callback that is not a function', () => {
+    expect(() => registerCommand('command', 1)).toThrowError(
+      'Expected to receive function instead received number'
+    )
+  })
+  it('should fail to register a command with the same key as a previous one', () => {
+    const key = 'command'
+    registerCommand(key, new Function())
+    expect(() => registerCommand(key, new Function())).toThrowError(
+      `A command named ${key} already exists`
+    )
+  })
+  it('should check if a command may be executed', () => {
+    registerCommand('exists', new Function())
+    expect(canExecuteCommand('exists')).toBeTruthy()
+    expect(canExecuteCommand('nonExistent')).toBeFalsy()
+  })
+  it('should throw when executing a command that does not exist', () => {
+    const commandName = 'nonExistent'
+    expect(() => executeCommand(commandName)).toThrowError(
+      `The command ${commandName} is not registered with any plugin`
+    )
+  })
+  it('should successfully execute a sync command', () => {
+    const cb = jest.fn()
+    registerCommand('syncCommand', cb)
+    executeCommand('syncCommand')
+    expect(cb).toHaveBeenCalled()
+  })
+  it('should fail to execute a sync command', () => {
+    const command = 'syncFail'
     const cb = () => {
-      throw new Error();
-    };
-    registerCommand(command, cb);
+      throw new Error()
+    }
+    registerCommand(command, cb)
     expect(() => {
       try {
-        executeCommand(command);
-      } catch(e) {
-        if (e.message !== `The command ${command} is not registered with any plugin`) {
-          throw e;
+        executeCommand(command)
+      } catch (e) {
+        if (
+          e.message !==
+          `The command ${command} is not registered with any plugin`
+        ) {
+          throw e
         }
       }
-    }).toThrow();
-  });
-  it("should successfully execute an async command", () => {
-    registerCommand("asyncCommand", () => Promise.resolve(true));
-    expect(executeCommand("asyncCommand")).resolves.toBeTruthy();
-  });
-  it("should fail to execute an async command", () => {
-    registerCommand("asyncFail", () => Promise.reject(false));
-    expect(executeCommand("asyncFail")).rejects.toBeFalsy();
-  });
-  it("should pass options to the command executor", () => {
-    registerCommand("optionsCommand", (target, value, options) => (options.first));
-    const option = "test";
-    expect(executeCommand("optionsCommand", undefined, undefined, { first: option })).toEqual(option);
-  });
-});
+    }).toThrow()
+  })
+  it('should successfully execute an async command', () => {
+    registerCommand('asyncCommand', () => Promise.resolve(true))
+    expect(executeCommand('asyncCommand')).resolves.toBeTruthy()
+  })
+  it('should fail to execute an async command', () => {
+    registerCommand('asyncFail', () => Promise.reject(false))
+    expect(executeCommand('asyncFail')).rejects.toBeFalsy()
+  })
+  it('should pass options to the command executor', () => {
+    registerCommand(
+      'optionsCommand',
+      (_target, _value, options) => options.first
+    )
+    const option = 'test'
+    expect(
+      executeCommand('optionsCommand', undefined, undefined, { first: option })
+    ).toEqual(option)
+  })
+})

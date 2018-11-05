@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import SeleniumError from "./SeleniumError";
+import SeleniumError from './SeleniumError'
 
 /**
  * Parses a Selenium locator, returning its type and the unprefixed locator
@@ -23,38 +23,38 @@ import SeleniumError from "./SeleniumError";
  *
  * @param locator  the locator to parse
  */
-export function parse_locator(locator, silent = false)
-{
+export function parse_locator(locator, silent = false) {
   if (!locator) {
-    throw new TypeError("Locator cannot be empty");
+    throw new TypeError('Locator cannot be empty')
   }
-  const result = locator.match(/^([A-Za-z]+)=.+/);
+  const result = locator.match(/^([A-Za-z]+)=.+/)
   if (result) {
-    let type = result[1];
-    const length = type.length;
-    if (type === "link") {
+    let type = result[1]
+    const length = type.length
+    if (type === 'link') {
       // deprecation control
       browser.runtime.sendMessage({
         log: {
-          type: "warn",
-          message: "link locators are deprecated in favor of linkText and partialLinkText, link is treated as linkText"
-        }
-      });
-      type = "linkText";
+          type: 'warn',
+          message:
+            'link locators are deprecated in favor of linkText and partialLinkText, link is treated as linkText',
+        },
+      })
+      type = 'linkText'
     }
-    const actualLocator = locator.substring(length + 1);
-    return { type: type, string: actualLocator };
+    const actualLocator = locator.substring(length + 1)
+    return { type: type, string: actualLocator }
   }
-  const implicitType = locator.indexOf("//") === -1 ? "id" : "xpath";
+  const implicitType = locator.indexOf('//') === -1 ? 'id' : 'xpath'
   if (!silent) {
     browser.runtime.sendMessage({
       log: {
-        type: "warn",
-        message: `implicit locators are deprecated, please change the locator to ${implicitType}=${locator}`
-      }
-    });
+        type: 'warn',
+        message: `implicit locators are deprecated, please change the locator to ${implicitType}=${locator}`,
+      },
+    })
   }
-  return { type: implicitType, string: locator };
+  return { type: implicitType, string: locator }
 }
 
 /**
@@ -63,11 +63,11 @@ export function parse_locator(locator, silent = false)
  * @param element  an HTMLElement
  */
 export function getTagName(element) {
-  let tagName;
+  let tagName
   if (element && element.tagName && element.tagName.toLowerCase) {
-    tagName = element.tagName.toLowerCase();
+    tagName = element.tagName.toLowerCase()
   }
-  return tagName;
+  return tagName
 }
 
 /**
@@ -78,36 +78,38 @@ export function getTagName(element) {
  *                 to return
  */
 export function getTimeoutTime(timeout) {
-  const now = new Date().getTime();
-  const timeoutLength = parseInt(timeout);
+  const now = new Date().getTime()
+  const timeoutLength = parseInt(timeout)
 
   if (isNaN(timeoutLength)) {
-    throw new SeleniumError("Timeout is not a number: '" + timeout + "'");
+    throw new SeleniumError("Timeout is not a number: '" + timeout + "'")
   }
 
-  return now + timeoutLength;
+  return now + timeoutLength
 }
 
 export function extractExceptionMessage(ex) {
-  if (ex == null) return "null exception";
-  if (ex.message != null) return ex.message;
-  if (ex.toString && ex.toString() != null) return ex.toString();
+  if (ex == null) return 'null exception'
+  if (ex.message != null) return ex.message
+  if (ex.toString && ex.toString() != null) return ex.toString()
 }
 
 // Strings utilities
 export function lowerFirstChar(str) {
-  return str.charAt(0).toLowerCase() + str.substr(1);
+  return str.charAt(0).toLowerCase() + str.substr(1)
 }
 
 export function upperFirstChar(str) {
-  return str.charAt(0).toUpperCase() + str.substr(1);
+  return str.charAt(0).toUpperCase() + str.substr(1)
 }
 
-export const isProduction = process.env.NODE_ENV === "production";
+export const isProduction = process.env.NODE_ENV === 'production'
 
 export function calculateFrameIndex(indicatorIndex, targetFrameIndex) {
-  if (indicatorIndex < 0) return targetFrameIndex;
-  return (indicatorIndex < targetFrameIndex) ? targetFrameIndex - 1 : targetFrameIndex;
+  if (indicatorIndex < 0) return targetFrameIndex
+  return indicatorIndex < targetFrameIndex
+    ? targetFrameIndex - 1
+    : targetFrameIndex
 }
 
-export const isStaging = process.env.NODE_ENV === "staging";
+export const isStaging = process.env.NODE_ENV === 'staging'

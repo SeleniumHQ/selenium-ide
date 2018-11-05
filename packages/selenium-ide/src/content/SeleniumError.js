@@ -17,10 +17,10 @@
 
 export default class SeleniumError extends Error {
   constructor(...argv) {
-    super(argv);
+    super(argv)
 
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, SeleniumError);
+      Error.captureStackTrace(this, SeleniumError)
     }
   }
 }

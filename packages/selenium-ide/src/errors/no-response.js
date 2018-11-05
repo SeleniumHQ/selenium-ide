@@ -17,10 +17,10 @@
 
 export default class NoResponseError extends Error {
   constructor(...argv) {
-    super(argv);
+    super(argv)
 
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, NoResponseError);
+      Error.captureStackTrace(this, NoResponseError)
     }
   }
 }

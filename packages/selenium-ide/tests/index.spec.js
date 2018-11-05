@@ -15,33 +15,36 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { By } from "selenium-webdriver";
-import Extension from "./extension";
+import { By } from 'selenium-webdriver'
+import Extension from './extension'
 
-jest.setTimeout(300000);
+jest.setTimeout(300000)
 
-describe("Selenium IDE", () => {
-  let ext;
+describe('Selenium IDE', () => {
+  let ext
   afterEach(async () => {
-    await ext.clean();
-  });
-  it("should load", async () => {
-    ext = await new Extension().init();
-    expect(await ext.driver.getTitle()).toBe("Selenium IDE - seed project");
-  });
-  it("should run the smoke suite", async () => {
-    ext = await new Extension().init();
-    const playAllButton = await ext.driver.findElement(By.css(".si-play-all"));
-    await playAllButton.click();
-    await ext.driver.wait(() => (
-      ext.driver.executeScript(() => (
-        !window._playbackState.isPlaying
-      ))
-    ));
-    const failureCount = await ext.driver.executeScript(() => (window._playbackState.failures));
+    await ext.clean()
+  })
+  it('should load', async () => {
+    ext = await new Extension().init()
+    expect(await ext.driver.getTitle()).toBe('Selenium IDE - seed project')
+  })
+  it('should run the smoke suite', async () => {
+    ext = await new Extension().init()
+    const playAllButton = await ext.driver.findElement(By.css('.si-play-all'))
+    await playAllButton.click()
+    await ext.driver.wait(() =>
+      ext.driver.executeScript(() => !window._playbackState.isPlaying)
+    )
+    const failureCount = await ext.driver.executeScript(
+      () => window._playbackState.failures
+    )
     if (failureCount > 0) {
-      console.log(await ext.driver.executeScript(() => (window._logger.printLogs(2))));
+      // eslint-disable-next-line no-console
+      console.log(
+        await ext.driver.executeScript(() => window._logger.printLogs(2))
+      )
     }
-    expect(failureCount).toBe(0);
-  });
-});
+    expect(failureCount).toBe(0)
+  })
+})

@@ -17,47 +17,47 @@
 
 /*eslint-disable no-undef*/
 
-goog.global = window;
+goog.global = window
 
-goog.require("goog.debug");
-goog.require("goog.dom");
-goog.require("goog.dom.DomHelper");
+goog.require('goog.debug')
+goog.require('goog.dom')
+goog.require('goog.dom.DomHelper')
 
-var _d = goog.dom.DomHelper;
-Object.defineProperty(goog.dom, "DomHelper", {
-  get: function () {
-    return _d;
+var _d = goog.dom.DomHelper
+Object.defineProperty(goog.dom, 'DomHelper', {
+  get: function() {
+    return _d
   },
 
-  set: function (value) {
+  set: function(_value) {
     // disallow setting of the DomHelper as it will be voided
     //_d = value;
-  }
-});
+  },
+})
 
-export var bot = {};
-goog.require("bot");
-goog.require("bot.action");
-goog.require("bot.events");
-goog.require("bot.locators");
-goog.require("bot.inject");
-goog.require("bot.inject.cache");
-goog.require("bot.userAgent");
-goog.require("bot.Keyboard");
+export var bot = {}
+goog.require('bot')
+goog.require('bot.action')
+goog.require('bot.events')
+goog.require('bot.locators')
+goog.require('bot.inject')
+goog.require('bot.inject.cache')
+goog.require('bot.userAgent')
+goog.require('bot.Keyboard')
 bot.getWindow = function() {
-  return bot.window_;
-};
+  return bot.window_
+}
 bot.setWindow = function(win) {
-  bot.window_ = win;
-};
+  bot.window_ = win
+}
 bot.getDocument = function() {
-  return bot.window_.document;
-};
+  return bot.window_.document
+}
 
-export var core = {};
-goog.require("core.firefox");
-goog.require("core.events");
-goog.require("core.text");
-goog.require("core.locators");
+export var core = {}
+goog.require('core.firefox')
+goog.require('core.events')
+goog.require('core.text')
+goog.require('core.locators')
 
-export default goog;
+export default goog

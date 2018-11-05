@@ -15,20 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import path from "path";
-import webdriver from "selenium-webdriver";
+import path from 'path'
+import webdriver from 'selenium-webdriver'
 
 export default async function CreateSession() {
   let builder = new webdriver.Builder().withCapabilities({
-    browserName: "chrome",
+    browserName: 'chrome',
     chromeOptions: {
-      args: [`load-extension=${process.env.EXT_PATH || path.join(__dirname + "../../../build")}`]
-    }
-  });
+      args: [
+        `load-extension=${process.env.EXT_PATH ||
+          path.join(__dirname + '../../../build')}`,
+      ],
+    },
+  })
   if (process.env.SERVER) {
-    builder = builder.usingServer(process.env.SERVER);
+    builder = builder.usingServer(process.env.SERVER)
   }
-  const driver = await builder.build();
+  const driver = await builder.build()
 
-  return driver;
+  return driver
 }

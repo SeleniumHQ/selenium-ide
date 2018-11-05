@@ -18,7 +18,7 @@
 export default {
   runtime: {
     onMessage: {
-      addListener: jest.fn()
-    }
-  }
-};
+      addListener: jest.fn(),
+    },
+  },
+}

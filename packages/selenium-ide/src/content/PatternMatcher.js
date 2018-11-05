@@ -15,88 +15,88 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import SeleniumError from "./SeleniumError";
+import SeleniumError from './SeleniumError'
 
 export default function PatternMatcher(pattern) {
-  this.selectStrategy(pattern);
+  this.selectStrategy(pattern)
 }
 
 PatternMatcher.prototype = {
   selectStrategy: function(pattern) {
-    this.pattern = pattern;
-    let strategyName = "glob";
+    this.pattern = pattern
+    let strategyName = 'glob'
     // by default
     if (/^([a-z-]+):(.*)/.test(pattern)) {
-      const possibleNewStrategyName = RegExp.$1;
-      const possibleNewPattern = RegExp.$2;
+      const possibleNewStrategyName = RegExp.$1
+      const possibleNewPattern = RegExp.$2
       if (PatternMatcher.strategies[possibleNewStrategyName]) {
-        strategyName = possibleNewStrategyName;
-        pattern = possibleNewPattern;
+        strategyName = possibleNewStrategyName
+        pattern = possibleNewPattern
       }
     }
-    const matchStrategy = PatternMatcher.strategies[strategyName];
+    const matchStrategy = PatternMatcher.strategies[strategyName]
     if (!matchStrategy) {
-      throw new SeleniumError("cannot find PatternMatcher.strategies." + strategyName);
+      throw new SeleniumError(
+        'cannot find PatternMatcher.strategies.' + strategyName
+      )
     }
-    this.strategy = matchStrategy;
-    this.matcher = new matchStrategy(pattern);
+    this.strategy = matchStrategy
+    this.matcher = new matchStrategy(pattern)
   },
 
   matches: function(actual) {
-    return this.matcher.matches(actual + "");
+    return this.matcher.matches(actual + '')
     // Note: appending an empty string avoids a Konqueror bug
-  }
-
-};
+  },
+}
 
 /**
  * A "static" convenience method for easy matching
  */
 PatternMatcher.matches = function(pattern, actual) {
-  return new PatternMatcher(pattern).matches(actual);
-};
+  return new PatternMatcher(pattern).matches(actual)
+}
 
 PatternMatcher.strategies = {
-
   /**
    * Exact matching, e.g. "exact:***"
    */
   exact: function(expected) {
-    this.expected = expected;
+    this.expected = expected
     this.matches = function(actual) {
-      return actual == this.expected;
-    };
+      return actual == this.expected
+    }
   },
 
   /**
    * Match by regular expression, e.g. "regexp:^[0-9]+$"
    */
   regexp: function(regexpString) {
-    this.regexp = new RegExp(regexpString);
+    this.regexp = new RegExp(regexpString)
     this.matches = function(actual) {
-      return this.regexp.test(actual);
-    };
+      return this.regexp.test(actual)
+    }
   },
 
   regex: function(regexpString) {
-    this.regexp = new RegExp(regexpString);
+    this.regexp = new RegExp(regexpString)
     this.matches = function(actual) {
-      return this.regexp.test(actual);
-    };
+      return this.regexp.test(actual)
+    }
   },
 
   regexpi: function(regexpString) {
-    this.regexp = new RegExp(regexpString, "i");
+    this.regexp = new RegExp(regexpString, 'i')
     this.matches = function(actual) {
-      return this.regexp.test(actual);
-    };
+      return this.regexp.test(actual)
+    }
   },
 
   regexi: function(regexpString) {
-    this.regexp = new RegExp(regexpString, "i");
+    this.regexp = new RegExp(regexpString, 'i')
     this.matches = function(actual) {
-      return this.regexp.test(actual);
-    };
+      return this.regexp.test(actual)
+    }
   },
 
   /**
@@ -111,37 +111,35 @@ PatternMatcher.strategies = {
    * and so avoid running into this IE6 freeze.
    */
   globContains: function(globString) {
-    this.regexp = new RegExp(PatternMatcher.regexpFromGlobContains(globString));
+    this.regexp = new RegExp(PatternMatcher.regexpFromGlobContains(globString))
     this.matches = function(actual) {
-      return this.regexp.test(actual);
-    };
+      return this.regexp.test(actual)
+    }
   },
-
 
   /**
    * "glob" (aka "wildmat") patterns, e.g. "glob:one,two,*"
    */
   glob: function(globString) {
-    this.regexp = new RegExp(PatternMatcher.regexpFromGlob(globString));
+    this.regexp = new RegExp(PatternMatcher.regexpFromGlob(globString))
     this.matches = function(actual) {
-      return this.regexp.test(actual);
-    };
-  }
-
-};
+      return this.regexp.test(actual)
+    }
+  },
+}
 
 PatternMatcher.convertGlobMetaCharsToRegexpMetaChars = function(glob) {
-  let re = glob;
-  re = re.replace(/([.^$+(){}\[\]\\|])/g, "\\$1"); // eslint-disable-line no-useless-escape
-  re = re.replace(/\?/g, "(.|[\r\n])");
-  re = re.replace(/\*/g, "(.|[\r\n])*");
-  return re;
-};
+  let re = glob
+  re = re.replace(/([.^$+(){}\[\]\\|])/g, '\\$1') // eslint-disable-line no-useless-escape
+  re = re.replace(/\?/g, '(.|[\r\n])')
+  re = re.replace(/\*/g, '(.|[\r\n])*')
+  return re
+}
 
 PatternMatcher.regexpFromGlobContains = function(globContains) {
-  return PatternMatcher.convertGlobMetaCharsToRegexpMetaChars(globContains);
-};
+  return PatternMatcher.convertGlobMetaCharsToRegexpMetaChars(globContains)
+}
 
 PatternMatcher.regexpFromGlob = function(glob) {
-  return "^" + PatternMatcher.convertGlobMetaCharsToRegexpMetaChars(glob) + "$";
-};
+  return '^' + PatternMatcher.convertGlobMetaCharsToRegexpMetaChars(glob) + '$'
+}

@@ -18,9 +18,9 @@
     "test": "jest",
     "test:ext": "jest --testMatch \"**/packages/selenium-ide/tests/**/*.spec.js\"",
     "test:runner": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
-    "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/test/**/*.spec.js\"",
+    "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/tests/**/*.spec.js\"",
     "lint": "yarn lint:scripts && yarn lint:styles",
-    "lint:scripts": "eslint packages/selenium-ide/src/neo/ packages/selenium-ide/src/plugin/ packages/selenium-ide/src/router/ packages/selenium-ide/src/api/ packages/selenium-side-runner/src/ packages/selianize/__tests__/ packages/selianize/src/ packages/browser-webdriver/src/ --ext .js --ext .jsx",
+    "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" --ignore-pattern=\"extension-boilerplate\"",
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap"
   },

@@ -15,37 +15,37 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { calculateFrameIndex } from "../../content/utils";
+import { calculateFrameIndex } from '../../content/utils'
 
-describe("utils", () => {
-  describe("calculate frame index", () => {
-    it("when recording indicator index is undefined", () => {
-      expect(calculateFrameIndex(undefined, 0)).toEqual(0);
-      expect(calculateFrameIndex(undefined, 1)).toEqual(1);
-      expect(calculateFrameIndex(undefined, 2)).toEqual(2);
-    });
-    it("when recording indicator index is < 0", () => {
-      expect(calculateFrameIndex(-1, 0)).toEqual(0);
-      expect(calculateFrameIndex(-2, 1)).toEqual(1);
-      expect(calculateFrameIndex(-10, 2)).toEqual(2);
-    });
-    it("when recording indicator index is 0", () => {
-      expect(calculateFrameIndex(0, 1)).toEqual(0);
-      expect(calculateFrameIndex(0, 2)).toEqual(1);
-      expect(calculateFrameIndex(0, 3)).toEqual(2);
-    });
-    it("when recording indicator index is 1", () => {
-      expect(calculateFrameIndex(1, 0)).toEqual(0);
-      expect(calculateFrameIndex(1, 2)).toEqual(1);
-      expect(calculateFrameIndex(1, 3)).toEqual(2);
-    });
-    it("when recording indicator index is 2", () => {
-      expect(calculateFrameIndex(2, 0)).toEqual(0);
-      expect(calculateFrameIndex(2, 1)).toEqual(1);
-      expect(calculateFrameIndex(2, 3)).toEqual(2);
-    });
-    it("when recording indicator index is 4", () => {
-      expect(calculateFrameIndex(4, 7)).toEqual(6);
-    });
-  });
-});
+describe('utils', () => {
+  describe('calculate frame index', () => {
+    it('when recording indicator index is undefined', () => {
+      expect(calculateFrameIndex(undefined, 0)).toEqual(0)
+      expect(calculateFrameIndex(undefined, 1)).toEqual(1)
+      expect(calculateFrameIndex(undefined, 2)).toEqual(2)
+    })
+    it('when recording indicator index is < 0', () => {
+      expect(calculateFrameIndex(-1, 0)).toEqual(0)
+      expect(calculateFrameIndex(-2, 1)).toEqual(1)
+      expect(calculateFrameIndex(-10, 2)).toEqual(2)
+    })
+    it('when recording indicator index is 0', () => {
+      expect(calculateFrameIndex(0, 1)).toEqual(0)
+      expect(calculateFrameIndex(0, 2)).toEqual(1)
+      expect(calculateFrameIndex(0, 3)).toEqual(2)
+    })
+    it('when recording indicator index is 1', () => {
+      expect(calculateFrameIndex(1, 0)).toEqual(0)
+      expect(calculateFrameIndex(1, 2)).toEqual(1)
+      expect(calculateFrameIndex(1, 3)).toEqual(2)
+    })
+    it('when recording indicator index is 2', () => {
+      expect(calculateFrameIndex(2, 0)).toEqual(0)
+      expect(calculateFrameIndex(2, 1)).toEqual(1)
+      expect(calculateFrameIndex(2, 3)).toEqual(2)
+    })
+    it('when recording indicator index is 4', () => {
+      expect(calculateFrameIndex(4, 7)).toEqual(6)
+    })
+  })
+})

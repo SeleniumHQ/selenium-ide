@@ -17,44 +17,113 @@
 
 export function attach(record) {
   if (window === window.top) {
-    window.addEventListener("message", function(event) {
-      if (event.source.top == window && event.data &&
-        event.data.direction == "from-page-script") {
+    window.addEventListener('message', function(event) {
+      if (
+        event.source.top == window &&
+        event.data &&
+        event.data.direction == 'from-page-script'
+      ) {
         if (event.data.recordedType) {
           switch (event.data.recordedType) {
-            case "prompt":
+            case 'prompt':
               if (event.data.recordedResult != null) {
-                record("answerOnNextPrompt", [[event.data.recordedResult]], "", true, event.data.frameLocation);
+                record(
+                  'answerOnNextPrompt',
+                  [[event.data.recordedResult]],
+                  '',
+                  true,
+                  event.data.frameLocation
+                )
               } else {
-                record("chooseCancelOnNextPrompt", [[""]], "", true, event.data.frameLocation);
+                record(
+                  'chooseCancelOnNextPrompt',
+                  [['']],
+                  '',
+                  true,
+                  event.data.frameLocation
+                )
               }
-              record("assertPrompt", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
+              record(
+                'assertPrompt',
+                [[event.data.recordedMessage]],
+                '',
+                false,
+                event.data.frameLocation
+              )
               if (event.data.recordedResult != null) {
-                record("webdriverAnswerOnVisiblePrompt", [[event.data.recordedResult]], "", false, event.data.frameLocation);
+                record(
+                  'webdriverAnswerOnVisiblePrompt',
+                  [[event.data.recordedResult]],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
               } else {
-                record("webdriverChooseCancelOnVisiblePrompt", [[""]], "", false, event.data.frameLocation);
+                record(
+                  'webdriverChooseCancelOnVisiblePrompt',
+                  [['']],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
               }
-              break;
-            case "confirm":
+              break
+            case 'confirm':
               if (event.data.recordedResult == true) {
-                record("chooseOkOnNextConfirmation", [[""]], "", true, event.data.frameLocation);
+                record(
+                  'chooseOkOnNextConfirmation',
+                  [['']],
+                  '',
+                  true,
+                  event.data.frameLocation
+                )
               } else {
-                record("chooseCancelOnNextConfirmation", [[""]], "", true, event.data.frameLocation);
+                record(
+                  'chooseCancelOnNextConfirmation',
+                  [['']],
+                  '',
+                  true,
+                  event.data.frameLocation
+                )
               }
-              record("assertConfirmation", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
+              record(
+                'assertConfirmation',
+                [[event.data.recordedMessage]],
+                '',
+                false,
+                event.data.frameLocation
+              )
               if (event.data.recordedResult == true) {
-                record("webdriverChooseOkOnVisibleConfirmation", [[""]], "", false, event.data.frameLocation);
+                record(
+                  'webdriverChooseOkOnVisibleConfirmation',
+                  [['']],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
               } else {
-                record("webdriverChooseCancelOnVisibleConfirmation", [[""]], "", false, event.data.frameLocation);
+                record(
+                  'webdriverChooseCancelOnVisibleConfirmation',
+                  [['']],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
               }
-              break;
-            case "alert":
+              break
+            case 'alert':
               //record("answerOnNextAlert",[[event.data.recordedResult]],"",true);
-              record("assertAlert", [[event.data.recordedMessage]], "", false, event.data.frameLocation);
-              break;
+              record(
+                'assertAlert',
+                [[event.data.recordedMessage]],
+                '',
+                false,
+                event.data.frameLocation
+              )
+              break
           }
         }
       }
-    });
+    })
   }
 }
