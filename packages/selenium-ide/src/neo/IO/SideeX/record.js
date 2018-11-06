@@ -19,9 +19,53 @@ import browser from 'webextension-polyfill'
 import UiState from '../../stores/view/UiState'
 import WindowSession from '../window-session'
 import { Commands, ArgTypes } from '../../models/Command'
+import Manager from '../../../plugin/manager'
+import { Logger, Channels } from '../../stores/view/Logs'
+
+const logger = new Logger(Channels.SYSTEM)
 
 function isEmpty(commands) {
   return commands.length === 0
+}
+
+async function notifyPluginsOfRecordedCommand(command, test) {
+  const results = await Manager.emitMessage({
+    action: 'event',
+    event: 'commandRecorded',
+    options: {
+      tabId: WindowSession.currentUsedTabId[test.id],
+      command: command.command,
+      target: command.target,
+      targets: command.targets,
+      value: command.value,
+    },
+  })
+  if (results.length >= 1) {
+    // if more than one plugin responded, warn the user
+    if (results.length > 1) {
+      logger.warn(
+        `More than one plugin tried to override ${
+          command.command
+        }, used response from ${results[0].plugin.name}`
+      )
+    }
+    const result = results[0].response
+    if (result.mutation === 'delete') {
+      test.removeCommand(command)
+    } else if (
+      result.mutation === 'update' &&
+      typeof result.command === 'string' &&
+      typeof result.target === 'string' &&
+      typeof result.value === 'string'
+    ) {
+      command.setCommand(result.command)
+      command.setTarget(result.target)
+      command.setValue(result.value)
+      if (result.targets && isTargetsValid(result.targets)) {
+        command.setTargets(result.targets)
+      }
+    }
+  }
 }
 
 async function addInitialCommands(recordedUrl) {
@@ -45,6 +89,8 @@ async function addInitialCommands(recordedUrl) {
       open.setTarget(recordedUrl)
     }
     setSize.setTarget(`${win.width}x${win.height}`)
+    await notifyPluginsOfRecordedCommand(open, test)
+    await notifyPluginsOfRecordedCommand(setSize, test)
   }
 }
 
@@ -63,6 +109,7 @@ export function recordCommand(command, target, value, index, select = false) {
     UiState.selectCommand(newCommand)
   }
 
+  notifyPluginsOfRecordedCommand(newCommand, test)
   return newCommand
 }
 
@@ -123,4 +170,24 @@ function getInsertionIndex(test, insertBeforeLastCommand = false) {
   }
 
   return index
+}
+
+function isTargetsValid(targets) {
+  if (Array.isArray(targets)) {
+    let isValid = true
+    targets.forEach(target => {
+      if (
+        !(
+          Array.isArray(target) &&
+          typeof target[0] === 'string' &&
+          target[0].indexOf('=') !== -1 &&
+          typeof target[1] === 'string'
+        )
+      ) {
+        isValid = false
+      }
+    })
+    return isValid
+  }
+  return false
 }

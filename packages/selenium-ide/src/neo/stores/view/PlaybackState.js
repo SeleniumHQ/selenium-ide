@@ -457,18 +457,18 @@ class PlaybackState {
       ).then(
         action(results => {
           return new Promise(res => {
-            results.forEach(result => {
-              if (result.message) {
-                if (result instanceof Error) {
-                  if (!(result instanceof NoResponseError)) {
-                    this.logger.error(result.message)
+            results.forEach(({ response }) => {
+              if (response.message) {
+                if (response instanceof Error) {
+                  if (!(response instanceof NoResponseError)) {
+                    this.logger.error(response.message)
                     this.forceFailure()
                     if (!this.hasFinishedSuccessfully) {
                       this.failures++
                     }
                   }
                 } else {
-                  this.logger.log(result.message)
+                  this.logger.log(response.message)
                 }
               }
             })

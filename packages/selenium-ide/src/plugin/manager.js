@@ -192,12 +192,12 @@ class PluginManager {
           }, TIMEOUT)
           return sendMessage(plugin.id, message)
             .catch(err => Promise.resolve(err))
-            .then(r => {
+            .then(response => {
               clearInterval(emitInterval)
               if (didReachTimeout) {
                 keepAliveCB(plugin, true)
               }
-              return r
+              return { plugin, response }
             })
         })
       )
