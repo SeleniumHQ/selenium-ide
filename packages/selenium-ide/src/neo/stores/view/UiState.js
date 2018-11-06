@@ -517,7 +517,7 @@ class UiState {
   }
 
   filterFunction({ name }) {
-    return name.indexOf(this.filterTerm) !== -1
+    return name.toLowerCase().indexOf(this.filterTerm.toLowerCase()) !== -1
   }
 
   setUrl(url, addToCache) {

@@ -140,7 +140,12 @@ class TestSelectorList extends React.Component {
     return (
       <ul className="tests">
         {this.props.tests
-          .filter(({ name }) => name.indexOf(this.props.filterTerm) !== -1)
+          .filter(
+            ({ name }) =>
+              name
+                .toLowerCase()
+                .indexOf(this.props.filterTerm.toLowerCase()) !== -1
+          )
           .map(test => (
             <li key={test.id}>
               <Checkbox
