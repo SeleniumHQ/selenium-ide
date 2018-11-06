@@ -534,9 +534,7 @@ async function emitStoreTitle(_, varName) {
 
 async function emitStoreXpathCount(locator, varName) {
   return Promise.resolve(
-    `await driver.wait(until.elementsLocated(${await LocationEmitter.emit(
-      locator
-    )}), configuration.timeout);await driver.findElements(${await LocationEmitter.emit(
+    `await driver.findElements(${await LocationEmitter.emit(
       locator
     )}).then(elements => {return vars["${varName}"] = elements.length;});`
   )

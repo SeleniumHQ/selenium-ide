@@ -653,7 +653,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementsLocated(By.xpath(\`button\`)), configuration.timeout);await driver.findElements(By.xpath(\`button\`)).then(elements => {return vars["${
+      `await driver.findElements(By.xpath(\`button\`)).then(elements => {return vars["${
         command.value
       }"] = elements.length;});`
     )
