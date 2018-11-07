@@ -29,7 +29,7 @@ function isEmpty(commands) {
 }
 
 async function notifyPluginsOfRecordedCommand(command, test) {
-  const results = await Manager.emitMessage({
+  const results = await Manager.emitMessageForResponse({
     action: 'event',
     event: 'commandRecorded',
     options: {

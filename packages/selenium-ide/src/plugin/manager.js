@@ -181,6 +181,7 @@ class PluginManager {
     }).then(res => res.message)
   }
 
+  // will return all responses including errors
   emitMessage(message, keepAliveCB) {
     if (this.plugins.length) {
       return Promise.all(
@@ -204,6 +205,12 @@ class PluginManager {
     } else {
       return Promise.resolve([])
     }
+  }
+
+  // only returns successful responses
+  async emitMessageForResponse(message, keepAliveCB) {
+    const results = await this.emitMessage(message, keepAliveCB)
+    return results.filter(({ response }) => !(response instanceof Error))
   }
 }
 
