@@ -200,7 +200,9 @@ function catchPlayingError(message) {
       playAfterConnectionFailed()
     }, 100)
   } else {
-    reportError(message instanceof Error ? message.message : message)
+    reportError(
+      message instanceof Error || message.message ? message.message : message
+    )
     finishPlaying()
   }
 }
