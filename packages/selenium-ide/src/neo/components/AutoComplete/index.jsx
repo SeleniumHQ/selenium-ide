@@ -26,6 +26,7 @@ export default class AutoComplete extends React.Component {
     this.id = uuidv4()
   }
   static propTypes = {
+    getItemKey: PropTypes.func,
     renderDefaultStyledItem: PropTypes.func,
   }
   render() {
@@ -67,7 +68,7 @@ export default class AutoComplete extends React.Component {
         )}
         renderItem={(item, isHighlighted) => (
           <div
-            key={item}
+            key={this.props.getItemKey ? this.props.getItemKey(item) : item}
             style={{
               background: isHighlighted ? '#f3f3f3' : 'white',
               padding: '8px',
@@ -79,7 +80,7 @@ export default class AutoComplete extends React.Component {
           </div>
         )}
         menuStyle={{
-          zIndex: 1,
+          zIndex: 5,
           borderRadius: '3px',
           border: '1px solid #DEDEDE',
           boxShadow: '0 0 3px 0 rgba(0,0,0,0.3)',

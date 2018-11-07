@@ -17,6 +17,7 @@
 
 import { action, computed, observable, toJS } from 'mobx'
 import uuidv4 from 'uuid/v4'
+import Fuse from 'fuse.js'
 
 export default class Command {
   id = null
@@ -1265,6 +1266,24 @@ class CommandList {
       commands[this.list.get(command).name] = command
       return commands
     }, {})
+  }
+
+  @computed
+  get fuse() {
+    return new Fuse(this.list.values(), {
+      shouldSort: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 50,
+      minMatchCharLength: 1,
+      keys: ['name'],
+    })
+  }
+
+  @action.bound
+  search(pattern) {
+    return this.fuse.search(pattern)
   }
 
   @action.bound
