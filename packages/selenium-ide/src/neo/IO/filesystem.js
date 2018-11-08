@@ -16,7 +16,6 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import parser from 'ua-parser-js'
 import { js_beautify as beautify } from 'js-beautify'
 import UpgradeProject from './migrate'
 import {
@@ -34,9 +33,9 @@ import Selianize, { ParseError } from 'selianize'
 import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
+import { userAgent as parsedUA } from '../../common/utils'
 
 export const supportedFileFormats = '.side, text/html'
-const parsedUA = parser(window.navigator.userAgent)
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -127,7 +126,7 @@ function exportProject(project) {
 }
 
 let previousFile = null
-function createBlob(_mimeType, data) {
+function createBlob(mimeType, data) { // eslint-disable-line
   const blob = new Blob([data], {
     type: 'text/plain',
   })

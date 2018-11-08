@@ -25,6 +25,7 @@ function Recorder(window) {
   this.window = window
   this.eventListeners = {}
   this.attached = false
+  this.recordingState = {}
 }
 
 Recorder.eventHandlers = {}
@@ -54,6 +55,42 @@ Recorder.prototype.parseEventKey = function(eventKey) {
   }
 }
 
+function updateInputElementsOfRelevantType(action) {
+  let inp = window.document.getElementsByTagName('input')
+  for (let i = 0; i < inp.length; i++) {
+    if (Recorder.inputTypes.indexOf(inp[i].type) >= 0) {
+      action(inp[i])
+    }
+  }
+}
+
+function focusEvent(recordingState, event) {
+  recordingState.focusTarget = event.target
+  recordingState.focusValue = recordingState.focusTarget.value
+  recordingState.tempValue = recordingState.focusValue
+  recordingState.preventType = false
+}
+
+function blurEvent(recordingState) {
+  recordingState.focusTarget = null
+  recordingState.focusValue = null
+  recordingState.tempValue = null
+}
+
+function attachInputListeners(recordingState) {
+  updateInputElementsOfRelevantType(input => {
+    input.addEventListener('focus', focusEvent.bind(null, recordingState))
+    input.addEventListener('blur', blurEvent.bind(null, recordingState))
+  })
+}
+
+function detachInputListeners(recordingState) {
+  updateInputElementsOfRelevantType(input => {
+    input.removeEventListener('focus', focusEvent.bind(null, recordingState))
+    input.removeEventListener('blur', blurEvent.bind(null, recordingState))
+  })
+}
+
 Recorder.prototype.attach = function() {
   if (!this.attached) {
     for (let eventKey in Recorder.eventHandlers) {
@@ -64,7 +101,11 @@ Recorder.prototype.attach = function() {
       const handlers = Recorder.eventHandlers[eventKey]
       this.eventListeners[eventKey] = []
       for (let i = 0; i < handlers.length; i++) {
-        this.window.document.addEventListener(eventName, handlers[i], capture)
+        this.window.document.addEventListener(
+          eventName,
+          handlers[i].bind(this),
+          capture
+        )
         this.eventListeners[eventKey].push(handlers[i])
       }
     }
@@ -73,6 +114,20 @@ Recorder.prototype.attach = function() {
       observer.observe(this.window.document.body, observer.config)
     }
     this.attached = true
+    this.recordingState = {
+      typeTarget: undefined,
+      typeLock: 0,
+      focusTarget: null,
+      focusValue: null,
+      tempValue: null,
+      preventType: false,
+      preventClickTwice: false,
+      preventClick: false,
+      enterTarget: null,
+      enterValue: null,
+      tabCheck: null,
+    }
+    attachInputListeners(this.recordingState)
     addRecordingIndicator()
   }
 }
@@ -97,16 +152,17 @@ Recorder.prototype.detach = function() {
   this.eventListeners = {}
   this.attached = false
   removeRecordingIndicator()
+  detachInputListeners(this.recordingState)
 }
 
-function attachRecorderHandler(message, _sender, sendResponse) {
+function attachRecorderHandler(message, sender, sendResponse) { // eslint-disable-line
   if (message.attachRecorder) {
     recorder.attach()
     sendResponse(true)
   }
 }
 
-function detachRecorderHandler(message, _sender, sendResponse) {
+function detachRecorderHandler(message, sender, sendResponse) { // eslint-disable-line
   if (message.detachRecorder) {
     recorder.detach()
     sendResponse(true)
@@ -157,7 +213,7 @@ function addRecordingIndicator() {
     window.document.body.appendChild(recordingIndicator)
     browser.runtime.onMessage.addListener(function(
       message,
-      _sender,
+      sender, // eslint-disable-line
       sendResponse
     ) {
       if (message.recordNotification) {

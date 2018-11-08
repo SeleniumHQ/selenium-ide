@@ -15,12 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default {
-  runtime: {
-    onMessage: {
-      addListener: jest.fn(),
-    },
-    sendMessage: jest.fn().mockReturnValue(Promise.reject()),
-    getURL: jest.fn(),
-  },
-}
+const isFirefox = jest.fn()
+const isTest = true
+
+export { isFirefox, isTest }

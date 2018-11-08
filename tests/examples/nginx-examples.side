@@ -1,5 +1,6 @@
 {
   "id": "b4675761-fdf4-4799-a7b0-989dd0f481f0",
+  "version": "1.1",
   "name": "nginx-examples",
   "url": "http://nginx:80",
   "tests": [{
@@ -426,6 +427,94 @@
       "targets": [],
       "value": ""
     }]
+  }, {
+    "id": "5ff84ee0-512d-4f41-8f46-8a1cb0a899e3",
+    "name": "form submit",
+    "commands": [{
+      "id": "800cecfe-7f17-4112-b999-2b0549ef8d03",
+      "comment": "",
+      "command": "open",
+      "target": "/form.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0b5dfa23-2e82-4b2e-ae1f-9d918c51da1e",
+      "comment": "",
+      "command": "type",
+      "target": "input",
+      "targets": [],
+      "value": "blah"
+    }, {
+      "id": "62fc176b-34e1-461b-b335-eb0ef1d7c148",
+      "comment": "",
+      "command": "sendKeys",
+      "target": "input",
+      "targets": [],
+      "value": "${KEY_ENTER}"
+    }, {
+      "id": "990183fd-4622-4fe2-98fd-5239b9d93a1e",
+      "comment": "",
+      "command": "assertElementNotPresent",
+      "target": "id=blah",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9bfe6f69-3aa6-4435-9e6c-cf21b5519be4",
+      "comment": "",
+      "command": "open",
+      "target": "/form.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9472e099-5481-49f3-8c4d-aa291fb9d029",
+      "comment": "",
+      "command": "type",
+      "target": "input",
+      "targets": [],
+      "value": "blah"
+    }, {
+      "id": "3fbc4ca2-8f12-4507-ab40-c9b133a44e9c",
+      "comment": "",
+      "command": "click",
+      "target": "button",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6fd38415-31a3-41e2-9488-72a03409534b",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "id=blah",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e3cce329-7a17-43d5-9035-876fe33a5892",
+      "comment": "",
+      "command": "open",
+      "target": "/form2.html",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "17ddfb27-4426-4f08-bcf8-feb61b7ef235",
+      "comment": "",
+      "command": "type",
+      "target": "input",
+      "targets": [],
+      "value": "blah"
+    }, {
+      "id": "0236f7ed-6f0b-4c1e-b388-2dd61612413b",
+      "comment": "",
+      "command": "click",
+      "target": "button",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "40ddf19c-e686-46e1-ac10-d137d3aba575",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "id=form",
+      "targets": [],
+      "value": ""
+    }]
   }],
   "suites": [{
     "id": "33487441-d469-4fe2-8f5e-893104aa2316",
@@ -449,7 +538,6 @@
     "timeout": 300,
     "tests": ["c720eabf-0c0a-4f6e-8aa6-9daca298d726", "4631cfbd-700c-42ea-add5-12e5a33d845e", "0d50f757-df05-4129-ab8b-ff52084c704d"]
   }],
-  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
-  "plugins": [],
-  "version": "1.0"
+  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/", "http://nginx/"],
+  "plugins": []
 }

@@ -103,13 +103,9 @@ export function upperFirstChar(str) {
   return str.charAt(0).toUpperCase() + str.substr(1)
 }
 
-export const isProduction = process.env.NODE_ENV === 'production'
-
 export function calculateFrameIndex(indicatorIndex, targetFrameIndex) {
   if (indicatorIndex < 0) return targetFrameIndex
   return indicatorIndex < targetFrameIndex
     ? targetFrameIndex - 1
     : targetFrameIndex
 }
-
-export const isStaging = process.env.NODE_ENV === 'staging'

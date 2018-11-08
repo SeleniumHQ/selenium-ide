@@ -16,15 +16,12 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import parser from 'ua-parser-js'
 import Debugger, { convertLocator } from '../debugger'
 import PlaybackState from '../../stores/view/PlaybackState'
 import variables from '../../stores/view/Variables'
 import { absolutifyUrl } from '../playback/utils'
-import { Logger, Channels } from '../../stores/view/Logs'
+import { userAgent as parsedUA } from '../../../common/utils'
 import './bootstrap'
-
-const parsedUA = parser(window.navigator.userAgent)
 
 export default class ExtCommand {
   constructor(windowSession) {
@@ -38,23 +35,15 @@ export default class ExtCommand {
     this.waitTimes = 60
 
     this.attached = false
-    this.logger = new Logger(Channels.PLAYBACK)
 
     // Use ES6 arrow function to bind correct this
-    this.tabsOnUpdatedHandler = (tabId, changeInfo, _tabInfo) => {
+    this.tabsOnUpdatedHandler = (tabId, changeInfo, tabInfo) => { // eslint-disable-line
       if (changeInfo.status) {
         if (changeInfo.status == 'loading') {
           this.setLoading(tabId)
         } else {
           this.setComplete(tabId)
         }
-      }
-    }
-
-    this.tabsOnRemovedHandler = (tabId, _removeInfo) => {
-      if (this.tabBelongsToPlayback(tabId)) {
-        this.logger.error('Playing window was closed prematurely')
-        PlaybackState.abortPlaying()
       }
     }
 
@@ -100,7 +89,6 @@ export default class ExtCommand {
     }
     this.attached = true
     browser.tabs.onUpdated.addListener(this.tabsOnUpdatedHandler)
-    browser.tabs.onRemoved.addListener(this.tabsOnRemovedHandler)
     browser.runtime.onMessage.addListener(this.frameLocationMessageHandler)
     browser.webNavigation.onCreatedNavigationTarget.addListener(
       this.newTabHandler
