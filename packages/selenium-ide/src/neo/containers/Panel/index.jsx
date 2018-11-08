@@ -22,7 +22,6 @@ import { observer } from "mobx-react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import SplitPane from "react-split-pane";
-import parser from "ua-parser-js";
 import classNames from "classnames";
 import { modifier } from "modifier-keys";
 import Tooltip from "../../components/Tooltip";
@@ -47,6 +46,7 @@ import "../../styles/layout.css";
 import "../../styles/resizer.css";
 import { isProduction } from "../../../content/utils";
 import Logger from "../../stores/view/Logs";
+import { userAgent } from "../../../content/utils";
 
 import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
 
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV !== "test") {
   browser.runtime.onMessage.addListener(api.default);
 }
 
-if (parser(window.navigator.userAgent).os.name === "Windows") {
+if (userAgent.os.name === "Windows") {
   require("../../styles/conditional/scrollbar.css");
   require("../../styles/conditional/button-direction.css");
 }

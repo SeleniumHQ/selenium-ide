@@ -16,7 +16,6 @@
 // under the License.
 
 import browser from "webextension-polyfill";
-import parser from "ua-parser-js";
 import { js_beautify as beautify } from "js-beautify";
 import UpgradeProject from "./migrate";
 import { verifyFile, FileTypes, migrateTestCase, migrateProject, migrateUrls } from "./legacy/migrate";
@@ -28,9 +27,9 @@ import Selianize, { ParseError } from "selianize";
 import Manager from "../../plugin/manager";
 import chromeGetFile from "./filesystem/chrome";
 import firefoxGetFile from "./filesystem/firefox";
+import { userAgent as parsedUA } from "../../content/utils";
 
 export const supportedFileFormats = ".side, text/html";
-const parsedUA = parser(window.navigator.userAgent);
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name;
