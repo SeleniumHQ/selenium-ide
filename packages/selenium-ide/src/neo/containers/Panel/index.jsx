@@ -44,13 +44,12 @@ import "../../styles/app.css";
 import "../../styles/font.css";
 import "../../styles/layout.css";
 import "../../styles/resizer.css";
-import { isProduction } from "../../../content/utils";
+import { isProduction, isTest, userAgent } from "../../../common/utils";
 import Logger from "../../stores/view/Logs";
-import { userAgent } from "../../../content/utils";
 
 import { loadProject, saveProject, loadJSProject } from "../../IO/filesystem";
 
-if (process.env.NODE_ENV !== "test") {
+if (!isTest) {
   const api = require("../../../api");
   browser.runtime.onMessage.addListener(api.default);
 }

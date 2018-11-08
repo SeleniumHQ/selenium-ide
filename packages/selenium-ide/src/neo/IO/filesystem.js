@@ -27,7 +27,7 @@ import Selianize, { ParseError } from "selianize";
 import Manager from "../../plugin/manager";
 import chromeGetFile from "./filesystem/chrome";
 import firefoxGetFile from "./filesystem/firefox";
-import { userAgent as parsedUA } from "../../content/utils";
+import { userAgent as parsedUA } from "../../common/utils";
 
 export const supportedFileFormats = ".side, text/html";
 

@@ -16,12 +16,12 @@
 // under the License.
 
 jest.mock("../../content/closure-polyfill");
-jest.mock("../../content/utils");
+jest.mock("../../common/utils");
 const recordApi = require("../../content/record-api");
 recordApi.record = jest.fn();
 import "../../content/record";
 import { fireEvent } from "dom-testing-library";
-import { isFirefox } from "../../content/utils";
+import { isFirefox } from "../../common/utils";
 
 describe("record-api", () => {
   let recorder;

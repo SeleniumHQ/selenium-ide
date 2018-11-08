@@ -20,7 +20,7 @@ import goog, { bot } from "./closure-polyfill";
 import { Recorder, recorder, record } from "./record-api";
 import { attach } from "./prompt-recorder";
 import LocatorBuilders from "./locatorBuilders";
-import { isTest, isFirefox } from "./utils";
+import { isTest, isFirefox } from "../common/utils";
 
 export { record as record };
 export const locatorBuilders = new LocatorBuilders(window);

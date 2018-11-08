@@ -20,7 +20,7 @@ import Debugger, { convertLocator } from "../debugger";
 import PlaybackState from "../../stores/view/PlaybackState";
 import variables from "../../stores/view/Variables";
 import { absolutifyUrl } from "../playback/utils";
-import { userAgent as parsedUA } from "../../../content/utils";
+import { userAgent as parsedUA } from "../../../common/utils";
 import "./bootstrap";
 
 export default class ExtCommand {

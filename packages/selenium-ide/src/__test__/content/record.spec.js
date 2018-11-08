@@ -17,9 +17,9 @@
 
 jest.mock("../../content/closure-polyfill");
 jest.mock("../../content/record-api");
-jest.mock("../../content/utils");
+jest.mock("../../common/utils");
 import { _isValidForm, _recordFormAction, record } from "../../content/record";
-import { isFirefox } from "../../content/utils";
+import { isFirefox } from "../../common/utils";
 
 function createTargetWithAttribute(attribute) {
   return {
