@@ -15,13 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { _isValidForm, _recordFormAction, record } from "../../content/record";
 jest.mock("../../content/closure-polyfill");
 jest.mock("../../content/record-api");
+jest.mock("../../content/utils");
+import { _isValidForm, _recordFormAction, record } from "../../content/record";
+import { isFirefox } from "../../content/utils";
 
-function createTargetWithAttribute(attribute, querySelector = () => { return { hidden: true }; }) {
+function createTargetWithAttribute(attribute) {
   return {
-    querySelector,
     hasAttribute: function(attribute) { return this.hasOwnProperty(attribute); },
     ...attribute
   };
@@ -29,6 +30,13 @@ function createTargetWithAttribute(attribute, querySelector = () => { return { h
 
 describe("record", () => {
   it("isValidForm", () => {
+    isFirefox.mockReturnValue(false);
+    expect(_isValidForm("form", createTargetWithAttribute({ id: true }))).toBeFalsy();
+    expect(_isValidForm("form", createTargetWithAttribute({ name: true }))).toBeFalsy();
+    expect(_isValidForm("form", createTargetWithAttribute({ onsubmit: true }))).toBeFalsy();
+    expect(_isValidForm("notaform", createTargetWithAttribute({ id: true }))).toBeFalsy();
+    expect(_isValidForm("form", createTargetWithAttribute({ css: true }))).toBeFalsy();
+    isFirefox.mockReturnValue(true);
     expect(_isValidForm("form", createTargetWithAttribute({ id: true }))).toBeTruthy();
     expect(_isValidForm("form", createTargetWithAttribute({ name: true }))).toBeTruthy();
     expect(_isValidForm("form", createTargetWithAttribute({ onsubmit: true }))).toBeFalsy();
@@ -55,10 +63,6 @@ describe("record", () => {
     it("submit css", () => {
       _recordFormAction(createTargetWithAttribute({ css: "formCss" }));
       expect(record.mock.calls).toEqual([]);
-    });
-    it("click", () => {
-      _recordFormAction(createTargetWithAttribute({ id: "formId" }, () => { return { hidden: false }; } ));
-      expect(record.mock.calls[0][0]).toBe("click");
     });
   });
 });

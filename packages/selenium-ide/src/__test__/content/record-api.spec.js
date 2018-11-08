@@ -15,21 +15,44 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// TODO:
-// - Confirm event path in manual recording to confirm mirror in tests
-// - Update package.json with jsdom config for jsDomError & virtualConsole
-//     It errors on click of element in form (e.g., button.click();)
-//     Something equivalent to this:
-//       virtualConsole = new VirtualConsole();
-//       virtualConsole.on("jsdomError", () => { });
-
 jest.mock("../../content/closure-polyfill");
+jest.mock("../../content/utils");
 const recordApi = require("../../content/record-api");
 recordApi.record = jest.fn();
-import { resetHelperVariables } from "../../content/record";
+import "../../content/record";
 import { fireEvent } from "dom-testing-library";
+import { isFirefox } from "../../content/utils";
 
 describe("record-api", () => {
+  let recorder;
+  let element;
+  const enterKey = { key: "Enter", keyCode: 13 };
+
+  function render(markup) {
+    element = window.document.createElement("div");
+    element.id = "test-target";
+    element.innerHTML = markup;
+    window.document.body.appendChild(element);
+  }
+
+  function filter(source, matcher) {
+    return source.find(
+      function(target) {
+        return target[0].match(matcher);
+      }
+    );
+  }
+
+  beforeAll(() => {
+    recorder = new recordApi.Recorder(window);
+  });
+
+  afterEach(() => {
+    if (recorder && recorder.attached) {
+      recorder.detach();
+    }
+  });
+
   describe("setup", () => {
     it("window exists", () => {
       expect(window).toBeDefined();
@@ -44,109 +67,70 @@ describe("record-api", () => {
     });
 
     it("recorder attached with event handlers", async () => {
-      const recorder = new recordApi.Recorder(window);
       await recorder.attach();
       expect(recorder.attached).toBeTruthy();
       expect(recorder.eventListeners).toBeTruthy();
+      expect(recordApi.record.mock.calls.length).toEqual(0);
       await recorder.detach();
       expect(recorder.attached).toBeFalsy();
     });
   });
 
   describe("form", () => {
-    let recorder;
-    let element;
-
-    function render(markup) {
-      element = window.document.createElement("div");
-      element.id = "test-target";
-      element.innerHTML = markup;
-      window.document.body.appendChild(element);
-    }
+    let inputElement;
 
     beforeEach(() => {
-      recorder = new recordApi.Recorder(window);
+      isFirefox.mockReturnValue(false);
+      jest.spyOn(console, "error");
+      console.error.mockImplementation(() => {});
+      render(`
+        <form action="/kaki.html" method="get" id="blah">
+            <input type="text" />
+            <button>asdfsd</button>
+            <button type="submit" style="display:none">sub</button>
+        </form>
+      `);
       recorder.attach();
+      inputElement = window.document.querySelector("form input");
+      fireEvent.focus(inputElement);
+      fireEvent.input(inputElement, { target: { value: "blah" } });
     });
 
     afterEach(() => {
-      if (recorder && recorder.attached) {
-        recorder.detach();
-        recorder = undefined;
-      }
       if (element && element.id && element.id === "test-target") {
         element.parentElement.removeChild(element);
         element = undefined;
       }
-      resetHelperVariables();
+      recordApi.record.mockClear();
+      console.error.mockRestore();
     });
 
-    const enterKey = { key: "Enter", keyCode: 13 };
+    it("keydown on input records sendKey ${KEY_ENTER}", () => {
+      fireEvent.keyDown(inputElement, enterKey);
+      fireEvent.keyUp(inputElement, enterKey);
+      expect(recordApi.record.mock.calls[1][0]).toEqual("sendKeys");
+      expect(
+        filter(recordApi.record.mock.calls[1][1], "type=\"submit\"")
+      ).toBeUndefined();
+    });
 
-    function filter(source, matcher) {
-      return source.find(
-        function(target) {
-          return target[0].match(matcher);
-        }
-      );
-    }
+    it("keydown on input records submit (on Firefox)", () => {
+      isFirefox.mockReturnValue(true);
+      fireEvent.keyDown(inputElement, enterKey);
+      fireEvent.keyUp(inputElement, enterKey);
+      expect(recordApi.record.mock.calls[1][0]).toEqual("submit");
+    });
 
-    describe("enter keydown", () => {
-      it("populated input records submit", () => {
-        render(`
-          <form id="blah">
-            <input></br>
-          </form>
-        `);
-        const target = window.document.querySelector("form input");
-        fireEvent.input(target, { target: { value: "blah" } });
-        fireEvent.keyDown(target, enterKey);
-        expect(recordApi.record.mock.calls[1][0]).toEqual("submit");
-      });
+    it("click on button without type=submit records click", () => {
+      const button = window.document.querySelector("button");
+      fireEvent.click(button);
+      expect(recordApi.record.mock.calls[0][0]).toEqual("click");
+    });
 
-      it("unpopulated input records nothing", () => {
-        render(`
-          <form id="blah">
-            <input></br>
-          </form>
-        `);
-        const target = window.document.querySelector("form input");
-        fireEvent.keyDown(target, enterKey);
-        expect(recordApi.record.mock.calls).toEqual([]);
-      });
-
-      it("button without type=submit records click", () => {
-        render(`
-          <form id="blah">
-            <input type="email"></br>
-            <button type="button">Next</button>
-            <button type="submit" style="display: none">Next</button>
-          </form>
-        `);
-        const target = window.document.querySelector("form input");
-        fireEvent.change(target, { target: { value: "blah" } });
-        fireEvent.keyDown(target, enterKey);
-        expect(recordApi.record.mock.calls[1][0]).toEqual("click");
-        expect(
-          filter(recordApi.record.mock.calls[1][1], "type=\"submit\"")
-        ).toBeUndefined();
-        expect(
-          filter(recordApi.record.mock.calls[1][1], "type=\"button\"").length
-        ).toBeGreaterThan(0);
-      });
-
-      it("button with type=submit records submit", () => {
-        render(`
-          <form id="blah">
-            <input></br>
-            <button type="submit">Next</button>
-          </form>
-        `);
-        const target = window.document.querySelector("form input");
-        fireEvent.input(target, { target: { value: "blah" } });
-        fireEvent.keyDown(target, enterKey);
-        expect(recordApi.record.mock.calls[1][0]).toEqual("submit");
-      });
+    it("click on button with type=submit records click", () => {
+      const button = window.document.querySelector("button[type='submit']");
+      fireEvent.click(button);
+      expect(recordApi.record.mock.calls[0][0]).toEqual("click");
     });
   });
 });
