@@ -16,6 +16,7 @@
 // under the License.
 
 import SeleniumError from "./SeleniumError";
+import parser from "ua-parser-js";
 
 /**
  * Parses a Selenium locator, returning its type and the unprefixed locator
@@ -113,3 +114,13 @@ export function calculateFrameIndex(indicatorIndex, targetFrameIndex) {
 export const isStaging = process.env.NODE_ENV === "staging";
 
 export const isTest = process.env.NODE_ENV === "test";
+
+export const userAgent = parser(window.navigator.userAgent);
+
+export function isChrome() {
+  userAgent.browser.name === "Chrome";
+}
+
+export function isFirefox() {
+  userAgent.browser.name === "Firefox";
+}
