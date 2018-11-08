@@ -528,6 +528,20 @@ export default function seed(store, numberOfSuites = 0) {
     ''
   )
 
+  const selectWindow = store.createTestCase('select window')
+  selectWindow.createCommand(undefined, 'open', '/')
+  selectWindow.createCommand(undefined, 'storeWindowHandle', 'handle')
+  selectWindow.createCommand(undefined, 'echo', '${handle}')
+  selectWindow.createCommand(undefined, 'click', 'linkText=Elemental Selenium')
+  selectWindow.createCommand(undefined, 'selectWindow', 'handle=${handle}')
+  selectWindow.createCommand(undefined, 'assertTitle', 'The Internet')
+  selectWindow.createCommand(undefined, 'selectWindow', 'index=1')
+  selectWindow.createCommand(
+    undefined,
+    'assertTitle',
+    'Elemental Selenium: Receive a Free, Weekly Tip on Using Selenium like a Pro'
+  )
+
   const suiteAll = store.createSuite('all tests')
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test)
@@ -566,7 +580,7 @@ export default function seed(store, numberOfSuites = 0) {
   UiState.changeView('Test suites')
   let suiteState = UiState.getSuiteState(suiteAll)
   suiteState.setOpen(true)
-  UiState.selectTest(suiteAll.tests[0], suiteAll)
+  UiState.selectTest(selectWindow, suiteAll)
 
   store.changeName('seed project')
 

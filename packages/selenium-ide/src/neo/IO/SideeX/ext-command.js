@@ -356,9 +356,29 @@ export default class ExtCommand {
     }
   }
 
-  async doSelectWindow(serialNumber) {
-    await this.wait('playingTabNames', serialNumber)
-    this.setCurrentPlayingTabId(this.playingTabNames[serialNumber])
+  async doSelectWindow(windowLocator) {
+    const fragments = windowLocator.split('=')
+    const type = fragments.shift()
+    const selector = parseInt(fragments.join('='))
+
+    if (type === 'handle') {
+      await this.switchToTab(selector)
+    } else if (type === 'index') {
+      const index = parseInt(
+        Object.keys(
+          this.windowSession.openedTabIds[
+            this.getCurrentPlayingWindowSessionIdentifier()
+          ]
+        )[selector]
+      )
+      await this.switchToTab(index)
+    } else {
+      return Promise.reject(new Error('No such window locator'))
+    }
+  }
+
+  async switchToTab(tabId) {
+    this.setCurrentPlayingTabId(tabId)
     const tab = await browser.tabs.update(this.getCurrentPlayingTabId(), {
       active: true,
     })
@@ -500,6 +520,11 @@ export default class ExtCommand {
 
   doStore(string, varName) {
     variables.set(varName, string)
+    return Promise.resolve()
+  }
+
+  doStoreWindowHandle(varName) {
+    variables.set(varName, this.getCurrentPlayingTabId())
     return Promise.resolve()
   }
 
@@ -717,6 +742,7 @@ export default class ExtCommand {
       case 'setWindowSize':
       case 'setSpeed':
       case 'store':
+      case 'storeWindowHandle':
       case 'close':
         return true
       default:

@@ -181,6 +181,10 @@ export const ArgTypes = {
     name: 'form locator',
     description: 'An element locator for the form you want to submit.',
   },
+  handle: {
+    name: 'window handle',
+    description: 'A handle representing a specific page (tab, or window).',
+  },
   keySequence: {
     name: 'key sequence',
     description:
@@ -930,6 +934,14 @@ class CommandList {
       {
         name: 'store title',
         description: 'Gets the title of the current page.',
+      },
+    ],
+    [
+      'storeWindowHandle',
+      {
+        name: 'store window handle',
+        descript: 'Gets the handle of the current page.',
+        target: ArgTypes.handle,
       },
     ],
     [
