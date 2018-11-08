@@ -270,7 +270,9 @@ class TestRow extends React.Component {
             Insert new command
           </ListMenuItem>
           <ListMenuSeparator />
-          <ListMenuItem onClick={this.clearAll}>Clear all</ListMenuItem>
+          <ListMenuItem onClick={this.clearAll}>
+            Clear all commands
+          </ListMenuItem>
           <ListMenuSeparator />
           <ListMenuItem label="B" onClick={this.props.command.toggleBreakpoint}>
             Toggle breakpoint
