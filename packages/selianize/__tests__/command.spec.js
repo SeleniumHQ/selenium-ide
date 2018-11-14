@@ -646,6 +646,18 @@ describe('command code emitter', () => {
       }"] = title;});`
     )
   })
+  it('should emit `store window handle` command', () => {
+    const command = {
+      command: 'storeWindowHandle',
+      target: 'windowName',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `await driver.getWindowHandle().then(handle => {return vars["${
+        command.target
+      }"] = handle;});`
+    )
+  })
   it('should emit `store xpath count` command', () => {
     const command = {
       command: 'storeXpathCount',

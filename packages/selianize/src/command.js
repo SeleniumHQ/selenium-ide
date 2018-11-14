@@ -65,6 +65,7 @@ const emitters = {
   storeText: emitStoreText,
   storeValue: emitStoreValue,
   storeTitle: emitStoreTitle,
+  storeWindowHandle: emitStoreWindowHandle,
   storeXpathCount: emitStoreXpathCount,
   storeAttribute: emitStoreAttribute,
   select: emitSelect,
@@ -529,6 +530,12 @@ async function emitStoreValue(locator, varName) {
 async function emitStoreTitle(_, varName) {
   return Promise.resolve(
     `await driver.getTitle().then(title => {return vars["${varName}"] = title;});`
+  )
+}
+
+async function emitStoreWindowHandle(varName) {
+  return Promise.resolve(
+    `await driver.getWindowHandle().then(handle => {return vars["${varName}"] = handle;});`
   )
 }
 
