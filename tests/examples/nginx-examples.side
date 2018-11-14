@@ -2,7 +2,7 @@
   "id": "b4675761-fdf4-4799-a7b0-989dd0f481f0",
   "version": "1.1",
   "name": "nginx-examples",
-  "url": "http://localhost:8080",
+  "url": "http://nginx/",
   "tests": [{
     "id": "d7a82bde-3223-4dd7-8aa1-7dc5c0589f35",
     "name": "input type text",
