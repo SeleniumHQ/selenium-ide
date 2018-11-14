@@ -67,11 +67,17 @@ export class CommandNode {
           'Max retry limit exceeded. To override it, specify a new limit in the value input field.',
       })
     }
-    return this._executeCommand(commandExecutor, options, targetOverride).then(
-      result => {
-        return this._executionResult(commandExecutor, result)
-      }
-    )
+    return commandExecutor.beforeCommand(this.command).then(() => {
+      return this._executeCommand(
+        commandExecutor,
+        options,
+        targetOverride
+      ).then(result => {
+        return commandExecutor.afterCommand(this.command).then(() => {
+          return this._executionResult(commandExecutor, result)
+        })
+      })
+    })
   }
 
   _interpolateTarget(target) {

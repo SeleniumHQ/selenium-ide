@@ -54,6 +54,12 @@ export default class WebDriverExecutor {
     return true
   }
 
+  isAlive() {
+    // webdriver will throw for us, but not necessarily for all commands
+    // TODO: check if there are commands that will succeed if we always return true
+    return true
+  }
+
   name(command) {
     if (!command) {
       return 'skip'

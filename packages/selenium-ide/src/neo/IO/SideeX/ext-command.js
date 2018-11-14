@@ -26,6 +26,12 @@ import './bootstrap'
 
 const parsedUA = parser(window.navigator.userAgent)
 
+function playbackPausing() {
+  return (
+    !PlaybackState.isPlaying || PlaybackState.paused || PlaybackState.isStopping
+  )
+}
+
 export default class ExtCommand {
   constructor(windowSession) {
     this.options = {}
@@ -76,6 +82,9 @@ export default class ExtCommand {
     this.baseUrl = baseUrl
     this.testCaseId = testCaseId
     this.options = options
+    this.waitForNewWindow = false
+    this.windowName = ''
+    this.windowTimeout = 2000
     if (!this.options.softInit) {
       this.windowSession.generalUseLastPlayedTestCaseId = testCaseId
       this.setCurrentPlayingFrameLocation('root')
@@ -181,6 +190,42 @@ export default class ExtCommand {
     return this.playingTabStatus[this.getCurrentPlayingTabId()]
   }
 
+  isAlive() {
+    return this.getCurrentPlayingTabId() !== -1
+  }
+
+  throwAliveError() {
+    if (!this.isAlive()) {
+      if (
+        !Object.keys(
+          this.windowSession.openedTabIds[
+            this.getCurrentPlayingWindowSessionIdentifier()
+          ]
+        ).length
+      ) {
+        throw new Error("Can't execute a command after session was closed.")
+      } else {
+        throw new Error(
+          'A window was not selected after closing the previous one, aborting playback.'
+        )
+      }
+    }
+  }
+
+  async beforeCommand(commandObject) {
+    if (commandObject.opensWindow) {
+      this.waitForNewWindow = true
+      this.windowName = commandObject.windowHandleName
+      this.windowTimeout = commandObject.windowTimeout
+    }
+  }
+
+  async afterCommand(commandObject) {
+    if (this.waitForNewWindow && commandObject.opensWindow) {
+      await this.waitForNewWindowToAppear()
+    }
+  }
+
   sendMessage(command, target, value, top, implicitTime) {
     if (/^webdriver/.test(command)) {
       return Promise.resolve({ result: 'success' })
@@ -221,17 +266,37 @@ export default class ExtCommand {
     return new Promise((res, rej) => {
       if (Date.now() - implicitTime >= 5000) {
         rej(new Error('frame no longer exists'))
-      } else if (
-        !PlaybackState.isPlaying ||
-        PlaybackState.paused ||
-        PlaybackState.isStopping
-      ) {
+      } else if (playbackPausing()) {
         res()
       } else {
         setTimeout(() => {
           res(this.sendMessage(command, target, value, undefined, implicitTime))
         }, 100)
       }
+    })
+  }
+
+  waitForNewWindowToAppear() {
+    return new Promise((res, rej) => {
+      const startTime = new Date()
+      const interval = setInterval(() => {
+        if (!this.waitForNewWindow) {
+          clearInterval(interval)
+          res()
+        } else if (playbackPausing()) {
+          clearInterval(interval)
+          res()
+        } else if (new Date() - startTime > this.windowTimeout) {
+          clearInterval(interval)
+          rej(
+            new Error(
+              `Exceeded waiting time for new window to appear ${
+                this.windowTimeout
+              }ms`
+            )
+          )
+        }
+      }, 100)
     })
   }
 
@@ -260,9 +325,7 @@ export default class ExtCommand {
     return new Promise(res => {
       const interval = setInterval(() => {
         if (
-          !PlaybackState.isPlaying ||
-          PlaybackState.paused ||
-          PlaybackState.isStopping ||
+          playbackPausing() ||
           this.playingTabStatus[this.getCurrentPlayingTabId()]
         ) {
           clearInterval(interval)
@@ -290,6 +353,10 @@ export default class ExtCommand {
   }
 
   async setNewTab(tabId) {
+    if (this.waitForNewWindow) {
+      this.waitForNewWindow = false
+      variables.set(this.windowName, tabId)
+    }
     this.playingTabNames[
       'win_ser_' +
         this.windowSession.openedTabCount[
@@ -363,15 +430,6 @@ export default class ExtCommand {
 
     if (type === 'handle') {
       await this.switchToTab(selector)
-    } else if (type === 'index') {
-      const index = parseInt(
-        Object.keys(
-          this.windowSession.openedTabIds[
-            this.getCurrentPlayingWindowSessionIdentifier()
-          ]
-        )[selector]
-      )
-      await this.switchToTab(index)
     } else {
       return Promise.reject(new Error('No such window locator'))
     }
@@ -385,14 +443,14 @@ export default class ExtCommand {
     this.setCurrentPlayingWindowId(tab.windowId)
   }
 
-  doClose() {
+  async doClose() {
     let removingTabId = this.getCurrentPlayingTabId()
-    this.setCurrentPlayingTabId(-1)
     delete this.playingFrameLocations[removingTabId]
     delete this.windowSession.openedTabIds[
       this.getCurrentPlayingWindowSessionIdentifier()
     ][removingTabId]
-    return browser.tabs.remove(removingTabId)
+    await browser.tabs.remove(removingTabId)
+    this.setCurrentPlayingTabId(-1)
   }
 
   async doRun(target) {

@@ -121,6 +121,26 @@ describe('Command', () => {
     const command = new Command(undefined, '//open')
     expect(command.displayedName).toBe('open')
   })
+  it('by default should not open a new window', () => {
+    const command = new Command()
+    expect(command.opensWindow).toBeFalsy()
+  })
+  it('should generate a window handle variable name, when set to open a window', () => {
+    const command = new Command()
+    command.setOpensWindow(true)
+    expect(command.windowHandleName).not.toBe('')
+  })
+  it('should set the default timeout when set to open a window', () => {
+    const command = new Command()
+    command.setOpensWindow(true)
+    expect(command.windowTimeout).toBe(2000)
+  })
+  it('should set the handle name and the new window timeout', () => {
+    const command = new Command()
+    command.setOpensWindow(true, 'aWindow', 500)
+    expect(command.windowHandleName).toBe('aWindow')
+    expect(command.windowTimeout).toBe(500)
+  })
   it('shouls clone itself, creating a new id', () => {
     const command = new Command()
     command.setComment('test')

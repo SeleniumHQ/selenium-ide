@@ -138,7 +138,13 @@ function runNextCommand() {
     // paused
     if (isStopping()) return false
   }
+  // TODO: this is a hack, find a way to put this inside ext-command
   if (
+    !executor.isAlive() &&
+    PlaybackState.currentExecutingCommandNode.command.command !== 'selectWindow'
+  ) {
+    executor.throwAliveError()
+  } else if (
     PlaybackState.currentExecutingCommandNode.isWebDriverCommand(executor) ||
     PlaybackState.currentExecutingCommandNode.isExtCommand(executor)
   ) {

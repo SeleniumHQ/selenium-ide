@@ -19,6 +19,8 @@ import { action, computed, observable, toJS } from 'mobx'
 import uuidv4 from 'uuid/v4'
 import Fuse from 'fuse.js'
 
+const DEFAULT_NEW_WINDOW_TIMEOUT = 2000
+
 export default class Command {
   id = null
   @observable
@@ -33,6 +35,12 @@ export default class Command {
   value
   @observable
   isBreakpoint = false
+  @observable
+  opensWindow = false
+  @observable
+  windowHandleName = ''
+  @observable
+  windowTimeout = DEFAULT_NEW_WINDOW_TIMEOUT
 
   constructor(id = uuidv4(), command, target, value) {
     this.id = id
@@ -91,6 +99,18 @@ export default class Command {
   @action.bound
   setValue(value) {
     this.value = value ? value.replace(/\n/g, '\\n') : ''
+  }
+
+  @action.bound
+  setOpensWindow(opensWindow, name, timeout) {
+    if (opensWindow) {
+      this.opensWindow = opensWindow
+      if (!this.windowHandleName) {
+        this.windowHandleName = `win${Math.floor(Math.random() * 10000)}`
+      }
+    }
+    if (name) this.windowHandleName = name
+    if (timeout) this.windowTimeout = timeout
   }
 
   @action.bound
