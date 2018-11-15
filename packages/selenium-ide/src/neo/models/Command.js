@@ -102,7 +102,7 @@ export default class Command {
   }
 
   @action.bound
-  setOpensWindow(opensWindow, name, timeout) {
+  setOpensWindow(opensWindow) {
     if (typeof opensWindow == typeof true) {
       this.opensWindow = opensWindow
       if (!this.windowHandleName) {
