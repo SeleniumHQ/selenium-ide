@@ -33,6 +33,7 @@ export default class CommandInput extends React.Component {
     return (
       <Input name={this.props.name} label={this.props.label}>
         <AutoComplete
+          id={this.props.name}
           getItemValue={item => item.name}
           getItemKey={item => item.name}
           items={
@@ -44,7 +45,7 @@ export default class CommandInput extends React.Component {
             <span key={item.name}>{item.name}</span>
           )}
           value={this.props.value}
-          inputProps={{ disabled: this.props.disabled }}
+          inputProps={{ name: this.props.name, disabled: this.props.disabled }}
           onChange={e => {
             if (this.props.onChange) this.props.onChange(e.target.value)
           }}

@@ -50,13 +50,14 @@ export default class TargetInput extends React.Component {
         label={this.props.label}
       >
         <AutoComplete
+          id={this.props.name}
           getItemValue={item => item[0]}
           items={this.props.targets.peek()}
           renderDefaultStyledItem={item => (
             <TargetSuggestion locator={item[0]} strategy={item[1]} />
           )}
           value={this.props.value}
-          inputProps={{ disabled: this.props.disabled }}
+          inputProps={{ name: this.props.name, disabled: this.props.disabled }}
           onChange={e => {
             if (this.props.onChange) this.props.onChange(e.target.value)
           }}
@@ -67,6 +68,7 @@ export default class TargetInput extends React.Component {
       </Input>
     ) : (
       <Input
+        id={this.props.name}
         name={this.props.name}
         label={this.props.label}
         value={this.props.value}

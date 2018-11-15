@@ -41,7 +41,7 @@ export default class AutoComplete extends React.Component {
             }}
           >
             <input
-              id={this.id}
+              id={this.props.id || this.id}
               {...props}
               style={{
                 width: '100%',
@@ -50,7 +50,7 @@ export default class AutoComplete extends React.Component {
               }}
             />
             <label
-              htmlFor={this.id}
+              htmlFor={this.props.id || this.id}
               className="si-caret-wide"
               style={{
                 position: 'absolute',
