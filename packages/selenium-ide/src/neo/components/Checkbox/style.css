@@ -9,6 +9,10 @@ input[type='checkbox'].checkbox + label {
   padding: 5px 0;
 }
 
+.form-input input[type='checkbox'].checkbox + label {
+  width: auto;
+}
+
 input[type='checkbox'].checkbox + label span {
   display: inline-block;
   background-color: #fff;

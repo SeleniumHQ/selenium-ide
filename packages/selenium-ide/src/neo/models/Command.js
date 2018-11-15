@@ -103,14 +103,22 @@ export default class Command {
 
   @action.bound
   setOpensWindow(opensWindow, name, timeout) {
-    if (opensWindow) {
+    if (typeof opensWindow == typeof true) {
       this.opensWindow = opensWindow
       if (!this.windowHandleName) {
         this.windowHandleName = `win${Math.floor(Math.random() * 10000)}`
       }
     }
-    if (name) this.windowHandleName = name
-    if (timeout) this.windowTimeout = timeout
+  }
+
+  @action.bound
+  setWindowHandleName(name) {
+    this.windowHandleName = name
+  }
+
+  @action.bound
+  setWindowTimeout(timeout) {
+    this.windowTimeout = timeout
   }
 
   @action.bound

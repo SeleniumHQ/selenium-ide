@@ -24,6 +24,7 @@ import Input from '../FormInput'
 import TextArea from '../FormTextArea'
 import CommandInput from '../CommandInput'
 import TargetInput from '../TargetInput'
+import NewWindowInput from '../NewWindowInput'
 import FlatButton from '../FlatButton'
 import { find, select } from '../../IO/SideeX/find-select'
 import ModalState from '../../stores/view/ModalState'
@@ -165,6 +166,14 @@ export default class CommandForm extends React.Component {
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setComment : null}
           />
+          <div className="target">
+            <NewWindowInput
+              id="new-window"
+              name="new-window"
+              label="Opens Window"
+              command={this.props.command}
+            />
+          </div>
           <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
         </form>
       </div>

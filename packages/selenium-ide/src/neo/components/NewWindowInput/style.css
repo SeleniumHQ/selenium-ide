@@ -1,0 +1,14 @@
+.window-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.window-input > * {
+  margin: 0;
+}
+
+.window-input > .labelled-input {
+  margin: 0 0 0 5px;
+  flex-grow: 1;
+}

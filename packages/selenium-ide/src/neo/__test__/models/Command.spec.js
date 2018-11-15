@@ -129,6 +129,13 @@ describe('Command', () => {
     const command = new Command()
     command.setOpensWindow(true)
     expect(command.windowHandleName).not.toBe('')
+    expect(command.opensWindow).toBeTruthy()
+  })
+  it('should unset the command opens window', () => {
+    const command = new Command()
+    command.setOpensWindow(true)
+    command.setOpensWindow(false)
+    expect(command.opensWindow).toBeFalsy()
   })
   it('should set the default timeout when set to open a window', () => {
     const command = new Command()
@@ -137,8 +144,10 @@ describe('Command', () => {
   })
   it('should set the handle name and the new window timeout', () => {
     const command = new Command()
-    command.setOpensWindow(true, 'aWindow', 500)
+    command.setOpensWindow(true)
+    command.setWindowHandleName('aWindow')
     expect(command.windowHandleName).toBe('aWindow')
+    command.setWindowTimeout(500)
     expect(command.windowTimeout).toBe(500)
   })
   it('shouls clone itself, creating a new id', () => {
