@@ -428,7 +428,7 @@ export default class ExtCommand {
     const type = fragments.shift()
     const selector = parseInt(fragments.join('='))
 
-    if (type === 'handle') {
+    if (type === 'handle' && this.tabBelongsToPlayback(selector)) {
       await this.switchToTab(selector)
     } else {
       return Promise.reject(new Error('No such window locator'))
