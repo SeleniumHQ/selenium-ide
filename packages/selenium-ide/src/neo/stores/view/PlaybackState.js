@@ -576,8 +576,14 @@ class PlaybackState {
     else {
       this.breakOnNextCommand = false
       this.paused = true
-      UiState.selectedCommand(command)
-      WindowSession.focusIDEWindow()
+      UiState.selectCommand(command)
+      // Focus the IDE window
+      // TODO: fix issue with WindowSession.focusIDEWindow() here
+      browser.windows.getCurrent().then(windowInfo => {
+        browser.windows.update(windowInfo.id, {
+          focused: true,
+        })
+      })
     }
   }
 
