@@ -301,18 +301,6 @@ class PlaybackState {
     this._startPlayingCollection(suite, suite.tests, 'suitePlayackStarted')
   }
 
-  getRunningQueueByIndex(
-    commands,
-    index,
-    opts = { startFromBeginning: false }
-  ) {
-    if (opts.startFromBeginning) {
-      return commands.slice(0, index + 1)
-    } else {
-      return commands.slice(index)
-    }
-  }
-
   @action.bound
   startPlaying(
     command,
@@ -331,7 +319,8 @@ class PlaybackState {
       this.currentRunningTest = test
       this.testsCount = 1
       if (command && command instanceof Command) {
-        this.commandTarget.load(command, controls)
+        if (controls.playToThisPoint || controls.recordFromHere)
+          this.commandTarget.load(command, controls)
       }
       this.runningQueue = test.commands.peek()
       const pluginsLogs = {}

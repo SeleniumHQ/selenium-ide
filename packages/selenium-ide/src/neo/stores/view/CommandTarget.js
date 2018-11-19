@@ -57,7 +57,7 @@ export default class CommandTarget {
   }
 
   _alert(opts = { isTestAborted: false }) {
-    if (!this.is.visited && !opts.isTestAborted)
+    if (this.command && !this.is.visited && !opts.isTestAborted)
       this.logger.warn(
         'Unable to play to target command. Likely because it is in a control flow branch that was not executed during playback.'
       )

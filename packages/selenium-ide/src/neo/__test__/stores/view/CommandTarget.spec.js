@@ -100,6 +100,9 @@ describe('CommandTarget', () => {
       }
     }
     let commandTarget = new CommandTarget(new Logger())
+    commandTarget._alert()
+    expect(commandTarget.logger.message).toBeUndefined()
+    commandTarget = new CommandTarget(new Logger())
     commandTarget.load(command, controls)
     commandTarget._alert()
     expect(commandTarget.logger.message).toEqual(
