@@ -170,7 +170,13 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && noModifiers && key === 'B') {
       this.props.command.toggleBreakpoint()
     } else if (!this.props.isPristine && noModifiers && key === 'S') {
-      this.props.startPlayingHere(this.props.command)
+      this.props.startPlayingHere(this.props.command, {
+        playToThisPoint: true,
+      })
+    } else if (!this.props.isPristine && noModifiers && key === 'U') {
+      this.props.startPlayingHere(this.props.command, {
+        recordFromHere: true,
+      })
     } else if (!this.props.isPristine && noModifiers && key === 'X') {
       this.props.executeCommand(this.props.command)
     } else if (this.props.moveSelection && noModifiers && e.key === 'ArrowUp') {
@@ -278,10 +284,22 @@ class TestRow extends React.Component {
           <ListMenuItem
             label="S"
             onClick={() => {
-              this.props.startPlayingHere(this.props.command)
+              this.props.startPlayingHere(this.props.command, {
+                playToThisPoint: true,
+              })
             }}
           >
-            Play from here
+            Play to this point
+          </ListMenuItem>
+          <ListMenuItem
+            label="U"
+            onClick={() => {
+              this.props.startPlayingHere(this.props.command, {
+                recordFromHere: true,
+              })
+            }}
+          >
+            Record from here
           </ListMenuItem>
           <ListMenuItem
             label="X"
