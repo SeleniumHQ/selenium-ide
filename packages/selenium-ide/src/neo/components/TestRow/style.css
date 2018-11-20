@@ -35,6 +35,7 @@
 }
 
 .test-table tbody tr.selected {
+  border-top: 1px solid #75bfff;
   background-color: #e3f2ff;
 }
 
@@ -95,10 +96,6 @@
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
   border-left: 8px solid transparent;
-}
-
-.test-table tbody tr.selected:focus td {
-  border-top: 1px solid #75bfff;
 }
 
 .test-table tbody tr.break-point td:first-child .index {
