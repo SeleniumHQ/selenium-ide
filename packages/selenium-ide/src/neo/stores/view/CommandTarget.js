@@ -16,24 +16,23 @@
 // under the License.
 
 import UiState from './UiState'
+import PlaybackState from './PlaybackState'
+import Logger from './Logs'
 
 export default class CommandTarget {
-  constructor(logger) {
-    this.logger = logger
-    this._reset()
-  }
-
   load(command, controls) {
-    this.command = command
+    this._reset()
+    this._command = command
     this.is = controls
     if (this.is.playToThisPoint || this.is.recordFromHere)
       this._toggleBreakpoint()
   }
 
   _reset() {
-    if (this.command && this.command.isBreakpoint) this._toggleBreakpoint()
-    this.command = undefined
+    if (this._command && this._command.isBreakpoint) this._toggleBreakpoint()
+    this._command = undefined
     this.is = {}
+    this._logMessage = undefined
   }
 
   doPlayToThisPoint() {
@@ -45,25 +44,34 @@ export default class CommandTarget {
 
   async doRecordFromHere() {
     if (this.is.recordFromHere) {
+      PlaybackState.stopPlayingGracefully()
+      UiState.changeView(PlaybackState.lastSelectedView)
+      PlaybackState.playCommand(this._command)
+      PlaybackState.clearCommandStates()
+      UiState.selectNextCommand({
+        from: this._command,
+        isCommandTarget: true,
+      })
       this._toggleBreakpoint()
       this.is.visited = true
       await UiState.startRecording()
     }
   }
 
-  doCleanup(opts) {
+  async doCleanup(opts) {
     this._alert(opts)
     this._reset()
   }
 
   _alert(opts = { isTestAborted: false }) {
-    if (this.command && !this.is.visited && !opts.isTestAborted)
-      this.logger.warn(
+    if (this._command && !this.is.visited && !opts.isTestAborted) {
+      this._logMessage =
         'Unable to play to target command. Likely because it is in a control flow branch that was not executed during playback.'
-      )
+      Logger.warn(this._logMessage)
+    }
   }
 
   _toggleBreakpoint() {
-    if (this.command) this.command.toggleBreakpoint()
+    if (this._command) this._command.toggleBreakpoint()
   }
 }

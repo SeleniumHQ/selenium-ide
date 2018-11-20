@@ -15,11 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const UiState = {}
-UiState.changeView = jest.fn()
-UiState.selectNextCommand = jest.fn()
-UiState.isRecording = false
-UiState.startRecording = () => {
-  UiState.isRecording = UiState.isRecording ? false : true
-}
-export default UiState
+const PlaybackState = {}
+PlaybackState.stopPlayingGracefully = jest.fn()
+PlaybackState.playCommand = jest.fn()
+PlaybackState.clearCommandStates = jest.fn()
+export default PlaybackState

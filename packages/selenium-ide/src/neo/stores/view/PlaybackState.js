@@ -95,7 +95,7 @@ class PlaybackState {
     this.logger = new Logger(Channels.PLAYBACK)
     this.lastSelectedView = undefined
     this.filteredTests = []
-    this.commandTarget = new CommandTarget(this.logger)
+    this.commandTarget = new CommandTarget()
     this.extCommand = new ExtCommand(WindowSession)
     this.browserDriver = new WebDriverExecutor()
 
@@ -545,23 +545,10 @@ class PlaybackState {
     this.paused = false
   }
 
-  stopPlayingStartRecording() {
-    //this.isSilent = true
-    this.stopPlayingGracefully()
-    UiState.changeView(this.lastSelectedView)
-    this.playCommand(this.commandTarget.command)
-    this.clearCommandStates()
-    UiState.selectNextCommand({
-      from: this.commandTarget.command,
-      isCommandTarget: true,
-    })
-    this.commandTarget.doRecordFromHere()
-  }
-
   @action.bound
   async break(command) {
     if (this.commandTarget.is.recordFromHere)
-      await this.stopPlayingStartRecording()
+      this.commandTarget.doRecordFromHere()
     else {
       this.breakOnNextCommand = false
       this.paused = true
@@ -585,7 +572,7 @@ class PlaybackState {
       }
     }
     if (!this._testsToRun.length) {
-      if (!this.commandTarget.is.recordFromHere) WindowSession.focusIDEWindow()
+      WindowSession.focusIDEWindow()
     }
     this.stopPlaying().then(() => {
       if (this.jumpToNextCommand) {

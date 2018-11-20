@@ -19,6 +19,8 @@ import CommandTarget from '../../../stores/view/CommandTarget'
 import Command from '../../../models/Command'
 import UiState from '../../../stores/view/UiState'
 jest.mock('../../../stores/view/UiState')
+jest.mock('../../../stores/view/PlaybackState')
+jest.mock('../../../stores/view/Logs')
 
 describe('CommandTarget', () => {
   let commandTarget
@@ -34,105 +36,92 @@ describe('CommandTarget', () => {
       recordFromHere: false,
     }
   })
-  it('inits with sensible defaults', () => {
-    const commandTarget = new CommandTarget()
-    expect(commandTarget.command).toBeUndefined()
-    expect(commandTarget.is).toEqual({})
-  })
   it('stores command reference and sets metadata', () => {
     commandTarget.load(command, controls)
-    expect(commandTarget.is.playToThisPoint).toEqual(true)
-    expect(commandTarget.is.recordFromHere).toEqual(false)
-    expect(commandTarget.command).toEqual(command)
+    expect(commandTarget.is.playToThisPoint).toBeTruthy()
+    expect(commandTarget.is.recordFromHere).toBeFalsy()
+    expect(commandTarget._command).toEqual(command)
   })
   it('toggles command breakpoint', () => {
-    commandTarget.command = command
+    commandTarget._command = command
     commandTarget._toggleBreakpoint()
-    expect(commandTarget.command.isBreakpoint).toEqual(true)
+    expect(commandTarget._command.isBreakpoint).toBeTruthy()
   })
   it('load toggles command breakpoint depending on metadata', () => {
     commandTarget.load(command, controls)
-    expect(commandTarget.command.isBreakpoint).toBe(true)
+    expect(commandTarget._command.isBreakpoint).toBe(true)
   })
   it('resets state to sensible defaults and untoggles command breakpoint', () => {
     commandTarget.load(command, controls)
     commandTarget._reset()
-    expect(commandTarget.command).toBeUndefined()
+    expect(commandTarget._command).toBeFalsy()
     expect(commandTarget.is.playToThisPoint).toBeFalsy()
     expect(commandTarget.is.visited).toBeFalsy()
-    expect(command.isBreakpoint).toEqual(false)
+    expect(command.isBreakpoint).toBeFalsy()
   })
   it('doPlayToThisPoint toggles breakpoint and marks command as visited when correct metadata is loaded', () => {
     let _controls = {}
     commandTarget.load(command, _controls)
+    expect(command.isBreakpoint).toBeFalsy()
+    expect(commandTarget.is.playToThisPoint).toBeFalsy()
     commandTarget.doPlayToThisPoint()
-    expect(commandTarget.is.playToThisPoint).toBeUndefined()
     expect(commandTarget.is.visited).toBeFalsy()
-    expect(commandTarget.command).toBeDefined()
-    expect(command.isBreakpoint).toEqual(false)
+
     _controls = { playToThisPoint: true }
     commandTarget.load(command, _controls)
-    expect(command.isBreakpoint).toEqual(true)
-    commandTarget.doPlayToThisPoint()
+    expect(command.isBreakpoint).toBeTruthy()
     expect(commandTarget.is.playToThisPoint).toBeTruthy()
+    commandTarget.doPlayToThisPoint()
+    expect(command.isBreakpoint).toBeFalsy()
     expect(commandTarget.is.visited).toBeTruthy()
-    expect(commandTarget.command).toBeDefined()
-    expect(command.isBreakpoint).toEqual(false)
   })
-  it('doRecordFromHere marks command as visited and starts recording when correct metadata is loaded', async () => {
-    const _controls = { recordFromHere: true }
+  it('doRecordFromHere starts recording and marks command as visited when correct metadata is loaded', () => {
+    let _controls = {}
     commandTarget.load(command, _controls)
-    expect(commandTarget.command).toBeDefined()
-    expect(command.isBreakpoint).toEqual(true)
-    expect(commandTarget.is.recordFromHere).toBeTruthy()
     expect(commandTarget.is.visited).toBeFalsy()
-    await commandTarget.doRecordFromHere()
-    expect(commandTarget.command).toBeDefined()
-    expect(commandTarget.is.recordFromHere).toBeTruthy()
+    expect(command.isBreakpoint).toBeFalsy()
+    expect(UiState.isRecording).toBeFalsy()
+    commandTarget.doRecordFromHere()
+    expect(commandTarget.is.visited).toBeFalsy()
+    expect(UiState.isRecording).toBeFalsy()
+    expect(command.isBreakpoint).toBeFalsy()
+
+    _controls = { recordFromHere: true }
+    commandTarget.load(command, _controls)
+    expect(commandTarget.is.visited).toBeFalsy()
+    expect(command.isBreakpoint).toBeTruthy()
+    expect(UiState.isRecording).toBeFalsy()
+    commandTarget.doRecordFromHere()
     expect(commandTarget.is.visited).toBeTruthy()
-    expect(command.isBreakpoint).toEqual(false)
-    expect(UiState.isRecording).toBe(true)
+    expect(UiState.isRecording).toBeTruthy()
+    expect(command.isBreakpoint).toBeFalsy()
   })
   it('log if the command was not visited', () => {
-    class Logger {
-      warn(message) {
-        this.message = message
-      }
-    }
-    let commandTarget = new CommandTarget(new Logger())
     commandTarget._alert()
-    expect(commandTarget.logger.message).toBeUndefined()
-    commandTarget = new CommandTarget(new Logger())
+    expect(commandTarget._logMessage).toBeFalsy()
     commandTarget.load(command, controls)
     commandTarget._alert()
-    expect(commandTarget.logger.message).toEqual(
-      'Unable to play to target command. Likely because it is in a control flow branch that was not executed during playback.'
-    )
-    commandTarget.doCleanup()
-    expect(commandTarget.logger.message).toEqual(
+    expect(commandTarget._logMessage).toEqual(
       'Unable to play to target command. Likely because it is in a control flow branch that was not executed during playback.'
     )
   })
   it('do not log if the test is aborted', () => {
-    class Logger {
-      warn(message) {
-        this.message = message
-      }
-    }
-    const commandTarget = new CommandTarget(new Logger())
+    const commandTarget = new CommandTarget()
     commandTarget.load(command, controls)
     commandTarget._alert({ isTestAborted: true })
-    expect(commandTarget.logger.message).toBeUndefined()
+    expect(commandTarget._logMessage).toBeFalsy()
     commandTarget.doCleanup({ isTestAborted: true })
-    expect(commandTarget.logger.message).toBeUndefined()
+    expect(commandTarget._logMessage).toBeFalsy()
   })
   it('doCleanup resets state and logs if the command was not visited', () => {
     commandTarget.load(command, controls)
+    commandTarget._alert()
     commandTarget.doCleanup({ isTestAborted: true })
-    expect(commandTarget.command).toBeUndefined()
+    expect(commandTarget._command).toBeFalsy()
     expect(commandTarget.is.playToThisPoint).toBeFalsy()
     expect(commandTarget.is.recordFromHere).toBeFalsy()
     expect(commandTarget.is.visited).toBeFalsy()
-    expect(command.isBreakpoint).toEqual(false)
+    expect(commandTarget._logMessage).toBeFalsy()
+    expect(command.isBreakpoint).toBeFalsy()
   })
 })
