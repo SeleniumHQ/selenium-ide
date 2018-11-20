@@ -18,19 +18,26 @@
 import React from 'react'
 import { renderIntoDocument, cleanup } from 'react-testing-library'
 import TestTable from '../../../components/TestTable'
-//import UiState from '../../../stores/view/UiState'
-import Command from '../../../models/Command'
+import UiState from '../../../stores/view/UiState'
+import TestCase from '../../../models/TestCase'
+//import CommandTarget from '../../../stores/view/CommandTarget'
 
 describe('<TestTable />', () => {
   afterEach(cleanup)
 
   it.skip('renders', () => {
-    const commands = [
-      new Command(undefined, 'a', '', ''),
-      new Command(undefined, 'b', '', ''),
-      new Command(undefined, 'c', '', ''),
-    ]
-    const { container } = renderIntoDocument(<TestTable commands={commands} />)
-    console.log(container)
+    const test = new TestCase()
+    test.createCommand(undefined, 'a', '', '')
+    test.createCommand(undefined, 'b', '', '')
+    test.createCommand(undefined, 'c', '', '')
+    UiState.selectTest(test)
+    const { container } = renderIntoDocument(
+      <TestTable commands={test.commands} />
+    )
+    UiState.selectCommand(test.commands[1])
+    const selectedCommand = container.querySelector(
+      '.test-table tbody tr.selected'
+    )
+    console.log(selectedCommand)
   })
 })
