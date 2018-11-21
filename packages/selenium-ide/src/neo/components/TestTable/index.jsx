@@ -115,6 +115,9 @@ export default class TestTable extends React.Component {
                       )}
                       selected={this.props.selectedCommand === command.id}
                       readOnly={PlaybackState.isPlaying}
+                      singleCommandExecutionEnabled={
+                        PlaybackState.isSingleCommandExecutionEnabled
+                      }
                       index={index}
                       command={command}
                       new={

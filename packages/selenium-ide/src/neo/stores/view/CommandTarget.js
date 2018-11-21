@@ -27,6 +27,8 @@ export default class CommandTarget {
     this.is = controls
     if (this.is.playToThisPoint || this.is.recordFromHere)
       this._toggleBreakpoint()
+    if (this.is.playToThisPoint)
+      PlaybackState.isSingleCommandExecutionEnabled = true
   }
 
   doPlayToThisPoint() {
@@ -88,6 +90,7 @@ export default class CommandTarget {
     this._command = undefined
     this.is = {}
     this._logMessage = undefined
+    PlaybackState.isSingleCommandExecutionEnabled = false
   }
 
   async _startRecording() {

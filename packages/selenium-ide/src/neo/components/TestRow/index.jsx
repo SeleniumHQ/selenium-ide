@@ -110,6 +110,7 @@ class TestRow extends React.Component {
     className: PropTypes.string,
     status: PropTypes.string,
     readOnly: PropTypes.bool,
+    singleCommandExecutionEnabled: PropTypes.bool,
     command: PropTypes.object.isRequired,
     new: PropTypes.func,
     isPristine: PropTypes.bool,
@@ -337,7 +338,7 @@ class TestRow extends React.Component {
         }
         onClick={this.select}
         onDoubleClick={() => {
-          this.props.executeCommand && !this.props.readOnly
+          this.props.executeCommand && this.props.singleCommandExecutionEnabled
             ? this.props.executeCommand(this.props.command)
             : undefined
         }}

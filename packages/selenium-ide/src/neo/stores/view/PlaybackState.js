@@ -87,6 +87,8 @@ class PlaybackState {
   currentExecutingCommandNode = null
   @observable
   isSilent = false
+  @observable
+  isSingleCommandExecutionEnabled = false
 
   constructor() {
     this.maxDelay = 3000
