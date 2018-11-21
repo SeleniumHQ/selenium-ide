@@ -38,6 +38,7 @@ describe('<TestTable />', () => {
     const selectedCommand = container.querySelector(
       '.test-table tbody tr.selected'
     )
+    // eslint-disable-next-line
     console.log(selectedCommand)
   })
 })
