@@ -18,6 +18,7 @@
 import UiState from './UiState'
 import PlaybackState from './PlaybackState'
 import Logger from './Logs'
+import ModalState from './ModalState'
 
 export default class CommandTarget {
   load(command, controls) {
@@ -28,13 +29,6 @@ export default class CommandTarget {
       this._toggleBreakpoint()
   }
 
-  _reset() {
-    if (this._command && this._command.isBreakpoint) this._toggleBreakpoint()
-    this._command = undefined
-    this.is = {}
-    this._logMessage = undefined
-  }
-
   doPlayToThisPoint() {
     if (this.is.playToThisPoint) {
       this._toggleBreakpoint()
@@ -42,11 +36,11 @@ export default class CommandTarget {
     }
   }
 
-  async doRecordFromHere() {
+  async doRecordFromHere(opts = { showModal: true }) {
     if (this.is.recordFromHere) {
+      await PlaybackState.playCommand(this._command)
       PlaybackState.stopPlayingGracefully()
       UiState.changeView(PlaybackState.lastSelectedView)
-      PlaybackState.playCommand(this._command)
       PlaybackState.clearCommandStates()
       UiState.selectNextCommand({
         from: this._command,
@@ -54,11 +48,29 @@ export default class CommandTarget {
       })
       this._toggleBreakpoint()
       this.is.visited = true
-      await UiState.startRecording()
+      if (opts.showModal) {
+        ModalState.showDialog(
+          {
+            type: 'info',
+            title: 'Ready to record',
+            description:
+              'Your test is ready to record from the command you selected.\n\nTo proceed, click one of the buttons below',
+            confirmLabel: 'Start recording',
+            cancelLabel: 'Cancel',
+          },
+          async choseProceed => {
+            if (choseProceed) {
+              await UiState.startRecording()
+            }
+          }
+        )
+      } else {
+        await UiState.startRecording()
+      }
     }
   }
 
-  async doCleanup(opts) {
+  doCleanup(opts) {
     this._alert(opts)
     this._reset()
   }
@@ -69,6 +81,17 @@ export default class CommandTarget {
         'Unable to play to target command. Likely because it is in a control flow branch that was not executed during playback.'
       Logger.warn(this._logMessage)
     }
+  }
+
+  _reset() {
+    if (this._command && this._command.isBreakpoint) this._toggleBreakpoint()
+    this._command = undefined
+    this.is = {}
+    this._logMessage = undefined
+  }
+
+  async _startRecording() {
+    await UiState.startRecording()
   }
 
   _toggleBreakpoint() {

@@ -75,13 +75,13 @@ describe('CommandTarget', () => {
     expect(command.isBreakpoint).toBeFalsy()
     expect(commandTarget.is.visited).toBeTruthy()
   })
-  it('doRecordFromHere starts recording and marks command as visited when correct metadata is loaded', () => {
+  it('doRecordFromHere starts recording and marks command as visited when correct metadata is loaded', async () => {
     let _controls = {}
     commandTarget.load(command, _controls)
     expect(commandTarget.is.visited).toBeFalsy()
     expect(command.isBreakpoint).toBeFalsy()
     expect(UiState.isRecording).toBeFalsy()
-    commandTarget.doRecordFromHere()
+    commandTarget.doRecordFromHere({ showModal: false })
     expect(commandTarget.is.visited).toBeFalsy()
     expect(UiState.isRecording).toBeFalsy()
     expect(command.isBreakpoint).toBeFalsy()
@@ -91,7 +91,7 @@ describe('CommandTarget', () => {
     expect(commandTarget.is.visited).toBeFalsy()
     expect(command.isBreakpoint).toBeTruthy()
     expect(UiState.isRecording).toBeFalsy()
-    commandTarget.doRecordFromHere()
+    await commandTarget.doRecordFromHere({ showModal: false })
     expect(commandTarget.is.visited).toBeTruthy()
     expect(UiState.isRecording).toBeTruthy()
     expect(command.isBreakpoint).toBeFalsy()
