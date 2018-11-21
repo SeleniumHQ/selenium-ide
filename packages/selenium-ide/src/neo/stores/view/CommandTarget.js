@@ -43,7 +43,6 @@ export default class CommandTarget {
       await PlaybackState.playCommand(this._command)
       PlaybackState.stopPlayingGracefully()
       UiState.changeView(PlaybackState.lastSelectedView)
-      PlaybackState.clearCommandStates()
       UiState.selectNextCommand({
         from: this._command,
         isCommandTarget: true,
