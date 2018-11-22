@@ -34,7 +34,6 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
-
 export const supportedFileFormats = '.side, text/html'
 
 export function getFile(path) {
@@ -163,8 +162,8 @@ export function loadProject(project, file) {
             }
           })
         } else if (type === FileTypes.TestCase) {
-          const { test, baseUrl } = migrateTestCase(contents)
-          if (!project.urls.includes(baseUrl)) {
+          let { test, baseUrl } = migrateTestCase(contents)
+          if (project.urls.length && !project.urls.includes(baseUrl)) {
             ModalState.showAlert(
               {
                 title: 'Migrate test case',

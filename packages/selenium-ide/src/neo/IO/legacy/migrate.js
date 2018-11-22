@@ -123,14 +123,6 @@ export function migrateTestCase(data) {
   const baseUrl = result.html.head.link
     ? result.html.head.link._attributes.href
     : undefined
-  if (!baseUrl) {
-    const title = result.html.head.title
-      ? result.html.head.title._text
-      : undefined
-    throw new Error(
-      `The test case ${title} is missing a base URL and can't be migrated`
-    )
-  }
   let tr = result.html.body.table.tbody.tr
   tr = Array.isArray(tr) ? tr : [tr]
   const test = {
