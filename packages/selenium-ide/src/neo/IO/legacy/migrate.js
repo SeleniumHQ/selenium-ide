@@ -120,7 +120,17 @@ function migrateSuite(suite, fileMap, project) {
 export function migrateTestCase(data) {
   const sanitized = sanitizeXml(data)
   const result = JSON.parse(convert.xml2json(sanitized, { compact: true }))
-  const baseUrl = result.html.head.link._attributes.href
+  const baseUrl = result.html.head.link
+    ? result.html.head.link._attributes.href
+    : undefined
+  if (!baseUrl) {
+    const title = result.html.head.title
+      ? result.html.head.title._text
+      : undefined
+    throw new Error(
+      `The test case ${title} is missing a base URL and can't be migrated`
+    )
+  }
   let tr = result.html.body.table.tbody.tr
   tr = Array.isArray(tr) ? tr : [tr]
   const test = {
