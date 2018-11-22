@@ -162,6 +162,11 @@ class PlaybackState {
   }
 
   @action.bound
+  toggleIsSingleCommandExecutionEnabled() {
+    this.isSingleCommandExecutionEnabled = !this.isSingleCommandExecutionEnabled
+  }
+
+  @action.bound
   toggleDisableBreakpoints() {
     this.breakpointsDisabled = !this.breakpointsDisabled
   }

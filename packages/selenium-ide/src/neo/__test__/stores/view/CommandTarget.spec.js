@@ -67,7 +67,6 @@ describe('CommandTarget', () => {
     expect(commandTarget.is.playToThisPoint).toBeFalsy()
     commandTarget.doPlayToThisPoint()
     expect(commandTarget.is.visited).toBeFalsy()
-    expect(PlaybackState.isSingleCommandExecutionEnabled).toBeFalsy()
 
     _controls = { playToThisPoint: true }
     commandTarget.load(command, _controls)
@@ -76,7 +75,6 @@ describe('CommandTarget', () => {
     commandTarget.doPlayToThisPoint()
     expect(command.isBreakpoint).toBeFalsy()
     expect(commandTarget.is.visited).toBeTruthy()
-    expect(PlaybackState.isSingleCommandExecutionEnabled).toBeTruthy()
   })
   it('doRecordFromHere starts recording and marks command as visited when correct metadata is loaded', async () => {
     let _controls = {}
