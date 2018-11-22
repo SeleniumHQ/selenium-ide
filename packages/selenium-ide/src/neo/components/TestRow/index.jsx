@@ -27,6 +27,7 @@ import MoreButton from '../ActionButtons/More'
 import ListMenu, { ListMenuItem, ListMenuSeparator } from '../ListMenu'
 import MultilineEllipsis from '../MultilineEllipsis'
 import { withOnContextMenu } from '../ContextMenu'
+import ModalState from '../../stores/view/ModalState'
 import './style.css'
 
 export const Type = 'command'
@@ -227,7 +228,20 @@ class TestRow extends React.Component {
   }
   clearAll() {
     if (!this.props.readOnly) {
-      this.props.clearAllCommands()
+      ModalState.showAlert(
+        {
+          title: 'Clear all test commands',
+          description:
+            "You're about to remove all of the commands in this test. Do you want to proceed?",
+          confirmLabel: 'Clear all commands',
+          cancelLabel: 'Cancel',
+        },
+        choseProceed => {
+          if (choseProceed) {
+            this.props.clearAllCommands()
+          }
+        }
+      )
     }
   }
   render() {
