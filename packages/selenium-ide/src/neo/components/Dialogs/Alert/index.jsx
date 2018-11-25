@@ -22,6 +22,7 @@ import FlatButton from '../../FlatButton'
 import Markdown from '../../Markdown'
 import DialogContainer from '../Dialog'
 import classNames from 'classnames'
+import './style.css'
 
 export default class AlertDialog extends React.Component {
   constructor(props) {
