@@ -94,6 +94,33 @@ async function addInitialCommands(recordedUrl) {
   }
 }
 
+export function recordOpensWindow(windowHandleName) {
+  if (UiState.lastRecordedCommand) {
+    const command = UiState.lastRecordedCommand
+    command.setOpensWindow(true)
+    command.setWindowHandleName(windowHandleName)
+  }
+}
+
+function addStoreRootHandleIfDoesNotExist() {
+  const { test } = UiState.selectedTest
+
+  for (let i = 0; i < test.commands.length; i++) {
+    if (
+      test.commands[i].command === 'storeWindowHandle' &&
+      test.commands[i].target === 'root'
+    ) {
+      return
+    }
+    if (test.commands[i].command === 'selectWindow') {
+      test.createCommand(i, 'storeWindowHandle', 'root')
+      return
+    }
+  }
+
+  test.createCommand(1, 'storeWindowHandle', 'root')
+}
+
 // for plugins
 export function recordCommand(command, target, value, index, select = false) {
   const test = UiState.displayedTest
@@ -109,6 +136,9 @@ export function recordCommand(command, target, value, index, select = false) {
     UiState.selectCommand(newCommand)
   }
 
+  UiState.lastRecordedCommand = newCommand
+  if (command === 'selectWindow' && target === 'handle=${root}')
+    addStoreRootHandleIfDoesNotExist()
   notifyPluginsOfRecordedCommand(newCommand, test)
   return newCommand
 }

@@ -17,7 +17,7 @@
 
 import browser from 'webextension-polyfill'
 import UiState from '../../stores/view/UiState'
-import record from './record'
+import record, { recordOpensWindow } from './record'
 import { Logger, Channels } from '../../stores/view/Logs'
 
 const logger = new Logger(Channels.PLAYBACK)
@@ -122,7 +122,13 @@ export default class BackgroundRecorder {
       this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
       record(
         'selectWindow',
-        [[this.windowSession.openedTabIds[testCaseId][activeInfo.tabId]]],
+        [
+          [
+            `handle=\${${
+              this.windowSession.openedTabIds[testCaseId][activeInfo.tabId]
+            }}`,
+          ],
+        ],
         ''
       )
     }, 150)
@@ -195,7 +201,13 @@ export default class BackgroundRecorder {
           this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
           record(
             'selectWindow',
-            [[this.windowSession.openedTabIds[testCaseId][tabs[0].id]]],
+            [
+              [
+                `handle=\${${
+                  this.windowSession.openedTabIds[testCaseId][tabs[0].id]
+                }}`,
+              ],
+            ],
             ''
           )
         }
@@ -203,7 +215,6 @@ export default class BackgroundRecorder {
   }
 
   tabsOnRemovedHandler(tabId, _removeInfo) {
-    // eslint-disable-line no-unused-vars
     let testCase = getSelectedCase()
     if (!testCase) {
       return
@@ -217,31 +228,31 @@ export default class BackgroundRecorder {
       if (this.windowSession.currentUsedTabId[testCaseId] !== tabId) {
         record(
           'selectWindow',
-          [[this.windowSession.openedTabIds[testCaseId][tabId]]],
+          [
+            [
+              `handle=\${${
+                this.windowSession.openedTabIds[testCaseId][tabId]
+              }}`,
+            ],
+          ],
           ''
         )
-        record(
-          'close',
-          [[this.windowSession.openedTabIds[testCaseId][tabId]]],
-          ''
-        )
+        record('close', [['']], '')
         record(
           'selectWindow',
           [
             [
-              this.windowSession.openedTabIds[testCaseId][
-                this.windowSession.currentUsedTabId[testCaseId]
-              ],
+              `handle=\${${
+                this.windowSession.openedTabIds[testCaseId][
+                  this.windowSession.currentUsedTabId[testCaseId]
+                ]
+              }}`,
             ],
           ],
           ''
         )
       } else {
-        record(
-          'close',
-          [[this.windowSession.openedTabIds[testCaseId][tabId]]],
-          ''
-        )
+        record('close', [['']], '')
       }
       delete this.windowSession.openedTabIds[testCaseId][tabId]
       this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
@@ -258,8 +269,12 @@ export default class BackgroundRecorder {
       this.windowSession.openedTabIds[testCaseId][details.sourceTabId] !=
       undefined
     ) {
-      this.windowSession.openedTabIds[testCaseId][details.tabId] =
-        'win_ser_' + this.windowSession.openedTabCount[testCaseId]
+      this.windowSession.openedTabIds[testCaseId][
+        details.tabId
+      ] = `win${Math.floor(Math.random() * 10000)}`
+      recordOpensWindow(
+        this.windowSession.openedTabIds[testCaseId][details.tabId]
+      )
       if (details.windowId != undefined) {
         this.windowSession.setOpenedWindow(details.windowId)
       } else {
@@ -318,7 +333,13 @@ export default class BackgroundRecorder {
       this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
       record(
         'selectWindow',
-        [[this.windowSession.openedTabIds[testCaseId][sender.tab.id]]],
+        [
+          [
+            `handle=\${${
+              this.windowSession.openedTabIds[testCaseId][sender.tab.id]
+            }}`,
+          ],
+        ],
         ''
       )
     }
@@ -539,7 +560,7 @@ export default class BackgroundRecorder {
     this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
     this.windowSession.currentUsedTabId[testCaseId] = tab.id
     this.windowSession.currentUsedWindowId[testCaseId] = tab.windowId
-    this.windowSession.openedTabIds[testCaseId][tab.id] = 'win_ser_local'
+    this.windowSession.openedTabIds[testCaseId][tab.id] = 'root'
     this.windowSession.openedTabCount[testCaseId] = 1
   }
 

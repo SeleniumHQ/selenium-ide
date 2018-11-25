@@ -36,7 +36,6 @@ export default class ExtCommand {
   constructor(windowSession) {
     this.options = {}
     this.windowSession = windowSession
-    this.playingTabNames = {}
     this.playingTabStatus = {}
     this.playingFrameLocations = {}
     // TODO: flexible wait
@@ -58,7 +57,8 @@ export default class ExtCommand {
     }
 
     this.tabsOnRemovedHandler = (tabId, _removeInfo) => {
-      if (this.tabBelongsToPlayback(tabId)) {
+      // make sure not to throw if windows were closed as part of setup
+      if (!this.attaching && this.tabBelongsToPlayback(tabId)) {
         this.logger.error('Playing window was closed prematurely')
         PlaybackState.abortPlaying()
       }
@@ -91,12 +91,14 @@ export default class ExtCommand {
     } else if (!this.getCurrentPlayingFrameLocation()) {
       this.setCurrentPlayingFrameLocation('root')
     }
+    this.attaching = true
     this.attach()
     try {
       await this.attachToRecordingWindow(testCaseId)
     } catch (e) {
       await this.updateOrCreateTab()
     }
+    this.attaching = false
   }
 
   cleanup() {
@@ -357,19 +359,14 @@ export default class ExtCommand {
       this.waitForNewWindow = false
       variables.set(this.windowName, tabId)
     }
-    this.playingTabNames[
-      'win_ser_' +
+    this.windowSession.openedTabIds[
+      this.getCurrentPlayingWindowSessionIdentifier()
+    ][tabId] = this.waitForNewWindow
+      ? this.windowName
+      : 'win_ser_' +
         this.windowSession.openedTabCount[
           this.getCurrentPlayingWindowSessionIdentifier()
         ]
-    ] = tabId
-    this.windowSession.openedTabIds[
-      this.getCurrentPlayingWindowSessionIdentifier()
-    ][tabId] =
-      'win_ser_' +
-      this.windowSession.openedTabCount[
-        this.getCurrentPlayingWindowSessionIdentifier()
-      ]
     this.windowSession.openedTabCount[
       this.getCurrentPlayingWindowSessionIdentifier()
     ]++
@@ -746,7 +743,6 @@ export default class ExtCommand {
   setFirstTab(tab) {
     this.setCurrentPlayingWindowId(tab.windowId)
     this.setCurrentPlayingTabId(tab.id)
-    this.playingTabNames['win_ser_local'] = this.getCurrentPlayingTabId()
     if (
       !this.windowSession.openedTabIds[
         this.getCurrentPlayingWindowSessionIdentifier()
@@ -758,7 +754,7 @@ export default class ExtCommand {
     }
     this.windowSession.openedTabIds[
       this.getCurrentPlayingWindowSessionIdentifier()
-    ][this.getCurrentPlayingTabId()] = 'win_ser_local'
+    ][this.getCurrentPlayingTabId()] = 'root'
     this.windowSession.openedTabCount[
       this.getCurrentPlayingWindowSessionIdentifier()
     ] = 1
