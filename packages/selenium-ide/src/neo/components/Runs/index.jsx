@@ -19,6 +19,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import Progress from '../Progress'
+import PlaybackState from '../../stores/view/PlaybackState'
 import './style.css'
 
 export default class Runs extends React.Component {
@@ -33,16 +34,25 @@ export default class Runs extends React.Component {
     runs: 0,
     failures: 0,
   }
-  render() {
-    return (
-      <div className="runs">
+  Progress() {
+    if (PlaybackState.isSilent) {
+      ;<Progress hasError={this.props.hasError} />
+    } else {
+      return (
         <Progress
           hasError={this.props.hasError}
           progress={this.props.progress}
           totalProgress={this.props.totalProgress}
         />
+      )
+    }
+  }
+  render() {
+    return (
+      <div className="runs">
+        <Progress />
         <div className="status">
-          <span>Runs: {this.props.runs}</span>
+          <span>Runs: {PlaybackState.isSilent ? 0 : this.props.runs}</span>
           <span>
             Failures:{' '}
             <span className={classNames({ failed: this.props.failures })}>

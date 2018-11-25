@@ -302,14 +302,16 @@ class TestRow extends React.Component {
           >
             Record from here
           </ListMenuItem>
-          <ListMenuItem
-            label="X"
-            onClick={() => {
-              this.props.executeCommand(this.props.command)
-            }}
-          >
-            Execute this command
-          </ListMenuItem>
+          {this.props.isSingleCommandExecutionEnabled && (
+            <ListMenuItem
+              label="X"
+              onClick={() => {
+                this.props.executeCommand(this.props.command)
+              }}
+            >
+              Execute this command
+            </ListMenuItem>
+          )}
         </ListMenu>
       ) : null
     //setting component of context menu.

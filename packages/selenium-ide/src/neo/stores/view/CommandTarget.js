@@ -45,6 +45,7 @@ export default class CommandTarget {
     this.is = controls
     if (this.is.playToThisPoint || this.is.recordFromHere)
       this._toggleBreakpoint()
+    PlaybackState.toggleIsSilent()
     if (this.is.playToThisPoint)
       PlaybackState.toggleIsSingleCommandExecutionEnabled()
   }
@@ -65,7 +66,7 @@ export default class CommandTarget {
     if (!this.is.recordFromHere) return
     this.doPlayToThisPoint()
     this._prepareTestForRecording()
-    if (callback) callback
+    if (callback) await callback()
     else await UiState.startRecording()
   }
 

@@ -20,4 +20,5 @@ PlaybackState.stopPlayingGracefully = jest.fn()
 PlaybackState.playCommand = jest.fn()
 PlaybackState.clearCommandStates = jest.fn()
 PlaybackState.toggleIsSingleCommandExecutionEnabled = jest.fn()
+PlaybackState.toggleIsSilent = jest.fn()
 export default PlaybackState

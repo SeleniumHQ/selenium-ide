@@ -162,6 +162,11 @@ class PlaybackState {
   }
 
   @action.bound
+  toggleIsSilent() {
+    this.isSilent = !this.isSilent
+  }
+
+  @action.bound
   toggleIsSingleCommandExecutionEnabled() {
     this.isSingleCommandExecutionEnabled = !this.isSingleCommandExecutionEnabled
   }
@@ -555,15 +560,15 @@ class PlaybackState {
   @action.bound
   async break(command) {
     if (this.commandTarget.is.recordFromHere) {
-      this.commandTarget.doRecordFromHere(
+      this.commandTarget.doRecordFromHere(async () => {
         ModalState.showDialog(
           {
             type: 'info',
             title: 'Ready to record',
             description:
-              'Your test is ready to record from the command you selected.\n\nTo proceed, click one of the buttons below',
-            confirmLabel: 'Start recording',
-            cancelLabel: 'Cancel',
+              'Your test is ready to record from the command you selected.  \n\nTo proceed, click one of the buttons below',
+            confirmLabel: 'START RECORDING',
+            cancelLabel: 'CANCEL',
           },
           async choseProceed => {
             if (choseProceed) {
@@ -572,7 +577,7 @@ class PlaybackState {
             }
           }
         )
-      )
+      })
     } else {
       this.breakOnNextCommand = false
       this.paused = true
