@@ -554,19 +554,30 @@ class PlaybackState {
 
   @action.bound
   async break(command) {
-    if (this.commandTarget.is.recordFromHere)
-      this.commandTarget.doRecordFromHere()
-    else {
+    if (this.commandTarget.is.recordFromHere) {
+      this.commandTarget.doRecordFromHere(
+        ModalState.showDialog(
+          {
+            type: 'info',
+            title: 'Ready to record',
+            description:
+              'Your test is ready to record from the command you selected.\n\nTo proceed, click one of the buttons below',
+            confirmLabel: 'Start recording',
+            cancelLabel: 'Cancel',
+          },
+          async choseProceed => {
+            if (choseProceed) {
+              await UiState.startRecording()
+              await WindowSession.focusPlayingWindow()
+            }
+          }
+        )
+      )
+    } else {
       this.breakOnNextCommand = false
       this.paused = true
       UiState.selectCommand(command)
-      // Focus the IDE window
-      // TODO: fix issue with WindowSession.focusIDEWindow() here
-      browser.windows.getCurrent().then(windowInfo => {
-        browser.windows.update(windowInfo.id, {
-          focused: true,
-        })
-      })
+      WindowSession.focusIDEWindow()
     }
   }
 

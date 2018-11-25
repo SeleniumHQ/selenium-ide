@@ -18,9 +18,27 @@
 import UiState from './UiState'
 import PlaybackState from './PlaybackState'
 import Logger from './Logs'
-import ModalState from './ModalState'
 
+/**
+ *  Controls state and behavior for individual commands with alternative playback
+ *  behavior like `Record from here` and `Play to this point`
+ */
 export default class CommandTarget {
+  /**
+   * `is` stores metadata to determine alternative playback behavior for the target command
+   * For example:
+   * is: {
+   *   playToThisPoint: true,
+   *   recordFromHere: false
+   * }
+   */
+  is = {}
+
+  /**
+   * `_command` is the reference to the target command used for alternative playback
+   */
+  _command = undefined
+
   load(command, controls) {
     this._reset()
     this._command = command
@@ -31,49 +49,24 @@ export default class CommandTarget {
       PlaybackState.toggleIsSingleCommandExecutionEnabled()
   }
 
-  doPlayToThisPoint() {
-    if (this.is.playToThisPoint) {
-      this._toggleBreakpoint()
-      this.is.visited = true
-    }
-  }
-
-  async doRecordFromHere(opts = { showModal: true }) {
-    if (this.is.recordFromHere) {
-      await PlaybackState.playCommand(this._command)
-      PlaybackState.stopPlayingGracefully()
-      UiState.changeView(PlaybackState.lastSelectedView)
-      UiState.selectNextCommand({
-        from: this._command,
-        isCommandTarget: true,
-      })
-      this._toggleBreakpoint()
-      this.is.visited = true
-      if (opts.showModal) {
-        ModalState.showDialog(
-          {
-            type: 'info',
-            title: 'Ready to record',
-            description:
-              'Your test is ready to record from the command you selected.\n\nTo proceed, click one of the buttons below',
-            confirmLabel: 'Start recording',
-            cancelLabel: 'Cancel',
-          },
-          async choseProceed => {
-            if (choseProceed) {
-              await UiState.startRecording()
-            }
-          }
-        )
-      } else {
-        await UiState.startRecording()
-      }
-    }
-  }
-
   doCleanup(opts) {
     this._alert(opts)
     this._reset()
+  }
+
+  doPlayToThisPoint() {
+    if (this.is.playToThisPoint || this.is.recordFromHere) {
+      this._toggleBreakpoint()
+      this.is.visited = true
+    }
+  }
+
+  async doRecordFromHere(callback) {
+    if (!this.is.recordFromHere) return
+    this.doPlayToThisPoint()
+    this._prepareTestForRecording()
+    if (callback) callback
+    else await UiState.startRecording()
   }
 
   _alert(opts = { isTestAborted: false }) {
@@ -84,16 +77,22 @@ export default class CommandTarget {
     }
   }
 
+  async _prepareTestForRecording() {
+    await PlaybackState.playCommand(this._command)
+    PlaybackState.stopPlayingGracefully()
+    UiState.changeView(PlaybackState.lastSelectedView)
+    UiState.selectNextCommand({
+      from: this._command,
+      isCommandTarget: true,
+    })
+  }
+
   _reset() {
     if (this._command && this._command.isBreakpoint) this._toggleBreakpoint()
     this._command = undefined
     this.is = {}
     this._logMessage = undefined
     PlaybackState.toggleIsSingleCommandExecutionEnabled()
-  }
-
-  async _startRecording() {
-    await UiState.startRecording()
   }
 
   _toggleBreakpoint() {

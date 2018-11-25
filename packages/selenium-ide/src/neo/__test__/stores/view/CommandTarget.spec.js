@@ -18,7 +18,6 @@
 import CommandTarget from '../../../stores/view/CommandTarget'
 import Command from '../../../models/Command'
 import UiState from '../../../stores/view/UiState'
-import PlaybackState from '../../../stores/view/PlaybackState'
 jest.mock('../../../stores/view/UiState')
 jest.mock('../../../stores/view/PlaybackState')
 jest.mock('../../../stores/view/Logs')
@@ -82,7 +81,7 @@ describe('CommandTarget', () => {
     expect(commandTarget.is.visited).toBeFalsy()
     expect(command.isBreakpoint).toBeFalsy()
     expect(UiState.isRecording).toBeFalsy()
-    commandTarget.doRecordFromHere({ showModal: false })
+    commandTarget.doRecordFromHere()
     expect(commandTarget.is.visited).toBeFalsy()
     expect(UiState.isRecording).toBeFalsy()
     expect(command.isBreakpoint).toBeFalsy()
@@ -92,7 +91,7 @@ describe('CommandTarget', () => {
     expect(commandTarget.is.visited).toBeFalsy()
     expect(command.isBreakpoint).toBeTruthy()
     expect(UiState.isRecording).toBeFalsy()
-    await commandTarget.doRecordFromHere({ showModal: false })
+    await commandTarget.doRecordFromHere()
     expect(commandTarget.is.visited).toBeTruthy()
     expect(UiState.isRecording).toBeTruthy()
     expect(command.isBreakpoint).toBeFalsy()
