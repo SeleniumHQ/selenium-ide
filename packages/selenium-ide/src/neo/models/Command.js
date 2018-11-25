@@ -142,10 +142,16 @@ export default class Command {
     this.setTarget(jsRep.target)
     this.setTargets(jsRep.targets)
     this.setValue(jsRep.value)
+
+    if (jsRep.opensWindow) {
+      this.setOpensWindow(jsRep.opensWindow)
+      this.setWindowHandleName(jsRep.windowHandleName)
+      this.setWindowTimeout(jsRep.windowTimeout)
+    }
   }
 
   export() {
-    return {
+    let exported = {
       id: this.id,
       comment: this.comment,
       command: this.command,
@@ -153,6 +159,14 @@ export default class Command {
       targets: toJS(this.targets),
       value: this.value,
     }
+
+    if (this.opensWindow) {
+      exported.opensWindow = this.opensWindow
+      exported.windowHandleName = this.windowHandleName
+      exported.windowTimeout = this.windowTimeout
+    }
+
+    return exported
   }
 
   static fromJS = function(jsRep) {
