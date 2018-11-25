@@ -16,7 +16,6 @@
 // under the License.
 
 import uuidv4 from 'uuid/v4'
-import browser from 'webextension-polyfill'
 import { action, reaction, computed, observable } from 'mobx'
 import UiState from './UiState'
 import ModalState from './ModalState'
