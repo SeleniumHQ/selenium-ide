@@ -1,0 +1,98 @@
+{
+  "id": "b0eb1ebb-ea28-4dba-b86e-1e94a925fc6a",
+  "version": "1.1",
+  "name": "select window",
+  "url": "http://the-internet.herokuapp.com",
+  "tests": [{
+    "id": "c4bab89c-85a6-4b89-be6d-653dead81304",
+    "name": "select window",
+    "commands": [{
+      "id": "d2925ba0-55e8-41a5-aded-23f46ebc4852",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9895e357-fa10-45e3-b5f2-f4e50d55a09a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1200x904",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7b05843f-96f4-4520-bd6e-416131444cc0",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Elemental Selenium",
+      "targets": [
+        ["linkText=Elemental Selenium", "linkText"],
+        ["css=.large-4 a", "css:finder"],
+        ["xpath=//a[contains(text(),'Elemental Selenium')]", "xpath:link"],
+        ["xpath=//div[@id='page-footer']/div/div/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://elementalselenium.com/']", "xpath:href"],
+        ["xpath=//div/div/a", "xpath:position"]
+      ],
+      "value": "",
+      "opensWindow": true,
+      "windowHandleName": "win5336",
+      "windowTimeout": 2000
+    }, {
+      "id": "b0caf001-3a6a-41b2-b470-c46084424c6b",
+      "comment": "",
+      "command": "storeWindowHandle",
+      "target": "root",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "952208d9-c857-4ece-9c36-dc6383e6cd80",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${win5336}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2a912487-2f0d-4242-bf98-2020ef0194fb",
+      "comment": "",
+      "command": "assertTitle",
+      "target": "Elemental Selenium: Receive a Free, Weekly Tip on Using Selenium like a Pro",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c346a111-22be-4fd8-a1e2-2cc31a25bb10",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "91f93e94-dcee-491a-957f-e5e6668b3241",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${root}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "17065682-7c81-4906-b2dd-e8a933ad57f4",
+      "comment": "",
+      "command": "assertTitle",
+      "target": "The Internet",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "c2f2d476-d192-4836-9fb2-768fc5c1449c",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["c4bab89c-85a6-4b89-be6d-653dead81304"]
+  }],
+  "urls": ["http://the-internet.herokuapp.com/"],
+  "plugins": [{
+    "id": "nknickobkcecmkiiefhjmiaihliikohm",
+    "name": "Applitools",
+    "version": "1.0.0"
+  }]
+}
