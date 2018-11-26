@@ -20,6 +20,7 @@ import implicitLocators from './implicit-locators'
 import scriptInterpolation from './script-interpolation'
 import waitForCommands from './wait-for-commands'
 import variableName from './variable-name'
+import selectWindow from './select-window'
 
 export const migrators = {
   pause,
@@ -27,6 +28,7 @@ export const migrators = {
   scriptInterpolation,
   waitForCommands,
   variableName,
+  selectWindow,
 }
 
 export default Object.keys(migrators).reduce((migs, migName) => {

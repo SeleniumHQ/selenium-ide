@@ -17,7 +17,7 @@
 
 import migrations from './migrations'
 
-export const VERSIONS = ['1.0', '1.1']
+export const VERSIONS = ['1.0', '1.1', '2.0']
 
 export default function UpgradeProject(project) {
   let r = project
