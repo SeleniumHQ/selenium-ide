@@ -25,6 +25,7 @@ import SuiteSettings from '../../components/SuiteSettings'
 import RenameDialog from '../../components/Dialogs/Rename'
 import BaseUrlDialog from '../../components/Dialogs/BaseUrl'
 import WelcomeDialog from '../../components/Dialogs/Welcome'
+import AlertDialog from '../../components/Dialogs/Alert'
 import ModalState from '../../stores/view/ModalState'
 import { isProduction } from '../../../content/utils'
 
@@ -42,6 +43,7 @@ export default class Modal extends Component {
     return (
       <div>
         <Alert show={show => (ModalState.showAlert = show)} />
+        <AlertDialog show={show => (ModalState.showDialog = show)} />
         <TestSelector
           isEditing={!!ModalState.editedSuite}
           tests={this.props.project.tests}

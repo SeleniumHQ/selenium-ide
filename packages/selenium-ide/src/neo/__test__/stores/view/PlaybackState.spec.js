@@ -20,7 +20,6 @@ import PlaybackState from '../../../stores/view/PlaybackState'
 import UiState from '../../../stores/view/UiState'
 import ProjectStore from '../../../stores/domain/ProjectStore'
 import TestCase from '../../../models/TestCase'
-import Command from '../../../models/Command'
 
 describe('Playback State Call Stack', () => {
   afterEach(() => {
@@ -75,16 +74,5 @@ describe('Playback State Call Stack', () => {
     PlaybackState.currentPlayingIndex = 1
     PlaybackState.callTestCase('second')
     expect(PlaybackState.callstack[0].callee).toBe(second)
-  })
-  it.skip('should return a filtered command stack when referencing it by index', () => {
-    const commands = [
-      new Command(undefined, 'a', '', ''),
-      new Command(undefined, 'b', '', ''),
-      new Command(undefined, 'c', '', ''),
-    ]
-    const runningQueue = PlaybackState.runningQueueFromIndex(commands, 1)
-    expect(runningQueue.length).toBe(2)
-    expect(runningQueue[0].command).toBe('b')
-    expect(runningQueue[1].command).toBe('c')
   })
 })
