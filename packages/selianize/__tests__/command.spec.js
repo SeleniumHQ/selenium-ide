@@ -749,7 +749,17 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).rejects.toThrow(
-      'Can only emit `select window` using name locator'
+      'Can only emit `select window` using handles'
+    )
+  })
+  it('should emit `select window` to select a window by handle', () => {
+    const command = {
+      command: 'selectWindow',
+      target: 'handle=${window}',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      'await driver.switchTo().window(`${vars.window}`);'
     )
   })
   it('should emit `select window` to select a window by name', () => {
@@ -1231,6 +1241,19 @@ describe('command code emitter', () => {
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
       'await driver.wait(until.elementIsDisabled(await driver.findElement(By.css(`#blah`))), 5000);'
+    )
+  })
+  it('should emit new window handling, if command opens a new window', () => {
+    const command = {
+      command: 'click',
+      target: 'css=button',
+      value: '',
+      opensWindow: true,
+      windowHandleName: 'newWin',
+      windowTimeout: 2000,
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      'vars.__handles = await driver.getAllWindowHandles();await driver.wait(until.elementLocated(By.css(`button`)), configuration.timeout);await driver.findElement(By.css(`button`)).then(element => {return element.click();});vars.newWin = await utils.waitForWindow(driver, vars.__handles, 2000);'
     )
   })
 })

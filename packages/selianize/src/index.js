@@ -21,6 +21,7 @@ import TestCaseEmitter from './testcase'
 import CommandEmitter from './command'
 import LocationEmitter from './location'
 import config from './config'
+import utils from './utils'
 
 export default function Selianize(project, _opts, snapshot = {}) {
   const options = { ...config, ..._opts }
@@ -136,3 +137,7 @@ export function ParseError(error) {
 }
 
 export const Location = LocationEmitter
+
+export function getUtilsFile() {
+  return utils.getUtilsFile()
+}

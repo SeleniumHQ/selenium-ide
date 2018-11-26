@@ -26,7 +26,7 @@ import winston from 'winston'
 import glob from 'glob'
 import rimraf from 'rimraf'
 import { js_beautify as beautify } from 'js-beautify'
-import Selianize from 'selianize'
+import Selianize, { getUtilsFile } from 'selianize'
 import Capabilities from './capabilities'
 import Config from './config'
 import Satisfies from './versioner'
@@ -192,9 +192,10 @@ function runProject(project) {
       const tests = code.tests
         .reduce((tests, test) => {
           return (tests += test.code)
-        }, 'const tests = {};')
+        }, 'const utils = require("./utils.js");const tests = {};')
         .concat('module.exports = tests;')
       writeJSFile(path.join(projectPath, 'commons'), tests, '.js')
+      writeJSFile(path.join(projectPath, 'utils'), getUtilsFile(), '.js')
       code.suites.forEach(suite => {
         if (!suite.tests) {
           // not parallel
