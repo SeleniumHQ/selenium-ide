@@ -25,16 +25,11 @@ export function convertToSnake(string) {
 export function getUtilsFile() {
   return `
 async function waitForWindow(driver, handles, timeout) {
-  const startTime = new Date();
-  do {
-    const hndls = await driver.getAllWindowHandles();
-    if (hndls.length > handles.length) {
-      await driver.sleep(Math.max(timeout - (new Date() - startTime), 100));
-      return hndls.find(h => (!handles.includes(h)));
-    } else {
-      await driver.sleep(100);
-    }
-  } while(new Date() - startTime > timeout);
+  await driver.sleep(timeout);
+  const hndls = await driver.getAllWindowHandles();
+  if (hndls.length > handles.length) {
+    return hndls.find(h => (!handles.includes(h)));
+  }
   throw new Error("New window did not appear before timeout");
 }
 
