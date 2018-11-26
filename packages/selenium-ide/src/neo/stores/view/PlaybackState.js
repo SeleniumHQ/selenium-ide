@@ -563,9 +563,9 @@ class PlaybackState {
         ModalState.showDialog(
           {
             type: 'info',
-            title: 'Ready to record',
+            title: 'Start recording',
             description:
-              'Your test is ready to record from the command you selected.  \n\nTo proceed, click one of the buttons below',
+              'You can now start recording.  \n\nThe recording will start from the command you selected.',
             confirmLabel: 'START RECORDING',
             cancelLabel: 'CANCEL',
           },
