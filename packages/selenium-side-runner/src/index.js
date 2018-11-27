@@ -20,6 +20,7 @@
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
+import util from 'util'
 import { fork } from 'child_process'
 import program from 'commander'
 import winston from 'winston'
@@ -148,6 +149,8 @@ if (program.params) {
 configuration.baseUrl = program.baseUrl
   ? program.baseUrl
   : configuration.baseUrl
+
+winston.debug(util.inspect(configuration))
 
 let projectPath
 
