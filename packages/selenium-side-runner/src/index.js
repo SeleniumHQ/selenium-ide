@@ -60,6 +60,10 @@ program
     '--output-directory [directory]',
     'Write test results to files, results written in JSON'
   )
+  .option(
+    '--force',
+    "Forciblly run the project, regardless of project's version"
+  )
   .option('--debug', 'Print debug logs')
 
 if (process.env.NODE_ENV === 'development') {
@@ -149,14 +153,18 @@ let projectPath
 
 function runProject(project) {
   winston.info(`Running ${project.path}`)
-  let warning
-  try {
-    warning = Satisfies(project.version, '1.1')
-  } catch (e) {
-    return Promise.reject(e)
-  }
-  if (warning) {
-    winston.warn(warning)
+  if (!program.force) {
+    let warning
+    try {
+      warning = Satisfies(project.version, '2.0')
+    } catch (e) {
+      return Promise.reject(e)
+    }
+    if (warning) {
+      winston.warn(warning)
+    }
+  } else {
+    winston.warn("--force is set, ignoring project's version")
   }
   if (!project.suites.length) {
     return Promise.reject(
@@ -172,19 +180,23 @@ function runProject(project) {
   fs.mkdirSync(projectPath)
   fs.writeFileSync(
     path.join(projectPath, 'package.json'),
-    JSON.stringify({
-      name: project.name,
-      version: '0.0.0',
-      jest: {
-        modulePaths: [path.join(__dirname, '../node_modules')],
-        setupTestFrameworkScriptFile: require.resolve(
-          'jest-environment-selenium/dist/setup.js'
-        ),
-        testEnvironment: 'jest-environment-selenium',
-        testEnvironmentOptions: configuration,
+    JSON.stringify(
+      {
+        name: project.name,
+        version: '0.0.0',
+        jest: {
+          modulePaths: [path.join(__dirname, '../node_modules')],
+          setupTestFrameworkScriptFile: require.resolve(
+            'jest-environment-selenium/dist/setup.js'
+          ),
+          testEnvironment: 'jest-environment-selenium',
+          testEnvironmentOptions: configuration,
+        },
+        dependencies: project.dependencies || {},
       },
-      dependencies: project.dependencies || {},
-    })
+      null,
+      2
+    )
   )
 
   return Selianize(project, { silenceErrors: true }, project.snapshot).then(

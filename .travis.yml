@@ -26,4 +26,4 @@ script:
   - yarn lint
   - yarn test
   - yarn test:webdriver
-  - yarn test:runner --server http://localhost:4444/wd/hub
+  - yarn test:runner --server http://localhost:4444/wd/hub --force
