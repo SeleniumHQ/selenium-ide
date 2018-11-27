@@ -66,13 +66,32 @@ export default class Debugger {
   }
 
   getDocument() {
-    return this.sendCommand('DOM.getDocument').then(doc => doc.root)
+    return this.sendCommand('DOM.getDocument', {
+      pierce: true,
+      depth: -1,
+    }).then(doc => doc.root)
   }
 
   querySelector(selector, nodeId) {
-    return this.sendCommand('DOM.querySelector', { selector, nodeId }).then(
-      res => res && res.nodeId
-    )
+    return this.sendCommand('DOM.querySelector', {
+      selector,
+      nodeId,
+    }).then(res => res && res.nodeId)
+  }
+
+  getFrameTree() {
+    return this.sendCommand('Page.getFrameTree').then(doc => doc.frameTree)
+  }
+
+  static getFrameId(frameTree, frameIndices) {
+    if (frameIndices.length === 1) {
+      return frameTree[frameIndices.shift()].frame.id
+    } else {
+      return this.getFrameId(
+        frameTree[frameIndices.shift()].childFrames,
+        frameIndices
+      )
+    }
   }
 }
 

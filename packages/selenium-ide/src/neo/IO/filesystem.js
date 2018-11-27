@@ -16,7 +16,6 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import parser from 'ua-parser-js'
 import { js_beautify as beautify } from 'js-beautify'
 import UpgradeProject from './migrate'
 import {
@@ -34,9 +33,8 @@ import Selianize, { ParseError } from 'selianize'
 import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
-
+import { userAgent as parsedUA } from '../../common/utils'
 export const supportedFileFormats = '.side, text/html'
-const parsedUA = parser(window.navigator.userAgent)
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -127,7 +125,8 @@ function exportProject(project) {
 }
 
 let previousFile = null
-function createBlob(_mimeType, data) {
+// eslint-disable-next-line
+function createBlob(mimeType, data) {
   const blob = new Blob([data], {
     type: 'text/plain',
   })
@@ -156,11 +155,15 @@ export function loadProject(project, file) {
         const type = verifyFile(contents)
         if (type === FileTypes.Suite) {
           ModalState.importSuite(contents, files => {
-            loadJSProject(project, migrateProject(files))
+            try {
+              loadJSProject(project, migrateProject(files))
+            } catch (error) {
+              displayError(error)
+            }
           })
         } else if (type === FileTypes.TestCase) {
-          const { test, baseUrl } = migrateTestCase(contents)
-          if (!project.urls.includes(baseUrl)) {
+          let { test, baseUrl } = migrateTestCase(contents)
+          if (project.urls.length && !project.urls.includes(baseUrl)) {
             ModalState.showAlert(
               {
                 title: 'Migrate test case',

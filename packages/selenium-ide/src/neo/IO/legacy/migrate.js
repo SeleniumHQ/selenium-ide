@@ -120,7 +120,9 @@ function migrateSuite(suite, fileMap, project) {
 export function migrateTestCase(data) {
   const sanitized = sanitizeXml(data)
   const result = JSON.parse(convert.xml2json(sanitized, { compact: true }))
-  const baseUrl = result.html.head.link._attributes.href
+  const baseUrl = result.html.head.link
+    ? result.html.head.link._attributes.href
+    : undefined
   let tr = result.html.body.table.tbody.tr
   tr = Array.isArray(tr) ? tr : [tr]
   const test = {

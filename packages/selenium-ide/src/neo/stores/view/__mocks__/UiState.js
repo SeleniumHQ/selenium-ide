@@ -15,12 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default {
-  runtime: {
-    onMessage: {
-      addListener: jest.fn(),
-    },
-    sendMessage: jest.fn().mockReturnValue(Promise.reject()),
-    getURL: jest.fn(),
-  },
+const UiState = {}
+UiState.changeView = jest.fn()
+UiState.selectNextCommand = jest.fn()
+UiState.isRecording = false
+UiState.startRecording = () => {
+  UiState.isRecording = UiState.isRecording ? false : true
 }
+export default UiState

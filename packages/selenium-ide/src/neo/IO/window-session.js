@@ -116,6 +116,12 @@ export class WindowSession {
       focused: true,
     })
   }
+
+  async focusPlayingWindow() {
+    await browser.windows.update(this.generalUsePlayingWindowId, {
+      focused: true,
+    })
+  }
 }
 
 if (!window._windowSession) window._windowSession = new WindowSession()

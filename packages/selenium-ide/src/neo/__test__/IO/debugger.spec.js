@@ -15,12 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default {
-  runtime: {
-    onMessage: {
-      addListener: jest.fn(),
-    },
-    sendMessage: jest.fn().mockReturnValue(Promise.reject()),
-    getURL: jest.fn(),
-  },
-}
+import Debugger from '../../IO/debugger'
+
+describe('debugger', () => {
+  it('getFrameId', () => {
+    const childFrames = [
+      { frame: { id: 'a' } },
+      { frame: { id: 'b' }, childFrames: [{ frame: { id: 'ba' } }] },
+      { frame: { id: 'c' } },
+    ]
+    const frameIds = ['1', '0']
+    expect(Debugger.getFrameId(childFrames, frameIds)).toEqual('ba')
+  })
+})

@@ -65,6 +65,11 @@ describe('Project Store', () => {
     store.addUrl(url)
     expect(store.urls.length).toBe(1)
   })
+  it('should not attempt to add a URL if undefined', () => {
+    const store = new ProjectStore()
+    store.addUrl(undefined)
+    expect(store.urls.length).toBe(0)
+  })
   it('should not add duplicates to the url list', () => {
     const store = new ProjectStore()
     const url = new URL('http://www.seleniumhq.org/').href

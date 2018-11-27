@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: off, no-useless-escape: off */
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -20,18 +21,28 @@ import goog, { bot } from './closure-polyfill'
 import { Recorder, recorder, record } from './record-api'
 import { attach } from './prompt-recorder'
 import LocatorBuilders from './locatorBuilders'
+import { isTest, isFirefox } from '../common/utils'
 
 export { record }
 export const locatorBuilders = new LocatorBuilders(window)
 
 attach(record)
 
-let typeTarget
-let typeLock = 0
-let focusTarget = null
-let focusValue = null
-let tempValue = null
-let preventType = false
+export function _isValidForm(tagName, target) {
+  return !!(
+    tagName == 'form' &&
+    (target.hasAttribute('id') || target.hasAttribute('name')) &&
+    !target.hasAttribute('onsubmit') &&
+    isFirefox()
+  )
+}
+
+export function _recordFormAction(target) {
+  if (target.hasAttribute('id'))
+    record('submit', [['id=' + target.id, 'id']], '')
+  else if (target.hasAttribute('name'))
+    record('submit', [['name=' + target.name, 'name']], '')
+}
 
 Recorder.inputTypes = [
   'text',
@@ -53,7 +64,12 @@ Recorder.inputTypes = [
 ]
 Recorder.addEventHandler('type', 'change', function(event) {
   // © Chen-Chieh Ping, SideeX Team
-  if (event.target.tagName && !preventType && typeLock == 0 && (typeLock = 1)) {
+  if (
+    event.target.tagName &&
+    !this.recordingState.preventType &&
+    this.recordingState.typeLock == 0 &&
+    (this.recordingState.typeLock = 1)
+  ) {
     // END
     let tagName = event.target.tagName.toLowerCase()
     let type = event.target.type
@@ -66,30 +82,23 @@ Recorder.addEventHandler('type', 'change', function(event) {
         )
 
         // © Chen-Chieh Ping, SideeX Team
-        if (enterTarget != null) {
+        if (this.recordingState.enterTarget != null) {
           let tempTarget = event.target.parentElement
           let formChk = tempTarget.tagName.toLowerCase()
           while (formChk != 'form' && formChk != 'body') {
             tempTarget = tempTarget.parentElement
             formChk = tempTarget.tagName.toLowerCase()
           }
-          if (
-            formChk == 'form' &&
-            (tempTarget.hasAttribute('id') ||
-              tempTarget.hasAttribute('name')) &&
-            !tempTarget.hasAttribute('onsubmit')
-          ) {
-            if (tempTarget.hasAttribute('id'))
-              record('submit', [['id=' + tempTarget.id, 'id']], '')
-            else if (tempTarget.hasAttribute('name'))
-              record('submit', [['name=' + tempTarget.name, 'name']], '')
+
+          if (_isValidForm(formChk, tempTarget)) {
+            _recordFormAction(tempTarget)
           } else
             record(
               'sendKeys',
-              locatorBuilders.buildAll(enterTarget),
+              locatorBuilders.buildAll(this.recordingState.enterTarget),
               '${KEY_ENTER}'
             )
-          enterTarget = null
+          this.recordingState.enterTarget = null
         }
         // END
       } else {
@@ -103,27 +112,33 @@ Recorder.addEventHandler('type', 'change', function(event) {
       record('type', locatorBuilders.buildAll(event.target), event.target.value)
     }
   }
-  typeLock = 0
+  this.recordingState.typeLock = 0
 })
 
 Recorder.addEventHandler('type', 'input', function(event) {
-  //console.log(event.target);
-  typeTarget = event.target
+  this.recordingState.typeTarget = event.target
 })
 
+function eventIsTrusted(event) {
+  return isTest ? true : event.isTrusted
+}
+
 // © Jie-Lin You, SideeX Team
-let preventClickTwice = false
 Recorder.addEventHandler(
   'clickAt',
   'click',
   function(event) {
-    if (event.button == 0 && !preventClick && event.isTrusted) {
-      if (!preventClickTwice) {
+    if (
+      event.button == 0 &&
+      !this.recordingState.preventClick &&
+      eventIsTrusted(event)
+    ) {
+      if (!this.recordingState.preventClickTwice) {
         record('click', locatorBuilders.buildAll(event.target), '')
-        preventClickTwice = true
+        this.recordingState.preventClickTwice = true
       }
       setTimeout(function() {
-        preventClickTwice = false
+        this.recordingState.preventClickTwice = false
       }, 30)
     }
   },
@@ -142,30 +157,6 @@ Recorder.addEventHandler(
 )
 // END
 
-// © Chen-Chieh Ping, SideeX Team
-let inp = document.getElementsByTagName('input')
-for (let i = 0; i < inp.length; i++) {
-  if (Recorder.inputTypes.indexOf(inp[i].type) >= 0) {
-    inp[i].addEventListener('focus', function(event) {
-      focusTarget = event.target
-      focusValue = focusTarget.value
-      tempValue = focusValue
-      preventType = false
-    })
-    inp[i].addEventListener('blur', function() {
-      focusTarget = null
-      focusValue = null
-      tempValue = null
-    })
-  }
-}
-// END
-
-// © Chen-Chieh Ping, SideeX Team
-let preventClick = false
-let enterTarget = null
-let enterValue = null
-let tabCheck = null
 Recorder.addEventHandler(
   'sendKeys',
   'keydown',
@@ -176,123 +167,120 @@ Recorder.addEventHandler(
       let type = event.target.type
       if (tagName == 'input' && Recorder.inputTypes.indexOf(type) >= 0) {
         if (key == 13) {
-          enterTarget = event.target
-          enterValue = enterTarget.value
+          this.recordingState.enterTarget = event.target
+          this.recordingState.enterValue = this.recordingState.enterTarget.value
           let tempTarget = event.target.parentElement
           let formChk = tempTarget.tagName.toLowerCase()
-          //console.log(tempValue + " " + enterTarget.value + " " + tabCheck + " " + enterTarget + " " + focusValue);
-          // console.log(focusValue);
-          // console.log(enterTarget.value);
-          if (tempValue == enterTarget.value && tabCheck == enterTarget) {
+          if (
+            this.recordingState.tempValue ==
+              this.recordingState.enterTarget.value &&
+            this.recordingState.tabCheck == this.recordingState.enterTarget
+          ) {
             record(
               'sendKeys',
-              locatorBuilders.buildAll(enterTarget),
+              locatorBuilders.buildAll(this.recordingState.enterTarget),
               '${KEY_ENTER}'
             )
-            enterTarget = null
-            preventType = true
-          } else if (focusValue == enterTarget.value) {
+            this.recordingState.enterTarget = null
+            this.recordingState.preventType = true
+          } else if (
+            this.recordingState.focusValue == this.recordingState.enterValue
+          ) {
             while (formChk != 'form' && formChk != 'body') {
               tempTarget = tempTarget.parentElement
               formChk = tempTarget.tagName.toLowerCase()
             }
-            if (
-              formChk == 'form' &&
-              (tempTarget.hasAttribute('id') ||
-                tempTarget.hasAttribute('name')) &&
-              !tempTarget.hasAttribute('onsubmit')
-            ) {
-              if (tempTarget.hasAttribute('id'))
-                record('submit', [['id=' + tempTarget.id]], '')
-              else if (tempTarget.hasAttribute('name'))
-                record('submit', [['name=' + tempTarget.name]], '')
+            if (_isValidForm(formChk, tempTarget)) {
+              _recordFormAction(tempTarget)
             } else
               record(
                 'sendKeys',
-                locatorBuilders.buildAll(enterTarget),
+                locatorBuilders.buildAll(this.recordingState.enterTarget),
                 '${KEY_ENTER}'
               )
-            enterTarget = null
+            this.recordingState.enterTarget = null
           }
-          if (typeTarget.tagName && !preventType && (typeLock = 1)) {
+          if (
+            this.recordingState.typeTarget &&
+            this.recordingState.typeTarget.tagName &&
+            !this.recordingState.preventType &&
+            (this.recordingState.typeLock = 1)
+          ) {
             // END
-            tagName = typeTarget.tagName.toLowerCase()
-            type = typeTarget.type
+            tagName = this.recordingState.typeTarget.tagName.toLowerCase()
+            type = this.recordingState.typeTarget.type
             if ('input' == tagName && Recorder.inputTypes.indexOf(type) >= 0) {
-              if (typeTarget.value.length > 0) {
+              if (this.recordingState.typeTarget.value.length > 0) {
                 record(
                   'type',
-                  locatorBuilders.buildAll(typeTarget),
-                  typeTarget.value
+                  locatorBuilders.buildAll(this.recordingState.typeTarget),
+                  this.recordingState.typeTarget.value
                 )
 
                 // © Chen-Chieh Ping, SideeX Team
-                if (enterTarget != null) {
-                  tempTarget = typeTarget.parentElement
+                if (this.recordingState.enterTarget != null) {
+                  tempTarget = this.recordingState.typeTarget.parentElement
                   formChk = tempTarget.tagName.toLowerCase()
                   while (formChk != 'form' && formChk != 'body') {
                     tempTarget = tempTarget.parentElement
                     formChk = tempTarget.tagName.toLowerCase()
                   }
-                  if (
-                    formChk == 'form' &&
-                    (tempTarget.hasAttribute('id') ||
-                      tempTarget.hasAttribute('name')) &&
-                    !tempTarget.hasAttribute('onsubmit')
-                  ) {
-                    if (tempTarget.hasAttribute('id'))
-                      record('submit', [['id=' + tempTarget.id, 'id']], '')
-                    else if (tempTarget.hasAttribute('name'))
-                      record(
-                        'submit',
-                        [['name=' + tempTarget.name, 'name']],
-                        ''
-                      )
+                  if (_isValidForm(formChk, tempTarget)) {
+                    _recordFormAction(tempTarget)
                   } else
                     record(
                       'sendKeys',
-                      locatorBuilders.buildAll(enterTarget),
+                      locatorBuilders.buildAll(this.recordingState.enterTarget),
                       '${KEY_ENTER}'
                     )
-                  enterTarget = null
+                  this.recordingState.enterTarget = null
                 }
                 // END
               } else {
                 record(
                   'type',
-                  locatorBuilders.buildAll(typeTarget),
-                  typeTarget.value
+                  locatorBuilders.buildAll(this.recordingState.typeTarget),
+                  this.recordingState.typeTarget.value
                 )
               }
             } else if ('textarea' == tagName) {
               record(
                 'type',
-                locatorBuilders.buildAll(typeTarget),
-                typeTarget.value
+                locatorBuilders.buildAll(this.recordingState.typeTarget),
+                this.recordingState.typeTarget.value
               )
             }
           }
-          preventClick = true
+          this.recordingState.preventClick = true
           setTimeout(function() {
-            preventClick = false
+            this.recordingState.preventClick = false
           }, 500)
           setTimeout(function() {
-            if (enterValue != event.target.value) enterTarget = null
+            if (this.recordingState.enterValue != event.target.value)
+              this.recordingState.enterTarget = null
           }, 50)
         }
 
         let tempbool = false
         if ((key == 38 || key == 40) && event.target.value != '') {
-          if (focusTarget != null && focusTarget.value != tempValue) {
+          if (
+            this.recordingState.focusTarget != null &&
+            this.recordingState.focusTarget.value !=
+              this.recordingState.tempValue
+          ) {
             tempbool = true
-            tempValue = focusTarget.value
+            this.recordingState.tempValue = this.recordingState.focusTarget.value
           }
           if (tempbool) {
-            record('type', locatorBuilders.buildAll(event.target), tempValue)
+            record(
+              'type',
+              locatorBuilders.buildAll(event.target),
+              this.recordingState.tempValue
+            )
           }
 
           setTimeout(function() {
-            tempValue = focusTarget.value
+            this.recordingState.tempValue = this.recordingState.focusTarget.value
           }, 250)
 
           if (key == 38)
@@ -307,16 +295,16 @@ Recorder.addEventHandler(
               locatorBuilders.buildAll(event.target),
               '${KEY_DOWN}'
             )
-          tabCheck = event.target
+          this.recordingState.tabCheck = event.target
         }
         if (key == 9) {
-          if (tabCheck == event.target) {
+          if (this.recordingState.tabCheck == event.target) {
             record(
               'sendKeys',
               locatorBuilders.buildAll(event.target),
               '${KEY_TAB}'
             )
-            preventType = true
+            this.recordingState.preventType = true
           }
         }
       }
@@ -326,7 +314,6 @@ Recorder.addEventHandler(
 )
 // END
 
-// eslint-disable-next-line no-unused-vars
 let mousedown, mouseup, selectMouseup, selectMousedown, mouseoverQ, clickLocator
 // © Shuo-Heng Shih, SideeX Team
 Recorder.addEventHandler(
@@ -476,7 +463,7 @@ Recorder.addEventHandler(
         record('mouseDown', locatorBuilders.buildAll(mousedown.target), '')
         record('mouseUp', locatorBuilders.buildAll(event.target), '')
       } else if (mousedown && mousedown.target === event.target) {
-        let _target = locatorBuilders.buildAll(mousedown.target)
+        let target = locatorBuilders.buildAll(mousedown.target)
         // setTimeout(function() {
         //     if (!self.clickLocator)
         //         record("click", target, '');
@@ -554,10 +541,10 @@ Recorder.addEventHandler(
 
 // © Shuo-Heng Shih, SideeX Team
 let nowNode = 0,
-  mouseoverLocator, // eslint-disable-line no-unused-vars
+  mouseoverLocator,
   nodeInsertedLocator,
-  nodeAttrChange, // eslint-disable-line no-unused-vars
-  nodeAttrChangeTimeout // eslint-disable-line no-unused-vars
+  nodeAttrChange,
+  nodeAttrChangeTimeout
 Recorder.addEventHandler(
   'mouseOver',
   'mouseover',
@@ -650,7 +637,7 @@ let pageLoaded = true
 Recorder.addEventHandler(
   'checkPageLoaded',
   'readystatechange',
-  function(_event) {
+  function(event) {
     if (window.document.readyState === 'loading') {
       pageLoaded = false
     } else {
@@ -736,7 +723,7 @@ browser.runtime
   .sendMessage({
     attachRecorderRequest: true,
   })
-  .catch(function(_reason) {
+  .catch(function(reason) {
     // Failed silently if receiveing end does not exist
   })
 
@@ -748,8 +735,8 @@ Recorder.prototype.getOptionLocator = function(option) {
     return (
       'label=regexp:' +
       label
-        // eslint-disable-next-line no-useless-escape
         .replace(/[\(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
+          // eslint-disable-line no-useless-escape
           return '\\' + str
         })
         .replace(/\s+/g, function(str) {
@@ -860,8 +847,8 @@ function getOptionLocator(option) {
     return (
       'label=regexp:' +
       label
-        // eslint-disable-next-line no-useless-escape
         .replace(/[(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function(str) {
+          // eslint-disable-line no-useless-escape
           return '\\' + str
         })
         .replace(/\s+/g, function(str) {

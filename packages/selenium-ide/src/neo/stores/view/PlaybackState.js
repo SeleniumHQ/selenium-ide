@@ -16,7 +16,6 @@
 // under the License.
 
 import uuidv4 from 'uuid/v4'
-import browser from 'webextension-polyfill'
 import { action, reaction, computed, observable } from 'mobx'
 import UiState from './UiState'
 import ModalState from './ModalState'
@@ -35,6 +34,7 @@ import {
 import WindowSession from '../../IO/window-session'
 import ExtCommand from '../../IO/SideeX/ext-command'
 import WebDriverExecutor from '../../IO/playback/webdriver'
+import CommandTarget from './CommandTarget'
 
 class PlaybackState {
   @observable
@@ -84,6 +84,10 @@ class PlaybackState {
   callstack = []
   @observable
   currentExecutingCommandNode = null
+  @observable
+  isSilent = false
+  @observable
+  isSingleCommandExecutionEnabled = false
 
   constructor() {
     this.maxDelay = 3000
@@ -92,7 +96,7 @@ class PlaybackState {
     this.logger = new Logger(Channels.PLAYBACK)
     this.lastSelectedView = undefined
     this.filteredTests = []
-
+    this.commandTarget = new CommandTarget()
     this.extCommand = new ExtCommand(WindowSession)
     this.browserDriver = new WebDriverExecutor()
 
@@ -114,6 +118,10 @@ class PlaybackState {
   @computed
   get hasFinishedSuccessfully() {
     return this.errors === 0 && !this.forceTestCaseFailure
+  }
+
+  hasFinishedSilently() {
+    return this.isSilent
   }
 
   @computed
@@ -150,6 +158,16 @@ class PlaybackState {
   @computed
   get canPlaySuite() {
     return UiState.selectedTest.suite && !this.isPlayingTest
+  }
+
+  @action.bound
+  toggleIsSilent() {
+    this.isSilent = !this.isSilent
+  }
+
+  @action.bound
+  toggleIsSingleCommandExecutionEnabled() {
+    this.isSingleCommandExecutionEnabled = !this.isSingleCommandExecutionEnabled
   }
 
   @action.bound
@@ -250,7 +268,7 @@ class PlaybackState {
     if (this.paused) {
       this.resume(true)
     } else if (!this.isPlaying) {
-      this.startPlaying(UiState.selectedCommand, true)
+      this.startPlaying(UiState.selectedCommand, { breakOnNextCommand: true })
     }
   }
 
@@ -294,28 +312,28 @@ class PlaybackState {
     this._startPlayingCollection(suite, suite.tests, 'suitePlayackStarted')
   }
 
-  runningQueueFromIndex(commands, index) {
-    return commands.slice(index)
-  }
-
   @action.bound
-  startPlaying(command, breakOnNextCommand = false) {
+  startPlaying(
+    command,
+    controls = {
+      breakOnNextCommand: false,
+      playToThisPoint: false,
+      recordFromHere: false,
+    }
+  ) {
     const playTest = action(() => {
-      this.breakOnNextCommand = breakOnNextCommand
+      this.breakOnNextCommand = controls.breakOnNextCommand
       const { test } = UiState.selectedTest
       this.resetState()
       this.runId = uuidv4()
       this.currentRunningSuite = undefined
       this.currentRunningTest = test
       this.testsCount = 1
-      let currentPlayingIndex = 0
       if (command && command instanceof Command) {
-        currentPlayingIndex = test.commands.indexOf(command)
+        if (controls.playToThisPoint || controls.recordFromHere)
+          this.commandTarget.load(command, controls)
       }
-      this.runningQueue = this.runningQueueFromIndex(
-        test.commands.peek(),
-        currentPlayingIndex
-      )
+      this.runningQueue = test.commands.peek()
       const pluginsLogs = {}
       if (PluginManager.plugins.length)
         this.logger.log('Preparing plugins for test run...')
@@ -510,6 +528,7 @@ class PlaybackState {
       }
       this.stopPlayingGracefully()
     }
+    this.commandTarget.doCleanup({ isTestAborted: this.aborted })
   }
 
   @action.bound
@@ -524,6 +543,7 @@ class PlaybackState {
 
   @action.bound
   resume(breakOnNextCommand = false) {
+    this.commandTarget.doPlayToThisPoint()
     UiState.changeView('Executing')
     UiState.selectTest(
       this.stackCaller,
@@ -537,15 +557,32 @@ class PlaybackState {
   }
 
   @action.bound
-  break(command) {
-    this.breakOnNextCommand = false
-    this.paused = true
-    UiState.selectCommand(command)
-    browser.windows.getCurrent().then(windowInfo => {
-      browser.windows.update(windowInfo.id, {
-        focused: true,
+  async break(command) {
+    if (this.commandTarget.is.recordFromHere) {
+      this.commandTarget.doRecordFromHere(async () => {
+        ModalState.showDialog(
+          {
+            type: 'info',
+            title: 'Start recording',
+            description:
+              'You can now start recording.  \n\nThe recording will start from the command you selected.',
+            confirmLabel: 'START RECORDING',
+            cancelLabel: 'CANCEL',
+          },
+          async choseProceed => {
+            if (choseProceed) {
+              await UiState.startRecording()
+              await WindowSession.focusPlayingWindow()
+            }
+          }
+        )
       })
-    })
+    } else {
+      this.breakOnNextCommand = false
+      this.paused = true
+      UiState.selectCommand(command)
+      WindowSession.focusIDEWindow()
+    }
   }
 
   @action.bound
@@ -568,6 +605,7 @@ class PlaybackState {
       } else {
         if (!this.hasFailed && this.lastSelectedView) {
           UiState.changeView(this.lastSelectedView)
+          this.commandTarget.doCleanup({ isTestAborted: this.aborted })
         }
         this.lastSelectedView = undefined
         if (this.currentRunningSuite) {

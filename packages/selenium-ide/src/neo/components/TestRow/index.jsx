@@ -27,6 +27,7 @@ import MoreButton from '../ActionButtons/More'
 import ListMenu, { ListMenuItem, ListMenuSeparator } from '../ListMenu'
 import MultilineEllipsis from '../MultilineEllipsis'
 import { withOnContextMenu } from '../ContextMenu'
+import ModalState from '../../stores/view/ModalState'
 import './style.css'
 
 export const Type = 'command'
@@ -110,6 +111,7 @@ class TestRow extends React.Component {
     className: PropTypes.string,
     status: PropTypes.string,
     readOnly: PropTypes.bool,
+    singleCommandExecutionEnabled: PropTypes.bool,
     command: PropTypes.object.isRequired,
     new: PropTypes.func,
     isPristine: PropTypes.bool,
@@ -170,7 +172,13 @@ class TestRow extends React.Component {
     } else if (!this.props.isPristine && noModifiers && key === 'B') {
       this.props.command.toggleBreakpoint()
     } else if (!this.props.isPristine && noModifiers && key === 'S') {
-      this.props.startPlayingHere(this.props.command)
+      this.props.startPlayingHere(this.props.command, {
+        playToThisPoint: true,
+      })
+    } else if (!this.props.isPristine && noModifiers && key === 'U') {
+      this.props.startPlayingHere(this.props.command, {
+        recordFromHere: true,
+      })
     } else if (!this.props.isPristine && noModifiers && key === 'X') {
       this.props.executeCommand(this.props.command)
     } else if (this.props.moveSelection && noModifiers && e.key === 'ArrowUp') {
@@ -227,7 +235,20 @@ class TestRow extends React.Component {
   }
   clearAll() {
     if (!this.props.readOnly) {
-      this.props.clearAllCommands()
+      ModalState.showAlert(
+        {
+          title: 'Clear all test commands',
+          description:
+            "You're about to remove all of the commands in this test. Do you want to proceed?",
+          confirmLabel: 'Clear all commands',
+          cancelLabel: 'Cancel',
+        },
+        choseProceed => {
+          if (choseProceed) {
+            this.props.clearAllCommands()
+          }
+        }
+      )
     }
   }
   render() {
@@ -280,19 +301,33 @@ class TestRow extends React.Component {
           <ListMenuItem
             label="S"
             onClick={() => {
-              this.props.startPlayingHere(this.props.command)
+              this.props.startPlayingHere(this.props.command, {
+                playToThisPoint: true,
+              })
             }}
           >
-            Play from here
+            Play to this point
           </ListMenuItem>
           <ListMenuItem
-            label="X"
+            label="U"
             onClick={() => {
-              this.props.executeCommand(this.props.command)
+              this.props.startPlayingHere(this.props.command, {
+                recordFromHere: true,
+              })
             }}
           >
-            Execute this command
+            Record from here
           </ListMenuItem>
+          {this.props.isSingleCommandExecutionEnabled && (
+            <ListMenuItem
+              label="X"
+              onClick={() => {
+                this.props.executeCommand(this.props.command)
+              }}
+            >
+              Execute this command
+            </ListMenuItem>
+          )}
         </ListMenu>
       ) : null
     //setting component of context menu.
@@ -321,7 +356,7 @@ class TestRow extends React.Component {
         }
         onClick={this.select}
         onDoubleClick={() => {
-          this.props.executeCommand && !this.props.readOnly
+          this.props.executeCommand && this.props.singleCommandExecutionEnabled
             ? this.props.executeCommand(this.props.command)
             : undefined
         }}

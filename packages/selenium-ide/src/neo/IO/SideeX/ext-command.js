@@ -16,15 +16,12 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import parser from 'ua-parser-js'
 import Debugger, { convertLocator } from '../debugger'
 import PlaybackState from '../../stores/view/PlaybackState'
 import variables from '../../stores/view/Variables'
 import { absolutifyUrl } from '../playback/utils'
-import { Logger, Channels } from '../../stores/view/Logs'
+import { searchDocTree, userAgent as parsedUA } from '../../../common/utils'
 import './bootstrap'
-
-const parsedUA = parser(window.navigator.userAgent)
 
 function playbackPausing() {
   return (
@@ -43,10 +40,9 @@ export default class ExtCommand {
     this.waitTimes = 60
 
     this.attached = false
-    this.logger = new Logger(Channels.PLAYBACK)
 
     // Use ES6 arrow function to bind correct this
-    this.tabsOnUpdatedHandler = (tabId, changeInfo, _tabInfo) => {
+    this.tabsOnUpdatedHandler = (tabId, changeInfo, tabInfo) => { // eslint-disable-line
       if (changeInfo.status) {
         if (changeInfo.status == 'loading') {
           this.setLoading(tabId)
@@ -111,7 +107,6 @@ export default class ExtCommand {
     }
     this.attached = true
     browser.tabs.onUpdated.addListener(this.tabsOnUpdatedHandler)
-    browser.tabs.onRemoved.addListener(this.tabsOnRemovedHandler)
     browser.runtime.onMessage.addListener(this.frameLocationMessageHandler)
     browser.webNavigation.onCreatedNavigationTarget.addListener(
       this.newTabHandler
@@ -522,6 +517,26 @@ export default class ExtCommand {
     }
   }
 
+  getFrameIds() {
+    const frameLocation = this.getCurrentPlayingFrameLocation()
+    const frameIds = frameLocation.split(':')
+    frameIds.shift()
+    if (frameIds.length > 0) return frameIds
+  }
+
+  async getDocNodeId(connection) {
+    const docTree = await connection.getDocument()
+    const frameIds = this.getFrameIds()
+    if (frameIds) {
+      const { childFrames } = await connection.getFrameTree()
+      const frameId = Debugger.getFrameId(childFrames, frameIds)
+      const node = searchDocTree(docTree, 'frameId', frameId)
+      return node.contentDocument.children[0].children[1].nodeId
+    } else {
+      return docTree.nodeId
+    }
+  }
+
   async doSendKeys(locator, value, top) {
     const browserName = parsedUA.browser.name
     if (browserName === 'Chrome' && value.indexOf('${KEY_ENTER}') !== -1) {
@@ -545,9 +560,11 @@ export default class ExtCommand {
       }
       try {
         await connection.attach()
-        const docNode = await connection.getDocument()
         const selector = await this.convertToQuerySelector(locator)
-        const nodeId = await connection.querySelector(selector, docNode.nodeId)
+        const nodeId = await connection.querySelector(
+          selector,
+          await this.getDocNodeId(connection)
+        )
         const parts = value.split('${KEY_ENTER}')
         let n = 0
         while (n < parts.length) {

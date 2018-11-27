@@ -15,12 +15,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
+let element
+
 export default {
-  runtime: {
-    onMessage: {
-      addListener: jest.fn(),
-    },
-    sendMessage: jest.fn().mockReturnValue(Promise.reject()),
-    getURL: jest.fn(),
+  dom: {
+    DomHelper: jest.fn(),
   },
 }
+
+const core = {
+  firefox: jest.fn(),
+}
+
+core.firefox.unwrap = input => {
+  element = input
+  return element
+}
+
+const bot = {
+  locators: jest.fn(),
+}
+
+bot.locators.findElement = () => {
+  return element
+}
+
+export { core, bot }

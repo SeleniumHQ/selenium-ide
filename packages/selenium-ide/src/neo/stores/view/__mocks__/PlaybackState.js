@@ -15,12 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default {
-  runtime: {
-    onMessage: {
-      addListener: jest.fn(),
-    },
-    sendMessage: jest.fn().mockReturnValue(Promise.reject()),
-    getURL: jest.fn(),
-  },
-}
+const PlaybackState = {}
+PlaybackState.stopPlayingGracefully = jest.fn()
+PlaybackState.playCommand = jest.fn()
+PlaybackState.clearCommandStates = jest.fn()
+PlaybackState.toggleIsSingleCommandExecutionEnabled = jest.fn()
+PlaybackState.toggleIsSilent = jest.fn()
+export default PlaybackState
