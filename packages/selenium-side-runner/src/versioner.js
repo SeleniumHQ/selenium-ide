@@ -29,7 +29,7 @@ export default function Satisfies(strGolden, strVersion) {
   } else {
     throw new Error(
       semver.gt(version, golden)
-        ? 'project file is too old for the runner, upgrade the project via the IDE'
+        ? 'project file is too old for the runner, upgrade the project via the IDE (or use --force)'
         : 'runner is too old to run the project file, upgrade the runner using: `npm i -g selenium-side-runner@latest`'
     )
   }
