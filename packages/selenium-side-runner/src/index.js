@@ -107,7 +107,11 @@ const configurationFilePath = program.configurationFile || '.side.yml'
 try {
   Object.assign(
     configuration,
-    Config.load(path.join(process.cwd(), configurationFilePath))
+    Config.load(
+      path.isAbsolute(configurationFilePath)
+        ? configurationFilePath
+        : path.join(process.cwd(), configurationFilePath)
+    )
   )
 } catch (e) {
   winston.debug('Could not load ' + configurationFilePath)
@@ -284,7 +288,10 @@ function runJest(project) {
           ? [
               '--json',
               '--outputFile',
-              path.join(program.outputDirectory, `${project.name}.json`),
+              path.isAbsolute(program.outputDirectory)
+                ? path.join(program.outputDirectory, `${project.name}.json`)
+                : '../' +
+                  path.join(program.outputDirectory, `${project.name}.json`),
             ]
           : []
       )
