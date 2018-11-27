@@ -30,7 +30,7 @@ export default {
 }
 
 function matchStringPairs(input) {
-  const regex = /([^ =]*) ?= ?(".*"|[^ ]*)/g
+  const regex = /([^ =]*) ?= ?(".*"|\[.*\]|[^ ]*)/g
   let result
   const splitCapabilities = []
   while ((result = regex.exec(input)) !== null) {
@@ -57,8 +57,12 @@ function parseStringValue(value) {
     return value.match(/((\w|-)*)/g).filter(s => !!s)
   }
   try {
-    return JSON.parse(value)
+    let parsed = JSON.parse(value)
+    if (typeof parsed === 'string') {
+      parsed = parsed.trim()
+    }
+    return parsed
   } catch (e) {
-    return value
+    return value.trim()
   }
 }

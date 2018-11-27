@@ -70,10 +70,10 @@ describe('capabilities string parser', () => {
     })
   })
   it('should parse dot-notation arrays', () => {
-    const capabilities = 'chromeOptions.args=[disable-infobars]'
+    const capabilities = 'chromeOptions.args=[disable-infobars, headless]'
     expect(Capabilities.parseString(capabilities)).toEqual({
       chromeOptions: {
-        args: ['disable-infobars'],
+        args: ['disable-infobars', 'headless'],
       },
     })
   })
@@ -84,6 +84,16 @@ describe('capabilities string parser', () => {
       browserName: 'chrome',
       platform: 'MAC',
       unexpectedAlertBehaviour: 'ignore',
+    })
+  })
+  it('should trim the capability values', () => {
+    const capabilities =
+      'platform="  macOS 10.13   " chromeOptions.args=[   disable-infobars  ,  headless   ]'
+    expect(Capabilities.parseString(capabilities)).toEqual({
+      platform: 'macOS 10.13',
+      chromeOptions: {
+        args: ['disable-infobars', 'headless'],
+      },
     })
   })
 })
