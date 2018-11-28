@@ -54,7 +54,11 @@ function assignStringKey(key, value) {
 function parseStringValue(value) {
   // is array
   if (/^\[.*\]$/.test(value)) {
-    return value.match(/((\w|-)*)/g).filter(s => !!s)
+    return value
+      .substr(1, value.length - 2)
+      .match(/(([^,]*)*)/g)
+      .filter(s => !!s)
+      .map(s => s.trim())
   }
   try {
     let parsed = JSON.parse(value)

@@ -96,4 +96,10 @@ describe('capabilities string parser', () => {
       },
     })
   })
+  it('should parse urls in list', () => {
+    const capabilities = 'bypass=[http://localhost:434, http://localhost:321]'
+    expect(Capabilities.parseString(capabilities)).toEqual({
+      bypass: ['http://localhost:434', 'http://localhost:321'],
+    })
+  })
 })
