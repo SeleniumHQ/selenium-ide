@@ -34,7 +34,6 @@ Change the base URL that the tests were recorded with, note that it will not aff
 
 ### .side.yml
 All of the configuration can be written in the `.side.yml` file, the runner will load it from the current working directory automatically.
-You can disable that behavior with `--no-sideyml`.  
 
 #### Example usage
 ```yaml
