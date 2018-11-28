@@ -135,10 +135,7 @@ if (configuration.timeout === 'undefined') configuration.timeout = undefined
 
 if (program.capabilities) {
   try {
-    Object.assign(
-      configuration.capabilities,
-      Capabilities.parseString(program.capabilities)
-    )
+    configuration.capabilities = Capabilities.parseString(program.capabilities)
   } catch (e) {
     winston.debug('Failed to parse inline capabilities')
   }
@@ -146,10 +143,7 @@ if (program.capabilities) {
 
 if (program.params) {
   try {
-    Object.assign(
-      configuration.params,
-      Capabilities.parseString(program.params)
-    )
+    configuration.params = Capabilities.parseString(program.params)
   } catch (e) {
     winston.debug('Failed to parse additional params')
   }
