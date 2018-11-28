@@ -16,7 +16,7 @@
  */
 
 import browser from 'webextension-polyfill'
-import { isStaging } from '../content/utils'
+import { isStaging } from '../common/utils'
 
 let ideWindowId = undefined
 let master = {}
