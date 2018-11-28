@@ -53,6 +53,56 @@ The runner will automatically set the number of workers to the amount of cores a
 **Note:** unless you specified that a suite is parallel, it will still run the contained tests sequentially, though the runner will run suites in parallel by default.  
 To mark a suite's tests as parallel, set that in the suite's settings in the IDE.
 
+#### Using a proxy server
+`selenium-side-runner` can pass proxy capabilities to the browser using the following schemes.
+
+##### direct proxy  
+Configures WebDriver to bypass all browser proxies.  
+```selenium-side-runner --proxy-type=direct```
+```yaml
+proxyType: direct
+```
+
+##### manual proxy
+Manually configures the browser proxy.  
+```selenium-side-runner --proxy-type=manual --proxy-options="http=localhost:434 bypass=[http://localhost:434, http://localhost:8080]"```
+```yaml
+proxyType: manual
+proxyOptions:
+  http: http://localhost:434
+  https: http://localhost:434
+  ftp: http://localhost:434
+  bypass:
+    - http://localhost:8080
+    - http://host:434
+    - http://somethingelse:32
+```
+
+##### pac proxy
+Configures WebDriver to configure the browser proxy using the PAC file at the given URL.  
+```selenium-side-runner --proxy-type=pac --proxy-options="http://localhost/pac"```
+```yaml
+proxyType: pac
+proxyOptions: http://localhost/pac
+```
+
+##### socks proxy
+Creates a proxy configuration for a socks proxy.  
+```selenium-side-runner --proxy-type=socks --proxy-options="socksProxy=localhost:434 socksVersion=5"```
+```yaml
+proxyType: socks
+proxyOptions:
+  socksProxy: localhost:434
+  socksVersion: 5
+```
+
+##### system proxy  
+Configures WebDriver to use the current system's proxy.  
+```selenium-side-runner --proxy-type=system```
+```yaml
+proxyType: system
+```
+
 ### FAQ
 
 #### I'm getting an error similar to `Unknown locator ${vars.something}`
