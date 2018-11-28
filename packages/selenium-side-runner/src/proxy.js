@@ -38,14 +38,14 @@ export default function ParseProxy(type, options) {
       }
     } else if (typeof options !== 'object') {
       throw new Error(
-        'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=\\"localhost:321\\" ftp=\\"localhost:4324\\"")'
+        'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=localhost:321 ftp=localhost:4324")'
       )
     } else {
       let opts = {}
       if (options.http) opts.http = options.http
       if (options.https) opts.https = options.https
-      if (options.http) opts.ftp = options.ftp
-      if (options.http) opts.bypass = options.bypass
+      if (options.ftp) opts.ftp = options.ftp
+      if (options.bypass) opts.bypass = options.bypass
       return {
         proxyType: type,
         proxyOptions: opts,
@@ -54,7 +54,7 @@ export default function ParseProxy(type, options) {
   } else if (type === 'socks') {
     if (!options || !options.socksProxy) {
       throw new Error(
-        'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=\\"localhost:321\\"")'
+        'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=localhost:321")'
       )
     } else {
       if (options.socksVersion) {
@@ -69,7 +69,7 @@ export default function ParseProxy(type, options) {
           }
         } else {
           throw new Error(
-            'Proxy socks version is invalid (e.g. --proxy-options="socksProxy=\\"localhost:321\\" socksVersion=5")'
+            'Proxy socks version is invalid (e.g. --proxy-options="socksProxy=localhost:321 socksVersion=5")'
           )
         }
       } else {

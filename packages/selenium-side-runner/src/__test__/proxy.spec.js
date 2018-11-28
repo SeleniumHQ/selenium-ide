@@ -82,7 +82,7 @@ describe('proxy parser', () => {
   })
   it('should throw if non object was passed to manual proxy type', () => {
     expect(() => ParseProxy('manual', 5)).toThrowError(
-      'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=\\"localhost:321\\" ftp=\\"localhost:4324\\"")'
+      'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=localhost:321 ftp=localhost:4324")'
     )
   })
   it('should parse socks proxy', () => {
@@ -115,17 +115,17 @@ describe('proxy parser', () => {
   })
   it('should throw if no socks proxy url was given', () => {
     expect(() => ParseProxy('socks')).toThrowError(
-      'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=\\"localhost:321\\"")'
+      'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=localhost:321")'
     )
     expect(() => ParseProxy('socks', {})).toThrowError(
-      'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=\\"localhost:321\\"")'
+      'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=localhost:321")'
     )
   })
   it('should throw if a non-number was passed as socks version', () => {
     expect(() =>
       ParseProxy('socks', { socksProxy: 'localhost:434', socksVersion: 'test' })
     ).toThrowError(
-      'Proxy socks version is invalid (e.g. --proxy-options="socksProxy=\\"localhost:321\\" socksVersion=5")'
+      'Proxy socks version is invalid (e.g. --proxy-options="socksProxy=localhost:321 socksVersion=5")'
     )
   })
   it('should throw if an invalid proxy type was passed', () => {
