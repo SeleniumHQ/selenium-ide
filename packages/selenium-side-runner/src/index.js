@@ -29,6 +29,7 @@ import rimraf from 'rimraf'
 import { js_beautify as beautify } from 'js-beautify'
 import Selianize, { getUtilsFile } from 'selianize'
 import Capabilities from './capabilities'
+import ParseProxy from './proxy'
 import Config from './config'
 import Satisfies from './versioner'
 import metadata from '../package.json'
@@ -54,6 +55,14 @@ program
     `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`
   )
   .option(
+    '--proxy-type [type]',
+    'Type of proxy to use (one of: direct, manual, pac, socks, system)'
+  )
+  .option(
+    '--proxy-options [list]',
+    'Proxy options to pass, for use with manual, pac and socks proxies'
+  )
+  .option(
     '--configuration-file [filepath]',
     'Use specified YAML file for configuration. (default: .side.yml)'
   )
@@ -63,7 +72,7 @@ program
   )
   .option(
     '--force',
-    "Forciblly run the project, regardless of project's version"
+    "Forcibly run the project, regardless of project's version"
   )
   .option('--debug', 'Print debug logs')
 
@@ -103,16 +112,12 @@ const configuration = {
   path: path.join(__dirname, '../../'),
 }
 
-const configurationFilePath = program.configurationFile || '.side.yml'
+const confPath = program.configurationFile || '.side.yml'
+const configurationFilePath = path.isAbsolute(confPath)
+  ? confPath
+  : path.join(process.cwd(), confPath)
 try {
-  Object.assign(
-    configuration,
-    Config.load(
-      path.isAbsolute(configurationFilePath)
-        ? configurationFilePath
-        : path.join(process.cwd(), configurationFilePath)
-    )
-  )
+  Object.assign(configuration, Config.load(configurationFilePath))
 } catch (e) {
   winston.debug('Could not load ' + configurationFilePath)
 }
@@ -147,6 +152,31 @@ if (program.params) {
     )
   } catch (e) {
     winston.debug('Failed to parse additional params')
+  }
+}
+
+if (program.proxyType) {
+  try {
+    let opts = program.proxyOptions
+    if (program.proxyType === 'manual' || program.proxyType === 'socks') {
+      opts = Capabilities.parseString(opts)
+    }
+    const proxy = ParseProxy(program.proxyType, opts)
+    Object.assign(configuration, proxy)
+  } catch (e) {
+    winston.error(e.message)
+    process.exit(1)
+  }
+} else if (configuration.proxyType) {
+  try {
+    const proxy = ParseProxy(
+      configuration.proxyType,
+      configuration.proxyOptions
+    )
+    Object.assign(configuration, proxy)
+  } catch (e) {
+    winston.error(e.message)
+    process.exit(1)
   }
 }
 

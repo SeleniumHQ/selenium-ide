@@ -32,7 +32,7 @@
     "glob": "^7.1.2",
     "global-npm": "^0.3.0",
     "jest": "23.4.2",
-    "jest-environment-selenium": "2.0.0",
+    "jest-environment-selenium": "2.1.0",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
     "rimraf": "^2.6.2",
