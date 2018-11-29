@@ -45,7 +45,13 @@ export default class CommandInput extends React.Component {
             <span key={item.name}>{item.name}</span>
           )}
           value={this.props.value}
-          inputProps={{ name: this.props.name, disabled: this.props.disabled }}
+          inputProps={{
+            name: this.props.name,
+            disabled: this.props.disabled,
+            onBlur: e => {
+              this.props.onChange(e.target.value.trim())
+            },
+          }}
           onChange={e => {
             if (this.props.onChange) this.props.onChange(e.target.value)
           }}
