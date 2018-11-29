@@ -317,10 +317,6 @@ export const ArgTypes = {
     name: 'wait time',
     description: 'The amount of time to wait (in milliseconds).',
   },
-  window: {
-    name: 'window',
-    description: 'The id of the browser window to select.',
-  },
   xpath: {
     name: 'xpath',
     description: 'The xpath expression to evaluate.',
@@ -871,18 +867,18 @@ class CommandList {
         description:
           'Selects a popup window using a window locator. Once a popup \
                     window has been selected, all commands will go to that window. \
-                    To select the main window again, use null as the target. \
-                    Window locators provide different ways of specifying the window \
-                    object: by title or by generated id.',
-        target: ArgTypes.window,
+                    Window locators use handles to select windows.',
+        target: ArgTypes.handle,
       },
     ],
     [
       'close',
       {
         name: 'close',
-        description: 'Closes a window using a window locator.',
-        target: ArgTypes.window,
+        description:
+          'Closes the current window. \
+                    There is no need to close the initial window, IDE will re-use it; \
+                    closing it may cause a performance penalty on the test.',
       },
     ],
     [
