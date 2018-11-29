@@ -582,6 +582,13 @@ class CommandList {
       },
     ],
     [
+      'debugger',
+      {
+        name: 'debugger',
+        description: 'Breaks the execution and enters debugger',
+      },
+    ],
+    [
       'do',
       {
         name: 'do',

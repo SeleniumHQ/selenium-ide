@@ -25,6 +25,7 @@ const emitters = {
   clickAt: emitClick,
   check: emitCheck,
   uncheck: emitUncheck,
+  debugger: emitDebugger,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
@@ -277,6 +278,10 @@ async function emitClick(target) {
       target
     )}).then(element => {return element.click();});`
   )
+}
+
+async function emitDebugger() {
+  return Promise.resolve('debugger;')
 }
 
 async function emitDoubleClick(target) {
