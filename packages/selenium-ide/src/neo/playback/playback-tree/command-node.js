@@ -103,7 +103,7 @@ export class CommandNode {
   }
 
   _executeCommand(commandExecutor, options, targetOverride) {
-    if (!Commands.list.get(this.command.command)) {
+    if (this.command.enabled && !Commands.list.get(this.command.command)) {
       throw new Error(`Unknown command ${this.command.command}`)
     } else if (this.isControlFlow()) {
       return this._evaluate(commandExecutor)
