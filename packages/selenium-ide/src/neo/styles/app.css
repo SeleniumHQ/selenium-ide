@@ -1,3 +1,7 @@
+::-moz-focus-inner {
+  border: 0;
+}
+
 :root {
   --hover-color: #f3f3f3;
   --active-color: #d8ebfb;
@@ -123,8 +127,4 @@ code,
 
 .failed {
   color: #df0006;
-}
-
-::-moz-focus-inner {
-  border: 0;
 }
