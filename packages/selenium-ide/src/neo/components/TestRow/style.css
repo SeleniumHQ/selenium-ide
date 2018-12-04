@@ -22,7 +22,7 @@
 }
 
 .test-table tbody tr:hover {
-  background-color: #f3f3f3;
+  background-color: var(--color-hover);
 }
 
 .test-table td .index {
@@ -35,8 +35,15 @@
 }
 
 .test-table tbody tr.selected {
-  border-top: 1px solid #75bfff;
-  background-color: #e3f2ff;
+  background-color: var(--selected-color);
+}
+
+.test-table tbody tr.selected td {
+  border-top: 1px solid var(--selected-border-color);
+}
+
+.test-table tbody tr.selected:focus {
+  background-color: var(--active-color);
 }
 
 .test-table tbody tr.pending {
@@ -72,7 +79,12 @@
   width: 42px;
 }
 
-.test-table tbody tr:not(:focus) td:first-child {
+.test-table tbody tr.fatal td:not(:first-child) {
+  color: #e80600;
+  font-weight: bold;
+}
+
+.test-table tbody tr:not(.selected):not(:focus) td:first-child {
   padding-top: 6px;
   border-top: none;
 }
@@ -101,11 +113,6 @@
 .test-table tbody tr.break-point td:first-child .index {
   background-color: #40a6ff;
   color: white;
-}
-
-.test-table tbody tr.fatal td:not(:first-child) {
-  color: #e80600;
-  font-weight: bold;
 }
 
 .test-table.paused tbody tr.selected.pending:focus td {

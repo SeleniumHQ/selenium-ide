@@ -41,16 +41,15 @@
 }
 
 .test > a:hover {
-  background-color: #f3f3f3;
+  background-color: var(--hover-color);
 }
 
 .test > a.selected {
-  background-color: #e3f2ff;
+  background-color: var(--selected-color);
 }
 
 .test:focus > a.selected {
-  border-top: 1px solid #75bfff;
-  border-bottom: 1px solid #75bfff;
+  background-color: var(--active-color);
 }
 
 .test > a.executing {
