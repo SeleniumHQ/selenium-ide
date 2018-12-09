@@ -167,7 +167,7 @@ export class CommandNode {
         next: this.command.command !== 'run' ? this.next : result,
       }
     } else if (canExecuteCommand(this.command.command)) {
-      return { next: this.next }
+      return { next: this.next, result }
     } else {
       if (this.command.command.match(/^verify/)) {
         return {
