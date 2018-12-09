@@ -1,3 +1,14 @@
+::-moz-focus-inner {
+  border: 0;
+}
+
+:root {
+  --hover-color: #f3f3f3;
+  --active-color: #d8ebfb;
+  --selected-color: #e8f1f8;
+  --selected-border-color: #5cb3ff;
+}
+
 html {
   overflow: hidden;
 }
@@ -116,8 +127,4 @@ code,
 
 .failed {
   color: #df0006;
-}
-
-::-moz-focus-inner {
-  border: 0;
 }

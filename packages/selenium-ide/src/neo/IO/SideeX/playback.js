@@ -415,13 +415,13 @@ function doPluginCommand(commandNode, implicitTime, implicitCount) {
   const { id, target } = commandNode.command
   return PlaybackState.currentExecutingCommandNode
     .execute(executor, getPluginOptions(commandNode))
-    .then(result => {
+    .then(node => {
       PlaybackState.setCommandState(
         id,
-        result.status ? result.status : PlaybackStates.Passed,
-        (result && result.message) || undefined
+        node.result.status ? node.result.status : PlaybackStates.Passed,
+        (node.result && node.result.message) || undefined
       )
-      return result
+      return node
     })
     .catch(err => {
       if (isElementNotFound(err.message)) {

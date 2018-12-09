@@ -184,6 +184,14 @@ describe('command code emitter', () => {
       'await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {return element.click();});'
     )
   })
+  it('should emit `debugger` command', () => {
+    const command = {
+      command: 'debugger',
+      target: '',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe('debugger;')
+  })
   it('should emit `double click` command', () => {
     const command = {
       command: 'doubleClick',

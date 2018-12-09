@@ -64,8 +64,7 @@ export function emit(test, options = config, snapshot) {
         .join('')
         .concat(snapshot ? snapshot.setupHooks.join('') : '')
       emittedTest += `await tests["${test.name}"](driver, vars);`
-      emittedTest +=
-        'await driver.getTitle().then(title => {expect(title).toBeDefined();});'
+      emittedTest += 'expect(true).toBeTruthy();'
       emittedTest += teardownHooks
         .join('')
         .concat(snapshot ? snapshot.teardownHooks.join('') : '')
