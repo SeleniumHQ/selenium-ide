@@ -205,6 +205,7 @@ export function loadJSProject(project, data) {
     event: 'projectLoaded',
     options: {
       projectName: project.name,
+      projectId: project.id,
     },
   })
 }

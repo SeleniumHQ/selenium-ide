@@ -108,6 +108,11 @@ class UiState {
   }
 
   @computed
+  getProject() {
+    return this._project
+  }
+
+  @computed
   get filteredTests() {
     return this._project.tests.filter(this.filterFunction)
   }

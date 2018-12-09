@@ -23,6 +23,7 @@ import playbackRouter from './playback'
 import recordRouter from './record'
 import exportRouter from './export'
 import popupRouter from './popup'
+import UiState from '../../neo/stores/view/UiState'
 
 const router = new Router()
 
@@ -51,6 +52,11 @@ router.post('/log', (req, res) => {
     logger.log(`${Manager.getPlugin(req.sender).name}: ${req.message}`)
   }
   res(true)
+})
+
+router.get('/project', (_req, res) => {
+  const project = UiState.getProject()
+  res({ id: project.id, name: project.name })
 })
 
 router.use('/playback', playbackRouter)
