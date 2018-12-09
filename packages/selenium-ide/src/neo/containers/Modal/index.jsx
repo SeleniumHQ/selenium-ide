@@ -27,7 +27,7 @@ import BaseUrlDialog from '../../components/Dialogs/BaseUrl'
 import WelcomeDialog from '../../components/Dialogs/Welcome'
 import AlertDialog from '../../components/Dialogs/Alert'
 import ModalState from '../../stores/view/ModalState'
-import { isProduction } from '../../../content/utils'
+import { isProduction } from '../../../common/utils'
 
 @observer
 export default class Modal extends Component {

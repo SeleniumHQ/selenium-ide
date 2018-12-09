@@ -55,8 +55,7 @@ router.post('/log', (req, res) => {
 })
 
 router.get('/project', (_req, res) => {
-  const project = UiState.getProject()
-  res({ id: project.id, name: project.name })
+  res({ id: UiState.project.id, name: UiState.project.name })
 })
 
 router.use('/playback', playbackRouter)

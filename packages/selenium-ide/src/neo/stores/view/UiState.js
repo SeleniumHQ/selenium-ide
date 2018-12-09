@@ -108,7 +108,7 @@ class UiState {
   }
 
   @computed
-  getProject() {
+  get project() {
     return this._project
   }
 

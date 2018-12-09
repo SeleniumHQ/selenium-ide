@@ -22,7 +22,7 @@ import { canExecuteCommand } from '../../../plugin/commandExecutor'
 import { createPlaybackTree } from '../../playback/playback-tree'
 import { ControlFlowCommandChecks } from '../../models/Command'
 import Logger from '../../stores/view/Logs'
-import { isProduction } from '../../../content/utils'
+import { isProduction } from '../../../common/utils'
 
 let baseUrl = ''
 let ignoreBreakpoint = false
