@@ -135,6 +135,7 @@ class TestRow extends React.Component {
   }
   componentDidMount() {
     if (this.props.selected) {
+      this.scrollToRowIfNeeded(this.node)
       this.props.setSectionFocus('editor', () => {
         this.node.focus()
       })
