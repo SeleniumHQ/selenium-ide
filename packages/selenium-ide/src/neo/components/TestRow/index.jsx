@@ -132,10 +132,11 @@ class TestRow extends React.Component {
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func,
     level: PropTypes.number,
+    scrollToLastPos: PropTypes.func,
   }
   componentDidMount() {
     if (this.props.selected) {
-      this.scrollToRowIfNeeded(this.node)
+      this.props.scrollToLastPos()
       this.props.setSectionFocus('editor', () => {
         this.node.focus()
       })

@@ -5,6 +5,8 @@ export default class SuiteState {
   modified = false
   @observable
   selectedCommand = null
+  @observable
+  scrollY = null
 
   constructor(test) {
     this.changeDisposer = reaction(
