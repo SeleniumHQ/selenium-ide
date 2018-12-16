@@ -59,11 +59,7 @@ class UiState {
   @observable
   maxNavigationWidth = 250
   @observable
-  _navigationWidth = 180
-  @observable
-  navigationHover = false
-  @observable
-  navigationDragging = false
+  navigationWidth = 180
   @observable
   pristineCommand = new Command()
   @observable
@@ -132,13 +128,6 @@ class UiState {
     const value = PlaybackState.maxDelay - PlaybackState.delay
     const speed = Math.ceil((value / PlaybackState.maxDelay) * 5)
     return speed ? speed : 1
-  }
-
-  @computed
-  get navigationWidth() {
-    return this.navigationHover
-      ? this._navigationWidth
-      : this.minNavigationWidth
   }
 
   @action.bound
@@ -454,29 +443,10 @@ class UiState {
 
   @action.bound
   resizeNavigation(width) {
-    this._navigationWidth = width
+    this.navigationWidth = width
     storage.set({
-      navigationSize: this._navigationWidth,
+      navigationSize: this.navigationWidth,
     })
-  }
-
-  @action.bound
-  setNavigationHover(hover) {
-    clearTimeout(this._hoverTimeout)
-    if (!hover) {
-      this._hoverTimeout = setTimeout(() => {
-        action(() => {
-          this.navigationHover = false
-        })()
-      }, 600)
-    } else {
-      this.navigationHover = true
-    }
-  }
-
-  @action.bound
-  setNavigationDragging(isDragging) {
-    this.navigationDragging = isDragging
   }
 
   @action.bound

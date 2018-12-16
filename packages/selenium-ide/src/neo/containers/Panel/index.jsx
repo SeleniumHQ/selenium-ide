@@ -215,15 +215,6 @@ export default class Panel extends React.Component {
       UiState.toggleConsole()
     }
   }
-  navigationDragStart() {
-    UiState.setNavigationDragging(true)
-    UiState.resizeNavigation(UiState.navigationWidth)
-    UiState.setNavigationHover(true)
-  }
-  navigationDragEnd() {
-    UiState.setNavigationDragging(false)
-    UiState.setNavigationHover(false)
-  }
   loadNewProject() {
     if (!UiState.isSaved()) {
       ModalState.showAlert(
@@ -316,8 +307,6 @@ export default class Panel extends React.Component {
                   maxSize={UiState.maxNavigationWidth}
                   size={UiState.navigationWidth}
                   onChange={UiState.resizeNavigation}
-                  onDragStarted={this.navigationDragStart}
-                  onDragFinished={this.navigationDragEnd}
                 >
                   <Navigation
                     tests={UiState.filteredTests}

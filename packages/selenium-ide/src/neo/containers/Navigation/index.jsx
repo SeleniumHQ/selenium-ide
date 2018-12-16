@@ -81,12 +81,7 @@ export default class Navigation extends React.Component {
   }
   render() {
     return (
-      <aside
-        className="test-cases"
-        onKeyDown={this.handleKeyDown.bind(this)}
-        onMouseEnter={() => UiState.setNavigationHover(true)}
-        onMouseLeave={() => UiState.setNavigationHover(false)}
-      >
+      <aside className="test-cases" onKeyDown={this.handleKeyDown.bind(this)}>
         <VerticalTabBar
           tabs={UiState.views}
           tab={UiState.selectedView}
