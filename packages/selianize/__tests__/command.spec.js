@@ -198,9 +198,7 @@ describe('command code emitter', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {return driver.actions().doubleClick(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `double click at` command', () => {
     const command = {
@@ -208,9 +206,7 @@ describe('command code emitter', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.linkText(`button`)), configuration.timeout);await driver.findElement(By.linkText(`button`)).then(element => {return driver.actions().doubleClick(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `drag and drop to object` command', () => {
     const command = {
@@ -218,9 +214,7 @@ describe('command code emitter', () => {
       target: 'link=dragged',
       value: 'link=dropzone',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.linkText(`dragged`)), configuration.timeout);await driver.wait(until.elementLocated(By.linkText(`dropzone`)), configuration.timeout);await driver.findElement(By.linkText(`dragged`)).then(dragged => {return driver.findElement(By.linkText(`dropzone`)).then(dropzone => {return driver.actions().dragAndDrop(dragged, dropzone).perform();});});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `type` command', () => {
     const command = {
@@ -806,9 +800,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseDown(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse down at` event', () => {
     const command = {
@@ -816,9 +808,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseDown(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse up` event', () => {
     const command = {
@@ -826,9 +816,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseUp(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse up at` event', () => {
     const command = {
@@ -836,9 +824,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseUp(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse move` event', () => {
     const command = {
@@ -846,9 +832,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseMove(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse move at` event', () => {
     const command = {
@@ -856,9 +840,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseMove(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse over` event', () => {
     const command = {
@@ -866,9 +848,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseMove(element).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse out` event', () => {
     const command = {
@@ -876,9 +856,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'await driver.wait(until.elementLocated(By.id(`button`)), configuration.timeout);await driver.findElement(By.id(`button`)).then(element => {return driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});'
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert alert` command', () => {
     const command = {

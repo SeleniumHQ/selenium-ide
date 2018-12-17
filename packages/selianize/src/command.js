@@ -290,7 +290,7 @@ async function emitDoubleClick(target) {
       target
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       target
-    )}).then(element => {return driver.actions().doubleClick(element).perform();});`
+    )}).then(element => {return driver.actions({bridge: true}).doubleClick(element).perform();});`
   )
 }
 
@@ -304,7 +304,7 @@ async function emitDragAndDrop(dragged, dropzone) {
       dragged
     )}).then(dragged => {return driver.findElement(${await LocationEmitter.emit(
       dropzone
-    )}).then(dropzone => {return driver.actions().dragAndDrop(dragged, dropzone).perform();});});`
+    )}).then(dropzone => {return driver.actions({bridge: true}).dragAndDrop(dragged, dropzone).perform();});});`
   )
 }
 
@@ -642,7 +642,7 @@ async function emitMouseDown(locator) {
       locator
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       locator
-    )}).then(element => {return driver.actions().mouseDown(element).perform();});`
+    )}).then(element => {return driver.actions({bridge: true}).move({origin: element}).press().perform();});`
   )
 }
 
@@ -652,7 +652,7 @@ async function emitMouseUp(locator) {
       locator
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       locator
-    )}).then(element => {return driver.actions().mouseUp(element).perform();});`
+    )}).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});`
   )
 }
 
@@ -662,17 +662,13 @@ async function emitMouseMove(locator) {
       locator
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       locator
-    )}).then(element => {return driver.actions().mouseMove(element).perform();});`
+    )}).then(element => {return driver.actions({bridge: true}).move({origin: element}).perform();});`
   )
 }
 
-async function emitMouseOut(locator) {
+async function emitMouseOut(_locator) {
   return Promise.resolve(
-    `await driver.wait(until.elementLocated(${await LocationEmitter.emit(
-      locator
-    )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
-      locator
-    )}).then(element => {return driver.actions().mouseMove(element, {x: -1, y: -1}).perform();});`
+    `await driver.actions({bridge: true}).move({x: 0, y: 0}).perform();`
   )
 }
 

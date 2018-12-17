@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit \`double click at\` command 1`] = `"await driver.wait(until.elementLocated(By.linkText(\`button\`)), configuration.timeout);await driver.findElement(By.linkText(\`button\`)).then(element => {return driver.actions({bridge: true}).doubleClick(element).perform();});"`;
+
+exports[`command code emitter should emit \`double click\` command 1`] = `"await driver.wait(until.elementLocated(By.linkText(\`button\`)), configuration.timeout);await driver.findElement(By.linkText(\`button\`)).then(element => {return driver.actions({bridge: true}).doubleClick(element).perform();});"`;
+
+exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `"await driver.wait(until.elementLocated(By.linkText(\`dragged\`)), configuration.timeout);await driver.wait(until.elementLocated(By.linkText(\`dropzone\`)), configuration.timeout);await driver.findElement(By.linkText(\`dragged\`)).then(dragged => {return driver.findElement(By.linkText(\`dropzone\`)).then(dropzone => {return driver.actions({bridge: true}).dragAndDrop(dragged, dropzone).perform();});});"`;
+
+exports[`command code emitter should emit \`mouse down at\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).press().perform();});"`;
+
+exports[`command code emitter should emit \`mouse down\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).press().perform();});"`;
+
+exports[`command code emitter should emit \`mouse move at\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).perform();});"`;
+
+exports[`command code emitter should emit \`mouse move\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).perform();});"`;
+
+exports[`command code emitter should emit \`mouse out\` event 1`] = `"await driver.actions({bridge: true}).move({x: 0, y: 0}).perform();"`;
+
+exports[`command code emitter should emit \`mouse over\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).perform();});"`;
+
+exports[`command code emitter should emit \`mouse up at\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});"`;
+
+exports[`command code emitter should emit \`mouse up\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});"`;
