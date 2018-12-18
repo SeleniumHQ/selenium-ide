@@ -34,7 +34,6 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
-export const supportedFileFormats = '.side, text/html'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name

@@ -100,7 +100,6 @@ class ImportDialogContent extends React.Component {
           className="dropzone"
           acceptClassName="accept"
           rejectClassName="reject"
-          accept="text/html"
           onDropAccepted={this.onDrop.bind(this)}
         >
           <div>

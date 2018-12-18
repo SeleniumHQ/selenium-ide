@@ -19,7 +19,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import uuidv4 from 'uuid/v4'
 import { parse } from 'modifier-keys'
-import { supportedFileFormats } from '../../../IO/filesystem'
 import './style.css'
 
 export default class OpenButton extends React.Component {
@@ -70,7 +69,6 @@ export class OpenInput extends React.Component {
             this.input = input
           }}
           type="file"
-          accept={supportedFileFormats}
           onChange={this.handleChange}
         />
         <label
