@@ -43,23 +43,19 @@ export default class Navigation extends React.Component {
     tests: MobxPropTypes.arrayOrObservableArray.isRequired,
     duplicateTest: PropTypes.func,
   }
-  handleChangedTab(tab) {
+  async handleChangedTab(tab) {
     if (PlaybackState.isPlaying && !PlaybackState.paused) {
-      ModalState.showAlert(
-        {
-          title: 'Playback is Running',
-          description:
-            "Can't change the view while playback is running, pause the playback?",
-          confirmLabel: 'Pause',
-          cancelLabel: 'Cancel',
-        },
-        choseChange => {
-          if (choseChange) {
-            PlaybackState.pause()
-            UiState.changeView(tab)
-          }
-        }
-      )
+      const choseChange = await ModalState.showAlert({
+        title: 'Playback is Running',
+        description:
+          "Can't change the view while playback is running, pause the playback?",
+        confirmLabel: 'Pause',
+        cancelLabel: 'Cancel',
+      })
+      if (choseChange) {
+        PlaybackState.pause()
+        UiState.changeView(tab)
+      }
     } else {
       UiState.changeView(tab)
     }

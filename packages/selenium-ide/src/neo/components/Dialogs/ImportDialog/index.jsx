@@ -19,12 +19,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Dropzone from 'react-dropzone'
 import classNames from 'classnames'
-import Modal from '../Modal'
-import ModalHeader from '../ModalHeader'
-import FlatButton from '../FlatButton'
-import { parseSuiteRequirements } from '../../IO/legacy/migrate'
-import { loadAsText } from '../../IO/filesystem'
-import HtmlFile from '../../assets/images/html_file.png'
+import Modal from '../../Modal'
+import DialogContainer from '../Dialog'
+import FlatButton from '../../FlatButton'
+import { parseSuiteRequirements } from '../../../IO/legacy/migrate'
+import { loadAsText } from '../../../IO/filesystem'
+import HtmlFile from '../../../assets/images/html_file.png'
 import './style.css'
 
 export default class ImportDialog extends React.Component {
@@ -37,7 +37,7 @@ export default class ImportDialog extends React.Component {
   render() {
     return (
       <Modal
-        className="import-dialog"
+        className="stripped import-dialog"
         isOpen={this.props.isImporting}
         onRequestClose={this.props.cancel}
       >
@@ -86,12 +86,15 @@ class ImportDialogContent extends React.Component {
   }
   render() {
     return (
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-        }}
+      <DialogContainer
+        title="Import suite"
+        renderFooter={() => (
+          <span className="right">
+            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
+          </span>
+        )}
+        onRequestClose={this.props.cancel}
       >
-        <ModalHeader title="Import suite" close={this.props.cancel} />
         <p>
           In order to fully import your legacy Selenium IDE suite, you need to
           individually import the following tests
@@ -122,12 +125,7 @@ class ImportDialogContent extends React.Component {
               </li>
             ))}
         </ul>
-        <hr />
-        <span className="right">
-          <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-        </span>
-        <div className="clear" />
-      </form>
+      </DialogContainer>
     )
   }
 }

@@ -17,13 +17,14 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { DEFAULT_TIMEOUT } from '../../models/Suite'
-import Modal from '../Modal'
-import ModalHeader from '../ModalHeader'
-import Input from '../FormInput'
-import FlatButton from '../FlatButton'
-import Checkbox from '../Checkbox'
-import Markdown from '../Markdown'
+import { DEFAULT_TIMEOUT } from '../../../models/Suite'
+import Modal from '../../Modal'
+import DialogContainer from '../Dialog'
+import Input from '../../FormInput'
+import FlatButton from '../../FlatButton'
+import Checkbox from '../../Checkbox'
+import Markdown from '../../Markdown'
+import './style.css'
 
 export default class SuiteSettings extends React.Component {
   static propTypes = {
@@ -37,7 +38,7 @@ export default class SuiteSettings extends React.Component {
   render() {
     return (
       <Modal
-        className="suite-settings-dialog"
+        className="stripped suite-settings-dialog"
         isOpen={this.props.isEditing}
         onRequestClose={this.props.cancel}
       >
@@ -82,15 +83,30 @@ class SuiteSettingsContent extends React.Component {
   render() {
     const persistSession = !this.state.isParallel && this.state.persistSession
     return (
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-        }}
-        style={{
-          minWidth: '300px',
-        }}
+      <DialogContainer
+        title="Suite properties"
+        onRequestClose={this.props.cancel}
+        renderFooter={() => (
+          <span className="right">
+            <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
+            <FlatButton
+              type="submit"
+              onClick={() => {
+                this.props.submit({
+                  timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
+                  isParallel: this.state.isParallel,
+                  persistSession: this.state.persistSession,
+                })
+              }}
+              style={{
+                marginRight: '0',
+              }}
+            >
+              Submit
+            </FlatButton>
+          </span>
+        )}
       >
-        <ModalHeader title="Suite properties" close={this.props.cancel} />
         <div className="form-contents">
           <Input
             name="suite-timeout"
@@ -107,6 +123,11 @@ class SuiteSettingsContent extends React.Component {
             width={130}
             onChange={this.onIsParallelChange.bind(this)}
           />
+          <Markdown className="markdown">
+            {
+              'Running in parallel works only in the [runner](https://npmjs.com/package/selenium-side-runner)'
+            }
+          </Markdown>
           <Checkbox
             label="Persist session"
             checked={persistSession}
@@ -123,26 +144,7 @@ class SuiteSettingsContent extends React.Component {
             </Markdown>
           )}
         </div>
-        <span className="right">
-          <FlatButton onClick={this.props.cancel}>Cancel</FlatButton>
-          <FlatButton
-            type="submit"
-            onClick={() => {
-              this.props.submit({
-                timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
-                isParallel: this.state.isParallel,
-                persistSession: this.state.persistSession,
-              })
-            }}
-            style={{
-              marginRight: '0',
-            }}
-          >
-            Submit
-          </FlatButton>
-        </span>
-        <div className="clear" />
-      </form>
+      </DialogContainer>
     )
   }
 }

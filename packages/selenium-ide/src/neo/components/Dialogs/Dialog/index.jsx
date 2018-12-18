@@ -39,6 +39,9 @@ export default class DialogContainer extends React.Component {
     renderFooter: PropTypes.func,
     onRequestClose: PropTypes.func,
   }
+  static defaultProps = {
+    type: 'info',
+  }
   render() {
     return (
       <div
@@ -81,7 +84,7 @@ export default class DialogContainer extends React.Component {
               e.preventDefault()
             }}
           >
-            <div>{this.props.children}</div>
+            <div className="dialog__main">{this.props.children}</div>
             {this.props.renderFooter ? (
               <div className="dialog__footer">{this.props.renderFooter()}</div>
             ) : null}

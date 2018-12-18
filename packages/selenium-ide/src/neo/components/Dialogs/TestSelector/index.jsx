@@ -18,11 +18,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { PropTypes as MobxPropTypes } from 'mobx-react'
-import Modal from '../Modal'
-import ModalHeader from '../ModalHeader'
-import FlatButton from '../FlatButton'
-import SearchBar from '../SearchBar'
-import Checkbox from '../Checkbox'
+import Modal from '../../Modal'
+import DialogContainer from '../Dialog'
+import FlatButton from '../../FlatButton'
+import SearchBar from '../../SearchBar'
+import Checkbox from '../../Checkbox'
 import './style.css'
 
 export default class TestSelector extends React.Component {
@@ -36,7 +36,7 @@ export default class TestSelector extends React.Component {
   render() {
     return (
       <Modal
-        className="test-selector"
+        className="stripped test-selector"
         isOpen={this.props.isEditing}
         onRequestClose={this.props.cancelSelection}
       >
@@ -84,12 +84,28 @@ class TestSelectorContent extends React.Component {
   }
   render() {
     return (
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-        }}
+      <DialogContainer
+        title="Select tests"
+        onRequestClose={this.props.cancel}
+        renderFooter={() => (
+          <span className="right">
+            <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
+            <FlatButton
+              type="submit"
+              onClick={() => {
+                this.props.completeSelection(
+                  Object.values(this.state.selectedTests).filter(t => !!t)
+                )
+              }}
+              style={{
+                marginRight: '0',
+              }}
+            >
+              Select
+            </FlatButton>
+          </span>
+        )}
       >
-        <ModalHeader title="Select tests" close={this.props.cancelSelection} />
         <SearchBar
           inputRef={input => {
             this.input = input
@@ -103,25 +119,7 @@ class TestSelectorContent extends React.Component {
           selectedTests={this.state.selectedTests}
           selectTest={this.selectTest}
         />
-        <hr />
-        <span className="right">
-          <FlatButton onClick={this.props.cancelSelection}>Cancel</FlatButton>
-          <FlatButton
-            type="submit"
-            onClick={() => {
-              this.props.completeSelection(
-                Object.values(this.state.selectedTests).filter(t => !!t)
-              )
-            }}
-            style={{
-              marginRight: '0',
-            }}
-          >
-            Select
-          </FlatButton>
-        </span>
-        <div className="clear" />
-      </form>
+      </DialogContainer>
     )
   }
 }

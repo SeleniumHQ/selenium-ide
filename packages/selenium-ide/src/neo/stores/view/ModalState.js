@@ -124,41 +124,33 @@ class ModalState {
   }
 
   @action.bound
-  deleteSuite(suite) {
-    this.showAlert(
-      {
-        title: 'Delete suite',
-        description: `This will permanently delete '${suite.name}'`,
-        cancelLabel: 'cancel',
-        confirmLabel: 'delete',
-      },
-      choseDelete => {
-        if (choseDelete) {
-          this._project.deleteSuite(suite)
-          UiState.selectTest()
-        }
-      }
-    )
+  async deleteSuite(suite) {
+    const choseDelete = await this.showAlert({
+      title: 'Delete suite',
+      description: `This will permanently delete '${suite.name}'`,
+      cancelLabel: 'cancel',
+      confirmLabel: 'delete',
+    })
+    if (choseDelete) {
+      this._project.deleteSuite(suite)
+      UiState.selectTest()
+    }
   }
 
   @action.bound
   deleteTest(testCase) {
-    this.showAlert(
-      {
-        title: 'Delete test case',
-        description: `This will permanently delete '${
-          testCase.name
-        }', and remove it from all it's suites`,
-        cancelLabel: 'cancel',
-        confirmLabel: 'delete',
-      },
-      choseDelete => {
-        if (choseDelete) {
-          this._project.deleteTestCase(testCase)
-          UiState.selectTest()
-        }
-      }
-    )
+    const choseDelete = this.showAlert({
+      title: 'Delete test case',
+      description: `This will permanently delete '${
+        testCase.name
+      }', and remove it from all it's suites`,
+      cancelLabel: 'cancel',
+      confirmLabel: 'delete',
+    })
+    if (choseDelete) {
+      this._project.deleteTestCase(testCase)
+      UiState.selectTest()
+    }
   }
 
   @action.bound

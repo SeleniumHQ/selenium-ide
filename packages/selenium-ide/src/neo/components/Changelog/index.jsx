@@ -43,5 +43,6 @@ export function showChangelog() {
   ModalState.showAlert({
     title: `What's new: ${project.version}`,
     description: changelog,
+    isMarkdown: true,
   })
 }

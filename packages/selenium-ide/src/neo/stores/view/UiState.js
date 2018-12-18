@@ -147,21 +147,17 @@ class UiState {
   @action.bound
   async changeView(view, ignoreCache) {
     if (this.isRecording && view !== this.selectedView) {
-      ModalState.showAlert(
-        {
-          title: 'Stop recording',
-          description:
-            'Are you sure you would like to stop recording, and change views?',
-          confirmLabel: 'Stop recording',
-          cancelLabel: 'cancel',
-        },
-        async choseChange => {
-          if (choseChange) {
-            await this.stopRecording()
-            this._changeView(view, ignoreCache)
-          }
-        }
-      )
+      const choseChange = await ModalState.showAlert({
+        title: 'Stop recording',
+        description:
+          'Are you sure you would like to stop recording, and change views?',
+        confirmLabel: 'Stop recording',
+        cancelLabel: 'cancel',
+      })
+      if (choseChange) {
+        await this.stopRecording()
+        this._changeView(view, ignoreCache)
+      }
     } else {
       this._changeView(view, ignoreCache)
     }
@@ -221,23 +217,19 @@ class UiState {
   }
 
   @action.bound
-  selectTest(test, suite, stack, override) {
+  async selectTest(test, suite, stack, override) {
     if (this.isRecording && test !== this.selectedTest.test) {
-      ModalState.showAlert(
-        {
-          title: 'Stop recording',
-          description:
-            'Are you sure you would like to stop recording, and select a different test?',
-          confirmLabel: 'Stop recording',
-          cancelLabel: 'cancel',
-        },
-        async choseSelect => {
-          if (choseSelect) {
-            await this.stopRecording()
-            this._selectTest(test, suite, stack, override)
-          }
-        }
-      )
+      const choseSelect = await ModalState.showAlert({
+        title: 'Stop recording',
+        description:
+          'Are you sure you would like to stop recording, and select a different test?',
+        confirmLabel: 'Stop recording',
+        cancelLabel: 'cancel',
+      })
+      if (choseSelect) {
+        await this.stopRecording()
+        this._selectTest(test, suite, stack, override)
+      }
     } else {
       this._selectTest(test, suite, stack, override)
     }

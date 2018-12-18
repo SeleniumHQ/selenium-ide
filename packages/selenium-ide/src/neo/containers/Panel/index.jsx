@@ -215,39 +215,31 @@ export default class Panel extends React.Component {
       UiState.toggleConsole()
     }
   }
-  loadNewProject() {
+  async loadNewProject() {
     if (!UiState.isSaved()) {
-      ModalState.showAlert(
-        {
-          title: 'Create without saving',
-          description:
-            'Are you sure you would like to create a new project without saving the current one?',
-          confirmLabel: 'Proceed',
-          cancelLabel: 'Cancel',
-        },
-        async choseProceed => {
-          if (choseProceed) {
-            await UiState.stopRecording({ nameNewTest: false })
-            this.createNewProject()
-          }
-        }
-      )
+      const choseProceed = await ModalState.showAlert({
+        title: 'Create without saving',
+        description:
+          'Are you sure you would like to create a new project without saving the current one?',
+        confirmLabel: 'Proceed',
+        cancelLabel: 'Cancel',
+      })
+      if (choseProceed) {
+        await UiState.stopRecording({ nameNewTest: false })
+        this.createNewProject()
+      }
     } else if (UiState.isRecording) {
-      ModalState.showAlert(
-        {
-          title: 'Stop recording',
-          description:
-            'Are you sure you would to stop recording and create a new project?',
-          confirmLabel: 'Proceed',
-          cancelLabel: 'Cancel',
-        },
-        async choseProceed => {
-          if (choseProceed) {
-            await UiState.stopRecording({ nameNewTest: false })
-            this.createNewProject()
-          }
-        }
-      )
+      const choseProceed = await ModalState.showAlert({
+        title: 'Stop recording',
+        description:
+          'Are you sure you would to stop recording and create a new project?',
+        confirmLabel: 'Proceed',
+        cancelLabel: 'Cancel',
+      })
+      if (choseProceed) {
+        await UiState.stopRecording({ nameNewTest: false })
+        this.createNewProject()
+      }
     } else {
       this.createNewProject()
     }
