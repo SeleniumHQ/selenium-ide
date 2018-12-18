@@ -89,7 +89,7 @@
     }, {
       "id": "43b27b43-8ea8-47db-8f4f-5ffc494ab37f",
       "comment": "",
-      "command": "mouseOut",
+      "command": "//mouse out",
       "target": "id=a",
       "targets": [
         ["id=a", "id"],
@@ -102,7 +102,7 @@
     }, {
       "id": "f8e0ef09-0e16-4b9e-a522-34d49140b59c",
       "comment": "",
-      "command": "assertText",
+      "command": "//assert text",
       "target": "id=a",
       "targets": [
         ["id=a", "id"],
