@@ -1,0 +1,19 @@
+<script>
+  function addFrame() {
+    var frame = window.document.createElement('iframe')
+    frame.src='https://applitools-dom-capture-origin-2.surge.sh/test.html'
+    window.document.body.appendChild(frame)
+  }
+  function deleteFrame() {
+    var frames = window.document.querySelectorAll('iframe')
+    var firstFrame = frames[0]
+    firstFrame.parentNode.removeChild(firstFrame)
+  }
+</script>
+
+<h1>Manual Frames</h1>
+<button onclick="addFrame()">Add Frame</button>
+<button onclick="deleteFrame()">Delete Frame</button>
+</br>
+</br>
+<iframe src=https://applitools-dom-capture-origin-2.surge.sh/test.html></frame>
