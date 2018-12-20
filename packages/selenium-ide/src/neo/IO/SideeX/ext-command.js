@@ -42,7 +42,7 @@ export default class ExtCommand {
     this.attached = false
 
     // Use ES6 arrow function to bind correct this
-    this.tabsOnUpdatedHandler = (tabId, changeInfo, tabInfo) => {
+    this.tabsOnUpdatedHandler = (tabId, changeInfo, _tabInfo) => {
       // eslint-disable-line
       if (changeInfo.status) {
         if (changeInfo.status == 'loading') {
