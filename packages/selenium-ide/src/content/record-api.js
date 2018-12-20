@@ -155,14 +155,16 @@ Recorder.prototype.detach = function() {
   detachInputListeners(this.recordingState)
 }
 
-function attachRecorderHandler(message, sender, sendResponse) { // eslint-disable-line
+function attachRecorderHandler(message, sender, sendResponse) {
+  // eslint-disable-line
   if (message.attachRecorder) {
     recorder.attach()
     sendResponse(true)
   }
 }
 
-function detachRecorderHandler(message, sender, sendResponse) { // eslint-disable-line
+function detachRecorderHandler(message, sender, sendResponse) {
+  // eslint-disable-line
   if (message.detachRecorder) {
     recorder.detach()
     sendResponse(true)
@@ -277,7 +279,10 @@ function removeRecordingIndicator() {
       if (frame === currentWindow) {
         frameLocation =
           ':' +
-          calculateFrameIndex(recordingIndicatorIndex, idx) +
+          calculateFrameIndex({
+            indicatorIndex: recordingIndicatorIndex,
+            targetFrameIndex: idx,
+          }) +
           frameLocation
         currentWindow = currentParentWindow
         break
