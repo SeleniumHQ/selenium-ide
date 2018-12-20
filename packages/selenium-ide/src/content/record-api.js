@@ -20,6 +20,7 @@ import { calculateFrameIndex } from './utils'
 
 let contentSideexTabId = -1
 let frameLocation = ''
+let recordingIndicator
 
 function Recorder(window) {
   this.window = window
@@ -173,80 +174,80 @@ function detachRecorderHandler(message, _sender, sendResponse) {
 browser.runtime.onMessage.addListener(attachRecorderHandler)
 browser.runtime.onMessage.addListener(detachRecorderHandler)
 
-function findRecordingIndicator() {
-  try {
-    return document.getElementById('selenium-ide-indicator')
-  } catch (error) {
-    return true
+function addRecordingIndicator() {
+  if (!recordingIndicator && frameLocation === 'root') {
+    browser.runtime
+      .sendMessage({
+        setFrameNumberForTab: true,
+        indicatorIndex: window.parent.frames.length,
+        length: window.parent.frames.length + 1,
+      })
+      .then(() => {
+        recordingIndicator = window.document.createElement('iframe')
+        recordingIndicator.src = browser.runtime.getURL('/indicator.html')
+        recordingIndicator.id = 'selenium-ide-indicator'
+        recordingIndicator.style.border = '1px solid white'
+        recordingIndicator.style.position = 'fixed'
+        recordingIndicator.style.bottom = '36px'
+        recordingIndicator.style.right = '36px'
+        recordingIndicator.style.width = '280px'
+        recordingIndicator.style.height = '80px'
+        recordingIndicator.style['background-color'] = 'whitesmoke'
+        recordingIndicator.style['box-shadow'] =
+          '7px 7px 10px 0 rgba(0,0,0,0.3)'
+        recordingIndicator.style.transition = 'bottom 100ms linear'
+        recordingIndicator.style['z-index'] = 1000000000000000
+        recordingIndicator.addEventListener(
+          'mouseenter',
+          function(event) {
+            event.target.style.visibility = 'hidden'
+            setTimeout(function() {
+              event.target.style.visibility = 'visible'
+            }, 1000)
+          },
+          false
+        )
+        window.document.body.appendChild(recordingIndicator)
+        browser.runtime.onMessage.addListener(function(
+          message,
+          sender, // eslint-disable-line
+          sendResponse
+        ) {
+          if (message.recordNotification) {
+            recordingIndicator.contentWindow.postMessage(
+              {
+                direction: 'from-recording-module',
+                command: message.command,
+                target: message.target,
+                value: message.value,
+              },
+              '*'
+            )
+            sendResponse(true)
+          }
+        })
+      })
   }
 }
 
-function addRecordingIndicator() {
-  if (!findRecordingIndicator() && frameLocation === 'root') {
-    browser.runtime.sendMessage({
-      setFrameNumberForTab: true,
-      length: window.parent.frames.length,
-    })
-    let recordingIndicator = window.document.createElement('iframe')
-    recordingIndicator.src = browser.runtime.getURL('/indicator.html')
-    recordingIndicator.id = 'selenium-ide-indicator'
-    recordingIndicator.style.border = '1px solid white'
-    recordingIndicator.style.position = 'fixed'
-    recordingIndicator.style.bottom = '36px'
-    recordingIndicator.style.right = '36px'
-    recordingIndicator.style.width = '280px'
-    recordingIndicator.style.height = '80px'
-    recordingIndicator.style['background-color'] = 'whitesmoke'
-    recordingIndicator.style['box-shadow'] = '7px 7px 10px 0 rgba(0,0,0,0.3)'
-    recordingIndicator.style.transition = 'bottom 100ms linear'
-    recordingIndicator.style['z-index'] = 1000000000000000
-    recordingIndicator.addEventListener(
-      'mouseenter',
-      function(event) {
-        event.target.style.visibility = 'hidden'
-        setTimeout(function() {
-          event.target.style.visibility = 'visible'
-        }, 1000)
-      },
-      false
-    )
-    window.document.body.appendChild(recordingIndicator)
-    browser.runtime.onMessage.addListener(function(
-      message,
-      sender, // eslint-disable-line
-      sendResponse
-    ) {
-      if (message.recordNotification) {
-        recordingIndicator.contentWindow.postMessage(
-          {
-            direction: 'from-recording-module',
-            command: message.command,
-            target: message.target,
-            value: message.value,
-          },
-          '*'
-        )
-        sendResponse(true)
-      }
-    })
-  }
+function getFrameCount() {
+  return browser.runtime.sendMessage({
+    requestFrameCount: true,
+  })
 }
 
 function removeRecordingIndicator() {
-  let element = findRecordingIndicator()
-  if (element) {
-    element.parentElement.removeChild(element)
-  }
+  if (recordingIndicator)
+    recordingIndicator.parentElement.removeChild(recordingIndicator)
 }
 
 // TODO: Decouple frame location from recording since its also used in playback
-// and not obvious that that's happening (a.k.a. MAGIC!).
 // set frame id
 ;(async function getframeLocation() {
   let currentWindow = window
   let currentParentWindow
-  let recordingIndicator
   let recordingIndicatorIndex
+  let frameCount
 
   while (currentWindow !== window.top) {
     currentParentWindow = currentWindow.parent
@@ -254,22 +255,8 @@ function removeRecordingIndicator() {
       break
     }
 
-    try {
-      recordingIndicator = currentParentWindow.document.getElementById(
-        'selenium-ide-indicator'
-      )
-    } catch (e) {
-      // If we got here looking for the indicator, its likely that we found it
-      // but hit a CORS restriction. So we assume that's the case and set the
-      // indicator variable to true.
-      recordingIndicator = true
-    }
-
-    if (recordingIndicator) {
-      recordingIndicatorIndex = await browser.runtime.sendMessage({
-        requestFrameIndex: true,
-      })
-    }
+    frameCount = await getFrameCount()
+    if (frameCount) recordingIndicatorIndex = frameCount.indicatorIndex
 
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
       const frame = currentParentWindow.frames[idx]
