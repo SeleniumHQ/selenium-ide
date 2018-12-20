@@ -155,16 +155,14 @@ Recorder.prototype.detach = function() {
   detachInputListeners(this.recordingState)
 }
 
-function attachRecorderHandler(message, sender, sendResponse) {
-  // eslint-disable-line
+function attachRecorderHandler(message, _sender, sendResponse) {
   if (message.attachRecorder) {
     recorder.attach()
     sendResponse(true)
   }
 }
 
-function detachRecorderHandler(message, sender, sendResponse) {
-  // eslint-disable-line
+function detachRecorderHandler(message, _sender, sendResponse) {
   if (message.detachRecorder) {
     recorder.detach()
     sendResponse(true)
