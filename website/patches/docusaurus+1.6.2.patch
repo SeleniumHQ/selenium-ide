@@ -1,0 +1,46 @@
+patch-package
+--- a/node_modules/docusaurus/lib/core/BlogPostLayout.js
++++ b/node_modules/docusaurus/lib/core/BlogPostLayout.js
+@@ -103,7 +103,7 @@ class BlogPostLayout extends React.Component {
+         language="en"
+         description={this.getDescription()}
+         config={this.props.config}
+-        metadata={{blog: true}}>
++        metadata={{blog: true, canonical: post.canonical}}>
+         <div className="docMainWrapper wrapper">
+           <BlogSidebar
+             language="en"
+@@ -118,6 +118,13 @@ class BlogPostLayout extends React.Component {
+                 language="en"
+                 config={this.props.config}
+               />
++              {post.canonical && (
++                <span style={{
++                  color: 'rgba(0, 0, 0, 0.7)'
++                }}>
++                  Originally published at <a href={post.canonical}>{new URL(post.canonical).hostname}</a>.
++                </span>
++              )}
+               {this.renderSocialButtons()}
+             </div>
+             <div className="blog-recent">
+--- a/node_modules/docusaurus/lib/core/Head.js
++++ b/node_modules/docusaurus/lib/core/Head.js
+@@ -39,6 +39,7 @@ class Head extends React.Component {
+         <meta name="viewport" content="width=device-width" />
+         <meta name="generator" content="Docusaurus" />
+         <meta name="description" content={this.props.description} />
++        {this.props.canonical && <link rel="canonical" href={this.props.canonical} />}
+         {this.props.version && (
+           <meta name="docsearch:version" content={this.props.version} />
+         )}
+--- a/node_modules/docusaurus/lib/core/Site.js
++++ b/node_modules/docusaurus/lib/core/Site.js
+@@ -52,6 +52,7 @@ class Site extends React.Component {
+           url={url}
+           language={this.props.language}
+           version={this.props.version}
++          canonical={this.props.metadata.canonical}
+         />
+         <body className={this.props.className}>
+           <HeaderNav
