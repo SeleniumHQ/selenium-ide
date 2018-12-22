@@ -255,7 +255,7 @@ function removeRecordingIndicator() {
       break
     }
 
-    frameCount = await getFrameCount()
+    frameCount = await getFrameCount().catch(() => {})
     if (frameCount) recordingIndicatorIndex = frameCount.indicatorIndex
 
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
