@@ -243,7 +243,7 @@ function removeRecordingIndicator() {
 
 // TODO: Decouple frame location from recording since its also used in playback
 // set frame id
-;(async function getframeLocation() {
+async function getframeLocation() {
   let currentWindow = window
   let currentParentWindow
   let recordingIndicatorIndex
@@ -275,6 +275,10 @@ function removeRecordingIndicator() {
     }
   }
   frameLocation = 'root' + frameLocation
+}
+
+;(() => {
+  getframeLocation()
 })()
 
 browser.runtime.sendMessage({ frameLocation: frameLocation }).catch(() => {})
