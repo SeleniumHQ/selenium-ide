@@ -597,7 +597,17 @@ class PlaybackState {
       } else {
         if (!this.hasFailed && this.lastSelectedView) {
           UiState.changeView(this.lastSelectedView)
-          this.commandTarget.doCleanup({ isTestAborted: this.aborted })
+          this.commandTarget.doCleanup({
+            isTestAborted: this.aborted,
+            callback: () => {
+              ModalState.showDialog({
+                type: 'info',
+                title: 'Unable to reach target command',
+                description:
+                  'The target command was unreachable.  \n\nPlease try again.',
+              })
+            },
+          })
         }
         this.lastSelectedView = undefined
         if (this.currentRunningSuite) {

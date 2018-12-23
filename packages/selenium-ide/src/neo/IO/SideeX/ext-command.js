@@ -42,7 +42,8 @@ export default class ExtCommand {
     this.attached = false
 
     // Use ES6 arrow function to bind correct this
-    this.tabsOnUpdatedHandler = (tabId, changeInfo, tabInfo) => { // eslint-disable-line
+    this.tabsOnUpdatedHandler = (tabId, changeInfo, _tabInfo) => {
+      // eslint-disable-line
       if (changeInfo.status) {
         if (changeInfo.status == 'loading') {
           this.setLoading(tabId)
@@ -523,7 +524,7 @@ export default class ExtCommand {
 
   getFrameIds() {
     const frameLocation = this.getCurrentPlayingFrameLocation()
-    const frameIds = frameLocation.split(':')
+    const frameIds = frameLocation.split(':').map(Math.floor)
     frameIds.shift()
     if (frameIds.length > 0) return frameIds
   }

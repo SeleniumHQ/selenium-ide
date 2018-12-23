@@ -592,6 +592,23 @@ Recorder.addEventHandler(
 // END
 
 Recorder.addMutationObserver(
+  'FrameDeleted',
+  function(mutations) {
+    mutations.forEach(async mutation => {
+      const removedNodes = await mutation.removedNodes
+      if (
+        removedNodes.length &&
+        removedNodes[0].nodeName === 'IFRAME' &&
+        removedNodes[0].id !== 'selenium-ide-indicator'
+      ) {
+        browser.runtime.sendMessage({ frameRemoved: true }).catch(() => {})
+      }
+    })
+  },
+  { childList: true }
+)
+
+Recorder.addMutationObserver(
   'DOMNodeInserted',
   function(mutations) {
     if (

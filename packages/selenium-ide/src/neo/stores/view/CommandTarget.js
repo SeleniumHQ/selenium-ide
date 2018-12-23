@@ -75,6 +75,7 @@ export default class CommandTarget {
       this._logMessage =
         'Unable to play to target command. Likely because it is in a control flow branch that was not executed during playback.'
       Logger.warn(this._logMessage)
+      if (opts.callback) opts.callback()
     }
   }
 

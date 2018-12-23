@@ -304,10 +304,18 @@ export default class BackgroundRecorder {
   }
 
   addCommandMessageHandler(message, sender, sendResponse) {
-    if (message.requestFrameIndex) {
+    if (message.frameRemoved) {
+      browser.tabs.sendMessage(sender.tab.id, {
+        recalculateFrameLocation: true,
+      })
+      return sendResponse(true)
+    }
+    if (message.requestFrameCount) {
       return sendResponse(this.windowSession.frameCountForTab[sender.tab.id])
     } else if (message.setFrameNumberForTab) {
-      this.windowSession.frameCountForTab[sender.tab.id] = message.length
+      this.windowSession.frameCountForTab[sender.tab.id] = {
+        indicatorIndex: message.indicatorIndex,
+      }
       return sendResponse(true)
     }
     if (
