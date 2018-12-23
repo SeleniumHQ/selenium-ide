@@ -277,15 +277,18 @@ async function getFrameLocation() {
   browser.runtime.sendMessage({ frameLocation: frameLocation }).catch(() => {})
 }
 
-async function recalculateFrameLocation(message, _sender, sendResponse) {
+function recalculateFrameLocation(message, _sender, sendResponse) {
   if (message.recalculateFrameLocation) {
-    removeRecordingIndicator()
-    setTimeout(async () => {
-      await addRecordingIndicator()
-    }, 100)
-    frameLocation = ''
-    await getFrameLocation()
-    sendResponse(true)
+    ;(async () => {
+      removeRecordingIndicator()
+      setTimeout(async () => {
+        await addRecordingIndicator()
+      }, 100)
+      frameLocation = ''
+      await getFrameLocation()
+      sendResponse(true)
+    })()
+    return true
   }
 }
 
