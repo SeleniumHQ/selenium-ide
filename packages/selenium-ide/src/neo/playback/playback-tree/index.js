@@ -116,8 +116,11 @@ function trackBranchOpen(commandNode, nextCommandNode, stack, state) {
 }
 
 function trackBranchClose(commandNode, nextCommandNode, stack, state) {
+  let _nextNode = nextCommandNode
   state.pop()
-  connectNext(commandNode, nextCommandNode, stack, state)
+  const top = state.top()
+  if (top && ControlFlowCommandChecks.isLoop(top)) _nextNode = stack[top.index]
+  connectNext(commandNode, _nextNode, stack, state)
 }
 
 function connectConditionalForBranchOpen(

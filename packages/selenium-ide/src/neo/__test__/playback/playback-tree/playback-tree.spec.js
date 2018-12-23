@@ -116,6 +116,31 @@ describe('Control Flow', () => {
         expect(stack[2].right).toBeUndefined()
         expect(stack[2].left).toBeUndefined()
       })
+      test('while-if-end-end', () => {
+        let input = [
+          createCommand(ControlFlowCommandNames.while), // 0
+          createCommand(ControlFlowCommandNames.if), // 1
+          createCommand('command'), // 2
+          createCommand(ControlFlowCommandNames.end), // 3
+          createCommand(ControlFlowCommandNames.end), // 4
+        ]
+        let stack = createCommandNodesFromCommandStack(input)
+        expect(stack[0].next).toBeUndefined()
+        expect(stack[0].right).toEqual(stack[1])
+        expect(stack[0].left).toEqual(stack[4])
+        expect(stack[1].next).toBeUndefined()
+        expect(stack[1].right).toEqual(stack[2])
+        expect(stack[1].left).toEqual(stack[3])
+        expect(stack[2].next).toEqual(stack[3])
+        expect(stack[2].right).toBeUndefined()
+        expect(stack[2].left).toBeUndefined()
+        expect(stack[3].next).toEqual(stack[0])
+        expect(stack[3].right).toBeUndefined()
+        expect(stack[3].left).toBeUndefined()
+        expect(stack[4].next).toBeUndefined()
+        expect(stack[4].right).toBeUndefined()
+        expect(stack[4].left).toBeUndefined()
+      })
       test('while-command-command-end', () => {
         let input = [
           createCommand(ControlFlowCommandNames.while),
