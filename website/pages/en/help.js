@@ -34,7 +34,7 @@ function Help(props) {
       title: 'Join the community',
     },
     {
-      content: `Find out what's new with Selenium IDE.\n\n- Follow [Dave](https://twitter.com/tourdedave) and [Tomer](https://twitter.com/corevous] on Twitter.\n\n- Read the [Selenium IDE blog](${baseUrl}blog/).\n\n- Read the [release notes](https://github.com/SeleniumHQ/selenium-ide/releases) on GitHub.`,
+      content: `Find out what's new with Selenium IDE.\n\n- Follow [Dave](https://twitter.com/tourdedave) and [Tomer](https://twitter.com/corevous) on Twitter.\n\n- Read the [Selenium IDE blog](${baseUrl}blog/).\n\n- Read the [release notes](https://github.com/SeleniumHQ/selenium-ide/releases) on GitHub.`,
       title: 'Stay up to date',
     },
   ]

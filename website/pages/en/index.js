@@ -112,35 +112,35 @@ class Index extends React.Component {
             {
               content:
                 'Download Selenium IDE for either [Chrome](sad) or [Firefox](asd) and get started right away.',
-              image: `${baseUrl}img/selenium-ide128.png`,
+              image: `${baseUrl}img/browsers.png`,
               imageAlign: 'top',
               title: 'Supports Chrome and Firefox',
             },
             {
               content:
                 'Selenium IDE [Runner](linktodocs) will execute your test cases using WebDriver, allowing you to test on multiple machines, and browsers that Selenium IDE may not be available in.',
-              image: `${baseUrl}img/selenium-ide128.png`,
+              image: `${baseUrl}img/parallel-execution.png`,
               imageAlign: 'top',
               title: 'Parallel Execution',
             },
             {
               content:
                 'Selenium IDE records multiple locators, and will try to swap them on the fly if one failed, notifying you of the failure.',
-              image: `${baseUrl}img/selenium-ide128.png`,
+              image: `${baseUrl}img/fallback.png`,
               imageAlign: 'top',
               title: 'Locator Fallback',
             },
             {
               content:
                 'Through the use of the [run command](sda), you can re-use test cases already recorded from another test case, allowing you to re-use your login logic in multiple places throughout the suite.',
-              image: `${baseUrl}img/selenium-ide128.png`,
+              image: `${baseUrl}img/reuse.png`,
               imageAlign: 'top',
               title: 'Test Case Reuse',
             },
             {
               content:
                 'Extend Selenium IDE through the use of [plugins](plugins-getting-started), you can write plugins that will introduce new commands to the IDE.',
-              image: `${baseUrl}img/selenium-ide128.png`,
+              image: `${baseUrl}img/plugins.png`,
               imageAlign: 'top',
               title: 'Plugins',
             },
@@ -171,7 +171,7 @@ class Index extends React.Component {
           {
             content:
               'Selenium IDE packs with it rich IDE features, including setting breakpoints, pausing on exceptions and more.',
-            image: `${baseUrl}img/selenium-ide128.png`,
+            image: `${baseUrl}img/debugger.png`,
             imageAlign: 'right',
             title: 'Test Automation IDE',
           },
@@ -185,7 +185,7 @@ class Index extends React.Component {
           {
             content:
               'Selenium IDE comes shipped with an extensive [control flow](control-flow-getting-started) structure, no more `gotos` and the likes, from now on `ifs`, `whiles` and `times` out of the box.',
-            image: `${baseUrl}img/selenium-ide128.png`,
+            image: `${baseUrl}img/control-flow.png`,
             imageAlign: 'left',
             title: 'Control Flow',
           },
@@ -199,7 +199,7 @@ class Index extends React.Component {
           {
             content:
               "The [selenium-side-runner](runner-getting-started) is a feature packed test framework built on top of Selenium IDE. It let's you run tests in parallel, on different browsers, on Selenium Grid or on remove WebDriver instances.",
-            image: `${baseUrl}img/selenium-ide128.png`,
+            image: `${baseUrl}img/runner.png`,
             imageAlign: 'right',
             title: 'Selenium IDE Runner',
           },
