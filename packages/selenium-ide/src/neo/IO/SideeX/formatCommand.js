@@ -129,4 +129,4 @@ function handleFormatCommand(message, _sender, sendResponse) {
 
 try {
   browser.runtime.onMessage.addListener(handleFormatCommand)
-} catch(e) {} // eslint-disable-line
+} catch (e) {} // eslint-disable-line
