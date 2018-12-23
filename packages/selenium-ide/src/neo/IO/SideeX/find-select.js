@@ -104,8 +104,8 @@ function selectTarget(target) {
     UiState.selectedCommand.setTargets(target)
   } else if (UiState.selectedTest.test) {
     const command = UiState.selectedTest.test.createCommand()
-    command.setTarget(target[0][0])
     command.setTargets(target)
+    command.setTarget(target[0][0])
   }
 }
 
