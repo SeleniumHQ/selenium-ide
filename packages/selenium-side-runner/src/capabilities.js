@@ -30,7 +30,7 @@ export default {
 }
 
 function matchStringPairs(input) {
-  const regex = /([^ =]*) ?= ?(".*"|\[.*\]|[^ ]*)/g
+  const regex = /([^ =]*) ?= ?(".*"|'.*'|\[.*\]|[^ ]*)/g
   let result
   const splitCapabilities = []
   while ((result = regex.exec(input)) !== null) {
@@ -67,6 +67,15 @@ function parseStringValue(value) {
     }
     return parsed
   } catch (e) {
-    return value.trim()
+    // single quote is illegal in JSON
+    return trimSingleQuote(value)
   }
+}
+
+function trimSingleQuote(value) {
+  let str = value.trim()
+  if (str[0] === str[str.length - 1] && str[0] === "'") {
+    return str.substr(1, str.length - 2)
+  }
+  return str
 }

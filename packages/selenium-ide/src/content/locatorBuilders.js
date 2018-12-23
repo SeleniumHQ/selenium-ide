@@ -288,6 +288,18 @@ LocatorBuilders.prototype.preciseXPath = function(xpath, e) {
  * ===== builders =====
  */
 
+LocatorBuilders.add('css:data-attr', function(e) {
+  const dataAttributes = ['data-test', 'data-test-id']
+  for (let i = 0; i < dataAttributes.length; i++) {
+    const attr = dataAttributes[i]
+    const value = e.getAttribute(attr)
+    if (attr) {
+      return `css=*[${attr}="${value}"]`
+    }
+  }
+  return null
+})
+
 LocatorBuilders.add('id', function(e) {
   if (e.id) {
     return 'id=' + e.id

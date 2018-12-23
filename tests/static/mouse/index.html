@@ -1,0 +1,23 @@
+<script type="text/javascript">
+  function down() {
+    var e = document.getElementById("a");
+    e.innerText = "down";
+    e.style.backgroundColor = "red";
+  }
+  function up() {
+    var e = document.getElementById("a");
+    e.innerText = "up";
+    e.style.backgroundColor = "blue";
+  }
+  function enter() {
+    var e = document.getElementById("a");
+    e.innerText = "enter";
+    e.style.backgroundColor = "green";
+  }
+  function out() {
+    var e = document.getElementById("a");
+    e.innerText = "out";
+    e.style.backgroundColor = "white";
+  }
+</script>
+<div id="a" style="width: 500px;height: 500px;background-color: white;" onmousedown="down()" onmouseup="up()" onmouseenter="enter()" onmouseout="out()">out</div>

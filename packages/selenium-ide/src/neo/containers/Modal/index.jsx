@@ -18,10 +18,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import Alert from '../../components/Alert'
-import TestSelector from '../../components/TestSelector'
-import ImportDialog from '../../components/ImportDialog'
-import SuiteSettings from '../../components/SuiteSettings'
+import TestSelector from '../../components/Dialogs/TestSelector'
+import ImportDialog from '../../components/Dialogs/ImportDialog'
+import SuiteSettings from '../../components/Dialogs/SuiteSettings'
 import RenameDialog from '../../components/Dialogs/Rename'
 import BaseUrlDialog from '../../components/Dialogs/BaseUrl'
 import WelcomeDialog from '../../components/Dialogs/Welcome'
@@ -42,8 +41,7 @@ export default class Modal extends Component {
   render() {
     return (
       <div>
-        <Alert show={show => (ModalState.showAlert = show)} />
-        <AlertDialog show={show => (ModalState.showDialog = show)} />
+        <AlertDialog show={show => (ModalState.showAlert = show)} />
         <TestSelector
           isEditing={!!ModalState.editedSuite}
           tests={this.props.project.tests}

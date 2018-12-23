@@ -34,7 +34,6 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
-export const supportedFileFormats = '.side, text/html'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -101,24 +100,21 @@ function exportProject(project) {
       skipStdLibEmitting: true,
     }).catch(err => {
       const markdown = ParseError((err && err.message) || err)
-      ModalState.showAlert(
-        {
-          title: 'Error saving project',
-          description: markdown,
-          confirmLabel: 'Download log',
-          cancelLabel: 'Close',
-        },
-        choseDownload => {
-          if (choseDownload) {
-            browser.downloads.download({
-              filename: project.name + '-logs.md',
-              url: createBlob('text/markdown', markdown),
-              saveAs: true,
-              conflictAction: 'overwrite',
-            })
-          }
+      ModalState.showAlert({
+        title: 'Error saving project',
+        description: markdown,
+        confirmLabel: 'Download log',
+        cancelLabel: 'Close',
+      }).then(choseDownload => {
+        if (choseDownload) {
+          browser.downloads.download({
+            filename: project.name + '-logs.md',
+            url: createBlob('text/markdown', markdown),
+            saveAs: true,
+            conflictAction: 'overwrite',
+          })
         }
-      )
+      })
       return Promise.reject()
     })
   })
@@ -164,23 +160,20 @@ export function loadProject(project, file) {
         } else if (type === FileTypes.TestCase) {
           let { test, baseUrl } = migrateTestCase(contents)
           if (project.urls.length && !project.urls.includes(baseUrl)) {
-            ModalState.showAlert(
-              {
-                title: 'Migrate test case',
-                description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
-                confirmLabel: 'Migrate',
-                cancelLabel: 'Discard',
-              },
-              choseMigration => {
-                if (choseMigration) {
-                  UiState.selectTest(
-                    project.addTestCase(
-                      TestCase.fromJS(migrateUrls(test, baseUrl))
-                    )
+            ModalState.showAlert({
+              title: 'Migrate test case',
+              description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
+              confirmLabel: 'Migrate',
+              cancelLabel: 'Discard',
+            }).then(choseMigration => {
+              if (choseMigration) {
+                UiState.selectTest(
+                  project.addTestCase(
+                    TestCase.fromJS(migrateUrls(test, baseUrl))
                   )
-                }
+                )
               }
-            )
+            })
           } else {
             UiState.selectTest(
               project.addTestCase(TestCase.fromJS(test, baseUrl))

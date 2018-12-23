@@ -45,6 +45,11 @@ describe('capabilities string parser', () => {
     expect(Capabilities.parseString(capabilities)).toEqual({
       binary: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     })
+    const capabilities2 =
+      "binary='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'"
+    expect(Capabilities.parseString(capabilities2)).toEqual({
+      binary: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    })
   })
   it('should parse boolean capability key', () => {
     const capabilities = 'javascriptEnabled=false databaseEnabled=true'

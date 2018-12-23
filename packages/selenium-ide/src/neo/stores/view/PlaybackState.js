@@ -180,7 +180,7 @@ class PlaybackState {
     this.pauseOnExceptions = !this.pauseOnExceptions
   }
 
-  beforePlaying(play) {
+  async beforePlaying(play) {
     try {
       UiState._project.addCurrentUrl()
     } catch (e) {} // eslint-disable-line no-empty
@@ -188,21 +188,17 @@ class PlaybackState {
     UiState.changeView('Executing', true)
     UiState.selectCommand(undefined)
     if (UiState.isRecording) {
-      ModalState.showAlert(
-        {
-          title: 'Stop recording',
-          description:
-            'Are you sure you would like to stop recording, and start playing?',
-          confirmLabel: 'Playback',
-          cancelLabel: 'cancel',
-        },
-        chosePlay => {
-          if (chosePlay) {
-            UiState.stopRecording()
-            play()
-          }
-        }
-      )
+      const chosePlay = await ModalState.showAlert({
+        title: 'Stop recording',
+        description:
+          'Are you sure you would like to stop recording, and start playing?',
+        confirmLabel: 'Playback',
+        cancelLabel: 'cancel',
+      })
+      if (chosePlay) {
+        UiState.stopRecording()
+        play()
+      }
     } else {
       play()
     }
@@ -560,22 +556,18 @@ class PlaybackState {
   async break(command) {
     if (this.commandTarget.is.recordFromHere) {
       this.commandTarget.doRecordFromHere(async () => {
-        ModalState.showDialog(
-          {
-            type: 'info',
-            title: 'Start recording',
-            description:
-              'You can now start recording.  \n\nThe recording will start from the command you selected.',
-            confirmLabel: 'START RECORDING',
-            cancelLabel: 'CANCEL',
-          },
-          async choseProceed => {
-            if (choseProceed) {
-              await UiState.startRecording()
-              await WindowSession.focusPlayingWindow()
-            }
-          }
-        )
+        const choseProceed = await ModalState.showAlert({
+          type: 'info',
+          title: 'Start recording',
+          description:
+            'You can now start recording.  \n\nThe recording will start from the command you selected.',
+          confirmLabel: 'START RECORDING',
+          cancelLabel: 'CANCEL',
+        })
+        if (choseProceed) {
+          await UiState.startRecording()
+          await WindowSession.focusPlayingWindow()
+        }
       })
     } else {
       this.breakOnNextCommand = false

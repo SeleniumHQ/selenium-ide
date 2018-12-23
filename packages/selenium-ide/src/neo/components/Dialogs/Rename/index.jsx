@@ -113,7 +113,12 @@ class RenameDialogContents extends React.Component {
         title={content.title}
         type={this.state.valid ? 'info' : 'warn'}
         renderFooter={() => (
-          <span className="right">
+          <span
+            className="right"
+            style={{
+              display: 'flex',
+            }}
+          >
             <FlatButton
               disabled={this.props.isNewTest && !!this.state.value}
               onClick={this.props.cancel}

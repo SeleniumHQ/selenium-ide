@@ -23,15 +23,14 @@ const router = new Router()
 
 router.post('/alert', (req, res) => {
   const plugin = Manager.getPlugin(req.sender)
-  ModalState.showAlert(
-    {
-      title: `${plugin.name} says`,
-      description: req.message,
-      cancelLabel: req.cancel,
-      confirmLabel: req.confirm,
-    },
-    res
-  )
+  ModalState.showAlert({
+    title: `${plugin.name} says`,
+    description: req.message,
+    cancelLabel: req.cancel,
+    confirmLabel: req.confirm,
+  })
+    .then(res)
+    .catch(res)
 })
 
 export default router

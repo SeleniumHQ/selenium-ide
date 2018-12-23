@@ -37,23 +37,31 @@ export default class AlertDialog extends React.Component {
   static propTypes = {
     show: PropTypes.func.isRequired,
   }
-  show(options, cb) {
-    this.setState({
-      isOpen: true,
-      options,
-      cb,
+  show(options) {
+    if (this.state.isOpen) {
+      this.state.rej(
+        new Error('Another alert was opened while this was showing')
+      )
+    }
+    return new Promise((res, rej) => {
+      this.setState({
+        isOpen: true,
+        options,
+        res,
+        rej,
+      })
     })
   }
   close(status) {
     this.setState({
       isOpen: false,
     })
-    if (this.state.cb) this.state.cb(status)
+    this.state.res(status)
   }
   render() {
     return (
       <Modal
-        className={classNames('stripped')}
+        className={classNames('stripped', 'alert')}
         isOpen={this.state.isOpen}
         onRequestClose={this.close.bind(this, false)}
       >
@@ -78,9 +86,13 @@ export default class AlertDialog extends React.Component {
           )}
           onRequestClose={this.close.bind(this, false)}
         >
-          <Markdown className="markdown">
-            {this.state.options.description}
-          </Markdown>
+          {this.state.options.isMarkdown ? (
+            <Markdown className="markdown">
+              {this.state.options.description}
+            </Markdown>
+          ) : (
+            <div>{this.state.options.description}</div>
+          )}
         </DialogContainer>
       </Modal>
     )
