@@ -600,11 +600,11 @@ class PlaybackState {
           this.commandTarget.doCleanup({
             isTestAborted: this.aborted,
             callback: () => {
-              ModalState.showDialog({
+              ModalState.showAlert({
                 type: 'info',
                 title: 'Unable to reach target command',
                 description:
-                  'The target command was unreachable.  \n\nPlease try again.',
+                  "The target command was unreachable because it was part of a control flow branch that wasn't executed.  \n\nPlease try again.",
               })
             },
           })
