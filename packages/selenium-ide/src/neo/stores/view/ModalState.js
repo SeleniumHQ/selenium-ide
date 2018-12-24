@@ -42,22 +42,18 @@ class ModalState {
   }
 
   @action.bound
-  selectBaseUrl(isInvalid = true) {
+  selectBaseUrl(options = { isInvalid: true }) {
     return new Promise((res, rej) => {
       this.baseUrlState = {
+        ...options,
         selecting: true,
-        isInvalid,
         done: action(url => {
           res(url)
-          this.baseUrlState = {
-            isInvalid,
-          }
+          this.baseUrlState = {}
         }),
         cancel: action(() => {
           rej()
-          this.baseUrlState = {
-            isInvalid,
-          }
+          this.baseUrlState = {}
         }),
       }
     })

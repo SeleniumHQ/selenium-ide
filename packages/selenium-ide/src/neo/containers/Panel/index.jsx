@@ -251,6 +251,7 @@ export default class Panel extends React.Component {
     loadJSProject(this.state.project, newProject.toJS())
     Logger.clearLogs()
     newProject.setModified(false)
+    UiState.startRecording(false)
   }
   componentWillUnmount() {
     if (isProduction) {

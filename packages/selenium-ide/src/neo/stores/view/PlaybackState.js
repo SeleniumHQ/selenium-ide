@@ -368,7 +368,13 @@ class PlaybackState {
       } else {
         const startingUrl = UiState.baseUrl
         if (!startingUrl) {
-          UiState.setUrl(await ModalState.selectBaseUrl(true), true)
+          UiState.setUrl(
+            await ModalState.selectBaseUrl({
+              isInvalid: true,
+              confirmLabel: 'Start playback',
+            }),
+            true
+          )
         }
       }
       if (controls.playFromHere) {
