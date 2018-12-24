@@ -314,6 +314,34 @@ class PlaybackState {
     return commands.slice(index)
   }
 
+  async initPlayFromHere(command, test) {
+    // for soft-init in playback.js
+    this.isPlayFromHere = true
+
+    // to determine if control flow commands exist in test commands
+    const playbackTree = createPlaybackTree(test.commands.peek())
+
+    if (playbackTree.containsControlFlow) {
+      const choseProceed = await ModalState.showAlert({
+        isMarkdown: true,
+        type: 'info',
+        title: 'Targeted playback with control flow commands',
+        description:
+          'There are control flow commands present in your test. ' +
+          'Playing from a specific command may cause unintended test results. \n\n' +
+          'Do you want to continue or play to this command from the beginning ' +
+          'of the test?`',
+        confirmLabel: 'CONTINUE',
+        cancelLabel: 'PLAY TO HERE',
+      })
+      if (!choseProceed)
+        return this.startPlaying(command, { playToThisPoint: true })
+    }
+
+    // for error reporting when tree construction in playback throws
+    this.playFromHereCommandId = command.id
+  }
+
   @action.bound
   startPlaying(
     command,
@@ -339,25 +367,7 @@ class PlaybackState {
           this.commandTarget.load(command, controls)
       }
       if (controls.playFromHere) {
-        this.isPlayFromHere = true // for soft-init
-        const playbackTree = createPlaybackTree(test.commands.peek()) // to determine if control flow commands exist in test
-        if (playbackTree.containsControlFlow) {
-          const choseProceed = await ModalState.showAlert({
-            isMarkdown: true,
-            type: 'info',
-            title: 'Targeted playback with control flow commands',
-            description:
-              'There are control flow commands present in your test. ' +
-              'Playing from a specific command may cause unintended test results. \n\n' +
-              'Do you want to continue or play to this command from the beginning ' +
-              'of the test?`',
-            confirmLabel: 'CONTINUE',
-            cancelLabel: 'PLAY TO HERE',
-          })
-          if (!choseProceed)
-            return this.startPlaying(command, { playToThisPoint: true })
-        }
-        this.playFromHereCommandId = command.id // for error reporting when tree construction in playback throws
+        await this.initPlayFromHere(command, test)
         this.runningQueue = this.runningQueueFromIndex(
           test.commands.peek(),
           currentPlayingIndex
