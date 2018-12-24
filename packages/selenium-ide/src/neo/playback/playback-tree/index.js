@@ -17,7 +17,7 @@
 
 import { CommandNode } from './command-node'
 import { State } from './state'
-import { validateControlFlowSyntax } from './syntax-validation'
+import { validateControlFlowSyntax, repeatIfError } from './syntax-validation'
 import { deriveCommandLevels } from './command-leveler'
 import {
   ControlFlowCommandNames,
@@ -26,13 +26,26 @@ import {
 export { createPlaybackTree } // public API
 export { createCommandNodesFromCommandStack } // for testing
 
-function createPlaybackTree(commandStack) {
-  let nodes = createCommandNodesFromCommandStack(commandStack)
-  return { startingCommandNode: nodes[0] }
+function createPlaybackTree(commandStack, isValidationDisabled) {
+  let nodes = createCommandNodesFromCommandStack(
+    commandStack,
+    isValidationDisabled
+  )
+  return {
+    startingCommandNode: nodes[0],
+    containsControlFlow: containsControlFlow(nodes),
+  }
 }
 
-function createCommandNodesFromCommandStack(commandStack) {
-  validateControlFlowSyntax(commandStack)
+function containsControlFlow(nodes) {
+  return !!nodes.filter(node => node.isControlFlow()).length
+}
+
+function createCommandNodesFromCommandStack(
+  commandStack,
+  isValidationDisabled = false
+) {
+  if (!isValidationDisabled) validateControlFlowSyntax(commandStack)
   let levels = deriveCommandLevels(commandStack)
   let nodes = createCommandNodes(commandStack, levels)
   return connectCommandNodes(nodes)
@@ -65,9 +78,6 @@ function connectCommandNodes(_commandNodeStack) {
       connectDefault(commandNode, nextCommandNode, commandNodeStack, state)
     }
   })
-  //if (ControlFlowCommandChecks.isTerminal(commandNodeStack[0].command)) {
-  //  commandNodeStack.shift();
-  //}
   return commandNodeStack
 }
 
@@ -145,7 +155,9 @@ function connectNext(commandNode, nextCommandNode) {
 }
 
 function connectDo(commandNode, nextCommandNode, stack, state) {
-  commandNode.right = stack[state.top().index]
+  const top = state.top()
+  if (!top) repeatIfError()
+  commandNode.right = stack[top.index]
   commandNode.left = nextCommandNode
   state.pop()
 }

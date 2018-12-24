@@ -358,6 +358,15 @@ describe('Control Flow', () => {
     })
   })
   describe('Processed', () => {
+    it('knows if there are control flow commands within the command stack', () => {
+      let input = [
+        createCommand(ControlFlowCommandNames.do),
+        createCommand('command'),
+        createCommand(ControlFlowCommandNames.repeatIf),
+      ]
+      const tree = createPlaybackTree(input)
+      expect(tree.containsControlFlow).toBeTruthy()
+    })
     it('do-command-repeatIf-end skips do', () => {
       let input = [
         createCommand(ControlFlowCommandNames.do),

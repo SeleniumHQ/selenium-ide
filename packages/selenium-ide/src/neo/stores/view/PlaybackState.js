@@ -88,6 +88,8 @@ class PlaybackState {
   isSilent = false
   @observable
   isSingleCommandExecutionEnabled = false
+  @observable
+  isPlayFromHere = false
 
   constructor() {
     this.maxDelay = 3000
@@ -308,11 +310,44 @@ class PlaybackState {
     this._startPlayingCollection(suite, suite.tests, 'suitePlayackStarted')
   }
 
+  runningQueueFromIndex(commands, index) {
+    return commands.slice(index)
+  }
+
+  async initPlayFromHere(command, test) {
+    // for soft-init in playback.js
+    this.isPlayFromHere = true
+
+    // to determine if control flow commands exist in test commands
+    const playbackTree = createPlaybackTree(test.commands.peek())
+
+    if (playbackTree.containsControlFlow) {
+      const choseProceed = await ModalState.showAlert({
+        isMarkdown: true,
+        type: 'info',
+        title: 'Targeted playback with control flow commands',
+        description:
+          'There are control flow commands present in your test. ' +
+          'Playing from a specific command may cause unintended test results. \n\n' +
+          'Do you want to continue or play to this command from the beginning ' +
+          'of the test?`',
+        confirmLabel: 'CONTINUE',
+        cancelLabel: 'PLAY TO HERE',
+      })
+      if (!choseProceed)
+        return this.startPlaying(command, { playToThisPoint: true })
+    }
+
+    // for error reporting when tree construction in playback throws
+    this.playFromHereCommandId = command.id
+  }
+
   @action.bound
   startPlaying(
     command,
     controls = {
       breakOnNextCommand: false,
+      playFromHere: false,
       playToThisPoint: false,
       recordFromHere: false,
     }
@@ -325,7 +360,9 @@ class PlaybackState {
       this.currentRunningSuite = undefined
       this.currentRunningTest = test
       this.testsCount = 1
+      let currentPlayingIndex = 0
       if (command && command instanceof Command) {
+        currentPlayingIndex = test.commands.indexOf(command)
         if (controls.playToThisPoint || controls.recordFromHere)
           this.commandTarget.load(command, controls)
       } else {
@@ -340,7 +377,15 @@ class PlaybackState {
           )
         }
       }
-      this.runningQueue = test.commands.peek()
+      if (controls.playFromHere) {
+        await this.initPlayFromHere(command, test)
+        this.runningQueue = this.runningQueueFromIndex(
+          test.commands.peek(),
+          currentPlayingIndex
+        )
+      } else {
+        this.runningQueue = test.commands.peek()
+      }
       const pluginsLogs = {}
       if (PluginManager.plugins.length)
         this.logger.log('Preparing plugins for test run...')
@@ -611,11 +656,11 @@ class PlaybackState {
           this.commandTarget.doCleanup({
             isTestAborted: this.aborted,
             callback: () => {
-              ModalState.showDialog({
+              ModalState.showAlert({
                 type: 'info',
                 title: 'Unable to reach target command',
                 description:
-                  'The target command was unreachable.  \n\nPlease try again.',
+                  "The target command was unreachable because it was part of a control flow branch that wasn't executed.  \n\nPlease try again.",
               })
             },
           })
@@ -754,6 +799,10 @@ class PlaybackState {
     this.forceTestCaseFailure = false
     this.aborted = false
     this.paused = false
+    this.isPlayFromHere = false
+    this.isPlayingControlFlowCommands = false
+    this.runningQueue = []
+    this.playFromHereCommandId = undefined
   }
 }
 
@@ -766,5 +815,4 @@ export const PlaybackStates = {
 }
 
 if (!window._playbackState) window._playbackState = new PlaybackState()
-
 export default window._playbackState

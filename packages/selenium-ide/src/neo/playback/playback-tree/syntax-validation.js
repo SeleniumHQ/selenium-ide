@@ -102,10 +102,14 @@ function validateEnd(commandName, commandIndex, state) {
 
 function validateRepeatIf(_commandName, commandIndex, state) {
   if (!ControlFlowCommandChecks.isDo(state.top())) {
-    throw new ControlFlowSyntaxError(
-      'A repeat if used without a do block',
-      commandIndex
-    )
+    repeatIfError(commandIndex)
   }
   state.pop()
+}
+
+export function repeatIfError(commandIndex) {
+  throw new ControlFlowSyntaxError(
+    'A repeat if used without a do block',
+    commandIndex
+  )
 }
