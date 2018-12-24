@@ -170,6 +170,8 @@ function detachRecorderHandler(message, _sender, sendResponse) {
   }
 }
 
+const recorder = new Recorder(window)
+
 // recorder event handlers
 browser.runtime.onMessage.addListener(attachRecorderHandler)
 browser.runtime.onMessage.addListener(detachRecorderHandler)
@@ -229,9 +231,13 @@ function addRecordingIndicator() {
 }
 
 function getFrameCount() {
-  return browser.runtime.sendMessage({
-    requestFrameCount: true,
-  })
+  if (recorder.attached) {
+    return browser.runtime.sendMessage({
+      requestFrameCount: true,
+    })
+  } else {
+    return Promise.resolve(undefined)
+  }
 }
 
 function removeRecordingIndicator() {
@@ -274,7 +280,9 @@ async function getFrameLocation() {
     }
   }
   frameLocation = 'root' + frameLocation
-  browser.runtime.sendMessage({ frameLocation: frameLocation }).catch(() => {})
+  await browser.runtime
+    .sendMessage({ frameLocation: frameLocation })
+    .catch(() => {})
 }
 
 function recalculateFrameLocation(message, _sender, sendResponse) {
@@ -300,7 +308,6 @@ browser.runtime.onMessage.addListener(recalculateFrameLocation)
   await getFrameLocation()
 })()
 
-const recorder = new Recorder(window)
 window.recorder = recorder
 window.contentSideexTabId = contentSideexTabId
 window.Recorder = Recorder
