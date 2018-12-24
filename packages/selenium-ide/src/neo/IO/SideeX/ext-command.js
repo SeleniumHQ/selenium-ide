@@ -19,6 +19,7 @@ import browser from 'webextension-polyfill'
 import Debugger, { convertLocator } from '../debugger'
 import PlaybackState from '../../stores/view/PlaybackState'
 import variables from '../../stores/view/Variables'
+import FrameNotFoundError from '../../../errors/frame-not-found'
 import { absolutifyUrl } from '../playback/utils'
 import { searchDocTree, userAgent as parsedUA } from '../../../common/utils'
 import './bootstrap'
@@ -487,7 +488,7 @@ export default class ExtCommand {
     }
   }
 
-  doType(locator, value, top) {
+  async doType(locator, value, top) {
     if (/^([\w]:\\|\\\\|\/)/.test(value)) {
       const browserName = parsedUA.browser.name
       if (browserName !== 'Chrome')
@@ -495,28 +496,31 @@ export default class ExtCommand {
           new Error('File uploading is only support in Chrome at this time')
         )
       const connection = new Debugger(this.getCurrentPlayingTabId())
-      return connection
-        .attach()
-        .then(() =>
-          connection.getDocument().then(docNode =>
-            this.convertToQuerySelector(locator).then(selector =>
-              connection.querySelector(selector, docNode.nodeId).then(nodeId =>
-                connection
-                  .sendCommand('DOM.setFileInputFiles', {
-                    nodeId,
-                    files: value.split(','),
-                  })
-                  .then(connection.detach)
-                  .then(() => ({ result: 'success' }))
-              )
-            )
-          )
+      try {
+        await connection.attach()
+        const selector = await this.convertToQuerySelector(locator)
+        const nodeId = await connection.querySelector(
+          selector,
+          await this.getDocNodeId(connection)
         )
-        .catch(e => {
-          return connection.detach().then(() => {
-            throw e
-          })
+        await connection.sendCommand('DOM.setFileInputFiles', {
+          nodeId,
+          files: value.split(','),
         })
+        await connection.detach()
+        return {
+          result: 'success',
+        }
+      } catch (e) {
+        await connection.detach()
+        if (e instanceof FrameNotFoundError) {
+          throw new Error(
+            'Unable to upload files due to cross origin frames in the page'
+          )
+        } else {
+          throw e
+        }
+      }
     } else {
       return this.sendMessage('type', locator, value, top)
     }
@@ -530,15 +534,19 @@ export default class ExtCommand {
   }
 
   async getDocNodeId(connection) {
-    const docTree = await connection.getDocument()
-    const frameIds = this.getFrameIds()
-    if (frameIds) {
-      const { childFrames } = await connection.getFrameTree()
-      const frameId = Debugger.getFrameId(childFrames, frameIds)
-      const node = searchDocTree(docTree, 'frameId', frameId)
-      return node.contentDocument.children[0].children[1].nodeId
-    } else {
-      return docTree.nodeId
+    try {
+      const docTree = await connection.getDocument()
+      const frameIds = this.getFrameIds()
+      if (frameIds) {
+        const { childFrames } = await connection.getFrameTree()
+        const frameId = Debugger.getFrameId(childFrames, frameIds)
+        const node = searchDocTree(docTree, 'frameId', frameId)
+        return node.contentDocument.children[0].children[1].nodeId
+      } else {
+        return docTree.nodeId
+      }
+    } catch (e) {
+      throw new FrameNotFoundError(e.message)
     }
   }
 
@@ -588,7 +596,11 @@ export default class ExtCommand {
         }
       } catch (e) {
         await connection.detach()
-        throw e
+        if (e instanceof FrameNotFoundError) {
+          return this.sendMessage('sendKeys', locator, value, top)
+        } else {
+          throw e
+        }
       }
     } else {
       return this.sendMessage('sendKeys', locator, value, top)
