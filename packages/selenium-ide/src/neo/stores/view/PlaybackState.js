@@ -317,7 +317,7 @@ class PlaybackState {
       recordFromHere: false,
     }
   ) {
-    const playTest = action(() => {
+    const playTest = action(async () => {
       this.breakOnNextCommand = controls.breakOnNextCommand
       const { test } = UiState.selectedTest
       this.resetState()
@@ -328,6 +328,11 @@ class PlaybackState {
       if (command && command instanceof Command) {
         if (controls.playToThisPoint || controls.recordFromHere)
           this.commandTarget.load(command, controls)
+      } else {
+        const startingUrl = UiState.baseUrl
+        if (!startingUrl) {
+          UiState.setUrl(await ModalState.selectBaseUrl(true), true)
+        }
       }
       this.runningQueue = test.commands.peek()
       const pluginsLogs = {}
