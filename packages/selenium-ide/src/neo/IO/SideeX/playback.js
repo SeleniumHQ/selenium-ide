@@ -67,7 +67,7 @@ function initPlaybackTree(command) {
         0
       )
     } else {
-      let playbackTree = createPlaybackTree(queue)
+      let playbackTree = createPlaybackTree(queue, PlaybackState.isPlayFromHere)
       PlaybackState.setCurrentExecutingCommandNode(
         playbackTree.startingCommandNode
       )
@@ -183,7 +183,8 @@ function runNextCommand() {
 function prepareToPlay() {
   return executor.init(baseUrl, PlaybackState.currentRunningTest.id, {
     // softInit will try to reconnect to the last session for the sake of running the command if possible
-    softInit: PlaybackState.isSingleCommandRunning,
+    softInit:
+      PlaybackState.isSingleCommandRunning || PlaybackState.isPlayFromHere,
   })
 }
 
@@ -219,6 +220,8 @@ function reportError(error, nonFatal, index) {
     id = PlaybackState.runningQueue[index].id
   } else if (PlaybackState.currentExecutingCommandNode) {
     id = PlaybackState.currentExecutingCommandNode.command.id
+  } else if (PlaybackState.playFromHereCommandId) {
+    id = PlaybackState.playFromHereCommandId
   }
   let message = error
   if (

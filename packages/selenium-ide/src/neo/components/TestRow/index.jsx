@@ -318,6 +318,15 @@ class TestRow extends React.Component {
           >
             Record from here
           </ListMenuItem>
+          <ListMenuItem
+            onClick={() => {
+              this.props.startPlayingHere(this.props.command, {
+                playFromHere: true,
+              })
+            }}
+          >
+            Play from here
+          </ListMenuItem>
           {this.props.isSingleCommandExecutionEnabled && (
             <ListMenuItem
               label="X"

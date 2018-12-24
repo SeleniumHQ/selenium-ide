@@ -88,6 +88,8 @@ class PlaybackState {
   isSilent = false
   @observable
   isSingleCommandExecutionEnabled = false
+  @observable
+  isPlayFromHere = false
 
   constructor() {
     this.maxDelay = 3000
@@ -308,16 +310,21 @@ class PlaybackState {
     this._startPlayingCollection(suite, suite.tests, 'suitePlayackStarted')
   }
 
+  runningQueueFromIndex(commands, index) {
+    return commands.slice(index)
+  }
+
   @action.bound
   startPlaying(
     command,
     controls = {
       breakOnNextCommand: false,
+      playFromHere: false,
       playToThisPoint: false,
       recordFromHere: false,
     }
   ) {
-    const playTest = action(() => {
+    const playTest = action(async () => {
       this.breakOnNextCommand = controls.breakOnNextCommand
       const { test } = UiState.selectedTest
       this.resetState()
@@ -325,11 +332,39 @@ class PlaybackState {
       this.currentRunningSuite = undefined
       this.currentRunningTest = test
       this.testsCount = 1
+      let currentPlayingIndex = 0
       if (command && command instanceof Command) {
+        currentPlayingIndex = test.commands.indexOf(command)
         if (controls.playToThisPoint || controls.recordFromHere)
           this.commandTarget.load(command, controls)
       }
-      this.runningQueue = test.commands.peek()
+      if (controls.playFromHere) {
+        this.isPlayFromHere = true // for soft-init
+        const playbackTree = createPlaybackTree(test.commands.peek()) // to determine if control flow commands exist in test
+        if (playbackTree.containsControlFlow) {
+          const choseProceed = await ModalState.showAlert({
+            isMarkdown: true,
+            type: 'info',
+            title: 'Targeted playback with control flow commands',
+            description:
+              'There are control flow commands present in your test. ' +
+              'Playing from a specific command may cause unintended test results. \n\n' +
+              'Do you want to continue or play to this command from the beginning ' +
+              'of the test?`',
+            confirmLabel: 'CONTINUE',
+            cancelLabel: 'PLAY TO HERE',
+          })
+          if (!choseProceed)
+            return this.startPlaying(command, { playToThisPoint: true })
+        }
+        this.playFromHereCommandId = command.id // for error reporting when tree construction in playback throws
+        this.runningQueue = this.runningQueueFromIndex(
+          test.commands.peek(),
+          currentPlayingIndex
+        )
+      } else {
+        this.runningQueue = test.commands.peek()
+      }
       const pluginsLogs = {}
       if (PluginManager.plugins.length)
         this.logger.log('Preparing plugins for test run...')
@@ -743,6 +778,10 @@ class PlaybackState {
     this.forceTestCaseFailure = false
     this.aborted = false
     this.paused = false
+    this.isPlayFromHere = false
+    this.isPlayingControlFlowCommands = false
+    this.runningQueue = []
+    this.playFromHereCommandId = undefined
   }
 }
 
@@ -755,5 +794,4 @@ export const PlaybackStates = {
 }
 
 if (!window._playbackState) window._playbackState = new PlaybackState()
-
 export default window._playbackState
