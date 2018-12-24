@@ -231,13 +231,9 @@ function addRecordingIndicator() {
 }
 
 function getFrameCount() {
-  if (recorder.attached) {
-    return browser.runtime.sendMessage({
-      requestFrameCount: true,
-    })
-  } else {
-    return Promise.resolve(undefined)
-  }
+  return browser.runtime.sendMessage({
+    requestFrameCount: true,
+  })
 }
 
 function removeRecordingIndicator() {
