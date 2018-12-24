@@ -329,7 +329,10 @@ class UiState {
   async startRecording(isInvalid) {
     let startingUrl = this.baseUrl
     if (!startingUrl) {
-      startingUrl = await ModalState.selectBaseUrl(isInvalid)
+      startingUrl = await ModalState.selectBaseUrl({
+        isInvalid,
+        confirmLabel: 'Start recording',
+      })
     }
     try {
       await this.recorder.attach(startingUrl)

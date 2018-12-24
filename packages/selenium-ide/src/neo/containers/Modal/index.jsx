@@ -84,7 +84,8 @@ export default class Modal extends Component {
         />
         <BaseUrlDialog
           isSelectingUrl={ModalState.baseUrlState.selecting}
-          isInvalid={ModalState.baseUrlState.isInvalid}
+          isInvalid={!!ModalState.baseUrlState.isInvalid}
+          confirmLabel={ModalState.baseUrlState.confirmLabel}
           onUrlSelection={ModalState.baseUrlState.done}
           cancel={ModalState.baseUrlState.cancel}
         />
