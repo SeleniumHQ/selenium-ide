@@ -233,22 +233,19 @@ class TestRow extends React.Component {
       this.props.remove(this.props.index, this.props.command)
     }
   }
-  clearAll() {
+  async clearAll() {
     if (!this.props.readOnly) {
-      ModalState.showAlert(
-        {
-          title: 'Clear all test commands',
-          description:
-            "You're about to remove all of the commands in this test. Do you want to proceed?",
-          confirmLabel: 'Clear all commands',
-          cancelLabel: 'Cancel',
-        },
-        choseProceed => {
-          if (choseProceed) {
-            this.props.clearAllCommands()
-          }
-        }
-      )
+      const choseProceed = await ModalState.showAlert({
+        title: 'Clear all test commands',
+        description:
+          "You're about to remove all of the commands in this test. Do you want to proceed?",
+        confirmLabel: 'Clear all commands',
+        cancelLabel: 'Cancel',
+      })
+      if (choseProceed) {
+        this.props.clearAllCommands()
+        this.props.moveSelection(0)
+      }
     }
   }
   render() {

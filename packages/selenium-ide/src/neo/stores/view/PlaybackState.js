@@ -365,6 +365,11 @@ class PlaybackState {
         currentPlayingIndex = test.commands.indexOf(command)
         if (controls.playToThisPoint || controls.recordFromHere)
           this.commandTarget.load(command, controls)
+      } else {
+        const startingUrl = UiState.baseUrl
+        if (!startingUrl) {
+          UiState.setUrl(await ModalState.selectBaseUrl(true), true)
+        }
       }
       if (controls.playFromHere) {
         await this.initPlayFromHere(command, test)
