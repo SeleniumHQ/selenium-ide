@@ -33,12 +33,12 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 `peru` requires a POSIX machine to work, for the time being you can only properly build the extension on macOS and Linux.
 
 - Install the dependencies
-```peru sync```  
-```yarn``` or if using Node 10 ```yarn --ignore-engines```
+`peru sync`  
+`yarn` or if using Node 10 `yarn --ignore-engines`
 - Build the extension  
-```yarn build``` and then
-```yarn build:webdriver``` and then
-```yarn build:ext:prod``` or ```yarn build:ext``` for faster development build (also includes beta features)
+`yarn build` and then
+`yarn build:webdriver` and then
+`yarn build:ext:prod` or `yarn build:ext` for faster development build (also includes beta features)
 - Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
 
 Manifest located in `<Project Directory>/packages/selenium-ide/build/manifest.json`
