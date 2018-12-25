@@ -82,17 +82,6 @@ export default class Debugger {
   getFrameTree() {
     return this.sendCommand('Page.getFrameTree').then(doc => doc.frameTree)
   }
-
-  static getFrameId(frameTree, frameIndices) {
-    if (frameIndices.length === 1) {
-      return frameTree[frameIndices.shift()].frame.id
-    } else {
-      return this.getFrameId(
-        frameTree[frameIndices.shift()].childFrames,
-        frameIndices
-      )
-    }
-  }
 }
 
 export function convertLocator(locator) {

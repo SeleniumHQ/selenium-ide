@@ -21,7 +21,8 @@ import PlaybackState from '../../stores/view/PlaybackState'
 import variables from '../../stores/view/Variables'
 import FrameNotFoundError from '../../../errors/frame-not-found'
 import { absolutifyUrl } from '../playback/utils'
-import { searchDocTree, userAgent as parsedUA } from '../../../common/utils'
+import { userAgent as parsedUA } from '../../../common/utils'
+import { buildFrameTree } from '../playback/cdp-utils'
 import './bootstrap'
 
 function playbackPausing() {
@@ -533,15 +534,26 @@ export default class ExtCommand {
     if (frameIds.length > 0) return frameIds
   }
 
+  getCdpFrame(frameTree, frameIndices) {
+    if (frameIndices.length === 1) {
+      return frameTree.children[frameIndices.shift()]
+    } else {
+      return this.getFrameId(frameTree[frameIndices.shift()], frameIndices)
+    }
+  }
+
   async getDocNodeId(connection) {
     try {
       const docTree = await connection.getDocument()
       const frameIds = this.getFrameIds()
       if (frameIds) {
-        const { childFrames } = await connection.getFrameTree()
-        const frameId = Debugger.getFrameId(childFrames, frameIds)
-        const node = searchDocTree(docTree, 'frameId', frameId)
-        return node.contentDocument.children[0].children[1].nodeId
+        const tree = buildFrameTree(docTree)
+        const frame = this.getCdpFrame(tree, frameIds)
+        if (frame.documentNodeId) {
+          return frame.documentNodeId
+        } else {
+          throw new Error('frame not found')
+        }
       } else {
         return docTree.nodeId
       }
