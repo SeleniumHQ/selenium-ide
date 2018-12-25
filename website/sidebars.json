@@ -1,6 +1,6 @@
 {
   "docs": {
     "Introduction": ["getting-started", "command-line-runner", "control-flow"],
-    "API Reference": ["api"]
+    "API Reference": ["commands", "arguments"]
   }
 }

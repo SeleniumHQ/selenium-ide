@@ -23,9 +23,9 @@ function Help(props) {
     {
       content: `Find what you're looking for in our detailed documentation and guides.\n\n- Learn how to [get started](${docUrl(
         'getting-started'
-      )}) with Selenium IDE.\n\n- Learn how to [use selenium-side-runner](runner-getting-started).\n\n- View the [glossary of commands](${docUrl(
-        'api'
-      )})`,
+      )}) with Selenium IDE.\n\n- Learn how to [use selenium-side-runner](${docUrl(
+        'command-line-runner'
+      )}).\n\n- View the [glossary of commands](${docUrl('commands')})`,
       title: 'Browse Docs',
     },
     {

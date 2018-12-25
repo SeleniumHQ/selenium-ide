@@ -1,7 +1,7 @@
 ---
 id: command-line-runner
-title: Command-line runner
-sidebar_label: Command-line runner
+title: Command-line Runner
+sidebar_label: Command-line Runner
 ---
 
 You can now run your tests cross-browser, in parallel, and on a Grid without needing to write any code.
@@ -27,7 +27,7 @@ __NOTE: Your system configuration may differ from what's used in the sample abov
 
 ## Launching the runner
 
-Once everything's installed, running your tests is a simple matter of calling `selenium-side-runner` from the command-line followed by the path to the project file saved earlier (see [Getting Started](getting-started.md)).
+Once everything's installed, running your tests is a simple matter of calling `selenium-side-runner` from the command-line followed by the path to the project file saved earlier (see [Getting Started](getting-started.md#save-your-work)).
 
 ```sh
 > selenium-side-runner /path/to/your-project.side
@@ -102,4 +102,4 @@ If you want to ignore the file and use command line arguments instead, use `--no
 
 For details on additional functionlity the runner offers see [its documentation](https://github.com/SeleniumHQ/selenium-ide/blob/master/packages/selenium-side-runner/README.md).
 
-__NOTE: If you're trying to learn how translate recorded tests into WebDriver code, or if you want to integrate recorded tests into an existing custom test framework, then what you need is code export which is on the project roadmap and will be available soon.__
+If you're trying to learn how translate recorded tests into WebDriver code, or if you want to integrate recorded tests into an existing custom test framework, then what you need is code export which is on the project roadmap and will be available soon.
