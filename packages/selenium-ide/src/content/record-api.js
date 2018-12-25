@@ -256,8 +256,10 @@ async function getFrameLocation() {
       break
     }
 
-    frameCount = await getFrameCount().catch(() => {})
-    if (frameCount) recordingIndicatorIndex = frameCount.indicatorIndex
+    if (currentParentWindow === window.top) {
+      frameCount = await getFrameCount().catch(() => {})
+      if (frameCount) recordingIndicatorIndex = frameCount.indicatorIndex
+    }
 
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
       const frame = currentParentWindow.frames[idx]
