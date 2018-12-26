@@ -15,16 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Debugger from '../../IO/debugger'
-
-describe('debugger', () => {
-  it('getFrameId', () => {
-    const childFrames = [
-      { frame: { id: 'a' } },
-      { frame: { id: 'b' }, childFrames: [{ frame: { id: 'ba' } }] },
-      { frame: { id: 'c' } },
-    ]
-    const frameIds = ['1', '0']
-    expect(Debugger.getFrameId(childFrames, frameIds)).toEqual('ba')
+import { buildFrameTree } from '../../../IO/playback/cdp-utils'
+describe('CDP Utils', () => {
+  it('should build a frame tree from document tree', () => {
+    const snapshot = require('./snapshot-1.json')
+    const tree = buildFrameTree(snapshot)
+    expect(tree.children[5].documentURL).toBe(
+      '/Authentication/Authenticate?returnUrl=%2Fiframe_return.htm%3Fgoto%3Dhttps%253a%252f%252fapps.autodesk.com%253a443%252fBIM360%252fen%252fDetail%252fIndex%253fid%253d1459166100220459147%2526appLang%253den%2526os%253dWeb&isImmediate=false'
+    )
+    expect(tree.children[5].documentNodeId).toBe(2413)
   })
 })
