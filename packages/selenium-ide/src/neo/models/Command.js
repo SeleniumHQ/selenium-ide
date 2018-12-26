@@ -193,27 +193,23 @@ export const ArgTypes = {
   },
   attributeLocator: {
     name: 'attribute locator',
-    description:
-      'An element locator followed by an @ sign and then the name \
-                  of the attribute, e.g. "foo@bar".',
+    description: `An element locator followed by an @ sign and then the name of 
+    the attribute, e.g. "foo@bar".`,
   },
   conditionalExpression: {
     name: 'conditional expression',
-    description:
-      'JavaScript expression that returns a boolean result for use \
-                  in control flow commands.',
+    description: `JavaScript expression that returns a boolean result for use 
+    in control flow commands.`,
   },
   coord: {
-    name: 'coord String',
-    description:
-      'Specifies the x,y position (e.g., - 10,20) of the mouse event \
-                  relative to the element found from a locator.',
+    name: 'coord string',
+    description: `Specifies the x,y position (e.g., - 10,20) of the mouse event 
+    relative to the element found from a locator.`,
   },
   expectedValue: {
     name: 'expected value',
-    description:
-      'The result you expect a variable to contain (e.g., true, false,\
-                  or some other value).',
+    description: `The result you expect a variable to contain (e.g., true, false, 
+    or some other value).`,
   },
   expression: {
     name: 'expression',
@@ -221,17 +217,16 @@ export const ArgTypes = {
   },
   formLocator: {
     name: 'form locator',
-    description: 'An element locator for the form you want to submit.',
+    description: `An element locator for the form you want to submit.`,
   },
   handle: {
     name: 'window handle',
-    description: 'A handle representing a specific page (tab, or window).',
+    description: `A handle representing a specific page (tab, or window).`,
   },
   keySequence: {
     name: 'key sequence',
     description:
-      'A sequence of keys to type, can be used to send key strokes (e.g.\
-                  ${KEY_ENTER}).',
+      'A sequence of keys to type, can be used to send key strokes (e.g. ${KEY_ENTER}).',
   },
   locator: {
     name: 'locator',
@@ -243,10 +238,9 @@ export const ArgTypes = {
   },
   locatorOfDragDestinationObject: {
     name: 'locator of drag destination object',
-    description:
-      'The locator of an element whose location (e.g., the center-most \
-                  pixel within it) will be the point where locator of object to be \
-                  dragged is dropped.',
+    description: `The locator of an element whose location (e.g., the center-most 
+    pixel within it) will be the point where locator of object to be dragged is 
+    dropped.`,
   },
   optionLocator: {
     name: 'option',
@@ -259,22 +253,17 @@ export const ArgTypes = {
   },
   pattern: {
     name: 'text',
-    description:
-      'An exact string match. Support for pattern matching is in the \
-                  works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 \
-                  for details.',
+    description: `An exact string match. Support for pattern matching is in the 
+    works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details.`,
   },
   region: {
     name: 'region',
-    description:
-      'Specify a rectangle with coordinates and lengths (e.g., "x: \
-                  257, y: 300, width: 462, height: 280").',
+    description: `Specify a rectangle with coordinates and lengths (e.g., "x: 257, 
+    y: 300, width: 462, height: 280").`,
   },
   resolution: {
     name: 'resolution',
-    description:
-      'Specify a window resolution using WidthxHeight. (e.g., \
-                  1280x800).',
+    description: `Specify a window resolution using WidthxHeight. (e.g., 1280x800).`,
   },
   script: {
     name: 'script',
@@ -294,9 +283,8 @@ export const ArgTypes = {
   },
   times: {
     name: 'times',
-    description:
-      'The number of attempts a times control flow loop will execute \
-                  the commands within its block.',
+    description: `The number of attempts a times control flow loop will execute 
+    the commands within its block.`,
   },
   url: {
     name: 'url',
@@ -308,10 +296,9 @@ export const ArgTypes = {
   },
   variableName: {
     name: 'variable name',
-    description:
-      "The name of a variable (without brackets). Used to either store an \
-                  expression's result in or reference for a check (e.g., \
-                  with 'assert' or 'verify').",
+    description: `The name of a variable (without brackets). Used to either store 
+    an expression's result in or reference for a check (e.g., with 'assert' or 
+    'verify').`,
   },
   waitTime: {
     name: 'wait time',
@@ -330,8 +317,7 @@ class CommandList {
       'addSelection',
       {
         name: 'add selection',
-        description:
-          'Add a selection to the set of options in a multi-select element.',
+        description: `Add a selection to the set of options in a multi-select element.`,
         type: TargetTypes.LOCATOR,
         target: ArgTypes.locator,
       },
@@ -340,10 +326,9 @@ class CommandList {
       'answerOnNextPrompt',
       {
         name: 'answer on next prompt',
-        description:
-          'Affects the next alert prompt. This command will send \
-                    the specified answer string to it. If the alert is already \
-                    present, then use "webdriver answer on visible prompt" instead.',
+        description: `Affects the next alert prompt. This command will send the 
+        specified answer string to it. If the alert is already present, then use 
+        "webdriver answer on visible prompt" instead.`,
         target: ArgTypes.answer,
       },
     ],
@@ -351,8 +336,8 @@ class CommandList {
       'assert',
       {
         name: 'assert',
-        description:
-          "Check that a variable is an expected value. The variable's value will be converted to a string for comparison.",
+        description: `Check that a variable is an expected value. The variable's 
+        value will be converted to a string for comparison.`,
         target: ArgTypes.variableName,
         value: ArgTypes.expectedValue,
       },
@@ -361,8 +346,7 @@ class CommandList {
       'assertAlert',
       {
         name: 'assert alert',
-        description:
-          'Confirm that an alert has been rendered with the provided text.',
+        description: `Confirm that an alert has been rendered with the provided text.`,
         target: ArgTypes.alertText,
       },
     ],
@@ -414,8 +398,7 @@ class CommandList {
       {
         name: 'assert element present',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the target element is present somewhere on the page.',
+        description: `Confirm that the target element is present somewhere on the page.`,
         target: ArgTypes.locator,
       },
     ],
@@ -424,8 +407,7 @@ class CommandList {
       {
         name: 'assert element not present',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the target element is not present anywhere on the page.',
+        description: `Confirm that the target element is not present anywhere on the page.`,
         target: ArgTypes.locator,
       },
     ],
@@ -441,9 +423,8 @@ class CommandList {
       {
         name: 'assert selected value',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the value attribute of the selected option in \
-                    a dropdown element contains the provided value.',
+        description: `Confirm that the value attribute of the selected option 
+        in a dropdown element contains the provided value.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.pattern,
       },
@@ -453,9 +434,8 @@ class CommandList {
       {
         name: 'assert not selected value',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the value attribute of the selected option in \
-                    a dropdown element does not contain the provided value.',
+        description: `Confirm that the value attribute of the selected option 
+        in a dropdown element does not contain the provided value.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.pattern,
       },
@@ -465,9 +445,8 @@ class CommandList {
       {
         name: 'assert selected label',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the label of the selected option in a dropdown \
-                    element contains the provided value.',
+        description: `Confirm that the label of the selected option in a dropdown 
+        element contains the provided value.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.pattern,
       },
@@ -477,8 +456,7 @@ class CommandList {
       {
         name: 'assert text',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the text of an element contains the provided value.',
+        description: `Confirm that the text of an element contains the provided value.`,
         target: ArgTypes.locator,
         value: ArgTypes.pattern,
       },
@@ -488,8 +466,7 @@ class CommandList {
       {
         name: 'assert not text',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm that the text of an element does not contain the provided value.',
+        description: `Confirm that the text of an element does not contain the provided value.`,
         target: ArgTypes.locator,
         value: ArgTypes.pattern,
       },
@@ -498,8 +475,7 @@ class CommandList {
       'assertTitle',
       {
         name: 'assert title',
-        description:
-          'Confirm the title of the current page contains the provided text.',
+        description: `Confirm the title of the current page contains the provided text.`,
         target: ArgTypes.pattern,
       },
     ],
@@ -508,68 +484,12 @@ class CommandList {
       {
         name: 'assert value',
         type: TargetTypes.LOCATOR,
-        description:
-          'Confirm the (whitespace-trimmed) value of an input field (or \
-                    anything else with a value parameter). For checkbox/radio \
-                    elements, the value will be "on" or "off" depending on \
-                    whether the element is checked or not.',
+        description: `Confirm the (whitespace-trimmed) value of an input field 
+        (or anything else with a value parameter). For checkbox/radio elements, 
+        the value will be "on" or "off" depending on whether the element is 
+        checked or not.`,
         target: ArgTypes.locator,
         value: ArgTypes.pattern,
-      },
-    ],
-    [
-      'chooseCancelOnNextConfirmation',
-      {
-        name: 'choose cancel on next confirmation',
-        description:
-          'Affects the next confirmation alert. This command will \
-                    cancel it. If the alert is already present, then use \
-                    "webdriver choose cancel on visible confirmation" instead.',
-      },
-    ],
-    [
-      'chooseCancelOnNextPrompt',
-      {
-        name: 'choose cancel on next prompt',
-        description:
-          'Affects the next alert prompt. This command will cancel \
-                    it. If the alert is already present, then use "webdriver \
-                    choose cancel on visible prompt" instead.',
-      },
-    ],
-    [
-      'chooseOkOnNextConfirmation',
-      {
-        name: 'choose ok on next confirmation',
-        description:
-          'Affects the next confirmation alert. This command will accept \
-                    it. If the alert is already present, then use "webdriver \
-                    choose ok on visible confirmation" instead.',
-      },
-    ],
-    [
-      'click',
-      {
-        name: 'click',
-        type: TargetTypes.LOCATOR,
-        description:
-          'Clicks on a target element (e.g., a link, button, checkbox, or radio button).',
-        target: ArgTypes.locator,
-      },
-    ],
-    [
-      'clickAt',
-      {
-        name: 'click at',
-        type: TargetTypes.LOCATOR,
-        description:
-          'Clicks on a target element (e.g., a link, button, checkbox, \
-                    or radio button). The coordinates are relative to the target \
-                    element (e.g., 0,0 is the top left corner of the element) \
-                    and are mostly used to check effects that relay on them, \
-                    for example the material ripple effect.',
-        target: ArgTypes.locator,
-        value: ArgTypes.coord,
       },
     ],
     [
@@ -579,6 +499,64 @@ class CommandList {
         type: TargetTypes.LOCATOR,
         description: 'Check a toggle-button (checkbox/radio).',
         target: ArgTypes.locator,
+      },
+    ],
+    [
+      'chooseCancelOnNextConfirmation',
+      {
+        name: 'choose cancel on next confirmation',
+        description: `Affects the next confirmation alert. This command will 
+        cancel it. If the alert is already present, then use "webdriver choose 
+        cancel on visible confirmation" instead.`,
+      },
+    ],
+    [
+      'chooseCancelOnNextPrompt',
+      {
+        name: 'choose cancel on next prompt',
+        description: `Affects the next alert prompt. This command will cancel 
+        it. If the alert is already present, then use "webdriver choose cancel 
+        on visible prompt" instead.`,
+      },
+    ],
+    [
+      'chooseOkOnNextConfirmation',
+      {
+        name: 'choose ok on next confirmation',
+        description: `Affects the next confirmation alert. This command will 
+        accept it. If the alert is already present, then use "webdriver choose 
+        ok on visible confirmation" instead.`,
+      },
+    ],
+    [
+      'click',
+      {
+        name: 'click',
+        type: TargetTypes.LOCATOR,
+        description: `Clicks on a target element (e.g., a link, button, checkbox, or radio button).`,
+        target: ArgTypes.locator,
+      },
+    ],
+    [
+      'clickAt',
+      {
+        name: 'click at',
+        type: TargetTypes.LOCATOR,
+        description: `Clicks on a target element (e.g., a link, button, checkbox, 
+        or radio button). The coordinates are relative to the target element 
+        (e.g., 0,0 is the top left corner of the element) and are mostly used 
+        to check effects that relay on them, for example the material ripple effect.`,
+        target: ArgTypes.locator,
+        value: ArgTypes.coord,
+      },
+    ],
+    [
+      'close',
+      {
+        name: 'close',
+        description: `Closes the current window. There is no need to close the 
+        initial window, IDE will re-use it; closing it may cause a performance 
+        penalty on the test.`,
       },
     ],
     [
@@ -592,9 +570,8 @@ class CommandList {
       'do',
       {
         name: 'do',
-        description:
-          'Create a loop that executes the proceeding commands at \
-                    least once. Terminate the branch with the repeat if command.',
+        description: `Create a loop that executes the proceeding commands at 
+        least once. Terminate the branch with the repeat if command.`,
       },
     ],
     [
@@ -602,8 +579,7 @@ class CommandList {
       {
         name: 'double click',
         type: TargetTypes.LOCATOR,
-        description:
-          'Double clicks on an element (e.g., a link, button, checkbox, or radio button).',
+        description: `Double clicks on an element (e.g., a link, button, checkbox, or radio button).`,
         target: ArgTypes.locator,
       },
     ],
@@ -612,12 +588,11 @@ class CommandList {
       {
         name: 'double click at',
         type: TargetTypes.LOCATOR,
-        description:
-          'Double clicks on a target element (e.g., a link, button, \
-                    checkbox, or radio button). The coordinates are relative \
-                    to the target element (e.g., 0,0 is the top left corner \
-                    of the element) and are mostly used to check effects that \
-                    relay on them, for example the material ripple effect.',
+        description: `Double clicks on a target element (e.g., a link, button, 
+        checkbox, or radio button). The coordinates are relative to the target 
+        element (e.g., 0,0 is the top left corner of the element) and are mostly 
+        used to check effects that relay on them, for example the material 
+        ripple effect.`,
         target: ArgTypes.locator,
         value: ArgTypes.coord,
       },
@@ -636,9 +611,8 @@ class CommandList {
       'echo',
       {
         name: 'echo',
-        description:
-          'Prints the specified message into the third table cell in your Selenese tables.\
-                    Useful for debugging.',
+        description: `Prints the specified message into the third table cell in 
+        your Selenese tables. Useful for debugging.`,
         target: ArgTypes.message,
       },
     ],
@@ -646,20 +620,18 @@ class CommandList {
       'else',
       {
         name: 'else',
-        description:
-          'Part of an if block. Execute the commands in this branch \
-                    when an if and/or else if condition are not met. Terminate \
-                    the branch with the end command.',
+        description: `Part of an if block. Execute the commands in this branch 
+        when an if and/or else if condition are not met. Terminate the branch 
+        with the end command.`,
       },
     ],
     [
       'elseIf',
       {
         name: 'else if',
-        description:
-          'Part of an if block. Execute the commands in this branch \
-                    when an if condition has not been met. Terminate the branch \
-                    with the end command.',
+        description: `Part of an if block. Execute the commands in this branch 
+        when an if condition has not been met. Terminate the branch with the 
+        end command.`,
         target: ArgTypes.conditionalExpression,
       },
     ],
@@ -667,19 +639,17 @@ class CommandList {
       'end',
       {
         name: 'end',
-        description:
-          'Terminates a control flow block for if, while, and times.',
+        description: `Terminates a control flow block for if, while, and times.`,
       },
     ],
     [
       'executeScript',
       {
         name: 'execute script',
-        description:
-          "Executes a snippet of JavaScript in the context of the currently selected frame or \
-                    window. The script fragment will be executed as the body of an anonymous function. \
-                    To store the return value, use the 'return' keyword and provide a variable name in \
-                    the value input field.",
+        description: `Executes a snippet of JavaScript in the context of the 
+        currently selected frame or window. The script fragment will be executed 
+        as the body of an anonymous function.  To store the return value, use 
+        the 'return' keyword and provide a variable name in the value input field.`,
         target: ArgTypes.script,
         value: ArgTypes.variableName,
       },
@@ -688,11 +658,11 @@ class CommandList {
       'executeAsyncScript',
       {
         name: 'execute async script',
-        description:
-          "Executes an async snippet of JavaScript in the context of the currently selected frame or \
-                    window. The script fragment will be executed as the body of an anonymous function and must \
-                    return a Promise. The Promise result will be saved on the variable if you use the 'return' \
-                    keyword.",
+        description: `Executes an async snippet of JavaScript in the context of 
+        the currently selected frame or window. The script fragment will be 
+        executed as the body of an anonymous function and must return a Promise. 
+        The Promise result will be saved on the variable if you use the 'return' 
+        keyword.`,
         target: ArgTypes.script,
         value: ArgTypes.variableName,
       },
@@ -702,8 +672,7 @@ class CommandList {
       {
         name: 'edit content',
         type: TargetTypes.LOCATOR,
-        description:
-          'Sets the value of a content editable element as if you typed in it.',
+        description: `Sets the value of a content editable element as if you typed in it.`,
         target: ArgTypes.locator,
         value: ArgTypes.value,
       },
@@ -713,8 +682,7 @@ class CommandList {
       {
         name: 'if',
         type: TargetTypes.LOCATOR,
-        description:
-          'Create a conditional branch in your test. Terminate the branch with the end command.',
+        description: `Create a conditional branch in your test. Terminate the branch with the end command.`,
         target: ArgTypes.conditionalExpression,
       },
     ],
@@ -723,9 +691,8 @@ class CommandList {
       {
         name: 'mouse down at',
         type: TargetTypes.LOCATOR,
-        description:
-          'Simulates a user pressing the left mouse button (without releasing it yet) \
-                    at the specified location.',
+        description: `Simulates a user pressing the left mouse button (without 
+        releasing it yet) at the specified location.`,
         target: ArgTypes.locator,
         value: ArgTypes.coord,
       },
@@ -735,9 +702,8 @@ class CommandList {
       {
         name: 'mouse move at',
         type: TargetTypes.LOCATOR,
-        description:
-          'Simulates a user pressing the mouse button (without releasing it yet) \
-                    on the specified element.',
+        description: `Simulates a user pressing the mouse button (without releasing 
+        it yet) on the specified element.`,
         target: ArgTypes.locator,
         value: ArgTypes.coord,
       },
@@ -747,8 +713,7 @@ class CommandList {
       {
         name: 'mouse out',
         type: TargetTypes.LOCATOR,
-        description:
-          'Simulates a user moving the mouse pointer away from the specified element.',
+        description: `Simulates a user moving the mouse pointer away from the specified element.`,
         target: ArgTypes.locator,
       },
     ],
@@ -757,8 +722,7 @@ class CommandList {
       {
         name: 'mouse over',
         type: TargetTypes.LOCATOR,
-        description:
-          'Simulates a user hovering a mouse over the specified element.',
+        description: `Simulates a user hovering a mouse over the specified element.`,
         target: ArgTypes.locator,
       },
     ],
@@ -767,9 +731,8 @@ class CommandList {
       {
         name: 'mouse up at',
         type: TargetTypes.LOCATOR,
-        description:
-          'Simulates the event that occurs when the user releases the mouse button \
-                    (e.g., stops holding the button down) at the specified location.',
+        description: `Simulates the event that occurs when the user releases the 
+        mouse button (e.g., stops holding the button down) at the specified location.`,
         target: ArgTypes.locator,
         value: ArgTypes.coord,
       },
@@ -778,9 +741,8 @@ class CommandList {
       'open',
       {
         name: 'open',
-        description:
-          'Opens a URL and waits for the page to load before proceeding. \
-                    This accepts both relative and absolute URLs.',
+        description: `Opens a URL and waits for the page to load before proceeding. 
+        This accepts both relative and absolute URLs.`,
         target: ArgTypes.url,
       },
     ],
@@ -797,9 +759,8 @@ class CommandList {
       {
         name: 'remove selection',
         type: TargetTypes.LOCATOR,
-        description:
-          'Remove a selection from the set of selected options in a multi-select \
-                    element using an option locator.',
+        description: `Remove a selection from the set of selected options in a 
+        multi-select element using an option locator.`,
         target: ArgTypes.locator,
         value: ArgTypes.optionLocator,
       },
@@ -808,10 +769,9 @@ class CommandList {
       'repeatIf',
       {
         name: 'repeat if',
-        description:
-          "Terminate a 'do' control flow branch conditionally. If the result of the \
-                    provided conditional expression is true, it starts the do loop over. \
-                    Otherwise it ends the loop.",
+        description: `Terminate a 'do' control flow branch conditionally. If 
+        the result of the provided conditional expression is true, it starts 
+        the do loop over.  Otherwise it ends the loop.`,
         target: ArgTypes.conditionalExpression,
       },
     ],
@@ -827,13 +787,11 @@ class CommandList {
       'runScript',
       {
         name: 'run script',
-        description:
-          'Creates a new "script" tag in the body of the current test \
-                    window, and adds the specified text into the body of the \
-                    command. Beware that JS exceptions thrown in these script \
-                    tags aren\'t managed by Selenium, so you should probably wrap \
-                    your script in try/catch blocks if there is any chance that the \
-                    script will throw an exception.',
+        description: `Creates a new "script" tag in the body of the current 
+        test window, and adds the specified text into the body of the command. 
+        Beware that JS exceptions thrown in these script tags aren't managed 
+        by Selenium, so you should probably wrap your script in try/catch blocks 
+        if there is any chance that the script will throw an exception.`,
         target: ArgTypes.script,
       },
     ],
@@ -842,11 +800,10 @@ class CommandList {
       {
         name: 'select',
         type: TargetTypes.LOCATOR,
-        description:
-          'Select an element from a drop-down menu using an option locator. \
-                    Option locators provide different ways of specifying a select \
-                    element (e.g., label=, value=, id=, index=). If no option \
-                    locator prefix is provided, a match on the label will be attempted.',
+        description: `Select an element from a drop-down menu using an option 
+        locator. Option locators provide different ways of specifying a select 
+        element (e.g., label=, value=, id=, index=). If no option locator prefix 
+        is provided, a match on the label will be attempted.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.optionLocator,
       },
@@ -856,14 +813,12 @@ class CommandList {
       {
         name: 'select frame',
         type: TargetTypes.LOCATOR,
-        description:
-          'Selects a frame within the current window. You may invoke \
-                    this command multiple times to select a nested frame. NOTE: \
-                    To select the parent frame, use "relative=parent" as a \
-                    locator. To select the top frame, use "relative=top". \
-                    You can also select a frame by its 0-based index number \
-                    (e.g., select the first frame with "index=0", or the \
-                    third frame with "index=2").',
+        description: `Selects a frame within the current window. You may invoke 
+        this command multiple times to select a nested frame. NOTE: To select 
+        the parent frame, use "relative=parent" as a locator. To select the top 
+        frame, use "relative=top".  You can also select a frame by its 0-based 
+        index number (e.g., select the first frame with "index=0", or the third 
+        frame with "index=2").`,
         target: ArgTypes.locator,
       },
     ],
@@ -871,21 +826,10 @@ class CommandList {
       'selectWindow',
       {
         name: 'select window',
-        description:
-          'Selects a popup window using a window locator. Once a popup \
-                    window has been selected, all commands will go to that window. \
-                    Window locators use handles to select windows.',
+        description: `Selects a popup window using a window locator. Once a 
+        popup window has been selected, all commands will go to that window. 
+        Window locators use handles to select windows.`,
         target: ArgTypes.handle,
-      },
-    ],
-    [
-      'close',
-      {
-        name: 'close',
-        description:
-          'Closes the current window. \
-                    There is no need to close the initial window, IDE will re-use it; \
-                    closing it may cause a performance penalty on the test.',
       },
     ],
     [
@@ -893,17 +837,14 @@ class CommandList {
       {
         name: 'send keys',
         type: TargetTypes.LOCATOR,
-        description:
-          'Simulates keystroke events on the specified element, \
-                    as though you typed the value key-by-key. This simulates \
-                    a real user typing every character in the specified string; \
-                    it is also bound by the limitations of a real user, like not \
-                    being able to type into a invisible or read only elements. \
-                    This is useful for dynamic UI widgets (like auto-completing \
-                    combo boxes) that require explicit key events. Unlike the \
-                    simple "type" command, which forces the specified value \
-                    into the page directly, this command will not replace the \
-                    existing content.',
+        description: `Simulates keystroke events on the specified element, as 
+        though you typed the value key-by-key. This simulates a real user typing 
+        every character in the specified string; it is also bound by the 
+        limitations of a real user, like not being able to type into a invisible 
+        or read only elements.  This is useful for dynamic UI widgets (like 
+        auto-completing combo boxes) that require explicit key events. Unlike 
+        the simple "type" command, which forces the specified value into the 
+        page directly, this command will not replace the existing content.`,
         target: ArgTypes.locator,
         value: ArgTypes.keySequence,
       },
@@ -912,11 +853,10 @@ class CommandList {
       'setSpeed',
       {
         name: 'set speed',
-        description:
-          'Set execution speed (e.g., set the millisecond length of a \
-                    delay which will follow each Selenium operation). By default, \
-                    there is no such delay, e.g., the delay is 0 milliseconds. \
-                    This setting is global, and will affect all test runs, until changed.',
+        description: `Set execution speed (e.g., set the millisecond length of 
+        a delay which will follow each Selenium operation). By default, there 
+        is no such delay, e.g., the delay is 0 milliseconds. This setting is 
+        global, and will affect all test runs, until changed.`,
         target: ArgTypes.waitTime,
       },
     ],
@@ -942,10 +882,9 @@ class CommandList {
       'storeAttribute',
       {
         name: 'store attribute',
-        description:
-          'Gets the value of an element attribute. \
-                    The value of the attribute may differ across browsers \
-                    (this is the case for the "style" attribute, for example).',
+        description: `Gets the value of an element attribute. The value of the 
+        attribute may differ across browsers (this is the case for the "style" 
+        attribute, for example).`,
         target: ArgTypes.attributeLocator,
         value: ArgTypes.variableName,
       },
@@ -955,9 +894,8 @@ class CommandList {
       {
         name: 'store text',
         type: TargetTypes.LOCATOR,
-        description:
-          'Gets the text of an element and stores it for later use. \
-                    This works for any element that contains text.',
+        description: `Gets the text of an element and stores it for later use. 
+        This works for any element that contains text.`,
         target: ArgTypes.locator,
         value: ArgTypes.variableName,
       },
@@ -967,9 +905,8 @@ class CommandList {
       {
         name: 'store value',
         type: TargetTypes.LOCATOR,
-        description:
-          'Gets the value of element and stores it for later use. \
-                    This works for any input type element.',
+        description: `Gets the value of element and stores it for later use. 
+        This works for any input type element.`,
         target: ArgTypes.locator,
         value: ArgTypes.variableName,
       },
@@ -985,7 +922,7 @@ class CommandList {
       'storeWindowHandle',
       {
         name: 'store window handle',
-        descript: 'Gets the handle of the current page.',
+        description: 'Gets the handle of the current page.',
         target: ArgTypes.handle,
       },
     ],
@@ -993,9 +930,8 @@ class CommandList {
       'storeXpathCount',
       {
         name: 'store xpath count',
-        description:
-          'Gets the number of nodes that match the specified xpath, \
-                    eg. "//table" would give the number of tables.',
+        description: `Gets the number of nodes that match the specified xpath 
+        (e.g. "//table" would give the number of tables).`,
         target: ArgTypes.xpath,
         value: ArgTypes.variableName,
       },
@@ -1005,9 +941,8 @@ class CommandList {
       {
         name: 'submit',
         type: TargetTypes.LOCATOR,
-        description:
-          'Submit the specified form. This is particularly useful \
-                    for forms without submit buttons, e.g. single-input "Search" forms.',
+        description: `Submit the specified form. This is particularly useful for 
+        forms without submit buttons, e.g. single-input "Search" forms.`,
         target: ArgTypes.formLocator,
       },
     ],
@@ -1015,8 +950,7 @@ class CommandList {
       'times',
       {
         name: 'times',
-        description:
-          'Create a loop that executes the proceeding commands n number of times.',
+        description: `Create a loop that executes the proceeding commands n number of times.`,
         target: ArgTypes.times,
       },
     ],
@@ -1025,13 +959,12 @@ class CommandList {
       {
         name: 'type',
         type: TargetTypes.LOCATOR,
-        description:
-          'Sets the value of an input field, as though you typed it in. \
-                    Can also be used to set the value of combo boxes, check boxes, \
-                    etc. In these cases, value should be the value of the option \
-                    selected, not the visible text. \
-                    Chrome only: If a file path is given it will be uploaded to \
-                    the input (for type=file), NOTE: XPath locators are not supported.',
+        description: `Sets the value of an input field, as though you typed it 
+        in. Can also be used to set the value of combo boxes, check boxes, etc. 
+        In these cases, value should be the value of the option selected, not 
+        the visible text.  Chrome only: If a file path is given it will be 
+        uploaded to the input (for type=file), NOTE: XPath locators are not 
+        supported.`,
         target: ArgTypes.locator,
         value: ArgTypes.value,
       },
@@ -1049,8 +982,8 @@ class CommandList {
       'verify',
       {
         name: 'verify',
-        description:
-          "Soft assert that a variable is an expected value. The variable's value will be converted to a string for comparison.",
+        description: `Soft assert that a variable is an expected value. The 
+        variable's value will be converted to a string for comparison.`,
         target: ArgTypes.variableName,
         value: ArgTypes.expectedValue,
       },
@@ -1060,8 +993,7 @@ class CommandList {
       {
         name: 'verify checked',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert that a toggle-button (checkbox/radio) has been checked.',
+        description: `Soft assert that a toggle-button (checkbox/radio) has been checked.`,
         target: ArgTypes.locator,
       },
     ],
@@ -1070,8 +1002,7 @@ class CommandList {
       {
         name: 'verify not checked',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert that a toggle-button (checkbox/radio) has not been checked.',
+        description: `Soft assert that a toggle-button (checkbox/radio) has not been checked.`,
         target: ArgTypes.locator,
       },
     ],
@@ -1080,9 +1011,8 @@ class CommandList {
       {
         name: 'verify editable',
         type: TargetTypes.LOCATOR,
-        description:
-          "Soft assert whether the specified input element is \
-                    editable (e.g., hasn't been disabled).",
+        description: `Soft assert whether the specified input element is 
+        editable (e.g., hasn't been disabled).`,
         target: ArgTypes.locator,
       },
     ],
@@ -1091,9 +1021,8 @@ class CommandList {
       {
         name: 'verify not editable',
         type: TargetTypes.LOCATOR,
-        description:
-          "Soft assert whether the specified input element \
-                    is not editable (e.g., hasn't been disabled).",
+        description: `Soft assert whether the specified input element is not 
+        editable (e.g., hasn't been disabled).`,
         target: ArgTypes.locator,
       },
     ],
@@ -1102,8 +1031,7 @@ class CommandList {
       {
         name: 'verify element present',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert that the specified element is somewhere on the page.',
+        description: `Soft assert that the specified element is somewhere on the page.`,
         target: ArgTypes.locator,
       },
     ],
@@ -1112,8 +1040,7 @@ class CommandList {
       {
         name: 'verify element not present',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert that the specified element is not somewhere on the page.',
+        description: `Soft assert that the specified element is not somewhere on the page.`,
         target: ArgTypes.locator,
       },
     ],
@@ -1122,9 +1049,8 @@ class CommandList {
       {
         name: 'verify selected value',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert that the expected element has been chosen in a \
-                    select menu by its option attribute.',
+        description: `Soft assert that the expected element has been chosen in 
+        a select menu by its option attribute.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.option,
       },
@@ -1133,9 +1059,8 @@ class CommandList {
       'verifyNotSelectedValue',
       {
         name: 'verify not selected value',
-        description:
-          'Soft assert that the expected element has not been chosen in a \
-                    select menu by its option attribute.',
+        description: `Soft assert that the expected element has not been chosen 
+        in a select menu by its option attribute.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.option,
       },
@@ -1174,11 +1099,10 @@ class CommandList {
       {
         name: 'verify value',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert the (whitespace-trimmed) value of an input field \
-                    (or anything else with a value parameter). For checkbox/radio \
-                    elements, the value will be "on" or "off" depending on \
-                    whether the element is checked or not.',
+        description: `Soft assert the (whitespace-trimmed) value of an input 
+        field (or anything else with a value parameter). For checkbox/radio 
+        elements, the value will be "on" or "off" depending on whether the 
+        element is checked or not.`,
         target: ArgTypes.locator,
         value: ArgTypes.pattern,
       },
@@ -1188,9 +1112,8 @@ class CommandList {
       {
         name: 'verify selected label',
         type: TargetTypes.LOCATOR,
-        description:
-          'Soft assert the visible text for a selected option \
-                    in the specified select element.',
+        description: `Soft assert the visible text for a selected option in the 
+        specified select element.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.pattern,
       },
@@ -1259,11 +1182,9 @@ class CommandList {
       'webdriverAnswerOnVisiblePrompt',
       {
         name: 'webdriver answer on visible prompt',
-        description:
-          'Affects a currently showing alert prompt. This command \
-                    instructs Selenium to provide the specified answer to it. \
-                    If the alert has not appeared yet then use "answer on next \
-                    prompt" instead.',
+        description: `Affects a currently showing alert prompt. This command 
+        instructs Selenium to provide the specified answer to it. If the alert 
+        has not appeared yet then use "answer on next prompt" instead.`,
         target: ArgTypes.answer,
       },
     ],
@@ -1271,42 +1192,35 @@ class CommandList {
       'webdriverChooseCancelOnVisibleConfirmation',
       {
         name: 'webdriver choose cancel on visible confirmation',
-        description:
-          'Affects a currently showing confirmation alert. This command \
-                    instructs Selenium to cancel it. If the alert has not \
-                    appeared yet then use "choose cancel on next confirmation" \
-                    instead.',
+        description: `Affects a currently showing confirmation alert. This 
+        command instructs Selenium to cancel it. If the alert has not appeared 
+        yet then use "choose cancel on next confirmation" instead.`,
       },
     ],
     [
       'webdriverChooseCancelOnVisiblePrompt',
       {
         name: 'webdriver choose cancel on visible prompt',
-        description:
-          'Affects a currently showing alert prompt. This command \
-                    instructs Selenium to cancel it. If the alert has not \
-                    appeared yet then use "choose cancel on next prompt" \
-                    instead.',
+        description: `Affects a currently showing alert prompt. This command 
+        instructs Selenium to cancel it. If the alert has not appeared yet 
+        then use "choose cancel on next prompt" instead.`,
       },
     ],
     [
       'webdriverChooseOkOnVisibleConfirmation',
       {
         name: 'webdriver choose ok on visible confirmation',
-        description:
-          'Affects a currently showing confirmation alert. This command \
-                    instructs Selenium to accept it. If the alert has not \
-                    appeared yet then use "choose ok on next confirmation" \
-                    instead.',
+        description: `Affects a currently showing confirmation alert. This 
+        command instructs Selenium to accept it. If the alert has not appeared 
+        yet then use "choose ok on next confirmation" instead.`,
       },
     ],
     [
       'while',
       {
         name: 'while',
-        description:
-          'Create a loop that executes the proceeding commands repeatedly \
-                    for as long as the provided conditional expression is true.',
+        description: `Create a loop that executes the proceeding commands 
+        repeatedly for as long as the provided conditional expression is true.`,
         target: ArgTypes.conditionalExpression,
       },
     ],
