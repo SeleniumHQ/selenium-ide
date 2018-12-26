@@ -6,8 +6,8 @@ import {
 
 describe('generate api docs', () => {
   it.skip('stdout for debugging', () => {
-    console.log(generateArgumentMarkdown())
-    console.log(generateCommandMarkdown())
+    console.log(generateArgumentMarkdown()) // eslint-disable-line
+    console.log(generateCommandMarkdown()) // eslint-disable-line
   })
   it.skip('generate api docs files', () => {
     generateApiDocs()
