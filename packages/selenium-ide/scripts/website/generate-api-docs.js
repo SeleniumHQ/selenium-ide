@@ -1,5 +1,4 @@
 import { ArgTypes, Commands } from '../../src/neo/models/Command'
-import { baseUrl } from '../../../../website/siteConfig'
 const fs = require('fs')
 const path = require('path')
 
