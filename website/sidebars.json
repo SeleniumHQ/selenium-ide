@@ -1,7 +1,54 @@
 {
   "docs": {
-    "Introduction": ["introduction/getting-started", "introduction/command-line-runner", "introduction/control-flow"],
-    "API Reference": ["api/commands", "api/arguments"],
-    "Plugins": ["plugins/plugins-getting-started"]
+    "Introduction": [
+      "introduction/getting-started",
+      "introduction/command-line-runner",
+      "introduction/control-flow"
+    ],
+    "API Reference": [
+      "api/commands",
+      "api/arguments",
+      {
+        "type": "subcategory",
+        "label": "Plugins",
+        "ids": [
+          "api/plugins/introduction",
+          "api/plugins/system",
+          "api/plugins/playback",
+          "api/plugins/record",
+          "api/plugins/popup",
+          "api/plugins/export"
+        ]
+      }
+    ],
+    "Plugins": [
+      {
+        "type": "subcategory",
+        "label": "Introduction",
+        "ids": [
+          "plugins/plugins-getting-started",
+          "plugins/extension-id",
+          "plugins/health-checks"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Conceps",
+        "ids": [
+          "plugins/requests",
+          "plugins/error-handling",
+          "plugins/emitting-code"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Extending the IDE",
+        "ids": [
+          "plugins/adding-commands",
+          "plugins/ide-events",
+          "plugins/emitting-setup-teardown"
+        ]
+      }
+    ]
   }
 }

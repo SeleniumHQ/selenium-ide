@@ -13,7 +13,8 @@ This article assumes knowledge in WebExtension development, and will only discus
 ## Calling the API
 
 Selenium IDE API can be called using `browser.runtime.sendMessage`.  
-An example signature would be `browser.runtime.sendMessage(SIDE_ID, request)` where `SIDE_ID` refers to the IDE's extension ID, the official published IDs can be viewed [here](Selenium-IDE-Extension-ID).  
+
+An example signature would be `browser.runtime.sendMessage(SIDE_ID, request)` where `SIDE_ID` refers to the IDE's extension ID, the official published IDs can be viewed [here](extension-id).  
 
 ### Request
 
@@ -111,7 +112,7 @@ Dependencies are a dictionary of `key:value` like so `name:version`, where name 
 
 ## Registering the Plugin
 
-To register the plugin with Selenium IDE, make sure the IDE window is open, and that you're using the correct [[IDE ID | Selenium IDE Extension ID]].  
+To register the plugin with Selenium IDE, make sure the IDE window is open, and that you're using the correct [Selenium IDE Extension ID](extension-id).  
 
 Send the following message:  
 
