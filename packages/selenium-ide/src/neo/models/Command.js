@@ -183,13 +183,13 @@ export const TargetTypes = {
 }
 
 export const ArgTypes = {
-  answer: {
-    name: 'answer',
-    description: 'The answer to give in response to the prompt pop-up.',
-  },
   alertText: {
     name: 'alert text',
     description: 'text to check',
+  },
+  answer: {
+    name: 'answer',
+    description: 'The answer to give in response to the prompt pop-up.',
   },
   attributeLocator: {
     name: 'attribute locator',
@@ -232,24 +232,28 @@ export const ArgTypes = {
     name: 'locator',
     description: 'An element locator.',
   },
-  locatorOfObjectToBeDragged: {
-    name: 'locator of object to be dragged',
-    description: 'The locator of element to be dragged.',
-  },
   locatorOfDragDestinationObject: {
     name: 'locator of drag destination object',
     description: `The locator of an element whose location (e.g., the center-most 
     pixel within it) will be the point where locator of object to be dragged is 
     dropped.`,
   },
-  optionLocator: {
-    name: 'option',
-    description:
-      'An option locator, typically just an option label (e.g. "John Smith").',
+  locatorOfObjectToBeDragged: {
+    name: 'locator of object to be dragged',
+    description: 'The locator of element to be dragged.',
+  },
+  loopLimit: {
+    name: 'loop limit',
+    description: `Maximum number of times a looping control flow command can execute to protect against infinite loops.`,
   },
   message: {
     name: 'message',
     value: 'The message to print.',
+  },
+  optionLocator: {
+    name: 'option',
+    description:
+      'An option locator, typically just an option label (e.g. "John Smith").',
   },
   pattern: {
     name: 'text',
@@ -360,15 +364,6 @@ class CommandList {
       },
     ],
     [
-      'assertNotChecked',
-      {
-        name: 'assert not checked',
-        type: TargetTypes.LOCATOR,
-        description: 'Confirm that the target element has not been checked.',
-        target: ArgTypes.locator,
-      },
-    ],
-    [
       'assertConfirmation',
       {
         name: 'assert confirmation',
@@ -381,15 +376,6 @@ class CommandList {
         name: 'assert editable',
         type: TargetTypes.LOCATOR,
         description: 'Confirm that the target element is editable.',
-        target: ArgTypes.locator,
-      },
-    ],
-    [
-      'assertNotEditable',
-      {
-        name: 'assert not editable',
-        type: TargetTypes.LOCATOR,
-        description: 'Confirm that the target element is not editable.',
         target: ArgTypes.locator,
       },
     ],
@@ -412,6 +398,45 @@ class CommandList {
       },
     ],
     [
+      'assertNotChecked',
+      {
+        name: 'assert not checked',
+        type: TargetTypes.LOCATOR,
+        description: 'Confirm that the target element has not been checked.',
+        target: ArgTypes.locator,
+      },
+    ],
+    [
+      'assertNotEditable',
+      {
+        name: 'assert not editable',
+        type: TargetTypes.LOCATOR,
+        description: 'Confirm that the target element is not editable.',
+        target: ArgTypes.locator,
+      },
+    ],
+    [
+      'assertNotSelectedValue',
+      {
+        name: 'assert not selected value',
+        type: TargetTypes.LOCATOR,
+        description: `Confirm that the value attribute of the selected option 
+        in a dropdown element does not contain the provided value.`,
+        target: ArgTypes.selectLocator,
+        value: ArgTypes.pattern,
+      },
+    ],
+    [
+      'assertNotText',
+      {
+        name: 'assert not text',
+        type: TargetTypes.LOCATOR,
+        description: `Confirm that the text of an element does not contain the provided value.`,
+        target: ArgTypes.locator,
+        value: ArgTypes.pattern,
+      },
+    ],
+    [
       'assertPrompt',
       {
         name: 'assert prompt',
@@ -425,17 +450,6 @@ class CommandList {
         type: TargetTypes.LOCATOR,
         description: `Confirm that the value attribute of the selected option 
         in a dropdown element contains the provided value.`,
-        target: ArgTypes.selectLocator,
-        value: ArgTypes.pattern,
-      },
-    ],
-    [
-      'assertNotSelectedValue',
-      {
-        name: 'assert not selected value',
-        type: TargetTypes.LOCATOR,
-        description: `Confirm that the value attribute of the selected option 
-        in a dropdown element does not contain the provided value.`,
         target: ArgTypes.selectLocator,
         value: ArgTypes.pattern,
       },
@@ -457,16 +471,6 @@ class CommandList {
         name: 'assert text',
         type: TargetTypes.LOCATOR,
         description: `Confirm that the text of an element contains the provided value.`,
-        target: ArgTypes.locator,
-        value: ArgTypes.pattern,
-      },
-    ],
-    [
-      'assertNotText',
-      {
-        name: 'assert not text',
-        type: TargetTypes.LOCATOR,
-        description: `Confirm that the text of an element does not contain the provided value.`,
         target: ArgTypes.locator,
         value: ArgTypes.pattern,
       },
@@ -617,6 +621,16 @@ class CommandList {
       },
     ],
     [
+      'editContent',
+      {
+        name: 'edit content',
+        type: TargetTypes.LOCATOR,
+        description: `Sets the value of a content editable element as if you typed in it.`,
+        target: ArgTypes.locator,
+        value: ArgTypes.value,
+      },
+    ],
+    [
       'else',
       {
         name: 'else',
@@ -665,16 +679,6 @@ class CommandList {
         keyword.`,
         target: ArgTypes.script,
         value: ArgTypes.variableName,
-      },
-    ],
-    [
-      'editContent',
-      {
-        name: 'edit content',
-        type: TargetTypes.LOCATOR,
-        description: `Sets the value of a content editable element as if you typed in it.`,
-        target: ArgTypes.locator,
-        value: ArgTypes.value,
       },
     ],
     [
@@ -901,6 +905,13 @@ class CommandList {
       },
     ],
     [
+      'storeTitle',
+      {
+        name: 'store title',
+        description: 'Gets the title of the current page.',
+      },
+    ],
+    [
       'storeValue',
       {
         name: 'store value',
@@ -909,13 +920,6 @@ class CommandList {
         This works for any input type element.`,
         target: ArgTypes.locator,
         value: ArgTypes.variableName,
-      },
-    ],
-    [
-      'storeTitle',
-      {
-        name: 'store title',
-        description: 'Gets the title of the current page.',
       },
     ],
     [
@@ -952,6 +956,7 @@ class CommandList {
         name: 'times',
         description: `Create a loop that executes the proceeding commands n number of times.`,
         target: ArgTypes.times,
+        value: ArgTypes.loopLimit,
       },
     ],
     [
@@ -998,30 +1003,11 @@ class CommandList {
       },
     ],
     [
-      'verifyNotChecked',
-      {
-        name: 'verify not checked',
-        type: TargetTypes.LOCATOR,
-        description: `Soft assert that a toggle-button (checkbox/radio) has not been checked.`,
-        target: ArgTypes.locator,
-      },
-    ],
-    [
       'verifyEditable',
       {
         name: 'verify editable',
         type: TargetTypes.LOCATOR,
         description: `Soft assert whether the specified input element is 
-        editable (e.g., hasn't been disabled).`,
-        target: ArgTypes.locator,
-      },
-    ],
-    [
-      'verifyNotEditable',
-      {
-        name: 'verify not editable',
-        type: TargetTypes.LOCATOR,
-        description: `Soft assert whether the specified input element is not 
         editable (e.g., hasn't been disabled).`,
         target: ArgTypes.locator,
       },
@@ -1045,14 +1031,22 @@ class CommandList {
       },
     ],
     [
-      'verifySelectedValue',
+      'verifyNotChecked',
       {
-        name: 'verify selected value',
+        name: 'verify not checked',
         type: TargetTypes.LOCATOR,
-        description: `Soft assert that the expected element has been chosen in 
-        a select menu by its option attribute.`,
-        target: ArgTypes.selectLocator,
-        value: ArgTypes.option,
+        description: `Soft assert that a toggle-button (checkbox/radio) has not been checked.`,
+        target: ArgTypes.locator,
+      },
+    ],
+    [
+      'verifyNotEditable',
+      {
+        name: 'verify not editable',
+        type: TargetTypes.LOCATOR,
+        description: `Soft assert whether the specified input element is not 
+        editable (e.g., hasn't been disabled).`,
+        target: ArgTypes.locator,
       },
     ],
     [
@@ -1066,21 +1060,43 @@ class CommandList {
       },
     ],
     [
-      'verifyText',
-      {
-        name: 'verify text',
-        type: TargetTypes.LOCATOR,
-        description: 'Soft assert the text of an element is present.',
-        target: ArgTypes.locator,
-        value: ArgTypes.text,
-      },
-    ],
-    [
       'verifyNotText',
       {
         name: 'verify not text',
         type: TargetTypes.LOCATOR,
         description: 'Soft assert the text of an element is not present.',
+        target: ArgTypes.locator,
+        value: ArgTypes.text,
+      },
+    ],
+    [
+      'verifySelectedLabel',
+      {
+        name: 'verify selected label',
+        type: TargetTypes.LOCATOR,
+        description: `Soft assert the visible text for a selected option in the 
+        specified select element.`,
+        target: ArgTypes.selectLocator,
+        value: ArgTypes.pattern,
+      },
+    ],
+    [
+      'verifySelectedValue',
+      {
+        name: 'verify selected value',
+        type: TargetTypes.LOCATOR,
+        description: `Soft assert that the expected element has been chosen in 
+        a select menu by its option attribute.`,
+        target: ArgTypes.selectLocator,
+        value: ArgTypes.option,
+      },
+    ],
+    [
+      'verifyText',
+      {
+        name: 'verify text',
+        type: TargetTypes.LOCATOR,
+        description: 'Soft assert the text of an element is present.',
         target: ArgTypes.locator,
         value: ArgTypes.text,
       },
@@ -1108,17 +1124,6 @@ class CommandList {
       },
     ],
     [
-      'verifySelectedLabel',
-      {
-        name: 'verify selected label',
-        type: TargetTypes.LOCATOR,
-        description: `Soft assert the visible text for a selected option in the 
-        specified select element.`,
-        target: ArgTypes.selectLocator,
-        value: ArgTypes.pattern,
-      },
-    ],
-    [
       'waitForElementEditable',
       {
         name: 'wait for element editable',
@@ -1139,16 +1144,6 @@ class CommandList {
       },
     ],
     [
-      'waitForElementPresent',
-      {
-        name: 'wait for element present',
-        type: TargetTypes.LOCATOR,
-        description: 'Wait for a target element to be present on the page.',
-        target: ArgTypes.locator,
-        value: ArgTypes.waitTime,
-      },
-    ],
-    [
       'waitForElementNotPresent',
       {
         name: 'wait for element not present',
@@ -1159,21 +1154,31 @@ class CommandList {
       },
     ],
     [
-      'waitForElementVisible',
-      {
-        name: 'wait for element visible',
-        type: TargetTypes.LOCATOR,
-        description: 'Wait for a target element to be visible on the page.',
-        target: ArgTypes.locator,
-        value: ArgTypes.waitTime,
-      },
-    ],
-    [
       'waitForElementNotVisible',
       {
         name: 'wait for element not visible',
         type: TargetTypes.LOCATOR,
         description: 'Wait for a target element to not be visible on the page.',
+        target: ArgTypes.locator,
+        value: ArgTypes.waitTime,
+      },
+    ],
+    [
+      'waitForElementPresent',
+      {
+        name: 'wait for element present',
+        type: TargetTypes.LOCATOR,
+        description: 'Wait for a target element to be present on the page.',
+        target: ArgTypes.locator,
+        value: ArgTypes.waitTime,
+      },
+    ],
+    [
+      'waitForElementVisible',
+      {
+        name: 'wait for element visible',
+        type: TargetTypes.LOCATOR,
+        description: 'Wait for a target element to be visible on the page.',
         target: ArgTypes.locator,
         value: ArgTypes.waitTime,
       },
@@ -1222,6 +1227,7 @@ class CommandList {
         description: `Create a loop that executes the proceeding commands 
         repeatedly for as long as the provided conditional expression is true.`,
         target: ArgTypes.conditionalExpression,
+        value: ArgTypes.loopLimit,
       },
     ],
   ])
