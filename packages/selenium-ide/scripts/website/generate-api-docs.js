@@ -19,6 +19,7 @@ function writeToDocsFile(filename, data) {
     '..',
     '..',
     'docs',
+    'api',
     filename
   )
   fs.writeFileSync(filepath, data)

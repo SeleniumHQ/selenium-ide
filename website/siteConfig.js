@@ -38,8 +38,9 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { doc: 'getting-started', label: 'Docs' },
-    { doc: 'commands', label: 'API' },
+    { doc: 'introduction/getting-started', label: 'Docs' },
+    { doc: 'api/commands', label: 'API' },
+    { doc: 'plugins/plugins-getting-started', label: 'Plugins' },
     { page: 'help', label: 'Help' },
     { blog: true, label: 'Blog' },
   ],
@@ -104,6 +105,12 @@ const siteConfig = {
 
   gaTrackingId: 'UA-80983440-3',
   useEnglishUrl: true,
+
+  downloadUrls: {
+    chrome: `https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd`,
+    firefox: `https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/`,
+    github: `https://github.com/SeleniumHQ/selenium-ide/releases/latest`,
+  },
 }
 
 module.exports = siteConfig

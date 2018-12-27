@@ -15,11 +15,8 @@ const GridBlock = CompLibrary.GridBlock
 
 class HomeSplash extends React.Component {
   render() {
-    const { siteConfig, language = '' } = this.props
-    const { baseUrl, docsUrl } = siteConfig
-    const docsPart = `${docsUrl ? `${docsUrl}/` : ''}`
-    const langPart = `${language ? `${language}/` : ''}`
-    const _docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`
+    const { siteConfig } = this.props
+    const { downloadUrls } = siteConfig
 
     const SplashContainer = props => (
       <div className="homeContainer">
@@ -57,15 +54,15 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle siteConfig={siteConfig} />
           <PromoSection>
-            <Button href="https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd">
+            <Button href={downloadUrls.chrome}>
               <i className="fab fa-padding fa-chrome" />
               Chrome Download
             </Button>
-            <Button href="https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/">
+            <Button href={downloadUrls.firefox}>
               <i className="fab fa-padding fa-firefox" />
               Firefox Download
             </Button>
-            <Button href="https://github.com/SeleniumHQ/selenium-ide/releases/latest">
+            <Button href={downloadUrls.github}>
               <i className="fas fa-padding fa-file-archive" />
               Latest zip
             </Button>
@@ -90,7 +87,10 @@ class HomeSplash extends React.Component {
 class Index extends React.Component {
   render() {
     const { config: siteConfig, language = '' } = this.props
-    const { baseUrl } = siteConfig
+    const { baseUrl, docsUrl, downloadUrls } = siteConfig
+    const docsPart = `${docsUrl ? `${docsUrl}/` : ''}`
+    const langPart = `${language ? `${language}/` : 'en/'}`
+    const _docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`
 
     const Block = props => (
       <Container
@@ -110,39 +110,41 @@ class Index extends React.Component {
           align="center"
           contents={[
             {
-              content:
-                'Download Selenium IDE for either [Chrome](sad) or [Firefox](asd) and get started right away.',
-              image: `${baseUrl}img/browsers.png`,
-              imageAlign: 'top',
-              title: 'Supports Chrome and Firefox',
-            },
-            {
-              content:
-                'Selenium IDE [Runner](linktodocs) will execute your test cases using WebDriver, allowing you to test on multiple machines, and browsers that Selenium IDE may not be available in.',
+              content: `With the [Command-line runner for Selenium IDE](${_docUrl(
+                'command-line-runner'
+              )}) you can run your Selenium IDE tests in parallel, headlessly, on different brower & OS combinations, and connect it to a CI server.`,
               image: `${baseUrl}img/parallel-execution.png`,
               imageAlign: 'top',
-              title: 'Parallel Execution',
+              title: 'Fast Cross-browser Execution',
             },
             {
               content:
-                'Selenium IDE records multiple locators, and will try to swap them on the fly if one failed, notifying you of the failure.',
+                'Selenium IDE records multiple locators for each element it interacts with. If one locator fails during playback, the other locators will be tried until one is succesful.',
               image: `${baseUrl}img/fallback.png`,
               imageAlign: 'top',
-              title: 'Locator Fallback',
+              title: 'Reslient Tests',
             },
             {
-              content:
-                'Through the use of the [run command](sda), you can re-use test cases already recorded from another test case, allowing you to re-use your login logic in multiple places throughout the suite.',
+              content: `Through the use of the [run command](${_docUrl(
+                'commands#run'
+              )}), you can re-use one test case insidie of another (e.g., allowing you to re-use your login logic in multiple places throughout a suite).`,
               image: `${baseUrl}img/reuse.png`,
               imageAlign: 'top',
               title: 'Test Case Reuse',
             },
             {
-              content:
-                'Extend Selenium IDE through the use of [plugins](plugins-getting-started), you can write plugins that will introduce new commands to the IDE.',
+              content: `Extend Selenium IDE through the use of [plugins](${'plugins-getting-started'}). You can write plugins that will introduce new commands to the IDE or integrate it with a third-party service.`,
               image: `${baseUrl}img/plugins.png`,
               imageAlign: 'top',
               title: 'Plugins',
+            },
+            {
+              content: `Download Selenium IDE for either [Chrome](${
+                downloadUrls.chrome
+              }) or [Firefox](${downloadUrls.firefox}) and get started.`,
+              image: `${baseUrl}img/browsers.png`,
+              imageAlign: 'top',
+              title: 'Support for Chrome and Firefox',
             },
           ]}
         />
