@@ -26,6 +26,7 @@ function writeToDocsFile(filename, data) {
 
 export function generateArgumentMarkdown() {
   let result = ''
+  result += `---\nid: arguments\ntitle: Arguments\nsidebar_label: Arguments\n---\n\n`
   Object.keys(ArgTypes).forEach(function(arg) {
     result += `## ${arg}\n\n`
     result += `name: ${ArgTypes[arg].name}\n\n`
@@ -37,6 +38,7 @@ export function generateArgumentMarkdown() {
 
 export function generateCommandMarkdown() {
   let result = ''
+  result += `---\nid: commands\ntitle: Commands\nsidebar_label: Commands\n---\n\n`
   Commands.list.keys().forEach(function(command) {
     const kommand = Commands.list.get(command)
     const params = generateCommandArguments(kommand)

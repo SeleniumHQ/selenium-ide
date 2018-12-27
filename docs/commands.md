@@ -1,3 +1,9 @@
+---
+id: commands
+title: Commands
+sidebar_label: Commands
+---
+
 ## `add selection`
 
 Add a selection to the set of options in a multi-select element.
