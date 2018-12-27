@@ -59,16 +59,6 @@ Confirm that the target element has been checked.
 
 <hr>
 
-## `assert not checked`
-
-Confirm that the target element has not been checked.
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-<hr>
-
 ## `assert confirmation`
 
 Confirm that a confirmation has been rendered.
@@ -78,16 +68,6 @@ Confirm that a confirmation has been rendered.
 ## `assert editable`
 
 Confirm that the target element is editable.
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-<hr>
-
-## `assert not editable`
-
-Confirm that the target element is not editable.
 
 <strong>arguments</strong>
 
@@ -115,15 +95,29 @@ Confirm that the target element is not present anywhere on the page.
 
 <hr>
 
-## `assert prompt`
+## `assert not checked`
 
-Confirm that a JavaScript prompt has been rendered.
+Confirm that the target element has not been checked.
+
+<strong>arguments</strong>
+
+- [locator](arguments.md#locator): An element locator.
 
 <hr>
 
-## `assert selected value`
+## `assert not editable`
 
-Confirm that the value attribute of the selected option in a dropdown element contains the provided value.
+Confirm that the target element is not editable.
+
+<strong>arguments</strong>
+
+- [locator](arguments.md#locator): An element locator.
+
+<hr>
+
+## `assert not selected value`
+
+Confirm that the value attribute of the selected option in a dropdown element does not contain the provided value.
 
 <strong>arguments</strong>
 
@@ -134,9 +128,28 @@ Confirm that the value attribute of the selected option in a dropdown element co
 
 <hr>
 
-## `assert not selected value`
+## `assert not text`
 
-Confirm that the value attribute of the selected option in a dropdown element does not contain the provided value.
+Confirm that the text of an element does not contain the provided value.
+
+<strong>arguments</strong>
+
+- [locator](arguments.md#locator): An element locator.
+
+- [text](arguments.md#text): An exact string match. Support for pattern matching is in the 
+    works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details.
+
+<hr>
+
+## `assert prompt`
+
+Confirm that a JavaScript prompt has been rendered.
+
+<hr>
+
+## `assert selected value`
+
+Confirm that the value attribute of the selected option in a dropdown element contains the provided value.
 
 <strong>arguments</strong>
 
@@ -163,19 +176,6 @@ Confirm that the label of the selected option in a dropdown element contains the
 ## `assert text`
 
 Confirm that the text of an element contains the provided value.
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-- [text](arguments.md#text): An exact string match. Support for pattern matching is in the 
-    works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details.
-
-<hr>
-
-## `assert not text`
-
-Confirm that the text of an element does not contain the provided value.
 
 <strong>arguments</strong>
 
@@ -326,6 +326,18 @@ Prints the specified message into the third table cell in your Selenese tables. 
 
 <hr>
 
+## `edit content`
+
+Sets the value of a content editable element as if you typed in it.
+
+<strong>arguments</strong>
+
+- [locator](arguments.md#locator): An element locator.
+
+- [value](arguments.md#value): The value to type.
+
+<hr>
+
 ## `else`
 
 Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command.
@@ -374,18 +386,6 @@ Executes an async snippet of JavaScript in the context of the currently selected
 - [variable name](arguments.md#variablename): The name of a variable (without brackets). Used to either store 
     an expression's result in or reference for a check (e.g., with 'assert' or 
     'verify').
-
-<hr>
-
-## `edit content`
-
-Sets the value of a content editable element as if you typed in it.
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-- [value](arguments.md#value): The value to type.
 
 <hr>
 
@@ -629,6 +629,12 @@ Gets the text of an element and stores it for later use. This works for any elem
 
 <hr>
 
+## `store title`
+
+Gets the title of the current page.
+
+<hr>
+
 ## `store value`
 
 Gets the value of element and stores it for later use. This works for any input type element.
@@ -640,12 +646,6 @@ Gets the value of element and stores it for later use. This works for any input 
 - [variable name](arguments.md#variablename): The name of a variable (without brackets). Used to either store 
     an expression's result in or reference for a check (e.g., with 'assert' or 
     'verify').
-
-<hr>
-
-## `store title`
-
-Gets the title of the current page.
 
 <hr>
 
@@ -691,6 +691,8 @@ Create a loop that executes the proceeding commands n number of times.
 
 - [times](arguments.md#times): The number of attempts a times control flow loop will execute 
     the commands within its block.
+
+- [loop limit](arguments.md#looplimit): Maximum number of times a looping control flow command can execute to protect against infinite loops.
 
 <hr>
 
@@ -741,29 +743,9 @@ Soft assert that a toggle-button (checkbox/radio) has been checked.
 
 <hr>
 
-## `verify not checked`
-
-Soft assert that a toggle-button (checkbox/radio) has not been checked.
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-<hr>
-
 ## `verify editable`
 
 Soft assert whether the specified input element is editable (e.g., hasn't been disabled).
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-<hr>
-
-## `verify not editable`
-
-Soft assert whether the specified input element is not editable (e.g., hasn't been disabled).
 
 <strong>arguments</strong>
 
@@ -791,13 +773,23 @@ Soft assert that the specified element is not somewhere on the page.
 
 <hr>
 
-## `verify selected value`
+## `verify not checked`
 
-Soft assert that the expected element has been chosen in a select menu by its option attribute.
+Soft assert that a toggle-button (checkbox/radio) has not been checked.
 
 <strong>arguments</strong>
 
-- [select locator](arguments.md#selectlocator): An element locator identifying a drop-down menu.
+- [locator](arguments.md#locator): An element locator.
+
+<hr>
+
+## `verify not editable`
+
+Soft assert whether the specified input element is not editable (e.g., hasn't been disabled).
+
+<strong>arguments</strong>
+
+- [locator](arguments.md#locator): An element locator.
 
 <hr>
 
@@ -811,9 +803,9 @@ Soft assert that the expected element has not been chosen in a select menu by it
 
 <hr>
 
-## `verify text`
+## `verify not text`
 
-Soft assert the text of an element is present.
+Soft assert the text of an element is not present.
 
 <strong>arguments</strong>
 
@@ -823,9 +815,32 @@ Soft assert the text of an element is present.
 
 <hr>
 
-## `verify not text`
+## `verify selected label`
 
-Soft assert the text of an element is not present.
+Soft assert the visible text for a selected option in the specified select element.
+
+<strong>arguments</strong>
+
+- [select locator](arguments.md#selectlocator): An element locator identifying a drop-down menu.
+
+- [text](arguments.md#text): An exact string match. Support for pattern matching is in the 
+    works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details.
+
+<hr>
+
+## `verify selected value`
+
+Soft assert that the expected element has been chosen in a select menu by its option attribute.
+
+<strong>arguments</strong>
+
+- [select locator](arguments.md#selectlocator): An element locator identifying a drop-down menu.
+
+<hr>
+
+## `verify text`
+
+Soft assert the text of an element is present.
 
 <strong>arguments</strong>
 
@@ -858,19 +873,6 @@ Soft assert the (whitespace-trimmed) value of an input field (or anything else w
 
 <hr>
 
-## `verify selected label`
-
-Soft assert the visible text for a selected option in the specified select element.
-
-<strong>arguments</strong>
-
-- [select locator](arguments.md#selectlocator): An element locator identifying a drop-down menu.
-
-- [text](arguments.md#text): An exact string match. Support for pattern matching is in the 
-    works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details.
-
-<hr>
-
 ## `wait for element editable`
 
 Wait for an element to be editable.
@@ -895,18 +897,6 @@ Wait for an element to not be editable.
 
 <hr>
 
-## `wait for element present`
-
-Wait for a target element to be present on the page.
-
-<strong>arguments</strong>
-
-- [locator](arguments.md#locator): An element locator.
-
-- [wait time](arguments.md#waittime): The amount of time to wait (in milliseconds).
-
-<hr>
-
 ## `wait for element not present`
 
 Wait for a target element to not be present on the page.
@@ -919,9 +909,9 @@ Wait for a target element to not be present on the page.
 
 <hr>
 
-## `wait for element visible`
+## `wait for element not visible`
 
-Wait for a target element to be visible on the page.
+Wait for a target element to not be visible on the page.
 
 <strong>arguments</strong>
 
@@ -931,9 +921,21 @@ Wait for a target element to be visible on the page.
 
 <hr>
 
-## `wait for element not visible`
+## `wait for element present`
 
-Wait for a target element to not be visible on the page.
+Wait for a target element to be present on the page.
+
+<strong>arguments</strong>
+
+- [locator](arguments.md#locator): An element locator.
+
+- [wait time](arguments.md#waittime): The amount of time to wait (in milliseconds).
+
+<hr>
+
+## `wait for element visible`
+
+Wait for a target element to be visible on the page.
 
 <strong>arguments</strong>
 
@@ -979,6 +981,8 @@ Create a loop that executes the proceeding commands repeatedly for as long as th
 
 - [conditional expression](arguments.md#conditionalexpression): JavaScript expression that returns a boolean result for use 
     in control flow commands.
+
+- [loop limit](arguments.md#looplimit): Maximum number of times a looping control flow command can execute to protect against infinite loops.
 
 <hr>
 

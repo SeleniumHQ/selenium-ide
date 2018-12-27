@@ -4,18 +4,18 @@ title: Arguments
 sidebar_label: Arguments
 ---
 
-## answer
-
-name: answer
-
-description: The answer to give in response to the prompt pop-up.
-<hr>
-
 ## alertText
 
 name: alert text
 
 description: text to check
+<hr>
+
+## answer
+
+name: answer
+
+description: The answer to give in response to the prompt pop-up.
 <hr>
 
 ## attributeLocator
@@ -81,13 +81,6 @@ name: locator
 description: An element locator.
 <hr>
 
-## locatorOfObjectToBeDragged
-
-name: locator of object to be dragged
-
-description: The locator of element to be dragged.
-<hr>
-
 ## locatorOfDragDestinationObject
 
 name: locator of drag destination object
@@ -95,11 +88,18 @@ name: locator of drag destination object
 description: The locator of an element whose location (e.g., the center-most pixel within it) will be the point where locator of object to be dragged is dropped.
 <hr>
 
-## optionLocator
+## locatorOfObjectToBeDragged
 
-name: option
+name: locator of object to be dragged
 
-description: An option locator, typically just an option label (e.g. "John Smith").
+description: The locator of element to be dragged.
+<hr>
+
+## loopLimit
+
+name: loop limit
+
+description: Maximum number of times a looping control flow command can execute to protect against infinite loops.
 <hr>
 
 ## message
@@ -107,6 +107,13 @@ description: An option locator, typically just an option label (e.g. "John Smith
 name: message
 
 description: undefined
+<hr>
+
+## optionLocator
+
+name: option
+
+description: An option locator, typically just an option label (e.g. "John Smith").
 <hr>
 
 ## pattern
