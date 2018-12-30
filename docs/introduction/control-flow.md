@@ -35,7 +35,7 @@ Conditional branching enables you to change the behavior in your test.
 
 ![if-example](/selenium-ide/img/docs/control-flow/if.png)
 
-### [`if`](commands.md#if)
+### [`if`](../api/commands.md#if)
 
 This is the opening command for a conditional block.
 
@@ -45,19 +45,19 @@ If the expression evaluates to `true` then the test will execute the commands th
 
 If the expression evaluates to `false` it will skip the commands that follow and jump to the next relevant conditional control flow command (e.g., `else if`, `else`, or `end`).
 
-### [`else if`](commands.md#else-if)
+### [`else if`](../api/commands.md#else-if)
 
 This command is used within an `if` command block.
 
 Just like with `if` it takes a JavaScript expression in the `target` input field to evaluate, executing either the command branch that follows it, or skips to the next relevant control flow command (e.g., `else` or `end`).
 
-### [`else`](commands.md#else)
+### [`else`](../api/commands.md#else)
 
 `else` is the final condition you can have in an `if` block. When none of the prior conditions are met, this command branch will be executed.
 
 After it's done it will jump to the `end` command.
 
-### [`end`](commands.md#end)
+### [`end`](../api/commands.md#end)
 
 This command terminates the conditional command block. Without it the command block is incomplete and you'll receive a helpful error message letting you know when trying to run your test.
 
@@ -65,7 +65,7 @@ This command terminates the conditional command block. Without it the command bl
 
 Looping enables you to iterate over a given set of commands.
 
-### [`times`](commands.md#times)
+### [`times`](../api/commands.md#times)
 
 With `times` you can specify a number of iterations you would like to perform a set of commands. The number goes into the `target` input field of the `times` command.
 
@@ -73,7 +73,7 @@ To close the `times` command block be sure to use the `end` command.
 
 ![times-example](/selenium-ide/img/docs/control-flow/times.png)
 
-### [`do`](commands.md#do)
+### [`do`](../api/commands.md#do)
 
 You start this loop with the `do` command, followed by the command(s) that you want executed, and end with the `repeat if` command. `repeat if` takes a JavaScript expression you would like to evaluate in the `target` input field.
 
@@ -83,7 +83,7 @@ The commands after the `do` will be executed first and then the expression in th
 
 This will continue until either the condition returns `false` or the infinite loop protection is triggered -- which defaults to `1000` attempts. You can override this default by specifying a number in the `value` input field of the `repeat if` command.
 
-### [`while`](commands.md#while)
+### [`while`](../api/commands.md#while)
 
 With `while` you provide a JavaScript expression you would like to evaluate in the `target` input field. If it evaluates to `true` the command block that follows will execute until it reaches the `end` command.
 
