@@ -33,7 +33,7 @@
       },
       {
         "type": "subcategory",
-        "label": "Conceps",
+        "label": "Concepts",
         "ids": [
           "plugins/requests",
           "plugins/error-handling",
