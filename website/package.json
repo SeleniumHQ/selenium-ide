@@ -7,11 +7,17 @@
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "generate-docs": "npx babel --presets @babel/preset-env ../packages/selenium-ide/scripts/website/generate-api-docs.js -o ../packages/selenium-ide/scripts/website/generate-api-docs-es5.js;node -e \"require('../packages/selenium-ide/scripts/website/generate-api-docs-es5.js').generateApiDocs()\";rm ../packages/selenium-ide/scripts/website/generate-api-docs-es5.js"
   },
   "devDependencies": {
     "docusaurus": "^1.6.2",
     "patch-package": "^5.1.1",
     "postinstall-postinstall": "^2.0.0"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3"
   }
 }

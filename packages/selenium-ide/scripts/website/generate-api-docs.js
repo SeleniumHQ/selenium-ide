@@ -1,4 +1,5 @@
-import { ArgTypes, Commands } from '../../src/neo/models/Command'
+import { Commands } from '../../src/neo/models/Command/Commands'
+import { ArgTypes } from '../../src/neo/models/Command/ArgTypes'
 const fs = require('fs')
 const path = require('path')
 
@@ -40,8 +41,8 @@ export function generateArgumentMarkdown() {
 export function generateCommandMarkdown() {
   let result = ''
   result += `---\nid: commands\ntitle: Commands\nsidebar_label: Commands\n---\n\n`
-  Commands.list.keys().forEach(function(command) {
-    const kommand = Commands.list.get(command)
+  Commands.forEach(function(command) {
+    const kommand = command[1]
     const params = generateCommandArguments(kommand)
     result += `## \`${kommand.name}\`\n\n`
     result += `${cleanup(kommand.description)}\n\n`
