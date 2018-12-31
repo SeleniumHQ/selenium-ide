@@ -1,5 +1,4 @@
-const argTypes = require('./ArgTypes')
-const ArgTypes = argTypes.ArgTypes
+import { ArgTypes } from './ArgTypes'
 
 const TargetTypes = {
   NONE: 0,
@@ -7,7 +6,7 @@ const TargetTypes = {
   REGION: 'region',
 }
 
-const Commands = [
+export const Commands = [
   [
     'addSelection',
     {
@@ -922,5 +921,3 @@ const Commands = [
     },
   ],
 ]
-
-module.exports = { TargetTypes, Commands }

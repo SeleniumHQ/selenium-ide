@@ -8,7 +8,7 @@
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version",
     "postinstall": "patch-package",
-    "generate-docs": "npx babel --presets @babel/preset-env ../packages/selenium-ide/scripts/website/generate-api-docs.js -o ../packages/selenium-ide/scripts/website/generate-api-docs-es5.js;node -e \"require('../packages/selenium-ide/scripts/website/generate-api-docs-es5.js').generateApiDocs()\";rm ../packages/selenium-ide/scripts/website/generate-api-docs-es5.js"
+    "generate-docs": "npx babel --presets @babel/preset-env ../packages/selenium-ide/scripts/website/generate-api-docs.js ../packages/selenium-ide/src/neo/models/Command/Commands.js ../packages/selenium-ide/src/neo/models/Command/ArgTypes.js -d tmp;SCRIPT_EXEC=true node -e \"require('./tmp/generate-api-docs.js').generateApiDocs()\";rm -rf ./tmp"
   },
   "devDependencies": {
     "docusaurus": "^1.6.2",

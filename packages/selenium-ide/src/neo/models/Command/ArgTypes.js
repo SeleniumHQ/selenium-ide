@@ -1,4 +1,4 @@
-const ArgTypes = {
+export const ArgTypes = {
   alertText: {
     name: 'alert text',
     description: 'text to check',
@@ -129,5 +129,3 @@ const ArgTypes = {
     description: 'The xpath expression to evaluate.',
   },
 }
-
-module.exports = { ArgTypes }

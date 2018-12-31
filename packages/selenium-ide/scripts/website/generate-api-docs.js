@@ -1,7 +1,19 @@
-import { Commands } from '../../src/neo/models/Command/Commands'
-import { ArgTypes } from '../../src/neo/models/Command/ArgTypes'
 const fs = require('fs')
 const path = require('path')
+
+let Commands
+let ArgTypes
+let filePath
+
+if (process.env.SCRIPT_EXEC) {
+  Commands = require('./Commands').Commands
+  ArgTypes = require('./ArgTypes').ArgTypes
+  filePath = path.join(__dirname, '..', '..', 'docs', 'api')
+} else {
+  Commands = require('../../src/neo/models/Command/Commands').Commands
+  ArgTypes = require('../../src/neo/models/Command/ArgTypes').ArgTypes
+  filePath = path.join(__dirname, '..', '..', '..', '..', 'docs', 'api')
+}
 
 export function generateApiDocs() {
   const docs = {}
@@ -13,16 +25,7 @@ export function generateApiDocs() {
 }
 
 function writeToDocsFile(filename, data) {
-  const filepath = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    'docs',
-    'api',
-    filename
-  )
+  const filepath = path.join(filePath, filename)
   fs.writeFileSync(filepath, data)
 }
 
