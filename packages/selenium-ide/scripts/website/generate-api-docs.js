@@ -47,11 +47,28 @@ export function generateCommandMarkdown() {
   Commands.forEach(function(command) {
     const kommand = command[1]
     const params = generateCommandArguments(kommand)
+    const example = generateExampleSnippet(kommand)
     result += `## \`${kommand.name}\`\n\n`
     result += `${cleanup(kommand.description)}\n\n`
     params ? (result += params) : undefined
+    example ? (result += example) : undefined
+    result += '<hr>\n'
     result += `\n`
   })
+  return result
+}
+
+function generateExampleSnippet(command) {
+  let result
+  if (command.example) {
+    result = `<strong>example</strong>`
+    result += `\n\n`
+    result += `command | target | value\n`
+    result += `--- | --- | ---`
+    result += `\n`
+    result += `${command.example}`
+    result += `\n\n`
+  }
   return result
 }
 
@@ -62,7 +79,6 @@ function generateCommandArguments(command) {
   if (target || value) result += `<strong>arguments</strong>\n\n`
   target ? (result += target) : undefined
   value ? (result += value) : undefined
-  result += '<hr>\n'
   return result
 }
 
