@@ -6,7 +6,7 @@ sidebar_label: Getting Started
 
 Plugins can extend Selenium IDE's default behavior, through adding additional commands and locators, bootstrapping setup before and after test runs, and affecting the recording process.  
 
-Selenium IDE is using the WebExtension standard to work in modern browsers, you can check out Mozilla's [Your first extension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension). Communicating between the extensions is handled via the [external messaging protocol](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/sendMessage), you can view an example of that [here](https://github.com/SeleniumHQ/selenium-ide/tree/master/packages/extension-boilerplate).  
+Selenium IDE is using the WebExtension standard to work in modern browsers, you can check out Mozilla's <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension" target="_blank" rel="noopener noreferrer">Your first extension</a>. Communicating between the extensions is handled via the <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/sendMessage" target="_blank" rel="noopener noreferrer">external messaging protocol</a>, you can view an example of that <a href="https://github.com/SeleniumHQ/selenium-ide/tree/master/packages/extension-boilerplate" target="_blank" rel="noopener noreferrer">here</a>.  
 
 This article assumes knowledge in WebExtension development, and will only discuss Selenium IDE specific capabilities.
 
@@ -95,7 +95,7 @@ A list of new commands to be added to the IDE, each command takes a few paramete
 - `id` - required, a camelCase unique identifier for the command.
 - `name` - required, a natural language name for the command, the user will see this.
 - `type` - optional, can be either `locator` or `region`, is used to enable the `find` and `select` buttons. (**NOTE:** `type` is still in beta, and may be changed in the future).
-- `docs` - optional, a collection of metadata for the command description, target, and value. Alternatively, you can use an existing command target or value (a.k.a. ArgTypes) by specifying its name as a string (rather than a sub-collection). See `ArgTypes` in [`Command.js`](https://github.com/SeleniumHQ/selenium-ide/blob/master/packages/selenium-ide/src/neo/models/Command.js) for a full list.
+- `docs` - optional, a collection of metadata for the command description, target, and value. Alternatively, you can use an existing command target or value (a.k.a. ArgTypes) by specifying its name as a string (rather than a sub-collection). See `ArgTypes` in <a href="https://github.com/SeleniumHQ/selenium-ide/blob/master/packages/selenium-ide/src/neo/models/Command/ArgTypes.js" target="_blank" rel="noopener noreferrer">`ArgTypes.js`</a> for a full list.
 
 ### Locators
 
@@ -106,9 +106,9 @@ A list of new locators to be added to the IDE, each locator simply takes `id`.
 
 ### Dependencies
 
-Additional [Node.js](https://nodejs.org/en/) dependencies to download and use when ran in command line using [selenium-side-runner](https://www.npmjs.com/package/selenium-side-runner).  
+Additional <a href="https://nodejs.org/en/" target="_blank" rel="noopener noreferrer">Node.js</a> dependencies to download and use when ran using [the command-line runner](../introduction/command-line-runner).  
 
-Dependencies are a dictionary of `key:value` like so `name:version`, where name is the published name on [npm](http://npmjs.com/) and version is a valid [semver](https://semver.org/) published to npm.
+Dependencies are a dictionary of `key:value` like so `name:version`, where name is the published name on <a href="http://npmjs.com/" target="_blank" rel="noopener noreferrer">npm</a> and version is a valid <a href="https://semver.org/" target="_blank" rel="noopener noreferrer">semver</a> published to npm.
 
 ## Registering the Plugin
 

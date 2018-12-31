@@ -25,7 +25,7 @@ The following dependencies are needed for the command line runner to work:
 > brew install chromedriver
 ```
 
-__NOTE: Your system configuration may differ from what's used in the sample above (e.g., Homebrew on MacOS). If so, see [the Node installation documentation for package managers](https://nodejs.org/en/download/package-manager/) or download a Node installer for your operating system directly from [the Node downloads page](https://nodejs.org/en/download/) and check out the Getting Started documentation for [ChromeDriver](http://chromedriver.chromium.org/getting-started).__
+__NOTE: Your system configuration may differ from what's used in the sample above (e.g., Homebrew on MacOS). If so, see <a href="https://nodejs.org/en/download/package-manager/" target="_blank" rel="noopener noreferrer">the Node installation documentation for package managers</a> or download a Node installer for your operating system directly from <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener noreferrer">the Node downloads page</a> and check out the Getting Started documentation for <a href="http://chromedriver.chromium.org/getting-started" target="_blank" rel="noopener noreferrer">ChromeDriver</a>.__
 
 ## Launching the runner
 
@@ -53,7 +53,7 @@ The most common example of this is specifying a different browser for local test
 selenium-side-runner -c "browserName=firefox"
 ```
 
-__NOTE: For Firefox to work you'll need to download Mozilla's `geckodriver` and add it to your path (just like with ChromeDriver). For details, see [the `geckodriver` project page](https://github.com/mozilla/geckodriver/#usage).__
+__NOTE: For Firefox to work you'll need to download Mozilla's `geckodriver` and add it to your path (just like with ChromeDriver). For details, see <a href="https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/Usage.html" target="_blank" rel="noopener noreferrer">the `geckodriver` project page</a>.__
 
 ### Running on a remote WebDriver server
 

@@ -15,7 +15,12 @@ const GridBlock = CompLibrary.GridBlock
 
 const Button = props => (
   <div className="pluginWrapper buttonWrapper">
-    <a className="button" href={props.href} target={props.target}>
+    <a
+      className="button"
+      href={props.href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       {props.children}
     </a>
   </div>

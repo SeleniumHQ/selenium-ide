@@ -6,7 +6,7 @@ sidebar_label: Getting Started
 
 ## Installation
 
-Install Selenium IDE from either the [Chrome](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/selenium-ide/) web store.
+Install Selenium IDE from either the <a href="https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd" target="_blank" rel="noopener noreferrer">Chrome</a> or <a href="https://addons.mozilla.org/en-US/firefox/addon/selenium-ide/" target="_blank" rel="noopener noreferrer">Firefox</a> web store.
 
 ## Launch the IDE
 
