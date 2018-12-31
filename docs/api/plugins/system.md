@@ -30,6 +30,17 @@ Logs that explain plugin usage, or status should be logged here.
 - `type` - log type, `undefined` is an info log, while `error` will appear red, and `warn` will appear orange.
 - `message` - `string` message, any links will be automatically linkified.
 
+### `GET /project`
+
+Fetches the `id` and `name` of the currently loaded project.
+
+```js
+{
+  id: "auto-generated-project-id",
+  name: "your-project-name"
+}
+```
+
 #### Returns
 
 Returns `true` if the log was added.

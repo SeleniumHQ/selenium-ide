@@ -45,6 +45,7 @@ Event that pops each time a user loads a new project file.
 ##### Options
 
 - `projectName` - the loaded project's name
+- `projectId` - the loaded project's id
 
 ### Record Events
 
