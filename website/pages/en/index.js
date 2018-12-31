@@ -94,6 +94,7 @@ class Index extends React.Component {
 
     const Block = props => (
       <Container
+        className={props.className}
         padding={['bottom', 'top']}
         id={props.id}
         background={props.background}
@@ -155,6 +156,8 @@ class Index extends React.Component {
             title: 'Resilient Tests',
             content:
               'Selenium IDE records multiple locators for each element it interacts with. If one locator fails during playback, the others will be tried until one is succesful.',
+            image: `${baseUrl}img/home/locators.png`,
+            imageAlign: 'left',
           },
         ]}
       </Block>
@@ -168,6 +171,8 @@ class Index extends React.Component {
             content: `Through the use of the [run command](${_docUrl(
               'api/commands#run'
             )}), you can re-use one test case insidie of another (e.g., allowing you to re-use your login logic in multiple places throughout a suite).`,
+            image: `${baseUrl}img/home/run.png`,
+            imageAlign: 'right',
           },
         ]}
       </Block>
@@ -189,7 +194,7 @@ class Index extends React.Component {
     )
 
     const Plugins = () => (
-      <Block>
+      <Block className="center-image">
         {[
           {
             title: 'Plugins',

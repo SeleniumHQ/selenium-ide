@@ -22,3 +22,7 @@
 .home.mainContainer {
   padding: 0;
 }
+
+.center-image img {
+  margin: 40px 0 0 250px;
+}
