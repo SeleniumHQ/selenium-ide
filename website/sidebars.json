@@ -21,7 +21,7 @@
         ]
       }
     ],
-    "Plugins": [
+    "Build a Plugin": [
       {
         "type": "subcategory",
         "label": "Introduction",
