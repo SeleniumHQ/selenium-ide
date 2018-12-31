@@ -8,7 +8,7 @@ You can now run your tests cross-browser, in parallel, and on a Grid without nee
 
 It's a simple matter of installing the Selenium IDE command line runner and launching it from a command prompt.
 
-![command-line-runner-sample](/selenium-ide/img/runner.png)
+![command-line-runner-sample](/selenium-ide/img/docs/runner.png)
 
 ## Prerequisites
 

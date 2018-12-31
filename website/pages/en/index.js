@@ -21,6 +21,14 @@ const Button = props => (
   </div>
 )
 
+const PromoSection = props => (
+  <div className="section promoSection">
+    <div className="promoRow">
+      <div className="pluginRowBlock">{props.children}</div>
+    </div>
+  </div>
+)
+
 class HomeSplash extends React.Component {
   render() {
     const { siteConfig } = this.props
@@ -39,14 +47,6 @@ class HomeSplash extends React.Component {
         {siteConfig.title}
         <small>{siteConfig.tagline}</small>
       </h2>
-    )
-
-    const PromoSection = props => (
-      <div className="section promoSection">
-        <div className="promoRow">
-          <div className="pluginRowBlock">{props.children}</div>
-        </div>
-      </div>
     )
 
     return (
@@ -111,19 +111,19 @@ class Index extends React.Component {
           contents={[
             {
               title: 'Web Ready',
-              image: `${baseUrl}img/parallel-execution.png`,
+              image: `${baseUrl}img/home/computer.png`,
               imageAlign: 'top',
               content: `Simple, turn-key solution to quickly author reliable end-to-end tests. Works out of the box for any web app.`,
             },
             {
               title: 'Easy Debugging',
-              image: `${baseUrl}img/browsers.png`,
+              image: `${baseUrl}img/home/bullseye.png`,
               imageAlign: 'top',
               content: `Enjoy easier test debugging with rich IDE features like setting breakpoints and pausing on exceptions.`,
             },
             {
               title: 'Cross-browser Execution',
-              image: `${baseUrl}img/parallel-execution.png`,
+              image: `${baseUrl}img/home/lightning-bolt.png`,
               imageAlign: 'top',
               content: `Run your tests on any browser/OS combination in parallel using the [Command-line Runner for Selenium IDE](${_docUrl(
                 'introduction/command-line-runner'
@@ -135,10 +135,7 @@ class Index extends React.Component {
     )
 
     const FeatureCallout = () => (
-      <div
-        className="productShowcaseSection paddingBottom"
-        style={{ textAlign: 'center' }}
-      >
+      <div className="productShowcaseSection paddingBottom paddingTop">
         <h2>Ready to use IDE</h2>
         <MarkdownBlock>
           Getting started with Selenium IDE requires no additional setup other
@@ -158,8 +155,6 @@ class Index extends React.Component {
             title: 'Resilient Tests',
             content:
               'Selenium IDE records multiple locators for each element it interacts with. If one locator fails during playback, the others will be tried until one is succesful.',
-            image: `${baseUrl}img/fallback.png`,
-            imageAlign: 'right',
           },
         ]}
       </Block>
@@ -173,8 +168,6 @@ class Index extends React.Component {
             content: `Through the use of the [run command](${_docUrl(
               'api/commands#run'
             )}), you can re-use one test case insidie of another (e.g., allowing you to re-use your login logic in multiple places throughout a suite).`,
-            image: `${baseUrl}img/reuse.png`,
-            imageAlign: 'left',
           },
         ]}
       </Block>
@@ -188,7 +181,7 @@ class Index extends React.Component {
             content: `Selenium IDE ships with an extensive control flow structure, with available commands like \`if\`, \`while\` and \`times\`. To learn more, check out [the Control Flow documentation](${_docUrl(
               'introduction/control-flow'
             )}).`,
-            image: `${baseUrl}img/control-flow.png`,
+            image: `${baseUrl}img/home/control-flow.png`,
             imageAlign: 'left',
           },
         ]}
@@ -200,29 +193,36 @@ class Index extends React.Component {
         {[
           {
             title: 'Plugins',
-            content: `Extend Selenium IDE through the use of [plugins](${_docUrl(
+            content: `Selenium IDE can be extended through the use of [plugins](${_docUrl(
               'plugins/plugins-getting-started'
-            )}). You can write plugins that will introduce new commands to the IDE or integrate it with a third-party service.`,
-            image: `${baseUrl}img/plugins.png`,
-            imageAlign: 'left',
+            )}). They can introduce new commands to the IDE or integrate with a third-party service. Write your own or install one that someone else has already written.`,
+            image: `${baseUrl}img/home/plug.png`,
+            imageAlign: 'right',
           },
         ]}
       </Block>
     )
 
     const TryOut = () => (
-      <Block id="try" background="light">
-        {[
-          {
-            title: 'Try it out',
-            image: `${baseUrl}img/browsers.png`,
-            imageAlign: 'left',
-            content: `Download Selenium IDE for either [Chrome](${
-              downloadUrls.chrome
-            }) or [Firefox](${downloadUrls.firefox}) and get started.`,
-          },
-        ]}
-      </Block>
+      <Container padding={['bottom', 'top']} background="light">
+        <div className="homeContainer">
+          <div className="projectTitle">Try it out</div>
+          <div>
+            Download Selenium IDE for either Chrome or Firefox and get started.
+          </div>
+          <br />
+          <PromoSection>
+            <Button href={downloadUrls.chrome}>
+              <i className="fab fa-padding fa-chrome" />
+              Chrome Download
+            </Button>
+            <Button href={downloadUrls.firefox}>
+              <i className="fab fa-padding fa-firefox" />
+              Firefox Download
+            </Button>
+          </PromoSection>
+        </div>
+      </Container>
     )
 
     const Showcase = () => {
@@ -257,7 +257,7 @@ class Index extends React.Component {
     return (
       <div>
         <HomeSplash siteConfig={siteConfig} language={language} />
-        <div className="mainContainer">
+        <div className="home mainContainer">
           <Features />
           <FeatureCallout />
           <ResilientTests />
