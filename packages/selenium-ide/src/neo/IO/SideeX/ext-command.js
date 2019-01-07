@@ -576,7 +576,7 @@ export default class ExtCommand {
           text: '\r',
         })
         await connection.sendCommand('Input.dispatchKeyEvent', {
-          type: 'keyDown',
+          type: 'keyUp',
           keyCode: 13,
           key: 'Enter',
           code: 'Enter',
