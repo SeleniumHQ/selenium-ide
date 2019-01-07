@@ -102,12 +102,12 @@ export async function select(type, rect, selectNext = false) {
 function selectTarget(target) {
   UiState.setSelectingTarget(false)
   if (UiState.selectedCommand) {
-    UiState.selectedCommand.setTarget(target[0][0])
     UiState.selectedCommand.setTargets(target)
+    UiState.selectedCommand.setTarget(target[0][0])
   } else if (UiState.selectedTest.test) {
     const command = UiState.selectedTest.test.createCommand()
-    command.setTarget(target[0][0])
     command.setTargets(target)
+    command.setTarget(target[0][0])
   }
 }
 
