@@ -22,6 +22,7 @@ import ModalState from '../../stores/view/ModalState'
 import WindowSession from '../../IO/window-session'
 import { TargetTypes } from '../../models/Command'
 import Region from '../../models/Region'
+import { xlateArgument } from './formatCommand'
 
 async function getActiveTabForTest() {
   const identifier = WindowSession.currentUsedWindowId[
@@ -39,20 +40,21 @@ async function getActiveTabForTest() {
 
 export async function find(target) {
   try {
+    const xlatedTarget = xlateArgument(target)
     const tab = await getActiveTabForTest()
-    const region = new Region(target)
+    const region = new Region(xlatedTarget)
     await browser.windows.update(tab.windowId, {
       focused: true,
     })
     try {
       await browser.tabs.sendMessage(tab.id, {
         showElement: true,
-        targetValue: region.isValid() ? region.toJS() : target,
+        targetValue: region.isValid() ? region.toJS() : xlatedTarget,
       })
     } catch (e) {
       ModalState.showAlert({
         title: 'Element not found',
-        description: `Could not find ${target} on the page`,
+        description: `Could not find ${xlatedTarget} on the page`,
         confirmLabel: 'Close',
       })
     }
