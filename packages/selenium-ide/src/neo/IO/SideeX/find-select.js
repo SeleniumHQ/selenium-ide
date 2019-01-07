@@ -20,7 +20,7 @@ import UiState from '../../stores/view/UiState'
 import PlaybackState from '../../stores/view/PlaybackState'
 import ModalState from '../../stores/view/ModalState'
 import WindowSession from '../../IO/window-session'
-import { TargetTypes } from '../../models/Command'
+import { TargetTypes } from '../../models/Command/Commands'
 import Region from '../../models/Region'
 import { xlateArgument } from './formatCommand'
 
@@ -72,7 +72,7 @@ export async function select(type, rect, selectNext = false) {
         .sendMessage(tab.id, { selectMode: true, selecting: false })
         .catch(() => {})
     } else {
-      PlaybackState.stopPlaying()
+      PlaybackState.stopPlaying().catch(() => {})
       await browser.windows.update(tab.windowId, {
         focused: true,
       })

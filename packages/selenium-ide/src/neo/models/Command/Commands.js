@@ -1,6 +1,6 @@
 import { ArgTypes } from './ArgTypes'
 
-const TargetTypes = {
+export const TargetTypes = {
   NONE: 0,
   LOCATOR: 'locator',
   REGION: 'region',
