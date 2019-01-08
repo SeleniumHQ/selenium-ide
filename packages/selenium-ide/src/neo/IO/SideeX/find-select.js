@@ -55,7 +55,7 @@ export async function find(target) {
       ModalState.showAlert({
         title: 'Element not found',
         description: `Could not find ${xlatedTarget} on the page`,
-        confirmLabel: 'Close',
+        confirmLabel: 'close',
       })
     }
   } catch (e) {
@@ -137,7 +137,7 @@ function showNoTabAvailableDialog() {
     title: 'Tab not found',
     description:
       'No tab is available for this test case, either continue recording it, or play it back.',
-    confirmLabel: 'Close',
+    confirmLabel: 'close',
   })
 }
 

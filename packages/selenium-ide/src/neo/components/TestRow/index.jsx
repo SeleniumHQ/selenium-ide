@@ -239,8 +239,8 @@ class TestRow extends React.Component {
         title: 'Clear all test commands',
         description:
           "You're about to remove all of the commands in this test. Do you want to proceed?",
-        confirmLabel: 'Clear all commands',
-        cancelLabel: 'Cancel',
+        confirmLabel: 'clear all commands',
+        cancelLabel: 'cancel',
       })
       if (choseProceed) {
         this.props.clearAllCommands()

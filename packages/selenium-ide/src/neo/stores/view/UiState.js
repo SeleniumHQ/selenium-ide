@@ -151,7 +151,7 @@ class UiState {
         title: 'Stop recording',
         description:
           'Are you sure you would like to stop recording, and change views?',
-        confirmLabel: 'Stop recording',
+        confirmLabel: 'stop recording',
         cancelLabel: 'cancel',
       })
       if (choseChange) {
@@ -223,7 +223,7 @@ class UiState {
         title: 'Stop recording',
         description:
           'Are you sure you would like to stop recording, and select a different test?',
-        confirmLabel: 'Stop recording',
+        confirmLabel: 'stop recording',
         cancelLabel: 'cancel',
       })
       if (choseSelect) {

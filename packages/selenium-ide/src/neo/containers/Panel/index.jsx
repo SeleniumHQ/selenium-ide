@@ -57,6 +57,7 @@ if (!isTest) {
 if (userAgent.os.name === 'Windows') {
   require('../../styles/conditional/scrollbar.css')
   require('../../styles/conditional/button-direction.css')
+  require('../../styles/conditional/text.css')
 }
 
 const project = observable(new ProjectStore(''))
@@ -221,8 +222,8 @@ export default class Panel extends React.Component {
         title: 'Create without saving',
         description:
           'Are you sure you would like to create a new project without saving the current one?',
-        confirmLabel: 'Proceed',
-        cancelLabel: 'Cancel',
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
       })
       if (choseProceed) {
         await UiState.stopRecording({ nameNewTest: false })
@@ -233,8 +234,8 @@ export default class Panel extends React.Component {
         title: 'Stop recording',
         description:
           'Are you sure you would to stop recording and create a new project?',
-        confirmLabel: 'Proceed',
-        cancelLabel: 'Cancel',
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
       })
       if (choseProceed) {
         await UiState.stopRecording({ nameNewTest: false })

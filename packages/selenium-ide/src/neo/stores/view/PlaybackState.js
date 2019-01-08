@@ -194,7 +194,7 @@ class PlaybackState {
         title: 'Stop recording',
         description:
           'Are you sure you would like to stop recording, and start playing?',
-        confirmLabel: 'Playback',
+        confirmLabel: 'playback',
         cancelLabel: 'cancel',
       })
       if (chosePlay) {
@@ -331,8 +331,8 @@ class PlaybackState {
           'Playing from a specific command may cause unintended test results. \n\n' +
           'Do you want to continue or play to this command from the beginning ' +
           'of the test?`',
-        confirmLabel: 'CONTINUE',
-        cancelLabel: 'PLAY TO HERE',
+        confirmLabel: 'continue',
+        cancelLabel: 'play to here',
       })
       if (!choseProceed)
         return this.startPlaying(command, { playToThisPoint: true })
@@ -617,8 +617,8 @@ class PlaybackState {
           title: 'Start recording',
           description:
             'You can now start recording.  \n\nThe recording will start from the command you selected.',
-          confirmLabel: 'START RECORDING',
-          cancelLabel: 'CANCEL',
+          confirmLabel: 'start recording',
+          cancelLabel: 'cancel',
         })
         if (choseProceed) {
           await UiState.startRecording()

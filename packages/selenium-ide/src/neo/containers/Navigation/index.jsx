@@ -49,8 +49,8 @@ export default class Navigation extends React.Component {
         title: 'Playback is Running',
         description:
           "Can't change the view while playback is running, pause the playback?",
-        confirmLabel: 'Pause',
-        cancelLabel: 'Cancel',
+        confirmLabel: 'pause',
+        cancelLabel: 'cancel',
       })
       if (choseChange) {
         PlaybackState.pause()

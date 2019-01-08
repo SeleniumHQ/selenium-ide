@@ -103,8 +103,8 @@ function exportProject(project) {
       ModalState.showAlert({
         title: 'Error saving project',
         description: markdown,
-        confirmLabel: 'Download log',
-        cancelLabel: 'Close',
+        confirmLabel: 'download log',
+        cancelLabel: 'close',
       }).then(choseDownload => {
         if (choseDownload) {
           browser.downloads.download({
@@ -140,7 +140,7 @@ export function loadProject(project, file) {
     ModalState.showAlert({
       title: 'Error migrating project',
       description: error.message,
-      confirmLabel: 'Close',
+      confirmLabel: 'close',
     })
   }
   loadAsText(file).then(contents => {
@@ -163,8 +163,8 @@ export function loadProject(project, file) {
             ModalState.showAlert({
               title: 'Migrate test case',
               description: `The test case you're trying to migrate has a different base URL (${baseUrl}) than the project's one.  \nIn order to migrate the test case URLs will be made absolute.`,
-              confirmLabel: 'Migrate',
-              cancelLabel: 'Discard',
+              confirmLabel: 'migrate',
+              cancelLabel: 'discard',
             }).then(choseMigration => {
               if (choseMigration) {
                 UiState.selectTest(

@@ -128,3 +128,8 @@ code,
 .failed {
   color: #df0006;
 }
+
+.action-text,
+.btn {
+  text-transform: capitalize;
+}
