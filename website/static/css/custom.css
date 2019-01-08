@@ -26,3 +26,11 @@
 .center-image img {
   margin: 40px 0 0 250px;
 }
+
+img.logo {
+  border: 1px solid #2d57a5;
+}
+
+.promoSection .promoRow .pluginRowBlock .pluginWrapper.buttonWrapper {
+  padding: 3px 2px;
+}

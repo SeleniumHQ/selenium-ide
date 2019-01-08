@@ -23,7 +23,7 @@ const _users = [
 const siteConfig = {
   title: 'Selenium IDE', // Title for your website.
   tagline: 'Open source record and playback test automation for the web',
-  url: 'https://seleniumhq.github.io', // Your website URL
+  url: 'https://www.seleniumhq.org', // Your website URL
   baseUrl: '/selenium-ide/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
@@ -55,8 +55,8 @@ const siteConfig = {
 
   /* Colors for website */
   colors: {
-    primaryColor: '#143569',
-    secondaryColor: '#205cbb',
+    primaryColor: '#2e5185',
+    secondaryColor: '#2e4585',
   },
 
   /* Custom fonts for website */
@@ -103,7 +103,7 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   repoUrl: 'https://github.com/seleniumhq/selenium-ide',
 
-  gaTrackingId: 'UA-80983440-3',
+  gaTrackingId: 'UA-80983440-1',
   useEnglishUrl: true,
 
   downloadUrls: {

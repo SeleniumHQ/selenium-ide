@@ -2,13 +2,13 @@
   "scripts": {
     "examples": "docusaurus-examples",
     "start": "docusaurus-start",
-    "build": "docusaurus-build",
+    "build": "yarn run generate-docs && docusaurus-build",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version",
     "postinstall": "patch-package",
-    "generate-docs": "npx babel --presets @babel/preset-env ../packages/selenium-ide/scripts/website/generate-api-docs.js ../packages/selenium-ide/src/neo/models/Command/Commands.js ../packages/selenium-ide/src/neo/models/Command/ArgTypes.js -d tmp;SCRIPT_EXEC=true node -e \"require('./tmp/generate-api-docs.js').generateApiDocs()\";rm -rf ./tmp"
+    "generate-docs": "yarn run babel --presets @babel/preset-env ../packages/selenium-ide/scripts/website/generate-api-docs.js ../packages/selenium-ide/src/neo/models/Command/Commands.js ../packages/selenium-ide/src/neo/models/Command/ArgTypes.js -d tmp;SCRIPT_EXEC=true node -e \"require('./tmp/generate-api-docs.js').generateApiDocs()\";rm -rf ./tmp"
   },
   "devDependencies": {
     "docusaurus": "^1.6.2",
