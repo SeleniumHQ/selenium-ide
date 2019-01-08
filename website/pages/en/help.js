@@ -22,10 +22,10 @@ function Help(props) {
   const supportLinks = [
     {
       content: `Find what you're looking for in our detailed documentation and guides.\n\n- Learn how to [get started](${docUrl(
-        'getting-started'
+        'introduction/getting-started'
       )}) with Selenium IDE.\n\n- Learn how to [use selenium-side-runner](${docUrl(
-        'command-line-runner'
-      )}).\n\n- View the [glossary of commands](${docUrl('commands')})`,
+        'introduction/command-line-runner'
+      )}).\n\n- View the [glossary of commands](${docUrl('api/commands')})`,
       title: 'Browse Docs',
     },
     {
