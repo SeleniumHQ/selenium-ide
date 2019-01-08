@@ -101,6 +101,7 @@ class Footer extends React.Component {
             >
               Star
             </a>
+            <a href={`${this.props.config.baseUrl}legacy`}>Legacy IDE</a>
           </div>
         </section>
         <section className="copyright">{this.props.config.copyright}</section>
