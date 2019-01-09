@@ -133,6 +133,7 @@ function handleContentScriptResponse(message, sender, sendResponse) {
 }
 
 function showNoTabAvailableDialog() {
+  UiState.windowSession.focusIDEWindow()
   ModalState.showAlert({
     title: 'Tab not found',
     description:

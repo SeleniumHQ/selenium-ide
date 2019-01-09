@@ -96,6 +96,7 @@ class UiState {
       }
     })
     this.recorder = new BackgroundRecorder(WindowSession)
+    this.windowSession = WindowSession
   }
 
   @action.bound
