@@ -20,6 +20,7 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import classNames from 'classnames'
 import Linkify from 'react-linkify'
+import Spinner from '../Spinner'
 import { LogTypes } from '../../ui-models/Log'
 import './style.css'
 
@@ -34,6 +35,8 @@ export default class LogMessage extends React.Component {
         statusMessage = `Failed${this.props.log.description ? ':' : ''}`
       } else if (this.props.log.status === LogTypes.Undetermined) {
         statusMessage = 'Undetermined'
+      } else if (this.props.log.status === LogTypes.Awaiting) {
+        statusMessage = 'Running'
       }
     }
     return (
@@ -47,13 +50,17 @@ export default class LogMessage extends React.Component {
             target: '_blank',
           }}
         >
-          {this.props.log.index && (
-            <span className="index">{this.props.log.index}.</span>
-          )}
-          <span className="message">
-            {this.props.log.message}
-            <span className="status"> {statusMessage}</span>
-          </span>
+          <div className="log-overview">
+            {this.props.log.index && (
+              <span className="index">{this.props.log.index}.</span>
+            )}
+            <span className="message">
+              {this.props.log.message}
+              <span className="status"> {statusMessage}</span>
+            </span>
+            {(this.props.log.status === LogTypes.Running ||
+              this.props.log.status === LogTypes.Awaiting) && <Spinner />}
+          </div>
           {this.props.log.description && (
             <div className="details">{this.props.log.description}</div>
           )}

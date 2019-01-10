@@ -812,6 +812,7 @@ export const PlaybackStates = {
   Passed: 'passed',
   Pending: 'pending',
   Undetermined: 'undetermined',
+  Awaiting: 'awaiting',
 }
 
 if (!window._playbackState) window._playbackState = new PlaybackState()

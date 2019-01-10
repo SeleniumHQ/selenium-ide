@@ -125,13 +125,17 @@ export default class PlaybackLogger {
           log.setMessage(
             status.message
               ? status.message
-              : `${command.command} on ${command.target}${
-                  command.value ? ' with value ' + command.value : ''
-                }...`
+              : `${command.command}${
+                  command.target ? ' on ' + command.target : ''
+                }${command.value ? ' with value ' + command.value : ''}`
           )
+          log.setStatus(LogTypes.Running)
           break
         case PlaybackStates.Undetermined:
           log.setStatus(LogTypes.Undetermined)
+          break
+        case PlaybackStates.Awaiting:
+          log.setStatus(LogTypes.Awaiting)
           break
         case PlaybackStates.Failed:
         case PlaybackStates.Fatal: // eslint-disable-line no-fallthrough

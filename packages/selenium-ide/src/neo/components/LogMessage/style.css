@@ -31,11 +31,17 @@
   color: #e80600;
 }
 
+.log .log-overview {
+  display: flex;
+  align-items: center;
+}
+
 .log.success .message .status {
   color: #23843d;
 }
 
-.log.undetermined .message .status {
+.log.undetermined .message .status,
+.log.awaiting .message .status {
   color: #da920e;
 }
 

@@ -95,9 +95,11 @@ export default class Log {
 }
 
 export const LogTypes = {
+  Running: 'running',
   Success: 'success',
   Warning: 'warn',
   Error: 'error',
   Failure: 'failure',
   Undetermined: 'undetermined',
+  Awaiting: 'awaiting',
 }

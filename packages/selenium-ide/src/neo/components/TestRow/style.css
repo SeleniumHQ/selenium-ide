@@ -62,7 +62,8 @@
   color: #008425;
 }
 
-.test-table tbody tr.undetermined td {
+.test-table tbody tr.undetermined td,
+.test-table tbody tr.awaiting td {
   color: #d49b2c;
 }
 
