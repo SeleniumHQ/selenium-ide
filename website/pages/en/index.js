@@ -118,18 +118,21 @@ class Index extends React.Component {
             {
               title: 'Web Ready',
               image: `${baseUrl}img/home/computer.png`,
+              imageAlt: 'computer',
               imageAlign: 'top',
               content: `Simple, turn-key solution to quickly author reliable end-to-end tests. Works out of the box for any web app.`,
             },
             {
               title: 'Easy Debugging',
               image: `${baseUrl}img/home/bullseye.png`,
+              imageAlt: 'bullseye',
               imageAlign: 'top',
               content: `Enjoy easier test debugging with rich IDE features like setting breakpoints and pausing on exceptions.`,
             },
             {
               title: 'Cross-browser Execution',
               image: `${baseUrl}img/home/lightning-bolt.png`,
+              imageAlt: 'lightning bolt',
               imageAlign: 'top',
               content: `Run your tests on any browser/OS combination in parallel using the [Command-line Runner for Selenium IDE](${_docUrl(
                 'introduction/command-line-runner'
@@ -162,6 +165,7 @@ class Index extends React.Component {
             content:
               'Selenium IDE records multiple locators for each element it interacts with. If one locator fails during playback, the others will be tried until one is succesful.',
             image: `${baseUrl}img/home/locators.png`,
+            imageAlt: 'locators',
             imageAlign: 'left',
           },
         ]}
@@ -177,6 +181,7 @@ class Index extends React.Component {
               'api/commands#run'
             )}), you can re-use one test case insidie of another (e.g., allowing you to re-use your login logic in multiple places throughout a suite).`,
             image: `${baseUrl}img/home/run.png`,
+            imageAlt: 'run',
             imageAlign: 'right',
           },
         ]}
@@ -192,6 +197,7 @@ class Index extends React.Component {
               'introduction/control-flow'
             )}).`,
             image: `${baseUrl}img/home/control-flow.png`,
+            imageAlt: 'control flow',
             imageAlign: 'left',
           },
         ]}
@@ -207,6 +213,7 @@ class Index extends React.Component {
               'plugins/plugins-getting-started'
             )}). They can introduce new commands to the IDE or integrate with a third-party service. Write your own or install one that someone else has already written.`,
             image: `${baseUrl}img/home/plug.png`,
+            imageAlt: 'plug',
             imageAlign: 'right',
           },
         ]}
