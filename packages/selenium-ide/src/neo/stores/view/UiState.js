@@ -199,20 +199,23 @@ class UiState {
           ? PlaybackState.callstack[stack].callee
           : test
       if (_test !== this.displayedTest) {
+        this.selectedTest = {
+          test,
+          suite,
+          stack: stack >= 0 ? stack : undefined,
+          state: this.getTestState(test),
+        }
         if (PlaybackState.isPlaying && !PlaybackState.paused) {
           this.selectCommand(undefined)
         } else if (_test && _test.commands.length) {
-          this.selectCommand(_test.commands[0])
+          let command = this.selectedTest.state.selectedCommand
+          command = command ? command : _test.commands[0]
+          this.selectCommand(command)
         } else if (_test && !_test.commands.length) {
           this.selectCommand(this.pristineCommand)
         } else {
           this.selectCommand(undefined)
         }
-      }
-      this.selectedTest = {
-        test,
-        suite,
-        stack: stack >= 0 ? stack : undefined,
       }
     }
   }
@@ -286,6 +289,7 @@ class UiState {
       PlaybackState.paused ||
       opts.isCommandTarget
     ) {
+      this.selectedTest.state.selectedCommand = command
       this.selectedCommand = command
     }
   }
