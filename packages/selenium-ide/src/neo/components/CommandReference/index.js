@@ -34,11 +34,26 @@ export default class CommandReference extends React.Component {
       </div>
     )
   }
+  linkForArgument(param) {
+    return `https://www.seleniumhq.org/selenium-ide/docs/en/api/arguments/#${param.name
+      .replace(/ /g, '-')
+      .toLowerCase()}`
+  }
   argument(param) {
     if (param.name !== '' || param.description !== '') {
       return (
         <li className="argument">
-          {param.name} - {param.description}
+          <a
+            href={this.linkForArgument(param)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#3a709e',
+            }}
+          >
+            {param.name}
+          </a>{' '}
+          - {param.description}
         </li>
       )
     }
@@ -47,13 +62,36 @@ export default class CommandReference extends React.Component {
     return (
       <li className="signature">
         {this.props.currentCommand.name && (
-          <strong className="name">{this.props.currentCommand.name}</strong>
+          <a
+            className="link"
+            href={`https://www.seleniumhq.org/selenium-ide/docs/en/api/commands/#${this.props.currentCommand.name
+              .replace(/ /g, '-')
+              .toLowerCase()}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <strong className="name">{this.props.currentCommand.name}</strong>
+          </a>
         )}{' '}
         {this.props.currentCommand.target && (
-          <em className="target">{this.props.currentCommand.target.name}</em>
+          <a
+            className="link"
+            href={this.linkForArgument(this.props.currentCommand.target)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <em className="target">{this.props.currentCommand.target.name}</em>
+          </a>
         )}
         {this.props.currentCommand.value && (
-          <em className="value">, {this.props.currentCommand.value.name}</em>
+          <a
+            className="link"
+            href={this.linkForArgument(this.props.currentCommand.target)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <em className="value">, {this.props.currentCommand.value.name}</em>
+          </a>
         )}
       </li>
     )
