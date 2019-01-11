@@ -84,14 +84,17 @@ export default class CommandReference extends React.Component {
           </a>
         )}
         {this.props.currentCommand.value && (
-          <a
-            className="link"
-            href={this.linkForArgument(this.props.currentCommand.target)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <em className="value">, {this.props.currentCommand.value.name}</em>
-          </a>
+          <React.Fragment>
+            <span>, </span>
+            <a
+              className="link"
+              href={this.linkForArgument(this.props.currentCommand.value)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <em className="value">{this.props.currentCommand.value.name}</em>
+            </a>
+          </React.Fragment>
         )}
       </li>
     )
