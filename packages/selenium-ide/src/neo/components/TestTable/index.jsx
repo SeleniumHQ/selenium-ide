@@ -167,6 +167,7 @@ export default class TestTable extends React.Component {
                       }
                       index={this.props.commands.length}
                       command={UiState.pristineCommand}
+                      scrollToLastPos={this.scrollToLastPos}
                       isPristine={true}
                       select={this.props.selectCommand}
                       addCommand={this.props.addCommand}
