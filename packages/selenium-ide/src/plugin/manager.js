@@ -82,7 +82,13 @@ class PluginManager {
       RegisterTestHook(this.emitTest.bind(undefined, plugin))
       if (plugin.commands) {
         plugin.commands.forEach(({ id, name, type, docs }) => {
-          const doks = this.useExistingArgTypesIfProvided(docs)
+          const doks = this.useExistingArgTypesIfProvided(
+            Object.assign({}, docs, {
+              plugin: {
+                id,
+              },
+            })
+          )
           Commands.addCommand(id, { name, type, ...doks })
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id))
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id))
