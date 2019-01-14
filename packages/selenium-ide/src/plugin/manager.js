@@ -184,17 +184,20 @@ class PluginManager {
   // will return all responses including errors
   emitMessage(message, keepAliveCB) {
     if (this.plugins.length) {
+      let emitInterval
       return Promise.all(
         this.plugins.map(plugin => {
           let didReachTimeout = false
-          const emitInterval = setInterval(() => {
-            didReachTimeout = true
-            keepAliveCB(plugin)
-          }, TIMEOUT)
+          if (keepAliveCB) {
+            emitInterval = setInterval(() => {
+              didReachTimeout = true
+              keepAliveCB(plugin)
+            }, TIMEOUT)
+          }
           return sendMessage(plugin.id, message)
             .catch(err => Promise.resolve(err))
             .then(response => {
-              clearInterval(emitInterval)
+              if (emitInterval) clearInterval(emitInterval)
               if (didReachTimeout) {
                 keepAliveCB(plugin, true)
               }
