@@ -43,16 +43,20 @@ export default class CommandReference extends React.Component {
     if (param.name !== '' || param.description !== '') {
       return (
         <li className="argument">
-          <a
-            href={this.linkForArgument(param)}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: '#3a709e',
-            }}
-          >
-            {param.name}
-          </a>{' '}
+          {!this.props.currentCommand.plugin ? (
+            <a
+              href={this.linkForArgument(param)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: '#3a709e',
+              }}
+            >
+              {param.name}
+            </a>
+          ) : (
+            param.name
+          )}{' '}
           - {param.description}
         </li>
       )
@@ -61,39 +65,53 @@ export default class CommandReference extends React.Component {
   commandSignature() {
     return (
       <li className="signature">
-        {this.props.currentCommand.name && (
-          <a
-            className="link"
-            href={`https://www.seleniumhq.org/selenium-ide/docs/en/api/commands/#${this.props.currentCommand.name
-              .replace(/ /g, '-')
-              .toLowerCase()}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <strong className="name">{this.props.currentCommand.name}</strong>
-          </a>
-        )}{' '}
-        {this.props.currentCommand.target && (
-          <a
-            className="link"
-            href={this.linkForArgument(this.props.currentCommand.target)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <em className="target">{this.props.currentCommand.target.name}</em>
-          </a>
-        )}
-        {this.props.currentCommand.value && (
-          <React.Fragment>
-            <span>, </span>
+        {this.props.currentCommand.name &&
+          (!this.props.currentCommand.plugin ? (
             <a
               className="link"
-              href={this.linkForArgument(this.props.currentCommand.value)}
+              href={`https://www.seleniumhq.org/selenium-ide/docs/en/api/commands/#${this.props.currentCommand.name
+                .replace(/ /g, '-')
+                .toLowerCase()}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <em className="value">{this.props.currentCommand.value.name}</em>
+              <strong className="name">{this.props.currentCommand.name}</strong>
             </a>
+          ) : (
+            <strong className="name">{this.props.currentCommand.name}</strong>
+          ))}{' '}
+        {this.props.currentCommand.target &&
+          (!this.props.currentCommand.plugin ? (
+            <a
+              className="link"
+              href={this.linkForArgument(this.props.currentCommand.target)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <em className="target">
+                {this.props.currentCommand.target.name}
+              </em>
+            </a>
+          ) : (
+            <em className="target">{this.props.currentCommand.target.name}</em>
+          ))}
+        {this.props.currentCommand.value && (
+          <React.Fragment>
+            <span>, </span>
+            {!this.props.currentCommand.plugin ? (
+              <a
+                className="link"
+                href={this.linkForArgument(this.props.currentCommand.value)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <em className="value">
+                  {this.props.currentCommand.value.name}
+                </em>
+              </a>
+            ) : (
+              <em className="value">{this.props.currentCommand.value.name}</em>
+            )}
           </React.Fragment>
         )}
       </li>
