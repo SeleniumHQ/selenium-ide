@@ -137,6 +137,7 @@ export function ParseError(error) {
 }
 
 export const Location = LocationEmitter
+export const Command = CommandEmitter
 
 export function getUtilsFile() {
   return utils.getUtilsFile()
