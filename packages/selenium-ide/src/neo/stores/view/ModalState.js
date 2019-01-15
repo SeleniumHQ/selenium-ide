@@ -34,6 +34,8 @@ class ModalState {
     started: false,
     completed: false,
   }
+  @observable
+  newWindowConfigurationState = false
 
   constructor() {
     this.renameTest = this.rename.bind(this, Types.test)
@@ -222,6 +224,11 @@ class ModalState {
   @action.bound
   renameProject() {
     return this.rename(Types.project, this._project.name)
+  }
+
+  @action.bound
+  toggleNewWindowConfiguration() {
+    this.newWindowConfigurationState = !this.newWindowConfigurationState
   }
 }
 

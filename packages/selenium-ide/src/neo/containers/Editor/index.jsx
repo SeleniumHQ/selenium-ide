@@ -79,6 +79,13 @@ export default class Editor extends React.Component {
       UiState.focusNavigation()
     }
   }
+  isUniqueWindowName(windowName, commandId) {
+    const commands = this.props.test.commands
+      .filter(command => command.id !== commandId)
+      .filter(command => command.windowHandleName !== '')
+      .map(command => command.windowHandleName)
+    return !commands.includes(windowName)
+  }
   render() {
     return (
       <main className="editor" onKeyDown={this.handleKeyDown.bind(this)}>
@@ -107,6 +114,7 @@ export default class Editor extends React.Component {
           setCommand={this.handleCommandChange}
           isSelecting={UiState.isSelectingTarget}
           onSubmit={UiState.selectNextCommand}
+          isUniqueWindowName={this.isUniqueWindowName.bind(this)}
         />
       </main>
     )

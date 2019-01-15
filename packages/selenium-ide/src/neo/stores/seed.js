@@ -591,7 +591,8 @@ export default function seed(store, numberOfSuites = 0) {
   UiState.changeView('Test suites')
   let suiteState = UiState.getSuiteState(suiteAll)
   suiteState.setOpen(true)
-  UiState.selectTest(clickTest, suiteAll)
+  UiState.selectTest(selectWindow, suiteAll)
+  UiState.selectCommand(click)
 
   store.changeName('seed project')
 
