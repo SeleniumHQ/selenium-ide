@@ -116,7 +116,7 @@ export default class CommandForm extends React.Component {
             <FlatButton
               data-tip="<p>Modify new window configuration</p>"
               className="icon si-search"
-              disabled={!this.props.command.opensWindow}
+              disabled={!this.props.command || PlaybackState.isPlaying}
               onClick={ModalState.toggleNewWindowConfiguration}
             />
           </div>
@@ -173,17 +173,15 @@ export default class CommandForm extends React.Component {
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setComment : null}
           />
-          <div className="target">
-            <NewWindowConfigurationDialog
-              isOpen={ModalState.newWindowConfigurationState}
-              cancel={ModalState.toggleNewWindowConfiguration}
-              id="new-window"
-              name="new-window"
-              label="Opens Window"
-              command={this.props.command}
-              isUniqueWindowName={this.props.isUniqueWindowName}
-            />
-          </div>
+          <NewWindowConfigurationDialog
+            isOpen={ModalState.newWindowConfigurationState}
+            cancel={ModalState.toggleNewWindowConfiguration}
+            id="new-window"
+            name="new-window"
+            label="Opens Window"
+            command={this.props.command}
+            isUniqueWindowName={this.props.isUniqueWindowName}
+          />
           <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
         </form>
       </div>

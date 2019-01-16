@@ -61,6 +61,7 @@ class NewWindowInput extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
     this.state = {
       isInvalidName: false,
+      isConfigEnabled: props.command.opensWindow,
       options: {
         windowName: props.command.windowHandleName,
         windowTimeout: props.command.windowTimeout,
@@ -68,7 +69,7 @@ class NewWindowInput extends React.Component {
     }
   }
   handleCheckboxChange(e) {
-    this.props.command.setOpensWindow(e.target.checked)
+    this.setState({ ['isConfigEnabled']: e.target.checked })
   }
   handleInputChange(type, value) {
     const result = { [type]: value }
@@ -112,6 +113,7 @@ class NewWindowInput extends React.Component {
   onSubmit() {
     this.props.command.setWindowHandleName(this.state.options.windowName)
     this.props.command.setWindowTimeout(this.state.options.windowTimeout)
+    this.props.command.setOpensWindow(this.state.isConfigEnabled)
     this.props.cancel()
   }
   render() {
@@ -133,18 +135,22 @@ class NewWindowInput extends React.Component {
         )}
         onRequestClose={this.props.cancel}
       >
-        <p>
-          This command opens a new window. For accurate playback some additional
-          information is needed.
-        </p>
+        {this.state.isConfigEnabled ? (
+          <p>
+            This command opens a new window. For accurate playback some
+            additional information is needed.
+          </p>
+        ) : (
+          <p>Enable if this command opens a new window.</p>
+        )}
         <Checkbox
           label="Enable/Disable New Window Configuration"
           form={true}
-          checked={this.props.command && this.props.command.opensWindow}
-          disabled={!this.props.command}
+          disabled={false}
+          checked={this.state.isConfigEnabled}
           onChange={this.handleCheckboxChange}
         />
-        {this.props.command && this.props.command.opensWindow ? (
+        {this.state.isConfigEnabled ? (
           <React.Fragment>
             <LabelledInput
               name="windowName"
