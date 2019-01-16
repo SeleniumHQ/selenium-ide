@@ -12,3 +12,7 @@
   margin: 0 0 0 5px;
   flex-grow: 1;
 }
+
+.new-window-dialog p {
+  max-width: 292px;
+}
