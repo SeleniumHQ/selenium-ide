@@ -6361,9 +6361,9 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-"webextension-polyfill@https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5":
-  version "0.1.1"
-  resolved "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5"
+"webextension-polyfill@https://github.com/corevo/webextension-polyfill#dist":
+  version "0.3.1"
+  resolved "https://github.com/corevo/webextension-polyfill#9d49fda3f3c79ca227532cf1a3fc0715952c93d4"
 
 webpack-dev-middleware@1.12.2:
   version "1.12.2"
