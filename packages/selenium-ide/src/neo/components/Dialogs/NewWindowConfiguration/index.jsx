@@ -49,6 +49,7 @@ class NewWindowInput extends React.Component {
   static propTypes = {
     cancel: PropTypes.func.isRequired,
     command: PropTypes.object.isRequired,
+    isUniqueWindowName: PropTypes.func,
   }
 
   constructor(props) {

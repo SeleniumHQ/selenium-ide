@@ -24,7 +24,6 @@ import Input from '../FormInput'
 import TextArea from '../FormTextArea'
 import CommandInput from '../CommandInput'
 import TargetInput from '../TargetInput'
-import NewWindowConfigurationDialog from '../Dialogs/NewWindowConfiguration'
 import FlatButton from '../FlatButton'
 import { find, select } from '../../IO/SideeX/find-select'
 import ModalState from '../../stores/view/ModalState'
@@ -41,7 +40,6 @@ export default class CommandForm extends React.Component {
     command: PropTypes.object,
     isSelecting: PropTypes.bool,
     onSubmit: PropTypes.func,
-    isUniqueWindowName: PropTypes.func,
   }
   getCommandName(command) {
     const commandName = Commands.list.get(command).name
@@ -172,15 +170,6 @@ export default class CommandForm extends React.Component {
             value={this.props.command ? this.props.command.comment : ''}
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setComment : null}
-          />
-          <NewWindowConfigurationDialog
-            isOpen={ModalState.newWindowConfigurationState}
-            cancel={ModalState.toggleNewWindowConfiguration}
-            id="new-window"
-            name="new-window"
-            label="Opens Window"
-            command={this.props.command}
-            isUniqueWindowName={this.props.isUniqueWindowName}
           />
           <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
         </form>

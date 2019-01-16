@@ -26,7 +26,9 @@ import BaseUrlDialog from '../../components/Dialogs/BaseUrl'
 import WelcomeDialog from '../../components/Dialogs/Welcome'
 import AlertDialog from '../../components/Dialogs/Alert'
 import ModalState from '../../stores/view/ModalState'
+import NewWindowConfigurationDialog from '../../components/Dialogs/NewWindowConfiguration'
 import { isProduction } from '../../../common/utils'
+import UiState from '../../stores/view/UiState'
 
 @observer
 export default class Modal extends Component {
@@ -98,6 +100,15 @@ export default class Modal extends Component {
             completeWelcome={ModalState.completeWelcome}
           />
         ) : null}
+        <NewWindowConfigurationDialog
+          isOpen={ModalState.newWindowConfigurationState}
+          cancel={ModalState.toggleNewWindowConfiguration}
+          id="new-window"
+          name="new-window"
+          label="Opens Window"
+          command={UiState.selectedCommand}
+          isUniqueWindowName={ModalState.isUniqueWindowName}
+        />
       </div>
     )
   }

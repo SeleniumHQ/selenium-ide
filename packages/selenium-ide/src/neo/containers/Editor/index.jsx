@@ -28,17 +28,17 @@ import './style.css'
 
 @observer
 export default class Editor extends React.Component {
-  constructor(props) {
-    super(props)
-    this.addCommand = this.addCommand.bind(this)
-    this.removeCommand = this.removeCommand.bind(this)
-  }
   static propTypes = {
     test: PropTypes.object,
     callstackIndex: PropTypes.number,
     url: PropTypes.string.isRequired,
     urls: PropTypes.array,
     setUrl: PropTypes.func.isRequired,
+  }
+  constructor(props) {
+    super(props)
+    this.addCommand = this.addCommand.bind(this)
+    this.removeCommand = this.removeCommand.bind(this)
   }
   addCommand(index, command) {
     if (command) {
@@ -79,13 +79,6 @@ export default class Editor extends React.Component {
       UiState.focusNavigation()
     }
   }
-  isUniqueWindowName(windowName, commandId) {
-    const commands = this.props.test.commands
-      .filter(command => command.id !== commandId)
-      .filter(command => command.windowHandleName !== '')
-      .map(command => command.windowHandleName)
-    return !commands.includes(windowName)
-  }
   render() {
     return (
       <main className="editor" onKeyDown={this.handleKeyDown.bind(this)}>
@@ -114,7 +107,6 @@ export default class Editor extends React.Component {
           setCommand={this.handleCommandChange}
           isSelecting={UiState.isSelectingTarget}
           onSubmit={UiState.selectNextCommand}
-          isUniqueWindowName={this.isUniqueWindowName.bind(this)}
         />
       </main>
     )

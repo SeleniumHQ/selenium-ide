@@ -230,6 +230,14 @@ class ModalState {
   toggleNewWindowConfiguration() {
     this.newWindowConfigurationState = !this.newWindowConfigurationState
   }
+
+  isUniqueWindowName(windowName, commandId) {
+    const commands = UiState.selectedTest.test.commands
+      .filter(command => command.id !== commandId)
+      .filter(command => command.windowHandleName !== '')
+      .map(command => command.windowHandleName)
+    return !commands.includes(windowName)
+  }
 }
 
 const Types = {
