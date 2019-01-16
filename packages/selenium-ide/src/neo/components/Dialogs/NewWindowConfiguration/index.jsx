@@ -127,7 +127,9 @@ class NewWindowInput extends React.Component {
             <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
             <FlatButton
               type="submit"
-              disabled={this.state.isInvalidName}
+              disabled={
+                this.state.isInvalidName || this.state.options.windowName === ''
+              }
               onClick={this.onSubmit}
             >
               {'confirm'}
@@ -158,6 +160,7 @@ class NewWindowInput extends React.Component {
               label="Window Name"
               value={this.state.options.windowName}
               onChange={this.handleWindowNameChange}
+              autoFocus
             />
             {this.state.isInvalidName && (
               <span className="message">* {this.state.errorMessage}</span>
