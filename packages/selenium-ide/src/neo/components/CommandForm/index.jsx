@@ -113,7 +113,9 @@ export default class CommandForm extends React.Component {
             />
             <FlatButton
               data-tip="<p>Modify new window configuration</p>"
-              className="icon si-search"
+              className={classNames('icon', 'si-search', {
+                active: this.props.command.opensWindow,
+              })}
               disabled={!this.props.command || PlaybackState.isPlaying}
               onClick={ModalState.toggleNewWindowConfiguration}
             />
