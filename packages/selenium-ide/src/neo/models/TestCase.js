@@ -37,11 +37,12 @@ export default class TestCase {
   updateWindowHandleNames(oldValue, newValue) {
     const commands = this.commands
     commands.forEach(function(kommand) {
-      if (
-        kommand.command === 'selectWindow' &&
-        kommand.target.includes(oldValue)
-      )
-        kommand.target = kommand.target.replace(new RegExp(oldValue), newValue)
+      kommand.target = kommand.target
+        .split(`\${${oldValue}}`)
+        .join(`\${${newValue}}`)
+      kommand.value = kommand.value
+        .split(`\${${oldValue}}`)
+        .join(`\${${newValue}}`)
     })
     this.commands = commands
   }
@@ -61,7 +62,10 @@ export default class TestCase {
       )
     } else {
       const command = new Command(undefined, c, t, v)
-      command.attachWindowHandleNameChangeListener(this.updateWindowHandleNames)
+      command.addListener(
+        'window-handle-name-changed',
+        this.updateWindowHandleNames
+      )
       if (comment) command.setComment(comment)
       index !== undefined
         ? this.commands.splice(index, 0, command)
@@ -79,7 +83,10 @@ export default class TestCase {
         }`
       )
     } else {
-      command.attachWindowHandleNameChangeListener(this.updateWindowHandleNames)
+      command.addListener(
+        'window-handle-name-changed',
+        this.updateWindowHandleNames
+      )
       this.commands.push(command)
     }
   }
@@ -111,7 +118,10 @@ export default class TestCase {
 
   @action.bound
   removeCommand(command) {
-    command.detachWindowHandleNameChangeListener(this.updateWindowHandleNames)
+    command.removeListener(
+      'window-handle-name-changed',
+      this.updateWindowHandleNames
+    )
     this.commands.remove(command)
   }
 

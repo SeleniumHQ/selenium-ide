@@ -179,4 +179,34 @@ describe('TestCase model', () => {
     expect(test.commands.length).toBe(2)
     expect(test.commands[0] instanceof Command).toBeTruthy()
   })
+  it('should rename window handle in all commands that use it', () => {
+    const test = new TestCase()
+    const command1 = test.createCommand(
+      undefined,
+      'click',
+      undefined,
+      undefined,
+      undefined
+    )
+    command1.setOpensWindow(true)
+    const windowName = command1.windowHandleName
+    const command2 = test.createCommand(
+      undefined,
+      'selectWindow',
+      `handle=\${${windowName}}`,
+      undefined,
+      undefined
+    )
+    const command3 = test.createCommand(
+      undefined,
+      'echo',
+      `\${${windowName}}`,
+      undefined,
+      undefined
+    )
+    const newWindowName = 'blah'
+    command1.setWindowHandleName(newWindowName)
+    expect(command2.target).toEqual(`handle=\${${newWindowName}}`)
+    expect(command3.target).toEqual(`\${${newWindowName}}`)
+  })
 })

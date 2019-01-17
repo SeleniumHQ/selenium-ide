@@ -21,8 +21,10 @@ import Fuse from 'fuse.js'
 import { Commands as _Commands } from './Commands'
 import { ArgTypes as _ArgTypes } from './ArgTypes'
 const EventEmitter = require('events')
+import { mergeEventEmitter } from '../../../common/events'
 
 const DEFAULT_NEW_WINDOW_TIMEOUT = 2000
+const EE = Symbol('event-emitter')
 
 export default class Command {
   id = null
@@ -51,7 +53,8 @@ export default class Command {
     this.target = target || ''
     this.value = value || ''
     this.export = this.export.bind(this)
-    this.eventEmitter = new EventEmitter()
+    this[EE] = new EventEmitter()
+    mergeEventEmitter(this, this[EE])
   }
 
   @computed
@@ -115,22 +118,11 @@ export default class Command {
     }
   }
 
-  attachWindowHandleNameChangeListener(callback) {
-    this.eventEmitter.on('window-handle-name-change', callback)
-  }
-
-  detachWindowHandleNameChangeListener(callback) {
-    this.eventEmitter.off('window-handle-name-change', callback)
-  }
-
   @action.bound
-  setWindowHandleName(name) {
-    this.eventEmitter.emit(
-      'window-handle-name-change',
-      this.windowHandleName,
-      name
-    )
-    this.windowHandleName = name
+  setWindowHandleName(newName) {
+    const oldName = this.windowHandleName
+    this.windowHandleName = newName
+    this[EE].emit('window-handle-name-changed', oldName, newName)
   }
 
   @action.bound
