@@ -34,6 +34,19 @@ export default class TestCase {
   }
 
   @action.bound
+  updateWindowHandleNames(oldValue, newValue) {
+    const commands = this.commands
+    commands.forEach(function(kommand) {
+      if (
+        kommand.command === 'selectWindow' &&
+        kommand.target.includes(oldValue)
+      )
+        kommand.target = kommand.target.replace(new RegExp(oldValue), newValue)
+    })
+    this.commands = commands
+  }
+
+  @action.bound
   setName(name) {
     this.name = name
   }
@@ -48,6 +61,7 @@ export default class TestCase {
       )
     } else {
       const command = new Command(undefined, c, t, v)
+      command.attachWindowHandleNameChangeListener(this.updateWindowHandleNames)
       if (comment) command.setComment(comment)
       index !== undefined
         ? this.commands.splice(index, 0, command)
@@ -65,6 +79,7 @@ export default class TestCase {
         }`
       )
     } else {
+      command.attachWindowHandleNameChangeListener(this.updateWindowHandleNames)
       this.commands.push(command)
     }
   }
@@ -96,6 +111,7 @@ export default class TestCase {
 
   @action.bound
   removeCommand(command) {
+    command.detachWindowHandleNameChangeListener(this.updateWindowHandleNames)
     this.commands.remove(command)
   }
 
