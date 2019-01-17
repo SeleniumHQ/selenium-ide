@@ -478,12 +478,9 @@ Recorder.addEventHandler(
   'dragAndDropToObject',
   'dragstart',
   function(event) {
-    dropLocator = setTimeout(
-      () => {
-        dragstartLocator = event
-      },
-      200
-    )
+    dropLocator = setTimeout(() => {
+      dragstartLocator = event
+    }, 200)
   },
   true
 )
