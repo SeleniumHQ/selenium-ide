@@ -201,7 +201,7 @@ class PluginManager {
             }, TIMEOUT)
           }
           return sendMessage(plugin.id, message)
-            .catch(err => Promise.resolve(err))
+            .catch(err => err)
             .then(response => {
               if (emitInterval) clearInterval(emitInterval)
               if (didReachTimeout) {

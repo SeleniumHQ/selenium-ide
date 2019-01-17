@@ -82,7 +82,7 @@
     "ua-parser-js": "^0.7.17",
     "unescape": "^1.0.1",
     "uuid": "^3.1.0",
-    "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5",
+    "webextension-polyfill": "^0.3.1",
     "xml-escape": "^1.1.0",
     "xml-js": "^1.5.2"
   }
