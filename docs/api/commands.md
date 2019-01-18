@@ -26,7 +26,7 @@ Affects the next alert prompt. This command will send the specified answer strin
 
 ## `assert`
 
-Check that a variable is an expected value. The variable's value will be converted to a string for comparison.
+Check that a variable is an expected value. The variable's value will be converted to a string for comparison. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -41,7 +41,7 @@ Check that a variable is an expected value. The variable's value will be convert
 
 ## `assert alert`
 
-Confirm that an alert has been rendered with the provided text.
+Confirm that an alert has been rendered with the provided text. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -51,7 +51,7 @@ Confirm that an alert has been rendered with the provided text.
 
 ## `assert checked`
 
-Confirm that the target element has been checked.
+Confirm that the target element has been checked. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -61,13 +61,13 @@ Confirm that the target element has been checked.
 
 ## `assert confirmation`
 
-Confirm that a confirmation has been rendered.
+Confirm that a confirmation has been rendered. The test will stop if the assert fails.
 
 <hr>
 
 ## `assert editable`
 
-Confirm that the target element is editable.
+Confirm that the target element is editable. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -77,7 +77,7 @@ Confirm that the target element is editable.
 
 ## `assert element present`
 
-Confirm that the target element is present somewhere on the page.
+Confirm that the target element is present somewhere on the page. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -87,7 +87,7 @@ Confirm that the target element is present somewhere on the page.
 
 ## `assert element not present`
 
-Confirm that the target element is not present anywhere on the page.
+Confirm that the target element is not present anywhere on the page. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -97,7 +97,7 @@ Confirm that the target element is not present anywhere on the page.
 
 ## `assert not checked`
 
-Confirm that the target element has not been checked.
+Confirm that the target element has not been checked. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -107,7 +107,7 @@ Confirm that the target element has not been checked.
 
 ## `assert not editable`
 
-Confirm that the target element is not editable.
+Confirm that the target element is not editable. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -117,7 +117,7 @@ Confirm that the target element is not editable.
 
 ## `assert not selected value`
 
-Confirm that the value attribute of the selected option in a dropdown element does not contain the provided value.
+Confirm that the value attribute of the selected option in a dropdown element does not contain the provided value. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -130,7 +130,7 @@ Confirm that the value attribute of the selected option in a dropdown element do
 
 ## `assert not text`
 
-Confirm that the text of an element does not contain the provided value.
+Confirm that the text of an element does not contain the provided value. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -143,7 +143,7 @@ Confirm that the text of an element does not contain the provided value.
 
 ## `assert prompt`
 
-Confirm that a JavaScript prompt has been rendered.
+Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.
 
 <hr>
 
@@ -162,7 +162,7 @@ Confirm that the value attribute of the selected option in a dropdown element co
 
 ## `assert selected label`
 
-Confirm that the label of the selected option in a dropdown element contains the provided value.
+Confirm that the label of the selected option in a dropdown element contains the provided value. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -175,7 +175,7 @@ Confirm that the label of the selected option in a dropdown element contains the
 
 ## `assert text`
 
-Confirm that the text of an element contains the provided value.
+Confirm that the text of an element contains the provided value. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -188,7 +188,7 @@ Confirm that the text of an element contains the provided value.
 
 ## `assert title`
 
-Confirm the title of the current page contains the provided text.
+Confirm the title of the current page contains the provided text. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -199,7 +199,7 @@ Confirm the title of the current page contains the provided text.
 
 ## `assert value`
 
-Confirm the (whitespace-trimmed) value of an input field (or anything else with a value parameter). For checkbox/radio elements, the value will be "on" or "off" depending on whether the element is checked or not.
+Confirm the (whitespace-trimmed) value of an input field (or anything else with a value parameter). For checkbox/radio elements, the value will be "on" or "off" depending on whether the element is checked or not. The test will stop if the assert fails.
 
 <strong>arguments</strong>
 
@@ -720,7 +720,7 @@ Uncheck a toggle-button (checkbox/radio).
 
 ## `verify`
 
-Soft assert that a variable is an expected value. The variable's value will be converted to a string for comparison.
+Soft assert that a variable is an expected value. The variable's value will be converted to a string for comparison. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -735,7 +735,7 @@ Soft assert that a variable is an expected value. The variable's value will be c
 
 ## `verify checked`
 
-Soft assert that a toggle-button (checkbox/radio) has been checked.
+Soft assert that a toggle-button (checkbox/radio) has been checked. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -745,7 +745,7 @@ Soft assert that a toggle-button (checkbox/radio) has been checked.
 
 ## `verify editable`
 
-Soft assert whether the specified input element is editable (e.g., hasn't been disabled).
+Soft assert whether the specified input element is editable (e.g., hasn't been disabled). The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -755,7 +755,7 @@ Soft assert whether the specified input element is editable (e.g., hasn't been d
 
 ## `verify element present`
 
-Soft assert that the specified element is somewhere on the page.
+Soft assert that the specified element is somewhere on the page. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -765,7 +765,7 @@ Soft assert that the specified element is somewhere on the page.
 
 ## `verify element not present`
 
-Soft assert that the specified element is not somewhere on the page.
+Soft assert that the specified element is not somewhere on the page. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -775,7 +775,7 @@ Soft assert that the specified element is not somewhere on the page.
 
 ## `verify not checked`
 
-Soft assert that a toggle-button (checkbox/radio) has not been checked.
+Soft assert that a toggle-button (checkbox/radio) has not been checked. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -785,7 +785,7 @@ Soft assert that a toggle-button (checkbox/radio) has not been checked.
 
 ## `verify not editable`
 
-Soft assert whether the specified input element is not editable (e.g., hasn't been disabled).
+Soft assert whether the specified input element is not editable (e.g., hasn't been disabled). The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -795,7 +795,7 @@ Soft assert whether the specified input element is not editable (e.g., hasn't be
 
 ## `verify not selected value`
 
-Soft assert that the expected element has not been chosen in a select menu by its option attribute.
+Soft assert that the expected element has not been chosen in a select menu by its option attribute. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -805,7 +805,7 @@ Soft assert that the expected element has not been chosen in a select menu by it
 
 ## `verify not text`
 
-Soft assert the text of an element is not present.
+Soft assert the text of an element is not present. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -817,7 +817,7 @@ Soft assert the text of an element is not present.
 
 ## `verify selected label`
 
-Soft assert the visible text for a selected option in the specified select element.
+Soft assert the visible text for a selected option in the specified select element. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -830,7 +830,7 @@ Soft assert the visible text for a selected option in the specified select eleme
 
 ## `verify selected value`
 
-Soft assert that the expected element has been chosen in a select menu by its option attribute.
+Soft assert that the expected element has been chosen in a select menu by its option attribute. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -840,7 +840,7 @@ Soft assert that the expected element has been chosen in a select menu by its op
 
 ## `verify text`
 
-Soft assert the text of an element is present.
+Soft assert the text of an element is present. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -852,7 +852,7 @@ Soft assert the text of an element is present.
 
 ## `verify title`
 
-Soft assert the title of the current page contains the provided text.
+Soft assert the title of the current page contains the provided text. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
@@ -862,7 +862,7 @@ Soft assert the title of the current page contains the provided text.
 
 ## `verify value`
 
-Soft assert the (whitespace-trimmed) value of an input field (or anything else with a value parameter). For checkbox/radio elements, the value will be "on" or "off" depending on whether the element is checked or not.
+Soft assert the (whitespace-trimmed) value of an input field (or anything else with a value parameter). For checkbox/radio elements, the value will be "on" or "off" depending on whether the element is checked or not. The test will continue even if the verify fails.
 
 <strong>arguments</strong>
 
