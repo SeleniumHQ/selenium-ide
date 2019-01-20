@@ -112,7 +112,11 @@ export default class CommandForm extends React.Component {
               }
             />
             <FlatButton
-              data-tip="<p>Modify new window configuration</p>"
+              data-tip={
+                this.props.command.opensWindow
+                  ? '<p>Modify new window configuration</p>'
+                  : '<p>Add new window configuration</p>'
+              }
               className={classNames('icon', 'si-open-tab', {
                 active: this.props.command && this.props.command.opensWindow,
               })}
