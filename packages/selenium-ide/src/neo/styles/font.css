@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'selenium-ide';
-  src: url('../assets/fonts/selenium-ide.ttf?xyc7ya') format('truetype'),
-    url('../assets/fonts/selenium-ide.svg?xyc7ya#selenium-ide') format('svg');
+  src: url('../assets/fonts/selenium-ide.ttf?vpz726') format('truetype'),
+    url('../assets/fonts/selenium-ide.svg?vpz726#selenium-ide') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -22,22 +22,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.si-remove-comment::before {
+.si-open-tab::before {
   content: '\e900';
+  color: #505050;
 }
-
+.si-remove-comment::before {
+  content: '\e901';
+  color: #505050;
+}
 .si-comment::before {
   content: '\e925';
+  color: #505050;
 }
-
 .si-new-project::before {
   content: '\e91e';
+  color: #505050;
 }
-
 .si-record {
   position: relative;
 }
-
 .si-record::after,
 .si-record-circle::before {
   content: '\e91f';
@@ -45,140 +48,119 @@
   top: 0;
   left: 0;
 }
-
 .si-record::before,
 .si-record-out::before {
   content: '\e920';
 }
-
 .si-download::before {
-  content: '\e901';
+  content: '\e902';
+  color: #505050;
 }
-
 .si-filter::before {
   content: '\e915';
+  color: #505050;
 }
-
 .si-disable-breakpoints::before {
   content: '\e91b';
+  color: #505050;
 }
-
 .si-break-exceptions::before {
   content: '\e91c';
+  color: #505050;
 }
-
 .si-stop::before {
   content: '\e91d';
+  color: #505050;
 }
-
 .si-open::before {
   content: '\e905';
+  color: #505050;
 }
-
 .si-pencil::before {
   content: '\e919';
 }
-
 .si-step-down::before {
   content: '\e917';
+  color: #505050;
 }
-
 .si-caret-wide::before {
   content: '\e918';
+  color: #505050;
 }
-
 .si-gauge-1::before {
   content: '\e90c';
+  color: #505050;
 }
-
 .si-gauge-2::before {
   content: '\e90e';
+  color: #505050;
 }
-
 .si-gauge-3::before {
   content: '\e912';
+  color: #505050;
 }
-
 .si-gauge-4::before {
   content: '\e913';
+  color: #505050;
 }
-
 .si-gauge-5::before {
   content: '\e914';
+  color: #505050;
 }
-
 .si-gauge-12::before {
   content: '\e91a';
+  color: #505050;
 }
-
 .si-search::before {
   content: '\e916';
+  color: #505050;
 }
-
 .si-caret::before {
-  content: '\e902';
+  content: '\e903';
+  color: #505050;
 }
-
 .si-check::before {
   content: '\e910';
 }
-
 .si-add::before {
   content: '\e90d';
 }
-
 .si-ic_arrow_down::before {
-  content: '\e903';
+  content: '\e904';
 }
-
 .si-clear::before {
   content: '\e921';
 }
-
 .si-delete::before {
-  content: '\e904';
-}
-
-.si-step-into::before {
   content: '\e906';
 }
-
-.si-info::before {
+.si-step-into::before {
   content: '\e907';
 }
-
+.si-info::before {
+  content: '\e908';
+}
 .si-more::before {
   content: '\e911';
 }
-
 .si-play-all::before {
-  content: '\e908';
-}
-
-.si-play::before {
   content: '\e909';
 }
-
-.si-pause::before {
+.si-play::before {
   content: '\e90a';
 }
-
-.si-remove::before {
+.si-pause::before {
   content: '\e90b';
 }
-
-.si-code::before {
+.si-remove::before {
   content: '\e90f';
 }
-
-.si-save::before {
+.si-code::before {
   content: '\e922';
 }
-
-.si-select::before {
+.si-save::before {
   content: '\e923';
 }
-
-.si-stop1::before {
+.si-select::before {
   content: '\e924';
 }
