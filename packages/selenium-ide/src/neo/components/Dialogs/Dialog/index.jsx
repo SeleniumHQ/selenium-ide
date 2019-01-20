@@ -42,9 +42,17 @@ export default class DialogContainer extends React.Component {
   static defaultProps = {
     type: 'info',
   }
+  handleKeyDown(event) {
+    event.persist()
+    if (event.target.key === 'Escape') {
+      event.stopPropagation()
+      this.props.onRequestClose()
+    }
+  }
   render() {
     return (
       <div
+        onKeyDown={this.handleKeyDown.bind(this)}
         className={classNames(
           'dialog',
           `dialog--${this.props.type}`,

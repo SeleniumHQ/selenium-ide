@@ -110,9 +110,6 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props)
     this.state = { project }
-    this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(
-      this
-    )
     if (isProduction) {
       // the handler writes the size to the extension storage, which throws in development
       this.resizeHandler = window.addEventListener(
@@ -263,7 +260,7 @@ export default class Panel extends React.Component {
   }
   render() {
     return (
-      <div className="container">
+      <div className="container" onKeyDown={this.handleKeyDown.bind(this)}>
         <SuiteDropzone
           loadProject={loadProject.bind(undefined, this.state.project)}
         >
