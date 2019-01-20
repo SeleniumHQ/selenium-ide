@@ -17,3 +17,7 @@ tests/webdriver/
 tests/static/webdriver.js
 .*.swp
 website/i18n
+
+# auto-generated docs
+docs/api/arguments.md
+docs/api/commands.md
