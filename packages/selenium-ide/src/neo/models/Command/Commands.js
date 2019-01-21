@@ -49,7 +49,8 @@ export const Commands = [
     {
       name: 'assert checked',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element has been checked. The test will stop if the assert fails.',
+      description:
+        'Confirm that the target element has been checked. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -57,7 +58,8 @@ export const Commands = [
     'assertConfirmation',
     {
       name: 'assert confirmation',
-      description: 'Confirm that a confirmation has been rendered. The test will stop if the assert fails.',
+      description:
+        'Confirm that a confirmation has been rendered. The test will stop if the assert fails.',
     },
   ],
   [
@@ -65,7 +67,8 @@ export const Commands = [
     {
       name: 'assert editable',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element is editable. The test will stop if the assert fails.',
+      description:
+        'Confirm that the target element is editable. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -92,7 +95,8 @@ export const Commands = [
     {
       name: 'assert not checked',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element has not been checked. The test will stop if the assert fails.',
+      description:
+        'Confirm that the target element has not been checked. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -101,7 +105,8 @@ export const Commands = [
     {
       name: 'assert not editable',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element is not editable. The test will stop if the assert fails.',
+      description:
+        'Confirm that the target element is not editable. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -131,7 +136,8 @@ export const Commands = [
     'assertPrompt',
     {
       name: 'assert prompt',
-      description: 'Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.',
+      description:
+        'Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.',
     },
   ],
   [
@@ -762,7 +768,8 @@ export const Commands = [
     {
       name: 'verify not text',
       type: TargetTypes.LOCATOR,
-      description: 'Soft assert the text of an element is not present. The test will continue even if the verify fails.',
+      description:
+        'Soft assert the text of an element is not present. The test will continue even if the verify fails.',
       target: ArgTypes.locator,
       value: ArgTypes.text,
     },
@@ -794,7 +801,8 @@ export const Commands = [
     {
       name: 'verify text',
       type: TargetTypes.LOCATOR,
-      description: 'Soft assert the text of an element is present. The test will continue even if the verify fails.',
+      description:
+        'Soft assert the text of an element is present. The test will continue even if the verify fails.',
       target: ArgTypes.locator,
       value: ArgTypes.text,
     },
