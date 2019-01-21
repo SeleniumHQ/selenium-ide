@@ -136,8 +136,8 @@ class ModalState {
   }
 
   @action.bound
-  deleteTest(testCase) {
-    const choseDelete = this.showAlert({
+  async deleteTest(testCase) {
+    const choseDelete = await this.showAlert({
       title: 'Delete test case',
       description: `This will permanently delete '${
         testCase.name
