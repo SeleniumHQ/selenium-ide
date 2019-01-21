@@ -110,6 +110,10 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props)
     this.state = { project }
+    this.parseKeyDown = this.parseKeyDown.bind(this)
+    this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(
+      this
+    )
     if (isProduction) {
       // the handler writes the size to the extension storage, which throws in development
       this.resizeHandler = window.addEventListener(
@@ -144,72 +148,89 @@ export default class Panel extends React.Component {
       },
     })
   }
-  handleKeyDown(e) {
+  parseKeyDown(e) {
     modifier(e)
-    const key = e.key.toUpperCase()
-    const primaryAndShift = e.primaryKey && e.shiftKey
-    const onlyPrimary = e.primaryKey && !e.secondaryKey
-    const noModifiers = !e.primaryKey && !e.secondaryKey
-
+    return {
+      key: e.key.toUpperCase(),
+      primaryAndShift: e.primaryKey && e.shiftKey,
+      onlyPrimary: e.primaryKey && !e.secondaryKey,
+      noModifiers: !e.primaryKey && !e.secondaryKey,
+    }
+  }
+  handleKeyDown(e) {
+    const key = this.parseKeyDown(e)
     // when editing these, remember to edit the button's tooltip as well
-    if (primaryAndShift && key === 'N') {
+    if (key.primaryAndShift && key.key === 'N') {
       e.preventDefault()
       this.loadNewProject()
-    } else if (onlyPrimary && key === 'N') {
+    } else if (key.onlyPrimary && key.key === 'N') {
       e.preventDefault()
-    } else if (onlyPrimary && key === 'S') {
+    } else if (key.onlyPrimary && key.key === 'S') {
       e.preventDefault()
       saveProject(this.state.project)
-    } else if (onlyPrimary && key === 'O' && this.openFile) {
+    } else if (key.onlyPrimary && key.key === 'O' && this.openFile) {
       e.preventDefault()
       this.openFile()
-    } else if (onlyPrimary && key === '1') {
+    } else if (key.onlyPrimary && key.key === '1') {
       // test view
       e.preventDefault()
       UiState.changeView(UiState.views[+key - 1])
-    } else if (onlyPrimary && key === '2') {
+    } else if (key.onlyPrimary && key.key === '2') {
       // suite view
       e.preventDefault()
       UiState.changeView(UiState.views[+key - 1])
-    } else if (onlyPrimary && key === '3') {
+    } else if (key.onlyPrimary && key.key === '3') {
       // execution view
       e.preventDefault()
       UiState.changeView(UiState.views[+key - 1])
-    } else if (primaryAndShift && e.code === 'KeyR' && isProduction) {
+    } else if (key.primaryAndShift && e.code === 'KeyR' && isProduction) {
       // run suite
       e.preventDefault()
       if (PlaybackState.canPlaySuite) {
         PlaybackState.playSuiteOrResume()
       }
-    } else if (onlyPrimary && key === 'R' && isProduction) {
+    } else if (key.onlyPrimary && key.key === 'R' && isProduction) {
       // run test
       e.preventDefault()
       if (!PlaybackState.isPlayingSuite) {
         PlaybackState.playTestOrResume()
       }
-    } else if (onlyPrimary && key === 'P') {
+    } else if (key.onlyPrimary && key.key === 'P') {
       // pause
       e.preventDefault()
       PlaybackState.pauseOrResume()
-    } else if (onlyPrimary && key === '.') {
+    } else if (key.onlyPrimary && key.key === '.') {
       // stop
       e.preventDefault()
       PlaybackState.abortPlaying()
-    } else if (onlyPrimary && key === "'") {
+    } else if (key.onlyPrimary && key.key === "'") {
       // step over
       e.preventDefault()
       PlaybackState.stepOver()
-    } else if (onlyPrimary && key === 'Y') {
+    } else if (key.onlyPrimary && key.key === 'Y') {
       // disable breakpoints
       e.preventDefault()
       PlaybackState.toggleDisableBreakpoints()
-    } else if (onlyPrimary && key === 'U') {
+    } else if (key.onlyPrimary && key.key === 'U') {
       // record
       e.preventDefault()
       if (!PlaybackState.isPlaying) {
         UiState.toggleRecord()
       }
-    } else if (noModifiers && key === 'ESCAPE') {
+    }
+  }
+  handleKeyDownAlt(e) {
+    // The escape key is used in internal dialog modals to cancel. But the key
+    // bubbles to the body event listener in Panel's ctor. Moving the event
+    // listener into the top-level div in render prevents the keys from being
+    // recognized unless an internal component has focus (e.g., selecting a test,
+    // a test command, or an element within the command form).
+    //
+    // To fix, separating the key handling into two functions. One with just escape
+    // that will live on the top-level div. The other with the remaining keys that
+    // will live in an event listener on document.body.
+    const key = this.parseKeyDown(e)
+    if (key.noModifiers && key.key === 'ESCAPE') {
       UiState.toggleConsole()
     }
   }
@@ -260,7 +281,7 @@ export default class Panel extends React.Component {
   }
   render() {
     return (
-      <div className="container" onKeyDown={this.handleKeyDown.bind(this)}>
+      <div className="container" onKeyDown={this.handleKeyDownAlt.bind(this)}>
         <SuiteDropzone
           loadProject={loadProject.bind(undefined, this.state.project)}
         >
