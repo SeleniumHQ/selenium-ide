@@ -31,7 +31,7 @@ export const Commands = [
     {
       name: 'assert',
       description: `Check that a variable is an expected value. The variable's 
-        value will be converted to a string for comparison.`,
+        value will be converted to a string for comparison. The test will stop if the assert fails.`,
       target: ArgTypes.variableName,
       value: ArgTypes.expectedValue,
     },
@@ -40,7 +40,7 @@ export const Commands = [
     'assertAlert',
     {
       name: 'assert alert',
-      description: `Confirm that an alert has been rendered with the provided text.`,
+      description: `Confirm that an alert has been rendered with the provided text. The test will stop if the assert fails.`,
       target: ArgTypes.alertText,
     },
   ],
@@ -49,7 +49,8 @@ export const Commands = [
     {
       name: 'assert checked',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element has been checked.',
+      description:
+        'Confirm that the target element has been checked. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -57,7 +58,8 @@ export const Commands = [
     'assertConfirmation',
     {
       name: 'assert confirmation',
-      description: 'Confirm that a confirmation has been rendered.',
+      description:
+        'Confirm that a confirmation has been rendered. The test will stop if the assert fails.',
     },
   ],
   [
@@ -65,7 +67,8 @@ export const Commands = [
     {
       name: 'assert editable',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element is editable.',
+      description:
+        'Confirm that the target element is editable. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -74,7 +77,7 @@ export const Commands = [
     {
       name: 'assert element present',
       type: TargetTypes.LOCATOR,
-      description: `Confirm that the target element is present somewhere on the page.`,
+      description: `Confirm that the target element is present somewhere on the page. The test will stop if the assert fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -83,7 +86,7 @@ export const Commands = [
     {
       name: 'assert element not present',
       type: TargetTypes.LOCATOR,
-      description: `Confirm that the target element is not present anywhere on the page.`,
+      description: `Confirm that the target element is not present anywhere on the page. The test will stop if the assert fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -92,7 +95,8 @@ export const Commands = [
     {
       name: 'assert not checked',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element has not been checked.',
+      description:
+        'Confirm that the target element has not been checked. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -101,7 +105,8 @@ export const Commands = [
     {
       name: 'assert not editable',
       type: TargetTypes.LOCATOR,
-      description: 'Confirm that the target element is not editable.',
+      description:
+        'Confirm that the target element is not editable. The test will stop if the assert fails.',
       target: ArgTypes.locator,
     },
   ],
@@ -111,7 +116,7 @@ export const Commands = [
       name: 'assert not selected value',
       type: TargetTypes.LOCATOR,
       description: `Confirm that the value attribute of the selected option 
-        in a dropdown element does not contain the provided value.`,
+        in a dropdown element does not contain the provided value. The test will stop if the assert fails.`,
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern,
     },
@@ -121,7 +126,8 @@ export const Commands = [
     {
       name: 'assert not text',
       type: TargetTypes.LOCATOR,
-      description: `Confirm that the text of an element does not contain the provided value.`,
+      description: `Confirm that the text of an element does not contain the provided value.
+      The test will stop if the assert fails.`,
       target: ArgTypes.locator,
       value: ArgTypes.pattern,
     },
@@ -130,7 +136,8 @@ export const Commands = [
     'assertPrompt',
     {
       name: 'assert prompt',
-      description: 'Confirm that a JavaScript prompt has been rendered.',
+      description:
+        'Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.',
     },
   ],
   [
@@ -139,7 +146,7 @@ export const Commands = [
       name: 'assert selected value',
       type: TargetTypes.LOCATOR,
       description: `Confirm that the value attribute of the selected option 
-        in a dropdown element contains the provided value.`,
+        in a dropdown element contains the provided value. The test will stop if the assert fails.`,
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern,
     },
@@ -150,7 +157,7 @@ export const Commands = [
       name: 'assert selected label',
       type: TargetTypes.LOCATOR,
       description: `Confirm that the label of the selected option in a dropdown 
-        element contains the provided value.`,
+        element contains the provided value. The test will stop if the assert fails.`,
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern,
     },
@@ -160,7 +167,8 @@ export const Commands = [
     {
       name: 'assert text',
       type: TargetTypes.LOCATOR,
-      description: `Confirm that the text of an element contains the provided value.`,
+      description: `Confirm that the text of an element contains the provided value.
+      The test will stop if the assert fails.`,
       target: ArgTypes.locator,
       value: ArgTypes.pattern,
     },
@@ -169,7 +177,8 @@ export const Commands = [
     'assertTitle',
     {
       name: 'assert title',
-      description: `Confirm the title of the current page contains the provided text.`,
+      description: `Confirm the title of the current page contains the provided text.
+      The test will stop if the assert fails.`,
       target: ArgTypes.pattern,
     },
   ],
@@ -181,7 +190,7 @@ export const Commands = [
       description: `Confirm the (whitespace-trimmed) value of an input field 
         (or anything else with a value parameter). For checkbox/radio elements, 
         the value will be "on" or "off" depending on whether the element is 
-        checked or not.`,
+        checked or not. The test will stop if the assert fails.`,
       target: ArgTypes.locator,
       value: ArgTypes.pattern,
     },
@@ -678,7 +687,8 @@ export const Commands = [
     {
       name: 'verify',
       description: `Soft assert that a variable is an expected value. The 
-        variable's value will be converted to a string for comparison.`,
+        variable's value will be converted to a string for comparison.
+        The test will continue even if the verify fails.`,
       target: ArgTypes.variableName,
       value: ArgTypes.expectedValue,
     },
@@ -688,7 +698,8 @@ export const Commands = [
     {
       name: 'verify checked',
       type: TargetTypes.LOCATOR,
-      description: `Soft assert that a toggle-button (checkbox/radio) has been checked.`,
+      description: `Soft assert that a toggle-button (checkbox/radio) has been checked.
+      The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -698,7 +709,7 @@ export const Commands = [
       name: 'verify editable',
       type: TargetTypes.LOCATOR,
       description: `Soft assert whether the specified input element is 
-        editable (e.g., hasn't been disabled).`,
+        editable (e.g., hasn't been disabled). The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -707,7 +718,8 @@ export const Commands = [
     {
       name: 'verify element present',
       type: TargetTypes.LOCATOR,
-      description: `Soft assert that the specified element is somewhere on the page.`,
+      description: `Soft assert that the specified element is somewhere on the page.
+      The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -716,7 +728,8 @@ export const Commands = [
     {
       name: 'verify element not present',
       type: TargetTypes.LOCATOR,
-      description: `Soft assert that the specified element is not somewhere on the page.`,
+      description: `Soft assert that the specified element is not somewhere on the page.
+      The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -725,7 +738,8 @@ export const Commands = [
     {
       name: 'verify not checked',
       type: TargetTypes.LOCATOR,
-      description: `Soft assert that a toggle-button (checkbox/radio) has not been checked.`,
+      description: `Soft assert that a toggle-button (checkbox/radio) has not been checked.
+      The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -735,7 +749,7 @@ export const Commands = [
       name: 'verify not editable',
       type: TargetTypes.LOCATOR,
       description: `Soft assert whether the specified input element is not 
-        editable (e.g., hasn't been disabled).`,
+        editable (e.g., hasn't been disabled). The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
     },
   ],
@@ -744,7 +758,7 @@ export const Commands = [
     {
       name: 'verify not selected value',
       description: `Soft assert that the expected element has not been chosen 
-        in a select menu by its option attribute.`,
+        in a select menu by its option attribute. The test will continue even if the verify fails.`,
       target: ArgTypes.selectLocator,
       value: ArgTypes.option,
     },
@@ -754,7 +768,8 @@ export const Commands = [
     {
       name: 'verify not text',
       type: TargetTypes.LOCATOR,
-      description: 'Soft assert the text of an element is not present.',
+      description:
+        'Soft assert the text of an element is not present. The test will continue even if the verify fails.',
       target: ArgTypes.locator,
       value: ArgTypes.text,
     },
@@ -765,7 +780,7 @@ export const Commands = [
       name: 'verify selected label',
       type: TargetTypes.LOCATOR,
       description: `Soft assert the visible text for a selected option in the 
-        specified select element.`,
+        specified select element. The test will continue even if the verify fails.`,
       target: ArgTypes.selectLocator,
       value: ArgTypes.pattern,
     },
@@ -776,7 +791,7 @@ export const Commands = [
       name: 'verify selected value',
       type: TargetTypes.LOCATOR,
       description: `Soft assert that the expected element has been chosen in 
-        a select menu by its option attribute.`,
+        a select menu by its option attribute. The test will continue even if the verify fails.`,
       target: ArgTypes.selectLocator,
       value: ArgTypes.option,
     },
@@ -786,7 +801,8 @@ export const Commands = [
     {
       name: 'verify text',
       type: TargetTypes.LOCATOR,
-      description: 'Soft assert the text of an element is present.',
+      description:
+        'Soft assert the text of an element is present. The test will continue even if the verify fails.',
       target: ArgTypes.locator,
       value: ArgTypes.text,
     },
@@ -796,7 +812,7 @@ export const Commands = [
     {
       name: 'verify title',
       description:
-        'Soft assert the title of the current page contains the provided text.',
+        'Soft assert the title of the current page contains the provided text. The test will continue even if the verify fails.',
       target: ArgTypes.text,
     },
   ],
@@ -808,7 +824,7 @@ export const Commands = [
       description: `Soft assert the (whitespace-trimmed) value of an input 
         field (or anything else with a value parameter). For checkbox/radio 
         elements, the value will be "on" or "off" depending on whether the 
-        element is checked or not.`,
+        element is checked or not. The test will continue even if the verify fails.`,
       target: ArgTypes.locator,
       value: ArgTypes.pattern,
     },
