@@ -113,7 +113,7 @@ export default class CommandForm extends React.Component {
             />
             <FlatButton
               data-tip={
-                this.props.command.opensWindow
+                this.props.command && this.props.command.opensWindow
                   ? '<p>Modify new window configuration</p>'
                   : '<p>Add new window configuration</p>'
               }
