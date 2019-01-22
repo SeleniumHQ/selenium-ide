@@ -35,8 +35,6 @@ export default class LogMessage extends React.Component {
         statusMessage = `Failed${this.props.log.description ? ':' : ''}`
       } else if (this.props.log.status === LogTypes.Undetermined) {
         statusMessage = 'Undetermined'
-      } else if (this.props.log.status === LogTypes.Awaiting) {
-        statusMessage = 'Running'
       }
     }
     return (
