@@ -106,7 +106,7 @@ export default class Modal extends Component {
           id="new-window"
           name="new-window"
           label="Opens Window"
-          command={UiState.selectedCommand}
+          command={UiState.selectedCommand || {}}
           isUniqueWindowName={ModalState.isUniqueWindowName}
         />
       </div>

@@ -16,3 +16,24 @@
 .new-window-dialog p {
   max-width: 292px;
 }
+
+.new-window-dialog .labelled-input {
+  margin: 20px 0 0 0;
+}
+
+.new-window-dialog input[type='checkbox'].checkbox + label {
+  padding: 0;
+}
+
+.new-window-dialog .dialog__contents {
+  padding: 5px 20px 20px 20px;
+}
+
+.new-window-dialog .dialog__footer {
+  padding: 10px 0 0 0;
+}
+
+.new-window-dialog .message {
+  padding: 5px 0 0 0;
+  color: #ff5f7b;
+}

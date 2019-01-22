@@ -144,10 +144,10 @@ class NewWindowInput extends React.Component {
             additional information is needed.
           </p>
         ) : (
-          <p>Enable if this command opens a new window.</p>
+          <p>Use this option if the command opens a new window.</p>
         )}
         <Checkbox
-          label="Enable/Disable New Window Configuration"
+          label="New Window Configuration Enabled"
           form={true}
           disabled={false}
           checked={this.state.isConfigEnabled}
@@ -163,11 +163,11 @@ class NewWindowInput extends React.Component {
               autoFocus
             />
             {this.state.isInvalidName && (
-              <span className="message">* {this.state.errorMessage}</span>
+              <div className="message">* {this.state.errorMessage}</div>
             )}
             <p>
-              This tells the IDE how to interact with the new window. To make
-              your tests more readable, change it to something descriptive.
+              Window name tells the IDE how to interact with the new window. To
+              make your tests more readable, change it to something descriptive.
             </p>
             <LabelledInput
               name="windowTimeout"
@@ -178,8 +178,8 @@ class NewWindowInput extends React.Component {
               onBlur={this.handleWindowTimeoutBlur}
             />
             <p>
-              This is the amount of time the test will wait for the new window
-              to finish opening.
+              Timeout is the amount of time the test will wait for the new
+              window to finish opening.
             </p>
           </React.Fragment>
         ) : null}
