@@ -1251,6 +1251,7 @@ Selenium.prototype.doType = function(locator, value) {
       core.events.setValue(element, value)
     }
   }
+  bot.events.fire(element, bot.events.EventType.CHANGE)
 }
 
 Selenium.prototype.doSendKeys = function(locator, value) {
@@ -1286,6 +1287,7 @@ Selenium.prototype.doSendKeys = function(locator, value) {
   let element = this.browserbot.findElement(locator)
   let keys = this.replaceKeys(value)
   bot.action.type(element, keys)
+  bot.events.fire(element, bot.events.EventType.CHANGE)
 }
 
 Selenium.prototype.doSetSpeed = function() {
