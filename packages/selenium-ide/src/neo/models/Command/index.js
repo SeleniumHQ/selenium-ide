@@ -46,6 +46,8 @@ export default class Command {
   windowHandleName = ''
   @observable
   windowTimeout = DEFAULT_NEW_WINDOW_TIMEOUT
+  @observable
+  opensWindowRead = false
 
   constructor(id = uuidv4(), command, target, value) {
     this.id = id
@@ -123,6 +125,11 @@ export default class Command {
     const oldName = this.windowHandleName
     this.windowHandleName = newName
     this[EE].emit('window-handle-name-changed', oldName, newName)
+  }
+
+  @action.bound
+  toggleOpensWindowRead() {
+    this.opensWindowRead = !this.opensWindowRead
   }
 
   @action.bound

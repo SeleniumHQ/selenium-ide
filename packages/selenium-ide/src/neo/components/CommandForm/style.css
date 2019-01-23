@@ -52,3 +52,14 @@
   padding: 0;
   border: none;
 }
+
+.command-form .new-window-button {
+  position: relative;
+}
+
+.command-form .info-badge {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  font-size: 14px;
+}

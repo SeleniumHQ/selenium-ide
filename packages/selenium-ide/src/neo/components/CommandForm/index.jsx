@@ -25,11 +25,13 @@ import TextArea from '../FormTextArea'
 import CommandInput from '../CommandInput'
 import TargetInput from '../TargetInput'
 import FlatButton from '../FlatButton'
+import InfoBadge from '../InfoBadge'
 import { find, select } from '../../IO/SideeX/find-select'
 import ModalState from '../../stores/view/ModalState'
 import UiState from '../../stores/view/UiState'
 import PlaybackState from '../../stores/view/PlaybackState'
 import './style.css'
+
 @observer
 export default class CommandForm extends React.Component {
   constructor(props) {
@@ -117,12 +119,30 @@ export default class CommandForm extends React.Component {
                   ? '<p>Modify new window configuration</p>'
                   : '<p>Add new window configuration</p>'
               }
-              className={classNames('icon', 'si-open-tab', {
-                active: this.props.command && this.props.command.opensWindow,
-              })}
+              className={classNames(
+                'new-window-button',
+                'icon',
+                'si-open-tab',
+                {
+                  active: this.props.command && this.props.command.opensWindow,
+                }
+              )}
               disabled={!this.props.command || PlaybackState.isPlaying}
-              onClick={ModalState.toggleNewWindowConfiguration}
-            />
+              onClick={() => {
+                ModalState.toggleNewWindowConfiguration()
+                this.props.command
+                  ? this.props.command.toggleOpensWindowRead()
+                  : undefined
+              }}
+            >
+              {this.props.command &&
+              (this.props.command.opensWindow &&
+                !this.props.command.opensWindowRead) ? (
+                <InfoBadge />
+              ) : (
+                undefined
+              )}
+            </FlatButton>
           </div>
           <div className="target">
             <TargetInput
