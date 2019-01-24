@@ -588,15 +588,11 @@ export default function seed(store, numberOfSuites = 0) {
   waitSuite.addTestCase(waitTest4)
   waitSuite.addTestCase(waitTest5)
 
-  const t = store.createTestCase('aa')
-  t.createCommand(undefined, 'open', 'http://localhost:5000/')
-  t.createCommand(undefined, 'storeText', 'id=a', 'a')
-  t.createCommand(undefined, 'echo', '${a}')
-
   UiState.changeView('Test suites')
   let suiteState = UiState.getSuiteState(suiteAll)
   suiteState.setOpen(true)
-  UiState.selectTest(t)
+  UiState.selectTest(selectWindow, suiteAll)
+  UiState.selectCommand(click)
 
   store.changeName('seed project')
 
