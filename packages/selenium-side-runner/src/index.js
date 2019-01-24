@@ -303,6 +303,7 @@ function runProject(project) {
 function runJest(project) {
   return new Promise((resolve, reject) => {
     const args = [
+      '--no-watchman',
       '--testMatch',
       `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`,
     ]

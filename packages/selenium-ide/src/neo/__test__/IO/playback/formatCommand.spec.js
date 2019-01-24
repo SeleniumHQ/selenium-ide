@@ -15,13 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { interpolateScript } from '../../../IO/SideeX/formatCommand'
+import {
+  interpolateScript,
+  xlateArgument,
+} from '../../../IO/SideeX/formatCommand'
 import variables from '../../../stores/view/Variables'
 
-describe('interpolate script', () => {
-  afterEach(() => {
-    variables.clear()
+afterEach(() => {
+  variables.clear()
+})
+
+describe('interpolate string', () => {
+  it('should interpolate false values', () => {
+    variables.set('a', undefined)
+    expect(xlateArgument('${a}')).toBe('undefined')
+    variables.set('a', null)
+    expect(xlateArgument('${a}')).toBe('null')
+    variables.set('a', false)
+    expect(xlateArgument('${a}')).toBe('false')
+    variables.set('a', 0)
+    expect(xlateArgument('${a}')).toBe('0')
+    variables.set('a', '')
+    expect(xlateArgument('${a}')).toBe('')
   })
+})
+
+describe('interpolate script', () => {
   it('should not interpolate a script without variables', () => {
     const script = 'return 1'
     expect(interpolateScript(script).script).toEqual(script)

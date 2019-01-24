@@ -19,6 +19,7 @@ import browser from 'webextension-polyfill'
 import Debugger, { convertLocator } from '../debugger'
 import PlaybackState from '../../stores/view/PlaybackState'
 import variables from '../../stores/view/Variables'
+import { Logger, Channels } from '../../stores/view/Logs'
 import FrameNotFoundError from '../../../errors/frame-not-found'
 import { absolutifyUrl } from '../playback/utils'
 import { userAgent as parsedUA } from '../../../common/utils'
@@ -40,6 +41,7 @@ export default class ExtCommand {
     // TODO: flexible wait
     this.waitInterval = 500
     this.waitTimes = 60
+    this.logger = new Logger(Channels.PLAYBACK)
 
     this.attached = false
 
@@ -375,6 +377,10 @@ export default class ExtCommand {
 
   async doDebugger() {
     await PlaybackState.break()
+  }
+
+  async doEcho(string) {
+    this.logger.log(`echo: ${string}`)
   }
 
   doOpen(targetUrl) {
@@ -835,6 +841,7 @@ export default class ExtCommand {
   isExtCommand(command) {
     switch (command) {
       case 'debugger':
+      case 'echo':
       case 'pause':
       case 'open':
       case 'selectFrame':
