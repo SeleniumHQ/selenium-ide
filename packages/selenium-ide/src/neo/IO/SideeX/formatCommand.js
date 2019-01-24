@@ -50,7 +50,7 @@ export function xlateArgument(value) {
     if (lastIndex < value.length) {
       parts.push(string(value.substring(lastIndex, value.length)))
     }
-    return parts.join('')
+    return parts.map(String).join('')
   } else {
     return string(value)
   }
@@ -112,9 +112,6 @@ function handleFormatCommand(message, _sender, sendResponse) {
     return sendResponse(variables.get(message.variable))
   } else if (message.storeVar) {
     variables.set(message.storeVar, message.storeStr)
-    return sendResponse(true)
-  } else if (message.echoStr) {
-    logger.log('echo: ' + message.echoStr)
     return sendResponse(true)
   } else if (
     message.log &&

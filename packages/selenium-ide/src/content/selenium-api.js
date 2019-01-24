@@ -548,9 +548,24 @@ Selenium.prototype.doStoreEval = function() {
 
 Selenium.prototype.doStoreText = function(locator, varName) {
   throwIfNoVarNameProvided(varName)
-  const element = this.findElementVisible(locator)
+  let text
+  try {
+    // Try to get the text if the element is visible
+    const element = this.findElementVisible(locator)
+    text = bot.dom.getVisibleText(element)
+  } catch (e) {
+    // element is not visible, but it may be due to the fact that it has no text
+    const element = this.browserbot.findElement(locator)
+    if (element.innerHTML === '') {
+      // element is empty then return empty string
+      text = ''
+    } else {
+      // element has content this is indeed invisible
+      throw e
+    }
+  }
   return browser.runtime.sendMessage({
-    storeStr: bot.dom.getVisibleText(element),
+    storeStr: text,
     storeVar: varName,
   })
 }
@@ -592,10 +607,6 @@ Selenium.prototype.doStoreAttribute = function(locator, varName) {
     storeStr: attributeValue,
     storeVar: varName,
   })
-}
-
-Selenium.prototype.doEcho = function(value) {
-  return browser.runtime.sendMessage({ echoStr: value })
 }
 
 function waitUntil(condition, target, timeout, failureMessage) {
