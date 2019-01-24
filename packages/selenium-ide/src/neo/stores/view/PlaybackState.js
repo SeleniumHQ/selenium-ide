@@ -398,6 +398,7 @@ class PlaybackState {
             testId: this.currentRunningTest.id,
             testName: this.currentRunningTest.name,
             projectName: UiState._project.name,
+            commands: this.runningQueue,
           },
         },
         (plugin, resolved) => {
@@ -412,7 +413,19 @@ class PlaybackState {
             log.setStatus(LogTypes.Success)
           }
         }
-      ).then(this.play)
+      ).then(responses => {
+        if (
+          responses &&
+          responses[0].response &&
+          responses[0].response.status === 'fatal'
+        ) {
+          this.logger.log(
+            `[${responses[0].plugin.name}]: ${responses[0].response.message}`
+          )
+        } else {
+          this.play()
+        }
+      })
     })
     this.beforePlaying(playTest)
   }
