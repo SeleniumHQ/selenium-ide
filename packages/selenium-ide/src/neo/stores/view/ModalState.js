@@ -141,7 +141,7 @@ class ModalState {
       title: 'Delete test case',
       description: `This will permanently delete '${
         testCase.name
-      }', and remove it from all it's suites`,
+      }', and remove it from all its suites`,
       cancelLabel: 'cancel',
       confirmLabel: 'delete',
     })
