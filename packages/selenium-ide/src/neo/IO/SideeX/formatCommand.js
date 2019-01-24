@@ -31,7 +31,7 @@ export function xlateArgument(value) {
     const regexp = /\$\{(.*?)\}/g
     let lastIndex = 0
     while ((r2 = regexp.exec(value))) {
-      if (variables.get(r2[1])) {
+      if (variables.has(r2[1])) {
         if (r2.index - lastIndex > 0) {
           parts.push(string(value.substring(lastIndex, r2.index)))
         }
