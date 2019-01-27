@@ -17,7 +17,7 @@
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",
     "test:ext": "jest --testMatch \"**/packages/selenium-ide/tests/**/*.spec.js\"",
-    "test:runner": "cd tests/examples && node ../../packages/selenium-side-runner/dist/index.js *.side",
+    "test:runner": "cd packages/selenium-side-runner && node dist/index.js ../../tests/examples/*.side",
     "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/tests/**/*.spec.js\"",
     "lint": "yarn lint:scripts && yarn lint:styles",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
