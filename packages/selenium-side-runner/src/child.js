@@ -1,3 +1,1 @@
-import jest from 'jest'
-
-jest.run(process.argv.slice(2))
+require('jest-cli/bin/jest')

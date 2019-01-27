@@ -126,8 +126,18 @@ class PluginManager {
   // IMPORTANT: call this function only after calling validatePluginExport!!
   emitDependencies() {
     let dependencies = {}
+    let jest = {
+      extraGlobals: [],
+    }
     let plugins = this.plugins.filter(plugin => plugin.canEmit).map(plugin => {
       Object.assign(dependencies, plugin.dependencies)
+      if (
+        plugin.jest &&
+        plugin.jest.extraGlobals &&
+        Array.isArray(plugin.jest.extraGlobals)
+      ) {
+        jest.extraGlobals.push(...plugin.jest.extraGlobals)
+      }
       return {
         id: plugin.id,
         name: plugin.name,
@@ -135,7 +145,7 @@ class PluginManager {
       }
     })
 
-    return { plugins, dependencies }
+    return { plugins, dependencies, jest }
   }
 
   emitConfiguration(plugin, project) {

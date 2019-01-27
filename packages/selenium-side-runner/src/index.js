@@ -216,10 +216,14 @@ function runProject(project) {
         name: project.name,
         version: '0.0.0',
         jest: {
+          extraGlobals:
+            project.jest && project.jest.extraGlobals
+              ? project.jest.extraGlobals
+              : [],
           modulePaths: [path.join(__dirname, '../node_modules')],
-          setupTestFrameworkScriptFile: require.resolve(
-            'jest-environment-selenium/dist/setup.js'
-          ),
+          setupFilesAfterEnv: [
+            require.resolve('jest-environment-selenium/dist/setup.js'),
+          ],
           testEnvironment: 'jest-environment-selenium',
           testEnvironmentOptions: configuration,
         },
