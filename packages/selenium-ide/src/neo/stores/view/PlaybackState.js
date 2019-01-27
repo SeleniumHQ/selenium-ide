@@ -414,15 +414,16 @@ class PlaybackState {
           }
         }
       ).then(responses => {
-        if (
-          responses &&
-          responses[0].response &&
-          responses[0].response.status === 'fatal'
-        ) {
-          this.logger.log(
-            `[${responses[0].plugin.name}]: ${responses[0].response.message}`
-          )
-        } else {
+        let didFail = false
+        responses.forEach(res => {
+          if (res.response && res.response.status === 'fatal') {
+            didFail = true
+            this.logger.error(
+              `[${responses[0].plugin.name}]: ${responses[0].response.message}`
+            )
+          }
+        })
+        if (!didFail) {
           this.play()
         }
       })
