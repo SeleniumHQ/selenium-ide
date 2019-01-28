@@ -3,7 +3,8 @@
     "Introduction": [
       "introduction/getting-started",
       "introduction/command-line-runner",
-      "introduction/control-flow"
+      "introduction/control-flow",
+      "introduction/faq"
     ],
     "API Reference": [
       "api/commands",
