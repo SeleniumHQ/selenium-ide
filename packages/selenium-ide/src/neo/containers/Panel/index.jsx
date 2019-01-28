@@ -158,60 +158,60 @@ export default class Panel extends React.Component {
     }
   }
   handleKeyDown(e) {
-    const key = this.parseKeyDown(e)
+    const keyComb = this.parseKeyDown(e)
     // when editing these, remember to edit the button's tooltip as well
-    if (key.primaryAndShift && key.key === 'N') {
+    if (keyComb.primaryAndShift && keyComb.key === 'N') {
       e.preventDefault()
       this.loadNewProject()
-    } else if (key.onlyPrimary && key.key === 'N') {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'N') {
       e.preventDefault()
-    } else if (key.onlyPrimary && key.key === 'S') {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'S') {
       e.preventDefault()
       saveProject(this.state.project)
-    } else if (key.onlyPrimary && key.key === 'O' && this.openFile) {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'O' && this.openFile) {
       e.preventDefault()
       this.openFile()
-    } else if (key.onlyPrimary && key.key === '1') {
+    } else if (keyComb.onlyPrimary && keyComb.key === '1') {
       // test view
       e.preventDefault()
-      UiState.changeView(UiState.views[+key - 1])
-    } else if (key.onlyPrimary && key.key === '2') {
+      UiState.changeView(UiState.views[+keyComb.key - 1])
+    } else if (keyComb.onlyPrimary && keyComb.key === '2') {
       // suite view
       e.preventDefault()
-      UiState.changeView(UiState.views[+key - 1])
-    } else if (key.onlyPrimary && key.key === '3') {
+      UiState.changeView(UiState.views[+keyComb.key - 1])
+    } else if (keyComb.onlyPrimary && keyComb.key === '3') {
       // execution view
       e.preventDefault()
-      UiState.changeView(UiState.views[+key - 1])
-    } else if (key.primaryAndShift && e.code === 'KeyR' && isProduction) {
+      UiState.changeView(UiState.views[+keyComb.key - 1])
+    } else if (keyComb.primaryAndShift && e.code === 'KeyR' && isProduction) {
       // run suite
       e.preventDefault()
       if (PlaybackState.canPlaySuite) {
         PlaybackState.playSuiteOrResume()
       }
-    } else if (key.onlyPrimary && key.key === 'R' && isProduction) {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'R' && isProduction) {
       // run test
       e.preventDefault()
       if (!PlaybackState.isPlayingSuite) {
         PlaybackState.playTestOrResume()
       }
-    } else if (key.onlyPrimary && key.key === 'P') {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'P') {
       // pause
       e.preventDefault()
       PlaybackState.pauseOrResume()
-    } else if (key.onlyPrimary && key.key === '.') {
+    } else if (keyComb.onlyPrimary && keyComb.key === '.') {
       // stop
       e.preventDefault()
       PlaybackState.abortPlaying()
-    } else if (key.onlyPrimary && key.key === "'") {
+    } else if (keyComb.onlyPrimary && keyComb.key === "'") {
       // step over
       e.preventDefault()
       PlaybackState.stepOver()
-    } else if (key.onlyPrimary && key.key === 'Y') {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'Y') {
       // disable breakpoints
       e.preventDefault()
       PlaybackState.toggleDisableBreakpoints()
-    } else if (key.onlyPrimary && key.key === 'U') {
+    } else if (keyComb.onlyPrimary && keyComb.key === 'U') {
       // record
       e.preventDefault()
       if (!PlaybackState.isPlaying) {
