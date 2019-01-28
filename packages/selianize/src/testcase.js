@@ -70,7 +70,7 @@ export function emit(test, options = config, snapshot) {
         .concat(snapshot ? snapshot.teardownHooks.join('') : '')
       emittedTest += '});'
 
-      let func = `tests["${test.name}"] = async (driver, vars, opts) => {`
+      let func = `tests["${test.name}"] = async (driver, vars, opts = {}) => {`
       func += commands.join('')
       func += '}'
 
