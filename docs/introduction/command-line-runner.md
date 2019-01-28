@@ -123,18 +123,18 @@ If you want to ignore the file and use command line arguments instead, use `--no
 
 ## Advanced Options
 
-### Third-party params
+### Additional params
 
-Plugins for Selenium IDE can specify their own unique parameters they want to use at run-time. They are made available through `--params`.
+Plugins for Selenium IDE can specify their own unique run-time parameters. You can make use of them through the `--params` parameter.
 
-This options takes a string of the various options (similar to how you specify capabilities) with a couple of differences.
+This options takes a string of the various options (similar to how you specify capabilities).
 
 #### Basic Usage
 
-You specify the name of the parameter equal to its value. The most basic way to do this is by specifying a string value.
+You specify the name of the parameter and its value. The most basic way to do this is by specifying a string value.
 
 ```sh
-selenium-side-runner --params="a='example-value'"
+selenium-side-runner --params "a='example-value'"
 ```
 
 #### Nested parameters
@@ -142,7 +142,7 @@ selenium-side-runner --params="a='example-value'"
 Parameters can also be nested using a dot-notation.
 
 ```sh
-selenium-side-runner --params="a.b.c='example-value'"
+selenium-side-runner --params "a.b.c='example-value'"
 ```
 
 #### Array values
@@ -150,19 +150,19 @@ selenium-side-runner --params="a.b.c='example-value'"
 Alternative to strings, you can specify an array of values.
 
 ```sh
-selenium-side-runner --params="a.b.c=[1,2,3]"
+selenium-side-runner --params "a.b.c=[1,2,3]"
 ```
 
 ### Config File
 
-Rather than typing out all of the third-party runtime parameters, you can specify them in a configuration file and call this file at run-time instead.
+Rather than typing out all of the runtime parameters, you can specify them in a configuration file and call it at run-time instead.
 
 ```yaml
 params: "a.b.c=[1,2,3]"
 ```
 
 ```sh
-selenium-side-runner --configuration-file="config.yaml"
+selenium-side-runner --configuration-file "config.yaml"
 ```
 
 ### Using a proxy server
