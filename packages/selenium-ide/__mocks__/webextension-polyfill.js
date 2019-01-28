@@ -20,7 +20,7 @@ export default {
     onMessage: {
       addListener: jest.fn(),
     },
-    sendMessage: jest.fn().mockReturnValue(Promise.reject()),
+    sendMessage: jest.fn().mockReturnValue(Promise.resolve()),
     getURL: jest.fn(),
   },
 }

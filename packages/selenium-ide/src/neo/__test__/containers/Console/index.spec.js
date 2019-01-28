@@ -16,6 +16,7 @@
 // under the License.
 
 jest.mock('../../../IO/storage')
+jest.mock('../../../side-effects/playback-logging')
 import React from 'react'
 import {
   cleanup,

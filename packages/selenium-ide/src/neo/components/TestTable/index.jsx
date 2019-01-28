@@ -24,8 +24,8 @@ import classNames from 'classnames'
 import UiState from '../../stores/view/UiState'
 import PlaybackState from '../../stores/view/PlaybackState'
 import TestRow from '../TestRow'
-import './style.css'
 import { deriveCommandLevels } from '../../playback/playback-tree/command-leveler'
+import './style.css'
 
 @observer
 export default class TestTable extends React.Component {

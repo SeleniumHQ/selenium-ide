@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+jest.mock('../../../IO/storage')
 import React from 'react'
 import { renderIntoDocument, cleanup } from 'react-testing-library'
 import CommandReference from '../../../components/CommandReference'

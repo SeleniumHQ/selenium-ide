@@ -17,17 +17,17 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { observe } from 'mobx'
+import { observer } from 'mobx-react'
 import TabBar from '../../components/TabBar'
 import LogList from '../../components/LogList'
 import ClearButton from '../../components/ActionButtons/Clear'
 import { output } from '../../stores/view/Logs'
 import PlaybackLogger from '../../side-effects/playback-logging'
-import './style.css'
 import CommandReference from '../../components/CommandReference'
 import UiState from '../../stores/view/UiState'
-import { observer } from 'mobx-react'
-import { observe } from 'mobx'
 import { Commands } from '../../models/Command'
+import './style.css'
 
 @observer
 export default class Console extends React.Component {
