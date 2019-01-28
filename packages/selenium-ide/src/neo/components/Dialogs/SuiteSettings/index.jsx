@@ -125,7 +125,7 @@ class SuiteSettingsContent extends React.Component {
           />
           <Markdown className="markdown">
             {
-              'Running in parallel works only in the [runner](https://npmjs.com/package/selenium-side-runner)'
+              'Running in parallel works only in the [runner](https://www.seleniumhq.org/selenium-ide/docs/en/introduction/command-line-runner/)'
             }
           </Markdown>
           <Checkbox
