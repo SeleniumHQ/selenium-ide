@@ -142,7 +142,7 @@ selenium-side-runner --params "a='example-value'"
 Parameters can also be nested using a dot-notation.
 
 ```sh
-selenium-side-runner --params "a.b.c='example-value'"
+selenium-side-runner --params "a.b='another example-value'"
 ```
 
 #### Array values
@@ -151,6 +151,14 @@ Alternative to strings, you can specify an array of values.
 
 ```sh
 selenium-side-runner --params "a.b.c=[1,2,3]"
+```
+
+#### Multiple parameters
+
+`--params` can only be called once, but you can specify multiple parameters through space separation.
+
+```sh
+selenium-side-runner --params "a='example-value' a.b='another example-value' a.b.c=[1,2,3]"
 ```
 
 ### Config File
@@ -162,7 +170,7 @@ params: "a.b.c=[1,2,3]"
 ```
 
 ```sh
-selenium-side-runner --configuration-file "config.yaml"
+selenium-side-runner --config-file "config.yaml"
 ```
 
 ### Using a proxy server
