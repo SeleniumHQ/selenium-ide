@@ -63,7 +63,7 @@ program
     'Proxy options to pass, for use with manual, pac and socks proxies'
   )
   .option(
-    '--configuration-file [filepath]',
+    '--config, --config-file, --configuration-file [filepath]',
     'Use specified YAML file for configuration. (default: .side.yml)'
   )
   .option(
@@ -112,14 +112,14 @@ const configuration = {
   path: path.join(__dirname, '../../'),
 }
 
-const confPath = program.configurationFile || '.side.yml'
-const configurationFilePath = path.isAbsolute(confPath)
+const confPath = program.configFile || '.side.yml'
+const configFilePath = path.isAbsolute(confPath)
   ? confPath
   : path.join(process.cwd(), confPath)
 try {
-  Object.assign(configuration, Config.load(configurationFilePath))
+  Object.assign(configuration, Config.load(configFilePath))
 } catch (e) {
-  winston.debug('Could not load ' + configurationFilePath)
+  winston.debug('Could not load ' + configFilePath)
 }
 
 program.filter = program.filter || '*'
