@@ -24,7 +24,7 @@ export function sendMessage(id, payload) {
   return browser.runtime
     .sendMessage(id, payload)
     .then(response => {
-      if (!response) {
+      if (response === undefined || response === null) {
         return Promise.reject(
           new NoResponseError(
             `${Manager.getPlugin(id).name} plugin did not respond`
