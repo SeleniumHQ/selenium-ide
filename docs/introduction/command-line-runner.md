@@ -108,9 +108,13 @@ selenium-side-runner --filter smoke
 
 ### Specify a default configuration
 
-And rather than remembering all of the command-line arguments you need (which can become unwieldy) there's the ability to store your go-to configuration in a file.
+Rather than remembering all of the command-line arguments you need (which can become unwieldy) there's the ability to store your run-time parameters in a configuration file.
 
-Just create a `.side.yml` file in the directory you'll be running your tests from. The runner will pick it up automatically. Here is an example of the file's contents.
+There are two kinds of configuration files that you can use.
+
+#### Option 1
+
+Create a `.side.yml` file in the directory you'll be running your tests from. The runner will pick it up automatically. Here is an example of the file's contents.
 
 ```yaml
 capabilities:
@@ -121,11 +125,22 @@ server: "http://localhost:4444/wd/hub"
 
 If you want to ignore the file and use command line arguments instead, use `--no-sideyml` along with your other commands at run time.
 
+#### Option 2
+
+As an alternative to the `.side.yml` file, you can specify your run-time parameters in a YAML file with a name and location of your choosing and specify its location when running your tests.
+
+```sh
+selenium-side-runner --config-file "/path/to/your/config.yaml"
+```
+
+When using the `--config-file` flag, the `.side.yml` will be ignored.
+
+
 ## Advanced Options
 
 ### Additional params
 
-Plugins for Selenium IDE can specify their own unique run-time parameters. You can make use of them through the `--params` parameter.
+Plugins for Selenium IDE can specify their own unique run-time parameters. You can make use of them through the `--params` flag.
 
 This options takes a string of the various options (similar to how you specify capabilities).
 
@@ -147,7 +162,7 @@ selenium-side-runner --params "a.b='another example-value'"
 
 #### Array values
 
-Alternative to strings, you can specify an array of values.
+Alternative to strings, you can specify an array of alpha-numeric values.
 
 ```sh
 selenium-side-runner --params "a.b.c=[1,2,3]"
@@ -159,18 +174,6 @@ selenium-side-runner --params "a.b.c=[1,2,3]"
 
 ```sh
 selenium-side-runner --params "a='example-value' a.b='another example-value' a.b.c=[1,2,3]"
-```
-
-### Config File
-
-Rather than typing out all of the runtime parameters, you can specify them in a configuration file and call it at run-time instead.
-
-```yaml
-params: "a.b.c=[1,2,3]"
-```
-
-```sh
-selenium-side-runner --config-file "config.yaml"
 ```
 
 ### Using a proxy server
