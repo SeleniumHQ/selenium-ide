@@ -24,7 +24,7 @@ const router = new Router()
 router.post('/alert', (req, res) => {
   const plugin = Manager.getPlugin(req.sender)
   ModalState.showAlert({
-    title: `${plugin.name} says`,
+    title: `${plugin.name} says...`,
     description: req.message,
     cancelLabel: req.cancel,
     confirmLabel: req.confirm,
