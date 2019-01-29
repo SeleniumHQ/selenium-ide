@@ -1,1 +1,1 @@
-require('jest-cli/bin/jest')
+require('jest/bin/jest')
