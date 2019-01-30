@@ -23,6 +23,45 @@ import LocationEmitter from './location'
 import config from './config'
 import utils from './utils'
 
+/**
+ * @typedef Project a Selenium IDE project (.side)
+ * @property {string} id the id of the project
+ * @property {string} name the name of the project
+ * @property {string} url 
+ * @property {Test[]} tests
+ * @property {Suite[]} suites
+ * @property {string[]} urls
+ * @property {any[]} plugins
+ * @property {string} version
+ *
+ * @typedef Suite a suite of tests
+ * @property {string} id the suite's id
+ * @property {string} name the name of the suite
+ * @property {boolean} parallel
+ * @property {number} timeout
+ * @property {string[]} tests an array of test id's
+ *
+ * @typedef Test a test
+ * @property {string} id the id of the test
+ * @property {string} name the name of the test
+ * @property {Command[]} commands the name of the test
+ * 
+ * @typedef Command a command
+ * @property {string} id
+ * @property {string} comment
+ * @property {string} command
+ * @property {string} target
+ * @property {string[]} targets
+ * @property {string} value
+ * 
+ */ 
+
+/**
+ * Exports a Selenium IDE project (.side) to executable javascript code
+ * @param {Project} project 
+ * @param {{ silenceErrors?: boolean, skipStdLibEmitting?: boolean }} _opts 
+ * @param {*} snapshot 
+ */
 export default function Selianize(project, _opts, snapshot = {}) {
   const options = { ...config, ..._opts }
   return new Promise(async (res, rej) => {
