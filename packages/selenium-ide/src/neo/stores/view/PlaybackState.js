@@ -398,7 +398,7 @@ class PlaybackState {
             testId: this.currentRunningTest.id,
             testName: this.currentRunningTest.name,
             projectName: UiState._project.name,
-            commands: this.runningQueue,
+            commands: this.runningQueue.map(command => command.export()),
           },
         },
         (plugin, resolved) => {
