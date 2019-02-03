@@ -35,6 +35,7 @@ import WindowSession from '../../IO/window-session'
 import ExtCommand from '../../IO/SideeX/ext-command'
 import WebDriverExecutor from '../../IO/playback/webdriver'
 import CommandTarget from './CommandTarget'
+import Suite from '../../models/Suite'
 
 class PlaybackState {
   @observable
@@ -129,9 +130,7 @@ class PlaybackState {
   @computed
   get testsToRun() {
     return this.currentRunningSuite
-      ? this.currentRunningSuite.name === '__filteredTests__' + this.runId
-        ? this.filteredTests
-        : this.currentRunningSuite.tests
+      ? this.currentRunningSuite._tests
       : this.currentRunningTest
         ? [this.stackCaller] // eslint-disable-line indent
         : undefined // eslint-disable-line indent
@@ -248,7 +247,7 @@ class PlaybackState {
     if (this.paused) {
       return this.resume()
     } else if (!this.isPlaying) {
-      return this.startPlayingFilteredTests()
+      return this.startPlayingSuite({ isFiltered: true })
     }
   }
 
@@ -271,43 +270,36 @@ class PlaybackState {
   }
 
   @action.bound
-  _startPlayingCollection(suite, tests, eventMessage, runId = uuidv4()) {
-    const playSuite = action(() => {
-      this.runId = runId
-      this.resetState()
-      this.currentRunningSuite = suite
-      this._testsToRun = [...tests]
-      this.testsCount = this._testsToRun.length
-      PluginManager.emitMessage({
-        action: 'event',
-        event: eventMessage,
-        options: {
-          runId: runId,
-          suiteName: this.currentRunningSuite.name,
-          projectName: UiState._project.name,
-        },
-      }).then(() => {
-        this.playNext()
+  startPlayingSuite(opts = { isFiltered: false }) {
+    debugger
+    this.currentRunningSuite = undefined
+    this.runId = uuidv4()
+    let suite
+    if (!opts.isFiltered) {
+      suite = UiState.selectedTest.suite
+    } else {
+      suite = new Suite(undefined, 'Filtered Tests')
+      UiState.filteredTests.forEach(function(test) {
+        suite.addTestCase(test)
       })
+    }
+    this.resetState()
+    this.currentRunningSuite = suite
+    this._testsToRun = [...suite._tests]
+    this.testsCount = this._testsToRun.length
+    PluginManager.emitMessage({
+      action: 'event',
+      event: 'suitePlaybackStarted',
+      options: {
+        runId: this.runId,
+        tests: suite._tests.map(test => test.export()),
+      },
+    }).then(responses => {
+      if (!this.pluginDidFail(responses)) {
+        UiState.selectTest(suite._tests[0])
+        this.startPlaying(suite._tests[0].commands[0])
+      }
     })
-    this.beforePlaying(playSuite)
-  }
-
-  startPlayingFilteredTests() {
-    this.filteredTests = UiState.filteredTests
-    const runId = uuidv4()
-    const suite = { id: runId, name: '__filteredTests__' + runId }
-    this._startPlayingCollection(
-      suite,
-      this.filteredTests,
-      'filteredTestsPlaybackStarted',
-      runId
-    )
-  }
-
-  startPlayingSuite() {
-    const { suite } = UiState.selectedTest
-    this._startPlayingCollection(suite, suite.tests, 'suitePlayackStarted')
   }
 
   runningQueueFromIndex(commands, index) {
@@ -352,12 +344,12 @@ class PlaybackState {
       recordFromHere: false,
     }
   ) {
+    debugger
     const playTest = action(async () => {
       this.breakOnNextCommand = controls.breakOnNextCommand
       const { test } = UiState.selectedTest
       this.resetState()
-      this.runId = uuidv4()
-      this.currentRunningSuite = undefined
+      if (!this.currentRunningSuite) this.runId = uuidv4()
       this.currentRunningTest = test
       this.testsCount = 1
       let currentPlayingIndex = 0
@@ -389,47 +381,38 @@ class PlaybackState {
       const pluginsLogs = {}
       if (PluginManager.plugins.length)
         this.logger.log('Preparing plugins for test run...')
-      PluginManager.emitMessage(
-        {
-          action: 'event',
-          event: 'playbackStarted',
-          options: {
-            runId: this.runId,
-            testId: this.currentRunningTest.id,
-            testName: this.currentRunningTest.name,
-            projectName: UiState._project.name,
-            commands: this.runningQueue.map(command => command.export()),
-          },
-        },
-        (plugin, resolved) => {
-          let log = pluginsLogs[plugin.id]
+      this.emitPlaybackStarted((plugin, resolved) => {
+        let log = pluginsLogs[plugin.id]
 
-          if (!log) {
-            log = this.logger.log(`Waiting for ${plugin.name} to start`)
-            log.setStatus(LogTypes.Awaiting)
-            pluginsLogs[plugin.id] = log
-          }
-
-          if (resolved) {
-            log.setStatus(LogTypes.Success)
-          }
+        if (!log) {
+          log = this.logger.log(`Waiting for ${plugin.name} to start`)
+          log.setStatus(LogTypes.Awaiting)
+          pluginsLogs[plugin.id] = log
         }
-      ).then(responses => {
-        let didFail = false
-        responses.forEach(res => {
-          if (res.response && res.response.status === 'fatal') {
-            didFail = true
-            this.logger.error(
-              `[${responses[0].plugin.name}]: ${responses[0].response.message}`
-            )
-          }
-        })
-        if (!didFail) {
+
+        if (resolved) {
+          log.setStatus(LogTypes.Success)
+        }
+      }).then(responses => {
+        if (!this.pluginDidFail(responses)) {
           this.play()
         }
       })
     })
     this.beforePlaying(playTest)
+  }
+
+  pluginDidFail(responses) {
+    let didFail = false
+    responses.forEach(res => {
+      if (res.response && res.response.status === 'fatal') {
+        didFail = true
+        this.logger.error(
+          `[${responses[0].plugin.name}]: ${responses[0].response.message}`
+        )
+      }
+    })
+    return didFail
   }
 
   @action.bound
@@ -465,27 +448,40 @@ class PlaybackState {
     }
   }
 
+  emitPlaybackStarted(cb) {
+    return PluginManager.emitMessage(
+      {
+        action: 'event',
+        event: 'playbackStarted',
+        options: {
+          runId: this.runId,
+          testId: this.currentRunningTest.id,
+          testName: this.currentRunningTest.name,
+          suiteName: this.currentRunningSuite && this.currentRunningSuite.name,
+          projectName: UiState._project.name,
+          test: this.currentRunningTest,
+        },
+      },
+      cb
+    )
+  }
+
   @action.bound
   playNext() {
+    debugger
     if (UiState.selectedTest.suite && UiState.selectedTest.suite.isParallel) {
       variables.clear()
     }
+    // remove the first test from the test queue so it doesn't get replayed
+    if (this.currentRunningSuite._tests[0].name === this._testsToRun[0].name)
+      this._testsToRun.shift()
+    // pull the next test off the test queue for execution
     this.currentRunningTest = this._testsToRun.shift()
     this.runningQueue = this.currentRunningTest.commands.peek()
     this.clearStack()
     this.errors = 0
     this.forceTestCaseFailure = false
-    PluginManager.emitMessage({
-      action: 'event',
-      event: 'playbackStarted',
-      options: {
-        runId: this.runId,
-        testId: this.currentRunningTest.id,
-        testName: this.currentRunningTest.name,
-        suiteName: this.currentRunningSuite.name,
-        projectName: UiState._project.name,
-      },
-    }).then(
+    this.emitPlaybackStarted().then(
       action(() => {
         UiState.selectTest(
           this.currentRunningTest,
@@ -696,9 +692,16 @@ class PlaybackState {
             this.currentRunningSuite.id,
             this.hasFailed ? PlaybackStates.Failed : PlaybackStates.Passed
           )
+          this.cleanupCurrentRunningVariables()
         }
       }
     })
+  }
+
+  @action.bound
+  cleanupCurrentRunningVariables() {
+    this.currentRunningTest = undefined
+    this.currentRunningSuite = undefined
   }
 
   @action.bound
