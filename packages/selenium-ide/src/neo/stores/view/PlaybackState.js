@@ -405,7 +405,8 @@ class PlaybackState {
           let log = pluginsLogs[plugin.id]
 
           if (!log) {
-            log = this.logger.log(`Waiting for ${plugin.name} to start...`)
+            log = this.logger.log(`Waiting for ${plugin.name} to start`)
+            log.setStatus(LogTypes.Awaiting)
             pluginsLogs[plugin.id] = log
           }
 
@@ -530,7 +531,8 @@ class PlaybackState {
           let log = pluginsLogs[plugin.id]
 
           if (!log) {
-            log = this.logger.log(`Waiting for ${plugin.name} to finish...`)
+            log = this.logger.log(`Waiting for ${plugin.name} to finish`)
+            log.setStatus(LogTypes.Awaiting)
             pluginsLogs[plugin.id] = log
           }
 
