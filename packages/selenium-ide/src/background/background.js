@@ -46,7 +46,7 @@ function openPanel(tab) {
   clickEnabled = false
   setTimeout(function() {
     clickEnabled = true
-  }, 1000)
+  }, 1500)
 
   openWindowFromStorageResolution()
     .then(function waitForPanelLoaded(panelWindowInfo) {
