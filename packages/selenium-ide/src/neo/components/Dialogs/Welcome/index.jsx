@@ -45,6 +45,7 @@ class WelcomeDialogContents extends React.Component {
   constructor(props) {
     super(props)
     this.startRecordingInNewProject = this.startRecordingInNewProject.bind(this)
+    this.createNewProject = this.createNewProject.bind(this)
     this.openProject = this.openProject.bind(this)
     this.dismiss = this.dismiss.bind(this)
   }
@@ -54,6 +55,12 @@ class WelcomeDialogContents extends React.Component {
     await this.props.createNewProject()
     this.props.completeWelcome()
     UiState.toggleRecord(false)
+  }
+
+  async createNewProject() {
+    this.props.hideWelcome()
+    await this.props.createNewProject()
+    this.props.completeWelcome()
   }
 
   openProject(file) {
@@ -95,7 +102,6 @@ class WelcomeDialogContents extends React.Component {
             .
           </p>
         )}
-        onRequestClose={this.dismiss}
       >
         <div>
           <div>What would you like to do?</div>
@@ -110,6 +116,9 @@ class WelcomeDialogContents extends React.Component {
                 onFileSelected={this.openProject}
                 labelMarkup={<div>Open an existing project</div>}
               />
+            </li>
+            <li>
+              <a onClick={this.createNewProject}>Create a new project</a>
             </li>
             <li>
               <a onClick={this.dismiss}>Close Selenium IDE</a>

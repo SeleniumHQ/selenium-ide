@@ -75,17 +75,19 @@ export default class DialogContainer extends React.Component {
               <h2>{this.props.title}</h2>
             )}
           </div>
-          <RemoveButton
-            onClick={
-              this.props.onRequestClose ? this.props.onRequestClose : null
-            }
-            style={{
-              color: 'white',
-              position: 'absolute',
-              top: 0,
-              right: 0,
-            }}
-          />
+          {this.props.onRequestClose && (
+            <RemoveButton
+              onClick={
+                this.props.onRequestClose ? this.props.onRequestClose : null
+              }
+              style={{
+                color: 'white',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+              }}
+            />
+          )}
         </div>
         <div className="dialog__contents">
           <form

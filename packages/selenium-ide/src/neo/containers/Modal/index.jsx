@@ -91,7 +91,7 @@ export default class Modal extends Component {
           onUrlSelection={ModalState.baseUrlState.done}
           cancel={ModalState.baseUrlState.cancel}
         />
-        {isProduction ? (
+        {!isProduction ? (
           <WelcomeDialog
             isWelcomed={ModalState.welcomeState.started}
             project={this.props.project}
