@@ -277,7 +277,7 @@ class PlaybackState {
     if (!opts.isFiltered) {
       suite = UiState.selectedTest.suite
     } else {
-      suite = new Suite(undefined, 'Filtered Tests')
+      suite = new Suite(undefined, 'All Tests')
       UiState.filteredTests.forEach(function(test) {
         suite.addTestCase(test)
       })
