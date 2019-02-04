@@ -64,7 +64,12 @@ class BaseUrlDialogContents extends React.Component {
         }
         type={this.props.isInvalid ? 'warn' : 'info'}
         renderFooter={() => (
-          <div className="right">
+          <div
+            className="right"
+            style={{
+              display: 'flex',
+            }}
+          >
             <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
             <FlatButton
               type="submit"
