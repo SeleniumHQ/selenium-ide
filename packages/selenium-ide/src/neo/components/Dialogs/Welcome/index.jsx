@@ -93,7 +93,7 @@ class WelcomeDialogContents extends React.Component {
           <p>
             To learn more on Selenium IDE and how to use it visit the{' '}
             <a
-              href="https://www.seleniumhq.org/docs/02_selenium_ide.jsp"
+              href="https://www.seleniumhq.org/selenium-ide/"
               target="_blank"
               rel="noopener noreferrer"
             >
