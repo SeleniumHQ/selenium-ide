@@ -48,6 +48,13 @@ export default class DialogContainer extends React.Component {
     }
   }
   render() {
+    const coverImage = this.props.renderImage ? (
+      this.props.renderImage()
+    ) : images[this.props.type] ? (
+      <img height="30" src={images[this.props.type]} />
+    ) : (
+      undefined
+    )
     return (
       <div
         onKeyDown={this.handleKeyDown.bind(this)}
@@ -58,15 +65,9 @@ export default class DialogContainer extends React.Component {
         )}
       >
         <div className="dialog__header">
-          <div className="dialog__cover-image">
-            {this.props.renderImage ? (
-              this.props.renderImage()
-            ) : images[this.props.type] ? (
-              <img height="30" src={images[this.props.type]} />
-            ) : (
-              undefined
-            )}
-          </div>
+          {coverImage && (
+            <div className="dialog__cover-image">{coverImage}</div>
+          )}
           <div className="dialog__title">
             {this.props.renderTitle ? (
               this.props.renderTitle()

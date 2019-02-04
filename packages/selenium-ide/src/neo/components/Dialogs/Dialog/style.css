@@ -23,8 +23,11 @@
   background-color: #ff5f7b;
 }
 
-.dialog .dialog__title {
+.dialog .dialog__cover-image {
   padding-left: 15px;
+}
+
+.dialog .dialog__title {
   color: #fff;
 }
 
