@@ -500,7 +500,7 @@ export default class ExtCommand {
       const browserName = parsedUA.browser.name
       if (browserName !== 'Chrome')
         return Promise.reject(
-          new Error('File uploading is only support in Chrome at this time')
+          new Error('File uploading is only supported in Chrome at this time')
         )
       const connection = new Debugger(this.getCurrentPlayingTabId())
       try {
