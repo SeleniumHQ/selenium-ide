@@ -139,9 +139,13 @@ class NewWindowInput extends React.Component {
         onRequestClose={this.props.cancel}
       >
         {this.state.isConfigEnabled ? (
-          <p>
-            This command opens a new window. For accurate playback some
-            additional information is needed.
+          <p
+            style={{
+              whiteSpace: 'pre-line',
+            }}
+          >
+            {`This command opens a new window.
+            For accurate playback some additional information is needed.`}
           </p>
         ) : (
           <p>Use this option if the command opens a new window.</p>
@@ -157,7 +161,7 @@ class NewWindowInput extends React.Component {
           <React.Fragment>
             <LabelledInput
               name="windowName"
-              label="Window Name"
+              label="1. Window Name"
               value={this.state.options.windowName}
               onChange={this.handleWindowNameChange}
               autoFocus
@@ -165,13 +169,13 @@ class NewWindowInput extends React.Component {
             {this.state.isInvalidName && (
               <div className="message">* {this.state.errorMessage}</div>
             )}
-            <p>
-              Window name tells the IDE how to interact with the new window. To
-              make your tests more readable, change it to something descriptive.
+            <p style={{ whiteSpace: 'pre-line' }}>
+              {`Window Name is used in order to interact with the new window.
+              To make your tests more readable, change it to something descriptive.`}
             </p>
             <LabelledInput
               name="windowTimeout"
-              label="Timeout (milliseconds)"
+              label="2. Timeout (milliseconds)"
               type="number"
               value={this.state.options.windowTimeout}
               onChange={this.handleWindowTimeoutChange}
