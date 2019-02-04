@@ -57,7 +57,7 @@ class UiState {
   @observable
   minNavigationWidth = 180
   @observable
-  maxNavigationWidth = 250
+  maxNavigationWidth = 350
   @observable
   navigationWidth = 180
   @observable
