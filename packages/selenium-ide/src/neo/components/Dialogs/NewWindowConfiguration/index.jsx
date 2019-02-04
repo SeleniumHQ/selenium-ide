@@ -170,8 +170,7 @@ class NewWindowInput extends React.Component {
               <div className="message">* {this.state.errorMessage}</div>
             )}
             <p style={{ whiteSpace: 'pre-line' }}>
-              {`Window Name is used in order to interact with the new window.
-              To make your tests more readable, change it to something descriptive.`}
+              {`Window Name is used in order to interact with the new window. To make your tests more readable, change it to something descriptive.`}
             </p>
             <LabelledInput
               name="windowTimeout"
