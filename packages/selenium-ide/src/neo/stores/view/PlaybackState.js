@@ -271,8 +271,7 @@ class PlaybackState {
 
   @action.bound
   startPlayingSuite(opts = { isFiltered: false }) {
-    debugger
-    this.currentRunningSuite = undefined
+    this.cleanupCurrentRunningVariables()
     this.runId = uuidv4()
     let suite
     if (!opts.isFiltered) {
@@ -344,7 +343,6 @@ class PlaybackState {
       recordFromHere: false,
     }
   ) {
-    debugger
     const playTest = action(async () => {
       this.breakOnNextCommand = controls.breakOnNextCommand
       const { test } = UiState.selectedTest
@@ -468,7 +466,6 @@ class PlaybackState {
 
   @action.bound
   playNext() {
-    debugger
     if (UiState.selectedTest.suite && UiState.selectedTest.suite.isParallel) {
       variables.clear()
     }
