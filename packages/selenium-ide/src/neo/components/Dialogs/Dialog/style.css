@@ -1,6 +1,5 @@
 .dialog {
   min-width: 300px;
-  min-height: 340px;
   color: #505050;
   display: flex;
   flex-direction: column;
