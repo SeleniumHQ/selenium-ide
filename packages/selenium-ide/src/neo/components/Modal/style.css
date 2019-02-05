@@ -1,15 +1,13 @@
 .modal-content {
-  position: absolute;
-  top: 20%;
-  left: 50%;
+  min-width: 300px;
+  max-width: 65%;
+  margin: 100px auto 0 auto;
   outline: 0;
   -webkit-overflow-scrolling: touch;
 }
 
 .modal {
   color: #4d4d4d;
-  position: relative;
-  left: -50%;
   background: white;
   border: 1px solid #dedede;
   border-radius: 4px;
@@ -29,6 +27,10 @@
 
 .modal input {
   color: #4d4d4d;
+}
+
+.modal .right {
+  display: flex;
 }
 
 .modal .right .btn {
