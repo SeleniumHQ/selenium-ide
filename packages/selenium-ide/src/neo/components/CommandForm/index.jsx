@@ -127,7 +127,11 @@ export default class CommandForm extends React.Component {
                   active: this.props.command && this.props.command.opensWindow,
                 }
               )}
-              disabled={!this.props.command || PlaybackState.isPlaying}
+              disabled={
+                !this.props.command ||
+                (this.props.command && !this.props.command.command) ||
+                PlaybackState.isPlaying
+              }
               onClick={() => {
                 ModalState.toggleNewWindowConfiguration()
                 this.props.command
