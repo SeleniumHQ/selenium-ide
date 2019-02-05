@@ -32,6 +32,7 @@ import Capabilities from './capabilities'
 import ParseProxy from './proxy'
 import Config from './config'
 import Satisfies from './versioner'
+import parseModulePath from './module-path'
 import metadata from '../package.json'
 
 const DEFAULT_TIMEOUT = 15000
@@ -220,7 +221,7 @@ function runProject(project) {
             project.jest && project.jest.extraGlobals
               ? project.jest.extraGlobals
               : [],
-          modulePaths: [path.join(__dirname, '../node_modules')],
+          modulePaths: parseModulePath(path.join(__dirname, '../node_modules')),
           setupFilesAfterEnv: [
             require.resolve('jest-environment-selenium/dist/setup.js'),
           ],
