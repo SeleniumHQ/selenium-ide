@@ -15,13 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function absolutifyUrl(targetUrl, baseUrl) {
-  let url = targetUrl
-  try {
-    url = new URL(targetUrl).href
-  } catch (e) {
-    url = new URL(targetUrl, baseUrl).href
-  }
+import resolveUrl from 'resolve-url'
 
-  return url
+export function absolutifyUrl(targetUrl, baseUrl) {
+  return resolveUrl(baseUrl, targetUrl)
 }

@@ -75,6 +75,7 @@
     "react-syntax-highlighter": "^8.0.1",
     "react-tooltip": "^3.4.0",
     "react-transition-group": "^2.2.1",
+    "resolve-url": "^0.2.1",
     "scroll-into-view-if-needed": "2",
     "selianize": "^3.5.3",
     "string-natural-compare": "^2.0.2",
