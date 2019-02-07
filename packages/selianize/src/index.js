@@ -27,7 +27,7 @@ import utils from './utils'
  * @typedef Project a Selenium IDE project (.side)
  * @property {string} id the id of the project
  * @property {string} name the name of the project
- * @property {string} url 
+ * @property {string} url
  * @property {Test[]} tests
  * @property {Suite[]} suites
  * @property {string[]} urls
@@ -45,7 +45,7 @@ import utils from './utils'
  * @property {string} id the id of the test
  * @property {string} name the name of the test
  * @property {Command[]} commands the name of the test
- * 
+ *
  * @typedef Command a command
  * @property {string} id
  * @property {string} comment
@@ -53,14 +53,14 @@ import utils from './utils'
  * @property {string} target
  * @property {string[]} targets
  * @property {string} value
- * 
- */ 
+ *
+ */
 
 /**
  * Exports a Selenium IDE project (.side) to executable javascript code
- * @param {Project} project 
- * @param {{ silenceErrors?: boolean, skipStdLibEmitting?: boolean }} _opts 
- * @param {*} snapshot 
+ * @param {Project} project
+ * @param {{ silenceErrors?: boolean, skipStdLibEmitting?: boolean }} _opts
+ * @param {*} snapshot
  */
 export default function Selianize(project, _opts, snapshot = {}) {
   const options = { ...config, ..._opts }
