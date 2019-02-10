@@ -576,14 +576,14 @@ export default class ExtCommand {
         await connection.sendCommand('DOM.focus', { nodeId })
         await connection.sendCommand('Input.dispatchKeyEvent', {
           type: 'keyDown',
-          keyCode: 13,
+          windowsVirtualKeyCode: 13,
           key: 'Enter',
           code: 'Enter',
           text: '\r',
         })
         await connection.sendCommand('Input.dispatchKeyEvent', {
           type: 'keyUp',
-          keyCode: 13,
+          windowsVirtualKeyCode: 13,
           key: 'Enter',
           code: 'Enter',
           text: '\r',
