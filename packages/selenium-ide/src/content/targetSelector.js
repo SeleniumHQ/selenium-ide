@@ -120,7 +120,7 @@ class TargetSelector {
       }
       this.r = r
       const style =
-        'pointer-events: none; position: absolute; background-color: rgb(78, 171, 230); opacity: 0.4; border: 1px solid #0e0e0e; z-index: 100;'
+        'pointer-events: none; position: absolute; background-color: rgb(78, 171, 230); opacity: 0.4; border: 1px solid #0e0e0e; z-index: 1000000;'
       const pos = `top:${r.top + this.win.scrollY}px; left:${r.left +
         this.win.scrollX}px; width:${r.width}px; height:${r.height}px;`
       this.div.setAttribute('style', style + pos)
