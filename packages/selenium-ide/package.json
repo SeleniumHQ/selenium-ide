@@ -14,7 +14,7 @@
     "prepublishOnly": "yarn build-prod"
   },
   "devDependencies": {
-    "@medv/finder": "^1.1.0",
+    "@medv/finder": "^1.1.1",
     "autoprefixer": "^7.1.4",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",

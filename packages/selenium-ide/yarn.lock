@@ -2,9 +2,10 @@
 # yarn lockfile v1
 
 
-"@medv/finder@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@medv/finder/-/finder-1.1.0.tgz#915a72878f7e0547d09759e639f60dbd8f926bec"
+"@medv/finder@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@medv/finder/-/finder-1.1.1.tgz#c502c6578825902e5fae59885b60e0403ad8e933"
+  integrity sha512-LzJbdErL+RAj19mU28OClO4lPocuYBcfktcfo/laTWDsYgTv4Hgy4r0GMp52UJTVxgyBAl/Cym6r0yankaE/6A==
   dependencies:
     cssesc "^2.0.0"
 
@@ -6361,9 +6362,10 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-"webextension-polyfill@https://github.com/corevo/webextension-polyfill#dist":
+webextension-polyfill@^0.3.1:
   version "0.3.1"
-  resolved "https://github.com/corevo/webextension-polyfill#9d49fda3f3c79ca227532cf1a3fc0715952c93d4"
+  resolved "https://registry.yarnpkg.com/webextension-polyfill/-/webextension-polyfill-0.3.1.tgz#fab2aed917a713a5d8221e41febad81c5d0b080f"
+  integrity sha512-ISB42vlgMyM7xE1u6pREeCqmmXjLsYu/nqAR8Dl/gIAnylb+KpRpvKbVkUYNFePhhXn0Obkkc3jasOII9ztUtg==
 
 webpack-dev-middleware@1.12.2:
   version "1.12.2"
