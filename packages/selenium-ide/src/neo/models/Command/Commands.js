@@ -390,6 +390,16 @@ export const Commands = [
     },
   ],
   [
+    'mouseDown',
+    {
+      name: 'mouse down',
+      type: TargetTypes.LOCATOR,
+      description: `Simulates a user pressing the left mouse button (without 
+        releasing it yet).`,
+      target: ArgTypes.locator,
+    },
+  ],
+  [
     'mouseDownAt',
     {
       name: 'mouse down at',
