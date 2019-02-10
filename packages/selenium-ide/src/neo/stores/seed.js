@@ -17,6 +17,7 @@
 
 import generate from 'project-name-generator'
 import { CommandsArray } from '../models/Command'
+import Command from '../models/Command'
 import UiState from './view/UiState'
 
 export default function seed(store, numberOfSuites = 0) {
@@ -494,10 +495,19 @@ export default function seed(store, numberOfSuites = 0) {
     'css=#input-example input'
   )
 
-  const locatorFallbackTest = store.createTestCase('locator fallback template')
+  const locatorFallbackTest = store.createTestCase('locator fallback')
   locatorFallbackTest.createCommand(undefined, 'open', '/dynamic_loading/2')
   locatorFallbackTest.createCommand(undefined, 'click', 'css=button')
-  locatorFallbackTest.createCommand(undefined, 'clickAt', 'css=#finis > h4')
+  const locatorFallbackTestCommand = new Command(
+    undefined,
+    'clickAt',
+    'css=#finis > h4'
+  )
+  locatorFallbackTestCommand.setTargets([
+    ['css=#finis > h4', 'css'],
+    ['css=#finish > h4', 'css'],
+  ])
+  locatorFallbackTest.addCommand(locatorFallbackTestCommand)
   locatorFallbackTest.createCommand(
     undefined,
     'assertText',
@@ -557,7 +567,6 @@ export default function seed(store, numberOfSuites = 0) {
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test)
   })
-  suiteAll.removeTestCase(locatorFallbackTest)
 
   const suiteControlFlow = store.createSuite('control flow')
   suiteControlFlow.addTestCase(controlFlowIfTest)
