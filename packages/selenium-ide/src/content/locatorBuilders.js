@@ -242,26 +242,26 @@ LocatorBuilders.prototype.getNodeNbr = function(current) {
   return index
 }
 
-LocatorBuilders.prototype.getCSSSubPath = function(e) {
-  let css_attributes = ['id', 'name', 'class', 'type', 'alt', 'title', 'value']
-  for (let i = 0; i < css_attributes.length; i++) {
-    let attr = css_attributes[i]
-    let value = e.getAttribute(attr)
-    if (value) {
-      if (attr == 'id') return '#' + value
-      if (attr == 'class')
-        return (
-          e.nodeName.toLowerCase() +
-          '.' +
-          value.replace(' ', '.').replace('..', '.')
-        )
-      return e.nodeName.toLowerCase() + '[' + attr + '="' + value + '"]'
-    }
-  }
-  if (this.getNodeNbr(e))
-    return e.nodeName.toLowerCase() + ':nth-of-type(' + this.getNodeNbr(e) + ')'
-  else return e.nodeName.toLowerCase()
-}
+//LocatorBuilders.prototype.getCSSSubPath = function(e) {
+//  let css_attributes = ['id', 'name', 'class', 'type', 'alt', 'title', 'value']
+//  for (let i = 0; i < css_attributes.length; i++) {
+//    let attr = css_attributes[i]
+//    let value = e.getAttribute(attr)
+//    if (value) {
+//      if (attr == 'id') return '#' + value
+//      if (attr == 'class')
+//        return (
+//          e.nodeName.toLowerCase() +
+//          '.' +
+//          value.replace(' ', '.').replace('..', '.')
+//        )
+//      return e.nodeName.toLowerCase() + '[' + attr + '="' + value + '"]'
+//    }
+//  }
+//  if (this.getNodeNbr(e))
+//    return e.nodeName.toLowerCase() + ':nth-of-type(' + this.getNodeNbr(e) + ')'
+//  else return e.nodeName.toLowerCase()
+//}
 
 LocatorBuilders.prototype.preciseXPath = function(xpath, e) {
   //only create more precise xpath if needed
@@ -330,18 +330,18 @@ LocatorBuilders.add('css:finder', function(e) {
   return 'css=' + finder(e)
 })
 
-LocatorBuilders.add('css', function(e) {
-  let current = e
-  let sub_path = this.getCSSSubPath(e)
-  while (
-    this.findElement('css=' + sub_path) != e &&
-    current.nodeName.toLowerCase() != 'html'
-  ) {
-    sub_path = this.getCSSSubPath(current.parentNode) + ' > ' + sub_path
-    current = current.parentNode
-  }
-  return 'css=' + sub_path
-})
+//LocatorBuilders.add('css', function(e) {
+//  let current = e
+//  let sub_path = this.getCSSSubPath(e)
+//  while (
+//    this.findElement('css=' + sub_path) != e &&
+//    current.nodeName.toLowerCase() != 'html'
+//  ) {
+//    sub_path = this.getCSSSubPath(current.parentNode) + ' > ' + sub_path
+//    current = current.parentNode
+//  }
+//  return 'css=' + sub_path
+//})
 
 LocatorBuilders.add('xpath:link', function(e) {
   if (e.nodeName == 'A') {
@@ -520,6 +520,25 @@ LocatorBuilders.add('xpath:position', function(e, opt_contextNode) {
   }
   return null
 })
+
+LocatorBuilders.add('xpath:innerText', function(el) {
+  const initialXpath = `//*[contains(.,'${el.innerText}')]`
+  const xpathResults = document.evaluate(
+    initialXpath,
+    document,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null
+  ).singleNodeValue
+  if (xpathResults.includes(el)) {
+    return xpathResults.length === 1
+      ? initialXpath
+      : this.preciseXPath(initialXpath, el)
+  } else {
+    return null
+  }
+})
+
 // Samit: Warning: The old method of setting the order using LocatorBuilders.order is now deprecated
 // You can change the priority of builders by setting LocatorBuilders.order.
 //LocatorBuilders.order = ['id', 'link', 'name', 'css', 'xpath:link', 'xpath:img', 'xpath:attributes', 'xpath:idRelative', 'xpath:href', 'xpath:position'];
