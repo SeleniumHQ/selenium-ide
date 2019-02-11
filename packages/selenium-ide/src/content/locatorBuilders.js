@@ -267,6 +267,9 @@ LocatorBuilders.prototype.preciseXPath = function(xpath, e) {
  * ===== builders =====
  */
 
+// order listed dictates priority
+// e.g., 1st listed is top priority
+
 LocatorBuilders.add('css:data-attr', function(e) {
   const dataAttributes = ['data-test', 'data-test-id']
   for (let i = 0; i < dataAttributes.length; i++) {
@@ -504,7 +507,3 @@ LocatorBuilders.add('xpath:innerText', function(el) {
     return null
   }
 })
-
-// Samit: Warning: The old method of setting the order using LocatorBuilders.order is now deprecated
-// You can change the priority of builders by setting LocatorBuilders.order.
-//LocatorBuilders.order = ['id', 'link', 'name', 'css', 'xpath:link', 'xpath:img', 'xpath:attributes', 'xpath:idRelative', 'xpath:href', 'xpath:position'];
