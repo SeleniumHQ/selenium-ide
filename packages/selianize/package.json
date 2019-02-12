@@ -1,6 +1,6 @@
 {
   "name": "selianize",
-  "version": "3.5.3",
+  "version": "3.5.6",
   "description": "Export Selenium IDE projects into javascript",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "main": "dist/selianize.cjs.js",
