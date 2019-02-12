@@ -457,7 +457,7 @@ class PlaybackState {
           testName: this.currentRunningTest.name,
           suiteName: this.currentRunningSuite && this.currentRunningSuite.name,
           projectName: UiState._project.name,
-          test: this.currentRunningTest,
+          test: this.currentRunningTest.export(),
         },
       },
       cb
