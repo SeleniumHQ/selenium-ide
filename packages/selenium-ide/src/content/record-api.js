@@ -187,7 +187,7 @@ function addRecordingIndicator() {
     recordingIndicator.style.bottom = '36px'
     recordingIndicator.style.right = '36px'
     recordingIndicator.style.width = '280px'
-    recordingIndicator.style.height = '80px'
+    recordingIndicator.style.height = '50px'
     recordingIndicator.style['background-color'] = 'whitesmoke'
     recordingIndicator.style['box-shadow'] = '7px 7px 10px 0 rgba(0,0,0,0.3)'
     recordingIndicator.style.transition = 'bottom 100ms linear'

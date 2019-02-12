@@ -47,6 +47,39 @@ class TargetSelector {
     this.div = div
     this.e = null
     this.r = null
+    this.banner = doc.createElement('div')
+    this.banner.setAttribute(
+      'style',
+      'position: fixed;top: 0;left: 0;bottom: 0;right: 0;background: trasparent;z-index: 10000;'
+    )
+    const header = doc.createElement('div')
+    header.setAttribute(
+      'style',
+      "pointer-events: none;display: flex;align-items: center;justify-content: center;flex-direction: row;position: fixed;top: 20%;left: 35%;right: 35%;background: whitesmoke;color: #444;font-size: 28px;line-height: 50px;z-index: 10001;font-family: system, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;box-shadow: 7px 7px 10px 0 rgba(0,0,0,0.3);border: 1px white solid;"
+    )
+    const img = doc.createElement('img')
+    img.src = browser.runtime.getURL('/icons/icon128.png')
+    img.setAttribute('style', 'width: 28px;margin-right: 15px;')
+    header.appendChild(img)
+    const span = doc.createElement('span')
+    span.innerText = 'Select an element'
+    header.appendChild(span)
+    setTimeout(() => {
+      // this has to happen after a timeout, since adding it sync will add the event
+      // before the window is focused which will case mousemove to fire before the
+      // user actually moves the mouse
+      this.banner.addEventListener(
+        'mousemove',
+        () => {
+          setTimeout(() => {
+            this.banner.style.visibility = 'hidden'
+          }, 300)
+        },
+        false
+      )
+    }, 300)
+    this.banner.appendChild(header)
+    doc.body.insertBefore(this.banner, div)
     doc.addEventListener('mousemove', this, true)
     doc.addEventListener('click', this, true)
   }
@@ -58,6 +91,12 @@ class TargetSelector {
           this.div.parentNode.removeChild(this.div)
         }
         this.div = null
+      }
+      if (this.header) {
+        if (this.header.parentNode) {
+          this.header.parentNode.removeChild(this.header)
+        }
+        this.header = null
       }
       if (this.win) {
         const doc = this.win.document
@@ -101,7 +140,7 @@ class TargetSelector {
   }
 
   highlightElement(element) {
-    if (element && element != this.e) {
+    if (element && element != this.e && element !== this.banner) {
       this.e = element
     } else {
       return
