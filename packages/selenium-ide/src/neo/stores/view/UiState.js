@@ -198,7 +198,10 @@ class UiState {
         stack !== undefined && stack >= 0
           ? PlaybackState.callstack[stack].callee
           : test
-      if (_test && _test !== this.displayedTest) {
+      if (
+        _test &&
+        (_test !== this.displayedTest || suite !== this.selectedTest.suite)
+      ) {
         this.selectedTest = {
           test,
           suite,
