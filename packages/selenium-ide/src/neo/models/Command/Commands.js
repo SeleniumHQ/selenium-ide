@@ -440,6 +440,16 @@ export const Commands = [
     },
   ],
   [
+    'mouseUp',
+    {
+      name: 'mouse up',
+      type: TargetTypes.LOCATOR,
+      description: `Simulates the event that occurs when the user releases the 
+        mouse button (e.g., stops holding the button down).`,
+      target: ArgTypes.locator,
+    },
+  ],
+  [
     'mouseUpAt',
     {
       name: 'mouse up at',
