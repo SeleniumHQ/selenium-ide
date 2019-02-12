@@ -496,14 +496,13 @@ LocatorBuilders.add('xpath:innerText', function(el) {
     initialXpath,
     document,
     null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    XPathResult.ORDERED_NODE_ITERATOR_TYPE,
     null
-  ).singleNodeValue
-  if (xpathResults.includes(el)) {
-    return xpathResults.length === 1
-      ? initialXpath
-      : this.preciseXPath(initialXpath, el)
-  } else {
-    return null
+  )
+  let result = xpathResults.iterateNext()
+  while (result) {
+    if (result === el) break
+    result = xpathResults.iterateNext()
   }
+  return result ? this.preciseXPath(initialXpath, el) : null
 })
