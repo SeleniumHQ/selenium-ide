@@ -235,7 +235,6 @@ class PlaybackState {
 
   @action.bound
   playTestOrResume() {
-    debugger
     if (this.paused) {
       return this.resume()
     } else if (!this.isPlaying) {
