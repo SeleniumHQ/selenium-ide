@@ -235,6 +235,7 @@ class PlaybackState {
 
   @action.bound
   playTestOrResume() {
+    debugger
     if (this.paused) {
       return this.resume()
     } else if (!this.isPlaying) {
@@ -589,6 +590,7 @@ class PlaybackState {
       }
       this.stopPlayingGracefully()
     }
+    this.paused = false
     this.commandTarget.doCleanup({ isTestAborted: this.aborted })
   }
 
