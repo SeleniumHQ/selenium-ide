@@ -491,18 +491,12 @@ LocatorBuilders.add('xpath:position', function(e, opt_contextNode) {
 })
 
 LocatorBuilders.add('xpath:innerText', function(el) {
-  const initialXpath = `//*[contains(.,'${el.innerText}')]`
-  const xpathResults = document.evaluate(
-    initialXpath,
-    document,
-    null,
-    XPathResult.ORDERED_NODE_ITERATOR_TYPE,
-    null
-  )
-  let result = xpathResults.iterateNext()
-  while (result) {
-    if (result === el) break
-    result = xpathResults.iterateNext()
+  if (el.innerText) {
+    const initialXpath = `//${el.nodeName.toLowerCase()}[contains(.,'${
+      el.innerText
+    }')]`
+    return this.preciseXPath(initialXpath, el)
+  } else {
+    return null
   }
-  return result ? this.preciseXPath(initialXpath, el) : null
 })
