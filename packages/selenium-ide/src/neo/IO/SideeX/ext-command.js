@@ -245,6 +245,9 @@ export default class ExtCommand {
         { frameId: top ? 0 : frameId }
       )
       .then(r => {
+        if (!r) {
+          throw new Error('result is undefined')
+        }
         return r
       })
       .catch(error => {
