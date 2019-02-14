@@ -490,13 +490,10 @@ LocatorBuilders.add('xpath:position', function(e, opt_contextNode) {
   return null
 })
 
-//LocatorBuilders.add('xpath:innerText', function(el) {
-//  if (el.innerText && el.nodeName !== 'DIV') {
-//    const initialXpath = `//${el.nodeName.toLowerCase()}[contains(.,'${
-//      el.innerText
-//    }')]`
-//    return this.preciseXPath(initialXpath, el)
-//  } else {
-//    return null
-//  }
-//})
+LocatorBuilders.add('xpath:innerText', function(el) {
+  if (el.innerText) {
+    return `xpath=//${el.nodeName.toLowerCase()}[contains(.,'${el.innerText}')]`
+  } else {
+    return null
+  }
+})
