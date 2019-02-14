@@ -34,6 +34,15 @@ const PromoSection = props => (
   </div>
 )
 
+const PromoHeader = props => (
+  <div className="promo">
+    {props.text} Details available{' '}
+    <a href={props.link} target="_blank" rel="noopener noreferrer">
+      HERE
+    </a>
+  </div>
+)
+
 class HomeSplash extends React.Component {
   render() {
     const { siteConfig } = this.props
@@ -272,19 +281,28 @@ class Index extends React.Component {
     }
 
     return (
-      <div>
-        <HomeSplash siteConfig={siteConfig} language={language} />
-        <div className="home mainContainer">
-          <Features />
-          <FeatureCallout />
-          <ResilientTests />
-          <TestCaseReuse />
-          <ControlFlow />
-          <Plugins />
-          <TryOut />
-          <Showcase />
+      <React.Fragment>
+        {siteConfig.promoText &&
+          siteConfig.promoLink && (
+            <PromoHeader
+              text={siteConfig.promoText}
+              link={siteConfig.promoLink}
+            />
+          )}
+        <div>
+          <HomeSplash siteConfig={siteConfig} language={language} />
+          <div className="home mainContainer">
+            <Features />
+            <FeatureCallout />
+            <ResilientTests />
+            <TestCaseReuse />
+            <ControlFlow />
+            <Plugins />
+            <TryOut />
+            <Showcase />
+          </div>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

@@ -111,6 +111,8 @@ const siteConfig = {
     firefox: `https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/`,
     github: `https://github.com/SeleniumHQ/selenium-ide/releases/latest`,
   },
+  promoText: `[Webinar] The new Selenium IDE is HERE! Learn how it can turbo-charge your testing efforts.`,
+  promoLink: 'https://goo.gl/9q8xn3',
 }
 
 module.exports = siteConfig

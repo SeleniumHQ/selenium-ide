@@ -34,3 +34,11 @@ img.logo {
 .promoSection .promoRow .pluginRowBlock .pluginWrapper.buttonWrapper {
   padding: 3px 2px;
 }
+
+.promo {
+  height: 50px;
+  line-height: 50px;
+  background-color: pink;
+  color: black;
+  text-align: center;
+}
