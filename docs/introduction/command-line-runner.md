@@ -4,9 +4,9 @@ title: Command-line Runner
 sidebar_label: Command-line Runner
 ---
 
-You can now run your tests cross-browser, in parallel, and on a Grid without needing to write any code.
+You can now run all of your Selenium IDE tests on any browser, in parallel, and on a Grid without needing to write any code.
 
-It's a simple matter of installing the Selenium IDE command line runner and launching it from a command prompt.
+There's just the small matter of installing the Selenium IDE command line runner, getting the necessary browser drivers (if running your tests locally), and launching the runner from a command prompt with the options you want.
 
 ![command-line-runner-sample](/selenium-ide/img/docs/runner.png)
 
@@ -37,9 +37,11 @@ Once everything's installed, running your tests is a simple matter of calling `s
 
 _NOTE: If you have multiple `.side` files you can use a wildcard (e.g., `/path/to/*.side`)._
 
-When you run this command it will launch your tests in parallel, launching multiple browser windows spread across `n` processes (where `n` is the number of available cores on your machine).
+When you run this command it will launch your tests in parallel, in multiple browser windows, spread across `n` processes (where `n` is the number of available cores on your machine).
 
 The number of processes is configurable (amongst other things) at run time through various arguments you can provide.
+
+__NOTE: Parallel execution happens automically at the suite level. If you want the tests within a suite to be executed in parallel there is a setting you'll need to change. See [Test Parallelization In A Suite](command-line-runner.md#test-parallelization-in-a-suite) for details.__
 
 ## Run-time configuration
 
@@ -53,7 +55,7 @@ The most common example of this is specifying a different browser for local test
 selenium-side-runner -c "browserName=firefox"
 ```
 
-__NOTE: For Firefox to work you'll need to download Mozilla's `geckodriver` and add it to your path (just like with ChromeDriver). For details, see <a href="https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/Usage.html" target="_blank" rel="noopener noreferrer">the `geckodriver` project page</a>.__
+__NOTE: For Firefox to work you'll need to download Mozilla's `geckodriver`. This can easily be installed through `npm` (e.g., `npm install geckodriver`). Or you can download the binary yourself and add it to your sytem path. For details, see <a href="https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/Usage.html" target="_blank" rel="noopener noreferrer">the `geckodriver` project page</a>.__
 
 ### Running on a remote WebDriver server
 
@@ -62,6 +64,8 @@ To run your tests on a Grid (e.g., your own Grid or on a hosted provider like Sa
 ```sh
 selenium-side-runner --server http://localhost:4444/wd/hub -c "browser=chrome platform=MAC"
 ```
+
+You can see a full list of the available capabilities [here](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities).
 
 ### Specify the number of parallel processes
 
@@ -98,6 +102,7 @@ With the ability to specify a different base URL you can easily point your tests
 ```sh
 selenium-side-runner --base-url https://localhost
 ```
+
 ### Filter tests
 
 You also have the option to run a targeted subset of your tests with the `--filter target` command flag (where `target` is a regular expression value). Test names that contain the given search criteria will be the only ones run.
@@ -127,14 +132,29 @@ If you want to ignore the file and use command line arguments instead, use `--no
 
 #### Option 2
 
-As an alternative to the `.side.yml` file, you can specify your run-time parameters in a YAML file with a name and location of your choosing and specify its location when running your tests.
+Alternative to using a `.side.yml` file, you can specify your run-time parameters in a YAML file with a name and location of your choosing, and then specify its location when running your tests.
 
 ```sh
 selenium-side-runner --config-file "/path/to/your/config.yaml"
 ```
 
-When using the `--config-file` flag, the `.side.yml` will be ignored.
+__NOTE: When using the `--config-file` flag, the `.side.yml` will be ignored.__
 
+## Selenium IDE Configuration
+
+### Test Parallelization In A Suite
+
+Out of the box, the runner executes suites in parallel, but tests within a suite are executed sequentially.
+
+To run tests in a given suite in parallel, you'll need to update the settings for that suite in Selenium IDE.
+
+1. Switch to the `Test Suites` view in Selenium IDE
+2. Click the drop-down menu next to the name of the suite you'd like to configure and click `Settings`
+3. Click the checkbox for `Run in parallel`
+4. Click `Submit`
+5. Save your Selenium IDE project file
+
+To configure more than one suite to run this way, repeat steps 1-4 in each suite. Be sure to save the project file once you're done.
 
 ## Advanced Options
 
