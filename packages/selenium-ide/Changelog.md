@@ -1,3 +1,5 @@
+## 3.5.7
+Fixed performance issue during recording that would cause the browser window to become unresponsive.
 ## 3.5.6
 Added indication when selecting an element.  
 Added a new xpath locator strategy.  
