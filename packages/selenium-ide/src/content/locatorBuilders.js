@@ -491,7 +491,7 @@ LocatorBuilders.add('xpath:position', function(e, opt_contextNode) {
 })
 
 LocatorBuilders.add('xpath:innerText', function(el) {
-  if (el.innerText) {
+  if (el.innerText && el.nodeName !== 'DIV') {
     const initialXpath = `//${el.nodeName.toLowerCase()}[contains(.,'${
       el.innerText
     }')]`
