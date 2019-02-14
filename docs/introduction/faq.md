@@ -30,3 +30,35 @@ This issue presents itself when running your tests through the command line runn
 To circumvent it, you will need to enable w3c mode, which you can do by passing `-c "chromeOptions.w3c=true"` as part of launching the runner.
 
 It's worth nothing that enabling w3c mode can impact the performance of Selenium Actions (if your tests end up using them) so only use this mode if you're having problems with date input fields.
+
+### How do I get the IDE to wait for a certain condition to be true before proceeding?
+
+There are certain circumstances where the built in wait strategies in the IDE aren't sufficient. When that happens, you can use one of the available explicit wait commands.
+
+- `wait for element editable`
+- `wait for element present`
+- `wait for element visible`
+- `wait for element not editable`
+- `wait for element not present`
+- `wait for element not visible`
+
+### How to install the IDE behind strict Proxy/Firewall?
+
+In situations you may not have full public internet access (such as behind a "Corporate Proxy or Firewall"). In those environments you will need to obtain a copy of the built Selenium IDE ZIP file in order to record automated test scripts. This is available on GitHub's "Releases" section here:
+
+https://github.com/SeleniumHQ/selenium-ide/releases
+
+Not all releases include "selenium-ide.zip" since some are just "Source Code" releases. Look for the most recent build that has this zip file. It implies that it is the most recent version submitted to the Chrome and Firefox stores.
+
+#### Officially signed versions
+
+Downloading the zip file from the project release page provides you with an unsigned ZIP file. You can, alternatively, obtain officially signed installers that play better with "secured environments" from:
+* [Firefox Add-Ons](https://addons.mozilla.org/en-US/firefox/addon/selenium-ide/)
+* [Download instructions for the required ".xpi" installer](https://superuser.com/questions/646856/how-to-save-firefox-addons-for-offline-installation)
+
+__NOTE: If you already have the plugin installed (e.g., on the laptop you're trying to obtain a copy of the installer for) you'll only see the REMOVE button when trying to access them. So remove them once, get the installers for moving to another unconnected computer, then re-install in your primary device's browsers as needed.__
+
+* [Chrome store](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
+* [Download instructions for the required ".crx" installer](https://stackoverflow.com/questions/25480912/how-to-download-a-chrome-extension-without-installing-it)
+
+__NOTE: you can't obtain the ".crx" file directly from the Chrome store. Instead, you need to install it once locally, and then go to the installation directory on your machine to retrieve it.__
