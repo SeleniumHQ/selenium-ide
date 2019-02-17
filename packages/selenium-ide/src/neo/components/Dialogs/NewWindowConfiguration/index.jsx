@@ -144,8 +144,7 @@ class NewWindowInput extends React.Component {
               whiteSpace: 'pre-line',
             }}
           >
-            {`This command opens a new window.
-            For accurate playback some additional information is needed.`}
+            {`This command opens a new window. For accurate playback some additional information is needed.`}
           </p>
         ) : (
           <p>Use this option if the command opens a new window.</p>

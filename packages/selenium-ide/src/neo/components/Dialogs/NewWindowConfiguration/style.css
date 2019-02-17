@@ -13,10 +13,6 @@
   flex-grow: 1;
 }
 
-.new-window-dialog p {
-  max-width: 292px;
-}
-
 .new-window-dialog .labelled-input {
   margin: 20px 0 0 0;
 }
