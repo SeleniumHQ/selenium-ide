@@ -820,6 +820,7 @@ class PlaybackState {
     this.isPlayingControlFlowCommands = false
     this.runningQueue = []
     this.playFromHereCommandId = undefined
+    this.isSilent = false
   }
 }
 
