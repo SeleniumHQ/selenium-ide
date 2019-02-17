@@ -591,6 +591,8 @@ export default class ExtCommand {
           code: 'Enter',
           text: '\r',
         })
+        // adding minimal sleep after Enter to address race conditions
+        await new Promise(resolve => setTimeout(resolve, 500))
       }
       try {
         await connection.attach()
