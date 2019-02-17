@@ -46,7 +46,7 @@ export default class Navigation extends React.Component {
   async handleChangedTab(tab) {
     if (PlaybackState.isPlaying && !PlaybackState.paused) {
       const choseChange = await ModalState.showAlert({
-        title: 'Playback is Running',
+        title: 'Playback is running',
         description:
           "Can't change the view while playback is running, pause the playback?",
         confirmLabel: 'pause',
