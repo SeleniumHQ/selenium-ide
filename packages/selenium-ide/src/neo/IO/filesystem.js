@@ -34,6 +34,7 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
+import url from 'url'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -75,6 +76,15 @@ export function saveProject(_project) {
   UiState.saved()
 }
 
+export function sanitizeProjectName(projectName) {
+  let name = projectName
+  if (name.startsWith('http')) {
+    return url.parse(projectName).host
+  } else {
+    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
+  }
+}
+
 function downloadProject(project) {
   return exportProject(project).then(snapshot => {
     if (snapshot) {
@@ -82,7 +92,7 @@ function downloadProject(project) {
       Object.assign(project, Manager.emitDependencies())
     }
     return browser.downloads.download({
-      filename: project.name + '.side',
+      filename: sanitizeProjectName(project.name) + '.side',
       url: createBlob(
         'application/json',
         beautify(JSON.stringify(project), { indent_size: 2 })
