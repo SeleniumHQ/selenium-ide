@@ -34,23 +34,18 @@ export default class Runs extends React.Component {
     runs: 0,
     failures: 0,
   }
-  Progress() {
-    if (PlaybackState.isSilent) {
-      ;<Progress hasError={this.props.hasError} />
-    } else {
-      return (
-        <Progress
-          hasError={this.props.hasError}
-          progress={this.props.progress}
-          totalProgress={this.props.totalProgress}
-        />
-      )
-    }
-  }
   render() {
     return (
       <div className="runs">
-        <Progress />
+        {!PlaybackState.isSilent ? (
+          <Progress
+            hasError={this.props.hasError}
+            progress={this.props.progress}
+            totalProgress={this.props.totalProgress}
+          />
+        ) : (
+          <Progress hasError={false} />
+        )}
         <div className="status">
           <span>Runs: {PlaybackState.isSilent ? 0 : this.props.runs}</span>
           <span>
