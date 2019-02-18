@@ -38,7 +38,7 @@
   },
   "web_accessible_resources": [
     "icons/icon128.png",
-    "icons/icon_menu64.png",
+    "icons/icon_light128.png",
     "assets/prompt.js",
     "assets/indicator.js",
     "assets/highlight.css",

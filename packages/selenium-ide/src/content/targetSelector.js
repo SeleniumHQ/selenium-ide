@@ -58,7 +58,7 @@ class TargetSelector {
       "pointer-events: none;display: flex;align-items: center;justify-content: center;flex-direction: row;position: fixed;top: 20%;left: 50%;transform: translateX(-50%);background: #f7f7f7;color: #114990;font-size: 22px;font-weight: 200;z-index: 10001;font-family: system, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;box-shadow: 0 7px 10px 0 rgba(0,0,0,0.1);border: 1px black solid; border-radius: 50px;padding: 10px;"
     )
     const img = doc.createElement('img')
-    img.src = browser.runtime.getURL('/icons/icon_menu64.png')
+    img.src = browser.runtime.getURL('/icons/icon_light128.png')
     img.setAttribute('style', 'width: 28px;margin: 0 10px;')
     header.appendChild(img)
     const span = doc.createElement('span')
