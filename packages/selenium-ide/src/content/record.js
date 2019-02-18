@@ -534,8 +534,7 @@ Recorder.addEventHandler(
 let nowNode = 0,
   mouseoverLocator,
   nodeInsertedLocator,
-  nodeAttrChange,
-  nodeAttrChangeTimeout
+  nodeInsertedAttrChange
 Recorder.addEventHandler(
   'mouseOver',
   'mouseover',
@@ -546,14 +545,11 @@ Recorder.addEventHandler(
       let clickable = findClickableElement(event.target)
       if (clickable) {
         nodeInsertedLocator = event.target
+        nodeInsertedAttrChange = locatorBuilders.buildAll(event.target)
         setTimeout(() => {
           nodeInsertedLocator = undefined
+          nodeInsertedAttrChange = undefined
         }, 500)
-
-        nodeAttrChange = locatorBuilders.buildAll(event.target)
-        nodeAttrChangeTimeout = setTimeout(() => {
-          nodeAttrChange = undefined
-        }, 10)
       }
       //drop target overlapping
       if (mouseoverQ) {
@@ -629,9 +625,10 @@ Recorder.addMutationObserver(
         nodeInsertedLocator = undefined
       }
       if (nodeInsertedLocator) {
-        record('mouseOver', locatorBuilders.buildAll(nodeInsertedLocator), '')
+        record('mouseOver', nodeInsertedAttrChange, '')
         mouseoutLocator = nodeInsertedLocator
         nodeInsertedLocator = undefined
+        nodeInsertedAttrChange = undefined
         mouseoverLocator = undefined
       }
     }
