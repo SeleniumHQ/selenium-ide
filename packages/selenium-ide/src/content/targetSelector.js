@@ -55,13 +55,17 @@ class TargetSelector {
     const header = doc.createElement('div')
     header.setAttribute(
       'style',
-      "pointer-events: none;display: flex;align-items: center;justify-content: center;flex-direction: row;position: fixed;top: 20%;left: 35%;right: 35%;background: whitesmoke;color: #444;font-size: 28px;line-height: 50px;z-index: 10001;font-family: system, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;box-shadow: 7px 7px 10px 0 rgba(0,0,0,0.3);border: 1px white solid;"
+      "pointer-events: none;display: flex;align-items: center;justify-content: center;flex-direction: row;position: fixed;top: 20%;left: 50%;transform: translateX(-50%);background: #f7f7f7;color: #114990;font-size: 22px;font-weight: 200;z-index: 10001;font-family: system, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;box-shadow: 0 7px 10px 0 rgba(0,0,0,0.1);border: 1px black solid; border-radius: 50px;padding: 15px;"
     )
     const img = doc.createElement('img')
-    img.src = browser.runtime.getURL('/icons/icon128.png')
-    img.setAttribute('style', 'width: 28px;margin-right: 15px;')
+    img.src = browser.runtime.getURL('/icons/icon_menu64.png')
+    img.setAttribute('style', 'width: 28px;margin: 0 10px;')
     header.appendChild(img)
     const span = doc.createElement('span')
+    span.setAttribute(
+      'style',
+      'border-left: 1px solid #c6c6c6;padding: 3px 10px;'
+    )
     span.innerText = 'Select an element'
     header.appendChild(span)
     setTimeout(() => {
