@@ -22,7 +22,7 @@ The following dependencies are needed for the command line runner to work:
 ```sh
 > brew install node
 > npm install -g selenium-side-runner
-> brew install chromedriver
+> brew cask install chromedriver
 ```
 
 __NOTE: Your system configuration may differ from what's used in the sample above (e.g., Homebrew on MacOS). If so, see <a href="https://nodejs.org/en/download/package-manager/" target="_blank" rel="noopener noreferrer">the Node installation documentation for package managers</a> or download a Node installer for your operating system directly from <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener noreferrer">the Node downloads page</a> and check out the Getting Started documentation for <a href="http://chromedriver.chromium.org/getting-started" target="_blank" rel="noopener noreferrer">ChromeDriver</a>.__
