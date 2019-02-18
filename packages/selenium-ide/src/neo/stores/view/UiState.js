@@ -151,7 +151,7 @@ class UiState {
       const choseChange = await ModalState.showAlert({
         title: 'Stop recording',
         description:
-          'Are you sure you would like to stop recording, and change views?',
+          'Changing the current view will stop the recording process. Would you like to continue?',
         confirmLabel: 'stop recording',
         cancelLabel: 'cancel',
       })
@@ -229,7 +229,7 @@ class UiState {
       const choseSelect = await ModalState.showAlert({
         title: 'Stop recording',
         description:
-          'Are you sure you would like to stop recording, and select a different test?',
+          'Leaving this test and moving to another one will stop the recording process. Would you like to continue?',
         confirmLabel: 'stop recording',
         cancelLabel: 'cancel',
       })

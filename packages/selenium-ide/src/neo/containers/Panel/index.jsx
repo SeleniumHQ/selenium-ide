@@ -251,7 +251,7 @@ export default class Panel extends React.Component {
       const choseProceed = await ModalState.showAlert({
         title: 'Stop recording',
         description:
-          'Are you sure you would to stop recording and create a new project?',
+          'Leaving this project and creating a new one will stop the recording process. Would you like to continue?',
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       })

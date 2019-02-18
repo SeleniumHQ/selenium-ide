@@ -192,7 +192,7 @@ class PlaybackState {
       const chosePlay = await ModalState.showAlert({
         title: 'Stop recording',
         description:
-          'Are you sure you would like to stop recording, and start playing?',
+          'Playing this test will stop the recording process. Would you like to continue?',
         confirmLabel: 'playback',
         cancelLabel: 'cancel',
       })
