@@ -47,10 +47,10 @@ export function emit(suite, tests, options = config, snapshot) {
       if (suite.parallel) {
         testsCode = testsCode.map((code, index) => ({
           name: tests[suite.tests[index]].emitted.name,
-          code: code.replace(
+          code: `${code.replace(
             /^it/,
             `jest.setTimeout(${suite.timeout * 1000});test`
-          ),
+          )}${hookResults}${snapshot ? snapshot.hook : ''}`,
         }))
         return res(testsCode)
       }
