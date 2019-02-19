@@ -76,4 +76,27 @@ router.put('/command', (req, res) => {
   }
 })
 
+router.delete('/command', (req, res) => {
+  if (!req.id) {
+    res({ status: 'error', message: 'No id sent' })
+  } else {
+    const test = UiState.displayedTest
+    if (test) {
+      const command = test.commands.find(cmd => cmd.id === req.id)
+      if (command) {
+        test.removeCommand(command)
+        res(true)
+      } else {
+        res({
+          status: 'error',
+          message:
+            'No command with that id exists in the currently displayed test',
+        })
+      }
+    } else {
+      res({ status: 'error', message: 'No test selected' })
+    }
+  }
+})
+
 export default router
