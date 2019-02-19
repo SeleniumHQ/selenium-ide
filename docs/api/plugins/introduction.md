@@ -14,7 +14,7 @@ The API is structured per domain of power (e.g. playback, record etc...).
 
 ### Versioning
 
-`uri`s in the api start at `/`, and are versioned, the current living version is 1, calling a `uri` with no version means the latest one.  
+`uri`s in the API start at `/`, and are versioned, the current living version is 1, calling a `uri` with no version means the latest one.  
 
 - `/register` - latest version of the register function.
 - `/v1/register` - register `v1`
@@ -32,13 +32,13 @@ Each one determines different functionality on the resource.
 
 ### Errors
 
-When sending a request Selenium IDE will either not respond (if the window is closed), in which case the Promise will reject.  
+If the window is closed when a request is sent, Selenium IDE will not respond and the Promise will reject.  
 
-Or if Selenium IDE is open it can either succeed which will resolve the Promise, or pass a "userland" error back to you, since errors can't be serialized.  
+Alternatively, if Selenium IDE is open it can either succeed which will resolve the Promise, or pass a "userland" error back to you, since errors can't be serialized.  
 
-#### Connection Error
+#### Connection error
 
-Connection error will happen when the IDE window is closed, therefore the promise will reject.
+A Connection error will occur when the IDE window is closed, therefore the promise will reject.
 
 ```js
 browser.runtime.sendMessage(SIDE_ID, payload).catch((error) => {
@@ -46,9 +46,9 @@ browser.runtime.sendMessage(SIDE_ID, payload).catch((error) => {
 });
 ```
 
-#### Request Error
+#### Request error
 
-Request error will happen when a request is invalid, for example request a resource that doesn't exist, like [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), such requests **resolve** the promise with errors attached on them.
+A Request error will occur when a request is invalid, for example a request for a resource which doesn't exist, like [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). Such requests **resolve** the promise with errors attached on them.
 
 ```js
 browser.runtime.sendMessage(SIDE_ID, payload).then((response) => {
@@ -60,7 +60,7 @@ browser.runtime.sendMessage(SIDE_ID, payload).then((response) => {
 
 #### Successful Request
 
-A successful request is one where `error` is not defined on the response object, each endpoint has its own response, most `post` will respond with `true` if succeeded.
+A successful request is one where `error` is not defined on the response object. Each endpoint has its own response and most `post` requests will respond with `true` if successful.
 
 ```js
 browser.runtime.sendMessage(SIDE_ID, payload).then((response) => {

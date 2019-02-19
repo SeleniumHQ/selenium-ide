@@ -4,13 +4,13 @@ title: Sending and Receiving Requests
 sidebar_label: Requests
 ---
 
-Selenium IDE took inspiration from HTTP for the messaging to it.  
+Selenium IDE took it's inspiration from HTTP for the messaging to it.  
 
 Messaging from it, however, has a slightly different approach (to save plugins from developing their own router).  
 
 ## Requests to the IDE
 
-The request is a JSON object with a very specific keys, determining it's eventual execution in the IDE.  
+The request is a JSON object with very specific keys, determining it's eventual execution in the IDE.  
 
 ```js
 {
@@ -28,7 +28,7 @@ The request is a JSON object with a very specific keys, determining it's eventua
 
 ### Sending a Request
 
-The IDE will reply with a valid response, in case of an error it can be viewed by opening the DevTools of the IDE window.
+The IDE will reply with a valid response, in case of an error, this can be viewed by opening the DevTools of the IDE window.
 
 ```js
 browser.runtime.sendMessage(SIDE_ID, request).then(response => {
@@ -38,7 +38,7 @@ browser.runtime.sendMessage(SIDE_ID, request).then(response => {
 
 ## Requests from the IDE
 
-Requests from the IDE are different in keys and structure, the IDE has a router that takes care of nested routing (e.g. `uri: /path/to/nested/uri`). In order to avoid plugin developers from developing their own router, or implementing one, a different approach was taken.  
+Requests from the IDE differ in keys and structure, the IDE has a router that takes care of nested routing (e.g. `uri: /path/to/nested/uri`). In order to avoid plugin developers from developing or implementing their own router, a different approach was taken.  
 
 ```js
 {
@@ -70,9 +70,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
 
 #### Async Requests
 
-Some requests have async nature to them, when we need to wait on a promise or when we execute a command that changes the DOM.  
+Some requests are async in nature, when we need to wait on a promise or execute a command that changes the DOM.  
 
-Selenium IDE will have to be notified to wait, it'll wait until `sendResponse` will be called, which might get it **stuck forever**, make sure in case of failures to return an [error](error-handling.md) to the IDE.  
+Selenium IDE will have to be notified to wait, it'll wait until `sendResponse` will be called. To prevent Selenium IDE from becoming **stuck waiting forever**, make sure that in case of failures, you return an [error](error-handling.md) to the IDE.  
 
 In order to have Selenium IDE wait, `return true` in the `onMessageExternal` event handler, and keep `sendResponse` around to return the final results with.
 

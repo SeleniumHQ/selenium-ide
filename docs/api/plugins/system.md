@@ -4,7 +4,7 @@ title: Plugins System API
 sidebar_label: System
 ---
 
-The System API is the most basic API Selenium IDE provides. It is not prefixed and can be called with `/`. 
+The System API is the most basic API which Selenium IDE provides. It is not prefixed and can be called with `/`. 
 
 ### `GET /health`
 
@@ -12,11 +12,11 @@ Used for plugin health checks, see [Plugin Health Checks](../../plugins/health-c
 
 ### `POST /register`
 
-Used to register your plugin with Selenium IDE, this way the IDE knows of your existence, see [registering the plugin](../../plugins/plugins-getting-started#registering-the-plugin).
+Used to register your plugin with Selenium IDE, this way the IDE knows of your plugin's existence, see [registering the plugin](../../plugins/plugins-getting-started#registering-the-plugin).
 
 ### `POST /log`
 
-Used for `system` logs, meaning when that the user can filter by system logs group.  
+Used for `system` logs, meaning when the user can filter by system logs group.  
 Logs that explain plugin usage, or status should be logged here.  
 
 ```js

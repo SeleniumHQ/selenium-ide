@@ -4,7 +4,7 @@ title: Plugins Popup API
 sidebar_label: Popup
 ---
 
-The Popup API deals with popups that the user can see.  
+The Popup API deals with popups which the user can see.  
 
 This API is prefix with `/popup`.  
 

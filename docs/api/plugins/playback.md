@@ -6,7 +6,7 @@ sidebar_label: Playback
 
 The Playback API is for the playback capabilities of Selenium IDE.  
 
-It is prefix with `/playback`.  
+It is prefixed with `/playback`.  
 
 ### `GET /playback/location`
 

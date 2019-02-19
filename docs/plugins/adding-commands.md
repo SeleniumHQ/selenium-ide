@@ -6,7 +6,7 @@ sidebar_label: Adding Commands
 
 To add a command to Selenium IDE firstly make sure to declare it in the [manifest](plugins-getting-started#the-manifest).
 
-After declaring the command Selenium IDE will expect you to respond to requests for it's execution and emission.  
+After declaring the command, Selenium IDE will expect you to respond to requests for it's execution and emission.  
 
 ## Executing a Command
 
@@ -44,7 +44,7 @@ Command details the user has input in the table:
 
 Playback options, detailing the execution environment:
 
-- `runId` - optional, a unique identifier for the current test run, can be used to infer certain commands were ran in the same run.
+- `runId` - optional, a unique identifier for the current test run, can be used to infer certain commands were performed during the same run.
 - `testId` - a persistent unique identifier for a test, even though the test's content may change, the same identifier will always be sent.
 - `frameId` - `integer` or `0 || undefined` indicates under which frame the command should be executed, `0` or `undefined` indicates that the command should be executed at the `window` level.
 - `tabId` - the tab to execute the command in.
@@ -96,9 +96,9 @@ In order to run the test case using the [command-line runner](../introduction/co
 
 Failing to provide it will result in the user getting an error when trying to save the test case.  
 
-Before implementing the command's code emitting, getting a general concept with how emitting works is a good idea ([link](emitting-code.md)).  
+Before implementing the command's code emitting, it will be useful to understand the general concepts of how emitting works ([link](emitting-code.md)).  
 
-This article only concerns the command's test code, if your plugin needs to add setup and teardown code, see [Emitting Setup and Teardown Code](emitting-setup-teardown.md).  
+This article is only concerned with the command's test code, if your plugin needs to add setup and teardown code, see [Emitting Setup and Teardown Code](emitting-setup-teardown.md).  
 
 Selenium IDE will send a request to emit the commands you've registered in the manifest.
 
@@ -127,7 +127,7 @@ Command details the user has input in the table:
 
 ### Returning the Emitted Code
 
-Once you've finished creating the JavaScript string to execute the command send it back to the IDE.  
+Once you've finished creating the JavaScript string to execute the command, send it back to the IDE.  
 
 **Don't use the `return` keyword, if you need to wait on a Promise use `await`, `return` will cause the test to quit early.**  
 

@@ -4,13 +4,13 @@ title: Plugins Record API
 sidebar_label: Record
 ---
 
-Record API concerns with the recording capabilities of Selenium IDE.  
+The Record API is concerned with the recording capabilities of Selenium IDE.  
 
 This API is prefix with `/record`.  
 
 ### `GET /record/tab`
 
-Gets the `tabId` that the recorder is currently attached to (can be used even if not recording atm).
+Gets the `tabId` that the recorder is currently attached to (can be used even if not currently recording).
 
 ```js
 {

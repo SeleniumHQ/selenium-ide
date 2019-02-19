@@ -4,7 +4,7 @@ title: Plugin Health Checks
 sidebar_label: Health Checks
 ---
 
-Plugins can only [register](plugins-getting-started#registering-the-plugin) to Selenium IDE, when the extension window is open.
+Plugins can only [register](plugins-getting-started#registering-the-plugin) with Selenium IDE when the extension window is open.
 
 Registering before that will yield an error saying `Selenium IDE is not active`.
 
