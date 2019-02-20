@@ -1,3 +1,9 @@
+## 3.5.8
+Improved recording indicator UI
+Improved recording of mouse over locators
+Enable saving projects with invalid file system characters
+Enable plugins to delete commands
+Fix for plugins to work with a suite of tests running in parallel in the runner
 ## 3.5.7
 Fixed performance issue during recording that would cause the browser window to become unresponsive.
 ## 3.5.6
