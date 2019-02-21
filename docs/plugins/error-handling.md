@@ -24,7 +24,7 @@ An error object is a normal JavaScript object, that when sent to the IDE, will b
 
 ## Sending the Error
 
-When encountering error during execution, you can reply with the error object using `sendResponse`.
+When encountering an error during execution, you can reply with the error object using `sendResponse`.
 
 ```js
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
