@@ -29,13 +29,13 @@ let ignoreBreakpoint = false
 let breakOnNextCommand = false
 let executor = undefined
 
-export function play(currUrl, exec) {
+export function play(currUrl, exec, variables) {
   baseUrl = currUrl
   ignoreBreakpoint = false
   breakOnNextCommand = false
   executor = exec
   initPlaybackTree()
-  return prepareToPlay()
+  return prepareToPlay(variables)
     .then(executionLoop)
     .then(finishPlaying)
     .catch(catchPlayingError)
@@ -180,12 +180,17 @@ function runNextCommand() {
   }
 }
 
-function prepareToPlay() {
-  return executor.init(baseUrl, PlaybackState.currentRunningTest.id, {
-    // softInit will try to reconnect to the last session for the sake of running the command if possible
-    softInit:
-      PlaybackState.isSingleCommandRunning || PlaybackState.isPlayFromHere,
-  })
+function prepareToPlay(variables) {
+  return executor.init(
+    baseUrl,
+    PlaybackState.currentRunningTest.id,
+    {
+      // softInit will try to reconnect to the last session for the sake of running the command if possible
+      softInit:
+        PlaybackState.isSingleCommandRunning || PlaybackState.isPlayFromHere,
+    },
+    variables
+  )
 }
 
 function prepareToPlayAfterConnectionFailed() {

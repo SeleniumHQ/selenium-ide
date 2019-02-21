@@ -15,14 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
-import { Logger, Channels, output } from '../../stores/view/Logs'
-import variables from '../../stores/view/Variables'
-
-const logger = new Logger(Channels.PLAYBACK)
 const nbsp = String.fromCharCode(160)
 
-export function xlateArgument(value) {
+export function xlateArgument(value, variables) {
   value = value.replace(/^\s+/, '')
   value = value.replace(/\s+$/, '')
   let r2
@@ -56,7 +51,7 @@ export function xlateArgument(value) {
   }
 }
 
-export function interpolateScript(script) {
+export function interpolateScript(script, variables) {
   let value = script.replace(/^\s+/, '').replace(/\s+$/, '')
   let r2
   let parts = []
@@ -106,24 +101,3 @@ function string(value) {
     return ''
   }
 }
-
-function handleFormatCommand(message, _sender, sendResponse) {
-  if (message.getVar) {
-    return sendResponse(variables.get(message.variable))
-  } else if (message.storeVar) {
-    variables.set(message.storeVar, message.storeStr)
-    return sendResponse(true)
-  } else if (
-    message.log &&
-    output.logs[output.logs.length - 1].message.indexOf(message.log.message) ===
-      -1
-  ) {
-    // this check may be dangerous, especially if something else is bombarding the logs
-    logger[message.log.type || 'log'](message.log.message)
-    return sendResponse(true)
-  }
-}
-
-try {
-  browser.runtime.onMessage.addListener(handleFormatCommand)
-} catch (e) {} // eslint-disable-line

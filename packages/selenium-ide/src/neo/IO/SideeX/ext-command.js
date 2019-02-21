@@ -18,8 +18,7 @@
 import browser from 'webextension-polyfill'
 import Debugger, { convertLocator } from '../debugger'
 import PlaybackState from '../../stores/view/PlaybackState'
-import variables from '../../stores/view/Variables'
-import { Logger, Channels } from '../../stores/view/Logs'
+import { Logger, Channels, output } from '../../stores/view/Logs'
 import FrameNotFoundError from '../../../errors/frame-not-found'
 import { absolutifyUrl } from '../playback/utils'
 import { userAgent as parsedUA } from '../../../common/utils'
@@ -77,12 +76,31 @@ export default class ExtCommand {
         this.setNewTab(details.tabId)
       }
     }
+
+    this.commandVariablesHandler = (message, _sender, sendResponse) => {
+      if (message.getVar) {
+        return sendResponse(this.variables.get(message.variable))
+      } else if (message.storeVar) {
+        this.variables.set(message.storeVar, message.storeStr)
+        return sendResponse(true)
+      } else if (
+        message.log &&
+        output.logs[output.logs.length - 1].message.indexOf(
+          message.log.message
+        ) === -1
+      ) {
+        // this check may be dangerous, especially if something else is bombarding the logs
+        this.logger[message.log.type || 'log'](message.log.message)
+        return sendResponse(true)
+      }
+    }
   }
 
-  async init(baseUrl, testCaseId, options = {}) {
+  async init(baseUrl, testCaseId, options = {}, variables) {
     this.baseUrl = baseUrl
     this.testCaseId = testCaseId
     this.options = options
+    this.variables = variables
     this.waitForNewWindow = false
     this.windowName = ''
     this.windowTimeout = 2000
@@ -116,6 +134,7 @@ export default class ExtCommand {
     browser.webNavigation.onCreatedNavigationTarget.addListener(
       this.newTabHandler
     )
+    browser.runtime.onMessage.addListener(this.commandVariablesHandler)
   }
 
   detach() {
@@ -128,6 +147,7 @@ export default class ExtCommand {
     browser.webNavigation.onCreatedNavigationTarget.removeListener(
       this.newTabHandler
     )
+    browser.runtime.onMessage.removeListener(this.commandVariablesHandler)
   }
 
   getCurrentPlayingWindowSessionIdentifier() {
@@ -360,7 +380,7 @@ export default class ExtCommand {
   async setNewTab(tabId) {
     if (this.waitForNewWindow) {
       this.waitForNewWindow = false
-      variables.set(this.windowName, tabId)
+      this.variables.set(this.windowName, tabId)
     }
     this.windowSession.openedTabIds[
       this.getCurrentPlayingWindowSessionIdentifier()
@@ -631,12 +651,12 @@ export default class ExtCommand {
   }
 
   doStore(string, varName) {
-    variables.set(varName, string)
+    this.variables.set(varName, string)
     return Promise.resolve()
   }
 
   doStoreWindowHandle(varName) {
-    variables.set(varName, this.getCurrentPlayingTabId())
+    this.variables.set(varName, this.getCurrentPlayingTabId())
     return Promise.resolve()
   }
 

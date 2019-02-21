@@ -17,7 +17,6 @@
 
 import webdriver from 'browser-webdriver'
 import { absolutifyUrl } from './utils'
-import variables from '../../stores/view/Variables'
 import { Logger, Channels } from '../../stores/view/Logs'
 import PlaybackState from '../../stores/view/PlaybackState'
 
@@ -38,8 +37,9 @@ export default class WebDriverExecutor {
     this.logger = new Logger(Channels.PLAYBACK)
   }
 
-  async init(baseUrl) {
+  async init({ baseUrl, variables }) {
     this.baseUrl = baseUrl
+    this.variables = variables
     this.driver = await new webdriver.Builder()
       .withCapabilities(this.capabilities)
       .usingServer(this.server)
@@ -219,7 +219,7 @@ export default class WebDriverExecutor {
       ...script.argv
     )
     if (optionalVariable) {
-      variables.set(optionalVariable, result)
+      this.variables.set(optionalVariable, result)
     }
   }
 
@@ -231,33 +231,33 @@ export default class WebDriverExecutor {
       ...script.argv
     )
     if (optionalVariable) {
-      variables.set(optionalVariable, result)
+      this.variables.set(optionalVariable, result)
     }
   }
 
   // store commands
 
   async doStore(string, variable) {
-    variables.set(variable, string)
+    this.variables.set(variable, string)
     return Promise.resolve()
   }
 
   async doStoreText(locator, variable) {
     const element = await waitForElement(locator, this.driver)
     const text = await element.getText()
-    variables.set(variable, text)
+    this.variables.set(variable, text)
   }
 
   async doStoreValue(locator, variable) {
     const element = await waitForElement(locator, this.driver)
     const value = await element.getAttribute('value')
-    variables.set(variable, value)
+    this.variables.set(variable, value)
   }
 
   // assertions
 
   async doAssert(variableName, value) {
-    const variable = `${variables.get(variableName)}`
+    const variable = `${this.variables.get(variableName)}`
     if (variable != value) {
       throw new Error(
         "Actual value '" + variable + "' did not match '" + value + "'"

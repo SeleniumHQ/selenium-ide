@@ -17,6 +17,7 @@
 
 import Command, { ControlFlowCommandNames } from '../../../models/Command'
 import { CommandNode } from '../../../playback/playback-tree/command-node'
+import Variables from '../../../stores/view/Variables'
 
 describe('Command Node', () => {
   it('control flow check returns correct result', () => {
@@ -69,7 +70,7 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    node._evaluate().then(result => {
+    node._evaluate({ variables: new Variables() }).then(result => {
       expect(result.result).toEqual('Invalid number provided as a target.')
     })
   })

@@ -20,7 +20,7 @@ import { action, reaction, computed, observable } from 'mobx'
 import UiState from './UiState'
 import ModalState from './ModalState'
 import Command from '../../models/Command'
-import variables from './Variables'
+import Variables from './Variables'
 import PluginManager from '../../../plugin/manager'
 import NoResponseError from '../../../errors/no-response'
 import { Logger, Channels } from './Logs'
@@ -100,6 +100,7 @@ class PlaybackState {
     this.lastSelectedView = undefined
     this.filteredTests = []
     this.commandTarget = new CommandTarget()
+    this.variables = new Variables()
     this.extCommand = new ExtCommand(WindowSession)
     this.browserDriver = new WebDriverExecutor()
 
@@ -210,7 +211,8 @@ class PlaybackState {
     this.isPlaying = true
     return play(
       UiState.baseUrl,
-      process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand
+      process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand,
+      this.variables
     )
   }
 
@@ -467,7 +469,7 @@ class PlaybackState {
   @action.bound
   playNext() {
     if (UiState.selectedTest.suite && UiState.selectedTest.suite.isParallel) {
-      variables.clear()
+      this.variables.clear()
     }
     // remove the first test from the test queue so it doesn't get replayed
     if (this.currentRunningSuite._tests[0].name === this._testsToRun[0].name)
@@ -808,7 +810,7 @@ class PlaybackState {
   resetState() {
     this.clearCommandStates()
     this.clearStack()
-    variables.clear()
+    this.variables.clear()
     this.finishedTestsCount = 0
     this.noStatisticsEffects = false
     this.failures = 0

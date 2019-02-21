@@ -80,26 +80,26 @@ export class CommandNode {
     })
   }
 
-  _interpolateTarget(target) {
+  _interpolateTarget(variables, target) {
     const type = Commands.list.get(this.command.command).target
     if (
       type &&
       (type.name === ArgTypes.script.name ||
         type.name === ArgTypes.conditionalExpression.name)
     ) {
-      return interpolateScript(this.command.target)
+      return interpolateScript(this.command.target, variables)
     } else if (target) {
-      return xlateArgument(target)
+      return xlateArgument(target, variables)
     }
-    return xlateArgument(this.command.target)
+    return xlateArgument(this.command.target, variables)
   }
 
-  _interpolateValue() {
+  _interpolateValue(variables) {
     const type = Commands.list.get(this.command.command).value
     if (type && type.name === ArgTypes.script.name) {
-      return interpolateScript(this.command.value)
+      return interpolateScript(this.command.value, variables)
     }
-    return xlateArgument(this.command.value)
+    return xlateArgument(this.command.value, variables)
   }
 
   _executeCommand(commandExecutor, options, targetOverride) {
@@ -116,37 +116,37 @@ export class CommandNode {
       this.isExtCommand(commandExecutor)
     ) {
       return commandExecutor[commandExecutor.name(this.command.command)](
-        this._interpolateTarget(),
-        this._interpolateValue()
+        this._interpolateTarget(commandExecutor.variables),
+        this._interpolateValue(commandExecutor.variables)
       )
     } else if (canExecuteCommand(this.command.command)) {
       return executeCommand(
         this.command.command,
-        this._interpolateTarget(targetOverride),
-        this._interpolateValue(),
+        this._interpolateTarget(commandExecutor.variables, targetOverride),
+        this._interpolateValue(commandExecutor.variables),
         options
       )
     } else if (this.command.command === 'mouseOver') {
       return commandExecutor.doMouseOver(
-        this._interpolateTarget(),
-        this._interpolateValue()
+        this._interpolateTarget(commandExecutor.variables),
+        this._interpolateValue(commandExecutor.variables)
       )
     } else if (this.command.command === 'sendKeys') {
       return commandExecutor.doSendKeys(
-        this._interpolateTarget(),
-        this._interpolateValue()
+        this._interpolateTarget(commandExecutor.variables),
+        this._interpolateValue(commandExecutor.variables)
       )
     } else if (this.command.command === 'type') {
       return commandExecutor.doType(
-        this._interpolateTarget(),
-        this._interpolateValue(),
+        this._interpolateTarget(commandExecutor.variables),
+        this._interpolateValue(commandExecutor.variables),
         commandExecutor.isWindowMethodCommand(this.command.command)
       )
     } else {
       return commandExecutor.sendMessage(
         this.command.command,
-        this._interpolateTarget(targetOverride),
-        this._interpolateValue(),
+        this._interpolateTarget(commandExecutor.variables, targetOverride),
+        this._interpolateValue(commandExecutor.variables),
         commandExecutor.isWindowMethodCommand(this.command.command)
       )
     }
@@ -181,7 +181,7 @@ export class CommandNode {
   }
 
   _evaluate(commandExecutor) {
-    let expression = this._interpolateTarget()
+    let expression = this._interpolateTarget(commandExecutor.variables)
     if (ControlFlowCommandChecks.isTimes(this.command)) {
       const number = Math.floor(+expression)
       if (isNaN(number)) {

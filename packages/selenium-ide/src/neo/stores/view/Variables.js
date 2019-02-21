@@ -17,7 +17,7 @@
 
 import { action, observable } from 'mobx'
 
-class Variables {
+export default class Variables {
   @observable.shallow
   storedVars = new Map()
 
@@ -46,7 +46,3 @@ class Variables {
     this.storedVars.clear()
   }
 }
-
-if (!window._variables) window._variables = new Variables()
-
-export default window._variables

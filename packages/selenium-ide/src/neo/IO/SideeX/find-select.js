@@ -40,7 +40,7 @@ async function getActiveTabForTest() {
 
 export async function find(target) {
   try {
-    const xlatedTarget = xlateArgument(target)
+    const xlatedTarget = xlateArgument(target, PlaybackState.variables)
     const tab = await getActiveTabForTest()
     const region = new Region(xlatedTarget)
     await browser.windows.update(tab.windowId, {
