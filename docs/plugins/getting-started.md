@@ -6,7 +6,7 @@ sidebar_label: Getting Started
 
 Plugins can extend Selenium IDE's default behavior, through adding additional commands and locators, bootstrapping setup before and after test runs, and affecting the recording process.  
 
-Selenium IDE is using the WebExtension standard to work in modern browsers, you can check out Mozilla's <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension" target="_blank" rel="noopener noreferrer">Your first extension</a>. Communicating between the extensions is handled via the <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/sendMessage" target="_blank" rel="noopener noreferrer">external messaging protocol</a>, you can view an example of that <a href="https://github.com/SeleniumHQ/selenium-ide/tree/master/packages/extension-boilerplate" target="_blank" rel="noopener noreferrer">here</a>.  
+Selenium IDE is using the WebExtension standard to work in modern browsers (to learn more, you can check out Mozilla's <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension" target="_blank" rel="noopener noreferrer">Your first extension</a> article). Communicating between the extensions is handled via the <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/sendMessage" target="_blank" rel="noopener noreferrer">external messaging protocol</a>, you can view an example of that <a href="https://github.com/SeleniumHQ/selenium-ide/tree/master/packages/extension-boilerplate" target="_blank" rel="noopener noreferrer">here</a>.  
 
 This article assumes knowledge in WebExtension development, and will only discuss Selenium IDE specific capabilities.
 
@@ -14,7 +14,7 @@ This article assumes knowledge in WebExtension development, and will only discus
 
 Selenium IDE API can be called using `browser.runtime.sendMessage`.  
 
-An example signature would be `browser.runtime.sendMessage(SIDE_ID, request)` where `SIDE_ID` refers to the IDE's extension ID, the official published IDs can be viewed [here](extension-id).  
+An example signature would be `browser.runtime.sendMessage(SIDE_ID, request)` where `SIDE_ID` refers to the IDE's official extension IDs, which can be viewed [here](extension-id).  
 
 ### Request
 
@@ -34,7 +34,7 @@ The request is the second argument for `browser.runtime.sendMessage` and is simi
 - `uri` - a resource locator to an IDE feature (e.g. record a command, resolve a locator)
 - `verb` - a modifier function (e.g. `get` gets you stuff, `post` adds new stuff, just like in http)
 
-The IDE will reply with a valid response, in case of an error it can be viewed by opening the DevTools of the IDE window.
+The IDE will reply with a valid response, or in case of an error, this can be viewed by opening the DevTools of the IDE window.
 
 ```js
 browser.runtime.sendMessage(SIDE_ID, request).then(response => {

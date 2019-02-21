@@ -113,6 +113,6 @@ Event that pops when a test suite finishes to execute.
 - `suiteName` - the running suite's name.
 - `projectName` - the current project's name.  
 
-Selenium IDE will not wait on the stop event, unlike the start event, this is to not make the user feel the IDE is frozen, you can still run your teardown code, as subsequent test runs will have a different `runId`.
+Selenium IDE will not wait on the stop event (unlike the start event), this is to prevent the user from feeling like the IDE is frozen, you can still run your teardown code, as subsequent test runs will have a different `runId`.
 
 **Note:** suite events will pop in addition to the normal test case events.

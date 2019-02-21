@@ -6,7 +6,7 @@ sidebar_label: Frequently Asked Questions
 
 ### How do I record hovers?
 
-Mouse over (a.k.a. hover) actions are difficult to automatically capture as part of a record cycle.
+Mouseover (a.k.a. hover) actions are difficult to automatically capture as part of a record cycle.
 
 To add a hover to your test, there's a small bit of manual intervention required. And there are two different ways you can do it.
 
@@ -44,7 +44,7 @@ There are certain circumstances where the built in wait strategies in the IDE ar
 
 ### How to install the IDE behind strict Proxy/Firewall?
 
-In situations you may not have full public internet access (such as behind a "Corporate Proxy or Firewall"). In those environments you will need to obtain a copy of the built Selenium IDE ZIP file in order to record automated test scripts. This is available on GitHub's "Releases" section here:
+In some situations you may not have full public internet access (such as behind a "Corporate Proxy or Firewall"). In those environments you will need to obtain a copy of the built Selenium IDE ZIP file in order to record automated test scripts. This is available on GitHub's "Releases" section here:
 
 https://github.com/SeleniumHQ/selenium-ide/releases
 

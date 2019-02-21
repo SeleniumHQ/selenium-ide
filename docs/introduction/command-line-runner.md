@@ -37,11 +37,11 @@ Once everything's installed, running your tests is a simple matter of calling `s
 
 _NOTE: If you have multiple `.side` files you can use a wildcard (e.g., `/path/to/*.side`)._
 
-When you run this command it will launch your tests in parallel, in multiple browser windows, spread across `n` processes (where `n` is the number of available cores on your machine).
+When you run this command it will launch your tests in parallel, in multiple browser windows, spread across `n` processes (where `n` is the number of available CPU cores on your machine).
 
 The number of processes is configurable (amongst other things) at run time through various arguments you can provide.
 
-__NOTE: Parallel execution happens automically at the suite level. If you want the tests within a suite to be executed in parallel there is a setting you'll need to change. See [Test Parallelization In A Suite](command-line-runner.md#test-parallelization-in-a-suite) for details.__
+__NOTE: Parallel execution happens atomically at the suite level. If you want the tests within a suite to be executed in parallel, there is a setting you'll need to change. See [Test Parallelization In A Suite](command-line-runner.md#test-parallelization-in-a-suite) for details.__
 
 ## Run-time configuration
 
@@ -75,17 +75,17 @@ When running on a Grid you will likely want to control how many parallel session
 selenium-side-runner -w 10 --server http://localhost:4444/wd/hub
 ```
 
-The runner will automatically set the number of workers to the amount of cores available on your computer. In most cases this is the best option.
+The runner will automatically set the number of workers to the same number of CPU cores available on your computer. In most cases this is the best option.
 
 ### Chrome specific capabilities
 
-If you had Chrome installed in a non-standard location on your machine you could specify it so ChromeDriver knows where to look.
+If you have Chrome installed in a non-standard location on your machine you can specify the path so ChromeDriver knows where to look.
 
 ```sh
 selenium-side-runner -c "chromeOptions.binary='/path/to/non-standard/Chrome/install'"
 ```
 
-With Chrome specific capabilities you could also run the tests headlessly.
+With Chrome specific capabilities you can also run the tests headlessly.
 
 ```sh
 selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"
@@ -113,7 +113,7 @@ selenium-side-runner --filter smoke
 
 ### Specify a default configuration
 
-Rather than remembering all of the command-line arguments you need (which can become unwieldy) there's the ability to store your run-time parameters in a configuration file.
+Rather than remembering all of the command-line arguments you need (which can become unwieldy), you have the ability to store your run-time parameters in a configuration file.
 
 There are two kinds of configuration files that you can use.
 
@@ -142,7 +142,7 @@ __NOTE: When using the `--config-file` flag, the `.side.yml` will be ignored.__
 
 ## Selenium IDE Configuration
 
-### Test Parallelization In A Suite
+### Test parallelization in a suite
 
 Out of the box, the runner executes suites in parallel, but tests within a suite are executed sequentially.
 
@@ -156,7 +156,7 @@ To run tests in a given suite in parallel, you'll need to update the settings fo
 
 To configure more than one suite to run this way, repeat steps 1-4 in each suite. Be sure to save the project file once you're done.
 
-## Advanced Options
+## Advanced options
 
 ### Additional params
 
@@ -174,7 +174,7 @@ selenium-side-runner --params "a='example-value'"
 
 #### Nested parameters
 
-Parameters can also be nested using a dot-notation.
+Parameters can also be nested using dot-notation.
 
 ```sh
 selenium-side-runner --params "a.b='another example-value'"
@@ -202,7 +202,7 @@ You can pass proxy capabilities to the browser using the following options in th
 
 #### Direct proxy  
 
-This options configures WebDriver to bypass all browser proxies.
+This option configures WebDriver to bypass all browser proxies.
 
 ##### From the command-line:
 
@@ -294,4 +294,4 @@ proxyType: system
 
 ### Code export
 
-If you're trying to learn how translate recorded tests into WebDriver code, or if you want to integrate recorded tests into an existing custom test framework, then what you need is code export which is on the project roadmap and will be available soon.
+If you're trying to learn how to translate recorded tests into WebDriver code, or if you want to integrate recorded tests into an existing custom test framework, then what you need is code export which is on the project roadmap and will be available soon.

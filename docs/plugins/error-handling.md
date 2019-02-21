@@ -4,7 +4,7 @@ title: Error Handling
 sidebar_label: Error Handling
 ---
 
-If you encouter a failure when executing a command and need to fail the test case because of it, you'll have to respond with an error to the IDE.  
+If you encounter a failure when executing a command and need to fail the test case because of it, you'll have to respond with an error to the IDE.  
 
 Since JSON doesn't support Error serializations, a standard was made by the IDE.
 
@@ -24,7 +24,7 @@ An error object is a normal JavaScript object, that when sent to the IDE, will b
 
 ## Sending the Error
 
-During execution when encountering error, you can reply with the error object using `sendResponse`.
+When encountering error during execution, you can reply with the error object using `sendResponse`.
 
 ```js
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {

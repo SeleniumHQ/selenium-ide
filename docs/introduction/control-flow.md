@@ -6,13 +6,13 @@ sidebar_label: Control Flow
 
 Selenium IDE comes with commands that enable you to add conditional logic and looping to your tests.
 
-This enables you to execute commands (or a set of commands) only when certain conditions in your application are met. Or execute command(s) repeatedly based on pre-defined criteria.
+This enables you to execute commands (or a set of commands) only when certain conditions in your application are met, or execute command(s) repeatedly based on pre-defined criteria.
 
 ## JavaScript Expressions
 
 Conditions in your application are checked by using JavaScript expressions.
 
-You can use the `execute script` or `execute async script` commands to run a snippet of JavaScript at any point during your test and store the result in a variable. These variable can be used in a control flow command.
+You can use the `execute script` or `execute async script` commands to run a snippet of JavaScript at any point during your test and store the result in a variable. These variables can be used in a control flow command.
 
 You can also use JavaScript expressions directly in the control flow commands.
 
