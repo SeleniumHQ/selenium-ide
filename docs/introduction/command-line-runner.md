@@ -41,7 +41,7 @@ When you run this command it will launch your tests in parallel, in multiple bro
 
 The number of processes is configurable (amongst other things) at run time through various arguments you can provide.
 
-__NOTE: Parallel execution happens atomically at the suite level. If you want the tests within a suite to be executed in parallel, there is a setting you'll need to change. See [Test Parallelization In A Suite](command-line-runner.md#test-parallelization-in-a-suite) for details.__
+__NOTE: Parallel execution happens automatically at the suite level. If you want the tests within a suite to be executed in parallel, there is a setting you'll need to change. See [Test Parallelization In A Suite](command-line-runner.md#test-parallelization-in-a-suite) for details.__
 
 ## Run-time configuration
 
