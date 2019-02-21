@@ -10,7 +10,7 @@ Messaging from it, however, has a slightly different approach (to save plugins f
 
 ## Requests to the IDE
 
-The request is a JSON object with very specific keys, determining it's eventual execution in the IDE.  
+The request is a JSON object with specific keys, determining it's eventual execution in the IDE.  
 
 ```js
 {
