@@ -4,7 +4,7 @@ title: Sending and Receiving Requests
 sidebar_label: Requests
 ---
 
-Selenium IDE took it's inspiration from HTTP for the messaging to it.  
+Selenium IDE took its inspiration from HTTP for the messaging to it.  
 
 Messaging from it, however, has a slightly different approach (to save plugins from developing their own router).  
 
