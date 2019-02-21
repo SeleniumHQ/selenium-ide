@@ -13,9 +13,9 @@ And playback in command line mode using [the command-line runner](../introductio
 The runner is based on Node, you can leverage the environment to emit better code.
 
 - Node.js 8 or above with npm
-- [Jest](https://facebook.github.io/jest/) 23
+- [Jest](https://facebook.github.io/jest/)
 - [jest-environment-selenium](https://github.com/applitools/jest-environment-selenium)
-- [selenium-webdriver](https://www.npmjs.com/package/selenium-webdriver) 3.6.0
+- [selenium-webdriver](https://www.npmjs.com/package/selenium-webdriver)
 
 ## Emitting Code
 
