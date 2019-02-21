@@ -6,7 +6,7 @@ sidebar_label: Adding Commands
 
 To add a command to Selenium IDE firstly make sure to declare it in the [manifest](plugins-getting-started#the-manifest).
 
-After declaring the command, Selenium IDE will expect you to respond to requests for it's execution and emission.  
+After declaring the command, Selenium IDE will expect you to respond to requests for its execution and emission.  
 
 ## Executing a Command
 
