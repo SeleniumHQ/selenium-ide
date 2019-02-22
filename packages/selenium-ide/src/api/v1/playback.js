@@ -61,7 +61,9 @@ router.post('/log', (req, res) => {
 })
 
 router.put('/var', (req, res) => {
-  logger.log('VAR RECEIVED!')
+  logger.log(
+    `${Manager.getPlugin(req.sender).name}: Added variable ${req.name}`
+  )
   variables.set(req.name, req.contents)
   res(true)
 })
