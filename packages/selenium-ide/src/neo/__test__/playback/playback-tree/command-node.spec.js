@@ -17,6 +17,7 @@
 
 import Command, { ControlFlowCommandNames } from '../../../models/Command'
 import { CommandNode } from '../../../playback/playback-tree/command-node'
+import variables from '../../../stores/view/Variables'
 
 describe('Command Node', () => {
   it('control flow check returns correct result', () => {
@@ -39,6 +40,57 @@ describe('Command Node', () => {
     expect(node._isRetryLimit()).toBeFalsy()
     node.timesVisited = 1000
     expect(node._isRetryLimit()).toBeTruthy()
+  })
+  it('forEach fetches count from preset variable', () => {
+    const varName = 'blah'
+    variables.set(varName, { a: 'a', b: 'b', c: 'c', d: 'd' })
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      varName,
+      ''
+    )
+    const node = new CommandNode(command)
+    expect(node.evaluateForEach()).toEqual({ script: '0 < 1' })
+  })
+  it('forEach handles stringified JSON count from preset variable', async () => {
+    const varName = 'blah'
+    variables.set(varName, '{"a":["d","g"],"b":["e","h"],"c":["f","i"]}')
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      varName,
+      ''
+    )
+    const node = new CommandNode(command)
+    expect(node.evaluateForEach()).toEqual({ script: '0 < 2' })
+  })
+  it('forEach errors without a valid variable', () => {
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      'asdf',
+      ''
+    )
+    const node = new CommandNode(command)
+    node.evaluateForEach().then(result => {
+      expect(result.result).toEqual('Invalid variable provided.')
+    })
+  })
+  it('forEach makes scoped variables available', () => {
+    const varName = 'asdf'
+    variables.set(varName, '{"a":["d","g"],"b":["e","h"],"c":["f","i"]}')
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      varName,
+      ''
+    )
+    const node = new CommandNode(command)
+    node.evaluateForEach()
+    expect(variables.get('a')).toEqual('d')
+    expect(variables.get('b')).toEqual('e')
+    expect(variables.get('c')).toEqual('f')
   })
   it('retry limit can be overriden', () => {
     const command = new Command(

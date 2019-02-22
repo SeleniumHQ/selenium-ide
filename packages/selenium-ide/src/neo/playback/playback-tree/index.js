@@ -86,6 +86,7 @@ let connectCommandNode = {
   [ControlFlowCommandNames.else]: connectNext,
   [ControlFlowCommandNames.elseIf]: connectConditional,
   [ControlFlowCommandNames.end]: trackBranchClose,
+  [ControlFlowCommandNames.forEach]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.if]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.repeatIf]: connectDo,
   [ControlFlowCommandNames.times]: connectConditionalForBranchOpen,

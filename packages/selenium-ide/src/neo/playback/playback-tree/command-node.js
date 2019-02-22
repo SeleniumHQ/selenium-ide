@@ -22,6 +22,7 @@ import {
   canExecuteCommand,
   executeCommand,
 } from '../../../plugin/commandExecutor'
+import variables from '../../stores/view/Variables'
 
 export class CommandNode {
   constructor(command) {
@@ -180,6 +181,26 @@ export class CommandNode {
     }
   }
 
+  evaluateForEach() {
+    let variable = variables.get(this._interpolateTarget())
+    let timesVisited = this.timesVisited
+    if (!variable) {
+      return Promise.resolve({
+        result: 'Invalid variable provided.',
+      })
+    } else {
+      if (typeof variable === 'string') variable = JSON.parse(variable)
+      const keys = Object.keys(variable)
+      Object.keys(variable).forEach(function(key) {
+        variables.set(key, variable[key][timesVisited])
+      })
+      const count = variable[keys[0]].length
+      return {
+        script: `${this.timesVisited} < ${count}`,
+      }
+    }
+  }
+
   _evaluate(commandExecutor) {
     let expression = this._interpolateTarget()
     if (ControlFlowCommandChecks.isTimes(this.command)) {
@@ -192,6 +213,11 @@ export class CommandNode {
       expression = {
         script: `${this.timesVisited} < ${number}`,
       }
+    }
+    if (ControlFlowCommandChecks.isForEach(this.command)) {
+      const result = this.evaluateForEach(expression)
+      if (result.script) expression = result
+      else return result
     }
     return (this.isWebDriverCommand(commandExecutor)
       ? commandExecutor.evaluateConditional(expression)

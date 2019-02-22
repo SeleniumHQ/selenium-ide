@@ -44,6 +44,7 @@ const validateCommand = {
   [ControlFlowCommandNames.else]: validateElse,
   [ControlFlowCommandNames.elseIf]: validateElseIf,
   [ControlFlowCommandNames.end]: validateEnd,
+  [ControlFlowCommandNames.forEach]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.if]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.repeatIf]: validateRepeatIf,
   [ControlFlowCommandNames.times]: trackControlFlowBranchOpen,

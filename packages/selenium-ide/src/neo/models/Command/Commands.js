@@ -679,6 +679,15 @@ export const Commands = [
     },
   ],
   [
+    'forEach',
+    {
+      name: 'for each',
+      description: `Create a loop that executes the proceeding commands for each item in a given collection.`,
+      target: ArgTypes.variableName,
+      value: ArgTypes.loopLimit,
+    },
+  ],
+  [
     'type',
     {
       name: 'type',
