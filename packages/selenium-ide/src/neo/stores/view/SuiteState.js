@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, computed, observable } from 'mobx'
+import { computed } from 'mobx'
 
 export default class SuiteState {
   constructor(UiState, suite) {
