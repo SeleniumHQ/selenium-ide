@@ -122,7 +122,7 @@ const collectTarget = connect => ({
 export default class Test extends React.Component {
   static propTypes = {
     className: PropTypes.string,
-    callstack: PropTypes.object,
+    callstack: PropTypes.array,
     test: PropTypes.object.isRequired,
     suite: PropTypes.object,
     menu: PropTypes.node,

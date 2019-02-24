@@ -52,7 +52,7 @@ export default class TargetInput extends React.Component {
         <AutoComplete
           id={this.props.name}
           getItemValue={item => item[0]}
-          items={this.props.targets.peek()}
+          items={this.props.targets.slice()}
           renderDefaultStyledItem={item => (
             <TargetSuggestion locator={item[0]} strategy={item[1]} />
           )}

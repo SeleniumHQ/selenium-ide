@@ -312,7 +312,7 @@ class PlaybackState {
     this.isPlayFromHere = true
 
     // to determine if control flow commands exist in test commands
-    const playbackTree = createPlaybackTree(test.commands.peek())
+    const playbackTree = createPlaybackTree(test.commands.slice())
 
     if (playbackTree.containsControlFlow) {
       const choseProceed = await ModalState.showAlert({
@@ -372,11 +372,11 @@ class PlaybackState {
       if (controls.playFromHere) {
         await this.initPlayFromHere(command, test)
         this.runningQueue = this.runningQueueFromIndex(
-          test.commands.peek(),
+          test.commands.slice(),
           currentPlayingIndex
         )
       } else {
-        this.runningQueue = test.commands.peek()
+        this.runningQueue = test.commands.slice()
       }
       const pluginsLogs = {}
       if (PluginManager.plugins.length)
@@ -476,7 +476,7 @@ class PlaybackState {
       this._testsToRun.shift()
     // pull the next test off the test queue for execution
     this.currentRunningTest = this._testsToRun.shift()
-    this.runningQueue = this.currentRunningTest.commands.peek()
+    this.runningQueue = this.currentRunningTest.commands.slice()
     this.clearStack()
     this.errors = 0
     this.forceTestCaseFailure = false
@@ -773,7 +773,7 @@ class PlaybackState {
       true
     )
     this.currentRunningTest = testCase
-    this.runningQueue = testCase.commands.peek()
+    this.runningQueue = testCase.commands.slice()
     let playbackTree = createPlaybackTree(this.runningQueue)
     this.setCurrentExecutingCommandNode(playbackTree.startingCommandNode)
     return playbackTree.startingCommandNode
@@ -784,7 +784,7 @@ class PlaybackState {
     const top = this.callstack.pop()
     this.currentRunningTest = top.caller
     this.setCurrentExecutingCommandNode(top.position.next)
-    this.runningQueue = top.caller.commands.peek()
+    this.runningQueue = top.caller.commands.slice()
     UiState.selectTest(
       this.stackCaller,
       this.currentRunningSuite,
