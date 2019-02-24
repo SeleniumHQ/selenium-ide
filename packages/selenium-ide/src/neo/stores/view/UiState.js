@@ -255,7 +255,7 @@ class UiState {
       const test = selectTestInArray(index, tests)
       const suiteIndex = this._project.suites.indexOf(suite)
       if (test) {
-        suiteState.setOpen(true)
+        suite.setOpen(true)
         this.selectTest(test, suite)
       } else if (suiteIndex > 0 && index < 0) {
         const previousSuite = this._project.suites[suiteIndex - 1]

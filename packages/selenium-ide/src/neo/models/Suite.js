@@ -36,6 +36,8 @@ export default class Suite {
   _tests = []
   @observable
   modified = false
+  @observable
+  isOpen = false
 
   constructor(id = uuidv4(), name = 'Untitled Suite') {
     this.id = id
@@ -94,6 +96,11 @@ export default class Suite {
     if (!this.isParallel) {
       this.persistSession = persistSession
     }
+  }
+
+  @action.bound
+  setOpen(isOpen) {
+    this.isOpen = isOpen
   }
 
   containsTest(test) {

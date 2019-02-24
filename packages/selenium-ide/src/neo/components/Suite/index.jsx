@@ -76,7 +76,7 @@ class Suite extends React.Component {
     setContextMenu: PropTypes.func,
   }
   handleClick() {
-    this.store.setOpen(!this.store.isOpen)
+    this.suite.setOpen(!this.suite.isOpen)
   }
   handleKeyDown(event) {
     const e = event.nativeEvent
@@ -86,7 +86,7 @@ class Suite extends React.Component {
     if (noModifiers && e.key === 'ArrowLeft') {
       event.preventDefault()
       event.stopPropagation()
-      this.store.setOpen(false)
+      this.suite.setOpen(false)
       UiState.selectTestByIndex(-1, this.props.suite)
     }
   }
@@ -119,7 +119,7 @@ class Suite extends React.Component {
               tabIndex="-1"
               className={classNames(
                 PlaybackState.suiteState.get(this.props.suite.id),
-                { active: this.store.isOpen }
+                { active: this.suite.isOpen }
               )}
               onClick={this.handleClick}
             >
@@ -136,7 +136,7 @@ class Suite extends React.Component {
           {listMenu}
         </div>
         <TestList
-          collapsed={!this.store.isOpen}
+          collapsed={!this.suite.isOpen}
           suite={this.props.suite}
           tests={this.store.filteredTests.get()}
           removeTest={test => {

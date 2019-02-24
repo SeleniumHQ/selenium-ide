@@ -598,8 +598,7 @@ export default function seed(store, numberOfSuites = 0) {
   waitSuite.addTestCase(waitTest5)
 
   UiState.changeView('Test suites')
-  let suiteState = UiState.getSuiteState(suiteAll)
-  suiteState.setOpen(true)
+  suiteAll.setOpen(true)
   UiState.selectTest(selectWindow, suiteAll)
   UiState.selectCommand(click)
 
