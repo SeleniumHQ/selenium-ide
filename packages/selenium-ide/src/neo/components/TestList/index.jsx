@@ -73,7 +73,7 @@ export default class TestList extends Component {
                   PlaybackState.stackCaller.id === test.id &&
                   PlaybackState.paused
                 }
-                changed={UiState.getTestState(test).modified}
+                changed={test.modified}
                 selectTest={UiState.selectTest}
                 moveSelectionUp={() => {
                   UiState.selectTestByIndex(index - 1)
@@ -107,7 +107,7 @@ export default class TestList extends Component {
                   PlaybackState.stackCaller.id === test.id &&
                   PlaybackState.paused
                 }
-                changed={UiState.getTestState(test).modified}
+                changed={test.modified}
                 selectTest={UiState.selectTest}
                 removeTest={
                   this.props.removeTest
@@ -145,7 +145,7 @@ export default class TestList extends Component {
                   PlaybackState.stackCaller.id === test.id &&
                   PlaybackState.paused
                 }
-                changed={UiState.getTestState(test).modified}
+                changed={test.modified}
                 selectTest={UiState.selectTest}
                 renameTest={this.props.renameTest}
                 duplicateTest={() => {

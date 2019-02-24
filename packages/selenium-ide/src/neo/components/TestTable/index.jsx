@@ -60,8 +60,8 @@ export default class TestTable extends React.Component {
     this.newCommand = undefined
   }
   scrollToLastPos() {
-    if (UiState.selectedTest.state.scrollY) {
-      this.node.scrollTop = UiState.selectedTest.state.scrollY
+    if (UiState.selectedTest.test.scrollY) {
+      this.node.scrollTop = UiState.selectedTest.test.scrollY
     } else {
       this.node.scrollTop = 0
     }
@@ -78,7 +78,7 @@ export default class TestTable extends React.Component {
     }
   }
   handleScroll() {
-    UiState.selectedTest.state.scrollY = this.node.scrollTop
+    UiState.selectedTest.test.scrollY = this.node.scrollTop
   }
   render() {
     if (this.props.commands)

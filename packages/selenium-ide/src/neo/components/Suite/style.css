@@ -21,6 +21,10 @@
   overflow: hidden;
 }
 
+.project > a .title.changed::after {
+  content: '*';
+}
+
 .project > a .si-caret {
   font-size: 10px;
   color: #505050;

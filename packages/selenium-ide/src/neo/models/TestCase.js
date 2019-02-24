@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { action, observable } from 'mobx'
+import { action, observable, reaction } from 'mobx'
 import uuidv4 from 'uuid/v4'
 import Command from './Command'
 
@@ -26,11 +26,30 @@ export default class TestCase {
   @observable
   commands = []
   nameDialogShown = false
+  @observable
+  modified = false
+  @observable
+  selectedCommand = null
+  @observable
+  scrollY = null
 
   constructor(id = uuidv4(), name = 'Untitled Test') {
     this.id = id
     this.name = name
+    this.changeDisposer = reaction(
+      () =>
+        this.commands.map(({ command, target, targets, value }) => ({
+          command,
+          target,
+          targets,
+          value,
+        })),
+      () => {
+        this.modified = true
+      }
+    )
     this.export = this.export.bind(this)
+    this.dispose = this.dispose.bind(this)
   }
 
   @action.bound
@@ -50,6 +69,7 @@ export default class TestCase {
   @action.bound
   setName(name) {
     this.name = name
+    this.modified = true
   }
 
   @action.bound
@@ -136,6 +156,10 @@ export default class TestCase {
       name: this.name,
       commands: this.commands.map(c => c.export()),
     }
+  }
+
+  dispose() {
+    this.changeDisposer()
   }
 
   @action

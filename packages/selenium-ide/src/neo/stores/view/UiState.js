@@ -18,7 +18,6 @@
 import { action, computed, observable, observe, extendObservable } from 'mobx'
 import storage from '../../IO/storage'
 import SuiteState from './SuiteState'
-import TestState from './TestState'
 import PlaybackState from './PlaybackState'
 import ModalState from './ModalState'
 import Command from '../../models/Command'
@@ -71,7 +70,6 @@ class UiState {
 
   constructor() {
     this.suiteStates = {}
-    this.testStates = {}
     this.filterFunction = this.filterFunction.bind(this)
     this.observePristine()
     storage.get().then(data => {
@@ -206,12 +204,11 @@ class UiState {
           test,
           suite,
           stack: stack >= 0 ? stack : undefined,
-          state: this.getTestState(test),
         }
         if (PlaybackState.isPlaying && !PlaybackState.paused) {
           this.selectCommand(undefined)
         } else if (_test && _test.commands.length) {
-          let command = this.selectedTest.state.selectedCommand
+          let command = this.selectedTest.test.selectedCommand
           command = command ? command : _test.commands[0]
           this.selectCommand(command)
         } else if (_test && !_test.commands.length) {
@@ -292,7 +289,7 @@ class UiState {
       PlaybackState.paused ||
       opts.isCommandTarget
     ) {
-      this.selectedTest.state.selectedCommand = command
+      this.selectedTest.test.selectedCommand = command
       this.selectedCommand = command
     }
   }
@@ -497,14 +494,6 @@ class UiState {
     return this.suiteStates[suite.id]
   }
 
-  getTestState(test) {
-    if (!this.testStates[test.id]) {
-      this.testStates[test.id] = new TestState(test)
-    }
-
-    return this.testStates[test.id]
-  }
-
   filterFunction({ name }) {
     return name.toLowerCase().indexOf(this.filterTerm.toLowerCase()) !== -1
   }
@@ -522,15 +511,8 @@ class UiState {
     this.clipboard = null
     this.isRecording = false
     this.suiteStates = {}
-    this.clearTestStates()
     this.selectTest(this._project.tests[0])
     WindowSession.closeAllOpenedWindows()
-  }
-
-  @action.bound
-  clearTestStates() {
-    Object.values(this.testStates).forEach(state => state.dispose())
-    this.testStates = {}
   }
 
   isSaved() {
@@ -539,8 +521,11 @@ class UiState {
 
   @action.bound
   saved() {
-    Object.values(this.testStates).forEach(state => {
-      state.modified = false
+    this._project._tests.forEach(test => {
+      test.modified = false
+    })
+    this._project._suites.forEach(test => {
+      test.modified = false
     })
     this._project.setModified(false)
   }

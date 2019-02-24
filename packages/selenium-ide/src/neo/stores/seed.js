@@ -605,5 +605,7 @@ export default function seed(store, numberOfSuites = 0) {
 
   store.changeName('seed project')
 
+  UiState.saved()
+
   return store
 }

@@ -124,7 +124,13 @@ class Suite extends React.Component {
               onClick={this.handleClick}
             >
               <span className="si-caret" />
-              <span className="title">{this.props.suite.name}</span>
+              <span
+                className={classNames('title', {
+                  changed: this.props.suite.modified,
+                })}
+              >
+                {this.props.suite.name}
+              </span>
             </a>
           )}
           {listMenu}
