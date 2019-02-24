@@ -216,6 +216,9 @@ class UiState {
         } else {
           this.selectCommand(undefined)
         }
+      } else if (!_test) {
+        this.selectedTest = {}
+        this.selectCommand(undefined)
       }
     }
   }
@@ -289,8 +292,12 @@ class UiState {
       PlaybackState.paused ||
       opts.isCommandTarget
     ) {
-      this.selectedTest.test.selectedCommand = command
-      this.selectedCommand = command
+      if (this.selectedTest.test) {
+        this.selectedTest.test.selectedCommand = command
+        this.selectedCommand = command
+      } else {
+        this.selectedCommand = undefined
+      }
     }
   }
 
