@@ -200,7 +200,7 @@ class CommandList {
 
   @computed
   get array() {
-    return this.list.keys()
+    return Array.from(this.list.keys())
   }
 
   @computed
@@ -213,7 +213,7 @@ class CommandList {
 
   @computed
   get fuse() {
-    return new Fuse(this.list.values(), {
+    return new Fuse(Array.from(this.list.values()), {
       shouldSort: true,
       threshold: 0.4,
       location: 0,

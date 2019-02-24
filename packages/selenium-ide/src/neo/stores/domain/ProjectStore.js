@@ -70,17 +70,21 @@ export default class ProjectStore {
 
   @computed
   get suites() {
-    return this._suites.sort((s1, s2) => naturalCompare(s1.name, s2.name))
+    return this._suites
+      .slice()
+      .sort((s1, s2) => naturalCompare(s1.name, s2.name))
   }
 
   @computed
   get tests() {
-    return this._tests.sort((t1, t2) => naturalCompare(t1.name, t2.name))
+    return this._tests
+      .slice()
+      .sort((t1, t2) => naturalCompare(t1.name, t2.name))
   }
 
   @computed
   get urls() {
-    return this._urls.sort()
+    return this._urls.slice().sort()
   }
 
   @action.bound

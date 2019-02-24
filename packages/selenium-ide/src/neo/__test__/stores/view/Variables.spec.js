@@ -15,10 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { useStrict } from 'mobx'
+import { configure } from 'mobx'
 import Variables from '../../../stores/view/Variables'
 
-useStrict(true)
+configure({
+  enforceActions: 'observed',
+})
 
 describe('variables', () => {
   let variables

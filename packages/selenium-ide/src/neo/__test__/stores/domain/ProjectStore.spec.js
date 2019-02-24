@@ -15,12 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { useStrict } from 'mobx'
+import { configure } from 'mobx'
 import ProjectStore from '../../../stores/domain/ProjectStore'
 import Suite from '../../../models/Suite'
 import TestCase from '../../../models/TestCase'
 
-useStrict(true)
+configure({
+  enforceActions: 'observed',
+})
 
 describe('Project Store', () => {
   it('should have an id', () => {

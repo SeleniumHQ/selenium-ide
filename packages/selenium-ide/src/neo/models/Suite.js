@@ -53,7 +53,7 @@ export default class Suite {
   @computed
   get tests() {
     return this.isParallel
-      ? this._tests.sort((t1, t2) => naturalCompare(t1.name, t2.name))
+      ? this._tests.slice().sort((t1, t2) => naturalCompare(t1.name, t2.name))
       : this._tests
   }
 

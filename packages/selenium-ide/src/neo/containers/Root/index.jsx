@@ -18,10 +18,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import { useStrict } from 'mobx'
+import { configure } from 'mobx'
 import Panel from '../Panel'
 
-useStrict(true)
+configure({
+  enforceActions: 'observed',
+})
 
 const render = Component => {
   ReactDOM.render(

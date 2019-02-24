@@ -15,11 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { useStrict } from 'mobx'
+import { configure } from 'mobx'
 import TestCase from '../../models/TestCase'
 import Command from '../../models/Command'
 
-useStrict(true)
+configure({
+  enforceActions: 'observed',
+})
 
 describe('TestCase model', () => {
   it("new test should be named 'Untitled Test'", () => {
