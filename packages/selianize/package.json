@@ -7,8 +7,8 @@
   "module": "dist/selianize.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "build:dev": "yarn build -w",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "watch": "yarn build -w"
   },
   "engines": {
     "node": ">=8"

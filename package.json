@@ -23,7 +23,7 @@
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap",
-    "watch": "lerna exec --no-bail --parallel yarn run build:dev"
+    "watch": "lerna exec --no-bail --parallel yarn run watch"
   },
   "jest": {
     "testURL": "http://localhost/index.html",

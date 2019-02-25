@@ -5,9 +5,9 @@
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
     "build": "babel -d dist src --ignore=__test__",
-    "build:dev": "yarn build -w",
     "pkg": "pkg package.json --targets=node9-linux-x64,node9-macos-x64,node9-windows-x64 --out-path=dist/bin",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "watch": "yarn build -w"
   },
   "bin": {
     "selenium-side-runner": "dist/index.js"

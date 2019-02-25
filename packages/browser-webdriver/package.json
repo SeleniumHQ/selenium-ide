@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "build": "yarn run browserify src/index.js -s browser-webdriver -o build/webdriver.js",
-    "build:dev": "yarn run watchify src/index.js -s browser-webdriver -o build/webdriver.js"
+    "watch": "yarn run watchify src/index.js -s browser-webdriver -o build/webdriver.js"
   },
   "files": [
     "build/webdriver.js"
