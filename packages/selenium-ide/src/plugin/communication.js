@@ -22,7 +22,7 @@ import Manager from './manager'
 
 export function sendMessage(id, payload) {
   return browser.runtime
-    .sendMessage(id, payload)
+    .sendMessage(id, JSON.parse(JSON.stringify(payload)))
     .then(response => {
       if (response === undefined || response === null) {
         return Promise.reject(

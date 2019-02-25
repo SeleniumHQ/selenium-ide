@@ -114,7 +114,7 @@ class PluginManager {
         entity: 'project',
         project,
       })
-        .catch(() => false)
+        .catch(() => ({ canEmit: false }))
         .then(({ canEmit }) => {
           plugin.canEmit = canEmit
           return plugin
