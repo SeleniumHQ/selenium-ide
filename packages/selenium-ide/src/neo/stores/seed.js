@@ -389,7 +389,7 @@ export default function seed(store, numberOfSuites = 0) {
   storeTextTest.createCommand(undefined, 'open', '/login')
   storeTextTest.createCommand(undefined, 'sendKeys', 'css=#username', 'blah')
   storeTextTest.createCommand(undefined, 'storeValue', 'css=#username', 'aVar')
-  storeTextTest.createCommand(undefined, 'echo', '${aVar}')
+  storeTextTest.createCommand(undefined, 'assert', 'aVar', 'blah')
 
   const submitTest = store.createTestCase('submit')
   submitTest.createCommand(undefined, 'open', '/login')
