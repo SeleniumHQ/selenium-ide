@@ -7,7 +7,7 @@
   "module": "dist/selianize.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build:dev": "yarn build -w",
     "prepublishOnly": "yarn build"
   },
   "engines": {
