@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
     "build": "lerna run build --ignore selenium-ide-extension-boilerplate",
-    "build:ext": "cd packages/selenium-ide && yarn build-dev",
+    "build:ext": "cd packages/selenium-ide && yarn build:dev",
     "build:runner": "cd packages/selenium-side-runner && yarn build",
     "build:selianize": "cd packages/selianize && yarn build",
     "build:webdriver": "cd packages/browser-webdriver && yarn build",
