@@ -563,6 +563,23 @@ export default function seed(store, numberOfSuites = 0) {
   selectWindow.createCommand(undefined, 'assertTitle', 'The Internet')
   selectWindow.createCommand(undefined, 'close')
 
+  const login = store.createTestCase('login')
+  login.createCommand(undefined, 'open', '/login')
+  login.createCommand(undefined, 'sendKeys', 'id=username', '${username}')
+  login.createCommand(undefined, 'sendKeys', 'id=password', '${password}')
+  login.createCommand(undefined, 'click', 'css=#login button')
+
+  const reuse = store.createTestCase('reuse')
+  reuse.createCommand(undefined, 'store', 'tomsmith', 'username')
+  reuse.createCommand(undefined, 'store', 'SuperSecretPassword!', 'password')
+  reuse.createCommand(undefined, 'run', 'login')
+  reuse.createCommand(
+    undefined,
+    'assertText',
+    'id=flash',
+    'You logged into a secure area!\\n×'
+  )
+
   const suiteAll = store.createSuite('all tests')
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test)
@@ -599,7 +616,7 @@ export default function seed(store, numberOfSuites = 0) {
 
   UiState.changeView('Test suites')
   suiteAll.setOpen(true)
-  UiState.selectTest(selectWindow, suiteAll)
+  UiState.selectTest(checkTest, suiteAll)
   UiState.selectCommand(click)
 
   store.changeName('seed project')
