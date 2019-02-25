@@ -520,6 +520,7 @@ class UiState {
     this.suiteStates = {}
     this.selectTest(this._project.tests[0])
     WindowSession.closeAllOpenedWindows()
+    this.saved()
   }
 
   isSaved() {
@@ -528,13 +529,7 @@ class UiState {
 
   @action.bound
   saved() {
-    this._project._tests.forEach(test => {
-      test.modified = false
-    })
-    this._project._suites.forEach(test => {
-      test.modified = false
-    })
-    this._project.setModified(false)
+    this._project.saved()
   }
 }
 

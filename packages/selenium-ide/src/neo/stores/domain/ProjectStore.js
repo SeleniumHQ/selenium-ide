@@ -205,6 +205,17 @@ export default class ProjectStore {
   }
 
   @action.bound
+  saved() {
+    this._tests.forEach(test => {
+      test.modified = false
+    })
+    this._suites.forEach(test => {
+      test.modified = false
+    })
+    this.setModified(false)
+  }
+
+  @action.bound
   fromJS(jsRep) {
     this.name = jsRep.name
     this.setUrl(jsRep.url)
@@ -219,7 +230,7 @@ export default class ProjectStore {
     this.plugins.replace(jsRep.plugins)
     this.version = jsRep.version
     this.id = jsRep.id || uuidv4()
-    this.setModified(false)
+    this.saved()
   }
 
   dispose() {
