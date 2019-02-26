@@ -214,7 +214,7 @@ function runProject(project) {
     path.join(projectPath, 'package.json'),
     JSON.stringify(
       {
-        name: project.name,
+        name: sanitizeFileName(project.name),
         version: '0.0.0',
         jest: {
           extraGlobals:
