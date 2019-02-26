@@ -207,7 +207,7 @@ function runProject(project) {
       )
     )
   }
-  projectPath = `side-suite-${project.name}`
+  projectPath = `side-suite-${sanitizeFileName(project.name)}`
   rimraf.sync(projectPath)
   fs.mkdirSync(projectPath)
   fs.writeFileSync(
@@ -251,17 +251,21 @@ function runProject(project) {
             ? ''
             : 'beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));'
           writeJSFile(
-            path.join(projectPath, suite.name),
+            path.join(projectPath, sanitizeFileName(suite.name)),
             `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${
               code.globalConfig
             }${suite.code}${cleanup}`
           )
         } else if (suite.tests.length) {
-          fs.mkdirSync(path.join(projectPath, suite.name))
+          fs.mkdirSync(path.join(projectPath, sanitizeFileName(suite.name)))
           // parallel suite
           suite.tests.forEach(test => {
             writeJSFile(
-              path.join(projectPath, suite.name, test.name),
+              path.join(
+                projectPath,
+                sanitizeFileName(suite.name),
+                sanitizeFileName(test.name)
+              ),
               `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${
                 code.globalConfig
               }${test.code}`
@@ -364,6 +368,10 @@ function runAll(projects, index = 0) {
 
 function writeJSFile(name, data, postfix = '.test.js') {
   fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }))
+}
+
+function sanitizeFileName(name) {
+  return name.replace(/([^a-z0-9 ._-]+)/gi, '')
 }
 
 const projects = [
