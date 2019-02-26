@@ -6,7 +6,7 @@ _[WIP] An integrated development environment for Selenium scripts_
 
 ## Introduction
 
-This project is a work in progress, a complete rewrite of the old Selenium IDE.
+This project is a work in progress, towards a complete rewrite of the old Selenium IDE.
 The older IDE was a Firefox extension that relied heavily on APIs that are no longer supported by newer versions of Firefox.
 In this project, the IDE is developed as a modern browser extension, supporting both Chrome and Firefox and other modern browsers (in theory).
 
