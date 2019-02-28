@@ -22,7 +22,7 @@
 }
 
 .test-table tbody tr:hover {
-  background-color: var(--color-hover);
+  background-color: var(--hover-color);
 }
 
 .test-table td .index {
