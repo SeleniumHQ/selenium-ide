@@ -86,6 +86,46 @@ describe('Playback', () => {
     })
   })
 
+  describe('abort', () => {
+    it('should abort a test', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const playbackPromise = playback.play(test).catch(() => {})
+
+      await psetTimeout(15)
+      await playback.abort()
+      await playbackPromise
+
+      const results = cb.mock.calls.flat()
+      expect(results.length).toBe(3)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.ABORTED)
+    })
+  })
+
   describe('Events', () => {
     describe("'command-state-changed'", () => {
       it('should listen to pending and pass changes', async () => {
@@ -284,3 +324,8 @@ describe('Playback', () => {
     })
   })
 })
+
+const psetTimeout = timeout =>
+  new Promise(res => {
+    setTimeout(res, timeout)
+  })

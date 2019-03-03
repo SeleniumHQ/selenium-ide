@@ -37,9 +37,17 @@ export default class FakeExecutor {
     return func
   }
 
-  async beforeCommand(_commandObject) {}
+  async kill() {
+    this.killed = true
+  }
 
-  async afterCommand(_commandObject) {}
+  async beforeCommand(_commandObject) {
+    if (this.killed) throw new Error('playback is dead')
+  }
+
+  async afterCommand(_commandObject) {
+    if (this.killed) throw new Error('playback is dead')
+  }
 
   async doPause(timeout = 0) {
     await new Promise(res => {
