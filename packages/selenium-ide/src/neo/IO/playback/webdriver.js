@@ -73,6 +73,10 @@ export default class WebDriverExecutor {
     return func
   }
 
+  async beforeCommand(_commandObject) {}
+
+  async afterCommand(_commandObject) {}
+
   // Commands go after this line
 
   // TODO
