@@ -50,7 +50,15 @@ export default class Playback {
 
   async resume() {}
 
-  async stop() {}
+  async stop() {
+    this._setExitCondition(PlaybackStates.STOPPED)
+    this._stopping = true
+    await this.executor.cancel()
+
+    // play will throw but the user will catch it with this.play()
+    // this.stop() should resolve once play finishes
+    await this._playPromise.catch(() => {})
+  }
 
   async abort() {
     this._setExitCondition(PlaybackStates.ABORTED)
@@ -93,7 +101,9 @@ export default class Playback {
   }
 
   async _executionLoop() {
-    if (this.currentExecutingNode) {
+    if (this._stopping) {
+      return
+    } else if (this.currentExecutingNode) {
       const command = this.currentExecutingNode.command
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
         id: command.id,

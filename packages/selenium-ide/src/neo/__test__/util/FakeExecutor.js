@@ -37,6 +37,10 @@ export default class FakeExecutor {
     return func
   }
 
+  async cancel() {
+    // no-op in this case
+  }
+
   async kill() {
     this.killed = true
   }
