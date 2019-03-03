@@ -52,7 +52,14 @@ export default class Playback {
 
   async stop() {}
 
-  async abort() {}
+  async abort() {
+    this._setExitCondition(PlaybackStates.ABORTED)
+    await this.executor.kill()
+
+    // play will throw but the user will catch it with this.play()
+    // this.abort() should resolve once play finishes
+    await this._playPromise.catch(() => {})
+  }
 
   async cleanup() {
     await this.executor.cleanup()
@@ -72,13 +79,17 @@ export default class Playback {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
     })
-    try {
-      await this._executionLoop()
-    } catch (err) {
-      throw err
-    } finally {
-      await this._finishPlaying()
-    }
+    this._playPromise = (async () => {
+      try {
+        await this._executionLoop()
+      } catch (err) {
+        throw err
+      } finally {
+        await this._finishPlaying()
+      }
+    })()
+
+    await this._playPromise
   }
 
   async _executionLoop() {
@@ -101,7 +112,7 @@ export default class Playback {
             state: CommandStates.Failed,
             message: err.message,
           })
-          this._exitCondition = PlaybackStates.FAILED
+          this._setExitCondition(PlaybackStates.FAILED)
           throw err
         } else if (err instanceof VerificationError) {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
@@ -110,7 +121,7 @@ export default class Playback {
             state: CommandStates.Failed,
             message: err.message,
           })
-          this._exitCondition = PlaybackStates.FAILED
+          this._setExitCondition(PlaybackStates.FAILED)
           // focibly continuing verify commands
           this.currentExecutingNode = this.currentExecutingNode.next
           return await this._executionLoop()
@@ -121,7 +132,7 @@ export default class Playback {
             state: CommandStates.Fatal,
             message: err.message,
           })
-          this._exitCondition = PlaybackStates.ERRORED
+          this._setExitCondition(PlaybackStates.ERRORED)
           throw err
         }
       }
@@ -148,6 +159,17 @@ export default class Playback {
       state: this._exitCondition || PlaybackStates.FINISHED,
     })
   }
+
+  _setExitCondition(condition) {
+    if (!this._exitCondition) {
+      this._exitCondition = condition
+    } else if (
+      PlaybackStatesPriorities[condition] >
+      PlaybackStatesPriorities[this._exitCondition]
+    ) {
+      this._exitCondition = condition
+    }
+  }
 }
 
 export const PlaybackEvents = {
@@ -165,6 +187,14 @@ export const PlaybackStates = {
   BREAKPOINT: 'breakpoint',
   STOPPED: 'stopped',
   ABORTED: 'aborted',
+}
+
+const PlaybackStatesPriorities = {
+  [PlaybackStates.FINISHED]: 0,
+  [PlaybackStates.FAILED]: 1,
+  [PlaybackStates.ERRORED]: 2,
+  [PlaybackStates.STOPPED]: 3,
+  [PlaybackStates.ABORTED]: 4,
 }
 
 export const CommandStates = {
