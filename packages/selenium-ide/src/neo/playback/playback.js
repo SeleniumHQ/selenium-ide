@@ -18,6 +18,7 @@
 import EventEmitter from 'events'
 import { createPlaybackTree } from './playback-tree'
 import { mergeEventEmitter } from '../../common/events'
+import { AssertionError, VerificationError } from './errors'
 
 const EE = Symbol('event-emitter')
 
@@ -93,21 +94,35 @@ export default class Playback {
       try {
         result = await this._executeCommand(this.currentExecutingNode)
       } catch (err) {
-        this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
-          id: command.id,
-          callstackIndex: undefined,
-          state: this.currentExecutingNode.isVerify()
-            ? CommandStates.Failed
-            : CommandStates.Fatal,
-          message: err.message,
-        })
-
-        if (!this.currentExecutingNode.isVerify()) {
+        if (err instanceof AssertionError) {
+          this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+            id: command.id,
+            callstackIndex: undefined,
+            state: CommandStates.Failed,
+            message: err.message,
+          })
+          this._exitCondition = PlaybackStates.FAILED
           throw err
-        } else {
-          // fociblly continuing verify commands
+        } else if (err instanceof VerificationError) {
+          this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+            id: command.id,
+            callstackIndex: undefined,
+            state: CommandStates.Failed,
+            message: err.message,
+          })
+          this._exitCondition = PlaybackStates.FAILED
+          // focibly continuing verify commands
           this.currentExecutingNode = this.currentExecutingNode.next
           return await this._executionLoop()
+        } else {
+          this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+            id: command.id,
+            callstackIndex: undefined,
+            state: CommandStates.Fatal,
+            message: err.message,
+          })
+          this._exitCondition = PlaybackStates.ERRORED
+          throw err
         }
       }
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
@@ -130,7 +145,7 @@ export default class Playback {
 
   async _finishPlaying() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
-      state: PlaybackStates.FINISHED,
+      state: this._exitCondition || PlaybackStates.FINISHED,
     })
   }
 }
@@ -144,8 +159,10 @@ export const PlaybackStates = {
   PREPARATION: 'prep',
   PLAYING: 'playing',
   FINISHED: 'finished',
+  FAILED: 'failed',
+  ERRORED: 'errored',
   PAUSED: 'paused',
-  DEBUGGER: 'debugger',
+  BREAKPOINT: 'breakpoint',
   STOPPED: 'stopped',
   ABORTED: 'aborted',
 }
