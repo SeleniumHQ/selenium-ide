@@ -135,7 +135,7 @@ export default class Playback {
       return
     } else if (this._pausing) {
       await this._pause()
-      await this._executionLoop()
+      return await this._executionLoop()
     } else if (this.currentExecutingNode) {
       const command = this.currentExecutingNode.command
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
