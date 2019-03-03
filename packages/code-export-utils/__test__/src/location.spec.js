@@ -18,7 +18,7 @@
 import LocationEmitter from '../../src/location'
 
 describe('Location emitter', async () => {
-  it('emits by emitters', () => {
+  it('emits by sync emitter', () => {
     const emitters = {
       id: selector => {
         return `By.id("${selector}")`
@@ -26,5 +26,26 @@ describe('Location emitter', async () => {
     }
 
     expect(LocationEmitter.emit('id=blah', emitters)).toEqual(`By.id("blah")`)
+  })
+  it('emits by async emitter', () => {
+    const emitters = {
+      id: selector => {
+        return Promise.resolve(`By.id("${selector}")`)
+      },
+    }
+
+    expect(LocationEmitter.emit('id=blah', emitters)).resolves.toBe(
+      `By.id("blah")`
+    )
+  })
+  it('should fail to emit empty string', () => {
+    return expect(() => LocationEmitter.emit('', {})).toThrow(
+      "Locator can't be empty"
+    )
+  })
+  it('should fail to emit unknown locator', () => {
+    return expect(() => LocationEmitter.emit('notExists=element', {})).toThrow(
+      'Unknown locator notExists'
+    )
   })
 })
