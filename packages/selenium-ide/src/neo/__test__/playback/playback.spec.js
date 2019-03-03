@@ -86,20 +86,23 @@ describe('Playback', () => {
     })
   })
 
-  describe('abort', () => {
-    it('should abort a test', async () => {
+  describe('stop', () => {
+    it('should stop a test', async () => {
       const test = [
         {
+          id: 1,
           command: 'open',
           target: '',
           value: '',
         },
         {
+          id: 2,
           command: 'open',
           target: '',
           value: '',
         },
         {
+          id: 3,
           command: 'open',
           target: '',
           value: '',
@@ -112,6 +115,59 @@ describe('Playback', () => {
       })
       const cb = jest.fn()
       playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      const playbackPromise = playback.play(test).catch(() => {})
+
+      await psetTimeout(15)
+      await playback.stop()
+      await playbackPromise
+
+      const results = cb.mock.calls.flat()
+      expect(results.length).toBe(3)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.STOPPED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
+  })
+
+  describe('abort', () => {
+    it('should abort a test', async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 3,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
       const playbackPromise = playback.play(test).catch(() => {})
 
       await psetTimeout(15)
@@ -123,6 +179,57 @@ describe('Playback', () => {
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
       expect(results[2].state).toBe(PlaybackStates.ABORTED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
+
+    it('should abort a test after attempting to stop', async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 3,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      const playbackPromise = playback.play(test).catch(() => {})
+
+      await psetTimeout(15)
+      playback.stop()
+      await psetTimeout(2)
+      await playback.abort()
+      await playbackPromise
+
+      const results = cb.mock.calls.flat()
+      expect(results.length).toBe(3)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.ABORTED)
+
+      expect(commandResults).toMatchSnapshot()
     })
   })
 
