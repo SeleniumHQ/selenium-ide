@@ -36,6 +36,10 @@ import ExtCommand from '../../IO/SideeX/ext-command'
 import WebDriverExecutor from '../../IO/playback/webdriver'
 import CommandTarget from './CommandTarget'
 import Suite from '../../models/Suite'
+import Playback, {
+  PlaybackEvents,
+  PlaybackStates,
+} from '../../playback/playback'
 
 class PlaybackState {
   @observable
@@ -207,13 +211,34 @@ class PlaybackState {
   }
 
   @action.bound
-  play() {
+  async play() {
     this.isPlaying = true
-    return play(
-      UiState.baseUrl,
-      process.env.USE_WEBDRIVER ? this.browserDriver : this.extCommand,
-      this.variables
-    )
+    if (process.env.USE_WEBDRIVER) {
+      const playback = new Playback(this.runningQueue, {
+        baseUrl: UiState.baseUrl,
+        executor: this.browserDriver,
+        testId: this.currentRunningTest.id,
+        variables: this.variables,
+      })
+      const stateChangedFn = ({ id, callstackIndex, state, message }) => {
+        if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
+          this.errors++
+        }
+        this.setCommandStateAtomically(id, callstackIndex, state, message)
+      }
+      playback.addListener(PlaybackEvents.COMMAND_STATE_CHANGED, stateChangedFn)
+      const result = await playback.play().catch(() => {})
+
+      playback.removeListener(
+        PlaybackEvents.COMMAND_STATE_CHANGED,
+        stateChangedFn
+      )
+
+      this.finishPlaying()
+      return result
+    } else {
+      return play(UiState.baseUrl, this.extCommand, this.variables)
+    }
   }
 
   @action.bound
@@ -826,14 +851,7 @@ class PlaybackState {
   }
 }
 
-export const PlaybackStates = {
-  Failed: 'failed',
-  Fatal: 'fatal',
-  Passed: 'passed',
-  Pending: 'pending',
-  Undetermined: 'undetermined',
-  Awaiting: 'awaiting',
-}
+export { PlaybackStates } from '../../playback/playback'
 
 if (!window._playbackState) window._playbackState = new PlaybackState()
 export default window._playbackState
