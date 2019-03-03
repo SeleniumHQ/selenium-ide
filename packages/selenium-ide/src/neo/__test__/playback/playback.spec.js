@@ -15,7 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Playback, { PlaybackEvents, CommandStates } from '../../playback/playback'
+import Playback, {
+  PlaybackEvents,
+  PlaybackStates,
+  CommandStates,
+} from '../../playback/playback'
+import { AssertionError, VerificationError } from '../../playback/errors'
 import FakeExecutor from '../util/FakeExecutor'
 
 describe('Playback', () => {
@@ -72,7 +77,7 @@ describe('Playback', () => {
       ]
       const executor = new FakeExecutor({})
       executor.doVerifyText = jest.fn(async () => {
-        throw new Error('failed to verify')
+        throw new VerificationError('failed to verify')
       })
       const playback = new Playback({
         executor,
@@ -114,7 +119,7 @@ describe('Playback', () => {
         ]
         const executor = new FakeExecutor({})
         executor.doVerifyText = jest.fn(async () => {
-          throw new Error('failed to verify')
+          throw new VerificationError('failed to verify')
         })
         const playback = new Playback({
           executor,
@@ -146,6 +151,135 @@ describe('Playback', () => {
         expect(results.length).toBe(2)
         expect(results[0].state).toBe(CommandStates.Pending)
         expect(results[1].state).toBe(CommandStates.Fatal)
+      })
+    })
+    describe("'playback-state-changed'", () => {
+      it('should finish test successfully', async () => {
+        const test = [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ]
+        const executor = new FakeExecutor({})
+        executor.doOpen = jest.fn(async () => {})
+        const playback = new Playback({
+          executor,
+        })
+        const cb = jest.fn()
+        playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+        await playback.play(test)
+        const results = cb.mock.calls.flat()
+        expect(results.length).toBe(3)
+        expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+        expect(results[1].state).toBe(PlaybackStates.PLAYING)
+        expect(results[2].state).toBe(PlaybackStates.FINISHED)
+      })
+      it('should fail due to verify', async () => {
+        const test = [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'verifyText',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ]
+        const executor = new FakeExecutor({})
+        executor.doOpen = jest.fn(async () => {})
+        executor.doVerifyText = jest.fn(async () => {
+          throw new VerificationError('failed to verify')
+        })
+        const playback = new Playback({
+          executor,
+        })
+        const cb = jest.fn()
+        playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+        await playback.play(test)
+        const results = cb.mock.calls.flat()
+        expect(results.length).toBe(3)
+        expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+        expect(results[1].state).toBe(PlaybackStates.PLAYING)
+        expect(results[2].state).toBe(PlaybackStates.FAILED)
+      })
+      it('should fail due to assertion', async () => {
+        const test = [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'assertText',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ]
+        const executor = new FakeExecutor({})
+        executor.doOpen = jest.fn(async () => {})
+        executor.doAssertText = jest.fn(async () => {
+          throw new AssertionError('failed to assert')
+        })
+        const playback = new Playback({
+          executor,
+        })
+        const cb = jest.fn()
+        playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+        await playback.play(test).catch(() => {})
+        const results = cb.mock.calls.flat()
+        expect(results.length).toBe(3)
+        expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+        expect(results[1].state).toBe(PlaybackStates.PLAYING)
+        expect(results[2].state).toBe(PlaybackStates.FAILED)
+      })
+      it('should fail due to error', async () => {
+        const test = [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'assertText',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ]
+        const executor = new FakeExecutor({})
+        executor.doOpen = jest.fn(async () => {})
+        executor.doAssertText = jest.fn(async () => {
+          throw new Error('error in command')
+        })
+        const playback = new Playback({
+          executor,
+        })
+        const cb = jest.fn()
+        playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+        await playback.play(test).catch(() => {})
+        const results = cb.mock.calls.flat()
+        expect(results.length).toBe(3)
+        expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+        expect(results[1].state).toBe(PlaybackStates.PLAYING)
+        expect(results[2].state).toBe(PlaybackStates.ERRORED)
       })
     })
   })
