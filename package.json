@@ -34,7 +34,7 @@
       "./packages/selenium-ide/scripts/jest/test.config.js"
     ],
     "testMatch": [
-      "**/packages/**/__test?(s)__/**/*.js?(x)"
+      "**/packages/**/__test?(s)__/**/*.spec.js?(x)"
     ]
   },
   "devDependencies": {
