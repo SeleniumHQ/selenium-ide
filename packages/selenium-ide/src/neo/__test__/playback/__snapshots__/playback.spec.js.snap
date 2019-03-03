@@ -1,5 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Playback abort should abort a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": "playback is dead",
+    "state": "fatal",
+  },
+]
+`;
+
 exports[`Playback abort should abort a test 1`] = `
 Array [
   Object {
@@ -54,6 +95,76 @@ Array [
     "id": 2,
     "message": "playback is dead",
     "state": "fatal",
+  },
+]
+`;
+
+exports[`Playback resume resume a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback stop should stop a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
   },
 ]
 `;

@@ -46,14 +46,35 @@ export default class Playback {
 
   async playSingleCommand() {}
 
-  async pause() {}
+  async pause({ graceful } = { graceful: false }) {
+    this._pausing = true
+    if (!graceful) {
+      await this.executor.cancel()
+    }
+  }
 
-  async resume() {}
+  resume() {
+    if (this._resume) {
+      const r = this._resume
+      this._resume = undefined
+      r()
+      this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+        state: PlaybackStates.PLAYING,
+      })
+    }
+  }
 
   async stop() {
     this._setExitCondition(PlaybackStates.STOPPED)
     this._stopping = true
-    await this.executor.cancel()
+
+    if (this._resume) {
+      const r = this._resume
+      this._resume = undefined
+      r()
+    } else {
+      await this.executor.cancel()
+    }
 
     // play will throw but the user will catch it with this.play()
     // this.stop() should resolve once play finishes
@@ -62,6 +83,15 @@ export default class Playback {
 
   async abort() {
     this._setExitCondition(PlaybackStates.ABORTED)
+
+    if (this._resume) {
+      const r = this._resume
+      this._resume = undefined
+      r()
+    }
+    // we kill regardless of wether the test is paused to keep the
+    // behavior consistent
+
     await this.executor.kill()
 
     // play will throw but the user will catch it with this.play()
@@ -103,6 +133,9 @@ export default class Playback {
   async _executionLoop() {
     if (this._stopping) {
       return
+    } else if (this._pausing) {
+      await this._pause()
+      await this._executionLoop()
     } else if (this.currentExecutingNode) {
       const command = this.currentExecutingNode.command
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
@@ -167,6 +200,16 @@ export default class Playback {
   async _finishPlaying() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this._exitCondition || PlaybackStates.FINISHED,
+    })
+  }
+
+  async _pause() {
+    this._pausing = false
+    this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+      state: PlaybackStates.PAUSED,
+    })
+    await new Promise(res => {
+      this._resume = res
     })
   }
 
