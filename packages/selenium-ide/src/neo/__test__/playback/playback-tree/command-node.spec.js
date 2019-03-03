@@ -160,6 +160,15 @@ describe('Command Node', () => {
     expect(result.next).toBeUndefined()
     expect(result.result).toEqual('no dice')
   })
+  it('isVerify checks if a command is a verify command', () => {
+    const verify = new Command(undefined, 'verifyText', '', '')
+    const nodeVerify = new CommandNode(verify)
+    expect(nodeVerify.isVerify()).toBeTruthy()
+
+    const assert = new Command(undefined, 'assertText', '', '')
+    const nodeAssert = new CommandNode(assert)
+    expect(nodeAssert.isVerify()).toBeFalsy()
+  })
 })
 
 function commandExecutor(extCommand = false, webDriverCommand = false) {
