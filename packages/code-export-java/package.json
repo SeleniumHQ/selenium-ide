@@ -1,0 +1,16 @@
+{
+  "name": "code-export-java",
+  "version": "0.1.0",
+  "description": "Export Selenium IDE project contents to Java",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "keywords": [
+    "selenium",
+    "ide",
+    "export"
+  ],
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1"
+  }
+}
