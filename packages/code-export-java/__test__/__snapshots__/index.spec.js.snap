@@ -1,4 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Code Export Java Selenium should export a test to JUnit code 1`] = `
+"
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
@@ -24,11 +27,13 @@ public class Login {
 
     @Test
     public void login() {
-        driver.get("http://the-internet.herokuapp.com/login");
+        driver.get(\\"http://the-internet.herokuapp.com/login\\");
         driver.manage().window().setSize(new Dimension(1440, 1177));
-        driver.findElement(By.id("username")).sendKeys("tomsmith");
-        driver.findElement(By.id("password")).sendKeys("SuperSecretPassword!");
-        driver.findElement(By.cssSelector("#login button")).click();
-        assertThat(driver.findElement(By.cssSelector(".flash.success")).getText(), is("You logged into a secure area!\\n×"));
+        driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
+        driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
+        driver.findElement(By.cssSelector(\\"#login button\\")).click();
+        assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
     }
 }
+"
+`;

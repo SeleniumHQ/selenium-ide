@@ -30,14 +30,9 @@ describe('Code Export Java Selenium', () => {
     const project = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'test-files', 'single-test.side'))
     )
-    let test = {}
-    test.ide = project.tests[0]
-    test.java = fs.readFileSync(
-      path.join(__dirname, 'test-files', 'single-test.java')
-    )
-    const results = await emitTest(project.url, test.ide)
+    const results = await emitTest(project.url, project.tests[0])
     expect(results).toBeDefined()
-    expect(results).toBe(test.java.toString())
+    expect(results).toMatchSnapshot()
   })
   //it('should export a suite to code', () => {})
 })
