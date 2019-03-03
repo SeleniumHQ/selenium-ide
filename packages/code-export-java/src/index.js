@@ -25,13 +25,21 @@ export function emitTest(baseUrl, test) {
     @Test
     public void ${name}() {
     `
-  test.commands.forEach(command => {
-    result += `    ${CommandEmitter.emit(command)}
-    `
+  const emittedCommands = test.commands.map(command => {
+    return CommandEmitter.emit(command)
   })
-  result += `}`
-  result += `\n`
-  return emitClass(name, result)
+  return Promise.all(emittedCommands)
+    .then(results => {
+      results.forEach(emittedCommand => {
+        result += `    ${emittedCommand}
+    `
+      })
+    })
+    .then(() => {
+      result += `}`
+      result += `\n`
+      return emitClass(name, result)
+    })
 }
 
 export function sanitizeName(input) {

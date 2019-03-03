@@ -24,7 +24,7 @@ describe('Command Emitting', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).toBe(
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
       'driver.findElement(By.linkText("button")).click();'
     )
   })
@@ -34,7 +34,7 @@ describe('Command Emitting', () => {
       target: 'https://www.seleniumhq.org/',
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).toBe(
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
       `driver.get("${command.target}");`
     )
   })
@@ -44,7 +44,7 @@ describe('Command Emitting', () => {
       target: '1440x1177',
       value: '',
     }
-    expect(CommandEmitter.emit(command)).toBe(
+    expect(CommandEmitter.emit(command)).resolves.toBe(
       `driver.manage().window().setSize(new Dimension(1440, 1177));`
     )
   })
@@ -54,7 +54,7 @@ describe('Command Emitting', () => {
       target: 'id=input',
       value: 'example input',
     }
-    expect(CommandEmitter.emit(command)).toBe(
+    expect(CommandEmitter.emit(command)).resolves.toBe(
       `driver.findElement(By.id("input")).sendKeys("${command.value}");`
     )
   })
@@ -64,7 +64,7 @@ describe('Command Emitting', () => {
       target: 'id=test',
       value: 'some text that should be here',
     }
-    expect(CommandEmitter.emit(command)).toBe(
+    expect(CommandEmitter.emit(command)).resolves.toBe(
       `assertThat(driver.findElement(By.id("test")).getText(), is("${
         command.value
       }"));`

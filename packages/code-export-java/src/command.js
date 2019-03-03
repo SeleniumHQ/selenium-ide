@@ -9,38 +9,46 @@ const emitters = {
   type: emitType,
 }
 
-export function emit(command) {
+export async function emit(command) {
   if (emitters[command.command]) {
-    return emitters[command.command](command.target, command.value)
+    return await emitters[command.command](command.target, command.value)
   }
 }
 
-function emitClick(target) {
-  return `driver.findElement(${LocationEmitter.emit(target)}).click();`
+async function emitClick(target) {
+  return Promise.resolve(
+    `driver.findElement(${await LocationEmitter.emit(target)}).click();`
+  )
 }
 
 function emitOpen(target) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
     : `"${global.baseUrl}${target}"`
-  return `driver.get(${url});`
+  return Promise.resolve(`driver.get(${url});`)
 }
 
-function emitSetWindowSize(size) {
+async function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
-  return `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
+  return Promise.resolve(
+    `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
+  )
 }
 
-function emitType(target, value) {
-  return `driver.findElement(${LocationEmitter.emit(
-    target
-  )}).sendKeys("${value}");`
+async function emitType(target, value) {
+  return Promise.resolve(
+    `driver.findElement(${await LocationEmitter.emit(
+      target
+    )}).sendKeys("${value}");`
+  )
 }
 
-function emitVerifyText(locator, text) {
-  return `assertThat(driver.findElement(${LocationEmitter.emit(
-    locator
-  )}).getText(), is("${TextProcessor.escape(text)}"));`
+async function emitVerifyText(locator, text) {
+  return Promise.resolve(
+    `assertThat(driver.findElement(${await LocationEmitter.emit(
+      locator
+    )}).getText(), is("${TextProcessor.escape(text)}"));`
+  )
 }
 
 export default {
