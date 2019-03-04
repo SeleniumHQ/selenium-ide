@@ -130,13 +130,17 @@ export default class Playback {
     await this._playPromise
   }
 
-  async _executionLoop() {
+  async _executionLoop({ ignoreBreakpoint } = {}) {
     if (this._stopping) {
       return
     } else if (this._pausing) {
       await this._pause()
-      return await this._executionLoop()
+      return await this._executionLoop({ ignoreBreakpoint: true })
     } else if (this.currentExecutingNode) {
+      if (this.currentExecutingNode.command.isBreakpoint && !ignoreBreakpoint) {
+        await this._break()
+        return await this._executionLoop({ ignoreBreakpoint: true })
+      }
       const command = this.currentExecutingNode.command
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
         id: command.id,
@@ -204,10 +208,22 @@ export default class Playback {
   }
 
   async _pause() {
-    this._pausing = false
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PAUSED,
     })
+    await this.__pause()
+  }
+
+  async _break() {
+    this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+      state: PlaybackStates.BREAKPOINT,
+    })
+    await this.__pause()
+  }
+
+  async __pause() {
+    this._pausing = false
+
     await new Promise(res => {
       this._resume = res
     })
