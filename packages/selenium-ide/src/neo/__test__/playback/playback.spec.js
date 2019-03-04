@@ -730,8 +730,8 @@ describe('Playback', () => {
         await playback.play(test)
         const results = flat(cb.mock.calls)
         expect(results.length).toBe(2)
-        expect(results[0].state).toBe(CommandStates.Pending)
-        expect(results[1].state).toBe(CommandStates.Passed)
+        expect(results[0].state).toBe(CommandStates.EXECUTING)
+        expect(results[1].state).toBe(CommandStates.PASSED)
       })
       it('should listen to fail changes', async () => {
         const test = [
@@ -753,10 +753,10 @@ describe('Playback', () => {
         await playback.play(test).catch(() => {})
         const results = flat(cb.mock.calls)
         expect(results.length).toBe(2)
-        expect(results[0].state).toBe(CommandStates.Pending)
-        expect(results[1].state).toBe(CommandStates.Failed)
+        expect(results[0].state).toBe(CommandStates.EXECUTING)
+        expect(results[1].state).toBe(CommandStates.FAILED)
       })
-      it('should listen to fatal changes', async () => {
+      it('should listen to error changes', async () => {
         const test = [
           {
             command: 'fatal',
@@ -773,8 +773,8 @@ describe('Playback', () => {
         await playback.play(test).catch(() => {})
         const results = flat(cb.mock.calls)
         expect(results.length).toBe(2)
-        expect(results[0].state).toBe(CommandStates.Pending)
-        expect(results[1].state).toBe(CommandStates.Fatal)
+        expect(results[0].state).toBe(CommandStates.EXECUTING)
+        expect(results[1].state).toBe(CommandStates.ERRORED)
       })
     })
     describe("'playback-state-changed'", () => {

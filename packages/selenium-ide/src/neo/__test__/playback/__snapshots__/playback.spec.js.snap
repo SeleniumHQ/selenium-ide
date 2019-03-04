@@ -6,7 +6,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -18,7 +18,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -30,13 +30,13 @@ Array [
     "callstackIndex": undefined,
     "id": 3,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
     "id": 3,
     "message": "playback is dead",
-    "state": "fatal",
+    "state": "errored",
   },
 ]
 `;
@@ -47,7 +47,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -59,13 +59,13 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
     "id": 2,
     "message": "playback is dead",
-    "state": "fatal",
+    "state": "errored",
   },
 ]
 `;
@@ -76,7 +76,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -88,13 +88,13 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
     "id": 2,
     "message": "playback is dead",
-    "state": "fatal",
+    "state": "errored",
   },
 ]
 `;
@@ -105,19 +105,19 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
     "id": 1,
     "message": "error",
-    "state": "fatal",
+    "state": "errored",
   },
   Object {
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -129,7 +129,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -141,7 +141,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -153,7 +153,7 @@ Array [
     "callstackIndex": undefined,
     "id": 3,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -165,7 +165,7 @@ Array [
     "callstackIndex": undefined,
     "id": 3,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -182,31 +182,31 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
     "id": 1,
     "message": "error",
-    "state": "fatal",
+    "state": "errored",
   },
   Object {
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
     "id": 1,
     "message": "error",
-    "state": "fatal",
+    "state": "errored",
   },
   Object {
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -223,7 +223,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -235,7 +235,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -247,7 +247,7 @@ Array [
     "callstackIndex": undefined,
     "id": 3,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -264,7 +264,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -276,7 +276,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -288,7 +288,7 @@ Array [
     "callstackIndex": undefined,
     "id": 3,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -305,7 +305,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -317,7 +317,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -334,7 +334,7 @@ Array [
     "callstackIndex": undefined,
     "id": 1,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
@@ -346,7 +346,7 @@ Array [
     "callstackIndex": undefined,
     "id": 2,
     "message": undefined,
-    "state": "pending",
+    "state": "executing",
   },
   Object {
     "callstackIndex": undefined,
