@@ -18,6 +18,18 @@
 import CommandEmitter from '../src/command'
 
 describe('Command Emitting', () => {
+  it('should emit `assert text` command', () => {
+    const command = {
+      command: 'assertText',
+      target: 'id=test',
+      value: 'some text that should be here',
+    }
+    expect(CommandEmitter.emit(command)).resolves.toBe(
+      `assertThat(driver.findElement(By.id("test")).getText(), is("${
+        command.value
+      }"));`
+    )
+  })
   it('should emit `click` command', () => {
     const command = {
       command: 'click',
@@ -28,6 +40,74 @@ describe('Command Emitting', () => {
       'driver.findElement(By.linkText("button")).click();'
     )
   })
+  it('should emit `click at` command', () => {
+    const command = {
+      command: 'clickAt',
+      target: 'link=button',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      'driver.findElement(By.linkText("button")).click();'
+    )
+  })
+  it('should emit `check` command', () => {
+    const command = {
+      command: 'check',
+      target: 'id=f',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `{
+        WebElement element = driver.findElement(By.id("f"));
+        if (!element.isSelected()) {
+          element.click();
+        }
+      }`
+    )
+  })
+  it('should emit `double click` command', () => {
+    const command = {
+      command: 'doubleClick',
+      target: 'link=button',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `{
+        WebElement element = driver.findElement(By.linkText("button"));
+        Actions builder = new Actions(driver);
+        builder.doubleClick(element).perform();
+      }`
+    )
+  })
+  it('should emit `double click at` command', () => {
+    const command = {
+      command: 'doubleClickAt',
+      target: 'link=button',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `{
+        WebElement element = driver.findElement(By.linkText("button"));
+        Actions builder = new Actions(driver);
+        builder.doubleClick(element).perform();
+      }`
+    )
+  })
+  it('should emit `drag and drop to object` command', () => {
+    const command = {
+      command: 'dragAndDropToObject',
+      target: 'link=dragged',
+      value: 'link=dropped',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `{
+        WebElement dragged = driver.findElement(By.linkText("dragged"));
+        WebElement dropped = driver.findElement(By.linkText("dropped"));
+        Actions builder = new Actions(driver);
+        builder.dragAndDrop(dragged, dropped).perform();
+      }`
+    )
+  })
   it('should emit `open` with absolute url', () => {
     const command = {
       command: 'open',
@@ -36,6 +116,16 @@ describe('Command Emitting', () => {
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
       `driver.get("${command.target}");`
+    )
+  })
+  it.skip('should emit `send keys` command', () => {
+    const command = {
+      command: 'sendKeys',
+      target: 'id=input',
+      value: 'example input',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `driver.findElement(By.id("input")).sendKeys("${command.value}"));`
     )
   })
   it('should emit `setWindowSize`', () => {
@@ -58,16 +148,19 @@ describe('Command Emitting', () => {
       `driver.findElement(By.id("input")).sendKeys("${command.value}");`
     )
   })
-  it('should emit `assert text` command', () => {
+  it('should emit `uncheck` command', () => {
     const command = {
-      command: 'assertText',
-      target: 'id=test',
-      value: 'some text that should be here',
+      command: 'uncheck',
+      target: 'id=f',
+      value: '',
     }
-    expect(CommandEmitter.emit(command)).resolves.toBe(
-      `assertThat(driver.findElement(By.id("test")).getText(), is("${
-        command.value
-      }"));`
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `{
+        WebElement element = driver.findElement(By.id("f"));
+        if (element.isSelected()) {
+          element.click();
+        }
+      }`
     )
   })
 })
