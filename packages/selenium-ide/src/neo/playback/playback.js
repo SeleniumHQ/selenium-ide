@@ -23,11 +23,14 @@ import { AssertionError, VerificationError } from './errors'
 const EE = Symbol('event-emitter')
 
 export default class Playback {
-  constructor({ executor, testId, baseUrl, variables }) {
+  constructor({ executor, testId, baseUrl, variables, options }) {
     this.executor = executor
     this.testId = testId
     this.baseUrl = baseUrl
     this.variables = variables
+    this.options = options || {
+      pauseOnExceptions: false,
+    }
     this[EE] = new EventEmitter()
     mergeEventEmitter(this, this[EE])
   }
@@ -159,8 +162,10 @@ export default class Playback {
             state: CommandStates.Failed,
             message: err.message,
           })
-          this._setExitCondition(PlaybackStates.FAILED)
-          throw err
+          return await this._handleException(() => {
+            this._setExitCondition(PlaybackStates.FAILED)
+            throw err
+          })
         } else if (err instanceof VerificationError) {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
@@ -168,10 +173,12 @@ export default class Playback {
             state: CommandStates.Failed,
             message: err.message,
           })
-          this._setExitCondition(PlaybackStates.FAILED)
-          // focibly continuing verify commands
-          this.currentExecutingNode = this.currentExecutingNode.next
-          return await this._executionLoop()
+          return await this._handleException(async () => {
+            this._setExitCondition(PlaybackStates.FAILED)
+            // focibly continuing verify commands
+            this.currentExecutingNode = this.currentExecutingNode.next
+            return await this._executionLoop()
+          })
         } else {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
@@ -179,8 +186,10 @@ export default class Playback {
             state: CommandStates.Fatal,
             message: err.message,
           })
-          this._setExitCondition(PlaybackStates.ERRORED)
-          throw err
+          return await this._handleException(() => {
+            this._setExitCondition(PlaybackStates.ERRORED)
+            throw err
+          })
         }
       }
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
@@ -222,11 +231,21 @@ export default class Playback {
   }
 
   async __pause() {
+    // internal method to handle either breaking or pausing
     this._pausing = false
 
     await new Promise(res => {
       this._resume = res
     })
+  }
+
+  async _handleException(unhandledBahaviorFn) {
+    if (!this.options.pauseOnExceptions) {
+      return await unhandledBahaviorFn()
+    } else {
+      await this._break()
+      return await this._executionLoop({ ignoreBreakpoint: true })
+    }
   }
 
   _setExitCondition(condition) {

@@ -99,6 +99,124 @@ Array [
 ]
 `;
 
+exports[`Playback pause on exceptions should pause for every type of error 1`] = `
+Array [
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": "error",
+    "state": "fatal",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": "error in verify",
+    "state": "failed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": "error in assert",
+    "state": "failed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback pause on exceptions should pause until the command is fixed 1`] = `
+Array [
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": "error",
+    "state": "fatal",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": "error",
+    "state": "fatal",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
 exports[`Playback resume resume a paused test 1`] = `
 Array [
   Object {
