@@ -47,7 +47,12 @@ export default class Playback {
     await this._play()
   }
 
-  async playSingleCommand() {}
+  async playSingleCommand(command) {
+    this.playbackTree = createPlaybackTree([command])
+    this.currentExecutingNode = this.playbackTree.startingCommandNode
+    if (!this._initialized) await this.init()
+    await this._play()
+  }
 
   async pause({ graceful } = { graceful: false }) {
     this._pausing = true
