@@ -127,7 +127,7 @@ describe('Playback', () => {
       await playback.resume()
       await playbackPromise
 
-      const results = cb.mock.calls.flat()
+      const results = flat(cb.mock.calls)
       expect(results.length).toBe(5)
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -210,7 +210,7 @@ describe('Playback', () => {
       await playback.stop()
       await playbackPromise
 
-      const results = cb.mock.calls.flat()
+      const results = flat(cb.mock.calls)
       expect(results.length).toBe(3)
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -259,7 +259,7 @@ describe('Playback', () => {
       await playback.stop()
       await playbackPromise
 
-      const results = cb.mock.calls.flat()
+      const results = flat(cb.mock.calls)
       expect(results.length).toBe(4)
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -309,7 +309,7 @@ describe('Playback', () => {
       await playback.abort()
       await playbackPromise
 
-      const results = cb.mock.calls.flat()
+      const results = flat(cb.mock.calls)
       expect(results.length).toBe(3)
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -358,7 +358,7 @@ describe('Playback', () => {
       await playback.abort()
       await playbackPromise
 
-      const results = cb.mock.calls.flat()
+      const results = flat(cb.mock.calls)
       expect(results.length).toBe(3)
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -407,7 +407,7 @@ describe('Playback', () => {
       await playback.abort()
       await playbackPromise
 
-      const results = cb.mock.calls.flat()
+      const results = flat(cb.mock.calls)
       expect(results.length).toBe(4)
       expect(results[0].state).toBe(PlaybackStates.PREPARATION)
       expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -436,7 +436,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, cb)
         await playback.play(test)
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(2)
         expect(results[0].state).toBe(CommandStates.Pending)
         expect(results[1].state).toBe(CommandStates.Passed)
@@ -459,7 +459,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, cb)
         await playback.play(test).catch(() => {})
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(2)
         expect(results[0].state).toBe(CommandStates.Pending)
         expect(results[1].state).toBe(CommandStates.Failed)
@@ -479,7 +479,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, cb)
         await playback.play(test).catch(() => {})
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(2)
         expect(results[0].state).toBe(CommandStates.Pending)
         expect(results[1].state).toBe(CommandStates.Fatal)
@@ -502,7 +502,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
         await playback.play(test)
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(3)
         expect(results[0].state).toBe(PlaybackStates.PREPARATION)
         expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -537,7 +537,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
         await playback.play(test)
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(3)
         expect(results[0].state).toBe(PlaybackStates.PREPARATION)
         expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -572,7 +572,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
         await playback.play(test).catch(() => {})
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(3)
         expect(results[0].state).toBe(PlaybackStates.PREPARATION)
         expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -607,7 +607,7 @@ describe('Playback', () => {
         const cb = jest.fn()
         playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
         await playback.play(test).catch(() => {})
-        const results = cb.mock.calls.flat()
+        const results = flat(cb.mock.calls)
         expect(results.length).toBe(3)
         expect(results[0].state).toBe(PlaybackStates.PREPARATION)
         expect(results[1].state).toBe(PlaybackStates.PLAYING)
@@ -621,3 +621,5 @@ const psetTimeout = timeout =>
   new Promise(res => {
     setTimeout(res, timeout)
   })
+
+const flat = arr => arr.reduce((f, a) => [...f, ...a], [])
