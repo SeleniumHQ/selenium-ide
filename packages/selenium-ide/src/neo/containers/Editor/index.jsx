@@ -38,7 +38,7 @@ export default class Editor extends React.Component {
   constructor(props) {
     super(props)
     this.addCommand = this.addCommand.bind(this)
-    this.removeCommand = this.removeCommand.bind(this)
+    this.removeSelectedCommands = this.removeSelectedCommands.bind(this)
   }
   addCommand(index, command) {
     if (command) {
@@ -50,17 +50,18 @@ export default class Editor extends React.Component {
       return newCommand
     }
   }
-  removeCommand(index, command) {
+  removeSelectedCommands(index) {
     const { test } = this.props
-    test.removeCommand(command)
-    if (UiState.selectedCommand === command) {
-      if (test.commands.length > index) {
-        UiState.selectCommand(test.commands[index])
-      } else if (test.commands.length) {
-        UiState.selectCommand(test.commands[test.commands.length - 1])
-      } else {
-        UiState.selectCommand(UiState.pristineCommand)
-      }
+    index = index - (UiState.selectedCommands.length - 1)
+    index = Math.max(index, 0)
+    UiState.selectedCommands.forEach(command => test.removeCommand(command))
+    UiState.clearAllSelectedCommands()
+    if (test.commands.length > index) {
+      UiState.selectCommand(test.commands[index])
+    } else if (test.commands.length) {
+      UiState.selectCommand(test.commands[test.commands.length - 1])
+    } else {
+      UiState.selectCommand(UiState.pristineCommand)
     }
   }
   handleKeyDown(event) {
@@ -94,12 +95,14 @@ export default class Editor extends React.Component {
           selectedCommand={
             UiState.selectedCommand ? UiState.selectedCommand.id : null
           }
+          selectedCommands={UiState.selectedCommands}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
-          removeCommand={this.removeCommand}
+          removeSelectedCommands={this.removeSelectedCommands}
           clearAllCommands={
             this.props.test ? this.props.test.clearAllCommands : null
           }
+          clearAllSelectedCommands={UiState.clearAllSelectedCommands}
           swapCommands={this.props.test ? this.props.test.swapCommands : null}
         />
         <CommandForm

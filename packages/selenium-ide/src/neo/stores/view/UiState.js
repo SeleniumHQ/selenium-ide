@@ -36,6 +36,8 @@ class UiState {
   @observable
   selectedCommand = null
   @observable
+  selectedCommands = []
+  @observable
   filterTerm = ''
   @observable
   clipboard = null
@@ -168,15 +170,22 @@ class UiState {
   }
 
   @action.bound
-  copyToClipboard(item) {
-    this.clipboard = item
+  copyToClipboard() {
+    // sorting by index
+    this.clipboard = this.selectedCommands.sort((c1, c2) => {
+      let c1Index = this.displayedTest.commands.indexOf(c1)
+      let c2Index = this.displayedTest.commands.indexOf(c2)
+      return c1Index - c2Index
+    })
   }
 
   @action.bound
   pasteFromClipboard(index) {
-    if (this.clipboard && this.displayedTest) {
-      const newCommand = this.clipboard.clone()
-      this.displayedTest.insertCommandAt(newCommand, index)
+    if (this.clipboard.length && this.displayedTest) {
+      this.clipboard.forEach((command, idx) => {
+        const newCommand = command.clone()
+        this.displayedTest.insertCommandAt(newCommand, index + idx + 1)
+      })
     }
   }
 
@@ -200,11 +209,18 @@ class UiState {
         _test &&
         (_test !== this.displayedTest || suite !== this.selectedTest.suite)
       ) {
+        if (this.selectedTest.test) {
+          this.selectedTest.test.selectedCommands = this.selectedCommands.slice(
+            0
+          )
+        }
+        this.selectedCommands.clear()
         this.selectedTest = {
           test,
           suite,
           stack: stack >= 0 ? stack : undefined,
         }
+        this.selectedCommands = this.selectedTest.test.selectedCommands.slice(0)
         if (PlaybackState.isPlaying && !PlaybackState.paused) {
           this.selectCommand(undefined)
         } else if (_test && _test.commands.length) {
@@ -295,6 +311,7 @@ class UiState {
       if (this.selectedTest.test) {
         this.selectedTest.test.selectedCommand = command
         this.selectedCommand = command
+        this.addToSelectedCommands(command)
       } else {
         this.selectedCommand = undefined
       }
@@ -307,10 +324,41 @@ class UiState {
     if (index >= 0 && index < test.commands.length) {
       this.selectCommand(test.commands[index], opts)
     } else if (index === test.commands.length) {
+      this.clearAllSelectedCommands()
       this.selectCommand(this.pristineCommand, opts)
     }
   }
 
+  @action.bound
+  clearAllSelectedCommands() {
+    if (this.selectedTest.test) {
+      this.selectedTest.test.selectedCommand = undefined
+      this.selectedTest.test.selectedCommands.clear()
+      this.selectedCommands.clear()
+      this.selectedCommand = undefined
+    } else {
+      this.selectedCommand = undefined
+      this.selectedCommands.clear()
+    }
+  }
+
+  @action.bound
+  addToSelectedCommands(command) {
+    if (!PlaybackState.isPlaying || PlaybackState.paused) {
+      if (command) {
+        if (
+          this.selectTest &&
+          this.selectedTest.test.commands.find(c => c === command)
+        ) {
+          if (
+            this.selectedCommands.findIndex(c => c.id === command.id) === -1
+          ) {
+            this.selectedCommands.push(command)
+          }
+        }
+      }
+    }
+  }
   @action.bound
   selectNextCommand(opts = { from: undefined, isCommandTarget: false }) {
     this.selectCommandByIndex(this.nextCommandIndex(opts.from), opts)
