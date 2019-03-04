@@ -84,6 +84,21 @@ describe('Playback', () => {
       })
       expect(async () => await playback.play(test)).not.toThrow()
     })
+
+    it('should play a single command', async () => {
+      const command = {
+        command: 'open',
+        target: '',
+        value: '',
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      await playback.playSingleCommand(command)
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('resume', () => {
@@ -517,7 +532,7 @@ describe('Playback', () => {
       expect(commandResults).toMatchSnapshot()
     })
 
-    it.only('should pause for every type of error', async () => {
+    it('should pause for every type of error', async () => {
       const test = [
         {
           id: 1,
