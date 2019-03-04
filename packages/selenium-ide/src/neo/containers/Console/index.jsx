@@ -65,14 +65,9 @@ export default class Console extends React.Component {
     this.viewport.scrollTo(0, to)
   }
   render() {
-    let command
-    if (UiState.selectedCommand) {
-      if (UiState.selectedCommand.enabled) {
-        command = Commands.list.get(UiState.selectedCommand.command)
-      } else {
-        command = Commands.list.get(UiState.selectedCommand.command.substr(2))
-      }
-    }
+    const command = UiState.selectedCommand
+      ? Commands.list.get(UiState.selectedCommand.displayedName)
+      : undefined
     const tabs = [
       { name: 'Log', unread: this.state.logsUnread },
       { name: 'Reference', unread: false },
