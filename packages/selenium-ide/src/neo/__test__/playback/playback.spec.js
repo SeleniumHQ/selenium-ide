@@ -605,6 +605,111 @@ describe('Playback', () => {
     })
   })
 
+  describe('delay between commands', () => {
+    it('should delay between commands', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+        options: {
+          delay: 5,
+        },
+      })
+      const d = new Date()
+      await playback.play(test)
+      expect(new Date() - d).toBeGreaterThan(10)
+    })
+
+    it('should be able to pause mid-delay', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+        options: {
+          delay: 500,
+        },
+      })
+      const d = new Date()
+      playback.play(test)
+      await psetTimeout(2)
+      await playback.pause()
+
+      expect(new Date() - d).toBeLessThan(15)
+    })
+
+    it('should be able to stop mid-delay', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+        options: {
+          delay: 500,
+        },
+      })
+      const d = new Date()
+      playback.play(test)
+      await psetTimeout(2)
+      await playback.stop()
+
+      expect(new Date() - d).toBeLessThan(15)
+    })
+
+    it('should be able to abort mid-delay', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+        options: {
+          delay: 500,
+        },
+      })
+      const d = new Date()
+      playback.play(test)
+      await psetTimeout(2)
+      await playback.abort()
+
+      expect(new Date() - d).toBeLessThan(15)
+    })
+  })
+
   describe('Events', () => {
     describe("'command-state-changed'", () => {
       it('should listen to pending and pass changes', async () => {

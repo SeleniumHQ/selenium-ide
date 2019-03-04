@@ -21,6 +21,8 @@ import { mergeEventEmitter } from '../../common/events'
 import { AssertionError, VerificationError } from './errors'
 
 const EE = Symbol('event-emitter')
+const state = Symbol('state')
+const DELAY_INTERVAL = 10
 
 export default class Playback {
   constructor({ executor, testId, baseUrl, variables, options }) {
@@ -28,43 +30,51 @@ export default class Playback {
     this.testId = testId
     this.baseUrl = baseUrl
     this.variables = variables
-    this.options = options || {
-      pauseOnExceptions: false,
-    }
+    this.options = Object.assign(
+      {
+        pauseOnExceptions: false,
+        delay: 0,
+      },
+      options
+    )
     this[EE] = new EventEmitter()
+    this[state] = {}
     mergeEventEmitter(this, this[EE])
   }
 
   async init() {
     await this._prepareToPlay()
-    this._initialized = true
+    this[state].initialized = true
   }
 
   async play(commands) {
     this.playbackTree = createPlaybackTree(commands)
     this.currentExecutingNode = this.playbackTree.startingCommandNode
-    if (!this._initialized) await this.init()
+    if (!this[state].initialized) await this.init()
     await this._play()
   }
 
   async playSingleCommand(command) {
     this.playbackTree = createPlaybackTree([command])
     this.currentExecutingNode = this.playbackTree.startingCommandNode
-    if (!this._initialized) await this.init()
+    if (!this[state].initialized) await this.init()
     await this._play()
   }
 
   async pause({ graceful } = { graceful: false }) {
-    this._pausing = true
+    this[state].pausing = true
     if (!graceful) {
       await this.executor.cancel()
     }
+    await new Promise(res => {
+      this[state].pausingResolve = res
+    })
   }
 
   resume() {
-    if (this._resume) {
-      const r = this._resume
-      this._resume = undefined
+    if (this[state].resumeResolve) {
+      const r = this[state].resumeResolve
+      this[state].resumeResolve = undefined
       r()
       this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
         state: PlaybackStates.PLAYING,
@@ -74,11 +84,11 @@ export default class Playback {
 
   async stop() {
     this._setExitCondition(PlaybackStates.STOPPED)
-    this._stopping = true
+    this[state].stopping = true
 
-    if (this._resume) {
-      const r = this._resume
-      this._resume = undefined
+    if (this[state].resumeResolve) {
+      const r = this[state].resumeResolve
+      this[state].resumeResolve = undefined
       r()
     } else {
       await this.executor.cancel()
@@ -86,15 +96,16 @@ export default class Playback {
 
     // play will throw but the user will catch it with this.play()
     // this.stop() should resolve once play finishes
-    await this._playPromise.catch(() => {})
+    await this[state].playPromise.catch(() => {})
   }
 
   async abort() {
     this._setExitCondition(PlaybackStates.ABORTED)
+    this[state].aborting = true
 
-    if (this._resume) {
-      const r = this._resume
-      this._resume = undefined
+    if (this[state].resumeResolve) {
+      const r = this[state].resumeResolve
+      this[state].resumeResolve = undefined
       r()
     }
     // we kill regardless of wether the test is paused to keep the
@@ -104,7 +115,7 @@ export default class Playback {
 
     // play will throw but the user will catch it with this.play()
     // this.abort() should resolve once play finishes
-    await this._playPromise.catch(() => {})
+    await this[state].playPromise.catch(() => {})
   }
 
   async cleanup() {
@@ -125,23 +136,26 @@ export default class Playback {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
     })
-    this._playPromise = (async () => {
-      try {
-        await this._executionLoop()
-      } catch (err) {
-        throw err
-      } finally {
-        await this._finishPlaying()
-      }
-    })()
+    this[state] = {
+      initialized: true,
+      playPromise: (async () => {
+        try {
+          await this._executionLoop()
+        } catch (err) {
+          throw err
+        } finally {
+          await this._finishPlaying()
+        }
+      })(),
+    }
 
-    await this._playPromise
+    await this[state].playPromise
   }
 
   async _executionLoop({ ignoreBreakpoint } = {}) {
-    if (this._stopping) {
+    if (this[state].stopping) {
       return
-    } else if (this._pausing) {
+    } else if (this[state].pausing) {
       await this._pause()
       return await this._executionLoop({ ignoreBreakpoint: true })
     } else if (this.currentExecutingNode) {
@@ -156,6 +170,18 @@ export default class Playback {
         state: CommandStates.Pending,
         message: undefined,
       })
+
+      try {
+        await this._delay()
+      } catch (err) {
+        if (this[state].stopping) {
+          return
+        } else if (this[state].pausing) {
+          await this._pause()
+          return await this._executionLoop({ ignoreBreakpoint: true })
+        }
+      }
+
       let result
       try {
         result = await this._executeCommand(this.currentExecutingNode)
@@ -217,7 +243,7 @@ export default class Playback {
 
   async _finishPlaying() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
-      state: this._exitCondition || PlaybackStates.FINISHED,
+      state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
   }
 
@@ -237,10 +263,15 @@ export default class Playback {
 
   async __pause() {
     // internal method to handle either breaking or pausing
-    this._pausing = false
+    this[state].pausing = false
+    if (this[state].pausingResolve) {
+      const r = this[state].pausingResolve
+      this[state].pausingResolve = undefined
+      r()
+    }
 
     await new Promise(res => {
-      this._resume = res
+      this[state].resumeResolve = res
     })
   }
 
@@ -253,14 +284,38 @@ export default class Playback {
     }
   }
 
+  async _delay() {
+    if (this.options.delay)
+      return new Promise((res, rej) => {
+        const start = new Date()
+        const interval = setInterval(() => {
+          if (
+            this[state].pausing ||
+            this[state].stopping ||
+            this[state].aborting
+          ) {
+            rej(
+              new Error(
+                'delay cancelled due to playback being stopped/paused'
+              )
+            )
+            clearInterval(interval)
+          } else if (new Date() - start > this.options.delay) {
+            res()
+            clearInterval(interval)
+          }
+        }, DELAY_INTERVAL)
+      })
+  }
+
   _setExitCondition(condition) {
-    if (!this._exitCondition) {
-      this._exitCondition = condition
+    if (!this[state].exitCondition) {
+      this[state].exitCondition = condition
     } else if (
       PlaybackStatesPriorities[condition] >
-      PlaybackStatesPriorities[this._exitCondition]
+      PlaybackStatesPriorities[this[state].exitCondition]
     ) {
-      this._exitCondition = condition
+      this[state].exitCondition = condition
     }
   }
 }
