@@ -167,7 +167,7 @@ export default class Playback {
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
         id: command.id,
         callstackIndex: undefined,
-        state: CommandStates.Pending,
+        state: CommandStates.EXECUTING,
         message: undefined,
       })
 
@@ -190,7 +190,7 @@ export default class Playback {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
             callstackIndex: undefined,
-            state: CommandStates.Failed,
+            state: CommandStates.FAILED,
             message: err.message,
           })
           return await this._handleException(() => {
@@ -201,7 +201,7 @@ export default class Playback {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
             callstackIndex: undefined,
-            state: CommandStates.Failed,
+            state: CommandStates.FAILED,
             message: err.message,
           })
           return await this._handleException(async () => {
@@ -214,7 +214,7 @@ export default class Playback {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
             callstackIndex: undefined,
-            state: CommandStates.Fatal,
+            state: CommandStates.ERRORED,
             message: err.message,
           })
           return await this._handleException(() => {
@@ -226,7 +226,7 @@ export default class Playback {
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
         id: command.id,
         callstackIndex: undefined,
-        state: CommandStates.Passed,
+        state: CommandStates.PASSED,
         message: undefined,
       })
       this.currentExecutingNode = result.next
@@ -295,9 +295,7 @@ export default class Playback {
             this[state].aborting
           ) {
             rej(
-              new Error(
-                'delay cancelled due to playback being stopped/paused'
-              )
+              new Error('delay cancelled due to playback being stopped/paused')
             )
             clearInterval(interval)
           } else if (new Date() - start > this.options.delay) {
@@ -346,10 +344,10 @@ const PlaybackStatesPriorities = {
 }
 
 export const CommandStates = {
-  Failed: 'failed',
-  Fatal: 'fatal',
-  Passed: 'passed',
-  Pending: 'pending',
-  Undetermined: 'undetermined',
-  Awaiting: 'awaiting',
+  EXECUTING: 'executing',
+  PENDING: 'pending',
+  PASSED: 'passed',
+  UNDETERMINED: 'undetermined',
+  FAILED: 'failed',
+  ERRORED: 'errored',
 }

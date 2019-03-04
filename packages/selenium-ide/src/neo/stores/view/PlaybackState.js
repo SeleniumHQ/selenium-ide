@@ -851,7 +851,5 @@ class PlaybackState {
   }
 }
 
-export { PlaybackStates } from '../../playback/playback'
-
 if (!window._playbackState) window._playbackState = new PlaybackState()
 export default window._playbackState
