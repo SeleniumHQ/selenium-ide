@@ -468,6 +468,128 @@ describe('Playback', () => {
     })
   })
 
+  describe('pause on exceptions', () => {
+    it('should pause until the command is fixed', async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {
+        throw new Error('error')
+      })
+      const playback = new Playback({
+        executor,
+        options: {
+          pauseOnExceptions: true,
+        },
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      const playbackPromise = playback.play(test).catch(() => {})
+
+      await psetTimeout(5)
+      await playback.resume()
+      await psetTimeout(5)
+      executor.doOpen.mockImplementation(async () => {})
+      await playback.resume()
+      await psetTimeout(100)
+      await playbackPromise
+
+      const results = flat(cb.mock.calls)
+      expect(results.length).toBe(7)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.BREAKPOINT)
+      expect(results[3].state).toBe(PlaybackStates.PLAYING)
+      expect(results[4].state).toBe(PlaybackStates.BREAKPOINT)
+      expect(results[5].state).toBe(PlaybackStates.PLAYING)
+      expect(results[6].state).toBe(PlaybackStates.FINISHED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
+
+    it.only('should pause for every type of error', async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'verify',
+          target: '',
+          value: '',
+        },
+        {
+          id: 3,
+          command: 'assert',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {
+        throw new Error('error')
+      })
+      executor.doVerify = jest.fn(async () => {
+        throw new VerificationError('error in verify')
+      })
+      executor.doAssert = jest.fn(async () => {
+        throw new AssertionError('error in assert')
+      })
+      const playback = new Playback({
+        executor,
+        options: {
+          pauseOnExceptions: true,
+        },
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      const playbackPromise = playback.play(test).catch(() => {})
+
+      await psetTimeout(5)
+      executor.doOpen.mockImplementation(async () => {})
+      await playback.resume()
+      await psetTimeout(5)
+      executor.doVerify.mockImplementation(async () => {})
+      await playback.resume()
+      await psetTimeout(5)
+      executor.doAssert.mockImplementation(async () => {})
+      await psetTimeout(5)
+      await playback.resume()
+      await playbackPromise
+
+      const results = flat(cb.mock.calls)
+      expect(results.length).toBe(9)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.BREAKPOINT)
+      expect(results[3].state).toBe(PlaybackStates.PLAYING)
+      expect(results[4].state).toBe(PlaybackStates.BREAKPOINT)
+      expect(results[5].state).toBe(PlaybackStates.PLAYING)
+      expect(results[6].state).toBe(PlaybackStates.BREAKPOINT)
+      expect(results[7].state).toBe(PlaybackStates.PLAYING)
+      expect(results[8].state).toBe(PlaybackStates.FINISHED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
+  })
+
   describe('Events', () => {
     describe("'command-state-changed'", () => {
       it('should listen to pending and pass changes', async () => {
