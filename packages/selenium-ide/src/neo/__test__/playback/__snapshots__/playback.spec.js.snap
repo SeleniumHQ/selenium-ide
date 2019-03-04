@@ -140,6 +140,47 @@ Array [
 ]
 `;
 
+exports[`Playback resume resume after hitting a breakpoint 1`] = `
+Array [
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "pending",
+  },
+  Object {
+    "callstackIndex": undefined,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
 exports[`Playback stop should stop a paused test 1`] = `
 Array [
   Object {

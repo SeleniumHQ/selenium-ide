@@ -169,6 +169,56 @@ describe('Playback', () => {
 
       await playbackPromise
     })
+
+    it('resume after hitting a breakpoint', async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'open',
+          target: '',
+          value: '',
+          isBreakpoint: true,
+        },
+        {
+          id: 3,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      const playbackPromise = playback.play(test).catch(() => {})
+
+      await psetTimeout(15)
+      await playback.resume()
+      await playbackPromise
+
+      const results = flat(cb.mock.calls)
+      expect(results.length).toBe(5)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.BREAKPOINT)
+      expect(results[3].state).toBe(PlaybackStates.PLAYING)
+      expect(results[4].state).toBe(PlaybackStates.FINISHED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
   })
 
   describe('stop', () => {
