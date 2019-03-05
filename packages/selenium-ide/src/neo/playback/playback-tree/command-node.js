@@ -63,7 +63,7 @@ export class CommandNode {
     return this.command.command.startsWith('//')
   }
 
-  execute(commandExecutor, options, targetOverride) {
+  execute(commandExecutor, args) {
     if (this._isRetryLimit()) {
       return Promise.resolve({
         result:
@@ -76,11 +76,7 @@ export class CommandNode {
       )
     }
     return commandExecutor.beforeCommand(this.command).then(() => {
-      return this._executeCommand(
-        commandExecutor,
-        options,
-        targetOverride
-      ).then(result => {
+      return this._executeCommand(commandExecutor, args).then(result => {
         return commandExecutor.afterCommand(this.command).then(() => {
           return this._executionResult(commandExecutor, result)
         })
@@ -110,8 +106,19 @@ export class CommandNode {
     return xlateArgument(this.command.value, variables)
   }
 
-  _executeCommand(commandExecutor, options, targetOverride) {
-    if (this.command.enabled && !Commands.list.get(this.command.command)) {
+  _executeCommand(
+    commandExecutor,
+    { options, executorOverride, targetOverride } = {}
+  ) {
+    if (executorOverride) {
+      return executorOverride(
+        this._interpolateTarget(commandExecutor.variables),
+        this._interpolateValue(commandExecutor.variables)
+      )
+    } else if (
+      this.command.enabled &&
+      !Commands.list.get(this.command.command)
+    ) {
       throw new Error(`Unknown command ${this.command.command}`)
     } else if (this.isControlFlow()) {
       return this._evaluate(commandExecutor)

@@ -19,6 +19,7 @@ import Playback, {
   PlaybackEvents,
   PlaybackStates,
   CommandStates,
+  CallstackChange,
 } from '../../playback/playback'
 import { AssertionError, VerificationError } from '../../playback/errors'
 import FakeExecutor from '../util/FakeExecutor'
@@ -64,7 +65,11 @@ describe('Playback', () => {
       const playback = new Playback({
         executor,
       })
-      return expect(playback.play(test)).rejects.toBeInstanceOf(Error)
+      try {
+        await playback.play(test)
+      } catch (err) {
+        expect(err.message).toBe('Unknown command fail')
+      }
     })
 
     it('should pass a test with a failing verify', async () => {
@@ -98,6 +103,145 @@ describe('Playback', () => {
       })
       await playback.playSingleCommand(command)
       expect(executor.doOpen).toHaveBeenCalledTimes(1)
+    })
+
+    it('should play a nested test case', async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'run',
+          target: 'test2',
+          value: '',
+        },
+        {
+          id: 3,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+
+      const test2 = {
+        id: 2,
+        commands: [
+          {
+            id: 4,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 5,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 6,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(0))
+      const playback = new Playback({
+        executor,
+        testId: 1,
+        getTestByName: () => test2,
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.CALL_STACK_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      await playback.play(test)
+
+      const results = flat(cb.mock.calls)
+      console.log(results)
+      expect(results.length).toBe(2)
+      expect(results[0].change).toBe(CallstackChange.CALLED)
+      expect(results[1].change).toBe(CallstackChange.UNWINDED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
+
+    it("should fail to execute a nested test without providing 'getTestByName'", async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'run',
+          target: 'test2',
+          value: '',
+        },
+        {
+          id: 3,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(0))
+      const playback = new Playback({
+        executor,
+      })
+      try {
+        await playback.play(test)
+      } catch (err) {
+        expect(err.message).toBe("'run' command is not supported")
+      }
+    })
+
+    it("should fail to execute a nested test if the test doesn't exist", async () => {
+      const test = [
+        {
+          id: 1,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          id: 2,
+          command: 'run',
+          target: 'test2',
+          value: '',
+        },
+        {
+          id: 3,
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(0))
+      const playback = new Playback({
+        executor,
+        getTestByName: () => undefined,
+      })
+      try {
+        await playback.play(test)
+      } catch (err) {
+        expect(err.message).toBe("Can't run unknown test: test2")
+      }
     })
   })
 
