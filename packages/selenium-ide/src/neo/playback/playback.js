@@ -16,20 +16,29 @@
 // under the License.
 
 import EventEmitter from 'events'
-import { createPlaybackTree } from './playback-tree'
 import { mergeEventEmitter } from '../../common/events'
+import { createPlaybackTree } from './playback-tree'
 import { AssertionError, VerificationError } from './errors'
+import Callstack from './callstack'
 
 const EE = Symbol('event-emitter')
 const state = Symbol('state')
 const DELAY_INTERVAL = 10
 
 export default class Playback {
-  constructor({ executor, testId, baseUrl, variables, options }) {
+  constructor({
+    executor,
+    testId,
+    baseUrl,
+    variables,
+    getTestByName,
+    options,
+  }) {
     this.executor = executor
     this.testId = testId
     this.baseUrl = baseUrl
     this.variables = variables
+    this.getTestByName = getTestByName
     this.options = Object.assign(
       {
         pauseOnExceptions: false,
@@ -40,6 +49,7 @@ export default class Playback {
     this[EE] = new EventEmitter()
     this[state] = {}
     mergeEventEmitter(this, this[EE])
+    this._run = this._run.bind(this)
   }
 
   async init() {
@@ -136,18 +146,25 @@ export default class Playback {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
     })
+    const callstack = new Callstack()
+    callstack.call({
+      callee: {
+        id: this.testId,
+      },
+    })
     this[state] = {
       initialized: true,
-      playPromise: (async () => {
-        try {
-          await this._executionLoop()
-        } catch (err) {
-          throw err
-        } finally {
-          await this._finishPlaying()
-        }
-      })(),
+      callstack,
     }
+    this[state].playPromise = (async () => {
+      try {
+        await this._executionLoop()
+      } catch (err) {
+        throw err
+      } finally {
+        await this._finishPlaying()
+      }
+    })()
 
     await this[state].playPromise
   }
@@ -158,15 +175,20 @@ export default class Playback {
     } else if (this[state].pausing) {
       await this._pause()
       return await this._executionLoop({ ignoreBreakpoint: true })
-    } else if (this.currentExecutingNode) {
+    } else if (!this.currentExecutingNode && this[state].callstack.length > 1) {
+      this._unwind()
+    }
+
+    if (this.currentExecutingNode) {
       if (this.currentExecutingNode.command.isBreakpoint && !ignoreBreakpoint) {
         await this._break()
         return await this._executionLoop({ ignoreBreakpoint: true })
       }
       const command = this.currentExecutingNode.command
+      const callstackIndex = this[state].callstack.length - 1
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
         id: command.id,
-        callstackIndex: undefined,
+        callstackIndex,
         state: CommandStates.EXECUTING,
         message: undefined,
       })
@@ -189,7 +211,7 @@ export default class Playback {
         if (err instanceof AssertionError) {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
-            callstackIndex: undefined,
+            callstackIndex,
             state: CommandStates.FAILED,
             message: err.message,
           })
@@ -200,7 +222,7 @@ export default class Playback {
         } else if (err instanceof VerificationError) {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
-            callstackIndex: undefined,
+            callstackIndex,
             state: CommandStates.FAILED,
             message: err.message,
           })
@@ -213,7 +235,7 @@ export default class Playback {
         } else {
           this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
             id: command.id,
-            callstackIndex: undefined,
+            callstackIndex,
             state: CommandStates.ERRORED,
             message: err.message,
           })
@@ -225,7 +247,7 @@ export default class Playback {
       }
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
         id: command.id,
-        callstackIndex: undefined,
+        callstackIndex,
         state: CommandStates.PASSED,
         message: undefined,
       })
@@ -236,9 +258,44 @@ export default class Playback {
   }
 
   async _executeCommand(commandNode) {
-    const result = await commandNode.execute(this.executor)
+    const { command } = commandNode
+    if (command.command === 'run') {
+      await commandNode.execute(this.executor, {
+        executorOverride: this._run,
+      })
 
-    return result
+      return {
+        next: this.playbackTree.startingCommandNode,
+      }
+    } else {
+      const result = await commandNode.execute(this.executor)
+
+      return result
+    }
+  }
+
+  async _run(testName) {
+    if (!this.getTestByName) {
+      throw new Error("'run' command is not supported")
+    }
+    const test = await this.getTestByName(testName)
+    if (!test) {
+      throw new Error(`Can't run unknown test: ${testName}`)
+    }
+
+    const tree = createPlaybackTree(test.commands)
+    this[state].callstack.call({
+      callee: test,
+      caller: {
+        position: this.currentExecutingNode.next,
+        tree,
+      },
+    })
+    this[EE].emit(PlaybackEvents.CALL_STACK_CHANGED, {
+      change: CallstackChange.CALLED,
+      callee: test,
+    })
+    this.playbackTree = tree
   }
 
   async _finishPlaying() {
@@ -306,6 +363,17 @@ export default class Playback {
       })
   }
 
+  _unwind() {
+    const { callee, caller } = this[state].callstack.unwind()
+    this[EE].emit(PlaybackEvents.CALL_STACK_CHANGED, {
+      change: CallstackChange.UNWINDED,
+      callee,
+      caller: this[state].callstack.top().callee,
+    })
+    this.playbackTree = caller.tree
+    this.currentExecutingNode = caller.position
+  }
+
   _setExitCondition(condition) {
     if (!this[state].exitCondition) {
       this[state].exitCondition = condition
@@ -321,6 +389,7 @@ export default class Playback {
 export const PlaybackEvents = {
   COMMAND_STATE_CHANGED: 'command-state-changed',
   PLAYBACK_STATE_CHANGED: 'playback-state-changed',
+  CALL_STACK_CHANGED: 'call-stack-changed',
 }
 
 export const PlaybackStates = {
@@ -350,4 +419,9 @@ export const CommandStates = {
   UNDETERMINED: 'undetermined',
   FAILED: 'failed',
   ERRORED: 'errored',
+}
+
+export const CallstackChange = {
+  CALLED: 'called',
+  UNWINDED: 'unwinded',
 }
