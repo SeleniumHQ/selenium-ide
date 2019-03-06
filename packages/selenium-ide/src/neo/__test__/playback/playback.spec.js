@@ -53,6 +53,68 @@ describe('Playback', () => {
       expect(executor.doOpen).toHaveBeenCalledTimes(3)
     })
 
+    it('should play a test twice', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      await playback.play(test)
+      await playback.play(test)
+      expect(executor.doOpen).toHaveBeenCalledTimes(6)
+    })
+
+    it('should throw if trying to play while a test is running', async () => {
+      const test = [
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+        {
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ]
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      playback.play(test)
+      expect.assertions(1)
+      try {
+        await playback.play(test)
+      } catch (err) {
+        expect(err.message).toBe(
+          "Can't start playback while a different playback is running"
+        )
+      }
+    })
+
     it('should fail to play a test with an unknown command', async () => {
       const test = [
         {
@@ -65,6 +127,7 @@ describe('Playback', () => {
       const playback = new Playback({
         executor,
       })
+      expect.assertions(1)
       try {
         await playback.play(test)
       } catch (err) {
@@ -201,6 +264,7 @@ describe('Playback', () => {
       const playback = new Playback({
         executor,
       })
+      expect.assertions(1)
       try {
         await playback.play(test)
       } catch (err) {
@@ -236,6 +300,7 @@ describe('Playback', () => {
         executor,
         getTestByName: () => undefined,
       })
+      expect.assertions(1)
       try {
         await playback.play(test)
       } catch (err) {

@@ -143,6 +143,12 @@ export default class Playback {
   }
 
   async _play() {
+    if (this[state].playPromise) {
+      throw new Error(
+        "Can't start playback while a different playback is running"
+      )
+    }
+
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
     })
@@ -299,6 +305,7 @@ export default class Playback {
   }
 
   async _finishPlaying() {
+    this[state].playPromise = undefined
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
