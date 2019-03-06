@@ -558,7 +558,9 @@ describe('Playback', () => {
       playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
         commandResults.push(r)
       )
-      const playbackPromise = playback.play(test).catch(() => {})
+      const playbackPromise = playback.play(test).catch(err => {
+        expect(err.message).toBe('playback is dead')
+      })
 
       await psetTimeout(15)
       playback.stop()
@@ -607,7 +609,9 @@ describe('Playback', () => {
       playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
         commandResults.push(r)
       )
-      const playbackPromise = playback.play(test).catch(() => {})
+      const playbackPromise = playback.play(test).catch(err => {
+        expect(err.message).toBe('playback is dead')
+      })
 
       await psetTimeout(15)
       await playback.pause()
@@ -845,7 +849,9 @@ describe('Playback', () => {
         },
       })
       const d = new Date()
-      playback.play(test)
+      playback.play(test).catch(err => {
+        expect(err.message).toBe('playback is dead')
+      })
       await psetTimeout(2)
       await playback.abort()
 
