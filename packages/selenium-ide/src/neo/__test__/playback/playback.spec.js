@@ -167,7 +167,6 @@ describe('Playback', () => {
       await playback.play(test)
 
       const results = flat(cb.mock.calls)
-      console.log(results)
       expect(results.length).toBe(2)
       expect(results[0].change).toBe(CallstackChange.CALLED)
       expect(results[1].change).toBe(CallstackChange.UNWINDED)
