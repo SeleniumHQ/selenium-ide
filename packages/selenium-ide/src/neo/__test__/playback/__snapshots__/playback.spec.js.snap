@@ -376,6 +376,47 @@ Array [
 ]
 `;
 
+exports[`Playback resume should resume a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
 exports[`Playback stop should stop a paused test 1`] = `
 Array [
   Object {
