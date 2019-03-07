@@ -27,23 +27,26 @@ import FakeExecutor from '../util/FakeExecutor'
 describe('Playback', () => {
   describe('Playback test queue', () => {
     it('should play a test', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -54,23 +57,26 @@ describe('Playback', () => {
     })
 
     it('should play a test twice', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -82,23 +88,26 @@ describe('Playback', () => {
     })
 
     it('should throw if trying to play while a test is running', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -116,13 +125,16 @@ describe('Playback', () => {
     })
 
     it('should fail to play a test with an unknown command', async () => {
-      const test = [
-        {
-          command: 'fail',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'fail',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       const playback = new Playback({
         executor,
@@ -136,13 +148,16 @@ describe('Playback', () => {
     })
 
     it('should pass a test with a failing verify', async () => {
-      const test = [
-        {
-          command: 'verifyText',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'verifyText',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doVerifyText = jest.fn(async () => {
         throw new VerificationError('failed to verify')
@@ -168,27 +183,85 @@ describe('Playback', () => {
       expect(executor.doOpen).toHaveBeenCalledTimes(1)
     })
 
+    it('should play a single command twice', async () => {
+      const command = {
+        command: 'open',
+        target: '',
+        value: '',
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      await playback.playSingleCommand(command)
+      await playback.playSingleCommand(command)
+      expect(executor.doOpen).toHaveBeenCalledTimes(2)
+    })
+
+    it('should play a single command while a test case is paused and then continue', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => psetTimeout(5))
+      const playback = new Playback({
+        executor,
+      })
+      const playPromise = playback.play(test)
+      await psetTimeout(7)
+      await playback.pause()
+      await playback.playSingleCommand({
+        command: 'open',
+        target: '',
+        value: '',
+      })
+      await playback.resume()
+      await playPromise
+      expect(executor.doOpen).toHaveBeenCalledTimes(4)
+    })
+
     it('should play a nested test case', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'run',
-          target: 'test2',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'run',
+            target: 'test2',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
 
       const test2 = {
         id: 2,
@@ -218,7 +291,6 @@ describe('Playback', () => {
       executor.doOpen = jest.fn(() => psetTimeout(0))
       const playback = new Playback({
         executor,
-        testId: 1,
         getTestByName: () => test2,
       })
       const cb = jest.fn()
@@ -238,26 +310,29 @@ describe('Playback', () => {
     })
 
     it("should fail to execute a nested test without providing 'getTestByName'", async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'run',
-          target: 'test2',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'run',
+            target: 'test2',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
 
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(0))
@@ -273,26 +348,29 @@ describe('Playback', () => {
     })
 
     it("should fail to execute a nested test if the test doesn't exist", async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'run',
-          target: 'test2',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'run',
+            target: 'test2',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
 
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(0))
@@ -307,30 +385,111 @@ describe('Playback', () => {
         expect(err.message).toBe("Can't run unknown test: test2")
       }
     })
+    it('should play a test step by step', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => psetTimeout(0))
+      const playback = new Playback({
+        executor,
+      })
+      const playPromise = playback.play(test, { pauseImmediately: true })
+      expect(executor.doOpen).toHaveBeenCalledTimes(0)
+      await psetTimeout(1)
+      await playback.step()
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+      await playback.step(2)
+      expect(executor.doOpen).toHaveBeenCalledTimes(3)
+      await playback.resume()
+      await playPromise
+      expect(executor.doOpen).toHaveBeenCalledTimes(3)
+    })
+
+    it('should reject step if one of the steps failed', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'fail',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => psetTimeout(0))
+      const playback = new Playback({
+        executor,
+      })
+      const playPromise = playback
+        .play(test, { pauseImmediately: true })
+        .catch(() => {})
+      await psetTimeout(1)
+      await playback.step()
+      expect.assertions(2)
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+      try {
+        await playback.step(2)
+      } catch (err) {
+        expect(err.message).toBe('Playback stopped prematurely')
+      }
+      await playPromise
+    })
   })
 
   describe('resume', () => {
-    it('resume a paused test', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+    it('should resume a paused test', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -362,26 +521,29 @@ describe('Playback', () => {
     })
 
     it("resume is a no-op if test isn't paused", async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(0))
       const playback = new Playback({
@@ -394,27 +556,30 @@ describe('Playback', () => {
     })
 
     it('resume after hitting a breakpoint', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-          isBreakpoint: true,
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+            isBreakpoint: true,
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -446,26 +611,29 @@ describe('Playback', () => {
 
   describe('stop', () => {
     it('should stop a test', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -493,26 +661,29 @@ describe('Playback', () => {
     })
 
     it('should stop a paused test', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -545,26 +716,29 @@ describe('Playback', () => {
 
   describe('abort', () => {
     it('should abort a test', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -592,26 +766,29 @@ describe('Playback', () => {
     })
 
     it('should abort a test after attempting to stop', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -643,26 +820,29 @@ describe('Playback', () => {
     })
 
     it('should abort a paused test', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(() => psetTimeout(10))
       const playback = new Playback({
@@ -697,14 +877,17 @@ describe('Playback', () => {
 
   describe('pause on exceptions', () => {
     it('should pause until the command is fixed', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {
         throw new Error('error')
@@ -745,26 +928,29 @@ describe('Playback', () => {
     })
 
     it('should pause for every type of error', async () => {
-      const test = [
-        {
-          id: 1,
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          id: 2,
-          command: 'verify',
-          target: '',
-          value: '',
-        },
-        {
-          id: 3,
-          command: 'assert',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'verify',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'assert',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {
         throw new Error('error')
@@ -819,23 +1005,26 @@ describe('Playback', () => {
 
   describe('delay between commands', () => {
     it('should delay between commands', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -850,13 +1039,16 @@ describe('Playback', () => {
     })
 
     it('should be able to pause mid-delay', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -874,13 +1066,16 @@ describe('Playback', () => {
     })
 
     it('should be able to stop mid-delay', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -898,13 +1093,16 @@ describe('Playback', () => {
     })
 
     it('should be able to abort mid-delay', async () => {
-      const test = [
-        {
-          command: 'open',
-          target: '',
-          value: '',
-        },
-      ]
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
       const executor = new FakeExecutor({})
       executor.doOpen = jest.fn(async () => {})
       const playback = new Playback({
@@ -927,13 +1125,16 @@ describe('Playback', () => {
   describe('Events', () => {
     describe("'command-state-changed'", () => {
       it('should listen to pending and pass changes', async () => {
-        const test = [
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         executor.doOpen = jest.fn(async () => {})
         const playback = new Playback({
@@ -948,13 +1149,16 @@ describe('Playback', () => {
         expect(results[1].state).toBe(CommandStates.PASSED)
       })
       it('should listen to fail changes', async () => {
-        const test = [
-          {
-            command: 'verifyText',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'verifyText',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         executor.doVerifyText = jest.fn(async () => {
           throw new VerificationError('failed to verify')
@@ -971,13 +1175,16 @@ describe('Playback', () => {
         expect(results[1].state).toBe(CommandStates.FAILED)
       })
       it('should listen to error changes', async () => {
-        const test = [
-          {
-            command: 'fatal',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'fatal',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         const playback = new Playback({
           executor,
@@ -993,13 +1200,16 @@ describe('Playback', () => {
     })
     describe("'playback-state-changed'", () => {
       it('should finish test successfully', async () => {
-        const test = [
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         executor.doOpen = jest.fn(async () => {})
         const playback = new Playback({
@@ -1015,23 +1225,26 @@ describe('Playback', () => {
         expect(results[2].state).toBe(PlaybackStates.FINISHED)
       })
       it('should fail due to verify', async () => {
-        const test = [
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-          {
-            command: 'verifyText',
-            target: '',
-            value: '',
-          },
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'verifyText',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         executor.doOpen = jest.fn(async () => {})
         executor.doVerifyText = jest.fn(async () => {
@@ -1050,23 +1263,26 @@ describe('Playback', () => {
         expect(results[2].state).toBe(PlaybackStates.FAILED)
       })
       it('should fail due to assertion', async () => {
-        const test = [
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-          {
-            command: 'assertText',
-            target: '',
-            value: '',
-          },
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'assertText',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         executor.doOpen = jest.fn(async () => {})
         executor.doAssertText = jest.fn(async () => {
@@ -1085,23 +1301,26 @@ describe('Playback', () => {
         expect(results[2].state).toBe(PlaybackStates.FAILED)
       })
       it('should fail due to error', async () => {
-        const test = [
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-          {
-            command: 'assertText',
-            target: '',
-            value: '',
-          },
-          {
-            command: 'open',
-            target: '',
-            value: '',
-          },
-        ]
+        const test = {
+          id: 1,
+          commands: [
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'assertText',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'open',
+              target: '',
+              value: '',
+            },
+          ],
+        }
         const executor = new FakeExecutor({})
         executor.doOpen = jest.fn(async () => {})
         executor.doAssertText = jest.fn(async () => {

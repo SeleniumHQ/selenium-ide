@@ -26,16 +26,8 @@ const state = Symbol('state')
 const DELAY_INTERVAL = 10
 
 export default class Playback {
-  constructor({
-    executor,
-    testId,
-    baseUrl,
-    variables,
-    getTestByName,
-    options,
-  }) {
+  constructor({ executor, baseUrl, variables, getTestByName, options }) {
     this.executor = executor
-    this.testId = testId
     this.baseUrl = baseUrl
     this.variables = variables
     this.getTestByName = getTestByName
@@ -57,10 +49,16 @@ export default class Playback {
     this[state].initialized = true
   }
 
-  async play(commands) {
-    this.playbackTree = createPlaybackTree(commands)
+  async play(test, { pauseImmediately } = {}) {
+    this.playbackTree = createPlaybackTree(test.commands)
     this.currentExecutingNode = this.playbackTree.startingCommandNode
     if (!this[state].initialized) await this.init()
+    const callstack = new Callstack()
+    callstack.call({
+      callee: test,
+    })
+    this[state].callstack = callstack
+    if (pauseImmediately) this[state].steps = 0
     await this._play()
   }
 
@@ -68,7 +66,31 @@ export default class Playback {
     this.playbackTree = createPlaybackTree([command])
     this.currentExecutingNode = this.playbackTree.startingCommandNode
     if (!this[state].initialized) await this.init()
+    if (this[state].callstack) {
+    } else {
+      const callstack = new Callstack()
+      callstack.call({
+        callee: {
+          commands: [command],
+        },
+      })
+      this[state].callstack = callstack
+    }
     await this._play()
+  }
+
+  async step(steps = 1) {
+    if (this[state].resumeResolve) {
+      this[state].steps = steps
+      this[state].stepPromise = 'as'
+      const p = new Promise((res, rej) => {
+        this[state].stepPromise = { res, rej }
+      })
+      this._resume()
+      await p
+    } else {
+      throw new Error("Can't step through a test that isn't paused")
+    }
   }
 
   async pause({ graceful } = { graceful: false }) {
@@ -82,14 +104,8 @@ export default class Playback {
   }
 
   resume() {
-    if (this[state].resumeResolve) {
-      const r = this[state].resumeResolve
-      this[state].resumeResolve = undefined
-      r()
-      this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
-        state: PlaybackStates.PLAYING,
-      })
-    }
+    this[state].steps = undefined
+    this._resume()
   }
 
   async stop() {
@@ -152,16 +168,6 @@ export default class Playback {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
     })
-    const callstack = new Callstack()
-    callstack.call({
-      callee: {
-        id: this.testId,
-      },
-    })
-    this[state] = {
-      initialized: true,
-      callstack,
-    }
     this[state].playPromise = (async () => {
       try {
         await this._executionLoop()
@@ -175,13 +181,37 @@ export default class Playback {
     await this[state].playPromise
   }
 
+  _resume() {
+    if (this[state].resumeResolve) {
+      const r = this[state].resumeResolve
+      this[state].resumeResolve = undefined
+      r()
+      this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+        state: PlaybackStates.PLAYING,
+      })
+    }
+  }
+
   async _executionLoop({ ignoreBreakpoint } = {}) {
     if (this[state].stopping) {
       return
     } else if (this[state].pausing) {
       await this._pause()
       return await this._executionLoop({ ignoreBreakpoint: true })
-    } else if (!this.currentExecutingNode && this[state].callstack.length > 1) {
+    } else if (this[state].steps !== undefined) {
+      if (this[state].steps === 0) {
+        this[state].steps = undefined
+        if (this[state].stepPromise) {
+          this[state].stepPromise.res()
+          this[state].stepPromise = undefined
+        }
+        await this._pause()
+        return await this._executionLoop({ ignoreBreakpoint: true })
+      }
+      this[state].steps--
+    }
+
+    if (!this.currentExecutingNode && this[state].callstack.length > 1) {
       this._unwind()
     }
 
@@ -306,6 +336,10 @@ export default class Playback {
 
   async _finishPlaying() {
     this[state].playPromise = undefined
+    this[state].steps = undefined
+    if (this[state].stepPromise) {
+      this[state].stepPromise.rej(new Error('Playback stopped prematurely'))
+    }
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
