@@ -17,7 +17,19 @@
 
 import CommandEmitter from '../src/command'
 
-describe('Command Emitting', () => {
+describe('command code emitter', () => {
+  it('should emit `assert` command', () => {
+    const command = {
+      command: 'assert',
+      target: 'varrrName',
+      value: 'true',
+    }
+    expect(CommandEmitter.emit(command)).resolves.toBe(
+      `assertEquals(vars.get("${command.target}").toString(), ${
+        command.value
+      });`
+    )
+  })
   it('should emit `assert text` command', () => {
     const command = {
       command: 'assertText',
@@ -108,6 +120,18 @@ describe('Command Emitting', () => {
       }`
     )
   })
+  it('should emit `execute script` command', () => {
+    const command = {
+      command: 'executeScript',
+      target: 'javascript',
+      value: 'myVar',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `vars.push("${command.value}") = driver.executeScript("${
+        command.target
+      }");`
+    )
+  })
   it('should emit `open` with absolute url', () => {
     const command = {
       command: 'open',
@@ -118,7 +142,7 @@ describe('Command Emitting', () => {
       `driver.get("${command.target}");`
     )
   })
-  it.skip('should emit `send keys` command', () => {
+  it('should emit `send keys` command', () => {
     const command = {
       command: 'sendKeys',
       target: 'id=input',

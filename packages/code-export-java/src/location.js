@@ -1,4 +1,4 @@
-import LocationEmitter from '../../code-export-utils/src/location'
+import exporter from '../../code-export-utils/src'
 
 const emitters = {
   id: emitId,
@@ -11,7 +11,7 @@ const emitters = {
 }
 
 export function emit(location) {
-  return LocationEmitter.emit(location, emitters)
+  return exporter.emit.location(location, emitters)
 }
 
 export default {

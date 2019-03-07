@@ -1,7 +1,8 @@
-import LocationEmitter from './location'
-import TextProcessor from '../../code-export-utils/src/text'
+import exporter from '../../code-export-utils/src'
+import location from './location'
 
-const emitters = {
+export const emitters = {
+  assert: emitAssert,
   assertText: emitVerifyText,
   click: emitClick,
   check: emitCheck,
@@ -10,23 +11,39 @@ const emitters = {
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
+  executeScript: emitExecuteScript,
   open: emitOpen,
-  //sendKeys: emitSendKeys,
+  sendKeys: emitSendKeys,
   setWindowSize: emitSetWindowSize,
   type: emitType,
   uncheck: emitUncheck,
 }
 
+function variableLookup(varName) {
+  return `vars.get("${varName}").toString()`
+}
+
 export function emit(command) {
-  if (emitters[command.command]) {
-    return emitters[command.command](command.target, command.value)
-  }
+  return exporter.emit.command(command, emitters, variableLookup)
+}
+
+// TODO: add support for executeScript opt. args
+function generateScript(script, isExpression = false) {
+  return `driver.executeScript("${
+    isExpression ? `return (${script})` : script
+  }");`
+}
+
+function emitAssert(varName, value) {
+  return Promise.resolve(
+    `assertEquals(vars.get("${varName}").toString(), ${value});`
+  )
 }
 
 async function emitCheck(locator) {
   return Promise.resolve(
     `{
-        WebElement element = driver.findElement(${await LocationEmitter.emit(
+        WebElement element = driver.findElement(${await location.emit(
           locator
         )});
         if (!element.isSelected()) {
@@ -38,16 +55,14 @@ async function emitCheck(locator) {
 
 async function emitClick(target) {
   return Promise.resolve(
-    `driver.findElement(${await LocationEmitter.emit(target)}).click();`
+    `driver.findElement(${await location.emit(target)}).click();`
   )
 }
 
 async function emitDoubleClick(target) {
   return Promise.resolve(
     `{
-        WebElement element = driver.findElement(${await LocationEmitter.emit(
-          target
-        )});
+        WebElement element = driver.findElement(${await location.emit(target)});
         Actions builder = new Actions(driver);
         builder.doubleClick(element).perform();
       }`
@@ -57,15 +72,21 @@ async function emitDoubleClick(target) {
 async function emitDragAndDrop(dragged, dropped) {
   return Promise.resolve(
     `{
-        WebElement dragged = driver.findElement(${await LocationEmitter.emit(
+        WebElement dragged = driver.findElement(${await location.emit(
           dragged
         )});
-        WebElement dropped = driver.findElement(${await LocationEmitter.emit(
+        WebElement dropped = driver.findElement(${await location.emit(
           dropped
         )});
         Actions builder = new Actions(driver);
         builder.dragAndDrop(dragged, dropped).perform();
       }`
+  )
+}
+
+async function emitExecuteScript(script, varName) {
+  return Promise.resolve(
+    (varName ? `vars.push("${varName}") = ` : '') + generateScript(script)
   )
 }
 
@@ -85,26 +106,22 @@ async function emitSetWindowSize(size) {
 
 async function emitType(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await LocationEmitter.emit(
-      target
-    )}).sendKeys("${value}");`
+    `driver.findElement(${await location.emit(target)}).sendKeys("${value}");`
   )
 }
 
-//async function emitSendKeys(target, value) {
-//  return Promise.resolve(
-//    `driver.findElement(${await LocationEmitter.emit(
-//      target
-//    )}).sendKeys(${value
-//      .map(s => (s.startsWith('Key[') ? s : `\`${s}\``))
-//      .join(',')});`
-//  )
-//}
+async function emitSendKeys(target, value) {
+  return Promise.resolve(
+    `driver.findElement(${await location.emit(target)}).sendKeys(${value
+      .map(s => (s.startsWith('Key[') ? s : `"${s}"`))
+      .join(',')}));`
+  )
+}
 
 async function emitUncheck(locator) {
   return Promise.resolve(
     `{
-        WebElement element = driver.findElement(${await LocationEmitter.emit(
+        WebElement element = driver.findElement(${await location.emit(
           locator
         )});
         if (element.isSelected()) {
@@ -116,9 +133,9 @@ async function emitUncheck(locator) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(
-    `assertThat(driver.findElement(${await LocationEmitter.emit(
+    `assertThat(driver.findElement(${await location.emit(
       locator
-    )}).getText(), is("${TextProcessor.escape(text)}"));`
+    )}).getText(), is("${exporter.emit.escapedText(text)}"));`
   )
 }
 

@@ -62,6 +62,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
+import java.util.HashMap;
 
 `
 }
@@ -69,6 +70,7 @@ import org.openqa.selenium.WebElement;
 function emitSetup() {
   return `
     private WebDriver driver;
+    private HashMap<String, Object> vars = new HashMap<>();
 
     @Before
     public void setUp() {

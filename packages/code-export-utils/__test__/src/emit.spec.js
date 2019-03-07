@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import LocationEmitter from '../../src/location'
+import { emitLocation } from '../../src/emit'
 
 describe('Location emitter', async () => {
   it('emits by sync emitter', () => {
@@ -24,8 +24,7 @@ describe('Location emitter', async () => {
         return `By.id("${selector}")`
       },
     }
-
-    expect(LocationEmitter.emit('id=blah', emitters)).toEqual(`By.id("blah")`)
+    expect(emitLocation('id=blah', emitters)).toEqual(`By.id("blah")`)
   })
   it('emits by async emitter', () => {
     const emitters = {
@@ -33,18 +32,13 @@ describe('Location emitter', async () => {
         return Promise.resolve(`By.id("${selector}")`)
       },
     }
-
-    expect(LocationEmitter.emit('id=blah', emitters)).resolves.toBe(
-      `By.id("blah")`
-    )
+    expect(emitLocation('id=blah', emitters)).resolves.toBe(`By.id("blah")`)
   })
   it('should fail to emit empty string', () => {
-    return expect(() => LocationEmitter.emit('', {})).toThrow(
-      "Locator can't be empty"
-    )
+    return expect(() => emitLocation('', {})).toThrow("Locator can't be empty")
   })
   it('should fail to emit unknown locator', () => {
-    return expect(() => LocationEmitter.emit('notExists=element', {})).toThrow(
+    return expect(() => emitLocation('notExists=element', {})).toThrow(
       'Unknown locator notExists'
     )
   })

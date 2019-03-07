@@ -15,21 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import StringEscape from 'js-string-escape'
-
-export function emit(location, emitters) {
-  if (/^\/\//.test(location)) {
-    return emitters.xpath(location)
-  }
-  const fragments = location.split('=')
-  const type = fragments.shift()
-  const selector = StringEscape(fragments.join('='))
-  if (emitters[type]) {
-    return emitters[type](selector)
-  } else {
-    throw new Error(type ? `Unknown locator ${type}` : "Locator can't be empty")
-  }
-}
+import emit from './emit'
 
 export default {
   emit,
