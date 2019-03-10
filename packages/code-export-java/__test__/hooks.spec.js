@@ -15,24 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import fs from 'fs'
-import path from 'path'
-import { emitTest, sanitizeName, capitalize } from '../src'
+import Dependencies from '../src/hooks/declareDependencies'
 
-describe('Code Export Java Selenium', () => {
-  it('should sanitize the name', () => {
-    expect(sanitizeName('blah blah')).toEqual('blahblah')
+describe('emitted test hooks', () => {
+  it('should register external dependencies', () => {
+    Dependencies.register('blahblahblah')
+    expect(Dependencies.emit().includes('blahblahblah')).toBeTruthy()
   })
-  it('should capitalize the name', () => {
-    expect(capitalize('blahblah')).toEqual('Blahblah')
-  })
-  it('should export a test to JUnit code', async () => {
-    const project = JSON.parse(
-      fs.readFileSync(path.join(__dirname, 'test-files', 'single-test.side'))
-    )
-    const results = await emitTest(project.url, project.tests[0])
-    expect(results).toBeDefined()
-    expect(results).toMatchSnapshot()
-  })
-  //it('should export a suite to code', () => {})
 })
+
+// declareDependencies
+// declareVariables
+// beforeAll
+// beforeEach
+// afterEach
+// afterAll
