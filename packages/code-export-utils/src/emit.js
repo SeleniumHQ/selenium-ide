@@ -15,12 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { registerPreprocessors, preprocessParameter } from './preprocessor'
+import { preprocessParameter } from './preprocessor'
 import StringEscape from 'js-string-escape'
 
-export function emitCommand(command, emitters, variableLookup) {
-  registerPreprocessors(emitters)
-  const emitter = emitters[command.command]
+export function emitCommand(command, emitter, variableLookup) {
   if (emitter) {
     return emitter(
       preprocessParameter(

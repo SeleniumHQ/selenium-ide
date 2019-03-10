@@ -99,12 +99,18 @@ export const emitters = {
   //while: emitControlFlowWhile,
 }
 
+exporter.register.preprocessors(emitters)
+
 function variableLookup(varName) {
   return `vars.get("${varName}").toString()`
 }
 
 export function emit(command) {
-  return exporter.emit.command(command, emitters, variableLookup)
+  return exporter.emit.command(
+    command,
+    emitters[command.command],
+    variableLookup
+  )
 }
 
 // TODO: add support for executeScript opt. args

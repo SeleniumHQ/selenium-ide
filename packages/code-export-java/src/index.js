@@ -50,7 +50,7 @@ export function capitalize(input) {
   return input.charAt(0).toUpperCase() + input.substr(1)
 }
 
-function emitDependencies() {
+export function emitDependencies() {
   return `
 import org.junit.Test;
 import org.junit.Before;
