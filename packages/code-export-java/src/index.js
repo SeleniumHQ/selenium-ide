@@ -15,7 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import CommandEmitter from './command'
+import Command from './command'
+import Dependencies from './hooks/declareDependencies'
+import BeforeEach from './hooks/beforeEach'
+import DeclareVariables from './hooks/declareVariables'
+import AfterEach from './hooks/afterEach'
 
 export function emitTest(baseUrl, test) {
   global.baseUrl = baseUrl
@@ -26,7 +30,7 @@ export function emitTest(baseUrl, test) {
     public void ${name}() {
     `
   const emittedCommands = test.commands.map(command => {
-    return CommandEmitter.emit(command)
+    return Command.emit(command)
   })
   return Promise.all(emittedCommands)
     .then(results => {
@@ -50,50 +54,13 @@ export function capitalize(input) {
   return input.charAt(0).toUpperCase() + input.substr(1)
 }
 
-export function emitDependencies() {
-  return `
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebElement;
-import java.util.HashMap;
-
-`
-}
-
-function emitSetup() {
-  return `
-    private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<>();
-
-    @Before
-    public void setUp() {
-        driver = new FirefoxDriver();
-    }
-`
-}
-
-function emitTearDown() {
-  return `
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-`
-}
-
 function emitClass(name, body) {
   let result = ''
-  result += emitDependencies()
+  result += Dependencies.emit()
   result += `public class ${capitalize(name)} {`
-  result += emitSetup()
-  result += emitTearDown()
+  result += DeclareVariables.emit()
+  result += BeforeEach.emit()
+  result += AfterEach.emit()
   result += body
   result += `}\n`
   return result

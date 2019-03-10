@@ -19,8 +19,8 @@ import emit from './emit'
 import { registerPreprocessors } from './preprocessor'
 
 export default {
-  emit,
-  register: {
-    preprocessors: registerPreprocessors,
+  ...emit,
+  preprocessors: {
+    register: registerPreprocessors,
   },
 }

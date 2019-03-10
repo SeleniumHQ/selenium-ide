@@ -99,14 +99,14 @@ export const emitters = {
   //while: emitControlFlowWhile,
 }
 
-exporter.register.preprocessors(emitters)
+exporter.preprocessors.register(emitters)
 
 function variableLookup(varName) {
   return `vars.get("${varName}").toString()`
 }
 
 export function emit(command) {
-  return exporter.emit.command(
+  return exporter.command.emit(
     command,
     emitters[command.command],
     variableLookup
@@ -221,7 +221,7 @@ async function emitVerifyText(locator, text) {
   return Promise.resolve(
     `assertThat(driver.findElement(${await location.emit(
       locator
-    )}).getText(), is("${exporter.emit.escapedText(text)}"));`
+    )}).getText(), is("${exporter.text.emit(text)}"));`
   )
 }
 

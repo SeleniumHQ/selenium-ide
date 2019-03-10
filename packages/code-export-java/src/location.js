@@ -11,7 +11,7 @@ const emitters = {
 }
 
 export function emit(location) {
-  return exporter.emit.location(location, emitters)
+  return exporter.location.emit(location, emitters)
 }
 
 export default {

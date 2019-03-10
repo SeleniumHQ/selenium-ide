@@ -18,6 +18,7 @@
 import fs from 'fs'
 import path from 'path'
 import { emitTest, sanitizeName, capitalize } from '../src'
+import Dependencies from '../src/hooks/declareDependencies'
 
 describe('Code Export Java Selenium', () => {
   it('should sanitize the name', () => {
@@ -35,4 +36,17 @@ describe('Code Export Java Selenium', () => {
     expect(results).toMatchSnapshot()
   })
   //it('should export a suite to code', () => {})
+  describe('hooks', () => {
+    it('should register external dependencies', () => {
+      Dependencies.register('blahblahblah')
+      expect(Dependencies.emit().includes('blahblahblah')).toBeTruthy()
+    })
+  })
 })
+
+// declareDependencies
+// declareVariables
+// beforeAll
+// beforeEach
+// afterEach
+// afterAll
