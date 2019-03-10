@@ -30,27 +30,29 @@
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy"
     },
-    "setupTestFrameworkScriptFile": "./packages/selenium-ide/scripts/jest/test.config.js",
+    "setupFilesAfterEnv": [
+      "./packages/selenium-ide/scripts/jest/test.config.js"
+    ],
     "testMatch": [
       "**/packages/**/__test?(s)__/**/*.js?(x)"
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.3.4",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^24.3.1",
     "eslint": "^5.8.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-jest": "^21.27.1",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.11.1",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^23.6.0",
+    "jest": "^24.3.1",
     "lerna": "^3.4.3",
     "prettier": "^1.14.3",
     "stylelint": "^9.7.1",
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-standard": "^18.2.0",
-    "stylelint-prettier": "^1.0.3",
-    "web-ext": "^2.4.0"
+    "stylelint-prettier": "^1.0.3"
   }
 }

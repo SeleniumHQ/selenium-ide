@@ -1,26 +1,12 @@
 {
-  "env": {
-    "test": {
-      "presets": ["node8"]
-    },
-    "development": {
-      "presets": [
+  "presets": [
+    [
+      "@babel/preset-env",
       {
-        "env": {
-          "modules": false
+        "targets": {
+          "node": "8"
         }
-      }],
-      "plugins": [
-        "external-helpers",
-        "transform-decorators-legacy",
-        "transform-decorators",
-        "transform-object-rest-spread",
-        ["babel-plugin-transform-runtime", {
-          "helpers": false,
-          "polyfill": false,
-          "regenerator": true
-        }]
-      ]
-    }
-  }
+      }
+    ]
+  ]
 }

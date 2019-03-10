@@ -15,17 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import path from 'path'
-import webpack from 'webpack'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import CopyWebpackPlugin from 'copy-webpack-plugin'
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
-import autoprefixer from 'autoprefixer'
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const autoprefixer = require('autoprefixer')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-export default {
+module.exports = {
   context: path.resolve(__dirname, 'src'),
   devtool: isProduction ? 'source-map' : 'cheap-eval-source-map',
   entry: {

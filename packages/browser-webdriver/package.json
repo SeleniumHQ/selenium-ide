@@ -13,8 +13,8 @@
     "build/webdriver.js"
   ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-node8": "^1.2.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/preset-env": "^7.3.4",
     "browserify": "^16.2.2",
     "selenium-webdriver": "3.6.0",
     "watchify": "^3.11.0"

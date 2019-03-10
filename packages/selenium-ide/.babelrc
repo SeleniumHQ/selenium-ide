@@ -1,20 +1,19 @@
 {
-  "presets": ["env",
-    "react"
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "8",
+          "chrome": "60",
+          "firefox": "56"
+        }
+      }
+    ],
+    "@babel/preset-react"
   ],
   "plugins": [
-    "transform-decorators-legacy",
-    "transform-decorators",
-    "transform-object-rest-spread",
-    ["transform-class-properties", { "loose": true }],
-    ["babel-plugin-transform-builtin-extend", {
-      "globals": ["Error", "Array"]
-    }],
-    "react-hot-loader/babel",
-    ["babel-plugin-transform-runtime", {
-      "helpers": false,
-      "polyfill": false,
-      "regenerator": true
-    }]
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ]
 }
