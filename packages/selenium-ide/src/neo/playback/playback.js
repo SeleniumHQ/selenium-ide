@@ -50,6 +50,7 @@ export default class Playback {
   }
 
   async play(test, { pauseImmediately } = {}) {
+    this._beforePlay()
     this.playbackTree = createPlaybackTree(test.commands)
     this.currentExecutingNode = this.playbackTree.startingCommandNode
     if (!this[state].initialized) await this.init()
@@ -59,10 +60,15 @@ export default class Playback {
     })
     this[state].callstack = callstack
     if (pauseImmediately) this[state].steps = 0
-    await this._play()
+    return this._play()
   }
 
+  async playTo(test, commandToStop) {}
+
+  async playFrom(test, commandToStart) {}
+
   async playSingleCommand(command) {
+    this._beforePlay()
     this.playbackTree = createPlaybackTree([command])
     this.currentExecutingNode = this.playbackTree.startingCommandNode
     if (!this[state].initialized) await this.init()
@@ -158,27 +164,38 @@ export default class Playback {
     })
   }
 
-  async _play() {
-    if (this[state].playPromise) {
+  _beforePlay() {
+    if (this[state].isPlaying) {
       throw new Error(
         "Can't start playback while a different playback is running"
       )
+    } else {
+      this[state].isPlaying = true
     }
+  }
 
+  async _play() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
     })
+
+    let finishWasCalled = false
     this[state].playPromise = (async () => {
       try {
         await this._executionLoop()
       } catch (err) {
-        throw err
+        if (finishWasCalled) {
+          throw err
+        }
       } finally {
         await this._finishPlaying()
       }
     })()
 
-    await this[state].playPromise
+    return () => {
+      finishWasCalled = true
+      return this[state].playPromise
+    }
   }
 
   _resume() {
@@ -336,6 +353,7 @@ export default class Playback {
 
   async _finishPlaying() {
     this[state].playPromise = undefined
+    this[state].isPlaying = undefined
     this[state].steps = undefined
     if (this[state].stepPromise) {
       this[state].stepPromise.rej(new Error('Playback stopped prematurely'))
