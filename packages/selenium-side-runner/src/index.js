@@ -34,6 +34,7 @@ import Config from './config'
 import Satisfies from './versioner'
 import parseModulePath from './module-path'
 import metadata from '../package.json'
+import { sanitizeFileName } from './util'
 
 const DEFAULT_TIMEOUT = 15000
 
@@ -368,10 +369,6 @@ function runAll(projects, index = 0) {
 
 function writeJSFile(name, data, postfix = '.test.js') {
   fs.writeFileSync(`${name}${postfix}`, beautify(data, { indent_size: 2 }))
-}
-
-function sanitizeFileName(name) {
-  return name.replace(/([^a-z0-9 ._-]+)/gi, '')
 }
 
 const projects = [
