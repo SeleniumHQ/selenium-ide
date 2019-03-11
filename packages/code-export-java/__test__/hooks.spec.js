@@ -26,8 +26,3 @@ describe('emitted test hooks', () => {
     })
   })
 })
-
-// beforeAll
-// beforeEach
-// afterEach
-// afterAll
