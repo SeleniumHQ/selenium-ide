@@ -591,6 +591,36 @@ describe('Playback', () => {
         )
       }
     })
+    it('should play from a point', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      const playPromise = await playback.playFrom(test, test.commands[1])
+      await playPromise()
+      expect(executor.doOpen).toHaveBeenCalledTimes(2)
+    })
   })
 
   describe('resume', () => {

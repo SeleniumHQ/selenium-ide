@@ -49,10 +49,14 @@ export default class Playback {
     this[state].initialized = true
   }
 
-  async play(test, { pauseImmediately } = {}) {
+  async play(test, { pauseImmediately, startingCommandIndex } = {}) {
     this._beforePlay()
     this.playbackTree = createPlaybackTree(test.commands)
-    this.currentExecutingNode = this.playbackTree.startingCommandNode
+    if (startingCommandIndex) {
+      this.currentExecutingNode = this.playbackTree.nodes[startingCommandIndex]
+    } else {
+      this.currentExecutingNode = this.playbackTree.startingCommandNode
+    }
     if (!this[state].initialized) await this.init()
     const callstack = new Callstack()
     callstack.call({
@@ -83,7 +87,16 @@ export default class Playback {
     }
   }
 
-  async playFrom(test, commandToStart) {}
+  async playFrom(test, commandToStart) {
+    const index = test.commands.indexOf(commandToStart)
+    if (index === -1) {
+      throw new Error('Command not found in test')
+    } else {
+      const finish = await this.play(test, { startingCommandIndex: index })
+
+      return finish
+    }
+  }
 
   async playSingleCommand(command) {
     this._beforePlay()

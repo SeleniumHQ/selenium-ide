@@ -33,6 +33,7 @@ function createPlaybackTree(commandStack, isValidationDisabled) {
   )
   return {
     startingCommandNode: nodes[0],
+    nodes,
     containsControlFlow: containsControlFlow(nodes),
   }
 }
