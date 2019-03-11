@@ -63,7 +63,25 @@ export default class Playback {
     return this._play()
   }
 
-  async playTo(test, commandToStop) {}
+  async playTo(test, commandToStop) {
+    if (!test.commands.includes(commandToStop)) {
+      throw new Error('Command not found in test')
+    } else {
+      const playToPromise = new Promise((res, rej) => {
+        this[state].playTo = {
+          command: commandToStop,
+          res,
+          rej,
+        }
+      }).finally(() => {
+        this[state].playTo = undefined
+      })
+      const finish = await this.play(test)
+      await playToPromise
+
+      return finish
+    }
+  }
 
   async playFrom(test, commandToStart) {}
 
@@ -233,7 +251,11 @@ export default class Playback {
     }
 
     if (this.currentExecutingNode) {
-      if (this.currentExecutingNode.command.isBreakpoint && !ignoreBreakpoint) {
+      if (
+        (this.currentExecutingNode.command.isBreakpoint && !ignoreBreakpoint) ||
+        (this[state].playTo &&
+          this[state].playTo.command === this.currentExecutingNode.command)
+      ) {
         await this._break()
         return await this._executionLoop({ ignoreBreakpoint: true })
       }
@@ -358,6 +380,13 @@ export default class Playback {
     if (this[state].stepPromise) {
       this[state].stepPromise.rej(new Error('Playback stopped prematurely'))
     }
+    if (this[state].playTo) {
+      this[state].playTo.rej(
+        new Error(
+          "Playback finished before reaching the requested command, check to make sure control flow isn't preventing this"
+        )
+      )
+    }
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
@@ -384,6 +413,13 @@ export default class Playback {
       const r = this[state].pausingResolve
       this[state].pausingResolve = undefined
       r()
+    }
+    if (
+      this.currentExecutingNode &&
+      this[state].playTo &&
+      this.currentExecutingNode.command === this[state].playTo.command
+    ) {
+      this[state].playTo.res()
     }
 
     await new Promise(res => {
