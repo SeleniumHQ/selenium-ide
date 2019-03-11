@@ -26,7 +26,7 @@ import FakeExecutor from '../util/FakeExecutor'
 
 describe('Playback', () => {
   describe('Playback test queue', () => {
-    it.only('should play a test', async () => {
+    it('should play a test', async () => {
       const test = {
         id: 1,
         commands: [
@@ -496,7 +496,7 @@ describe('Playback', () => {
   })
 
   describe('play to and from', () => {
-    it.skip('should play to a point', async () => {
+    it('should play to a point and continue to the end', async () => {
       const test = {
         id: 1,
         commands: [
@@ -522,8 +522,74 @@ describe('Playback', () => {
       const playback = new Playback({
         executor,
       })
-      await playback.playTo(test, test.commands[2])
+      const playPromise = await playback.playTo(test, test.commands[2])
       expect(executor.doOpen).toHaveBeenCalledTimes(2)
+      await playback.resume()
+      await playPromise()
+      expect(executor.doOpen).toHaveBeenCalledTimes(3)
+    })
+    it('should fail to play to a point that does not exist in the test', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      const playback = new Playback({
+        executor,
+      })
+      expect.assertions(1)
+      try {
+        await playback.playTo(test, {})
+      } catch (err) {
+        expect(err.message).toBe('Command not found in test')
+      }
+    })
+    it('should fail to play to an unreachable point', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'if',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'end',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      executor.evaluateConditional = jest.fn(async () => false)
+      const playback = new Playback({
+        executor,
+      })
+      expect.assertions(1)
+      try {
+        await playback.playTo(test, test.commands[2])
+      } catch (err) {
+        expect(err.message).toBe(
+          "Playback finished before reaching the requested command, check to make sure control flow isn't preventing this"
+        )
+      }
     })
   })
 
