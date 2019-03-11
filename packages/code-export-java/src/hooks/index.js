@@ -4,6 +4,7 @@ import beforeAll from './beforeAll'
 import beforeEach from './beforeEach'
 import afterEach from './afterEach'
 import afterAll from './afterAll'
+import inEach from './inEach'
 
 export default {
   dependencies,
@@ -12,4 +13,5 @@ export default {
   beforeEach,
   afterEach,
   afterAll,
+  inEach,
 }

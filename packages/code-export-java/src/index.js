@@ -18,7 +18,7 @@
 import Command from './command'
 import hooks from './hooks'
 
-export function emitTest(baseUrl, test) {
+export function emitTest({ baseUrl, test }) {
   global.baseUrl = baseUrl
   const name = sanitizeName(test.name)
   let result = ''
@@ -37,10 +37,36 @@ export function emitTest(baseUrl, test) {
       })
     })
     .then(() => {
+      result += hooks.inEach.emit()
       result += `}`
       result += `\n`
       return emitClass(name, result)
     })
+}
+
+export async function emitSuite({ baseUrl, suite, tests }) {
+  global.baseUrl = baseUrl
+  let result = ''
+  for (const testName of suite.tests) {
+    result += `
+    @Test
+    public void ${sanitizeName(testName)}() {
+    `
+    const commands = tests
+      .find(test => test.name === testName)
+      .commands.map(command => {
+        return Command.emit(command)
+      })
+    const emittedCommands = await Promise.all(commands)
+    emittedCommands.forEach(emittedCommand => {
+      result += `    ${emittedCommand}
+    `
+    })
+    result += hooks.inEach.emit()
+    result += `}`
+    result += `\n`
+  }
+  return emitClass(sanitizeName(suite.name), result)
 }
 
 export function sanitizeName(input) {
@@ -63,4 +89,20 @@ function emitClass(name, body) {
   result += body
   result += `}\n`
   return result
+}
+
+export default {
+  emit: {
+    test: emitTest,
+    suite: emitSuite,
+  },
+  register: {
+    command: Command.register,
+    variable: hooks.variables.register,
+    dependency: hooks.dependencies.register,
+    beforeAll: hooks.beforeAll.register,
+    beforeEach: hooks.beforeEach.register,
+    afterEach: hooks.afterEach.register,
+    afterAll: hooks.afterAll.register,
+  },
 }

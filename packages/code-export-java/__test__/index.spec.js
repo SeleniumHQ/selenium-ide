@@ -17,7 +17,7 @@
 
 import fs from 'fs'
 import path from 'path'
-import { emitTest, sanitizeName, capitalize } from '../src'
+import { emitTest, emitSuite, sanitizeName, capitalize } from '../src'
 
 describe('Code Export Java Selenium', () => {
   it('should sanitize the name', () => {
@@ -30,9 +30,47 @@ describe('Code Export Java Selenium', () => {
     const project = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'test-files', 'single-test.side'))
     )
-    const results = await emitTest(project.url, project.tests[0])
+    const results = await emitTest({
+      baseUrl: project.url,
+      test: project.tests[0],
+      tests: project.tests,
+    })
     expect(results).toBeDefined()
     expect(results).toMatchSnapshot()
   })
-  //it('should export a suite to code', () => {})
+  it('should export a suite to JUnit code', async () => {
+    const project = normalizeProject(
+      JSON.parse(
+        fs.readFileSync(path.join(__dirname, 'test-files', 'single-suite.side'))
+      )
+    )
+    const results = await emitSuite({
+      baseUrl: project.url,
+      suite: project.suites[0],
+      tests: project.tests,
+    })
+    expect(results).toBeDefined()
+    expect(results).toMatchSnapshot()
+  })
 })
+
+describe('Normalize Project', () => {
+  it('converts suite.tests guids to names', () => {
+    const project = JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'test-files', 'single-suite.side'))
+    )
+    const normalizedProject = normalizeProject(project)
+    const testNames = project.tests.map(test => test.name)
+    expect(testNames).toEqual(normalizedProject.suites[0].tests)
+  })
+})
+
+function normalizeProject(project) {
+  let _project = { ...project }
+  _project.suites.forEach(suite => {
+    suite.tests.forEach((testId, index) => {
+      suite.tests[index] = _project.tests.find(test => test.id === testId).name
+    })
+  })
+  return _project
+}
