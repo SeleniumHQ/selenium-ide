@@ -22,21 +22,19 @@ import './style.css'
 
 export default class ActionButton extends React.Component {
   render() {
-    const { 'data-tip': dataTip, ...props } = { ...this.props }
+    const props = { ...this.props }
 
     delete props.isActive
     return (
-      <span data-tip={dataTip}>
-        <button
-          type="button"
-          {...props}
-          className={classNames(
-            'btn-action',
-            { active: this.props.isActive },
-            this.props.className
-          )}
-        />
-      </span>
+      <button
+        type="button"
+        {...props}
+        className={classNames(
+          'btn-action',
+          { active: this.props.isActive },
+          this.props.className
+        )}
+      />
     )
   }
 
