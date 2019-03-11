@@ -16,9 +16,8 @@
 // under the License.
 
 let result = `
-    @After
-    public void tearDown() {
-        driver.quit();
+    @AfterAll
+    public void finalTearDown() {
 `
 
 function register(statement) {

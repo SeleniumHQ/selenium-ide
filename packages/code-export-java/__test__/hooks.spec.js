@@ -15,17 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Dependencies from '../src/hooks/declareDependencies'
+import hooks from '../src/hooks'
 
 describe('emitted test hooks', () => {
-  it('should register external dependencies', () => {
-    Dependencies.register('blahblahblah')
-    expect(Dependencies.emit().includes('blahblahblah')).toBeTruthy()
+  it('should register new entries', () => {
+    Object.keys(hooks).forEach(hook => {
+      const input = 'blahblahblah'
+      hooks[hook].register(input)
+      expect(hooks[hook].emit().includes(input)).toBeTruthy()
+    })
   })
 })
 
-// declareDependencies
-// declareVariables
 // beforeAll
 // beforeEach
 // afterEach
