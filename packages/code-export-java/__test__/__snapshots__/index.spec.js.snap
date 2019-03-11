@@ -18,6 +18,10 @@ public class Login {
     private WebDriver driver;
     private HashMap<String, Object> vars = new HashMap<>();
 
+    @BeforeAll
+    public void initialSetUp() {
+    }
+
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
@@ -26,6 +30,10 @@ public class Login {
     @After
     public void tearDown() {
         driver.quit();
+    }
+
+    @AfterAll
+    public void finalTearDown() {
     }
 
     @Test

@@ -16,10 +16,7 @@
 // under the License.
 
 import Command from './command'
-import Dependencies from './hooks/declareDependencies'
-import BeforeEach from './hooks/beforeEach'
-import DeclareVariables from './hooks/declareVariables'
-import AfterEach from './hooks/afterEach'
+import hooks from './hooks'
 
 export function emitTest(baseUrl, test) {
   global.baseUrl = baseUrl
@@ -56,11 +53,13 @@ export function capitalize(input) {
 
 function emitClass(name, body) {
   let result = ''
-  result += Dependencies.emit()
+  result += hooks.dependencies.emit()
   result += `public class ${capitalize(name)} {`
-  result += DeclareVariables.emit()
-  result += BeforeEach.emit()
-  result += AfterEach.emit()
+  result += hooks.variables.emit()
+  result += hooks.beforeAll.emit()
+  result += hooks.beforeEach.emit()
+  result += hooks.afterEach.emit()
+  result += hooks.afterAll.emit()
   result += body
   result += `}\n`
   return result
