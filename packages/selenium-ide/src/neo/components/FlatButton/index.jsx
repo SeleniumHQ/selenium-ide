@@ -25,15 +25,17 @@ export default class FlatButton extends React.Component {
     buttonRef: PropTypes.func,
   }
   render() {
-    const props = { ...this.props }
+    const { 'data-tip': dataTip, ...props } = { ...this.props }
     delete props.buttonRef
     return (
-      <button
-        type="button"
-        ref={this.props.buttonRef}
-        {...props}
-        className={classNames('btn', this.props.className)}
-      />
+      <span data-tip={dataTip}>
+        <button
+          type="button"
+          ref={this.props.buttonRef}
+          {...props}
+          className={classNames('btn', this.props.className)}
+        />
+      </span>
     ) // eslint-disable-line react/prop-types
   }
 }
