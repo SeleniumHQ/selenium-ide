@@ -118,8 +118,8 @@ export const emitters = {
 
 exporter.preprocessors.register(emitters)
 
-function variableLookup(varName) {
-  return `vars.get("${varName}").toString()`
+export function register(command, emitter) {
+  emitters[command] = emitter
 }
 
 export function emit(command) {
@@ -128,6 +128,10 @@ export function emit(command) {
     emitters[command.command],
     variableLookup
   )
+}
+
+function variableLookup(varName) {
+  return `vars.get("${varName}").toString()`
 }
 
 // TODO: add support for executeScript opt. args
