@@ -54,6 +54,7 @@ describe('Code Export Java Selenium', () => {
   })
 })
 
+// TODO: Move into the IDE
 describe('Normalize Project', () => {
   it('converts suite.tests guids to names', () => {
     const project = JSON.parse(

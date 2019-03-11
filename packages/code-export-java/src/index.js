@@ -104,5 +104,6 @@ export default {
     beforeEach: hooks.beforeEach.register,
     afterEach: hooks.afterEach.register,
     afterAll: hooks.afterAll.register,
+    inEach: hooks.inEach.register,
   },
 }

@@ -15,18 +15,46 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//import java from '../../code-export-java'
+import java from '../../code-export-java'
 
-// java.register.command('command name', () => {})
-// java.register.variable('')
-// java.register.dependency('')
-// java.register.beforeAll('')
-// java.register.beforeEach('')
-// java.register.afterEach('')
-// java.register.afterAll('')
-// java.emit.test('http://...', {})
-// java.emit.suite('http://...', {})
+const exporter = { java }
 
-//function emitTest() {}
+export function registerCommand(language, command, emitter) {
+  exporter[language].register.command(command, emitter)
+}
 
-//function emitSuite() {}
+export function registerVariable(language, declaration) {
+  exporter[language].register.variable(declaration)
+}
+
+export function registerDependency(language, statement) {
+  exporter[language].register.dependency(statement)
+}
+
+export function registerBeforeAll(language, statement) {
+  exporter[language].register.beforeAll(statement)
+}
+
+export function registerBeforeEach(language, statement) {
+  exporter[language].register.beforeEach(statement)
+}
+
+export function registerInEach(language, statement) {
+  exporter[language].register.inEach(statement)
+}
+
+export function registerAfterEach(language, statement) {
+  exporter[language].register.afterEach(statement)
+}
+
+export function registerAfterAll(language, statement) {
+  exporter[language].register.afterAll(statement)
+}
+
+export function emitTest(language, { baseUrl, test, tests }) {
+  return exporter[language].emit.test({ baseUrl, test, tests })
+}
+
+export function emitSuite(language, { baseUrl, suite, tests }) {
+  return exporter[language].emit.suite({ baseUrl, suite, tests })
+}
