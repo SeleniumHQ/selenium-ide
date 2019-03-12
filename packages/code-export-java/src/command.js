@@ -217,6 +217,22 @@ async function emitType(target, value) {
   )
 }
 
+//async function emitSelect(selectElement, option) {
+//  return Promise.resolve(`{
+//    WebElement dropdown = driver.findElement(${selectElement});
+//    dropdown.findElement(${}).click();
+//  }`)
+//  //return Promise.resolve(
+//  //  `await driver.wait(until.elementLocated(${await LocationEmitter.emit(
+//  //    selectElement
+//  //  )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
+//  //    selectElement
+//  //  )}).then(element => {return element.findElement(${await SelectionEmitter.emit(
+//  //    option
+//  //  )}).then(option => {return option.click();});});`
+//  //)
+//}
+
 async function emitSendKeys(target, value) {
   return Promise.resolve(
     `driver.findElement(${await location.emit(target)}).sendKeys(${value

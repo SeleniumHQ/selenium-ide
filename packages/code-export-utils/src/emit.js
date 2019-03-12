@@ -49,6 +49,20 @@ export function emitLocation(location, emitters) {
   }
 }
 
+export function emitSelection(location, emitters) {
+  if (!location) throw new Error(`Location can't be empty`)
+  const [type, selector] = location.split('=')
+  if (emitters[type] && selector) {
+    let result = emitters[type](selector)
+    return result
+  } else if (!selector) {
+    // no selector strategy given, assuming label
+    return emitters['label'](type)
+  } else {
+    throw new Error(`Unknown selection locator ${type}`)
+  }
+}
+
 export function emitEscapedText(text) {
   return StringEscape(text)
 }
@@ -59,6 +73,9 @@ export default {
   },
   location: {
     emit: emitLocation,
+  },
+  selection: {
+    emit: emitSelection,
   },
   text: {
     emit: emitEscapedText,

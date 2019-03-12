@@ -19,42 +19,31 @@ import exporter from '../../code-export-utils/src'
 
 const emitters = {
   id: emitId,
-  name: emitName,
-  link: emitLink,
-  linkText: emitLink,
-  partialLinkText: emitPartialLinkText,
-  css: emitCss,
-  xpath: emitXpath,
+  value: emitValue,
+  label: emitLabel,
+  index: emitIndex,
 }
 
 export function emit(location) {
-  return exporter.location.emit(location, emitters)
+  return exporter.selection.emit(location, emitters)
 }
 
 export default {
   emit,
 }
 
-function emitId(selector) {
-  return Promise.resolve(`By.id("${selector}")`)
+function emitId(id) {
+  return Promise.resolve(`By.cssSelector("*[id="${id}"]")`)
 }
 
-function emitName(selector) {
-  return Promise.resolve(`By.name("${selector}")`)
+function emitValue(value) {
+  return Promise.resolve(`By.cssSelector("*[value="${value}"]")`)
 }
 
-function emitLink(selector) {
-  return Promise.resolve(`By.linkText("${selector}")`)
+function emitLabel(label) {
+  return Promise.resolve(`By.xpath("//option[. = '${label}']")`)
 }
 
-function emitPartialLinkText(selector) {
-  return Promise.resolve(`By.partialLinkText("${selector}")`)
-}
-
-function emitCss(selector) {
-  return Promise.resolve(`By.cssSelector("${selector}")`)
-}
-
-function emitXpath(selector) {
-  return Promise.resolve(`By.xpath("${selector}")`)
+function emitIndex(index) {
+  return Promise.resolve(`By.cssSelector("*:nth-child(${index})")`)
 }
