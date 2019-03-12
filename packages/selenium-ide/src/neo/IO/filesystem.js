@@ -104,7 +104,7 @@ function downloadProject(project) {
 }
 
 function exportProject(project) {
-  return Manager.validatePluginExport(project).then(() => {
+  return Manager.validatePluginExport(project, 'save').then(() => {
     return Selianize(project, {
       silenceErrors: true,
       skipStdLibEmitting: true,

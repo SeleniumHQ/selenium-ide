@@ -107,10 +107,10 @@ class PluginManager {
     return this.plugins.find(p => p.id === pluginId)
   }
 
-  validatePluginExport(project) {
+  validatePluginExport(project, action = 'emit') {
     function validatePlugin(plugin) {
       return sendMessage(plugin.id, {
-        action: 'emit',
+        action,
         entity: 'project',
         project,
       })
