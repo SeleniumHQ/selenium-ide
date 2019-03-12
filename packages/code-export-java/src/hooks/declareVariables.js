@@ -15,20 +15,27 @@
 // specific language governing permissions and limitations
 // under the License.
 
-let result = `
+let variables = `
     private WebDriver driver;
     private HashMap<String, Object> vars = new HashMap<>();
 `
 
+let hooks = []
+
 function register(statement) {
-  result += statement + '\r\n'
+  hooks.push(statement)
+}
+
+function clear() {
+  hooks = []
 }
 
 function emit() {
-  return result
+  return variables + hooks.join('\r\n')
 }
 
 export default {
-  emit,
   register,
+  clear,
+  emit,
 }

@@ -25,4 +25,12 @@ describe('emitted test hooks', () => {
       expect(hooks[hook].emit().includes(input)).toBeTruthy()
     })
   })
+  it('should clear new entries', () => {
+    Object.keys(hooks).forEach(hook => {
+      const input = 'blahblahblah'
+      hooks[hook].register(input)
+      hooks[hook].clear()
+      expect(hooks[hook].emit().includes(input)).toBeFalsy()
+    })
+  })
 })

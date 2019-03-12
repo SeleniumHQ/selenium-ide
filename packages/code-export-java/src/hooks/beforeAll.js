@@ -15,24 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
-let result = `
+let beforeAll = `
     @BeforeAll
     public void initialSetUp() {
 `
 
+let hooks = []
+
 function register(statement) {
-  result += statement + '\r\n'
+  hooks.push(statement)
+}
+
+function clear() {
+  hooks = []
 }
 
 function emit() {
   return (
-    result +
+    beforeAll +
+    hooks.join('\r\n') +
     `    }
 `
   )
 }
 
 export default {
-  emit,
   register,
+  clear,
+  emit,
 }

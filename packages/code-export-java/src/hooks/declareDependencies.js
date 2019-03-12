@@ -30,15 +30,22 @@ import java.util.HashMap;
 
 `
 
-function register(dependency) {
-  dependencies += dependency + '\r\n'
+let hooks = []
+
+function register(statement) {
+  hooks.push(statement)
+}
+
+function clear() {
+  hooks = []
 }
 
 function emit() {
-  return dependencies
+  return dependencies + hooks.join('\r\n')
 }
 
 export default {
-  emit,
   register,
+  clear,
+  emit,
 }

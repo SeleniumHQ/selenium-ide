@@ -15,25 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-let result = `
+let afterEach = `
     @After
     public void tearDown() {
         driver.quit();
 `
 
+let hooks = []
+
 function register(statement) {
-  result += statement + '\r\n'
+  hooks.push(statement)
+}
+
+function clear() {
+  hooks = []
 }
 
 function emit() {
   return (
-    result +
+    afterEach +
+    hooks.join('\r\n') +
     `    }
 `
   )
 }
 
 export default {
-  emit,
   register,
+  clear,
+  emit,
 }

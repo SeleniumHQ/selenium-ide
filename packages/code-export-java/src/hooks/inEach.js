@@ -15,17 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-let result = ''
+let hooks = []
 
 function register(statement) {
-  result += statement + '\r\n'
+  hooks.push(statement)
+}
+
+function clear() {
+  hooks = []
 }
 
 function emit() {
-  return result
+  return hooks.join('\r\n')
 }
 
 export default {
-  emit,
   register,
+  clear,
+  emit,
 }
