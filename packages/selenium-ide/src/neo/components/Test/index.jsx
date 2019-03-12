@@ -260,7 +260,7 @@ export default class Test extends React.Component {
             this.props.suite
           )}
         >
-          <span>{this.props.test.name}</span>
+          <span className="title">{this.props.test.name}</span>
           {this.props.menu}
           {this.props.removeTest &&
             !this.props.menu && (

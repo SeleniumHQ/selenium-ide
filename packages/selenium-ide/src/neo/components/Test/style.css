@@ -14,7 +14,7 @@
   padding-left: 11px;
 }
 
-.test .name > span {
+.test .name > .title {
   flex-grow: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
