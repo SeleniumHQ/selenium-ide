@@ -17,31 +17,32 @@
 
 import exporter from '../../code-export-utils/src'
 import location from './location'
+import selection from './selection'
 
 export const emitters = {
-  //addSelection: emitSelect,
-  //answerOnNextPrompt: skip,
+  addSelection: emitSelect,
+  answerOnNextPrompt: skip,
   assert: emitAssert,
-  //assertAlert: emitAssertAlertAndAccept,
-  //assertChecked: emitVerifyChecked,
-  //assertConfirmation: emitAssertAlert,
-  //assertEditable: emitVerifyEditable,
-  //assertElementPresent: emitVerifyElementPresent,
+  assertAlert: emitAssertAlert,
+  assertChecked: emitVerifyChecked,
+  assertConfirmation: emitAssertAlert,
+  assertEditable: emitVerifyEditable,
+  assertElementPresent: emitVerifyElementPresent,
   //assertElementNotPresent: emitVerifyElementNotPresent,
   //assertNotChecked: emitVerifyNotChecked,
   //assertNotEditable: emitVerifyNotEditable,
   //assertNotSelectedValue: emitVerifyNotSelectedValue,
   //assertNotText: emitVerifyNotText,
-  //assertPrompt: emitAssertAlert,
+  assertPrompt: emitAssertAlert,
   //assertSelectedLabel: emitVerifySelectedLabel,
   //assertSelectedValue: emitVerifySelectedValue,
   //assertValue: emitVerifyValue,
   assertText: emitVerifyText,
   //assertTitle: emitVerifyTitle,
   check: emitCheck,
-  //chooseCancelOnNextConfirmation: skip,
-  //chooseCancelOnNextPrompt: skip,
-  //chooseOkOnNextConfirmation: skip,
+  chooseCancelOnNextConfirmation: skip,
+  chooseCancelOnNextPrompt: skip,
+  chooseOkOnNextConfirmation: skip,
   click: emitClick,
   clickAt: emitClick,
   //close: emitClose,
@@ -56,7 +57,7 @@ export const emitters = {
   //elseIf: emitControlFlowElseIf,
   //end: emitControlFlowEnd,
   executeScript: emitExecuteScript,
-  //executeAsyncScript: emitExecuteAsyncScript,
+  executeAsyncScript: emitExecuteAsyncScript,
   //if: emitControlFlowIf,
   //mouseDown: emitMouseDown,
   //mouseDownAt: emitMouseDown,
@@ -68,11 +69,11 @@ export const emitters = {
   //mouseUpAt: emitMouseUp,
   open: emitOpen,
   //pause: emitPause,
-  //removeSelection: emitSelect,
+  removeSelection: emitSelect,
   //repeatIf: emitControlFlowRepeatIf,
   //run: emitRun,
   //runScript: emitRunScript,
-  //select: emitSelect,
+  select: emitSelect,
   //selectFrame: emitSelectFrame,
   //selectWindow: emitSelectWindow,
   sendKeys: emitSendKeys,
@@ -90,9 +91,9 @@ export const emitters = {
   type: emitType,
   uncheck: emitUncheck,
   //verify: emitAssert,
-  //verifyChecked: emitVerifyChecked,
-  //verifyEditable: emitVerifyEditable,
-  //verifyElementPresent: emitVerifyElementPresent,
+  verifyChecked: emitVerifyChecked,
+  verifyEditable: emitVerifyEditable,
+  verifyElementPresent: emitVerifyElementPresent,
   //verifyElementNotPresent: emitVerifyElementNotPresent,
   //verifyNotChecked: emitVerifyNotChecked,
   //verifyNotEditable: emitVerifyNotEditable,
@@ -134,17 +135,18 @@ function variableLookup(varName) {
   return `vars.get("${varName}").toString()`
 }
 
-// TODO: add support for executeScript opt. args
-function generateScript(script, isExpression = false) {
-  return `driver.executeScript("${
-    isExpression ? `return (${script})` : script
-  }");`
-}
-
 function emitAssert(varName, value) {
   return Promise.resolve(
     `assertEquals(vars.get("${varName}").toString(), ${value});`
   )
+}
+
+function emitAssertAlert(alertText) {
+  return Promise.resolve(`{
+      Alert alert = driver.switchTo().alert();
+      assertThat(alert.getText(), is("${alertText}"));
+      alert.accept();
+  }`)
 }
 
 async function emitCheck(locator) {
@@ -193,8 +195,32 @@ async function emitDragAndDrop(dragged, dropped) {
 
 async function emitExecuteScript(script, varName) {
   return Promise.resolve(
-    (varName ? `vars.push("${varName}") = ` : '') + generateScript(script)
+    `{
+      JavascriptExecutor js = (JavascriptExecutor) driver;
+      ${varName ? `vars.push("${varName}") = ` : ''}js.executeScript("${
+      script.script
+    }${generateScriptArguments(script)}");
+  }`
   )
+}
+
+async function emitExecuteAsyncScript(script, varName) {
+  return Promise.resolve(
+    `{
+      JavascriptExecutor js = (JavascriptExecutor) driver;
+      ${
+        varName ? `vars.push("${varName}") =` : ''
+      } js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+      script.script
+    }.then(callback).catch(callback);${generateScriptArguments(script)}");
+    }`
+  )
+}
+
+function generateScriptArguments(script) {
+  return `${script.argv.length ? ',' : ''}${script.argv
+    .map(varName => `vars.get("${varName}")`)
+    .join(',')}`
 }
 
 function emitOpen(target) {
@@ -217,21 +243,14 @@ async function emitType(target, value) {
   )
 }
 
-//async function emitSelect(selectElement, option) {
-//  return Promise.resolve(`{
-//    WebElement dropdown = driver.findElement(${selectElement});
-//    dropdown.findElement(${}).click();
-//  }`)
-//  //return Promise.resolve(
-//  //  `await driver.wait(until.elementLocated(${await LocationEmitter.emit(
-//  //    selectElement
-//  //  )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
-//  //    selectElement
-//  //  )}).then(element => {return element.findElement(${await SelectionEmitter.emit(
-//  //    option
-//  //  )}).then(option => {return option.click();});});`
-//  //)
-//}
+async function emitSelect(selectElement, option) {
+  return Promise.resolve(`{
+    WebElement dropdown = driver.findElement(${await location.emit(
+      selectElement
+    )});
+    dropdown.findElement(${await selection.emit(option)}).click();
+  }`)
+}
 
 async function emitSendKeys(target, value) {
   return Promise.resolve(
@@ -254,12 +273,46 @@ async function emitUncheck(locator) {
   )
 }
 
+async function emitVerifyChecked(locator) {
+  return Promise.resolve(
+    `assertTrue(driver.findElement(${await location.emit(
+      locator
+    )}).isSelected());`
+  )
+}
+
+async function emitVerifyEditable(locator) {
+  return Promise.resolve(
+    `{
+        WebElement element = driver.findElement(${await location.emit(
+          locator
+        )});
+        Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
+        assertTrue(isEditable)
+    }`
+  )
+}
+
+async function emitVerifyElementPresent(locator) {
+  return Promise.resolve(`
+  {
+      List<WebElement> elements = driver.findElements(${await location.emit(
+        locator
+      )});
+      assertTrue(elements.get(0) != null);
+  }`)
+}
+
 async function emitVerifyText(locator, text) {
   return Promise.resolve(
     `assertThat(driver.findElement(${await location.emit(
       locator
     )}).getText(), is("${exporter.text.emit(text)}"));`
   )
+}
+
+function skip() {
+  return Promise.resolve()
 }
 
 export default {
