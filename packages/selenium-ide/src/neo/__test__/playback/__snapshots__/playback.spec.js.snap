@@ -112,6 +112,12 @@ Array [
   Object {
     "callstackIndex": 0,
     "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
     "message": "playback is dead",
     "state": "errored",
   },
@@ -294,47 +300,6 @@ Array [
 ]
 `;
 
-exports[`Playback resume resume a paused test 1`] = `
-Array [
-  Object {
-    "callstackIndex": 0,
-    "id": 1,
-    "message": undefined,
-    "state": "executing",
-  },
-  Object {
-    "callstackIndex": 0,
-    "id": 1,
-    "message": undefined,
-    "state": "passed",
-  },
-  Object {
-    "callstackIndex": 0,
-    "id": 2,
-    "message": undefined,
-    "state": "executing",
-  },
-  Object {
-    "callstackIndex": 0,
-    "id": 2,
-    "message": undefined,
-    "state": "passed",
-  },
-  Object {
-    "callstackIndex": 0,
-    "id": 3,
-    "message": undefined,
-    "state": "executing",
-  },
-  Object {
-    "callstackIndex": 0,
-    "id": 3,
-    "message": undefined,
-    "state": "passed",
-  },
-]
-`;
-
 exports[`Playback resume resume after hitting a breakpoint 1`] = `
 Array [
   Object {
@@ -348,6 +313,12 @@ Array [
     "id": 1,
     "message": undefined,
     "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
   },
   Object {
     "callstackIndex": 0,
@@ -412,6 +383,12 @@ Array [
     "callstackIndex": 0,
     "id": 3,
     "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
     "state": "passed",
   },
 ]
@@ -443,6 +420,24 @@ Array [
     "message": undefined,
     "state": "passed",
   },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": "Playback stopped",
+    "state": "errored",
+  },
 ]
 `;
 
@@ -471,6 +466,18 @@ Array [
     "id": 2,
     "message": undefined,
     "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": "Playback stopped",
+    "state": "errored",
   },
 ]
 `;

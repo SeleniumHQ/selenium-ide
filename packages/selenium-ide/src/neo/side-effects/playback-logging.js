@@ -18,7 +18,8 @@
 import { observe } from 'mobx'
 import Log, { LogTypes } from '../ui-models/Log'
 import { Logger, Channels, output } from '../stores/view/Logs'
-import PlaybackState, { PlaybackStates } from '../stores/view/PlaybackState'
+import PlaybackState from '../stores/view/PlaybackState'
+import { CommandStates } from '../playback/playback'
 
 export default class PlaybackLogger {
   constructor() {
@@ -54,15 +55,12 @@ export default class PlaybackLogger {
     const commandParts = stateId.split(':')
     let commandId, stackIndex
     if (commandParts.length === 2) {
-      stackIndex = commandParts[0]
+      stackIndex = parseInt(commandParts[0])
       commandId = commandParts[1]
     } else {
       commandId = commandParts[0]
     }
-    const test =
-      stackIndex !== undefined
-        ? PlaybackState.callstack[stackIndex].callee
-        : PlaybackState.currentRunningTest
+    const test = stackIndex === 0 ? PlaybackState.currentRunningTest : undefined
     const command = test.commands.find(({ id }) => id === commandId)
     cb(command, status)
   }
@@ -121,7 +119,7 @@ export default class PlaybackLogger {
         shouldAddLog = true
       }
       switch (status.state) {
-        case PlaybackStates.Pending:
+        case CommandStates.EXECUTING:
           log.setMessage(
             status.message
               ? status.message
@@ -131,21 +129,21 @@ export default class PlaybackLogger {
           )
           log.setStatus(LogTypes.Running)
           break
-        case PlaybackStates.Undetermined:
+        case CommandStates.UNDETERMINED:
           log.setStatus(LogTypes.Undetermined)
           break
-        case PlaybackStates.Awaiting:
+        case CommandStates.PENDING:
           log.setStatus(LogTypes.Awaiting)
           break
-        case PlaybackStates.Failed:
-        case PlaybackStates.Fatal: // eslint-disable-line no-fallthrough
+        case CommandStates.FAILED:
+        case CommandStates.ERRORED: // eslint-disable-line no-fallthrough
           log.setStatus(LogTypes.Failure)
           break
-        case PlaybackStates.Passed:
+        case CommandStates.PASSED:
           log.setStatus(LogTypes.Success)
           break
       }
-      if (status.state !== PlaybackStates.Pending) {
+      if (status.state !== CommandStates.EXECUTING) {
         // In pending the description is used as the message
         log.setDescription(status.message)
         if (command.command === 'run') {
@@ -163,7 +161,7 @@ export default class PlaybackLogger {
       return false
     } else if (command.command === 'echo') {
       return false
-    } else if (command.command === 'run' && state !== PlaybackStates.Fatal) {
+    } else if (command.command === 'run' && state !== CommandStates.ERRORED) {
       return false
     } else {
       return true

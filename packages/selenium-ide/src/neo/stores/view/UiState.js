@@ -203,7 +203,7 @@ class UiState {
         this.selectedTest = {
           test,
           suite,
-          stack: stack >= 0 ? stack : undefined,
+          stack: stack >= 0 ? stack : 0,
         }
         if (PlaybackState.isPlaying && !PlaybackState.paused) {
           this.selectCommand(undefined)
