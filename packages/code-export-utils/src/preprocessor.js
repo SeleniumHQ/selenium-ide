@@ -21,7 +21,9 @@ export function registerPreprocessors(emitters) {
       case 'sendKeys':
         emitters[emitter].valuePreprocessor = keysPreprocessor
         break
-      case ('runScript', 'executeScript', 'executeAsyncScript'):
+      case 'runScript':
+      case 'executeScript':
+      case 'executeAsyncScript':
         emitters[emitter].targetPreprocessor = scriptPreprocessor
         break
     }
@@ -35,6 +37,7 @@ export function preprocessParameter(param, preprocessor, variableLookup) {
 }
 
 export function defaultPreprocessor(param, variableLookup) {
+  if (!param) return
   const _var = param.match(/\$\{(\w+)\}/)
   if (_var) {
     return param.replace(_var[0], variableLookup(_var[1]))
