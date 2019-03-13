@@ -28,45 +28,45 @@ export const emitters = {
   assertConfirmation: emitAssertAlert,
   assertEditable: emitVerifyEditable,
   assertElementPresent: emitVerifyElementPresent,
-  //assertElementNotPresent: emitVerifyElementNotPresent,
-  //assertNotChecked: emitVerifyNotChecked,
-  //assertNotEditable: emitVerifyNotEditable,
-  //assertNotSelectedValue: emitVerifyNotSelectedValue,
-  //assertNotText: emitVerifyNotText,
+  assertElementNotPresent: emitVerifyElementNotPresent,
+  assertNotChecked: emitVerifyNotChecked,
+  assertNotEditable: emitVerifyNotEditable,
+  assertNotSelectedValue: emitVerifyNotSelectedValue,
+  assertNotText: emitVerifyNotText,
   assertPrompt: emitAssertAlert,
-  //assertSelectedLabel: emitVerifySelectedLabel,
-  //assertSelectedValue: emitVerifySelectedValue,
-  //assertValue: emitVerifyValue,
+  assertSelectedLabel: emitVerifySelectedLabel,
+  assertSelectedValue: emitVerifySelectedValue,
+  assertValue: emitVerifyValue,
   assertText: emitVerifyText,
-  //assertTitle: emitVerifyTitle,
+  assertTitle: emitVerifyTitle,
   check: emitCheck,
   chooseCancelOnNextConfirmation: skip,
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
   click: emitClick,
   clickAt: emitClick,
-  //close: emitClose,
-  //debugger: emitDebugger,
+  close: emitClose,
+  debugger: skip,
   //do: emitControlFlowDo,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
-  //echo: emitEcho,
-  //editContent: emitEditContent,
+  echo: emitEcho,
+  editContent: emitEditContent,
   //else: emitControlFlowElse,
   //elseIf: emitControlFlowElseIf,
   //end: emitControlFlowEnd,
   executeScript: emitExecuteScript,
   executeAsyncScript: emitExecuteAsyncScript,
   //if: emitControlFlowIf,
-  //mouseDown: emitMouseDown,
-  //mouseDownAt: emitMouseDown,
-  //mouseMove: emitMouseMove,
-  //mouseMoveAt: emitMouseMove,
-  //mouseOver: emitMouseMove,
-  //mouseOut: emitMouseOut,
-  //mouseUp: emitMouseUp,
-  //mouseUpAt: emitMouseUp,
+  mouseDown: emitMouseDown,
+  mouseDownAt: emitMouseDown,
+  mouseMove: emitMouseMove,
+  mouseMoveAt: emitMouseMove,
+  mouseOver: emitMouseMove,
+  mouseOut: emitMouseOut,
+  mouseUp: emitMouseUp,
+  mouseUpAt: emitMouseUp,
   open: emitOpen,
   //pause: emitPause,
   removeSelection: emitSelect,
@@ -90,20 +90,20 @@ export const emitters = {
   //times: emitControlFlowTimes,
   type: emitType,
   uncheck: emitUncheck,
-  //verify: emitAssert,
+  verify: emitAssert,
   verifyChecked: emitVerifyChecked,
   verifyEditable: emitVerifyEditable,
   verifyElementPresent: emitVerifyElementPresent,
-  //verifyElementNotPresent: emitVerifyElementNotPresent,
-  //verifyNotChecked: emitVerifyNotChecked,
-  //verifyNotEditable: emitVerifyNotEditable,
-  //verifyNotSelectedValue: emitVerifyNotSelectedValue,
-  //verifyNotText: emitVerifyNotText,
-  //verifySelectedLabel: emitVerifySelectedLabel,
-  //verifySelectedValue: emitVerifySelectedValue,
-  //verifyText: emitVerifyText,
-  //verifyTitle: emitVerifyTitle,
-  //verifyValue: emitVerifyValue,
+  verifyElementNotPresent: emitVerifyElementNotPresent,
+  verifyNotChecked: emitVerifyNotChecked,
+  verifyNotEditable: emitVerifyNotEditable,
+  verifyNotSelectedValue: emitVerifyNotSelectedValue,
+  verifyNotText: emitVerifyNotText,
+  verifySelectedLabel: emitVerifySelectedLabel,
+  verifySelectedValue: emitVerifySelectedValue,
+  verifyText: emitVerifyText,
+  verifyTitle: emitVerifyTitle,
+  verifyValue: emitVerifyValue,
   //waitForElementEditable: emitWaitForElementEditable,
   //waitForElementPresent: emitWaitForElementPresent,
   //waitForElementVisible: emitWaitForElementVisible,
@@ -168,6 +168,10 @@ async function emitClick(target) {
   )
 }
 
+async function emitClose() {
+  return Promise.resolve(`driver.close();`)
+}
+
 async function emitDoubleClick(target) {
   return Promise.resolve(
     `{
@@ -176,6 +180,19 @@ async function emitDoubleClick(target) {
         builder.doubleClick(element).perform();
       }`
   )
+}
+
+async function emitEcho(message) {
+  return Promise.resolve(`System.out.println("${message}");`)
+}
+
+async function emitEditContent(locator, content) {
+  return Promise.resolve(`
+  {
+      WebElement element = driver.findElement(${await location.emit(locator)});
+      JavascriptExecutor js = (JavascriptExecutor) driver;
+      js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${content}'}", element);
+  }`)
 }
 
 async function emitDragAndDrop(dragged, dropped) {
@@ -221,6 +238,48 @@ function generateScriptArguments(script) {
   return `${script.argv.length ? ',' : ''}${script.argv
     .map(varName => `vars.get("${varName}")`)
     .join(',')}`
+}
+
+async function emitMouseDown(locator) {
+  return Promise.resolve(`
+    {
+        WebElement element = driver.findElement(${await location.emit(
+          locator
+        )});
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).clickAndHold().perform();
+    }`)
+}
+
+async function emitMouseMove(locator) {
+  return Promise.resolve(`
+    {
+        WebElement element = driver.findElement(${await location.emit(
+          locator
+        )});
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).perform();
+    }`)
+}
+
+async function emitMouseOut() {
+  return Promise.resolve(`
+    {
+        WebElement element = driver.findElement(By.tagName("body"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element, 0, 0).perform();
+    }`)
+}
+
+async function emitMouseUp(locator) {
+  return Promise.resolve(`
+    {
+        WebElement element = driver.findElement(${await location.emit(
+          locator
+        )});
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).release().perform();
+    }`)
 }
 
 function emitOpen(target) {
@@ -299,8 +358,72 @@ async function emitVerifyElementPresent(locator) {
       List<WebElement> elements = driver.findElements(${await location.emit(
         locator
       )});
-      assertTrue(elements.get(0) != null);
+      assert(elements.size() > 0);
   }`)
+}
+
+async function emitVerifyElementNotPresent(locator) {
+  return Promise.resolve(`
+  {
+      List<WebElement> elements = driver.findElements(${await location.emit(
+        locator
+      )});
+      assert(elements.size() == 0);
+  }`)
+}
+
+async function emitVerifyNotChecked(locator) {
+  return Promise.resolve(
+    `assertFalse(driver.findElement(${await location.emit(
+      locator
+    )}).isSelected());`
+  )
+}
+
+async function emitVerifyNotEditable(locator) {
+  return Promise.resolve(`
+  {
+      WebElement element = driver.findElement(${await location.emit(locator)});
+      Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
+      assertFalse(isEditable)
+  }`)
+}
+
+async function emitVerifyNotSelectedValue(locator, expectedValue) {
+  return Promise.resolve(`
+    {
+        String value = driver.findElement(${await location.emit(
+          locator
+        )}).getAttribute("value");
+        assertThat(value, is(not("${exporter.text.emit(expectedValue)}")));
+    }`)
+}
+
+async function emitVerifyNotText(locator, text) {
+  return Promise.resolve(`
+  {
+      String text = driver.findElement(${await location.emit(
+        locator
+      )}).getText();
+      assertThat(text, is(not("${exporter.text.emit(text)}")));
+  }`)
+}
+
+async function emitVerifySelectedLabel(locator, labelValue) {
+  return Promise.resolve(`
+    {
+        WebElement element = driver.findElement(${await location.emit(
+          locator
+        )});
+        String value = element.getAttribute("value");
+        String locator = String.format("option[@value='%s']", value);
+        String selectedText = element.findElement(By.xpath(locator)).getText();
+        assertThat(selectedText, is("${labelValue}"));
+    }`)
+}
+
+async function emitVerifySelectedValue(locator, value) {
+  return emitVerifyValue(locator, value)
 }
 
 async function emitVerifyText(locator, text) {
@@ -309,6 +432,20 @@ async function emitVerifyText(locator, text) {
       locator
     )}).getText(), is("${exporter.text.emit(text)}"));`
   )
+}
+
+async function emitVerifyValue(locator, value) {
+  return Promise.resolve(`
+    {
+        String value = driver.findElement(${await location.emit(
+          locator
+        )}).getAttribute("value");
+        assertThat(value, is("${value}"));
+    }`)
+}
+
+async function emitVerifyTitle(title) {
+  return Promise.resolve(`assertThat(driver.getTitle(), is("${title}"));`)
 }
 
 function skip() {

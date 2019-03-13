@@ -104,7 +104,66 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
   {
       List<WebElement> elements = driver.findElements(By.id("element"));
-      assertTrue(elements.get(0) != null);
+      assert(elements.size() > 0);
+  }`)
+  })
+  it('should emit `assert element not present` command', () => {
+    const command = {
+      command: 'assertElementNotPresent',
+      target: 'id=element',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      List<WebElement> elements = driver.findElements(By.id("element"));
+      assert(elements.size() == 0);
+  }`)
+  })
+  it('should emit `assert not checked` command', () => {
+    const command = {
+      command: 'assertNotChecked',
+      target: 'id=check',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `assertFalse(driver.findElement(By.id("check")).isSelected());`
+    )
+  })
+  it('should emit `assert not editable` command', () => {
+    const command = {
+      command: 'assertNotEditable',
+      target: 'id=text',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      WebElement element = driver.findElement(By.id("text"));
+      Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
+      assertFalse(isEditable)
+  }`)
+  })
+  it('should emit `assert not selected value` command', () => {
+    const command = {
+      command: 'assertNotSelectedValue',
+      target: 'id=select',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("select")).getAttribute("value");
+        assertThat(value, is(not("test")));
+    }`)
+  })
+  it('should emit `assert not text` command', () => {
+    const command = {
+      command: 'assertNotText',
+      target: 'id=test',
+      value: 'text',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      String text = driver.findElement(By.id("test")).getText();
+      assertThat(text, is(not("text")));
   }`)
   })
   it('should emit `assert prompt` command', () => {
@@ -121,6 +180,33 @@ describe('command code emitter', () => {
   }`
     )
   })
+  it("should emit 'assert selected label' command", () => {
+    const command = {
+      command: 'assertSelectedLabel',
+      target: 'id=test',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("test"));
+        String value = element.getAttribute("value");
+        String locator = String.format("option[@value='%s']", value);
+        String selectedText = element.findElement(By.xpath(locator)).getText();
+        assertThat(selectedText, is("test"));
+    }`)
+  })
+  it('should emit `assert selected value` command', () => {
+    const command = {
+      command: 'assertSelectedValue',
+      target: 'id=select',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("select")).getAttribute("value");
+        assertThat(value, is("test"));
+    }`)
+  })
   it('should emit `assert text` command', () => {
     const command = {
       command: 'assertText',
@@ -132,6 +218,28 @@ describe('command code emitter', () => {
         command.value
       }"));`
     )
+  })
+  it('should emit `assert title` command', () => {
+    const command = {
+      command: 'assertTitle',
+      target: 'example title',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `assertThat(driver.getTitle(), is("example title"));`
+    )
+  })
+  it('should emit `assert value` command', () => {
+    const command = {
+      command: 'assertValue',
+      target: 'id=select',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("select")).getAttribute("value");
+        assertThat(value, is("test"));
+    }`)
   })
   it('should emit `click` command', () => {
     const command = {
@@ -167,6 +275,14 @@ describe('command code emitter', () => {
         }
       }`
     )
+  })
+  it('should emit `close` command', () => {
+    const command = {
+      command: 'close',
+      target: '',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`driver.close();`)
   })
   it('should emit `double click` command', () => {
     const command = {
@@ -211,6 +327,29 @@ describe('command code emitter', () => {
       }`
     )
   })
+  it('should emit `echo` command', () => {
+    const command = {
+      command: 'echo',
+      target: 'blah',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `System.out.println("blah");`
+    )
+  })
+  it('should emit `edit content` command', () => {
+    const command = {
+      command: 'editContent',
+      target: 'id=contentEditable',
+      value: '<button>test</button>',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      WebElement element = driver.findElement(By.id("contentEditable"));
+      JavascriptExecutor js = (JavascriptExecutor) driver;
+      js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '<button>test</button>'}", element);
+  }`)
+  })
   it('should emit `execute script` command', () => {
     const command = {
       command: 'executeScript',
@@ -236,6 +375,110 @@ describe('command code emitter', () => {
       vars.push("myVar") = js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);");
     }`
     )
+  })
+  it('should emit `mouse down` event', () => {
+    const command = {
+      command: 'mouseDown',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).clickAndHold().perform();
+    }`)
+  })
+  it('should emit `mouse down at` event', () => {
+    const command = {
+      command: 'mouseDownAt',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).clickAndHold().perform();
+    }`)
+  })
+  it('should emit `mouse move` event', () => {
+    const command = {
+      command: 'mouseMove',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).perform();
+    }`)
+  })
+  it('should emit `mouse move at` event', () => {
+    const command = {
+      command: 'mouseMoveAt',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).perform();
+    }`)
+  })
+  it('should emit `mouse out` event', () => {
+    const command = {
+      command: 'mouseOut',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.tagName("body"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element, 0, 0).perform();
+    }`)
+  })
+  it('should emit `mouse over` event', () => {
+    const command = {
+      command: 'mouseOver',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).perform();
+    }`)
+  })
+  it('should emit `mouse up` event', () => {
+    const command = {
+      command: 'mouseUp',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).release().perform();
+    }`)
+  })
+  it('should emit `mouse up at` event', () => {
+    const command = {
+      command: 'mouseUpAt',
+      target: 'id=button',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("button"));
+        Action builder = new Actions(driver);
+        builder.moveToElement(element).release().perform();
+    }`)
   })
   it('should emit `open` with absolute url', () => {
     const command = {
@@ -334,6 +577,18 @@ describe('command code emitter', () => {
       }`
     )
   })
+  it('should emit `verify` command', () => {
+    const command = {
+      command: 'verify',
+      target: 'varrrName',
+      value: 'true',
+    }
+    expect(Command.emit(command)).resolves.toBe(
+      `assertEquals(vars.get("${command.target}").toString(), ${
+        command.value
+      });`
+    )
+  })
   it('should emit `verify checked` command', () => {
     const command = {
       command: 'verifyChecked',
@@ -367,7 +622,127 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
   {
       List<WebElement> elements = driver.findElements(By.id("element"));
-      assertTrue(elements.get(0) != null);
+      assert(elements.size() > 0);
   }`)
+  })
+  it('should emit `verify element not present` command', () => {
+    const command = {
+      command: 'verifyElementNotPresent',
+      target: 'id=element',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      List<WebElement> elements = driver.findElements(By.id("element"));
+      assert(elements.size() == 0);
+  }`)
+  })
+  it('should emit `verify not checked` command', () => {
+    const command = {
+      command: 'verifyNotChecked',
+      target: 'id=check',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `assertFalse(driver.findElement(By.id("check")).isSelected());`
+    )
+  })
+  it('should emit `verify not editable` command', () => {
+    const command = {
+      command: 'verifyNotEditable',
+      target: 'id=text',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      WebElement element = driver.findElement(By.id("text"));
+      Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
+      assertFalse(isEditable)
+  }`)
+  })
+  it('should emit `verify not selected value` command', () => {
+    const command = {
+      command: 'verifyNotSelectedValue',
+      target: 'id=select',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("select")).getAttribute("value");
+        assertThat(value, is(not("test")));
+    }`)
+  })
+  it('should emit `verify not text` command', () => {
+    const command = {
+      command: 'verifyNotText',
+      target: 'id=test',
+      value: 'text',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+  {
+      String text = driver.findElement(By.id("test")).getText();
+      assertThat(text, is(not("text")));
+  }`)
+  })
+  it("should emit 'verify selected label' command", () => {
+    const command = {
+      command: 'verifySelectedLabel',
+      target: 'id=test',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.id("test"));
+        String value = element.getAttribute("value");
+        String locator = String.format("option[@value='%s']", value);
+        String selectedText = element.findElement(By.xpath(locator)).getText();
+        assertThat(selectedText, is("test"));
+    }`)
+  })
+  it('should emit `verify value` command', () => {
+    const command = {
+      command: 'verifyValue',
+      target: 'id=select',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("select")).getAttribute("value");
+        assertThat(value, is("test"));
+    }`)
+  })
+  it('should emit `verify selected value` command', () => {
+    const command = {
+      command: 'verifySelectedValue',
+      target: 'id=select',
+      value: 'test',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("select")).getAttribute("value");
+        assertThat(value, is("test"));
+    }`)
+  })
+  it('should emit `verify text` command', () => {
+    const command = {
+      command: 'verifyText',
+      target: 'id=test',
+      value: 'some text that should be here',
+    }
+    expect(Command.emit(command)).resolves.toBe(
+      `assertThat(driver.findElement(By.id("test")).getText(), is("${
+        command.value
+      }"));`
+    )
+  })
+  it('should emit `verify title` command', () => {
+    const command = {
+      command: 'verifyTitle',
+      target: 'example title',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `assertThat(driver.getTitle(), is("example title"));`
+    )
   })
 })
