@@ -38,8 +38,12 @@ export default class Playback {
       },
       options
     )
-    this[EE] = new EventEmitter()
     this[state] = {}
+    this[EE] = new EventEmitter()
+    this[EE].emitCommandStateChange = payload => {
+      this[state].lastSentCommandState = payload
+      this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, payload)
+    }
     mergeEventEmitter(this, this[EE])
     this._run = this._run.bind(this)
   }
@@ -119,9 +123,11 @@ export default class Playback {
   async step(steps = 1) {
     if (this[state].resumeResolve) {
       this[state].steps = steps
-      this[state].stepPromise = 'as'
       const p = new Promise((res, rej) => {
         this[state].stepPromise = { res, rej }
+      }).finally(() => {
+        this[state].stepPromise = undefined
+        this[state].steps = undefined
       })
       this._resume()
       await p
@@ -241,29 +247,37 @@ export default class Playback {
   }
 
   async _executionLoop({ ignoreBreakpoint } = {}) {
-    if (this[state].stopping) {
-      return
-    } else if (this[state].pausing) {
-      await this._pause()
-      return await this._executionLoop({ ignoreBreakpoint: true })
-    } else if (this[state].steps !== undefined) {
-      if (this[state].steps === 0) {
-        this[state].steps = undefined
-        if (this[state].stepPromise) {
-          this[state].stepPromise.res()
-          this[state].stepPromise = undefined
-        }
-        await this._pause()
-        return await this._executionLoop({ ignoreBreakpoint: true })
-      }
-      this[state].steps--
-    }
-
     if (!this.currentExecutingNode && this[state].callstack.length > 1) {
       this._unwind()
     }
 
     if (this.currentExecutingNode) {
+      const command = this.currentExecutingNode.command
+      const callstackIndex = this[state].callstack.length - 1
+      this[EE].emitCommandStateChange({
+        id: command.id,
+        callstackIndex,
+        state: CommandStates.EXECUTING,
+        message: undefined,
+      })
+
+      if (this[state].stopping) {
+        return
+      } else if (this[state].pausing) {
+        await this._pause()
+        return await this._executionLoop({ ignoreBreakpoint: true })
+      } else if (this[state].steps !== undefined) {
+        if (this[state].steps === 0) {
+          this[state].steps = undefined
+          if (this[state].stepPromise) {
+            this[state].stepPromise.res()
+          }
+          await this._pause()
+          return await this._executionLoop({ ignoreBreakpoint: true })
+        }
+        this[state].steps--
+      }
+
       if (
         (this.currentExecutingNode.command.isBreakpoint && !ignoreBreakpoint) ||
         (this[state].playTo &&
@@ -272,14 +286,6 @@ export default class Playback {
         await this._break()
         return await this._executionLoop({ ignoreBreakpoint: true })
       }
-      const command = this.currentExecutingNode.command
-      const callstackIndex = this[state].callstack.length - 1
-      this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
-        id: command.id,
-        callstackIndex,
-        state: CommandStates.EXECUTING,
-        message: undefined,
-      })
 
       try {
         await this._delay()
@@ -297,7 +303,7 @@ export default class Playback {
         result = await this._executeCommand(this.currentExecutingNode)
       } catch (err) {
         if (err instanceof AssertionError) {
-          this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+          this[EE].emitCommandStateChange({
             id: command.id,
             callstackIndex,
             state: CommandStates.FAILED,
@@ -308,7 +314,7 @@ export default class Playback {
             throw err
           })
         } else if (err instanceof VerificationError) {
-          this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+          this[EE].emitCommandStateChange({
             id: command.id,
             callstackIndex,
             state: CommandStates.FAILED,
@@ -321,7 +327,7 @@ export default class Playback {
             return await this._executionLoop()
           })
         } else {
-          this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+          this[EE].emitCommandStateChange({
             id: command.id,
             callstackIndex,
             state: CommandStates.ERRORED,
@@ -333,7 +339,7 @@ export default class Playback {
           })
         }
       }
-      this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+      this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
         state: CommandStates.PASSED,
@@ -389,9 +395,27 @@ export default class Playback {
   async _finishPlaying() {
     this[state].playPromise = undefined
     this[state].isPlaying = undefined
-    this[state].steps = undefined
+    if (
+      this[state].lastSentCommandState &&
+      this[state].lastSentCommandState.state === CommandStates.EXECUTING
+    ) {
+      const { id, callstackIndex } = this[state].lastSentCommandState
+      this[EE].emitCommandStateChange({
+        id,
+        callstackIndex,
+        state: CommandStates.ERRORED,
+        message: 'Playback stopped',
+      })
+    }
+    this[state].lastSentCommandState = undefined
     if (this[state].stepPromise) {
-      this[state].stepPromise.rej(new Error('Playback stopped prematurely'))
+      if (this[state].steps === 0) {
+        // the last step is the end of the test
+        this[state].stepPromise.res()
+      } else {
+        this[state].stepPromise.rej(new Error('Playback stopped prematurely'))
+      }
+      this[state].steps = undefined
     }
     if (this[state].playTo) {
       this[state].playTo.rej(

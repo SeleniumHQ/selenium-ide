@@ -46,11 +46,11 @@
   background-color: var(--active-color);
 }
 
-.test-table tbody tr.pending {
+.test-table tbody tr.executing {
   background-color: #e3f2ff;
 }
 
-.test-table.paused tbody tr.pending {
+.test-table.paused tbody tr.executing {
   background-color: #fffcc5;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .test-table tbody tr.undetermined td,
-.test-table tbody tr.awaiting td {
+.test-table tbody tr.pending td {
   color: #d49b2c;
 }
 
@@ -80,7 +80,7 @@
   width: 42px;
 }
 
-.test-table tbody tr.fatal td:not(:first-child) {
+.test-table tbody tr.errored td:not(:first-child) {
   color: #e80600;
   font-weight: bold;
 }

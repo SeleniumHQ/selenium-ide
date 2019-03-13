@@ -56,8 +56,6 @@ export default class ToolBar extends React.Component {
   render() {
     const isTestEmpty =
       UiState.selectedTest.test && !UiState.selectedTest.test.commands.length
-    const isCommandValid =
-      UiState.selectedCommand && UiState.selectedCommand.isValid
     return (
       <div className="toolbar">
         <PlayAll
@@ -86,7 +84,7 @@ export default class ToolBar extends React.Component {
         {PlaybackState.isPlaying ? (
           <Stop
             onClick={() => {
-              PlaybackState.abortPlaying()
+              PlaybackState.stopOrAbort()
             }}
           />
         ) : null}
@@ -108,7 +106,7 @@ export default class ToolBar extends React.Component {
           />
         ) : null}
         <StepInto
-          disabled={!isCommandValid || UiState.isRecording}
+          disabled={!(PlaybackState.isPlaying && PlaybackState.paused)}
           onClick={PlaybackState.stepOver}
         />
         <GaugeMenu

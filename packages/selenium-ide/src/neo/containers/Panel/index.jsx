@@ -202,7 +202,7 @@ export default class Panel extends React.Component {
     } else if (keyComb.onlyPrimary && keyComb.key === '.') {
       // stop
       e.preventDefault()
-      PlaybackState.abortPlaying()
+      PlaybackState.stopOrAbort()
     } else if (keyComb.onlyPrimary && keyComb.key === "'") {
       // step over
       e.preventDefault()

@@ -26,11 +26,6 @@ import NoResponseError from '../../../errors/no-response'
 import { Logger, Channels } from './Logs'
 import { LogTypes } from '../../ui-models/Log'
 import { createPlaybackTree } from '../../playback/playback-tree'
-import {
-  play,
-  playSingleCommand,
-  resumePlayback,
-} from '../../IO/SideeX/playback'
 import WindowSession from '../../IO/window-session'
 import ExtCommand from '../../IO/SideeX/ext-command'
 import WebDriverExecutor from '../../IO/playback/webdriver'
@@ -39,19 +34,20 @@ import Suite from '../../models/Suite'
 import Playback, {
   PlaybackEvents,
   PlaybackStates,
+  CommandStates,
 } from '../../playback/playback'
 
 class PlaybackState {
   @observable
   runId = ''
   @observable
+  playbackState = undefined
+  @observable
   isPlaying = false
   @observable
   isStopping = false
   @observable
   breakpointsDisabled = false
-  @observable
-  breakOnNextCommand = false
   @observable
   pauseOnExceptions = false
   @observable
@@ -82,13 +78,9 @@ class PlaybackState {
   @observable
   forceTestCaseFailure = false
   @observable
-  paused = false
-  @observable
   delay = 0
   @observable
   callstack = []
-  @observable
-  currentExecutingCommandNode = null
   @observable
   isSilent = false
   @observable
@@ -99,7 +91,6 @@ class PlaybackState {
   constructor() {
     this.maxDelay = 3000
     this._testsToRun = []
-    this.runningQueue = []
     this.logger = new Logger(Channels.PLAYBACK)
     this.lastSelectedView = undefined
     this.filteredTests = []
@@ -107,14 +98,14 @@ class PlaybackState {
     this.variables = new Variables()
     this.extCommand = new ExtCommand(WindowSession)
     this.browserDriver = new WebDriverExecutor()
+    this.playback = undefined
+  }
 
-    reaction(
-      () => this.paused,
-      paused => {
-        if (!paused) {
-          resumePlayback()
-        }
-      }
+  @computed
+  get paused() {
+    return (
+      this.playbackState === PlaybackStates.PAUSED ||
+      this.playbackState === PlaybackStates.BREAKPOINT
     )
   }
 
@@ -211,34 +202,54 @@ class PlaybackState {
   }
 
   @action.bound
+  commandStateChanged({ id, callstackIndex, state, message }) {
+    if (state === CommandStates.FAILED || state === CommandStates.ERRORED) {
+      this.errors++
+    }
+    this.setCommandStateAtomically(id, callstackIndex, state, message)
+  }
+
+  @action.bound
+  playbackStateChanged({ state }) {
+    this.playbackState = state
+  }
+
+  @action.bound
   async play() {
     this.isPlaying = true
-    if (process.env.USE_WEBDRIVER) {
-      const playback = new Playback(this.runningQueue, {
-        baseUrl: UiState.baseUrl,
-        executor: this.browserDriver,
-        testId: this.currentRunningTest.id,
-        variables: this.variables,
-      })
-      const stateChangedFn = ({ id, callstackIndex, state, message }) => {
-        if (state === PlaybackStates.Failed || state === PlaybackStates.Fatal) {
-          this.errors++
-        }
-        this.setCommandStateAtomically(id, callstackIndex, state, message)
-      }
-      playback.addListener(PlaybackEvents.COMMAND_STATE_CHANGED, stateChangedFn)
-      const result = await playback.play().catch(() => {})
+    this.playback = new Playback({
+      baseUrl: UiState.baseUrl,
+      executor: this.browserDriver,
+      variables: this.variables,
+    })
+    this.playback.addListener(
+      PlaybackEvents.PLAYBACK_STATE_CHANGED,
+      this.playbackStateChanged
+    )
+    this.playback.addListener(
+      PlaybackEvents.COMMAND_STATE_CHANGED,
+      this.commandStateChanged
+    )
+    const finish = await this.playback.play({
+      id: this.currentRunningTest.id,
+      commands: this.currentRunningTest.commands.slice(),
+    })
 
-      playback.removeListener(
-        PlaybackEvents.COMMAND_STATE_CHANGED,
-        stateChangedFn
-      )
+    await finish()
+    this.playback.removeListener(
+      PlaybackEvents.COMMAND_STATE_CHANGED,
+      this.commandStateChanged
+    )
+    this.playback.removeListener(
+      PlaybackEvents.PLAYBACK_STATE_CHANGED,
+      this.playbackStateChanged
+    )
 
-      this.finishPlaying()
-      return result
-    } else {
-      return play(UiState.baseUrl, this.extCommand, this.variables)
-    }
+    await this.playback.cleanup()
+    this.finishPlaying()
+    action(() => {
+      this.isPlaying = false
+    })()
   }
 
   @action.bound
@@ -289,10 +300,8 @@ class PlaybackState {
 
   @action.bound
   stepOver() {
-    if (this.paused) {
-      this.resume(true)
-    } else if (!this.isPlaying) {
-      this.startPlaying(UiState.selectedCommand, { breakOnNextCommand: true })
+    if (this.isPlaying && this.paused) {
+      this.playback.step()
     }
   }
 
@@ -328,80 +337,23 @@ class PlaybackState {
     })
   }
 
-  runningQueueFromIndex(commands, index) {
-    return commands.slice(index)
-  }
-
-  async initPlayFromHere(command, test) {
-    // for soft-init in playback.js
-    this.isPlayFromHere = true
-
-    // to determine if control flow commands exist in test commands
-    const playbackTree = createPlaybackTree(test.commands.slice())
-
-    if (playbackTree.containsControlFlow) {
-      const choseProceed = await ModalState.showAlert({
-        isMarkdown: true,
-        type: 'info',
-        title: 'Targeted playback with control flow commands',
-        description:
-          'There are control flow commands present in your test. ' +
-          'Playing from a specific command may cause unintended test results. \n\n' +
-          'Do you want to continue or play to this command from the beginning ' +
-          'of the test?`',
-        confirmLabel: 'continue',
-        cancelLabel: 'play to here',
-      })
-      if (!choseProceed)
-        return this.startPlaying(command, { playToThisPoint: true })
-    }
-
-    // for error reporting when tree construction in playback throws
-    this.playFromHereCommandId = command.id
-  }
-
   @action.bound
-  startPlaying(
-    command,
-    controls = {
-      breakOnNextCommand: false,
-      playFromHere: false,
-      playToThisPoint: false,
-      recordFromHere: false,
-    }
-  ) {
+  startPlaying() {
     const playTest = action(async () => {
-      this.breakOnNextCommand = controls.breakOnNextCommand
       const { test } = UiState.selectedTest
       this.resetState()
       if (!this.currentRunningSuite) this.runId = uuidv4()
       this.currentRunningTest = test
       this.testsCount = 1
-      let currentPlayingIndex = 0
-      if (command && command instanceof Command) {
-        currentPlayingIndex = test.commands.indexOf(command)
-        if (controls.playToThisPoint || controls.recordFromHere)
-          this.commandTarget.load(command, controls)
-      } else {
-        const startingUrl = UiState.baseUrl
-        if (!startingUrl) {
-          UiState.setUrl(
-            await ModalState.selectBaseUrl({
-              isInvalid: true,
-              confirmLabel: 'Start playback',
-            }),
-            true
-          )
-        }
-      }
-      if (controls.playFromHere) {
-        await this.initPlayFromHere(command, test)
-        this.runningQueue = this.runningQueueFromIndex(
-          test.commands.slice(),
-          currentPlayingIndex
+      const startingUrl = UiState.baseUrl
+      if (!startingUrl) {
+        UiState.setUrl(
+          await ModalState.selectBaseUrl({
+            isInvalid: true,
+            confirmLabel: 'Start playback',
+          }),
+          true
         )
-      } else {
-        this.runningQueue = test.commands.slice()
       }
       const pluginsLogs = {}
       if (PluginManager.plugins.length)
@@ -447,7 +399,6 @@ class PlaybackState {
         this.runId = ''
         this.noStatisticsEffects = true
         this.jumpToNextCommand = jumpToNext
-        this.paused = false
         this.errors = 0
         this.forceTestCaseFailure = false
         this.aborted = false
@@ -501,7 +452,6 @@ class PlaybackState {
       this._testsToRun.shift()
     // pull the next test off the test queue for execution
     this.currentRunningTest = this._testsToRun.shift()
-    this.runningQueue = this.currentRunningTest.commands.slice()
     this.clearStack()
     this.errors = 0
     this.forceTestCaseFailure = false
@@ -520,18 +470,9 @@ class PlaybackState {
   }
 
   @action.bound
-  stopPlayingGracefully() {
-    if (this.isPlaying) {
-      this.isStopping = true
-      this.paused = false
-    }
-  }
-
-  @action.bound
   stopPlaying() {
     if (this.isPlaying) {
       this.isStopping = true
-      this.paused = false
       const pluginsLogs = {}
       return PluginManager.emitMessage(
         {
@@ -581,10 +522,9 @@ class PlaybackState {
             this.testState.set(
               this.stackCaller.id,
               this.hasFinishedSuccessfully
-                ? PlaybackStates.Passed
-                : PlaybackStates.Failed
+                ? PlaybackStates.FINISHED
+                : PlaybackStates.FAILED
             )
-            this.isPlaying = false
             this.isStopping = false
             return res()
           })
@@ -594,30 +534,31 @@ class PlaybackState {
     return Promise.reject('Playback is not running')
   }
 
-  @action.bound
-  abortPlaying() {
-    if (this.isPlaying) {
-      this.aborted = true
-      this._testsToRun = []
-      if (this.paused) {
-        this.setCommandStateAtomically(
-          this.currentExecutingCommandNode.command.id,
-          this.callstack.length ? this.callstack.length - 1 : undefined,
-          PlaybackStates.Fatal,
-          'Playback aborted'
-        )
-      } else {
-        this.setCommandStateAtomically(
-          this.currentExecutingCommandNode.command.id,
-          this.callstack.length ? this.callstack.length - 1 : undefined,
-          PlaybackStates.Undetermined,
-          'Aborting...'
-        )
-      }
-      this.stopPlayingGracefully()
+  async stop() {
+    if (this.playback) {
+      this.isStopping = true
+      await this.playback.stop()
+      this.isStopping = false
+    } else {
+      throw new Error('Playback is not running')
     }
-    this.paused = false
-    this.commandTarget.doCleanup({ isTestAborted: this.aborted })
+  }
+
+  async abort() {
+    if (this.playback) {
+      await this.playback.abort()
+    } else {
+      throw new Error('Playback is not running')
+    }
+  }
+
+  async stopOrAbort() {
+    this._testsToRun = []
+    if (this.isStopping) {
+      await this.abort()
+    } else {
+      await this.stop()
+    }
   }
 
   @action.bound
@@ -627,46 +568,27 @@ class PlaybackState {
 
   @action.bound
   pause() {
-    this.paused = true
-  }
-
-  @action.bound
-  resume(breakOnNextCommand = false) {
-    this.commandTarget.doPlayToThisPoint()
-    UiState.changeView('Executing')
-    UiState.selectTest(
-      this.stackCaller,
-      this.currentRunningSuite,
-      this.callstack.length - 1,
-      true
-    )
-    UiState.selectCommand(undefined)
-    this.breakOnNextCommand = breakOnNextCommand
-    this.paused = false
-  }
-
-  @action.bound
-  async break(command) {
-    if (this.commandTarget.is.recordFromHere) {
-      this.commandTarget.doRecordFromHere(async () => {
-        const choseProceed = await ModalState.showAlert({
-          type: 'info',
-          title: 'Start recording',
-          description:
-            'You can now start recording.  \n\nThe recording will start from the command you selected.',
-          confirmLabel: 'start recording',
-          cancelLabel: 'cancel',
-        })
-        if (choseProceed) {
-          await UiState.startRecording()
-          await WindowSession.focusPlayingWindow()
-        }
-      })
+    if (this.playback) {
+      this.playback.pause()
     } else {
-      this.breakOnNextCommand = false
-      this.paused = true
-      UiState.selectCommand(command)
-      WindowSession.focusIDEWindow()
+      throw new Error('Playback is not running')
+    }
+  }
+
+  @action.bound
+  resume() {
+    if (this.playback) {
+      UiState.changeView('Executing')
+      UiState.selectTest(
+        this.stackCaller,
+        this.currentRunningSuite,
+        this.callstack.length - 1,
+        true
+      )
+      UiState.selectCommand(undefined)
+      this.playback.resume()
+    } else {
+      throw new Error('Playback is not running')
     }
   }
 
@@ -715,7 +637,7 @@ class PlaybackState {
           })
           this.suiteState.set(
             this.currentRunningSuite.id,
-            this.hasFailed ? PlaybackStates.Failed : PlaybackStates.Passed
+            this.hasFailed ? PlaybackStates.FAILED : PlaybackStates.FINISHED
           )
           this.cleanupCurrentRunningVariables()
         }
@@ -730,11 +652,6 @@ class PlaybackState {
   }
 
   @action.bound
-  setCurrentExecutingCommandNode(node) {
-    this.currentExecutingCommandNode = node
-  }
-
-  @action.bound
   setCommandStateAtomically(commandId, callstackIndex, state, message) {
     this.commandState.set(
       `${callstackIndex !== undefined ? callstackIndex + ':' : ''}${commandId}`,
@@ -743,10 +660,10 @@ class PlaybackState {
   }
 
   @action.bound
-  setCommandState(commandId, state, message) {
+  async setCommandState(commandId, state, message) {
     if (
       !this.pauseOnExceptions &&
-      (state === PlaybackStates.Failed || state === PlaybackStates.Fatal)
+      (state === CommandStates.FAILED || state === CommandStates.ERRORED)
     ) {
       this.errors++
     }
@@ -757,11 +674,11 @@ class PlaybackState {
         state,
         message
       )
-      if (state === PlaybackStates.Fatal && !this.isSingleCommandRunning) {
+      if (state === CommandStates.ERRORED && !this.isSingleCommandRunning) {
         if (!this.pauseOnExceptions) {
-          this.stopPlayingGracefully()
+          await this.stopOrAbort()
         } else if (this.pauseOnExceptions) {
-          this.break(this.currentExecutingCommandNode.command)
+          await this.break()
         }
       }
     }
@@ -842,10 +759,8 @@ class PlaybackState {
     this.errors = 0
     this.forceTestCaseFailure = false
     this.aborted = false
-    this.paused = false
     this.isPlayFromHere = false
     this.isPlayingControlFlowCommands = false
-    this.runningQueue = []
     this.playFromHereCommandId = undefined
     this.isSilent = false
   }

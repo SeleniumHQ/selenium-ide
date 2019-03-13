@@ -27,7 +27,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
-  devtool: isProduction ? 'source-map' : 'cheap-eval-source-map',
+  devtool: isProduction ? 'source-map' : 'eval',
   entry: {
     polyfills: ['./content/setup'],
     playback: ['./content/commands-api'],
