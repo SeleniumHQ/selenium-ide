@@ -32,14 +32,14 @@ function Recorder(window) {
   this.recordingState = {}
 }
 
-/** @type {{ [key: string]: Function[] }} */
+/** @type {{ [key: string]: EventListener[] }} */
 Recorder.eventHandlers = {}
 /** @type {{ [observerName: string]: MutationObserver }} */
 Recorder.mutationObservers = {}
 /**
  * @param {string} handlerName
  * @param {string} eventName
- * @param {Handler} handler
+ * @param {EventListener} handler
  * @param {boolean} options
  */
 Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
