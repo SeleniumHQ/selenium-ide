@@ -235,21 +235,25 @@ class PlaybackState {
       commands: this.currentRunningTest.commands.slice(),
     })
 
-    await finish()
-    this.playback.removeListener(
-      PlaybackEvents.COMMAND_STATE_CHANGED,
-      this.commandStateChanged
-    )
-    this.playback.removeListener(
-      PlaybackEvents.PLAYBACK_STATE_CHANGED,
-      this.playbackStateChanged
-    )
+    try {
+      await finish()
+    } catch (err) {
+    } finally {
+      this.playback.removeListener(
+        PlaybackEvents.COMMAND_STATE_CHANGED,
+        this.commandStateChanged
+      )
+      this.playback.removeListener(
+        PlaybackEvents.PLAYBACK_STATE_CHANGED,
+        this.playbackStateChanged
+      )
 
-    await this.playback.cleanup()
-    this.finishPlaying()
-    action(() => {
-      this.isPlaying = false
-    })()
+      await this.playback.cleanup()
+      this.finishPlaying()
+      action(() => {
+        this.isPlaying = false
+      })()
+    }
   }
 
   @action.bound

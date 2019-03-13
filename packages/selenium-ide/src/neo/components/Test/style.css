@@ -68,3 +68,12 @@
 .test.changed .name > span::after {
   content: '*';
 }
+
+.test > a.finished {
+  color: #276d3a;
+}
+
+.test > a.errored,
+.test > a.failed {
+  color: #df0006;
+}
