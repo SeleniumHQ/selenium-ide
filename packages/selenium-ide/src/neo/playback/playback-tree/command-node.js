@@ -55,9 +55,12 @@ export class CommandNode {
   isTerminal() {
     return (
       ControlFlowCommandChecks.isTerminal(this.command) ||
-      this.command.command === '' ||
-      this.command.command.startsWith('//')
+      this.command.command === ''
     )
+  }
+
+  isDisabled() {
+    return this.command.command.startsWith('//')
   }
 
   execute(commandExecutor, options, targetOverride) {
@@ -67,7 +70,7 @@ export class CommandNode {
           'Max retry limit exceeded. To override it, specify a new limit in the value input field.',
       })
     }
-    if (this.isTerminal()) {
+    if (this.isDisabled()) {
       return Promise.resolve(
         this._executionResult(commandExecutor, { result: 'success' })
       )
@@ -112,6 +115,10 @@ export class CommandNode {
       throw new Error(`Unknown command ${this.command.command}`)
     } else if (this.isControlFlow()) {
       return this._evaluate(commandExecutor)
+    } else if (this.isTerminal()) {
+      return Promise.resolve({
+        result: 'success',
+      })
     } else if (
       this.isWebDriverCommand(commandExecutor) ||
       this.isExtCommand(commandExecutor)
