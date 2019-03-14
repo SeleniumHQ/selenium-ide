@@ -60,7 +60,10 @@ export default class PlaybackLogger {
     } else {
       commandId = commandParts[0]
     }
-    const test = stackIndex === 0 ? PlaybackState.currentRunningTest : undefined
+    const test =
+      stackIndex === PlaybackState.callstack.length
+        ? PlaybackState.currentRunningTest
+        : PlaybackState.callstack[stackIndex].callee
     const command = test.commands.find(({ id }) => id === commandId)
     cb(command, status)
   }
