@@ -18,6 +18,7 @@
 let variables = `
     private WebDriver driver;
     private HashMap<String, Object> vars = new HashMap<>();
+    JavascriptExecutor js = (JavascriptExecutor) driver;
 `
 
 let hooks = []

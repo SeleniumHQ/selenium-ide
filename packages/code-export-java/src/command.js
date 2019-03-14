@@ -47,18 +47,18 @@ export const emitters = {
   clickAt: emitClick,
   close: emitClose,
   debugger: skip,
-  //do: emitControlFlowDo,
+  do: emitControlFlowDo,
   doubleClick: emitDoubleClick,
   doubleClickAt: emitDoubleClick,
   dragAndDropToObject: emitDragAndDrop,
   echo: emitEcho,
   editContent: emitEditContent,
-  //else: emitControlFlowElse,
-  //elseIf: emitControlFlowElseIf,
-  //end: emitControlFlowEnd,
+  else: emitControlFlowElse,
+  elseIf: emitControlFlowElseIf,
+  end: emitControlFlowEnd,
   executeScript: emitExecuteScript,
   executeAsyncScript: emitExecuteAsyncScript,
-  //if: emitControlFlowIf,
+  if: emitControlFlowIf,
   mouseDown: emitMouseDown,
   mouseDownAt: emitMouseDown,
   mouseMove: emitMouseMove,
@@ -70,7 +70,7 @@ export const emitters = {
   open: emitOpen,
   pause: emitPause,
   removeSelection: emitSelect,
-  //repeatIf: emitControlFlowRepeatIf,
+  repeatIf: emitControlFlowRepeatIf,
   //run: emitRun,
   runScript: emitRunScript,
   select: emitSelect,
@@ -79,15 +79,15 @@ export const emitters = {
   sendKeys: emitSendKeys,
   setSpeed: emitSetSpeed,
   setWindowSize: emitSetWindowSize,
-  //store: emitStore,
-  //storeAttribute: emitStoreAttribute,
-  //storeText: emitStoreText,
-  //storeTitle: emitStoreTitle,
-  //storeValue: emitStoreValue,
-  //storeWindowHandle: emitStoreWindowHandle,
-  //storeXpathCount: emitStoreXpathCount,
-  //submit: emitSubmit,
-  //times: emitControlFlowTimes,
+  store: emitStore,
+  storeAttribute: emitStoreAttribute,
+  storeText: emitStoreText,
+  storeTitle: emitStoreTitle,
+  storeValue: emitStoreValue,
+  storeWindowHandle: emitStoreWindowHandle,
+  storeXpathCount: emitStoreXpathCount,
+  submit: emitSubmit,
+  times: emitControlFlowTimes,
   type: emitType,
   uncheck: emitUncheck,
   verify: emitAssert,
@@ -104,17 +104,17 @@ export const emitters = {
   verifyText: emitVerifyText,
   verifyTitle: emitVerifyTitle,
   verifyValue: emitVerifyValue,
-  //waitForElementEditable: emitWaitForElementEditable,
-  //waitForElementPresent: emitWaitForElementPresent,
-  //waitForElementVisible: emitWaitForElementVisible,
-  //waitForElementNotEditable: emitWaitForElementNotEditable,
-  //waitForElementNotPresent: emitWaitForElementNotPresent,
-  //waitForElementNotVisible: emitWaitForElementNotVisible,
-  //webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
-  //webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
-  //webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
-  //webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
-  //while: emitControlFlowWhile,
+  waitForElementEditable: emitWaitForElementEditable,
+  waitForElementPresent: emitWaitForElementPresent,
+  waitForElementVisible: emitWaitForElementVisible,
+  waitForElementNotEditable: emitWaitForElementNotEditable,
+  waitForElementNotPresent: emitWaitForElementNotPresent,
+  waitForElementNotVisible: emitWaitForElementNotVisible,
+  webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
+  webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
+  webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
+  while: emitControlFlowWhile,
 }
 
 exporter.preprocessors.register(emitters)
@@ -149,6 +149,15 @@ function emitAssertAlert(alertText) {
   }`)
 }
 
+function emitAnswerOnNextPrompt(textToSend) {
+  return Promise.resolve(`
+    {
+        Alert alert = driver.switchTo().alert();
+        alert.sendKeys("${textToSend}")
+        alert.accept();
+    }`)
+}
+
 async function emitCheck(locator) {
   return Promise.resolve(
     `{
@@ -162,6 +171,14 @@ async function emitCheck(locator) {
   )
 }
 
+function emitChooseCancelOnNextConfirmation() {
+  return Promise.resolve(`driver.switchTo().alert().dismiss();`)
+}
+
+function emitChooseOkOnNextConfirmation() {
+  return Promise.resolve(`driver.switchTo().alert().accept();`)
+}
+
 async function emitClick(target) {
   return Promise.resolve(
     `driver.findElement(${await location.emit(target)}).click();`
@@ -170,6 +187,47 @@ async function emitClick(target) {
 
 async function emitClose() {
   return Promise.resolve(`driver.close();`)
+}
+
+function generateExpressionScript(script) {
+  return `(Boolean) js.executeScript("return (${
+    script.script
+  })${generateScriptArguments(script)}");`
+}
+
+function emitControlFlowDo() {
+  return Promise.resolve('do {')
+}
+
+function emitControlFlowElse() {
+  return Promise.resolve(`} else {`)
+}
+
+function emitControlFlowElseIf(script) {
+  return Promise.resolve(`} else if (${generateExpressionScript(script)}) {`)
+}
+
+function emitControlFlowEnd() {
+  return Promise.resolve(`}`)
+}
+
+function emitControlFlowIf(script) {
+  return Promise.resolve(`if (${generateExpressionScript(script)}) {`)
+}
+
+function emitControlFlowRepeatIf(script) {
+  return Promise.resolve(`} while (${generateExpressionScript(script)});`)
+}
+
+function emitControlFlowTimes(target) {
+  return Promise.resolve(`
+      Integer times = ${target};
+      for(int i = 0; i < times; i++) {
+  `)
+}
+
+function emitControlFlowWhile(script) {
+  return Promise.resolve(`while (${generateExpressionScript(script)}) {`)
 }
 
 async function emitDoubleClick(target) {
@@ -190,7 +248,6 @@ async function emitEditContent(locator, content) {
   return Promise.resolve(`
   {
       WebElement element = driver.findElement(${await location.emit(locator)});
-      JavascriptExecutor js = (JavascriptExecutor) driver;
       js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${content}'}", element);
   }`)
 }
@@ -211,27 +268,23 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitExecuteScript(script, varName) {
-  return Promise.resolve(
-    `{
-      JavascriptExecutor js = (JavascriptExecutor) driver;
-      ${varName ? `vars.push("${varName}") = ` : ''}js.executeScript("${
-      script.script
-    }${generateScriptArguments(script)}");
-  }`
-  )
+  return Promise.resolve(`
+    {
+        Object result = js.executeScript("${
+          script.script
+        }${generateScriptArguments(script)}");
+        ${varName ? `vars("${varName}").push(result);` : ''}
+    }`)
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  return Promise.resolve(
-    `{
-      JavascriptExecutor js = (JavascriptExecutor) driver;
-      ${
-        varName ? `vars.push("${varName}") =` : ''
-      } js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
-      script.script
-    }.then(callback).catch(callback);${generateScriptArguments(script)}");
-    }`
-  )
+  return Promise.resolve(`
+    {
+        Object result = js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+          script.script
+        }.then(callback).catch(callback);${generateScriptArguments(script)}");
+        ${varName ? `vars("${varName}").push(result);` : ''}
+    }`)
 }
 
 function generateScriptArguments(script) {
@@ -294,11 +347,9 @@ async function emitPause(time) {
 }
 
 async function emitRunScript(script) {
-  return Promise.resolve(`
-    {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("${script.script}${generateScriptArguments(script)}");
-    }`)
+  return Promise.resolve(
+    `js.executeScript("${script.script}${generateScriptArguments(script)}");`
+  )
 }
 
 async function emitSetWindowSize(size) {
@@ -377,6 +428,69 @@ async function emitSendKeys(target, value) {
 function emitSetSpeed() {
   return Promise.resolve(
     `System.out.println("\`set speed\` is a no-op in the runner, use \`pause instead\`");`
+  )
+}
+
+async function emitStore(value, varName) {
+  return Promise.resolve(`vars("${varName}").push("${value}");`)
+}
+
+async function emitStoreAttribute(locator, varName) {
+  const attributePos = locator.lastIndexOf('@')
+  const elementLocator = locator.slice(0, attributePos)
+  const attributeName = locator.slice(attributePos + 1)
+
+  return Promise.resolve(`
+    {
+        WebElement element = driver.findElement(${await location.emit(
+          elementLocator
+        )});
+        String attribute = element.getAttribute("${attributeName}");
+        vars("${varName}").push(attribute);
+    }`)
+}
+
+async function emitStoreText(locator, varName) {
+  return Promise.resolve(`
+    {
+        String elementText = driver.findElement(${await location.emit(
+          locator
+        )}).getText();
+        vars("${varName}").push(elementText);
+    }`)
+}
+
+async function emitStoreTitle(_, varName) {
+  return Promise.resolve(`vars("${varName}").push(driver.getTitle());`)
+}
+
+async function emitStoreValue(locator, varName) {
+  return Promise.resolve(`
+    {
+        String value = driver.findElement(${await location.emit(
+          locator
+        )}).getAttribute("value");
+        vars("${varName}").push(value);
+    }`)
+}
+
+async function emitStoreWindowHandle(varName) {
+  return Promise.resolve(`vars("${varName}").push(driver.getWindowHandle());`)
+}
+
+async function emitStoreXpathCount(locator, varName) {
+  return Promise.resolve(`
+    {
+        List<WebElement> elements = driver.findElements(${await location.emit(
+          locator
+        )});
+        vars("${varName}").push(elements.size());
+    }`)
+}
+
+async function emitSubmit(_locator) {
+  return Promise.resolve(
+    `throw new Error("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
   )
 }
 
@@ -515,8 +629,81 @@ async function emitVerifyTitle(title) {
   return Promise.resolve(`assertThat(driver.getTitle(), is("${title}"));`)
 }
 
+async function emitWaitForElementEditable(locator, timeout) {
+  return Promise.resolve(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+          timeout / 1000
+        )});
+        wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
+          locator
+        )});
+    }`)
+}
+
 function skip() {
   return Promise.resolve()
+}
+
+async function emitWaitForElementPresent(locator, timeout) {
+  return Promise.resolve(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+          timeout / 1000
+        )});
+        wait.until(ExpectedConditions.presenceOfElementLocated(${await location.emit(
+          locator
+        )});
+    }`)
+}
+
+async function emitWaitForElementVisible(locator, timeout) {
+  return Promise.resolve(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+          timeout / 1000
+        )});
+        wait.until(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
+          locator
+        )});
+    }`)
+}
+
+async function emitWaitForElementNotEditable(locator, timeout) {
+  return Promise.resolve(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+          timeout / 1000
+        )});
+        wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
+          locator
+        )})));
+    }`)
+}
+
+async function emitWaitForElementNotPresent(locator, timeout) {
+  return Promise.resolve(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+          timeout / 1000
+        )});
+        WebElement element = driver.findElement(${await location.emit(
+          locator
+        )});
+        wait.until(ExpectedConditions.stalenessOf(element));
+    }`)
+}
+
+async function emitWaitForElementNotVisible(locator, timeout) {
+  return Promise.resolve(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+          timeout / 1000
+        )});
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(${await location.emit(
+          locator
+        )});
+    }`)
 }
 
 export default {

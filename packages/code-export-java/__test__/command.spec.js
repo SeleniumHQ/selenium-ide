@@ -16,6 +16,7 @@
 // under the License.
 
 import Command from '../src/command'
+import { ControlFlowCommandNames } from '../../selenium-ide/src/neo/models/Command'
 
 describe('command code emitter', () => {
   it('should emit `add selection` command', () => {
@@ -284,6 +285,14 @@ describe('command code emitter', () => {
     }
     return expect(Command.emit(command)).resolves.toBe(`driver.close();`)
   })
+  it('should emit `do` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.do,
+      target: '',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`do {`)
+  })
   it('should emit `double click` command', () => {
     const command = {
       command: 'doubleClick',
@@ -346,9 +355,34 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
   {
       WebElement element = driver.findElement(By.id("contentEditable"));
-      JavascriptExecutor js = (JavascriptExecutor) driver;
       js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '<button>test</button>'}", element);
   }`)
+  })
+  it('should emit `else` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.else,
+      target: 'true',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`} else {`)
+  })
+  it('should emit `else if` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.elseIf,
+      target: 'true',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `} else if ((Boolean) js.executeScript("return (true)");) {`
+    )
+  })
+  it('should emit `end` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.end,
+      target: '',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`}`)
   })
   it('should emit `execute script` command', () => {
     const command = {
@@ -356,12 +390,11 @@ describe('command code emitter', () => {
       target: 'javascript',
       value: 'myVar',
     }
-    return expect(Command.emit(command)).resolves.toBe(
-      `{
-      JavascriptExecutor js = (JavascriptExecutor) driver;
-      vars.push("myVar") = js.executeScript("javascript");
-  }`
-    )
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        Object result = js.executeScript("javascript");
+        vars("myVar").push(result);
+    }`)
   })
   it('should emit `execute async script` command', () => {
     const command = {
@@ -369,11 +402,20 @@ describe('command code emitter', () => {
       target: 'javascript',
       value: 'myVar',
     }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        Object result = js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);");
+        vars("myVar").push(result);
+    }`)
+  })
+  it('should emit `if` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.if,
+      target: 'true',
+      value: '',
+    }
     return expect(Command.emit(command)).resolves.toBe(
-      `{
-      JavascriptExecutor js = (JavascriptExecutor) driver;
-      vars.push("myVar") = js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);");
-    }`
+      `if ((Boolean) js.executeScript(\"return (true)\");) {`
     )
   })
   it('should emit `mouse down` event', () => {
@@ -513,17 +555,25 @@ describe('command code emitter', () => {
   }`
     )
   })
+  it('should emit `repeatIf` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.repeatIf,
+      target: 'true',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `} while ((Boolean) js.executeScript("return (true)"););`
+    )
+  })
   it('should emit `run script` command', () => {
     const command = {
       command: 'runScript',
       target: "alert('test');alert('Im annoying');",
       value: '',
     }
-    return expect(Command.emit(command)).resolves.toBe(`
-    {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("alert('test');alert('Im annoying');");
-    }`)
+    return expect(Command.emit(command)).resolves.toBe(
+      `js.executeScript("alert('test');alert('Im annoying');");`
+    )
   })
   it('should emit `select` command', () => {
     const command = {
@@ -642,6 +692,106 @@ describe('command code emitter', () => {
         Command.emit({ command: 'chooseOkOnNextConfirmation' })
       ).resolves.toBeUndefined(),
     ])
+  })
+  it('should emit `store` command', () => {
+    const command = {
+      command: 'store',
+      target: 'some value',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `vars("myVar").push("some value");`
+    )
+  })
+  it('should emit `store attribute` command', () => {
+    const command = {
+      command: 'storeAttribute',
+      target: 'xpath=button[3]@id',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebElement element = driver.findElement(By.xpath("button[3]"));
+        String attribute = element.getAttribute("id");
+        vars("myVar").push(attribute);
+    }`)
+  })
+  it('should emit `store text` command', () => {
+    const command = {
+      command: 'storeText',
+      target: 'id=someElement',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String elementText = driver.findElement(By.id("someElement")).getText();
+        vars("myVar").push(elementText);
+    }`)
+  })
+  it('should emit `store title` command', () => {
+    const command = {
+      command: 'storeTitle',
+      target: '',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `vars("myVar").push(driver.getTitle());`
+    )
+  })
+  it('should emit `store value` command', () => {
+    const command = {
+      command: 'storeValue',
+      target: 'id=someElement',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        String value = driver.findElement(By.id("someElement")).getAttribute("value");
+        vars("myVar").push(value);
+    }`)
+  })
+  it('should emit `store window handle` command', () => {
+    const command = {
+      command: 'storeWindowHandle',
+      target: 'windowName',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `vars("windowName").push(driver.getWindowHandle());`
+    )
+  })
+  it('should emit `store xpath count` command', () => {
+    const command = {
+      command: 'storeXpathCount',
+      target: 'xpath=button',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        List<WebElement> elements = driver.findElements(By.xpath("button"));
+        vars("myVar").push(elements.size());
+    }`)
+  })
+  it('should emit `submit` command', () => {
+    const command = {
+      command: 'submit',
+      target: 'id=form',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `throw new Error("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
+    )
+  })
+  it('should emit `times` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.times,
+      target: '5',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+      Integer times = ${command.target};
+      for(int i = 0; i < times; i++) {
+  `)
   })
   it('should emit `type` command', () => {
     const command = {
@@ -834,6 +984,122 @@ describe('command code emitter', () => {
     }
     return expect(Command.emit(command)).resolves.toBe(
       `assertThat(driver.getTitle(), is("example title"));`
+    )
+  })
+  it('should emit `waitForElementEditable` command', () => {
+    const command = {
+      command: 'waitForElementEditable',
+      target: 'css=#blah',
+      value: '5000',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#blah"));
+    }`)
+  })
+  it('should emit `waitForElementPresent` command', () => {
+    const command = {
+      command: 'waitForElementPresent',
+      target: 'css=#blah',
+      value: '5000',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#blah"));
+    }`)
+  })
+  it('should emit `waitForElementVisible` command', () => {
+    const command = {
+      command: 'waitForElementVisible',
+      target: 'css=#blah',
+      value: '5000',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#blah"));
+    }`)
+  })
+  it('should emit `waitForElementNotEditable` command', () => {
+    const command = {
+      command: 'waitForElementNotEditable',
+      target: 'css=#blah',
+      value: '5000',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#blah"))));
+    }`)
+  })
+  it('should emit `waitForElementNotPresent` command', () => {
+    const command = {
+      command: 'waitForElementNotPresent',
+      target: 'css=#blah',
+      value: '5000',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement element = driver.findElement(By.cssSelector("#blah"));
+        wait.until(ExpectedConditions.stalenessOf(element));
+    }`)
+  })
+  it('should emit `waitForElementNotVisible` command', () => {
+    const command = {
+      command: 'waitForElementNotVisible',
+      target: 'css=#blah',
+      value: '5000',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#blah"));
+    }`)
+  })
+  it('should emit `answer on visible prompt` command', () => {
+    const command = {
+      command: 'webdriverAnswerOnVisiblePrompt',
+      target: 'an answer',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        Alert alert = driver.switchTo().alert();
+        alert.sendKeys("an answer")
+        alert.accept();
+    }`)
+  })
+  it('should emit `choose cancel on visible prompt` command', () => {
+    const command = {
+      command: 'webdriverChooseCancelOnVisiblePrompt',
+      target: '',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `driver.switchTo().alert().dismiss();`
+    )
+  })
+  it('should emit `choose ok on visible confirmation` command', () => {
+    const command = {
+      command: 'webdriverChooseOkOnVisibleConfirmation',
+      target: '',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `driver.switchTo().alert().accept();`
+    )
+  })
+  it('should emit `while` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.while,
+      target: 'true',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `while ((Boolean) js.executeScript("return (true)");) {`
     )
   })
 })

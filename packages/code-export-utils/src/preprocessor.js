@@ -24,6 +24,10 @@ export function registerPreprocessors(emitters) {
       case 'runScript':
       case 'executeScript':
       case 'executeAsyncScript':
+      case 'if':
+      case 'elseIf':
+      case 'repeatIf':
+      case 'while':
         emitters[emitter].targetPreprocessor = scriptPreprocessor
         break
     }
