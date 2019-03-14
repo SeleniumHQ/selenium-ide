@@ -199,7 +199,7 @@ describe('Playback', () => {
       expect(async () => await (await playback.play(test))()).not.toThrow()
     })
 
-    it.skip('should play a single command', async () => {
+    it('should play a single command', async () => {
       const command = {
         command: 'open',
         target: '',
@@ -214,7 +214,7 @@ describe('Playback', () => {
       expect(executor.doOpen).toHaveBeenCalledTimes(1)
     })
 
-    it.skip('should play a single command twice', async () => {
+    it('should play a single command twice', async () => {
       const command = {
         command: 'open',
         target: '',
@@ -230,7 +230,29 @@ describe('Playback', () => {
       expect(executor.doOpen).toHaveBeenCalledTimes(2)
     })
 
-    it.skip('should play a single command while a test case is paused and then continue', async () => {
+    it('should not be able to play a single command twice at the same time', async () => {
+      const command = {
+        command: 'open',
+        target: '',
+        value: '',
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => psetTimeout(1))
+      const playback = new Playback({
+        executor,
+      })
+      expect.assertions(1)
+      playback.playSingleCommand(command)
+      try {
+        await playback.playSingleCommand(command)
+      } catch (err) {
+        expect(err.message).toBe(
+          "Can't play a command while playback is running"
+        )
+      }
+    })
+
+    it('should play a single command while a test case is paused and then continue', async () => {
       const test = {
         id: 1,
         commands: [
@@ -267,6 +289,48 @@ describe('Playback', () => {
       await playback.resume()
       await playPromise()
       expect(executor.doOpen).toHaveBeenCalledTimes(4)
+    })
+
+    it('should not be able to play a single command while a test case is playing', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => psetTimeout(1))
+      const playback = new Playback({
+        executor,
+      })
+      expect.assertions(1)
+      await playback.play(test)
+
+      try {
+        await playback.playSingleCommand({
+          command: 'open',
+          target: '',
+          value: '',
+        })
+      } catch (err) {
+        expect(err.message).toBe(
+          "Can't play a command while playback is running"
+        )
+      }
     })
 
     it('should play a nested test case', async () => {

@@ -103,12 +103,29 @@ export default class Playback {
   }
 
   async playSingleCommand(command) {
-    this._beforePlay()
-    this.playbackTree = createPlaybackTree([command])
-    this.currentExecutingNode = this.playbackTree.startingCommandNode
     if (!this[state].initialized) await this.init()
     if (this[state].callstack) {
+      if (!this[state].resumeResolve) {
+        throw new Error("Can't play a command while playback is running")
+      }
+
+      this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+        state: PlaybackStates.PLAYING,
+      })
+
+      try {
+        await this._playSingleCommand(command)
+      } catch (err) {
+        throw err
+      } finally {
+        this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+          state: PlaybackStates.BREAKPOINT,
+        })
+      }
     } else {
+      this._beforePlay()
+      this.playbackTree = createPlaybackTree([command])
+      this.currentExecutingNode = this.playbackTree.startingCommandNode
       const callstack = new Callstack()
       callstack.call({
         callee: {
@@ -116,8 +133,8 @@ export default class Playback {
         },
       })
       this[state].callstack = callstack
+      await (await this._play())()
     }
-    await this._play()
   }
 
   async step(steps = 1) {
@@ -351,6 +368,44 @@ export default class Playback {
     }
   }
 
+  async _playSingleCommand(command) {
+    const commandNode = createPlaybackTree([command]).startingCommandNode
+    const callstackIndex = undefined
+    this[EE].emitCommandStateChange({
+      id: command.id,
+      callstackIndex,
+      state: CommandStates.EXECUTING,
+      message: undefined,
+    })
+
+    try {
+      await this._executeCommand(commandNode)
+    } catch (err) {
+      if (err instanceof AssertionError || err instanceof VerificationError) {
+        this[EE].emitCommandStateChange({
+          id: command.id,
+          callstackIndex,
+          state: CommandStates.FAILED,
+          message: err.message,
+        })
+      } else {
+        this[EE].emitCommandStateChange({
+          id: command.id,
+          callstackIndex,
+          state: CommandStates.ERRORED,
+          message: err.message,
+        })
+      }
+      throw err
+    }
+    this[EE].emitCommandStateChange({
+      id: command.id,
+      callstackIndex,
+      state: CommandStates.PASSED,
+      message: undefined,
+    })
+  }
+
   async _executeCommand(commandNode) {
     const { command } = commandNode
     if (command.command === 'run') {
@@ -424,6 +479,7 @@ export default class Playback {
         )
       )
     }
+    this[state].callstack = undefined
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
