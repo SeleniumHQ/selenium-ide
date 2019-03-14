@@ -19,13 +19,11 @@ import uuidv4 from 'uuid/v4'
 import { action, reaction, computed, observable } from 'mobx'
 import UiState from './UiState'
 import ModalState from './ModalState'
-import Command from '../../models/Command'
 import Variables from './Variables'
 import PluginManager from '../../../plugin/manager'
 import NoResponseError from '../../../errors/no-response'
 import { Logger, Channels } from './Logs'
 import { LogTypes } from '../../ui-models/Log'
-import { createPlaybackTree } from '../../playback/playback-tree'
 import WindowSession from '../../IO/window-session'
 import ExtCommand from '../../IO/SideeX/ext-command'
 import WebDriverExecutor from '../../IO/playback/webdriver'
@@ -35,6 +33,7 @@ import Playback, {
   PlaybackEvents,
   PlaybackStates,
   CommandStates,
+  CallstackChange,
 } from '../../playback/playback'
 
 class PlaybackState {
@@ -215,12 +214,22 @@ class PlaybackState {
   }
 
   @action.bound
+  callstackStateChanged({ change, callee }) {
+    if (change === CallstackChange.CALLED) {
+      this.callTestCase(callee)
+    } else if (change === CallstackChange.UNWINDED) {
+      this.unwindTestCase()
+    }
+  }
+
+  @action.bound
   async play() {
     this.isPlaying = true
     this.playback = new Playback({
       baseUrl: UiState.baseUrl,
       executor: this.browserDriver,
       variables: this.variables,
+      getTestByName: this.getTestByName,
     })
     this.playback.addListener(
       PlaybackEvents.PLAYBACK_STATE_CHANGED,
@@ -229,6 +238,10 @@ class PlaybackState {
     this.playback.addListener(
       PlaybackEvents.COMMAND_STATE_CHANGED,
       this.commandStateChanged
+    )
+    this.playback.addListener(
+      PlaybackEvents.CALL_STACK_CHANGED,
+      this.callstackStateChanged
     )
     const finish = await this.playback.play({
       id: this.currentRunningTest.id,
@@ -699,17 +712,19 @@ class PlaybackState {
   }
 
   @action.bound
-  callTestCase(_testCase) {
-    let testCase = _testCase
-    if (typeof testCase === 'string') {
-      testCase = this.testMap[testCase]
+  getTestByName(testCaseName) {
+    if (typeof testCaseName === 'string') {
+      const test = this.testMap[testCaseName]
+      if (test) return test.export()
     }
-    if (!testCase) {
-      throw new Error(`No test case named ${_testCase}`)
-    }
+  }
+
+  @action.bound
+  callTestCase(testCase) {
+    const test = this.testMap[testCase.name]
     this.callstack.push({
       caller: this.currentRunningTest,
-      callee: testCase,
+      callee: test,
       position: this.currentExecutingCommandNode,
     })
     UiState.selectTest(
@@ -718,26 +733,19 @@ class PlaybackState {
       this.callstack.length - 1,
       true
     )
-    this.currentRunningTest = testCase
-    this.runningQueue = testCase.commands.slice()
-    let playbackTree = createPlaybackTree(this.runningQueue)
-    this.setCurrentExecutingCommandNode(playbackTree.startingCommandNode)
-    return playbackTree.startingCommandNode
+    this.currentRunningTest = test
   }
 
   @action.bound
   unwindTestCase() {
     const top = this.callstack.pop()
     this.currentRunningTest = top.caller
-    this.setCurrentExecutingCommandNode(top.position.next)
-    this.runningQueue = top.caller.commands.slice()
     UiState.selectTest(
       this.stackCaller,
       this.currentRunningSuite,
       this.callstack.length - 1,
       true
     )
-    return top
   }
 
   @action.bound
