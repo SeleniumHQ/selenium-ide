@@ -490,6 +490,16 @@ describe('command code emitter', () => {
       `driver.get("${command.target}");`
     )
   })
+  it('should emit `pause` command', () => {
+    const command = {
+      command: 'pause',
+      target: '300',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `Thread.sleep(${command.target});`
+    )
+  })
   it('should emit `remove selection` command', () => {
     const command = {
       command: 'removeSelection',
@@ -502,6 +512,18 @@ describe('command code emitter', () => {
     dropdown.findElement(By.xpath("//option[. = 'A label']")).click();
   }`
     )
+  })
+  it('should emit `run script` command', () => {
+    const command = {
+      command: 'runScript',
+      target: "alert('test');alert('Im annoying');",
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("alert('test');alert('Im annoying');");
+    }`)
   })
   it('should emit `select` command', () => {
     const command = {
@@ -516,6 +538,16 @@ describe('command code emitter', () => {
   }`
     )
   })
+  it('should emit `select frame` to select the top frame', () => {
+    const command = {
+      command: 'selectFrame',
+      target: 'relative=top',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      'driver.switchTo().defaultContent();'
+    )
+  })
   it('should emit `send keys` command', () => {
     const command = {
       command: 'sendKeys',
@@ -525,6 +557,65 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(
       `driver.findElement(By.id("input")).sendKeys("${command.value}"));`
     )
+  })
+  it('should emit `set speed`', () => {
+    expect(Command.emit({ command: 'setSpeed' })).resolves.toBe(
+      `System.out.println("\`set speed\` is a no-op in the runner, use \`pause instead\`");`
+    )
+  })
+  it('should fail to emit `select window` by using unknown locator', () => {
+    const command = {
+      command: 'selectWindow',
+      target: 'notExisting=something',
+      value: '',
+    }
+    return expect(Command.emit(command)).rejects.toThrow(
+      'Can only emit `select window` using handles'
+    )
+  })
+  it('should emit `select window` to select a window by handle', () => {
+    const command = {
+      command: 'selectWindow',
+      target: 'handle=${window}',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `driver.switchTo().window("vars.get("window").toString()");`
+    )
+  })
+  it('should emit `select window` to select a window by name', () => {
+    const command = {
+      command: 'selectWindow',
+      target: 'name=window',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `driver.switchTo().window("window");`
+    )
+  })
+  it('should emit `select window` to select a window by the local keyword', () => {
+    const command = {
+      command: 'selectWindow',
+      target: 'win_ser_local',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+      {
+          ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
+          driver.switchTo().window(handles.get(0));
+      }`)
+  })
+  it('should emit `select window` to select a window by implicit index', () => {
+    const command = {
+      command: 'selectWindow',
+      target: 'win_ser_12',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+      {
+          ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
+          driver.switchTo().window(handles.get(12));
+      }`)
   })
   it('should emit `setWindowSize`', () => {
     const command = {

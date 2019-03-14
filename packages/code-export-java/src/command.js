@@ -68,16 +68,16 @@ export const emitters = {
   mouseUp: emitMouseUp,
   mouseUpAt: emitMouseUp,
   open: emitOpen,
-  //pause: emitPause,
+  pause: emitPause,
   removeSelection: emitSelect,
   //repeatIf: emitControlFlowRepeatIf,
   //run: emitRun,
-  //runScript: emitRunScript,
+  runScript: emitRunScript,
   select: emitSelect,
-  //selectFrame: emitSelectFrame,
-  //selectWindow: emitSelectWindow,
+  selectFrame: emitSelectFrame,
+  selectWindow: emitSelectWindow,
   sendKeys: emitSendKeys,
-  //setSpeed: emitSetSpeed,
+  setSpeed: emitSetSpeed,
   setWindowSize: emitSetWindowSize,
   //store: emitStore,
   //storeAttribute: emitStoreAttribute,
@@ -289,16 +289,22 @@ function emitOpen(target) {
   return Promise.resolve(`driver.get(${url});`)
 }
 
+async function emitPause(time) {
+  return Promise.resolve(`Thread.sleep(${time});`)
+}
+
+async function emitRunScript(script) {
+  return Promise.resolve(`
+    {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("${script.script}${generateScriptArguments(script)}");
+    }`)
+}
+
 async function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
   return Promise.resolve(
     `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
-  )
-}
-
-async function emitType(target, value) {
-  return Promise.resolve(
-    `driver.findElement(${await location.emit(target)}).sendKeys("${value}");`
   )
 }
 
@@ -311,11 +317,72 @@ async function emitSelect(selectElement, option) {
   }`)
 }
 
+async function emitSelectFrame(frameLocation) {
+  if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
+    return Promise.resolve('driver.switchTo().defaultContent();')
+  } else if (/^index=/.test(frameLocation)) {
+    return Promise.resolve(
+      `driver.switchTo().frame("${frameLocation.split('index=')[1]}");`
+    )
+  } else {
+    return Promise.resolve(`
+      {
+          WebElement element = driver.findElement(${await location.emit(
+            frameLocation
+          )});
+          driver.switchTo().frame(element);
+      }`)
+  }
+}
+
+async function emitSelectWindow(windowLocation) {
+  if (/^handle=/.test(windowLocation)) {
+    return Promise.resolve(
+      `driver.switchTo().window("${windowLocation.split('handle=')[1]}");`
+    )
+  } else if (/^name=/.test(windowLocation)) {
+    return Promise.resolve(
+      `driver.switchTo().window("${windowLocation.split('name=')[1]}");`
+    )
+  } else if (/^win_ser_/.test(windowLocation)) {
+    if (windowLocation === 'win_ser_local') {
+      return Promise.resolve(`
+      {
+          ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
+          driver.switchTo().window(handles.get(0));
+      }`)
+    } else {
+      const index = parseInt(windowLocation.substr('win_ser_'.length))
+      return Promise.resolve(`
+      {
+          ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
+          driver.switchTo().window(handles.get(${index}));
+      }`)
+    }
+  } else {
+    return Promise.reject(
+      new Error('Can only emit `select window` using handles')
+    )
+  }
+}
+
 async function emitSendKeys(target, value) {
   return Promise.resolve(
     `driver.findElement(${await location.emit(target)}).sendKeys(${value
       .map(s => (s.startsWith('Key[') ? s : `"${s}"`))
       .join(',')}));`
+  )
+}
+
+function emitSetSpeed() {
+  return Promise.resolve(
+    `System.out.println("\`set speed\` is a no-op in the runner, use \`pause instead\`");`
+  )
+}
+
+async function emitType(target, value) {
+  return Promise.resolve(
+    `driver.findElement(${await location.emit(target)}).sendKeys("${value}");`
   )
 }
 
