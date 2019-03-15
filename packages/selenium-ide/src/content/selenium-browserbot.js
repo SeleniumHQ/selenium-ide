@@ -1378,7 +1378,7 @@ BrowserBot.prototype.getNonTopWindowNames = function() {
 
 BrowserBot.prototype.getCurrentWindow = function(doNotModify) {
   if (this.proxyInjectionMode) {
-    return window
+    return this.currentWindow
   }
   let testWindow = core.firefox.unwrap(this.currentWindow)
   if (!doNotModify) {

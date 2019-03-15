@@ -869,7 +869,7 @@ export default class ExtCommand {
       case 'echo':
       case 'pause':
       case 'open':
-      case 'selectFrame':
+      // case 'selectFrame':
       case 'selectWindow':
       case 'run':
       case 'setWindowSize':
