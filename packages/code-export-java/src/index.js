@@ -17,67 +17,61 @@
 
 import Command from './command'
 import hooks from './hooks'
+import { clearHooks } from './hooks'
+import { sanitizeName, capitalize } from './parsers'
 
-export function emitTest({ baseUrl, test }) {
+export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
   const name = sanitizeName(test.name)
-  let result = ''
-  result += `
-    @Test
-    public void ${name}() {
-    `
-  const emittedCommands = test.commands.map(command => {
-    return Command.emit(command)
-  })
-  return Promise.all(emittedCommands)
-    .then(results => {
-      results.forEach(emittedCommand => {
-        result += `    ${emittedCommand}
-    `
-      })
-    })
-    .then(() => {
-      result += hooks.inEach.emit()
-      result += `}`
-      result += `\n`
-      return emitClass(name, result)
-    })
+  const result = await _emitTest(name, test, tests)
+  return _emitClass(name, result)
 }
 
 export async function emitSuite({ baseUrl, suite, tests }) {
   global.baseUrl = baseUrl
   let result = ''
   for (const testName of suite.tests) {
-    result += `
-    @Test
-    public void ${sanitizeName(testName)}() {
-    `
-    const commands = tests
-      .find(test => test.name === testName)
-      .commands.map(command => {
+    const test = tests.find(test => test.name === testName)
+    result += await _emitTest(testName, test, tests)
+  }
+  return _emitClass(sanitizeName(suite.name), result)
+}
+
+async function registerReusedTestMethods(test, tests) {
+  for (const command of test.commands) {
+    if (command.command === 'run') {
+      const reusedTest = tests.find(test => test.name === command.target)
+      const commands = reusedTest.commands.map(command => {
         return Command.emit(command)
       })
-    const emittedCommands = await Promise.all(commands)
-    emittedCommands.forEach(emittedCommand => {
-      result += `    ${emittedCommand}
-    `
-    })
-    result += hooks.inEach.emit()
-    result += `}`
-    result += `\n`
+      const emittedCommands = await Promise.all(commands)
+      hooks.methods.register(sanitizeName(reusedTest.name), emittedCommands)
+    }
   }
-  return emitClass(sanitizeName(suite.name), result)
 }
 
-export function sanitizeName(input) {
-  return input.replace(/([^a-z0-9]+)/gi, '')
+async function _emitTest(name, test, tests) {
+  let result = ''
+  result += `
+    @Test
+    public void ${name}() {`
+  result += '\n\t'
+  await registerReusedTestMethods(test, tests)
+  const commands = test.commands.map(command => {
+    return Command.emit(command)
+  })
+  const emittedCommands = await Promise.all(commands)
+  emittedCommands.forEach(emittedCommand => {
+    result += `\t${emittedCommand}
+    `
+  })
+  result += hooks.inEach.emit()
+  result += `}`
+  result += `\n`
+  return result
 }
 
-export function capitalize(input) {
-  return input.charAt(0).toUpperCase() + input.substr(1)
-}
-
-function emitClass(name, body) {
+function _emitClass(name, body) {
   let result = ''
   result += hooks.dependencies.emit()
   result += `public class ${capitalize(name)} {`
@@ -86,8 +80,10 @@ function emitClass(name, body) {
   result += hooks.beforeEach.emit()
   result += hooks.afterEach.emit()
   result += hooks.afterAll.emit()
+  result += hooks.methods.emit()
   result += body
   result += `}\n`
+  clearHooks()
   return result
 }
 

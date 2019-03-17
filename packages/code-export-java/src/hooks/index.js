@@ -5,6 +5,7 @@ import beforeEach from './beforeEach'
 import afterEach from './afterEach'
 import afterAll from './afterAll'
 import inEach from './inEach'
+import methods from './declareMethods'
 
 const hooks = [
   dependencies,
@@ -14,6 +15,7 @@ const hooks = [
   afterEach,
   afterAll,
   inEach,
+  methods,
 ]
 
 export function clearHooks() {
@@ -30,4 +32,5 @@ export default {
   afterEach,
   afterAll,
   inEach,
+  methods,
 }

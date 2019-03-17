@@ -565,6 +565,14 @@ describe('command code emitter', () => {
       `} while ((Boolean) js.executeScript("return (true)"););`
     )
   })
+  it('should emit `run` command', () => {
+    const command = {
+      command: 'run',
+      target: 'some test case',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`sometestcase();`)
+  })
   it('should emit `run script` command', () => {
     const command = {
       command: 'runScript',
@@ -605,7 +613,17 @@ describe('command code emitter', () => {
       value: 'example input',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `driver.findElement(By.id("input")).sendKeys("${command.value}"));`
+      `driver.findElement(By.id("input")).sendKeys("${command.value}");`
+    )
+  })
+  it('should emit `send keys` command with a variable input', () => {
+    const command = {
+      command: 'sendKeys',
+      target: 'id=input',
+      value: '${blah}',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `driver.findElement(By.id("input")).sendKeys(vars.get("blah").toString());`
     )
   })
   it('should emit `set speed`', () => {

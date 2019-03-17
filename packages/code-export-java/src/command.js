@@ -18,6 +18,7 @@
 import exporter from '../../code-export-utils/src'
 import location from './location'
 import selection from './selection'
+import { sanitizeName } from './parsers'
 
 export const emitters = {
   addSelection: emitSelect,
@@ -71,7 +72,7 @@ export const emitters = {
   pause: emitPause,
   removeSelection: emitSelect,
   repeatIf: emitControlFlowRepeatIf,
-  //run: emitRun,
+  run: emitRun,
   runScript: emitRunScript,
   select: emitSelect,
   selectFrame: emitSelectFrame,
@@ -346,6 +347,10 @@ async function emitPause(time) {
   return Promise.resolve(`Thread.sleep(${time});`)
 }
 
+async function emitRun(testName) {
+  return Promise.resolve(`${sanitizeName(testName)}();`)
+}
+
 async function emitRunScript(script) {
   return Promise.resolve(
     `js.executeScript("${script.script}${generateScriptArguments(script)}");`
@@ -417,11 +422,33 @@ async function emitSelectWindow(windowLocation) {
   }
 }
 
+function generateSendKeysInput(value) {
+  if (typeof value === 'object') {
+    return value
+      .map(s => {
+        if (s.startsWith('Key[')) {
+          return s
+        } else if (s.startsWith('vars.get')) {
+          return s
+        } else {
+          return `"${s}"`
+        }
+      })
+      .join(',')
+  } else {
+    if (value.startsWith('vars.get')) {
+      return value
+    } else {
+      return `"${value}"`
+    }
+  }
+}
+
 async function emitSendKeys(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(target)}).sendKeys(${value
-      .map(s => (s.startsWith('Key[') ? s : `"${s}"`))
-      .join(',')}));`
+    `driver.findElement(${await location.emit(
+      target
+    )}).sendKeys(${generateSendKeysInput(value)});`
   )
 }
 
@@ -496,7 +523,9 @@ async function emitSubmit(_locator) {
 
 async function emitType(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(target)}).sendKeys("${value}");`
+    `driver.findElement(${await location.emit(
+      target
+    )}).sendKeys(${generateSendKeysInput(value)});`
   )
 }
 

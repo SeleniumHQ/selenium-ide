@@ -33,4 +33,15 @@ describe('emitted test hooks', () => {
       expect(hooks[hook].emit().includes(input)).toBeFalsy()
     })
   })
+  it('method declaration should not register duplicates', () => {
+    hooks.methods.register('blah', ['blah', 'blah', 'blah'])
+    hooks.methods.register('blah', ['blah', 'blah', 'blah'])
+    const output = `
+    public void blah() {
+    \tblah
+    \tblah
+    \tblah
+    }`
+    expect(hooks.methods.emit()).toMatch(output)
+  })
 })
