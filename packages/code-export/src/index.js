@@ -47,6 +47,10 @@ export function registerAfterEach(language, statement) {
   exporter[language].register.afterEach(statement)
 }
 
+export function registerMethods(language, name, commands) {
+  exporter[language].register.methods(name, commands)
+}
+
 export function registerAfterAll(language, statement) {
   exporter[language].register.afterAll(statement)
 }
