@@ -15,9 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import java from '../../code-export-java'
+import java from 'code-export-java'
 
-const exporter = { java }
+export const availableLanguages = [
+  { name: 'java-junit', displayName: 'Java JUnit', fileExtension: '.java' },
+]
+
+const exporter = { 'java-junit': java }
 
 export function registerCommand(language, command, emitter) {
   exporter[language].register.command(command, emitter)
@@ -55,10 +59,10 @@ export function registerAfterAll(language, statement) {
   exporter[language].register.afterAll(statement)
 }
 
-export function emitTest(language, { baseUrl, test, tests }) {
-  return exporter[language].emit.test({ baseUrl, test, tests })
+export function emitTest(language, { url, test, tests }) {
+  return exporter[language].emit.test({ baseUrl: url, test, tests })
 }
 
-export function emitSuite(language, { baseUrl, suite, tests }) {
-  return exporter[language].emit.suite({ baseUrl, suite, tests })
+export function emitSuite(language, { url, suite, tests }) {
+  return exporter[language].emit.suite({ baseUrl: url, suite, tests })
 }

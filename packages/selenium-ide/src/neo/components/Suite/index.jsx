@@ -74,6 +74,7 @@ class Suite extends React.Component {
     canDrop: PropTypes.bool,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func,
+    codeExport: PropTypes.func,
   }
   handleClick() {
     this.props.suite.setOpen(!this.props.suite.isOpen)
@@ -105,6 +106,7 @@ class Suite extends React.Component {
         </ListMenuItem>
         <ListMenuItem onClick={this.props.remove}>Delete</ListMenuItem>
         <ListMenuItem onClick={this.props.editSettings}>Settings</ListMenuItem>
+        <ListMenuItem onClick={this.props.codeExport}>Export</ListMenuItem>
       </ListMenu>
     )
     //setting component of context menu.
