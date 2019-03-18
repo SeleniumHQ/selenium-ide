@@ -132,7 +132,7 @@ function exportProject(project) {
 
 let previousFile = null
 // eslint-disable-next-line
-function createBlob(mimeType, data) {
+export function createBlob(mimeType, data) {
   const blob = new Blob([data], {
     type: 'text/plain',
   })
