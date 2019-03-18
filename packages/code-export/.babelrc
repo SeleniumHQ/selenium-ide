@@ -3,9 +3,8 @@
      ["env",
        {
          "targets": {
-           "node": "current"
+           "node": "8"
          }
-       }],
-     "jest"
+       }]
    ]
  }

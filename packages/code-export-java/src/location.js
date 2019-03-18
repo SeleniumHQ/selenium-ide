@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import exporter from '../../code-export-utils/src'
+import exporter from 'code-export-utils'
 
 const emitters = {
   id: emitId,

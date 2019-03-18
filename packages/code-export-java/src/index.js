@@ -24,7 +24,7 @@ export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
   const name = sanitizeName(test.name)
   const result = await _emitTest(name, test, tests)
-  return _emitClass(name, result)
+  return { name, body: _emitClass(name, result) }
 }
 
 export async function emitSuite({ baseUrl, suite, tests }) {
@@ -34,7 +34,8 @@ export async function emitSuite({ baseUrl, suite, tests }) {
     const test = tests.find(test => test.name === testName)
     result += await _emitTest(testName, test, tests)
   }
-  return _emitClass(sanitizeName(suite.name), result)
+  const name = sanitizeName(suite.name)
+  return { name, body: _emitClass(name, result) }
 }
 
 async function registerReusedTestMethods(test, tests) {

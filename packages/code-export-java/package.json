@@ -10,7 +10,16 @@
   ],
   "license": "Apache-2.0",
   "private": true,
+  "scripts": {
+    "build": "babel -d dist src --ignore=__test__",
+    "watch": "yarn build -w"
+  },
+  "main": "dist/index.js",
   "devDependencies": {
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "babel-cli": "^6.26.0"
+  },
+  "dependencies": {
+    "code-export-utils": "*"
   }
 }

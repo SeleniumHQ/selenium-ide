@@ -29,8 +29,8 @@ describe('Code Export Java Selenium', () => {
       test: project.tests[0],
       tests: project.tests,
     })
-    expect(results).toBeDefined()
-    expect(results).toMatchSnapshot()
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
   })
   it('should export a suite to JUnit code', async () => {
     const project = normalizeProject(
@@ -43,8 +43,8 @@ describe('Code Export Java Selenium', () => {
       suite: project.suites[0],
       tests: project.tests,
     })
-    expect(results).toBeDefined()
-    expect(results).toMatchSnapshot()
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
   })
   it('should export a test to JUnit code with reused test method', async () => {
     const project = normalizeProject(
@@ -59,8 +59,8 @@ describe('Code Export Java Selenium', () => {
       test: project.tests[1],
       tests: project.tests,
     })
-    expect(results).toBeDefined()
-    expect(results).toMatchSnapshot()
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
   })
   it('should export a suite to JUnit code with reused test method', async () => {
     const project = normalizeProject(
@@ -75,8 +75,8 @@ describe('Code Export Java Selenium', () => {
       suite: project.suites[0],
       tests: project.tests,
     })
-    expect(results).toBeDefined()
-    expect(results).toMatchSnapshot()
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
   })
 })
 
@@ -86,18 +86,28 @@ describe('Normalize Project', () => {
     const project = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'test-files', 'single-suite.side'))
     )
-    const normalizedProject = normalizeProject(project)
+    const normalizedSuite = normalizeTestsInSuite({
+      suite: project.suites[0],
+      tests: project.tests,
+    })
     const testNames = project.tests.map(test => test.name)
-    expect(testNames).toEqual(normalizedProject.suites[0].tests)
+    expect(testNames).toEqual(normalizedSuite.tests)
   })
 })
 
 function normalizeProject(project) {
   let _project = { ...project }
   _project.suites.forEach(suite => {
-    suite.tests.forEach((testId, index) => {
-      suite.tests[index] = _project.tests.find(test => test.id === testId).name
-    })
+    normalizeTestsInSuite({ suite, tests: _project.tests })
   })
   return _project
+}
+
+function normalizeTestsInSuite({ suite, tests }) {
+  if (!suite) return
+  let _suite = { ...suite }
+  _suite.tests.forEach((testId, index) => {
+    _suite.tests[index] = tests.find(test => test.id === testId).name
+  })
+  return _suite
 }
