@@ -17,8 +17,12 @@
 
 import webdriver from 'browser-webdriver'
 import { absolutifyUrl } from './utils'
-import { Logger, Channels } from '../../stores/view/Logs'
-import PlaybackState from '../../stores/view/PlaybackState'
+import {
+  composePreprocessors,
+  preprocessArray,
+  interpolateString,
+  interpolateScript,
+} from './preprocessors'
 
 const By = webdriver.By
 const until = webdriver.until
@@ -34,7 +38,6 @@ export default class WebDriverExecutor {
   constructor(capabilities, server) {
     this.capabilities = capabilities || DEFAULT_CAPABILITIES
     this.server = server || DEFAULT_SERVER
-    this.logger = new Logger(Channels.PLAYBACK)
   }
 
   async init({ baseUrl, variables }) {
@@ -48,10 +51,6 @@ export default class WebDriverExecutor {
 
   async cleanup() {
     await this.driver.quit()
-  }
-
-  isWebDriverCommand() {
-    return true
   }
 
   isAlive() {
@@ -148,9 +147,10 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doSubmit(locator) {
-    const element = await waitForElement(locator, this.driver)
-    await element.submit()
+  async doSubmit() {
+    throw new Error(
+      '"submit" is not a supported command in Selenium WebDriver. Please re-record the step.'
+    )
   }
 
   // mouse commands
@@ -208,7 +208,7 @@ export default class WebDriverExecutor {
 
   async doSendKeys(locator, value) {
     const element = await waitForElement(locator, this.driver)
-    await element.sendKeys(...preprocessKeys(value))
+    await element.sendKeys(...value)
   }
 
   // script commands
@@ -414,7 +414,6 @@ export default class WebDriverExecutor {
 
   async doEcho(string) {
     this.logger.log(`echo: ${string}`)
-    return Promise.resolve()
   }
 
   async doPause(time) {
@@ -422,26 +421,145 @@ export default class WebDriverExecutor {
   }
 
   async evaluateConditional(script) {
-    try {
-      const result = await this.driver.executeScript(
-        `return (${script.script})`,
-        ...script.argv
-      )
-      return Promise.resolve({
-        result: 'success',
-        value: !!result,
-      })
-    } catch (error) {
-      return Promise.resolve({
-        result: error.message,
-      })
+    const result = await this.driver.executeScript(
+      `return (${script.script})`,
+      ...script.argv
+    )
+    return {
+      value: !!result,
     }
   }
-
-  async doRun(target) {
-    return Promise.resolve(PlaybackState.callTestCase(target))
-  }
 }
+
+WebDriverExecutor.prototype.doOpen = composePreprocessors(
+  interpolateString,
+  WebDriverExecutor.prototype.doOpen
+)
+
+WebDriverExecutor.prototype.doSetWindowSize = composePreprocessors(
+  interpolateString,
+  WebDriverExecutor.prototype.doSetWindowSize
+)
+
+WebDriverExecutor.prototype.doSelectFrame = composePreprocessors(
+  interpolateString,
+  WebDriverExecutor.prototype.doSelectFrame
+)
+
+WebDriverExecutor.prototype.doClick = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doClick
+)
+
+WebDriverExecutor.prototype.doClickAt = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doClickAt
+)
+
+WebDriverExecutor.prototype.doDoubleClick = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doDoubleClick
+)
+
+WebDriverExecutor.prototype.doCheck = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doCheck
+)
+
+WebDriverExecutor.prototype.doCheck = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doCheck
+)
+
+WebDriverExecutor.prototype.doUncheck = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doUncheck
+)
+
+WebDriverExecutor.prototype.doSelect = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+    valueFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doSelect
+)
+
+WebDriverExecutor.prototype.doType = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doType
+)
+
+WebDriverExecutor.prototype.doSendKeys = composePreprocessors(
+  interpolateString,
+  preprocessKeys,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doSendKeys
+)
+
+WebDriverExecutor.prototype.doRunScript = composePreprocessors(
+  interpolateScript,
+  WebDriverExecutor.prototype.doRunScript
+)
+
+WebDriverExecutor.prototype.doExecuteScript = composePreprocessors(
+  interpolateScript,
+  null,
+  WebDriverExecutor.prototype.doExecuteScript
+)
+
+WebDriverExecutor.prototype.doExecuteAsyncScript = composePreprocessors(
+  interpolateScript,
+  null,
+  WebDriverExecutor.prototype.doExecuteAsyncScript
+)
+
+WebDriverExecutor.prototype.doStore = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doStore
+)
+
+WebDriverExecutor.prototype.doStoreText = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doStoreText
+)
+
+WebDriverExecutor.prototype.doStoreValue = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doStoreValue
+)
+
+WebDriverExecutor.prototype.doAssert = composePreprocessors(
+  null,
+  interpolateString,
+  WebDriverExecutor.prototype.doAssert
+)
+
+WebDriverExecutor.prototype.doAssertText = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  WebDriverExecutor.prototype.doAssertText
+)
 
 async function waitForElement(locator, driver) {
   const elementLocator = parseLocator(locator)
@@ -481,7 +599,8 @@ function parseOptionLocator(locator) {
   }
 }
 
-function preprocessKeys(str) {
+function preprocessKeys(_str, variables) {
+  const str = interpolateString(_str, variables)
   let keys = []
   let match = str.match(/\$\{\w+\}/g)
   if (!match) {

@@ -56,8 +56,8 @@ describe('Command Node', () => {
     const command = new Command(undefined, ControlFlowCommandNames.while, '', 2)
     const node = new CommandNode(command)
     node.timesVisited = 3
-    node.execute().then(result => {
-      expect(result.result).toEqual(
+    return node.execute().catch(err => {
+      expect(err.message).toEqual(
         'Max retry limit exceeded. To override it, specify a new limit in the value input field.'
       )
     })
@@ -70,8 +70,8 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    node._evaluate({ variables: new Variables() }).then(result => {
-      expect(result.result).toEqual('Invalid number provided as a target.')
+    return node._evaluate({ variables: new Variables() }).catch(err => {
+      expect(err.message).toEqual('Invalid number provided as a target.')
     })
   })
   it('timesVisited only incremenrts for control flow commands', () => {
@@ -102,42 +102,12 @@ describe('Command Node', () => {
     const result = node._evaluationResult({ result: 'success', value: false })
     expect(result.next).toEqual('c')
   })
-  it('evaluationResult returns a message when unsuccessful', () => {
-    const command = new Command(undefined, 'a', '', '')
-    const node = new CommandNode(command)
-    node.right = 'b'
-    node.left = 'c'
-    const result = node._evaluationResult({ result: 'no dice' })
-    expect(result.next).toBeUndefined()
-    expect(result.result).toEqual('no dice')
-  })
-  it("executionResult returns the 'next' node on extCommand", () => {
+  it("executionResult returns the 'next' node on non-controlflow commands", () => {
     const command = new Command(undefined, 'open', '', '')
     let nodeA = new CommandNode(command)
     const nodeB = new CommandNode(command)
     nodeA.next = nodeB
-    expect(nodeA._executionResult(commandExecutor(true, false)).next).toEqual(
-      nodeB
-    )
-  })
-  it("executionResult returns the 'next' node on Selenium command", () => {
-    const command = new Command(undefined, 'click', '', '')
-    let nodeA = new CommandNode(command)
-    const nodeB = new CommandNode(command)
-    nodeA.next = nodeB
-    expect(
-      nodeA._executionResult(commandExecutor(), { result: 'success' }).next
-    ).toEqual(nodeB)
-  })
-  it("executionResult returns the 'next' node and result message on verify command", () => {
-    const command = new Command(undefined, 'verify', '', '')
-    let nodeA = new CommandNode(command)
-    const nodeB = new CommandNode(command)
-    nodeA.next = nodeB
-    expect(
-      nodeA._executionResult(commandExecutor(), { result: 'failed with error' })
-        .next
-    ).toEqual(nodeB)
+    expect(nodeA._executionResult().next).toEqual(nodeB)
   })
   it("executionResult returns a 'next' node on control flow", () => {
     const command = new Command(undefined, ControlFlowCommandNames.if, '', '')
@@ -145,39 +115,9 @@ describe('Command Node', () => {
     nodeA.left = 'asdf'
     const nodeB = new CommandNode(command)
     expect(
-      nodeA._executionResult(commandExecutor(), {
-        result: 'success',
+      nodeA._executionResult({
         next: nodeB,
       }).next
     ).toEqual(nodeB)
   })
-  it('executionResult returns a message when unsuccessful', () => {
-    const command = new Command(undefined, 'command', '', '')
-    const node = new CommandNode(command)
-    const result = node._executionResult(commandExecutor(), {
-      result: 'no dice',
-    })
-    expect(result.next).toBeUndefined()
-    expect(result.result).toEqual('no dice')
-  })
-  it('isVerify checks if a command is a verify command', () => {
-    const verify = new Command(undefined, 'verifyText', '', '')
-    const nodeVerify = new CommandNode(verify)
-    expect(nodeVerify.isVerify()).toBeTruthy()
-
-    const assert = new Command(undefined, 'assertText', '', '')
-    const nodeAssert = new CommandNode(assert)
-    expect(nodeAssert.isVerify()).toBeFalsy()
-  })
 })
-
-function commandExecutor(extCommand = false, webDriverCommand = false) {
-  return {
-    isExtCommand: function() {
-      return extCommand
-    },
-    isWebDriverCommand: function() {
-      return webDriverCommand
-    },
-  }
-}

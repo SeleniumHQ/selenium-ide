@@ -22,7 +22,7 @@ import ModalState from '../../stores/view/ModalState'
 import WindowSession from '../../IO/window-session'
 import { TargetTypes } from '../../models/Command/Commands'
 import Region from '../../models/Region'
-import { xlateArgument } from './formatCommand'
+import { interpolateString } from '../../playback/preprocessors'
 
 async function getActiveTabForTest() {
   const identifier = WindowSession.currentUsedWindowId[
@@ -40,7 +40,7 @@ async function getActiveTabForTest() {
 
 export async function find(target) {
   try {
-    const xlatedTarget = xlateArgument(target, PlaybackState.variables)
+    const xlatedTarget = interpolateString(target, PlaybackState.variables)
     const tab = await getActiveTabForTest()
     const region = new Region(xlatedTarget)
     await browser.windows.update(tab.windowId, {
