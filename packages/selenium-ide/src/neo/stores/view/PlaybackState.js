@@ -16,7 +16,7 @@
 // under the License.
 
 import uuidv4 from 'uuid/v4'
-import { action, reaction, computed, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import UiState from './UiState'
 import ModalState from './ModalState'
 import Variables from './Variables'
@@ -26,7 +26,7 @@ import { Logger, Channels } from './Logs'
 import { LogTypes } from '../../ui-models/Log'
 import WindowSession from '../../IO/window-session'
 import ExtCommand from '../../IO/SideeX/ext-command'
-import WebDriverExecutor from '../../IO/playback/webdriver'
+import WebDriverExecutor from '../../playback/webdriver'
 import CommandTarget from './CommandTarget'
 import Suite from '../../models/Suite'
 import Playback, {
@@ -251,6 +251,7 @@ class PlaybackState {
     try {
       await finish()
     } catch (err) {
+      // error will report with the failing command
     } finally {
       this.playback.removeListener(
         PlaybackEvents.COMMAND_STATE_CHANGED,

@@ -17,7 +17,72 @@
 
 const nbsp = String.fromCharCode(160)
 
-export function xlateArgument(value, variables) {
+// this function is meant to be composed on the prototype of the executor
+// refer to preprocessor.spec.js for an example on how to do so
+// this will define this to be in scope allowing the executor function to
+// have this in scope as well as grant the preprocessor access to the variables
+export function composePreprocessors(...args) {
+  const func = args[args.length - 1]
+  const params = args.slice(0, args.length - 1)
+  if (params.length === 0) {
+    return func
+  } else if (params.length === 1) {
+    return function preprocess(target) {
+      return func.call(this, runPreprocessor(params[0], target, this.variables))
+    }
+  } else if (params.length === 2) {
+    return function preprocess(target, value) {
+      return func.call(
+        this,
+        runPreprocessor(params[0], target, this.variables),
+        runPreprocessor(params[1], value, this.variables)
+      )
+    }
+  } else {
+    return function preprocess(target, value, options) {
+      if (!options) {
+        return func.call(
+          this,
+          runPreprocessor(params[0], target, this.variables),
+          runPreprocessor(params[1], value, this.variables)
+        )
+      }
+      return func.call(
+        this,
+        runPreprocessor(params[0], target, this.variables),
+        runPreprocessor(params[1], value, this.variables),
+        preprocessObject(params[2], options, this.variables)
+      )
+    }
+  }
+}
+
+function runPreprocessor(preprocessor, value, ...args) {
+  if (typeof preprocessor === 'function') {
+    return preprocessor(value, ...args)
+  }
+  return value
+}
+
+function preprocessObject(preprocessors, obj, ...args) {
+  const result = { ...obj }
+
+  Object.keys(preprocessors).forEach(prop => {
+    if (result[prop]) {
+      result[prop] = runPreprocessor(preprocessors[prop], result[prop], ...args)
+    }
+  })
+
+  return result
+}
+
+export function preprocessArray(interpolator) {
+  return function preprocessArray(items, variables) {
+    return items.map(item => interpolator(item, variables))
+  }
+}
+
+export function interpolateString(value, variables) {
   value = value.replace(/^\s+/, '')
   value = value.replace(/\s+$/, '')
   let r2

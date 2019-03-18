@@ -150,7 +150,6 @@ describe('Playback', () => {
       const playback = new Playback({
         executor,
       })
-      const fn = jest.fn()
       playback.play(test)
       return psetTimeout(2)
     })

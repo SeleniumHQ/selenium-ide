@@ -16,13 +16,12 @@
 // under the License.
 
 export default class FakeExecutor {
-  async init({ _baseUrl, _variables }) {}
+  init({ _baseUrl, variables }) {
+    // this can be async
+    this.variables = variables
+  }
 
   async cleanup() {}
-
-  isWebDriverCommand() {
-    return true
-  }
 
   name(command) {
     if (!command) {
