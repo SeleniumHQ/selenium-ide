@@ -20,11 +20,15 @@ import hooks from './hooks'
 import { clearHooks } from './hooks'
 import { sanitizeName, capitalize } from './parsers'
 
+const fileExtension = '.java'
+
 export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
-  const name = sanitizeName(test.name)
-  const result = await _emitTest(name, test, tests)
-  return { name, body: _emitClass(name, result) }
+  const result = await _emitTest(test, tests)
+  return {
+    filename: `${sanitizeName(test.name)}.${fileExtension}`,
+    body: _emitClass(test.name, result),
+  }
 }
 
 export async function emitSuite({ baseUrl, suite, tests }) {
@@ -32,10 +36,12 @@ export async function emitSuite({ baseUrl, suite, tests }) {
   let result = ''
   for (const testName of suite.tests) {
     const test = tests.find(test => test.name === testName)
-    result += await _emitTest(testName, test, tests)
+    result += await _emitTest(test, tests)
   }
-  const name = sanitizeName(suite.name)
-  return { name, body: _emitClass(name, result) }
+  return {
+    filename: `${sanitizeName(suite.name)}.${fileExtension}`,
+    body: _emitClass(suite.name, result),
+  }
 }
 
 async function registerReusedTestMethods(test, tests) {
@@ -51,11 +57,11 @@ async function registerReusedTestMethods(test, tests) {
   }
 }
 
-async function _emitTest(name, test, tests) {
+async function _emitTest(test, tests) {
   let result = ''
   result += `
     @Test
-    public void ${name}() {`
+    public void ${sanitizeName(test.name)}() {`
   result += '\n\t'
   await registerReusedTestMethods(test, tests)
   const commands = test.commands.map(command => {
@@ -75,7 +81,7 @@ async function _emitTest(name, test, tests) {
 function _emitClass(name, body) {
   let result = ''
   result += hooks.dependencies.emit()
-  result += `public class ${capitalize(name)} {`
+  result += `public class ${capitalize(sanitizeName(name))} {`
   result += hooks.variables.emit()
   result += hooks.beforeAll.emit()
   result += hooks.beforeEach.emit()

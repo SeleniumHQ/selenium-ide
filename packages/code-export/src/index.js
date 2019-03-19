@@ -18,7 +18,7 @@
 import java from 'code-export-java'
 
 export const availableLanguages = [
-  { name: 'java-junit', displayName: 'Java JUnit', fileExtension: '.java' },
+  { name: 'java-junit', displayName: 'Java JUnit' },
 ]
 
 const exporter = { 'java-junit': java }
