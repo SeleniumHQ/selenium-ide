@@ -385,7 +385,9 @@ async function emitSelectFrame(frameLocation) {
     return Promise.resolve('driver.switchTo().defaultContent();')
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
-      `driver.switchTo().frame("${frameLocation.split('index=')[1]}");`
+      `driver.switchTo().frame(${Math.floor(
+        frameLocation.split('index=')[1]
+      )});`
     )
   } else {
     return Promise.resolve(`
@@ -433,15 +435,13 @@ function generateSendKeysInput(value) {
   if (typeof value === 'object') {
     return value
       .map(s => {
-        if (s.startsWith('Key[')) {
-          return s
-        } else if (s.startsWith('vars.get')) {
+        if (s.startsWith('vars.get')) {
           return s
         } else {
           return `"${s}"`
         }
       })
-      .join(',')
+      .join(', ')
   } else {
     if (value.startsWith('vars.get')) {
       return value
@@ -678,7 +678,7 @@ async function emitWaitForElementEditable(locator, timeout) {
 }
 
 function skip() {
-  return Promise.resolve()
+  return Promise.resolve('')
 }
 
 async function emitWaitForElementPresent(locator, timeout) {

@@ -648,6 +648,16 @@ describe('command code emitter', () => {
       `driver.findElement(By.id("input")).sendKeys(vars.get("blah").toString());`
     )
   })
+  it('should emit `send keys` command with a key press', () => {
+    const command = {
+      command: 'sendKeys',
+      target: 'id=input',
+      value: 'SuperSecretPassword!${KEY_ENTER}',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `driver.findElement(By.id("input")).sendKeys("SuperSecretPassword!", "Key['ENTER']");`
+    )
+  })
   it('should emit `set speed`', () => {
     expect(Command.emit({ command: 'setSpeed' })).resolves.toBe(
       `System.out.println("\`set speed\` is a no-op in the runner, use \`pause instead\`");`
@@ -719,18 +729,16 @@ describe('command code emitter', () => {
   })
   it('should skip playback supported commands, that are not supported in webdriver', () => {
     return Promise.all([
-      expect(
-        Command.emit({ command: 'answerOnNextPrompt' })
-      ).resolves.toBeUndefined(),
+      expect(Command.emit({ command: 'answerOnNextPrompt' })).resolves.toBe(''),
       expect(
         Command.emit({ command: 'chooseCancelOnNextConfirmation' })
-      ).resolves.toBeUndefined(),
+      ).resolves.toBe(''),
       expect(
         Command.emit({ command: 'chooseCancelOnNextPrompt' })
-      ).resolves.toBeUndefined(),
+      ).resolves.toBe(''),
       expect(
         Command.emit({ command: 'chooseOkOnNextConfirmation' })
-      ).resolves.toBeUndefined(),
+      ).resolves.toBe(''),
     ])
   })
   it('should emit `store` command', () => {

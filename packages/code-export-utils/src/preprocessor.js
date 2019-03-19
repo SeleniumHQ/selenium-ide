@@ -107,7 +107,7 @@ export function keysPreprocessor(str, variableLookup) {
         if (/^\$\{KEY_\w+\}/.test(currentKey)) {
           // is a key
           let keyName = currentKey.match(/\$\{KEY_(\w+)\}/)[1]
-          keys.push(`Key["${keyName}"]`)
+          keys.push(`Key['${keyName}']`)
         } else {
           // not a key, assume stored variables interpolation
           keys.push(defaultPreprocessor(currentKey, variableLookup))

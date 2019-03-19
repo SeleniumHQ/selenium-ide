@@ -85,7 +85,7 @@ describe('preprocessors', () => {
         value: '${KEY_ENTER}',
       }
       return expect(await keysPreprocessor(command.value)[0]).toMatch(
-        `Key["ENTER"]`
+        `Key['ENTER']`
       )
     })
     it('should convert a string and a key', async () => {
@@ -96,7 +96,7 @@ describe('preprocessors', () => {
       }
       return expect(await keysPreprocessor(command.value)).toEqual([
         'test',
-        'Key["ENTER"]',
+        `Key['ENTER']`,
       ])
     })
     it('should convert multiple strings and keys', async () => {
@@ -107,9 +107,9 @@ describe('preprocessors', () => {
       }
       return expect(await keysPreprocessor(command.value)).toEqual([
         'test',
-        'Key["ENTER"]',
+        `Key['ENTER']`,
         'foo',
-        'Key["DOWN"]',
+        `Key['DOWN']`,
         'bar',
       ])
     })
@@ -121,7 +121,7 @@ describe('preprocessors', () => {
       }
       return expect(
         await keysPreprocessor(command.value, variableLookup)
-      ).toEqual(['test', 'vars.get("var").toString()', 'foo', 'Key["ENTER"]'])
+      ).toEqual(['test', 'vars.get("var").toString()', 'foo', `Key['ENTER']`])
     })
   })
 })
