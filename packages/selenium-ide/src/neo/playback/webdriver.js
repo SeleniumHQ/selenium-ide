@@ -23,6 +23,7 @@ import {
   interpolateString,
   interpolateScript,
 } from './preprocessors'
+import { AssertionError, VerificationError } from './errors'
 
 const By = webdriver.By
 const until = webdriver.until
@@ -36,21 +37,34 @@ const DEFAULT_SERVER = 'http://localhost:4444/wd/hub'
 
 export default class WebDriverExecutor {
   constructor(capabilities, server) {
-    this.capabilities = capabilities || DEFAULT_CAPABILITIES
-    this.server = server || DEFAULT_SERVER
+    if (capabilities && typeof capabilities.get === 'function') {
+      this.driver = capabilities
+    } else {
+      this.capabilities = capabilities || DEFAULT_CAPABILITIES
+      this.server = server || DEFAULT_SERVER
+    }
   }
 
-  async init({ baseUrl, variables }) {
+  async init({ baseUrl, logger, variables }) {
     this.baseUrl = baseUrl
     this.variables = variables
-    this.driver = await new webdriver.Builder()
-      .withCapabilities(this.capabilities)
-      .usingServer(this.server)
-      .build()
+    this.logger = logger
+
+    if (!this.driver) {
+      this.driver = await new webdriver.Builder()
+        .withCapabilities(this.capabilities)
+        .usingServer(this.server)
+        .build()
+    }
+    this.initialized = true
   }
 
   async cleanup() {
-    await this.driver.quit()
+    if (this.initialized) {
+      await this.driver.quit()
+      this.driver = undefined
+      this.initialized = false
+    }
   }
 
   isAlive() {
@@ -65,7 +79,7 @@ export default class WebDriverExecutor {
     }
 
     const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
-    const func = ('do' + upperCase).replace('Verify', 'Assert')
+    const func = ('do' + upperCase)
     if (!this[func]) {
       throw new Error(`Unknown command ${command}`)
     }
@@ -263,7 +277,7 @@ export default class WebDriverExecutor {
   async doAssert(variableName, value) {
     const variable = `${this.variables.get(variableName)}`
     if (variable != value) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + variable + "' did not match '" + value + "'"
       )
     }
@@ -275,7 +289,7 @@ export default class WebDriverExecutor {
       .alert()
       .getText()
     if (actualText !== expectedText) {
-      throw new Error(
+      throw new AssertionError(
         "Actual alert text '" +
           actualText +
           "' did not match '" +
@@ -288,7 +302,7 @@ export default class WebDriverExecutor {
   async doAssertTitle(title) {
     const actualTitle = await this.driver.getTitle()
     if (title != actualTitle) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + actualTitle + "' did not match '" + title + "'"
       )
     }
@@ -301,7 +315,7 @@ export default class WebDriverExecutor {
   async doAssertElementNotPresent(locator) {
     const elements = await this.driver.findElements(parseLocator(locator))
     if (elements.length) {
-      throw new Error('Unexpected element was found in page')
+      throw new AssertionError('Unexpected element was found in page')
     }
   }
 
@@ -309,7 +323,7 @@ export default class WebDriverExecutor {
     const element = await waitForElement(locator, this.driver)
     const text = await element.getText()
     if (text !== value) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + text + "' did not match '" + value + "'"
       )
     }
@@ -319,7 +333,9 @@ export default class WebDriverExecutor {
     const element = await waitForElement(locator, this.driver)
     const text = await element.getText()
     if (text === value) {
-      throw new Error("Actual value '" + text + "' did match '" + value + "'")
+      throw new AssertionError(
+        "Actual value '" + text + "' did match '" + value + "'"
+      )
     }
   }
 
@@ -327,7 +343,7 @@ export default class WebDriverExecutor {
     const element = await waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + elementValue + "' did not match '" + value + "'"
       )
     }
@@ -338,7 +354,7 @@ export default class WebDriverExecutor {
     const element = await waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + elementValue + "' did match '" + value + "'"
       )
     }
@@ -347,14 +363,14 @@ export default class WebDriverExecutor {
   async doAssertChecked(locator) {
     const element = await waitForElement(locator, this.driver)
     if (!(await element.isSelected())) {
-      throw new Error('Element is not checked, expected to be checked')
+      throw new AssertionError('Element is not checked, expected to be checked')
     }
   }
 
   async doAssertNotChecked(locator) {
     const element = await waitForElement(locator, this.driver)
     if (await element.isSelected()) {
-      throw new Error('Element is checked, expected to be unchecked')
+      throw new AssertionError('Element is checked, expected to be unchecked')
     }
   }
 
@@ -362,7 +378,7 @@ export default class WebDriverExecutor {
     const element = await waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + elementValue + "' did not match '" + value + "'"
       )
     }
@@ -372,7 +388,7 @@ export default class WebDriverExecutor {
     const element = await waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + elementValue + "' did match '" + value + "'"
       )
     }
@@ -386,7 +402,7 @@ export default class WebDriverExecutor {
     )
     const selectedOptionLabel = await selectedOption.getText()
     if (selectedOptionLabel !== label) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" +
           selectedOptionLabel +
           "' did not match '" +
@@ -404,7 +420,7 @@ export default class WebDriverExecutor {
     )
     const selectedOptionLabel = await selectedOption.getText()
     if (selectedOptionLabel === label) {
-      throw new Error(
+      throw new AssertionError(
         "Actual value '" + selectedOptionLabel + "' not match '" + label + "'"
       )
     }
@@ -560,6 +576,38 @@ WebDriverExecutor.prototype.doAssertText = composePreprocessors(
   interpolateString,
   WebDriverExecutor.prototype.doAssertText
 )
+
+WebDriverExecutor.prototype.doEcho = composePreprocessors(
+  interpolateString,
+  WebDriverExecutor.prototype.doEcho
+)
+
+function createVerifyCommands(Executor) {
+  Object.getOwnPropertyNames(Executor.prototype)
+    .filter(command => /^doAssert/.test(command))
+    .forEach(assertion => {
+      const verify = assertion.replace('doAssert', 'doVerify')
+      Executor.prototype[verify] = {
+        // creating the function inside an object since function declared in an
+        // object are named after the property, thus creating dyanmic named funcs
+        // also in order to be able to call(this) the function has to be normal
+        // declaration rather than arrow, as arrow will be bound to
+        // createVerifyCommands context which is undefined
+        [verify]: async function(...args) {
+          try {
+            return await Executor.prototype[assertion].call(this, ...args)
+          } catch (err) {
+            if (err instanceof AssertionError) {
+              throw new VerificationError(err.message)
+            }
+            throw err
+          }
+        },
+      }[verify]
+    })
+}
+
+createVerifyCommands(WebDriverExecutor)
 
 async function waitForElement(locator, driver) {
   const elementLocator = parseLocator(locator)
