@@ -46,7 +46,7 @@ export default class ExportDialog extends React.Component {
 class ExportContent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { selectedLanguages: [] }
+    this.state = { selectedLanguages: ['java-junit'] }
   }
   static propTypes = {
     cancelSelection: PropTypes.func.isRequired,
