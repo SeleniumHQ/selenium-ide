@@ -29,6 +29,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -45,7 +46,8 @@ function clear() {
   hooks = []
 }
 
-function emit() {
+function emit({ isOptional } = { isOptional: false }) {
+  if (isOptional && !hooks.length) return ''
   return dependencies + hooks.join('\r\n')
 }
 

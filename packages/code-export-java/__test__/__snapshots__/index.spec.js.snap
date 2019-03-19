@@ -15,6 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -24,10 +25,6 @@ public class Login {
     private HashMap<String, Object> vars = new HashMap<>();
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
-    @BeforeAll
-    public void initialSetUp() {
-    }
-
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
@@ -36,10 +33,6 @@ public class Login {
     @After
     public void tearDown() {
         driver.quit();
-    }
-
-    @AfterAll
-    public void finalTearDown() {
     }
 
     @Test
@@ -80,6 +73,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -89,10 +83,6 @@ public class Login {
     private HashMap<String, Object> vars = new HashMap<>();
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
-    @BeforeAll
-    public void initialSetUp() {
-    }
-
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
@@ -101,10 +91,6 @@ public class Login {
     @After
     public void tearDown() {
         driver.quit();
-    }
-
-    @AfterAll
-    public void finalTearDown() {
     }
 
     public void login() {
@@ -146,6 +132,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -155,10 +142,6 @@ public class Login {
     private HashMap<String, Object> vars = new HashMap<>();
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
-    @BeforeAll
-    public void initialSetUp() {
-    }
-
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
@@ -167,10 +150,6 @@ public class Login {
     @After
     public void tearDown() {
         driver.quit();
-    }
-
-    @AfterAll
-    public void finalTearDown() {
     }
 
     @Test
@@ -201,6 +180,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -210,10 +190,6 @@ public class Validcredentials {
     private HashMap<String, Object> vars = new HashMap<>();
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
-    @BeforeAll
-    public void initialSetUp() {
-    }
-
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
@@ -222,10 +198,6 @@ public class Validcredentials {
     @After
     public void tearDown() {
         driver.quit();
-    }
-
-    @AfterAll
-    public void finalTearDown() {
     }
 
     public void login() {

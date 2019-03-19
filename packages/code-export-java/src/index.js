@@ -83,10 +83,10 @@ function _emitClass(name, body) {
   result += hooks.dependencies.emit()
   result += `public class ${capitalize(sanitizeName(name))} {`
   result += hooks.variables.emit()
-  result += hooks.beforeAll.emit()
+  result += hooks.beforeAll.emit({ isOptional: true })
   result += hooks.beforeEach.emit()
   result += hooks.afterEach.emit()
-  result += hooks.afterAll.emit()
+  result += hooks.afterAll.emit({ isOptional: true })
   result += hooks.methods.emit()
   result += body
   result += `}\n`

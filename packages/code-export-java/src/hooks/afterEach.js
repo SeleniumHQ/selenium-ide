@@ -31,7 +31,8 @@ function clear() {
   hooks = []
 }
 
-function emit() {
+function emit({ isOptional } = { isOptional: false }) {
+  if (isOptional && !hooks.length) return ''
   return (
     afterEach +
     hooks.join('\r\n') +
