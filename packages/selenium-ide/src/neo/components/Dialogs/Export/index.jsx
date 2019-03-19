@@ -76,6 +76,7 @@ class ExportContent extends React.Component {
           <span className="right">
             <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
             <FlatButton
+              disabled={!this.state.selectedLanguages.length}
               type="submit"
               onClick={() => {
                 this.props.completeSelection(this.state.selectedLanguages)
