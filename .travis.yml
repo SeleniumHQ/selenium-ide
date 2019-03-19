@@ -19,10 +19,7 @@ before_install:
   - peru sync
 install:
   - yarn --ignore-engines
-  - yarn build:webdriver
-  - yarn build:selianize
-  - yarn build:runner
-  - NODE_ENV="staging" yarn build:ext
+  - NODE_ENV="staging" yarn build
   - docker-compose up -d
 script:
   - yarn lint
