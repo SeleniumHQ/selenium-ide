@@ -30,10 +30,7 @@ import NewWindowConfigurationDialog from '../../components/Dialogs/NewWindowConf
 import ExportDialog from '../../components/Dialogs/Export'
 import { isProduction } from '../../../common/utils'
 import UiState from '../../stores/view/UiState'
-import { emitTest, emitSuite } from 'code-export'
-import browser from 'webextension-polyfill'
-import { createBlob } from '../../IO/filesystem'
-import { availableLanguages } from 'code-export'
+import { exportCodeToFile } from '../../code-export'
 
 @observer
 export default class Modal extends Component {
@@ -44,40 +41,6 @@ export default class Modal extends Component {
   selectTestsForSuite(suite, tests) {
     suite.replaceTestCases(tests)
     ModalState.editSuite(null)
-  }
-  async export(selectedLanguages, { test, suite }) {
-    const { url, tests } = UiState.project.toJS()
-    for (const language of selectedLanguages) {
-      let emittedCode
-      if (test) {
-        emittedCode = await emitTest(language, { url, test, tests })
-      } else if (suite) {
-        emittedCode = await emitSuite(language, { url, suite, tests })
-      }
-      if (emittedCode) {
-        const name = `${emittedCode.name}.${
-          availableLanguages.find(_language => _language.name === language)
-            .fileExtension
-        }`
-        this.downloadEmittedCode(name, emittedCode.body)
-      }
-    }
-    ModalState.cancelCodeExport()
-  }
-  normalizeTestsInSuite({ suite, tests }) {
-    if (!suite) return
-    let _suite = { ...suite }
-    _suite.tests.forEach((testId, index) => {
-      _suite.tests[index] = tests.find(test => test.id === testId).name
-    })
-    return _suite
-  }
-  downloadEmittedCode(filename, body) {
-    browser.downloads.download({
-      filename,
-      url: createBlob('text/plain', body),
-      conflictAction: 'uniquify',
-    })
   }
   render() {
     return (
@@ -154,7 +117,7 @@ export default class Modal extends Component {
             ModalState.cancelCodeExport()
           }}
           completeSelection={selectedLanguages =>
-            this.export(selectedLanguages, ModalState.exportPayload)
+            exportCodeToFile(selectedLanguages, ModalState.exportPayload)
           }
         />
       </div>
