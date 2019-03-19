@@ -1,0 +1,159 @@
+{
+  "id": "213b6ed8-55e3-4a15-bc10-0c1474aa7937",
+  "version": "2.0",
+  "name": "the-internet",
+  "url": "http://the-internet.herokuapp.com",
+  "tests": [{
+    "id": "d0f4bf60-d07a-4f93-adde-d60f0e04941b",
+    "name": "valid credentials",
+    "commands": [{
+      "id": "ba273d63-711b-4c6e-a726-403803b43e19",
+      "comment": "",
+      "command": "open",
+      "target": "/login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "906eeacc-d60d-4f8c-afa8-0bb11e636dc2",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1440x1177",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "02c52cbb-4341-4995-b2a9-ff4234c56661",
+      "comment": "",
+      "command": "type",
+      "target": "id=username",
+      "targets": [
+        ["id=username", "id"],
+        ["name=username", "name"],
+        ["css=#username", "css:finder"],
+        ["xpath=//input[@id='username']", "xpath:attributes"],
+        ["xpath=//form[@id='login']/div/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "tomsmith"
+    }, {
+      "id": "a0b7676a-64ce-443f-84f9-7d1b0b938f49",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//form[@id='login']/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "SuperSecretPassword!"
+    }, {
+      "id": "cc0d80e8-a017-4a52-beda-894897031f89",
+      "comment": "",
+      "command": "click",
+      "target": "css=#login button",
+      "targets": [
+        ["css=.fa", "css:finder"],
+        ["xpath=//form[@id='login']/button/i", "xpath:idRelative"],
+        ["xpath=//i", "xpath:position"],
+        ["xpath=//i[contains(.,' Login')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe82de21-c699-4d98-b98f-691f71f0f398",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.flash.success",
+      "targets": [
+        ["id=flash", "id"],
+        ["css=#flash", "css:finder"],
+        ["xpath=//div[@id='flash']", "xpath:attributes"],
+        ["xpath=//div[@id='flash-messages']/div", "xpath:idRelative"],
+        ["xpath=//div/div/div", "xpath:position"]
+      ],
+      "value": "You logged into a secure area!\\n×"
+    }]
+  }, {
+    "id": "92164fab-fb26-4359-a0e3-5a4d7a756e03",
+    "name": "invalid credentials",
+    "commands": [{
+      "id": "0f195785-3337-4d11-8356-b2d15fcdffa7",
+      "comment": "",
+      "command": "open",
+      "target": "/login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ae33c069-785e-4e46-8667-4bae1914cb6a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1440x1177",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ba49be2c-330c-449c-a488-a964f204c46f",
+      "comment": "",
+      "command": "type",
+      "target": "id=username",
+      "targets": [
+        ["id=username", "id"],
+        ["name=username", "name"],
+        ["css=#username", "css:finder"],
+        ["xpath=//input[@id='username']", "xpath:attributes"],
+        ["xpath=//form[@id='login']/div/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "blah"
+    }, {
+      "id": "80945f1b-f0fa-4305-9928-50cbe0ce1ceb",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//form[@id='login']/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "blah"
+    }, {
+      "id": "ec28319d-39a2-4e9f-b626-1b685ca925ea",
+      "comment": "",
+      "command": "click",
+      "target": "css=#login button",
+      "targets": [
+        ["css=.fa", "css:finder"],
+        ["xpath=//form[@id='login']/button/i", "xpath:idRelative"],
+        ["xpath=//i", "xpath:position"],
+        ["xpath=//i[contains(.,' Login')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "0fc630bd-b187-41e7-8580-01e6500a8f48",
+      "comment": "",
+      "command": "assertText",
+      "target": "id=flash",
+      "targets": [
+        ["id=flash", "id"],
+        ["css=#flash", "css:finder"],
+        ["xpath=//div[@id='flash']", "xpath:attributes"],
+        ["xpath=//div[@id='flash-messages']/div", "xpath:idRelative"],
+        ["xpath=//div/div/div", "xpath:position"]
+      ],
+      "value": "Your username is invalid!\\n×"
+    }]
+  }],
+  "suites": [{
+    "id": "edca97e7-1507-4fcd-b61b-fc4cc290c005",
+    "name": "login",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["d0f4bf60-d07a-4f93-adde-d60f0e04941b", "92164fab-fb26-4359-a0e3-5a4d7a756e03"]
+  }],
+  "urls": ["http://the-internet.herokuapp.com/"],
+  "plugins": []
+}

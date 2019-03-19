@@ -15,23 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import UiState from '../stores/view/UiState'
-import ModalState from '../stores/view/ModalState'
-import { emitTest, emitSuite } from 'code-export'
-import { downloadUniqueFile } from '../IO/filesystem'
-import { normalizeTestsInSuite } from '../IO/normalize'
+import url from 'url'
 
-export async function exportCodeToFile(selectedLanguages, { test, suite }) {
-  const { url, tests } = UiState.project.toJS()
-  for (const language of selectedLanguages) {
-    let emittedCode
-    if (test) {
-      emittedCode = await emitTest(language, { url, test, tests })
-    } else if (suite) {
-      const _suite = normalizeTestsInSuite({ suite, tests })
-      emittedCode = await emitSuite(language, { url, suite: _suite, tests })
-    }
-    if (emittedCode) downloadUniqueFile(emittedCode.filename, emittedCode.body)
+export function normalizeTestsInSuite({ suite, tests }) {
+  if (!suite) return
+  let _suite = { ...suite }
+  _suite.tests.forEach((testId, index) => {
+    _suite.tests[index] = tests.find(test => test.id === testId).name
+  })
+  return _suite
+}
+
+export function sanitizeProjectName(projectName) {
+  let name = projectName
+  if (name.startsWith('http')) {
+    return url.parse(projectName).host
+  } else {
+    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
   }
-  ModalState.cancelCodeExport()
 }

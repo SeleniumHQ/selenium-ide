@@ -18,6 +18,7 @@
 import fs from 'fs'
 import path from 'path'
 import { emitTest, emitSuite, _emitMethod, _findTestByName } from '../src'
+import { normalizeTestsInSuite } from '../../selenium-ide/src/neo/IO/normalize'
 
 describe('Code Export Java Selenium', () => {
   it('should export a test to JUnit code', async () => {
@@ -80,34 +81,10 @@ describe('Code Export Java Selenium', () => {
   })
 })
 
-// TODO: Move into the IDE
-describe('Normalize Project', () => {
-  it('converts suite.tests guids to names', () => {
-    const project = JSON.parse(
-      fs.readFileSync(path.join(__dirname, 'test-files', 'single-suite.side'))
-    )
-    const normalizedSuite = normalizeTestsInSuite({
-      suite: project.suites[0],
-      tests: project.tests,
-    })
-    const testNames = project.tests.map(test => test.name)
-    expect(testNames).toEqual(normalizedSuite.tests)
-  })
-})
-
 function normalizeProject(project) {
   let _project = { ...project }
   _project.suites.forEach(suite => {
     normalizeTestsInSuite({ suite, tests: _project.tests })
   })
   return _project
-}
-
-function normalizeTestsInSuite({ suite, tests }) {
-  if (!suite) return
-  let _suite = { ...suite }
-  _suite.tests.forEach((testId, index) => {
-    _suite.tests[index] = tests.find(test => test.id === testId).name
-  })
-  return _suite
 }
