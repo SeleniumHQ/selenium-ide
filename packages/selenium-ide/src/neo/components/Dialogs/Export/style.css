@@ -4,7 +4,7 @@
 }
 
 .language-selector .languages {
-  height: 250px;
+  height: auto;
   overflow: auto;
   max-height: initial;
   padding: 0;
