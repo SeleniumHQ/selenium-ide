@@ -19,7 +19,7 @@ export function parseString(input) {
   const capabilities = {}
 
   matchStringPairs(input).forEach(({ key, value }) => {
-    Object.assign(capabilities, assignStringKey(key, parseStringValue(value)))
+    assignStringKey(key, parseStringValue(value), capabilities)
   })
 
   return capabilities
@@ -30,7 +30,7 @@ export default {
 }
 
 function matchStringPairs(input) {
-  const regex = /([^ =]*) ?= ?(".*"|'.*'|\[.*\]|[^ ]*)/g
+  const regex = /([^\s=]*)\s?=\s?(".*"|'.*'|\[.*\]|[^\s]*)/g
   let result
   const splitCapabilities = []
   while ((result = regex.exec(input)) !== null) {
@@ -40,10 +40,14 @@ function matchStringPairs(input) {
   return splitCapabilities
 }
 
-function assignStringKey(key, value) {
-  const keyObject = {}
+function assignStringKey(key, value, keyObject) {
+  keyObject = keyObject || {}
+
   key.split('.').reduce((objectKey, currKey, index, keys) => {
-    const ref = {}
+    const ref =
+      !objectKey[currKey] || typeof objectKey[currKey] !== 'object'
+        ? {}
+        : objectKey[currKey]
     objectKey[currKey] = keys.length === index + 1 ? value : ref
     return ref
   }, keyObject)
