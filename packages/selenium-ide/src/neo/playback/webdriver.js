@@ -25,15 +25,25 @@ import {
 } from './preprocessors'
 import { AssertionError, VerificationError } from './errors'
 
-const By = webdriver.By
-const until = webdriver.until
-const Key = webdriver.Key
+const {
+  By,
+  Condition,
+  until,
+  Key,
+  WebElement,
+  WebElementCondition,
+  WebElementPromise,
+} = webdriver
+const { TimeoutError } = webdriver.error
 
-const IMPLICIT_WAIT = 30 * 1000
+const IMPLICIT_WAIT = 5 * 1000
+const POLL_TIMEOUT = 50
 const DEFAULT_CAPABILITIES = {
   browserName: 'chrome',
 }
 const DEFAULT_SERVER = 'http://localhost:4444/wd/hub'
+
+const state = Symbol('state')
 
 export default class WebDriverExecutor {
   constructor(capabilities, server) {
@@ -49,6 +59,7 @@ export default class WebDriverExecutor {
     this.baseUrl = baseUrl
     this.variables = variables
     this.logger = logger
+    this[state] = {}
 
     if (!this.driver) {
       this.driver = await new webdriver.Builder()
@@ -57,6 +68,12 @@ export default class WebDriverExecutor {
         .build()
     }
     this.initialized = true
+  }
+
+  async cancel() {
+    if (this[state].cancellable) {
+      await this[state].cancellable.cancel()
+    }
   }
 
   async cleanup() {
@@ -79,7 +96,7 @@ export default class WebDriverExecutor {
     }
 
     const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
-    const func = ('do' + upperCase)
+    const func = 'do' + upperCase
     if (!this[func]) {
       throw new Error(`Unknown command ${command}`)
     }
@@ -156,7 +173,7 @@ export default class WebDriverExecutor {
     } else if (locator.startsWith('index=')) {
       await targetLocator.frame(+locator.substr('index='.length))
     } else {
-      const element = await waitForElement(locator, this.driver)
+      const element = await this.waitForElement(locator, this.driver)
       await targetLocator.frame(element)
     }
   }
@@ -170,13 +187,13 @@ export default class WebDriverExecutor {
   // mouse commands
 
   async doClick(locator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     await element.click()
   }
 
   async doClickAt(locator, coordString) {
     const coords = coordString.split(',')
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     await this.driver
       .actions()
       .mouseMove(element, { x: coords[0], y: coords[1] })
@@ -185,7 +202,7 @@ export default class WebDriverExecutor {
   }
 
   async doDoubleClick(locator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     await this.driver
       .actions()
       .doubleClick(element)
@@ -193,21 +210,21 @@ export default class WebDriverExecutor {
   }
 
   async doCheck(locator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     if (!(await element.isSelected())) {
       await element.click()
     }
   }
 
   async doUncheck(locator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     if (await element.isSelected()) {
       await element.click()
     }
   }
 
   async doSelect(locator, optionLocator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const option = await element.findElement(parseOptionLocator(optionLocator))
     await option.click()
   }
@@ -215,13 +232,13 @@ export default class WebDriverExecutor {
   // keyboard commands
 
   async doType(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     await element.clear()
     await element.sendKeys(value)
   }
 
   async doSendKeys(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     await element.sendKeys(...value)
   }
 
@@ -261,13 +278,13 @@ export default class WebDriverExecutor {
   }
 
   async doStoreText(locator, variable) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const text = await element.getText()
     this.variables.set(variable, text)
   }
 
   async doStoreValue(locator, variable) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const value = await element.getAttribute('value')
     this.variables.set(variable, value)
   }
@@ -309,7 +326,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertElementPresent(locator) {
-    await waitForElement(locator, this.driver)
+    await this.waitForElement(locator, this.driver)
   }
 
   async doAssertElementNotPresent(locator) {
@@ -320,7 +337,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertText(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const text = await element.getText()
     if (text !== value) {
       throw new AssertionError(
@@ -330,7 +347,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertNotText(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const text = await element.getText()
     if (text === value) {
       throw new AssertionError(
@@ -340,7 +357,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertValue(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
       throw new AssertionError(
@@ -351,7 +368,7 @@ export default class WebDriverExecutor {
 
   // not generally implemented
   async doAssertNotValue(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
       throw new AssertionError(
@@ -361,21 +378,21 @@ export default class WebDriverExecutor {
   }
 
   async doAssertChecked(locator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     if (!(await element.isSelected())) {
       throw new AssertionError('Element is not checked, expected to be checked')
     }
   }
 
   async doAssertNotChecked(locator) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     if (await element.isSelected()) {
       throw new AssertionError('Element is checked, expected to be unchecked')
     }
   }
 
   async doAssertSelectedValue(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
       throw new AssertionError(
@@ -385,7 +402,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertNotSelectedValue(locator, value) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
       throw new AssertionError(
@@ -395,7 +412,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertSelectedLabel(locator, label) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const selectedValue = await element.getAttribute('value')
     const selectedOption = await element.findElement(
       By.xpath(`option[@value="${selectedValue}"]`)
@@ -413,7 +430,7 @@ export default class WebDriverExecutor {
   }
 
   async doAssertNotSelectedLabel(locator, label) {
-    const element = await waitForElement(locator, this.driver)
+    const element = await this.waitForElement(locator, this.driver)
     const selectedValue = await element.getAttribute('value')
     const selectedOption = await element.findElement(
       By.xpath(`option[@value="${selectedValue}"]`)
@@ -444,6 +461,139 @@ export default class WebDriverExecutor {
     return {
       value: !!result,
     }
+  }
+
+  async waitForElement(locator) {
+    const elementLocator = parseLocator(locator)
+    return await this.wait(until.elementLocated(elementLocator), IMPLICIT_WAIT)
+  }
+
+  async wait(
+    condition,
+    timeout = 0,
+    message = undefined,
+    pollTimeout = POLL_TIMEOUT
+  ) {
+    if (typeof timeout !== 'number' || timeout < 0) {
+      throw TypeError('timeout must be a number >= 0: ' + timeout)
+    }
+
+    if (typeof pollTimeout !== 'number' || pollTimeout < 0) {
+      throw TypeError('pollTimeout must be a number >= 0: ' + pollTimeout)
+    }
+
+    if (condition && typeof condition.then === 'function') {
+      return new Promise((resolve, reject) => {
+        if (!timeout) {
+          resolve(condition)
+          return
+        }
+
+        let start = Date.now()
+        let timer = setTimeout(function() {
+          timer = null
+          reject(
+            new TimeoutError(
+              (message ? `${message}\n` : '') +
+                'Timed out waiting for promise to resolve after ' +
+                (Date.now() - start) +
+                'ms'
+            )
+          )
+        }, timeout)
+        const clearTimer = () => timer && clearTimeout(timer)
+
+        condition.then(
+          function(value) {
+            clearTimer()
+            resolve(value)
+          },
+          function(error) {
+            clearTimer()
+            reject(error)
+          }
+        )
+      })
+    }
+
+    let fn = condition
+    if (condition instanceof Condition) {
+      message = message || condition.description()
+      fn = condition.fn
+    }
+
+    if (typeof fn !== 'function') {
+      throw TypeError(
+        'Wait condition must be a promise-like object, function, or a ' +
+          'Condition object'
+      )
+    }
+
+    const { driver } = this
+    function evaluateCondition() {
+      return new Promise((resolve, reject) => {
+        try {
+          resolve(fn(driver))
+        } catch (ex) {
+          reject(ex)
+        }
+      })
+    }
+
+    let result = new Promise((resolve, reject) => {
+      const startTime = Date.now()
+      let cancelled = false
+      let resolveCancel
+      const cancelPromise = new Promise(res => {
+        resolveCancel = res
+      })
+      this[state].cancellable = {
+        cancel: () => {
+          cancelled = true
+          return cancelPromise
+        },
+      }
+      const pollCondition = async () => {
+        evaluateCondition().then(function(value) {
+          const elapsed = Date.now() - startTime
+          if (cancelled) {
+            resolveCancel()
+            reject(new Error('Aborted by user'))
+            this[state].cancellable = undefined
+          } else if (value) {
+            resolve(value)
+            this[state].cancellable = undefined
+          } else if (timeout && elapsed >= timeout) {
+            reject(
+              new TimeoutError(
+                (message ? `${message}\n` : '') +
+                  `Wait timed out after ${elapsed}ms`
+              )
+            )
+            this[state].cancellable = undefined
+          } else {
+            setTimeout(pollCondition, pollTimeout)
+          }
+        }, reject)
+      }
+      pollCondition()
+    })
+
+    if (condition instanceof WebElementCondition) {
+      result = new WebElementPromise(
+        driver,
+        result.then(function(value) {
+          if (!(value instanceof WebElement)) {
+            throw TypeError(
+              'WebElementCondition did not resolve to a WebElement: ' +
+                Object.prototype.toString.call(value)
+            )
+          }
+          return value
+        })
+      )
+    }
+    return result
   }
 }
 
@@ -608,14 +758,6 @@ function createVerifyCommands(Executor) {
 }
 
 createVerifyCommands(WebDriverExecutor)
-
-async function waitForElement(locator, driver) {
-  const elementLocator = parseLocator(locator)
-  await driver.wait(until.elementLocated(elementLocator), IMPLICIT_WAIT)
-  const element = await driver.findElement(elementLocator)
-
-  return element
-}
 
 function parseLocator(locator) {
   if (/^\/\//.test(locator)) {
