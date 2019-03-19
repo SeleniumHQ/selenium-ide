@@ -87,6 +87,42 @@ describe('Playback', () => {
       expect(executor.doOpen).toHaveBeenCalledTimes(6)
     })
 
+    it("should throw if trying to run a test when a driver isn't initialized", async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      expect.assertions(1)
+      await (await playback.play(test))()
+      executor.cleanup()
+      try {
+        await (await playback.play(test))()
+      } catch (err) {
+        expect(err.message).toBe('executor is dead')
+      }
+    })
+
     it('should throw if trying to play while a test is running', async () => {
       const test = {
         id: 1,

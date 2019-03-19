@@ -19,9 +19,12 @@ export default class FakeExecutor {
   init({ _baseUrl, variables }) {
     // this can be async
     this.variables = variables
+    this.initialized = true
   }
 
-  async cleanup() {}
+  async cleanup() {
+    this.initialized = false
+  }
 
   name(command) {
     if (!command) {
@@ -45,10 +48,12 @@ export default class FakeExecutor {
   }
 
   async beforeCommand(_commandObject) {
+    if (!this.initialized) throw new Error('executor is dead')
     if (this.killed) throw new Error('playback is dead')
   }
 
   async afterCommand(_commandObject) {
+    if (!this.initialized) throw new Error('executor is dead')
     if (this.killed) throw new Error('playback is dead')
   }
 

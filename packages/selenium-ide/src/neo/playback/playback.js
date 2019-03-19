@@ -26,11 +26,19 @@ const state = Symbol('state')
 const DELAY_INTERVAL = 10
 
 export default class Playback {
-  constructor({ executor, baseUrl, variables, getTestByName, options }) {
+  constructor({
+    executor,
+    logger,
+    baseUrl,
+    variables,
+    getTestByName,
+    options,
+  }) {
     this.executor = executor
     this.baseUrl = baseUrl
     this.variables = variables
     this.getTestByName = getTestByName
+    this.logger = logger
     this.options = Object.assign(
       {
         pauseOnExceptions: false,
@@ -215,6 +223,7 @@ export default class Playback {
     await this.executor.init({
       baseUrl: this.baseUrl,
       variables: this.variables,
+      logger: this.logger,
     })
   }
 
