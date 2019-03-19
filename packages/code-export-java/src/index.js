@@ -26,7 +26,7 @@ export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
   const result = await _emitTest(test, tests)
   return {
-    filename: `${sanitizeName(test.name)}.${fileExtension}`,
+    filename: `${capitalize(sanitizeName(test.name))}.${fileExtension}`,
     body: _emitClass(test.name, result),
   }
 }
@@ -39,7 +39,7 @@ export async function emitSuite({ baseUrl, suite, tests }) {
     result += await _emitTest(test, tests)
   }
   return {
-    filename: `${sanitizeName(suite.name)}.${fileExtension}`,
+    filename: `${capitalize(sanitizeName(suite.name))}.${fileExtension}`,
     body: _emitClass(suite.name, result),
   }
 }

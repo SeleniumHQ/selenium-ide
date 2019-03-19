@@ -19,6 +19,7 @@ let beforeEach = `
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
+        js = (JavascriptExecutor) driver;
 `
 
 let hooks = []

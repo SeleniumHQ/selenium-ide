@@ -22,12 +22,13 @@ import java.util.ArrayList;
 
 public class Login {
     private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<>();
-    JavascriptExecutor js = (JavascriptExecutor) driver;
+    private HashMap<String, Object> vars = new HashMap<String, Object>();
+    JavascriptExecutor js;
 
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
+        js = (JavascriptExecutor) driver;
     }
 
     @After
@@ -80,12 +81,13 @@ import java.util.ArrayList;
 
 public class Login {
     private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<>();
-    JavascriptExecutor js = (JavascriptExecutor) driver;
+    private HashMap<String, Object> vars = new HashMap<String, Object>();
+    JavascriptExecutor js;
 
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
+        js = (JavascriptExecutor) driver;
     }
 
     @After
@@ -102,15 +104,15 @@ public class Login {
     }
     @Test
     public void invalidcredentials() {
-		vars(\\"username\\").push(\\"blah\\");
-    	vars(\\"password\\").push(\\"blah\\");
+		vars.put(\\"username\\", \\"blah\\");
+    	vars.put(\\"password\\", \\"blah\\");
     	login();
     }
 
     @Test
     public void validcredentials() {
-		vars(\\"username\\").push(\\"tomsmith\\");
-    	vars(\\"password\\").push(\\"SuperSecretPassword!\\");
+		vars.put(\\"username\\", \\"tomsmith\\");
+    	vars.put(\\"password\\", \\"SuperSecretPassword!\\");
     	login();
     }
 }
@@ -139,12 +141,13 @@ import java.util.ArrayList;
 
 public class Login {
     private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<>();
-    JavascriptExecutor js = (JavascriptExecutor) driver;
+    private HashMap<String, Object> vars = new HashMap<String, Object>();
+    JavascriptExecutor js;
 
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
+        js = (JavascriptExecutor) driver;
     }
 
     @After
@@ -187,12 +190,13 @@ import java.util.ArrayList;
 
 public class Validcredentials {
     private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<>();
-    JavascriptExecutor js = (JavascriptExecutor) driver;
+    private HashMap<String, Object> vars = new HashMap<String, Object>();
+    JavascriptExecutor js;
 
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
+        js = (JavascriptExecutor) driver;
     }
 
     @After
@@ -209,8 +213,8 @@ public class Validcredentials {
     }
     @Test
     public void validcredentials() {
-		vars(\\"username\\").push(\\"tomsmith\\");
-    	vars(\\"password\\").push(\\"SuperSecretPassword!\\");
+		vars.put(\\"username\\", \\"tomsmith\\");
+    	vars.put(\\"password\\", \\"SuperSecretPassword!\\");
     	login();
     }
 }

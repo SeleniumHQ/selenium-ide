@@ -36,12 +36,12 @@ describe('command code emitter', () => {
     const command = {
       command: 'assert',
       target: 'varrrName',
-      value: 'true',
+      value: 'blah',
     }
     expect(Command.emit(command)).resolves.toBe(
-      `assertEquals(vars.get("${command.target}").toString(), ${
+      `assertEquals(vars.get("${command.target}").toString(), "${
         command.value
-      });`
+      }");`
     )
   })
   it('should emit `assert alert` command', () => {
@@ -373,7 +373,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `} else if ((Boolean) js.executeScript("return (true)");) {`
+      `} else if ((Boolean) js.executeScript("return (true)")) {`
     )
   })
   it('should emit `end` command', () => {
@@ -393,7 +393,19 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         Object result = js.executeScript("javascript");
-        vars("myVar").push(result);
+        vars.put("myVar", result);
+    }`)
+  })
+  it('should emit `execute script` command with return string value', () => {
+    const command = {
+      command: 'executeScript',
+      target: 'return "a"',
+      value: 'myVar',
+    }
+    return expect(Command.emit(command)).resolves.toBe(`
+    {
+        Object result = js.executeScript("return 'a'");
+        vars.put("myVar", result);
     }`)
   })
   it('should emit `execute async script` command', () => {
@@ -405,7 +417,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         Object result = js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);");
-        vars("myVar").push(result);
+        vars.put("myVar", result);
     }`)
   })
   it('should emit `if` command', () => {
@@ -415,7 +427,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `if ((Boolean) js.executeScript(\"return (true)\");) {`
+      `if ((Boolean) js.executeScript("return (true)")) {`
     )
   })
   it('should emit `mouse down` event', () => {
@@ -562,7 +574,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `} while ((Boolean) js.executeScript("return (true)"););`
+      `} while ((Boolean) js.executeScript("return (true)"));`
     )
   })
   it('should emit `run` command', () => {
@@ -718,7 +730,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `vars("myVar").push("some value");`
+      `vars.put("myVar", "some value");`
     )
   })
   it('should emit `store attribute` command', () => {
@@ -731,7 +743,7 @@ describe('command code emitter', () => {
     {
         WebElement element = driver.findElement(By.xpath("button[3]"));
         String attribute = element.getAttribute("id");
-        vars("myVar").push(attribute);
+        vars.put("myVar", attribute);
     }`)
   })
   it('should emit `store text` command', () => {
@@ -743,7 +755,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         String elementText = driver.findElement(By.id("someElement")).getText();
-        vars("myVar").push(elementText);
+        vars.put("myVar", elementText);
     }`)
   })
   it('should emit `store title` command', () => {
@@ -753,7 +765,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `vars("myVar").push(driver.getTitle());`
+      `vars.put("myVar", driver.getTitle());`
     )
   })
   it('should emit `store value` command', () => {
@@ -765,7 +777,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         String value = driver.findElement(By.id("someElement")).getAttribute("value");
-        vars("myVar").push(value);
+        vars.put("myVar", value);
     }`)
   })
   it('should emit `store window handle` command', () => {
@@ -775,7 +787,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `vars("windowName").push(driver.getWindowHandle());`
+      `vars.put("windowName", driver.getWindowHandle());`
     )
   })
   it('should emit `store xpath count` command', () => {
@@ -787,7 +799,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         List<WebElement> elements = driver.findElements(By.xpath("button"));
-        vars("myVar").push(elements.size());
+        vars.put("myVar", elements.size());
     }`)
   })
   it('should emit `submit` command', () => {
@@ -840,12 +852,12 @@ describe('command code emitter', () => {
     const command = {
       command: 'verify',
       target: 'varrrName',
-      value: 'true',
+      value: 'blah',
     }
     expect(Command.emit(command)).resolves.toBe(
-      `assertEquals(vars.get("${command.target}").toString(), ${
+      `assertEquals(vars.get("${command.target}").toString(), "${
         command.value
-      });`
+      }");`
     )
   })
   it('should emit `verify checked` command', () => {
@@ -1117,7 +1129,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `while ((Boolean) js.executeScript("return (true)");) {`
+      `while ((Boolean) js.executeScript("return (true)")) {`
     )
   })
 })

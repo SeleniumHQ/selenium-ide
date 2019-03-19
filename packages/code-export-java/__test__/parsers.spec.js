@@ -21,6 +21,9 @@ describe('parsers', () => {
   it('should sanitize the name', () => {
     expect(sanitizeName('blah blah')).toEqual('blahblah')
   })
+  it('should trim whitespace from the name', () => {
+    expect(sanitizeName(' blah blah ')).toEqual('blahblah')
+  })
   it('should capitalize the name', () => {
     expect(capitalize('blahblah')).toEqual('Blahblah')
   })

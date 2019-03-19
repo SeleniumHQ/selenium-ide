@@ -136,9 +136,13 @@ function variableLookup(varName) {
   return `vars.get("${varName}").toString()`
 }
 
+function variableSetter(varName, value) {
+  return varName ? `vars.put("${varName}", ${value});` : ''
+}
+
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `assertEquals(vars.get("${varName}").toString(), ${value});`
+    `assertEquals(vars.get("${varName}").toString(), "${value}");`
   )
 }
 
@@ -191,9 +195,10 @@ async function emitClose() {
 }
 
 function generateExpressionScript(script) {
-  return `(Boolean) js.executeScript("return (${
-    script.script
-  })${generateScriptArguments(script)}");`
+  const scriptString = script.script.replace(/"/g, "'")
+  return `(Boolean) js.executeScript("return (${scriptString})"${generateScriptArguments(
+    script
+  )})`
 }
 
 function emitControlFlowDo() {
@@ -269,12 +274,13 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitExecuteScript(script, varName) {
+  const scriptString = script.script.replace(/"/g, "'")
   return Promise.resolve(`
     {
-        Object result = js.executeScript("${
-          script.script
-        }${generateScriptArguments(script)}");
-        ${varName ? `vars("${varName}").push(result);` : ''}
+        Object result = js.executeScript("${scriptString}"${generateScriptArguments(
+    script
+  )});
+        ${variableSetter(varName, 'result')}
     }`)
 }
 
@@ -284,12 +290,12 @@ async function emitExecuteAsyncScript(script, varName) {
         Object result = js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
           script.script
         }.then(callback).catch(callback);${generateScriptArguments(script)}");
-        ${varName ? `vars("${varName}").push(result);` : ''}
+        ${variableSetter(varName, 'result')}
     }`)
 }
 
 function generateScriptArguments(script) {
-  return `${script.argv.length ? ',' : ''}${script.argv
+  return `${script.argv.length ? ', ' : ''}${script.argv
     .map(varName => `vars.get("${varName}")`)
     .join(',')}`
 }
@@ -459,7 +465,7 @@ function emitSetSpeed() {
 }
 
 async function emitStore(value, varName) {
-  return Promise.resolve(`vars("${varName}").push("${value}");`)
+  return Promise.resolve(variableSetter(varName, `"${value}"`))
 }
 
 async function emitStoreAttribute(locator, varName) {
@@ -473,7 +479,7 @@ async function emitStoreAttribute(locator, varName) {
           elementLocator
         )});
         String attribute = element.getAttribute("${attributeName}");
-        vars("${varName}").push(attribute);
+        ${variableSetter(varName, 'attribute')}
     }`)
 }
 
@@ -483,12 +489,12 @@ async function emitStoreText(locator, varName) {
         String elementText = driver.findElement(${await location.emit(
           locator
         )}).getText();
-        vars("${varName}").push(elementText);
+        ${variableSetter(varName, 'elementText')}
     }`)
 }
 
 async function emitStoreTitle(_, varName) {
-  return Promise.resolve(`vars("${varName}").push(driver.getTitle());`)
+  return Promise.resolve(variableSetter(varName, 'driver.getTitle()'))
 }
 
 async function emitStoreValue(locator, varName) {
@@ -497,12 +503,12 @@ async function emitStoreValue(locator, varName) {
         String value = driver.findElement(${await location.emit(
           locator
         )}).getAttribute("value");
-        vars("${varName}").push(value);
+        ${variableSetter(varName, 'value')}
     }`)
 }
 
 async function emitStoreWindowHandle(varName) {
-  return Promise.resolve(`vars("${varName}").push(driver.getWindowHandle());`)
+  return Promise.resolve(variableSetter(varName, 'driver.getWindowHandle()'))
 }
 
 async function emitStoreXpathCount(locator, varName) {
@@ -511,7 +517,7 @@ async function emitStoreXpathCount(locator, varName) {
         List<WebElement> elements = driver.findElements(${await location.emit(
           locator
         )});
-        vars("${varName}").push(elements.size());
+        ${variableSetter(varName, 'elements.size()')}
     }`)
 }
 
