@@ -207,6 +207,12 @@ export function scriptPreprocessor(script) {
   }
 }
 
+function scriptValuePreprocessor(value) {
+  value = value.trim()
+  if (!value) return []
+  return value.split(/,/)
+}
+
 function keysPreprocessor(str) {
   let keys = []
   let match = str.match(/\$\{\w+\}/g)
@@ -362,32 +368,48 @@ async function emitRun(testCase) {
   )
 }
 
-async function emitRunScript(script) {
-  return Promise.resolve(generateScript(script))
+async function emitRunScript(script, varArgv) {
+  return `await driver.executeScript(\`${script.script}\`${
+    script.argv.length ? ',' : ''
+  }${script.argv.map(n => `vars["${n}"]`).join(',')}${
+    varArgv.length ? ',' : ''
+  }${varArgv.join(',')});`
 }
 
 emitRunScript.target = scriptPreprocessor
+emitRunScript.value = scriptValuePreprocessor
 
-async function emitExecuteScript(script, varName) {
-  return Promise.resolve(
-    (varName ? `vars["${varName}"] = ` : '') + generateScript(script)
+async function emitExecuteScript(script, value) {
+  const [varName, ...varArgv] = value
+  return (
+    (varName ? `vars["${varName}"] = ` : '') +
+    `await driver.executeScript(\`${script.script}\`${
+      script.argv.length ? ',' : ''
+    }${script.argv.map(n => `vars["${n}"]`).join(',')}${
+      varArgv.length ? ',' : ''
+    }${varArgv.join(',')});`
   )
 }
 
 emitExecuteScript.target = scriptPreprocessor
+emitExecuteScript.value = scriptValuePreprocessor
 
-async function emitExecuteAsyncScript(script, varName) {
-  return Promise.resolve(
+async function emitExecuteAsyncScript(script, value) {
+  const [varName, ...varArgv] = value
+  return (
     (varName ? `vars["${varName}"] = ` : '') +
-      `await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
-        script.script
-      }.then(callback).catch(callback);\`${
-        script.argv.length ? ',' : ''
-      }${script.argv.map(n => `vars["${n}"]`).join(',')});`
+    `await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
+      script.script
+    }.then(callback).catch(callback);\`${
+      script.argv.length ? ',' : ''
+    }${script.argv.map(n => `vars["${n}"]`).join(',')}${
+      varArgv.length ? ',' : ''
+    }${varArgv.join(',')});`
   )
 }
 
 emitExecuteAsyncScript.target = scriptPreprocessor
+emitExecuteAsyncScript.value = scriptValuePreprocessor
 
 async function emitPause(time) {
   return Promise.resolve(`await driver.sleep(${time});`)

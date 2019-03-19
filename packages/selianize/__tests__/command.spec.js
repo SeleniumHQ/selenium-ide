@@ -281,40 +281,92 @@ describe('command code emitter', () => {
     )
   })
   it('should emit `run script` command', () => {
-    const command = {
+    const standardCommand = {
       command: 'runScript',
       target: "alert('test');\nalert('Im annoying');",
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.executeScript(\`${command.target}\`);`
-    )
+    const valuedCommand = {
+      command: 'runScript',
+      target: "alert('test');\nalert('Im annoying');",
+      value: '0, "hello"',
+    }
+    return Promise.all([
+      expect(CommandEmitter.emit(standardCommand)).resolves.toBe(
+        `await driver.executeScript(\`${standardCommand.target}\`);`
+      ),
+      expect(CommandEmitter.emit(valuedCommand)).resolves.toBe(
+        `await driver.executeScript(\`${valuedCommand.target}\`,${
+          valuedCommand.value
+        });`
+      ),
+    ])
   })
   it('should emit `execute script` command', () => {
-    const command = {
+    const standardCommand = {
+      command: 'executeScript',
+      target: 'javascript',
+      value: '',
+    }
+    const varCommand = {
       command: 'executeScript',
       target: 'javascript',
       value: 'myVar',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `vars["${command.value}"] = await driver.executeScript(\`${
-        command.target
-      }\`);`
-    )
+    const varAndArgCommand = {
+      command: 'executeScript',
+      target: 'javascript',
+      value: 'myVar, 0, 1',
+    }
+    return Promise.all([
+      expect(CommandEmitter.emit(standardCommand)).resolves.toBe(
+        `await driver.executeScript(\`${standardCommand.target}\`);`
+      ),
+      expect(CommandEmitter.emit(varCommand)).resolves.toBe(
+        `vars["myVar"] = await driver.executeScript(\`${varCommand.target}\`);`
+      ),
+      expect(CommandEmitter.emit(varAndArgCommand)).resolves.toBe(
+        `vars["myVar"] = await driver.executeScript(\`${
+          varAndArgCommand.target
+        }\`, 0, 1);`
+      ),
+    ])
   })
   it('should emit `execute async script` command', () => {
-    const command = {
+    const standardCommand = {
+      command: 'executeAsyncScript',
+      target: 'javascript',
+      value: '',
+    }
+    const varCommand = {
       command: 'executeAsyncScript',
       target: 'javascript',
       value: 'myVar',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `vars["${
-        command.value
-      }"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
-        command.target
-      }.then(callback).catch(callback);\`);`
-    )
+    const varAndArgCommand = {
+      command: 'executeAsyncScript',
+      target: 'javascript',
+      value: 'myVar, 0, 1',
+    }
+    return Promise.all([
+      expect(CommandEmitter.emit(standardCommand)).resolves.toBe(
+        `await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
+          standardCommand.target
+        }.then(callback).catch(callback);\`);`
+      ),
+      expect(CommandEmitter.emit(varCommand)).resolves.toBe(
+        `vars["${
+          varCommand.value
+        }"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
+          varCommand.target
+        }.then(callback).catch(callback);\`);`
+      ),
+      expect(CommandEmitter.emit(varAndArgCommand)).resolves.toBe(
+        `vars["myVar"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
+          varAndArgCommand.target
+        }.then(callback).catch(callback);\`, 0, 1);`
+      ),
+    ])
   })
   it('should emit `pause` command', () => {
     const command = {
