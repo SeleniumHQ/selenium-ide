@@ -25,7 +25,6 @@ import NoResponseError from '../../../errors/no-response'
 import { Logger, Channels } from './Logs'
 import { LogTypes } from '../../ui-models/Log'
 import WindowSession from '../../IO/window-session'
-import ExtCommand from '../../IO/SideeX/ext-command'
 import WebDriverExecutor from '../../playback/webdriver'
 import CommandTarget from './CommandTarget'
 import Suite from '../../models/Suite'
@@ -95,7 +94,6 @@ class PlaybackState {
     this.filteredTests = []
     this.commandTarget = new CommandTarget()
     this.variables = new Variables()
-    this.extCommand = new ExtCommand(WindowSession)
     this.browserDriver = new WebDriverExecutor()
     this.playback = undefined
   }
@@ -228,6 +226,7 @@ class PlaybackState {
     this.playback = new Playback({
       baseUrl: UiState.baseUrl,
       executor: this.browserDriver,
+      logger: this.logger,
       variables: this.variables,
       getTestByName: this.getTestByName,
     })
