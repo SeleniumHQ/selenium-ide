@@ -26,7 +26,7 @@ export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
   const result = await _emitTest(test, tests)
   return {
-    filename: `${capitalize(sanitizeName(test.name))}.${fileExtension}`,
+    filename: generateFilename(test.name),
     body: _emitClass(test.name, result),
   }
 }
@@ -39,9 +39,13 @@ export async function emitSuite({ baseUrl, suite, tests }) {
     result += await _emitTest(test, tests)
   }
   return {
-    filename: `${capitalize(sanitizeName(suite.name))}.${fileExtension}`,
+    filename: generateFilename(suite.name),
     body: _emitClass(suite.name, result),
   }
+}
+
+function generateFilename(name) {
+  return `${capitalize(sanitizeName(name))}${fileExtension}`
 }
 
 async function registerReusedTestMethods(test, tests) {
