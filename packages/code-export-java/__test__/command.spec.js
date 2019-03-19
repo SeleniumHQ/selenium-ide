@@ -346,6 +346,16 @@ describe('command code emitter', () => {
       `System.out.println("blah");`
     )
   })
+  it('should emit `echo` command with variables', () => {
+    const command = {
+      command: 'echo',
+      target: '${blah}',
+      value: '',
+    }
+    return expect(Command.emit(command)).resolves.toBe(
+      `System.out.println(vars.get("blah").toString());`
+    )
+  })
   it('should emit `edit content` command', () => {
     const command = {
       command: 'editContent',

@@ -247,7 +247,8 @@ async function emitDoubleClick(target) {
 }
 
 async function emitEcho(message) {
-  return Promise.resolve(`System.out.println("${message}");`)
+  const _message = message.startsWith('vars.get') ? message : `"${message}"`
+  return Promise.resolve(`System.out.println(${_message});`)
 }
 
 async function emitEditContent(locator, content) {
