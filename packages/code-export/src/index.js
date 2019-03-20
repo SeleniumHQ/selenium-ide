@@ -43,8 +43,12 @@ export function registerBeforeEach(language, statement) {
   exporter[language].register.beforeEach(statement)
 }
 
-export function registerInEach(language, statement) {
-  exporter[language].register.inEach(statement)
+export function registerInEachBegin(language, statement) {
+  exporter[language].register.inEachBegin(statement)
+}
+
+export function registerInEachEnd(language, statement) {
+  exporter[language].register.inEachEnd(statement)
 }
 
 export function registerAfterEach(language, statement) {

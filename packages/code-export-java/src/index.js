@@ -67,6 +67,7 @@ async function _emitTest(test, tests) {
     @Test
     public void ${sanitizeName(test.name)}() {`
   result += '\n\t'
+  result += hooks.inEachBegin.emit()
   await registerReusedTestMethods(test, tests)
   const commands = test.commands.map(command => {
     return Command.emit(command)
@@ -76,7 +77,7 @@ async function _emitTest(test, tests) {
     result += `\t${emittedCommand}
     `
   })
-  result += hooks.inEach.emit()
+  result += hooks.inEachEnd.emit()
   result += `}`
   result += `\n`
   return result
@@ -111,7 +112,8 @@ export default {
     beforeEach: hooks.beforeEach.register,
     afterEach: hooks.afterEach.register,
     afterAll: hooks.afterAll.register,
-    inEach: hooks.inEach.register,
+    inEachBegin: hooks.inEachBegin.register,
+    inEachEnd: hooks.inEachEnd.register,
     methods: hooks.methods.register,
   },
 }
