@@ -590,6 +590,8 @@ async function emitSelect(selectElement, option) {
 async function emitSelectFrame(frameLocation) {
   if (frameLocation === 'relative=top') {
     return Promise.resolve('await driver.switchTo().frame();')
+  } else if (frameLocation === 'relative=parent') {
+    return Promise.resolve('await driver.switchTo().parentFrame();')
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
       `await driver.switchTo().frame(${frameLocation.split('index=')[1]});`
