@@ -137,4 +137,4 @@ Once you've finished creating the JavaScript string to execute the command, send
 sendResponse(`driver.findElement().then((element) => {element.perform...});`);
 ```  
 
-You can view extensive examples in the IDE's internal [emitting module](https://github.com/SeleniumHQ/selenium-ide/blob/master/packages/selianize/src/command.js).
+You can view extensive examples in the IDE's internal [emitting module](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/selianize/src/command.js).

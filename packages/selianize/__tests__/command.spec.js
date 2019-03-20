@@ -19,7 +19,7 @@ import CommandEmitter, { registerEmitter } from '../src/command'
 import {
   Commands,
   ControlFlowCommandNames,
-} from '../../selenium-ide/src/neo/models/Command'
+} from '../../selenium-ide-extension/src/neo/models/Command'
 
 describe('keys preprocessor', () => {
   it('should not affect hardcoded strings', () => {

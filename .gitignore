@@ -3,7 +3,7 @@ node_modules
 _MACOSX/
 .DS_Store
 build
-packages/selenium-ide/selenium
+packages/selenium-ide-extension/selenium
 .peru
 .idea
 .tern-port

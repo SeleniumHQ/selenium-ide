@@ -11,4 +11,4 @@ services:
     ports:
       - "4444:4444"
     volumes:
-      - "./packages/selenium-ide/build:/ext-build"
+      - "./packages/selenium-ide-extension/build:/ext-build"

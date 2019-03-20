@@ -1,9 +1,9 @@
 imports:
-  atoms: packages/selenium-ide/selenium/atoms
-  selenium-atoms: packages/selenium-ide/selenium/selenium-atoms
-  selenium-core: packages/selenium-ide/selenium/selenium-core-scripts
-  webdriver: packages/selenium-ide/selenium/webdriver
-  third_party: packages/selenium-ide/selenium/third_party
+  atoms: packages/selenium-ide-extension/selenium/atoms
+  selenium-atoms: packages/selenium-ide-extension/selenium/selenium-atoms
+  selenium-core: packages/selenium-ide-extension/selenium/selenium-core-scripts
+  webdriver: packages/selenium-ide-extension/selenium/webdriver
+  third_party: packages/selenium-ide-extension/selenium/third_party
 
 git module atoms:
   url: https://github.com/SeleniumHQ/selenium
