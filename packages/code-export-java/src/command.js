@@ -150,7 +150,6 @@ function emitAssertAlert(alertText) {
   return Promise.resolve(`{
       Alert alert = driver.switchTo().alert();
       assertThat(alert.getText(), is("${alertText}"));
-      alert.accept();
   }`)
 }
 
@@ -437,6 +436,9 @@ function generateSendKeysInput(value) {
       .map(s => {
         if (s.startsWith('vars.get')) {
           return s
+        } else if (s.startsWith('Key[')) {
+          const key = s.match(/\['(.*)'\]/)[1]
+          return `Keys.${key}`
         } else {
           return `"${s}"`
         }
@@ -564,7 +566,7 @@ async function emitVerifyEditable(locator) {
           locator
         )});
         Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
-        assertTrue(isEditable)
+        assertTrue(isEditable);
     }`
   )
 }
@@ -602,7 +604,7 @@ async function emitVerifyNotEditable(locator) {
   {
       WebElement element = driver.findElement(${await location.emit(locator)});
       Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
-      assertFalse(isEditable)
+      assertFalse(isEditable);
   }`)
 }
 
@@ -673,7 +675,7 @@ async function emitWaitForElementEditable(locator, timeout) {
         )});
         wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
           locator
-        )});
+        )}));
     }`)
 }
 
@@ -689,7 +691,7 @@ async function emitWaitForElementPresent(locator, timeout) {
         )});
         wait.until(ExpectedConditions.presenceOfElementLocated(${await location.emit(
           locator
-        )});
+        )}));
     }`)
 }
 
@@ -701,7 +703,7 @@ async function emitWaitForElementVisible(locator, timeout) {
         )});
         wait.until(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
           locator
-        )});
+        )}));
     }`)
 }
 
@@ -711,7 +713,7 @@ async function emitWaitForElementNotEditable(locator, timeout) {
         WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
           timeout / 1000
         )});
-        wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
+        wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(${await location.emit(
           locator
         )})));
     }`)
@@ -738,7 +740,7 @@ async function emitWaitForElementNotVisible(locator, timeout) {
         )});
         wait.until(ExpectedConditions.invisibilityOfElementLocated(${await location.emit(
           locator
-        )});
+        )}));
     }`)
 }
 

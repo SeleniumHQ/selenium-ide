@@ -54,7 +54,6 @@ describe('command code emitter', () => {
       `{
       Alert alert = driver.switchTo().alert();
       assertThat(alert.getText(), is("an alert"));
-      alert.accept();
   }`
     )
   })
@@ -78,7 +77,6 @@ describe('command code emitter', () => {
       `{
       Alert alert = driver.switchTo().alert();
       assertThat(alert.getText(), is("a confirmation"));
-      alert.accept();
   }`
     )
   })
@@ -92,7 +90,7 @@ describe('command code emitter', () => {
       `{
         WebElement element = driver.findElement(By.id("text"));
         Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
-        assertTrue(isEditable)
+        assertTrue(isEditable);
     }`
     )
   })
@@ -140,7 +138,7 @@ describe('command code emitter', () => {
   {
       WebElement element = driver.findElement(By.id("text"));
       Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
-      assertFalse(isEditable)
+      assertFalse(isEditable);
   }`)
   })
   it('should emit `assert not selected value` command', () => {
@@ -177,7 +175,6 @@ describe('command code emitter', () => {
       `{
       Alert alert = driver.switchTo().alert();
       assertThat(alert.getText(), is("a prompt"));
-      alert.accept();
   }`
     )
   })
@@ -655,7 +652,7 @@ describe('command code emitter', () => {
       value: 'SuperSecretPassword!${KEY_ENTER}',
     }
     return expect(Command.emit(command)).resolves.toBe(
-      `driver.findElement(By.id("input")).sendKeys("SuperSecretPassword!", "Key['ENTER']");`
+      `driver.findElement(By.id("input")).sendKeys("SuperSecretPassword!", Keys.ENTER);`
     )
   })
   it('should emit `set speed`', () => {
@@ -898,7 +895,7 @@ describe('command code emitter', () => {
       `{
         WebElement element = driver.findElement(By.id("text"));
         Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
-        assertTrue(isEditable)
+        assertTrue(isEditable);
     }`
     )
   })
@@ -946,7 +943,7 @@ describe('command code emitter', () => {
   {
       WebElement element = driver.findElement(By.id("text"));
       Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;
-      assertFalse(isEditable)
+      assertFalse(isEditable);
   }`)
   })
   it('should emit `verify not selected value` command', () => {
@@ -1043,7 +1040,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#blah"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#blah")));
     }`)
   })
   it('should emit `waitForElementPresent` command', () => {
@@ -1055,7 +1052,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#blah"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#blah")));
     }`)
   })
   it('should emit `waitForElementVisible` command', () => {
@@ -1067,7 +1064,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#blah"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#blah")));
     }`)
   })
   it('should emit `waitForElementNotEditable` command', () => {
@@ -1079,7 +1076,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#blah"))));
+        wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(By.cssSelector("#blah"))));
     }`)
   })
   it('should emit `waitForElementNotPresent` command', () => {
@@ -1104,7 +1101,7 @@ describe('command code emitter', () => {
     return expect(Command.emit(command)).resolves.toBe(`
     {
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#blah"));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#blah")));
     }`)
   })
   it('should emit `answer on visible prompt` command', () => {
