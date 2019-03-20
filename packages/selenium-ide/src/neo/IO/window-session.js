@@ -124,6 +124,23 @@ export class WindowSession {
   }
 }
 
+if (browser && browser.runtime && browser.runtime.onMessage) {
+  browser.runtime.onMessage.addListener(function contentWindowIdListener(
+    message,
+    _sender,
+    sendResponse
+  ) {
+    if (
+      message.selfWindowId != undefined &&
+      message.commWindowId != undefined
+    ) {
+      WindowSession.ideWindowId = message.selfWindowId
+      browser.runtime.onMessage.removeListener(contentWindowIdListener)
+      sendResponse(true)
+    }
+  })
+}
+
 if (!window._windowSession) window._windowSession = new WindowSession()
 
 export default window._windowSession
