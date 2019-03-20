@@ -18,7 +18,7 @@
 import { action, computed, observable, toJS } from 'mobx'
 import uuidv4 from 'uuid/v4'
 import Fuse from 'fuse.js'
-import { Commands as _Commands } from './Commands'
+import { Commands as _Commands, TargetTypes } from './Commands'
 import { ArgTypes as _ArgTypes } from './ArgTypes'
 const EventEmitter = require('events')
 import { mergeEventEmitter } from '../../../common/events'
@@ -74,6 +74,15 @@ export default class Command {
     return Commands.array.includes(this.command)
   }
 
+  @computed
+  get canHaveTargets() {
+    if (Commands.list.has(this.command)) {
+      const { type } = Commands.list.get(this.command)
+      return type === TargetTypes.LOCATOR
+    }
+    return false
+  }
+
   @action.bound
   clone() {
     const clone = new Command()
@@ -93,6 +102,10 @@ export default class Command {
     } else {
       this.command = command || ''
     }
+
+    if (!this.canHaveTargets) {
+      this.setTargets()
+    }
   }
 
   @action.bound
@@ -102,7 +115,11 @@ export default class Command {
 
   @action.bound
   setTargets(targets = []) {
-    this.targets.replace(targets)
+    if (this.canHaveTargets) {
+      this.targets.replace(targets)
+    } else {
+      this.targets.replace([])
+    }
   }
 
   @action.bound

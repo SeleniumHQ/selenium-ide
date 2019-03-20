@@ -70,10 +70,17 @@ describe('Command', () => {
     expect(command.target).toBe('a')
   })
   it('should set the targets', () => {
-    const command = new Command()
+    const command = new Command(undefined, 'click')
     command.setTargets([['button', 'xpath']])
     expect(command.targets[0][0]).toBe('button')
     expect(command.targets[0][1]).toBe('xpath')
+  })
+  it("should remove set targets if command doesn't support targets", () => {
+    const command = new Command(undefined, 'click')
+    command.setTargets([['button', 'xpath']])
+    expect(command.targets.length).toBe(1)
+    command.setCommand('open')
+    expect(command.targets.length).toBe(0)
   })
   it('should set the value', () => {
     const command = new Command()
@@ -177,7 +184,7 @@ describe('Command', () => {
     const jsRepresentation = {
       id: '1',
       comment: 'test',
-      command: 'open',
+      command: 'click',
       target: '/',
       targets: [['button', 'xpath']],
       value: 'test',
