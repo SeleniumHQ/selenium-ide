@@ -4,15 +4,12 @@
 
 _[WIP] An integrated development environment for Selenium scripts_
 
+Selenium IDE as a WebExtension is developed under the branch `v3` view the readme [here](https://github.com/SeleniumHQ/selenium-ide/tree/v3).
+
 ## Introduction
 
 This project is a work in progress, towards a complete rewrite of the old Selenium IDE.
-The older IDE was a Firefox extension that relied heavily on APIs that are no longer supported by newer versions of Firefox.
-In this project, the IDE is developed as a modern browser extension, supporting both Chrome and Firefox and other modern browsers (in theory).
-
-As this is an early stage and many things aren't clear, it's quite challenging to collaborate and coordinate the efforts - so please be patient.
-
-We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was kind enough to let us use their work.
+The IDE traditionally was developed to be a browser extension, we are now rewriting it to work as an electron app, more info soon.
 
 ## Installation
 
@@ -24,24 +21,15 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 
 - `git` has to be in `$PATH` for the installation to pass
 
-- [yarn](https://yarnpkg.com/en/docs/install) `npm` might work as well (untested)
-
-- [peru](https://github.com/buildinspace/peru#installation)
+- [yarn](https://yarnpkg.com/en/docs/install)
 
 ## Building
 
-`peru` requires a POSIX machine to work, for the time being you can only properly build the extension on macOS and Linux.
-
 - Install the dependencies
-`peru sync`  
 `yarn` or if using Node 10 `yarn --ignore-engines`
 - Build the extension  
 `yarn build` and then
 `yarn watch` for faster incremental builds
-`yarn build:ext:prod` to build only the extension or `yarn build:ext` for faster development build (also includes beta features)
-- Install as developer on [Google Chrome](https://developer.chrome.com/extensions/getstarted#unpacked) or [Firefox](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)  
-
-Manifest located in `<Project Directory>/packages/selenium-ide/build/manifest.json`
 
 ## What now?
 
