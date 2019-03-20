@@ -410,36 +410,7 @@ class PlaybackState {
   }
 
   @action.bound
-  playCommand(command, jumpToNext) {
-    if (!this.isPlaying) {
-      const playCommand = action(() => {
-        this.runId = ''
-        this.noStatisticsEffects = true
-        this.jumpToNextCommand = jumpToNext
-        this.errors = 0
-        this.forceTestCaseFailure = false
-        this.aborted = false
-        this.currentRunningTest = UiState.selectedTest.test
-        this.runningQueue = [command]
-        this.isSingleCommandRunning = true
-        this.play().then(() => {
-          this.isSingleCommandRunning = false
-        })
-      })
-      this.beforePlaying(playCommand)
-    } else {
-      const queue = this.runningQueue
-      const currentExecutingCommandNode = this.currentExecutingCommandNode
-      this.isSingleCommandRunning = true
-      playSingleCommand(command).then(
-        action(() => {
-          this.isSingleCommandRunning = false
-          this.runningQueue = queue
-          this.currentExecutingCommandNode = currentExecutingCommandNode
-        })
-      )
-    }
-  }
+  playCommand() {}
 
   emitPlaybackStarted(cb) {
     return PluginManager.emitMessage(
