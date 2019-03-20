@@ -55,9 +55,12 @@ export class CommandNode {
   isTerminal() {
     return (
       ControlFlowCommandChecks.isTerminal(this.command) ||
-      this.command.command === '' ||
-      this.command.command.startsWith('//')
+      this.command.command === ''
     )
+  }
+
+  isDisabled() {
+    return this.command.command.startsWith('//')
   }
 
   execute(commandExecutor, options, targetOverride) {
@@ -66,6 +69,11 @@ export class CommandNode {
         result:
           'Max retry limit exceeded. To override it, specify a new limit in the value input field.',
       })
+    }
+    if (this.isDisabled()) {
+      return Promise.resolve(
+        this._executionResult(commandExecutor, { result: 'success' })
+      )
     }
     return commandExecutor.beforeCommand(this.command).then(() => {
       return this._executeCommand(
