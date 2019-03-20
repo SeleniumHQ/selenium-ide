@@ -8,8 +8,6 @@
     "build:ext": "cd packages/selenium-ide && yarn build:dev",
     "build:runner": "cd packages/selenium-side-runner && yarn build",
     "build:selianize": "cd packages/selianize && yarn build",
-    "build:webdriver": "cd packages/browser-webdriver && yarn build",
-    "build:webdriver:dev": "cd packages/browser-webdriver && yarn build:dev",
     "build:ext:prod": "cd packages/selenium-ide && yarn build",
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",

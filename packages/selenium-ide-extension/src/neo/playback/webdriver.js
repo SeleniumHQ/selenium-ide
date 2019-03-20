@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import webdriver from 'browser-webdriver'
+import webdriver from 'selenium-webdriver'
 import { absolutifyUrl } from './utils'
 import {
   composePreprocessors,
