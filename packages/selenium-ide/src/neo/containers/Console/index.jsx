@@ -66,7 +66,7 @@ export default class Console extends React.Component {
   }
   render() {
     const command = UiState.selectedCommand
-      ? Commands.list.get(UiState.selectedCommand.command)
+      ? Commands.list.get(UiState.selectedCommand.displayedName)
       : undefined
     const tabs = [
       { name: 'Log', unread: this.state.logsUnread },
