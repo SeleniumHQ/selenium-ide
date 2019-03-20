@@ -13,17 +13,19 @@ The IDE traditionally was developed to be a browser extension, we are now rewrit
 
 ## Installation
 
-### Pre-packaged
+### WebExtension
 - [Chrome extension](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
 - [Firefox extension](https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/)
 
-## Prerequisites
+## Electron
+
+### Prerequisites
 
 - `git` has to be in `$PATH` for the installation to pass
 
 - [yarn](https://yarnpkg.com/en/docs/install)
 
-## Building
+### Building
 
 - Install the dependencies
 `yarn` or if using Node 10 `yarn --ignore-engines`
