@@ -64,12 +64,12 @@ __NOTE: If you already have the plugin installed (e.g., on the laptop you're try
 __NOTE: you can't obtain the ".crx" file directly from the Chrome store. Instead, you need to install it once locally, and then go to the installation directory on your machine to retrieve it.__
 
 ### Why does no save dialog appear once a plugin is attached?
-Due to a current [Chrome bug](https://bugs.chromium.org/p/chromium/issues/detail?id=922373), if you don't reply to the emitted message from Selenium IDE, further processing won't happen. In order to workaround the issue, make sure to listen for the action `emit` with the entity `project` and reply with `true`:
+Due to a current [Chrome bug](https://bugs.chromium.org/p/chromium/issues/detail?id=922373), if you don't reply to the emitted message from Selenium IDE, further processing won't happen. In order to workaround the issue, make sure to listen for the action `emit` with the entity `project` and reply with `undefined`:
 
 ```javascript
 chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.action === "emit" && message.entity === "project") {
-    sendResponse(true);
+    sendResponse(undefined);
   }
 });
 ```
