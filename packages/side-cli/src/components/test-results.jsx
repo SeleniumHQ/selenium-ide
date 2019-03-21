@@ -15,8 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import React from 'react'
+import { Box } from 'ink'
+import Step from './step'
 
-export function absolutifyUrl(targetUrl, baseUrl) {
-  return url.resolve(baseUrl, targetUrl)
+export default class TestResults extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+  render() {
+    return (
+      <Box flexDirection="column">
+        {this.props.commands.map(command => (
+          <Step
+            key={command.id}
+            command={command}
+            result={this.props.results[command.id]}
+          />
+        ))}
+      </Box>
+    )
+  }
 }

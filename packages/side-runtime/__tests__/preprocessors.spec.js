@@ -21,7 +21,7 @@ import {
   interpolateScript,
   interpolateString,
 } from '../src/preprocessors'
-import Variables from './util/Variables'
+import Variables from '../src/Variables'
 import FakeExecutor from './util/FakeExecutor'
 
 let variables

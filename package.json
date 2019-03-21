@@ -18,7 +18,7 @@
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
     "lint:styles": "stylelint \"packages/selenium-ide-extension/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap",
-    "watch": "lerna run --no-bail --parallel watch"
+    "watch": "lerna run --no-bail --parallel watch --ignore selenium-ide-extension --ignore selianize --ignore selenium-side-runner"
   },
   "jest": {
     "testURL": "http://localhost/index.html",
@@ -32,9 +32,9 @@
       "**/packages/**/__test?(s)__/**/*.spec.js?(x)"
     ],
     "testPathIgnorePatterns": [
-        "/node_modules/",
-        "/selenium-ide-extension/",
-        "selianize"
+      "/node_modules/",
+      "/selenium-ide-extension/",
+      "selianize"
     ]
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
     "eslint-plugin-react": "^7.11.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.3.1",
-    "lerna": "^3.4.3",
+    "lerna": "^3.13.1",
     "prettier": "^1.14.3",
     "stylelint": "^9.7.1",
     "stylelint-config-prettier": "^4.0.0",

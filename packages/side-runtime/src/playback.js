@@ -20,6 +20,7 @@ import { events } from '@seleniumhq/side-commons'
 import { createPlaybackTree } from './playback-tree'
 import { AssertionError, VerificationError } from './errors'
 import Callstack from './callstack'
+import Variables from './Variables'
 
 const EE = Symbol('event-emitter')
 const state = Symbol('state')
@@ -36,7 +37,7 @@ export default class Playback {
   }) {
     this.executor = executor
     this.baseUrl = baseUrl
-    this.variables = variables
+    this.variables = variables || new Variables()
     this.getTestByName = getTestByName
     this.logger = logger
     this.options = Object.assign(

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -15,8 +17,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import fs from 'fs'
+import React from 'react'
+import { render } from 'ink'
+import PlaybackComponent from './components/playback'
+import { Playback, WebDriverExecutor } from '@seleniumhq/side-runtime'
 
-export function absolutifyUrl(targetUrl, baseUrl) {
-  return url.resolve(baseUrl, targetUrl)
-}
+const projectPath = process.argv[2]
+const project = JSON.parse(fs.readFileSync(projectPath).toString())
+const executor = new WebDriverExecutor()
+const playback = new Playback({ executor, baseUrl: project.url })
+render(<PlaybackComponent project={project} playback={playback} />)

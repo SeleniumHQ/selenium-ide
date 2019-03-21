@@ -554,7 +554,7 @@ export default class WebDriverExecutor {
         },
       }
       const pollCondition = async () => {
-        evaluateCondition().then(function(value) {
+        evaluateCondition().then(value => {
           const elapsed = Date.now() - startTime
           if (cancelled) {
             resolveCancel()

@@ -1,8 +1,8 @@
 {
-  "name": "@seleniumhq/side-runtime",
+  "name": "@seleniumhq/side-cli",
   "version": "3.5.10",
   "private": true,
-  "description": "Selenium IDE playback and execution",
+  "description": "Selenium IDE cli",
   "author": "Tomer <tomer@corevo.io>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
@@ -12,6 +12,9 @@
     "watch": "yarn build -w"
   },
   "main": "dist/index.js",
+  "bin": {
+    "side-cli": "dist/index.js"
+  },
   "files": [
     "dist"
   ],
@@ -24,14 +27,14 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
     "@babel/preset-env": "^7.4.1",
-    "selenium-webdriver": "^4.0.0-alpha.1"
+    "@babel/preset-react": "^7.0.0"
   },
   "dependencies": {
-    "@seleniumhq/side-commons": "^3.5.10"
-  },
-  "peerDependencies": {
-    "selenium-webdriver": "4.0.0-alpha.1"
+    "@seleniumhq/side-runtime": "^3.5.10",
+    "ink": "^2.0.6",
+    "ink-select-input": "^3.1.0",
+    "react": "^16.8.4",
+    "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }

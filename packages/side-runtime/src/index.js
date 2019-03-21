@@ -15,8 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import _Playback from './playback'
+import _WebDriverExecutor from './webdriver'
 
-export function absolutifyUrl(targetUrl, baseUrl) {
-  return url.resolve(baseUrl, targetUrl)
-}
+export const Playback = _Playback
+export const WebDriverExecutor = _WebDriverExecutor
+export * from './playback'

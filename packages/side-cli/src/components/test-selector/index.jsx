@@ -15,8 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import React from 'react'
+import SelectInput from 'ink-select-input'
 
-export function absolutifyUrl(targetUrl, baseUrl) {
-  return url.resolve(baseUrl, targetUrl)
+export default class TestSelector extends React.Component {
+  render() {
+    return (
+      <SelectInput
+        items={this.props.tests.map(test => ({
+          key: test.name,
+          label: test.name,
+          value: test,
+        }))}
+        onSelect={({ value }) => this.props.onTestSelected(value)}
+      />
+    )
+  }
 }

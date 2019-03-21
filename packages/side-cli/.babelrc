@@ -7,7 +7,7 @@
           "node": "8"
         }
       }
-    ]
-  ],
-  "plugins": ["@babel/plugin-proposal-export-namespace-from"]
+    ],
+    "@babel/preset-react"
+  ]
 }

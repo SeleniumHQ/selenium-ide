@@ -17,7 +17,7 @@
 
 import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
 import { CommandNode } from '../../src/playback-tree/command-node'
-import Variables from '../util/Variables'
+import Variables from '../../src/Variables'
 
 describe('Command Node', () => {
   it('control flow check returns correct result', () => {
