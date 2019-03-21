@@ -23,6 +23,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/preset-env": "^7.4.1"
   },
   "dependencies": {
