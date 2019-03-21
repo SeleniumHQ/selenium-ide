@@ -11,6 +11,7 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 install:
   - yarn --ignore-engines
+  - yarn build
 script:
   - yarn lint
   - yarn test

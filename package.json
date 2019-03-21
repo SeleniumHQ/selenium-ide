@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "lerna run build --ignore selenium-ide-extension-boilerplate --ignore selenium-ide-extension",
+    "build": "lerna run build --ignore selenium-ide-extension-boilerplate --ignore selenium-ide-extension --ignore selianize --ignore selenium-side-runner",
     "build:ext": "cd packages/selenium-ide && yarn build:dev",
     "build:runner": "cd packages/selenium-side-runner && yarn build",
     "build:selianize": "cd packages/selianize && yarn build",
