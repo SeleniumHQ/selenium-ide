@@ -18,11 +18,15 @@
 import {
   createPlaybackTree,
   createCommandNodesFromCommandStack,
-} from '../../../playback/playback-tree'
-import Command, { ControlFlowCommandNames } from '../../../models/Command'
+} from '../../src/playback-tree'
+import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
 
-function createCommand(name) {
-  return new Command(null, name, '', '')
+function createCommand(command) {
+  return {
+    command,
+    target: '',
+    value: '',
+  }
 }
 
 describe('Control Flow', () => {
@@ -375,14 +379,6 @@ describe('Control Flow', () => {
         expect(stack[8].next).toBeUndefined()
         expect(stack[8].right).toBeUndefined()
         expect(stack[8].left).toBeUndefined()
-      })
-      test('comment on empty command', () => {
-        let emptyCommandWithComment = createCommand('')
-        emptyCommandWithComment.setComment('blah')
-        const input = [emptyCommandWithComment, createCommand('open')]
-        const tree = createPlaybackTree(input)
-        expect(tree.startingCommandNode.command).toEqual(input[0])
-        expect(tree.startingCommandNode.next.command).toEqual(input[1])
       })
     })
   })

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ControlFlowCommandNames } from '../../models/Command'
+import { ControlFlowCommandNames } from './commands'
 
 export function deriveCommandLevels(commandStack) {
   let level = 0

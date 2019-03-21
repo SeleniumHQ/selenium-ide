@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { absolutifyUrl } from '../../playback/utils'
+import { absolutifyUrl } from '../src/utils'
 
 describe('url absolutifier', () => {
   it('should append to the base url', () => {

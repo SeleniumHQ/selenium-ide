@@ -15,10 +15,7 @@
 // specific language governing permControlFlowCommandChecks.issions and limitations
 // under the License.
 
-import {
-  ControlFlowCommandNames,
-  ControlFlowCommandChecks,
-} from '../../models/Command'
+import { ControlFlowCommandNames, ControlFlowCommandChecks } from './commands'
 import { State } from './state'
 import { ControlFlowSyntaxError } from './control-flow-syntax-error'
 

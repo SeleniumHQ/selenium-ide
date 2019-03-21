@@ -15,11 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { validateControlFlowSyntax } from '../../../playback/playback-tree/syntax-validation'
-import Command, { ControlFlowCommandNames } from '../../../models/Command'
+import { validateControlFlowSyntax } from '../../src/playback-tree/syntax-validation'
+import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
 
-function createCommand(name) {
-  return new Command(null, name, '', '')
+function createCommand(command) {
+  return {
+    command,
+    target: '',
+    value: '',
+  }
 }
 
 describe('Control Flow', () => {

@@ -16,7 +16,7 @@
 // under the License.
 
 import EventEmitter from 'events'
-import { mergeEventEmitter } from '../../common/events'
+import { events } from '@seleniumhq/side-commons'
 import { createPlaybackTree } from './playback-tree'
 import { AssertionError, VerificationError } from './errors'
 import Callstack from './callstack'
@@ -52,7 +52,7 @@ export default class Playback {
       this[state].lastSentCommandState = payload
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, payload)
     }
-    mergeEventEmitter(this, this[EE])
+    events.mergeEventEmitter(this, this[EE])
     this._run = this._run.bind(this)
   }
 

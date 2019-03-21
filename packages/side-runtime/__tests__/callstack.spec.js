@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Callstack from '../../playback/callstack'
+import Callstack from '../src/callstack'
 
 describe('Call stack', () => {
   it('should be able to call and unwind', () => {

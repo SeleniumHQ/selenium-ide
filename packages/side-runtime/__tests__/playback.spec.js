@@ -20,9 +20,9 @@ import Playback, {
   PlaybackStates,
   CommandStates,
   CallstackChange,
-} from '../../playback/playback'
-import { AssertionError, VerificationError } from '../../playback/errors'
-import FakeExecutor from '../util/FakeExecutor'
+} from '../src/playback'
+import { AssertionError, VerificationError } from '../src/errors'
+import FakeExecutor from './util/FakeExecutor'
 
 describe('Playback', () => {
   describe('Playback test queue', () => {

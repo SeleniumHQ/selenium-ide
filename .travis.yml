@@ -11,8 +11,6 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 install:
   - yarn --ignore-engines
-  - yarn build:selianize
-  - yarn build:runner
 script:
   - yarn lint
   - yarn test

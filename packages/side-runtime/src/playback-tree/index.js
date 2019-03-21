@@ -19,10 +19,7 @@ import { CommandNode } from './command-node'
 import { State } from './state'
 import { validateControlFlowSyntax, repeatIfError } from './syntax-validation'
 import { deriveCommandLevels } from './command-leveler'
-import {
-  ControlFlowCommandNames,
-  ControlFlowCommandChecks,
-} from '../../models/Command'
+import { ControlFlowCommandNames, ControlFlowCommandChecks } from './commands'
 export { createPlaybackTree } // public API
 export { createCommandNodesFromCommandStack } // for testing
 

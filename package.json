@@ -30,6 +30,11 @@
     ],
     "testMatch": [
       "**/packages/**/__test?(s)__/**/*.spec.js?(x)"
+    ],
+    "testPathIgnorePatterns": [
+        "/node_modules/",
+        "/selenium-ide-extension/",
+        "selianize"
     ]
   },
   "devDependencies": {

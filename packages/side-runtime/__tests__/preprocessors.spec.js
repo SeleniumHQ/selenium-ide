@@ -20,9 +20,9 @@ import {
   preprocessArray,
   interpolateScript,
   interpolateString,
-} from '../../playback/preprocessors'
-import Variables from '../../stores/view/Variables'
-import FakeExecutor from '../util/FakeExecutor'
+} from '../src/preprocessors'
+import Variables from './util/Variables'
+import FakeExecutor from './util/FakeExecutor'
 
 let variables
 beforeEach(() => {

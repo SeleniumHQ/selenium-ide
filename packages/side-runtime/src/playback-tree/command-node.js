@@ -16,7 +16,7 @@
 // under the License.
 
 import { interpolateScript } from '../preprocessors'
-import { ControlFlowCommandChecks } from '../../models/Command'
+import { ControlFlowCommandChecks } from './commands'
 
 export class CommandNode {
   constructor(command) {
