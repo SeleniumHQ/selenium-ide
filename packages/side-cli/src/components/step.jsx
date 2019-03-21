@@ -17,6 +17,7 @@
 
 import React from 'react'
 import { Box, Color } from 'ink'
+import Spinner from 'ink-spinner'
 import { CommandStates } from '@seleniumhq/side-runtime'
 
 export default class Step extends React.Component {
@@ -24,24 +25,77 @@ export default class Step extends React.Component {
     super(props)
     this.state = {}
   }
-  parseColorForState(state) {
-    return {
-      [STATE_TO_COLOR[state]]: true,
-    }
-  }
   render() {
-    const style = this.props.result
-      ? this.parseColorForState(this.props.result.state)
-      : {}
+    const children = `${this.props.command.command} | ${
+      this.props.command.target
+    } | ${this.props.command.value}`
+    const state = this.props.result ? this.props.result.state : undefined
     return (
       <Box>
-        <Color {...style}>
-          {this.props.command.command} | {this.props.command.target} |{' '}
-          {this.props.command.value}
-        </Color>
+        {(state === CommandStates.EXECUTING ||
+          state === CommandStates.PENDING) && (
+          <PendingStep>{children}</PendingStep>
+        )}
+        {state === CommandStates.PASSED && <PassedStep>{children}</PassedStep>}
+        {state === CommandStates.UNDETERMINED && (
+          <UndeterminedStep>{children}</UndeterminedStep>
+        )}
+        {(state === CommandStates.FAILED ||
+          state === CommandStates.ERRORED) && (
+          <FailedStep>{children}</FailedStep>
+        )}
+        {!state && <NoStateStep>{children}</NoStateStep>}
       </Box>
     )
   }
+}
+
+function PendingStep(props) {
+  return (
+    <>
+      {'  '}
+      <Color yellow>
+        <Spinner type="dots" />
+      </Color>{' '}
+      {props.children}
+    </>
+  )
+}
+
+function PassedStep(props) {
+  return (
+    <>
+      {'  '}
+      <Color green>✓</Color> {props.children}
+    </>
+  )
+}
+
+function FailedStep(props) {
+  return (
+    <>
+      {'  '}
+      <Color red>✕</Color> {props.children}
+    </>
+  )
+}
+
+function UndeterminedStep(props) {
+  return (
+    <>
+      {'  '}
+      <Color orange>○</Color> {props.children}
+    </>
+  )
+}
+
+function NoStateStep(props) {
+  return (
+    <>
+      {'    '}
+      {props.children}
+    </>
+  )
 }
 
 const STATE_TO_COLOR = {

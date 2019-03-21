@@ -17,6 +17,7 @@
 
 import React from 'react'
 import TestSelector from './test-selector'
+import TestTitle from './test-title'
 import TestResults from './test-results'
 import { PlaybackEvents } from '@seleniumhq/side-runtime'
 
@@ -34,6 +35,14 @@ export default class Playback extends React.Component {
         })
       }
     )
+    this.props.playback.on(
+      PlaybackEvents.PLAYBACK_STATE_CHANGED,
+      ({ state }) => {
+        this.setState({
+          testState: state,
+        })
+      }
+    )
     this.handleTestSelected = this.handleTestSelected.bind(this)
   }
   async handleTestSelected(test) {
@@ -48,10 +57,13 @@ export default class Playback extends React.Component {
   }
   render() {
     return this.state.test ? (
-      <TestResults
-        commands={this.state.test.commands}
-        results={this.state.results}
-      />
+      <>
+        <TestTitle name={this.state.test.name} state={this.state.testState} />
+        <TestResults
+          commands={this.state.test.commands}
+          results={this.state.results}
+        />
+      </>
     ) : (
       <TestSelector
         tests={this.props.project.tests}

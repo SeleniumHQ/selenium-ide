@@ -34,6 +34,7 @@
     "@seleniumhq/side-runtime": "^3.5.10",
     "ink": "^2.0.6",
     "ink-select-input": "^3.1.0",
+    "ink-spinner": "^3.0.0",
     "react": "^16.8.4",
     "selenium-webdriver": "^4.0.0-alpha.1"
   }
