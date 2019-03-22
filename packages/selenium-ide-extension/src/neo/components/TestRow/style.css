@@ -1,0 +1,179 @@
+.test-table tr {
+  display: flex;
+  background-color: white;
+}
+
+.test-table td {
+  font-size: 12px;
+}
+
+.test-table tbody tr {
+  cursor: pointer;
+}
+
+.test-table tbody tr td {
+  border-top: 1px solid transparent;
+  border-collapse: separate;
+  word-break: break-all;
+}
+
+.test-table tr td:not(:last-child) {
+  flex: 0% 1 1;
+}
+
+.test-table tbody tr:hover {
+  background-color: var(--hover-color);
+}
+
+.test-table td .index {
+  display: inline-block;
+  word-break: keep-all;
+}
+
+.test-table tr .command {
+  font-style: italic;
+}
+
+.test-table tbody tr.selected {
+  background-color: var(--selected-color);
+}
+
+.test-table tbody tr.selected td {
+  border-top: 1px solid var(--selected-border-color);
+}
+
+.test-table tbody tr.selected:focus {
+  background-color: var(--active-color);
+}
+
+.test-table tbody tr.executing {
+  background-color: #e3f2ff;
+}
+
+.test-table.paused tbody tr.executing {
+  background-color: #fffcc5;
+}
+
+.test-table tbody tr:focus {
+  outline: 0;
+}
+
+.test-table tbody tr.passed td {
+  color: #008425;
+}
+
+.test-table tbody tr.undetermined td,
+.test-table tbody tr.pending td {
+  color: #d49b2c;
+}
+
+.test-table tbody tr.failed td {
+  color: #e80600;
+}
+
+.test-table tbody tr td:first-child {
+  position: relative;
+  flex: initial;
+  padding: 5px;
+  border-right: 1px #cecece solid;
+  padding-left: 0;
+  width: 42px;
+}
+
+.test-table tbody tr.errored td:not(:first-child) {
+  color: #e80600;
+  font-weight: bold;
+}
+
+.test-table tbody tr:not(.selected):not(:focus) td:first-child {
+  padding-top: 6px;
+  border-top: none;
+}
+
+.test-table tbody tr td:first-child a.break-toggle {
+  display: block;
+}
+
+.test-table tbody tr td:first-child span.index {
+  color: #8b8b8b;
+  line-height: 16px;
+  width: 22px;
+  text-align: right;
+}
+
+.test-table tbody tr td:first-child .arrow {
+  position: absolute;
+  margin: auto 0;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+
+.test-table tbody tr.break-point td:first-child .index {
+  background-color: #40a6ff;
+  color: white;
+}
+
+.test-table.paused tbody tr.selected.pending:focus td {
+  border-top: 1px solid #d3d622;
+}
+
+.test-table.breakpoints-disabled tbody tr.break-point td:first-child .index {
+  background-color: rgba(64, 166, 255, 0.5);
+}
+
+.test-table tbody tr.break-point td:first-child .arrow {
+  border-left-color: #40a6ff;
+}
+
+.test-table.breakpoints-disabled tbody tr.break-point td:first-child .arrow {
+  border-left-color: rgba(64, 166, 255, 0.5);
+}
+
+.test-table tbody tr td:first-child span.comment-icon {
+  float: right;
+}
+
+.test-table .cell__hidden {
+  display: none;
+}
+
+.test-table tr:hover .comment {
+  display: none;
+}
+
+.test-table tr:not(:hover) .cell__alternate {
+  display: none;
+}
+
+.test-table td.buttons {
+  width: 22px;
+}
+
+.test-table tr .buttons {
+  padding: 0;
+  margin: 0;
+}
+
+.test-table tr .buttons > * {
+  min-height: 24px;
+  opacity: 0;
+  height: 100%;
+}
+
+.test-table tr .buttons button {
+  width: 22px;
+  font-size: 20px;
+  height: 100%;
+  margin: auto 0;
+}
+
+.test-table tr:hover .buttons > * {
+  opacity: 1;
+}
+
+.test-table tr .buttons > .active {
+  opacity: 1;
+}

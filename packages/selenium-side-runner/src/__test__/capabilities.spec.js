@@ -74,6 +74,20 @@ describe('capabilities string parser', () => {
       },
     })
   })
+  it('should parse multiple dot-notation capability key', () => {
+    const capabilities = `
+webdriver.remote.sessionid=someId
+webdriver.remote.username=username
+    `
+    expect(Capabilities.parseString(capabilities)).toEqual({
+      webdriver: {
+        remote: {
+          sessionid: 'someId',
+          username: 'username',
+        },
+      },
+    })
+  })
   it('should parse dot-notation arrays', () => {
     const capabilities = 'chromeOptions.args=[disable-infobars, headless]'
     expect(Capabilities.parseString(capabilities)).toEqual({

@@ -4,26 +4,21 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "start": "cd packages/selenium-ide && yarn start",
-    "build": "lerna run build --ignore selenium-ide-extension-boilerplate",
+    "build": "lerna run build --ignore selenium-ide-extension-boilerplate --ignore selenium-ide-extension --ignore selianize --ignore selenium-side-runner",
     "build:ext": "cd packages/selenium-ide && yarn build:dev",
     "build:runner": "cd packages/selenium-side-runner && yarn build",
     "build:selianize": "cd packages/selianize && yarn build",
-    "build:webdriver": "cd packages/browser-webdriver && yarn build",
-    "build:webdriver:dev": "cd packages/browser-webdriver && yarn build:dev",
     "build:ext:prod": "cd packages/selenium-ide && yarn build",
-    "pack:chrome": "cd packages/selenium-ide && yarn build-chrome",
-    "pack:firefox": "cd packages/selenium-ide && yarn build-firefox",
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",
-    "test:ext": "jest --testMatch \"**/packages/selenium-ide/tests/**/*.spec.js\"",
+    "test:ext": "jest --testMatch \"**/packages/selenium-ide-extension/tests/**/*.spec.js\"",
     "test:runner": "cd packages/selenium-side-runner && node dist/index.js ../../tests/examples/*.side",
     "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/tests/**/*.spec.js\"",
     "lint": "yarn lint:scripts && yarn lint:styles",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
-    "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
+    "lint:styles": "stylelint \"packages/selenium-ide-extension/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap",
-    "watch": "lerna run --no-bail --parallel watch"
+    "watch": "lerna run --no-bail --parallel watch --ignore selenium-ide-extension --ignore selianize --ignore selenium-side-runner"
   },
   "jest": {
     "testURL": "http://localhost/index.html",
@@ -31,10 +26,15 @@
       "^.+\\.(css|scss)$": "identity-obj-proxy"
     },
     "setupFilesAfterEnv": [
-      "./packages/selenium-ide/scripts/jest/test.config.js"
+      "./packages/selenium-ide-extension/scripts/jest/test.config.js"
     ],
     "testMatch": [
-      "**/packages/**/__test?(s)__/**/*.js?(x)"
+      "**/packages/**/__test?(s)__/**/*.spec.js?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/selenium-ide-extension/",
+      "selianize"
     ]
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
     "eslint-plugin-react": "^7.11.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.3.1",
-    "lerna": "^3.4.3",
+    "lerna": "^3.13.1",
     "prettier": "^1.14.3",
     "stylelint": "^9.7.1",
     "stylelint-config-prettier": "^4.0.0",

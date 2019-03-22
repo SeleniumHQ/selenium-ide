@@ -1,0 +1,483 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Playback Playback test queue should play a nested test case 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 1,
+    "id": 4,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 1,
+    "id": 4,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 1,
+    "id": 5,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 1,
+    "id": 5,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 1,
+    "id": 6,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 1,
+    "id": 6,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback abort should abort a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": "playback is dead",
+    "state": "errored",
+  },
+]
+`;
+
+exports[`Playback abort should abort a test 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": "playback is dead",
+    "state": "errored",
+  },
+]
+`;
+
+exports[`Playback abort should abort a test after attempting to stop 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": "playback is dead",
+    "state": "errored",
+  },
+]
+`;
+
+exports[`Playback pause on exceptions should pause for every type of error 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": "error",
+    "state": "errored",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": "error in verify",
+    "state": "failed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": "error in assert",
+    "state": "failed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback pause on exceptions should pause until the command is fixed 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": "error",
+    "state": "errored",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": "error",
+    "state": "errored",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback resume resume after hitting a breakpoint 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback resume should resume a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback stop should stop a paused test 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": "Playback stopped",
+    "state": "errored",
+  },
+]
+`;
+
+exports[`Playback stop should stop a test 1`] = `
+Array [
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 1,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 2,
+    "message": undefined,
+    "state": "passed",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": undefined,
+    "state": "executing",
+  },
+  Object {
+    "callstackIndex": 0,
+    "id": 3,
+    "message": "Playback stopped",
+    "state": "errored",
+  },
+]
+`;
