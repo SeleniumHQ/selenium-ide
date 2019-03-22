@@ -23,7 +23,7 @@ let frameLocation = ''
 let recordingIndicator
 
 /**
- * @param {Window} window 
+ * @param {Window} window
  */
 function Recorder(window) {
   this.window = window
