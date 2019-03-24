@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from '../../../IO/migrations/variable-name'
+import migrate from '../../src/migrations/variable-name'
 
 describe('project migrator', () => {
   it('should be included in 1.1', () => {

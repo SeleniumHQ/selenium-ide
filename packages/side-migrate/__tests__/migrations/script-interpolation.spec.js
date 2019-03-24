@@ -15,41 +15,51 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from '../../../IO/migrations/select-window'
+import migrate from '../../src/migrations/script-interpolation'
 
 describe('project migrator', () => {
-  it('should be included in 2.0', () => {
-    expect(migrate.version).toBe('2.0')
+  it('should be included in 1.1', () => {
+    expect(migrate.version).toBe('1.1')
   })
-  it('should migrate select window commands', () => {
+  it('should migrate variables that are interpolated into strings in scripts and expressions', () => {
     const project = {
       tests: [
         {
           id: '1',
           commands: [
             {
-              command: 'open',
-              target: '/',
+              command: 'executeScript',
+              target: 'return "${x}"',
               value: '',
             },
             {
-              command: 'click',
-              target: 'css=button',
+              command: 'executeScript',
+              target: "return '${x}'",
               value: '',
             },
             {
-              command: 'selectWindow',
-              target: 'win_ser_1',
+              command: 'executeScript',
+              target: 'return `${x}`',
               value: '',
             },
             {
-              command: 'selectWindow',
-              target: 'win_ser_local',
+              command: 'executeScript',
+              target: "return '${x}'.substr(0, 1);",
               value: '',
             },
             {
-              command: 'close',
-              target: 'win_ser_local',
+              command: 'executeScript',
+              target: "return '${x}' + '${xyz}'",
+              value: '',
+            },
+            {
+              command: 'executeScript',
+              target: "return '${xyz2}'",
+              value: '',
+            },
+            {
+              command: 'if',
+              target: "'${x}' == '2'",
               value: '',
             },
           ],
@@ -57,42 +67,44 @@ describe('project migrator', () => {
       ],
     }
     const upgraded = migrate(project)
-    expect(upgraded).toMatchObject({
+    expect(upgraded).toEqual({
       tests: [
         {
           id: '1',
           commands: [
             {
-              command: 'open',
-              target: '/',
+              command: 'executeScript',
+              target: 'return ${x}',
               value: '',
             },
             {
-              command: 'storeWindowHandle',
-              target: 'root',
+              command: 'executeScript',
+              target: 'return ${x}',
               value: '',
             },
             {
-              command: 'click',
-              target: 'css=button',
-              value: '',
-              opensWindow: true,
-              windowHandleName: expect.stringContaining('win'),
-              windowTimeout: 2000,
-            },
-            {
-              command: 'selectWindow',
-              target: expect.stringMatching(/handle=\$\{.*\}/),
+              command: 'executeScript',
+              target: 'return ${x}',
               value: '',
             },
             {
-              command: 'selectWindow',
-              target: 'handle=${root}',
+              command: 'executeScript',
+              target: 'return ${x}.substr(0, 1);',
               value: '',
             },
             {
-              command: 'close',
-              target: '',
+              command: 'executeScript',
+              target: 'return ${x} + ${xyz}',
+              value: '',
+            },
+            {
+              command: 'executeScript',
+              target: 'return ${xyz2}',
+              value: '',
+            },
+            {
+              command: 'if',
+              target: "${x} == '2'",
               value: '',
             },
           ],

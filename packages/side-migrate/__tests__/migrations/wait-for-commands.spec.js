@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from '../../../IO/migrations/wait-for-commands'
+import migrate from '../../src/migrations/wait-for-commands'
 
 describe('project migrator', () => {
   it('should be included in 1.1', () => {

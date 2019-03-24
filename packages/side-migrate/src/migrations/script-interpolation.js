@@ -15,27 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from '../../models/Command'
+import { Commands, ArgTypes } from '@seleniumhq/side-model'
 
 export default function migrate(project) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
       commands: test.commands.map(c => {
-        if (Commands.list.has(c.command)) {
+        if (Commands[c.command]) {
           let newCmd = Object.assign({}, c)
-          const type = Commands.list.get(c.command)
-          if (type.target && type.target.name === ArgTypes.locator.name) {
-            newCmd.target = migrateLocator(newCmd.target)
-          }
-          if (type.value && type.value.name === ArgTypes.locator.name) {
-            newCmd.value = migrateLocator(newCmd.value)
-          }
-          if (newCmd.targets) {
-            newCmd.targets = newCmd.targets.map(targetTuple => [
-              migrateLocator(targetTuple[0]),
-              targetTuple[1],
-            ])
+          const type = Commands[c.command]
+          if (
+            type.target &&
+            (type.target.name === ArgTypes.script.name ||
+              type.target.name === ArgTypes.conditionalExpression.name)
+          ) {
+            newCmd.target = migrateScript(newCmd.target)
           }
           return newCmd
         }
@@ -46,13 +41,11 @@ export default function migrate(project) {
   return r
 }
 
-function migrateLocator(locator) {
-  const result = locator.match(/^([A-Za-z]+)=.+/)
-  if (!result) {
-    const implicitType = locator.indexOf('//') === -1 ? 'id' : 'xpath'
-    return `${implicitType}=${locator}`
-  }
-  return locator
+function migrateScript(script) {
+  return script
+    .replace(/'\$\{(\w+)\}'/g, '${$1}')
+    .replace(/`\$\{(\w+)\}`/g, '${$1}')
+    .replace(/"\$\{(\w+)\}"/g, '${$1}')
 }
 
 migrate.version = '1.1'

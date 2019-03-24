@@ -17,7 +17,6 @@
 
 import fs from 'fs'
 import path from 'path'
-import { configure } from 'mobx'
 import {
   verifyFile,
   FileTypes,
@@ -25,11 +24,7 @@ import {
   migrateTestCase,
   migrateProject,
   migrateUrls,
-} from '../../../IO/legacy/migrate'
-
-configure({
-  enforceActions: 'observed',
-})
+} from '../../src/legacy/migrate'
 
 describe('file classifier', () => {
   it('should recognize suite', () => {

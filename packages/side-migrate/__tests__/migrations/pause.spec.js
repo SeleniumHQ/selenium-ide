@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrate from '../../../IO/migrations/pause'
+import migrate from '../../src/migrations/pause'
 
 describe('project migrator', () => {
   it('should be included in 1.1', () => {

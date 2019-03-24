@@ -18,7 +18,7 @@
 import convert from 'xml-js'
 import xmlescape from 'xml-escape'
 import xmlunescape from 'unescape'
-import { Commands } from '../../models/Command'
+import { Commands } from '@seleniumhq/side-model'
 
 export const FileTypes = {
   Suite: 'suite',
@@ -178,7 +178,7 @@ function parseTarget(targetCell) {
 
 function isImplementedWait(command) {
   if (/^wait/.test(command)) {
-    return Commands.list.has(command)
+    return Commands[command]
   } else {
     // not a wait command
     return true

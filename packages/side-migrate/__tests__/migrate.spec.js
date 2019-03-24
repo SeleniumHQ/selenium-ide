@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import UpgradeProject, { VERSIONS } from '../../IO/migrate'
+import UpgradeProject, { VERSIONS } from '../src/migrate'
 
 describe('project migrator', () => {
   it('should migrate a project to the latest version', () => {
