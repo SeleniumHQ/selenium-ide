@@ -97,12 +97,3 @@ function NoStateStep(props) {
     </>
   )
 }
-
-const STATE_TO_COLOR = {
-  [CommandStates.EXECUTING]: 'yellow',
-  [CommandStates.PENDING]: 'yellow',
-  [CommandStates.PASSED]: 'green',
-  [CommandStates.UNDETERMINED]: 'orange',
-  [CommandStates.FAILED]: 'red',
-  [CommandStates.ERRORED]: 'red',
-}

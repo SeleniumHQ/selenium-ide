@@ -50,6 +50,7 @@ export default class Playback extends React.Component {
     try {
       await (await this.props.playback.play(test))()
     } catch (err) {
+      // eslint-disable-next-line
       console.error(err)
       process.exitCode = 1
     } finally {
