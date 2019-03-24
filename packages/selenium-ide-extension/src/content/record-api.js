@@ -22,6 +22,9 @@ let contentSideexTabId = -1
 let frameLocation = ''
 let recordingIndicator
 
+/**
+ * @param {Window} window
+ */
 function Recorder(window) {
   this.window = window
   this.eventListeners = {}
@@ -29,8 +32,16 @@ function Recorder(window) {
   this.recordingState = {}
 }
 
+/** @type {{ [key: string]: EventListener[] }} */
 Recorder.eventHandlers = {}
+/** @type {{ [observerName: string]: MutationObserver }} */
 Recorder.mutationObservers = {}
+/**
+ * @param {string} handlerName
+ * @param {string} eventName
+ * @param {EventListener} handler
+ * @param {boolean} options
+ */
 Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
   handler.handlerName = handlerName
   if (!options) options = false
@@ -41,13 +52,19 @@ Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
   this.eventHandlers[key].push(handler)
 }
 
+/**
+ * @param {string} observerName
+ * @param {MutationCallback} callback
+ */
 Recorder.addMutationObserver = function(observerName, callback, config) {
   const observer = new MutationObserver(callback)
   observer.observerName = observerName
   observer.config = config
   this.mutationObservers[observerName] = observer
 }
-
+/**
+ * @param {string} eventKey
+ */
 Recorder.prototype.parseEventKey = function(eventKey) {
   if (eventKey.match(/^C_/)) {
     return { eventName: eventKey.substring(2), capture: true }
