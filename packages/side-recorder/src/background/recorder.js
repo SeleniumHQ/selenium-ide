@@ -16,24 +16,9 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import UiState from '../../stores/view/UiState'
-import record, { recordOpensWindow } from './record'
-import { Logger, Channels } from '../../stores/view/Logs'
-
-const logger = new Logger(Channels.PLAYBACK)
-
-function getSelectedCase() {
-  return {
-    id: UiState.selectedTest.test.id,
-  }
-}
-
-function hasRecorded() {
-  return !!UiState.selectedTest.test.commands.length
-}
 
 export default class BackgroundRecorder {
-  constructor(windowSession) {
+  constructor(windowSession, record, recordOpensWindow, hasRecorded) {
     // The only way to know if a tab is recordable is to assume it is, and verify it sends a record
     // In order to do that we need to optimistically attach the recorder to all tabs, and try to
     // remove it, even if it's in a priviledged tab
@@ -42,6 +27,9 @@ export default class BackgroundRecorder {
     this.lastActivatedTabId = undefined
     this.isAttaching = false
     this.attached = false
+    this.record = record
+    this.recordOpensWindow = recordOpensWindow
+    this.hasRecorded = hasRecorded
     this.rebind()
     if (browser && browser.runtime && browser.runtime.onMessage) {
       browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler)
@@ -81,17 +69,15 @@ export default class BackgroundRecorder {
   // TODO: rename method
   tabsOnActivatedHandler(activeInfo) {
     this.lastActivatedTabId = activeInfo.tabId
-    let testCase = getSelectedCase()
-    if (!testCase) {
+    if (!this.sessionId) {
       return
     }
-    let testCaseId = testCase.id
-    if (!this.windowSession.openedTabIds[testCaseId]) {
+    if (!this.windowSession.openedTabIds[this.sessionId]) {
       return
     }
 
     if (
-      this.windowSession.openedTabIds[testCaseId] &&
+      this.windowSession.openedTabIds[this.sessionId] &&
       this.doesTabBelongToRecording(activeInfo.tabId)
     ) {
       this.reattachToTab(activeInfo.tabId)
@@ -102,31 +88,33 @@ export default class BackgroundRecorder {
     // Delay a little time to add command in order.
     setTimeout(() => {
       if (
-        this.windowSession.currentUsedTabId[testCaseId] === activeInfo.tabId &&
-        this.windowSession.currentUsedWindowId[testCaseId] ===
+        this.windowSession.currentUsedTabId[this.sessionId] ===
+          activeInfo.tabId &&
+        this.windowSession.currentUsedWindowId[this.sessionId] ===
           activeInfo.windowId
       )
         return
       // If no command has been recorded, ignore selectWindow command
       // until the user has select a starting page to record the commands
-      if (!hasRecorded()) return
+      if (!this.hasRecorded()) return
       // Ignore all unknown tabs, the activated tab may not derived from
       // other opened tabs, or it may managed by other SideeX panels
       if (
-        this.windowSession.openedTabIds[testCaseId][activeInfo.tabId] ==
+        this.windowSession.openedTabIds[this.sessionId][activeInfo.tabId] ==
         undefined
       )
         return
       // Tab information has existed, add selectWindow command
-      this.windowSession.currentUsedTabId[testCaseId] = activeInfo.tabId
-      this.windowSession.currentUsedWindowId[testCaseId] = activeInfo.windowId
-      this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
-      record(
+      this.windowSession.currentUsedTabId[this.sessionId] = activeInfo.tabId
+      this.windowSession.currentUsedWindowId[this.sessionId] =
+        activeInfo.windowId
+      this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
+      this.record(
         'selectWindow',
         [
           [
             `handle=\${${
-              this.windowSession.openedTabIds[testCaseId][activeInfo.tabId]
+              this.windowSession.openedTabIds[this.sessionId][activeInfo.tabId]
             }}`,
           ],
         ],
@@ -136,12 +124,10 @@ export default class BackgroundRecorder {
   }
 
   windowsOnFocusChangedHandler(windowId) {
-    let testCase = getSelectedCase()
-    if (!testCase) {
+    if (!this.sessionId) {
       return
     }
-    let testCaseId = testCase.id
-    if (!this.windowSession.openedTabIds[testCaseId]) {
+    if (!this.windowSession.openedTabIds[this.sessionId]) {
       return
     }
 
@@ -161,7 +147,7 @@ export default class BackgroundRecorder {
         const tab = tabs[0]
         this.lastActivatedTabId = tab.id
         if (
-          this.windowSession.openedTabIds[testCaseId] &&
+          this.windowSession.openedTabIds[this.sessionId] &&
           this.doesTabBelongToRecording(tab.id)
         ) {
           this.reattachToTab(tab.id)
@@ -171,7 +157,8 @@ export default class BackgroundRecorder {
     // If the activated window is the same as the last, just do nothing
     // selectWindow command will be handled by tabs.onActivated listener
     // if there also has a event of switching a activated tab
-    if (this.windowSession.currentUsedWindowId[testCaseId] === windowId) return
+    if (this.windowSession.currentUsedWindowId[this.sessionId] === windowId)
+      return
 
     browser.tabs
       .query({
@@ -184,28 +171,31 @@ export default class BackgroundRecorder {
         }
 
         // The activated tab is not the same as the last
-        if (tabs[0].id !== this.windowSession.currentUsedTabId[testCaseId]) {
+        if (
+          tabs[0].id !== this.windowSession.currentUsedTabId[this.sessionId]
+        ) {
           // If no command has been recorded, ignore selectWindow command
           // until the user has select a starting page to record commands
-          if (!hasRecorded()) return
+          if (!this.hasRecorded()) return
 
           // Ignore all unknown tabs, the activated tab may not derived from
           // other opened tabs, or it may managed by other SideeX panels
           if (
-            this.windowSession.openedTabIds[testCaseId][tabs[0].id] == undefined
+            this.windowSession.openedTabIds[this.sessionId][tabs[0].id] ==
+            undefined
           )
             return
 
           // Tab information has existed, add selectWindow command
-          this.windowSession.currentUsedWindowId[testCaseId] = windowId
-          this.windowSession.currentUsedTabId[testCaseId] = tabs[0].id
-          this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
-          record(
+          this.windowSession.currentUsedWindowId[this.sessionId] = windowId
+          this.windowSession.currentUsedTabId[this.sessionId] = tabs[0].id
+          this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
+          this.record(
             'selectWindow',
             [
               [
                 `handle=\${${
-                  this.windowSession.openedTabIds[testCaseId][tabs[0].id]
+                  this.windowSession.openedTabIds[this.sessionId][tabs[0].id]
                 }}`,
               ],
             ],
@@ -216,36 +206,34 @@ export default class BackgroundRecorder {
   }
 
   tabsOnRemovedHandler(tabId, _removeInfo) {
-    let testCase = getSelectedCase()
-    if (!testCase) {
+    if (!this.sessionId) {
       return
     }
-    let testCaseId = testCase.id
-    if (!this.windowSession.openedTabIds[testCaseId]) {
+    if (!this.windowSession.openedTabIds[this.sessionId]) {
       return
     }
 
-    if (this.windowSession.openedTabIds[testCaseId][tabId] != undefined) {
-      if (this.windowSession.currentUsedTabId[testCaseId] !== tabId) {
-        record(
+    if (this.windowSession.openedTabIds[this.sessionId][tabId] != undefined) {
+      if (this.windowSession.currentUsedTabId[this.sessionId] !== tabId) {
+        this.record(
           'selectWindow',
           [
             [
               `handle=\${${
-                this.windowSession.openedTabIds[testCaseId][tabId]
+                this.windowSession.openedTabIds[this.sessionId][tabId]
               }}`,
             ],
           ],
           ''
         )
-        record('close', [['']], '')
-        record(
+        this.record('close', [['']], '')
+        this.record(
           'selectWindow',
           [
             [
               `handle=\${${
-                this.windowSession.openedTabIds[testCaseId][
-                  this.windowSession.currentUsedTabId[testCaseId]
+                this.windowSession.openedTabIds[this.sessionId][
+                  this.windowSession.currentUsedTabId[this.sessionId]
                 ]
               }}`,
             ],
@@ -253,28 +241,26 @@ export default class BackgroundRecorder {
           ''
         )
       } else {
-        record('close', [['']], '')
+        this.record('close', [['']], '')
       }
-      delete this.windowSession.openedTabIds[testCaseId][tabId]
-      this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
+      delete this.windowSession.openedTabIds[this.sessionId][tabId]
+      this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
     }
   }
 
   webNavigationOnCreatedNavigationTargetHandler(details) {
     // we can't necessarily know that this will indicate a tab being
     // activated, and we hope tabs.onActivated will get called for us
-    let testCase = getSelectedCase()
-    if (!testCase) return
-    let testCaseId = testCase.id
+    if (!this.sessionId) return
     if (
-      this.windowSession.openedTabIds[testCaseId][details.sourceTabId] !=
+      this.windowSession.openedTabIds[this.sessionId][details.sourceTabId] !=
       undefined
     ) {
-      this.windowSession.openedTabIds[testCaseId][
+      this.windowSession.openedTabIds[this.sessionId][
         details.tabId
       ] = `win${Math.floor(Math.random() * 10000)}`
-      recordOpensWindow(
-        this.windowSession.openedTabIds[testCaseId][details.tabId]
+      this.recordOpensWindow(
+        this.windowSession.openedTabIds[this.sessionId][details.tabId]
       )
       if (details.windowId != undefined) {
         this.windowSession.setOpenedWindow(details.windowId)
@@ -285,7 +271,7 @@ export default class BackgroundRecorder {
           this.windowSession.setOpenedWindow(tabInfo.windowId)
         })
       }
-      this.windowSession.openedTabCount[testCaseId]++
+      this.windowSession.openedTabCount[this.sessionId]++
       if (
         this.lastAttachedTabId !== this.lastActivatedTabId &&
         this.lastActivatedTabId === details.tabId
@@ -319,25 +305,27 @@ export default class BackgroundRecorder {
     }
     sendResponse(true)
 
-    let testCaseId = getSelectedCase().id
-
-    if (!hasRecorded()) {
-      record('open', [[sender.tab.url]], '')
+    if (!this.hasRecorded()) {
+      this.record('open', [[sender.tab.url]], '')
     }
 
-    if (this.windowSession.openedTabIds[testCaseId][sender.tab.id] == undefined)
+    if (
+      this.windowSession.openedTabIds[this.sessionId][sender.tab.id] ==
+      undefined
+    )
       return
 
-    if (this.windowSession.currentUsedTabId[testCaseId] != sender.tab.id) {
-      this.windowSession.currentUsedTabId[testCaseId] = sender.tab.id
-      this.windowSession.currentUsedWindowId[testCaseId] = sender.tab.windowId
-      this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
-      record(
+    if (this.windowSession.currentUsedTabId[this.sessionId] != sender.tab.id) {
+      this.windowSession.currentUsedTabId[this.sessionId] = sender.tab.id
+      this.windowSession.currentUsedWindowId[this.sessionId] =
+        sender.tab.windowId
+      this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
+      this.record(
         'selectWindow',
         [
           [
             `handle=\${${
-              this.windowSession.openedTabIds[testCaseId][sender.tab.id]
+              this.windowSession.openedTabIds[this.sessionId][sender.tab.id]
             }}`,
           ],
         ],
@@ -347,14 +335,14 @@ export default class BackgroundRecorder {
 
     if (
       message.frameLocation !==
-      this.windowSession.currentUsedFrameLocation[testCaseId]
+      this.windowSession.currentUsedFrameLocation[this.sessionId]
     ) {
       let newFrameLevels = message.frameLocation.split(':')
       let oldFrameLevels = this.windowSession.currentUsedFrameLocation[
-        testCaseId
+        this.sessionId
       ].split(':')
       while (oldFrameLevels.length > newFrameLevels.length) {
-        record('selectFrame', [['relative=parent']], '')
+        this.record('selectFrame', [['relative=parent']], '')
         oldFrameLevels.pop()
       }
       while (
@@ -362,62 +350,24 @@ export default class BackgroundRecorder {
         oldFrameLevels[oldFrameLevels.length - 1] !=
           newFrameLevels[oldFrameLevels.length - 1]
       ) {
-        record('selectFrame', [['relative=parent']], '')
+        this.record('selectFrame', [['relative=parent']], '')
         oldFrameLevels.pop()
       }
       while (oldFrameLevels.length < newFrameLevels.length) {
-        record(
+        this.record(
           'selectFrame',
           [['index=' + newFrameLevels[oldFrameLevels.length]]],
           ''
         )
         oldFrameLevels.push(newFrameLevels[oldFrameLevels.length])
       }
-      this.windowSession.currentUsedFrameLocation[testCaseId] =
+      this.windowSession.currentUsedFrameLocation[this.sessionId] =
         message.frameLocation
-    }
-    if (
-      message.command.includes('Value') &&
-      typeof message.value === 'undefined'
-    ) {
-      logger.error(
-        "This element does not have property 'value'. Please change to use storeText command."
-      )
-      return
-    } else if (message.command.includes('Text') && message.value === '') {
-      logger.error(
-        "This element does not have property 'Text'. Please change to use storeValue command."
-      )
-      return
-    } else if (message.command.includes('store')) {
-      // In Google Chrome, window.prompt() must be triggered in
-      // an actived tabs of front window, so we let panel window been focused
-      browser.windows
-        .update(this.windowSession.selfWindowId, { focused: true })
-        .then(function() {
-          // Even if window has been focused, window.prompt() still failed.
-          // Delay a little time to ensure that status has been updated
-          setTimeout(function() {
-            message.value = prompt('Enter the name of the variable')
-            if (message.insertBeforeLastCommand) {
-              record(message.command, message.target, message.value, true)
-            } else {
-              this.sendRecordNotification(
-                sender.tab.id,
-                message.command,
-                message.target,
-                message.value
-              )
-              record(message.command, message.target, message.value)
-            }
-          }, 100)
-        })
-      return
     }
 
     //handle choose ok/cancel confirm
     if (message.insertBeforeLastCommand) {
-      record(message.command, message.target, message.value, true)
+      this.record(message.command, message.target, message.value, true)
     } else {
       this.sendRecordNotification(
         sender.tab.id,
@@ -425,7 +375,7 @@ export default class BackgroundRecorder {
         message.target,
         message.value
       )
-      record(message.command, message.target, message.value)
+      this.record(message.command, message.target, message.value)
     }
   }
 
@@ -487,12 +437,13 @@ export default class BackgroundRecorder {
     }
   }
 
-  async attach(startUrl) {
+  async attach(startUrl, sessionId) {
     if (this.attached || this.isAttaching) {
       return
     }
     try {
       this.isAttaching = true
+      this.sessionId = sessionId
       browser.tabs.onActivated.addListener(this.tabsOnActivatedHandler)
       browser.windows.onFocusChanged.addListener(
         this.windowsOnFocusChangedHandler
@@ -534,34 +485,33 @@ export default class BackgroundRecorder {
   // this will attempt to connect to a previous recording
   // else it will create a new window for recording
   async attachToExistingRecording(url) {
-    let testCaseId = getSelectedCase().id
     try {
-      if (this.windowSession.currentUsedWindowId[testCaseId]) {
+      if (this.windowSession.currentUsedWindowId[this.sessionId]) {
         // test was recorded before and has a dedicated window
         await browser.windows.update(
-          this.windowSession.currentUsedWindowId[testCaseId],
+          this.windowSession.currentUsedWindowId[this.sessionId],
           {
             focused: true,
           }
         )
       } else if (
-        this.windowSession.generalUseLastPlayedTestCaseId === testCaseId
+        this.windowSession.generalUseLastPlayedTestCaseId === this.sessionId
       ) {
         // the last played test was the one the user wishes to record now
-        this.windowSession.dedicateGeneralUseSession(testCaseId)
+        this.windowSession.dedicateGeneralUseSession(this.sessionId)
         await browser.windows.update(
-          this.windowSession.currentUsedWindowId[testCaseId],
+          this.windowSession.currentUsedWindowId[this.sessionId],
           {
             focused: true,
           }
         )
       } else {
         // the test was never recorded before, nor it was the last test ran
-        await this.createNewRecordingWindow(testCaseId, url)
+        await this.createNewRecordingWindow(this.sessionId, url)
       }
     } catch (e) {
       // window was deleted at some point by the user, creating a new one
-      await this.createNewRecordingWindow(testCaseId, url)
+      await this.createNewRecordingWindow(this.sessionId, url)
     }
   }
 
@@ -582,10 +532,9 @@ export default class BackgroundRecorder {
   }
 
   doesTabBelongToRecording(tabId) {
-    let testCaseId = getSelectedCase().id
     return (
-      this.windowSession.openedTabIds[testCaseId] &&
-      Object.keys(this.windowSession.openedTabIds[testCaseId]).includes(
+      this.windowSession.openedTabIds[this.sessionId] &&
+      Object.keys(this.windowSession.openedTabIds[this.sessionId]).includes(
         `${tabId}`
       )
     )

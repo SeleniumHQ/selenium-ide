@@ -17,37 +17,33 @@
 
 import browser from 'webextension-polyfill'
 
-export class WindowSession {
-  // tabs opened during IDE session
-  openedTabIds = {}
-  // number of tabs opened during IDE session (for select window #)
-  openedTabCount = {}
-  // windows opened during IDE session
-  openedWindowIds = {}
+export default class WindowSession {
+  constructor() {
+    // tabs opened during IDE session
+    this.openedTabIds = {}
+    // number of tabs opened during IDE session (for select window #)
+    this.openedTabCount = {}
+    // windows opened during IDE session
+    this.openedWindowIds = {}
 
-  // tab count for the recording indicator
-  frameCountForTab = {}
+    // tab count for the recording indicator
+    this.frameCountForTab = {}
 
-  currentUsedTabId = {}
-  currentUsedWindowId = {}
-  currentUsedFrameLocation = {}
+    this.currentUsedTabId = {}
+    this.currentUsedWindowId = {}
+    this.currentUsedFrameLocation = {}
 
-  // window to use for general playback (not dedicated to a specific test)
-  generalUsePlayingWindowId = undefined
-  generalUseIdentifier = 'GENERAL_USE_IDENTIFIER'
+    // window to use for general playback (not dedicated to a specific test)
+    this.generalUsePlayingWindowId = undefined
+    this.generalUseIdentifier = Symbol('GENERAL_USE_IDENTIFIER')
 
-  // the last test case id that was played back using the general use window
-  generalUseLastPlayedTestCaseId = undefined
-
-  // IDE panel id
-  ideWindowId = undefined
+    // the last test case id that was played back using the general use window
+    this.generalUseLastPlayedTestCaseId = undefined
+  }
 
   // set window as opened in the session
   setOpenedWindow(windowId) {
     this.openedWindowIds[windowId] = true
-    browser.runtime.getBackgroundPage().then(backgroundWindow => {
-      backgroundWindow.openedWindowIds.push(windowId)
-    })
   }
 
   getTabIdsByIdentifier(identifier) {
@@ -106,15 +102,6 @@ export class WindowSession {
       await browser.windows.remove(windowId)
     }
     this.openedWindowIds = {}
-    browser.runtime.getBackgroundPage().then(backgroundWindow => {
-      backgroundWindow.openedWindowIds = []
-    })
-  }
-
-  async focusIDEWindow() {
-    await browser.windows.update(this.ideWindowId, {
-      focused: true,
-    })
   }
 
   async focusPlayingWindow() {
@@ -123,24 +110,3 @@ export class WindowSession {
     })
   }
 }
-
-if (browser && browser.runtime && browser.runtime.onMessage) {
-  browser.runtime.onMessage.addListener(function contentWindowIdListener(
-    message,
-    _sender,
-    sendResponse
-  ) {
-    if (
-      message.selfWindowId != undefined &&
-      message.commWindowId != undefined
-    ) {
-      WindowSession.ideWindowId = message.selfWindowId
-      browser.runtime.onMessage.removeListener(contentWindowIdListener)
-      sendResponse(true)
-    }
-  })
-}
-
-if (!window._windowSession) window._windowSession = new WindowSession()
-
-export default window._windowSession

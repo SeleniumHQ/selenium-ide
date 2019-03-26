@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { calculateFrameIndex } from '../../content/utils'
+import { calculateFrameIndex } from '../../src/content/utils'
 
 describe('utils', () => {
   describe('calculate frame index', () => {

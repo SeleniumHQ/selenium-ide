@@ -48,7 +48,7 @@ function getFrameLocation() {
 // Not a top window
 if (window !== window.top) {
   window.prompt = function(text, defaultText) {
-    if (document.body.hasAttribute('SideeXPlayingFlag')) {
+    if (document.body.hasAttribute('SidePlayingFlag')) {
       return window.top.prompt(text, defaultText)
     } else {
       let result = originalPrompt(text, defaultText)
@@ -68,7 +68,7 @@ if (window !== window.top) {
   }
 
   window.confirm = function(text) {
-    if (document.body.hasAttribute('SideeXPlayingFlag')) {
+    if (document.body.hasAttribute('SidePlayingFlag')) {
       return window.top.confirm(text)
     } else {
       let result = originalConfirmation(text)
@@ -88,7 +88,7 @@ if (window !== window.top) {
   }
 
   window.alert = function(text) {
-    if (document.body.hasAttribute('SideeXPlayingFlag')) {
+    if (document.body.hasAttribute('SidePlayingFlag')) {
       recordedAlert = text
       // Response directly
       window.top.postMessage(
@@ -163,7 +163,7 @@ if (window !== window.top) {
   }
   window.alert = function(text) {
     recordedAlert = text
-    if (document.body.hasAttribute('SideeXPlayingFlag')) {
+    if (document.body.hasAttribute('SidePlayingFlag')) {
       // Response directly
       window.top.postMessage(
         {

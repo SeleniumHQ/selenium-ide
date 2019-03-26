@@ -1,0 +1,54 @@
+{
+  "description": "Selenium IDE Recorder",
+  "manifest_version": 2,
+  "name": "Selenium IDE",
+  "version": "1.0.0",
+  "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/icon_menu16.png",
+      "32": "icons/icon_menu32.png",
+      "64": "icons/icon_menu64.png"
+    },
+    "default_title": "Selenium IDE"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webNavigation",
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "icons/icon128.png",
+    "icons/icon_light128.png",
+    "assets/prompt.js",
+    "assets/indicator.js",
+    "assets/highlight.css",
+    "indicator.html"
+  ],
+  "content_security_policy": "script-src 'self' 'sha256-W7QWmGne6B9hjKtOqoGmUFOPgpFcUo4Nr/yyMqtgXcU=' 'sha256-4cgtnhJWZr038A2+gTGcUgQL2QsJao6c0AiTxYYo6c8=' 'unsafe-eval'; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "assets/record.js"
+      ],
+      "match_about_blank": true,
+      "all_frames": true
+    }
+  ],
+  "background": {
+    "scripts": [
+      "assets/background.js"
+    ]
+  }
+}

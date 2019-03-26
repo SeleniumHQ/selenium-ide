@@ -1,0 +1,39 @@
+{
+  "name": "@seleniumhq/side-recorder",
+  "version": "3.5.10",
+  "private": true,
+  "description": "Selenium IDE WebExtension based recorder",
+  "author": "Tomer <tomer@corevo.io>",
+  "homepage": "http://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "webpack",
+    "prepublishOnly": "yarn build",
+    "watch": "yarn build -w"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.4.1",
+    "babel-loader": "^8.0.5",
+    "copy-webpack-plugin": "^5.0.2",
+    "dom-testing-library": "^3.18.2",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "dependencies": {
+    "@medv/finder": "^1.1.1",
+    "ua-parser-js": "^0.7.19",
+    "webextension-polyfill": "^0.4.0"
+  }
+}

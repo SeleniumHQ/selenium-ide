@@ -26,23 +26,6 @@ export function attach(record) {
         if (event.data.recordedType) {
           switch (event.data.recordedType) {
             case 'prompt':
-              if (event.data.recordedResult != null) {
-                record(
-                  'answerOnNextPrompt',
-                  [[event.data.recordedResult]],
-                  '',
-                  true,
-                  event.data.frameLocation
-                )
-              } else {
-                record(
-                  'chooseCancelOnNextPrompt',
-                  [['']],
-                  '',
-                  true,
-                  event.data.frameLocation
-                )
-              }
               record(
                 'assertPrompt',
                 [[event.data.recordedMessage]],
@@ -52,7 +35,7 @@ export function attach(record) {
               )
               if (event.data.recordedResult != null) {
                 record(
-                  'webdriverAnswerOnVisiblePrompt',
+                  'answerPrompt',
                   [[event.data.recordedResult]],
                   '',
                   false,
@@ -60,7 +43,7 @@ export function attach(record) {
                 )
               } else {
                 record(
-                  'webdriverChooseCancelOnVisiblePrompt',
+                  'cancelPrompt',
                   [['']],
                   '',
                   false,
@@ -69,23 +52,6 @@ export function attach(record) {
               }
               break
             case 'confirm':
-              if (event.data.recordedResult == true) {
-                record(
-                  'chooseOkOnNextConfirmation',
-                  [['']],
-                  '',
-                  true,
-                  event.data.frameLocation
-                )
-              } else {
-                record(
-                  'chooseCancelOnNextConfirmation',
-                  [['']],
-                  '',
-                  true,
-                  event.data.frameLocation
-                )
-              }
               record(
                 'assertConfirmation',
                 [[event.data.recordedMessage]],
@@ -95,7 +61,7 @@ export function attach(record) {
               )
               if (event.data.recordedResult == true) {
                 record(
-                  'webdriverChooseOkOnVisibleConfirmation',
+                  'acceptConfirmation',
                   [['']],
                   '',
                   false,
@@ -103,7 +69,7 @@ export function attach(record) {
                 )
               } else {
                 record(
-                  'webdriverChooseCancelOnVisibleConfirmation',
+                  'declineConfirmation',
                   [['']],
                   '',
                   false,
@@ -112,7 +78,6 @@ export function attach(record) {
               }
               break
             case 'alert':
-              //record("answerOnNextAlert",[[event.data.recordedResult]],"",true);
               record(
                 'assertAlert',
                 [[event.data.recordedMessage]],

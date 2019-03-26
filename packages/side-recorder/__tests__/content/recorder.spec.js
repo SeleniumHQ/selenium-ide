@@ -15,15 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-jest.mock('../../content/closure-polyfill')
-jest.mock('../../common/utils')
-const recordApi = require('../../content/record-api')
-recordApi.record = jest.fn()
-import '../../content/record'
+jest.mock('../../src/content/utils')
+import Recorder from '../../src/content/recorder'
 import { fireEvent } from 'dom-testing-library'
-import { isFirefox } from '../../common/utils'
+import { isFirefox } from '../../src/content/utils'
 
-describe('record-api', () => {
+Recorder.prototype.record = jest.fn()
+
+describe('recorder', () => {
   let recorder
   let element
   const enterKey = { key: 'Enter', keyCode: 13 }
@@ -42,7 +41,8 @@ describe('record-api', () => {
   }
 
   beforeAll(() => {
-    recorder = new recordApi.Recorder(window)
+    recorder = new Recorder(window)
+    recorder.record = jest.fn()
   })
 
   afterEach(() => {
@@ -61,14 +61,14 @@ describe('record-api', () => {
     })
 
     it('event handlers exist', () => {
-      expect(recordApi.Recorder.eventHandlers).not.toEqual({})
+      expect(Recorder.eventHandlers).not.toEqual({})
     })
 
     it('recorder attached with event handlers', async () => {
       await recorder.attach()
       expect(recorder.attached).toBeTruthy()
       expect(recorder.eventListeners).toBeTruthy()
-      expect(recordApi.record.mock.calls.length).toEqual(0)
+      expect(recorder.record.mock.calls.length).toEqual(0)
       await recorder.detach()
       expect(recorder.attached).toBeFalsy()
     })
@@ -76,6 +76,11 @@ describe('record-api', () => {
 
   describe('form', () => {
     let inputElement
+    let record
+
+    beforeAll(() => {
+      record = recorder.record
+    })
 
     beforeEach(() => {
       isFirefox.mockReturnValue(false)
@@ -88,8 +93,8 @@ describe('record-api', () => {
             <button type="submit" style="display:none">sub</button>
         </form>
       `)
-      recorder.attach()
       inputElement = window.document.querySelector('form input')
+      recorder.attach()
       fireEvent.focus(inputElement)
       fireEvent.input(inputElement, { target: { value: 'blah' } })
     })
@@ -99,36 +104,34 @@ describe('record-api', () => {
         element.parentElement.removeChild(element)
         element = undefined
       }
-      recordApi.record.mockClear()
+      record.mockClear()
       console.error.mockRestore() // eslint-disable-line no-console
     })
 
     it('keydown on input records sendKey ${KEY_ENTER}', () => {
       fireEvent.keyDown(inputElement, enterKey)
       fireEvent.keyUp(inputElement, enterKey)
-      expect(recordApi.record.mock.calls[1][0]).toEqual('sendKeys')
-      expect(
-        filter(recordApi.record.mock.calls[1][1], 'type="submit"')
-      ).toBeUndefined()
+      expect(record.mock.calls[1][0]).toEqual('sendKeys')
+      expect(filter(record.mock.calls[1][1], 'type="submit"')).toBeUndefined()
     })
 
     it('keydown on input records submit (on Firefox)', () => {
       isFirefox.mockReturnValue(true)
       fireEvent.keyDown(inputElement, enterKey)
       fireEvent.keyUp(inputElement, enterKey)
-      expect(recordApi.record.mock.calls[1][0]).toEqual('submit')
+      expect(record.mock.calls[1][0]).toEqual('submit')
     })
 
     it('click on button without type=submit records click', () => {
       const button = window.document.querySelector('button')
       fireEvent.click(button)
-      expect(recordApi.record.mock.calls[0][0]).toEqual('click')
+      expect(record.mock.calls[0][0]).toEqual('click')
     })
 
     it('click on button with type=submit records click', () => {
       const button = window.document.querySelector("button[type='submit']")
       fireEvent.click(button)
-      expect(recordApi.record.mock.calls[0][0]).toEqual('click')
+      expect(record.mock.calls[0][0]).toEqual('click')
     })
   })
 })

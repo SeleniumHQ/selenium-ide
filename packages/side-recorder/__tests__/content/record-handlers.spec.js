@@ -15,11 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-jest.mock('../../content/closure-polyfill')
-jest.mock('../../content/record-api')
-jest.mock('../../common/utils')
-import { _isValidForm, _recordFormAction, record } from '../../content/record'
-import { isFirefox } from '../../common/utils'
+jest.mock('../../src/content/utils')
+import {
+  _isValidForm,
+  _recordFormAction,
+} from '../../src/content/record-handlers'
+import { isFirefox } from '../../src/content/utils'
 
 function createTargetWithAttribute(attribute) {
   return {
@@ -30,7 +31,11 @@ function createTargetWithAttribute(attribute) {
   }
 }
 
-describe('record', () => {
+const recorder = {
+  record: jest.fn(),
+}
+
+describe('record handlers', () => {
   it('isValidForm', () => {
     isFirefox.mockReturnValue(false)
     expect(
@@ -68,23 +73,26 @@ describe('record', () => {
 
   describe('recordFormAction', () => {
     afterEach(() => {
-      record.mockReset()
+      recorder.record.mockReset()
     })
     it('submit id', () => {
-      _recordFormAction(createTargetWithAttribute({ id: 'formId' }))
-      expect(record.mock.calls[0][0]).toBe('submit')
-      expect(record.mock.calls[0][1][0][0]).toBe('id=formId')
-      expect(record.mock.calls[0][1][0][1]).toBe('id')
+      _recordFormAction(createTargetWithAttribute({ id: 'formId' }), recorder)
+      expect(recorder.record.mock.calls[0][0]).toBe('submit')
+      expect(recorder.record.mock.calls[0][1][0][0]).toBe('id=formId')
+      expect(recorder.record.mock.calls[0][1][0][1]).toBe('id')
     })
     it('submit name', () => {
-      _recordFormAction(createTargetWithAttribute({ name: 'formName' }))
-      expect(record.mock.calls[0][0]).toBe('submit')
-      expect(record.mock.calls[0][1][0][0]).toBe('name=formName')
-      expect(record.mock.calls[0][1][0][1]).toBe('name')
+      _recordFormAction(
+        createTargetWithAttribute({ name: 'formName' }),
+        recorder
+      )
+      expect(recorder.record.mock.calls[0][0]).toBe('submit')
+      expect(recorder.record.mock.calls[0][1][0][0]).toBe('name=formName')
+      expect(recorder.record.mock.calls[0][1][0][1]).toBe('name')
     })
     it('submit css', () => {
-      _recordFormAction(createTargetWithAttribute({ css: 'formCss' }))
-      expect(record.mock.calls).toEqual([])
+      _recordFormAction(createTargetWithAttribute({ css: 'formCss' }), recorder)
+      expect(recorder.record.mock.calls).toEqual([])
     })
   })
 })

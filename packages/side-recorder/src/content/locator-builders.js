@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-//import { MozillaBrowserBot } from "./selenium-browserbot";
-import { bot, core } from './closure-polyfill'
+import findElement from '../third-party/find-element'
 import { parse_locator } from './utils'
 import finder from '@medv/finder'
 
 export default function LocatorBuilders(window) {
   this.window = window
 }
-
-window.LocatorBuilders = LocatorBuilders
 
 LocatorBuilders.prototype.detach = function() {}
 
@@ -52,20 +49,19 @@ LocatorBuilders.prototype.build = function(e) {
 }
 
 LocatorBuilders.prototype.buildAll = function(el) {
-  let e = core.firefox.unwrap(el) //Samit: Fix: Do the magic to get it to work in Firefox 4
   let locator
   let locators = []
   for (let i = 0; i < LocatorBuilders.order.length; i++) {
     let finderName = LocatorBuilders.order[i]
     try {
-      locator = this.buildWith(finderName, e)
+      locator = this.buildWith(finderName, el)
       if (locator) {
         locator = String(locator)
         //Samit: The following is a quickfix for above commented code to stop exceptions on almost every locator builder
         //TODO: the builderName should NOT be used as a strategy name, create a feature to allow locatorBuilders to specify this kind of behaviour
         //TODO: Useful if a builder wants to capture a different element like a parent. Use the this.elementEquals
         let fe = this.findElement(locator)
-        if (e == fe) {
+        if (el == fe) {
           locators.push([locator, finderName])
         }
       }
@@ -80,10 +76,7 @@ LocatorBuilders.prototype.buildAll = function(el) {
 LocatorBuilders.prototype.findElement = function(loc) {
   try {
     const locator = parse_locator(loc, true)
-    return bot.locators.findElement(
-      { [locator.type]: locator.string },
-      this.window.document
-    )
+    return findElement({ [locator.type]: locator.string }, this.window.document)
   } catch (error) {
     //this.log.debug("findElement failed: " + error + ", locator=" + locator);
     return null
