@@ -27,12 +27,15 @@
     "babel-loader": "^8.0.5",
     "copy-webpack-plugin": "^5.0.2",
     "dom-testing-library": "^3.18.2",
+    "engine.io": "^3.3.2",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
     "@medv/finder": "^1.1.1",
+    "engine.io-client": "^3.3.2",
     "ua-parser-js": "^0.7.19",
     "webextension-polyfill": "^0.4.0"
   }

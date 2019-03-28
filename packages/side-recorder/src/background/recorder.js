@@ -437,7 +437,7 @@ export default class BackgroundRecorder {
     }
   }
 
-  async attach(startUrl, sessionId) {
+  async attach(sessionId) {
     if (this.attached || this.isAttaching) {
       return
     }
@@ -454,7 +454,7 @@ export default class BackgroundRecorder {
       )
       browser.runtime.onMessage.addListener(this.addCommandMessageHandler)
 
-      await this.attachToExistingRecording(startUrl)
+      await this.attachToExistingRecording()
 
       this.attached = true
       this.isAttaching = false
@@ -484,7 +484,7 @@ export default class BackgroundRecorder {
 
   // this will attempt to connect to a previous recording
   // else it will create a new window for recording
-  async attachToExistingRecording(url) {
+  async attachToExistingRecording() {
     try {
       if (this.windowSession.currentUsedWindowId[this.sessionId]) {
         // test was recorded before and has a dedicated window
@@ -507,28 +507,29 @@ export default class BackgroundRecorder {
         )
       } else {
         // the test was never recorded before, nor it was the last test ran
-        await this.createNewRecordingWindow(this.sessionId, url)
+        await this.getRecordingWindow()
       }
     } catch (e) {
-      // window was deleted at some point by the user, creating a new one
-      await this.createNewRecordingWindow(this.sessionId, url)
+      throw new Error("Can't attach since no window to attach to is available")
     }
   }
 
-  async createNewRecordingWindow(testCaseId, url) {
-    const win = await browser.windows.create({
-      url,
+  async getRecordingWindow() {
+    const windows = await browser.windows.getAll({
+      populate: true,
+      windowTypes: ['normal'],
     })
+    const win = windows[0]
     const tab = win.tabs[0]
     this.lastAttachedTabId = tab.id
     this.windowSession.setOpenedWindow(tab.windowId)
-    this.windowSession.openedTabIds[testCaseId] = {}
+    this.windowSession.openedTabIds[this.sessionId] = {}
 
-    this.windowSession.currentUsedFrameLocation[testCaseId] = 'root'
-    this.windowSession.currentUsedTabId[testCaseId] = tab.id
-    this.windowSession.currentUsedWindowId[testCaseId] = tab.windowId
-    this.windowSession.openedTabIds[testCaseId][tab.id] = 'root'
-    this.windowSession.openedTabCount[testCaseId] = 1
+    this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
+    this.windowSession.currentUsedTabId[this.sessionId] = tab.id
+    this.windowSession.currentUsedWindowId[this.sessionId] = tab.windowId
+    this.windowSession.openedTabIds[this.sessionId][tab.id] = 'root'
+    this.windowSession.openedTabCount[this.sessionId] = 1
   }
 
   doesTabBelongToRecording(tabId) {

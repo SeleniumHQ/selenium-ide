@@ -11,6 +11,7 @@
     "build:ext:prod": "cd packages/selenium-ide && yarn build",
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",
     "test": "jest",
+    "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "test:ext": "jest --testMatch \"**/packages/selenium-ide-extension/tests/**/*.spec.js\"",
     "test:runner": "cd packages/selenium-side-runner && node dist/index.js ../../tests/examples/*.side",
     "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/tests/**/*.spec.js\"",

@@ -7,6 +7,9 @@ services:
     volumes:
       - "./tests/static:/usr/share/nginx/html:ro"
   selenium:
-    image: "selenium/standalone-chrome:3.11.0-antimony"
+    image: "selenium/standalone-chrome-debug:3.11.0-antimony"
     ports:
       - "4444:4444"
+      - "5900:5900"
+    volumes:
+      - "./packages/side-recorder/build:/recorder-ext-build"

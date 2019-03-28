@@ -15,16 +15,62 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import eio from 'engine.io-client'
 import BackgroundRecorder from './recorder'
 import WindowSession from './window-session'
 
 const windowSession = new WindowSession()
+const socket = eio(window.socketUrl || 'ws://host.docker.internal:4445')
 
-window.hasRecorded = false
-const record = (...args) => {
+const record = (command, targets, values, insertBeforeLastCommand) => {
   window.hasRecorded = true
-  console.log(...args)
+  return socket.send(
+    JSON.stringify({
+      type: 'record',
+      payload: {
+        command,
+        targets,
+        values,
+        insertBeforeLastCommand,
+      },
+    })
+  )
 }
-const recordOpensWindow = () => {}
+
+const recordOpensWindow = windowHandleName => {
+  return socket.send(
+    JSON.stringify({
+      type: 'recordOpensWindow',
+      payload: {
+        windowHandleName,
+      },
+    })
+  )
+}
+
 const hasRecorded = () => window.hasRecorded
-window.recorder = new BackgroundRecorder(windowSession, record, recordOpensWindow, hasRecorded)
+
+window.recorder = new BackgroundRecorder(
+  windowSession,
+  record,
+  recordOpensWindow,
+  hasRecorded
+)
+
+const attach = ({ sessionId, hasRecorded = false }) => {
+  window.hasRecorded = hasRecorded
+  return window.recorder.attach(sessionId)
+}
+
+const detach = () => window.recorder.detach()
+
+socket.on('open', () => {
+  socket.on('message', data => {
+    const { type, payload } = JSON.parse(data)
+    if (type === 'attach') {
+      attach(payload)
+    } else if (type === 'detach') {
+      detach()
+    }
+  })
+})
