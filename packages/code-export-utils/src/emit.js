@@ -68,16 +68,8 @@ export function emitEscapedText(text) {
 }
 
 export default {
-  command: {
-    emit: emitCommand,
-  },
-  location: {
-    emit: emitLocation,
-  },
-  selection: {
-    emit: emitSelection,
-  },
-  text: {
-    emit: emitEscapedText,
-  },
+  command: emitCommand,
+  location: emitLocation,
+  selection: emitSelection,
+  text: emitEscapedText,
 }

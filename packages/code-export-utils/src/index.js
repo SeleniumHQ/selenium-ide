@@ -16,10 +16,12 @@
 // under the License.
 
 import emit from './emit'
+import prettify from './prettify'
 import { registerPreprocessors } from './preprocessor'
 
 export default {
-  ...emit,
+  emit: { ...emit },
+  prettify: { ...prettify },
   preprocessors: {
     register: registerPreprocessors,
   },
