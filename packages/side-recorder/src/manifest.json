@@ -48,6 +48,7 @@
   ],
   "background": {
     "scripts": [
+      "assets/config.js",
       "assets/background.js"
     ]
   }

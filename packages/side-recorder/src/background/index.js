@@ -20,7 +20,7 @@ import BackgroundRecorder from './recorder'
 import WindowSession from './window-session'
 
 const windowSession = new WindowSession()
-const socket = eio(window.socketUrl || 'ws://host.docker.internal:4445')
+const socket = eio(window.socketUrl || 'ws://localhost:4445')
 
 const record = (command, targets, values, insertBeforeLastCommand) => {
   window.hasRecorded = true

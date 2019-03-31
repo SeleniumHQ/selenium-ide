@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import path from 'path'
 import webdriver from 'selenium-webdriver'
 import engine from 'engine.io'
 
@@ -31,15 +32,12 @@ describe('recorder e2e', () => {
     server.on('connection', socket => {
       extSocket = socket
     })
-    const builder = new webdriver.Builder()
-      .withCapabilities({
-        browserName: 'chrome',
-        chromeOptions: {
-          args: [`load-extension=/recorder-ext-build/`],
-          windowTypes: ['webview'],
-        },
-      })
-      .usingServer('http://localhost:4444/wd/hub')
+    const builder = new webdriver.Builder().withCapabilities({
+      browserName: 'chrome',
+      chromeOptions: {
+        args: [`load-extension=${path.join(__dirname + '../../../build')}`],
+      },
+    })
     driver = await builder.build()
   })
   afterAll(async () => {

@@ -105,6 +105,7 @@ module.exports = {
   ).concat([
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
+      { from: 'background/config.js', to: './' },
       { from: 'content/prompt.js', to: './' },
       { from: 'content/highlight.css', to: './' },
       { from: 'content/indicator.html', to: '../' },
