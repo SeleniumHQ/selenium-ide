@@ -41,6 +41,7 @@ describe('recorder e2e', () => {
     driver = await builder.build()
   })
   afterAll(async () => {
+    await server.httpServer.close()
     await server.close()
     await driver.quit()
   })

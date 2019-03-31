@@ -17,4 +17,4 @@
 
 import Recorder from './recorder'
 
-const recorder = new Recorder(window)
+new Recorder(window)
