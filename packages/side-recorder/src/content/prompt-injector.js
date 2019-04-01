@@ -18,13 +18,20 @@
 import browser from 'webextension-polyfill'
 
 let elementForInjectingScript
-export function attach(record) {
-  elementForInjectingScript = document.createElement('script')
-  elementForInjectingScript.src = browser.runtime.getURL('/assets/prompt.js')
-  ;(document.head || document.documentElement).appendChild(
-    elementForInjectingScript
-  )
+elementForInjectingScript = document.createElement('script')
+elementForInjectingScript.src = browser.runtime.getURL('/assets/prompt.js')
+;(document.head || document.documentElement).appendChild(
+  elementForInjectingScript
+)
 
+export function attach(record) {
+  window.postMessage(
+    {
+      direction: 'from-content-script',
+      attach: true,
+    },
+    '*'
+  )
   attachPromptRecorder(record)
 }
 
@@ -36,7 +43,6 @@ export function detach() {
     },
     '*'
   )
-  elementForInjectingScript.parentNode.removeChild(elementForInjectingScript)
 }
 
 function attachPromptRecorder(record) {
