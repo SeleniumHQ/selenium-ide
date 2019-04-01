@@ -30,7 +30,7 @@ export default {
 }
 
 function matchStringPairs(input) {
-  const regex = /([^\s=]*)\s?=\s?(".*"|'.*'|\[.*\]|[^\s]*)/g
+  const regex = /([^\s=]*)\s?=\s?(".*?"|'.*?'|\[.*\]|[^\s]*)/g
   let result
   const splitCapabilities = []
   while ((result = regex.exec(input)) !== null) {

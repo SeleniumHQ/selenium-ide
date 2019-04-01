@@ -51,6 +51,19 @@ describe('capabilities string parser', () => {
       binary: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     })
   })
+  it('should parse multiple multiword capability keys', () => {
+    const expected = {
+      browserName: 'internet explorer',
+      version: 10,
+      platform: 'Windows 8.1',
+    }
+    const capabilitiesSingleQuotes =
+      "browserName='internet explorer' version=10.0 platform='Windows 8.1'"
+    expect(Capabilities.parseString(capabilitiesSingleQuotes)).toEqual(expected)
+    const capabilitiesDoubleQuotes =
+      'browserName="internet explorer" version=10.0 platform="Windows 8.1"'
+    expect(Capabilities.parseString(capabilitiesDoubleQuotes)).toEqual(expected)
+  })
   it('should parse boolean capability key', () => {
     const capabilities = 'javascriptEnabled=false databaseEnabled=true'
     expect(Capabilities.parseString(capabilities)).toEqual({
