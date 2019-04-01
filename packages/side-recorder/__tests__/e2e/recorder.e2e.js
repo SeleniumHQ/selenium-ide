@@ -19,7 +19,7 @@ import path from 'path'
 import webdriver from 'selenium-webdriver'
 import engine from 'engine.io'
 
-const { By } = webdriver
+const { By, until } = webdriver
 
 jest.setTimeout(300000)
 
@@ -64,12 +64,22 @@ describe('recorder e2e', () => {
       })
     )
     await driver.get('http://the-internet.herokuapp.com/')
-    const elem = await driver.findElement(By.linkText('Checkboxes'))
+    const elem = await driver.findElement(By.linkText('JavaScript Alerts'))
     await elem.click()
+    const alertButton = await driver.wait(
+      until.elementLocated(By.css('.example li:first-child button'))
+    )
+    await alertButton.click()
+    await driver
+      .switchTo()
+      .alert()
+      .accept()
     await driver.sleep(1000)
-    expect(recording.length).toBe(2)
+    expect(recording.length).toBe(4)
     expect(recording[0].command).toBe('open')
     expect(recording[1].command).toBe('click')
+    expect(recording[2].command).toBe('click')
+    expect(recording[3].command).toBe('assertAlert')
   })
 })
 

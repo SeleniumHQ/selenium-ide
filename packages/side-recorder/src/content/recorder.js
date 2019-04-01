@@ -18,6 +18,7 @@
 import browser from 'webextension-polyfill'
 import { calculateFrameIndex } from './utils'
 import { handlers, observers } from './record-handlers'
+import { attach, detach } from './prompt-injector'
 
 /**
  * @param {Window} window
@@ -138,6 +139,7 @@ export default class Recorder {
       }
       attachInputListeners(this.recordingState, this.window)
       this.addRecordingIndicator()
+      attach(this.record.bind(this))
     }
   }
 
@@ -162,6 +164,7 @@ export default class Recorder {
     this.attached = false
     this.removeRecordingIndicator()
     detachInputListeners(this.recordingState, this.window)
+    detach()
   }
 
   getFrameCount() {

@@ -17,15 +17,12 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import { attach } from './prompt-recorder'
 import LocatorBuilders from './locator-builders'
 import { isTest, isFirefox } from './utils'
 
 const locatorBuilders = new LocatorBuilders(window)
 export const handlers = []
 export const observers = []
-
-//attach(record)
 
 export function _isValidForm(tagName, target) {
   return !!(

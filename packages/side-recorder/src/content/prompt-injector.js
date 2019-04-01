@@ -17,20 +17,15 @@
 
 import browser from 'webextension-polyfill'
 
-let handler, elementForInjectingScript
-export function attach(selenium) {
+let elementForInjectingScript
+export function attach(record) {
   elementForInjectingScript = document.createElement('script')
   elementForInjectingScript.src = browser.runtime.getURL('/assets/prompt.js')
   ;(document.head || document.documentElement).appendChild(
     elementForInjectingScript
   )
 
-  if (window === window.top) {
-    handler = e => {
-      return handleMessage(e, selenium)
-    }
-    window.addEventListener('message', handler)
-  }
+  attachPromptRecorder(record)
 }
 
 export function detach() {
@@ -42,33 +37,82 @@ export function detach() {
     '*'
   )
   elementForInjectingScript.parentNode.removeChild(elementForInjectingScript)
-  window.removeEventListener('message', handler)
 }
 
-function handleMessage(event, selenium) {
-  if (
-    event.source.top == window &&
-    event.data &&
-    event.data.direction == 'from-page-script'
-  ) {
-    if (event.data.response) {
-      switch (event.data.response) {
-        case 'prompt':
-          selenium.browserbot.promptResponse = true
-          if (event.data.value)
-            selenium.browserbot.promptMessage = event.data.value
-          break
-        case 'confirm':
-          selenium.browserbot.confirmationResponse = true
-          if (event.data.value)
-            selenium.browserbot.confirmationMessage = event.data.value
-          break
-        case 'alert':
-          selenium.browserbot.alertResponse = true
-          if (event.data.value)
-            selenium.browserbot.alertMessage = event.data.value
-          break
+function attachPromptRecorder(record) {
+  if (window === window.top) {
+    window.addEventListener('message', function(event) {
+      if (
+        event.source.top == window &&
+        event.data &&
+        event.data.direction == 'from-page-script'
+      ) {
+        if (event.data.recordedType) {
+          switch (event.data.recordedType) {
+            case 'prompt':
+              record(
+                'assertPrompt',
+                [[event.data.recordedMessage]],
+                '',
+                false,
+                event.data.frameLocation
+              )
+              if (event.data.recordedResult != null) {
+                record(
+                  'answerPrompt',
+                  [[event.data.recordedResult]],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
+              } else {
+                record(
+                  'cancelPrompt',
+                  [['']],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
+              }
+              break
+            case 'confirm':
+              record(
+                'assertConfirmation',
+                [[event.data.recordedMessage]],
+                '',
+                false,
+                event.data.frameLocation
+              )
+              if (event.data.recordedResult == true) {
+                record(
+                  'acceptConfirmation',
+                  [['']],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
+              } else {
+                record(
+                  'declineConfirmation',
+                  [['']],
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
+              }
+              break
+            case 'alert':
+              record(
+                'assertAlert',
+                [[event.data.recordedMessage]],
+                '',
+                false,
+                event.data.frameLocation
+              )
+              break
+          }
+        }
       }
-    }
+    })
   }
 }
