@@ -53,6 +53,8 @@ export default class WebDriverExecutor {
       this.capabilities = capabilities || DEFAULT_CAPABILITIES
       this.server = server || DEFAULT_SERVER
     }
+
+    this.waitForNewWindow = this.waitForNewWindow.bind(this)
   }
 
   async init({ baseUrl, logger, variables }) {
@@ -103,9 +105,28 @@ export default class WebDriverExecutor {
     return func
   }
 
-  async beforeCommand(_commandObject) {}
+  async beforeCommand(commandObject) {
+    if (commandObject.opensWindow) {
+      this[state].openedWindows = await this.driver.getAllWindowHandles()
+    }
+  }
 
-  async afterCommand(_commandObject) {}
+  async afterCommand(commandObject) {
+    if (commandObject.opensWindow) {
+      const handle = await this.wait(
+        this.waitForNewWindow,
+        commandObject.windowTimeout
+      )
+      this.variables.set(commandObject.windowHandleName, handle)
+    }
+  }
+
+  async waitForNewWindow() {
+    const currentHandles = await this.driver.getAllWindowHandles()
+    return currentHandles.find(
+      handle => !this[state].openedWindows.includes(handle)
+    )
+  }
 
   // Commands go after this line
 
@@ -137,7 +158,6 @@ export default class WebDriverExecutor {
   // doMouseOver
   // doMouseUpAt
   // doRemoveSelection
-  // doSelectWindow
   // setSpeed
   // doStoreAttribute
   // doStoreTitle
@@ -162,6 +182,22 @@ export default class WebDriverExecutor {
       .manage()
       .window()
       .setSize(parseInt(width), parseInt(height))
+  }
+
+  async doSelectWindow(handleLocator) {
+    const prefix = 'handle='
+    if (handleLocator.startsWith(prefix)) {
+      const handle = handleLocator.substr(prefix.length)
+      await this.driver.switchTo().window(handle)
+    } else {
+      throw new Error(
+        'Invalid window handle given (e.g. handle=${handleVariable})'
+      )
+    }
+  }
+
+  async doClose() {
+    await this.driver.close()
   }
 
   async doSelectFrame(locator) {
@@ -287,6 +323,11 @@ export default class WebDriverExecutor {
     const element = await this.waitForElement(locator, this.driver)
     const value = await element.getAttribute('value')
     this.variables.set(variable, value)
+  }
+
+  async doStoreWindowHandle(variable) {
+    const handle = await this.driver.getWindowHandle()
+    this.variables.set(variable, handle)
   }
 
   // assertions
@@ -446,7 +487,9 @@ export default class WebDriverExecutor {
   // other commands
 
   async doEcho(string) {
-    this.logger.log(`echo: ${string}`)
+    if (this.logger) {
+      this.logger.log(`echo: ${string}`)
+    }
   }
 
   async doPause(time) {
@@ -605,6 +648,11 @@ WebDriverExecutor.prototype.doOpen = composePreprocessors(
 WebDriverExecutor.prototype.doSetWindowSize = composePreprocessors(
   interpolateString,
   WebDriverExecutor.prototype.doSetWindowSize
+)
+
+WebDriverExecutor.prototype.doSelectWindow = composePreprocessors(
+  interpolateString,
+  WebDriverExecutor.prototype.doSelectWindow
 )
 
 WebDriverExecutor.prototype.doSelectFrame = composePreprocessors(
