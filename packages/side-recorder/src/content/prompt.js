@@ -57,13 +57,16 @@ function getFrameLocation() {
   return frameLocation
 }
 
-window.__setWindowHandle = handle => {
+window.__setWindowHandle = (handle, sessionId) => {
   let frameLocation = getFrameLocation()
   window.top.postMessage(
     {
       direction: 'from-page-script',
       recordedType: 'handle',
-      recordedMessage: handle,
+      recordedMessage: {
+        handle,
+        sessionId,
+      },
       frameLocation,
     },
     '*'

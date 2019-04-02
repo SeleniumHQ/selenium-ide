@@ -34,6 +34,7 @@ export default class BackgroundRecorder {
     if (browser && browser.runtime && browser.runtime.onMessage) {
       browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler)
       browser.runtime.onMessage.addListener(this.frameCountHandler)
+      browser.runtime.onMessage.addListener(this.setWindowHandleHandler)
     }
   }
 
@@ -290,6 +291,30 @@ export default class BackgroundRecorder {
     }
   }
 
+  setWindowHandleHandler(message, sender, sendResponse) {
+    if (message.setWindowHandle) {
+      if (!this.windowSession.openedTabIds[message.sessionId]) {
+        this.initSession(sender.tab, message.sessionId)
+      }
+      this.windowSession.openedTabIds[message.sessionId][sender.tab.id] =
+        message.handle
+      this.recordOpensWindow(
+        this.windowSession.openedTabIds[message.sessionId][sender.tab.id]
+      )
+      if (sender.tab.windowId != undefined) {
+        this.windowSession.setOpenedWindow(sender.tab.windowId)
+      } else {
+        // Google Chrome does not support windowId.
+        // Retrieve windowId from tab information.
+        browser.tabs.get(sender.tab.id).then(tabInfo => {
+          this.windowSession.setOpenedWindow(tabInfo.windowId)
+        })
+      }
+      this.windowSession.openedTabCount[message.sessionId]++
+      return sendResponse(true)
+    }
+  }
+
   addCommandMessageHandler(message, sender, sendResponse) {
     if (message.frameRemoved) {
       browser.tabs.sendMessage(sender.tab.id, {
@@ -415,6 +440,7 @@ export default class BackgroundRecorder {
     this.webNavigationOnCreatedNavigationTargetHandler = this.webNavigationOnCreatedNavigationTargetHandler.bind(
       this
     )
+    this.setWindowHandleHandler = this.setWindowHandleHandler.bind(this)
     this.addCommandMessageHandler = this.addCommandMessageHandler.bind(this)
     this.attachRecorderRequestHandler = this.attachRecorderRequestHandler.bind(
       this
@@ -485,32 +511,34 @@ export default class BackgroundRecorder {
   // this will attempt to connect to a previous recording
   // else it will create a new window for recording
   async attachToExistingRecording() {
-    try {
-      if (this.windowSession.currentUsedWindowId[this.sessionId]) {
-        // test was recorded before and has a dedicated window
-        await browser.windows.update(
-          this.windowSession.currentUsedWindowId[this.sessionId],
-          {
-            focused: true,
-          }
-        )
-      } else if (
-        this.windowSession.generalUseLastPlayedTestCaseId === this.sessionId
-      ) {
-        // the last played test was the one the user wishes to record now
-        this.windowSession.dedicateGeneralUseSession(this.sessionId)
-        await browser.windows.update(
-          this.windowSession.currentUsedWindowId[this.sessionId],
-          {
-            focused: true,
-          }
-        )
-      } else {
-        // the test was never recorded before, nor it was the last test ran
-        await this.getRecordingWindow()
-      }
-    } catch (e) {
-      throw new Error("Can't attach since no window to attach to is available")
+    if (this.windowSession.currentUsedWindowId[this.sessionId]) {
+      // test was recorded before and has a dedicated window
+      const win = await browser.windows.update(
+        this.windowSession.currentUsedWindowId[this.sessionId],
+        {
+          focused: true,
+        }
+      )
+      const tab = (await browser.tabs.query({
+        windowId: win.id,
+        active: true,
+      }))[0]
+      this.windowSession.currentUsedTabId[this.sessionId] = tab.id
+      this.reattachToTab(tab.id)
+    } else if (
+      this.windowSession.generalUseLastPlayedTestCaseId === this.sessionId
+    ) {
+      // the last played test was the one the user wishes to record now
+      this.windowSession.dedicateGeneralUseSession(this.sessionId)
+      await browser.windows.update(
+        this.windowSession.currentUsedWindowId[this.sessionId],
+        {
+          focused: true,
+        }
+      )
+    } else {
+      // the test was never recorded before, nor it was the last test ran
+      await this.getRecordingWindow()
     }
   }
 
@@ -520,16 +548,22 @@ export default class BackgroundRecorder {
       windowTypes: ['normal'],
     })
     const win = windows[0]
-    const tab = win.tabs[0]
+    const tab = win.tabs.find(tab => tab.active)
     this.lastAttachedTabId = tab.id
-    this.windowSession.setOpenedWindow(tab.windowId)
-    this.windowSession.openedTabIds[this.sessionId] = {}
 
-    this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
-    this.windowSession.currentUsedTabId[this.sessionId] = tab.id
-    this.windowSession.currentUsedWindowId[this.sessionId] = tab.windowId
-    this.windowSession.openedTabIds[this.sessionId][tab.id] = 'root'
+    this.initSession(tab, this.sessionId)
     this.windowSession.openedTabCount[this.sessionId] = 1
+  }
+
+  initSession(tab, sessionId) {
+    this.windowSession.setOpenedWindow(tab.windowId)
+    this.windowSession.openedTabIds[sessionId] = {}
+
+    this.windowSession.currentUsedFrameLocation[sessionId] = 'root'
+    this.windowSession.currentUsedTabId[sessionId] = tab.id
+    this.windowSession.currentUsedWindowId[sessionId] = tab.windowId
+    this.windowSession.openedTabIds[sessionId][tab.id] = 'root'
+    this.windowSession.openedTabCount[sessionId] = 0
   }
 
   doesTabBelongToRecording(tabId) {

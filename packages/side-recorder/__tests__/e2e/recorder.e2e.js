@@ -27,7 +27,7 @@ describe('recorder e2e', () => {
   let driver
   let server
   let extSocket
-  beforeAll(async () => {
+  beforeEach(async () => {
     server = engine.listen(4445)
     server.on('connection', socket => {
       extSocket = socket
@@ -40,7 +40,7 @@ describe('recorder e2e', () => {
     })
     driver = await builder.build()
   })
-  afterAll(async () => {
+  afterEach(async () => {
     await server.httpServer.close()
     await server.close()
     await driver.quit()
@@ -74,12 +74,105 @@ describe('recorder e2e', () => {
       .switchTo()
       .alert()
       .accept()
-    await driver.sleep(1000)
+    await driver.sleep(100)
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'detach',
+      })
+    )
+    extSocket.removeAllListeners('message')
+    await driver.sleep(100)
     expect(recording.length).toBe(4)
     expect(recording[0].command).toBe('open')
     expect(recording[1].command).toBe('click')
     expect(recording[2].command).toBe('click')
     expect(recording[3].command).toBe('assertAlert')
+  })
+  it('should record a new window', async () => {
+    const recording = []
+    await driver.sleep(1000)
+    extSocket.on('message', data => {
+      const message = JSON.parse(data)
+      if (message.type === 'record') {
+        recording.push(message.payload)
+      }
+    })
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'attach',
+        payload: {
+          sessionId: 'aaa',
+        },
+      })
+    )
+    await driver.get('http://the-internet.herokuapp.com/')
+    const handles = await driver.getAllWindowHandles()
+    const elem = await driver.findElement(By.linkText('Elemental Selenium'))
+    await elem.click()
+    await driver.sleep(100)
+    const handle = await getNewWindowHandle(driver, handles)
+    await driver.switchTo().window(handle)
+    await driver.sleep(100)
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'detach',
+      })
+    )
+    await driver.sleep(100)
+    expect(recording.length).toBe(3)
+    expect(recording[0].command).toBe('open')
+    expect(recording[1].command).toBe('click')
+    expect(recording[2].command).toBe('selectWindow')
+  })
+  it('should record switching to an existing window', async () => {
+    const recording = []
+    await driver.sleep(1000)
+    extSocket.on('message', data => {
+      const message = JSON.parse(data)
+      if (message.type === 'record') {
+        recording.push(message.payload)
+      }
+    })
+    await driver.get('http://the-internet.herokuapp.com/')
+    await driver.executeScript('window.__setWindowHandle("root", "aab")')
+    const handles = await driver.getAllWindowHandles()
+    const elem = await driver.findElement(By.linkText('Elemental Selenium'))
+    await elem.click()
+    await driver.sleep(2000)
+    const handle = await getNewWindowHandle(driver, handles)
+    await driver.switchTo().window(handle)
+    await driver.executeScript('window.__setWindowHandle("newWin", "aab")')
+    await driver.sleep(100)
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'attach',
+        payload: {
+          sessionId: 'aab',
+          hasRecorded: true,
+        },
+      })
+    )
+    await driver.sleep(1000)
+    await driver.switchTo().window(handles[0])
+    await driver.sleep(100)
+    await driver.switchTo().window(handle)
+    await driver.sleep(1000)
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'detach',
+      })
+    )
+    await driver.sleep(100)
+    expect(recording[0].command).toBe('selectWindow')
+    expect(recording[0].targets[0][0]).toBe('handle=${root}')
+    expect(recording[1].command).toBe('selectWindow')
+    expect(recording[1].targets[0][0]).toBe('handle=${newWin}')
+    expect(recording.length).toBe(2)
   })
 })
 
@@ -87,3 +180,12 @@ const psend = (socket, ...args) =>
   new Promise(res => {
     socket.send(...args, res)
   })
+
+function getNewWindowHandle(driver, originalHandles) {
+  // Note: this assumes there's just one new window.
+  return driver.getAllWindowHandles().then(function(currentHandles) {
+    return currentHandles.filter(function(i) {
+      return originalHandles.indexOf(i) < 0
+    })[0]
+  })
+}

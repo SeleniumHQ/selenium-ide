@@ -35,7 +35,9 @@ export default class Recorder {
     this.recalculateFrameLocation = this.recalculateFrameLocation.bind(this)
     this.attachRecorderHandler = this.attachRecorderHandler.bind(this)
     this.detachRecorderHandler = this.detachRecorderHandler.bind(this)
+    this.setWindowHandle = this.setWindowHandle.bind(this)
 
+    this.window.addEventListener('message', this.setWindowHandle)
     browser.runtime.onMessage.addListener(this.recalculateFrameLocation)
     browser.runtime.onMessage.addListener(this.attachRecorderHandler)
     browser.runtime.onMessage.addListener(this.detachRecorderHandler)
@@ -74,7 +76,7 @@ export default class Recorder {
 
   /* record */
   record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
-    browser.runtime
+    return browser.runtime
       .sendMessage({
         command: command,
         target: target,
@@ -88,6 +90,21 @@ export default class Recorder {
       .catch(() => {
         this.detach()
       })
+  }
+
+  setWindowHandle(event) {
+    if (
+      event.source.top === window &&
+      event.data &&
+      event.data.direction === 'from-page-script' &&
+      event.data.recordedType === 'handle'
+    ) {
+      return browser.runtime.sendMessage({
+        setWindowHandle: true,
+        handle: event.data.recordedMessage.handle,
+        sessionId: event.data.recordedMessage.sessionId,
+      })
+    }
   }
 
   /**
