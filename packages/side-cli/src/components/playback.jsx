@@ -15,10 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import util from 'util'
 import React from 'react'
 import TestSelector from './test-selector'
 import TestTitle from './test-title'
 import TestResults from './test-results'
+import Logs from './log'
 import { PlaybackEvents } from '@seleniumhq/side-runtime'
 
 export default class Playback extends React.Component {
@@ -26,6 +28,16 @@ export default class Playback extends React.Component {
     super(props)
     this.state = {
       results: {},
+      logs: [],
+    }
+    const _cons = console
+    global.console = {
+      log: i => {
+        this.setState({
+          logs: [...this.state.logs, util.format(i)],
+        })
+      },
+      error: _cons.error,
     }
     this.props.playback.on(
       PlaybackEvents.COMMAND_STATE_CHANGED,
@@ -65,6 +77,7 @@ export default class Playback extends React.Component {
           commands={this.state.test.commands}
           results={this.state.results}
         />
+        <Logs>{this.state.logs}</Logs>
       </>
     ) : (
       <TestSelector
