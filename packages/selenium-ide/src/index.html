@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body style="margin: 0;">
+      <div style="display: flex;height: -webkit-fill-available;">
+          <div style="background: blue;max-width: 200px;">
+              <h1>Test manager</h1>
+          </div>
+          <div style="flex-grow: 1;display: flex;flex-direction: column;">
+              <div style="background: red;height: 30px;">
+                  browser tabs
+              </div>
+              <webview id="aut" style="flex-grow: 1;border: none;"></webview>
+          </div>
+      </div>
+    <script>
+        const webview = document.querySelector('webview')
+        webview.addEventListener('dom-ready', () => {
+            webview.openDevTools()
+        })
+    </script>
+  </body>
+</html>
