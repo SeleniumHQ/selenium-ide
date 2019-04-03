@@ -35,6 +35,10 @@ describe('recorder e2e', () => {
     const builder = new webdriver.Builder().withCapabilities({
       browserName: 'chrome',
       chromeOptions: {
+        // Don't set it to headless as extensions dont work in general
+        // when used in headless mode
+        // https://pptr.dev/#?product=Puppeteer&version=v1.12.2&show=api-working-with-chrome-extensions
+        // in production it really doesn't matter as recording in headless mode doesn't make sense
         args: [`load-extension=${path.join(__dirname + '../../../build')}`],
       },
     })
