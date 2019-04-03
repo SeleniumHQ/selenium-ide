@@ -18,16 +18,20 @@
 import ArgTypes from './ArgTypes'
 
 export default {
+  acceptConfirmation: {
+    name: 'accept confirmation',
+    description: `Affects a currently showing confirmation alert. This 
+        command instructs Selenium to accept it.`,
+  },
   addSelection: {
     name: 'add selection',
     description: `Add a selection to the set of options in a multi-select element.`,
     target: ArgTypes.locator,
   },
-  answerOnNextPrompt: {
-    name: 'answer on next prompt',
-    description: `Affects the next alert prompt. This command will send the 
-        specified answer string to it. If the alert is already present, then use 
-        "webdriver answer on visible prompt" instead.`,
+  answerPrompt: {
+    name: 'answer prompt',
+    description: `Affects a currently showing alert prompt. This command 
+        instructs Selenium to provide the specified answer to it.`,
     target: ArgTypes.answer,
   },
   assert: {
@@ -136,28 +140,20 @@ export default {
     target: ArgTypes.locator,
     value: ArgTypes.pattern,
   },
+  cancelConfirmation: {
+    name: 'cancel confirmation',
+    description: `Affects a currently showing confirmation alert. This 
+        command instructs Selenium to cancel it.`,
+  },
+  cancelPrompt: {
+    name: 'cancel prompt',
+    description: `Affects a currently showing alert prompt. This command 
+        instructs Selenium to cancel it.`,
+  },
   check: {
     name: 'check',
     description: 'Check a toggle-button (checkbox/radio).',
     target: ArgTypes.locator,
-  },
-  chooseCancelOnNextConfirmation: {
-    name: 'choose cancel on next confirmation',
-    description: `Affects the next confirmation alert. This command will 
-        cancel it. If the alert is already present, then use "webdriver choose 
-        cancel on visible confirmation" instead.`,
-  },
-  chooseCancelOnNextPrompt: {
-    name: 'choose cancel on next prompt',
-    description: `Affects the next alert prompt. This command will cancel 
-        it. If the alert is already present, then use "webdriver choose cancel 
-        on visible prompt" instead.`,
-  },
-  chooseOkOnNextConfirmation: {
-    name: 'choose ok on next confirmation',
-    description: `Affects the next confirmation alert. This command will 
-        accept it. If the alert is already present, then use "webdriver choose 
-        ok on visible confirmation" instead.`,
   },
   click: {
     name: 'click',
@@ -441,12 +437,6 @@ export default {
     target: ArgTypes.xpath,
     value: ArgTypes.variableName,
   },
-  submit: {
-    name: 'submit',
-    description: `Submit the specified form. This is particularly useful for 
-        forms without submit buttons, e.g. single-input "Search" forms.`,
-    target: ArgTypes.formLocator,
-  },
   times: {
     name: 'times',
     description: `Create a loop that executes the proceeding commands n number of times.`,
@@ -598,31 +588,6 @@ export default {
     description: 'Wait for a target element to be visible on the page.',
     target: ArgTypes.locator,
     value: ArgTypes.waitTime,
-  },
-  webdriverAnswerOnVisiblePrompt: {
-    name: 'webdriver answer on visible prompt',
-    description: `Affects a currently showing alert prompt. This command 
-        instructs Selenium to provide the specified answer to it. If the alert 
-        has not appeared yet then use "answer on next prompt" instead.`,
-    target: ArgTypes.answer,
-  },
-  webdriverChooseCancelOnVisibleConfirmation: {
-    name: 'webdriver choose cancel on visible confirmation',
-    description: `Affects a currently showing confirmation alert. This 
-        command instructs Selenium to cancel it. If the alert has not appeared 
-        yet then use "choose cancel on next confirmation" instead.`,
-  },
-  webdriverChooseCancelOnVisiblePrompt: {
-    name: 'webdriver choose cancel on visible prompt',
-    description: `Affects a currently showing alert prompt. This command 
-        instructs Selenium to cancel it. If the alert has not appeared yet 
-        then use "choose cancel on next prompt" instead.`,
-  },
-  webdriverChooseOkOnVisibleConfirmation: {
-    name: 'webdriver choose ok on visible confirmation',
-    description: `Affects a currently showing confirmation alert. This 
-        command instructs Selenium to accept it. If the alert has not appeared 
-        yet then use "choose ok on next confirmation" instead.`,
   },
   while: {
     name: 'while',

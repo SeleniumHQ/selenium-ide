@@ -99,7 +99,7 @@ function attachPromptRecorder(record) {
                 )
               } else {
                 record(
-                  'declineConfirmation',
+                  'cancelConfirmation',
                   [['']],
                   '',
                   false,
