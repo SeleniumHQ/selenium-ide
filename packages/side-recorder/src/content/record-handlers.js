@@ -24,22 +24,6 @@ const locatorBuilders = new LocatorBuilders(window)
 export const handlers = []
 export const observers = []
 
-export function _isValidForm(tagName, target) {
-  return !!(
-    tagName == 'form' &&
-    (target.hasAttribute('id') || target.hasAttribute('name')) &&
-    !target.hasAttribute('onsubmit') &&
-    isFirefox()
-  )
-}
-
-export function _recordFormAction(target, recorder) {
-  if (target.hasAttribute('id'))
-    recorder.record('submit', [['id=' + target.id, 'id']], '')
-  else if (target.hasAttribute('name'))
-    recorder.record('submit', [['name=' + target.name, 'name']], '')
-}
-
 function eventIsTrusted(event) {
   return isTest ? true : event.isTrusted
 }
@@ -75,14 +59,11 @@ handlers.push([
               formChk = tempTarget.tagName.toLowerCase()
             }
 
-            if (_isValidForm(formChk, tempTarget)) {
-              _recordFormAction(tempTarget, this)
-            } else
-              this.record(
-                'sendKeys',
-                locatorBuilders.buildAll(this.recordingState.enterTarget),
-                '${KEY_ENTER}'
-              )
+            this.record(
+              'sendKeys',
+              locatorBuilders.buildAll(this.recordingState.enterTarget),
+              '${KEY_ENTER}'
+            )
             this.recordingState.enterTarget = null
           }
           // END
@@ -180,15 +161,11 @@ handlers.push([
               tempTarget = tempTarget.parentElement
               formChk = tempTarget.tagName.toLowerCase()
             }
-            if (_isValidForm(formChk, tempTarget)) {
-              _recordFormAction(tempTarget, this)
-            } else {
-              this.record(
-                'sendKeys',
-                locatorBuilders.buildAll(this.recordingState.enterTarget),
-                '${KEY_ENTER}'
-              )
-            }
+            this.record(
+              'sendKeys',
+              locatorBuilders.buildAll(this.recordingState.enterTarget),
+              '${KEY_ENTER}'
+            )
             this.recordingState.enterTarget = null
           }
           if (
@@ -216,14 +193,11 @@ handlers.push([
                     tempTarget = tempTarget.parentElement
                     formChk = tempTarget.tagName.toLowerCase()
                   }
-                  if (_isValidForm(formChk, tempTarget)) {
-                    _recordFormAction(tempTarget, this)
-                  } else
-                    this.record(
-                      'sendKeys',
-                      locatorBuilders.buildAll(this.recordingState.enterTarget),
-                      '${KEY_ENTER}'
-                    )
+                  this.record(
+                    'sendKeys',
+                    locatorBuilders.buildAll(this.recordingState.enterTarget),
+                    '${KEY_ENTER}'
+                  )
                   this.recordingState.enterTarget = null
                 }
                 // END
