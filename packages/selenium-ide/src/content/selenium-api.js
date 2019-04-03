@@ -1478,6 +1478,13 @@ Selenium.prototype.doSubmit = function(formLocator) {
    *
    * @param formLocator an <a href="#locators">element locator</a> for the form you want to submit
    */
+  browser.runtime.sendMessage({
+    log: {
+      type: 'warn',
+      message:
+        'submit is deprecated and will be removed from later versions of Selenium IDE, please re-record the step.',
+    },
+  })
   let form = this.browserbot.findElement(formLocator)
   return bot.action.submit(form)
 }

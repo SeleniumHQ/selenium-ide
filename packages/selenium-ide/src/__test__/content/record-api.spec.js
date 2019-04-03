@@ -112,13 +112,6 @@ describe('record-api', () => {
       ).toBeUndefined()
     })
 
-    it('keydown on input records submit (on Firefox)', () => {
-      isFirefox.mockReturnValue(true)
-      fireEvent.keyDown(inputElement, enterKey)
-      fireEvent.keyUp(inputElement, enterKey)
-      expect(recordApi.record.mock.calls[1][0]).toEqual('submit')
-    })
-
     it('click on button without type=submit records click', () => {
       const button = window.document.querySelector('button')
       fireEvent.click(button)
