@@ -21,6 +21,7 @@ import scriptInterpolation from './script-interpolation'
 import waitForCommands from './wait-for-commands'
 import variableName from './variable-name'
 import selectWindow from './select-window'
+import prompt from './prompt'
 
 export const migrators = {
   pause,
@@ -29,6 +30,7 @@ export const migrators = {
   waitForCommands,
   variableName,
   selectWindow,
+  prompt,
 }
 
 export default Object.keys(migrators).reduce((migs, migName) => {

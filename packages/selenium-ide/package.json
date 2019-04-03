@@ -1,5 +1,5 @@
 {
-  "name": "selenium-ide",
+  "name": "@seleniumhq/selenium-ide",
   "version": "3.5.10",
   "private": true,
   "description": "Selenium IDE electron app",
