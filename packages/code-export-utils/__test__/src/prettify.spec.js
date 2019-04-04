@@ -18,23 +18,69 @@
 import prettify from '../../src/prettify'
 
 describe('Prettify', () => {
-  it('command block', () => {
+  const commandPrefixPadding = '  '
+  it('should render from a command array', () => {
     const commandBlock = {
       commands: [
         { level: 0, statement: 'blah' },
         { level: 1, statement: 'blah' },
       ],
     }
-    const commandPrefixPadding = '  '
-    expect(prettify.commandBlock({ commandPrefixPadding, commandBlock })).toBe(
+    expect(prettify.command({ commandPrefixPadding, commandBlock }).body).toBe(
       `blah\n  blah`
     )
   })
-  it('command string', () => {
-    const commandString = 'blah\nblah'
-    const commandPrefixPadding = '  '
+  it('should render from a command string', () => {
+    const commandBlock = 'blah\nblah'
+    expect(prettify.command({ commandPrefixPadding, commandBlock }).body).toBe(
+      `blah\nblah`
+    )
+  })
+  it('command string can render from a starting level', () => {
+    const commandBlock = 'blah\nblah'
+    const startingLevel = 1
     expect(
-      prettify.commandString({ commandPrefixPadding, level: 0, commandString })
-    ).toBe(`blah\nblah`)
+      prettify.command({ commandPrefixPadding, commandBlock, startingLevel })
+        .body
+    ).toBe(`${commandPrefixPadding}blah\n${commandPrefixPadding}blah`)
+  })
+  it('command array can render from a starting level', () => {
+    const commandBlock = {
+      commands: [
+        { level: 0, statement: 'blah' },
+        { level: 0, statement: 'blah' },
+      ],
+    }
+    const startingLevel = 1
+    expect(
+      prettify.command({ commandPrefixPadding, commandBlock, startingLevel })
+        .body
+    ).toBe(`${commandPrefixPadding}blah\n${commandPrefixPadding}blah`)
+  })
+  it('command string returns an ending level', () => {
+    const commandBlock = 'blah\nblah'
+    const result = prettify.command({ commandPrefixPadding, commandBlock })
+    expect(result.endingLevel).toBe(0)
+  })
+  it('command array returns an ending level', () => {
+    const commandBlock = {
+      commands: [
+        { level: 0, statement: 'blah' },
+        { level: 1, statement: 'blah' },
+      ],
+    }
+    const result = prettify.command({ commandPrefixPadding, commandBlock })
+    expect(result.endingLevel).toBe(1)
+  })
+  it('command array can specify an alternative ending level', () => {
+    const commandBlock = {
+      commands: [
+        { level: 0, statement: 'blah' },
+        { level: 1, statement: 'blah' },
+      ],
+      endingLevel: 2,
+    }
+    const result = prettify.command({ commandPrefixPadding, commandBlock })
+    expect(result.endingLevel).toBe(2)
   })
 })

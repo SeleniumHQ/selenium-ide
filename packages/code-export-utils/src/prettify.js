@@ -15,25 +15,36 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function prettifyCommandBlock({ commandPrefixPadding, commandBlock }) {
-  return commandBlock.commands
-    .map(
-      command => commandPrefixPadding.repeat(command.level) + command.statement
-    )
-    .join('\n')
-}
-
-export function prettifyCommandString({
-  commandPrefixPadding,
-  level,
-  commandString,
-}) {
-  return commandString
-    .split('\n')
-    .join('\n' + commandPrefixPadding.repeat(level))
+function prettifyCommand(
+  { commandPrefixPadding, commandBlock, startingLevel } = {
+    undefined,
+  }
+) {
+  if (!startingLevel) startingLevel = 0
+  if (typeof commandBlock.commands === 'object') {
+    return {
+      body: commandBlock.commands
+        .map(
+          command =>
+            commandPrefixPadding.repeat(startingLevel + command.level) +
+            command.statement
+        )
+        .join('\n'),
+      endingLevel:
+        commandBlock.endingLevel ||
+        commandBlock.commands[commandBlock.commands.length - 1].level,
+    }
+  } else {
+    return {
+      body: commandBlock
+        .split('\n')
+        .join('\n' + commandPrefixPadding.repeat(startingLevel))
+        .replace(/^/, commandPrefixPadding.repeat(startingLevel)),
+      endingLevel: startingLevel,
+    }
+  }
 }
 
 export default {
-  commandString: prettifyCommandString,
-  commandBlock: prettifyCommandBlock,
+  command: prettifyCommand,
 }
