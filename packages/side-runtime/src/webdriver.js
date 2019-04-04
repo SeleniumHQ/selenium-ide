@@ -130,42 +130,6 @@ export default class WebDriverExecutor {
 
   // Commands go after this line
 
-  // TODO
-  // doAssertConfirmation
-  // doAssertEditable
-  // doAssertNotEditable
-  // doAssertPrompt
-  // doVerify
-  // doVerifyChecked
-  // doVerifyNotChecked
-  // doVerifyEditable
-  // doVerifyNotEditable
-  // doVerifyElementPresent
-  // doVerifyElementNotPresent
-  // doVerifySelectedValue
-  // doVerifyNotSelectedValue
-  // doVerifyText
-  // doVerifyNotText
-  // doVerifyTitle
-  // doVerifyValue
-  // doVerifySelectedLabel
-  // doDoubleClickAt
-  // doDragAndDropToObject
-  // doEditContent
-  // doMouseMoveAt
-  // doMouseDownAt
-  // doMouseOut
-  // doMouseOver
-  // doMouseUpAt
-  // doRemoveSelection
-  // setSpeed
-  // doStoreAttribute
-  // doStoreTitle
-  // doStoreXpathCount
-  // doWebDriverChooseOkOnVisibleConfirmation
-  // doChooseCancelOnNextConfirmation
-  // doChooseCancelOnNextPrompt
-
   async skip() {
     return Promise.resolve()
   }
@@ -220,7 +184,29 @@ export default class WebDriverExecutor {
     )
   }
 
+  // alert commands
+
+  async doAnswerPrompt(optAnswer) {
+    const alert = await this.driver.switchTo().alert()
+    if (optAnswer) {
+      await alert.sendKeys(optAnswer)
+    }
+    await alert.accept()
+  }
+
   // mouse commands
+
+  async doAddSelection(locator, optionLocator) {
+    const element = await this.waitForElement(locator, this.driver)
+    const option = await element.findElement(parseOptionLocator(optionLocator))
+    const selections = await this.driver.executeScript(
+      'return arguments[0].selectedOptions',
+      element
+    )
+    if (!(await findElement(selections, option))) {
+      await option.click()
+    }
+  }
 
   async doClick(locator) {
     const element = await this.waitForElement(locator, this.driver)
@@ -306,6 +292,15 @@ export default class WebDriverExecutor {
     }
   }
 
+  // alert commands
+
+  async doAcceptConfirmation() {
+    await this.driver
+      .switchTo()
+      .alert()
+      .accept()
+  }
+
   // store commands
 
   async doStore(string, variable) {
@@ -342,10 +337,8 @@ export default class WebDriverExecutor {
   }
 
   async doAssertAlert(expectedText) {
-    const actualText = await this.driver
-      .switchTo()
-      .alert()
-      .getText()
+    const alert = await this.driver.switchTo().alert()
+    const actualText = await alert.getText()
     if (actualText !== expectedText) {
       throw new AssertionError(
         "Actual alert text '" +
@@ -355,6 +348,7 @@ export default class WebDriverExecutor {
           "'"
       )
     }
+    await alert.accept()
   }
 
   async doAssertTitle(title) {
@@ -660,6 +654,22 @@ WebDriverExecutor.prototype.doSelectFrame = composePreprocessors(
   WebDriverExecutor.prototype.doSelectFrame
 )
 
+WebDriverExecutor.prototype.doAnswerPrompt = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAnswerPrompt
+)
+
+WebDriverExecutor.prototype.doAddSelection = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+    valueFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doAddSelection
+)
+
 WebDriverExecutor.prototype.doClick = composePreprocessors(
   interpolateString,
   null,
@@ -893,4 +903,14 @@ const OPTIONS_LOCATORS = {
   value: value => By.css(`*[value="${value}"]`),
   label: label => By.xpath(`//option[. = '${label}']`),
   index: index => By.css(`*:nth-child(${index})`),
+}
+
+async function findElement(elements, element) {
+  const id = await element.getId()
+  for (let i = 0; i < elements.length; i++) {
+    if ((await elements[i].getId()) === id) {
+      return true
+    }
+  }
+  return false
 }
