@@ -15,11 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function prettifyCommand(
-  { commandPrefixPadding, commandBlock, startingLevel } = {
-    undefined,
-  }
-) {
+function prettifyCommand({
+  commandPrefixPadding,
+  commandBlock,
+  startingLevel,
+} = {}) {
   if (!startingLevel) startingLevel = 0
   if (typeof commandBlock.commands === 'object') {
     return {
