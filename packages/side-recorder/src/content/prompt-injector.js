@@ -58,7 +58,7 @@ function attachPromptRecorder(record) {
             case 'prompt':
               record(
                 'assertPrompt',
-                [[event.data.recordedMessage]],
+                event.data.recordedMessage,
                 '',
                 false,
                 event.data.frameLocation
@@ -66,25 +66,19 @@ function attachPromptRecorder(record) {
               if (event.data.recordedResult != null) {
                 record(
                   'answerPrompt',
-                  [[event.data.recordedResult]],
+                  event.data.recordedResult,
                   '',
                   false,
                   event.data.frameLocation
                 )
               } else {
-                record(
-                  'dismissPrompt',
-                  [['']],
-                  '',
-                  false,
-                  event.data.frameLocation
-                )
+                record('dismissPrompt', '', '', false, event.data.frameLocation)
               }
               break
             case 'confirm':
               record(
                 'assertConfirmation',
-                [[event.data.recordedMessage]],
+                event.data.recordedMessage,
                 '',
                 false,
                 event.data.frameLocation
@@ -92,7 +86,7 @@ function attachPromptRecorder(record) {
               if (event.data.recordedResult == true) {
                 record(
                   'acceptConfirmation',
-                  [['']],
+                  '',
                   '',
                   false,
                   event.data.frameLocation
@@ -100,7 +94,7 @@ function attachPromptRecorder(record) {
               } else {
                 record(
                   'dismissConfirmation',
-                  [['']],
+                  '',
                   '',
                   false,
                   event.data.frameLocation
@@ -110,12 +104,12 @@ function attachPromptRecorder(record) {
             case 'alert':
               record(
                 'assertAlert',
-                [[event.data.recordedMessage]],
+                event.data.recordedMessage,
                 '',
                 false,
                 event.data.frameLocation
               )
-              record('acceptAlert', [['']], '', false, event.data.frameLocation)
+              record('acceptAlert', '', '', false, event.data.frameLocation)
               break
           }
         }

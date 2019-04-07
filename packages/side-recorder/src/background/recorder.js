@@ -227,7 +227,7 @@ export default class BackgroundRecorder {
           ],
           ''
         )
-        this.record('close', [['']], '')
+        this.record('close', '', '')
         this.record(
           'selectWindow',
           [
@@ -242,7 +242,7 @@ export default class BackgroundRecorder {
           ''
         )
       } else {
-        this.record('close', [['']], '')
+        this.record('close', '', '')
       }
       delete this.windowSession.openedTabIds[this.sessionId][tabId]
       this.windowSession.currentUsedFrameLocation[this.sessionId] = 'root'
@@ -331,7 +331,7 @@ export default class BackgroundRecorder {
     sendResponse(true)
 
     if (!this.hasRecorded()) {
-      this.record('open', [[sender.tab.url]], '')
+      this.record('open', sender.tab.url, '')
     }
 
     if (
@@ -367,7 +367,7 @@ export default class BackgroundRecorder {
         this.sessionId
       ].split(':')
       while (oldFrameLevels.length > newFrameLevels.length) {
-        this.record('selectFrame', [['relative=parent']], '')
+        this.record('selectFrame', 'relative=parent', '')
         oldFrameLevels.pop()
       }
       while (
@@ -375,13 +375,13 @@ export default class BackgroundRecorder {
         oldFrameLevels[oldFrameLevels.length - 1] !=
           newFrameLevels[oldFrameLevels.length - 1]
       ) {
-        this.record('selectFrame', [['relative=parent']], '')
+        this.record('selectFrame', 'relative=parent', '')
         oldFrameLevels.pop()
       }
       while (oldFrameLevels.length < newFrameLevels.length) {
         this.record(
           'selectFrame',
-          [['index=' + newFrameLevels[oldFrameLevels.length]]],
+          'index=' + newFrameLevels[oldFrameLevels.length],
           ''
         )
         oldFrameLevels.push(newFrameLevels[oldFrameLevels.length])
@@ -390,18 +390,13 @@ export default class BackgroundRecorder {
         message.frameLocation
     }
 
-    //handle choose ok/cancel confirm
-    if (message.insertBeforeLastCommand) {
-      this.record(message.command, message.target, message.value, true)
-    } else {
-      this.sendRecordNotification(
-        sender.tab.id,
-        message.command,
-        message.target,
-        message.value
-      )
-      this.record(message.command, message.target, message.value)
-    }
+    this.sendRecordNotification(
+      sender.tab.id,
+      message.command,
+      message.target,
+      message.value
+    )
+    this.record(message.command, message.target, message.value)
   }
 
   sendRecordNotification(tabId, command, target, value) {

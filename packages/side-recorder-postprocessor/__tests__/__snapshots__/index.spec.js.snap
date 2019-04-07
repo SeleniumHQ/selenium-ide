@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`recorder postprocessor recording should add \`store window handle\` to be able to switch back to the root window 1`] = `
+Array [
+  Object {
+    "command": "storeWindowHandle",
+    "target": "root",
+    "value": "",
+  },
+  Object {
+    "command": "selectWindow",
+    "target": "handle=\${newWindow}",
+    "value": "",
+  },
+  Object {
+    "command": "selectWindow",
+    "target": "handle=\${root}",
+    "value": undefined,
+  },
+]
+`;
+
+exports[`recorder postprocessor recording should add commands to an empty test 1`] = `
+Array [
+  Object {
+    "command": "open",
+    "target": "/",
+    "value": "",
+  },
+  Object {
+    "command": "click",
+    "target": "linkText=hey",
+    "targetFallback": Array [
+      Array [
+        "linkText=hey",
+        "linkText",
+      ],
+    ],
+    "value": "",
+  },
+]
+`;
+
+exports[`recorder postprocessor recording should add target fallback if possible 1`] = `
+Array [
+  Object {
+    "command": "click",
+    "target": "css=button",
+    "value": "",
+  },
+  Object {
+    "command": "click",
+    "target": "css=button",
+    "targetFallback": Array [
+      Array [
+        "css=button",
+        "css",
+      ],
+    ],
+    "value": "",
+  },
+]
+`;
+
+exports[`recorder postprocessor recording should add value fallback if possible 1`] = `
+Array [
+  Object {
+    "command": "dragAndDropToObject",
+    "target": "css=button",
+    "value": "css=button",
+  },
+  Object {
+    "command": "dragAndDropToObject",
+    "target": "css=button",
+    "value": "css=button",
+    "valueFallback": "css=button",
+  },
+]
+`;
+
+exports[`recorder postprocessor recording should not add \`store window handle\` for \`select window\` if the root handle is stored 1`] = `
+Array [
+  Object {
+    "command": "storeWindowHandle",
+    "target": "root",
+    "value": "",
+  },
+  Object {
+    "command": "selectWindow",
+    "target": "handle=\${root}",
+    "value": undefined,
+  },
+]
+`;

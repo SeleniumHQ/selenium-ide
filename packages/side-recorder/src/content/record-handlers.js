@@ -466,7 +466,7 @@ handlers.push([
       this.record(
         'dragAndDropToObject',
         locatorBuilders.buildAll(dragstartLocator.target),
-        locatorBuilders.build(event.target)
+        locatorBuilders.buildAll(event.target)
       )
     }
     dragstartLocator = undefined
@@ -583,7 +583,7 @@ observers.push([
         //TODO: fix target
         this.record(
           'runScript',
-          [['window.scrollTo(0,' + window.scrollY + ')']],
+          'window.scrollTo(0,' + window.scrollY + ')',
           ''
         )
         pageLoaded = false
