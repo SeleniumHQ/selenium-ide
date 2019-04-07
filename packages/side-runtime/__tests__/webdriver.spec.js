@@ -144,7 +144,10 @@ describe.skip('webdriver executor', () => {
         await expect(executor.doAssertAlert('wat')).rejects.toThrow(
           "Actual alert text 'test' did not match 'wat'"
         )
-        await driver.switchTo().alert().accept()
+        await driver
+          .switchTo()
+          .alert()
+          .accept()
       })
     })
     describe('assert confirmation', () => {
@@ -157,7 +160,10 @@ describe.skip('webdriver executor', () => {
         await expect(executor.doAssertConfirmation('wat')).rejects.toThrow(
           "Actual confirm text 'test' did not match 'wat'"
         )
-        await driver.switchTo().alert().dismiss()
+        await driver
+          .switchTo()
+          .alert()
+          .dismiss()
       })
     })
   })
