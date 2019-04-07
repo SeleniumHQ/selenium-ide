@@ -15,11 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function prettifyCommand({
-  commandPrefixPadding,
+/**
+ * Returns a prettified string with indentation and line-breaks based on inputs
+ * @param {Object|string} commandBlock The input to be prettified
+ * @param {Object} opts - The styling options
+ * @param {number} opts.startingLevel The staring indentation level
+ * @param {string} opts.commandPrefixPadding The padding to use for indentation
+ * @returns {Object|string} The prettified result. Can include an endingLevel
+ */
+function prettifyCommand(
   commandBlock,
-  startingLevel,
-} = {}) {
+  { startingLevel, commandPrefixPadding } = {}
+) {
   if (!startingLevel) startingLevel = 0
   if (typeof commandBlock.commands === 'object') {
     return {
