@@ -18,8 +18,9 @@
 export default function migrate(project) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
+    const commands = addAcceptAlert(test.commands)
     return Object.assign({}, test, {
-      commands: test.commands
+      commands: commands
         .filter(c => !commandsToRemove.includes(c.command))
         .map(c => {
           if (commandsToReplace[c.command]) {
@@ -34,6 +35,20 @@ export default function migrate(project) {
   return r
 }
 
+function addAcceptAlert(commands) {
+  let cmds = [...commands]
+  for (let i = 0; i < cmds.length; i++) {
+    if (cmds[i].command === 'assertAlert') {
+      cmds.splice(i + 1, 0, {
+        command: 'acceptAlert',
+        target: '',
+        value: '',
+      })
+    }
+  }
+  return cmds
+}
+
 const commandsToRemove = [
   'answerOnNextPrompt',
   'chooseCancelOnNextPrompt',
@@ -42,9 +57,9 @@ const commandsToRemove = [
 ]
 const commandsToReplace = {
   webdriverAnswerOnVisiblePrompt: 'answerPrompt',
-  webdriverChooseCancelOnVisiblePrompt: 'cancelPrompt',
+  webdriverChooseCancelOnVisiblePrompt: 'dismissPrompt',
   webdriverChooseOkOnVisibleConfirmation: 'acceptConfirmation',
-  webdriverChooseCancelOnVisibleConfirmation: 'cancelConfirmation',
+  webdriverChooseCancelOnVisibleConfirmation: 'dismissConfirmation',
 }
 
 migrate.version = '3.0'

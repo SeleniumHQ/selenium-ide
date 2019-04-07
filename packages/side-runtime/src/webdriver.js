@@ -184,16 +184,6 @@ export default class WebDriverExecutor {
     )
   }
 
-  // alert commands
-
-  async doAnswerPrompt(optAnswer) {
-    const alert = await this.driver.switchTo().alert()
-    if (optAnswer) {
-      await alert.sendKeys(optAnswer)
-    }
-    await alert.accept()
-  }
-
   // mouse commands
 
   async doAddSelection(locator, optionLocator) {
@@ -294,11 +284,26 @@ export default class WebDriverExecutor {
 
   // alert commands
 
+  async doAcceptAlert() {
+    await this.driver
+      .switchTo()
+      .alert()
+      .accept()
+  }
+
   async doAcceptConfirmation() {
     await this.driver
       .switchTo()
       .alert()
       .accept()
+  }
+
+  async doAnswerPrompt(optAnswer) {
+    const alert = await this.driver.switchTo().alert()
+    if (optAnswer) {
+      await alert.sendKeys(optAnswer)
+    }
+    await alert.accept()
   }
 
   // store commands
@@ -348,7 +353,20 @@ export default class WebDriverExecutor {
           "'"
       )
     }
-    await alert.accept()
+  }
+
+  async doAssertConfirmation(expectedText) {
+    const alert = await this.driver.switchTo().alert()
+    const actualText = await alert.getText()
+    if (actualText !== expectedText) {
+      throw new AssertionError(
+        "Actual confirm text '" +
+          actualText +
+          "' did not match '" +
+          expectedText +
+          "'"
+      )
+    }
   }
 
   async doAssertTitle(title) {
@@ -777,6 +795,18 @@ WebDriverExecutor.prototype.doAssert = composePreprocessors(
   null,
   interpolateString,
   WebDriverExecutor.prototype.doAssert
+)
+
+WebDriverExecutor.prototype.doAssertAlert = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAssertAlert
+)
+
+WebDriverExecutor.prototype.doAssertConfirmation = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAssertConfirmation
 )
 
 WebDriverExecutor.prototype.doAssertText = composePreprocessors(

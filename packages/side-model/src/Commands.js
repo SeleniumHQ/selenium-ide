@@ -18,6 +18,11 @@
 import ArgTypes from './ArgTypes'
 
 export default {
+  acceptAlert: {
+    name: 'accept alert',
+    description: `Affects a currently showing alert. This 
+        command instructs Selenium to accept it.`,
+  },
   acceptConfirmation: {
     name: 'accept confirmation',
     description: `Affects a currently showing confirmation alert. This 
@@ -56,6 +61,7 @@ export default {
     name: 'assert confirmation',
     description:
       'Confirm that a confirmation has been rendered. The test will stop if the assert fails.',
+    target: ArgTypes.alertText,
   },
   assertEditable: {
     name: 'assert editable',
@@ -103,6 +109,7 @@ export default {
     name: 'assert prompt',
     description:
       'Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.',
+    target: ArgTypes.alertText,
   },
   assertSelectedValue: {
     name: 'assert selected value',
@@ -140,15 +147,15 @@ export default {
     target: ArgTypes.locator,
     value: ArgTypes.pattern,
   },
-  cancelConfirmation: {
-    name: 'cancel confirmation',
+  dismissConfirmation: {
+    name: 'dismiss confirmation',
     description: `Affects a currently showing confirmation alert. This 
-        command instructs Selenium to cancel it.`,
+        command instructs Selenium to dismiss it.`,
   },
-  cancelPrompt: {
-    name: 'cancel prompt',
+  dismissPrompt: {
+    name: 'dismiss prompt',
     description: `Affects a currently showing alert prompt. This command 
-        instructs Selenium to cancel it.`,
+        instructs Selenium to dismiss it.`,
   },
   check: {
     name: 'check',

@@ -28,6 +28,11 @@ describe('project migrator', () => {
           id: '1',
           commands: [
             {
+              command: 'assertAlert',
+              target: '',
+              value: '',
+            },
+            {
               command: 'answerOnNextPrompt',
               target: '',
               value: '',
@@ -87,6 +92,11 @@ describe('project migrator', () => {
               target: '',
               value: '',
             },
+            {
+              command: 'assertAlert',
+              target: '',
+              value: '',
+            },
           ],
         },
       ],
@@ -97,6 +107,16 @@ describe('project migrator', () => {
         {
           id: '1',
           commands: [
+            {
+              command: 'assertAlert',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'acceptAlert',
+              target: '',
+              value: '',
+            },
             {
               command: 'click',
               target: '',
@@ -113,7 +133,7 @@ describe('project migrator', () => {
               value: '',
             },
             {
-              command: 'cancelPrompt',
+              command: 'dismissPrompt',
               target: '',
               value: '',
             },
@@ -133,7 +153,17 @@ describe('project migrator', () => {
               value: '',
             },
             {
-              command: 'cancelConfirmation',
+              command: 'dismissConfirmation',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'assertAlert',
+              target: '',
+              value: '',
+            },
+            {
+              command: 'acceptAlert',
               target: '',
               value: '',
             },

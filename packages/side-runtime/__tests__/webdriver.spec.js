@@ -66,6 +66,18 @@ describe.skip('webdriver executor', () => {
     afterAll(async () => {
       await driver.quit()
     })
+    describe('accept alert', () => {
+      it('should dismiss an alert', async () => {
+        await driver.get(`http://localhost:${port}/popup/alert.html`)
+        const element = await driver.findElement(By.css('button'))
+        await element.click()
+        await executor.doAcceptAlert()
+        await element.click()
+        // accepting twice to make sure that we can interact with the page
+        // after accepting initially
+        await executor.doAcceptAlert()
+      })
+    })
     describe('add selection', () => {
       it('should select a single select item', async () => {
         await driver.get(`http://localhost:${port}/select.html`)
@@ -120,6 +132,32 @@ describe.skip('webdriver executor', () => {
         await element.click()
         await executor.doAnswerPrompt('')
         expect(await driver.getTitle()).toBe('empty')
+      })
+    })
+    describe('assert alert', () => {
+      it('should dismiss an alert', async () => {
+        expect.assertions(1)
+        await driver.get(`http://localhost:${port}/popup/alert.html`)
+        const element = await driver.findElement(By.css('button'))
+        await element.click()
+        await executor.doAssertAlert('test')
+        await expect(executor.doAssertAlert('wat')).rejects.toThrow(
+          "Actual alert text 'test' did not match 'wat'"
+        )
+        await driver.switchTo().alert().accept()
+      })
+    })
+    describe('assert confirmation', () => {
+      it('should assert confirmation visibility', async () => {
+        expect.assertions(1)
+        await driver.get(`http://localhost:${port}/popup/confirm.html`)
+        const element = await driver.findElement(By.css('button'))
+        await element.click()
+        await executor.doAssertConfirmation('test')
+        await expect(executor.doAssertConfirmation('wat')).rejects.toThrow(
+          "Actual confirm text 'test' did not match 'wat'"
+        )
+        await driver.switchTo().alert().dismiss()
       })
     })
   })

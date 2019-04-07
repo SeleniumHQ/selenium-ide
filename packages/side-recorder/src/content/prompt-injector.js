@@ -73,7 +73,7 @@ function attachPromptRecorder(record) {
                 )
               } else {
                 record(
-                  'cancelPrompt',
+                  'dismissPrompt',
                   [['']],
                   '',
                   false,
@@ -99,7 +99,7 @@ function attachPromptRecorder(record) {
                 )
               } else {
                 record(
-                  'cancelConfirmation',
+                  'dismissConfirmation',
                   [['']],
                   '',
                   false,
@@ -115,6 +115,7 @@ function attachPromptRecorder(record) {
                 false,
                 event.data.frameLocation
               )
+              record('acceptAlert', [['']], '', false, event.data.frameLocation)
               break
           }
         }
