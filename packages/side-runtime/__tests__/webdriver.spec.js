@@ -69,6 +69,17 @@ describe.skip('webdriver executor', () => {
     afterAll(async () => {
       await driver.quit()
     })
+    describe('plugins', () => {
+      it('should be able to register a command', async () => {
+        expect.assertions(3)
+        executor.registerCommand('commandName', async function(target, value) {
+          expect(this).toBe(executor)
+          expect(target).toBe('target')
+          expect(value).toBe('value')
+        })
+        await executor.doCommandName('target', 'value')
+      })
+    })
     describe('accept alert', () => {
       it('should dismiss an alert', async () => {
         await driver.get(`http://localhost:${port}/popup/alert.html`)

@@ -128,6 +128,10 @@ export default class WebDriverExecutor {
     )
   }
 
+  registerCommand(commandName, fn) {
+    this['do' + commandName.charAt(0).toUpperCase() + commandName.slice(1)] = fn
+  }
+
   // Commands go after this line
 
   async skip() {
