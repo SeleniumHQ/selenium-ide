@@ -22,7 +22,7 @@ import exporter from 'code-export-utils'
 
 async function prettify(command, { fullPayload } = {}) {
   const commandBlock = await Command.emit(command)
-  const result = exporter.prettify.command(commandBlock, {
+  const result = exporter.prettify(commandBlock, {
     commandPrefixPadding,
   })
   return fullPayload ? result : result.body
