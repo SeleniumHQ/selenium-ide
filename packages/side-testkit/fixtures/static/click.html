@@ -1,0 +1,30 @@
+<button id="c">click!</button>
+<button id="d">double click!</button>
+<div id="r"></div>
+<script>
+    var r = document.getElementById('r')
+    function click(e) {
+        let c = getClickCoord(e)
+        r.innerText = `click ${c.left},${c.top}`
+    }
+    function dclick(e) {
+        let c = getClickCoord(e)
+        r.innerText = `double ${c.left},${c.top}`
+    }
+    function getClickCoord(event) {
+        let top = event.pageY,
+          left = event.pageX;
+        let element = event.target;
+        do {
+          top -= element.offsetTop;
+          left -= element.offsetLeft;
+          element = element.offsetParent;
+        } while (element);
+        return { top, left }
+    }
+    var c = document.getElementById('c')
+    c.addEventListener('click', click)
+
+    var d = document.getElementById('d')
+    d.addEventListener('dblclick', dclick)
+</script>
