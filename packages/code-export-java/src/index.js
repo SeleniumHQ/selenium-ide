@@ -101,7 +101,7 @@ async function _emitTest(test, tests) {
   result += _renderHook(hooks.inEachEnd.emit({ isOptional: true }), {
     startingLevel,
   })
-  result += prettifyString(`}\n`, 1)
+  result += prettifyString(`}\n\n`, 1)
   return result
 }
 
@@ -122,7 +122,9 @@ function _emitClass(name, body) {
   result += _renderHook(hooks.beforeEach.emit())
   result += _renderHook(hooks.afterEach.emit())
   result += _renderHook(hooks.afterAll.emit({ isOptional: true }))
-  result += _renderHook(hooks.declareMethods.emit({ isOptional: true }))
+  result += _renderHook(hooks.declareMethods.emit({ isOptional: true }), {
+    startingLevel: 0,
+  })
   result += body
   result += `}`
   Hook.clear(hooks)

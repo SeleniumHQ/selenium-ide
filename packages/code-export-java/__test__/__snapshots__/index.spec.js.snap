@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Code Export Java Selenium should export a suite to JUnit code 1`] = `
-"
-import org.junit.Test;
+"import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -24,47 +23,46 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Login {
-    private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<String, Object>();
-    JavascriptExecutor js;
+  private WebDriver driver;
+  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  JavascriptExecutor js;
 
-    @Before
-    public void setUp() {
-        driver = new FirefoxDriver();
-        js = (JavascriptExecutor) driver;
-    }
+  @Before
+  public void setUp() {
+    driver = new FirefoxDriver();
+    js = (JavascriptExecutor) driver;
+  }
 
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
 
-    @Test
-    public void validcredentials() {
-		driver.get(\\"http://the-internet.herokuapp.com/login\\");
-    	driver.manage().window().setSize(new Dimension(1440, 1177));
-    	driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
-    	driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
-    	driver.findElement(By.cssSelector(\\"#login button\\")).click();
-    	assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
-    }
+  @Test
+  public void validcredentials() {
+    driver.get(\\"http://the-internet.herokuapp.com/login\\");
+    driver.manage().window().setSize(new Dimension(1440, 1177));
+    driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
+    driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
+    driver.findElement(By.cssSelector(\\"#login button\\")).click();
+    assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
+  }
 
-    @Test
-    public void invalidcredentials() {
-		driver.get(\\"http://the-internet.herokuapp.com/login\\");
-    	driver.manage().window().setSize(new Dimension(1440, 1177));
-    	driver.findElement(By.id(\\"username\\")).sendKeys(\\"blah\\");
-    	driver.findElement(By.id(\\"password\\")).sendKeys(\\"blah\\");
-    	driver.findElement(By.cssSelector(\\"#login button\\")).click();
-    	assertThat(driver.findElement(By.id(\\"flash\\")).getText(), is(\\"Your username is invalid!\\\\\\\\n×\\"));
-    }
-}
-"
+  @Test
+  public void invalidcredentials() {
+    driver.get(\\"http://the-internet.herokuapp.com/login\\");
+    driver.manage().window().setSize(new Dimension(1440, 1177));
+    driver.findElement(By.id(\\"username\\")).sendKeys(\\"blah\\");
+    driver.findElement(By.id(\\"password\\")).sendKeys(\\"blah\\");
+    driver.findElement(By.cssSelector(\\"#login button\\")).click();
+    assertThat(driver.findElement(By.id(\\"flash\\")).getText(), is(\\"Your username is invalid!\\\\\\\\n×\\"));
+  }
+
+}"
 `;
 
 exports[`Code Export Java Selenium should export a suite to JUnit code with reused test method 1`] = `
-"
-import org.junit.Test;
+"import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -86,48 +84,48 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Login {
-    private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<String, Object>();
-    JavascriptExecutor js;
+  private WebDriver driver;
+  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  JavascriptExecutor js;
 
-    @Before
-    public void setUp() {
-        driver = new FirefoxDriver();
-        js = (JavascriptExecutor) driver;
-    }
+  @Before
+  public void setUp() {
+    driver = new FirefoxDriver();
+    js = (JavascriptExecutor) driver;
+  }
 
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
 
-    public void login() {
-    	driver.get(\\"https://the-internet.herokuapp.com/\\");
-    	driver.findElement(By.linkText(\\"Form Authentication\\")).click();
-    	driver.findElement(By.id(\\"username\\")).sendKeys(vars.get(\\"username\\").toString());
-    	driver.findElement(By.id(\\"password\\")).sendKeys(vars.get(\\"password\\").toString());
-    	driver.findElement(By.cssSelector(\\".fa\\")).click();
-    }
-    @Test
-    public void invalidcredentials() {
-		vars.put(\\"username\\", \\"blah\\");
-    	vars.put(\\"password\\", \\"blah\\");
-    	login();
-    }
+  public void login() {
+    driver.get(\\"https://the-internet.herokuapp.com/\\");
+    driver.findElement(By.linkText(\\"Form Authentication\\")).click();
+    driver.findElement(By.id(\\"username\\")).sendKeys(vars.get(\\"username\\").toString());
+    driver.findElement(By.id(\\"password\\")).sendKeys(vars.get(\\"password\\").toString());
+    driver.findElement(By.cssSelector(\\".fa\\")).click();
+  }
 
-    @Test
-    public void validcredentials() {
-		vars.put(\\"username\\", \\"tomsmith\\");
-    	vars.put(\\"password\\", \\"SuperSecretPassword!\\");
-    	login();
-    }
-}
-"
+  @Test
+  public void invalidcredentials() {
+    vars.put(\\"username\\", \\"blah\\");
+    vars.put(\\"password\\", \\"blah\\");
+    login();
+  }
+
+  @Test
+  public void validcredentials() {
+    vars.put(\\"username\\", \\"tomsmith\\");
+    vars.put(\\"password\\", \\"SuperSecretPassword!\\");
+    login();
+  }
+
+}"
 `;
 
 exports[`Code Export Java Selenium should export a test to JUnit code 1`] = `
-"
-import org.junit.Test;
+"import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -149,37 +147,36 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Login {
-    private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<String, Object>();
-    JavascriptExecutor js;
+  private WebDriver driver;
+  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  JavascriptExecutor js;
 
-    @Before
-    public void setUp() {
-        driver = new FirefoxDriver();
-        js = (JavascriptExecutor) driver;
-    }
+  @Before
+  public void setUp() {
+    driver = new FirefoxDriver();
+    js = (JavascriptExecutor) driver;
+  }
 
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
 
-    @Test
-    public void login() {
-		driver.get(\\"http://the-internet.herokuapp.com/login\\");
-    	driver.manage().window().setSize(new Dimension(1440, 1177));
-    	driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
-    	driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
-    	driver.findElement(By.cssSelector(\\"#login button\\")).click();
-    	assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
-    }
-}
-"
+  @Test
+  public void login() {
+    driver.get(\\"http://the-internet.herokuapp.com/login\\");
+    driver.manage().window().setSize(new Dimension(1440, 1177));
+    driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
+    driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
+    driver.findElement(By.cssSelector(\\"#login button\\")).click();
+    assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
+  }
+
+}"
 `;
 
 exports[`Code Export Java Selenium should export a test to JUnit code with reused test method 1`] = `
-"
-import org.junit.Test;
+"import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -201,34 +198,35 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Validcredentials {
-    private WebDriver driver;
-    private HashMap<String, Object> vars = new HashMap<String, Object>();
-    JavascriptExecutor js;
+  private WebDriver driver;
+  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  JavascriptExecutor js;
 
-    @Before
-    public void setUp() {
-        driver = new FirefoxDriver();
-        js = (JavascriptExecutor) driver;
-    }
+  @Before
+  public void setUp() {
+    driver = new FirefoxDriver();
+    js = (JavascriptExecutor) driver;
+  }
 
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
 
-    public void login() {
-    	driver.get(\\"https://the-internet.herokuapp.com/\\");
-    	driver.findElement(By.linkText(\\"Form Authentication\\")).click();
-    	driver.findElement(By.id(\\"username\\")).sendKeys(vars.get(\\"username\\").toString());
-    	driver.findElement(By.id(\\"password\\")).sendKeys(vars.get(\\"password\\").toString());
-    	driver.findElement(By.cssSelector(\\".fa\\")).click();
-    }
-    @Test
-    public void validcredentials() {
-		vars.put(\\"username\\", \\"tomsmith\\");
-    	vars.put(\\"password\\", \\"SuperSecretPassword!\\");
-    	login();
-    }
-}
-"
+  public void login() {
+    driver.get(\\"https://the-internet.herokuapp.com/\\");
+    driver.findElement(By.linkText(\\"Form Authentication\\")).click();
+    driver.findElement(By.id(\\"username\\")).sendKeys(vars.get(\\"username\\").toString());
+    driver.findElement(By.id(\\"password\\")).sendKeys(vars.get(\\"password\\").toString());
+    driver.findElement(By.cssSelector(\\".fa\\")).click();
+  }
+
+  @Test
+  public void validcredentials() {
+    vars.put(\\"username\\", \\"tomsmith\\");
+    vars.put(\\"password\\", \\"SuperSecretPassword!\\");
+    login();
+  }
+
+}"
 `;
