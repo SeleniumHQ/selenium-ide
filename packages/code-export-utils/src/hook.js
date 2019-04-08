@@ -30,7 +30,7 @@ export default class Hook {
   emit({ isOptional } = { isOptional: false }) {
     if (isOptional && !this.registeredCommands.length) return ''
     const commands = []
-    let registeredCommandLevel = 1
+    let registeredCommandLevel = 0
     if (this.startingSyntax) {
       if (this.startingSyntax.commands) {
         this.startingSyntax.commands.forEach(command => {
