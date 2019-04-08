@@ -29,6 +29,18 @@ export default class RecordPostprocessor {
     events.mergeEventEmitter(this, this[EE])
   }
 
+  add(index, step) {
+    this.commands.splice(index, 0, step)
+  }
+
+  remove(index) {
+    this.commands.splice(index, 1)
+  }
+
+  replace(index, step) {
+    this.commands.splice(index, 1, step)
+  }
+
   record(index, { command, target, value }) {
     const newCommand = this.parseCommand(command, target, value)
     this._splice(index, 0, newCommand)

@@ -89,38 +89,61 @@ describe('recorder postprocessor', () => {
       expect(prc.commands[2].command).toBe('click')
     })
     it('should not add `store window handle` for `select window` if the root handle is stored', () => {
-      const prc = new RecordPostprocessor(
-        'https://google.com',
-        [
-          {
-            command: 'storeWindowHandle',
-            target: 'root',
-            value: '',
-          },
-        ],
-        1
-      )
+      const prc = new RecordPostprocessor('https://google.com', [
+        {
+          command: 'storeWindowHandle',
+          target: 'root',
+          value: '',
+        },
+      ])
       prc.record(1, { command: 'selectWindow', target: 'handle=${root}' })
       expect(prc.commands.length).toBe(2)
       expect(prc.commands).toMatchSnapshot()
     })
     it('should add `store window handle` to be able to switch back to the root window', () => {
-      const prc = new RecordPostprocessor(
-        'https://google.com',
-        [
-          {
-            command: 'selectWindow',
-            target: 'handle=${newWindow}',
-            value: '',
-          },
-        ],
-        1
-      )
+      const prc = new RecordPostprocessor('https://google.com', [
+        {
+          command: 'selectWindow',
+          target: 'handle=${newWindow}',
+          value: '',
+        },
+      ])
       prc.record(1, { command: 'selectWindow', target: 'handle=${root}' })
       expect(prc.commands.length).toBe(3)
       expect(prc.commands[0].command).toBe('storeWindowHandle')
       expect(prc.commands[2].target).toBe('handle=${root}')
       expect(prc.commands).toMatchSnapshot()
+    })
+  })
+  describe('CRUD', () => {
+    it('should add a command mid recording', () => {
+      const prc = new RecordPostprocessor('https://google.com')
+      prc.record(0, { command: 'click', target: 'css=button' })
+      prc.add(1, { command: 'test', target: 'hello' })
+      prc.record(2, { command: 'click', target: 'css=button' })
+      expect(prc.commands.length).toBe(3)
+      expect(prc.commands[1].command).toBe('test')
+    })
+    it('should remove a recorded command', () => {
+      const prc = new RecordPostprocessor('https://google.com')
+      prc.record(0, { command: 'click', target: 'css=button' })
+      prc.record(1, { command: 'clickAt', target: 'css=button' })
+      expect(prc.commands.length).toBe(2)
+      expect(prc.commands[1].command).toBe('clickAt')
+      prc.remove(1)
+      expect(prc.commands.length).toBe(1)
+      expect(prc.commands[0].command).toBe('click')
+    })
+    it('should replace a recorded command', () => {
+      const prc = new RecordPostprocessor('https://google.com')
+      prc.record(0, { command: 'click', target: 'css=button' })
+      prc.record(1, { command: 'clickAt', target: 'css=button' })
+      expect(prc.commands.length).toBe(2)
+      prc.replace(1, {
+        command: 'test',
+      })
+      expect(prc.commands.length).toBe(2)
+      expect(prc.commands[1].command).toBe('test')
     })
   })
 })
