@@ -23,7 +23,7 @@
  * @param {string} opts.commandPrefixPadding The padding to use for indentation
  * @returns {Object|string} The prettified result. Can include an endingLevel
  */
-function prettifyCommand(
+export default function prettify(
   commandBlock,
   { startingLevel, commandPrefixPadding } = {}
 ) {
@@ -50,8 +50,4 @@ function prettifyCommand(
       endingLevel: startingLevel,
     }
   }
-}
-
-export default {
-  command: prettifyCommand,
 }

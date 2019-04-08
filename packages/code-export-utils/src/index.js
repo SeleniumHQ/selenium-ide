@@ -22,7 +22,7 @@ import Hook from './hook'
 
 export default {
   emit: { ...emit },
-  prettify: { ...prettify },
+  prettify,
   preprocessors: {
     register: registerPreprocessors,
   },

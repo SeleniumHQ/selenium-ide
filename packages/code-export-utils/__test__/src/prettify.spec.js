@@ -26,20 +26,20 @@ describe('Prettify', () => {
         { level: 1, statement: 'blah' },
       ],
     }
-    expect(prettify.command(commandBlock, { commandPrefixPadding }).body).toBe(
+    expect(prettify(commandBlock, { commandPrefixPadding }).body).toBe(
       `blah\n  blah`
     )
   })
   it('should render from a command string', () => {
     const commandString = 'blah\nblah'
-    expect(prettify.command(commandString, { commandPrefixPadding }).body).toBe(
+    expect(prettify(commandString, { commandPrefixPadding }).body).toBe(
       `blah\nblah`
     )
   })
   it('command string can render from a starting level', () => {
     const commandString = 'blah\nblah'
     expect(
-      prettify.command(commandString, {
+      prettify(commandString, {
         commandPrefixPadding,
         startingLevel: 1,
       }).body
@@ -54,13 +54,12 @@ describe('Prettify', () => {
     }
     const startingLevel = 1
     expect(
-      prettify.command(commandBlock, { commandPrefixPadding, startingLevel })
-        .body
+      prettify(commandBlock, { commandPrefixPadding, startingLevel }).body
     ).toBe(`${commandPrefixPadding}blah\n${commandPrefixPadding}blah`)
   })
   it('command string returns an ending level', () => {
     const commandString = 'blah\nblah'
-    const result = prettify.command(commandString, { commandPrefixPadding })
+    const result = prettify(commandString, { commandPrefixPadding })
     expect(result.endingLevel).toBe(0)
   })
   it('command array returns an ending level', () => {
@@ -70,7 +69,7 @@ describe('Prettify', () => {
         { level: 1, statement: 'blah' },
       ],
     }
-    const result = prettify.command(commandBlock, { commandPrefixPadding })
+    const result = prettify(commandBlock, { commandPrefixPadding })
     expect(result.endingLevel).toBe(1)
   })
   it('command array can specify an alternative ending level', () => {
@@ -81,7 +80,7 @@ describe('Prettify', () => {
       ],
       endingLevel: 2,
     }
-    const result = prettify.command(commandBlock, { commandPrefixPadding })
+    const result = prettify(commandBlock, { commandPrefixPadding })
     expect(result.endingLevel).toBe(2)
   })
 })
