@@ -58,13 +58,16 @@ async function registerReusedTestMethods(test, tests) {
         return Command.emit(command)
       })
       const emittedCommands = await Promise.all(commands)
-      hooks.declareMethods.register(`public void ${reusedTest.name}() {`)
-      hooks.declareMethods.register(
-        emittedCommands
-          .join(`\n${commandPrefixPadding}`)
-          .replace(/^/, commandPrefixPadding)
-      )
-      hooks.declareMethods.register(`}`)
+      const methodDeclaration = `public void ${reusedTest.name}() {`
+      if (!hooks.declareMethods.isRegistered(methodDeclaration)) {
+        hooks.declareMethods.register(methodDeclaration)
+        hooks.declareMethods.register(
+          emittedCommands
+            .join(`\n${commandPrefixPadding}`)
+            .replace(/^/, commandPrefixPadding)
+        )
+        hooks.declareMethods.register(`}`)
+      }
     }
   }
 }
@@ -87,7 +90,7 @@ async function _emitTest(test, tests) {
   })
   const emittedCommands = await Promise.all(commands)
   emittedCommands.forEach(emittedCommand => {
-    const commandBlock = exporter.prettify.command(emittedCommand, {
+    const commandBlock = exporter.prettify(emittedCommand, {
       commandPrefixPadding,
       startingLevel,
     })
@@ -103,7 +106,7 @@ async function _emitTest(test, tests) {
 }
 
 function _renderHook(hook, { startingLevel } = { startingLevel: 1 }) {
-  const result = exporter.prettify.command(hook, {
+  const result = exporter.prettify(hook, {
     commandPrefixPadding,
     startingLevel,
   }).body
