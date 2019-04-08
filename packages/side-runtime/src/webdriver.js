@@ -204,11 +204,11 @@ export default class WebDriverExecutor {
   }
 
   async doClickAt(locator, coordString) {
-    const coords = coordString.split(',')
+    const coords = parseCoordString(coordString)
     const element = await this.waitForElement(locator, this.driver)
     await this.driver
-      .actions()
-      .mouseMove(element, { x: coords[0], y: coords[1] })
+      .actions({ bridge: true })
+      .move({ origin: element, ...coords })
       .click()
       .perform()
   }
@@ -216,8 +216,18 @@ export default class WebDriverExecutor {
   async doDoubleClick(locator) {
     const element = await this.waitForElement(locator, this.driver)
     await this.driver
-      .actions()
+      .actions({ bridge: true })
       .doubleClick(element)
+      .perform()
+  }
+
+  async doDoubleClickAt(locator, coordString) {
+    const coords = parseCoordString(coordString)
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element, ...coords })
+      .doubleClick()
       .perform()
   }
 
@@ -367,6 +377,59 @@ export default class WebDriverExecutor {
           "'"
       )
     }
+  }
+
+  async doAssertEditable(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    if (
+      !(
+        (await element.isEnabled()) && !(await element.getAttribute('readonly'))
+      )
+    ) {
+      throw new AssertionError('Element is not editable')
+    }
+  }
+
+  async doAssertNotEditable(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    if (
+      (await element.isEnabled()) &&
+      !(await element.getAttribute('readonly'))
+    ) {
+      throw new AssertionError('Element is editable')
+    }
+  }
+
+  async doAssertPrompt(expectedText) {
+    const alert = await this.driver.switchTo().alert()
+    const actualText = await alert.getText()
+    if (actualText !== expectedText) {
+      throw new AssertionError(
+        "Actual prompt text '" +
+          actualText +
+          "' did not match '" +
+          expectedText +
+          "'"
+      )
+    }
+  }
+
+  async doDismissConfirmation() {
+    await this.driver
+      .switchTo()
+      .alert()
+      .dismiss()
+  }
+
+  async doDismissPrompt() {
+    await this.driver
+      .switchTo()
+      .alert()
+      .dismiss()
+  }
+
+  async doDebugger() {
+    throw new Error('`debugger` is not supported in this run mode')
   }
 
   async doAssertTitle(title) {
@@ -709,6 +772,13 @@ WebDriverExecutor.prototype.doDoubleClick = composePreprocessors(
   WebDriverExecutor.prototype.doDoubleClick
 )
 
+WebDriverExecutor.prototype.doDoubleClickAt = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doDoubleClickAt
+)
+
 WebDriverExecutor.prototype.doCheck = composePreprocessors(
   interpolateString,
   null,
@@ -809,6 +879,26 @@ WebDriverExecutor.prototype.doAssertConfirmation = composePreprocessors(
   WebDriverExecutor.prototype.doAssertConfirmation
 )
 
+WebDriverExecutor.prototype.doAssertEditable = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doAssertEditable
+)
+
+WebDriverExecutor.prototype.doAssertNotEditable = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doAssertNotEditable
+)
+
+WebDriverExecutor.prototype.doAssertPrompt = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAssertPrompt
+)
+
 WebDriverExecutor.prototype.doAssertText = composePreprocessors(
   interpolateString,
   interpolateString,
@@ -874,6 +964,15 @@ function parseOptionLocator(locator) {
     throw new Error(
       type ? `Unknown selection locator ${type}` : "Locator can't be empty"
     )
+  }
+}
+
+function parseCoordString(coord) {
+  const [x, y] = coord.split(',').map(n => parseInt(n))
+
+  return {
+    x,
+    y,
   }
 }
 

@@ -19,6 +19,7 @@ import { promisify } from 'util'
 import webdriver, { By } from 'selenium-webdriver'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
+import { ControlFlowCommandNames } from '../src/playback-tree/commands'
 import WebDriverExecutor from '../src/webdriver'
 
 jest.setTimeout(30000)
@@ -26,15 +27,17 @@ jest.setTimeout(30000)
 describe.skip('webdriver executor', () => {
   it('should implement all the Selenium commands', () => {
     Object.keys(Commands).forEach(command => {
-      expect(() => {
-        if (
-          !WebDriverExecutor.prototype[
-            `do${command.charAt(0).toUpperCase() + command.slice(1)}`
-          ]
-        ) {
-          throw new Error(`${command} is not implemented!`)
-        }
-      }).not.toThrow()
+      if (!ControlFlowCommandNames[command]) {
+        expect(() => {
+          if (
+            !WebDriverExecutor.prototype[
+              `do${command.charAt(0).toUpperCase() + command.slice(1)}`
+            ]
+          ) {
+            throw new Error(`${command} is not implemented!`)
+          }
+        }).not.toThrow()
+      }
     })
   })
   describe('commands', () => {
@@ -135,7 +138,7 @@ describe.skip('webdriver executor', () => {
       })
     })
     describe('assert alert', () => {
-      it('should dismiss an alert', async () => {
+      it('should assert alert visibility', async () => {
         expect.assertions(1)
         await driver.get(`http://localhost:${port}/popup/alert.html`)
         const element = await driver.findElement(By.css('button'))
@@ -164,6 +167,108 @@ describe.skip('webdriver executor', () => {
           .switchTo()
           .alert()
           .dismiss()
+      })
+    })
+    describe('assert editable', () => {
+      it('should assert wether different inputs are editable', async () => {
+        await driver.get(`http://localhost:${port}/editable.html`)
+        await executor.doAssertEditable('id=e')
+        await expect(executor.doAssertEditable('id=d')).rejects.toThrow(
+          'Element is not editable'
+        )
+        await expect(executor.doAssertEditable('id=r')).rejects.toThrow(
+          'Element is not editable'
+        )
+      })
+      it('should assert wether different inputs are not editable', async () => {
+        await driver.get(`http://localhost:${port}/editable.html`)
+        await executor.doAssertNotEditable('id=d')
+        await executor.doAssertNotEditable('id=r')
+        await expect(executor.doAssertNotEditable('id=e')).rejects.toThrow(
+          'Element is editable'
+        )
+      })
+    })
+    describe('assert prompt', () => {
+      it('should assert prompt visibility', async () => {
+        expect.assertions(1)
+        await driver.get(`http://localhost:${port}/popup/prompt.html`)
+        const element = await driver.findElement(By.css('button'))
+        await element.click()
+        await executor.doAssertPrompt('test')
+        await expect(executor.doAssertPrompt('wat')).rejects.toThrow(
+          "Actual prompt text 'test' did not match 'wat'"
+        )
+        await driver
+          .switchTo()
+          .alert()
+          .dismiss()
+      })
+    })
+    describe('click and click at', () => {
+      it('should click', async () => {
+        await driver.get(`http://localhost:${port}/click.html`)
+        await executor.doClick('id=c')
+        const r = await driver.findElement(By.id('r'))
+        expect(await r.getText()).toMatch(/^click/)
+      })
+      it('should click (using click at)', async () => {
+        await driver.get(`http://localhost:${port}/click.html`)
+        await executor.doClickAt('id=c', '10,5')
+        const r = await driver.findElement(By.id('r'))
+        expect(await r.getText()).toMatch(/^click/)
+      })
+      it.skip('should click at a specific coordinate', async () => {
+        // skip until chromedriver implements actions api correctly
+        await driver.get(`http://localhost:${port}/click.html`)
+        await executor.doClickAt('id=c', '10,5')
+        const r = await driver.findElement(By.id('r'))
+        expect(await r.getText()).toBe('click 58,13')
+      })
+    })
+    describe('dismiss confirmation', () => {
+      it('should dismiss a confirmation', async () => {
+        await driver.get(`http://localhost:${port}/popup/confirm.html`)
+        const element = await driver.findElement(By.css('button'))
+        await element.click()
+        await executor.doDismissConfirmation()
+        await element.click()
+        // accepting twice to make sure that we can interact with the page
+        // after accepting initially
+        await executor.doDismissConfirmation()
+      })
+    })
+    describe('dismiss prompt', () => {
+      it('should dismiss a prompt', async () => {
+        await driver.get(`http://localhost:${port}/popup/prompt.html`)
+        const element = await driver.findElement(By.css('button'))
+        await element.click()
+        await executor.doDismissPrompt()
+        await element.click()
+        // accepting twice to make sure that we can interact with the page
+        // after accepting initially
+        await executor.doDismissPrompt()
+      })
+    })
+    describe('double click at', () => {
+      it('should double click', async () => {
+        await driver.get(`http://localhost:${port}/click.html`)
+        await executor.doDoubleClick('id=d')
+        const r = await driver.findElement(By.id('r'))
+        expect(await r.getText()).toMatch(/^double/)
+      })
+      it('should double click (using double click at)', async () => {
+        await driver.get(`http://localhost:${port}/click.html`)
+        await executor.doDoubleClickAt('id=d', '10,5')
+        const r = await driver.findElement(By.id('r'))
+        expect(await r.getText()).toMatch(/^double/)
+      })
+      it.skip('should double click at a specific coordinate', async () => {
+        // skip until chromedriver implements actions api correctly
+        await driver.get(`http://localhost:${port}/click.html`)
+        await executor.doDoubleClickAt('id=d', '10,5')
+        const r = await driver.findElement(By.id('r'))
+        expect(await r.getText()).toBe('double 58,13')
       })
     })
   })
