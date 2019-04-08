@@ -18,6 +18,7 @@
 import emit from './emit'
 import prettify from './prettify'
 import { registerPreprocessors } from './preprocessor'
+import Hook from './hook'
 
 export default {
   emit: { ...emit },
@@ -25,4 +26,5 @@ export default {
   preprocessors: {
     register: registerPreprocessors,
   },
+  hook: Hook,
 }

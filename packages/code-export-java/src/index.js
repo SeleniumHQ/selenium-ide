@@ -15,12 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import exporter from 'code-export-utils'
 import Command from './command'
-import hooks from './hooks'
-import { clearHooks } from './hooks'
 import { sanitizeName, capitalize } from './parsers'
+import Hook from './hook'
 
 const fileExtension = '.java'
+export const commandPrefixPadding = '  '
+const hooks = Hook.generateAll()
 
 export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
@@ -56,46 +58,71 @@ async function registerReusedTestMethods(test, tests) {
         return Command.emit(command)
       })
       const emittedCommands = await Promise.all(commands)
-      hooks.methods.register(sanitizeName(reusedTest.name), emittedCommands)
+      hooks.declareMethods.register(`public void ${reusedTest.name}() {`)
+      hooks.declareMethods.register(
+        emittedCommands
+          .join(`\n${commandPrefixPadding}`)
+          .replace(/^/, commandPrefixPadding)
+      )
+      hooks.declareMethods.register(`}`)
     }
   }
 }
 
+function prettifyString(input, level) {
+  return commandPrefixPadding.repeat(level) + input
+}
+
 async function _emitTest(test, tests) {
   let result = ''
-  result += `
-    @Test
-    public void ${sanitizeName(test.name)}() {`
-  result += '\n\t'
-  result += hooks.inEachBegin.emit()
+  result += prettifyString('@Test\n', 1)
+  result += prettifyString(`public void ${sanitizeName(test.name)}() {\n`, 1)
+  let startingLevel = 2
+  result += _renderHook(hooks.inEachBegin.emit({ isOptional: true }), {
+    startingLevel,
+  })
   await registerReusedTestMethods(test, tests)
   const commands = test.commands.map(command => {
     return Command.emit(command)
   })
   const emittedCommands = await Promise.all(commands)
   emittedCommands.forEach(emittedCommand => {
-    result += `\t${emittedCommand}
-    `
+    const commandBlock = exporter.prettify.command(emittedCommand, {
+      commandPrefixPadding,
+      startingLevel,
+    })
+    startingLevel = commandBlock.endingLevel
+    result += commandBlock.body
+    result += '\n'
   })
-  result += hooks.inEachEnd.emit()
-  result += `}`
-  result += `\n`
+  result += _renderHook(hooks.inEachEnd.emit({ isOptional: true }), {
+    startingLevel,
+  })
+  result += prettifyString(`}\n`, 1)
   return result
+}
+
+function _renderHook(hook, { startingLevel } = { startingLevel: 1 }) {
+  const result = exporter.prettify.command(hook, {
+    commandPrefixPadding,
+    startingLevel,
+  }).body
+  return result.trim().length ? result + '\n\n' : ''
 }
 
 function _emitClass(name, body) {
   let result = ''
-  result += hooks.dependencies.emit()
-  result += `public class ${capitalize(sanitizeName(name))} {`
-  result += hooks.variables.emit()
-  result += hooks.beforeAll.emit({ isOptional: true })
-  result += hooks.beforeEach.emit()
-  result += hooks.afterEach.emit()
-  result += hooks.afterAll.emit({ isOptional: true })
-  result += hooks.methods.emit()
+  result += _renderHook(hooks.declareDependencies.emit(), { startingLevel: 0 })
+  result += `public class ${capitalize(sanitizeName(name))} {\n`
+  result += _renderHook(hooks.declareVariables.emit())
+  result += _renderHook(hooks.beforeAll.emit({ isOptional: true }))
+  result += _renderHook(hooks.beforeEach.emit())
+  result += _renderHook(hooks.afterEach.emit())
+  result += _renderHook(hooks.afterAll.emit({ isOptional: true }))
+  result += _renderHook(hooks.declareMethods.emit({ isOptional: true }))
   result += body
-  result += `}\n`
-  clearHooks()
+  result += `}`
+  Hook.clear(hooks)
   return result
 }
 
@@ -106,14 +133,14 @@ export default {
   },
   register: {
     command: Command.register,
-    variable: hooks.variables.register,
-    dependency: hooks.dependencies.register,
+    variable: hooks.declareVariables.register,
+    dependency: hooks.declareDependencies.register,
     beforeAll: hooks.beforeAll.register,
     beforeEach: hooks.beforeEach.register,
     afterEach: hooks.afterEach.register,
     afterAll: hooks.afterAll.register,
     inEachBegin: hooks.inEachBegin.register,
     inEachEnd: hooks.inEachEnd.register,
-    methods: hooks.methods.register,
+    methods: hooks.declareMethods.register,
   },
 }

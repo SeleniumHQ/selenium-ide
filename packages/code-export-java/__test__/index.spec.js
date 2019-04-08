@@ -21,7 +21,7 @@ import { emitTest, emitSuite, _emitMethod, _findTestByName } from '../src'
 import { normalizeTestsInSuite } from '../../selenium-ide/src/neo/IO/normalize'
 
 describe('Code Export Java Selenium', () => {
-  it('should export a test to JUnit code', async () => {
+  it.only('should export a test to JUnit code', async () => {
     const project = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'test-files', 'single-test.side'))
     )
@@ -30,6 +30,7 @@ describe('Code Export Java Selenium', () => {
       test: project.tests[0],
       tests: project.tests,
     })
+    console.log(results.body)
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
