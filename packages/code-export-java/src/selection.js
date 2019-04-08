@@ -25,7 +25,7 @@ const emitters = {
 }
 
 export function emit(location) {
-  return exporter.selection.emit(location, emitters)
+  return exporter.emit.selection(location, emitters)
 }
 
 export default {
