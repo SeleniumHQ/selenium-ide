@@ -26,5 +26,8 @@
     "@babel/cli": "^7.2.3",
     "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
     "@babel/preset-env": "^7.4.1"
+  },
+  "dependencies": {
+    "@seleniumhq/side-commons": "^3.5.10"
   }
 }

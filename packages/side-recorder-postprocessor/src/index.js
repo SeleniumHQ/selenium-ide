@@ -16,18 +16,22 @@
 // under the License.
 
 import { URL } from 'url'
+import EventEmitter from 'events'
+import { events } from '@seleniumhq/side-commons'
+
+const EE = Symbol('event-emitter')
 
 export default class RecordPostprocessor {
-  constructor(baseUrl, commands = [], insertionIndex = 0) {
+  constructor(baseUrl, commands = []) {
     this.baseUrl = baseUrl
     this.commands = [...commands]
-    this.insertionIndex = insertionIndex
+    this[EE] = new EventEmitter()
+    events.mergeEventEmitter(this, this[EE])
   }
 
-  record(command, target, value) {
+  record(index, { command, target, value }) {
     const newCommand = this.parseCommand(command, target, value)
-    this.commands.splice(this.insertionIndex, 0, newCommand)
-    this.insertionIndex++
+    this._splice(index, 0, newCommand)
     this.lastRecordedCommand = newCommand
 
     if (command === 'selectWindow' && target === 'handle=${root}')
@@ -93,8 +97,7 @@ export default class RecordPostprocessor {
         isClick(beforeLastCommand.command) &&
         lastCommand.target === beforeLastCommand.target
       ) {
-        this.commands.splice(index - 2, 2)
-        this.insertionIndex = this.insertionIndex - 2
+        this._splice(index - 2, 2)
       }
     }
   }
@@ -113,13 +116,35 @@ export default class RecordPostprocessor {
         return
       }
       if (this.commands[i].command === 'selectWindow') {
-        this.commands.splice(i, 0, command)
-        this.insertionIndex++
+        this._splice(i, 0, command)
         return
       }
     }
 
-    this.commands.splice(0, 0, command)
-    this.insertionIndex++
+    this._splice(0, 0, command)
   }
+
+  _splice(index, removeCount, ...toAdd) {
+    for (let i = 0; i < removeCount; i++) {
+      const command = this.commands[index]
+      this.commands.splice(index, 1)
+      this[EE].emit(CommandsChanged.COMMAND_REMOVED, {
+        index,
+        command,
+      })
+    }
+
+    toAdd.forEach((command, i) => {
+      this.commands.splice(index + i, 0, command)
+      this[EE].emit(CommandsChanged.COMMAND_ADDED, {
+        index: index + i,
+        command,
+      })
+    })
+  }
+}
+
+export const CommandsChanged = {
+  COMMAND_ADDED: 'added',
+  COMMAND_REMOVED: 'removed',
 }

@@ -21,51 +21,71 @@ describe('recorder postprocessor', () => {
   describe('recording', () => {
     it('should add commands to an empty test', () => {
       const prc = new RecordPostprocessor('https://google.com')
-      prc.record('open', 'https://google.com/')
-      prc.record('click', [['linkText=hey', 'linkText']], '')
+      prc.record(0, { command: 'open', target: 'https://google.com/' })
+      prc.record(1, {
+        command: 'click',
+        target: [['linkText=hey', 'linkText']],
+        value: '',
+      })
       expect(prc.commands.length).toBe(2)
       expect(prc.commands).toMatchSnapshot()
     })
     it('should remove the baseUrl from the `open` target when possible', () => {
       const prc = new RecordPostprocessor('https://google.com')
-      prc.record('open', 'https://google.com/')
-      prc.record('open', 'https://google.co.il/')
+      prc.record(0, { command: 'open', target: 'https://google.com/' })
+      prc.record(1, { command: 'open', target: 'https://google.co.il/' })
       expect(prc.commands[0].target).toBe('/')
       expect(prc.commands[1].target).toBe('https://google.co.il/')
     })
     it('should add target fallback if possible', () => {
       const prc = new RecordPostprocessor('https://google.com')
-      prc.record('click', 'css=button', '')
-      prc.record('click', [['css=button', 'css']], '')
+      prc.record(0, { command: 'click', target: 'css=button', value: '' })
+      prc.record(1, {
+        command: 'click',
+        target: [['css=button', 'css']],
+        value: '',
+      })
       expect(prc.commands[0].targetFallback).not.toBeDefined()
       expect(prc.commands[1].targetFallback).toBeDefined()
       expect(prc.commands).toMatchSnapshot()
     })
     it('should add value fallback if possible', () => {
       const prc = new RecordPostprocessor('https://google.com')
-      prc.record('dragAndDropToObject', 'css=button', 'css=button')
-      prc.record('dragAndDropToObject', 'css=button', [['css=button', 'css']])
+      prc.record(0, {
+        command: 'dragAndDropToObject',
+        target: 'css=button',
+        value: 'css=button',
+      })
+      prc.record(1, {
+        command: 'dragAndDropToObject',
+        target: 'css=button',
+        value: [['css=button', 'css']],
+      })
       expect(prc.commands[0].valueFallback).not.toBeDefined()
       expect(prc.commands[1].valueFallback).toBeDefined()
       expect(prc.commands).toMatchSnapshot()
     })
     it('should remove `click` and `click at` if `double click` or `double click at` was recorded on the same element', () => {
       const prc = new RecordPostprocessor('https://google.com')
-      prc.record('click', 'css=button', '')
-      prc.record('clickAt', 'css=button', '')
+      prc.record(0, { command: 'click', target: 'css=button', value: '' })
+      prc.record(1, { command: 'clickAt', target: 'css=button', value: '' })
       expect(prc.commands.length).toBe(2)
-      prc.record('doubleClick', 'css=button', '')
+      prc.record(2, { command: 'doubleClick', target: 'css=button', value: '' })
       expect(prc.commands.length).toBe(1)
       expect(prc.commands[0].command).toBe('doubleClick')
 
-      prc.record('click', 'css=button', '')
-      prc.record('clickAt', 'css=button', '')
+      prc.record(1, { command: 'click', target: 'css=button', value: '' })
+      prc.record(2, { command: 'clickAt', target: 'css=button', value: '' })
       expect(prc.commands.length).toBe(3)
-      prc.record('doubleClickAt', 'css=button', '')
+      prc.record(3, {
+        command: 'doubleClickAt',
+        target: 'css=button',
+        value: '',
+      })
       expect(prc.commands.length).toBe(2)
       expect(prc.commands[1].command).toBe('doubleClickAt')
 
-      prc.record('click', 'css=button', '')
+      prc.record(2, { command: 'click', target: 'css=button', value: '' })
       expect(prc.commands[2].command).toBe('click')
     })
     it('should not add `store window handle` for `select window` if the root handle is stored', () => {
@@ -80,7 +100,7 @@ describe('recorder postprocessor', () => {
         ],
         1
       )
-      prc.record('selectWindow', 'handle=${root}')
+      prc.record(1, { command: 'selectWindow', target: 'handle=${root}' })
       expect(prc.commands.length).toBe(2)
       expect(prc.commands).toMatchSnapshot()
     })
@@ -96,7 +116,7 @@ describe('recorder postprocessor', () => {
         ],
         1
       )
-      prc.record('selectWindow', 'handle=${root}')
+      prc.record(1, { command: 'selectWindow', target: 'handle=${root}' })
       expect(prc.commands.length).toBe(3)
       expect(prc.commands[0].command).toBe('storeWindowHandle')
       expect(prc.commands[2].target).toBe('handle=${root}')
