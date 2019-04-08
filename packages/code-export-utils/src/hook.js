@@ -70,4 +70,12 @@ export default class Hook {
       this.registeredCommands.push(value)
     })
   }
+
+  isRegistered(input = '') {
+    return this.registeredCommands
+      .map(command => {
+        return command.includes(input)
+      })
+      .includes(true)
+  }
 }

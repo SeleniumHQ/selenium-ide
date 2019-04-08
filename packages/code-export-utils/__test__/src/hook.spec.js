@@ -72,4 +72,10 @@ describe('Hooks', () => {
     const hook = new Hook({ startingSyntax: 'blah1', endingSyntax: 'blah99' })
     expect(hook.emit({ isOptional: true })).toEqual('')
   })
+  it('should allow for checking if a command is already registered', () => {
+    const hook = new Hook()
+    hook.register('blah')
+    expect(hook.isRegistered('blah')).toBeTruthy()
+    expect(hook.isRegistered('halb')).toBeFalsy()
+  })
 })
