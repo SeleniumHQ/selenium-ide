@@ -20,15 +20,19 @@ import Command from './command'
 import { sanitizeName, capitalize } from './parsers'
 import Hook from './hook'
 
+const hooks = Hook.generateAll()
+
 const fileExtension = '.java'
 export const commandPrefixPadding = '  '
-const hooks = Hook.generateAll()
+const classLevel = 0
+const methodLevel = 1
+const commandLevel = 2
 
 export async function emitTest({ baseUrl, test, tests }) {
   global.baseUrl = baseUrl
   const result = await _emitTest(test, tests)
   return {
-    filename: generateFilename(test.name),
+    filename: _generateFilename(test.name),
     body: _emitClass(test.name, result),
   }
 }
@@ -41,16 +45,30 @@ export async function emitSuite({ baseUrl, suite, tests }) {
     result += await _emitTest(test, tests)
   }
   return {
-    filename: generateFilename(suite.name),
+    filename: _generateFilename(suite.name),
     body: _emitClass(suite.name, result),
   }
 }
 
-function generateFilename(name) {
+function _generateFilename(name) {
   return `${capitalize(sanitizeName(name))}${fileExtension}`
 }
 
-async function registerReusedTestMethods(test, tests) {
+function _render(input, { startingLevel, newLineCount, fullPayload } = {}) {
+  if (!newLineCount) newLineCount = methodLevel
+  if (!startingLevel) startingLevel = classLevel
+  if (!fullPayload) fullPayload = false
+  const result = exporter.prettify(input, {
+    commandPrefixPadding,
+    startingLevel,
+  })
+  if (fullPayload) return result
+  return result.body.trim().length
+    ? result.body + '\n'.repeat(newLineCount)
+    : ''
+}
+
+async function _registerReusedTestMethods(test, tests) {
   for (const command of test.commands) {
     if (command.command === 'run') {
       const reusedTest = tests.find(test => test.name === command.target)
@@ -72,61 +90,63 @@ async function registerReusedTestMethods(test, tests) {
   }
 }
 
-function prettifyString(input, level) {
-  return commandPrefixPadding.repeat(level) + input
-}
-
 async function _emitTest(test, tests) {
   let result = ''
-  result += prettifyString('@Test\n', 1)
-  result += prettifyString(`public void ${sanitizeName(test.name)}() {\n`, 1)
-  let startingLevel = 2
-  result += _renderHook(hooks.inEachBegin.emit({ isOptional: true }), {
-    startingLevel,
+  result += _render('@Test', { startingLevel: methodLevel })
+  result += _render(`public void ${sanitizeName(test.name)}() {`, {
+    startingLevel: methodLevel,
   })
-  await registerReusedTestMethods(test, tests)
+  result += _render(hooks.inEachBegin.emit({ isOptional: true }), {
+    startingLevel: commandLevel,
+  })
+  await _registerReusedTestMethods(test, tests)
   const commands = test.commands.map(command => {
     return Command.emit(command)
   })
   const emittedCommands = await Promise.all(commands)
+  let endingLevel = commandLevel
   emittedCommands.forEach(emittedCommand => {
-    const commandBlock = exporter.prettify(emittedCommand, {
-      commandPrefixPadding,
-      startingLevel,
+    const commandBlock = _render(emittedCommand, {
+      startingLevel: endingLevel,
+      fullPayload: true,
     })
-    startingLevel = commandBlock.endingLevel
+    endingLevel = commandBlock.endingLevel
     result += commandBlock.body
     result += '\n'
   })
-  result += _renderHook(hooks.inEachEnd.emit({ isOptional: true }), {
-    startingLevel,
+  result += _render(hooks.inEachEnd.emit({ isOptional: true }), {
+    startingLevel: commandLevel,
   })
-  result += prettifyString(`}\n\n`, 1)
+  result += _render(`}`, { startingLevel: methodLevel })
   return result
-}
-
-function _renderHook(hook, { startingLevel } = { startingLevel: 1 }) {
-  const result = exporter.prettify(hook, {
-    commandPrefixPadding,
-    startingLevel,
-  }).body
-  return result.trim().length ? result + '\n\n' : ''
 }
 
 function _emitClass(name, body) {
   let result = ''
-  result += _renderHook(hooks.declareDependencies.emit(), { startingLevel: 0 })
-  result += `public class ${capitalize(sanitizeName(name))} {\n`
-  result += _renderHook(hooks.declareVariables.emit())
-  result += _renderHook(hooks.beforeAll.emit({ isOptional: true }))
-  result += _renderHook(hooks.beforeEach.emit())
-  result += _renderHook(hooks.afterEach.emit())
-  result += _renderHook(hooks.afterAll.emit({ isOptional: true }))
-  result += _renderHook(hooks.declareMethods.emit({ isOptional: true }), {
-    startingLevel: 0,
+  result += _render(hooks.declareDependencies.emit())
+  result += _render(`public class ${capitalize(sanitizeName(name))} {`)
+  result += _render(hooks.declareVariables.emit(), {
+    startingLevel: methodLevel,
+  })
+  result += _render(hooks.beforeAll.emit({ isOptional: true }), {
+    startingLevel: methodLevel,
+  })
+  result += _render(hooks.beforeEach.emit(), {
+    startingLevel: methodLevel,
+  })
+  result += _render(hooks.afterEach.emit(), {
+    startingLevel: methodLevel,
+  })
+  result += _render(hooks.afterAll.emit({ isOptional: true }), {
+    startingLevel: methodLevel,
+  })
+  result += _render(hooks.declareMethods.emit({ isOptional: true }), {
+    startingLevel: methodLevel,
   })
   result += body
-  result += `}`
+  result += _render(`}`, {
+    startingLevel: classLevel,
+  })
   Hook.clear(hooks)
   return result
 }
