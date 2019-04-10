@@ -21,13 +21,17 @@
  * @param {Object} opts - The styling options
  * @param {number} opts.startingLevel The staring indentation level
  * @param {string} opts.commandPrefixPadding The padding to use for indentation
- * @returns {Object|string} The prettified result. Can include an endingLevel
+ * @returns {Object} The prettified result (e.g., `.body`) and the absolute
+ * indentation level (e.g., `endingLevel`) for the next command to use
  */
 export default function prettify(
   commandBlock,
   { startingLevel, commandPrefixPadding } = {}
 ) {
   if (!startingLevel) startingLevel = 0
+  if (commandBlock.startingLevelAdjustment)
+    startingLevel += commandBlock.startingLevelAdjustment
+  if (startingLevel < 0) startingLevel = 0
   if (typeof commandBlock.commands === 'object') {
     return {
       body: commandBlock.commands
@@ -37,9 +41,7 @@ export default function prettify(
             command.statement
         )
         .join('\n'),
-      endingLevel:
-        commandBlock.endingLevel ||
-        commandBlock.commands[commandBlock.commands.length - 1].level,
+      endingLevel: calculateEndingLevel({ startingLevel, commandBlock }),
     }
   } else {
     return {
@@ -50,4 +52,12 @@ export default function prettify(
       endingLevel: startingLevel,
     }
   }
+}
+
+function calculateEndingLevel({ startingLevel, commandBlock } = {}) {
+  const endingLevel =
+    commandBlock.commands[commandBlock.commands.length - 1].level || 0
+  const endingLevelAdjustment = commandBlock.endingLevelAdjustment || 0
+  const result = startingLevel + endingLevel + endingLevelAdjustment
+  return result
 }
