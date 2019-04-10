@@ -1,0 +1,27 @@
+<div id="cont" style="background: blue;width: 500px;height: 500px;" onclick="javascript:void(0)">
+</div>
+
+<script>
+    const cont = document.getElementById('cont')
+    const btn = document.createElement('button')
+    btn.innerText = 'click me'
+    let hasChild = false
+    document.body.addEventListener('mousemove', () => {
+    })
+    cont.addEventListener('mouseover', () => {
+        console.log('over')
+        if (!hasChild) {
+            cont.className = 'kaki'
+            cont.appendChild(btn)
+            hasChild = true
+        }
+    })
+    cont.addEventListener('mouseout', () => {
+        console.log('out')
+        if (hasChild) {
+            cont.className = ''
+            cont.removeChild(btn)
+            hasChild = false
+        }
+    })
+</script>

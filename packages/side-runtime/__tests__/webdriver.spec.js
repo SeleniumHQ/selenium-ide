@@ -343,5 +343,129 @@ describe.skip('webdriver executor', () => {
         expect(await r.getText()).toBe('down 10,5')
       })
     })
+    describe('mouse move at', () => {
+      it('it should move to a specific point in an element', async () => {
+        // decide wether coordinates are relative to center or to the top-left corner
+        await driver.get(`http://localhost:${port}/mouse/move.html`)
+        await executor.doMouseMoveAt('id=a', '100,5')
+        const r = await driver.findElement(By.id('a'))
+        expect(await r.getText()).toBe('move 350,255')
+      })
+    })
+    describe('mouse out', () => {
+      it('should move out of an element through the top', async () => {
+        await driver.get(`http://localhost:${port}/mouse/out.html?y=1`)
+        const r = await driver.findElement(By.id('cont'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .perform()
+        await executor.doMouseOut('id=cont')
+        expect(await r.getText()).toBe('out 250,-1')
+      })
+      it('should move out of an element through the right', async () => {
+        await driver
+          .manage()
+          .window()
+          .setRect({ height: 1000, width: 1000 })
+        await driver.get(`http://localhost:${port}/mouse/out.html?x=0&y=0`)
+        const r = await driver.findElement(By.id('cont'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .perform()
+        await executor.doMouseOut('id=cont')
+        expect(await r.getText()).toBe('out 501,250')
+      })
+      it('should move out of an element through the bottom', async () => {
+        await driver
+          .manage()
+          .window()
+          .setRect({ height: 1000, width: 1000 })
+        await driver.get(
+          `http://localhost:${port}/mouse/out.html?x=0&y=0&w=1000`
+        )
+        const r = await driver.findElement(By.id('cont'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .perform()
+        await executor.doMouseOut('id=cont')
+        expect(await r.getText()).toBe('out 500,501')
+      })
+      it('should move out of an element through the left', async () => {
+        await driver
+          .manage()
+          .window()
+          .setRect({ height: 400, width: 1000 })
+        await driver.get(
+          `http://localhost:${port}/mouse/out.html?x=1&y=0&w=1000&h=400`
+        )
+        const r = await driver.findElement(By.id('cont'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .perform()
+        await executor.doMouseOut('id=cont')
+        expect(await r.getText()).toMatch(/^out -1,/)
+      })
+      it('should throw if the element takes up the entire viewport', async () => {
+        await driver
+          .manage()
+          .window()
+          .setRect({ height: 400, width: 400 })
+        await driver.get(
+          `http://localhost:${port}/mouse/out.html?x=0&y=0&w=400&h=400`
+        )
+        await expect(executor.doMouseOut('id=cont')).rejects.toThrow(
+          'Unable to perform mouse out as the element takes up the entire viewport'
+        )
+      })
+    })
+    describe('mouse over', () => {
+      it('should be able to move the pointer over an element', async () => {
+        await driver.get(`http://localhost:${port}/mouse/over.html`)
+        await executor.doMouseOver('id=a')
+        const r = await driver.findElement(By.id('a'))
+        expect(await r.getText()).toMatch(/^over/)
+      })
+    })
+    describe('mouse up and mouse up at', () => {
+      it('it should move and release the left mouse button on an element', async () => {
+        await driver.get(`http://localhost:${port}/mouse/updown.html`)
+        const r = await driver.findElement(By.id('a'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .press()
+          .perform()
+        await executor.doMouseUp('id=a')
+        expect(await r.getText()).toMatch(/^up/)
+      })
+      it('it should move and press the release mouse button on an element (using mouse up at)', async () => {
+        await driver.get(`http://localhost:${port}/mouse/updown.html`)
+
+        const r = await driver.findElement(By.id('a'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .press()
+          .perform()
+        await executor.doMouseUpAt('id=a', '100,50')
+        expect(await r.getText()).toMatch(/^up/)
+      })
+      it.skip('it should move and release the left mouse button on an element at a specific point', async () => {
+        // decide wether coordinates are relative to center or to the top-left corner
+        await driver.get(`http://localhost:${port}/mouse/updown.html`)
+        const r = await driver.findElement(By.id('a'))
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: r })
+          .press()
+          .perform()
+        await executor.doMouseUpAt('id=a', '100,5')
+        expect(await r.getText()).toBe('up 10,5')
+      })
+    })
   })
 })

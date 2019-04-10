@@ -277,6 +277,87 @@ export default class WebDriverExecutor {
       .perform()
   }
 
+  async doMouseMoveAt(locator, coordString) {
+    const coords = parseCoordString(coordString)
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element, ...coords })
+      .perform()
+  }
+
+  async doMouseOut(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    const [rect, vp] = await this.driver.executeScript(
+      'return [arguments[0].getBoundingClientRect(), {height: window.innerHeight, width: window.innerWidth}];',
+      element
+    )
+
+    // try top
+    if (rect.top > 0) {
+      const y = -(rect.height / 2 + 1)
+      return await this.driver
+        .actions({ bridge: true })
+        .move({ origin: element, y })
+        .perform()
+    }
+    // try right
+    else if (vp.width > rect.right) {
+      const x = rect.right / 2 + 1
+      return await this.driver
+        .actions({ bridge: true })
+        .move({ origin: element, x })
+        .perform()
+    }
+    // try bottom
+    else if (vp.height > rect.bottom) {
+      const y = rect.height / 2 + 1
+      return await this.driver
+        .actions({ bridge: true })
+        .move({ origin: element, y })
+        .perform()
+    }
+    // try left
+    else if (rect.left > 0) {
+      const x = parseInt(-(rect.right / 2))
+      return await this.driver
+        .actions({ bridge: true })
+        .move({ origin: element, x })
+        .perform()
+    }
+
+    throw new Error(
+      'Unable to perform mouse out as the element takes up the entire viewport'
+    )
+  }
+
+  async doMouseOver(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element })
+      .perform()
+  }
+
+  async doMouseUp(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element })
+      .release()
+      .perform()
+  }
+
+  async doMouseUpAt(locator, coordString) {
+    const coords = parseCoordString(coordString)
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element, ...coords })
+      .release()
+      .perform()
+  }
+
   async doSelect(locator, optionLocator) {
     const element = await this.waitForElement(locator, this.driver)
     const option = await element.findElement(parseOptionLocator(optionLocator))
@@ -860,6 +941,51 @@ WebDriverExecutor.prototype.doMouseDownAt = composePreprocessors(
     targetFallback: preprocessArray(interpolateString),
   },
   WebDriverExecutor.prototype.doMouseDownAt
+)
+
+WebDriverExecutor.prototype.doMouseMoveAt = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseMoveAt
+)
+
+WebDriverExecutor.prototype.doMouseOut = composePreprocessors(
+  interpolateString,
+  null,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseOut
+)
+
+WebDriverExecutor.prototype.doMouseOver = composePreprocessors(
+  interpolateString,
+  null,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseOver
+)
+
+WebDriverExecutor.prototype.doMouseUp = composePreprocessors(
+  interpolateString,
+  null,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseUp
+)
+
+WebDriverExecutor.prototype.doMouseUpAt = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseUpAt
 )
 
 WebDriverExecutor.prototype.doSelect = composePreprocessors(

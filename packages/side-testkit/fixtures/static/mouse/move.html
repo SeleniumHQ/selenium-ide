@@ -1,0 +1,19 @@
+<script type="text/javascript">
+  function move(event) {
+    let c = getClickCoord(event)
+    var e = document.getElementById("a");
+    e.innerText = `move ${c.left},${c.top}`;
+  }
+  function getClickCoord(event) {
+      let top = event.pageY,
+          left = event.pageX;
+      let element = event.target;
+      do {
+          top -= element.offsetTop;
+          left -= element.offsetLeft;
+          element = element.offsetParent;
+      } while (element);
+      return { top, left }
+  }
+</script>
+<div id="a" style="width: 500px;height: 500px;" onmousemove="move(event)"></div>
