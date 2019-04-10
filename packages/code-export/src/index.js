@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import java from 'code-export-java'
+import javaJunit from 'code-export-java-junit'
 
 export const availableLanguages = [
   { name: 'java-junit', displayName: 'Java JUnit' },
 ]
 
-const exporter = { 'java-junit': java }
+const exporter = { 'java-junit': javaJunit }
 
 export function registerCommand(language, command, emitter) {
   exporter[language].register.command(command, emitter)

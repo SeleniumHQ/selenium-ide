@@ -20,6 +20,6 @@
     "babel-cli": "^6.26.0"
   },
   "dependencies": {
-    "code-export-java": "*"
+    "code-export-java-junit": "*"
   }
 }
