@@ -202,6 +202,23 @@ export default class WebDriverExecutor {
     }
   }
 
+  async doRemoveSelection(locator, optionLocator) {
+    const element = await this.waitForElement(locator, this.driver)
+
+    if (!(await element.getAttribute('multiple'))) {
+      throw new Error('Given element is not a multiple select type element')
+    }
+
+    const option = await element.findElement(parseOptionLocator(optionLocator))
+    const selections = await this.driver.executeScript(
+      'return arguments[0].selectedOptions',
+      element
+    )
+    if (await findElement(selections, option)) {
+      await option.click()
+    }
+  }
+
   async doCheck(locator) {
     const element = await this.waitForElement(locator, this.driver)
     if (!(await element.isSelected())) {
@@ -459,6 +476,16 @@ export default class WebDriverExecutor {
     return Promise.resolve()
   }
 
+  async doStoreAttribute(attributeLocator, variable) {
+    const attributePos = attributeLocator.lastIndexOf('@')
+    const elementLocator = attributeLocator.slice(0, attributePos)
+    const attributeName = attributeLocator.slice(attributePos + 1)
+
+    const element = await this.waitForElement(elementLocator, this.driver)
+    const value = await element.getAttribute(attributeName)
+    this.variables.set(variable, value)
+  }
+
   async doStoreText(locator, variable) {
     const element = await this.waitForElement(locator, this.driver)
     const text = await element.getText()
@@ -693,6 +720,14 @@ export default class WebDriverExecutor {
     await this.driver.sleep(time)
   }
 
+  async doRun() {
+    throw new Error('`run` is not supported in this run mode')
+  }
+
+  async doSetSpeed() {
+    throw new Error('`set speed` is not supported in this run mode')
+  }
+
   async evaluateConditional(script) {
     const result = await this.driver.executeScript(
       `return (${script.script})`,
@@ -873,6 +908,16 @@ WebDriverExecutor.prototype.doAddSelection = composePreprocessors(
   WebDriverExecutor.prototype.doAddSelection
 )
 
+WebDriverExecutor.prototype.doRemoveSelection = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+    valueFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doRemoveSelection
+)
+
 WebDriverExecutor.prototype.doCheck = composePreprocessors(
   interpolateString,
   null,
@@ -1042,6 +1087,13 @@ WebDriverExecutor.prototype.doStore = composePreprocessors(
   interpolateString,
   null,
   WebDriverExecutor.prototype.doStore
+)
+
+WebDriverExecutor.prototype.doStoreAttribute = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doStoreAttribute
 )
 
 WebDriverExecutor.prototype.doStoreText = composePreprocessors(

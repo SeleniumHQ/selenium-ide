@@ -20,6 +20,7 @@ import webdriver, { By } from 'selenium-webdriver'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
 import { ControlFlowCommandNames } from '../src/playback-tree/commands'
+import Variables from '../src/Variables'
 import WebDriverExecutor from '../src/webdriver'
 
 jest.setTimeout(30000)
@@ -51,7 +52,7 @@ describe.skip('webdriver executor', () => {
     ],
   ])('commands on %s', (_browserName, capabilities) => {
     const app = createStaticSite()
-    let port, close, driver, executor
+    let port, close, driver, executor, variables
     beforeAll(async () => {
       await new Promise(res => {
         const server = app.listen(() => {
@@ -65,10 +66,11 @@ describe.skip('webdriver executor', () => {
       await close()
     })
     beforeAll(async () => {
+      variables = new Variables()
       const builder = new webdriver.Builder().withCapabilities(capabilities)
       driver = await builder.build()
       executor = new WebDriverExecutor(driver)
-      await executor.init({})
+      await executor.init({ variables })
     })
     afterAll(async () => {
       await driver.quit()
@@ -465,6 +467,60 @@ describe.skip('webdriver executor', () => {
           .perform()
         await executor.doMouseUpAt('id=a', '100,5')
         expect(await r.getText()).toBe('up 10,5')
+      })
+    })
+    describe('remove selection', () => {
+      it('should throw when trying to use with a single item select', async () => {
+        await driver.get(`http://localhost:${port}/select.html`)
+        await expect(
+          executor.doRemoveSelection('css=select', 'label=Two')
+        ).rejects.toThrow('Given element is not a multiple select type element')
+      })
+      it('should remove from a multi select element', async () => {
+        await driver.get(`http://localhost:${port}/select.html`)
+        const element = await driver.findElement(By.id('mult'))
+        const opt1 = await element.findElement(By.css('option:nth-child(1)'))
+        const opt4 = await element.findElement(By.css('option:nth-child(4)'))
+        await opt1.click()
+        await opt4.click()
+        expect(
+          (await driver.executeScript(
+            'return arguments[0].selectedOptions',
+            element
+          )).length
+        ).toBe(2)
+        await executor.doRemoveSelection('id=mult', 'label=Volvo')
+        const selections = await driver.executeScript(
+          'return arguments[0].selectedOptions',
+          element
+        )
+        expect(selections.length).toBe(1)
+        await executor.doRemoveSelection('id=mult', 'value=volvo')
+        // no selections by mistake
+        expect(
+          (await driver.executeScript(
+            'return arguments[0].selectedOptions',
+            element
+          )).length
+        ).toBe(1)
+        await executor.doRemoveSelection('id=mult', 'value=audi')
+        expect(
+          (await driver.executeScript(
+            'return arguments[0].selectedOptions',
+            element
+          )).length
+        ).toBe(0)
+      })
+    })
+    describe('store attribute', () => {
+      it('should store the attribute of an element', async () => {
+        await driver.get(`http://localhost:${port}/store/attributes.html`)
+        await executor.doStoreAttribute('id=disabled@disabled', 'd')
+        expect(executor.variables.get('d')).toBe('true')
+        await executor.doStoreAttribute('id=disabled@type', 't')
+        expect(executor.variables.get('t')).toBe('text')
+        await executor.doStoreAttribute('id=disabled@nan', 'n')
+        expect(executor.variables.get('n')).toBe(null)
       })
     })
   })
