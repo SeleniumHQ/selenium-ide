@@ -40,7 +40,16 @@ describe.skip('webdriver executor', () => {
       }
     })
   })
-  describe('commands', () => {
+  describe.each([
+    [
+      'chrome',
+      { browserName: 'chrome', chromeOptions: { args: ['headless'] } },
+    ],
+    [
+      'firefox',
+      { browserName: 'firefox', 'moz:firefoxOptions': { args: ['-headless'] } },
+    ],
+  ])('commands on %s', (_browserName, capabilities) => {
     const app = createStaticSite()
     let port, close, driver, executor
     beforeAll(async () => {
@@ -56,18 +65,20 @@ describe.skip('webdriver executor', () => {
       await close()
     })
     beforeAll(async () => {
-      const builder = new webdriver.Builder().withCapabilities({
-        browserName: 'chrome',
-        chromeOptions: {
-          args: ['headless'],
-        },
-      })
+      const builder = new webdriver.Builder().withCapabilities(capabilities)
       driver = await builder.build()
       executor = new WebDriverExecutor(driver)
       await executor.init({})
     })
     afterAll(async () => {
       await driver.quit()
+    })
+    afterEach(async () => {
+      try {
+        await driver.actions({ bridge: true }).clear()
+      } catch (err) {
+        // chromedriver doesn't support clear()
+      }
     })
     describe('plugins', () => {
       it('should be able to register a command', async () => {
@@ -261,7 +272,7 @@ describe.skip('webdriver executor', () => {
         await executor.doDismissPrompt()
       })
     })
-    describe('double click at', () => {
+    describe('double click and double click at', () => {
       it('should double click', async () => {
         await driver.get(`http://localhost:${port}/click.html`)
         await executor.doDoubleClick('id=d')
@@ -280,6 +291,56 @@ describe.skip('webdriver executor', () => {
         await executor.doDoubleClickAt('id=d', '10,5')
         const r = await driver.findElement(By.id('r'))
         expect(await r.getText()).toBe('double 58,13')
+      })
+    })
+    describe.skip('drag and drop', () => {
+      // skip until webdriver implements html5 dnd
+      it('should drag and drop an element', async () => {
+        await driver.get(`http://localhost:${port}/dnd.html`)
+        await executor.doDragAndDropToObject('id=p1', 'id=target')
+        const r = await driver.findElement(By.id('target'))
+        expect(await r.getText()).toBe('dropped')
+      })
+    })
+    describe('edit content', () => {
+      it('should set the content of a content editable element', async () => {
+        await driver.get(`http://localhost:${port}/contenteditable.html`)
+        await executor.doEditContent('id=c', 'hello world')
+        const r = await driver.findElement(By.id('c'))
+        expect(await r.getText()).toBe('hello world')
+      })
+      it('should escape HTML when put into a content editable element', async () => {
+        await driver.get(`http://localhost:${port}/contenteditable.html`)
+        await executor.doEditContent('id=c', '<b>hello world</b>')
+        const r = await driver.findElement(By.id('c'))
+        expect(await r.getText()).toBe('<b>hello world</b>')
+      })
+      it('should throw if trying to set the content of a non-content editable element', async () => {
+        await driver.get(`http://localhost:${port}/editable.html`)
+        await expect(
+          executor.doEditContent('id=e', 'hello world')
+        ).rejects.toThrow('Element is not content editable')
+      })
+    })
+    describe('mouse down and mouse down at', () => {
+      it('it should move and press the left mouse button on an element', async () => {
+        await driver.get(`http://localhost:${port}/mouse/updown.html`)
+        await executor.doMouseDown('id=a')
+        const r = await driver.findElement(By.id('a'))
+        expect(await r.getText()).toMatch(/^down/)
+      })
+      it('it should move and press the left mouse button on an element (using mouse down at)', async () => {
+        await driver.get(`http://localhost:${port}/mouse/updown.html`)
+        await executor.doMouseDownAt('id=a', '100,50')
+        const r = await driver.findElement(By.id('a'))
+        expect(await r.getText()).toMatch(/^down/)
+      })
+      it.skip('it should move and press the left mouse button on an element at a specific point', async () => {
+        // decide wether coordinates are relative to center or to the top-left corner
+        await driver.get(`http://localhost:${port}/mouse/updown.html`)
+        await executor.doMouseDownAt('id=a', '100,5')
+        const r = await driver.findElement(By.id('a'))
+        expect(await r.getText()).toBe('down 10,5')
       })
     })
   })

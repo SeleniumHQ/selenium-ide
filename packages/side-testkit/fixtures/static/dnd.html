@@ -1,0 +1,36 @@
+<style>
+body {
+    margin: 0;
+}
+</style>
+<script>
+    function dragstart_handler(ev) {
+        // Add the target element's id to the data transfer object
+        console.log('1')
+        ev.dataTransfer.setData("text/plain", ev.target.id);
+        ev.dataTransfer.dropEffect = "move";
+    }
+    function dragover_handler(ev) {
+        ev.preventDefault();
+        // Set the dropEffect to move
+        ev.dataTransfer.dropEffect = "move"
+        console.log('2')
+    }
+    function drop_handler(ev) {
+        ev.preventDefault();
+        // Get the id of the target and add the moved element to the target's DOM
+        ev.target.innerText = 'dropped'
+        console.log('3')
+    }
+</script>
+<body>
+ <p id="p1" draggable="true" ondragstart="dragstart_handler(event);">This element is draggable.</p>
+ <div id="target" ondrop="drop_handler(event);" ondragover="dragover_handler(event);">Drop Zone</div>
+ <div id="c"></div>
+ <script>
+     document.body.addEventListener('mousemove', (e) => {
+         const r = document.getElementById('c')
+         r.innerText = `${e.clientX}, ${e.clientY}`
+     })
+ </script>
+</body>

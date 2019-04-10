@@ -202,6 +202,20 @@ export default class WebDriverExecutor {
     }
   }
 
+  async doCheck(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    if (!(await element.isSelected())) {
+      await element.click()
+    }
+  }
+
+  async doUncheck(locator) {
+    const element = await this.waitForElement(locator, this.driver)
+    if (await element.isSelected()) {
+      await element.click()
+    }
+  }
+
   async doClick(locator) {
     const element = await this.waitForElement(locator, this.driver)
     await element.click()
@@ -235,18 +249,32 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doCheck(locator) {
-    const element = await this.waitForElement(locator, this.driver)
-    if (!(await element.isSelected())) {
-      await element.click()
-    }
+  async doDragAndDropToObject(dragLocator, dropLocator) {
+    const drag = await this.waitForElement(dragLocator, this.driver)
+    const drop = await this.waitForElement(dropLocator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .dragAndDrop(drag, drop)
+      .perform()
   }
 
-  async doUncheck(locator) {
+  async doMouseDown(locator) {
     const element = await this.waitForElement(locator, this.driver)
-    if (await element.isSelected()) {
-      await element.click()
-    }
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element })
+      .press()
+      .perform()
+  }
+
+  async doMouseDownAt(locator, coordString) {
+    const coords = parseCoordString(coordString)
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver
+      .actions({ bridge: true })
+      .move({ origin: element, ...coords })
+      .press()
+      .perform()
   }
 
   async doSelect(locator, optionLocator) {
@@ -256,6 +284,15 @@ export default class WebDriverExecutor {
   }
 
   // keyboard commands
+
+  async doEditContent(locator, value) {
+    const element = await this.waitForElement(locator, this.driver)
+    await this.driver.executeScript(
+      "if(arguments[0].contentEditable === 'true') {arguments[0].innerText = arguments[1]} else {throw new Error('Element is not content editable')}",
+      element,
+      value
+    )
+  }
 
   async doType(locator, value) {
     const element = await this.waitForElement(locator, this.driver)
@@ -318,6 +355,20 @@ export default class WebDriverExecutor {
       await alert.sendKeys(optAnswer)
     }
     await alert.accept()
+  }
+
+  async doDismissConfirmation() {
+    await this.driver
+      .switchTo()
+      .alert()
+      .dismiss()
+  }
+
+  async doDismissPrompt() {
+    await this.driver
+      .switchTo()
+      .alert()
+      .dismiss()
   }
 
   // store commands
@@ -416,24 +467,6 @@ export default class WebDriverExecutor {
           "'"
       )
     }
-  }
-
-  async doDismissConfirmation() {
-    await this.driver
-      .switchTo()
-      .alert()
-      .dismiss()
-  }
-
-  async doDismissPrompt() {
-    await this.driver
-      .switchTo()
-      .alert()
-      .dismiss()
-  }
-
-  async doDebugger() {
-    throw new Error('`debugger` is not supported in this run mode')
   }
 
   async doAssertTitle(title) {
@@ -564,6 +597,10 @@ export default class WebDriverExecutor {
   }
 
   // other commands
+
+  async doDebugger() {
+    throw new Error('`debugger` is not supported in this run mode')
+  }
 
   async doEcho(string) {
     if (this.logger) {
@@ -755,6 +792,20 @@ WebDriverExecutor.prototype.doAddSelection = composePreprocessors(
   WebDriverExecutor.prototype.doAddSelection
 )
 
+WebDriverExecutor.prototype.doCheck = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doCheck
+)
+
+WebDriverExecutor.prototype.doUncheck = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doUncheck
+)
+
 WebDriverExecutor.prototype.doClick = composePreprocessors(
   interpolateString,
   null,
@@ -783,25 +834,32 @@ WebDriverExecutor.prototype.doDoubleClickAt = composePreprocessors(
   WebDriverExecutor.prototype.doDoubleClickAt
 )
 
-WebDriverExecutor.prototype.doCheck = composePreprocessors(
+WebDriverExecutor.prototype.doDragAndDropToObject = composePreprocessors(
   interpolateString,
-  null,
-  { targetFallback: preprocessArray(interpolateString) },
-  WebDriverExecutor.prototype.doCheck
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+    valueFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doDragAndDropToObject
 )
 
-WebDriverExecutor.prototype.doCheck = composePreprocessors(
+WebDriverExecutor.prototype.doMouseDown = composePreprocessors(
   interpolateString,
   null,
-  { targetFallback: preprocessArray(interpolateString) },
-  WebDriverExecutor.prototype.doCheck
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseDown
 )
 
-WebDriverExecutor.prototype.doUncheck = composePreprocessors(
+WebDriverExecutor.prototype.doMouseDownAt = composePreprocessors(
   interpolateString,
-  null,
-  { targetFallback: preprocessArray(interpolateString) },
-  WebDriverExecutor.prototype.doUncheck
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doMouseDownAt
 )
 
 WebDriverExecutor.prototype.doSelect = composePreprocessors(
@@ -812,6 +870,15 @@ WebDriverExecutor.prototype.doSelect = composePreprocessors(
     valueFallback: preprocessArray(interpolateString),
   },
   WebDriverExecutor.prototype.doSelect
+)
+
+WebDriverExecutor.prototype.doEditContent = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  {
+    targetFallback: preprocessArray(interpolateString),
+  },
+  WebDriverExecutor.prototype.doEditContent
 )
 
 WebDriverExecutor.prototype.doType = composePreprocessors(
