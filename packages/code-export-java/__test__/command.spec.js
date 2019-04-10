@@ -319,7 +319,7 @@ describe('command code emitter', () => {
       value: '<button>test</button>',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebElement element = driver.findElement(By.id("contentEditable"));\n${commandPrefixPadding}js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '<button>test</button>'}", element);\n}`
+      `{\n${commandPrefixPadding}WebElement element = driver.findElement(By.id("contentEditable"));\n${commandPrefixPadding}js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}", element);\n}`
     )
   })
   it('should emit `else` command', () => {
@@ -344,13 +344,16 @@ describe('command code emitter', () => {
       endingLevel: 1,
     })
   })
-  it('should emit `end` command', () => {
+  it('should emit `end` command', async () => {
     const command = {
       command: ControlFlowCommandNames.end,
       target: '',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`}`)
+    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
+      body: `}`,
+      endingLevel: 0,
+    })
   })
   it('should emit `execute script` command', () => {
     const command = {

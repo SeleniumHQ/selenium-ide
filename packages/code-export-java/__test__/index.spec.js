@@ -79,6 +79,22 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
+  it('should export a suite to JUnit code that uses control flow commands', async () => {
+    const project = normalizeProject(
+      JSON.parse(
+        fs.readFileSync(
+          path.join(__dirname, 'test-files', 'control-flow-suite.side')
+        )
+      )
+    )
+    const results = await emitSuite({
+      baseUrl: project.url,
+      suite: project.suites[0],
+      tests: project.tests,
+    })
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
+  })
 })
 
 function normalizeProject(project) {

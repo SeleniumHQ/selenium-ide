@@ -212,14 +212,15 @@ function generateExpressionScript(script) {
 function emitControlFlowDo() {
   return Promise.resolve({
     commands: [{ level: 0, statement: 'do {' }],
-    endingLevel: 1,
+    endingLevelAdjustment: 1,
   })
 }
 
 function emitControlFlowElse() {
   return Promise.resolve({
     commands: [{ level: 0, statement: '} else {' }],
-    endingLevel: 1,
+    startingLevelAdjustment: -1,
+    endingLevelAdjustment: +1,
   })
 }
 
@@ -231,12 +232,16 @@ function emitControlFlowElseIf(script) {
         statement: `} else if (${generateExpressionScript(script)}) {`,
       },
     ],
-    endingLevel: 1,
+    startingLevelAdjustment: -1,
+    endingLevelAdjustment: +1,
   })
 }
 
 function emitControlFlowEnd() {
-  return Promise.resolve(`}`)
+  return Promise.resolve({
+    commands: [{ level: 0, statement: `}` }],
+    startingLevelAdjustment: -1,
+  })
 }
 
 function emitControlFlowIf(script) {
@@ -244,12 +249,17 @@ function emitControlFlowIf(script) {
     commands: [
       { level: 0, statement: `if (${generateExpressionScript(script)}) {` },
     ],
-    endingLevel: 1,
+    endingLevelAdjustment: 1,
   })
 }
 
 function emitControlFlowRepeatIf(script) {
-  return Promise.resolve(`} while (${generateExpressionScript(script)});`)
+  return Promise.resolve({
+    commands: [
+      { level: 0, statement: `} while (${generateExpressionScript(script)});` },
+    ],
+    startingLevelAdjustment: -1,
+  })
 }
 
 function emitControlFlowTimes(target) {
@@ -257,7 +267,7 @@ function emitControlFlowTimes(target) {
     { level: 0, statement: `Integer times = ${target};` },
     { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
   ]
-  return Promise.resolve({ commands, endingLevel: 1 })
+  return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 
 function emitControlFlowWhile(script) {
@@ -265,7 +275,7 @@ function emitControlFlowWhile(script) {
     commands: [
       { level: 0, statement: `while (${generateExpressionScript(script)}) {` },
     ],
-    endingLevel: 1,
+    endingLevelAdjustment: 1,
   })
 }
 
