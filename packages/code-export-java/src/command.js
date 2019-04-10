@@ -323,7 +323,7 @@ async function emitEditContent(locator, content) {
     },
     {
       level: 1,
-      statement: `js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${content}'}", element);`,
+      statement: `js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
     },
     { level: 0, statement: '}' },
   ]
