@@ -403,6 +403,52 @@ export default class WebDriverExecutor {
     await element.sendKeys(...value)
   }
 
+  // wait commands
+
+  async doWaitForElementEditable(locator, timeout) {
+    const element = await this.driver.findElement(parseLocator(locator))
+    await this.wait(async () => await this.isElementEditable(element), parseInt(timeout), 'Timed out waiting for element to be editable')
+  }
+
+  async doWaitForElementNotEditable(locator, timeout) {
+    const element = await this.driver.findElement(parseLocator(locator))
+    await this.wait(async () => !(await this.isElementEditable(element)), parseInt(timeout), 'Timed out waiting for element to not be editable')
+  }
+
+  async doWaitForElementPresent(locator, timeout) {
+    await this.wait(
+      until.elementLocated(parseLocator(locator)),
+      parseInt(timeout)
+    )
+  }
+
+  async doWaitForElementNotPresent(locator, timeout) {
+    const parsedLocator = parseLocator(locator)
+    const elements = await this.driver.findElements(parsedLocator)
+    if (elements.length !== 0) {
+      await this.wait(until.stalenessOf(elements[0]), parseInt(timeout))
+    }
+  }
+
+  async doWaitForElementVisible(locator, timeout) {
+    const startTime = new Date()
+    const element = await this.wait(
+      until.elementLocated(parseLocator(locator)),
+      parseInt(timeout)
+    )
+    const elapsed = new Date() - startTime
+    await this.wait(until.elementIsVisible(element), timeout - elapsed)
+  }
+
+  async doWaitForElementNotVisible(locator, timeout) {
+    const parsedLocator = parseLocator(locator)
+    const elements = await this.driver.findElements(parsedLocator)
+
+    if (elements.length > 0) {
+      await this.wait(until.elementIsNotVisible(elements[0]), parseInt(timeout))
+    }
+  }
+
   // script commands
 
   async doRunScript(script) {
@@ -554,21 +600,14 @@ export default class WebDriverExecutor {
 
   async doAssertEditable(locator) {
     const element = await this.waitForElement(locator, this.driver)
-    if (
-      !(
-        (await element.isEnabled()) && !(await element.getAttribute('readonly'))
-      )
-    ) {
+    if (!(await this.isElementEditable(element))) {
       throw new AssertionError('Element is not editable')
     }
   }
 
   async doAssertNotEditable(locator) {
     const element = await this.waitForElement(locator, this.driver)
-    if (
-      (await element.isEnabled()) &&
-      !(await element.getAttribute('readonly'))
-    ) {
+    if (await this.isElementEditable(element)) {
       throw new AssertionError('Element is editable')
     }
   }
@@ -751,6 +790,11 @@ export default class WebDriverExecutor {
   async waitForElement(locator) {
     const elementLocator = parseLocator(locator)
     return await this.wait(until.elementLocated(elementLocator), IMPLICIT_WAIT)
+  }
+
+  async isElementEditable(element) {
+    const { enabled, readonly } = await this.driver.executeScript('return { enabled: !arguments[0].disabled, readonly: arguments[0].readOnly };', element)
+    return enabled && !readonly
   }
 
   async wait(

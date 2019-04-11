@@ -1,0 +1,10 @@
+<script type="text/javascript">
+  function hide() {
+    setTimeout(() => {
+      const e = document.getElementById('t')
+      e.style.display = 'none'
+    }, 200);
+  }
+</script>
+<button id="b" onclick="hide()">hide element with delay</button>
+<div id="t">hey</div>

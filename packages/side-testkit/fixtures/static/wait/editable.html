@@ -1,0 +1,11 @@
+<script>
+    function edit() {
+        setTimeout(() => {
+            const e = document.getElementById('t')
+            e.disabled = false
+            e.readOnly = false
+        }, 200);
+    }
+</script>
+<button id="b" onclick="edit()">make element editable with delay</button>
+<input id="t" type="text" disabled readonly />

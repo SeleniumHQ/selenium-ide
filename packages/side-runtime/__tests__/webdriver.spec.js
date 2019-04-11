@@ -16,7 +16,7 @@
 // under the License.
 
 import { promisify } from 'util'
-import webdriver, { By } from 'selenium-webdriver'
+import webdriver, { By, WebElement } from 'selenium-webdriver'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
 import { ControlFlowCommandNames } from '../src/playback-tree/commands'
@@ -25,7 +25,7 @@ import WebDriverExecutor from '../src/webdriver'
 
 jest.setTimeout(30000)
 
-describe.skip('webdriver executor', () => {
+describe('webdriver executor', () => {
   it('should implement all the Selenium commands', () => {
     Object.keys(Commands).forEach(command => {
       if (!ControlFlowCommandNames[command]) {
@@ -41,7 +41,7 @@ describe.skip('webdriver executor', () => {
       }
     })
   })
-  describe.each([
+  describe.skip.each([
     [
       'chrome',
       { browserName: 'chrome', chromeOptions: { args: ['headless'] } },
@@ -537,6 +537,96 @@ describe.skip('webdriver executor', () => {
         expect(executor.variables.get('n')).toBe(6)
         await executor.doStoreElementCount('css=.nan', 'n')
         expect(executor.variables.get('n')).toBe(0)
+      })
+    })
+    describe('wait for element editable', () => {
+      it('should wait for an element to be editable', async () => {
+        await driver.get(`http://localhost:${port}/wait/editable.html`)
+        const button = await driver.findElement(By.id('b'))
+        await button.click()
+        await executor.doWaitForElementEditable('id=t', '500')
+        const input = await driver.findElement(By.id('t'))
+        await input.sendKeys('hey')
+        expect(await input.getAttribute('value')).toBe('hey')
+      })
+      it('should timeout trying to wait for an element to be editable', async () => {
+        await driver.get(`http://localhost:${port}/wait/editable.html`)
+        await expect(
+          executor.doWaitForElementEditable('id=t', '100')
+        ).rejects.toThrow()
+      })
+      it('should wait for an element to be not editable', async () => {
+        await driver.get(`http://localhost:${port}/wait/not-editable.html`)
+        const button = await driver.findElement(By.id('b'))
+        await button.click()
+        await executor.doWaitForElementNotEditable('id=t', '500')
+        const input = await driver.findElement(By.id('t'))
+        await expect(input.sendKeys('hey')).rejects.toThrow()
+      })
+      it('should timeout trying to wait for an element to be not editable', async () => {
+        await driver.get(`http://localhost:${port}/wait/not-editable.html`)
+        await expect(
+          executor.doWaitForElementNotEditable('id=t', '100')
+        ).rejects.toThrow()
+      })
+    })
+    describe('wait for element present', () => {
+      it('should wait for an element to appear', async () => {
+        await driver.get(`http://localhost:${port}/wait/present.html`)
+        const button = await driver.findElement(By.id('b'))
+        await button.click()
+        await executor.doWaitForElementPresent('id=t', '500')
+        expect(await driver.findElement(By.id('t'))).toBeInstanceOf(WebElement)
+      })
+      it('should timeout trying to wait for an element to appear', async () => {
+        await driver.get(`http://localhost:${port}/wait/present.html`)
+        await expect(
+          executor.doWaitForElementPresent('id=t', '100')
+        ).rejects.toThrow()
+      })
+      it('should wait for an element to disappear', async () => {
+        await driver.get(`http://localhost:${port}/wait/not-present.html`)
+        expect(await driver.findElement(By.id('t'))).toBeInstanceOf(WebElement)
+        const button = await driver.findElement(By.id('b'))
+        await button.click()
+        await executor.doWaitForElementNotPresent('id=t', '500')
+        await expect(driver.findElement(By.id('t'))).rejects.toThrow()
+      })
+      it('should timeout trying to wait for an element to disappear', async () => {
+        await driver.get(`http://localhost:${port}/wait/not-present.html`)
+        await expect(
+          executor.doWaitForElementNotPresent('id=t', '100')
+        ).rejects.toThrow()
+      })
+    })
+    describe('wait for element visible', () => {
+      it('should wait for an element to be visible', async () => {
+        await driver.get(`http://localhost:${port}/wait/visible.html`)
+        const button = await driver.findElement(By.id('b'))
+        await button.click()
+        await executor.doWaitForElementVisible('id=t', '500')
+        expect(await driver.findElement(By.id('t'))).toBeInstanceOf(WebElement)
+      })
+      it('should timeout trying to wait for an element to be visible', async () => {
+        await driver.get(`http://localhost:${port}/wait/visible.html`)
+        await expect(
+          executor.doWaitForElementVisible('id=t', '100')
+        ).rejects.toThrow()
+      })
+      it('should wait for an element to be invisible', async () => {
+        await driver.get(`http://localhost:${port}/wait/not-visible.html`)
+        const elem = await driver.findElement(By.id('t'))
+        expect(await elem.isDisplayed()).toBeTruthy()
+        const button = await driver.findElement(By.id('b'))
+        await button.click()
+        await executor.doWaitForElementNotVisible('id=t', '500')
+        expect(await elem.isDisplayed()).toBeFalsy()
+      })
+      it('should timeout trying to wait for an element to be invisible', async () => {
+        await driver.get(`http://localhost:${port}/wait/not-visible.html`)
+        await expect(
+          executor.doWaitForElementNotVisible('id=t', '100')
+        ).rejects.toThrow()
       })
     })
   })

@@ -1,0 +1,10 @@
+<script type="text/javascript">
+  function show() {
+    setTimeout(() => {
+      const e = document.getElementById('t')
+      e.style.display = 'block'
+    }, 200);
+  }
+</script>
+<button id="b" onclick="show()">show element with delay</button>
+<div id="t" style="display: none;">hey</div>

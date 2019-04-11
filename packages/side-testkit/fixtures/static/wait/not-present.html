@@ -1,0 +1,10 @@
+<script>
+    function del() {
+        setTimeout(() => {
+            var d = document.getElementById('t')
+            d.parentElement.removeChild(d)
+        }, 200)
+    }
+</script>
+<button id="b" onclick="del()">delete element with delay</button>
+<div id="t">hey</div>
