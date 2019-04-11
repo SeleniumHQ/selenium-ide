@@ -407,12 +407,20 @@ export default class WebDriverExecutor {
 
   async doWaitForElementEditable(locator, timeout) {
     const element = await this.driver.findElement(parseLocator(locator))
-    await this.wait(async () => await this.isElementEditable(element), parseInt(timeout), 'Timed out waiting for element to be editable')
+    await this.wait(
+      async () => await this.isElementEditable(element),
+      parseInt(timeout),
+      'Timed out waiting for element to be editable'
+    )
   }
 
   async doWaitForElementNotEditable(locator, timeout) {
     const element = await this.driver.findElement(parseLocator(locator))
-    await this.wait(async () => !(await this.isElementEditable(element)), parseInt(timeout), 'Timed out waiting for element to not be editable')
+    await this.wait(
+      async () => !(await this.isElementEditable(element)),
+      parseInt(timeout),
+      'Timed out waiting for element to not be editable'
+    )
   }
 
   async doWaitForElementPresent(locator, timeout) {
@@ -793,7 +801,10 @@ export default class WebDriverExecutor {
   }
 
   async isElementEditable(element) {
-    const { enabled, readonly } = await this.driver.executeScript('return { enabled: !arguments[0].disabled, readonly: arguments[0].readOnly };', element)
+    const { enabled, readonly } = await this.driver.executeScript(
+      'return { enabled: !arguments[0].disabled, readonly: arguments[0].readOnly };',
+      element
+    )
     return enabled && !readonly
   }
 
