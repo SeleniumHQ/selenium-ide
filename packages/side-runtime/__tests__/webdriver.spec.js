@@ -523,5 +523,12 @@ describe.skip('webdriver executor', () => {
         expect(executor.variables.get('n')).toBe(null)
       })
     })
+    describe('store title', () => {
+      it('should store the title of a page', async () => {
+        await driver.get(`http://localhost:${port}/title.html`)
+        await executor.doStoreTitle('t')
+        expect(executor.variables.get('t')).toBe('test title')
+      })
+    })
   })
 })

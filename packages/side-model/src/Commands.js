@@ -424,6 +424,7 @@ export default {
   storeTitle: {
     name: 'store title',
     description: 'Gets the title of the current page.',
+    target: ArgTypes.variableName,
   },
   storeValue: {
     name: 'store value',

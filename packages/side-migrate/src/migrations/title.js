@@ -15,32 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import pause from './pause'
-import implicitLocators from './implicit-locators'
-import scriptInterpolation from './script-interpolation'
-import waitForCommands from './wait-for-commands'
-import variableName from './variable-name'
-import selectWindow from './select-window'
-import prompt from './prompt'
-import title from './title'
-
-export const migrators = {
-  pause,
-  implicitLocators,
-  scriptInterpolation,
-  waitForCommands,
-  variableName,
-  selectWindow,
-  prompt,
-  title,
+export default function migrate(project) {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
+    return Object.assign({}, test, {
+      commands: test.commands.map(c => {
+        if (c.command === 'storeTitle') {
+          return Object.assign({}, c, {
+            command: c.command,
+            target: c.value,
+            value: '',
+          })
+        }
+        return c
+      }),
+    })
+  })
+  return r
 }
 
-export default Object.keys(migrators).reduce((migs, migName) => {
-  const mig = migrators[migName]
-  if (!migs[mig.version]) {
-    migs[mig.version] = {}
-  }
-  migs[mig.version][migName] = mig
-
-  return migs
-}, {})
+migrate.version = '3.0'

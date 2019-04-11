@@ -492,6 +492,11 @@ export default class WebDriverExecutor {
     this.variables.set(variable, text)
   }
 
+  async doStoreTitle(variable) {
+    const title = await this.driver.getTitle()
+    this.variables.set(variable, title)
+  }
+
   async doStoreValue(locator, variable) {
     const element = await this.waitForElement(locator, this.driver)
     const value = await element.getAttribute('value')
