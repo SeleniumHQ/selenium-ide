@@ -120,11 +120,11 @@ export const emitters = {
 
 exporter.preprocessors.register(emitters)
 
-export function register(command, emitter) {
+function register(command, emitter) {
   emitters[command] = emitter
 }
 
-export function emit(command) {
+function emit(command) {
   return exporter.emit.command(
     command,
     emitters[command.command],
@@ -1034,4 +1034,5 @@ async function emitWaitForElementNotVisible(locator, timeout) {
 
 export default {
   emit,
+  register,
 }

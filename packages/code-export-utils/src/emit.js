@@ -17,6 +17,9 @@
 
 import { preprocessParameter } from './preprocessor'
 import StringEscape from 'js-string-escape'
+import { clearHooks } from './hook'
+import doRender from './render'
+import find from './find'
 
 export function emitCommand(command, emitter, variableLookup) {
   if (emitter) {
@@ -67,9 +70,157 @@ export function emitEscapedText(text) {
   return StringEscape(text)
 }
 
+async function emitCommands(commands, emitter) {
+  const _commands = commands.map(command => {
+    return emitter.emit(command)
+  })
+  const result = await Promise.all(_commands)
+  return result
+}
+
+async function emitMethod(
+  commands,
+  { commandPrefixPadding, methodDeclaration, terminatingKeyword, emitter } = {}
+) {
+  const emittedCommands = await emitCommands(commands, emitter)
+  return [
+    methodDeclaration,
+    emittedCommands
+      .join(`\n${commandPrefixPadding}`)
+      .replace(/^/, commandPrefixPadding),
+    terminatingKeyword,
+  ]
+}
+
+async function registerMethod(
+  name,
+  commands,
+  {
+    generateMethodDeclaration,
+    terminatingKeyword,
+    hooks,
+    emitter,
+    commandPrefixPadding,
+  }
+) {
+  const methodDeclaration = generateMethodDeclaration(name)
+  if (!hooks.declareMethods.isRegistered(methodDeclaration)) {
+    const result = await emitMethod(commands, {
+      emitter,
+      commandPrefixPadding,
+      methodDeclaration,
+      terminatingKeyword,
+    })
+    result.forEach(statement => {
+      hooks.declareMethods.register(statement)
+    })
+  }
+}
+
+async function emitTest(
+  test,
+  tests,
+  {
+    testLevel,
+    commandLevel,
+    testDeclaration,
+    terminatingKeyword,
+    commandPrefixPadding,
+    hooks,
+    emitter,
+    generateMethodDeclaration,
+  }
+) {
+  const render = doRender.bind(this, commandPrefixPadding)
+  if (!testLevel) testLevel = 1
+  if (!commandLevel) commandLevel = 2
+  const methods = find.reusedTestMethods(test, tests)
+  for (const method of methods) {
+    await registerMethod(method.name, method.commands, {
+      generateMethodDeclaration,
+      terminatingKeyword,
+      hooks,
+      emitter,
+      commandPrefixPadding,
+    })
+  }
+  let result = ''
+  result += render(testDeclaration, {
+    startingLevel: testLevel,
+  })
+  result += render(hooks.inEachBegin.emit({ isOptional: true }), {
+    startingLevel: commandLevel,
+  })
+  const emittedCommands = await emitCommands(test.commands, emitter)
+  result += render(emittedCommands, {
+    startingLevel: commandLevel,
+  })
+  result += render(hooks.inEachEnd.emit({ isOptional: true }), {
+    startingLevel: commandLevel,
+  })
+  result += render(terminatingKeyword, { startingLevel: testLevel })
+  return result
+}
+
+function emitSuite(
+  body,
+  {
+    suiteLevel,
+    testLevel,
+    commandLevel,
+    suiteDeclaration,
+    terminatingKeyword,
+    commandPrefixPadding,
+    hooks,
+  }
+) {
+  const render = doRender.bind(this, commandPrefixPadding)
+  if (!suiteLevel) {
+    suiteLevel = 0
+  }
+  if (!testLevel) {
+    testLevel = 1
+  }
+  if (!commandLevel) {
+    commandLevel = 2
+  }
+  let result = ''
+  result += render(hooks.declareDependencies.emit())
+  result += render(suiteDeclaration, { startingLevel: suiteLevel })
+  result += render(hooks.declareVariables.emit(), {
+    startingLevel: testLevel,
+  })
+  result += render(hooks.beforeAll.emit({ isOptional: true }), {
+    startingLevel: testLevel,
+  })
+  result += render(hooks.beforeEach.emit(), {
+    startingLevel: testLevel,
+  })
+  result += render(hooks.afterEach.emit(), {
+    startingLevel: testLevel,
+  })
+  result += render(hooks.afterAll.emit({ isOptional: true }), {
+    startingLevel: testLevel,
+  })
+  result += render(hooks.declareMethods.emit({ isOptional: true }), {
+    startingLevel: testLevel,
+  })
+  result += body
+  result += render(terminatingKeyword, {
+    startingLevel: suiteLevel,
+  })
+  clearHooks(hooks)
+  return result
+}
+
 export default {
   command: emitCommand,
+  commands: emitCommands,
   location: emitLocation,
+  method: emitMethod,
+  registerMethod,
   selection: emitSelection,
+  suite: emitSuite,
+  test: emitTest,
   text: emitEscapedText,
 }

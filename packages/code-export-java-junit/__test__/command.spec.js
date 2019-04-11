@@ -17,8 +17,10 @@
 
 import Command from '../src/command'
 import { ControlFlowCommandNames } from '../../selenium-ide/src/neo/models/Command'
-import { commandPrefixPadding } from '../src/index'
+import { opts } from '../src/index'
 import exporter from 'code-export-utils'
+
+const commandPrefixPadding = opts.commandPrefixPadding
 
 async function prettify(command, { fullPayload } = {}) {
   const commandBlock = await Command.emit(command)

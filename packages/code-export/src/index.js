@@ -18,8 +18,7 @@
 import javaJunit from 'code-export-java-junit'
 
 export const availableLanguages = [
-  { name: 'java-junit', displayName: 'Java JUnit' },
-]
+  { name: 'java-junit', displayName: 'Java JUnit' }, ]
 
 const exporter = { 'java-junit': javaJunit }
 
@@ -55,7 +54,7 @@ export function registerAfterEach(language, statement) {
   exporter[language].register.afterEach(statement)
 }
 
-export function registerMethods(language, name, commands) {
+export function registerMethod(language, name, commands) {
   exporter[language].register.methods(name, commands)
 }
 

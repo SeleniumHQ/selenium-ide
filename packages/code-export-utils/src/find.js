@@ -15,20 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import emit from './emit'
-import prettify from './prettify'
-import { registerPreprocessors } from './preprocessor'
-import Hook from './hook'
-import find from './find'
-import render from './render'
+function findReusedTestMethods(test, tests) {
+  const results = []
+  for (const command of test.commands) {
+    if (command.command === 'run') {
+      const reusedTest = tests.find(test => test.name === command.target)
+      results.push({ name: reusedTest.name, commands: reusedTest.commands })
+    }
+  }
+  return results
+}
 
 export default {
-  emit: { ...emit },
-  prettify,
-  preprocessors: {
-    register: registerPreprocessors,
-  },
-  hook: Hook,
-  find: { ...find },
-  render,
+  reusedTestMethods: findReusedTestMethods,
 }

@@ -79,3 +79,9 @@ export default class Hook {
       .includes(true)
   }
 }
+
+export function clearHooks(hooks) {
+  Object.keys(hooks).forEach(hook => {
+    hooks[hook].clearRegister()
+  })
+}

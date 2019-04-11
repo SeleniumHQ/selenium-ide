@@ -33,18 +33,12 @@ function generate(hookName) {
   return new exporter.hook(emitters[hookName]())
 }
 
-function generateAll() {
+export function generateHooks() {
   let result = {}
   Object.keys(emitters).forEach(hookName => {
     result[hookName] = generate(hookName)
   })
   return result
-}
-
-function clear(hooks) {
-  Object.keys(hooks).forEach(hook => {
-    hooks[hook].clearRegister()
-  })
 }
 
 function afterAll() {
@@ -177,9 +171,4 @@ function declareVariables() {
 
 function empty() {
   return {}
-}
-
-export default {
-  generateAll,
-  clear,
 }
