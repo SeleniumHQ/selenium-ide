@@ -79,12 +79,6 @@ export async function emitSuite({ baseUrl, suite, tests }) {
   }
 }
 
-async function registerMethod(name, commands) {
-  await exporter.emit.registerMethod(name, commands, {
-    ...opts,
-  })
-}
-
 export default {
   emit: {
     test: emitTest,
@@ -100,6 +94,5 @@ export default {
     afterAll: opts.hooks.afterAll.register,
     inEachBegin: opts.hooks.inEachBegin.register,
     inEachEnd: opts.hooks.inEachEnd.register,
-    method: registerMethod,
   },
 }
