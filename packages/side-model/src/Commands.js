@@ -414,6 +414,13 @@ export default {
     target: ArgTypes.attributeLocator,
     value: ArgTypes.variableName,
   },
+  storeElementCount: {
+    name: 'store element count',
+    description: `Gets the number of nodes that match the specified locator 
+        (e.g. "xpath=//table" would give the number of tables).`,
+    target: ArgTypes.locator,
+    value: ArgTypes.variableName,
+  },
   storeText: {
     name: 'store text',
     description: `Gets the text of an element and stores it for later use. 
@@ -437,13 +444,6 @@ export default {
     name: 'store window handle',
     description: 'Gets the handle of the current page.',
     target: ArgTypes.handle,
-  },
-  storeXpathCount: {
-    name: 'store xpath count',
-    description: `Gets the number of nodes that match the specified xpath 
-        (e.g. "//table" would give the number of tables).`,
-    target: ArgTypes.xpath,
-    value: ArgTypes.variableName,
   },
   times: {
     name: 'times',

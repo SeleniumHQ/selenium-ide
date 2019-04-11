@@ -530,5 +530,14 @@ describe.skip('webdriver executor', () => {
         expect(executor.variables.get('t')).toBe('test title')
       })
     })
+    describe('store element count', () => {
+      it('should store the number of elements in a page', async () => {
+        await driver.get(`http://localhost:${port}/store/nodes.html`)
+        await executor.doStoreElementCount('css=.testclass', 'n')
+        expect(executor.variables.get('n')).toBe(6)
+        await executor.doStoreElementCount('css=.nan', 'n')
+        expect(executor.variables.get('n')).toBe(0)
+      })
+    })
   })
 })

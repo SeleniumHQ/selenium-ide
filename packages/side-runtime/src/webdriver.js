@@ -486,6 +486,11 @@ export default class WebDriverExecutor {
     this.variables.set(variable, value)
   }
 
+  async doStoreElementCount(locator, variable) {
+    const elements = await this.driver.findElements(parseLocator(locator))
+    this.variables.set(variable, elements.length)
+  }
+
   async doStoreText(locator, variable) {
     const element = await this.waitForElement(locator, this.driver)
     const text = await element.getText()
@@ -1099,6 +1104,13 @@ WebDriverExecutor.prototype.doStoreAttribute = composePreprocessors(
   null,
   { targetFallback: preprocessArray(interpolateString) },
   WebDriverExecutor.prototype.doStoreAttribute
+)
+
+WebDriverExecutor.prototype.doStoreElementCount = composePreprocessors(
+  interpolateString,
+  null,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doStoreElementCount
 )
 
 WebDriverExecutor.prototype.doStoreText = composePreprocessors(
