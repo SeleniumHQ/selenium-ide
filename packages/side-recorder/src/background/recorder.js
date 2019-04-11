@@ -534,6 +534,7 @@ export default class BackgroundRecorder {
     } else {
       // the test was never recorded before, nor it was the last test ran
       await this.getRecordingWindow()
+      await this.attachToTab(this.lastAttachedTabId)
     }
   }
 

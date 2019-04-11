@@ -51,6 +51,7 @@ describe('recorder e2e', () => {
   })
   it('should record a command', async () => {
     const recording = []
+    await driver.get('http://the-internet.herokuapp.com/')
     await driver.sleep(1000)
     extSocket.on('message', data => {
       const message = JSON.parse(data)
@@ -67,7 +68,6 @@ describe('recorder e2e', () => {
         },
       })
     )
-    await driver.get('http://the-internet.herokuapp.com/')
     const elem = await driver.findElement(By.linkText('JavaScript Alerts'))
     await elem.click()
     const alertButton = await driver.wait(
@@ -87,14 +87,16 @@ describe('recorder e2e', () => {
     )
     extSocket.removeAllListeners('message')
     await driver.sleep(100)
-    expect(recording.length).toBe(4)
+    expect(recording.length).toBe(5)
     expect(recording[0].command).toBe('open')
     expect(recording[1].command).toBe('click')
     expect(recording[2].command).toBe('click')
     expect(recording[3].command).toBe('assertAlert')
+    expect(recording[4].command).toBe('acceptAlert')
   })
   it('should record a new window', async () => {
     const recording = []
+    await driver.get('http://the-internet.herokuapp.com/')
     await driver.sleep(1000)
     extSocket.on('message', data => {
       const message = JSON.parse(data)
@@ -111,7 +113,6 @@ describe('recorder e2e', () => {
         },
       })
     )
-    await driver.get('http://the-internet.herokuapp.com/')
     const handles = await driver.getAllWindowHandles()
     const elem = await driver.findElement(By.linkText('Elemental Selenium'))
     await elem.click()
