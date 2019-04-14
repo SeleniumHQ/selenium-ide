@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -22,6 +24,7 @@ import classNames from 'classnames'
 export default class DismissButton extends React.Component {
   render() {
     return (
+      // Create class="si-remove" 的ActionButton
       <ActionButton
         tabIndex="-1"
         {...this.props}

@@ -24,7 +24,9 @@ export default class NewButton extends React.Component {
   render() {
     const props = { ...this.props }
     return (
+      // Create class="si-new-project" 的ActionButton
       <ActionButton
+        //  data-tip ---> Create new project
         data-tip={`<p>Create new project <span style="color: #929292;padding-left: 5px;">${parse(
           'n',
           { primaryKey: true, shiftKey: true }

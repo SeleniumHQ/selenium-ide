@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -22,6 +24,7 @@ import classNames from 'classnames'
 export default class ClearButton extends React.Component {
   render() {
     return (
+      //  class="si-clear" de ActionButton button
       <ActionButton
         data-tip="<p>Clear log</p>"
         {...this.props}

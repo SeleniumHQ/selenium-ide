@@ -15,14 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
 import { parse } from 'modifier-keys'
-
 export default class DisableBreakpointsButton extends React.Component {
   render() {
     return (
+      // Create class="si-disable-breakpoints" 的ActionButton
+      // data-tip --->  Disable breakpoints
       <ActionButton
         data-tip={`<p>Disable breakpoints <span style="color: #929292;padding-left: 5px;">${parse(
           'y',

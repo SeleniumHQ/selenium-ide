@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -26,6 +28,7 @@ export default class MoreButton extends React.Component {
     delete props.isMenuOpen
     return (
       <ActionButton
+        // Create class="no-focus si-more" 的ActionButton
         tabIndex={this.props.canFocus ? '0' : '-1'}
         {...props}
         className={classNames(

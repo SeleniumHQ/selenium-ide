@@ -16,6 +16,9 @@
 // under the License.
 
 /*eslint-disable react/prop-types*/
+
+//Already positioned
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import ActionButton from '../ActionButton'
@@ -26,6 +29,7 @@ export default class SpeedGaugeButton extends React.Component {
   static propTypes = {
     speed: PropTypes.number,
   }
+  // speed 默认是5 范围（1-5） 1-2-3-4-5 5个等级
   static defaultProps = {
     speed: 5,
   }
@@ -33,6 +37,8 @@ export default class SpeedGaugeButton extends React.Component {
     const props = { ...this.props }
     delete props.isMenuOpen
     return (
+      // Create class="si-gauge" 的ActionButton
+      // data-tip--->Test execution speed
       <ActionButton
         data-tip="<p>Test execution speed</p>"
         {...props}
@@ -42,6 +48,7 @@ export default class SpeedGaugeButton extends React.Component {
           this.props.className
         )}
       >
+        {/*创建一个下拉箭头视图*/}
         <i className="si-caret" />
       </ActionButton>
     )

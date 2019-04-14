@@ -54,5 +54,8 @@
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-prettier": "^1.0.3"
-  }
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "OrangeHeroDavid <OrangeHeroDavid@163.com>"
 }

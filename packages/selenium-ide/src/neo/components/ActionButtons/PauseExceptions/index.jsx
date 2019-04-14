@@ -22,7 +22,9 @@ import classNames from 'classnames'
 export default class PauseExceptionsButton extends React.Component {
   render() {
     return (
+      // Create class="si-break-exceptions" 的ActionButton
       <ActionButton
+        // data-tip="<p>Pause on exceptions</p>"
         data-tip="<p>Pause on exceptions</p>"
         {...this.props}
         className={classNames('si-break-exceptions', this.props.className)}

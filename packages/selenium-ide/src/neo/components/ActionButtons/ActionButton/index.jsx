@@ -15,16 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//此处ActionButton是 所有button的父组件
+
+//Already positioned
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import './style.css'
-
+//定义ActionButton
 export default class ActionButton extends React.Component {
   render() {
     const props = { ...this.props }
-
     delete props.isActive
+    //渲染了一个class='btn-action'的button
     return (
       <button
         type="button"
@@ -37,7 +40,8 @@ export default class ActionButton extends React.Component {
       />
     )
   }
-
+  //class name isRequired
+  //isActive is bool
   static propTypes = {
     className: PropTypes.string.isRequired,
     isActive: PropTypes.bool,

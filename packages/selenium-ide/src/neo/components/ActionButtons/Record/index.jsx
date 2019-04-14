@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import ActionButton from '../ActionButton'
@@ -29,20 +31,24 @@ export default class Record extends React.Component {
   }
   render() {
     return (
+      // className="record" 的Div
       <div
         className="record"
         data-tip={
+          //根据isRecording的真假渲染不同的组件
+          //Ctrl + U
           this.props.isRecording
             ? `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse(
                 'u',
                 { primaryKey: true }
               )}</span></p>`
-            : `<p>Start recording <span style="color: #929292;padding-left: 5px;">${parse(
+            : `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse(
                 'u',
                 { primaryKey: true }
               )}</span></p>`
         }
       >
+        {/*Create class="si-play" 的ActionButton*/}
         <ActionButton
           disabled={this.props.disabled}
           isActive={this.props.isRecording}

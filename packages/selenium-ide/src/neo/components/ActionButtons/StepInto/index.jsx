@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -23,6 +25,7 @@ import { parse } from 'modifier-keys'
 export default class StepIntoButton extends React.Component {
   render() {
     return (
+      // Create class="si-step-down" 的ActionButton
       <ActionButton
         data-tip={`<p>Step over current command <span style="color: #929292;padding-left: 5px;">${parse(
           "'",

@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -22,6 +24,8 @@ import classNames from 'classnames'
 export default class RemoveButton extends React.Component {
   render() {
     return (
+      // Create classNames('no-focus', 'si-remove') 的ActionButton
+      // tabIndex="-1" 为什么？
       <ActionButton
         tabIndex="-1"
         {...this.props}

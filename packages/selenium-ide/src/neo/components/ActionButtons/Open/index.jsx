@@ -15,6 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+//OpenButton 没有继承ActionButton 而是uuidv4
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import uuidv4 from 'uuid/v4'
@@ -71,6 +74,7 @@ export class OpenInput extends React.Component {
           type="file"
           onChange={this.handleChange}
         />
+        {/*Ctrl + O也可以触发*/}
         <label
           data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse(
             'o',

@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import ActionButton from '../ActionButton'
@@ -27,6 +29,8 @@ export default class SaveButton extends React.Component {
     const props = { ...this.props }
     delete props.unsaved
     return (
+      // Create class="si-save" 的ActionButton
+      //Ctrl + S
       <ActionButton
         data-tip={`<p>Save project <span style="color: #929292;padding-left: 5px;">${parse(
           's',

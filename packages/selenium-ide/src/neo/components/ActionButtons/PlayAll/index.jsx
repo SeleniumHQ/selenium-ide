@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -23,7 +25,9 @@ import { parse } from 'modifier-keys'
 export default class PlayAllButton extends React.Component {
   render() {
     return (
+      // Create class="si-play-all" 的ActionButton
       <ActionButton
+        // data-tip--->Run all tests
         data-tip={`<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse(
           'r',
           { primaryKey: true, shiftKey: true }

@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//Already positioned
+
 import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
@@ -23,6 +25,7 @@ import { parse } from 'modifier-keys'
 export default class PauseCurrentButton extends React.Component {
   render() {
     return (
+      // Create class="si-pause" 的暂停ActionButton
       <ActionButton
         data-tip={`<p>Pause test execution <span style="color: #929292;padding-left: 5px;">${parse(
           'p',
