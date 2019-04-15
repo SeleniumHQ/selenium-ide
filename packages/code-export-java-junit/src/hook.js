@@ -146,6 +146,7 @@ function declareDependencies() {
         { level: 0, statement: 'import java.util.HashMap;' },
         { level: 0, statement: 'import java.util.List;' },
         { level: 0, statement: 'import java.util.ArrayList;' },
+        { level: 0, statement: 'import java.util.Map;' },
       ],
     },
   }
@@ -160,7 +161,7 @@ function declareVariables() {
         {
           level: 0,
           statement:
-            'private HashMap<String, Object> vars = new HashMap<String, Object>();',
+            'private Map<String, Object> vars = new HashMap<String, Object>();',
         },
         { level: 0, statement: 'JavascriptExecutor js;' },
       ],
