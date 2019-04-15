@@ -147,13 +147,9 @@ function emitAssert(varName, value) {
 }
 
 function emitAssertAlert(alertText) {
-  const commands = [
-    { level: 0, statement: '{' },
-    { level: 1, statement: 'Alert alert = driver.switchTo().alert();' },
-    { level: 1, statement: `assertThat(alert.getText(), is("${alertText}"));` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  return Promise.resolve(
+    `assertThat(driver.switchTo().alert().getText(), is("${alertText}"));`
+  )
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
@@ -342,33 +338,17 @@ async function emitEditContent(locator, content) {
 
 async function emitExecuteScript(script, varName) {
   const scriptString = script.script.replace(/"/g, "'")
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `Object result = js.executeScript("${scriptString}"${generateScriptArguments(
-        script
-      )});`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'result')}` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  const result = `js.executeScript("${scriptString}"${generateScriptArguments(
+    script
+  )})`
+  return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `Object result = js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
-        script.script
-      }.then(callback).catch(callback);${generateScriptArguments(script)}");`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'result')}` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  const result = `js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+    script.script
+  }.then(callback).catch(callback);${generateScriptArguments(script)}")`
+  return Promise.resolve(variableSetter(varName, result))
 }
 
 function generateScriptArguments(script) {
@@ -631,18 +611,8 @@ async function emitStoreAttribute(locator, varName) {
 }
 
 async function emitStoreText(locator, varName) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `String elementText = driver.findElement(${await location.emit(
-        locator
-      )}).getText();`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'elementText')}` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  const result = `driver.findElement(${await location.emit(locator)}).getText()`
+  return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitStoreTitle(_, varName) {
@@ -650,18 +620,10 @@ async function emitStoreTitle(_, varName) {
 }
 
 async function emitStoreValue(locator, varName) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `String value = driver.findElement(${await location.emit(
-        locator
-      )}).getAttribute("value");`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'value')}` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  const result = `driver.findElement(${await location.emit(
+    locator
+  )}).getAttribute("value")`
+  return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitStoreWindowHandle(varName) {
@@ -669,18 +631,8 @@ async function emitStoreWindowHandle(varName) {
 }
 
 async function emitStoreXpathCount(locator, varName) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
-        locator
-      )});`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'elements.size()')}` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  const result = `driver.findElements(${await location.emit(locator)}).size()`
+  return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitSubmit(_locator) {
@@ -821,21 +773,10 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
 }
 
 async function emitVerifyNotText(locator, text) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `String text = driver.findElement(${await location.emit(
-        locator
-      )}).getText();`,
-    },
-    {
-      level: 1,
-      statement: `assertThat(text, is(not("${exporter.emit.text(text)}")));`,
-    },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
+  const result = `driver.findElement(${await location.emit(locator)}).getText()`
+  return Promise.resolve(
+    `assertThat(${result}, is(not("${exporter.emit.text(text)}")));`
+  )
 }
 
 async function emitVerifySelectedLabel(locator, labelValue) {

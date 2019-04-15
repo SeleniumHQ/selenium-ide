@@ -22,14 +22,16 @@ import org.openqa.selenium.Keys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 public class Login {
   private WebDriver driver;
-  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  private Map<String, Object> vars;
   JavascriptExecutor js;
   @Before
   public void setUp() {
     driver = new FirefoxDriver();
     js = (JavascriptExecutor) driver;
+    vars = new HashMap<String, Object>();
   }
   @After
   public void tearDown() {
@@ -79,14 +81,16 @@ import org.openqa.selenium.Keys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 public class Controlflow {
   private WebDriver driver;
-  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  private Map<String, Object> vars;
   JavascriptExecutor js;
   @Before
   public void setUp() {
     driver = new FirefoxDriver();
     js = (JavascriptExecutor) driver;
+    vars = new HashMap<String, Object>();
   }
   @After
   public void tearDown() {
@@ -94,116 +98,62 @@ public class Controlflow {
   }
   @Test
   public void controlflowif() {
-    {
-      Object result = js.executeScript(\\"return 'a'\\");
-      vars.put(\\"myVar\\", result);
-    }
+    vars.put(\\"myVar\\", js.executeScript(\\"return 'a'\\"));
     if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", vars.get(\\"myVar\\"))) {
-      {
-        Object result = js.executeScript(\\"return 'a'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'a'\\"));
     } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", vars.get(\\"myVar\\"))) {
-      {
-        Object result = js.executeScript(\\"return 'b'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'b'\\"));
     } else {
-      {
-        Object result = js.executeScript(\\"return 'c'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'c'\\"));
     }
     assertEquals(vars.get(\\"output\\").toString(), \\"a\\");
   }
   @Test
   public void controlflowelseif() {
-    {
-      Object result = js.executeScript(\\"return 'b'\\");
-      vars.put(\\"myVar\\", result);
-    }
+    vars.put(\\"myVar\\", js.executeScript(\\"return 'b'\\"));
     if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", vars.get(\\"myVar\\"))) {
-      {
-        Object result = js.executeScript(\\"return 'a'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'a'\\"));
     } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", vars.get(\\"myVar\\"))) {
-      {
-        Object result = js.executeScript(\\"return 'b'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'b'\\"));
     } else {
-      {
-        Object result = js.executeScript(\\"return 'c'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'c'\\"));
     }
     assertEquals(vars.get(\\"output\\").toString(), \\"b\\");
   }
   @Test
   public void controlflowelse() {
-    {
-      Object result = js.executeScript(\\"return 'c'\\");
-      vars.put(\\"myVar\\", result);
-    }
+    vars.put(\\"myVar\\", js.executeScript(\\"return 'c'\\"));
     if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", vars.get(\\"myVar\\"))) {
-      {
-        Object result = js.executeScript(\\"return 'a'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'a'\\"));
     } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", vars.get(\\"myVar\\"))) {
-      {
-        Object result = js.executeScript(\\"return 'b'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'b'\\"));
     } else {
-      {
-        Object result = js.executeScript(\\"return 'c'\\");
-        vars.put(\\"output\\", result);
-      }
+      vars.put(\\"output\\", js.executeScript(\\"return 'c'\\"));
     }
     assertEquals(vars.get(\\"output\\").toString(), \\"c\\");
   }
   @Test
   public void controlflowdo() {
-    {
-      Object result = js.executeScript(\\"return 1\\");
-      vars.put(\\"check\\", result);
-    }
+    vars.put(\\"check\\", js.executeScript(\\"return 1\\"));
     do {
-      {
-        Object result = js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\"));
-        vars.put(\\"check\\", result);
-      }
+      vars.put(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\")));
     } while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", vars.get(\\"check\\")));
     assertEquals(vars.get(\\"check\\").toString(), \\"3\\");
   }
   @Test
   public void controlflowtimes() {
-    {
-      Object result = js.executeScript(\\"return 1\\");
-      vars.put(\\"check\\", result);
-    }
+    vars.put(\\"check\\", js.executeScript(\\"return 1\\"));
     Integer times = 2;
     for(int i = 0; i < times; i++) {
-      {
-        Object result = js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\"));
-        vars.put(\\"check\\", result);
-      }
+      vars.put(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\")));
     }
     assertEquals(vars.get(\\"check\\").toString(), \\"3\\");
   }
   @Test
   public void controlflowwhile() {
-    {
-      Object result = js.executeScript(\\"return 1\\");
-      vars.put(\\"check\\", result);
-    }
+    vars.put(\\"check\\", js.executeScript(\\"return 1\\"));
     while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", vars.get(\\"check\\"))) {
-      {
-        Object result = js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\"));
-        vars.put(\\"check\\", result);
-      }
+      vars.put(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\")));
     }
     assertEquals(vars.get(\\"check\\").toString(), \\"3\\");
   }
@@ -233,14 +183,16 @@ import org.openqa.selenium.Keys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 public class Login {
   private WebDriver driver;
-  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  private Map<String, Object> vars;
   JavascriptExecutor js;
   @Before
   public void setUp() {
     driver = new FirefoxDriver();
     js = (JavascriptExecutor) driver;
+    vars = new HashMap<String, Object>();
   }
   @After
   public void tearDown() {
@@ -291,14 +243,16 @@ import org.openqa.selenium.Keys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 public class Login {
   private WebDriver driver;
-  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  private Map<String, Object> vars;
   JavascriptExecutor js;
   @Before
   public void setUp() {
     driver = new FirefoxDriver();
     js = (JavascriptExecutor) driver;
+    vars = new HashMap<String, Object>();
   }
   @After
   public void tearDown() {
@@ -339,14 +293,16 @@ import org.openqa.selenium.Keys;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 public class Validcredentials {
   private WebDriver driver;
-  private HashMap<String, Object> vars = new HashMap<String, Object>();
+  private Map<String, Object> vars;
   JavascriptExecutor js;
   @Before
   public void setUp() {
     driver = new FirefoxDriver();
     js = (JavascriptExecutor) driver;
+    vars = new HashMap<String, Object>();
   }
   @After
   public void tearDown() {

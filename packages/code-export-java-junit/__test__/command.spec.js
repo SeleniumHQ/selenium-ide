@@ -60,7 +60,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Alert alert = driver.switchTo().alert();\n${commandPrefixPadding}assertThat(alert.getText(), is("an alert"));\n}`
+      `assertThat(driver.switchTo().alert().getText(), is("an alert"));`
     )
   })
   it('should emit `assert checked` command', () => {
@@ -80,7 +80,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Alert alert = driver.switchTo().alert();\n${commandPrefixPadding}assertThat(alert.getText(), is("a confirmation"));\n}`
+      `assertThat(driver.switchTo().alert().getText(), is("a confirmation"));`
     )
   })
   it('should emit `assert editable` command', () => {
@@ -150,7 +150,7 @@ describe('command code emitter', () => {
       value: 'text',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}String text = driver.findElement(By.id("test")).getText();\n${commandPrefixPadding}assertThat(text, is(not("text")));\n}`
+      `assertThat(driver.findElement(By.id("test")).getText(), is(not("text")));`
     )
   })
   it('should emit `assert prompt` command', () => {
@@ -160,7 +160,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Alert alert = driver.switchTo().alert();\n${commandPrefixPadding}assertThat(alert.getText(), is("a prompt"));\n}`
+      `assertThat(driver.switchTo().alert().getText(), is("a prompt"));`
     )
   })
   it("should emit 'assert selected label' command", () => {
@@ -364,7 +364,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Object result = js.executeScript("javascript");\n${commandPrefixPadding}vars.put("myVar", result);\n}`
+      `vars.put("myVar", js.executeScript("javascript"));`
     )
   })
   it('should emit `execute script` command with return string value', () => {
@@ -374,7 +374,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Object result = js.executeScript("return 'a'");\n${commandPrefixPadding}vars.put("myVar", result);\n}`
+      `vars.put("myVar", js.executeScript("return 'a'"));`
     )
   })
   it('should emit `execute async script` command', () => {
@@ -384,7 +384,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Object result = js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);");\n${commandPrefixPadding}vars.put("myVar", result);\n}`
+      `vars.put("myVar", js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);"));`
     )
   })
   it('should emit `if` command', () => {
@@ -692,7 +692,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}String elementText = driver.findElement(By.id("someElement")).getText();\n${commandPrefixPadding}vars.put("myVar", elementText);\n}`
+      `vars.put("myVar", driver.findElement(By.id("someElement")).getText());`
     )
   })
   it('should emit `store title` command', () => {
@@ -712,7 +712,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}String value = driver.findElement(By.id("someElement")).getAttribute("value");\n${commandPrefixPadding}vars.put("myVar", value);\n}`
+      `vars.put("myVar", driver.findElement(By.id("someElement")).getAttribute("value"));`
     )
   })
   it('should emit `store window handle` command', () => {
@@ -732,7 +732,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}List<WebElement> elements = driver.findElements(By.xpath("button"));\n${commandPrefixPadding}vars.put("myVar", elements.size());\n}`
+      `vars.put("myVar", driver.findElements(By.xpath("button")).size());`
     )
   })
   it('should emit `submit` command', () => {
@@ -867,7 +867,7 @@ describe('command code emitter', () => {
       value: 'text',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}String text = driver.findElement(By.id("test")).getText();\n${commandPrefixPadding}assertThat(text, is(not("text")));\n}`
+      `assertThat(driver.findElement(By.id("test")).getText(), is(not("text")));`
     )
   })
   it("should emit 'verify selected label' command", () => {
