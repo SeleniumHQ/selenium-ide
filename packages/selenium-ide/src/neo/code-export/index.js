@@ -17,7 +17,7 @@
 
 import UiState from '../stores/view/UiState'
 import ModalState from '../stores/view/ModalState'
-import { emitTest, emitSuite } from 'code-export'
+import exporter from 'code-export'
 import { downloadUniqueFile } from '../IO/filesystem'
 import { normalizeTestsInSuite } from '../IO/normalize'
 
@@ -30,7 +30,7 @@ export async function exportCodeToFile(
   for (const language of selectedLanguages) {
     let emittedCode
     if (test) {
-      emittedCode = await emitTest(language, {
+      emittedCode = await exporter.emit.test(language, {
         url,
         test,
         tests,
@@ -38,7 +38,7 @@ export async function exportCodeToFile(
       })
     } else if (suite) {
       const _suite = normalizeTestsInSuite({ suite, tests })
-      emittedCode = await emitSuite(language, {
+      emittedCode = await exporter.emit.suite(language, {
         url,
         suite: _suite,
         tests,

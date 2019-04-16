@@ -23,43 +23,43 @@ export const availableLanguages = [
 
 const exporter = { 'java-junit': javaJunit }
 
-export function registerCommand(language, command, emitter) {
+function registerCommand(language, command, emitter) {
   exporter[language].register.command(command, emitter)
 }
 
-export function registerVariable(language, declaration) {
+function registerVariable(language, declaration) {
   exporter[language].register.variable(declaration)
 }
 
-export function registerDependency(language, statement) {
+function registerDependency(language, statement) {
   exporter[language].register.dependency(statement)
 }
 
-export function registerBeforeAll(language, statement) {
+function registerBeforeAll(language, statement) {
   exporter[language].register.beforeAll(statement)
 }
 
-export function registerBeforeEach(language, statement) {
+function registerBeforeEach(language, statement) {
   exporter[language].register.beforeEach(statement)
 }
 
-export function registerInEachBegin(language, statement) {
+function registerInEachBegin(language, statement) {
   exporter[language].register.inEachBegin(statement)
 }
 
-export function registerInEachEnd(language, statement) {
+function registerInEachEnd(language, statement) {
   exporter[language].register.inEachEnd(statement)
 }
 
-export function registerAfterEach(language, statement) {
+function registerAfterEach(language, statement) {
   exporter[language].register.afterEach(statement)
 }
 
-export function registerAfterAll(language, statement) {
+function registerAfterAll(language, statement) {
   exporter[language].register.afterAll(statement)
 }
 
-export function emitTest(language, { url, test, tests, enableOriginTracing }) {
+function emitTest(language, { url, test, tests, enableOriginTracing }) {
   return exporter[language].emit.test({
     baseUrl: url,
     test,
@@ -78,4 +78,22 @@ export function emitSuite(
     tests,
     enableOriginTracing,
   })
+}
+
+export default {
+  register: {
+    command: registerCommand,
+    variable: registerVariable,
+    dependency: registerDependency,
+    beforeAll: registerBeforeAll,
+    beforeEach: registerBeforeEach,
+    inEachBegin: registerInEachBegin,
+    inEachEnd: registerInEachEnd,
+    afterEach: registerAfterEach,
+    afterAll: registerAfterAll,
+  },
+  emit: {
+    test: emitTest,
+    suite: emitSuite,
+  },
 }
