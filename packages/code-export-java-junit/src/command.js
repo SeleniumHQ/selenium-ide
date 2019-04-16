@@ -121,7 +121,7 @@ export const emitters = {
 exporter.preprocessors.register(emitters)
 
 function register(command, emitter) {
-  emitters[command] = emitter
+  exporter.register.emitter({ command, emitter, emitters })
 }
 
 function emit(command) {
