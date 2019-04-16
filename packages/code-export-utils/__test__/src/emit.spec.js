@@ -15,9 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { emitLocation, emitSelection } from '../../src/emit'
+import { emitLocation, emitSelection, emitOriginTracing } from '../../src/emit'
+import TestCase from '../../../selenium-ide/src/neo/models/TestCase'
 
-describe('Location emitter', async () => {
+describe('Location emitter', () => {
   it('emits by sync emitter', () => {
     const emitters = {
       id: selector => {
@@ -44,7 +45,7 @@ describe('Location emitter', async () => {
   })
 })
 
-describe('Selection emitter', async () => {
+describe('Selection emitter', () => {
   it('emits by sync emitter', () => {
     const emitters = {
       id: id => {
@@ -74,5 +75,19 @@ describe('Selection emitter', async () => {
     return expect(() => emitSelection('notExists=element', {})).toThrow(
       'Unknown selection locator notExists'
     )
+  })
+})
+
+describe('Trace emitter', () => {
+  it('should emit original test step number and details', () => {
+    const test = new TestCase()
+    test.createCommand(undefined, 'a', 'foo', 'bar')
+    test.createCommand(undefined, 'b', 'baz', 'qux', 'a comment')
+    expect(emitOriginTracing(test, { commentPrefix: '//' })).toEqual([
+      '// Test name: Untitled Test',
+      '// Step # | name | target | value | comment',
+      '// 1 | a | foo | bar | ',
+      '// 2 | b | baz | qux | a comment',
+    ])
   })
 })

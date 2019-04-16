@@ -20,13 +20,18 @@ import prettify from './prettify'
 export default function render(
   commandPrefixPadding,
   input,
-  { startingLevel, newLineCount, fullPayload } = {}
+  { startingLevel, newLineCount, fullPayload, originTracing } = {}
 ) {
   if (!startingLevel) startingLevel = 0
   if (!newLineCount) newLineCount = 1
   if (!fullPayload) fullPayload = false
   if (Array.isArray(input)) {
-    return renderCommands(input, { startingLevel, commandPrefixPadding })
+    // e.g., an array of emitted command strings to be stitched together
+    return renderCommands(input, {
+      startingLevel,
+      commandPrefixPadding,
+      originTracing,
+    })
   } else {
     const result = prettify(input, {
       commandPrefixPadding,
@@ -39,18 +44,21 @@ export default function render(
   }
 }
 
-function renderCommands(
+export function renderCommands(
   commands,
-  { startingLevel, commandPrefixPadding } = {}
+  { startingLevel, commandPrefixPadding, originTracing } = {}
 ) {
   let result = ''
   let endingLevel = startingLevel
-  commands.forEach(command => {
+  const originTitle = originTracing ? originTracing.shift() : undefined
+  result += originTitle ? originTitle + '\n' : ''
+  commands.forEach((command, index) => {
     const commandBlock = render(commandPrefixPadding, command, {
       startingLevel: endingLevel,
       fullPayload: true,
     })
     endingLevel = commandBlock.endingLevel
+    result += originTracing ? originTracing[index] + '\n' : ''
     result += commandBlock.body
     result += '\n'
   })
