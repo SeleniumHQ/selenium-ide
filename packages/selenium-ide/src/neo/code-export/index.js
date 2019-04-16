@@ -26,10 +26,20 @@ export async function exportCodeToFile(selectedLanguages, { test, suite }) {
   for (const language of selectedLanguages) {
     let emittedCode
     if (test) {
-      emittedCode = await emitTest(language, { url, test, tests })
+      emittedCode = await emitTest(language, {
+        url,
+        test,
+        tests,
+        enableOriginTracing: true,
+      })
     } else if (suite) {
       const _suite = normalizeTestsInSuite({ suite, tests })
-      emittedCode = await emitSuite(language, { url, suite: _suite, tests })
+      emittedCode = await emitSuite(language, {
+        url,
+        suite: _suite,
+        tests,
+        enableOriginTracing: true,
+      })
     }
     if (emittedCode) downloadUniqueFile(emittedCode.filename, emittedCode.body)
   }
