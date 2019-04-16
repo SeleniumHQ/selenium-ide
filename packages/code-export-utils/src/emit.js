@@ -146,7 +146,7 @@ async function emitTest(
     emitter,
     generateMethodDeclaration,
     enableOriginTracing,
-  }
+  } = {}
 ) {
   const render = doRender.bind(this, commandPrefixPadding)
   if (!testLevel) testLevel = 1
@@ -194,7 +194,7 @@ function emitSuite(
     commandPrefixPadding,
     commentPrefix,
     hooks,
-  }
+  } = {}
 ) {
   const render = doRender.bind(this, commandPrefixPadding)
   if (!suiteLevel) {
