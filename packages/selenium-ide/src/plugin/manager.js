@@ -21,6 +21,7 @@ import {
   RegisterTestHook,
   RegisterEmitter,
 } from 'selianize'
+import exporter from 'code-export'
 import { Commands, ArgTypes } from '../neo/models/Command'
 import { registerCommand } from './commandExecutor'
 import { sendMessage } from './communication'
@@ -92,6 +93,15 @@ class PluginManager {
           Commands.addCommand(id, { name, type, ...doks })
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id))
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id))
+          if (plugin.exports) {
+            plugin.exports.languages.forEach(language => {
+              exporter.register.command(
+                language,
+                id,
+                this.exportCommand.bind(undefined, language, plugin, id)
+              )
+            })
+          }
         })
       }
     } else {
@@ -189,6 +199,19 @@ class PluginManager {
     return sendMessage(plugin.id, {
       action: 'emit',
       entity: 'command',
+      command: {
+        command,
+        target,
+        value,
+      },
+    }).then(res => res.message)
+  }
+
+  exportCommand(language, plugin, command, target, value) {
+    return sendMessage(plugin.id, {
+      action: 'export',
+      entity: 'command',
+      language,
       command: {
         command,
         target,
