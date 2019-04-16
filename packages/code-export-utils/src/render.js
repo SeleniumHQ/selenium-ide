@@ -63,13 +63,15 @@ export function renderCommands(
       })
       result += originRecord
     }
-    const commandBlock = render(commandPrefixPadding, command, {
-      startingLevel: endingLevel,
-      fullPayload: true,
-    })
-    endingLevel = commandBlock.endingLevel
-    result += commandBlock.body
-    result += '\n'
+    if (command) {
+      const commandBlock = render(commandPrefixPadding, command, {
+        startingLevel: endingLevel,
+        fullPayload: true,
+      })
+      endingLevel = commandBlock.endingLevel
+      result += commandBlock.body
+      result += '\n'
+    }
   })
   return result
 }

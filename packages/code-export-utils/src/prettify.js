@@ -28,6 +28,7 @@ export default function prettify(
   commandBlock,
   { startingLevel, commandPrefixPadding } = {}
 ) {
+  if (!commandBlock) return { body: '' }
   if (!startingLevel) startingLevel = 0
   if (commandBlock.startingLevelAdjustment)
     startingLevel += commandBlock.startingLevelAdjustment
