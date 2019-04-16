@@ -116,8 +116,10 @@ export default class Modal extends Component {
           cancelSelection={() => {
             ModalState.cancelCodeExport()
           }}
-          completeSelection={selectedLanguages =>
-            exportCodeToFile(selectedLanguages, ModalState.exportPayload)
+          completeSelection={(selectedLanguages, enableOriginTracing) =>
+            exportCodeToFile(selectedLanguages, ModalState.exportPayload, {
+              enableOriginTracing,
+            })
           }
         />
       </div>

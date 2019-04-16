@@ -46,7 +46,10 @@ export default class ExportDialog extends React.Component {
 class ExportContent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { selectedLanguages: ['java-junit'] }
+    this.state = {
+      selectedLanguages: ['java-junit'],
+      enableOriginTracing: false,
+    }
   }
   static propTypes = {
     cancelSelection: PropTypes.func.isRequired,
@@ -67,6 +70,9 @@ class ExportContent extends React.Component {
       })
     }
   }
+  toggleOriginTracing() {
+    this.setState({ enableOriginTracing: !this.state.enableOriginTracing })
+  }
   render() {
     return (
       <DialogContainer
@@ -79,7 +85,10 @@ class ExportContent extends React.Component {
               disabled={!this.state.selectedLanguages.length}
               type="submit"
               onClick={() => {
-                this.props.completeSelection(this.state.selectedLanguages)
+                this.props.completeSelection(
+                  this.state.selectedLanguages,
+                  this.state.enableOriginTracing
+                )
               }}
               style={{
                 marginRight: '0',
@@ -93,6 +102,13 @@ class ExportContent extends React.Component {
         <ExportList
           selectedLanguages={this.state.selectedLanguages}
           selectLanguage={this.selectLanguage.bind(this)}
+        />
+        <hr />
+        <Checkbox
+          label="Origin tracing code comments enabled"
+          checked={this.state.enableOriginTracing}
+          form={true}
+          onChange={this.toggleOriginTracing.bind(this)}
         />
       </DialogContainer>
     )

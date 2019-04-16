@@ -21,7 +21,11 @@ import { emitTest, emitSuite } from 'code-export'
 import { downloadUniqueFile } from '../IO/filesystem'
 import { normalizeTestsInSuite } from '../IO/normalize'
 
-export async function exportCodeToFile(selectedLanguages, { test, suite }) {
+export async function exportCodeToFile(
+  selectedLanguages,
+  { test, suite },
+  { enableOriginTracing }
+) {
   const { url, tests } = UiState.project.toJS()
   for (const language of selectedLanguages) {
     let emittedCode
@@ -30,7 +34,7 @@ export async function exportCodeToFile(selectedLanguages, { test, suite }) {
         url,
         test,
         tests,
-        enableOriginTracing: true,
+        enableOriginTracing,
       })
     } else if (suite) {
       const _suite = normalizeTestsInSuite({ suite, tests })
@@ -38,7 +42,7 @@ export async function exportCodeToFile(selectedLanguages, { test, suite }) {
         url,
         suite: _suite,
         tests,
-        enableOriginTracing: true,
+        enableOriginTracing,
       })
     }
     if (emittedCode) downloadUniqueFile(emittedCode.filename, emittedCode.body)
