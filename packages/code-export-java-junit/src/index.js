@@ -26,6 +26,7 @@ opts.hooks = generateHooks()
 opts.fileExtension = '.java'
 opts.commandPrefixPadding = '  '
 opts.terminatingKeyword = '}'
+opts.commentPrefix = '//'
 opts.generateMethodDeclaration = generateMethodDeclaration
 
 function generateTestDeclaration(name) {
