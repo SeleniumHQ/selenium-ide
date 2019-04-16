@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import register from '../../src/register'
+import { registerCommandEmitter } from '../../src/register'
 
 describe('Register', () => {
   it('should register a new command emitter', () => {
@@ -24,7 +24,7 @@ describe('Register', () => {
     }
     const command = 'foo'
     const emitter = 'bar'
-    register.emitter({ command, emitter, emitters })
+    registerCommandEmitter({ command, emitter, emitters })
     expect(emitters).toEqual({ blah: 'blah', foo: 'bar' })
   })
   it('should throw when trying to overwrite an existing command emitter', () => {
@@ -34,7 +34,7 @@ describe('Register', () => {
     const command = 'blah'
     const emitter = 'blah'
     expect(() => {
-      register.emitter({ command, emitter, emitters })
+      registerCommandEmitter({ command, emitter, emitters })
     }).toThrow()
   })
 })

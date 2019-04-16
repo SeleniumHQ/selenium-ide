@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function registerCommandEmitter({ command, emitter, emitters } = {}) {
+import { keysPreprocessor, scriptPreprocessor } from './preprocessor'
+
+export function registerCommandEmitter({ command, emitter, emitters } = {}) {
   if (!emitters[command]) {
     emitters[command] = emitter
   } else {
@@ -23,6 +25,21 @@ function registerCommandEmitter({ command, emitter, emitters } = {}) {
   }
 }
 
-export default {
-  emitter: registerCommandEmitter,
+export function registerPreprocessors(emitters) {
+  Object.keys(emitters).forEach(emitter => {
+    switch (emitter) {
+      case 'sendKeys':
+        emitters[emitter].valuePreprocessor = keysPreprocessor
+        break
+      case 'runScript':
+      case 'executeScript':
+      case 'executeAsyncScript':
+      case 'if':
+      case 'elseIf':
+      case 'repeatIf':
+      case 'while':
+        emitters[emitter].targetPreprocessor = scriptPreprocessor
+        break
+    }
+  })
 }

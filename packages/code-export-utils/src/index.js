@@ -17,7 +17,7 @@
 
 import emit from './emit'
 import prettify from './prettify'
-import { registerPreprocessors } from './preprocessor'
+import { registerPreprocessors, registerCommandEmitter } from './register'
 import Hook from './hook'
 import find from './find'
 import render from './render'
@@ -25,8 +25,9 @@ import render from './render'
 export default {
   emit: { ...emit },
   prettify,
-  preprocessors: {
-    register: registerPreprocessors,
+  register: {
+    preprocessors: registerPreprocessors,
+    emitter: registerCommandEmitter,
   },
   hook: Hook,
   find: { ...find },

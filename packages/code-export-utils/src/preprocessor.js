@@ -15,25 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function registerPreprocessors(emitters) {
-  Object.keys(emitters).forEach(emitter => {
-    switch (emitter) {
-      case 'sendKeys':
-        emitters[emitter].valuePreprocessor = keysPreprocessor
-        break
-      case 'runScript':
-      case 'executeScript':
-      case 'executeAsyncScript':
-      case 'if':
-      case 'elseIf':
-      case 'repeatIf':
-      case 'while':
-        emitters[emitter].targetPreprocessor = scriptPreprocessor
-        break
-    }
-  })
-}
-
 export function preprocessParameter(param, preprocessor, variableLookup) {
   return preprocessor
     ? preprocessor(param, variableLookup)

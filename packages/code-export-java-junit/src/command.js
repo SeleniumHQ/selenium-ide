@@ -118,7 +118,7 @@ export const emitters = {
   while: emitControlFlowWhile,
 }
 
-exporter.preprocessors.register(emitters)
+exporter.register.preprocessors(emitters)
 
 function register(command, emitter) {
   exporter.register.emitter({ command, emitter, emitters })

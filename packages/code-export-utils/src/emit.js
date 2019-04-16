@@ -169,6 +169,7 @@ async function emitTest(
     startingLevel: commandLevel,
   })
   const emittedCommands = await emitCommands(test.commands, emitter)
+  debugger
   const originTracing = enableOriginTracing
     ? emitOriginTracing(test, { commentPrefix })
     : undefined
