@@ -42,12 +42,13 @@ function generateFilename(name) {
   return `${capitalize(sanitizeName(name))}${opts.fileExtension}`
 }
 
-export async function emitTest({ baseUrl, test, tests }) {
+export async function emitTest({ baseUrl, test, tests, enableOriginTracing }) {
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
   const result = await exporter.emit.test(test, tests, {
     ...opts,
     testDeclaration,
+    enableOriginTracing,
   })
   const suiteDeclaration = generateSuiteDeclaration(test.name)
   return {
@@ -59,7 +60,12 @@ export async function emitTest({ baseUrl, test, tests }) {
   }
 }
 
-export async function emitSuite({ baseUrl, suite, tests }) {
+export async function emitSuite({
+  baseUrl,
+  suite,
+  tests,
+  enableOriginTracing,
+}) {
   global.baseUrl = baseUrl
   let result = ''
   for (const testName of suite.tests) {
@@ -68,6 +74,7 @@ export async function emitSuite({ baseUrl, suite, tests }) {
     result += await exporter.emit.test(test, tests, {
       ...opts,
       testDeclaration,
+      enableOriginTracing,
     })
   }
   const suiteDeclaration = generateSuiteDeclaration(suite.name)
