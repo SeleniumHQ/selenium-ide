@@ -97,6 +97,7 @@ function beforeEach() {
         { level: 0, statement: 'public void setUp() {' },
         { level: 1, statement: 'driver = new FirefoxDriver();' },
         { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
+        { level: 1, statement: 'vars = new HashMap<String, Object>();' },
       ],
     },
     endingSyntax: {
@@ -160,8 +161,7 @@ function declareVariables() {
         { level: 0, statement: 'private WebDriver driver;' },
         {
           level: 0,
-          statement:
-            'private Map<String, Object> vars = new HashMap<String, Object>();',
+          statement: 'private Map<String, Object> vars;',
         },
         { level: 0, statement: 'JavascriptExecutor js;' },
       ],
