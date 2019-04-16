@@ -30,12 +30,12 @@ describe('Render', () => {
     const originTracing = emitOriginTracing(test, { commentPrefix })
     const commandStatements = ['blah', 'andblah']
     const result = renderCommands(commandStatements, {
-      startingLevel: 0,
+      startingLevel: 1,
       commandPrefixPadding,
       originTracing,
     })
     expect(result).toMatch(
-      `// Test name: Untitled Test\n// Step # | name | target | value | comment\nblah\n// 1 | a |  |  | \nandblah`
+      `${commandPrefixPadding}${commentPrefix} Test name: Untitled Test\n${commandPrefixPadding}${commentPrefix} Step # | name | target | value | comment\n${commandPrefixPadding}${commentPrefix} 1 | a |  |  | \n${commandPrefixPadding}blah\n${commandPrefixPadding}${commentPrefix} 2 | b |  |  | \n${commandPrefixPadding}andblah`
     )
   })
   it('should render without command tracing', () => {

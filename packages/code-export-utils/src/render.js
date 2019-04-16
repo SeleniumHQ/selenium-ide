@@ -50,15 +50,24 @@ export function renderCommands(
 ) {
   let result = ''
   let endingLevel = startingLevel
-  const originTitle = originTracing ? originTracing.shift() : undefined
-  result += originTitle ? originTitle + '\n' : ''
+  const originTitle = originTracing ? originTracing.splice(0, 2) : undefined
+  if (originTitle) {
+    result += render(commandPrefixPadding, originTitle.join('\n'), {
+      startingLevel: endingLevel,
+    })
+  }
   commands.forEach((command, index) => {
+    if (originTracing) {
+      const originRecord = render(commandPrefixPadding, originTracing[index], {
+        startingLevel: endingLevel,
+      })
+      result += originRecord
+    }
     const commandBlock = render(commandPrefixPadding, command, {
       startingLevel: endingLevel,
       fullPayload: true,
     })
     endingLevel = commandBlock.endingLevel
-    result += originTracing ? originTracing[index] + '\n' : ''
     result += commandBlock.body
     result += '\n'
   })
