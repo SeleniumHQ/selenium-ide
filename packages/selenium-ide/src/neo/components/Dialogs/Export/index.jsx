@@ -105,7 +105,7 @@ class ExportContent extends React.Component {
         />
         <hr />
         <Checkbox
-          label="Origin tracing code comments enabled"
+          label="Include origin tracing code comments"
           checked={this.state.enableOriginTracing}
           form={true}
           onChange={this.toggleOriginTracing.bind(this)}
