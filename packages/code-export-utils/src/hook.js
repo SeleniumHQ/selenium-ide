@@ -20,6 +20,10 @@ export default class Hook {
     this.startingSyntax = startingSyntax
     this.endingSyntax = endingSyntax
     this.registrationLevel = registrationLevel
+    this.clearRegister = this.clearRegister.bind(this)
+    this.emit = this.emit.bind(this)
+    this.register = this.register.bind(this)
+    this.isRegistered = this.isRegistered.bind(this)
     this.clearRegister()
   }
 
