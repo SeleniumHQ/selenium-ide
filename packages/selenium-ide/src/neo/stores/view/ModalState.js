@@ -36,11 +36,14 @@ class ModalState {
   }
   @observable
   newWindowConfigurationState = false
+  @observable
+  exportState = {}
 
   constructor() {
     this.renameTest = this.rename.bind(this, Types.test)
     this.renameSuite = this.rename.bind(this, Types.suite)
     this.rename = this.rename.bind(this)
+    this.exportPayload = undefined
   }
 
   @action.bound
@@ -149,6 +152,18 @@ class ModalState {
       this._project.deleteTestCase(testCase)
       UiState.selectTest()
     }
+  }
+
+  @action.bound
+  async codeExport(payload) {
+    this.exportState = { isExporting: true }
+    this.exportPayload = payload
+  }
+
+  @action.bound
+  async cancelCodeExport() {
+    this.exportState = {}
+    this.exportPayload = undefined
   }
 
   @action.bound

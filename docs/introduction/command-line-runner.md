@@ -17,15 +17,62 @@ The following dependencies are needed for the command line runner to work:
 - `node` (the Node.js programming language) version `8` or `10`
 - `npm` (the NodeJS package manager) which typically gets installed with `node`
 - `selenium-side-runner` (the Selenium IDE command line runner)
-- and the browser driver we want to use (`chromedriver` in this case)
+- and the browser driver we want to use (more on that in the next section)
 
 ```sh
 > brew install node
 > npm install -g selenium-side-runner
-> brew cask install chromedriver
 ```
 
-__NOTE: Your system configuration may differ from what's used in the sample above (e.g., Homebrew on MacOS). If so, see <a href="https://nodejs.org/en/download/package-manager/" target="_blank" rel="noopener noreferrer">the Node installation documentation for package managers</a> or download a Node installer for your operating system directly from <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener noreferrer">the Node downloads page</a> and check out the Getting Started documentation for <a href="http://chromedriver.chromium.org/getting-started" target="_blank" rel="noopener noreferrer">ChromeDriver</a>.__
+__NOTE: Your system configuration may differ from what's used in the sample above (e.g., Homebrew on MacOS). If so, see <a href="https://nodejs.org/en/download/package-manager/" target="_blank" rel="noopener noreferrer">the Node installation documentation for package managers</a> or download a Node installer for your operating system directly from <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener noreferrer">the Node downloads page</a>.__
+
+## Installing a browser driver
+
+If you want to run your tests _locally_ there is some additional setup required for each browser.
+
+Selenium communicates with each browser through a small binary application called a browser driver. Each browser has its own which you can either download and add to your system path manually, or, you can use a package manager to install the latest version of the browser driver (recommended).
+
+You'll also need to have the browser installed on your machine.
+
+### Chrome
+
+For Chrome, you'll need [ChromeDriver](http://chromedriver.chromium.org).
+
+```sh
+> npm install -g chromedriver
+```
+
+### Edge
+
+For Microsoft Edge, you'll need to be running on Windows, and you'll also need [EdgeDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/).
+
+```sh
+> npm install -g edgedriver
+```
+
+### Firefox
+
+For Firefox, you'll need [geckodriver](https://github.com/mozilla/geckodriver).
+
+```sh
+> npm install -g geckodriver
+```
+
+### Internet Explorer
+
+For Internet Explorer, you'll need to be running on Windows, and you'll also need [IEDriver](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver).
+
+```sh
+> npm install -g iedriver
+```
+
+There's some additional setup required for IEDriver to work. Details avaialble [here](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration).
+
+### Safari
+
+For Safari, you'll need [SafariDriver](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari).
+
+It ships with the latest version of Safari. There are just a few steps you'll need to take to enable it on your machine. See [this section of the SafariDriver documentation](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari#2957277) for details.
 
 ## Launching the runner
 
@@ -47,23 +94,29 @@ __NOTE: Parallel execution happens automatically at the suite level. If you want
 
 With the runner you have the ability to pass in different configuration arguments at run time.
 
-### Pass capabilities
+### Running on a different browser locally
 
-The most common example of this is specifying a different browser for local test execution.
+The most common use of capabilities is to specify a different browser for local test execution.
 
 ```sh
+selenium-side-runner -c "browserName=chrome"
+selenium-side-runner -c "browserName='internet explorer'"
+selenium-side-runner -c "browserName=edge"
 selenium-side-runner -c "browserName=firefox"
+selenium-side-runner -c "browserName=safari"
 ```
 
-__NOTE: For Firefox to work you'll need to download Mozilla's `geckodriver`. This can easily be installed through `npm` (e.g., `npm install geckodriver`). Or you can download the binary yourself and add it to your sytem path. For details, see <a href="https://firefox-source-docs.mozilla.org/testing/geckodriver/geckodriver/Usage.html" target="_blank" rel="noopener noreferrer">the `geckodriver` project page</a>.__
+__NOTE: When running tests locally, some setup is required for each browser. See [Installing a browser driver](command-line-runner.md#installing-a-browser-driver) for details.__
 
-### Running on a remote WebDriver server
+### Running on Selenium Grid
 
 To run your tests on a Grid (e.g., your own Grid or on a hosted provider like Sauce Labs) you can specify that along with different capabilities.
 
 ```sh
-selenium-side-runner --server http://localhost:4444/wd/hub -c "browser=chrome platform=MAC"
+selenium-side-runner --server http://localhost:4444/wd/hub -c "browserName='internet explorer' version='11.0' platform='Windows 8.1'"
 ```
+
+`--server` specifies the URL to the Grid, and `-c` are the capabilities you'd like the Grid to use.
 
 You can see a full list of the available capabilities [here](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities).
 

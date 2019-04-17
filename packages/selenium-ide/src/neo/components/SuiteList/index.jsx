@@ -30,6 +30,7 @@ export default class SuiteList extends React.Component {
     rename: PropTypes.func.isRequired,
     editSettings: PropTypes.func.isRequired,
     removeSuite: PropTypes.func.isRequired,
+    codeExport: PropTypes.func.isRequired,
   }
   render() {
     return (
@@ -47,6 +48,9 @@ export default class SuiteList extends React.Component {
               }}
               remove={() => {
                 this.props.removeSuite(suite)
+              }}
+              codeExport={() => {
+                this.props.codeExport({ suite: suite.export() })
               }}
             />
           </li>

@@ -46,6 +46,7 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
+    "code-export": "*",
     "@medv/finder": "^1.1.1",
     "browser-webdriver": "^3.5.12",
     "classnames": "^2.2.5",

@@ -19,9 +19,7 @@ before_install:
   - peru sync
 install:
   - yarn --ignore-engines
-  - yarn build:webdriver
-  - yarn build:selianize
-  - yarn build:runner
+  - yarn run lerna run build --ignore selenium-ide-extension --ignore selenium-ide-extension-boilerplate
   - NODE_ENV="staging" yarn build:ext
   - docker-compose up -d
 script:

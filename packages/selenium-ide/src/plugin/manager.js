@@ -21,6 +21,7 @@ import {
   RegisterTestHook,
   RegisterEmitter,
 } from 'selianize'
+import exporter from 'code-export'
 import { Commands, ArgTypes } from '../neo/models/Command'
 import { registerCommand } from './commandExecutor'
 import { sendMessage } from './communication'
@@ -80,6 +81,17 @@ class PluginManager {
       this.plugins.push(plugin)
       RegisterSuiteHook(this.emitSuite.bind(undefined, plugin))
       RegisterTestHook(this.emitTest.bind(undefined, plugin))
+      if (plugin.exports) {
+        plugin.exports.languages.forEach(language => {
+          Object.keys(exporter.register).forEach(register => {
+            if (register !== 'command') {
+              this.doExport(register, language, plugin).then(message => {
+                if (message) exporter.register[register](language, message)
+              })
+            }
+          })
+        })
+      }
       if (plugin.commands) {
         plugin.commands.forEach(({ id, name, type, docs }) => {
           const doks = this.useExistingArgTypesIfProvided(
@@ -92,6 +104,15 @@ class PluginManager {
           Commands.addCommand(id, { name, type, ...doks })
           registerCommand(id, RunCommand.bind(undefined, plugin.id, id))
           RegisterEmitter(id, this.emitCommand.bind(undefined, plugin, id))
+          if (plugin.exports) {
+            plugin.exports.languages.forEach(language => {
+              exporter.register.command(
+                language,
+                id,
+                this.exportCommand.bind(undefined, language, plugin, id)
+              )
+            })
+          }
         })
       }
     } else {
@@ -195,6 +216,29 @@ class PluginManager {
         value,
       },
     }).then(res => res.message)
+  }
+
+  exportCommand(language, plugin, command, target, value) {
+    return sendMessage(plugin.id, {
+      action: 'export',
+      entity: 'command',
+      language,
+      command: {
+        command,
+        target,
+        value,
+      },
+    }).then(res => res.message)
+  }
+
+  doExport(entity, language, plugin) {
+    return sendMessage(plugin.id, {
+      action: 'export',
+      entity,
+      language,
+    })
+      .then(res => res.message)
+      .catch(() => undefined)
   }
 
   // will return all responses including errors

@@ -108,6 +108,7 @@ export default class Navigation extends React.Component {
                   tests={this.props.tests}
                   duplicateTest={this.props.duplicateTest}
                   removeTest={ModalState.deleteTest}
+                  codeExport={ModalState.codeExport}
                 />
               </React.Fragment>
             )}
@@ -123,6 +124,7 @@ export default class Navigation extends React.Component {
                   editSettings={ModalState.editSuiteSettings}
                   selectTests={ModalState.editSuite}
                   removeSuite={ModalState.deleteSuite}
+                  codeExport={ModalState.codeExport}
                 />
               </React.Fragment>
             )}

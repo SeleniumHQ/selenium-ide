@@ -12,6 +12,7 @@
     "build:webdriver": "cd packages/browser-webdriver && yarn build",
     "build:webdriver:dev": "cd packages/browser-webdriver && yarn build:dev",
     "build:ext:prod": "cd packages/selenium-ide && yarn build",
+    "build:code-export": "cd packages/code-export-utils && yarn build && cd ../code-export-java-junit && yarn build && cd ../code-export && yarn build",
     "pack:chrome": "cd packages/selenium-ide && yarn build-chrome",
     "pack:firefox": "cd packages/selenium-ide && yarn build-firefox",
     "pack:runner": "cd packages/selenium-side-runner && yarn pkg",

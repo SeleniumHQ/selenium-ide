@@ -34,7 +34,7 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
-import url from 'url'
+import { sanitizeProjectName } from './normalize'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -74,15 +74,6 @@ export function saveProject(_project) {
   const project = _project.toJS()
   downloadProject(project)
   UiState.saved()
-}
-
-export function sanitizeProjectName(projectName) {
-  let name = projectName
-  if (name.startsWith('http')) {
-    return url.parse(projectName).host
-  } else {
-    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
-  }
 }
 
 function downloadProject(project) {
@@ -127,6 +118,14 @@ function exportProject(project) {
       })
       return Promise.reject()
     })
+  })
+}
+
+export function downloadUniqueFile(filename, body) {
+  browser.downloads.download({
+    filename,
+    url: createBlob('text/plain', body),
+    conflictAction: 'uniquify',
   })
 }
 

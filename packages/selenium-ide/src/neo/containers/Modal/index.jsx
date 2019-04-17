@@ -27,8 +27,10 @@ import WelcomeDialog from '../../components/Dialogs/Welcome'
 import AlertDialog from '../../components/Dialogs/Alert'
 import ModalState from '../../stores/view/ModalState'
 import NewWindowConfigurationDialog from '../../components/Dialogs/NewWindowConfiguration'
+import ExportDialog from '../../components/Dialogs/Export'
 import { isProduction } from '../../../common/utils'
 import UiState from '../../stores/view/UiState'
+import { exportCodeToFile } from '../../code-export'
 
 @observer
 export default class Modal extends Component {
@@ -108,6 +110,17 @@ export default class Modal extends Component {
           label="Opens Window"
           command={UiState.selectedCommand || {}}
           isUniqueWindowName={ModalState.isUniqueWindowName}
+        />
+        <ExportDialog
+          isExporting={!!ModalState.exportState.isExporting}
+          cancelSelection={() => {
+            ModalState.cancelCodeExport()
+          }}
+          completeSelection={(selectedLanguages, enableOriginTracing) =>
+            exportCodeToFile(selectedLanguages, ModalState.exportPayload, {
+              enableOriginTracing,
+            })
+          }
         />
       </div>
     )
