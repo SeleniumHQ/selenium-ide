@@ -1,3 +1,5 @@
+## 3.6.0
+Code export for Java JUnit
 ## 3.5.8
 Improved recording indicator UI
 Improved recording of mouse over locators
