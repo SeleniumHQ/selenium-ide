@@ -73,6 +73,10 @@ program
     'Write test results to files, results written in JSON'
   )
   .option(
+    '--junit',
+    'Write test results to files, results written in JUnit XML format'
+  )
+  .option(
     '--force',
     "Forcibly run the project, regardless of project's version"
   )
@@ -228,7 +232,18 @@ function runProject(project) {
           ],
           testEnvironment: 'jest-environment-selenium',
           testEnvironmentOptions: configuration,
+          ...(program.junit ? { reporters: ['default', 'jest-junit'] } : {}),
         },
+        ...(program.junit && program.outputDirectory
+          ? {
+              'jest-junit': {
+                outputDirectory: path.isAbsolute(program.outputDirectory)
+                  ? program.outputDirectory
+                  : '../' + program.outputDirectory,
+                outputName: `${project.name}.xml`,
+              },
+            }
+          : {}),
         dependencies: project.dependencies || {},
       },
       null,
@@ -319,7 +334,7 @@ function runJest(project) {
     ]
       .concat(program.maxWorkers ? ['-w', program.maxWorkers] : [])
       .concat(
-        program.outputDirectory
+        program.outputDirectory && !program.junit
           ? [
               '--json',
               '--outputFile',
