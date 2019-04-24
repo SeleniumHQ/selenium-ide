@@ -34,6 +34,7 @@
     "global-npm": "^0.3.0",
     "jest-cli": "24.1.0",
     "jest-environment-selenium": "2.1.0",
+    "jest-junit": "^6.3.0",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.10.0",
     "rimraf": "^2.6.2",
