@@ -11,7 +11,7 @@ Object {
 
 exports[`test case code emitter should emit a test with a single command 1`] = `
 Object {
-  "function": "tests[\\"example test case\\"] = async (driver, vars, opts = {}) => {await driver.get((new URL(\\"/\\", BASE_URL)).href);}",
+  "function": "tests[\\"example test case\\"] = async (driver, vars, opts = {}) => {await driver.get((new URL(\`/\`, BASE_URL)).href);}",
   "id": "1",
   "name": "example test case",
   "test": "it(\\"example test case\\", async () => {await tests[\\"example test case\\"](driver, vars);expect(true).toBeTruthy();});",
@@ -20,7 +20,7 @@ Object {
 
 exports[`test case code emitter should emit a test with multiple commands 1`] = `
 Object {
-  "function": "tests[\\"example test case\\"] = async (driver, vars, opts = {}) => {await driver.get((new URL(\\"/\\", BASE_URL)).href);await driver.get((new URL(\\"/test\\", BASE_URL)).href);await driver.get((new URL(\\"/example\\", BASE_URL)).href);}",
+  "function": "tests[\\"example test case\\"] = async (driver, vars, opts = {}) => {await driver.get((new URL(\`/\`, BASE_URL)).href);await driver.get((new URL(\`/test\`, BASE_URL)).href);await driver.get((new URL(\`/example\`, BASE_URL)).href);}",
   "id": "1",
   "name": "example test case",
   "test": "it(\\"example test case\\", async () => {await tests[\\"example test case\\"](driver, vars);expect(true).toBeTruthy();});",
