@@ -16,6 +16,8 @@
 // under the License.
 
 import { promisify } from 'util'
+import 'chromedriver'
+import 'geckodriver'
 import webdriver, { By, WebElement } from 'selenium-webdriver'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
@@ -25,7 +27,7 @@ import WebDriverExecutor from '../src/webdriver'
 
 jest.setTimeout(30000)
 
-describe.skip('webdriver executor', () => {
+describe('webdriver executor', () => {
   it('should implement all the Selenium commands', () => {
     Object.keys(Commands).forEach(command => {
       if (!ControlFlowCommandNames[command]) {
@@ -44,7 +46,10 @@ describe.skip('webdriver executor', () => {
   describe.each([
     [
       'chrome',
-      { browserName: 'chrome', chromeOptions: { args: ['headless'] } },
+      {
+        browserName: 'chrome',
+        chromeOptions: { args: ['headless', 'disable-gpu'] },
+      },
     ],
     [
       'firefox',
@@ -152,12 +157,15 @@ describe.skip('webdriver executor', () => {
         const element = await driver.findElement(By.css('button'))
         await element.click()
         await executor.doAnswerPrompt('hello')
+        await driver.sleep(10)
         expect(await driver.getTitle()).toBe('hello')
         await element.click()
         await executor.doAnswerPrompt('world')
+        await driver.sleep(10)
         expect(await driver.getTitle()).toBe('world')
         await element.click()
         await executor.doAnswerPrompt('')
+        await driver.sleep(10)
         expect(await driver.getTitle()).toBe('empty')
       })
     })
