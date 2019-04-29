@@ -18,6 +18,7 @@
 import path from 'path'
 import webdriver from 'selenium-webdriver'
 import engine from 'engine.io'
+import RecordPostprocessor from '@seleniumhq/side-recorder-postprocessor'
 
 const { By, until } = webdriver
 
@@ -178,6 +179,53 @@ describe('recorder e2e', () => {
     expect(recording[1].command).toBe('selectWindow')
     expect(recording[1].targets[0][0]).toBe('handle=${newWin}')
     expect(recording.length).toBe(2)
+  })
+  it('should postprocess the recording', async () => {
+    const prc = new RecordPostprocessor()
+    await driver.get('http://the-internet.herokuapp.com/')
+    await driver.sleep(1000)
+    extSocket.on('message', data => {
+      const message = JSON.parse(data)
+      if (message.type === 'record') {
+        prc.record(prc.commands.length, message.payload)
+      }
+    })
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'attach',
+        payload: {
+          sessionId: 'aaa',
+        },
+      })
+    )
+    const elem = await driver.findElement(By.linkText('JavaScript Alerts'))
+    await elem.click()
+    const alertButton = await driver.wait(
+      until.elementLocated(By.css('.example li:first-child button'))
+    )
+    await alertButton.click()
+    await driver
+      .switchTo()
+      .alert()
+      .accept()
+    await driver.sleep(100)
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'detach',
+      })
+    )
+    extSocket.removeAllListeners('message')
+    await driver.sleep(100)
+    expect(prc.commands.length).toBe(5)
+    expect(prc.commands[0].command).toBe('open')
+    expect(prc.commands[1].command).toBe('click')
+    expect(prc.commands[1].target).toBeDefined()
+    expect(prc.commands[1].targetFallback).toBeDefined()
+    expect(prc.commands[2].command).toBe('click')
+    expect(prc.commands[3].command).toBe('assertAlert')
+    expect(prc.commands[4].command).toBe('acceptAlert')
   })
 })
 
