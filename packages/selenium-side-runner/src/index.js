@@ -252,7 +252,7 @@ function runProject(project) {
     return Promise.reject(
       new Error(
         `The project ${
-        project.name
+          project.name
         } has no test suites defined, create a suite using the IDE.`
       )
     )
@@ -305,7 +305,7 @@ function runProject(project) {
           writeJSFile(
             path.join(projectPath, sanitizeFileName(suite.name)),
             `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${
-            code.globalConfig
+              code.globalConfig
             }${suite.code}${cleanup}`
           )
         } else if (suite.tests.length) {
@@ -319,7 +319,7 @@ function runProject(project) {
                 sanitizeFileName(test.name)
               ),
               `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${
-              code.globalConfig
+                code.globalConfig
               }${test.code}`
             )
           })
