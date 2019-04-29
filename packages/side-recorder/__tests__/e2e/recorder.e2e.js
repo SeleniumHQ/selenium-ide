@@ -175,9 +175,9 @@ describe('recorder e2e', () => {
     )
     await driver.sleep(100)
     expect(recording[0].command).toBe('selectWindow')
-    expect(recording[0].targets[0][0]).toBe('handle=${root}')
+    expect(recording[0].target[0][0]).toBe('handle=${root}')
     expect(recording[1].command).toBe('selectWindow')
-    expect(recording[1].targets[0][0]).toBe('handle=${newWin}')
+    expect(recording[1].target[0][0]).toBe('handle=${newWin}')
     expect(recording.length).toBe(2)
   })
   it('should postprocess the recording', async () => {

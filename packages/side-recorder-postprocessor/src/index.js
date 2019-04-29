@@ -41,12 +41,12 @@ export default class RecordPostprocessor {
     this.commands.splice(index, 1, step)
   }
 
-  record(index, { command, targets, values }) {
-    const newCommand = this.parseCommand(command, targets, values)
+  record(index, { command, target, value }) {
+    const newCommand = this.parseCommand(command, target, value)
     this._splice(index, 0, newCommand)
     this.lastRecordedCommand = newCommand
 
-    if (command === 'selectWindow' && targets === 'handle=${root}')
+    if (command === 'selectWindow' && target === 'handle=${root}')
       this.postprocessSelectWindow()
     this.postprocessDoubleClick(newCommand)
   }

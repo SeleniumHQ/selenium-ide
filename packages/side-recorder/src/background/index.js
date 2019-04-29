@@ -22,15 +22,15 @@ import WindowSession from './window-session'
 const windowSession = new WindowSession()
 const socket = eio(window.socketUrl || 'ws://localhost:4445')
 
-const record = (command, targets, values, insertBeforeLastCommand) => {
+const record = (command, target, value, insertBeforeLastCommand) => {
   window.hasRecorded = true
   return socket.send(
     JSON.stringify({
       type: 'record',
       payload: {
         command,
-        targets,
-        values,
+        target,
+        value,
         insertBeforeLastCommand,
       },
     })
