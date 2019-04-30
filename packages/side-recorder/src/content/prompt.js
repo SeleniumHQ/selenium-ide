@@ -15,32 +15,71 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const originalPrompt = window.prompt
-const originalConfirmation = window.confirm
-const originalAlert = window.alert
+window.__side = {}
 
-if (window == window.top) {
-  window.addEventListener('message', handler)
+window.__side.originalPrompt = window.prompt
+window.__side.originalConfirmation = window.confirm
+window.__side.originalAlert = window.alert
+
+window.__side.id = 0
+window.__side.promises = {}
+
+window.__side.postMessage = async (target, message) => {
+  window.__side.id++
+  const p = new Promise((res, rej) => {
+    window.__side.promises[window.__side.id] = { res, rej }
+  })
+  target.postMessage(
+    {
+      ...message,
+      direction: 'from-page-script',
+      id: window.__side.id,
+    },
+    '*'
+  )
+
+  return p
 }
 
-function handler(event) {
+window.addEventListener('message', event => {
+  if (
+    event.source == window &&
+    event.data &&
+    event.data.direction == 'from-content-script' &&
+    event.data.id
+  ) {
+    if (event.data.error) {
+      window.__side.promises[event.data.id].rej(new Error(event.data.message))
+    } else {
+      window.__side.promises[event.data.id].res(event.data.result)
+    }
+    // potential memory leak so using delete
+    delete window.__side.promises[event.data.id]
+  }
+})
+
+if (window == window.top) {
+  window.addEventListener('message', window.__side.handler)
+}
+
+window.__side.handler = event => {
   if (
     event.source == window &&
     event.data &&
     event.data.direction == 'from-content-script'
   ) {
     if (event.data.attach) {
-      attach()
+      window.__side.attach()
     } else if (event.data.detach) {
-      window.prompt = originalPrompt
-      window.confirm = originalConfirmation
-      window.alert = originalAlert
+      window.prompt = window.__side.originalPrompt
+      window.confirm = window.__side.originalConfirmation
+      window.alert = window.__side.originalAlert
       return
     }
   }
 }
 
-function getFrameLocation() {
+window.__side.getFrameLocation = () => {
   let frameLocation = ''
   let currentWindow = window
   let currentParentWindow
@@ -57,8 +96,8 @@ function getFrameLocation() {
   return frameLocation
 }
 
-window.__setWindowHandle = (handle, sessionId) => {
-  let frameLocation = getFrameLocation()
+window.__side.setWindowHandle = (handle, sessionId) => {
+  let frameLocation = window.__side.getFrameLocation()
   window.top.postMessage(
     {
       direction: 'from-page-script',
@@ -73,10 +112,19 @@ window.__setWindowHandle = (handle, sessionId) => {
   )
 }
 
-function attach() {
+window.__side.highlight = async element => {
+  element.setAttribute('data-side-highlight', '')
+  await window.__side.postMessage(window, {
+    action: 'find',
+    query: '*[data-side-highlight]',
+  })
+  element.removeAttribute('data-side-highlight')
+}
+
+window.__side.attach = () => {
   window.prompt = function(text, defaultText) {
-    let result = originalPrompt(text, defaultText)
-    let frameLocation = getFrameLocation()
+    let result = window.__side.originalPrompt(text, defaultText)
+    let frameLocation = window.__side.getFrameLocation()
     window.top.postMessage(
       {
         direction: 'from-page-script',
@@ -90,8 +138,8 @@ function attach() {
     return result
   }
   window.confirm = function(text) {
-    let result = originalConfirmation(text)
-    let frameLocation = getFrameLocation()
+    let result = window.__side.originalConfirmation(text)
+    let frameLocation = window.__side.getFrameLocation()
     window.top.postMessage(
       {
         direction: 'from-page-script',
@@ -105,8 +153,8 @@ function attach() {
     return result
   }
   window.alert = function(text) {
-    let result = originalAlert(text)
-    let frameLocation = getFrameLocation()
+    let result = window.__side.originalAlert(text)
+    let frameLocation = window.__side.getFrameLocation()
     window.top.postMessage(
       {
         direction: 'from-page-script',

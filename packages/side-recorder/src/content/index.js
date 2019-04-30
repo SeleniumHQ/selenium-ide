@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import './find-select'
 import Recorder from './recorder'
 
 new Recorder(window)
