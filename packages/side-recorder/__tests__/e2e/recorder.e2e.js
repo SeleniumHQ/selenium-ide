@@ -143,14 +143,14 @@ describe('recorder e2e', () => {
       }
     })
     await driver.get('http://the-internet.herokuapp.com/')
-    await driver.executeScript('window.__setWindowHandle("root", "aab")')
+    await driver.executeScript('window.__side.setWindowHandle("root", "aab")')
     const handles = await driver.getAllWindowHandles()
     const elem = await driver.findElement(By.linkText('Elemental Selenium'))
     await elem.click()
     await driver.sleep(2000)
     const handle = await getNewWindowHandle(driver, handles)
     await driver.switchTo().window(handle)
-    await driver.executeScript('window.__setWindowHandle("newWin", "aab")')
+    await driver.executeScript('window.__side.setWindowHandle("newWin", "aab")')
     await driver.sleep(100)
     psend(
       extSocket,
@@ -226,6 +226,39 @@ describe('recorder e2e', () => {
     expect(prc.commands[2].command).toBe('click')
     expect(prc.commands[3].command).toBe('assertAlert')
     expect(prc.commands[4].command).toBe('acceptAlert')
+  })
+  it('should select an element', async () => {
+    await driver.sleep(1000)
+    let result
+    extSocket.on('message', data => {
+      const message = JSON.parse(data)
+      if (message.type === 'select') {
+        result = message.payload.result
+      }
+    })
+    await driver.get('http://the-internet.herokuapp.com/')
+    await driver.executeScript('window.__side.setWindowHandle("root", "aab")')
+    psend(
+      extSocket,
+      JSON.stringify({
+        type: 'select',
+        payload: {
+          sessionId: 'aab',
+          windowName: 'root',
+        },
+      })
+    )
+    await driver.sleep(1000)
+    const elem = await driver.findElement(By.linkText('Frames'))
+    await driver
+      .actions({ bridge: true })
+      .move({ origin: elem, x: 100, y: 100, duration: 500 })
+      .pause(500)
+      .move({ origin: elem, duration: 1000 })
+      .click()
+      .perform()
+    await driver.sleep(500)
+    expect(result).toBeDefined()
   })
 })
 

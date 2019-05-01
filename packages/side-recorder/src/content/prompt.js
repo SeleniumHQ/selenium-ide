@@ -17,9 +17,9 @@
 
 window.__side = {}
 
-window.__side.originalPrompt = window.prompt
-window.__side.originalConfirmation = window.confirm
-window.__side.originalAlert = window.alert
+window.__originalPrompt = window.prompt
+window.__originalConfirmation = window.confirm
+window.__originalAlert = window.alert
 
 window.__side.id = 0
 window.__side.promises = {}
@@ -58,10 +58,6 @@ window.addEventListener('message', event => {
   }
 })
 
-if (window == window.top) {
-  window.addEventListener('message', window.__side.handler)
-}
-
 window.__side.handler = event => {
   if (
     event.source == window &&
@@ -71,12 +67,16 @@ window.__side.handler = event => {
     if (event.data.attach) {
       window.__side.attach()
     } else if (event.data.detach) {
-      window.prompt = window.__side.originalPrompt
-      window.confirm = window.__side.originalConfirmation
-      window.alert = window.__side.originalAlert
+      window.prompt = window.__originalPrompt
+      window.confirm = window.__originalConfirmation
+      window.alert = window.__originalAlert
       return
     }
   }
+}
+
+if (window == window.top) {
+  window.addEventListener('message', window.__side.handler)
 }
 
 window.__side.getFrameLocation = () => {
@@ -123,7 +123,7 @@ window.__side.highlight = async element => {
 
 window.__side.attach = () => {
   window.prompt = function(text, defaultText) {
-    let result = window.__side.originalPrompt(text, defaultText)
+    let result = window.__originalPrompt(text, defaultText)
     let frameLocation = window.__side.getFrameLocation()
     window.top.postMessage(
       {
@@ -138,7 +138,7 @@ window.__side.attach = () => {
     return result
   }
   window.confirm = function(text) {
-    let result = window.__side.originalConfirmation(text)
+    let result = window.__originalConfirmation(text)
     let frameLocation = window.__side.getFrameLocation()
     window.top.postMessage(
       {
@@ -153,7 +153,7 @@ window.__side.attach = () => {
     return result
   }
   window.alert = function(text) {
-    let result = window.__side.originalAlert(text)
+    let result = window.__originalAlert(text)
     let frameLocation = window.__side.getFrameLocation()
     window.top.postMessage(
       {

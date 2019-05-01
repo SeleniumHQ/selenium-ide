@@ -17,6 +17,10 @@
 
 import browser from 'webextension-polyfill'
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
+import LocatorBuilders from './locator-builders'
+import TargetSelector from './target-selector'
+
+const locatorBuilders = new LocatorBuilders(window)
 
 window.addEventListener('message', event => {
   if (
@@ -36,6 +40,53 @@ window.addEventListener('message', event => {
     })
   }
 })
+
+let targetSelector
+
+browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.action === 'select') {
+    sendResponse(true)
+    if (message.selecting) {
+      startSelection()
+    } else {
+      cleanSelection()
+    }
+  }
+})
+
+browser.runtime
+  .sendMessage({
+    attachSelectorRequest: true,
+  })
+  .then(shouldAttach => {
+    if (shouldAttach) {
+      startSelection()
+    }
+  })
+  .catch(() => {})
+
+function startSelection() {
+  targetSelector = new TargetSelector(function(element, win) {
+    if (element && win) {
+      const target = locatorBuilders.buildAll(element)
+      if (target != null && target instanceof Array) {
+        if (target) {
+          browser.runtime.sendMessage({
+            action: 'select',
+            selectTarget: true,
+            target,
+          })
+        }
+      }
+    }
+    targetSelector = null
+  })
+}
+
+function cleanSelection() {
+  targetSelector.cleanup()
+  targetSelector = null
+}
 
 function highlight(element) {
   return new Promise(res => {
