@@ -465,6 +465,7 @@ export default class ExtCommand {
 
   async switchToTab(tabId) {
     this.setCurrentPlayingTabId(tabId)
+    this.setCurrentPlayingFrameLocation('root')
     const tab = await browser.tabs.update(this.getCurrentPlayingTabId(), {
       active: true,
     })
