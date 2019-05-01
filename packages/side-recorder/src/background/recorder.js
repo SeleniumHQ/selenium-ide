@@ -298,9 +298,6 @@ export default class BackgroundRecorder {
       }
       this.windowSession.openedTabIds[message.sessionId][sender.tab.id] =
         message.handle
-      this.recordOpensWindow(
-        this.windowSession.openedTabIds[message.sessionId][sender.tab.id]
-      )
       if (sender.tab.windowId != undefined) {
         this.windowSession.setOpenedWindow(sender.tab.windowId)
       } else {
