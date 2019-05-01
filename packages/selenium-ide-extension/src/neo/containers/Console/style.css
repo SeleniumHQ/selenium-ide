@@ -1,9 +1,0 @@
-footer.console {
-  border-top: 1px #cecece solid;
-}
-
-.console .viewport {
-  padding: 7px 10px 0 15px;
-  font-size: 12px;
-  overflow-y: auto;
-}

@@ -1,4 +1,0 @@
-capabilities:
-  browserName: chrome
-  platform: MAC
-  unexpectedAlertBehaviour: ignore
