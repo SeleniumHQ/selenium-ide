@@ -85,9 +85,10 @@ class PluginManager {
         plugin.exports.languages.forEach(language => {
           Object.keys(exporter.register).forEach(register => {
             if (register !== 'command') {
-              this.doExport(register, language, plugin).then(message => {
-                if (message) exporter.register[register](language, message)
-              })
+              exporter.register[register](
+                language,
+                this.doExport.bind(undefined, register, language, plugin)
+              )
             }
           })
         })
@@ -231,11 +232,12 @@ class PluginManager {
     }).then(res => res.message)
   }
 
-  doExport(entity, language, plugin) {
+  doExport(entity, language, plugin, options) {
     return sendMessage(plugin.id, {
       action: 'export',
       entity,
       language,
+      options,
     })
       .then(res => res.message)
       .catch(() => undefined)
