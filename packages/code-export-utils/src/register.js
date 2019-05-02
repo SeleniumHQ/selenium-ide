@@ -43,3 +43,18 @@ export function registerPreprocessors(emitters) {
     }
   })
 }
+
+export async function registerMethod(
+  name,
+  result,
+  { generateMethodDeclaration, hooks }
+) {
+  const methodDeclaration = generateMethodDeclaration(name)
+  if (!(await hooks.declareMethods.isRegistered(methodDeclaration))) {
+    result.forEach(statement => {
+      hooks.declareMethods.register(() => {
+        return statement
+      })
+    })
+  }
+}
