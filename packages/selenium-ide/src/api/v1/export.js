@@ -17,11 +17,16 @@
 
 import Router from '../../router'
 import { Location } from 'selianize'
+import exporter from 'code-export'
 
 const router = new Router()
 
 router.get('/location', (req, res) => {
-  Location.emit(req.location).then(res)
+  if (req.language) {
+    exporter.emit.locator(req.language, req.location).then(res)
+  } else {
+    Location.emit(req.location).then(res)
+  }
 })
 
 export default router
