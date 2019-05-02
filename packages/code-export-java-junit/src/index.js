@@ -17,6 +17,7 @@
 
 import exporter from 'code-export-utils'
 import emitter from './command'
+import location from './location'
 import { generateHooks } from './hook'
 import { sanitizeName, capitalize } from './parsers'
 
@@ -53,7 +54,7 @@ export async function emitTest({ baseUrl, test, tests, enableOriginTracing }) {
   const suiteDeclaration = generateSuiteDeclaration(test.name)
   return {
     filename: generateFilename(test.name),
-    body: exporter.emit.suite(result, {
+    body: await exporter.emit.suite(result, tests, {
       ...opts,
       suiteDeclaration,
     }),
@@ -80,7 +81,7 @@ export async function emitSuite({
   const suiteDeclaration = generateSuiteDeclaration(suite.name)
   return {
     filename: generateFilename(suite.name),
-    body: exporter.emit.suite(result, {
+    body: await exporter.emit.suite(result, tests, {
       ...opts,
       suiteDeclaration,
     }),
@@ -91,6 +92,7 @@ export default {
   emit: {
     test: emitTest,
     suite: emitSuite,
+    locator: location.emit,
   },
   register: {
     command: emitter.register,

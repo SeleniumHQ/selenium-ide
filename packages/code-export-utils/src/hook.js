@@ -28,11 +28,10 @@ export default class Hook {
   }
 
   clearRegister() {
-    this.registeredCommands = []
+    this.emitters = []
   }
 
-  emit({ isOptional } = { isOptional: false }) {
-    if (isOptional && !this.registeredCommands.length) return ''
+  async emit({ isOptional, tests } = { isOptional: false }) {
     const commands = []
     let registeredCommandLevel = 0
     if (this.startingSyntax) {
@@ -45,15 +44,21 @@ export default class Hook {
         commands.push({ level: 0, statement: this.startingSyntax })
       }
     }
-    this.registeredCommands.forEach(command => {
+    const emittedCommands = (await Promise.all(
+      this.emitters.map(emitter => emitter({ tests }))
+    )).filter(entry => !!entry)
+    if (isOptional && !emittedCommands.length) return ''
+    emittedCommands.forEach(command => {
       if (typeof command === 'object') {
         commands.push(command)
       } else if (typeof command === 'string') {
-        commands.push({
-          level: this.registrationLevel
-            ? this.registrationLevel
-            : registeredCommandLevel,
-          statement: command,
+        command.split('\n').forEach(statement => {
+          commands.push({
+            level: this.registrationLevel
+              ? this.registrationLevel
+              : registeredCommandLevel,
+            statement,
+          })
         })
       }
     })
@@ -69,18 +74,13 @@ export default class Hook {
     return { commands }
   }
 
-  register(input) {
-    input.split('\n').forEach(value => {
-      this.registeredCommands.push(value)
-    })
+  register(emitter) {
+    this.emitters.push(emitter)
   }
 
-  isRegistered(input = '') {
-    return this.registeredCommands
-      .map(command => {
-        return command.includes(input)
-      })
-      .includes(true)
+  async isRegistered(input = '') {
+    const result = await Promise.all(this.emitters.map(emitter => emitter()))
+    return result.map(command => command.includes(input)).includes(true)
   }
 }
 

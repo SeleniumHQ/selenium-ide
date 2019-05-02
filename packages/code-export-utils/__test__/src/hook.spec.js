@@ -18,38 +18,18 @@
 import Hook from '../../src/hook'
 
 describe('Hooks', () => {
-  it('should accept starting and ending syntax as strings', () => {
-    const hook = new Hook({ startingSyntax: 'blah', endingSyntax: 'blah' })
-    expect(hook.startingSyntax).toBeDefined()
-    expect(hook.endingSyntax).toBeDefined()
-  })
-  it('should accept starting and ending syntax as objects', () => {
-    const hook = new Hook({
-      startingSyntax: { commands: [{ level: 0, statement: 'blah' }] },
-      endingSyntax: { commands: [{ level: 0, statement: 'blah' }] },
-    })
-    expect(hook.startingSyntax).toBeDefined()
-    expect(hook.endingSyntax).toBeDefined()
-  })
-  it('should accept a registration level', () => {
-    const hook = new Hook({ registrationLevel: 1 })
-    expect(hook.registrationLevel).toBeDefined()
-  })
-  it('should register a command string', () => {
-    const hook = new Hook()
-    hook.register('blah')
-    expect(hook.registeredCommands).toEqual(['blah'])
-  })
-  it('should register a command string with line breaks', () => {
-    const hook = new Hook()
-    hook.register('blah\nblah')
-    expect(hook.registeredCommands).toEqual(['blah', 'blah'])
-  })
   it('should clear registered commands', () => {
     const hook = new Hook()
-    hook.register('blah')
+    hook.register(() => {
+      return 'blah'
+    })
     hook.clearRegister()
-    expect(hook.registeredCommands).toEqual([])
+    expect(hook.emitters).toEqual([])
+  })
+  it('should not error when no emitters registered', async () => {
+    const hook = new Hook()
+    const result = await hook.emit()
+    expect(result.commands).toEqual([])
   })
   it('should emit command object', () => {
     const hook = new Hook({
@@ -57,9 +37,13 @@ describe('Hooks', () => {
       endingSyntax: 'blah99',
       registrationLevel: 1,
     })
-    hook.register('blah2')
-    hook.register('blah3')
-    expect(hook.emit()).toEqual({
+    hook.register(() => {
+      return Promise.resolve('blah2')
+    })
+    hook.register(() => {
+      return 'blah3'
+    })
+    expect(hook.emit()).resolves.toEqual({
       commands: [
         { level: 0, statement: 'blah1' },
         { level: 1, statement: 'blah2' },
@@ -70,12 +54,20 @@ describe('Hooks', () => {
   })
   it('should optionally emit commands', () => {
     const hook = new Hook({ startingSyntax: 'blah1', endingSyntax: 'blah99' })
-    expect(hook.emit({ isOptional: true })).toEqual('')
+    expect(hook.emit({ isOptional: true })).resolves.toEqual('')
+    expect(hook.emit({ isOptional: false })).resolves.toEqual({
+      commands: [
+        { level: 0, statement: 'blah1' },
+        { level: 0, statement: 'blah99' },
+      ],
+    })
   })
   it('should allow for checking if a command is already registered', () => {
     const hook = new Hook()
-    hook.register('blah')
-    expect(hook.isRegistered('blah')).toBeTruthy()
-    expect(hook.isRegistered('halb')).toBeFalsy()
+    hook.register(() => {
+      return 'blah'
+    })
+    expect(hook.isRegistered('blah')).resolves.toBeTruthy()
+    expect(hook.isRegistered('halb')).resolves.toBeFalsy()
   })
 })
