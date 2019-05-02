@@ -27,36 +27,36 @@ function registerCommand(language, command, emitter) {
   exporter[language].register.command(command, emitter)
 }
 
-function registerVariable(language, declaration) {
-  exporter[language].register.variable(declaration)
+function registerVariable(language, emitter) {
+  exporter[language].register.variable(emitter)
 }
 
-function registerDependency(language, statement) {
-  exporter[language].register.dependency(statement)
+function registerDependency(language, emitter) {
+  exporter[language].register.dependency(emitter)
 }
 
-function registerBeforeAll(language, statement) {
-  exporter[language].register.beforeAll(statement)
+function registerBeforeAll(language, emitter) {
+  exporter[language].register.beforeAll(emitter)
 }
 
-function registerBeforeEach(language, statement) {
-  exporter[language].register.beforeEach(statement)
+function registerBeforeEach(language, emitter) {
+  exporter[language].register.beforeEach(emitter)
 }
 
-function registerInEachBegin(language, statement) {
-  exporter[language].register.inEachBegin(statement)
+function registerInEachBegin(language, emitter) {
+  exporter[language].register.inEachBegin(emitter)
 }
 
-function registerInEachEnd(language, statement) {
-  exporter[language].register.inEachEnd(statement)
+function registerInEachEnd(language, emitter) {
+  exporter[language].register.inEachEnd(emitter)
 }
 
-function registerAfterEach(language, statement) {
-  exporter[language].register.afterEach(statement)
+function registerAfterEach(language, emitter) {
+  exporter[language].register.afterEach(emitter)
 }
 
-function registerAfterAll(language, statement) {
-  exporter[language].register.afterAll(statement)
+function registerAfterAll(language, emitter) {
+  exporter[language].register.afterAll(emitter)
 }
 
 function emitTest(language, { url, test, tests, enableOriginTracing }) {
@@ -80,6 +80,10 @@ export function emitSuite(
   })
 }
 
+export function emitLocator(language, input) {
+  return exporter[language].emit.locator(input)
+}
+
 export default {
   register: {
     command: registerCommand,
@@ -95,5 +99,6 @@ export default {
   emit: {
     test: emitTest,
     suite: emitSuite,
+    locator: emitLocator,
   },
 }
