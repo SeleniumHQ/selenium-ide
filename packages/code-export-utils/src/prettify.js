@@ -56,8 +56,11 @@ export default function prettify(
 }
 
 function calculateEndingLevel({ startingLevel, commandBlock } = {}) {
-  const endingLevel =
-    commandBlock.commands[commandBlock.commands.length - 1].level || 0
+  let endingLevel = 0
+  if (commandBlock.commands.length > 0) {
+    endingLevel =
+      commandBlock.commands[commandBlock.commands.length - 1].level || 0
+  }
   const endingLevelAdjustment = commandBlock.endingLevelAdjustment || 0
   const result = startingLevel + endingLevel + endingLevelAdjustment
   return result
