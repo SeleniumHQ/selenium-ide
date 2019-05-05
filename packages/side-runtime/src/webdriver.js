@@ -36,24 +36,23 @@ const {
 } = webdriver
 const { TimeoutError } = webdriver.error
 
-const IMPLICIT_WAIT = 5 * 1000
 const POLL_TIMEOUT = 50
 const DEFAULT_CAPABILITIES = {
   browserName: 'chrome',
 }
-const DEFAULT_SERVER = 'http://localhost:4444/wd/hub'
 
 const state = Symbol('state')
 
 export default class WebDriverExecutor {
-  constructor({ driver, capabilities, server, hooks }) {
+  constructor({ driver, capabilities, server, hooks, implicitWait }) {
     if (driver) {
       this.driver = driver
     } else {
       this.capabilities = capabilities || DEFAULT_CAPABILITIES
-      this.server = server || DEFAULT_SERVER
+      this.server = server
     }
 
+    this.implicitWait = implicitWait || 5 * 1000
     this.hooks = hooks
 
     this.waitForNewWindow = this.waitForNewWindow.bind(this)
@@ -815,7 +814,10 @@ export default class WebDriverExecutor {
 
   async waitForElement(locator) {
     const elementLocator = parseLocator(locator)
-    return await this.wait(until.elementLocated(elementLocator), IMPLICIT_WAIT)
+    return await this.wait(
+      until.elementLocated(elementLocator),
+      this.implicitWait
+    )
   }
 
   async isElementEditable(element) {
