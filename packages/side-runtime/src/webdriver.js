@@ -46,13 +46,15 @@ const DEFAULT_SERVER = 'http://localhost:4444/wd/hub'
 const state = Symbol('state')
 
 export default class WebDriverExecutor {
-  constructor(capabilities, server) {
-    if (capabilities && typeof capabilities.get === 'function') {
-      this.driver = capabilities
+  constructor({ driver, capabilities, server, hooks }) {
+    if (driver) {
+      this.driver = driver
     } else {
       this.capabilities = capabilities || DEFAULT_CAPABILITIES
       this.server = server || DEFAULT_SERVER
     }
+
+    this.hooks = hooks
 
     this.waitForNewWindow = this.waitForNewWindow.bind(this)
   }
@@ -105,10 +107,18 @@ export default class WebDriverExecutor {
     return func
   }
 
+  async executeHook(hook, ...args) {
+    if (this.hooks && this.hooks[hook]) {
+      await this.hooks[hook].apply(this, args)
+    }
+  }
+
   async beforeCommand(commandObject) {
     if (commandObject.opensWindow) {
       this[state].openedWindows = await this.driver.getAllWindowHandles()
     }
+
+    await this.executeHook('onBeforeCommand', { command: commandObject })
   }
 
   async afterCommand(commandObject) {
@@ -118,7 +128,15 @@ export default class WebDriverExecutor {
         commandObject.windowTimeout
       )
       this.variables.set(commandObject.windowHandleName, handle)
+
+      await this.executeHook('onWindowAppeared', {
+        command: commandObject,
+        windowHandleName: commandObject.windowHandleName,
+        windowHandle: handle,
+      })
     }
+
+    await this.executeHook('onAfterCommand', { command: commandObject })
   }
 
   async waitForNewWindow() {

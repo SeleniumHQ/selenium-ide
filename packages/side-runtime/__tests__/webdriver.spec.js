@@ -74,7 +74,7 @@ describe('webdriver executor', () => {
       variables = new Variables()
       const builder = new webdriver.Builder().withCapabilities(capabilities)
       driver = await builder.build()
-      executor = new WebDriverExecutor(driver)
+      executor = new WebDriverExecutor({ driver })
       await executor.init({ variables })
     })
     afterAll(async () => {
