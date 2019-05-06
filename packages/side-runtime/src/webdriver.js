@@ -208,7 +208,10 @@ export default class WebDriverExecutor {
   // mouse commands
 
   async doAddSelection(locator, optionLocator, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const option = await element.findElement(parseOptionLocator(optionLocator))
     const selections = await this.driver.executeScript(
       'return arguments[0].selectedOptions',
@@ -220,7 +223,10 @@ export default class WebDriverExecutor {
   }
 
   async doRemoveSelection(locator, optionLocator, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
 
     if (!(await element.getAttribute('multiple'))) {
       throw new Error('Given element is not a multiple select type element')
@@ -237,27 +243,39 @@ export default class WebDriverExecutor {
   }
 
   async doCheck(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     if (!(await element.isSelected())) {
       await element.click()
     }
   }
 
   async doUncheck(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     if (await element.isSelected()) {
       await element.click()
     }
   }
 
   async doClick(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await element.click()
   }
 
   async doClickAt(locator, coordString, commandObject = {}) {
     const coords = parseCoordString(coordString)
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element, ...coords })
@@ -266,7 +284,10 @@ export default class WebDriverExecutor {
   }
 
   async doDoubleClick(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .doubleClick(element)
@@ -275,7 +296,10 @@ export default class WebDriverExecutor {
 
   async doDoubleClickAt(locator, coordString, commandObject = {}) {
     const coords = parseCoordString(coordString)
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element, ...coords })
@@ -284,8 +308,14 @@ export default class WebDriverExecutor {
   }
 
   async doDragAndDropToObject(dragLocator, dropLocator, commandObject = {}) {
-    const drag = await this.waitForElement(dragLocator, commandObject.targetFallback)
-    const drop = await this.waitForElement(dropLocator, commandObject.valueFallback)
+    const drag = await this.waitForElement(
+      dragLocator,
+      commandObject.targetFallback
+    )
+    const drop = await this.waitForElement(
+      dropLocator,
+      commandObject.valueFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .dragAndDrop(drag, drop)
@@ -293,7 +323,10 @@ export default class WebDriverExecutor {
   }
 
   async doMouseDown(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element })
@@ -303,7 +336,10 @@ export default class WebDriverExecutor {
 
   async doMouseDownAt(locator, coordString, commandObject = {}) {
     const coords = parseCoordString(coordString)
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element, ...coords })
@@ -313,7 +349,10 @@ export default class WebDriverExecutor {
 
   async doMouseMoveAt(locator, coordString, commandObject = {}) {
     const coords = parseCoordString(coordString)
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element, ...coords })
@@ -321,7 +360,10 @@ export default class WebDriverExecutor {
   }
 
   async doMouseOut(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const [rect, vp] = await this.driver.executeScript(
       'return [arguments[0].getBoundingClientRect(), {height: window.innerHeight, width: window.innerWidth}];',
       element
@@ -366,7 +408,10 @@ export default class WebDriverExecutor {
   }
 
   async doMouseOver(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element })
@@ -374,7 +419,10 @@ export default class WebDriverExecutor {
   }
 
   async doMouseUp(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element })
@@ -384,7 +432,10 @@ export default class WebDriverExecutor {
 
   async doMouseUpAt(locator, coordString, commandObject = {}) {
     const coords = parseCoordString(coordString)
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver
       .actions({ bridge: true })
       .move({ origin: element, ...coords })
@@ -393,7 +444,10 @@ export default class WebDriverExecutor {
   }
 
   async doSelect(locator, optionLocator, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const option = await element.findElement(parseOptionLocator(optionLocator))
     await option.click()
   }
@@ -401,7 +455,10 @@ export default class WebDriverExecutor {
   // keyboard commands
 
   async doEditContent(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await this.driver.executeScript(
       "if(arguments[0].contentEditable === 'true') {arguments[0].innerText = arguments[1]} else {throw new Error('Element is not content editable')}",
       element,
@@ -410,13 +467,19 @@ export default class WebDriverExecutor {
   }
 
   async doType(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await element.clear()
     await element.sendKeys(value)
   }
 
   async doSendKeys(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     await element.sendKeys(...value)
   }
 
@@ -563,7 +626,10 @@ export default class WebDriverExecutor {
   }
 
   async doStoreText(locator, variable, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const text = await element.getText()
     this.variables.set(variable, text)
   }
@@ -574,7 +640,10 @@ export default class WebDriverExecutor {
   }
 
   async doStoreValue(locator, variable, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const value = await element.getAttribute('value')
     this.variables.set(variable, value)
   }
@@ -624,14 +693,20 @@ export default class WebDriverExecutor {
   }
 
   async doAssertEditable(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     if (!(await this.isElementEditable(element))) {
       throw new AssertionError('Element is not editable')
     }
   }
 
   async doAssertNotEditable(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     if (await this.isElementEditable(element)) {
       throw new AssertionError('Element is editable')
     }
@@ -672,7 +747,10 @@ export default class WebDriverExecutor {
   }
 
   async doAssertText(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const text = await element.getText()
     if (text !== value) {
       throw new AssertionError(
@@ -682,7 +760,10 @@ export default class WebDriverExecutor {
   }
 
   async doAssertNotText(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const text = await element.getText()
     if (text === value) {
       throw new AssertionError(
@@ -692,7 +773,10 @@ export default class WebDriverExecutor {
   }
 
   async doAssertValue(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
       throw new AssertionError(
@@ -703,7 +787,10 @@ export default class WebDriverExecutor {
 
   // not generally implemented
   async doAssertNotValue(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
       throw new AssertionError(
@@ -713,21 +800,30 @@ export default class WebDriverExecutor {
   }
 
   async doAssertChecked(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     if (!(await element.isSelected())) {
       throw new AssertionError('Element is not checked, expected to be checked')
     }
   }
 
   async doAssertNotChecked(locator, _, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     if (await element.isSelected()) {
       throw new AssertionError('Element is checked, expected to be unchecked')
     }
   }
 
   async doAssertSelectedValue(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const elementValue = await element.getAttribute('value')
     if (elementValue !== value) {
       throw new AssertionError(
@@ -737,7 +833,10 @@ export default class WebDriverExecutor {
   }
 
   async doAssertNotSelectedValue(locator, value, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const elementValue = await element.getAttribute('value')
     if (elementValue === value) {
       throw new AssertionError(
@@ -747,7 +846,10 @@ export default class WebDriverExecutor {
   }
 
   async doAssertSelectedLabel(locator, label, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const selectedValue = await element.getAttribute('value')
     const selectedOption = await element.findElement(
       By.xpath(`option[@value="${selectedValue}"]`)
@@ -765,7 +867,10 @@ export default class WebDriverExecutor {
   }
 
   async doAssertNotSelectedLabel(locator, label, commandObject = {}) {
-    const element = await this.waitForElement(locator, commandObject.targetFallback)
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback
+    )
     const selectedValue = await element.getAttribute('value')
     const selectedOption = await element.findElement(
       By.xpath(`option[@value="${selectedValue}"]`)
