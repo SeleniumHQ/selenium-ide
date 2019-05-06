@@ -24,6 +24,7 @@ import selectWindow from './select-window'
 import prompt from './prompt'
 import title from './title'
 import storeElementCount from './store-element-count'
+import targetFallback from './target-fallback'
 
 export const migrators = {
   pause,
@@ -35,6 +36,7 @@ export const migrators = {
   prompt,
   title,
   storeElementCount,
+  targetFallback,
 }
 
 export default Object.keys(migrators).reduce((migs, migName) => {

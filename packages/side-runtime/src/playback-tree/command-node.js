@@ -82,7 +82,7 @@ export class CommandNode {
       return commandExecutor[commandExecutor.name(this.command.command)](
         this.command.target,
         this.command.value,
-        this.command.targets
+        this.command
       )
     }
   }

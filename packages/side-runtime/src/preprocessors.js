@@ -78,7 +78,7 @@ function preprocessObject(preprocessors, obj, ...args) {
 
 export function preprocessArray(interpolator) {
   return function preprocessArray(items, variables) {
-    return items.map(item => interpolator(item, variables))
+    return items.map(item => [interpolator(item[0], variables), item[1]])
   }
 }
 

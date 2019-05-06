@@ -69,8 +69,8 @@ describe('preprocessor composition', () => {
     )
     const exec = new FakeExecutor()
     exec.init({ variables })
-    exec.doFake('${a}', '${a}', { targets: ['${a}', '${a}'] })
-    expect(fn).toHaveBeenCalledWith('a', 'a', { targets: ['a', 'a'] })
+    exec.doFake('${a}', '${a}', { targets: [['${a}', 's'], ['${a}', 's']] })
+    expect(fn).toHaveBeenCalledWith('a', 'a', { targets: [['a', 's'], ['a', 's']] })
   })
   it('should ignore preprocess if null is passed', () => {
     variables.set('a', 'a')
@@ -104,10 +104,10 @@ describe('preprocessor composition', () => {
 describe('array preprocessing', () => {
   it('should preprocess array of string using a single interpolator', () => {
     variables.set('a', 'a')
-    const arr = ['${a}a', '${a}b']
+    const arr = [['${a}a', 's'], ['${a}b', 's']]
     expect(preprocessArray(interpolateString)(arr, variables)).toEqual([
-      'aa',
-      'ab',
+      ['aa', 's'],
+      ['ab', 's'],
     ])
   })
 })

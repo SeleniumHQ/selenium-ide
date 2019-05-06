@@ -47,7 +47,7 @@ describe('Playback using webdriver', () => {
       chromeOptions: { args: ['headless', 'disable-gpu'] },
     })
     driver = await builder.build()
-    executor = new WebDriverExecutor({ driver })
+    executor = new WebDriverExecutor({ driver, implicitWait: 50 })
   })
   afterAll(async () => {
     await driver.quit()
@@ -209,6 +209,37 @@ describe('Playback using webdriver', () => {
     }
     await (await playback.play(test))()
     expect(didExecute).toBeTruthy()
+    executor.hooks = undefined
+  })
+  it('should perform locator fallback', async () => {
+    const test = {
+      id: 1,
+      commands: [
+        {
+          command: 'open',
+          target: '/check.html',
+          value: '',
+        },
+        {
+          command: 'uncheck',
+          target: 'id=nan',
+          value: '',
+          targetFallback: [
+            ['id=stillnan', 'id'],
+            ['id=t', 'id'],
+            ['id=broken', 'id'],
+          ],
+        },
+      ],
+    }
+    const playback = new Playback({
+      executor,
+      variables,
+      baseUrl: `http://localhost:${port}/`,
+    })
+    await (await playback.play(test))()
+    const element = await driver.findElement(By.id('t'))
+    expect(await element.isSelected()).toBeFalsy()
     executor.hooks = undefined
   })
 })
