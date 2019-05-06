@@ -70,7 +70,9 @@ describe('preprocessor composition', () => {
     const exec = new FakeExecutor()
     exec.init({ variables })
     exec.doFake('${a}', '${a}', { targets: [['${a}', 's'], ['${a}', 's']] })
-    expect(fn).toHaveBeenCalledWith('a', 'a', { targets: [['a', 's'], ['a', 's']] })
+    expect(fn).toHaveBeenCalledWith('a', 'a', {
+      targets: [['a', 's'], ['a', 's']],
+    })
   })
   it('should ignore preprocess if null is passed', () => {
     variables.set('a', 'a')
