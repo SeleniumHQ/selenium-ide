@@ -59,23 +59,28 @@ function registerAfterAll(language, emitter) {
   exporter[language].register.afterAll(emitter)
 }
 
-function emitTest(language, { url, test, tests, enableOriginTracing }) {
+function emitTest(
+  language,
+  { url, test, tests, project, enableOriginTracing }
+) {
   return exporter[language].emit.test({
     baseUrl: url,
     test,
     tests,
+    project,
     enableOriginTracing,
   })
 }
 
 export function emitSuite(
   language,
-  { url, suite, tests, enableOriginTracing }
+  { url, suite, tests, project, enableOriginTracing }
 ) {
   return exporter[language].emit.suite({
     baseUrl: url,
     suite,
     tests,
+    project,
     enableOriginTracing,
   })
 }

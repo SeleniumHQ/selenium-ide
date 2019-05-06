@@ -26,7 +26,8 @@ export async function exportCodeToFile(
   { test, suite },
   { enableOriginTracing }
 ) {
-  const { url, tests } = UiState.project.toJS()
+  const project = UiState.project.toJS()
+  const { url, tests } = project
   for (const language of selectedLanguages) {
     let emittedCode
     if (test) {
@@ -34,14 +35,15 @@ export async function exportCodeToFile(
         url,
         test,
         tests,
+        project,
         enableOriginTracing,
       })
     } else if (suite) {
-      const _suite = normalizeTestsInSuite({ suite, tests })
       emittedCode = await exporter.emit.suite(language, {
         url,
-        suite: _suite,
+        suite: normalizeTestsInSuite({ suite, tests }),
         tests,
+        project,
         enableOriginTracing,
       })
     }

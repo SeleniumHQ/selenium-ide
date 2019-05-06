@@ -31,7 +31,9 @@ export default class Hook {
     this.emitters = []
   }
 
-  async emit({ isOptional, tests } = { isOptional: false }) {
+  async emit(
+    { isOptional, test, suite, tests, project } = { isOptional: false }
+  ) {
     const commands = []
     let registeredCommandLevel = 0
     if (this.startingSyntax) {
@@ -44,8 +46,9 @@ export default class Hook {
         commands.push({ level: 0, statement: this.startingSyntax })
       }
     }
+    const name = test ? test.name : suite ? suite.name : undefined
     const emittedCommands = (await Promise.all(
-      this.emitters.map(emitter => emitter({ tests }))
+      this.emitters.map(emitter => emitter({ name, tests, project }))
     )).filter(entry => !!entry)
     if (isOptional && !emittedCommands.length) return ''
     emittedCommands.forEach(command => {
