@@ -18,23 +18,25 @@
 import { registerCommandEmitter } from '../../src/register'
 
 describe('Register', () => {
-  it('should register a new command emitter', () => {
-    const emitters = {
-      blah: 'blah',
-    }
-    const command = 'foo'
-    const emitter = 'bar'
-    registerCommandEmitter({ command, emitter, emitters })
-    expect(emitters).toEqual({ blah: 'blah', foo: 'bar' })
-  })
-  it('should throw when trying to overwrite an existing command emitter', () => {
-    const emitters = {
-      blah: 'blah',
-    }
-    const command = 'blah'
-    const emitter = 'blah'
-    expect(() => {
+  describe('Command Emitters', () => {
+    it('should register a new command emitter', () => {
+      const emitters = {
+        blah: 'blah',
+      }
+      const command = 'foo'
+      const emitter = 'bar'
       registerCommandEmitter({ command, emitter, emitters })
-    }).toThrow()
+      expect(emitters).toEqual({ blah: 'blah', foo: 'bar' })
+    })
+    it('should throw when trying to overwrite an existing command emitter', () => {
+      const emitters = {
+        blah: 'blah',
+      }
+      const command = 'blah'
+      const emitter = 'blah'
+      expect(() => {
+        registerCommandEmitter({ command, emitter, emitters })
+      }).toThrow()
+    })
   })
 })
