@@ -1,6 +1,6 @@
 {
   "name": "code-export",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "Selenium IDE code export",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -20,6 +20,6 @@
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.6.0"
+    "code-export-java-junit": "^3.7.0"
   }
 }
