@@ -36,7 +36,7 @@ export default class CommandReference extends React.Component {
   }
   linkForArgument(param) {
     return `https://www.seleniumhq.org/selenium-ide/docs/en/api/arguments/#${param.name
-      .replace(/ /g, '-')
+      .replace(/ /g, '')
       .toLowerCase()}`
   }
   argument(param) {
