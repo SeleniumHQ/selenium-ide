@@ -8,13 +8,16 @@ sidebar_label: Code Export
 
 You can export either a test or suite of tests to WebDriver code by right-clicking on a test or a suite, selecting `Export`, choosing your target language, and clicking `Export`.
 
+![code-export-right-click](/selenium-ide/img/docs/code-export/right-click.png)
+![code-export-menu](/selenium-ide/img/docs/code-export/menu.png)
+
 This will save a file containing the exported code for your targret language to your browser's download directory.
 
 ### Origin Tracing Code Comments
 
 When exporting there is an optional toggle to enable origin tracing code comments.
 
-This will place inline code comments in the exported file with details about the test step in Selenium IDE that generated the generated code that follows it.
+This will place inline code comments in the exported file with details about the test step in Selenium IDE that generated it.
 
 ## Supported Exports
 
@@ -26,7 +29,7 @@ Contributions are welcome to help add new languages and test frameworks for a gi
 
 ### Java JUnit
 
-The exported code for Java JUnit is built to work with Java 8, JUnit 4.12, and Selenium 3.141.
+The exported code for Java JUnit is built to work with Java 8, JUnit 4.12, and the latest version of Selenium 3.
 
 You should be able to take the exported Java file and place it into a standard Maven directory structure with a `pom.xml` file listing these dependencies and run it.
 
@@ -36,7 +39,7 @@ Code export was built in a modular way to help enable contributions.
 
 Each language and test framework will have its own package containing the code to be exported. Each snippet of code maps to a command in Selenium IDE and each of these packages rely on an underlying "core" package which does all of the heavy lifting.
 
-Here are the steps to create one for a new language or framework within an already established language.
+Here are the steps to create one for a new language or for a new test framework within an already established language.
 
 ### 1. Create a new package
 
@@ -50,38 +53,34 @@ For a given language, there is a file for each, along with accompanying test fil
 
 You can see an example of that in `packages/code-export-java-junit`.
 
-[Commands](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/command.js)
-[Command Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/command.spec.js)
-[Locator Strategies](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/location.js)
-[Locator Strategies Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/location.spec.js)
+- [Commands](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/command.js)
+- [Command Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/command.spec.js)
+- [Locator Strategies](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/location.js)
+- [Locator Strategies Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/location.spec.js)
 
 ### 4. Create the hooks
 
-Hooks are what makes up the structure of the code to be exported (e.g., a suite, a test, and all of the things that go into it like setup, teardown, etc.). They are also what enables plugins to export code to different parts of a test or suite as well.
+Hooks make up a majority of the structure of the code to be exported (e.g., a suite, a test, and all of the things that go into it like setup, teardown, etc.). They are also what enables plugins to export code to different parts of a test or a suite.
 
 There are 9 different hooks:
 
-- afterAll (after all tests have completed)
-- afterEach (after each test has been completed)
-- beforeAll (before all tests have been run)
-- beforeEach (before each test has been run - after beforeAll)
-- command (emit code for a new command added by a plugin)
-- dependency (add an addittional language dependency)
-- inEachBegin (in each test, at the beginning of it)
-- inEachEnd (in each test, at the end of it)
-- variable (declare a new variable to be used throughout the suite)
+- `afterAll` (after all tests have completed)
+- `afterEach` (after each test has been completed - before `afterAll`)
+- `beforeAll` (before all tests have been run)
+- `beforeEach` (before each test has been run - after `beforeAll`)
+- `command` (emit code for a new command added by a plugin)
+- `dependency` (add an addittional language dependency)
+- `inEachBegin` (in each test, at the beginning of it)
+- `inEachEnd` (in each test, at the end of it)
+- `variable` (declare a new variable to be used throughout the suite)
 
-You can see an example of hooks being implemented in `packages/code-export-java-junit`.
-
-[Hooks](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/hook.js)
+You can see an example of hooks being implemented in `packages/code-export-java-junit` here: [Hooks](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/hook.js)
 
 ### 3. Update the language specific attributes
 
 In each language you need to specify some low-level details. Things like how many spaces to indent, how to declare a method, a test, a suite, etc.
 
-You can see an example of hooks being implemented in `packages/code-export-java-junit`.
-
-[Language specific options](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/index.js)
+You can see an example of this being implemented in `packages/code-export-java-junit` here: [Language specific options](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/index.js)
 
 ### 5. Add it to the mix
 
@@ -105,4 +104,4 @@ Test, fix, and test again until you are confident with the end result.
 
 ### 7. Submit a PR
 
-You've done the hard part. Now it's just a simple matter of submitting a PR. Please do so against the `v3` branch.
+You've done the hard part. Now it's just a simple matter of submitting a PR. Please do so against the [`v3` branch](https://github.com/SeleniumHQ/selenium-ide/tree/v3).
