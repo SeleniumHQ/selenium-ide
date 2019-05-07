@@ -96,17 +96,32 @@ window.__side.getFrameLocation = () => {
   return frameLocation
 }
 
-window.__side.setWindowHandle = (handle, sessionId) => {
-  let frameLocation = window.__side.getFrameLocation()
-  window.top.postMessage(
+window.__side.setWindowHandle = async (handle, sessionId) => {
+  await window.__side.postMessage(
+    window,
     {
       direction: 'from-page-script',
-      recordedType: 'handle',
-      recordedMessage: {
+      action: 'set-handle',
+      args: {
         handle,
         sessionId,
       },
-      frameLocation,
+    },
+    '*'
+  )
+}
+
+window.__side.setActiveContext = async sessionId => {
+  let frameLocation = window.__side.getFrameLocation()
+  await window.__side.postMessage(
+    window,
+    {
+      direction: 'from-page-script',
+      action: 'set-frame',
+      args: {
+        sessionId,
+        frameLocation,
+      },
     },
     '*'
   )

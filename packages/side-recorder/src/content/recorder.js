@@ -38,6 +38,7 @@ export default class Recorder {
     this.setWindowHandle = this.setWindowHandle.bind(this)
 
     this.window.addEventListener('message', this.setWindowHandle)
+    this.window.addEventListener('message', this.setActiveContext)
     browser.runtime.onMessage.addListener(this.recalculateFrameLocation)
     browser.runtime.onMessage.addListener(this.attachRecorderHandler)
     browser.runtime.onMessage.addListener(this.detachRecorderHandler)
@@ -94,16 +95,49 @@ export default class Recorder {
 
   setWindowHandle(event) {
     if (
-      event.source.top === window &&
       event.data &&
       event.data.direction === 'from-page-script' &&
-      event.data.recordedType === 'handle'
+      event.data.action === 'set-handle'
     ) {
-      return browser.runtime.sendMessage({
-        setWindowHandle: true,
-        handle: event.data.recordedMessage.handle,
-        sessionId: event.data.recordedMessage.sessionId,
-      })
+      browser.runtime
+        .sendMessage({
+          setWindowHandle: true,
+          handle: event.data.args.handle,
+          sessionId: event.data.args.sessionId,
+        })
+        .then(() => {
+          event.source.postMessage(
+            {
+              id: event.data.id,
+              direction: 'from-content-script',
+            },
+            '*'
+          )
+        })
+    }
+  }
+
+  setActiveContext(event) {
+    if (
+      event.data &&
+      event.data.direction === 'from-page-script' &&
+      event.data.action === 'set-frame'
+    ) {
+      browser.runtime
+        .sendMessage({
+          setActiveContext: true,
+          frameLocation: event.data.args.frameLocation,
+          sessionId: event.data.args.sessionId,
+        })
+        .then(() => {
+          event.source.postMessage(
+            {
+              id: event.data.id,
+              direction: 'from-content-script',
+            },
+            '*'
+          )
+        })
     }
   }
 

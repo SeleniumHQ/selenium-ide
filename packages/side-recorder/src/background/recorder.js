@@ -35,6 +35,7 @@ export default class BackgroundRecorder {
       browser.runtime.onMessage.addListener(this.attachRecorderRequestHandler)
       browser.runtime.onMessage.addListener(this.frameCountHandler)
       browser.runtime.onMessage.addListener(this.setWindowHandleHandler)
+      browser.runtime.onMessage.addListener(this.setActiveContext)
     }
   }
 
@@ -312,6 +313,25 @@ export default class BackgroundRecorder {
     }
   }
 
+  setActiveContext(message, sender, sendResponse) {
+    if (message.setActiveContext) {
+      const { sessionId, frameLocation } = message
+      this.windowSession.currentUsedFrameLocation[sessionId] = frameLocation
+      this.windowSession.currentUsedTabId[sessionId] = sender.tab.id
+
+      if (sender.tab.windowId != undefined) {
+        this.windowSession.currentUsedWindowId[sessionId] = sender.tab.windowId
+      } else {
+        // Google Chrome does not support windowId.
+        // Retrieve windowId from tab information.
+        browser.tabs.get(sender.tab.id).then(tabInfo => {
+          this.windowSession.currentUsedWindowId[sessionId] = tabInfo.windowId
+        })
+      }
+      return sendResponse(true)
+    }
+  }
+
   addCommandMessageHandler(message, sender, sendResponse) {
     if (message.frameRemoved) {
       browser.tabs.sendMessage(sender.tab.id, {
@@ -433,6 +453,7 @@ export default class BackgroundRecorder {
       this
     )
     this.setWindowHandleHandler = this.setWindowHandleHandler.bind(this)
+    this.setActiveContext = this.setActiveContext.bind(this)
     this.addCommandMessageHandler = this.addCommandMessageHandler.bind(this)
     this.attachRecorderRequestHandler = this.attachRecorderRequestHandler.bind(
       this
