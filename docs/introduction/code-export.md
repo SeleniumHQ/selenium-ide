@@ -58,6 +58,10 @@ You can see an example of that in `packages/code-export-java-junit`.
 - [Locator Strategies](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/location.js)
 - [Locator Strategies Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/location.spec.js)
 
+When declaring new commands you can either specify its output [as a string](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/command.js#L192), or [as an object which specifies indentation levels](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/command.js#L242-L249)).
+
+Built into code-export is a prettifier which controls the indentation of the outputted code. This structure is useful if a command's output is verbose and you want to be explicit. Or if the command changes the indentation level of the commands that come after it.
+
 ### 4. Create the hooks
 
 Hooks make up a majority of the structure of the code to be exported (e.g., a suite, a test, and all of the things that go into it like setup, teardown, etc.). They are also what enables plugins to export code to different parts of a test or a suite.
