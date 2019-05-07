@@ -22,3 +22,5 @@ export function sanitizeName(input) {
 export function capitalize(input) {
   return input.charAt(0).toUpperCase() + input.substr(1)
 }
+
+export default { sanitizeName, capitalize }

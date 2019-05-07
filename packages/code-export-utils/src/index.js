@@ -21,6 +21,7 @@ import { registerPreprocessors, registerCommandEmitter } from './register'
 import Hook from './hook'
 import find from './find'
 import render from './render'
+import parsers from './parsers'
 
 export default {
   emit: { ...emit },
@@ -32,4 +33,5 @@ export default {
   hook: Hook,
   find: { ...find },
   render,
+  parsers,
 }

@@ -19,8 +19,8 @@ import exporter from 'code-export-utils'
 import emitter from './command'
 import location from './location'
 import { generateHooks } from './hook'
-import { sanitizeName, capitalize } from './parsers'
 
+// Define language options -- "opts" for short
 export let opts = {}
 opts.emitter = emitter
 opts.hooks = generateHooks()
@@ -30,19 +30,25 @@ opts.terminatingKeyword = '}'
 opts.commentPrefix = '//'
 opts.generateMethodDeclaration = generateMethodDeclaration
 
+// Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
 function generateTestDeclaration(name) {
-  return `@Test\npublic void ${sanitizeName(name)}() {`
+  return `@Test\npublic void ${exporter.parsers.sanitizeName(name)}() {`
 }
 function generateMethodDeclaration(name) {
-  return `public void ${sanitizeName(name)}() {`
+  return `public void ${exporter.parsers.sanitizeName(name)}() {`
 }
 function generateSuiteDeclaration(name) {
-  return `public class ${capitalize(sanitizeName(name))} {`
+  return `public class ${exporter.parsers.capitalize(
+    exporter.parsers.sanitizeName(name)
+  )} {`
 }
 function generateFilename(name) {
-  return `${capitalize(sanitizeName(name))}${opts.fileExtension}`
+  return `${exporter.parsers.capitalize(exporter.parsers.sanitizeName(name))}${
+    opts.fileExtension
+  }`
 }
 
+// Emit an individual test, wrapped in a suite (using the test name as the suite name)
 export async function emitTest({
   baseUrl,
   test,
@@ -71,6 +77,7 @@ export async function emitTest({
   }
 }
 
+// Emit a suite with all of its tests
 export async function emitSuite({
   baseUrl,
   suite,
@@ -79,17 +86,11 @@ export async function emitSuite({
   enableOriginTracing,
 }) {
   global.baseUrl = baseUrl
-  let result = ''
-  for (const testName of suite.tests) {
-    const test = tests.find(test => test.name === testName)
-    const testDeclaration = generateTestDeclaration(test.name)
-    result += await exporter.emit.test(test, tests, {
-      ...opts,
-      testDeclaration,
-      enableOriginTracing,
-      project,
-    })
-  }
+  const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
+    enableOriginTracing,
+    generateTestDeclaration,
+    project,
+  })
   const suiteDeclaration = generateSuiteDeclaration(suite.name)
   return {
     filename: generateFilename(suite.name),

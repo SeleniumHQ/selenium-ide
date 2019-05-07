@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { sanitizeName, capitalize } from '../src/parsers'
+import { sanitizeName, capitalize } from '../../src/parsers'
 
 describe('parsers', () => {
   it('should sanitize the name', () => {

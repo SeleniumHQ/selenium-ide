@@ -252,6 +252,26 @@ async function emitSuite(
   return result
 }
 
+async function emitTestsFromSuite(
+  tests,
+  suite,
+  languageOpts,
+  { enableOriginTracing, generateTestDeclaration, project }
+) {
+  let result = ''
+  for (const testName of suite.tests) {
+    const test = tests.find(test => test.name === testName)
+    const testDeclaration = generateTestDeclaration(test.name)
+    result += await emitTest(test, tests, {
+      ...languageOpts,
+      testDeclaration,
+      enableOriginTracing,
+      project,
+    })
+  }
+  return result
+}
+
 export default {
   command: emitCommand,
   commands: emitCommands,
@@ -261,4 +281,5 @@ export default {
   suite: emitSuite,
   test: emitTest,
   text: emitEscapedText,
+  testsFromSuite: emitTestsFromSuite,
 }

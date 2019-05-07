@@ -18,7 +18,6 @@
 import exporter from 'code-export-utils'
 import location from './location'
 import selection from './selection'
-import { sanitizeName } from './parsers'
 
 export const emitters = {
   addSelection: emitSelect,
@@ -437,7 +436,7 @@ async function emitPause(time) {
 }
 
 async function emitRun(testName) {
-  return Promise.resolve(`${sanitizeName(testName)}();`)
+  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
 }
 
 async function emitRunScript(script) {
