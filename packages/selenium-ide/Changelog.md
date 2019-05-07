@@ -1,3 +1,6 @@
+## 3.7.0
+Improved plugin support for code export
+Support for recursive reused test methods in code export
 ## 3.6.0
 Code export for Java JUnit
 ## 3.5.8
