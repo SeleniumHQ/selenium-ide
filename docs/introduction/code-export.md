@@ -34,19 +34,75 @@ You should be able to take the exported Java file and place it into a standard M
 
 Code export was built in a modular way to help enable contributions.
 
-Each language and test framework will have its own package containing the code to be exported. Each snippet of code maps to a command in Selenium IDE.
+Each language and test framework will have its own package containing the code to be exported. Each snippet of code maps to a command in Selenium IDE and each of these packages rely on an underlying "core" package which does all of the heavy lifting.
 
-Each of these packages rely on an underlying "core" package which does all of the heavy lifting.
+Here are the steps to create one for a new language or framework within an already established language.
 
 ### 1. Create a new package
 
-To contribute a new language, simply copy an existing language package (e.g., `packages/code-export-java-junit`) and rename it (e.g., the folder and the details in the `package.json` file) to the target language and framework you'd like to contribute (e.g., `packages/code-export-ruby-rspec`, etc.).
+Copy an existing language package (e.g., `packages/code-export-java-junit`) and rename it (e.g., the folder and the details in the `package.json` file) to the target language and framework you'd like to contribute (e.g., `packages/code-export-ruby-rspec`, etc.).
 
 ### 2. Update the locators and commands
 
-### 3. Update the language specific attributes
+The bread and butter of code export is the language specific strings that will be turned into outputted code. The most prominent of these are the commands and locator strategies (e.g., the syntax for the "by" lookups).
+
+For a given language, there is a file for each, along with accompanying test files.
+
+You can see an example of that in `packages/code-export-java-junit`.
+
+[Commands](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/command.js)
+[Command Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/command.spec.js)
+[Locator Strategies](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/location.js)
+[Locator Strategies Tests](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/__test__/src/location.spec.js)
 
 ### 4. Create the hooks
 
-### 5. Test and tune the exports
+Hooks are what makes up the structure of the code to be exported (e.g., a suite, a test, and all of the things that go into it like setup, teardown, etc.). They are also what enables plugins to export code to different parts of a test or suite as well.
 
+There are 9 different hooks:
+
+- afterAll (after all tests have completed)
+- afterEach (after each test has been completed)
+- beforeAll (before all tests have been run)
+- beforeEach (before each test has been run - after beforeAll)
+- command (emit code for a new command added by a plugin)
+- dependency (add an addittional language dependency)
+- inEachBegin (in each test, at the beginning of it)
+- inEachEnd (in each test, at the end of it)
+- variable (declare a new variable to be used throughout the suite)
+
+You can see an example of hooks being implemented in `packages/code-export-java-junit`.
+
+[Hooks](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/hook.js)
+
+### 3. Update the language specific attributes
+
+In each language you need to specify some low-level details. Things like how many spaces to indent, how to declare a method, a test, a suite, etc.
+
+You can see an example of hooks being implemented in `packages/code-export-java-junit`.
+
+[Language specific options](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/index.js)
+
+### 5. Add it to the mix
+
+Once you've got everything else in place, it's time to wire it up for use in the UI.
+
+This is possible in [`packages/code-export/src/index.js`](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export/src/index.js). 
+
+You will need to:
+
+1. Import your new code-export package
+2. Update `availableLanguages` with details about your code-export language
+3. Update `exporter` to reference your code-export name and import
+
+### 6. Test and tune
+
+The best end-to-end test for code export is to export a series of tests and verify that they run as you would expect.
+
+From a development build you have access to the seed tests. This is a good starting point to verify that all of the standard library commands work for your new language.
+
+Test, fix, and test again until you are confident with the end result.
+
+### 7. Submit a PR
+
+You've done the hard part. Now it's just a simple matter of submitting a PR. Please do so against the `v3` branch.
