@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Command from '../src/command'
-import { ControlFlowCommandNames } from '../../selenium-ide/src/neo/models/Command'
-import { opts } from '../src/index'
+import Command from '../../src/command'
+import { ControlFlowCommandNames } from '../../../selenium-ide/src/neo/models/Command'
+import { opts } from '../../src/index'
 import exporter from 'code-export-utils'
 
 const commandPrefixPadding = opts.commandPrefixPadding

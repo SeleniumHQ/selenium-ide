@@ -17,14 +17,18 @@
 
 import fs from 'fs'
 import path from 'path'
-import { emitTest, emitSuite, _emitMethod, _findTestByName } from '../src'
-import { normalizeTestsInSuite } from '../../selenium-ide/src/neo/IO/normalize'
+import { emitTest, emitSuite, _emitMethod, _findTestByName } from '../../src'
+import { normalizeTestsInSuite } from '../../../selenium-ide/src/neo/IO/normalize'
+
+function readFile(filename) {
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', 'test-files', filename))
+  )
+}
 
 describe('Code Export Java Selenium', () => {
   it('should export a test to JUnit code', async () => {
-    const project = JSON.parse(
-      fs.readFileSync(path.join(__dirname, 'test-files', 'single-test.side'))
-    )
+    const project = readFile('single-test.side')
     const results = await emitTest({
       baseUrl: project.url,
       test: project.tests[0],
@@ -34,11 +38,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite to JUnit code', async () => {
-    const project = normalizeProject(
-      JSON.parse(
-        fs.readFileSync(path.join(__dirname, 'test-files', 'single-suite.side'))
-      )
-    )
+    const project = normalizeProject(readFile('single-suite.side'))
     const results = await emitSuite({
       baseUrl: project.url,
       suite: project.suites[0],
@@ -48,13 +48,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toMatchSnapshot()
   })
   it('should export a test to JUnit code with reused test method', async () => {
-    const project = normalizeProject(
-      JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, 'test-files', 'test-case-reuse.side')
-        )
-      )
-    )
+    const project = normalizeProject(readFile('test-case-reuse.side'))
     const results = await emitTest({
       baseUrl: project.url,
       test: project.tests[1],
@@ -64,13 +58,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite to JUnit code with reused test method', async () => {
-    const project = normalizeProject(
-      JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, 'test-files', 'test-case-reuse.side')
-        )
-      )
-    )
+    const project = normalizeProject(readFile('test-case-reuse.side'))
     const results = await emitSuite({
       baseUrl: project.url,
       suite: project.suites[0],
@@ -80,13 +68,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite to JUnit code that uses control flow commands', async () => {
-    const project = normalizeProject(
-      JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, 'test-files', 'control-flow-suite.side')
-        )
-      )
-    )
+    const project = normalizeProject(readFile('control-flow-suite.side'))
     const results = await emitSuite({
       baseUrl: project.url,
       suite: project.suites[0],
