@@ -15,17 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function findReusedTestMethods(test, tests) {
-  const results = []
+export function findReusedTestMethods(test, tests, _results) {
+  const results = _results ? _results : []
   for (const command of test.commands) {
     if (command.command === 'run') {
       const reusedTest = tests.find(test => test.name === command.target)
       results.push({ name: reusedTest.name, commands: reusedTest.commands })
+      return findReusedTestMethods(reusedTest, tests, results)
     }
   }
   return results
-}
-
-export default {
-  reusedTestMethods: findReusedTestMethods,
 }

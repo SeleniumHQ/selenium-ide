@@ -18,8 +18,8 @@
 import { preprocessParameter } from './preprocessor'
 import StringEscape from 'js-string-escape'
 import doRender from './render'
-import find from './find'
 import { registerMethod } from './register'
+import { findReusedTestMethods } from './find'
 
 export function emitCommand(command, emitter, variableLookup) {
   if (emitter) {
@@ -134,7 +134,7 @@ async function emitTest(
   const render = doRender.bind(this, commandPrefixPadding)
   if (!testLevel) testLevel = 1
   if (!commandLevel) commandLevel = 2
-  const methods = find.reusedTestMethods(test, tests)
+  const methods = findReusedTestMethods(test, tests)
   for (const method of methods) {
     const result = await emitMethod(method.name, method.commands, {
       emitter,
