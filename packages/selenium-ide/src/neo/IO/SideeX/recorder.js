@@ -393,11 +393,11 @@ export default class BackgroundRecorder {
       // In Google Chrome, window.prompt() must be triggered in
       // an actived tabs of front window, so we let panel window been focused
       browser.windows
-        .update(this.windowSession.selfWindowId, { focused: true })
-        .then(function() {
+        .update(this.windowSession.ideWindowId, { focused: true })
+        .then(() => {
           // Even if window has been focused, window.prompt() still failed.
           // Delay a little time to ensure that status has been updated
-          setTimeout(function() {
+          setTimeout(() => {
             message.value = prompt('Enter the name of the variable')
             if (message.insertBeforeLastCommand) {
               record(message.command, message.target, message.value, true)
