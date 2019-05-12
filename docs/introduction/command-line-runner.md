@@ -8,7 +8,7 @@ You can now run all of your Selenium IDE tests on any browser, in parallel, and 
 
 There's just the small matter of installing the Selenium IDE command line runner, getting the necessary browser drivers (if running your tests locally), and launching the runner from a command prompt with the options you want.
 
-![command-line-runner-sample](/selenium-ide/img/docs/runner.png)
+![command-line-runner-sample](/website/static/img/docs/runner.png)
 
 ## Prerequisites
 
