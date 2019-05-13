@@ -70,7 +70,11 @@ program
   )
   .option(
     '--output-directory [directory]',
-    'Write test results to files, results written in JSON'
+    'Write test results to files, format is defined by --output-format'
+  )
+  .option(
+    '--output-format [jest | junit]',
+    'Format for the output. (default: jest)'
   )
   .option(
     '--force',
@@ -180,6 +184,51 @@ configuration.baseUrl = program.baseUrl
   ? program.baseUrl
   : configuration.baseUrl
 
+configuration.outputFormat = () => ({
+  jestArguments: [],
+  jestConfiguration: {},
+  packageJsonConfiguration: {},
+})
+if (program.outputDirectory) {
+  const outputDirectory = path.isAbsolute(program.outputDirectory)
+    ? program.outputDirectory
+    : path.join('..', program.outputDirectory)
+  const outputFormatConfigurations = {
+    jest(project) {
+      return {
+        jestArguments: [
+          '--json',
+          '--outputFile',
+          path.join(outputDirectory, `${project.name}.json`),
+        ],
+        jestConfiguration: {},
+        packageJsonConfiguration: {},
+      }
+    },
+    junit(project) {
+      return {
+        jestArguments: [],
+        jestConfiguration: { reporters: ['default', 'jest-junit'] },
+        packageJsonConfiguration: {
+          'jest-junit': {
+            outputDirectory: outputDirectory,
+            outputName: `${project.name}.xml`,
+          },
+        },
+      }
+    },
+  }
+  const format = program.outputFormat ? program.outputFormat : 'jest'
+  configuration.outputFormat = outputFormatConfigurations[format]
+  if (!configuration.outputFormat) {
+    const allowedFormats = Object.keys(outputFormatConfigurations).join(', ')
+    winston.error(
+      `'${format}'is not an output format, allowed values: ${allowedFormats}`
+    )
+    process.exit(1)
+  }
+}
+
 winston.debug(util.inspect(configuration))
 
 let projectPath
@@ -228,7 +277,9 @@ function runProject(project) {
           ],
           testEnvironment: 'jest-environment-selenium',
           testEnvironmentOptions: configuration,
+          ...configuration.outputFormat(project).jestConfiguration,
         },
+        ...configuration.outputFormat(project).packageJsonConfiguration,
         dependencies: project.dependencies || {},
       },
       null,
@@ -318,18 +369,7 @@ function runJest(project) {
       `{**/*${program.filter}*/*.test.js,**/*${program.filter}*.test.js}`,
     ]
       .concat(program.maxWorkers ? ['-w', program.maxWorkers] : [])
-      .concat(
-        program.outputDirectory
-          ? [
-              '--json',
-              '--outputFile',
-              path.isAbsolute(program.outputDirectory)
-                ? path.join(program.outputDirectory, `${project.name}.json`)
-                : '../' +
-                  path.join(program.outputDirectory, `${project.name}.json`),
-            ]
-          : []
-      )
+      .concat(configuration.outputFormat(project).jestArguments)
     const opts = {
       cwd: path.join(process.cwd(), projectPath),
       stdio: 'inherit',

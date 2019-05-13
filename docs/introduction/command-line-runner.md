@@ -8,7 +8,7 @@ You can now run all of your Selenium IDE tests on any browser, in parallel, and 
 
 There's just the small matter of installing the Selenium IDE command line runner, getting the necessary browser drivers (if running your tests locally), and launching the runner from a command prompt with the options you want.
 
-![command-line-runner-sample](/selenium-ide/img/docs/runner.png)
+![command-line-runner-sample](/website/static/img/docs/runner.png)
 
 ## Prerequisites
 
@@ -143,6 +143,34 @@ With Chrome specific capabilities you can also run the tests headlessly.
 ```sh
 selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"
 ```
+
+### Output tests results to a file
+
+If you need to export test results to a file (when running as part of a CI process for example), you can use a combination `--output-directory` and `--output-format`.
+
+`--output-directory` defines if and where to put the test result files.
+
+`--output-format` defines which format use for the test result file, it can be `jest` or `junit`. The default if format is not specified is `jest`
+
+#### Examples
+
+```sh
+selenium-side-runner --output-directory=results
+```
+
+Will output results in `jest` frormat in `./results/projectName.json'
+
+```sh
+selenium-side-runner --output-directory=results --output-format=jest
+```
+
+Will output results in `jest` frormat in `./results/projectName.json'
+
+```sh
+selenium-side-runner --output-directory=results --output-format=junit
+```
+
+Will output results in `junit` frormat in `./results/projectName.xml'
 
 ## A framework at your fingertips
 
