@@ -144,6 +144,34 @@ With Chrome specific capabilities you can also run the tests headlessly.
 selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"
 ```
 
+### Output tests results to a file
+
+If you need to export test results to a file (when running as part of a CI process for example), you can use a combination `--output-directory` and `--output-format`.
+
+`--output-directory` defines if and where to put the test result files.
+
+`--output-format` defines which format use for the test result file, it can be `jest` or `junit`. The default if format is not specified is `jest`
+
+#### Examples
+
+```sh
+selenium-side-runner --output-directory=results
+```
+
+Will output results in `jest` frormat in `./results/projectName.json'
+
+```sh
+selenium-side-runner --output-directory=results --output-format=jest
+```
+
+Will output results in `jest` frormat in `./results/projectName.json'
+
+```sh
+selenium-side-runner --output-directory=results --output-format=junit
+```
+
+Will output results in `junit` frormat in `./results/projectName.xml'
+
 ## A framework at your fingertips
 
 There are also other niceties that come out of the box with the runner. Things you would expect to be available in a traditional test automation framework.
