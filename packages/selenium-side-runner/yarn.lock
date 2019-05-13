@@ -3402,10 +3402,10 @@ jest-environment-node@^24.7.1:
     jest-mock "^24.7.0"
     jest-util "^24.7.1"
 
-jest-environment-selenium@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-2.1.0.tgz#f1bf4584b6d80fc2dbe48d147f79b8fca7154ca8"
-  integrity sha512-1P6y6326Py+b51JPGjaAqValZpK3qpP43sFpCjusDcz5iLOpeKzxzM33u9ErU3uBtL2ovElxe4Bkj2tiZ8km3Q==
+jest-environment-selenium@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-2.1.1.tgz#5f50bbc05ffc6b7d1e1c2d602fa912496d068250"
+  integrity sha512-4qThDy2Tpew8WofRyfFSptLOo62IdW+dFWCDcF4qOZ/70mrsPzXkyOYT1Njm7rigjRGkwEsYSaYMoH6fp94b2Q==
 
 jest-get-type@^24.3.0:
   version "24.3.0"

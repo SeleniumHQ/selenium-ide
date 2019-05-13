@@ -33,7 +33,7 @@
     "glob": "^7.1.2",
     "global-npm": "^0.3.0",
     "jest-cli": "24.7.1",
-    "jest-environment-selenium": "2.1.0",
+    "jest-environment-selenium": "2.1.1",
     "jest-junit": "^6.3.0",
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.13.1",

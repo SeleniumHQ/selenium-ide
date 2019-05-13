@@ -65,7 +65,7 @@ program
     'Proxy options to pass, for use with manual, pac and socks proxies'
   )
   .option(
-    '--config, --config-file, --configuration-file [filepath]',
+    '--config, --config-file [filepath]',
     'Use specified YAML file for configuration. (default: .side.yml)'
   )
   .option(
@@ -304,7 +304,7 @@ function runProject(project) {
             : 'beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));'
           writeJSFile(
             path.join(projectPath, sanitizeFileName(suite.name)),
-            `// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${
+            `jest.setMock('selenium-webdriver', webdriver);\n// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${
               code.globalConfig
             }${suite.code}${cleanup}`
           )
@@ -318,7 +318,7 @@ function runProject(project) {
                 sanitizeFileName(suite.name),
                 sanitizeFileName(test.name)
               ),
-              `// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${
+              `jest.setMock('selenium-webdriver', webdriver);\n// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${
                 code.globalConfig
               }${test.code}`
             )
