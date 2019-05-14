@@ -188,7 +188,7 @@ class Index extends React.Component {
             title: 'Test Case Reuse',
             content: `Through the use of the [run command](${_docUrl(
               'api/commands#run'
-            )}), you can re-use one test case insidie of another (e.g., allowing you to re-use your login logic in multiple places throughout a suite).`,
+            )}), you can re-use one test case inside of another (e.g., allowing you to re-use your login logic in multiple places throughout a suite).`,
             image: `${baseUrl}img/home/run.png`,
             imageAlt: 'run',
             imageAlign: 'right',
