@@ -49,6 +49,7 @@ export default class LogMessage extends React.Component {
           }}
         >
           <div className="log-overview">
+            <span className="time">[{this.props.log.time}]</span>
             {this.props.log.index && (
               <span className="index">{this.props.log.index}.</span>
             )}

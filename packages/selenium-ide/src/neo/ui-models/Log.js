@@ -34,10 +34,13 @@ export default class Log {
   channel = null
   @observable
   isNotice = false
+  @observable
+  time = false
 
   constructor(message, status) {
     this.message = message
     this.status = status
+    this.setTime()
   }
 
   @action.bound
@@ -73,6 +76,11 @@ export default class Log {
   @action.bound
   setNotice() {
     this.isNotice = true
+  }
+
+  @action.bound
+  setTime() {
+    this.time = new Date().toLocaleString().trim()
   }
 
   @action.bound

@@ -7,6 +7,10 @@
   width: 20px;
 }
 
+.log .time {
+  padding-right: 5px;
+}
+
 .log.notice {
   font-weight: bold;
 }
