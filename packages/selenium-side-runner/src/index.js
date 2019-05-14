@@ -258,6 +258,8 @@ function runProject(project) {
     )
   }
   projectPath = `side-suite-${sanitizeFileName(project.name)}`
+  let dependencies = project.dependencies || {}
+  dependencies['jest-junit'] = '^6.4.0'
   rimraf.sync(projectPath)
   fs.mkdirSync(projectPath)
   fs.writeFileSync(
@@ -280,7 +282,7 @@ function runProject(project) {
           ...configuration.outputFormat(project).jestConfiguration,
         },
         ...configuration.outputFormat(project).packageJsonConfiguration,
-        dependencies: project.dependencies || {},
+        dependencies,
       },
       null,
       2
