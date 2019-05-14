@@ -43,7 +43,11 @@ Here are the steps to create one for a new language or for a new test framework 
 
 ### 1. Create a new package
 
-Copy an existing language package (e.g., `packages/code-export-java-junit`) and rename it (e.g., the folder and the details in the `package.json` file) to the target language and framework you'd like to contribute (e.g., `packages/code-export-ruby-rspec`, etc.).
+First, copy an existing language package (e.g., `packages/code-export-java-junit`) and rename it (e.g., the folder and the details in the `package.json` file) to the target language and framework you'd like to contribute (e.g., `packages/code-export-ruby-rspec`, etc.).
+
+Next, add the new package as a dependency to [the `package.json` in `code-export`](https://github.com/SeleniumHQ/selenium-ide/blob/c55c556ffc947fd3f6ee8ab317915c6f879a88dc/packages/code-export/package.json#L22).
+
+Lastly, run `yarn` from the root of the project.
 
 ### 2. Update the locators and commands
 
