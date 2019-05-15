@@ -22,7 +22,7 @@ import './style.css'
 
 export default class Callstack extends React.Component {
   static propTypes = {
-    stack: PropTypes.object.isRequired,
+    stack: PropTypes.array.isRequired,
     selectedIndex: PropTypes.number,
     isExecuting: PropTypes.bool,
     onClick: PropTypes.func,
