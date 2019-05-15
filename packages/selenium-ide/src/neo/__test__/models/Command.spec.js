@@ -206,6 +206,19 @@ describe('Command', () => {
     expect(command.windowTimeout).toBe(jsRepresentation.windowTimeout)
     expect(command instanceof Command).toBeTruthy()
   })
+
+  it('should set default value in the wait for command when there is no value', () => {
+    const command = new Command()
+    command.setCommand('wait for element present')
+    expect(command.value).toBe('30000')
+  })
+
+  it('should set value in the wait for command when there is a value', () => {
+    const command = new Command()
+    command.setCommand('wait for element editable')
+    command.setValue('50000')
+    expect(command.value).toBe('50000')
+  })
 })
 
 describe('Commands enum', () => {
