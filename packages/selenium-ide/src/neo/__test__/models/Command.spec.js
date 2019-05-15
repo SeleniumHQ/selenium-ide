@@ -207,17 +207,18 @@ describe('Command', () => {
     expect(command instanceof Command).toBeTruthy()
   })
 
-  it('should set default value in the wait for command when there is no value', () => {
+  it('should not overridden value when replace command', () => {
     const command = new Command()
+    command.setCommand('assert text')
+    command.setValue('Hello World')
     command.setCommand('wait for element present')
-    expect(command.value).toBe('30000')
+    expect(command.value).toBe('Hello World')
   })
 
-  it('should set value in the wait for command when there is a value', () => {
+  it("should not set value for commands that do not start with 'wait for'", () => {
     const command = new Command()
-    command.setCommand('wait for element editable')
-    command.setValue('50000')
-    expect(command.value).toBe('50000')
+    command.setCommand('click')
+    expect(command.value).toBe('')
   })
 })
 
