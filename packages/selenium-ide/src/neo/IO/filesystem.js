@@ -125,7 +125,8 @@ export function downloadUniqueFile(filename, body) {
   browser.downloads.download({
     filename,
     url: createBlob('text/plain', body),
-    conflictAction: 'uniquify',
+    saveAs: true,
+    conflictAction: 'overwrite',
   })
 }
 
