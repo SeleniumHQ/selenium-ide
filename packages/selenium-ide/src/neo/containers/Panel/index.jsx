@@ -35,7 +35,6 @@ import Navigation from '../Navigation'
 import Editor from '../Editor'
 import Console from '../Console'
 import Modal from '../Modal'
-import Changelog from '../../components/Changelog'
 import UiState from '../../stores/view/UiState'
 import PlaybackState from '../../stores/view/PlaybackState'
 import ModalState from '../../stores/view/ModalState'
@@ -343,7 +342,6 @@ export default class Panel extends React.Component {
             project={this.state.project}
             createNewProject={this.createNewProject.bind(this)}
           />
-          <Changelog />
           <Tooltip />
         </SuiteDropzone>
       </div>
