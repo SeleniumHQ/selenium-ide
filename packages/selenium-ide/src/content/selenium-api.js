@@ -473,7 +473,7 @@ Selenium.prototype.findElementVisible = function(locator) {
 
 Selenium.prototype.doAssertText = function(locator, value) {
   const element = this.findElementVisible(locator)
-  const visibleText = bot.dom.getVisibleText(element)
+  const visibleText = bot.dom.getVisibleText(element).trim()
   if (visibleText !== value) {
     throw new Error(`Actual value "${visibleText}" did not match "${value}"`)
   }
@@ -481,7 +481,7 @@ Selenium.prototype.doAssertText = function(locator, value) {
 
 Selenium.prototype.doAssertNotText = function(locator, value) {
   const element = this.findElementVisible(locator)
-  const visibleText = bot.dom.getVisibleText(element)
+  const visibleText = bot.dom.getVisibleText(element).trim()
   if (visibleText === value) {
     throw new Error(`Actual value "${visibleText}" did match "${value}"`)
   }
@@ -552,7 +552,7 @@ Selenium.prototype.doStoreText = function(locator, varName) {
   try {
     // Try to get the text if the element is visible
     const element = this.findElementVisible(locator)
-    text = bot.dom.getVisibleText(element)
+    text = bot.dom.getVisibleText(element).trim()
   } catch (e) {
     // element is not visible, but it may be due to the fact that it has no text
     const element = this.browserbot.findElement(locator)
@@ -2033,7 +2033,7 @@ Selenium.prototype.getText = function(locator) {
    * @return string the text of the element
    */
   let element = this.browserbot.findElement(locator)
-  return bot.dom.getVisibleText(element)
+  return bot.dom.getVisibleText(element).trim()
 }
 
 Selenium.prototype.getEval = function(script) {
