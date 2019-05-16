@@ -37,6 +37,12 @@ export default class LogMessage extends React.Component {
         statusMessage = 'Undetermined'
       }
     }
+
+    let hours = ("0" + this.props.log.timestamp.getHours()).slice(-2)
+    let minutes = ("0" + this.props.log.timestamp.getMinutes()).slice(-2)
+    let seconds = ("0" + this.props.log.timestamp.getSeconds()).slice(-2)
+    let time = hours + ":" + minutes + ":" + seconds
+
     return (
       <li
         className={classNames('log', this.props.log.status, {
@@ -49,7 +55,7 @@ export default class LogMessage extends React.Component {
           }}
         >
           <div className="log-overview">
-            <span className="time">[{this.props.log.time}]</span>
+            <span className="time">[{time}]</span>
             {this.props.log.index && (
               <span className="index">{this.props.log.index}.</span>
             )}
