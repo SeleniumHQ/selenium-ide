@@ -55,20 +55,8 @@ class ExportContent extends React.Component {
     cancelSelection: PropTypes.func.isRequired,
     completeSelection: PropTypes.func.isRequired,
   }
-  selectLanguage(isSelected, language) {
-    if (isSelected) {
-      if (!this.state.selectedLanguages.includes(language)) {
-        this.setState({
-          selectedLanguages: [...this.state.selectedLanguages, language],
-        })
-      }
-    } else {
-      this.setState({
-        selectedLanguages: this.state.selectedLanguages.filter(
-          _language => _language !== language
-        ),
-      })
-    }
+  selectLanguage(_isSelected, language) {
+    this.setState({ selectedLanguages: [language] })
   }
   toggleOriginTracing() {
     this.setState({ enableOriginTracing: !this.state.enableOriginTracing })
@@ -127,13 +115,15 @@ class ExportList extends React.Component {
     return (
       <ul className="languages">
         {availableLanguages.map(language => (
-          <li key={language.name}>
-            <Checkbox
-              label={language.displayName}
+          <li key={language.name} className="language">
+            <input
+              type="radio"
+              value={language.name}
+              id={language.name}
               checked={this.props.selectedLanguages.includes(language.name)}
-              form={true}
               onChange={this.handleChange.bind(this, language.name)}
             />
+            <label htmlFor={language.name}>{language.displayName}</label>
           </li>
         ))}
       </ul>
