@@ -26,7 +26,6 @@ import OpenButton from '../ActionButtons/Open'
 import SaveButton from '../ActionButtons/Save'
 import MoreButton from '../ActionButtons/More'
 import ListMenu, { ListMenuItem } from '../ListMenu'
-import { showChangelog } from '../Changelog'
 import './style.css'
 
 @observer
@@ -91,7 +90,9 @@ export default class ProjectHeader extends React.Component {
             <ListMenuItem href="https://www.seleniumhq.org/selenium-ide/docs/en/introduction/command-line-runner/">
               {'Running in CI'}
             </ListMenuItem>
-            <ListMenuItem onClick={showChangelog}>{"What's new"}</ListMenuItem>
+            <ListMenuItem href="https://github.com/SeleniumHQ/selenium-ide/releases/latest">
+              {"What's new"}
+            </ListMenuItem>
             <ListMenuItem href="https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/">
               {'Help'}
             </ListMenuItem>
