@@ -114,16 +114,18 @@ class ExportList extends React.Component {
   render() {
     return (
       <ul className="languages">
-        {availableLanguages.map(language => (
-          <li key={language.name} className="language">
+        {Object.keys(availableLanguages).map(language => (
+          <li key={language} className="language">
             <input
               type="radio"
-              value={language.name}
-              id={language.name}
-              checked={this.props.selectedLanguages.includes(language.name)}
-              onChange={this.handleChange.bind(this, language.name)}
+              value={language}
+              id={language}
+              checked={this.props.selectedLanguages.includes(language)}
+              onChange={this.handleChange.bind(this, language)}
             />
-            <label htmlFor={language.name}>{language.displayName}</label>
+            <label htmlFor={language}>
+              {availableLanguages[language].displayName}
+            </label>
           </li>
         ))}
       </ul>

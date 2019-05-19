@@ -20,7 +20,9 @@ import emitter from './command'
 import location from './location'
 import { generateHooks } from './hook'
 
-// Define language options -- "opts" for short
+// Define language options
+export const displayName = 'Java JUnit'
+
 export let opts = {}
 opts.emitter = emitter
 opts.hooks = generateHooks()

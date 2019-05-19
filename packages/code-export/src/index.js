@@ -15,55 +15,51 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import javaJunit from 'code-export-java-junit'
-
-export const availableLanguages = [
-  { name: 'java-junit', displayName: 'Java JUnit' },
-]
-
-const exporter = { 'java-junit': javaJunit }
+export const availableLanguages = {
+  'java-junit': require('code-export-java-junit'),
+}
 
 function registerCommand(language, command, emitter) {
-  exporter[language].register.command(command, emitter)
+  availableLanguages[language].default.register.command(command, emitter)
 }
 
 function registerVariable(language, emitter) {
-  exporter[language].register.variable(emitter)
+  availableLanguages[language].default.register.variable(emitter)
 }
 
 function registerDependency(language, emitter) {
-  exporter[language].register.dependency(emitter)
+  availableLanguages[language].default.register.dependency(emitter)
 }
 
 function registerBeforeAll(language, emitter) {
-  exporter[language].register.beforeAll(emitter)
+  availableLanguages[language].default.register.beforeAll(emitter)
 }
 
 function registerBeforeEach(language, emitter) {
-  exporter[language].register.beforeEach(emitter)
+  availableLanguages[language].default.register.beforeEach(emitter)
 }
 
 function registerInEachBegin(language, emitter) {
-  exporter[language].register.inEachBegin(emitter)
+  availableLanguages[language].default.register.inEachBegin(emitter)
 }
 
 function registerInEachEnd(language, emitter) {
-  exporter[language].register.inEachEnd(emitter)
+  availableLanguages[language].default.register.inEachEnd(emitter)
 }
 
 function registerAfterEach(language, emitter) {
-  exporter[language].register.afterEach(emitter)
+  availableLanguages[language].default.register.afterEach(emitter)
 }
 
 function registerAfterAll(language, emitter) {
-  exporter[language].register.afterAll(emitter)
+  availableLanguages[language].default.register.afterAll(emitter)
 }
 
 function emitTest(
   language,
   { url, test, tests, project, enableOriginTracing }
 ) {
-  return exporter[language].emit.test({
+  return availableLanguages[language].default.emit.test({
     baseUrl: url,
     test,
     tests,
@@ -76,7 +72,8 @@ export function emitSuite(
   language,
   { url, suite, tests, project, enableOriginTracing }
 ) {
-  return exporter[language].emit.suite({
+  debugger
+  return availableLanguages[language].default.emit.suite({
     baseUrl: url,
     suite,
     tests,
@@ -86,7 +83,7 @@ export function emitSuite(
 }
 
 export function emitLocator(language, input) {
-  return exporter[language].emit.locator(input)
+  return availableLanguages[language].default.emit.locator(input)
 }
 
 export default {
