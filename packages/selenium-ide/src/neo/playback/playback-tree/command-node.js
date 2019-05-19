@@ -22,7 +22,6 @@ import {
   canExecuteCommand,
   executeCommand,
 } from '../../../plugin/commandExecutor'
-import variables from '../../stores/view/Variables'
 
 export class CommandNode {
   constructor(command) {
@@ -189,7 +188,7 @@ export class CommandNode {
     }
   }
 
-  evaluateForEach() {
+  evaluateForEach(variables) {
     let variable = variables.get(this._interpolateTarget())
     let timesVisited = this.timesVisited
     if (!variable) {
@@ -223,7 +222,7 @@ export class CommandNode {
       }
     }
     if (ControlFlowCommandChecks.isForEach(this.command)) {
-      const result = this.evaluateForEach(expression)
+      const result = this.evaluateForEach(commandExecutor.variables)
       if (result.script) expression = result
       else return result
     }

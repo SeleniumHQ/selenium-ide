@@ -60,7 +60,7 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    expect(node.evaluateForEach()).toEqual({ script: '0 < 1' })
+    expect(node.evaluateForEach(variables)).toEqual({ script: '0 < 1' })
   })
   it('forEach handles stringified JSON count from preset variable', async () => {
     const varName = 'blah'
@@ -72,7 +72,7 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    expect(node.evaluateForEach()).toEqual({ script: '0 < 2' })
+    expect(node.evaluateForEach(variables)).toEqual({ script: '0 < 2' })
   })
   it('forEach errors without a valid variable', () => {
     const command = new Command(
@@ -82,7 +82,7 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    node.evaluateForEach().then(result => {
+    node.evaluateForEach(variables).then(result => {
       expect(result.result).toEqual('Invalid variable provided.')
     })
   })
@@ -96,7 +96,7 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    node.evaluateForEach()
+    node.evaluateForEach(variables)
     expect(variables.get('a')).toEqual('d')
     expect(variables.get('b')).toEqual('e')
     expect(variables.get('c')).toEqual('f')
