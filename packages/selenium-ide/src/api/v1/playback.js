@@ -17,6 +17,7 @@
 
 import Router from '../../router'
 import PlaybackState from '../../neo/stores/view/PlaybackState'
+import variables from '../../neo/stores/view/Variables'
 import Manager from '../../plugin/manager'
 import { Logger, Channels } from '../../neo/stores/view/Logs'
 import { LogTypes } from '../../neo/ui-models/Log'
@@ -56,6 +57,14 @@ router.post('/log', (req, res) => {
   } else {
     logger.log(`${Manager.getPlugin(req.sender).name}: ${req.message}`)
   }
+  res(true)
+})
+
+router.put('/var', (req, res) => {
+  logger.log(
+    `${Manager.getPlugin(req.sender).name}: Added variable ${req.name}`
+  )
+  variables.set(req.name, req.contents)
   res(true)
 })
 

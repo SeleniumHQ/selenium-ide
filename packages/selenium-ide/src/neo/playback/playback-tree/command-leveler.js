@@ -38,6 +38,7 @@ let levelCommand = {
   [ControlFlowCommandNames.else]: levelElse,
   [ControlFlowCommandNames.elseIf]: levelElse,
   [ControlFlowCommandNames.end]: levelBranchEnd,
+  [ControlFlowCommandNames.forEach]: levelBranchOpen,
   [ControlFlowCommandNames.if]: levelBranchOpen,
   [ControlFlowCommandNames.repeatIf]: levelBranchEnd,
   [ControlFlowCommandNames.times]: levelBranchOpen,

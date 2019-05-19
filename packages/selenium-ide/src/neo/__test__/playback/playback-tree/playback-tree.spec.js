@@ -335,6 +335,23 @@ describe('Control Flow', () => {
         expect(stack[2].right).toBeUndefined()
         expect(stack[2].left).toBeUndefined()
       })
+      test.only('forEach-command-end', () => {
+        let input = [
+          createCommand(ControlFlowCommandNames.forEach),
+          createCommand('command'),
+          createCommand(ControlFlowCommandNames.end),
+        ]
+        let stack = createCommandNodesFromCommandStack(input)
+        expect(stack[0].next).toBeUndefined()
+        expect(stack[0].right).toEqual(stack[1])
+        expect(stack[0].left).toEqual(stack[2])
+        expect(stack[1].next).toEqual(stack[0])
+        expect(stack[1].right).toBeUndefined()
+        expect(stack[1].left).toBeUndefined()
+        expect(stack[2].next).toBeUndefined()
+        expect(stack[2].right).toBeUndefined()
+        expect(stack[2].left).toBeUndefined()
+      })
       test('if-if-if-if-end-end-end-command-end', () => {
         let input = [
           createCommand(ControlFlowCommandNames.if),

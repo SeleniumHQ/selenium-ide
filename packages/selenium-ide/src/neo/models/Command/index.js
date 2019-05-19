@@ -270,6 +270,7 @@ export const ControlFlowCommandNames = {
   else: 'else',
   elseIf: 'elseIf',
   end: 'end',
+  forEach: 'forEach',
   if: 'if',
   repeatIf: 'repeatIf',
   times: 'times',
@@ -349,7 +350,8 @@ function isLoop(command) {
   return (
     commandNamesEqual(command, ControlFlowCommandNames.while) ||
     commandNamesEqual(command, ControlFlowCommandNames.times) ||
-    commandNamesEqual(command, ControlFlowCommandNames.repeatIf)
+    commandNamesEqual(command, ControlFlowCommandNames.repeatIf) ||
+    commandNamesEqual(command, ControlFlowCommandNames.forEach)
   )
 }
 
@@ -359,6 +361,10 @@ function isTerminal(command) {
 
 function isTimes(command) {
   return commandNamesEqual(command, ControlFlowCommandNames.times)
+}
+
+function isForEach(command) {
+  return commandNamesEqual(command, ControlFlowCommandNames.forEach)
 }
 
 export const ControlFlowCommandChecks = {
@@ -374,4 +380,5 @@ export const ControlFlowCommandChecks = {
   isTerminal: isTerminal,
   isControlFlow: isControlFlow,
   isTimes: isTimes,
+  isForEach: isForEach,
 }
