@@ -546,6 +546,12 @@ Selenium.prototype.doStoreEval = function() {
   throw new Error('store eval is obsolete please migrate to execute script')
 }
 
+Selenium.prototype.doStoreJson = function(json, varName) {
+  throwIfNoVarNameProvided(varName)
+  const result = JSON.parse(json)
+  return browser.runtime.sendMessage({ storeStr: result, storeVar: varName })
+}
+
 Selenium.prototype.doStoreText = function(locator, varName) {
   throwIfNoVarNameProvided(varName)
   let text

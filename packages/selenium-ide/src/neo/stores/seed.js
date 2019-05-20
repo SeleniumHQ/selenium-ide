@@ -614,6 +614,16 @@ export default function seed(store, numberOfSuites = 0) {
     'You logged into a secure area!\\n×'
   )
 
+  const storeJson = store.createTestCase('store json')
+  storeJson.createCommand(undefined, 'storeJson', `[{"a":0}]`, 'blah')
+  storeJson.createCommand(
+    undefined,
+    'executeScript',
+    'return ${blah}.length == 1',
+    'result'
+  )
+  storeJson.createCommand(undefined, 'assert', 'result', 'true')
+
   const suiteAll = store.createSuite('all tests')
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test)
@@ -650,8 +660,8 @@ export default function seed(store, numberOfSuites = 0) {
   waitSuite.addTestCase(waitTest5)
 
   UiState.changeView('Test suites')
-  suiteControlFlow.setOpen(true)
-  UiState.selectTest(controlFlowForEachTest, suiteControlFlow)
+  suiteAll.setOpen(true)
+  UiState.selectTest(storeJson, suiteAll)
   //UiState.selectCommand(click)
 
   store.changeName('seed project')

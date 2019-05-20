@@ -613,6 +613,15 @@ export const Commands = [
     },
   ],
   [
+    'storeJson',
+    {
+      name: 'store json',
+      description: ``,
+      target: ArgTypes.json,
+      value: ArgTypes.variableName,
+    },
+  ],
+  [
     'storeText',
     {
       name: 'store text',
