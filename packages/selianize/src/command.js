@@ -11,8 +11,7 @@
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+// KIND, either express or implied.  See the License for the specific language governing permissions and limitations
 // under the License.
 
 import config from './config'
@@ -64,6 +63,7 @@ const emitters = {
   assertSelectedLabel: emitVerifySelectedLabel,
   store: emitStore,
   storeText: emitStoreText,
+  storeJson: emitStoreJson,
   storeValue: emitStoreValue,
   storeTitle: emitStoreTitle,
   storeWindowHandle: emitStoreWindowHandle,
@@ -103,6 +103,7 @@ const emitters = {
   else: emitControlFlowElse,
   elseIf: emitControlFlowElseIf,
   end: emitControlFlowEnd,
+  forEach: emitControlFlowForEach,
   if: emitControlFlowIf,
   repeatIf: emitControlFlowRepeatIf,
   times: emitControlFlowTimes,
@@ -531,6 +532,10 @@ async function emitStoreText(locator, varName) {
   )
 }
 
+async function emitStoreJson(json, varName) {
+  return Promise.resolve(`vars["${varName}"] = JSON.parse('${json}');`)
+}
+
 async function emitStoreValue(locator, varName) {
   return Promise.resolve(
     `await driver.wait(until.elementLocated(${await LocationEmitter.emit(
@@ -773,6 +778,16 @@ function emitControlFlowTimes(target) {
 function emitControlFlowWhile(target) {
   return Promise.resolve(
     `while (!!${generateScript(target, true).slice(0, -1)}) {`
+  )
+}
+
+function emitControlFlowForEach(collectionVarName, iteratorVarName) {
+  return Promise.resolve(
+    '${vars["' +
+      collectionVarName +
+      '"]}.forEach((iterator, index) => {${vars["' +
+      iteratorVarName +
+      '"] = iterator;'
   )
 }
 

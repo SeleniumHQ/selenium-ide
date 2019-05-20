@@ -624,6 +624,16 @@ describe('command code emitter', () => {
       }"] = text;});});`
     )
   })
+  it('should emit `store json` command', () => {
+    const command = {
+      command: 'storeJson',
+      target: '[{"a":0}]',
+      value: 'myVar',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      `vars["${command.value}"] = JSON.parse('[{\"a\":0}]');`
+    )
+  })
   it('should emit `store value` command', () => {
     const command = {
       command: 'storeValue',
@@ -1129,6 +1139,16 @@ describe('command code emitter', () => {
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
       `} while (!!await driver.executeScript(\`return (${command.target})\`));`
+    )
+  })
+  it('should emit `forEach` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.forEach,
+      target: 'collection',
+      value: 'iterator',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toBe(
+      '${vars["collection"]}.forEach((iterator, index) => {${vars["iterator"] = iterator;'
     )
   })
   it('should emit `assert` command', () => {
