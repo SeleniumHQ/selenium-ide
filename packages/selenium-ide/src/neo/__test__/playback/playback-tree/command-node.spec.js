@@ -51,25 +51,13 @@ describe('Command Node', () => {
     expect(node._isRetryLimit()).toBeTruthy()
   })
   it('forEach fetches count from preset variable', () => {
-    const varName = 'blah'
-    variables.set(varName, { a: 'a', b: 'b', c: 'c', d: 'd' })
+    const collectionName = 'blah'
+    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
     const command = new Command(
       undefined,
       ControlFlowCommandNames.forEach,
-      varName,
-      ''
-    )
-    const node = new CommandNode(command)
-    expect(node.evaluateForEach(variables)).toEqual({ script: '0 < 1' })
-  })
-  it('forEach handles stringified JSON count from preset variable', async () => {
-    const varName = 'blah'
-    variables.set(varName, '{"a":["d","g"],"b":["e","h"],"c":["f","i"]}')
-    const command = new Command(
-      undefined,
-      ControlFlowCommandNames.forEach,
-      varName,
-      ''
+      collectionName,
+      'iteratorVar'
     )
     const node = new CommandNode(command)
     expect(node.evaluateForEach(variables)).toEqual({ script: '0 < 2' })
@@ -86,20 +74,18 @@ describe('Command Node', () => {
       expect(result.result).toEqual('Invalid variable provided.')
     })
   })
-  it('forEach makes scoped variables available', () => {
-    const varName = 'asdf'
-    variables.set(varName, '{"a":["d","g"],"b":["e","h"],"c":["f","i"]}')
+  it('forEach stores iterated collection entry on a variable using the provided name', () => {
+    const collectionName = 'asdf'
+    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
     const command = new Command(
       undefined,
       ControlFlowCommandNames.forEach,
-      varName,
-      ''
+      collectionName,
+      'iteratorVar'
     )
     const node = new CommandNode(command)
     node.evaluateForEach(variables)
-    expect(variables.get('a')).toEqual('d')
-    expect(variables.get('b')).toEqual('e')
-    expect(variables.get('c')).toEqual('f')
+    expect(variables.get('iteratorVar')).toEqual({ a: 'a1', b: 'b1' })
   })
   it('retry limit can be overriden', () => {
     const command = new Command(

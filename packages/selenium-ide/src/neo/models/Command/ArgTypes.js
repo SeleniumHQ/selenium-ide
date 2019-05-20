@@ -12,6 +12,10 @@ export const ArgTypes = {
     description: `An element locator followed by an @ sign and then the name of 
     the attribute, e.g. "foo@bar".`,
   },
+  arrayVariableName: {
+    name: 'array variable name',
+    description: 'The name of a variable containing a JavaScript array.',
+  },
   conditionalExpression: {
     name: 'conditional expression',
     description: `JavaScript expression that returns a boolean result for use 
@@ -39,6 +43,14 @@ export const ArgTypes = {
     name: 'window handle',
     description: `A handle representing a specific page (tab, or window).`,
   },
+  iteratorVariableName: {
+    name: 'iterator variable name',
+    description: `The name of the variable used when iterating over a collection in a looping control flow command (e.g., for each).`,
+  },
+  json: {
+    name: 'json',
+    description: `A string representation of a JavaScript object.`,
+  },
   keySequence: {
     name: 'key sequence',
     description:
@@ -64,7 +76,7 @@ export const ArgTypes = {
   },
   message: {
     name: 'message',
-    value: 'The message to print.',
+    description: 'The message to print.',
   },
   optionLocator: {
     name: 'option',

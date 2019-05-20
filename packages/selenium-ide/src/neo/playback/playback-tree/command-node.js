@@ -189,22 +189,12 @@ export class CommandNode {
   }
 
   evaluateForEach(variables) {
-    let variable = variables.get(this._interpolateTarget())
-    let timesVisited = this.timesVisited
-    if (!variable) {
-      return Promise.resolve({
-        result: 'Invalid variable provided.',
-      })
-    } else {
-      if (typeof variable === 'string') variable = JSON.parse(variable)
-      const keys = Object.keys(variable)
-      Object.keys(variable).forEach(function(key) {
-        variables.set(key, variable[key][timesVisited])
-      })
-      const count = variable[keys[0]].length
-      return {
-        script: `${this.timesVisited} < ${count}`,
-      }
+    let collection = variables.get(this._interpolateTarget())
+    if (!collection)
+      return Promise.resolve({ result: 'Invalid variable provided.' })
+    variables.set(this._interpolateValue(), collection[this.timesVisited])
+    return {
+      script: `${this.timesVisited} < ${collection.length}`,
     }
   }
 

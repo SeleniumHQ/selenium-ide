@@ -335,7 +335,7 @@ describe('Control Flow', () => {
         expect(stack[2].right).toBeUndefined()
         expect(stack[2].left).toBeUndefined()
       })
-      test.only('forEach-command-end', () => {
+      test('forEach-command-end', () => {
         let input = [
           createCommand(ControlFlowCommandNames.forEach),
           createCommand('command'),

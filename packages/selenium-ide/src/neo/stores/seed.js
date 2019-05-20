@@ -218,6 +218,40 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowWhileTest.createCommand(undefined, 'end')
   controlFlowWhileTest.createCommand(undefined, 'assert', 'check', '3')
 
+  const controlFlowForEachTest = store.createTestCase('control flow for each')
+  controlFlowForEachTest.createCommand(
+    undefined,
+    'executeScript',
+    'return 0',
+    'count'
+  )
+  controlFlowForEachTest.createCommand(
+    undefined,
+    'executeScript',
+    `return [{'a': 0}, {'a': 1}, {'a': 2}, {'a': 3}, {'a': '4'}]`,
+    'collection'
+  )
+  controlFlowForEachTest.createCommand(
+    undefined,
+    'forEach',
+    'collection',
+    'iteratorVar'
+  )
+  controlFlowForEachTest.createCommand(
+    undefined,
+    'executeScript',
+    'return ${count} == ${iteratorVar}.a',
+    'result'
+  )
+  controlFlowForEachTest.createCommand(undefined, 'assert', 'result', 'true')
+  controlFlowForEachTest.createCommand(
+    undefined,
+    'executeScript',
+    'return ${count} += 1',
+    'count'
+  )
+  controlFlowForEachTest.createCommand(undefined, 'end')
+
   const executeScriptTest = store.createTestCase('execute script')
   executeScriptTest.createCommand(
     undefined,
@@ -592,6 +626,7 @@ export default function seed(store, numberOfSuites = 0) {
   suiteControlFlow.addTestCase(controlFlowDoTest)
   suiteControlFlow.addTestCase(controlFlowTimesTest)
   suiteControlFlow.addTestCase(controlFlowWhileTest)
+  suiteControlFlow.addTestCase(controlFlowForEachTest)
 
   const smokeSuite = store.createSuite('smoke')
   smokeSuite.addTestCase(checkTest)
@@ -615,9 +650,9 @@ export default function seed(store, numberOfSuites = 0) {
   waitSuite.addTestCase(waitTest5)
 
   UiState.changeView('Test suites')
-  suiteAll.setOpen(true)
-  UiState.selectTest(checkTest, suiteAll)
-  UiState.selectCommand(click)
+  suiteControlFlow.setOpen(true)
+  UiState.selectTest(controlFlowForEachTest, suiteControlFlow)
+  //UiState.selectCommand(click)
 
   store.changeName('seed project')
 
