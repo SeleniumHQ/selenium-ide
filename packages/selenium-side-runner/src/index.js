@@ -259,7 +259,7 @@ function runProject(project) {
   }
   projectPath = `side-suite-${sanitizeFileName(project.name)}`
   if (!project.dependencies) project.dependencies = {}
-  project.dependencies['jest-junit'] = '^6.4.0'
+  if (program.outputFormat) project.dependencies['jest-junit'] = '^6.4.0'
   rimraf.sync(projectPath)
   fs.mkdirSync(projectPath)
   fs.writeFileSync(
