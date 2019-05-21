@@ -17,7 +17,6 @@
 
 import Router from '../../router'
 import PlaybackState from '../../neo/stores/view/PlaybackState'
-import variables from '../../neo/stores/view/Variables'
 import Manager from '../../plugin/manager'
 import { Logger, Channels } from '../../neo/stores/view/Logs'
 import { LogTypes } from '../../neo/ui-models/Log'
@@ -61,10 +60,18 @@ router.post('/log', (req, res) => {
 })
 
 router.put('/var', (req, res) => {
-  logger.log(
-    `${Manager.getPlugin(req.sender).name}: Added variable ${req.name}`
-  )
-  variables.set(req.name, req.contents)
+  try {
+    PlaybackState.variables.set(req.name, req.contents)
+    logger.log(
+      `${Manager.getPlugin(req.sender).name}: Added variable ${req.name}`
+    )
+  } catch (error) {
+    logger.log(
+      `${Manager.getPlugin(req.sender).name}: Unable to add variable ${
+        req.name
+      }`
+    )
+  }
   res(true)
 })
 
