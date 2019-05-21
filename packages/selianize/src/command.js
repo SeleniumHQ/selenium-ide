@@ -783,11 +783,7 @@ function emitControlFlowWhile(target) {
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
   return Promise.resolve(
-    '${vars["' +
-      collectionVarName +
-      '"]}.forEach((iterator, index) => {${vars["' +
-      iteratorVarName +
-      '"] = iterator;'
+    `for (let i = 0; i < vars["${collectionVarName}"].length - 1; i++) {vars["${iteratorVarName}"] = vars["${collectionVarName}"][i];`
   )
 }
 

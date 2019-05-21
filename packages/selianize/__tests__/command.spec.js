@@ -1148,7 +1148,7 @@ describe('command code emitter', () => {
       value: 'iterator',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      '${vars["collection"]}.forEach((iterator, index) => {${vars["iterator"] = iterator;'
+      `for (let i = 0; i < vars["collection"].length - 1; i++) {vars["iterator"] = vars["collection"][i];`
     )
   })
   it('should emit `assert` command', () => {
