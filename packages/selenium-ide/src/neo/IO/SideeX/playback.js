@@ -487,6 +487,20 @@ function getImplicitTimeout() {
   return isProduction ? 30000 : 5000
 }
 
+function isFallbackExclusion() {
+  const commandName = PlaybackState.currentExecutingCommandNode.command.command
+  return commandName.startsWith('waitFor')
+}
+
+function overrideImplicitWait(commandId) {
+  PlaybackState.setCommandState(
+    commandId,
+    PlaybackStates.Fatal,
+    'Unable to locate element within the timeout provided.'
+  )
+  return false
+}
+
 function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
   const timeout = getImplicitTimeout()
   if (isStopping()) {
@@ -497,6 +511,7 @@ function doImplicitWait(error, commandId, target, implicitTime, implicitCount) {
     )
     return false
   } else if (isElementNotFound(error)) {
+    if (isFallbackExclusion()) return overrideImplicitWait(commandId)
     if (implicitTime && Date.now() - implicitTime > timeout) {
       return doLocatorFallback().then(result => {
         if (result && result.result === 'success') return result
