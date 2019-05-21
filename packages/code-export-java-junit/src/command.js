@@ -58,6 +58,7 @@ export const emitters = {
   end: emitControlFlowEnd,
   executeScript: emitExecuteScript,
   executeAsyncScript: emitExecuteAsyncScript,
+  forEach: emitControlFlowForEach,
   if: emitControlFlowIf,
   mouseDown: emitMouseDown,
   mouseDownAt: emitMouseDown,
@@ -81,6 +82,7 @@ export const emitters = {
   setWindowSize: emitSetWindowSize,
   store: emitStore,
   storeAttribute: emitStoreAttribute,
+  storeJson: emitStoreJson,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
@@ -245,6 +247,25 @@ function emitControlFlowIf(script) {
       { level: 0, statement: `if (${generateExpressionScript(script)}) {` },
     ],
     endingLevelAdjustment: 1,
+  })
+}
+
+function emitControlFlowForEach(collectionVarName, iteratorVarName) {
+  return Promise.resolve({
+    commands: [
+      {
+        level: 0,
+        statement: `ArrayList collection = (ArrayList) vars.get("${collectionVarName}");`,
+      },
+      {
+        level: 0,
+        statement: `for (int i = 0; i < collection.size() - 1; i++) {`,
+      },
+      {
+        level: 1,
+        statement: `vars.put("${iteratorVarName}", collection.get(i));`,
+      },
+    ],
   })
 }
 
@@ -607,6 +628,11 @@ async function emitStoreAttribute(locator, varName) {
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
+}
+
+async function emitStoreJson(_json, _varName) {
+  // TODO
+  return Promise.resolve('')
 }
 
 async function emitStoreText(locator, varName) {

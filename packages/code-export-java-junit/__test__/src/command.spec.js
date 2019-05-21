@@ -387,6 +387,17 @@ describe('command code emitter', () => {
       `vars.put("myVar", js.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);"));`
     )
   })
+  it('should emit `forEach` command', () => {
+    const command = {
+      command: ControlFlowCommandNames.forEach,
+      target: 'collection',
+      value: 'iteratorVar',
+    }
+    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
+      body: `ArrayList collection = (ArrayList) vars.get("collection");\nfor (int i = 0; i < collection.size() - 1; i++) {\n${commandPrefixPadding}vars.put("iteratorVar", collection.get(i));`,
+      endingLevel: 1,
+    })
+  })
   it('should emit `if` command', () => {
     const command = {
       command: ControlFlowCommandNames.if,
@@ -694,6 +705,14 @@ describe('command code emitter', () => {
     return expect(prettify(command)).resolves.toBe(
       `vars.put("myVar", driver.findElement(By.id("someElement")).getText());`
     )
+  })
+  it.skip('should emit `store json` command', () => {
+    const command = {
+      command: 'storeJson',
+      target: '[{"a":0}]',
+      value: 'myVar',
+    }
+    return expect(prettify(command)).resolves.toBe('')
   })
   it('should emit `store title` command', () => {
     const command = {
