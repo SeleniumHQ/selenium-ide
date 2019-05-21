@@ -72,7 +72,6 @@ export function emitSuite(
   language,
   { url, suite, tests, project, enableOriginTracing }
 ) {
-  debugger
   return availableLanguages[language].default.emit.suite({
     baseUrl: url,
     suite,

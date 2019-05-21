@@ -631,7 +631,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `vars["${command.value}"] = JSON.parse('[{\"a\":0}]');`
+      `vars["${command.value}"] = JSON.parse('[{"a":0}]');`
     )
   })
   it('should emit `store value` command', () => {
