@@ -17,6 +17,7 @@
 
 export const availableLanguages = {
   'java-junit': require('code-export-java-junit'),
+  //'python-pytest': require('code-export-python-pytest'),
 }
 
 function registerCommand(language, command, emitter) {
