@@ -11,7 +11,7 @@ A clear and concise description of what the bug is.
 <!--
 Please be sure to include an SSCCE (Short, Self Contained, Correct [compilable] example) http://sscce.org/
 
-If you have an issue with file saving, please see [issue 363](https://github.com/SeleniumHQ/selenium-ide/issues/363) instead. The current save behavior is a known limitation of browser extensions that we're actively working on fixing.
+If you have an issue with file saving, please see https://github.com/SeleniumHQ/selenium-ide/issues/363 instead. The current save behavior is a known limitation of browser extensions that we're actively working on fixing.
 -->
 
 ## To Reproduce
