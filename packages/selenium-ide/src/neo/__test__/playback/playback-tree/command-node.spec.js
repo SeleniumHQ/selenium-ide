@@ -60,7 +60,7 @@ describe('Command Node', () => {
       'iteratorVar'
     )
     const node = new CommandNode(command)
-    expect(node.evaluateForEach(variables)).toEqual({ script: '0 < 2' })
+    expect(node.evaluateForEach(variables)).toEqual(true)
   })
   it('forEach errors without a valid variable', () => {
     const command = new Command(
