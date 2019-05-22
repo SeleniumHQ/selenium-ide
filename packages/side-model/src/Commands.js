@@ -260,6 +260,12 @@ export default {
     target: ArgTypes.script,
     value: ArgTypes.variableName,
   },
+  forEach: {
+    name: 'for each',
+    description: `Create a loop that executes the proceeding commands for each item in a given collection.`,
+    target: ArgTypes.arrayVariableName,
+    value: ArgTypes.iteratorVariableName,
+  },
   if: {
     name: 'if',
     description: `Create a conditional branch in your test. Terminate the branch with the end command.`,

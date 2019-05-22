@@ -23,6 +23,7 @@ import Playback, {
 } from '../src/playback'
 import { AssertionError, VerificationError } from '../src/errors'
 import FakeExecutor from './util/FakeExecutor'
+import Variables from '../src/Variables'
 
 describe('Playback', () => {
   describe('Playback test queue', () => {
@@ -648,6 +649,39 @@ describe('Playback', () => {
       } catch (err) {
         expect(err.message).toBe('Command not found in test')
       }
+    })
+    it('should replay a command when in a control flow loop', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'forEach',
+            target: 'collectionVarName',
+            value: 'iteratorVarName',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'end',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const variables = new Variables()
+      variables.set('collectionVarName', [0, 1, 2])
+      const playback = new Playback({
+        executor,
+        variables,
+      })
+      const playPromise = await playback.playFrom(test, test.commands[0])
+      await playPromise()
+      expect(executor.doOpen).toHaveBeenCalledTimes(3)
     })
     it('should fail to play to an unreachable point', async () => {
       const test = {

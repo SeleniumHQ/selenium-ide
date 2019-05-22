@@ -29,6 +29,10 @@ export default {
     description: `An element locator followed by an @ sign and then the name of 
     the attribute, e.g. "foo@bar".`,
   },
+  arrayVariableName: {
+    name: 'array variable name',
+    description: 'The name of a variable containing a JavaScript array.',
+  },
   conditionalExpression: {
     name: 'conditional expression',
     description: `JavaScript expression that returns a boolean result for use 
@@ -55,6 +59,10 @@ export default {
   handle: {
     name: 'window handle',
     description: `A handle representing a specific page (tab, or window).`,
+  },
+  iteratorVariableName: {
+    name: 'iterator variable name',
+    description: `The name of the variable used when iterating over a collection in a looping control flow command (e.g., for each).`,
   },
   keySequence: {
     name: 'key sequence',

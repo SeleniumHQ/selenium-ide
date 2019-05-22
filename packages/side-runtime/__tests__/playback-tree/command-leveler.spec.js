@@ -43,6 +43,8 @@ describe('Control Flow', () => {
           createCommand('command'),
           createCommand(ControlFlowCommandNames.end),
           createCommand(ControlFlowCommandNames.repeatIf),
+          createCommand(ControlFlowCommandNames.forEach),
+          createCommand(ControlFlowCommandNames.end),
           createCommand(ControlFlowCommandNames.end),
         ])
         expect(stack[0]).toEqual(0) //  if
@@ -57,7 +59,9 @@ describe('Control Flow', () => {
         expect(stack[9]).toEqual(3) //        command
         expect(stack[10]).toEqual(2) //     end
         expect(stack[11]).toEqual(1) //   repeatIf
-        expect(stack[12]).toEqual(0) //  end
+        expect(stack[12]).toEqual(1) //   forEach
+        expect(stack[13]).toEqual(1) //   end
+        expect(stack[14]).toEqual(0) //  end
       })
     })
   })

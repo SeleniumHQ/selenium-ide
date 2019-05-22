@@ -20,6 +20,10 @@ import { CommandNode } from '../../src/playback-tree/command-node'
 import Variables from '../../src/Variables'
 
 describe('Command Node', () => {
+  let variables
+  beforeEach(() => {
+    variables = new Variables()
+  })
   it('control flow check returns correct result', () => {
     let node = new CommandNode(undefined)
     node.right = 'asdf'
@@ -49,6 +53,40 @@ describe('Command Node', () => {
     const node = new CommandNode(command)
     node.timesVisited = 5
     expect(node._isRetryLimit()).toBeTruthy()
+  })
+  it('forEach fetches count from preset variable', () => {
+    const collectionName = 'blah'
+    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
+    const command = {
+      command: ControlFlowCommandNames.forEach,
+      target: collectionName,
+      value: 'iteratorVar',
+    }
+    const node = new CommandNode(command)
+    expect(node.evaluateForEach(variables)).toEqual(true)
+  })
+  it('forEach errors without a valid variable', () => {
+    const command = {
+      command: ControlFlowCommandNames.forEach,
+      target: 'asdf',
+      value: '',
+    }
+    const node = new CommandNode(command)
+    node.evaluateForEach(variables).then(result => {
+      expect(result.result).toEqual('Invalid variable provided.')
+    })
+  })
+  it('forEach stores iterated collection entry on a variable using the provided name', () => {
+    const collectionName = 'asdf'
+    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
+    const command = {
+      command: ControlFlowCommandNames.forEach,
+      target: collectionName,
+      value: 'iteratorVar',
+    }
+    const node = new CommandNode(command)
+    node.evaluateForEach(variables)
+    expect(variables.get('iteratorVar')).toEqual({ a: 'a1', b: 'b1' })
   })
   it('execute resolves with an error message when too many retries attempted in a loop', () => {
     const command = {

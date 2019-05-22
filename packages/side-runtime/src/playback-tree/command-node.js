@@ -75,7 +75,7 @@ export class CommandNode {
     if (executorOverride) {
       return executorOverride(this.command.target, this.command.value)
     } else if (this.isControlFlow()) {
-      return this._evaluate(commandExecutor)
+      return Promise.resolve(this._evaluate(commandExecutor))
     } else if (this.isTerminal()) {
       return Promise.resolve()
     } else {
@@ -94,6 +94,19 @@ export class CommandNode {
     }
   }
 
+  evaluateForEach(variables) {
+    let collection = variables.get(
+      interpolateScript(this.command.target, variables).script
+    )
+    if (!collection)
+      return Promise.resolve({ result: 'Invalid variable provided.' })
+    variables.set(
+      interpolateScript(this.command.value, variables).script,
+      collection[this.timesVisited]
+    )
+    return this.timesVisited < collection.length
+  }
+
   _evaluate(commandExecutor) {
     let expression = interpolateScript(
       this.command.target,
@@ -104,9 +117,11 @@ export class CommandNode {
       if (isNaN(number)) {
         return Promise.reject(new Error('Invalid number provided as a target.'))
       }
-      expression = {
-        script: `${this.timesVisited} < ${number}`,
-      }
+      return this._evaluationResult({ value: this.timesVisited < number })
+    } else if (ControlFlowCommandChecks.isForEach(this.command)) {
+      return this._evaluationResult({
+        value: this.evaluateForEach(commandExecutor.variables),
+      })
     }
     return commandExecutor.evaluateConditional(expression).then(result => {
       return this._evaluationResult(result)

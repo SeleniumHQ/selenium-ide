@@ -194,6 +194,12 @@ describe('Control Flow', () => {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at times')
       })
+      test('forEach', () => {
+        let input = [createCommand(ControlFlowCommandNames.forEach)]
+        expect(function() {
+          validateControlFlowSyntax(input)
+        }).toThrow(`Incomplete block at ${ControlFlowCommandNames.forEach}`)
+      })
       test('repeatIf', () => {
         let input = [createCommand(ControlFlowCommandNames.repeatIf)]
         expect(function() {
