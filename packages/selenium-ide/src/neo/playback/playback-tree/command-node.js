@@ -193,9 +193,10 @@ export class CommandNode {
     if (!collection)
       return Promise.resolve({ result: 'Invalid variable provided.' })
     variables.set(this._interpolateValue(), collection[this.timesVisited])
-    return {
-      script: `${this.timesVisited} < ${collection.length}`,
-    }
+    //return {
+    //  script: `${this.timesVisited} < ${collection.length}`,
+    //}
+    return this.timesVisited < collection.length
   }
 
   _evaluate(commandExecutor) {
@@ -207,14 +208,17 @@ export class CommandNode {
           result: 'Invalid number provided as a target.',
         })
       }
-      expression = {
-        script: `${this.timesVisited} < ${number}`,
-      }
-    }
-    if (ControlFlowCommandChecks.isForEach(this.command)) {
+      return Promise.resolve(
+        this._evaluationResult({
+          result: 'success',
+          value: this.timesVisited < number,
+        })
+      )
+    } else if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
-      if (result.script) expression = result
-      else return result
+      return Promise.resolve(
+        this._evaluationResult({ result: 'success', value: result })
+      )
     }
     return (this.isWebDriverCommand(commandExecutor)
       ? commandExecutor.evaluateConditional(expression)
