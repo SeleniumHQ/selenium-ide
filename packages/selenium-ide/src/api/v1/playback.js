@@ -61,7 +61,7 @@ router.post('/log', (req, res) => {
 
 router.put('/var', (req, res) => {
   try {
-    PlaybackState.variables.set(req.name, req.contents)
+    PlaybackState.variables.set(req.name, JSON.parse(req.contents))
     logger.log(
       `${Manager.getPlugin(req.sender).name}: Added variable ${req.name}`
     )
