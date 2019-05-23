@@ -1,4 +1,4 @@
-## 3.7.5
+## 3.8.0
 - Added forEach and storeJson commands
 - Made it so explicit wait commands (e.g., `wait for element visible`, etc.) override the built-in implicit wait mechanism
 - Fixed a bug in how the runner fetches dependencies, so it only happens when features that need external dependencies are used
