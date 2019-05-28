@@ -42,12 +42,12 @@ function generateMethodDeclaration(name) {
 function generateSuiteDeclaration(name) {
   return `public class ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
-  )} {`
+  )}Test {`
 }
 function generateFilename(name) {
-  return `${exporter.parsers.capitalize(exporter.parsers.sanitizeName(name))}${
-    opts.fileExtension
-  }`
+  return `${exporter.parsers.capitalize(
+    exporter.parsers.sanitizeName(name)
+  )}Test${opts.fileExtension}`
 }
 
 // Emit an individual test, wrapped in a suite (using the test name as the suite name)
