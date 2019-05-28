@@ -23,7 +23,8 @@
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap",
-    "watch": "lerna run --no-bail --parallel watch"
+    "watch": "lerna run --no-bail --parallel watch",
+    "postpublish": "npx ./gh-release.js"
   },
   "jest": {
     "testURL": "http://localhost/index.html",
@@ -53,6 +54,7 @@
     "stylelint": "^9.7.1",
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-config-standard": "^18.2.0",
-    "stylelint-prettier": "^1.0.3"
+    "stylelint-prettier": "^1.0.3",
+    "putasset": "^4.3.2"
   }
 }
