@@ -2983,6 +2983,18 @@ graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
+grizzly@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/grizzly/-/grizzly-4.0.1.tgz#e79fb25a522a08057f690cda19be2d19c12e437f"
+  integrity sha512-I9bJu+0IXzsix/7Ayl+9RRB1dpbP2c80VREoCAKXwGAATXff9K3cKxjDOqoxS8gt1OvHkVoxZSKk070xKfvcNg==
+  dependencies:
+    "@octokit/rest" "^16.1.0"
+    checkup "^1.3.0"
+    debug "^4.1.0"
+    minimist "^1.2.0"
+    readjson "^1.1.0"
+    try-catch "^2.0.0"
+
 growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
