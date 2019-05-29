@@ -23,4 +23,8 @@ export function capitalize(input) {
   return input.charAt(0).toUpperCase() + input.substr(1)
 }
 
-export default { sanitizeName, capitalize }
+export function uncapitalize(input) {
+  return input.charAt(0).toLowerCase() + input.substr(1)
+}
+
+export default { sanitizeName, capitalize, uncapitalize }

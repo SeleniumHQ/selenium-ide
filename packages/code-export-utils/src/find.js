@@ -26,3 +26,14 @@ export function findReusedTestMethods(test, tests, _results) {
   }
   return results
 }
+
+export function findCommandThatOpensWindow(commands) {
+  let result
+  for (const command of commands) {
+    if (command.opensWindow) {
+      result = command
+      break
+    }
+  }
+  return result
+}

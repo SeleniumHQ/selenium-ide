@@ -112,6 +112,7 @@ export const emitters = {
   waitForElementNotEditable: emitWaitForElementNotEditable,
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
+  waitForWindow: emitWaitForWindow,
   webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
   webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
   webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
@@ -126,11 +127,10 @@ function register(command, emitter) {
 }
 
 function emit(command) {
-  return exporter.emit.command(
-    command,
-    emitters[command.command],
-    variableLookup
-  )
+  return exporter.emit.command(command, emitters[command.command], {
+    variableLookup,
+    emitNewWindowHandling,
+  })
 }
 
 function variableLookup(varName) {
@@ -139,6 +139,47 @@ function variableLookup(varName) {
 
 function variableSetter(varName, value) {
   return varName ? `vars.put("${varName}", ${value});` : ''
+}
+
+function emitWaitForWindow() {
+  const generateMethodDeclaration = name => {
+    return `public String ${name}(int timeout) {`
+  }
+  const commands = [
+    { level: 0, statement: 'try {' },
+    { level: 1, statement: 'Thread.sleep(timeout);' },
+    { level: 0, statement: '} catch (InterruptedException e) {' },
+    { level: 1, statement: 'e.printStackTrace();' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'Set<String> whNow = driver.getWindowHandles();' },
+    {
+      level: 0,
+      statement:
+        'Set<String> whThen = (Set<String>) vars.get("window_handles");',
+    },
+    { level: 0, statement: 'if (whNow.size() > whThen.size()) {' },
+    { level: 1, statement: 'whNow.removeAll(whThen);' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'return whNow.iterator().next();' },
+  ]
+  return Promise.resolve({
+    name: 'waitForWindow',
+    commands,
+    generateMethodDeclaration,
+  })
+}
+
+async function emitNewWindowHandling(command, emittedCommand) {
+  // TODO: add waitForWindow method to global emitting
+  // TODO: fix interpolation bug
+  // TODO: e2e test
+  // TODO: test with a command that emits an object instead of a string
+  // TODO: port to code-export-python-pytest
+  return Promise.resolve(
+    `vars.put("window_handles", driver.getWindowHandles());\n${await emittedCommand}\nvars.put("${
+      command.windowHandleName
+    }", waitForWindow(${command.windowTimeout}));`
+  )
 }
 
 function emitAssert(varName, value) {
@@ -453,7 +494,14 @@ function emitOpen(target) {
 }
 
 async function emitPause(time) {
-  return Promise.resolve(`Thread.sleep(${time});`)
+  const commands = [
+    { level: 0, statement: 'try {' },
+    { level: 1, statement: `Thread.sleep(${time});` },
+    { level: 0, statement: '} catch (InterruptedException e) {' },
+    { level: 1, statement: 'e.printStackTrace();' },
+    { level: 0, statement: '}' },
+  ]
+  return Promise.resolve({ commands })
 }
 
 async function emitRun(testName) {
@@ -522,7 +570,7 @@ async function emitSelectFrame(frameLocation) {
 async function emitSelectWindow(windowLocation) {
   if (/^handle=/.test(windowLocation)) {
     return Promise.resolve(
-      `driver.switchTo().window("${windowLocation.split('handle=')[1]}");`
+      `driver.switchTo().window(${windowLocation.split('handle=')[1]});`
     )
   } else if (/^name=/.test(windowLocation)) {
     return Promise.resolve(
@@ -1001,4 +1049,5 @@ async function emitWaitForElementNotVisible(locator, timeout) {
 export default {
   emit,
   register,
+  emitWaitForWindow,
 }

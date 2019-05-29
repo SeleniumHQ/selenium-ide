@@ -144,10 +144,7 @@ function declareDependencies() {
         },
         { level: 0, statement: 'import org.openqa.selenium.Alert;' },
         { level: 0, statement: 'import org.openqa.selenium.Keys;' },
-        { level: 0, statement: 'import java.util.HashMap;' },
-        { level: 0, statement: 'import java.util.List;' },
-        { level: 0, statement: 'import java.util.ArrayList;' },
-        { level: 0, statement: 'import java.util.Map;' },
+        { level: 0, statement: 'import java.util.*;' },
       ],
     },
   }

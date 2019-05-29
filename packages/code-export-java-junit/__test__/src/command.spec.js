@@ -506,7 +506,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `Thread.sleep(${command.target});`
+      `try {\n${commandPrefixPadding}Thread.sleep(300);\n} catch (InterruptedException e) {\n${commandPrefixPadding}e.printStackTrace();\n}`
     )
   })
   it('should emit `remove selection` command', () => {
@@ -584,7 +584,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switchTo().window("vars.get("window").toString()");`
+      `driver.switchTo().window(vars.get("window").toString());`
     )
   })
   it('should emit `select window` to select a window by name', () => {
@@ -1041,5 +1041,18 @@ describe('command code emitter', () => {
       body: `while ((Boolean) js.executeScript("return (true)")) {`,
       endingLevel: 1,
     })
+  })
+  it('should emit new window handling, if command opens a new window', () => {
+    const command = {
+      command: 'click',
+      target: 'css=button',
+      value: '',
+      opensWindow: true,
+      windowHandleName: 'newWin',
+      windowTimeout: 2000,
+    }
+    return expect(prettify(command)).resolves.toBe(
+      `vars.put("window_handles", driver.getWindowHandles());\ndriver.findElement(By.cssSelector("button")).click();\nvars.put("newWin", waitForWindow(2000));`
+    )
   })
 })

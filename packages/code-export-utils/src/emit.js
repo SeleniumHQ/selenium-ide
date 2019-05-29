@@ -19,11 +19,16 @@ import { preprocessParameter } from './preprocessor'
 import StringEscape from 'js-string-escape'
 import doRender from './render'
 import { registerMethod } from './register'
-import { findReusedTestMethods } from './find'
+import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
 
-export function emitCommand(command, emitter, variableLookup) {
+export function emitCommand(
+  command,
+  emitter,
+  { variableLookup, emitNewWindowHandling }
+) {
+  // TODO: disabled commands --> test?
   if (emitter) {
-    return emitter(
+    let result = emitter(
       preprocessParameter(
         command.target,
         emitter.targetPreprocessor,
@@ -35,6 +40,8 @@ export function emitCommand(command, emitter, variableLookup) {
         variableLookup
       )
     )
+    if (command.opensWindow) result = emitNewWindowHandling(command, result)
+    return result
   }
 }
 
@@ -79,22 +86,27 @@ async function emitCommands(commands, emitter) {
 }
 
 async function emitMethod(
-  name,
-  commands,
+  method,
   {
     commandPrefixPadding,
     generateMethodDeclaration,
     terminatingKeyword,
     emitter,
+    overrideCommandEmitting,
   } = {}
 ) {
-  const methodDeclaration = generateMethodDeclaration(name)
-  const emittedCommands = await emitCommands(commands, emitter)
+  const methodDeclaration = generateMethodDeclaration(method.name)
+  let result
+  if (overrideCommandEmitting) {
+    result = method.commands.map(
+      cmd => `${commandPrefixPadding.repeat(cmd.level) + cmd.statement}`
+    )
+  } else {
+    result = await emitCommands(method.commands, emitter)
+  }
   return [
     methodDeclaration,
-    emittedCommands
-      .join(`\n${commandPrefixPadding}`)
-      .replace(/^/, commandPrefixPadding),
+    result.join(`\n${commandPrefixPadding}`).replace(/^/, commandPrefixPadding),
     terminatingKeyword,
   ]
 }
@@ -135,8 +147,22 @@ async function emitTest(
   if (!testLevel) testLevel = 1
   if (!commandLevel) commandLevel = 2
   const methods = findReusedTestMethods(test, tests)
+  if (findCommandThatOpensWindow(test.commands) && emitter.emitWaitForWindow) {
+    const method = await emitter.emitWaitForWindow()
+    const result = await emitMethod(method, {
+      emitter,
+      commandPrefixPadding,
+      generateMethodDeclaration: method.generateMethodDeclaration,
+      terminatingKeyword,
+      overrideCommandEmitting: true,
+    })
+    await registerMethod(method.name, result, {
+      generateMethodDeclaration,
+      hooks,
+    })
+  }
   for (const method of methods) {
-    const result = await emitMethod(method.name, method.commands, {
+    const result = await emitMethod(method, {
       emitter,
       commandPrefixPadding,
       generateMethodDeclaration,
