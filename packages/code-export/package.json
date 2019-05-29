@@ -20,7 +20,6 @@
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.8.0",
-    "code-export-python-pytest": "^3.8.0"
+    "code-export-java-junit": "^3.8.0"
   }
 }
