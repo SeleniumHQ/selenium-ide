@@ -427,6 +427,12 @@ export default {
     target: ArgTypes.locator,
     value: ArgTypes.variableName,
   },
+  storeJson: {
+    name: 'store json',
+    description: `Ssave JSON as an object on a variable`,
+    target: ArgTypes.json,
+    value: ArgTypes.variableName,
+  },
   storeText: {
     name: 'store text',
     description: `Gets the text of an element and stores it for later use. 

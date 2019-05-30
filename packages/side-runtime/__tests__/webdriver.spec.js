@@ -520,6 +520,15 @@ describe('webdriver executor', () => {
         ).toBe(0)
       })
     })
+    describe('store json', () => {
+      it('should the JSON string as an object', async () => {
+        const varName = 'blah'
+        await executor.doStoreJson('{"blah":"blah"}', varName)
+        const result = executor.variables.get(varName)
+        expect(typeof result).toMatch('object')
+        expect(result.blah).toMatch('blah')
+      })
+    })
     describe('store attribute', () => {
       it('should store the attribute of an element', async () => {
         await driver.get(`http://localhost:${port}/store/attributes.html`)

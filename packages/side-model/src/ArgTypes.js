@@ -64,6 +64,10 @@ export default {
     name: 'iterator variable name',
     description: `The name of the variable used when iterating over a collection in a looping control flow command (e.g., for each).`,
   },
+  json: {
+    name: 'json',
+    description: `A string representation of a JavaScript object.`,
+  },
   keySequence: {
     name: 'key sequence',
     description:

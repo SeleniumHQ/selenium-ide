@@ -625,6 +625,11 @@ export default class WebDriverExecutor {
     this.variables.set(variable, elements.length)
   }
 
+  async doStoreJson(json, variable) {
+    this.variables.set(variable, JSON.parse(json))
+    return Promise.resolve()
+  }
+
   async doStoreText(locator, variable, commandObject = {}) {
     const element = await this.waitForElement(
       locator,
@@ -1305,6 +1310,12 @@ WebDriverExecutor.prototype.doStoreElementCount = composePreprocessors(
   null,
   { targetFallback: preprocessArray(interpolateString) },
   WebDriverExecutor.prototype.doStoreElementCount
+)
+
+WebDriverExecutor.prototype.doStoreJson = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doStoreJson
 )
 
 WebDriverExecutor.prototype.doStoreText = composePreprocessors(
