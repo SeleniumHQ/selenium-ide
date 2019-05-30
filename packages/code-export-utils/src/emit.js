@@ -147,18 +147,28 @@ async function emitTest(
   if (!testLevel) testLevel = 1
   if (!commandLevel) commandLevel = 2
   const methods = findReusedTestMethods(test, tests)
-  if (findCommandThatOpensWindow(test.commands) && emitter.emitWaitForWindow) {
-    const method = await emitter.emitWaitForWindow()
-    const result = await emitMethod(method, {
-      emitter,
-      commandPrefixPadding,
-      generateMethodDeclaration: method.generateMethodDeclaration,
-      terminatingKeyword,
-      overrideCommandEmitting: true,
-    })
-    await registerMethod(method.name, result, {
-      generateMethodDeclaration,
-      hooks,
+  if (emitter.extras) {
+    Object.keys(emitter.extras).forEach(async emitter_name => {
+      let ignore = true
+      if (
+        emitter_name === 'emitWaitForWindow' &&
+        findCommandThatOpensWindow(test.commands)
+      )
+        ignore = false
+      if (!ignore) {
+        const method = await emitter.extras[emitter_name]()
+        const result = await emitMethod(method, {
+          emitter,
+          commandPrefixPadding,
+          generateMethodDeclaration: method.generateMethodDeclaration,
+          terminatingKeyword,
+          overrideCommandEmitting: true,
+        })
+        await registerMethod(method.name, result, {
+          generateMethodDeclaration,
+          hooks,
+        })
+      }
     })
   }
   for (const method of methods) {

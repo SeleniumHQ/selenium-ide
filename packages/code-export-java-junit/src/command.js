@@ -112,7 +112,6 @@ export const emitters = {
   waitForElementNotEditable: emitWaitForElementNotEditable,
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
-  waitForWindow: emitWaitForWindow,
   webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
   webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
   webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
@@ -1049,5 +1048,5 @@ async function emitWaitForElementNotVisible(locator, timeout) {
 export default {
   emit,
   register,
-  emitWaitForWindow,
+  extras: { emitWaitForWindow },
 }
