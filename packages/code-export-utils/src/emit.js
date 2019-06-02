@@ -80,7 +80,17 @@ async function emitCommands(commands, emitter) {
   const _commands = commands.map(command => {
     return emitter.emit(command)
   })
-  const result = await Promise.all(_commands)
+  const emittedCommands = await Promise.all(_commands)
+  let result = []
+  emittedCommands.forEach(entry => {
+    if (typeof entry === 'string' && entry.includes('\n')) {
+      entry.split('\n').forEach(subEntry => {
+        result.push(subEntry)
+      })
+    } else {
+      result.push(entry)
+    }
+  })
   return result
 }
 
