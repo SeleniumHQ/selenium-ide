@@ -62,12 +62,16 @@ describe('Hooks', () => {
       ],
     })
   })
-  it('should allow for checking if a command is already registered', () => {
+  it('should check if a command is already registered', () => {
     const hook = new Hook()
     hook.register(() => {
       return 'blah'
     })
+    hook.register(() => {
+      return 1234
+    })
     expect(hook.isRegistered('blah')).resolves.toBeTruthy()
+    expect(hook.isRegistered(1234)).resolves.toBeTruthy()
     expect(hook.isRegistered('halb')).resolves.toBeFalsy()
   })
 })

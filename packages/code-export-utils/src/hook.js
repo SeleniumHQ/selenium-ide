@@ -83,7 +83,7 @@ export default class Hook {
 
   async isRegistered(input = '') {
     const result = await Promise.all(this.emitters.map(emitter => emitter()))
-    return result.map(command => command.includes(input)).includes(true)
+    return result.includes(input)
   }
 }
 
