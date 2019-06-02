@@ -25,9 +25,7 @@ const changelog = exec(
 ).trim()
 
 // zip build dir
-exec(
-  'zip -r packages/selenium-ide/build/selenium-ide.zip packages/selenium-ide/build/'
-)
+exec('cd packages/selenium-ide/build;zip -r selenium-ide.zip *')
 log('Zipped build directory')
 
 // create release with changelog
