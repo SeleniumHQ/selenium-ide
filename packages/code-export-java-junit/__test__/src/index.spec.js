@@ -87,6 +87,16 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
+  it('should export a suite to JUnit code with commands that open a new window inside of a reused test method', async () => {
+    const project = normalizeProject(readFile('nested-select-window.side'))
+    const results = await emitSuite({
+      baseUrl: project.url,
+      suite: project.suites[0],
+      tests: project.tests,
+    })
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
+  })
 })
 
 function normalizeProject(project) {
