@@ -174,7 +174,7 @@ async function emitTest(
           overrideCommandEmitting: true,
         })
         await registerMethod(method.name, result, {
-          generateMethodDeclaration,
+          generateMethodDeclaration: method.generateMethodDeclaration,
           hooks,
         })
       }

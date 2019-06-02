@@ -26,8 +26,8 @@ function readFile(filename) {
   )
 }
 
-describe('Code Export Java Selenium', () => {
-  it('should export a test to JUnit code', async () => {
+describe('Code Export Java JUnit Selenium', () => {
+  it('should export a test', async () => {
     const project = readFile('single-test.side')
     const results = await emitTest({
       baseUrl: project.url,
@@ -37,7 +37,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a suite to JUnit code', async () => {
+  it('should export a suite', async () => {
     const project = normalizeProject(readFile('single-suite.side'))
     const results = await emitSuite({
       baseUrl: project.url,
@@ -47,7 +47,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a test to JUnit code with reused test method', async () => {
+  it('should export a test with a reused test method', async () => {
     const project = normalizeProject(readFile('test-case-reuse.side'))
     const results = await emitTest({
       baseUrl: project.url,
@@ -57,7 +57,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a test to JUnit code with commands that open a new window', async () => {
+  it('should export a test with commands that open a new window', async () => {
     const project = normalizeProject(readFile('select-window.side'))
     const results = await emitTest({
       baseUrl: project.url,
@@ -67,7 +67,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a suite to JUnit code with reused test method', async () => {
+  it('should export a suite with a reused test method', async () => {
     const project = normalizeProject(readFile('test-case-reuse.side'))
     const results = await emitSuite({
       baseUrl: project.url,
@@ -77,7 +77,7 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a suite to JUnit code that uses control flow commands', async () => {
+  it('should export a suite that uses control flow commands', async () => {
     const project = normalizeProject(readFile('control-flow-suite.side'))
     const results = await emitSuite({
       baseUrl: project.url,
@@ -87,8 +87,18 @@ describe('Code Export Java Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a suite to JUnit code with commands that open a new window inside of a reused test method', async () => {
+  it('should export a suite with commands that open a new window inside of a reused test method', async () => {
     const project = normalizeProject(readFile('nested-select-window.side'))
+    const results = await emitSuite({
+      baseUrl: project.url,
+      suite: project.suites[0],
+      tests: project.tests,
+    })
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
+  })
+  it('should export a suite with just one new window util method when there are multiple commands that open a new window', async () => {
+    const project = normalizeProject(readFile('nested-select-window-v2.side'))
     const results = await emitSuite({
       baseUrl: project.url,
       suite: project.suites[0],
