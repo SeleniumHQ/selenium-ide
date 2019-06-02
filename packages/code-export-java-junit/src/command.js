@@ -169,11 +169,6 @@ function emitWaitForWindow() {
 }
 
 async function emitNewWindowHandling(command, emittedCommand) {
-  // TODO: add waitForWindow method to global emitting
-  // TODO: fix interpolation bug
-  // TODO: e2e test
-  // TODO: test with a command that emits an object instead of a string
-  // TODO: port to code-export-python-pytest
   return Promise.resolve(
     `vars.put("window_handles", driver.getWindowHandles());\n${await emittedCommand}\nvars.put("${
       command.windowHandleName

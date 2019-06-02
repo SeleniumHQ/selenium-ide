@@ -26,7 +26,6 @@ export function emitCommand(
   emitter,
   { variableLookup, emitNewWindowHandling }
 ) {
-  // TODO: disabled commands --> test?
   if (emitter) {
     let result = emitter(
       preprocessParameter(
