@@ -30,7 +30,7 @@ describe('find', () => {
       const command = new Command(undefined, 'click', 'id=blah')
       command.opensWindow = true
       test.addCommand(command)
-      const result = findCommandThatOpensWindow(test.commands)
+      const result = findCommandThatOpensWindow(test)
       expect(result.command).toEqual('click')
     })
     it('should not find a command that opens a window if one is not present in a test', () => {
@@ -38,8 +38,19 @@ describe('find', () => {
       test.createCommand(undefined, 'open', '/')
       const command = new Command(undefined, 'click', 'id=blah')
       test.addCommand(command)
-      const result = findCommandThatOpensWindow(test.commands)
+      const result = findCommandThatOpensWindow(test)
       expect(result).toBeUndefined()
+    })
+    it('should find a command within a reused test method', () => {
+      const test = new TestCase()
+      test.createCommand(undefined, 'run', 'blah')
+      const anotherTest = new TestCase(undefined, 'blah')
+      const command = new Command(undefined, 'click', 'id=blah')
+      command.opensWindow = true
+      anotherTest.addCommand(command)
+      const tests = [test, anotherTest]
+      const result = findCommandThatOpensWindow(test, tests)
+      expect(result).toBeTruthy()
     })
   })
   describe('findReusedTestMethods', () => {

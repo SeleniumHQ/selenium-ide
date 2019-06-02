@@ -148,11 +148,11 @@ async function emitTest(
   if (!commandLevel) commandLevel = 2
   const methods = findReusedTestMethods(test, tests)
   if (emitter.extras) {
-    Object.keys(emitter.extras).forEach(async emitter_name => {
+    for (const emitter_name in emitter.extras) {
       let ignore = true
       if (
         emitter_name === 'emitWaitForWindow' &&
-        findCommandThatOpensWindow(test.commands)
+        findCommandThatOpensWindow(test, tests)
       )
         ignore = false
       if (!ignore) {
@@ -169,7 +169,7 @@ async function emitTest(
           hooks,
         })
       }
-    })
+    }
   }
   for (const method of methods) {
     const result = await emitMethod(method, {

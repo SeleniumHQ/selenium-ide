@@ -27,12 +27,18 @@ export function findReusedTestMethods(test, tests, _results) {
   return results
 }
 
-export function findCommandThatOpensWindow(commands) {
+export function findCommandThatOpensWindow(test, tests) {
   let result
-  for (const command of commands) {
+  for (const command of test.commands) {
     if (command.opensWindow) {
       result = command
       break
+    }
+    if (command.command === 'run') {
+      const nestedTests = findReusedTestMethods(test, tests)
+      for (const nestedTest in nestedTests) {
+        return findCommandThatOpensWindow(nestedTests[nestedTest], nestedTests)
+      }
     }
   }
   return result
