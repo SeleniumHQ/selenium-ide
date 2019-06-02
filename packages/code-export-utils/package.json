@@ -1,6 +1,6 @@
 {
   "name": "code-export-utils",
-  "version": "3.7.0",
+  "version": "3.8.1",
   "description": "Utils for Selenium IDE code export",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
