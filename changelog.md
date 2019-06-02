@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.8.1
+- Code export fixes for commands that open and switch to new windows
+- Added a suffix of "Test" to class and filenames in Java code export
+
 ## v3.8.0
 - Added forEach and storeJson commands
 - Made it so explicit wait commands (e.g., `wait for element visible`, etc.) override the built-in implicit wait mechanism
