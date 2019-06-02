@@ -48,7 +48,7 @@ grizzly(token, {
       owner,
       repo,
       tag,
-      filename: 'build/applitools-for-selenium-ide.zip',
+      filename: 'packages/selenium-ide/build/selenium-ide.zip',
     })
       .then(url => {
         log(`Upload success, download url: ${url}`)
