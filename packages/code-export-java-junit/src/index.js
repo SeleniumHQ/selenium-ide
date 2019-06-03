@@ -70,14 +70,15 @@ export async function emitTest({
   })
   const suiteName = test.name
   const suiteDeclaration = generateSuiteDeclaration(suiteName)
+  const _suite = await exporter.emit.suite(result, tests, {
+    ...opts,
+    suiteDeclaration,
+    suiteName,
+    project,
+  })
   return {
     filename: generateFilename(test.name),
-    body: await exporter.emit.suite(result, tests, {
-      ...opts,
-      suiteDeclaration,
-      suiteName,
-      project,
-    }),
+    body: exporter.emit.orderedSuite(_suite),
   }
 }
 
@@ -96,14 +97,15 @@ export async function emitSuite({
     project,
   })
   const suiteDeclaration = generateSuiteDeclaration(suite.name)
+  const _suite = await exporter.emit.suite(result, tests, {
+    ...opts,
+    suiteDeclaration,
+    suite,
+    project,
+  })
   return {
     filename: generateFilename(suite.name),
-    body: await exporter.emit.suite(result, tests, {
-      ...opts,
-      suiteDeclaration,
-      suite,
-      project,
-    }),
+    body: exporter.emit.orderedSuite(_suite),
   }
 }
 
