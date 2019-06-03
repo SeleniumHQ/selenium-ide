@@ -42,6 +42,32 @@ There are certain circumstances where the built in wait strategies in the IDE ar
 - `wait for element not present`
 - `wait for element not visible`
 
+### How can I use regex in text verifications?
+
+This is functionality that we'll eventually add (see [issue 141 for details](https://github.com/SeleniumHQ/selenium-ide/issues/141)). As a workaround, you can use an XPath locator with `starts-with` and `contains` keywords.
+
+command | target|value
+------------ | -------------|-----------
+assertElementPresent|//a@[starts-with(.,'you are the') and contains(.,'User to log in today')]|
+
+### How do I scroll?
+
+There's not a distinct command in Selenium IDE for scrolling because there's not one implemented in Selenium. Instead you can use the `scrollTo` command in JavaScript to accomplish this by specifying `x` and `y` coordinates you'd like to scroll to.
+
+command | target|value
+------------ | -------------|-----------
+executeScript|window.scrollTo(0,1000)|
+
+### Saving Files
+
+#### Why is the location I saved my SIDE project to not remembered?
+#### Why do I need to step through a "Save as" flow everytime I want to save my project?
+#### Why do I need to overwrite a previously saved file?
+
+All of these questions are part of the same problem -- as a browser extension Selenium IDE does not have access to the file system. The only way to offer "save" functionality is through downloading the file. This issue will be resolved when the IDE moves to a native application. This will give the IDE premier filesystem access, which will enable it to offer a polished "save" experience.
+
+If you want to stay updated, you can follow along with [issue 363](https://github.com/SeleniumHQ/selenium-ide/issues/363).
+
 ### How to install the IDE behind strict Proxy/Firewall?
 
 In some situations you may not have full public internet access (such as behind a "Corporate Proxy or Firewall"). In those environments you will need to obtain a copy of the built Selenium IDE ZIP file in order to record automated test scripts. This is available on GitHub's "Releases" section here:

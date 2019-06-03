@@ -128,3 +128,5 @@ If your plugin responds to an event and there is a no-op in your code, be sure t
 ### Responding to events with async code
 
 If your plugin responds to an event and executes async code, be sure to `return true` outside of the async closure.
+
+See [Async Requests](requests.md#async-requests) for details.

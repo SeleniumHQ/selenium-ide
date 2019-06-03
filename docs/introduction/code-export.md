@@ -33,6 +33,31 @@ The exported code for Java JUnit is built to work with Java 8, JUnit 4.12, and t
 
 You should be able to take the exported Java file and place it into a standard Maven directory structure with a `pom.xml` file listing these dependencies and run it.
 
+Here's a sample `pom.xml` to help you get started.
+
+```xml
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-ide-java-code-export</artifactId>
+  <version>1</version>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>3.141.59</version>
+    </dependency>
+  </dependencies>
+</project>
+```
+
 ## How To Contribute
 
 Code export was built in a modular way to help enable contributions.
@@ -66,7 +91,7 @@ When declaring new commands you can either specify its output [as a string](http
 
 Built into code-export is a prettifier which controls the indentation of the outputted code. This structure is useful if a command's output is verbose and you want to be explicit. Or if the command changes the indentation level of the commands that come after it.
 
-### 4. Create the hooks
+### 3. Create the hooks
 
 Hooks make up a majority of the structure of the code to be exported (e.g., a suite, a test, and all of the things that go into it like setup, teardown, etc.). They are also what enables plugins to export code to different parts of a test or a suite.
 
@@ -84,7 +109,7 @@ There are 9 different hooks:
 
 You can see an example of hooks being implemented in `packages/code-export-java-junit` here: [Hooks](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export-java-junit/src/hook.js)
 
-### 3. Update the language specific attributes
+### 4. Update the language specific attributes
 
 In each language you need to specify some low-level details. Things like how many spaces to indent, how to declare a method, a test, a suite, etc.
 
@@ -96,11 +121,7 @@ Once you've got everything else in place, it's time to wire it up for use in the
 
 This is possible in [`packages/code-export/src/index.js`](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export/src/index.js). 
 
-You will need to:
-
-1. Import your new code-export package
-2. Update `availableLanguages` with details about your code-export language
-3. Update `exporter` to reference your code-export name and import
+You will need to add your language to `availableLanguages`.
 
 ### 6. Test and tune
 

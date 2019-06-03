@@ -381,6 +381,15 @@ export const Commands = [
     },
   ],
   [
+    'forEach',
+    {
+      name: 'for each',
+      description: `Create a loop that executes the proceeding commands for each item in a given collection.`,
+      target: ArgTypes.arrayVariableName,
+      value: ArgTypes.iteratorVariableName,
+    },
+  ],
+  [
     'if',
     {
       name: 'if',
@@ -685,15 +694,6 @@ export const Commands = [
       description: `Create a loop that executes the proceeding commands n number of times.`,
       target: ArgTypes.times,
       value: ArgTypes.loopLimit,
-    },
-  ],
-  [
-    'forEach',
-    {
-      name: 'for each',
-      description: `Create a loop that executes the proceeding commands for each item in a given collection.`,
-      target: ArgTypes.arrayVariableName,
-      value: ArgTypes.iteratorVariableName,
     },
   ],
   [
