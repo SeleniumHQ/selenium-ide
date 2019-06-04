@@ -520,21 +520,21 @@ async function emitSetWindowSize(size) {
 }
 
 async function emitSelect(selectElement, option) {
+  const emittedLocator = await location.emit(selectElement)
+  const emittedSelection = await selection.emit(option)
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement dropdown = driver.findElement(${await location.emit(
-        selectElement
-      )});`,
+      level: 0,
+      statement: `dropdown = driver.find_element(${emittedLocator.by}, ${
+        emittedLocator.value
+      })`,
     },
     {
-      level: 1,
-      statement: `dropdown.findElement(${await selection.emit(
-        option
-      )}).click();`,
+      level: 0,
+      statement: `dropdown.findElement(${emittedSelection.by}, ${
+        emittedSelection.value
+      }).click()`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }

@@ -58,7 +58,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebElement dropdown = driver.findElement(By.cssSelector("select"));\n${commandPrefixPadding}dropdown.findElement(By.xpath("//option[. = 'A label']")).click();\n}`
+      `dropdown = driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `assert` command', () => {
