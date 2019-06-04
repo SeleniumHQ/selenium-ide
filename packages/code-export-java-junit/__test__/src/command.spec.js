@@ -649,7 +649,7 @@ describe('command code emitter', () => {
   })
   it('should emit `set speed`', () => {
     expect(prettify({ command: 'setSpeed' })).resolves.toBe(
-      `System.out.println("\`set speed\` is a no-op in the runner, use \`pause instead\`");`
+      `System.out.println("\`set speed\` is a no-op in code export, use \`pause\` instead");`
     )
   })
   it('should emit `setWindowSize`', () => {

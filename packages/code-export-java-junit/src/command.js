@@ -642,7 +642,7 @@ async function emitSendKeys(target, value) {
 
 function emitSetSpeed() {
   return Promise.resolve(
-    `System.out.println("\`set speed\` is a no-op in the runner, use \`pause instead\`");`
+    `System.out.println("\`set speed\` is a no-op in code export, use \`pause\` instead");`
   )
 }
 
