@@ -16,7 +16,10 @@
 // under the License.
 
 import Command from '../../src/command'
-import { ControlFlowCommandNames } from '../../../selenium-ide/src/neo/models/Command'
+import {
+  Commands,
+  ControlFlowCommandNames,
+} from '../../../selenium-ide/src/neo/models/Command'
 import { opts } from '../../src/index'
 import exporter from 'code-export-utils'
 
@@ -31,6 +34,23 @@ async function prettify(command, { fullPayload } = {}) {
 }
 
 describe('command code emitter', () => {
+  it.skip('should emit all known commands', () => {
+    let result = []
+    Commands.array.forEach(command => {
+      if (!Command.canEmit(command)) {
+        result.push(command)
+      }
+    })
+    expect(() => {
+      if (result.length) {
+        if (result.length === 1) {
+          throw new Error(`${result[0]} has no emitter, write one!`)
+        } else {
+          throw new Error(`No emitters for ${result.join(', ')}. Write them!`)
+        }
+      }
+    }).not.toThrow()
+  })
   it('should emit `add selection` command', () => {
     const command = {
       command: 'addSelection',

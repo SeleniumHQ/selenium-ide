@@ -82,7 +82,7 @@ export const emitters = {
   setWindowSize: emitSetWindowSize,
   store: emitStore,
   storeAttribute: emitStoreAttribute,
-  storeJson: emitStoreJson,
+  //storeJson: emitStoreJson,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
@@ -130,6 +130,10 @@ function emit(command) {
     variableLookup,
     emitNewWindowHandling,
   })
+}
+
+function canEmit(commandName) {
+  return !!emitters[commandName]
 }
 
 function variableLookup(varName) {
@@ -1041,6 +1045,7 @@ async function emitWaitForElementNotVisible(locator, timeout) {
 }
 
 export default {
+  canEmit,
   emit,
   register,
   extras: { emitWaitForWindow },
