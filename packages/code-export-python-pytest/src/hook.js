@@ -11,8 +11,7 @@
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+// KIND, either express or implied.  See the License for the specific language governing permissions and limitations
 // under the License.
 
 import exporter from 'code-export-utils'
@@ -106,7 +105,7 @@ function declareDependencies() {
         { level: 0, statement: 'from selenium import webdriver' },
         {
           level: 0,
-          statement: ' from selenium.webdriver.common.by import By ',
+          statement: 'from selenium.webdriver.common.by import By',
         },
       ],
     },
