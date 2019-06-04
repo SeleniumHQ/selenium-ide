@@ -36,25 +36,25 @@ export default {
 }
 
 function emitId(selector) {
-  return Promise.resolve(`By.id("${selector}")`)
+  return Promise.resolve({ by: 'By.ID', value: selector })
 }
 
 function emitName(selector) {
-  return Promise.resolve(`By.name("${selector}")`)
+  return Promise.resolve({ by: 'By.NAME', value: selector })
 }
 
 function emitLink(selector) {
-  return Promise.resolve(`By.linkText("${selector}")`)
+  return Promise.resolve({ by: 'By.LINK_TEXT', value: selector })
 }
 
 function emitPartialLinkText(selector) {
-  return Promise.resolve(`By.partialLinkText("${selector}")`)
+  return Promise.resolve({ by: 'By.PARTIAL_LINK_TEXT', value: selector })
 }
 
 function emitCss(selector) {
-  return Promise.resolve(`By.cssSelector("${selector}")`)
+  return Promise.resolve({ by: 'By.CSS_SELECTOR', value: selector })
 }
 
 function emitXpath(selector) {
-  return Promise.resolve(`By.xpath("${selector}")`)
+  return Promise.resolve({ by: 'By.XPATH', value: selector })
 }

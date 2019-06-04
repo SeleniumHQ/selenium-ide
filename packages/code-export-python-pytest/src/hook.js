@@ -104,6 +104,10 @@ function declareDependencies() {
       commands: [
         { level: 0, statement: 'import pytest' },
         { level: 0, statement: 'from selenium import webdriver' },
+        {
+          level: 0,
+          statement: ' from selenium.webdriver.common.by import By ',
+        },
       ],
     },
   }
