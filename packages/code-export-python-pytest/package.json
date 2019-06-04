@@ -1,7 +1,7 @@
 {
-  "name": "code-export",
+  "name": "code-export-python-pytest",
   "version": "3.8.1",
-  "description": "Selenium IDE code export",
+  "description": "Export Selenium IDE project contents to Python pytest",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
     "selenium",
@@ -17,10 +17,10 @@
   "main": "dist/index.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.8.1",
-    "code-export-python-pytest": "^3.8.1"
+    "code-export-utils": "^3.8.1"
   }
 }
