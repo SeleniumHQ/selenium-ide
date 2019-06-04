@@ -181,15 +181,11 @@ async function emitNewWindowHandling(command, emittedCommand) {
 }
 
 function emitAssert(varName, value) {
-  return Promise.resolve(
-    `assertEquals(vars.get("${varName}").toString(), "${value}");`
-  )
+  return Promise.resolve(`assert(vars["${varName}"] == "${value}")`)
 }
 
 function emitAssertAlert(alertText) {
-  return Promise.resolve(
-    `assertThat(driver.switchTo().alert().getText(), is("${alertText}"));`
-  )
+  return Promise.resolve(`assert driver.switch_to.alert.text == "${alertText}"`)
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
@@ -738,10 +734,11 @@ async function emitUncheck(locator) {
 }
 
 async function emitVerifyChecked(locator) {
+  const emittedLocator = await location.emit(locator)
   return Promise.resolve(
-    `assertTrue(driver.findElement(${await location.emit(
-      locator
-    )}).isSelected());`
+    `assert driver.find_element(${emittedLocator.by}, ${
+      emittedLocator.value
+    }).isSelected() is True`
   )
 }
 

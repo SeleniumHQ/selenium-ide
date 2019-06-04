@@ -68,9 +68,7 @@ describe('command code emitter', () => {
       value: 'blah',
     }
     expect(prettify(command)).resolves.toBe(
-      `assertEquals(vars.get("${command.target}").toString(), "${
-        command.value
-      }");`
+      `assert(vars["varrrName"] == "blah")`
     )
   })
   it('should emit `assert alert` command', () => {
@@ -80,7 +78,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assertThat(driver.switchTo().alert().getText(), is("an alert"));`
+      `assert driver.switch_to.alert.text == "an alert"`
     )
   })
   it('should emit `assert checked` command', () => {
@@ -90,7 +88,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assertTrue(driver.findElement(By.id("check")).isSelected());`
+      `assert driver.find_element(By.ID, "check").isSelected() is True`
     )
   })
   it('should emit `assert confirmation` command', () => {
