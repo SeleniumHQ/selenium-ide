@@ -39,7 +39,7 @@ function emitId(id) {
 function emitValue(value) {
   return Promise.resolve({
     by: 'By.CSS_SELECTOR',
-    value: `*[value='${value}']`,
+    value: `"*[value='${value}']"`,
   })
 }
 
