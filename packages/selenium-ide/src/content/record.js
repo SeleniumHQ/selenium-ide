@@ -812,6 +812,7 @@ Recorder.addEventHandler('select', 'change', function(event) {
                 value
               )
             }
+            this.recordingState.preventClickTwice = true
             options[i]._wasSelected = options[i].selected
           }
         }

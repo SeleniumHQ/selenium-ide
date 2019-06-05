@@ -87,6 +87,15 @@ describe('record-api', () => {
             <button>asdfsd</button>
             <button type="submit" style="display:none">sub</button>
         </form>
+        <form id="select-form" action="/more-kakai.html">
+          <select name="cars" multiple>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+          <input type="submit">
+        </form>
       `)
       recorder.attach()
       inputElement = window.document.querySelector('form input')
@@ -122,6 +131,15 @@ describe('record-api', () => {
       const button = window.document.querySelector("button[type='submit']")
       fireEvent.click(button)
       expect(recordApi.record.mock.calls[0][0]).toEqual('click')
+    })
+
+    it('selecting from a multi-select records just `add selection`', () => {
+      const option = window.document.querySelector('#select-form > select')
+      fireEvent.change(option)
+      fireEvent.click(option)
+      expect(
+        recordApi.record.mock.calls.map(call => call[0]).includes('click')
+      ).toBeFalsy()
     })
   })
 })
