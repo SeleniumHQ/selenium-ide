@@ -98,10 +98,10 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assertThat(driver.switchTo().alert().getText(), is("a confirmation"));`
+      `assert driver.switch_to.alert.text == "a confirmation"`
     )
   })
-  it('should emit `assert editable` command', () => {
+  it.only('should emit `assert editable` command', () => {
     const command = {
       command: 'assertEditable',
       target: 'id=text',
