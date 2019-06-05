@@ -676,10 +676,10 @@ async function emitStoreAttribute(locator, varName) {
   return Promise.resolve({ commands })
 }
 
-async function emitStoreJson(_json, _varName) {
-  // TODO
-  return Promise.resolve('')
-}
+//async function emitStoreJson(_json, _varName) {
+//  // TODO
+//  return Promise.resolve('')
+//}
 
 async function emitStoreText(locator, varName) {
   const result = `driver.findElement(${await location.emit(locator)}).getText()`
