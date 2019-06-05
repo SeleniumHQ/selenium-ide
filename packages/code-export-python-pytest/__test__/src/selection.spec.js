@@ -24,41 +24,36 @@ describe('selection location code emitter', () => {
     }).toThrow('Unknown selection locator notExists')
   })
   it('should assume when no selector is given that it is the label locator', () => {
-    return expect(emit('label')).resolves.toEqual({
-      by: 'By.XPATH',
-      value: `"//option[. = 'label']"`,
-    })
+    return expect(emit('label')).resolves.toEqual(
+      `By.XPATH, "//option[. = 'label']"`
+    )
   })
   it('should emit label locator', () => {
     const type = 'label'
     const selector = 'a label'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.XPATH',
-      value: `"//option[. = '${selector}']"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.XPATH, "//option[. = '${selector}']"`
+    )
   })
   it('should emit id locator', () => {
     const type = 'id'
     const selector = 'someId'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.CSS_SELECTOR',
-      value: `"*[id='${selector}']"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.CSS_SELECTOR, "*[id='${selector}']"`
+    )
   })
   it('should emit value locator', () => {
     const type = 'value'
     const selector = 'someValue'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.CSS_SELECTOR',
-      value: `"*[value='${selector}']"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.CSS_SELECTOR, "*[value='${selector}']"`
+    )
   })
   it('should emit index locator', () => {
     const type = 'index'
     const selector = '2'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.CSS_SELECTOR',
-      value: `"*:nth-child(${selector})"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.CSS_SELECTOR, "*:nth-child(${selector})"`
+    )
   })
 })

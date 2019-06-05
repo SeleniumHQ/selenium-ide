@@ -516,20 +516,18 @@ async function emitSetWindowSize(size) {
 }
 
 async function emitSelect(selectElement, option) {
-  const emittedLocator = await location.emit(selectElement)
-  const emittedSelection = await selection.emit(option)
   const commands = [
     {
       level: 0,
-      statement: `dropdown = driver.find_element(${emittedLocator.by}, ${
-        emittedLocator.value
-      })`,
+      statement: `dropdown = driver.find_element(${await location.emit(
+        selectElement
+      )})`,
     },
     {
       level: 0,
-      statement: `dropdown.findElement(${emittedSelection.by}, ${
-        emittedSelection.value
-      }).click()`,
+      statement: `dropdown.findElement(${await selection.emit(
+        option
+      )}).click()`,
     },
   ]
   return Promise.resolve({ commands })
@@ -734,11 +732,10 @@ async function emitUncheck(locator) {
 }
 
 async function emitVerifyChecked(locator) {
-  const emittedLocator = await location.emit(locator)
   return Promise.resolve(
-    `assert driver.find_element(${emittedLocator.by}, ${
-      emittedLocator.value
-    }).isSelected() is True`
+    `assert driver.find_element(${await location.emit(
+      locator
+    )}).isSelected() is True`
   )
 }
 

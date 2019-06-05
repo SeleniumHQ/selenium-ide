@@ -31,80 +31,68 @@ describe('location code emitter', () => {
   it('should emit id locator', () => {
     const type = 'id'
     const selector = 'someId'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.ID',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.ID, "someId"`
+    )
   })
   it('should emit link locator', () => {
     const type = 'link'
     const selector = 'someLink'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.LINK_TEXT',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.LINK_TEXT, "someLink"`
+    )
   })
   it('should emit linkText locator', () => {
     const type = 'linkText'
     const selector = 'someLink'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.LINK_TEXT',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.LINK_TEXT, "someLink"`
+    )
   })
   it('should emit partialLinkText locator', () => {
     const type = 'partialLinkText'
     const selector = 'someLink'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.PARTIAL_LINK_TEXT',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.PARTIAL_LINK_TEXT, "someLink"`
+    )
   })
   it('should emit css locator', () => {
     const type = 'css'
     const selector = 'someCss'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.CSS_SELECTOR',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.CSS_SELECTOR, "someCss"`
+    )
   })
   it('should emit css locator with `=` sign', () => {
     const type = 'css'
     const selector = 'a[title=JScript]'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.CSS_SELECTOR',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.CSS_SELECTOR, "a[title=JScript]"`
+    )
   })
   it('should escape quotes in locator strings', () => {
     const type = 'css'
     const selector = 'a[title="escaped"]'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.CSS_SELECTOR',
-      value: `"a[title=\\"escaped\\"]"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.CSS_SELECTOR, "a[title=\\"escaped\\"]"`
+    )
   })
   it('should emit xpath locator', () => {
     const type = 'xpath'
     const selector = 'someXpath'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.XPATH',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.XPATH, "someXpath"`
+    )
   })
   it('should emit implicit xpath locator', () => {
     const selector = '//test=xpath'
-    return expect(emit(selector)).resolves.toEqual({
-      by: 'By.XPATH',
-      value: `"${selector}"`,
-    })
+    return expect(emit(selector)).resolves.toEqual(`By.XPATH, "//test=xpath"`)
   })
   it('should emit name locator', () => {
     const type = 'name'
     const selector = 'someName'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual({
-      by: 'By.NAME',
-      value: `"${selector}"`,
-    })
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.NAME, "someName"`
+    )
   })
 })
