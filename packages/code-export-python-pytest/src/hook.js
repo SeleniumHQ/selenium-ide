@@ -102,6 +102,8 @@ function declareDependencies() {
     startingSyntax: {
       commands: [
         { level: 0, statement: 'import pytest' },
+        { level: 0, statement: 'import time' },
+        { level: 0, statement: 'import json' },
         { level: 0, statement: 'from selenium import webdriver' },
         {
           level: 0,
@@ -111,6 +113,11 @@ function declareDependencies() {
           level: 0,
           statement:
             'from selenium.webdriver.common.action_chains import ActionChains',
+        },
+        {
+          level: 0,
+          statement:
+            'from selenium.webdriver.support import expected_conditions',
         },
       ],
     },

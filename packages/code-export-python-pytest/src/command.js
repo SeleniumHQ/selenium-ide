@@ -82,7 +82,7 @@ export const emitters = {
   setWindowSize: emitSetWindowSize,
   store: emitStore,
   storeAttribute: emitStoreAttribute,
-  //storeJson: emitStoreJson,
+  storeJson: emitStoreJson,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
@@ -137,11 +137,11 @@ function canEmit(commandName) {
 }
 
 function variableLookup(varName) {
-  return `vars.get("${varName}").toString()`
+  return `vars["${varName}"]`
 }
 
 function variableSetter(varName, value) {
-  return varName ? `vars.put("${varName}", ${value});` : ''
+  return varName ? `vars["${varName}"] = ${value}` : ''
 }
 
 function emitWaitForWindow() {
@@ -234,9 +234,15 @@ async function emitClose() {
 
 function generateExpressionScript(script) {
   const scriptString = script.script.replace(/"/g, "'")
-  return `(Boolean) js.executeScript("return (${scriptString})"${generateScriptArguments(
+  return `driver.execute_script("return (${scriptString})"${generateScriptArguments(
     script
   )})`
+}
+
+function generateScriptArguments(script) {
+  return `${script.argv.length ? ', ' : ''}${script.argv
+    .map(varName => `vars.["${varName}"]`)
+    .join(',')}`
 }
 
 function emitControlFlowDo() {
@@ -251,7 +257,7 @@ function emitControlFlowDo() {
 
 function emitControlFlowElse() {
   return Promise.resolve({
-    commands: [{ level: 0, statement: '} else {' }],
+    commands: [{ level: 0, statement: 'else:' }],
     startingLevelAdjustment: -1,
     endingLevelAdjustment: +1,
   })
@@ -262,7 +268,7 @@ function emitControlFlowElseIf(script) {
     commands: [
       {
         level: 0,
-        statement: `} else if (${generateExpressionScript(script)}) {`,
+        statement: `elif ${generateExpressionScript(script)}:`,
       },
     ],
     startingLevelAdjustment: -1,
@@ -272,7 +278,7 @@ function emitControlFlowElseIf(script) {
 
 function emitControlFlowEnd() {
   return Promise.resolve({
-    commands: [{ level: 0, statement: `}` }],
+    commands: [{ level: 0, statement: `` }],
     startingLevelAdjustment: -1,
   })
 }
@@ -280,7 +286,7 @@ function emitControlFlowEnd() {
 function emitControlFlowIf(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `if (${generateExpressionScript(script)}) {` },
+      { level: 0, statement: `if ${generateExpressionScript(script)}:` },
     ],
     endingLevelAdjustment: 1,
   })
@@ -291,15 +297,15 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection = (ArrayList) vars.get("${collectionVarName}");`,
+        statement: `collection = vars["${collectionVarName}"]`,
       },
       {
         level: 0,
-        statement: `for (int i = 0; i < collection.size() - 1; i++) {`,
+        statement: `for entry in collection`,
       },
       {
         level: 1,
-        statement: `vars.put("${iteratorVarName}", collection.get(i));`,
+        statement: `vars["${iteratorVarName}"] = entry`,
       },
     ],
   })
@@ -308,17 +314,17 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
 function emitControlFlowRepeatIf(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `} while (${generateExpressionScript(script)});` },
+      {
+        level: 0,
+        statement: `condition = ${generateExpressionScript(script)}`,
+      },
     ],
     startingLevelAdjustment: -1,
   })
 }
 
 function emitControlFlowTimes(target) {
-  const commands = [
-    { level: 0, statement: `Integer times = ${target};` },
-    { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
-  ]
+  const commands = [{ level: 0, statement: `for i in range(1, ${target}):` }]
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 
@@ -368,115 +374,98 @@ async function emitDragAndDrop(dragged, dropped) {
   return Promise.resolve({ commands })
 }
 
-// HERE
 async function emitEcho(message) {
-  const _message = message.startsWith('vars.get') ? message : `"${message}"`
-  return Promise.resolve(`System.out.println(${_message});`)
+  const _message = message.startsWith('vars[') ? message : `"${message}"`
+  return Promise.resolve(`print(str(${_message}))`)
 }
 
 async function emitEditContent(locator, content) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `element = driver.find_element(${await location.emit(
         locator
-      )});`,
+      )})`,
     },
     {
-      level: 1,
-      statement: `js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
+      level: 0,
+      statement: `driver.execute_script("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element)`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitExecuteScript(script, varName) {
   const scriptString = script.script.replace(/"/g, "'")
-  const result = `js.executeScript("${scriptString}"${generateScriptArguments(
+  const result = `driver.execute_script("${scriptString}"${generateScriptArguments(
     script
   )})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  const result = `js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+  const result = `driver.execute_async_script("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
 }
 
-function generateScriptArguments(script) {
-  return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `vars.get("${varName}")`)
-    .join(',')}`
-}
-
 async function emitMouseDown(locator) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `element = driver.find_element(${await location.emit(
         locator
-      )});`,
+      )})`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 0, statement: 'actions = ActionChains(driver)' },
     {
-      level: 1,
-      statement: 'builder.moveToElement(element).clickAndHold().perform();',
+      level: 0,
+      statement: 'actions.move_to_element(element).click_and_hold().perform()',
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitMouseMove(locator) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `element = driver.find_element(${await location.emit(
         locator
-      )});`,
+      )})`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
-    { level: 1, statement: 'builder.moveToElement(element).perform();' },
-    { level: 0, statement: '}' },
+    { level: 0, statement: 'actions = ActionChains(driver)' },
+    { level: 0, statement: 'actions.move_to_element(element).perform()' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitMouseOut() {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(By.tagName("body"));`,
+      level: 0,
+      statement: `element = driver.find_element(By.CSS_SELECTOR, "body")`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
-    { level: 1, statement: 'builder.moveToElement(element, 0, 0).perform();' },
-    { level: 0, statement: '}' },
+    { level: 0, statement: 'actions = ActionChains(driver)' },
+    { level: 0, statement: 'actions.move_to_element(element, 0, 0).perform()' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitMouseUp(locator) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `element = driver.find_element(${await location.emit(
         locator
-      )});`,
+      )})`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 0, statement: 'actions = ActionChains(driver)' },
     {
-      level: 1,
-      statement: 'builder.moveToElement(element).release().perform();',
+      level: 0,
+      statement: 'actions.move_to_element(element).release().perform()',
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
@@ -485,35 +474,29 @@ function emitOpen(target) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
     : `"${global.baseUrl}${target}"`
-  return Promise.resolve(`driver.get(${url});`)
+  return Promise.resolve(`driver.get(${url})`)
 }
 
 async function emitPause(time) {
-  const commands = [
-    { level: 0, statement: 'try {' },
-    { level: 1, statement: `Thread.sleep(${time});` },
-    { level: 0, statement: '} catch (InterruptedException e) {' },
-    { level: 1, statement: 'e.printStackTrace();' },
-    { level: 0, statement: '}' },
-  ]
+  const commands = [{ level: 0, statement: `time.sleep(${time})` }]
   return Promise.resolve({ commands })
 }
 
 async function emitRun(testName) {
-  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
+  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}()`)
 }
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `js.executeScript("${script.script}${generateScriptArguments(script)}");`
+    `driver.execute_script("${script.script}${generateScriptArguments(
+      script
+    )}")`
   )
 }
 
 async function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
-  return Promise.resolve(
-    `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
-  )
+  return Promise.resolve(`driver.set_window_size(${width}, ${height})`)
 }
 
 async function emitSelect(selectElement, option) {
@@ -536,25 +519,21 @@ async function emitSelect(selectElement, option) {
 
 async function emitSelectFrame(frameLocation) {
   if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
-    return Promise.resolve('driver.switchTo().defaultContent();')
+    return Promise.resolve('driver.switch_to.default_content()')
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
-      `driver.switchTo().frame(${Math.floor(
-        frameLocation.split('index=')[1]
-      )});`
+      `driver.switch_to.frame(${Math.floor(frameLocation.split('index=')[1])})`
     )
   } else {
     return Promise.resolve({
       commands: [
-        { level: 0, statement: '{' },
         {
-          level: 1,
-          statement: `WebElement element = driver.findElement(${await location.emit(
+          level: 0,
+          statement: `element = driver.find_element(${await location.emit(
             frameLocation
-          )});`,
+          )})`,
         },
-        { level: 1, statement: 'driver.switchTo().frame(element);' },
-        { level: 0, statement: '}' },
+        { level: 0, statement: 'driver.switch_to.frame(element)' },
       ],
     })
   }
@@ -563,41 +542,30 @@ async function emitSelectFrame(frameLocation) {
 async function emitSelectWindow(windowLocation) {
   if (/^handle=/.test(windowLocation)) {
     return Promise.resolve(
-      `driver.switchTo().window(${windowLocation.split('handle=')[1]});`
+      `driver.switch_to.window(${windowLocation.split('handle=')[1]})`
     )
   } else if (/^name=/.test(windowLocation)) {
     return Promise.resolve(
-      `driver.switchTo().window("${windowLocation.split('name=')[1]}");`
+      `driver.switch_to.window("${windowLocation.split('name=')[1]}")`
     )
   } else if (/^win_ser_/.test(windowLocation)) {
     if (windowLocation === 'win_ser_local') {
       return Promise.resolve({
         commands: [
-          { level: 0, statement: '{' },
           {
-            level: 1,
-            statement:
-              'ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());',
+            level: 0,
+            statement: 'driver.switch_to.window(driver.window_handles[0])',
           },
-          { level: 1, statement: 'driver.switchTo().window(handles.get(0));' },
-          { level: 0, statement: '}' },
         ],
       })
     } else {
       const index = parseInt(windowLocation.substr('win_ser_'.length))
       return Promise.resolve({
         commands: [
-          { level: 0, statement: '{' },
           {
-            level: 1,
-            statement:
-              'ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());',
+            level: 0,
+            statement: `driver.switch_to.window(driver.window_handles[${index}])`,
           },
-          {
-            level: 1,
-            statement: `driver.switchTo().window(handles.get(${index}));`,
-          },
-          { level: 0, statement: '}' },
         ],
       })
     }
@@ -612,7 +580,7 @@ function generateSendKeysInput(value) {
   if (typeof value === 'object') {
     return value
       .map(s => {
-        if (s.startsWith('vars.get')) {
+        if (s.startsWith('vars[')) {
           return s
         } else if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)[1]
@@ -623,7 +591,7 @@ function generateSendKeysInput(value) {
       })
       .join(', ')
   } else {
-    if (value.startsWith('vars.get')) {
+    if (value.startsWith('vars[')) {
       return value
     } else {
       return `"${value}"`
@@ -633,15 +601,15 @@ function generateSendKeysInput(value) {
 
 async function emitSendKeys(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(
+    `driver.find_element(${await location.emit(
       target
-    )}).sendKeys(${generateSendKeysInput(value)});`
+    )}).send_keys(${generateSendKeysInput(value)})`
   )
 }
 
 function emitSetSpeed() {
   return Promise.resolve(
-    `System.out.println("\`set speed\` is a no-op in code export, use \`pause\` instead");`
+    'print("`set speed` is a no-op in code export, use `pause` instead")'
   )
 }
 
@@ -654,80 +622,71 @@ async function emitStoreAttribute(locator, varName) {
   const elementLocator = locator.slice(0, attributePos)
   const attributeName = locator.slice(attributePos + 1)
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `attribute = driver.find_element(${await location.emit(
         elementLocator
-      )});`,
+      )}).get_attribute("${attributeName}")`,
     },
-    {
-      level: 1,
-      statement: `String attribute = element.getAttribute("${attributeName}");`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'attribute')}` },
-    { level: 0, statement: '}' },
+    { level: 0, statement: `${variableSetter(varName, 'attribute')}` },
   ]
   return Promise.resolve({ commands })
 }
 
-async function emitStoreJson(_json, _varName) {
-  // TODO
-  return Promise.resolve('')
+async function emitStoreJson(json, varName) {
+  return Promise.resolve(variableSetter(varName, `json.loads(${json})`))
 }
 
 async function emitStoreText(locator, varName) {
-  const result = `driver.findElement(${await location.emit(locator)}).getText()`
+  const result = `driver.find_element(${await location.emit(locator)}).text`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitStoreTitle(_, varName) {
-  return Promise.resolve(variableSetter(varName, 'driver.getTitle()'))
+  return Promise.resolve(variableSetter(varName, 'driver.title'))
 }
 
 async function emitStoreValue(locator, varName) {
-  const result = `driver.findElement(${await location.emit(
+  const result = `driver.find_element(${await location.emit(
     locator
-  )}).getAttribute("value")`
+  )}).get_attribute("value")`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitStoreWindowHandle(varName) {
-  return Promise.resolve(variableSetter(varName, 'driver.getWindowHandle()'))
+  return Promise.resolve(
+    variableSetter(varName, 'driver.current_window_handle')
+  )
 }
 
 async function emitStoreXpathCount(locator, varName) {
-  const result = `driver.findElements(${await location.emit(locator)}).size()`
+  const result = `len(driver.find_elements(${await location.emit(locator)}))`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitSubmit(_locator) {
   return Promise.resolve(
-    `throw new Error("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
+    `raise Exception("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.")`
   )
 }
 
 async function emitType(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(
+    `driver.find_element(${await location.emit(
       target
-    )}).sendKeys(${generateSendKeysInput(value)});`
+    )}).send_keys(${generateSendKeysInput(value)})`
   )
 }
 
 async function emitUncheck(locator) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `element = driver.find_element(${await location.emit(
         locator
-      )});`,
+      )})`,
     },
-    { level: 1, statement: 'if (element.isSelected()) {' },
-    { level: 2, statement: 'element.click();' },
-    { level: 1, statement: '}' },
-    { level: 0, statement: '}' },
+    { level: 0, statement: 'if element.is_selected: element.click()' },
   ]
   return Promise.resolve({ commands })
 }
@@ -893,20 +852,18 @@ async function emitVerifyTitle(title) {
 
 async function emitWaitForElementEditable(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
+      level: 0,
       statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
-      level: 1,
+      level: 0,
       statement: `wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
         locator
       )}));`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
