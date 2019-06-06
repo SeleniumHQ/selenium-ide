@@ -107,6 +107,11 @@ function declareDependencies() {
           level: 0,
           statement: 'from selenium.webdriver.common.by import By',
         },
+        {
+          level: 0,
+          statement:
+            'from selenium.webdriver.common.action_chains import ActionChains',
+        },
       ],
     },
   }
