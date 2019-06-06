@@ -545,12 +545,13 @@ export const Commands = [
     {
       name: 'select frame',
       type: TargetTypes.LOCATOR,
-      description: `Selects a frame within the current window. You may invoke 
-        this command multiple times to select a nested frame. NOTE: To select 
-        the parent frame, use "relative=parent" as a locator. To select the top 
-        frame, use "relative=top".  You can also select a frame by its 0-based 
-        index number (e.g., select the first frame with "index=0", or the third 
-        frame with "index=2").`,
+      description: `Selects a frame within the current window. You can select a
+        frame by its 0-based index number (e.g., select the first frame with 
+        "index=0", or the third frame with "index=2"). For nested frames you will
+        need to invoke this command multiple times (once for each frame in the 
+        tree until you reach your desired frame). You can select the parent 
+        frame with "relative=parent". To return to the top of the page use 
+        "relative=top".`,
       target: ArgTypes.locator,
     },
   ],
