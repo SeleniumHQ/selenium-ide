@@ -38,10 +38,10 @@ export default class LogMessage extends React.Component {
       }
     }
 
-    let hours = ("0" + this.props.log.timestamp.getHours()).slice(-2)
-    let minutes = ("0" + this.props.log.timestamp.getMinutes()).slice(-2)
-    let seconds = ("0" + this.props.log.timestamp.getSeconds()).slice(-2)
-    let time = hours + ":" + minutes + ":" + seconds
+    let hours = ('0' + this.props.log.timestamp.getHours()).slice(-2)
+    let minutes = ('0' + this.props.log.timestamp.getMinutes()).slice(-2)
+    let seconds = ('0' + this.props.log.timestamp.getSeconds()).slice(-2)
+    let timestamp = hours + ':' + minutes + ':' + seconds
 
     return (
       <li
@@ -55,7 +55,6 @@ export default class LogMessage extends React.Component {
           }}
         >
           <div className="log-overview">
-            <span className="time">[{time}]</span>
             {this.props.log.index && (
               <span className="index">{this.props.log.index}.</span>
             )}
@@ -65,6 +64,8 @@ export default class LogMessage extends React.Component {
             </span>
             {(this.props.log.status === LogTypes.Running ||
               this.props.log.status === LogTypes.Awaiting) && <Spinner />}
+            <span className="shim" />
+            <span className="timestamp">{timestamp}</span>
           </div>
           {this.props.log.description && (
             <div className="details">{this.props.log.description}</div>

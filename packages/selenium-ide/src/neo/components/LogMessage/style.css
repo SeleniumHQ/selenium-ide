@@ -1,5 +1,6 @@
 .log {
-  padding-bottom: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .log .index {
@@ -7,8 +8,8 @@
   width: 20px;
 }
 
-.log .time {
-  padding-right: 5px;
+.log .timestamp {
+  font-weight: normal;
 }
 
 .log.notice {
@@ -21,6 +22,14 @@
 
 .log.error {
   color: #e80600;
+}
+
+.log .message {
+  flex-grow: 1;
+}
+
+.log .shim {
+  flex-grow: 1000;
 }
 
 .log .message::after {
@@ -63,4 +72,8 @@
 
 .log a:hover {
   text-decoration: underline;
+}
+
+.log:hover {
+  background-color: var(--hover-color);
 }
