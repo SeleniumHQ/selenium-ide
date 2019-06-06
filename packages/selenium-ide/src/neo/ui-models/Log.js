@@ -20,6 +20,7 @@ import uuidv4 from 'uuid/v4'
 
 export default class Log {
   id = uuidv4()
+  timestamp = null
   @observable
   index = null
   @observable
@@ -38,6 +39,7 @@ export default class Log {
   constructor(message, status) {
     this.message = message
     this.status = status
+    this.timestamp = new Date()
   }
 
   @action.bound
@@ -73,6 +75,11 @@ export default class Log {
   @action.bound
   setNotice() {
     this.isNotice = true
+  }
+
+  @action.bound
+  setTime() {
+    this.time = new Date().toLocaleString().trim()
   }
 
   @action.bound
