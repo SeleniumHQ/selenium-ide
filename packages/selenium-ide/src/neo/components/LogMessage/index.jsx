@@ -37,6 +37,12 @@ export default class LogMessage extends React.Component {
         statusMessage = 'Undetermined'
       }
     }
+
+    let hours = ('0' + this.props.log.timestamp.getHours()).slice(-2)
+    let minutes = ('0' + this.props.log.timestamp.getMinutes()).slice(-2)
+    let seconds = ('0' + this.props.log.timestamp.getSeconds()).slice(-2)
+    let timestamp = hours + ':' + minutes + ':' + seconds
+
     return (
       <li
         className={classNames('log', this.props.log.status, {
@@ -58,6 +64,8 @@ export default class LogMessage extends React.Component {
             </span>
             {(this.props.log.status === LogTypes.Running ||
               this.props.log.status === LogTypes.Awaiting) && <Spinner />}
+            <span className="shim" />
+            <span className="timestamp">{timestamp}</span>
           </div>
           {this.props.log.description && (
             <div className="details">{this.props.log.description}</div>

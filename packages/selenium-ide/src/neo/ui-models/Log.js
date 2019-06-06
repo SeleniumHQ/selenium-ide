@@ -38,6 +38,7 @@ export default class Log {
   constructor(message, status) {
     this.message = message
     this.status = status
+    this.timestamp = new Date()
   }
 
   @action.bound
@@ -73,6 +74,11 @@ export default class Log {
   @action.bound
   setNotice() {
     this.isNotice = true
+  }
+
+  @action.bound
+  setTime() {
+    this.time = new Date().toLocaleString().trim()
   }
 
   @action.bound
