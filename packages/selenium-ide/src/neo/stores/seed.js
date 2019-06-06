@@ -360,15 +360,15 @@ export default function seed(store, numberOfSuites = 0) {
   commentTest.createCommand(undefined, 'open', '/', '', 'also blah')
 
   const framesTest = store.createTestCase('frames')
-  framesTest.createCommand(undefined, 'open', '/iframe')
-  framesTest.createCommand(undefined, 'selectFrame', 'index=0')
-  framesTest.createCommand(
-    undefined,
-    'assertText',
-    'css=#tinymce',
-    'Your content goes here.'
-  )
   framesTest.createCommand(undefined, 'open', '/nested_frames')
+  framesTest.createCommand(undefined, 'selectFrame', 'index=0')
+  framesTest.createCommand(undefined, 'selectFrame', 'index=1')
+  framesTest.createCommand(undefined, 'assertText', 'css=#content', 'MIDDLE')
+  framesTest.createCommand(undefined, 'selectFrame', 'relative=parent')
+  framesTest.createCommand(undefined, 'selectFrame', 'index=1')
+  framesTest.createCommand(undefined, 'assertText', 'css=#content', 'MIDDLE')
+  framesTest.createCommand(undefined, 'selectFrame', 'relative=top')
+  framesTest.createCommand(undefined, 'selectFrame', 'index=0')
   framesTest.createCommand(undefined, 'selectFrame', 'index=1')
   framesTest.createCommand(undefined, 'assertText', 'css=#content', 'MIDDLE')
 
@@ -661,8 +661,7 @@ export default function seed(store, numberOfSuites = 0) {
 
   UiState.changeView('Test suites')
   suiteAll.setOpen(true)
-  UiState.selectTest(storeJson, suiteAll)
-  //UiState.selectCommand(click)
+  UiState.selectTest(checkTest, suiteAll)
 
   store.changeName('seed project')
 

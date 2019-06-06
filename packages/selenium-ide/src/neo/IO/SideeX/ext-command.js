@@ -426,7 +426,7 @@ export default class ExtCommand {
   }
 
   doSelectFrame(frameLocation) {
-    let result = frameLocation.match(/(index|relative) *= *([\d]+|parent)/i)
+    let result = frameLocation.match(/(index|relative) *= *([\d]+|parent|top)/i)
     if (result && result[2]) {
       let position = result[2]
       if (position == 'parent') {
@@ -434,6 +434,13 @@ export default class ExtCommand {
           this.getCurrentPlayingFrameLocation().slice(
             0,
             this.getCurrentPlayingFrameLocation().lastIndexOf(':')
+          )
+        )
+      } else if (position == 'top') {
+        this.setCurrentPlayingFrameLocation(
+          this.getCurrentPlayingFrameLocation().slice(
+            0,
+            this.getCurrentPlayingFrameLocation().indexOf(':')
           )
         )
       } else {
