@@ -20,7 +20,6 @@ import uuidv4 from 'uuid/v4'
 
 export default class Log {
   id = uuidv4()
-  timestamp = null
   @observable
   index = null
   @observable
