@@ -1,3 +1,7 @@
+.command-reference {
+  padding: 0 7px 0 7px;
+}
+
 .command-reference .signature {
   font-weight: bold;
 }

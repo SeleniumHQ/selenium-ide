@@ -3,7 +3,7 @@ footer.console {
 }
 
 .console .viewport {
-  padding: 7px 10px 0 15px;
+  padding: 7px 3px 0 3px;
   font-size: 12px;
   overflow-y: auto;
 }
