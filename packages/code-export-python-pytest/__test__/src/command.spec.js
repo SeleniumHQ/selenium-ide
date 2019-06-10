@@ -34,7 +34,7 @@ async function prettify(command, { fullPayload } = {}) {
 }
 
 describe('command code emitter', () => {
-  it.skip('should emit all known commands', () => {
+  it('should emit all known commands', () => {
     let result = []
     Commands.array.forEach(command => {
       if (!Command.canEmit(command)) {
@@ -947,14 +947,14 @@ describe('command code emitter', () => {
       `assert driver.title == "example title"`
     )
   })
-  it.only('should emit `waitForElementEditable` command', () => {
+  it('should emit `waitForElementEditable` command', () => {
     const command = {
       command: 'waitForElementEditable',
       target: 'css=#blah',
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebDriverWait wait = new WebDriverWait(driver, 5);\n${commandPrefixPadding}wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#blah")));\n}`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.element_to_be_clickable(By.CSS_SELECTOR, "#blah"))`
     )
   })
   it('should emit `waitForElementPresent` command', () => {
@@ -964,7 +964,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebDriverWait wait = new WebDriverWait(driver, 5);\n${commandPrefixPadding}wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#blah")));\n}`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.presence_of_element_located(By.CSS_SELECTOR, "#blah"))`
     )
   })
   it('should emit `waitForElementVisible` command', () => {
@@ -974,7 +974,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebDriverWait wait = new WebDriverWait(driver, 5);\n${commandPrefixPadding}wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#blah")));\n}`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.visibility_of_element_located(By.CSS_SELECTOR, "#blah"))`
     )
   })
   it('should emit `waitForElementNotEditable` command', () => {
@@ -984,7 +984,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebDriverWait wait = new WebDriverWait(driver, 5);\n${commandPrefixPadding}wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(By.cssSelector("#blah"))));\n}`
+      `WebDriverWait(self.driver, 5000).until(!expected_conditions.element_to_be_clickable(By.CSS_SELECTOR, "#blah"))`
     )
   })
   it('should emit `waitForElementNotPresent` command', () => {
@@ -994,7 +994,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebDriverWait wait = new WebDriverWait(driver, 5);\n${commandPrefixPadding}WebElement element = driver.findElement(By.cssSelector("#blah"));\n${commandPrefixPadding}wait.until(ExpectedConditions.stalenessOf(element));\n}`
+      `WebDriverWait(self.driver, 5000).until(!expected_conditions.presence_of_element_located(By.CSS_SELECTOR, "#blah"))`
     )
   })
   it('should emit `waitForElementNotVisible` command', () => {
@@ -1004,7 +1004,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}WebDriverWait wait = new WebDriverWait(driver, 5);\n${commandPrefixPadding}wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#blah")));\n}`
+      `WebDriverWait(self.driver, 5000).until(!expected_conditions.visibility_of_element_located(By.CSS_SELECTOR, "#blah"))`
     )
   })
   it('should emit `answer on visible prompt` command', () => {
@@ -1014,7 +1014,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}Alert alert = driver.switchTo().alert();\n${commandPrefixPadding}alert.sendKeys("an answer")\n${commandPrefixPadding}alert.accept();\n}`
+      `alert = driver.switch_to.alert\nalert.send_keys("an answer")\nalert.accept()`
     )
   })
   it('should emit `choose cancel on visible prompt` command', () => {
@@ -1024,7 +1024,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switchTo().alert().dismiss();`
+      `driver.switch_to.alert.dismiss()`
     )
   })
   it('should emit `choose ok on visible confirmation` command', () => {
@@ -1034,7 +1034,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switchTo().alert().accept();`
+      `driver.switch_to.alert.accept()`
     )
   })
   it('should emit `while` command', () => {
@@ -1044,7 +1044,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `while ((Boolean) js.executeScript("return (true)")) {`,
+      body: `while driver.execute_script("return (true)"):`,
       endingLevel: 1,
     })
   })
@@ -1058,7 +1058,7 @@ describe('command code emitter', () => {
       windowTimeout: 2000,
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars.put("window_handles", driver.getWindowHandles());\ndriver.findElement(By.cssSelector("button")).click();\nvars.put("newWin", waitForWindow(2000));`
+      `vars["window_handles"] = driver.window_handles\ndriver.find_element(By.CSS_SELECTOR, "button").click()\nvars["newWin"] = self.wait_for_window(2000)`
     )
   })
 })

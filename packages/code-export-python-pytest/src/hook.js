@@ -119,6 +119,10 @@ function declareDependencies() {
           statement:
             'from selenium.webdriver.support import expected_conditions',
         },
+        {
+          level: 0,
+          statement: 'import selenium.webdriver.support.wait.WebDriverWait',
+        },
       ],
     },
   }

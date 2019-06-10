@@ -174,9 +174,9 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `vars.put("window_handles", driver.getWindowHandles());\n${await emittedCommand}\nvars.put("${
+    `vars["window_handles"] = driver.window_handles\n${await emittedCommand}\nvars["${
       command.windowHandleName
-    }", waitForWindow(${command.windowTimeout}));`
+    }"] = self.wait_for_window(${command.windowTimeout})`
   )
 }
 
@@ -190,11 +190,9 @@ function emitAssertAlert(alertText) {
 
 function emitAnswerOnNextPrompt(textToSend) {
   const commands = [
-    { level: 0, statement: '{' },
-    { level: 1, statement: 'Alert alert = driver.switchTo().alert();' },
-    { level: 1, statement: `alert.sendKeys("${textToSend}")` },
-    { level: 1, statement: 'alert.accept();' },
-    { level: 0, statement: '}' },
+    { level: 0, statement: 'alert = driver.switch_to.alert' },
+    { level: 0, statement: `alert.send_keys("${textToSend}")` },
+    { level: 0, statement: 'alert.accept()' },
   ]
   return Promise.resolve({ commands })
 }
@@ -215,11 +213,11 @@ async function emitCheck(locator) {
 }
 
 function emitChooseCancelOnNextConfirmation() {
-  return Promise.resolve(`driver.switchTo().alert().dismiss();`)
+  return Promise.resolve(`driver.switch_to.alert.dismiss()`)
 }
 
 function emitChooseOkOnNextConfirmation() {
-  return Promise.resolve(`driver.switchTo().alert().accept();`)
+  return Promise.resolve(`driver.switch_to.alert.accept()`)
 }
 
 async function emitClick(target) {
@@ -331,7 +329,7 @@ function emitControlFlowTimes(target) {
 function emitControlFlowWhile(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `while (${generateExpressionScript(script)}) {` },
+      { level: 0, statement: `while ${generateExpressionScript(script)}:` },
     ],
     endingLevelAdjustment: 1,
   })
@@ -854,15 +852,9 @@ async function emitWaitForElementEditable(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
-        timeout / 1000
-      )});`,
-    },
-    {
-      level: 0,
-      statement: `wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.element_to_be_clickable(${await location.emit(
         locator
-      )}));`,
+      )}))`,
     },
   ]
   return Promise.resolve({ commands })
@@ -874,40 +866,24 @@ function skip() {
 
 async function emitWaitForElementPresent(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
-        timeout / 1000
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `wait.until(ExpectedConditions.presenceOfElementLocated(${await location.emit(
+      level: 0,
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.presence_of_element_located(${await location.emit(
         locator
-      )}));`,
+      )}))`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitWaitForElementVisible(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
-        timeout / 1000
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `wait.until(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
+      level: 0,
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.visibility_of_element_located(${await location.emit(
         locator
-      )}));`,
+      )}))`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({
     commands,
@@ -916,20 +892,12 @@ async function emitWaitForElementVisible(locator, timeout) {
 
 async function emitWaitForElementNotEditable(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
-        timeout / 1000
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(${await location.emit(
+      level: 0,
+      statement: `WebDriverWait(self.driver, ${timeout}).until(!expected_conditions.element_to_be_clickable(${await location.emit(
         locator
-      )})));`,
+      )}))`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({
     commands,
@@ -938,24 +906,12 @@ async function emitWaitForElementNotEditable(locator, timeout) {
 
 async function emitWaitForElementNotPresent(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
-        timeout / 1000
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      level: 0,
+      statement: `WebDriverWait(self.driver, ${timeout}).until(!expected_conditions.presence_of_element_located(${await location.emit(
         locator
-      )});`,
+      )}))`,
     },
-    {
-      level: 1,
-      statement: 'wait.until(ExpectedConditions.stalenessOf(element));',
-    },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({
     commands,
@@ -964,20 +920,12 @@ async function emitWaitForElementNotPresent(locator, timeout) {
 
 async function emitWaitForElementNotVisible(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
-        timeout / 1000
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `wait.until(ExpectedConditions.invisibilityOfElementLocated(${await location.emit(
+      level: 0,
+      statement: `WebDriverWait(self.driver, ${timeout}).until(!expected_conditions.visibility_of_element_located(${await location.emit(
         locator
-      )}));`,
+      )}))`,
     },
-    { level: 0, statement: '}' },
   ]
   return Promise.resolve({
     commands,
