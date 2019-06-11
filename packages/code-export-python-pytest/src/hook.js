@@ -123,6 +123,10 @@ function declareDependencies() {
           level: 0,
           statement: 'import selenium.webdriver.support.wait.WebDriverWait',
         },
+        {
+          level: 0,
+          statement: '',
+        },
       ],
     },
   }
