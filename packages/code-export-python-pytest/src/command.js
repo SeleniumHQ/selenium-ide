@@ -146,27 +146,20 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `public String ${name}(int timeout) {`
+    return `def ${name}(timeout = 2000) {`
   }
   const commands = [
-    { level: 0, statement: 'try {' },
-    { level: 1, statement: 'Thread.sleep(timeout);' },
-    { level: 0, statement: '} catch (InterruptedException e) {' },
-    { level: 1, statement: 'e.printStackTrace();' },
-    { level: 0, statement: '}' },
-    { level: 0, statement: 'Set<String> whNow = driver.getWindowHandles();' },
+    { level: 0, statement: 'driver.sleep(timeout)' },
+    { level: 0, statement: 'wh_now = driver.window_handles' },
     {
       level: 0,
-      statement:
-        'Set<String> whThen = (Set<String>) vars.get("window_handles");',
+      statement: 'wh_then = vars["window_handles"]',
     },
-    { level: 0, statement: 'if (whNow.size() > whThen.size()) {' },
-    { level: 1, statement: 'whNow.removeAll(whThen);' },
-    { level: 0, statement: '}' },
-    { level: 0, statement: 'return whNow.iterator().next();' },
+    { level: 0, statement: 'if len(wh_now) > len(wh_then):' },
+    { level: 1, statement: 'return set(wh_now).difference(set(wh_then))' },
   ]
   return Promise.resolve({
-    name: 'waitForWindow',
+    name: 'wait_for_window',
     commands,
     generateMethodDeclaration,
   })
@@ -278,6 +271,7 @@ function emitControlFlowEnd() {
   return Promise.resolve({
     commands: [{ level: 0, statement: `` }],
     startingLevelAdjustment: -1,
+    skipEmitting: true,
   })
 }
 
@@ -481,7 +475,7 @@ async function emitPause(time) {
 }
 
 async function emitRun(testName) {
-  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}()`)
+  return Promise.resolve(`self.${exporter.parsers.sanitizeName(testName)}()`)
 }
 
 async function emitRunScript(script) {
@@ -861,7 +855,7 @@ async function emitWaitForElementEditable(locator, timeout) {
 }
 
 function skip() {
-  return Promise.resolve('')
+  return Promise.resolve(undefined)
 }
 
 async function emitWaitForElementPresent(locator, timeout) {

@@ -365,8 +365,8 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: ``,
       endingLevel: 0,
+      skipEmitting: true,
     })
   })
   it('should emit `execute script` command', () => {
@@ -545,7 +545,7 @@ describe('command code emitter', () => {
       target: 'some test case',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`sometestcase()`)
+    return expect(prettify(command)).resolves.toBe(`self.sometestcase()`)
   })
   it('should emit `run script` command', () => {
     const command = {
@@ -674,15 +674,17 @@ describe('command code emitter', () => {
   })
   it('should skip playback supported commands, that are not supported in webdriver', () => {
     return Promise.all([
-      expect(prettify({ command: 'answerOnNextPrompt' })).resolves.toBe(''),
+      expect(prettify({ command: 'answerOnNextPrompt' })).resolves.toBe(
+        undefined
+      ),
       expect(
         prettify({ command: 'chooseCancelOnNextConfirmation' })
-      ).resolves.toBe(''),
+      ).resolves.toBe(undefined),
       expect(prettify({ command: 'chooseCancelOnNextPrompt' })).resolves.toBe(
-        ''
+        undefined
       ),
       expect(prettify({ command: 'chooseOkOnNextConfirmation' })).resolves.toBe(
-        ''
+        undefined
       ),
     ])
   })
