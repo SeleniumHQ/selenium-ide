@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import render from '../../src/render'
 import { renderCommands } from '../../src/render'
 import { emitOriginTracing } from '../../src/emit'
 import TestCase from '../../../selenium-ide/src/neo/models/TestCase'
@@ -46,4 +47,12 @@ describe('Render', () => {
     })
     expect(result).toMatch(`blah\nandblah`)
   })
+  it('should render with empty string', () => {
+    const commandPrefixPadding = '  '
+    const input = ''
+    const result = render(commandPrefixPadding, input, { startingLevel: 1 })
+    expect(result).toMatch(commandPrefixPadding)
+  })
+  //it('should skip emitting', () => {
+  //})
 })
