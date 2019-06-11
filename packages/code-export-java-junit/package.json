@@ -16,9 +16,9 @@
   },
   "main": "dist/index.js",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "@babel/cli": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
     "code-export-utils": "^3.8.1"
