@@ -958,7 +958,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(expected_conditions.element_to_be_clickable(By.CSS_SELECTOR, "#blah"))`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `waitForElementPresent` command', () => {
@@ -968,7 +968,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(expected_conditions.presence_of_element_located(By.CSS_SELECTOR, "#blah"))`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `waitForElementVisible` command', () => {
@@ -978,7 +978,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(expected_conditions.visibility_of_element_located(By.CSS_SELECTOR, "#blah"))`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `waitForElementNotEditable` command', () => {
@@ -988,7 +988,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(not expected_conditions.element_to_be_clickable(By.CSS_SELECTOR, "#blah"))`
+      `WebDriverWait(self.driver, 5000).until(not expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `waitForElementNotPresent` command', () => {
@@ -998,7 +998,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(expected_conditions.invisibility_of_element_located(By.CSS_SELECTOR, "#blah"))`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `waitForElementNotVisible` command', () => {
@@ -1008,7 +1008,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(expected_conditions.invisibility_of_element_located(By.CSS_SELECTOR, "#blah"))`
+      `WebDriverWait(self.driver, 5000).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `answer on visible prompt` command', () => {

@@ -865,9 +865,9 @@ async function emitWaitForElementEditable(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.element_to_be_clickable(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.element_to_be_clickable((${await location.emit(
         locator
-      )}))`,
+      )})))`,
     },
   ]
   return Promise.resolve({ commands })
@@ -881,9 +881,9 @@ async function emitWaitForElementPresent(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.presence_of_element_located(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.presence_of_element_located((${await location.emit(
         locator
-      )}))`,
+      )})))`,
     },
   ]
   return Promise.resolve({ commands })
@@ -893,9 +893,9 @@ async function emitWaitForElementVisible(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.visibility_of_element_located(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.visibility_of_element_located((${await location.emit(
         locator
-      )}))`,
+      )})))`,
     },
   ]
   return Promise.resolve({
@@ -907,9 +907,9 @@ async function emitWaitForElementNotEditable(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(not expected_conditions.element_to_be_clickable(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(not expected_conditions.element_to_be_clickable((${await location.emit(
         locator
-      )}))`,
+      )})))`,
     },
   ]
   return Promise.resolve({
@@ -921,9 +921,9 @@ async function emitWaitForElementNotPresent(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.invisibility_of_element_located(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.invisibility_of_element_located((${await location.emit(
         locator
-      )}))`,
+      )})))`,
     },
   ]
   return Promise.resolve({
@@ -935,9 +935,9 @@ async function emitWaitForElementNotVisible(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.invisibility_of_element_located(${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.invisibility_of_element_located((${await location.emit(
         locator
-      )}))`,
+      )})))`,
     },
   ]
   return Promise.resolve({
