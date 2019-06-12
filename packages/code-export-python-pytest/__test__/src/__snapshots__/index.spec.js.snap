@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestLogin():
   def setup_method(self, method):
@@ -20,20 +20,20 @@ class TestLogin():
     self.driver.quit();
   
   def test_validcredentials(self):
-    driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    driver.set_window_size(1440, 1177)
-    driver.find_element(By.ID, \\"username\\").send_keys(\\"tomsmith\\")
-    driver.find_element(By.ID, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
-    driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
-    assert driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\\\\\n×\\"
+    self.driver.get(\\"http://the-internet.herokuapp.com/login\\")
+    self.driver.set_window_size(1440, 1177)
+    self.driver.find_element(By.ID, \\"username\\").send_keys(\\"tomsmith\\")
+    self.driver.find_element(By.ID, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
+    self.driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
+    assert self.driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\\\\\n×\\"
   
   def test_invalidcredentials(self):
-    driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    driver.set_window_size(1440, 1177)
-    driver.find_element(By.ID, \\"username\\").send_keys(\\"blah\\")
-    driver.find_element(By.ID, \\"password\\").send_keys(\\"blah\\")
-    driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
-    assert driver.find_element(By.ID, \\"flash\\").text == \\"Your username is invalid!\\\\\\\\n×\\"
+    self.driver.get(\\"http://the-internet.herokuapp.com/login\\")
+    self.driver.set_window_size(1440, 1177)
+    self.driver.find_element(By.ID, \\"username\\").send_keys(\\"blah\\")
+    self.driver.find_element(By.ID, \\"password\\").send_keys(\\"blah\\")
+    self.driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
+    assert self.driver.find_element(By.ID, \\"flash\\").text == \\"Your username is invalid!\\\\\\\\n×\\"
   
 "
 `;
@@ -47,7 +47,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestControlflow():
   def setup_method(self, method):
@@ -58,53 +58,53 @@ class TestControlflow():
     self.driver.quit();
   
   def test_controlflowif(self):
-    vars[\\"myVar\\"] = driver.execute_script(\\"return 'a'\\")
-    if driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
-      vars[\\"output\\"] = driver.execute_script(\\"return 'a'\\")
-    elif driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
-      vars[\\"output\\"] = driver.execute_script(\\"return 'b'\\")
+    vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'a'\\")
+    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'a'\\")
+    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'b'\\")
     else:
-      vars[\\"output\\"] = driver.execute_script(\\"return 'c'\\")
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'c'\\")
     assert(vars[\\"output\\"] == \\"a\\")
   
   def test_controlflowelseif(self):
-    vars[\\"myVar\\"] = driver.execute_script(\\"return 'b'\\")
-    if driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
-      vars[\\"output\\"] = driver.execute_script(\\"return 'a'\\")
-    elif driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
-      vars[\\"output\\"] = driver.execute_script(\\"return 'b'\\")
+    vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'b'\\")
+    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'a'\\")
+    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'b'\\")
     else:
-      vars[\\"output\\"] = driver.execute_script(\\"return 'c'\\")
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'c'\\")
     assert(vars[\\"output\\"] == \\"b\\")
   
   def test_controlflowelse(self):
-    vars[\\"myVar\\"] = driver.execute_script(\\"return 'c'\\")
-    if driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
-      vars[\\"output\\"] = driver.execute_script(\\"return 'a'\\")
-    elif driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
-      vars[\\"output\\"] = driver.execute_script(\\"return 'b'\\")
+    vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'c'\\")
+    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'a'\\")
+    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'b'\\")
     else:
-      vars[\\"output\\"] = driver.execute_script(\\"return 'c'\\")
+      vars[\\"output\\"] = self.driver.execute_script(\\"return 'c'\\")
     assert(vars[\\"output\\"] == \\"c\\")
   
   def test_controlflowdo(self):
-    vars[\\"check\\"] = driver.execute_script(\\"return 1\\")
+    vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
     condition = True
     while condition:
-      vars[\\"check\\"] = driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
-    condition = driver.execute_script(\\"return (arguments[0] < 3)\\", vars.[\\"check\\"])
+      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
+    condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", vars.[\\"check\\"])
     assert(vars[\\"check\\"] == \\"3\\")
   
   def test_controlflowtimes(self):
-    vars[\\"check\\"] = driver.execute_script(\\"return 1\\")
+    vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
     for i in range(1, 2):
-      vars[\\"check\\"] = driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
+      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
     assert(vars[\\"check\\"] == \\"3\\")
   
   def test_controlflowwhile(self):
-    vars[\\"check\\"] = driver.execute_script(\\"return 1\\")
-    while driver.execute_script(\\"return (arguments[0] < 3)\\", vars.[\\"check\\"]):
-      vars[\\"check\\"] = driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
+    vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
+    while self.driver.execute_script(\\"return (arguments[0] < 3)\\", vars.[\\"check\\"]):
+      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
     assert(vars[\\"check\\"] == \\"3\\")
   
 "
@@ -119,7 +119,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestLogin():
   def setup_method(self, method):
@@ -130,11 +130,11 @@ class TestLogin():
     self.driver.quit();
   
   def login(self):
-    driver.get(\\"https://the-internet.herokuapp.com/\\")
-    driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
-    driver.find_element(By.ID, \\"username\\").send_keys(vars[\\"username\\"])
-    driver.find_element(By.ID, \\"password\\").send_keys(vars[\\"password\\"])
-    driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
+    self.driver.get(\\"https://the-internet.herokuapp.com/\\")
+    self.driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
+    self.driver.find_element(By.ID, \\"username\\").send_keys(vars[\\"username\\"])
+    self.driver.find_element(By.ID, \\"password\\").send_keys(vars[\\"password\\"])
+    self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
   
   def test_invalidcredentials(self):
     vars[\\"username\\"] = \\"blah\\"
@@ -158,7 +158,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestDefaultSuite():
   def setup_method(self, method):
@@ -169,19 +169,19 @@ class TestDefaultSuite():
     self.driver.quit();
   
   def wait_for_window(timeout = 2000) {
-    driver.sleep(timeout)
-    wh_now = driver.window_handles
+    self.driver.sleep(timeout)
+    wh_now = self.driver.window_handles
     wh_then = vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
       return set(wh_now).difference(set(wh_then))
   
   def selectwindow(self):
-    driver.get(\\"http://the-internet.herokuapp.com/windows\\")
-    vars[\\"window_handles\\"] = driver.window_handles
-    driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
+    self.driver.get(\\"http://the-internet.herokuapp.com/windows\\")
+    vars[\\"window_handles\\"] = self.driver.window_handles
+    self.driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
     vars[\\"win9425\\"] = self.wait_for_window(2000)
-    driver.switch_to.window(vars[\\"win9425\\"])
-    assert driver.title == \\"New Window\\"
+    self.driver.switch_to.window(vars[\\"win9425\\"])
+    assert self.driver.title == \\"New Window\\"
   
   def test_reuse(self):
     self.selectwindow()
@@ -198,7 +198,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestDefaultSuite():
   def setup_method(self, method):
@@ -209,30 +209,30 @@ class TestDefaultSuite():
     self.driver.quit();
   
   def wait_for_window(timeout = 2000) {
-    driver.sleep(timeout)
-    wh_now = driver.window_handles
+    self.driver.sleep(timeout)
+    wh_now = self.driver.window_handles
     wh_then = vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
       return set(wh_now).difference(set(wh_then))
   
   def selectwindow(self):
-    driver.get(\\"http://the-internet.herokuapp.com/windows\\")
-    vars[\\"window_handles\\"] = driver.window_handles
-    driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
+    self.driver.get(\\"http://the-internet.herokuapp.com/windows\\")
+    vars[\\"window_handles\\"] = self.driver.window_handles
+    self.driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
     vars[\\"win9425\\"] = self.wait_for_window(2000)
-    driver.switch_to.window(vars[\\"win9425\\"])
-    assert driver.title == \\"New Window\\"
+    self.driver.switch_to.window(vars[\\"win9425\\"])
+    assert self.driver.title == \\"New Window\\"
   
   def test_reuse(self):
     self.selectwindow()
   
   def test_selectwindow(self):
-    driver.get(\\"http://the-internet.herokuapp.com/windows\\")
-    vars[\\"window_handles\\"] = driver.window_handles
-    driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
+    self.driver.get(\\"http://the-internet.herokuapp.com/windows\\")
+    vars[\\"window_handles\\"] = self.driver.window_handles
+    self.driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
     vars[\\"win9425\\"] = self.wait_for_window(2000)
-    driver.switch_to.window(vars[\\"win9425\\"])
-    assert driver.title == \\"New Window\\"
+    self.driver.switch_to.window(vars[\\"win9425\\"])
+    assert self.driver.title == \\"New Window\\"
   
 "
 `;
@@ -246,7 +246,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestLogin():
   def setup_method(self, method):
@@ -257,12 +257,12 @@ class TestLogin():
     self.driver.quit();
   
   def test_login(self):
-    driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    driver.set_window_size(1440, 1177)
-    driver.find_element(By.ID, \\"username\\").send_keys(\\"tomsmith\\")
-    driver.find_element(By.ID, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
-    driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
-    assert driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\\\\\n×\\"
+    self.driver.get(\\"http://the-internet.herokuapp.com/login\\")
+    self.driver.set_window_size(1440, 1177)
+    self.driver.find_element(By.ID, \\"username\\").send_keys(\\"tomsmith\\")
+    self.driver.find_element(By.ID, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
+    self.driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
+    assert self.driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\\\\\n×\\"
   
 "
 `;
@@ -276,7 +276,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestValidcredentials():
   def setup_method(self, method):
@@ -287,11 +287,11 @@ class TestValidcredentials():
     self.driver.quit();
   
   def login(self):
-    driver.get(\\"https://the-internet.herokuapp.com/\\")
-    driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
-    driver.find_element(By.ID, \\"username\\").send_keys(vars[\\"username\\"])
-    driver.find_element(By.ID, \\"password\\").send_keys(vars[\\"password\\"])
-    driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
+    self.driver.get(\\"https://the-internet.herokuapp.com/\\")
+    self.driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
+    self.driver.find_element(By.ID, \\"username\\").send_keys(vars[\\"username\\"])
+    self.driver.find_element(By.ID, \\"password\\").send_keys(vars[\\"password\\"])
+    self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
   
   def test_validcredentials(self):
     vars[\\"username\\"] = \\"tomsmith\\"
@@ -310,7 +310,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
-import selenium.webdriver.support.wait.WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 
 class TestSelectwindow():
   def setup_method(self, method):
@@ -321,24 +321,24 @@ class TestSelectwindow():
     self.driver.quit();
   
   def wait_for_window(timeout = 2000) {
-    driver.sleep(timeout)
-    wh_now = driver.window_handles
+    self.driver.sleep(timeout)
+    wh_now = self.driver.window_handles
     wh_then = vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
       return set(wh_now).difference(set(wh_then))
   
   def test_selectwindow(self):
-    driver.get(\\"http://the-internet.herokuapp.com/\\")
-    driver.set_window_size(1260, 1027)
-    driver.find_element(By.LINK_TEXT, \\"Multiple Windows\\").click()
-    vars[\\"window_handles\\"] = driver.window_handles
-    driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
+    self.driver.get(\\"http://the-internet.herokuapp.com/\\")
+    self.driver.set_window_size(1260, 1027)
+    self.driver.find_element(By.LINK_TEXT, \\"Multiple Windows\\").click()
+    vars[\\"window_handles\\"] = self.driver.window_handles
+    self.driver.find_element(By.LINK_TEXT, \\"Click Here\\").click()
     vars[\\"win9625\\"] = self.wait_for_window(2000)
-    vars[\\"root\\"] = driver.current_window_handle
-    driver.switch_to.window(vars[\\"win9625\\"])
-    assert driver.title == \\"New Window\\"
-    driver.switch_to.window(vars[\\"root\\"])
-    assert driver.title == \\"The Internet\\"
+    vars[\\"root\\"] = self.driver.current_window_handle
+    self.driver.switch_to.window(vars[\\"win9625\\"])
+    assert self.driver.title == \\"New Window\\"
+    self.driver.switch_to.window(vars[\\"root\\"])
+    assert self.driver.title == \\"The Internet\\"
   
 "
 `;

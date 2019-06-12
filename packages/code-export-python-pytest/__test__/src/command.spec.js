@@ -58,7 +58,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dropdown = driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
+      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `assert` command', () => {
@@ -78,7 +78,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.switch_to.alert.text == "an alert"`
+      `assert self.driver.switch_to.alert.text == "an alert"`
     )
   })
   it('should emit `assert checked` command', () => {
@@ -88,7 +88,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.find_element(By.ID, "check").isSelected() is True`
+      `assert self.driver.find_element(By.ID, "check").isSelected() is True`
     )
   })
   it('should emit `assert confirmation` command', () => {
@@ -98,7 +98,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.switch_to.alert.text == "a confirmation"`
+      `assert self.driver.switch_to.alert.text == "a confirmation"`
     )
   })
   it('should emit `assert editable` command', () => {
@@ -108,7 +108,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is True`
+      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is True`
     )
   })
   it('should emit `assert element present` command', () => {
@@ -118,7 +118,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `elements = driver.find_elements(By.ID, "element")\nassert len(elements) > 0`
+      `elements = self.driver.find_elements(By.ID, "element")\nassert len(elements) > 0`
     )
   })
   it('should emit `assert element not present` command', () => {
@@ -128,7 +128,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `elements = driver.find_elements(By.ID, "element")\nassert len(elements) == 0`
+      `elements = self.driver.find_elements(By.ID, "element")\nassert len(elements) == 0`
     )
   })
   it('should emit `assert not checked` command', () => {
@@ -138,7 +138,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.find_element(By.ID, "check").is_selected() is False`
+      `assert self.driver.find_element(By.ID, "check").is_selected() is False`
     )
   })
   it('should emit `assert not editable` command', () => {
@@ -148,7 +148,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is False`
+      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is False`
     )
   })
   it('should emit `assert not selected value` command', () => {
@@ -158,7 +158,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `value = driver.find_element(By.ID, "select").get_attribute("value")\nassert value != "test"`
+      `value = self.driver.find_element(By.ID, "select").get_attribute("value")\nassert value != "test"`
     )
   })
   it('should emit `assert not text` command', () => {
@@ -168,7 +168,7 @@ describe('command code emitter', () => {
       value: 'text',
     }
     return expect(prettify(command)).resolves.toBe(
-      `text = driver.find_element(By.ID, "test").text\nassert text != "text"`
+      `text = self.driver.find_element(By.ID, "test").text\nassert text != "text"`
     )
   })
   it('should emit `assert prompt` command', () => {
@@ -178,7 +178,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.switch_to.alert.text == "a prompt"`
+      `assert self.driver.switch_to.alert.text == "a prompt"`
     )
   })
   it("should emit 'assert selected label' command", () => {
@@ -188,7 +188,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH(locator)).text\nassert selected_text == "test"`
+      `element = self.driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH(locator)).text\nassert selected_text == "test"`
     )
   })
   it('should emit `assert selected value` command', () => {
@@ -198,7 +198,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `value = driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
+      `value = self.driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
     )
   })
   it('should emit `assert text` command', () => {
@@ -208,7 +208,7 @@ describe('command code emitter', () => {
       value: 'some text that should be here',
     }
     expect(prettify(command)).resolves.toBe(
-      `assert driver.find_element(By.ID, "test").text == "some text that should be here"`
+      `assert self.driver.find_element(By.ID, "test").text == "some text that should be here"`
     )
   })
   it('should emit `assert title` command', () => {
@@ -218,7 +218,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.title == "example title"`
+      `assert self.driver.title == "example title"`
     )
   })
   it('should emit `assert value` command', () => {
@@ -228,7 +228,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `value = driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
+      `value = self.driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
     )
   })
   it('should emit `click` command', () => {
@@ -238,7 +238,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.find_element(By.LINK_TEXT, "button").click()`
+      `self.driver.find_element(By.LINK_TEXT, "button").click()`
     )
   })
   it('should emit `click at` command', () => {
@@ -248,7 +248,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.find_element(By.LINK_TEXT, "button").click()`
+      `self.driver.find_element(By.LINK_TEXT, "button").click()`
     )
   })
   it('should emit `check` command', () => {
@@ -258,7 +258,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "f")\nif element.is_selected() != True: element.click()`
+      `element = self.driver.find_element(By.ID, "f")\nif element.is_selected() != True: element.click()`
     )
   })
   it('should emit `close` command', () => {
@@ -267,7 +267,7 @@ describe('command code emitter', () => {
       target: '',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`driver.close()`)
+    return expect(prettify(command)).resolves.toBe(`self.driver.close()`)
   })
   it('should emit `do` command', () => {
     const command = {
@@ -287,7 +287,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.LINK_TEXT, "button")\nactions = ActionChains(driver)\nactions.double_click(element).perform()`
+      `element = self.driver.find_element(By.LINK_TEXT, "button")\nactions = ActionChains(driver)\nactions.double_click(element).perform()`
     )
   })
   it('should emit `double click at` command', () => {
@@ -297,7 +297,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.LINK_TEXT, "button")\nactions = ActionChains(driver)\nactions.double_click(element).perform()`
+      `element = self.driver.find_element(By.LINK_TEXT, "button")\nactions = ActionChains(driver)\nactions.double_click(element).perform()`
     )
   })
   it('should emit `drag and drop to object` command', () => {
@@ -307,7 +307,7 @@ describe('command code emitter', () => {
       value: 'link=dropped',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dragged = driver.find_element(By.LINK_TEXT, "dragged")\ndropped = driver.find_element(By.LINK_TEXT, "dropped")\nactions = ActionChains(driver)\nactions.drag_and_drop(dragged, dropped).perform()`
+      `dragged = self.driver.find_element(By.LINK_TEXT, "dragged")\ndropped = self.driver.find_element(By.LINK_TEXT, "dropped")\nactions = ActionChains(driver)\nactions.drag_and_drop(dragged, dropped).perform()`
     )
   })
   it('should emit `echo` command', () => {
@@ -333,7 +333,7 @@ describe('command code emitter', () => {
       value: '<button>test</button>',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "contentEditable")\ndriver.execute_script("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}", element)`
+      `element = self.driver.find_element(By.ID, "contentEditable")\nself.driver.execute_script("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}", element)`
     )
   })
   it('should emit `else` command', () => {
@@ -354,7 +354,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `elif driver.execute_script("return (true)"):`,
+      body: `elif self.driver.execute_script("return (true)"):`,
       endingLevel: 1,
     })
   })
@@ -376,7 +376,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = driver.execute_script("javascript")`
+      `vars["myVar"] = self.driver.execute_script("javascript")`
     )
   })
   it('should emit `execute script` command with return string value', () => {
@@ -386,7 +386,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = driver.execute_script("return 'a'")`
+      `vars["myVar"] = self.driver.execute_script("return 'a'")`
     )
   })
   it('should emit `execute async script` command', () => {
@@ -396,7 +396,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = driver.execute_async_script("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);")`
+      `vars["myVar"] = self.driver.execute_async_script("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);")`
     )
   })
   it('should emit `forEach` command', () => {
@@ -417,7 +417,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `if driver.execute_script("return (true)"):`,
+      body: `if self.driver.execute_script("return (true)"):`,
       endingLevel: 1,
     })
   })
@@ -428,7 +428,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).click_and_hold().perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).click_and_hold().perform()`
     )
   })
   it('should emit `mouse down at` event', () => {
@@ -438,7 +438,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).click_and_hold().perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).click_and_hold().perform()`
     )
   })
   it('should emit `mouse move` event', () => {
@@ -448,7 +448,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).perform()`
     )
   })
   it('should emit `mouse move at` event', () => {
@@ -458,7 +458,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).perform()`
     )
   })
   it('should emit `mouse out` event', () => {
@@ -468,7 +468,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.CSS_SELECTOR, "body")\nactions = ActionChains(driver)\nactions.move_to_element(element, 0, 0).perform()`
+      `element = self.driver.find_element(By.CSS_SELECTOR, "body")\nactions = ActionChains(driver)\nactions.move_to_element(element, 0, 0).perform()`
     )
   })
   it('should emit `mouse over` event', () => {
@@ -478,7 +478,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).perform()`
     )
   })
   it('should emit `mouse up` event', () => {
@@ -488,7 +488,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).release().perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).release().perform()`
     )
   })
   it('should emit `mouse up at` event', () => {
@@ -498,7 +498,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).release().perform()`
+      `element = self.driver.find_element(By.ID, "button")\nactions = ActionChains(driver)\nactions.move_to_element(element).release().perform()`
     )
   })
   it('should emit `open` with absolute url', () => {
@@ -508,7 +508,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.get("${command.target}")`
+      `self.driver.get("${command.target}")`
     )
   })
   it('should emit `pause` command', () => {
@@ -526,7 +526,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dropdown = driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
+      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `repeatIf` command', () => {
@@ -536,7 +536,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `condition = driver.execute_script("return (true)")`
+      `condition = self.driver.execute_script("return (true)")`
     )
   })
   it('should emit `run` command', () => {
@@ -554,7 +554,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.execute_script("alert('test');alert('Im annoying');")`
+      `self.driver.execute_script("alert('test');alert('Im annoying');")`
     )
   })
   it('should emit `select` command', () => {
@@ -564,7 +564,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dropdown = driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
+      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `select frame` to select the top frame', () => {
@@ -574,7 +574,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.default_content()`
+      `self.driver.switch_to.default_content()`
     )
   })
   it('should fail to emit `select window` by using unknown locator', () => {
@@ -594,7 +594,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.window(vars["window"])`
+      `self.driver.switch_to.window(vars["window"])`
     )
   })
   it('should emit `select window` to select a window by name', () => {
@@ -604,7 +604,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.window("window")`
+      `self.driver.switch_to.window("window")`
     )
   })
   it('should emit `select window` to select a window by the local keyword', () => {
@@ -614,7 +614,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.window(driver.window_handles[0])`
+      `self.driver.switch_to.window(self.driver.window_handles[0])`
     )
   })
   it('should emit `select window` to select a window by implicit index', () => {
@@ -624,7 +624,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.window(driver.window_handles[12])`
+      `self.driver.switch_to.window(self.driver.window_handles[12])`
     )
   })
   it('should emit `send keys` command', () => {
@@ -634,7 +634,7 @@ describe('command code emitter', () => {
       value: 'example input',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.find_element(By.ID, "input").send_keys("example input")`
+      `self.driver.find_element(By.ID, "input").send_keys("example input")`
     )
   })
   it('should emit `send keys` command with a variable input', () => {
@@ -644,7 +644,7 @@ describe('command code emitter', () => {
       value: '${blah}',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.find_element(By.ID, "input").send_keys(vars["blah"])`
+      `self.driver.find_element(By.ID, "input").send_keys(vars["blah"])`
     )
   })
   it('should emit `send keys` command with a key press', () => {
@@ -654,7 +654,7 @@ describe('command code emitter', () => {
       value: 'SuperSecretPassword!${KEY_ENTER}',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.find_element(By.ID, "input").send_keys("SuperSecretPassword!", Keys.ENTER)`
+      `self.driver.find_element(By.ID, "input").send_keys("SuperSecretPassword!", Keys.ENTER)`
     )
   })
   it('should emit `set speed`', () => {
@@ -669,7 +669,7 @@ describe('command code emitter', () => {
       value: '',
     }
     expect(prettify(command)).resolves.toBe(
-      `driver.set_window_size(1440, 1177)`
+      `self.driver.set_window_size(1440, 1177)`
     )
   })
   it('should skip playback supported commands, that are not supported in webdriver', () => {
@@ -705,7 +705,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `attribute = driver.find_element(By.XPATH, "button[3]").get_attribute("id")\nvars["myVar"] = attribute`
+      `attribute = self.driver.find_element(By.XPATH, "button[3]").get_attribute("id")\nvars["myVar"] = attribute`
     )
   })
   it('should emit `store text` command', () => {
@@ -715,7 +715,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = driver.find_element(By.ID, "someElement").text`
+      `vars["myVar"] = self.driver.find_element(By.ID, "someElement").text`
     )
   })
   it('should emit `store json` command', () => {
@@ -735,7 +735,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = driver.title`
+      `vars["myVar"] = self.driver.title`
     )
   })
   it('should emit `store value` command', () => {
@@ -745,7 +745,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = driver.find_element(By.ID, "someElement").get_attribute("value")`
+      `vars["myVar"] = self.driver.find_element(By.ID, "someElement").get_attribute("value")`
     )
   })
   it('should emit `store window handle` command', () => {
@@ -755,7 +755,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["windowName"] = driver.current_window_handle`
+      `vars["windowName"] = self.driver.current_window_handle`
     )
   })
   it('should emit `store xpath count` command', () => {
@@ -765,7 +765,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = len(driver.find_elements(By.XPATH, "button"))`
+      `vars["myVar"] = len(self.driver.find_elements(By.XPATH, "button"))`
     )
   })
   it('should emit `submit` command', () => {
@@ -775,7 +775,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `raise Exception("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.")`
+      `raise Exception("\`submit\` is not a supported command in Selenium Webself.driver. Please re-record the step in the IDE.")`
     )
   })
   it('should emit `times` command', () => {
@@ -796,7 +796,7 @@ describe('command code emitter', () => {
       value: 'example input',
     }
     expect(prettify(command)).resolves.toBe(
-      `driver.find_element(By.ID, "input").send_keys("example input")`
+      `self.driver.find_element(By.ID, "input").send_keys("example input")`
     )
   })
   it('should emit `uncheck` command', () => {
@@ -806,7 +806,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "f")\nif element.is_selected: element.click()`
+      `element = self.driver.find_element(By.ID, "f")\nif element.is_selected: element.click()`
     )
   })
   it('should emit `verify` command', () => {
@@ -826,7 +826,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.find_element(By.ID, "check").isSelected() is True`
+      `assert self.driver.find_element(By.ID, "check").isSelected() is True`
     )
   })
   it('should emit `verify editable` command', () => {
@@ -836,7 +836,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is True`
+      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is True`
     )
   })
   it('should emit `verify element present` command', () => {
@@ -846,7 +846,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `elements = driver.find_elements(By.ID, "element")\nassert len(elements) > 0`
+      `elements = self.driver.find_elements(By.ID, "element")\nassert len(elements) > 0`
     )
   })
   it('should emit `verify element not present` command', () => {
@@ -856,7 +856,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `elements = driver.find_elements(By.ID, "element")\nassert len(elements) == 0`
+      `elements = self.driver.find_elements(By.ID, "element")\nassert len(elements) == 0`
     )
   })
   it('should emit `verify not checked` command', () => {
@@ -866,7 +866,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.find_element(By.ID, "check").is_selected() is False`
+      `assert self.driver.find_element(By.ID, "check").is_selected() is False`
     )
   })
   it('should emit `verify not editable` command', () => {
@@ -876,7 +876,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is False`
+      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is False`
     )
   })
   it('should emit `verify not selected value` command', () => {
@@ -886,7 +886,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `value = driver.find_element(By.ID, "select").get_attribute("value")\nassert value != "test"`
+      `value = self.driver.find_element(By.ID, "select").get_attribute("value")\nassert value != "test"`
     )
   })
   it('should emit `verify not text` command', () => {
@@ -896,7 +896,7 @@ describe('command code emitter', () => {
       value: 'text',
     }
     return expect(prettify(command)).resolves.toBe(
-      `text = driver.find_element(By.ID, "test").text\nassert text != "text"`
+      `text = self.driver.find_element(By.ID, "test").text\nassert text != "text"`
     )
   })
   it("should emit 'verify selected label' command", () => {
@@ -906,7 +906,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH(locator)).text\nassert selected_text == "test"`
+      `element = self.driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH(locator)).text\nassert selected_text == "test"`
     )
   })
   it('should emit `verify value` command', () => {
@@ -916,7 +916,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `value = driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
+      `value = self.driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
     )
   })
   it('should emit `verify selected value` command', () => {
@@ -926,7 +926,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `value = driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
+      `value = self.driver.find_element(By.ID, "select").get_attribute("value")\nassert value == "test"`
     )
   })
   it('should emit `verify text` command', () => {
@@ -936,7 +936,7 @@ describe('command code emitter', () => {
       value: 'some text that should be here',
     }
     expect(prettify(command)).resolves.toBe(
-      `assert driver.find_element(By.ID, "test").text == "some text that should be here"`
+      `assert self.driver.find_element(By.ID, "test").text == "some text that should be here"`
     )
   })
   it('should emit `verify title` command', () => {
@@ -946,7 +946,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert driver.title == "example title"`
+      `assert self.driver.title == "example title"`
     )
   })
   it('should emit `waitForElementEditable` command', () => {
@@ -1016,7 +1016,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `alert = driver.switch_to.alert\nalert.send_keys("an answer")\nalert.accept()`
+      `alert = self.driver.switch_to.alert\nalert.send_keys("an answer")\nalert.accept()`
     )
   })
   it('should emit `choose cancel on visible prompt` command', () => {
@@ -1026,7 +1026,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.alert.dismiss()`
+      `self.driver.switch_to.alert.dismiss()`
     )
   })
   it('should emit `choose ok on visible confirmation` command', () => {
@@ -1036,7 +1036,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `driver.switch_to.alert.accept()`
+      `self.driver.switch_to.alert.accept()`
     )
   })
   it('should emit `while` command', () => {
@@ -1046,7 +1046,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `while driver.execute_script("return (true)"):`,
+      body: `while self.driver.execute_script("return (true)"):`,
       endingLevel: 1,
     })
   })
@@ -1060,7 +1060,7 @@ describe('command code emitter', () => {
       windowTimeout: 2000,
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["window_handles"] = driver.window_handles\ndriver.find_element(By.CSS_SELECTOR, "button").click()\nvars["newWin"] = self.wait_for_window(2000)`
+      `vars["window_handles"] = self.driver.window_handles\nself.driver.find_element(By.CSS_SELECTOR, "button").click()\nvars["newWin"] = self.wait_for_window(2000)`
     )
   })
 })
