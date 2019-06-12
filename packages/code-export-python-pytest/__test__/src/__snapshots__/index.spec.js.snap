@@ -11,7 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestLogin() {
+class TestLogin():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -49,7 +49,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestControlflow() {
+class TestControlflow():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -121,7 +121,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestLogin() {
+class TestLogin():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -160,7 +160,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestDefaultSuite() {
+class TestDefaultSuite():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -200,7 +200,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestDefaultSuite() {
+class TestDefaultSuite():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -248,7 +248,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestLogin() {
+class TestLogin():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -278,7 +278,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestValidcredentials() {
+class TestValidcredentials():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
@@ -312,7 +312,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 import selenium.webdriver.support.wait.WebDriverWait
 
-class TestSelectwindow() {
+class TestSelectwindow():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
     self.vars = {}
