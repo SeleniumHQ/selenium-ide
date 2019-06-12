@@ -59,9 +59,9 @@ class TestControlflow():
   
   def test_controlflowif(self):
     vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'a'\\")
-    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
+    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"]):
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'a'\\")
-    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
+    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"]):
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'b'\\")
     else:
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'c'\\")
@@ -69,9 +69,9 @@ class TestControlflow():
   
   def test_controlflowelseif(self):
     vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'b'\\")
-    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
+    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"]):
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'a'\\")
-    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
+    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"]):
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'b'\\")
     else:
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'c'\\")
@@ -79,9 +79,9 @@ class TestControlflow():
   
   def test_controlflowelse(self):
     vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'c'\\")
-    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars.[\\"myVar\\"]):
+    if self.driver.execute_script(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"]):
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'a'\\")
-    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars.[\\"myVar\\"]):
+    elif self.driver.execute_script(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"]):
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'b'\\")
     else:
       vars[\\"output\\"] = self.driver.execute_script(\\"return 'c'\\")
@@ -91,20 +91,20 @@ class TestControlflow():
     vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
     condition = True
     while condition:
-      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
-    condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", vars.[\\"check\\"])
+      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars[\\"check\\"])
+    condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])
     assert(vars[\\"check\\"] == \\"3\\")
   
   def test_controlflowtimes(self):
     vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
     for i in range(1, 2):
-      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
+      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     assert(vars[\\"check\\"] == \\"3\\")
   
   def test_controlflowwhile(self):
     vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
-    while self.driver.execute_script(\\"return (arguments[0] < 3)\\", vars.[\\"check\\"]):
-      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars.[\\"check\\"])
+    while self.driver.execute_script(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]):
+      vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     assert(vars[\\"check\\"] == \\"3\\")
   
 "

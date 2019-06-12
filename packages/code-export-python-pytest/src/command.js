@@ -235,7 +235,7 @@ function generateExpressionScript(script) {
 
 function generateScriptArguments(script) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `vars.["${varName}"]`)
+    .map(varName => `vars["${varName}"]`)
     .join(',')}`
 }
 
