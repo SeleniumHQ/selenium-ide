@@ -121,7 +121,8 @@ function declareDependencies() {
         },
         {
           level: 0,
-          statement: 'import selenium.webdriver.support.wait.WebDriverWait',
+          statement:
+            'from selenium.webdriver.support.wait import WebDriverWait',
         },
         {
           level: 0,
