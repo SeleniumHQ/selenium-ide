@@ -697,7 +697,7 @@ async function emitVerifyChecked(locator) {
   return Promise.resolve(
     `assert self.driver.find_element(${await location.emit(
       locator
-    )}).isSelected() is True`
+    )}).is_selected() is True`
   )
 }
 

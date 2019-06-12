@@ -88,7 +88,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert self.driver.find_element(By.ID, "check").isSelected() is True`
+      `assert self.driver.find_element(By.ID, "check").is_selected() is True`
     )
   })
   it('should emit `assert confirmation` command', () => {
@@ -826,7 +826,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `assert self.driver.find_element(By.ID, "check").isSelected() is True`
+      `assert self.driver.find_element(By.ID, "check").is_selected() is True`
     )
   })
   it('should emit `verify editable` command', () => {
