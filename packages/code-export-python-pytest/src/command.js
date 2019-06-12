@@ -137,11 +137,11 @@ function canEmit(commandName) {
 }
 
 function variableLookup(varName) {
-  return `vars["${varName}"]`
+  return `self.vars["${varName}"]`
 }
 
 function variableSetter(varName, value) {
-  return varName ? `vars["${varName}"] = ${value}` : ''
+  return varName ? `self.vars["${varName}"] = ${value}` : ''
 }
 
 function emitWaitForWindow() {
@@ -153,7 +153,7 @@ function emitWaitForWindow() {
     { level: 0, statement: 'wh_now = self.driver.window_handles' },
     {
       level: 0,
-      statement: 'wh_then = vars["window_handles"]',
+      statement: 'wh_then = self.vars["window_handles"]',
     },
     { level: 0, statement: 'if len(wh_now) > len(wh_then):' },
     { level: 1, statement: 'return set(wh_now).difference(set(wh_then))' },
@@ -167,14 +167,14 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `vars["window_handles"] = self.driver.window_handles\n${await emittedCommand}\nvars["${
+    `self.vars["window_handles"] = self.driver.window_handles\n${await emittedCommand}\nself.vars["${
       command.windowHandleName
     }"] = self.wait_for_window(${command.windowTimeout})`
   )
 }
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`assert(vars["${varName}"] == "${value}")`)
+  return Promise.resolve(`assert(self.vars["${varName}"] == "${value}")`)
 }
 
 function emitAssertAlert(alertText) {
@@ -235,7 +235,7 @@ function generateExpressionScript(script) {
 
 function generateScriptArguments(script) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `vars["${varName}"]`)
+    .map(varName => `self.vars["${varName}"]`)
     .join(',')}`
 }
 
@@ -292,7 +292,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `collection = vars["${collectionVarName}"]`,
+        statement: `collection = self.vars["${collectionVarName}"]`,
       },
       {
         level: 0,
@@ -300,7 +300,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `vars["${iteratorVarName}"] = entry`,
+        statement: `self.vars["${iteratorVarName}"] = entry`,
       },
     ],
   })
@@ -370,7 +370,7 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitEcho(message) {
-  const _message = message.startsWith('vars[') ? message : `"${message}"`
+  const _message = message.startsWith('self.vars[') ? message : `"${message}"`
   return Promise.resolve(`print(str(${_message}))`)
 }
 
@@ -578,7 +578,7 @@ function generateSendKeysInput(value) {
   if (typeof value === 'object') {
     return value
       .map(s => {
-        if (s.startsWith('vars[')) {
+        if (s.startsWith('self.vars[')) {
           return s
         } else if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)[1]
@@ -589,7 +589,7 @@ function generateSendKeysInput(value) {
       })
       .join(', ')
   } else {
-    if (value.startsWith('vars[')) {
+    if (value.startsWith('self.vars[')) {
       return value
     } else {
       return `"${value}"`

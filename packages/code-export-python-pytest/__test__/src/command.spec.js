@@ -68,7 +68,7 @@ describe('command code emitter', () => {
       value: 'blah',
     }
     expect(prettify(command)).resolves.toBe(
-      `assert(vars["varrrName"] == "blah")`
+      `assert(self.vars["varrrName"] == "blah")`
     )
   })
   it('should emit `assert alert` command', () => {
@@ -324,7 +324,7 @@ describe('command code emitter', () => {
       target: '${blah}',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`print(str(vars["blah"]))`)
+    return expect(prettify(command)).resolves.toBe(`print(str(self.vars["blah"]))`)
   })
   it('should emit `edit content` command', () => {
     const command = {
@@ -376,7 +376,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = self.driver.execute_script("javascript")`
+      `self.vars["myVar"] = self.driver.execute_script("javascript")`
     )
   })
   it('should emit `execute script` command with return string value', () => {
@@ -386,7 +386,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = self.driver.execute_script("return 'a'")`
+      `self.vars["myVar"] = self.driver.execute_script("return 'a'")`
     )
   })
   it('should emit `execute async script` command', () => {
@@ -396,7 +396,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = self.driver.execute_async_script("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);")`
+      `self.vars["myVar"] = self.driver.execute_async_script("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);")`
     )
   })
   it('should emit `forEach` command', () => {
@@ -406,7 +406,7 @@ describe('command code emitter', () => {
       value: 'iteratorVar',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `collection = vars["collection"]\nfor entry in collection\n${commandPrefixPadding}vars["iteratorVar"] = entry`,
+      body: `collection = self.vars["collection"]\nfor entry in collection\n${commandPrefixPadding}self.vars["iteratorVar"] = entry`,
       endingLevel: 1,
     })
   })
@@ -594,7 +594,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `self.driver.switch_to.window(vars["window"])`
+      `self.driver.switch_to.window(self.vars["window"])`
     )
   })
   it('should emit `select window` to select a window by name', () => {
@@ -644,7 +644,7 @@ describe('command code emitter', () => {
       value: '${blah}',
     }
     return expect(prettify(command)).resolves.toBe(
-      `self.driver.find_element(By.ID, "input").send_keys(vars["blah"])`
+      `self.driver.find_element(By.ID, "input").send_keys(self.vars["blah"])`
     )
   })
   it('should emit `send keys` command with a key press', () => {
@@ -695,7 +695,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = "some value"`
+      `self.vars["myVar"] = "some value"`
     )
   })
   it('should emit `store attribute` command', () => {
@@ -705,7 +705,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `attribute = self.driver.find_element(By.XPATH, "button[3]").get_attribute("id")\nvars["myVar"] = attribute`
+      `attribute = self.driver.find_element(By.XPATH, "button[3]").get_attribute("id")\nself.vars["myVar"] = attribute`
     )
   })
   it('should emit `store text` command', () => {
@@ -715,7 +715,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = self.driver.find_element(By.ID, "someElement").text`
+      `self.vars["myVar"] = self.driver.find_element(By.ID, "someElement").text`
     )
   })
   it('should emit `store json` command', () => {
@@ -725,7 +725,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = json.loads([{"a":0}])`
+      `self.vars["myVar"] = json.loads([{"a":0}])`
     )
   })
   it('should emit `store title` command', () => {
@@ -735,7 +735,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = self.driver.title`
+      `self.vars["myVar"] = self.driver.title`
     )
   })
   it('should emit `store value` command', () => {
@@ -745,7 +745,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = self.driver.find_element(By.ID, "someElement").get_attribute("value")`
+      `self.vars["myVar"] = self.driver.find_element(By.ID, "someElement").get_attribute("value")`
     )
   })
   it('should emit `store window handle` command', () => {
@@ -755,7 +755,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["windowName"] = self.driver.current_window_handle`
+      `self.vars["windowName"] = self.driver.current_window_handle`
     )
   })
   it('should emit `store xpath count` command', () => {
@@ -765,7 +765,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = len(self.driver.find_elements(By.XPATH, "button"))`
+      `self.vars["myVar"] = len(self.driver.find_elements(By.XPATH, "button"))`
     )
   })
   it('should emit `submit` command', () => {
@@ -816,7 +816,7 @@ describe('command code emitter', () => {
       value: 'blah',
     }
     expect(prettify(command)).resolves.toBe(
-      `assert(vars["varrrName"] == "blah")`
+      `assert(self.vars["varrrName"] == "blah")`
     )
   })
   it('should emit `verify checked` command', () => {
@@ -1060,7 +1060,7 @@ describe('command code emitter', () => {
       windowTimeout: 2000,
     }
     return expect(prettify(command)).resolves.toBe(
-      `vars["window_handles"] = self.driver.window_handles\nself.driver.find_element(By.CSS_SELECTOR, "button").click()\nvars["newWin"] = self.wait_for_window(2000)`
+      `self.vars["window_handles"] = self.driver.window_handles\nself.driver.find_element(By.CSS_SELECTOR, "button").click()\nself.vars["newWin"] = self.wait_for_window(2000)`
     )
   })
 })
