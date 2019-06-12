@@ -95,19 +95,19 @@ class TestControlflow():
     while condition:
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
     condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", self.vars[\\"check\\"])
-    assert(self.vars[\\"check\\"] == \\"3\\")
+    assert(self.vars[\\"check\\"] == 3)
   
   def test_controlflowtimes(self):
     self.vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
     for i in range(1, 2):
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
-    assert(self.vars[\\"check\\"] == \\"3\\")
+    assert(self.vars[\\"check\\"] == 3)
   
   def test_controlflowwhile(self):
     self.vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
     while self.driver.execute_script(\\"return (arguments[0] < 3)\\", self.vars[\\"check\\"]):
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
-    assert(self.vars[\\"check\\"] == \\"3\\")
+    assert(self.vars[\\"check\\"] == 3)
   
 "
 `;

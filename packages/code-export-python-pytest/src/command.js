@@ -174,7 +174,16 @@ async function emitNewWindowHandling(command, emittedCommand) {
 }
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`assert(self.vars["${varName}"] == "${value}")`)
+  let _value
+  if (value === 'true' || value === 'false') {
+    _value = exporter.parsers.capitalize(value)
+  } else if (value === '0' || !!Number(value)) {
+    _value = value
+  }
+  const result = _value
+    ? `assert(self.vars["${varName}"] == ${_value})`
+    : `assert(self.vars["${varName}"] == "${value}")`
+  return Promise.resolve(result)
 }
 
 function emitAssertAlert(alertText) {
