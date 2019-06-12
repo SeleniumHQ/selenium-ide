@@ -126,6 +126,10 @@ function declareDependencies() {
         },
         {
           level: 0,
+          statement: 'from selenium.webdriver.common.keys import Keys',
+        },
+        {
+          level: 0,
           statement: '',
         },
       ],
