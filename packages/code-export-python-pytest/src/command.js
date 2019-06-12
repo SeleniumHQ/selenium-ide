@@ -328,7 +328,7 @@ function emitControlFlowRepeatIf(script) {
 }
 
 function emitControlFlowTimes(target) {
-  const commands = [{ level: 0, statement: `for i in range(1, ${target}):` }]
+  const commands = [{ level: 0, statement: `for i in range(0, ${target}):` }]
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 

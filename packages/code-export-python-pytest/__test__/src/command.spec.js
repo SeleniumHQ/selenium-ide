@@ -787,7 +787,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `for i in range(1, 5):`,
+      body: `for i in range(0, 5):`,
       endingLevel: 1,
     })
   })

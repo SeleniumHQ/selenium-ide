@@ -99,7 +99,7 @@ class TestControlflow():
   
   def test_controlflowtimes(self):
     self.vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
-    for i in range(1, 2):
+    for i in range(0, 2):
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
     assert(self.vars[\\"check\\"] == 3)
   
