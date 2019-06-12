@@ -823,7 +823,7 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     },
     {
       level: 0,
-      statement: 'selected_text = element.find_element(By.XPATH(locator)).text',
+      statement: 'selected_text = element.find_element(By.XPATH, locator).text',
     },
     { level: 0, statement: `assert selected_text == "${labelValue}"` },
   ]

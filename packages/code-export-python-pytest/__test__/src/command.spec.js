@@ -188,7 +188,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = self.driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH(locator)).text\nassert selected_text == "test"`
+      `element = self.driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH, locator).text\nassert selected_text == "test"`
     )
   })
   it('should emit `assert selected value` command', () => {
@@ -324,7 +324,9 @@ describe('command code emitter', () => {
       target: '${blah}',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`print(str(self.vars["blah"]))`)
+    return expect(prettify(command)).resolves.toBe(
+      `print(str(self.vars["blah"]))`
+    )
   })
   it('should emit `edit content` command', () => {
     const command = {
@@ -906,7 +908,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = self.driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH(locator)).text\nassert selected_text == "test"`
+      `element = self.driver.find_element(By.ID, "test")\nlocator = "option[@value='{}']".format(element.get_attribute("value"))\nselected_text = element.find_element(By.XPATH, locator).text\nassert selected_text == "test"`
     )
   })
   it('should emit `verify value` command', () => {
