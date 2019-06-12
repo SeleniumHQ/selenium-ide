@@ -94,7 +94,7 @@ class TestControlflow():
     condition = True
     while condition:
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
-    condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", self.vars[\\"check\\"])
+      condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", self.vars[\\"check\\"])
     assert(self.vars[\\"check\\"] == 3)
   
   def test_controlflowtimes(self):
