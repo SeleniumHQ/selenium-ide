@@ -305,7 +305,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 0,
-        statement: `for entry in collection`,
+        statement: `for entry in collection:`,
       },
       {
         level: 1,

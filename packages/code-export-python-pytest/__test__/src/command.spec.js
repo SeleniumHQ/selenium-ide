@@ -408,7 +408,7 @@ describe('command code emitter', () => {
       value: 'iteratorVar',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `collection = self.vars["collection"]\nfor entry in collection\n${commandPrefixPadding}self.vars["iteratorVar"] = entry`,
+      body: `collection = self.vars["collection"]\nfor entry in collection:\n${commandPrefixPadding}self.vars["iteratorVar"] = entry`,
       endingLevel: 1,
     })
   })
