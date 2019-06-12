@@ -198,9 +198,10 @@ async function emitCheck(locator) {
         locator
       )})`,
     },
-    { level: 0, statement: 'if element.is_selected() != True:' },
-    { level: 1, statement: 'element.click()' },
-    { level: 0, statement: '' },
+    {
+      level: 0,
+      statement: 'if element.is_selected() != True: element.click()',
+    },
   ]
   return Promise.resolve({ commands })
 }

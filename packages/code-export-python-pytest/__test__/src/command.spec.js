@@ -258,7 +258,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = driver.find_element(By.ID, "f")\nif element.is_selected() != True:\n${commandPrefixPadding}element.click()\n`
+      `element = driver.find_element(By.ID, "f")\nif element.is_selected() != True: element.click()`
     )
   })
   it('should emit `close` command', () => {
