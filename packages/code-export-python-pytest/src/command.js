@@ -504,7 +504,7 @@ async function emitSelect(selectElement, option) {
     },
     {
       level: 0,
-      statement: `dropdown.findElement(${await selection.emit(
+      statement: `dropdown.find_element(${await selection.emit(
         option
       )}).click()`,
     },

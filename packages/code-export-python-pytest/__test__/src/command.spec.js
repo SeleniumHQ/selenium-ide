@@ -58,7 +58,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
+      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.find_element(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `assert` command', () => {
@@ -526,7 +526,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
+      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.find_element(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `repeatIf` command', () => {
@@ -564,7 +564,7 @@ describe('command code emitter', () => {
       value: 'label=A label',
     }
     return expect(prettify(command)).resolves.toBe(
-      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.findElement(By.XPATH, "//option[. = 'A label']").click()`
+      `dropdown = self.driver.find_element(By.CSS_SELECTOR, "select")\ndropdown.find_element(By.XPATH, "//option[. = 'A label']").click()`
     )
   })
   it('should emit `select frame` to select the top frame', () => {
