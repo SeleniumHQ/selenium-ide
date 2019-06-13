@@ -156,7 +156,10 @@ function emitWaitForWindow() {
       statement: 'wh_then = self.vars["window_handles"]',
     },
     { level: 0, statement: 'if len(wh_now) > len(wh_then):' },
-    { level: 1, statement: 'return set(wh_now).difference(set(wh_then))' },
+    {
+      level: 1,
+      statement: 'return set(wh_now).difference(set(wh_then)).pop()',
+    },
   ]
   return Promise.resolve({
     name: 'wait_for_window',

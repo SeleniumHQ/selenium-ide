@@ -177,7 +177,7 @@ class TestDefaultSuite():
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
-      return set(wh_now).difference(set(wh_then))
+      return set(wh_now).difference(set(wh_then)).pop()
   
   def selectwindow(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/windows\\")
@@ -218,7 +218,7 @@ class TestDefaultSuite():
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
-      return set(wh_now).difference(set(wh_then))
+      return set(wh_now).difference(set(wh_then)).pop()
   
   def selectwindow(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/windows\\")
@@ -333,7 +333,7 @@ class TestSelectwindow():
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
-      return set(wh_now).difference(set(wh_then))
+      return set(wh_now).difference(set(wh_then)).pop()
   
   def test_selectwindow(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/\\")
