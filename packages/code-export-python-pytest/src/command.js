@@ -146,7 +146,7 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `def ${name}(timeout = 2000) {`
+    return `def ${name}(timeout = 2):`
   }
   const commands = [
     { level: 0, statement: 'self.driver.sleep(timeout)' },

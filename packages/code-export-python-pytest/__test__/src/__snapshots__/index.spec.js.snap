@@ -172,7 +172,7 @@ class TestDefaultSuite():
   def teardown_method(self, method):
     self.driver.quit();
   
-  def wait_for_window(timeout = 2000) {
+  def wait_for_window(timeout = 2):
     self.driver.sleep(timeout)
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
@@ -213,7 +213,7 @@ class TestDefaultSuite():
   def teardown_method(self, method):
     self.driver.quit();
   
-  def wait_for_window(timeout = 2000) {
+  def wait_for_window(timeout = 2):
     self.driver.sleep(timeout)
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
@@ -328,7 +328,7 @@ class TestSelectwindow():
   def teardown_method(self, method):
     self.driver.quit();
   
-  def wait_for_window(timeout = 2000) {
+  def wait_for_window(timeout = 2):
     self.driver.sleep(timeout)
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
