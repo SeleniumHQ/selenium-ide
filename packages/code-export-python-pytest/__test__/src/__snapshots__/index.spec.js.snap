@@ -173,7 +173,7 @@ class TestDefaultSuite():
     self.driver.quit();
   
   def wait_for_window(timeout = 2):
-    self.driver.sleep(timeout)
+    time.sleep(round(timeout / 1000))
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
@@ -214,7 +214,7 @@ class TestDefaultSuite():
     self.driver.quit();
   
   def wait_for_window(timeout = 2):
-    self.driver.sleep(timeout)
+    time.sleep(round(timeout / 1000))
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
@@ -329,7 +329,7 @@ class TestSelectwindow():
     self.driver.quit();
   
   def wait_for_window(timeout = 2):
-    self.driver.sleep(timeout)
+    time.sleep(round(timeout / 1000))
     wh_now = self.driver.window_handles
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):

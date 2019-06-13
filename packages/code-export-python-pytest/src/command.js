@@ -149,7 +149,7 @@ function emitWaitForWindow() {
     return `def ${name}(timeout = 2):`
   }
   const commands = [
-    { level: 0, statement: 'self.driver.sleep(timeout)' },
+    { level: 0, statement: 'time.sleep(round(timeout / 1000))' },
     { level: 0, statement: 'wh_now = self.driver.window_handles' },
     {
       level: 0,
