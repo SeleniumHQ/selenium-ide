@@ -718,12 +718,7 @@ async function emitVerifyEditable(locator) {
         locator
       )})`,
     },
-    {
-      level: 0,
-      statement:
-        'is_editable = element.is_enabled() and element.get_attribute("readonly") == None',
-    },
-    { level: 0, statement: 'assert is_editable is True' },
+    { level: 0, statement: 'assert element.is_enabled() is True' },
   ]
   return Promise.resolve({ commands })
 }
@@ -770,12 +765,7 @@ async function emitVerifyNotEditable(locator) {
         locator
       )})`,
     },
-    {
-      level: 0,
-      statement:
-        'is_editable = element.is_enabled() and element.get_attribute("readonly") == None',
-    },
-    { level: 0, statement: 'assert is_editable is False' },
+    { level: 0, statement: 'assert element.is_enabled() is False' },
   ]
   return Promise.resolve({ commands })
 }
@@ -907,7 +897,7 @@ async function emitWaitForElementNotEditable(locator, timeout) {
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(not expected_conditions.element_to_be_clickable((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${timeout}).until_not(expected_conditions.element_to_be_clickable((${await location.emit(
         locator
       )})))`,
     },

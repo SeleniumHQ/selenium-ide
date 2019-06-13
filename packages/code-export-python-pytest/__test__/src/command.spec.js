@@ -108,7 +108,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is True`
+      `element = self.driver.find_element(By.ID, "text")\nassert element.is_enabled() is True`
     )
   })
   it('should emit `assert element present` command', () => {
@@ -148,7 +148,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is False`
+      `element = self.driver.find_element(By.ID, "text")\nassert element.is_enabled() is False`
     )
   })
   it('should emit `assert not selected value` command', () => {
@@ -838,7 +838,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is True`
+      `element = self.driver.find_element(By.ID, "text")\nassert element.is_enabled() is True`
     )
   })
   it('should emit `verify element present` command', () => {
@@ -878,7 +878,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command)).resolves.toBe(
-      `element = self.driver.find_element(By.ID, "text")\nis_editable = element.is_enabled() and element.get_attribute("readonly") == None\nassert is_editable is False`
+      `element = self.driver.find_element(By.ID, "text")\nassert element.is_enabled() is False`
     )
   })
   it('should emit `verify not selected value` command', () => {
@@ -988,7 +988,7 @@ describe('command code emitter', () => {
       value: '5000',
     }
     return expect(prettify(command)).resolves.toBe(
-      `WebDriverWait(self.driver, 5000).until(not expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "#blah")))`
+      `WebDriverWait(self.driver, 5000).until_not(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "#blah")))`
     )
   })
   it('should emit `waitForElementNotPresent` command', () => {
