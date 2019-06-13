@@ -146,7 +146,7 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `def ${name}(timeout = 2):`
+    return `def ${name}(self, timeout = 2):`
   }
   const commands = [
     { level: 0, statement: 'time.sleep(round(timeout / 1000))' },
@@ -644,7 +644,7 @@ async function emitStoreAttribute(locator, varName) {
 }
 
 async function emitStoreJson(json, varName) {
-  return Promise.resolve(variableSetter(varName, `json.loads(${json})`))
+  return Promise.resolve(variableSetter(varName, `json.loads('${json}')`))
 }
 
 async function emitStoreText(locator, varName) {

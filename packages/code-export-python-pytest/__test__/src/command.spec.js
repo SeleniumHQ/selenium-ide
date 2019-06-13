@@ -727,7 +727,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toBe(
-      `self.vars["myVar"] = json.loads([{"a":0}])`
+      `self.vars["myVar"] = json.loads('[{"a":0}]')`
     )
   })
   it('should emit `store title` command', () => {
