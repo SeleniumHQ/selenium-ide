@@ -5851,10 +5851,10 @@ sax@>=0.6.0, sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-selenium-webdriver@4.0.0-alpha.2:
-  version "4.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.0.0-alpha.2.tgz#8c44b0c337880e8cd7246ea338a0e363301459cc"
-  integrity sha512-pnebWYNnvsIWo5Rm64PFlrwfJFmqV26dyQ6Zoj4CXAsW9McvjQ/h1DOTHMxyoQfiT/Wqsm8Mij2usgmy6imk2Q==
+selenium-webdriver@4.0.0-alpha.3:
+  version "4.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.0.0-alpha.3.tgz#fb974f29696a6801ecaf203e38a65c3dbe7e363a"
+  integrity sha512-78a8bbvVtl3asv5JAiBXvK4KQ+GmXBCMO0DU1ZMbdO9EAb+ydPA53CI4ZA+I8muSLSVgNhRAnsndNWZLIQN2LA==
   dependencies:
     jszip "^3.1.5"
     rimraf "^2.6.3"

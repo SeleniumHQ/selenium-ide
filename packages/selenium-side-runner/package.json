@@ -37,7 +37,7 @@
     "js-beautify": "^1.7.5",
     "js-yaml": "^3.13.1",
     "rimraf": "^2.6.2",
-    "selenium-webdriver": "4.0.0-alpha.2",
+    "selenium-webdriver": "4.0.0-alpha.3",
     "selianize": "^3.8.0",
     "semver": "^5.5.1",
     "winston": "^2.4.0"
