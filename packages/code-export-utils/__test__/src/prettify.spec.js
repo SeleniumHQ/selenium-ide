@@ -118,4 +118,17 @@ describe('Prettify', () => {
     expect(result.body).toBe(`blah\n${commandPrefixPadding}blah`)
     expect(result.endingLevel).toBe(1)
   })
+  it('individual command emitting can be skipped', () => {
+    const commandBlock = {
+      commands: [{ level: 0, statement: '' }],
+      skipEmitting: true,
+      endingLevelAdjustment: -1,
+    }
+    const result = prettify(commandBlock, {
+      commandPrefixPadding,
+      startingLevel: 1,
+    })
+    expect(result.body).toBeFalsy()
+    expect(result.endingLevel).toBe(0)
+  })
 })

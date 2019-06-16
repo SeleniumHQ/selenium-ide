@@ -54,11 +54,24 @@ describe('Hooks', () => {
   })
   it('should optionally emit commands', () => {
     const hook = new Hook({ startingSyntax: 'blah1', endingSyntax: 'blah99' })
-    expect(hook.emit({ isOptional: true })).resolves.toEqual('')
+    expect(hook.emit({ isOptional: true })).resolves.toBeUndefined()
     expect(hook.emit({ isOptional: false })).resolves.toEqual({
       commands: [
         { level: 0, statement: 'blah1' },
         { level: 0, statement: 'blah99' },
+      ],
+    })
+  })
+  it('should emit a command with empty string', () => {
+    const hook = new Hook({ startingSyntax: 'a', endingSyntax: 'b' })
+    hook.register(() => {
+      return Promise.resolve('')
+    })
+    expect(hook.emit({ isOptional: false })).resolves.toEqual({
+      commands: [
+        { level: 0, statement: 'a' },
+        { level: 0, statement: '' },
+        { level: 0, statement: 'b' },
       ],
     })
   })

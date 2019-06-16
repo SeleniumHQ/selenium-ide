@@ -49,8 +49,8 @@ export default class Hook {
     const name = test ? test.name : suite ? suite.name : undefined
     const emittedCommands = (await Promise.all(
       this.emitters.map(emitter => emitter({ name, tests, project }))
-    )).filter(entry => !!entry)
-    if (isOptional && !emittedCommands.length) return ''
+    )).filter(entry => entry != undefined)
+    if (isOptional && !emittedCommands.length) return
     emittedCommands.forEach(command => {
       if (typeof command === 'object') {
         commands.push(command)

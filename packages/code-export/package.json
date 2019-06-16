@@ -16,10 +16,11 @@
   },
   "main": "dist/index.js",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "@babel/cli": "^7.4.4",
+    "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.8.1"
+    "code-export-java-junit": "^3.8.1",
+    "code-export-python-pytest": "^3.8.1"
   }
 }

@@ -28,21 +28,31 @@ export default function prettify(
   commandBlock,
   { startingLevel, commandPrefixPadding } = {}
 ) {
-  if (!commandBlock) return { body: '' }
+  if (commandBlock === undefined) return { body: undefined }
   if (!startingLevel) startingLevel = 0
   if (commandBlock.startingLevelAdjustment)
     startingLevel += commandBlock.startingLevelAdjustment
   if (startingLevel < 0) startingLevel = 0
   if (typeof commandBlock.commands === 'object') {
-    return {
-      body: commandBlock.commands
-        .map(
-          command =>
-            commandPrefixPadding.repeat(startingLevel + command.level) +
-            command.statement
-        )
-        .join('\n'),
-      endingLevel: calculateEndingLevel({ startingLevel, commandBlock }),
+    if (commandBlock.skipEmitting) {
+      return {
+        endingLevel: calculateEndingLevel({
+          startingLevel,
+          commandBlock,
+        }),
+        skipEmitting: commandBlock.skipEmitting,
+      }
+    } else {
+      return {
+        body: commandBlock.commands
+          .map(
+            command =>
+              commandPrefixPadding.repeat(startingLevel + command.level) +
+              command.statement
+          )
+          .join('\n'),
+        endingLevel: calculateEndingLevel({ startingLevel, commandBlock }),
+      }
     }
   } else {
     return {
@@ -57,7 +67,7 @@ export default function prettify(
 
 function calculateEndingLevel({ startingLevel, commandBlock } = {}) {
   let endingLevel = 0
-  if (commandBlock.commands.length > 0) {
+  if (commandBlock.commands && commandBlock.commands.length > 0) {
     endingLevel =
       commandBlock.commands[commandBlock.commands.length - 1].level || 0
   }

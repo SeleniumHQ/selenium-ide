@@ -38,7 +38,7 @@ export default function render(
       startingLevel,
     })
     if (fullPayload) return result
-    return result.body.trim().length
+    return result.body && result.body.length
       ? result.body + '\n'.repeat(newLineCount)
       : ''
   }
@@ -69,8 +69,10 @@ export function renderCommands(
         fullPayload: true,
       })
       endingLevel = commandBlock.endingLevel
-      result += commandBlock.body
-      result += '\n'
+      if (!commandBlock.skipEmitting) {
+        result += commandBlock.body
+        result += '\n'
+      }
     }
   })
   return result
