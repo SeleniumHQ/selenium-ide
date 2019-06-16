@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.9.0
+- Code export for Python (e.g., pytest, Python 3)
+- Fix for frames to support `relative=parent` in the runner
+- Fix for frames to support `relative=top` in IDE playback
+- Added timestamps to log entries (PR #688)
+
 ## v3.8.1
 - Code export fixes for commands that open and switch to new windows
 - Added a suffix of "Test" to class and filenames in Java code export
