@@ -3,7 +3,9 @@ Runs exported Selenium IDE tests in command line
 
 ## Installation
 Node.js is required to use `selenium-side-runner`.  
-The project guarantees support for the [active LTS major version](https://github.com/nodejs/Release) (e.g. [8](https://nodejs.org/en/download/) & [10](https://nodejs.org/en/download/current/)).  
+The project guarantees support for the [active LTS major version](https://github.com/nodejs/Release) (e.g. [10](https://nodejs.org/en/download/) & [12](https://nodejs.org/en/download/current/)).  
+
+__NOTE: The minimum supported version of Node is now 10.15.0 LTS__
 
 ```yarn global add selenium-side-runner```  
 or  
