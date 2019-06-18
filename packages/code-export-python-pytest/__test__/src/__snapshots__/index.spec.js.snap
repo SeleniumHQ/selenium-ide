@@ -18,7 +18,7 @@ class TestLogin():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def test_validcredentials(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -57,7 +57,7 @@ class TestControlflow():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def test_controlflowif(self):
     self.vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'a'\\")
@@ -130,7 +130,7 @@ class TestLogin():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def login(self):
     self.driver.get(\\"https://the-internet.herokuapp.com/\\")
@@ -170,7 +170,7 @@ class TestDefaultSuite():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def wait_for_window(self, timeout = 2):
     time.sleep(round(timeout / 1000))
@@ -211,7 +211,7 @@ class TestDefaultSuite():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def wait_for_window(self, timeout = 2):
     time.sleep(round(timeout / 1000))
@@ -260,7 +260,7 @@ class TestLogin():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def test_login(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -291,7 +291,7 @@ class TestValidcredentials():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def login(self):
     self.driver.get(\\"https://the-internet.herokuapp.com/\\")
@@ -326,7 +326,7 @@ class TestSelectwindow():
     self.vars = {}
   
   def teardown_method(self, method):
-    self.driver.quit();
+    self.driver.quit()
   
   def wait_for_window(self, timeout = 2):
     time.sleep(round(timeout / 1000))

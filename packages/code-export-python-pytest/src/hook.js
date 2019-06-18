@@ -58,7 +58,7 @@ function afterEach() {
     startingSyntax: {
       commands: [
         { level: 0, statement: 'def teardown_method(self, method):' },
-        { level: 1, statement: 'self.driver.quit();' },
+        { level: 1, statement: 'self.driver.quit()' },
       ],
     },
     endingSyntax: {
