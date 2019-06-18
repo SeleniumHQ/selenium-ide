@@ -22,7 +22,18 @@ import { normalizeTestsInSuite } from '../../../selenium-ide/src/neo/IO/normaliz
 
 function readFile(filename) {
   return JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'test-files', filename))
+    fs.readFileSync(
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'code-export-utils',
+        '__test__',
+        'test-files',
+        filename
+      )
+    )
   )
 }
 
