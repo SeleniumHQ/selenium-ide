@@ -178,7 +178,7 @@ async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
     `vars["windowHandles"] = await driver.getAllWindowHandles()\n${await emittedCommand}\nvars["${
       command.windowHandleName
-    }"] = waitForWindow(${command.windowTimeout})`
+    }"] = await waitForWindow(${command.windowTimeout})`
   )
 }
 
@@ -357,7 +357,7 @@ async function emitDoubleClick(target) {
     {
       level: 0,
       statement:
-        'await driver.actions({ bridge: true}).double_click(element).perform()',
+        'await driver.actions({ bridge: true}).doubleClick(element).perform()',
     },
   ]
   return Promise.resolve({ commands })
@@ -380,7 +380,7 @@ async function emitDragAndDrop(dragged, dropped) {
     {
       level: 0,
       statement:
-        'await driver.actions({ bridge: true }).drag_and_drop(dragged, dropped).perform()',
+        'await driver.actions({ bridge: true }).dragAndDrop(dragged, dropped).perform()',
     },
   ]
   return Promise.resolve({ commands })
@@ -388,7 +388,7 @@ async function emitDragAndDrop(dragged, dropped) {
 
 async function emitEcho(message) {
   const _message = message.startsWith('vars[') ? message : `"${message}"`
-  return Promise.resolve(`console.log("${_message}")`)
+  return Promise.resolve(`console.log(${_message})`)
 }
 
 async function emitEditContent(locator, content) {
@@ -416,7 +416,7 @@ async function emitExecuteScript(script, varName) {
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  const result = `await driver.execute_async_script("var callback = arguments[arguments.length - 1];${
+  const result = `await driver.executeAsyncScript("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
@@ -433,7 +433,7 @@ async function emitMouseDown(locator) {
     {
       level: 0,
       statement:
-        'await driver.actions({ bridge: true }).move_to_element(element).click_and_hold().perform()',
+        'await driver.actions({ bridge: true }).moveToElement(element).clickAndHold().perform()',
     },
   ]
   return Promise.resolve({ commands })
@@ -450,7 +450,7 @@ async function emitMouseMove(locator) {
     {
       level: 0,
       statement:
-        'await driver.actions({ bridge: true }).move_to_element(element).perform()',
+        'await driver.actions({ bridge: true }).moveToElement(element).perform()',
     },
   ]
   return Promise.resolve({ commands })
@@ -465,7 +465,7 @@ async function emitMouseOut() {
     {
       level: 0,
       statement:
-        'await driver.actions({ bridge: true }).move_to_element(element, 0, 0).perform()',
+        'await driver.actions({ bridge: true }).moveToElement(element, 0, 0).perform()',
     },
   ]
   return Promise.resolve({ commands })
@@ -482,7 +482,7 @@ async function emitMouseUp(locator) {
     {
       level: 0,
       statement:
-        'await driver.actions({ bridge: true }).move_to_element(element).release().perform()',
+        'await driver.actions({ bridge: true }).moveToElement(element).release().perform()',
     },
   ]
   return Promise.resolve({ commands })
@@ -678,7 +678,7 @@ async function emitStoreValue(locator, varName) {
 
 async function emitStoreWindowHandle(varName) {
   return Promise.resolve(
-    variableSetter(varName, 'await driver.getWindowHandle')
+    variableSetter(varName, 'await driver.getWindowHandle()')
   )
 }
 
@@ -877,7 +877,7 @@ async function emitWaitForElementPresent(locator, timeout) {
   return Promise.resolve(
     `await driver.wait(until.elementLocated(${await location.emit(
       locator
-    )}), ${Math.floor(timeout)});`
+    )}), ${Math.floor(timeout)})`
   )
 }
 
@@ -885,7 +885,7 @@ async function emitWaitForElementNotPresent(locator, timeout) {
   return Promise.resolve(
     `await driver.wait(until.stalenessOf(await driver.findElement(${await location.emit(
       locator
-    )})), ${Math.floor(timeout)});`
+    )})), ${Math.floor(timeout)})`
   )
 }
 
@@ -893,7 +893,7 @@ async function emitWaitForElementVisible(locator, timeout) {
   return Promise.resolve(
     `await driver.wait(until.elementIsVisible(await driver.findElement(${await location.emit(
       locator
-    )})), ${Math.floor(timeout)});`
+    )})), ${Math.floor(timeout)})`
   )
 }
 
@@ -901,7 +901,7 @@ async function emitWaitForElementNotVisible(locator, timeout) {
   return Promise.resolve(
     `await driver.wait(until.elementIsNotVisible(await driver.findElement(${await location.emit(
       locator
-    )})), ${Math.floor(timeout)});`
+    )})), ${Math.floor(timeout)})`
   )
 }
 
@@ -909,7 +909,7 @@ async function emitWaitForElementEditable(locator, timeout) {
   return Promise.resolve(
     `await driver.wait(until.elementIsEnabled(await driver.findElement(${await location.emit(
       locator
-    )})), ${Math.floor(timeout)});`
+    )})), ${Math.floor(timeout)})`
   )
 }
 
@@ -917,7 +917,7 @@ async function emitWaitForElementNotEditable(locator, timeout) {
   return Promise.resolve(
     `await driver.wait(until.elementIsDisabled(await driver.findElement(${await location.emit(
       locator
-    )})), ${Math.floor(timeout)});`
+    )})), ${Math.floor(timeout)})`
   )
 }
 
