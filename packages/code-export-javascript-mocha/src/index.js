@@ -28,7 +28,7 @@ opts.emitter = emitter
 opts.hooks = generateHooks()
 opts.fileExtension = '.spec.js'
 opts.commandPrefixPadding = '  '
-opts.terminatingKeyword = '}'
+opts.terminatingKeyword = '})'
 opts.commentPrefix = '//'
 opts.generateMethodDeclaration = generateMethodDeclaration
 
@@ -36,10 +36,10 @@ opts.generateMethodDeclaration = generateMethodDeclaration
 function generateTestDeclaration(name) {
   return `it('${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
-  )}', function() {`
+  )}', async function() {`
 }
 function generateMethodDeclaration(name) {
-  return `function ${exporter.parsers.uncapitalize(
+  return `async function ${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
   )}() {`
 }
