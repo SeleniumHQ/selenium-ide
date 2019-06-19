@@ -146,7 +146,7 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `async function ${name}(timeout = 2):`
+    return `async function ${name}(timeout = 2) {`
   }
   const commands = [
     { level: 0, statement: 'await driver.sleep(timeout / 1000)' },
@@ -286,7 +286,7 @@ function emitControlFlowEnd() {
 function emitControlFlowIf(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `if (${generateExpressionScript(script)}) {` },
+      { level: 0, statement: `if (!!${generateExpressionScript(script)}) {` },
     ],
     endingLevelAdjustment: 1,
   })
@@ -319,7 +319,7 @@ function emitControlFlowRepeatIf(script) {
         statement: `} while(!!${generateExpressionScript(script)})`,
       },
     ],
-    endingLevelAdjustment: -1,
+    startingLevelAdjustment: -1,
   })
 }
 

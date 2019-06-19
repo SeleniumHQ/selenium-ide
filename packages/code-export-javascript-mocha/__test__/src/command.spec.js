@@ -417,7 +417,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `if (await driver.executeScript("return (true)")) {`,
+      body: `if (!!await driver.executeScript("return (true)")) {`,
       endingLevel: 1,
     })
   })
