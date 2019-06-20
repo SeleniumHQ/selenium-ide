@@ -34,19 +34,18 @@ opts.generateMethodDeclaration = generateMethodDeclaration
 
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
 function generateTestDeclaration(name) {
-  return `it('${exporter.parsers.uncapitalize(
-    exporter.parsers.sanitizeName(name)
-  )}', async function() {`
+  return `it('${name}', async function() {`
 }
 function generateMethodDeclaration(name) {
-  return `async function ${exporter.parsers.uncapitalize(
-    exporter.parsers.sanitizeName(name)
-  )}() {`
+  return {
+    body: `async function ${exporter.parsers.uncapitalize(
+      exporter.parsers.sanitizeName(name)
+    )}() {`,
+    terminatingKeyword: '}',
+  }
 }
 function generateSuiteDeclaration(name) {
-  return `describe('${exporter.parsers.uncapitalize(
-    exporter.parsers.sanitizeName(name)
-  )}', function() {`
+  return `describe('${name}', function() {`
 }
 function generateFilename(name) {
   return `${exporter.parsers.uncapitalize(

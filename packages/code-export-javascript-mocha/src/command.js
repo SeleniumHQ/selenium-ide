@@ -146,10 +146,13 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `async function ${name}(timeout = 2) {`
+    return {
+      body: `async function ${name}(timeout = 2) {`,
+      terminatingKeyword: '}',
+    }
   }
   const commands = [
-    { level: 0, statement: 'await driver.sleep(timeout / 1000)' },
+    { level: 0, statement: 'await driver.sleep(timeout)' },
     { level: 0, statement: 'const handlesThen = vars["windowHandles"]' },
     {
       level: 0,

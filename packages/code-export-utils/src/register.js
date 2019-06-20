@@ -49,7 +49,11 @@ export async function registerMethod(
   result,
   { generateMethodDeclaration, hooks }
 ) {
-  const methodDeclaration = generateMethodDeclaration(name)
+  let methodDeclaration = generateMethodDeclaration(name)
+  methodDeclaration =
+    typeof methodDeclaration === 'object'
+      ? methodDeclaration.body
+      : methodDeclaration
   if (!(await hooks.declareMethods.isRegistered(methodDeclaration))) {
     result.forEach(statement => {
       hooks.declareMethods.register(() => {

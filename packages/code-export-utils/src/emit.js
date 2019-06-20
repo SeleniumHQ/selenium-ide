@@ -105,6 +105,12 @@ async function emitMethod(
   } = {}
 ) {
   const methodDeclaration = generateMethodDeclaration(method.name)
+  let _methodDeclaration = methodDeclaration
+  let _terminatingKeyword = terminatingKeyword
+  if (typeof methodDeclaration === 'object') {
+    _methodDeclaration = methodDeclaration.body
+    _terminatingKeyword = methodDeclaration.terminatingKeyword
+  }
   let result
   if (overrideCommandEmitting) {
     result = method.commands.map(
@@ -114,9 +120,9 @@ async function emitMethod(
     result = await emitCommands(method.commands, emitter)
   }
   return [
-    methodDeclaration,
+    _methodDeclaration,
     result.join(`\n${commandPrefixPadding}`).replace(/^/, commandPrefixPadding),
-    terminatingKeyword,
+    _terminatingKeyword,
   ]
 }
 
