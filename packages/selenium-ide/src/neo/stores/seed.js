@@ -595,7 +595,6 @@ export default function seed(store, numberOfSuites = 0) {
   selectWindow.createCommand(undefined, 'close')
   selectWindow.createCommand(undefined, 'selectWindow', 'handle=${handle}')
   selectWindow.createCommand(undefined, 'assertTitle', 'The Internet')
-  selectWindow.createCommand(undefined, 'close')
 
   const login = store.createTestCase('login')
   login.createCommand(undefined, 'open', '/login')
