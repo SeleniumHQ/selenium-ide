@@ -162,7 +162,7 @@ function emitWaitForWindow() {
     {
       level: 1,
       statement:
-        'return handlesNow.find(handle => (!handlesThen.includes(handle))',
+        'return handlesNow.find(handle => (!handlesThen.includes(handle)))',
     },
     { level: 0, statement: '}' },
     {

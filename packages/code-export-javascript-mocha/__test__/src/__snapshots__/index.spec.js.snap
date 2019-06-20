@@ -169,7 +169,7 @@ describe('Default Suite', function() {
     const handlesThen = vars[\\"windowHandles\\"]
     const handlesNow = await driver.getAllWindowHandles()
     if (handlesNow.length > handlesThen.length) {
-      return handlesNow.find(handle => (!handlesThen.includes(handle))
+      return handlesNow.find(handle => (!handlesThen.includes(handle)))
     }
     throw new Error(\\"New window did not appear before timeout\\")
   }
@@ -209,7 +209,7 @@ describe('Default Suite', function() {
     const handlesThen = vars[\\"windowHandles\\"]
     const handlesNow = await driver.getAllWindowHandles()
     if (handlesNow.length > handlesThen.length) {
-      return handlesNow.find(handle => (!handlesThen.includes(handle))
+      return handlesNow.find(handle => (!handlesThen.includes(handle)))
     }
     throw new Error(\\"New window did not appear before timeout\\")
   }
@@ -317,7 +317,7 @@ describe('select window', function() {
     const handlesThen = vars[\\"windowHandles\\"]
     const handlesNow = await driver.getAllWindowHandles()
     if (handlesNow.length > handlesThen.length) {
-      return handlesNow.find(handle => (!handlesThen.includes(handle))
+      return handlesNow.find(handle => (!handlesThen.includes(handle)))
     }
     throw new Error(\\"New window did not appear before timeout\\")
   }
