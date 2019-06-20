@@ -870,16 +870,17 @@ async function emitVerifySelectedLabel(locator, labelValue) {
       level: 1,
       statement: `const element = await driver.findElement(${await location.emit(
         locator
-      )}).getAttribute("value")`,
-    },
-    {
-      level: 1,
-      statement: "const locator = `option[@value='${element}']`",
+      )})`,
     },
     {
       level: 1,
       statement:
-        'const selectedText = element.findElement(By.xpath(locator)).getText()',
+        'const locator = `option[@value=\'${await element.getAttribute("value")}\']`',
+    },
+    {
+      level: 1,
+      statement:
+        'const selectedText = await element.findElement(By.xpath(locator)).getText()',
     },
     { level: 1, statement: `assert(selectedText == "${labelValue}")` },
     { level: 0, statement: `}` },

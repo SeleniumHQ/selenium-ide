@@ -190,11 +190,11 @@ describe('command code emitter', () => {
     return expect(prettify(command)).resolves.toBe(
       '{\n' +
         commandPrefixPadding +
-        'const element = await driver.findElement(By.id("test")).getAttribute("value")\n' +
+        'const element = await driver.findElement(By.id("test"))\n' +
         commandPrefixPadding +
-        "const locator = `option[@value='${element}']`\n" +
+        'const locator = `option[@value=\'${await element.getAttribute("value")}\']`\n' +
         commandPrefixPadding +
-        'const selectedText = element.findElement(By.xpath(locator)).getText()\n' +
+        'const selectedText = await element.findElement(By.xpath(locator)).getText()\n' +
         commandPrefixPadding +
         'assert(selectedText == "test")\n}'
     )
@@ -914,11 +914,11 @@ describe('command code emitter', () => {
     return expect(prettify(command)).resolves.toBe(
       '{\n' +
         commandPrefixPadding +
-        'const element = await driver.findElement(By.id("test")).getAttribute("value")\n' +
+        'const element = await driver.findElement(By.id("test"))\n' +
         commandPrefixPadding +
-        "const locator = `option[@value='${element}']`\n" +
+        'const locator = `option[@value=\'${await element.getAttribute("value")}\']`\n' +
         commandPrefixPadding +
-        'const selectedText = element.findElement(By.xpath(locator)).getText()\n' +
+        'const selectedText = await element.findElement(By.xpath(locator)).getText()\n' +
         commandPrefixPadding +
         'assert(selectedText == "test")\n}'
     )
