@@ -21,7 +21,11 @@ This will place inline code comments in the exported file with details about the
 
 ## Supported Exports
 
-Currently, export to Java is supported. Specifically, Java for JUnit.
+Currently, export to the following languages and test frameworks is supported.
+
+- Java JUnit
+- JavaScript Mocha
+- Python pytest
 
 We intend to support all of the officially supported programming language bindings for Selenium (e.g., Java, JavaScript, C#, Python, and Ruby) in at least one testing framework for each language.
 
@@ -58,6 +62,40 @@ Here's a sample `pom.xml` to help you get started.
 </project>
 ```
 
+### JavaScript Mocha
+
+The exported code for JavaScript Mocha is built to work with Node 10, Mocha 6.1.x, and the latest version of Selenium 4.
+
+You should be able to take the exported JavaScript file and run it after installing these dependencies (e.g., with `npm install`).
+
+Here's a sample `package.json` to help you get started.
+
+```javascript
+{
+  "dependencies": {
+    "mocha": "^6.1.4",
+    "selenium-webdriver": "^4.0.0-alpha.3"
+  }
+}
+```
+
+### Python pytest
+
+The exported code for Python pytest is built to work with Python 3, pytest 4.6.x, and the latest version of Selenium 4.
+
+You should be able to take the exported JavaScript file and run it after installing these dependencies (e.g., with `pip3 install`).
+
+Here's a sample `requirements.txt` to help you get started.
+
+```
+pytest == 4.6.3
+selenium == 4.0.0a1
+```
+
+```sh
+> pip3 install -r ./requirements.txt
+```
+
 ## How To Contribute
 
 Code export was built in a modular way to help enable contributions.
@@ -72,7 +110,7 @@ First, copy an existing language package (e.g., `packages/code-export-java-junit
 
 Next, add the new package as a dependency to [the `package.json` in `code-export`](https://github.com/SeleniumHQ/selenium-ide/blob/c55c556ffc947fd3f6ee8ab317915c6f879a88dc/packages/code-export/package.json#L22).
 
-Lastly, run `yarn` from the root of the project.
+Lastly, run `yarn` from the root of the project, and then build the project using `yarn watch` (full details for getting a local build going are available [here](https://github.com/SeleniumHQ/selenium-ide/blob/v3/README.md)).
 
 ### 2. Update the locators and commands
 
