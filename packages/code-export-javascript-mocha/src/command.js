@@ -186,7 +186,7 @@ async function emitNewWindowHandling(command, emittedCommand) {
 }
 
 function emitAssert(varName, value) {
-  return Promise.resolve(`assert(vars["${varName}"] == "${value}")`)
+  return Promise.resolve(`assert(vars["${varName}"].toString() == "${value}")`)
 }
 
 function emitAssertAlert(alertText) {

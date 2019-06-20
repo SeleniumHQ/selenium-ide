@@ -68,7 +68,7 @@ describe('command code emitter', () => {
       value: 'blah',
     }
     expect(prettify(command)).resolves.toBe(
-      `assert(vars["varrrName"] == "blah")`
+      `assert(vars["varrrName"].toString() == "blah")`
     )
   })
   it('should emit `assert alert` command', () => {
@@ -822,7 +822,7 @@ describe('command code emitter', () => {
       value: 'blah',
     }
     expect(prettify(command)).resolves.toBe(
-      `assert(vars["varrrName"] == "blah")`
+      `assert(vars["varrrName"].toString() == "blah")`
     )
   })
   it('should emit `verify checked` command', () => {

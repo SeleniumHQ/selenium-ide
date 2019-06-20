@@ -61,7 +61,7 @@ describe('control flow', function() {
     } else {
       vars[\\"output\\"] = await driver.executeScript(\\"return 'c'\\")
     }
-    assert(vars[\\"output\\"] == \\"a\\")
+    assert(vars[\\"output\\"].toString() == \\"a\\")
   })
   it('control flow else if', async function() {
     vars[\\"myVar\\"] = await driver.executeScript(\\"return 'b'\\")
@@ -72,7 +72,7 @@ describe('control flow', function() {
     } else {
       vars[\\"output\\"] = await driver.executeScript(\\"return 'c'\\")
     }
-    assert(vars[\\"output\\"] == \\"b\\")
+    assert(vars[\\"output\\"].toString() == \\"b\\")
   })
   it('control flow else', async function() {
     vars[\\"myVar\\"] = await driver.executeScript(\\"return 'c'\\")
@@ -83,14 +83,14 @@ describe('control flow', function() {
     } else {
       vars[\\"output\\"] = await driver.executeScript(\\"return 'c'\\")
     }
-    assert(vars[\\"output\\"] == \\"c\\")
+    assert(vars[\\"output\\"].toString() == \\"c\\")
   })
   it('control flow do', async function() {
     vars[\\"check\\"] = await driver.executeScript(\\"return 1\\")
     do {
       vars[\\"check\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     } while(!!await driver.executeScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]))
-    assert(vars[\\"check\\"] == \\"3\\")
+    assert(vars[\\"check\\"].toString() == \\"3\\")
   })
   it('control flow times', async function() {
     vars[\\"check\\"] = await driver.executeScript(\\"return 1\\")
@@ -98,14 +98,14 @@ describe('control flow', function() {
     for(let i = 0; i < times; i++) {
       vars[\\"check\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     }
-    assert(vars[\\"check\\"] == \\"3\\")
+    assert(vars[\\"check\\"].toString() == \\"3\\")
   })
   it('control flow while', async function() {
     vars[\\"check\\"] = await driver.executeScript(\\"return 1\\")
     while(!!await driver.executeScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
       vars[\\"check\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     }
-    assert(vars[\\"check\\"] == \\"3\\")
+    assert(vars[\\"check\\"].toString() == \\"3\\")
   })
 })
 "
