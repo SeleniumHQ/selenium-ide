@@ -57,9 +57,7 @@ describe('command code emitter', () => {
       target: 'css=select',
       value: 'label=A label',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const dropdown = await driver.findElement(By.css("select"))\n${commandPrefixPadding}await dropdown.findElement(By.xpath("//option[. = 'A label']")).click()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert` command', () => {
     const command = {
@@ -67,9 +65,7 @@ describe('command code emitter', () => {
       target: 'varrrName',
       value: 'blah',
     }
-    expect(prettify(command)).resolves.toBe(
-      `assert(vars["varrrName"].toString() == "blah")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert alert` command', () => {
     const command = {
@@ -77,9 +73,7 @@ describe('command code emitter', () => {
       target: 'an alert',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.switchTo().alert().getText() == "an alert")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert checked` command', () => {
     const command = {
@@ -87,9 +81,7 @@ describe('command code emitter', () => {
       target: 'id=check',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.findElement(By.id("check")).isSelected())`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert confirmation` command', () => {
     const command = {
@@ -97,9 +89,7 @@ describe('command code emitter', () => {
       target: 'a confirmation',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.switchTo().alert().getText() == "a confirmation")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert editable` command', () => {
     const command = {
@@ -107,9 +97,7 @@ describe('command code emitter', () => {
       target: 'id=text',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("text"))\n${commandPrefixPadding}assert(await element.isEnabled())\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert element present` command', () => {
     const command = {
@@ -117,9 +105,7 @@ describe('command code emitter', () => {
       target: 'id=element',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const elements = await driver.findElements(By.id("element"))\n${commandPrefixPadding}assert(elements.length)\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert element not present` command', () => {
     const command = {
@@ -127,9 +113,7 @@ describe('command code emitter', () => {
       target: 'id=element',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const elements = await driver.findElements(By.id("element"))\n${commandPrefixPadding}assert(!elements.length)\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert not checked` command', () => {
     const command = {
@@ -137,9 +121,7 @@ describe('command code emitter', () => {
       target: 'id=check',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(!await driver.findElement(By.id("check")).isSelected())`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert not editable` command', () => {
     const command = {
@@ -147,9 +129,7 @@ describe('command code emitter', () => {
       target: 'id=text',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("text"))\n${commandPrefixPadding}assert(!await element.isEnabled())\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert not selected value` command', () => {
     const command = {
@@ -157,9 +137,7 @@ describe('command code emitter', () => {
       target: 'id=select',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const value = await driver.findElement(By.id("select")).getAttribute("value")\n${commandPrefixPadding}assert(value !== "test")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert not text` command', () => {
     const command = {
@@ -167,9 +145,7 @@ describe('command code emitter', () => {
       target: 'id=test',
       value: 'text',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const text = await driver.findElement(By.id("test")).getText()\n${commandPrefixPadding}assert(text !== "text")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert prompt` command', () => {
     const command = {
@@ -177,9 +153,7 @@ describe('command code emitter', () => {
       target: 'a prompt',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.switchTo().alert().getText() == "a prompt")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it("should emit 'assert selected label' command", () => {
     const command = {
@@ -187,17 +161,7 @@ describe('command code emitter', () => {
       target: 'id=test',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      '{\n' +
-        commandPrefixPadding +
-        'const element = await driver.findElement(By.id("test"))\n' +
-        commandPrefixPadding +
-        'const locator = `option[@value=\'${await element.getAttribute("value")}\']`\n' +
-        commandPrefixPadding +
-        'const selectedText = await element.findElement(By.xpath(locator)).getText()\n' +
-        commandPrefixPadding +
-        'assert(selectedText == "test")\n}'
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert selected value` command', () => {
     const command = {
@@ -205,9 +169,7 @@ describe('command code emitter', () => {
       target: 'id=select',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const value = await driver.findElement(By.id("select")).getAttribute("value")\n${commandPrefixPadding}assert(value == "test")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert text` command', () => {
     const command = {
@@ -215,9 +177,7 @@ describe('command code emitter', () => {
       target: 'id=test',
       value: 'some text that should be here',
     }
-    expect(prettify(command)).resolves.toBe(
-      `assert(await driver.findElement(By.id("test")).getText() == "some text that should be here")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert title` command', () => {
     const command = {
@@ -225,9 +185,7 @@ describe('command code emitter', () => {
       target: 'example title',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.getTitle() == "example title")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `assert value` command', () => {
     const command = {
@@ -235,9 +193,7 @@ describe('command code emitter', () => {
       target: 'id=select',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const value = await driver.findElement(By.id("select")).getAttribute("value")\n${commandPrefixPadding}assert(value == "test")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `click` command', () => {
     const command = {
@@ -245,9 +201,7 @@ describe('command code emitter', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.findElement(By.linkText("button")).click()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `click at` command', () => {
     const command = {
@@ -255,9 +209,7 @@ describe('command code emitter', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.findElement(By.linkText("button")).click()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `check` command', () => {
     const command = {
@@ -265,9 +217,7 @@ describe('command code emitter', () => {
       target: 'id=f',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("f"))\n${commandPrefixPadding}if (!(await element.isSelected())) await element.click()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `close` command', () => {
     const command = {
@@ -275,7 +225,7 @@ describe('command code emitter', () => {
       target: '',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`await driver.close()`)
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `do` command', () => {
     const command = {
@@ -283,10 +233,9 @@ describe('command code emitter', () => {
       target: '',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: 'do {',
-      endingLevel: 1,
-    })
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `double click` command', () => {
     const command = {
@@ -294,9 +243,7 @@ describe('command code emitter', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.linkText("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true}).doubleClick(element).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `double click at` command', () => {
     const command = {
@@ -304,9 +251,7 @@ describe('command code emitter', () => {
       target: 'link=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.linkText("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true}).doubleClick(element).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `drag and drop to object` command', () => {
     const command = {
@@ -314,9 +259,7 @@ describe('command code emitter', () => {
       target: 'link=dragged',
       value: 'link=dropped',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const dragged = await driver.findElement(By.linkText("dragged"))\n${commandPrefixPadding}const dropped = await driver.findElement(By.linkText("dropped"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).dragAndDrop(dragged, dropped).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `echo` command', () => {
     const command = {
@@ -324,7 +267,7 @@ describe('command code emitter', () => {
       target: 'blah',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`console.log("blah")`)
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `echo` command with variables', () => {
     const command = {
@@ -332,7 +275,7 @@ describe('command code emitter', () => {
       target: '${blah}',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`console.log(vars["blah"])`)
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `edit content` command', () => {
     const command = {
@@ -340,9 +283,7 @@ describe('command code emitter', () => {
       target: 'id=contentEditable',
       value: '<button>test</button>',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("contentEditable"))\n${commandPrefixPadding}await driver.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}", element)\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `else` command', () => {
     const command = {
@@ -350,10 +291,9 @@ describe('command code emitter', () => {
       target: 'true',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `} else {`,
-      endingLevel: 1,
-    })
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `else if` command', () => {
     const command = {
@@ -361,10 +301,9 @@ describe('command code emitter', () => {
       target: 'true',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `} else if (!!await driver.executeScript("return (true)")) {`,
-      endingLevel: 1,
-    })
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `end` command', async () => {
     const command = {
@@ -372,10 +311,9 @@ describe('command code emitter', () => {
       target: '',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: '}',
-      endingLevel: 0,
-    })
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `execute script` command', () => {
     const command = {
@@ -383,9 +321,7 @@ describe('command code emitter', () => {
       target: 'javascript',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.executeScript("javascript")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `execute script` command with return string value', () => {
     const command = {
@@ -393,9 +329,7 @@ describe('command code emitter', () => {
       target: 'return "a"',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.executeScript("return 'a'")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `execute async script` command', () => {
     const command = {
@@ -403,9 +337,7 @@ describe('command code emitter', () => {
       target: 'javascript',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.executeAsyncScript("var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `forEach` command', () => {
     const command = {
@@ -413,10 +345,9 @@ describe('command code emitter', () => {
       target: 'collection',
       value: 'iteratorVar',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `const collection = vars["collection"]\nfor (let i = 0; i < collection.length - 1; i++) {\n${commandPrefixPadding}vars["iteratorVar"] = vars["collection"][i]`,
-      endingLevel: 1,
-    })
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `if` command', () => {
     const command = {
@@ -424,10 +355,9 @@ describe('command code emitter', () => {
       target: 'true',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `if (!!await driver.executeScript("return (true)")) {`,
-      endingLevel: 1,
-    })
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `mouse down` command', () => {
     const command = {
@@ -435,9 +365,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).clickAndHold().perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse down at` event', () => {
     const command = {
@@ -445,9 +373,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).clickAndHold().perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse move` event', () => {
     const command = {
@@ -455,9 +381,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse move at` event', () => {
     const command = {
@@ -465,9 +389,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse out` event', () => {
     const command = {
@@ -475,9 +397,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.CSS_SELECTOR, "body")\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element, 0, 0).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse over` event', () => {
     const command = {
@@ -485,9 +405,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse up` event', () => {
     const command = {
@@ -495,9 +413,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).release().perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `mouse up at` event', () => {
     const command = {
@@ -505,9 +421,7 @@ describe('command code emitter', () => {
       target: 'id=button',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("button"))\n${commandPrefixPadding}await driver.actions({ bridge: true }).moveToElement(element).release().perform()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `open` with absolute url', () => {
     const command = {
@@ -515,9 +429,7 @@ describe('command code emitter', () => {
       target: 'https://www.seleniumhq.org/',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.get("${command.target}")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `pause` command', () => {
     const command = {
@@ -525,7 +437,7 @@ describe('command code emitter', () => {
       target: '300',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`await driver.sleep(300)`)
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `remove selection` command', () => {
     const command = {
@@ -533,9 +445,7 @@ describe('command code emitter', () => {
       target: 'css=select',
       value: 'label=A label',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const dropdown = await driver.findElement(By.css("select"))\n${commandPrefixPadding}await dropdown.findElement(By.xpath("//option[. = 'A label']")).click()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `repeatIf` command', () => {
     const command = {
@@ -543,9 +453,7 @@ describe('command code emitter', () => {
       target: 'true',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `} while(!!await driver.executeScript("return (true)"))`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `run` command', () => {
     const command = {
@@ -553,7 +461,7 @@ describe('command code emitter', () => {
       target: 'some test case',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(`sometestcase()`)
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `run script` command', () => {
     const command = {
@@ -561,9 +469,7 @@ describe('command code emitter', () => {
       target: "alert('test');alert('Im annoying');",
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.executeScript("alert('test');alert('Im annoying');")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `select` command', () => {
     const command = {
@@ -571,9 +477,7 @@ describe('command code emitter', () => {
       target: 'css=select',
       value: 'label=A label',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const dropdown = await driver.findElement(By.css("select"))\n${commandPrefixPadding}await dropdown.findElement(By.xpath("//option[. = 'A label']")).click()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `select frame` to select the top frame', () => {
     const command = {
@@ -581,9 +485,7 @@ describe('command code emitter', () => {
       target: 'relative=top',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().defaultContent()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should fail to emit `select window` by using unknown locator', () => {
     const command = {
@@ -601,9 +503,7 @@ describe('command code emitter', () => {
       target: 'handle=${window}',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().window(vars["window"])`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `select window` to select a window by name', () => {
     const command = {
@@ -611,9 +511,7 @@ describe('command code emitter', () => {
       target: 'name=window',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().window("window")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `select window` to select a window by the local keyword', () => {
     const command = {
@@ -621,9 +519,7 @@ describe('command code emitter', () => {
       target: 'win_ser_local',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().window(await driver.getAllWindowHandles()[0])`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `select window` to select a window by implicit index', () => {
     const command = {
@@ -631,9 +527,7 @@ describe('command code emitter', () => {
       target: 'win_ser_12',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().window(await driver.getAllWindowHandles()[12])`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `send keys` command', () => {
     const command = {
@@ -641,9 +535,7 @@ describe('command code emitter', () => {
       target: 'id=input',
       value: 'example input',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.findElement(By.id("input")).sendKeys("example input")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `send keys` command with a variable input', () => {
     const command = {
@@ -651,9 +543,7 @@ describe('command code emitter', () => {
       target: 'id=input',
       value: '${blah}',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.findElement(By.id("input")).sendKeys(vars["blah"])`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `send keys` command with a key press', () => {
     const command = {
@@ -661,14 +551,10 @@ describe('command code emitter', () => {
       target: 'id=input',
       value: 'SuperSecretPassword!${KEY_ENTER}',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.findElement(By.id("input")).sendKeys("SuperSecretPassword!", Key.ENTER)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `set speed`', () => {
-    expect(prettify({ command: 'setSpeed' })).resolves.toBe(
-      `console.log("\`set speed\` is a no-op in code export, use \`pause\` instead")`
-    )
+    return expect(prettify({ command: 'setSpeed' })).resolves.toMatchSnapshot()
   })
   it('should emit `setWindowSize`', () => {
     const command = {
@@ -676,7 +562,7 @@ describe('command code emitter', () => {
       target: '1440x1177',
       value: '',
     }
-    expect(prettify(command)).resolves.toBe(`await driver.setRect(1440, 1177)`)
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should skip playback supported commands, that are not supported in webdriver', () => {
     return Promise.all([
@@ -700,9 +586,7 @@ describe('command code emitter', () => {
       target: 'some value',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = "some value"`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store attribute` command', () => {
     const command = {
@@ -710,9 +594,7 @@ describe('command code emitter', () => {
       target: 'xpath=button[3]@id',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const attribute = await driver.findElement(By.xpath("button[3]")).getAttribute("id")\n${commandPrefixPadding}vars["myVar"] = attribute\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store text` command', () => {
     const command = {
@@ -720,9 +602,7 @@ describe('command code emitter', () => {
       target: 'id=someElement',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.findElement(By.id("someElement")).getText()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store json` command', () => {
     const command = {
@@ -730,9 +610,7 @@ describe('command code emitter', () => {
       target: '[{"a":0}]',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = JSON.parse('[{"a":0}]')`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store title` command', () => {
     const command = {
@@ -740,9 +618,7 @@ describe('command code emitter', () => {
       target: '',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.getTitle()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store value` command', () => {
     const command = {
@@ -750,9 +626,7 @@ describe('command code emitter', () => {
       target: 'id=someElement',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.findElement(By.id("someElement")).getAttribute("value")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store window handle` command', () => {
     const command = {
@@ -760,9 +634,7 @@ describe('command code emitter', () => {
       target: 'windowName',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["windowName"] = await driver.getWindowHandle()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store xpath count` command', () => {
     const command = {
@@ -770,9 +642,7 @@ describe('command code emitter', () => {
       target: 'xpath=button',
       value: 'myVar',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["myVar"] = await driver.findElements(By.xpath("button")).length`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `submit` command', () => {
     const command = {
@@ -780,9 +650,7 @@ describe('command code emitter', () => {
       target: 'id=form',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `raise Exception("\`submit\` is not a supported command in Selenium Webdriver. Please re-record the step in the IDE.")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `times` command', () => {
     const command = {
@@ -790,10 +658,7 @@ describe('command code emitter', () => {
       target: '5',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `const times = 5\nfor(let i = 0; i < times; i++) {`,
-      endingLevel: 1,
-    })
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `type` command', () => {
     const command = {
@@ -801,9 +666,7 @@ describe('command code emitter', () => {
       target: 'id=input',
       value: 'example input',
     }
-    expect(prettify(command)).resolves.toBe(
-      `await driver.findElement(By.id("input")).sendKeys("example input")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `uncheck` command', () => {
     const command = {
@@ -811,9 +674,7 @@ describe('command code emitter', () => {
       target: 'id=f',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("f"))\n${commandPrefixPadding}if (await element.isSelected()) await element.click()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify` command', () => {
     const command = {
@@ -821,9 +682,7 @@ describe('command code emitter', () => {
       target: 'varrrName',
       value: 'blah',
     }
-    expect(prettify(command)).resolves.toBe(
-      `assert(vars["varrrName"].toString() == "blah")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify checked` command', () => {
     const command = {
@@ -831,9 +690,7 @@ describe('command code emitter', () => {
       target: 'id=check',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.findElement(By.id("check")).isSelected())`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify editable` command', () => {
     const command = {
@@ -841,9 +698,7 @@ describe('command code emitter', () => {
       target: 'id=text',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("text"))\n${commandPrefixPadding}assert(await element.isEnabled())\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify element present` command', () => {
     const command = {
@@ -851,9 +706,7 @@ describe('command code emitter', () => {
       target: 'id=element',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const elements = await driver.findElements(By.id("element"))\n${commandPrefixPadding}assert(elements.length)\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify element not present` command', () => {
     const command = {
@@ -861,9 +714,7 @@ describe('command code emitter', () => {
       target: 'id=element',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const elements = await driver.findElements(By.id("element"))\n${commandPrefixPadding}assert(!elements.length)\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify not checked` command', () => {
     const command = {
@@ -871,9 +722,7 @@ describe('command code emitter', () => {
       target: 'id=check',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(!await driver.findElement(By.id("check")).isSelected())`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify not editable` command', () => {
     const command = {
@@ -881,9 +730,7 @@ describe('command code emitter', () => {
       target: 'id=text',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const element = await driver.findElement(By.id("text"))\n${commandPrefixPadding}assert(!await element.isEnabled())\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify not selected value` command', () => {
     const command = {
@@ -891,9 +738,7 @@ describe('command code emitter', () => {
       target: 'id=select',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const value = await driver.findElement(By.id("select")).getAttribute("value")\n${commandPrefixPadding}assert(value !== "test")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify not text` command', () => {
     const command = {
@@ -901,9 +746,7 @@ describe('command code emitter', () => {
       target: 'id=test',
       value: 'text',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const text = await driver.findElement(By.id("test")).getText()\n${commandPrefixPadding}assert(text !== "text")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it("should emit 'verify selected label' command", () => {
     const command = {
@@ -911,17 +754,7 @@ describe('command code emitter', () => {
       target: 'id=test',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      '{\n' +
-        commandPrefixPadding +
-        'const element = await driver.findElement(By.id("test"))\n' +
-        commandPrefixPadding +
-        'const locator = `option[@value=\'${await element.getAttribute("value")}\']`\n' +
-        commandPrefixPadding +
-        'const selectedText = await element.findElement(By.xpath(locator)).getText()\n' +
-        commandPrefixPadding +
-        'assert(selectedText == "test")\n}'
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify value` command', () => {
     const command = {
@@ -929,9 +762,7 @@ describe('command code emitter', () => {
       target: 'id=select',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const value = await driver.findElement(By.id("select")).getAttribute("value")\n${commandPrefixPadding}assert(value == "test")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify selected value` command', () => {
     const command = {
@@ -939,9 +770,7 @@ describe('command code emitter', () => {
       target: 'id=select',
       value: 'test',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const value = await driver.findElement(By.id("select")).getAttribute("value")\n${commandPrefixPadding}assert(value == "test")\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify text` command', () => {
     const command = {
@@ -949,9 +778,7 @@ describe('command code emitter', () => {
       target: 'id=test',
       value: 'some text that should be here',
     }
-    expect(prettify(command)).resolves.toBe(
-      `assert(await driver.findElement(By.id("test")).getText() == "some text that should be here")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `verify title` command', () => {
     const command = {
@@ -959,9 +786,7 @@ describe('command code emitter', () => {
       target: 'example title',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `assert(await driver.getTitle() == "example title")`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `waitForElementEditable` command', () => {
     const command = {
@@ -969,9 +794,7 @@ describe('command code emitter', () => {
       target: 'css=#blah',
       value: '5000',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.wait(until.elementIsEnabled(await driver.findElement(By.css("#blah"))), 5000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `waitForElementPresent` command', () => {
     const command = {
@@ -979,9 +802,7 @@ describe('command code emitter', () => {
       target: 'css=#blah',
       value: '5000',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.css("#blah")), 5000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `waitForElementVisible` command', () => {
     const command = {
@@ -989,9 +810,7 @@ describe('command code emitter', () => {
       target: 'css=#blah',
       value: '5000',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.wait(until.elementIsVisible(await driver.findElement(By.css("#blah"))), 5000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `waitForElementNotEditable` command', () => {
     const command = {
@@ -999,9 +818,7 @@ describe('command code emitter', () => {
       target: 'css=#blah',
       value: '5000',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.wait(until.elementIsDisabled(await driver.findElement(By.css("#blah"))), 5000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `waitForElementNotPresent` command', () => {
     const command = {
@@ -1009,9 +826,7 @@ describe('command code emitter', () => {
       target: 'css=#blah',
       value: '5000',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.wait(until.stalenessOf(await driver.findElement(By.css("#blah"))), 5000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `waitForElementNotVisible` command', () => {
     const command = {
@@ -1019,9 +834,7 @@ describe('command code emitter', () => {
       target: 'css=#blah',
       value: '5000',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.wait(until.elementIsNotVisible(await driver.findElement(By.css("#blah"))), 5000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `answer on visible prompt` command', () => {
     const command = {
@@ -1029,9 +842,7 @@ describe('command code emitter', () => {
       target: 'an answer',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `{\n${commandPrefixPadding}const alert = await driver.switchTo().alert()\n${commandPrefixPadding}await alert.sendKeys("an answer")\n${commandPrefixPadding}await alert.accept()\n}`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `choose cancel on visible prompt` command', () => {
     const command = {
@@ -1039,9 +850,7 @@ describe('command code emitter', () => {
       target: '',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().alert().dismiss()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `choose ok on visible confirmation` command', () => {
     const command = {
@@ -1049,9 +858,7 @@ describe('command code emitter', () => {
       target: '',
       value: '',
     }
-    return expect(prettify(command)).resolves.toBe(
-      `await driver.switchTo().alert().accept()`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `while` command', () => {
     const command = {
@@ -1059,10 +866,7 @@ describe('command code emitter', () => {
       target: 'true',
       value: '',
     }
-    return expect(prettify(command, { fullPayload: true })).resolves.toEqual({
-      body: `while(!!await driver.executeScript("return (true)")) {`,
-      endingLevel: 1,
-    })
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit new window handling, if command opens a new window', () => {
     const command = {
@@ -1073,8 +877,6 @@ describe('command code emitter', () => {
       windowHandleName: 'newWin',
       windowTimeout: 2000,
     }
-    return expect(prettify(command)).resolves.toBe(
-      `vars["windowHandles"] = await driver.getAllWindowHandles()\nawait driver.findElement(By.css("button")).click()\nvars["newWin"] = await waitForWindow(2000)`
-    )
+    return expect(prettify(command)).resolves.toMatchSnapshot()
   })
 })
