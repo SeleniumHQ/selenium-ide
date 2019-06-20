@@ -58,8 +58,7 @@ describe('Code Export Java JUnit Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  // TODO: add support for alt. terminating keyword
-  it.skip('should export a test with a reused test method', async () => {
+  it('should export a test with a reused test method', async () => {
     const project = normalizeProject(readFile('test-case-reuse.side'))
     const results = await emitTest({
       baseUrl: project.url,
@@ -69,8 +68,7 @@ describe('Code Export Java JUnit Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  // TODO: add support for alt. terminating keyword
-  it.skip('should export a suite with a reused test method', async () => {
+  it('should export a suite with a reused test method', async () => {
     const project = normalizeProject(readFile('test-case-reuse.side'))
     const results = await emitSuite({
       baseUrl: project.url,
@@ -90,8 +88,7 @@ describe('Code Export Java JUnit Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  // TODO: add support for alt. terminating keyword
-  it.skip('should export a test with commands that open a new window', async () => {
+  it('should export a test with commands that open a new window', async () => {
     const project = normalizeProject(readFile('select-window.side'))
     const results = await emitTest({
       baseUrl: project.url,
@@ -101,8 +98,7 @@ describe('Code Export Java JUnit Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  // TODO: add support for alt. terminating keyword
-  it.skip('should export a suite with commands that open a new window inside of a reused test method', async () => {
+  it('should export a suite with commands that open a new window inside of a reused test method', async () => {
     const project = normalizeProject(readFile('nested-select-window.side'))
     const results = await emitSuite({
       baseUrl: project.url,
@@ -112,8 +108,7 @@ describe('Code Export Java JUnit Selenium', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  // TODO: add support for alt. terminating keyword
-  it.skip('should export a suite with just one new window util method when there are multiple commands that open a new window', async () => {
+  it('should export a suite with just one new window util method when there are multiple commands that open a new window', async () => {
     const project = normalizeProject(readFile('nested-select-window-v2.side'))
     const results = await emitSuite({
       baseUrl: project.url,
