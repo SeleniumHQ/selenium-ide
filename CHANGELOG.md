@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.10.0
+- Code export for JavaScript (e.g., Mocha, Node 10)
+
 ## v3.9.0
 - Code export for Python (e.g., pytest, Python 3)
 - Fix for frames to support `relative=parent` in the runner
