@@ -1,6 +1,6 @@
-<img src="packages/selenium-ide-extension/src/icons/icon128.png" alt="logo" height="128" align="right" />
+<img src="https://www.seleniumhq.org/selenium-ide/img/selenium-ide128.png" alt="logo" height="128" align="right" />
 
-# Selenium IDE &middot; [![Build Status](https://travis-ci.org/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.org/SeleniumHQ/selenium-ide)
+# Selenium IDE &middot; [![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.com/SeleniumHQ/selenium-ide)
 
 _[WIP] An integrated development environment for Selenium scripts_
 
@@ -18,6 +18,8 @@ The IDE traditionally was developed to be a browser extension, we are now rewrit
 - [Firefox extension](https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/)
 
 ## Electron
+
+The move to Electron is a work in progress. We will post updates as progress is made. If you're looking for Selenium IDE as a browser extension then check out the `v3` branch.
 
 ### Prerequisites
 
