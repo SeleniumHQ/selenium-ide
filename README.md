@@ -1,6 +1,6 @@
 <img src="packages/selenium-ide/src/icons/icon128.png" alt="logo" height="128" align="right" />
 
-# Selenium IDE &middot; [![Build Status](https://travis-ci.org/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.org/SeleniumHQ/selenium-ide)
+# Selenium IDE &middot; [![Build Status](https://travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.com/SeleniumHQ/selenium-ide)
 
 _[WIP] An integrated development environment for Selenium scripts_
 
