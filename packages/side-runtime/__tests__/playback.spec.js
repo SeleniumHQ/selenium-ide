@@ -26,6 +26,48 @@ import FakeExecutor from './util/FakeExecutor'
 import Variables from '../src/Variables'
 
 describe('Playback', () => {
+  describe('Event emitting', () => {
+    describe('Control Flow', () => {
+      it('forEach', async () => {
+        const test = {
+          id: 1,
+          commands: [
+            {
+              id: 'asdf0',
+              command: 'forEach',
+              target: 'collectionVarName',
+              value: 'iteratorVarName',
+            },
+            {
+              id: 'asdf1',
+              command: 'open',
+              target: '',
+              value: '',
+            },
+            {
+              id: 'asdf2',
+              command: 'end',
+              target: '',
+              value: '',
+            },
+          ],
+        }
+        const executor = new FakeExecutor({})
+        executor.doOpen = jest.fn(async () => {})
+        const variables = new Variables()
+        variables.set('collectionVarName', ['a', 'b', 'c'])
+        const playback = new Playback({
+          executor,
+          variables,
+        })
+        const cb = jest.fn()
+        playback.on(PlaybackEvents.CONTROL_FLOW_CHANGED, cb)
+        await (await playback.play(test))().catch(() => {})
+        const results = flat(cb.mock.calls)
+        expect(results).toMatchSnapshot()
+      })
+    })
+  })
   describe('Playback test queue', () => {
     it('should play a test', async () => {
       const test = {

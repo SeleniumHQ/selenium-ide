@@ -23,10 +23,14 @@ import { ControlFlowCommandNames, ControlFlowCommandChecks } from './commands'
 export { createPlaybackTree } // public API
 export { createCommandNodesFromCommandStack } // for testing
 
-function createPlaybackTree(commandStack, isValidationDisabled) {
+function createPlaybackTree(
+  commandStack,
+  { isValidationDisabled, emitControlFlowEvent } = {}
+) {
   let nodes = createCommandNodesFromCommandStack(
     commandStack,
-    isValidationDisabled
+    isValidationDisabled,
+    emitControlFlowEvent
   )
   return {
     startingCommandNode: nodes[0],
@@ -41,18 +45,19 @@ function containsControlFlow(nodes) {
 
 function createCommandNodesFromCommandStack(
   commandStack,
-  isValidationDisabled = false
+  isValidationDisabled = false,
+  emitControlFlowEvent
 ) {
   if (!isValidationDisabled) validateControlFlowSyntax(commandStack)
   let levels = deriveCommandLevels(commandStack)
-  let nodes = createCommandNodes(commandStack, levels)
+  let nodes = createCommandNodes(commandStack, levels, emitControlFlowEvent)
   return connectCommandNodes(nodes)
 }
 
-function createCommandNodes(commandStack, levels) {
+function createCommandNodes(commandStack, levels, emitControlFlowEvent) {
   let commandNodes = []
   commandStack.forEach(function(command, index) {
-    let node = new CommandNode(command)
+    let node = new CommandNode(command, { emitControlFlowEvent })
     node.index = index
     node.level = levels[index]
     commandNodes.push(node)

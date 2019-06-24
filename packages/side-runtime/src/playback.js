@@ -53,6 +53,9 @@ export default class Playback {
       this[state].lastSentCommandState = payload
       this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, payload)
     }
+    this[EE].emitControlFlowChange = payload => {
+      this[EE].emit(PlaybackEvents.CONTROL_FLOW_CHANGED, payload)
+    }
     events.mergeEventEmitter(this, this[EE])
     this._run = this._run.bind(this)
   }
@@ -64,7 +67,9 @@ export default class Playback {
 
   async play(test, { pauseImmediately, startingCommandIndex } = {}) {
     this._beforePlay()
-    this.playbackTree = createPlaybackTree(test.commands)
+    this.playbackTree = createPlaybackTree(test.commands, {
+      emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+    })
     if (startingCommandIndex) {
       this.currentExecutingNode = this.playbackTree.nodes[startingCommandIndex]
     } else {
@@ -133,7 +138,9 @@ export default class Playback {
       }
     } else {
       this._beforePlay()
-      this.playbackTree = createPlaybackTree([command])
+      this.playbackTree = createPlaybackTree([command], {
+        emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+      })
       this.currentExecutingNode = this.playbackTree.startingCommandNode
       const callstack = new Callstack()
       callstack.call({
@@ -379,7 +386,9 @@ export default class Playback {
   }
 
   async _playSingleCommand(command) {
-    const commandNode = createPlaybackTree([command]).startingCommandNode
+    const commandNode = createPlaybackTree([command], {
+      emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+    }).startingCommandNode
     const callstackIndex = undefined
     this[EE].emitCommandStateChange({
       id: command.id,
@@ -442,7 +451,9 @@ export default class Playback {
       throw new Error(`Can't run unknown test: ${testName}`)
     }
 
-    const tree = createPlaybackTree(test.commands)
+    const tree = createPlaybackTree(test.commands, {
+      emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+    })
     this[state].callstack.call({
       callee: test,
       caller: {
@@ -588,6 +599,7 @@ export const PlaybackEvents = {
   COMMAND_STATE_CHANGED: 'command-state-changed',
   PLAYBACK_STATE_CHANGED: 'playback-state-changed',
   CALL_STACK_CHANGED: 'call-stack-changed',
+  CONTROL_FLOW_CHANGED: 'control-flow-changed',
 }
 
 export const PlaybackStates = {

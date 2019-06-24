@@ -19,7 +19,7 @@ import { interpolateScript } from '../preprocessors'
 import { ControlFlowCommandChecks } from './commands'
 
 export class CommandNode {
-  constructor(command) {
+  constructor(command, { emitControlFlowEvent } = {}) {
     this.command = command
     this.next = undefined
     this.left = undefined
@@ -27,6 +27,9 @@ export class CommandNode {
     this.index
     this.level
     this.timesVisited = 0
+    this.emitControlFlowEvent = emitControlFlowEvent
+      ? emitControlFlowEvent
+      : () => {}
   }
 
   isExtCommand(executor) {
@@ -104,7 +107,16 @@ export class CommandNode {
       interpolateScript(this.command.value, variables).script,
       collection[this.timesVisited]
     )
-    return this.timesVisited < collection.length
+    const result = this.timesVisited < collection.length
+    if (result)
+      this.emitControlFlowEvent({
+        commandId: this.command.id,
+        type: CommandType.LOOP,
+        index: this.timesVisited,
+        iterator: collection[this.timesVisited],
+        collection,
+      })
+    return result
   }
 
   _evaluate(commandExecutor) {
@@ -119,8 +131,16 @@ export class CommandNode {
       }
       return this._evaluationResult({ value: this.timesVisited < number })
     } else if (ControlFlowCommandChecks.isForEach(this.command)) {
+      const result = this.evaluateForEach(commandExecutor.variables)
+      if (!result) {
+        this.emitControlFlowEvent({
+          commandId: this.command.id,
+          type: CommandType.LOOP,
+          end: true,
+        })
+      }
       return this._evaluationResult({
-        value: this.evaluateForEach(commandExecutor.variables),
+        value: result,
       })
     }
     return commandExecutor.evaluateConditional(expression).then(result => {
@@ -154,4 +174,9 @@ export class CommandNode {
       return this.timesVisited >= limit
     }
   }
+}
+
+export const CommandType = {
+  LOOP: 'loop',
+  CONDITIONAL: 'conditional',
 }

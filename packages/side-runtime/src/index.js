@@ -17,7 +17,9 @@
 
 import _Playback from './playback'
 import _WebDriverExecutor from './webdriver'
+import { CommandType as _CommandType } from './playback-tree/command-node'
 
 export const Playback = _Playback
 export const WebDriverExecutor = _WebDriverExecutor
 export * from './playback'
+export const CommandType = _CommandType

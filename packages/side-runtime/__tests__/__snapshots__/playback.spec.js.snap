@@ -1,5 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Playback Event emitting Control Flow forEach 1`] = `
+Array [
+  Object {
+    "collection": Array [
+      "a",
+      "b",
+      "c",
+    ],
+    "commandId": "asdf0",
+    "index": 0,
+    "iterator": "a",
+    "type": "loop",
+  },
+  Object {
+    "collection": Array [
+      "a",
+      "b",
+      "c",
+    ],
+    "commandId": "asdf0",
+    "index": 1,
+    "iterator": "b",
+    "type": "loop",
+  },
+  Object {
+    "collection": Array [
+      "a",
+      "b",
+      "c",
+    ],
+    "commandId": "asdf0",
+    "index": 2,
+    "iterator": "c",
+    "type": "loop",
+  },
+  Object {
+    "commandId": "asdf0",
+    "end": true,
+    "type": "loop",
+  },
+]
+`;
+
 exports[`Playback Playback test queue should play a nested test case 1`] = `
 Array [
   Object {
