@@ -135,13 +135,13 @@ The runner will automatically set the number of workers to the same number of CP
 If you have Chrome installed in a non-standard location on your machine you can specify the path so ChromeDriver knows where to look.
 
 ```sh
-selenium-side-runner -c "chromeOptions.binary='/path/to/non-standard/Chrome/install'"
+selenium-side-runner -c "goog:chromeOptions.binary='/path/to/non-standard/Chrome/install'"
 ```
 
 With Chrome specific capabilities you can also run the tests headlessly.
 
 ```sh
-selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"
+selenium-side-runner -c "goog:chromeOptions.args=[disable-infobars, headless]"
 ```
 
 ## A framework at your fingertips
@@ -175,10 +175,23 @@ There are two kinds of configuration files that you can use.
 Create a `.side.yml` file in the directory you'll be running your tests from. The runner will pick it up automatically. Here is an example of the file's contents.
 
 ```yaml
+---
 capabilities:
   browserName: "firefox"
 baseUrl: "https://www.seleniumhq.org"
 server: "http://localhost:4444/wd/hub"
+```
+
+```yaml
+---
+capabilities:
+  browserName: "chrome"
+  "goog:chromeOptions":
+    args:
+      - headless
+      - disable-gpu
+      - no-sandbox
+      - disable-dev-shm-usage
 ```
 
 If you want to ignore the file and use command line arguments instead, use `--no-sideyml` along with your other commands at run time.
