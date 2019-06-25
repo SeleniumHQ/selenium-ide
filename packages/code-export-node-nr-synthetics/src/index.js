@@ -131,7 +131,7 @@ export async function emitSuite({
     result[key].commands = commands
           .replace(/__STEP__/g, _=>{
             return global.nrsynthetics.incrementStep()
-          }).replace(/__TC_NAME__/g, test.name)
+          }).replace(/__TC_NAME__/g, testName)
 
     result[key].testEnd = testEnd.replace(/__TC_NAME__/g,testName)
 
