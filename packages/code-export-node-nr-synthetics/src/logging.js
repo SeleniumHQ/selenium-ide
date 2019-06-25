@@ -23,8 +23,9 @@
 /**
  *
  * @param timeout
- * @param stepLogging - write logged message as custom attribute in Insights
- * @returns {{log: log, getStep: (function(): number), end: end, error: error, logStep: logStep}}
+ * @param stepLogging
+ * @param insightsKey
+ * @returns {{endTestCase: endTestCase, postInsights: postInsights, log: log, getStep: (function(): number), end: end, error: error, logStep: logStep}}
  * @constructor
  */
 const Logger = function( {timeout = 3000,  stepLogging=false, insightsKey=''}) {
