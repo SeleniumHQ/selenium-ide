@@ -1,0 +1,934 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit 'assert selected label' command 1`] = `
+".then( function VerifySelectedLabel() {
+      logger.log(__STEP__, \\"Verify Selected Label test using s By.id(\\\\\\"test\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"test\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          let xpath = \`//option[@value=\\"\${value}\\"]\`;
+          return $browser.waitForAndFindElement(By.xpath(xpath), DefaultTimeout).then(el => {
+            return el.getText();
+          }).then(function (text) {
+            assert.strictEqual(text, \\"test\\");
+            return Promise.resolve(true);
+          });
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit 'verify selected label' command 1`] = `
+".then( function VerifySelectedLabel() {
+      logger.log(__STEP__, \\"Verify Selected Label test using s By.id(\\\\\\"test\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"test\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          let xpath = \`//option[@value=\\"\${value}\\"]\`;
+          return $browser.waitForAndFindElement(By.xpath(xpath), DefaultTimeout).then(el => {
+            return el.getText();
+          }).then(function (text) {
+            assert.strictEqual(text, \\"test\\");
+            return Promise.resolve(true);
+          });
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`add selection\` command 1`] = `
+".then( function Select() {
+      logger.log(__STEP__, \\"Select By.css(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"select\\"), DefaultTimeout).then(function (el1) {
+        el1.click();
+        logger.log(__STEP__, \\"Select By.xpath(\\\\\\"//option[. = \\\\'A label\\\\']\\\\\\")\\", \\"__TC_NAME__\\");
+        return $browser.waitForAndFindElement(By.xpath(\\"//option[. = 'A label']\\"), DefaultTimeout).then(function (el2) {
+          el2.click();
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `
+".then( function AnswerOnNextPrompt() {
+      logger.log(__STEP__, \\"Send Text an answer then accept\\", \\"__TC_NAME__\\");
+      return $browser.switchTo().alert().sendKeys(\\"an answer\\").then(el => {
+        alert.accept();
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert alert\` command 1`] = `
+".then( function AssertAlert() {
+      logger.log(__STEP__, \\"Assert on an alert\\", \\"__TC_NAME__\\");
+      return $browser.switchTo().alert().getText().then(text => {
+        assert.equal(text, \\"an alert\\");
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert checked\` command 1`] = `
+".then( function VerifyChecked() {
+      logger.log(__STEP__, \\"Verify Checked By.id(\\\\\\"check\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"check\\"), DefaultTimeout).then(el => {
+        return el.isSelected().then(isSelected => {
+          assert(isSelected);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `
+".then( function AssertAlert() {
+      logger.log(__STEP__, \\"Assert on a confirmation\\", \\"__TC_NAME__\\");
+      return $browser.switchTo().alert().getText().then(text => {
+        assert.equal(text, \\"a confirmation\\");
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert editable\` command 1`] = `
+".then( function VerifyEditable() {
+      logger.log(__STEP__, \\"Verify is Editable By.id(\\\\\\"text\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"text\\"), DefaultTimeout).then(el => {
+        return el.isEnabled().then(isEnabled => {
+          assert(isEnabled);
+          return el.getAttribute(\\"readonly\\").then(isReadOnly => {
+            assert(isEnabled && isReadOnly == null);
+            return Promise.resolve(true);
+          });
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert element not present\` command 1`] = `
+".then( function VerifyElementNotPresent() {
+      logger.log(__STEP__, \\"Verify Element is present By.id(\\\\\\"element\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"element\\"), DefaultTimeout).then(el => {
+        assert(elements.size() == 0);
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert element present\` command 1`] = `
+".then( function VerifyElementPresent() {
+      logger.log(__STEP__, \\"Verify Element is present By.id(\\\\\\"element\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"element\\"), DefaultTimeout).then(el => {
+        assert(elements.size() > 0);
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert not checked\` command 1`] = `
+".then( function VerifyNotChecked() {
+      logger.log(__STEP__, \\"Verify Not Checked By.id(\\\\\\"check\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"check\\"), DefaultTimeout).then(el => {
+        return el.isSelected().then(isSelected => {
+          assert(!isSelected);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert not editable\` command 1`] = `
+".then( function VerifyNotEditable() {
+      logger.log(__STEP__, \\"Verify is NOT Editable By.id(\\\\\\"text\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"text\\"), DefaultTimeout).then(el => {
+        return el.isEnabled().then(isEnabled => {
+          assert(isEnabled);
+          return el.getAttribute(\\"readonly\\").then(isReadOnly => {
+            assert(isEnabled && isReadOnly == null == false);
+            return Promise.resolve(true);
+          });
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
+".then( function VerifyNotSelectedValue() {
+      logger.log(__STEP__, \\"Verify not selected value test  using By.id(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"select\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          assert.notEqual(value, \\"test\\");
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert not text\` command 1`] = `"assert.notEqual(driver.findElement(By.id(\\"test\\")).getText(), \\"text\\")"`;
+
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `
+".then( function AssertAlert() {
+      logger.log(__STEP__, \\"Assert on a prompt\\", \\"__TC_NAME__\\");
+      return $browser.switchTo().alert().getText().then(text => {
+        assert.equal(text, \\"a prompt\\");
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert selected value\` command 1`] = `
+".then( function VerifyValue() {
+      logger.log(__STEP__, \\"Verify value test using By.id(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"select\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          assert.strictEqual(\\"test\\", value);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert text\` command 1`] = `
+".then( function VerifyText() {
+      logger.log(__STEP__, \\"Verify Text some text that should be here using By.id(\\\\\\"test\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"test\\"), DefaultTimeout).then(el => {
+        return el.getText().then(value => {
+          assert.strictEqual(\\"some text that should be here\\", value);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert title\` command 1`] = `
+".then( function VerifyTitle() {
+      logger.log(__STEP__, \\"Verify Title example title\\", \\"__TC_NAME__\\");
+      return $browser.getTitle().then(result => {
+        assert.strictEqual(\\"example title\\", result.trim());
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert value\` command 1`] = `
+".then( function VerifyValue() {
+      logger.log(__STEP__, \\"Verify value test using By.id(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"select\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          assert.strictEqual(\\"test\\", value);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`assert\` command 1`] = `
+".then( function Assert() {
+      logger.log(__STEP__, \\"Assert on varrrName is blah\\", \\"__TC_NAME__\\");
+      assert.equal(vars.get(\\"varrrName\\"), \\"blah\\");
+      return Promise.resolve(true);
+    })"
+`;
+
+exports[`command code emitter should emit \`check\` command 1`] = `
+".then( function Check() {
+      logger.log(__STEP__, \\"Check  By.id(\\\\\\"f\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"f\\"), DefaultTimeout).then(el => {
+        return el.isSelected().then(function (isSelected) {
+          if (!isSelected) {
+            el.click();
+          }
+
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `
+".then( function ChooseCancelOnNextConfirmation() {
+      logger.log(__STEP__, \\"Check  choose cancel on visible prompt\\", \\"__TC_NAME__\\");
+      return Promise.resolve($browser.switchTo().alert().dismiss());
+    })"
+`;
+
+exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `
+".then( function ChooseOkOnNextConfirmation() {
+      logger.log(__STEP__, \\"Check OK on next confirmation\\", \\"__TC_NAME__\\");
+      return Promise.resolve($browser.switchTo().alert().accept());
+    })"
+`;
+
+exports[`command code emitter should emit \`click at\` command 1`] = `
+".then( function Click() {
+      logger.log(__STEP__, \\"Click By.linkText(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.linkText(\\"button\\"), DefaultTimeout).then(el => {
+        el.click();
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`click\` command 1`] = `
+".then( function Click() {
+      logger.log(__STEP__, \\"Click By.linkText(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.linkText(\\"button\\"), DefaultTimeout).then(el => {
+        el.click();
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`close\` command 1`] = `
+".then( function Close() {
+      logger.log(__STEP__, \\"Close Browser\\", \\"__TC_NAME__\\");
+      return Promise.resolve($browser.close());
+    })"
+`;
+
+exports[`command code emitter should emit \`do\` command 1`] = `
+Object {
+  "body": ".then(function ControlFlowDo(){
+  var keepGoing=false
+  do {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`double click at\` command 1`] = `
+".then( function DoubleClickElement() {
+      logger.log(__STEP__, \\"Select By.linkText(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.linkText(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().doubleClick(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`double click\` command 1`] = `
+".then( function DoubleClickElement() {
+      logger.log(__STEP__, \\"Select By.linkText(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.linkText(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().doubleClick(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
+".then( function DragAndDrop() {
+      logger.log(__STEP__, \\"Dragged element\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.linkText(\\"dragged\\"), DefaultTimeout).then(draggedEle => {
+        return $browser.waitForAndFindElement(By.linkText(\\"dropped\\"), DefaultTimeout).then(droppedEle => {
+          logger.log(__STEP__, \\"Dropped element\\", \\"__TC_NAME__\\");
+          return Promise.resolve($browser.actions().dragAndDrop(draggedEle, droppedEle).perform());
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`echo\` command 1`] = `
+".then(function Echo(){
+  console.log(\\"blah\\")
+})"
+`;
+
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `
+".then(function Echo(){
+  console.log(vars.get(\\"blah\\"))
+})"
+`;
+
+exports[`command code emitter should emit \`edit content\` command 1`] = `
+".then( function EditContent() {
+      logger.log(__STEP__, \\"Edit Content  \\"<button>test</button>\\"\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"contentEditable\\"), DefaultTimeout).then(e => {
+        return $browser.executeScript(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '__CONTENT__'}\\", e);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`else if\` command 1`] = `
+Object {
+  "body": "  } else if ($browser.executeScript(\\"return (true)\\")) {",
+  "endingLevel": 2,
+}
+`;
+
+exports[`command code emitter should emit \`else\` command 1`] = `
+Object {
+  "body": "  } else {",
+  "endingLevel": 2,
+}
+`;
+
+exports[`command code emitter should emit \`end\` command 1`] = `
+Object {
+  "body": "  }
+})",
+  "endingLevel": 0,
+}
+`;
+
+exports[`command code emitter should emit \`execute async script\` command 1`] = `
+"  return $browser.executeAsyncScript(\\"javascript\\")
+  .then(function(result){
+    vars.set(\\"myVar\\", result)
+  })"
+`;
+
+exports[`command code emitter should emit \`execute script\` command 1`] = `
+".then(_=>{
+  return $browser.executeScript(\\"javascript\\")
+  .then(function(result){
+    vars.set(\\"myVar\\", result)
+    return Promise.resolve(true)
+  })
+})"
+`;
+
+exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `
+".then(_=>{
+  return $browser.executeScript(\\"return 'a'\\")
+  .then(function(result){
+    vars.set(\\"myVar\\", result)
+    return Promise.resolve(true)
+  })
+})"
+`;
+
+exports[`command code emitter should emit \`forEach\` command 1`] = `
+Object {
+  "body": ".then(_=>{
+  const collection = vars[\\"collection\\"]
+  for (let i = 0; i < collection.length - 1; i++) {
+    vars[\\"iteratorVar\\"] = vars[\\"collection\\"][i]",
+  "endingLevel": 2,
+}
+`;
+
+exports[`command code emitter should emit \`if\` command 1`] = `
+Object {
+  "body": "  if ($browser.executeScript(\\"return (true)\\")) {",
+  "endingLevel": 2,
+}
+`;
+
+exports[`command code emitter should emit \`mouse down at\` event 1`] = `
+".then( function MouseDown() {
+      logger.log(__STEP__, \\"Mouse Down\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseDown(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse down\` command 1`] = `
+".then( function MouseDown() {
+      logger.log(__STEP__, \\"Mouse Down\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseDown(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse move at\` event 1`] = `
+".then( function MouseDown() {
+      logger.log(__STEP__, \\"Mouse movde\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseDown(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse move\` event 1`] = `
+".then( function MouseDown() {
+      logger.log(__STEP__, \\"Mouse movde\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseDown(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse out\` event 1`] = `
+".then( function MouseOut() {
+      logger.log(__STEP__, \\"Mouse out By.tagName(\\\\\\"body\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.tagName(\\"body\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseMove(el, 0, 0).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse over\` event 1`] = `
+".then( function MouseDown() {
+      logger.log(__STEP__, \\"Mouse movde\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseDown(el).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse up at\` event 1`] = `
+".then( function MouseOut() {
+      logger.log(__STEP__, \\"Mouse up By.id(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseMove(el, 0, 0).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`mouse up\` event 1`] = `
+".then( function MouseOut() {
+      logger.log(__STEP__, \\"Mouse up By.id(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"button\\"), DefaultTimeout).then(el => {
+        return Promise.resolve($browser.actions().mouseMove(el, 0, 0).perform());
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`open\` with absolute url 1`] = `
+".then( function Open() {
+      logger.log(__STEP__, \\"Open URL https://www.seleniumhq.org/\\", \\"__TC_NAME__\\");
+      return $browser.get(\\"https://www.seleniumhq.org/\\").then(val => {
+        return val;
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`pause\` command 1`] = `
+".then(function Sleep(){
+  return $browser.sleep(300)
+})"
+`;
+
+exports[`command code emitter should emit \`remove selection\` command 1`] = `
+".then( function Select() {
+      logger.log(__STEP__, \\"Select By.css(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"select\\"), DefaultTimeout).then(function (el1) {
+        el1.click();
+        logger.log(__STEP__, \\"Select By.xpath(\\\\\\"//option[. = \\\\'A label\\\\']\\\\\\")\\", \\"__TC_NAME__\\");
+        return $browser.waitForAndFindElement(By.xpath(\\"//option[. = 'A label']\\"), DefaultTimeout).then(function (el2) {
+          el2.click();
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"    .then(function (){
+      return $browser.executeScript(\\"return (true)\\")
+    })
+    .then(function (ret){
+      keepGoing = (Boolean)ret
+    })
+  } while (keepGoing) 
+})"
+`;
+
+exports[`command code emitter should emit \`run script\` command 1`] = `"// reusable RUN() scripts not supported"`;
+
+exports[`command code emitter should emit \`run\` command 1`] = `"// reusable RUN() scripts not supported"`;
+
+exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `
+".then( function SwitchToDefaultContent() {
+      logger.log(__STEP__, \\"Switch to default content\\", \\"__TC_NAME__\\");
+      return Promise.resolve($browser.switchTo().defaultContent());
+    })"
+`;
+
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `
+".then( function SwitchToWindow() {
+      logger.log(__STEP__, \\"Switch to Window using Handle vars.get(\\\\\\"window\\\\\\")\\", \\"__TC_NAME__\\");
+      return Promise.resolve($browser.switchTo().window(vars.get(\\"window\\")));
+    })"
+`;
+
+exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
+".then( function SwitchToWindowUseIndex() {
+      logger.log(__STEP__, \\"Get Window Handle 12\\", \\"__TC_NAME__\\");
+      return $browser.getWindowHandle().then(el => {
+        logger.log(__STEP__, \\"Switch to Window 12\\");
+        return Promise.resolve($browser.switchTo().window(el.get(12)));
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`select window\` to select a window by name 1`] = `
+".then( function SwitchToWindow() {
+      logger.log(__STEP__, \\"Switch to Window using Name window\\", \\"__TC_NAME__\\");
+      return Promise.resolve($browser.switchTo().window(__LOCATOR__));
+    })"
+`;
+
+exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `
+".then( function SwitchToWindowUseIndex() {
+      logger.log(__STEP__, \\"Get Window Handle 0\\", \\"__TC_NAME__\\");
+      return $browser.getWindowHandle().then(el => {
+        logger.log(__STEP__, \\"Switch to Window 0\\");
+        return Promise.resolve($browser.switchTo().window(el.get(0)));
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`select\` command 1`] = `
+".then( function Select() {
+      logger.log(__STEP__, \\"Select By.css(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"select\\"), DefaultTimeout).then(function (el1) {
+        el1.click();
+        logger.log(__STEP__, \\"Select By.xpath(\\\\\\"//option[. = \\\\'A label\\\\']\\\\\\")\\", \\"__TC_NAME__\\");
+        return $browser.waitForAndFindElement(By.xpath(\\"//option[. = 'A label']\\"), DefaultTimeout).then(function (el2) {
+          el2.click();
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`send keys\` command 1`] = `
+".then( function SendKeys() {
+      logger.log(__STEP__, \\"Send Key\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"input\\"), DefaultTimeout).then(el => {
+        el.sendKeys(\\"example input\\");
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `
+".then( function SendKeys() {
+      logger.log(__STEP__, \\"Send Key\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"input\\"), DefaultTimeout).then(el => {
+        el.sendKeys(\\"SuperSecretPassword!\\", $driver.Key.ENTER);
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `
+".then( function SendKeys() {
+      logger.log(__STEP__, \\"Send Key\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"input\\"), DefaultTimeout).then(el => {
+        el.sendKeys(vars.get(\\"blah\\"));
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`set speed\` 1`] = `"console.log(\\"\`set speed\` is a no-op in the runner, use \`pause instead\`\\");"`;
+
+exports[`command code emitter should emit \`setWindowSize\` 1`] = `
+".then( function SetWindow() {
+      logger.log(__STEP__, \\"Set Window Size Width=1440 Height=1177\\", \\"__TC_NAME__\\");
+      return $browser.manage().window().setSize(1440, 1177).then(val => {
+        return val;
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`store attribute\` command 1`] = `
+".then( function StoreAttribute() {
+      logger.log(__STEP__, \\"Store attribute to id using By.xpath(\\\\\\"button[3]\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.xpath(\\"button[3]\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"id\\");
+      }).then(el => {
+        vars.set(\\"myVar\\", attribute);;
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`store json\` command 1`] = `"vars.set(\\"myVar\\", JSON.parse('[{\\"a\\":0}]'));"`;
+
+exports[`command code emitter should emit \`store text\` command 1`] = `".then( _=>{ vars.set(\\"myVar\\", driver.findElement(By.id(\\"someElement\\")).getText());)"`;
+
+exports[`command code emitter should emit \`store title\` command 1`] = `".then( _=>{ vars.set(\\"myVar\\", driver.getTitle());)"`;
+
+exports[`command code emitter should emit \`store value\` command 1`] = `".then( _=>{ vars.set(\\"myVar\\", driver.findElement(By.id(\\"someElement\\")).getAttribute(\\"value\\"));})"`;
+
+exports[`command code emitter should emit \`store window handle\` command 1`] = `
+".then(_=>{
+    return  $browser.getWindowHandle()
+      .then(handle=>{
+        vars.set(\\"windowName\\", handle)
+      })
+  })"
+`;
+
+exports[`command code emitter should emit \`store xpath count\` command 1`] = `".then( _=>{ vars.set(\\"myVar\\", driver.findElements(By.xpath(\\"button\\")).size());)"`;
+
+exports[`command code emitter should emit \`store\` command 1`] = `".then( _=>{ vars.set(\\"myVar\\", some value);)"`;
+
+exports[`command code emitter should emit \`submit\` command 1`] = `
+".then( _=>{
+    throw new Error(\\"submit is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\");
+
+    })
+"
+`;
+
+exports[`command code emitter should emit \`times\` command 1`] = `
+".then(function ControlFlowTimes(){
+  var times = 5;
+  for(int i = 0; i < times; i++) {"
+`;
+
+exports[`command code emitter should emit \`type\` command 1`] = `
+".then( function SendKeys() {
+      logger.log(__STEP__, \\"Type \\\\\\"example input\\\\\\" using locator By.id(\\\\\\"input\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"input\\"), DefaultTimeout).then(el => {
+        el.sendKeys(\\"example input\\");
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`uncheck\` command 1`] = `
+".then( function Uncheck() {
+      logger.log(__STEP__, \\"Uncheck By.id(\\\\\\"f\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"f\\"), DefaultTimeout).then(el => {
+        return el.isSelected().then(isSelected => {
+          if (isSelected) {
+            el.click();
+          }
+
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify checked\` command 1`] = `
+".then( function VerifyChecked() {
+      logger.log(__STEP__, \\"Verify Checked By.id(\\\\\\"check\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"check\\"), DefaultTimeout).then(el => {
+        return el.isSelected().then(isSelected => {
+          assert(isSelected);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify editable\` command 1`] = `
+".then( function VerifyEditable() {
+      logger.log(__STEP__, \\"Verify is Editable By.id(\\\\\\"text\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"text\\"), DefaultTimeout).then(el => {
+        return el.isEnabled().then(isEnabled => {
+          assert(isEnabled);
+          return el.getAttribute(\\"readonly\\").then(isReadOnly => {
+            assert(isEnabled && isReadOnly == null);
+            return Promise.resolve(true);
+          });
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify element not present\` command 1`] = `
+".then( function VerifyElementNotPresent() {
+      logger.log(__STEP__, \\"Verify Element is present By.id(\\\\\\"element\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"element\\"), DefaultTimeout).then(el => {
+        assert(elements.size() == 0);
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify element present\` command 1`] = `
+".then( function VerifyElementPresent() {
+      logger.log(__STEP__, \\"Verify Element is present By.id(\\\\\\"element\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"element\\"), DefaultTimeout).then(el => {
+        assert(elements.size() > 0);
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify not checked\` command 1`] = `
+".then( function VerifyNotChecked() {
+      logger.log(__STEP__, \\"Verify Not Checked By.id(\\\\\\"check\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"check\\"), DefaultTimeout).then(el => {
+        return el.isSelected().then(isSelected => {
+          assert(!isSelected);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify not editable\` command 1`] = `
+".then( function VerifyNotEditable() {
+      logger.log(__STEP__, \\"Verify is NOT Editable By.id(\\\\\\"text\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"text\\"), DefaultTimeout).then(el => {
+        return el.isEnabled().then(isEnabled => {
+          assert(isEnabled);
+          return el.getAttribute(\\"readonly\\").then(isReadOnly => {
+            assert(isEnabled && isReadOnly == null == false);
+            return Promise.resolve(true);
+          });
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
+".then( function VerifyNotSelectedValue() {
+      logger.log(__STEP__, \\"Verify not selected value test  using By.id(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"select\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          assert.notEqual(value, \\"test\\");
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify not text\` command 1`] = `"assert.notEqual(driver.findElement(By.id(\\"test\\")).getText(), \\"text\\")"`;
+
+exports[`command code emitter should emit \`verify selected value\` command 1`] = `
+".then( function VerifyValue() {
+      logger.log(__STEP__, \\"Verify value test using By.id(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"select\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          assert.strictEqual(\\"test\\", value);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify text\` command 1`] = `
+".then( function VerifyText() {
+      logger.log(__STEP__, \\"Verify Text some text that should be here using By.id(\\\\\\"test\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"test\\"), DefaultTimeout).then(el => {
+        return el.getText().then(value => {
+          assert.strictEqual(\\"some text that should be here\\", value);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify title\` command 1`] = `
+".then( function VerifyTitle() {
+      logger.log(__STEP__, \\"Verify Title example title\\", \\"__TC_NAME__\\");
+      return $browser.getTitle().then(result => {
+        assert.strictEqual(\\"example title\\", result.trim());
+        return Promise.resolve(true);
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify value\` command 1`] = `
+".then( function VerifyValue() {
+      logger.log(__STEP__, \\"Verify value test using By.id(\\\\\\"select\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.id(\\"select\\"), DefaultTimeout).then(el => {
+        return el.getAttribute(\\"value\\").then(value => {
+          assert.strictEqual(\\"test\\", value);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`verify\` command 1`] = `
+".then( function Assert() {
+      logger.log(__STEP__, \\"Assert on varrrName is blah\\", \\"__TC_NAME__\\");
+      assert.equal(vars.get(\\"varrrName\\"), \\"blah\\");
+      return Promise.resolve(true);
+    })"
+`;
+
+exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `
+".then( function WaitForElementEditable() {
+      logger.log(__STEP__, \\"Wait For Element Editable By.css(\\\\\\"#blah\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"#blah\\"), 5000).then(el => {
+        return el;
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `
+".then( function WaitForElementNotEditable() {
+      logger.log(__STEP__, \\"Wait For Element is Not Editable By.css(\\\\\\"#blah\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"#blah\\"), 5000).then(el => {
+        return $browser.wait($driver.until.elementIsDisabled(el)).then(isDisabled => {
+          assert(isDisabled);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `
+".then( function WaitForElementNotEditable() {
+      logger.log(__STEP__, \\"Wait For Element is Not Present By.css(\\\\\\"#blah\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"#blah\\"), 5000).then(el => {
+        return $browser.wait($driver.until.elementIsDisabled(el)).then(isDisabled => {
+          assert(isDisabled);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `
+".then( function WaitForElementNotEditable() {
+      logger.log(__STEP__, \\"Wait For Element is Not Present By.css(\\\\\\"#blah\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"#blah\\"), 5000).then(el => {
+        return $browser.wait($driver.until.elementIsDisabled(el)).then(isDisabled => {
+          assert(isDisabled);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `
+".then( function WaitForElementEditable() {
+      logger.log(__STEP__, \\"Wait For Element is Present By.css(\\\\\\"#blah\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"#blah\\"), 5000).then(el => {
+        return el;
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `
+".then( function WaitForElementVisible() {
+      logger.log(__STEP__, \\"Wait For Element is Visible By.css(\\\\\\"#blah\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"#blah\\"), 5000).then(el => {
+        return $browser.wait($driver.until.elementIsVisible(el)).then(isVisible => {
+          assert(isVisible);
+          return Promise.resolve(true);
+        });
+      });
+    })"
+`;
+
+exports[`command code emitter should emit \`while\` command 1`] = `"while ($browser.executeScript(\\"return (true)\\")) {"`;
+
+exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
+".then(_=>{
+   return $browser.getAllWindowHandles()
+   .then(wHandles=>{
+       vars.set(\\"window_handles\\", wHandles);
+       return Promise.resolve(true)
+    }) 
+})
+.then( function Click() {
+      logger.log(__STEP__, \\"Click By.css(\\\\\\"button\\\\\\")\\", \\"__TC_NAME__\\");
+      return $browser.waitForAndFindElement(By.css(\\"button\\"), DefaultTimeout).then(el => {
+        el.click();
+        return Promise.resolve(true);
+      });
+    })
+.then(_=>{
+   return $browser.getAllWindowHandles()
+   .then( wHandles=>{
+       let prevHandles = new Set(vars.get(\\"window_handles\\"))
+       let currHandles = wHandles
+       let diff = new Set ([...currHandles].filter(x => !prevHandles.has(x)))  
+       vars.set(\\"newWin\\", diff.values().next().value);
+       return Promise.resolve(true)
+    })
+})
+"
+`;

@@ -1,7 +1,7 @@
 {
-  "name": "code-export",
+  "name": "code-export-node-nr-synthetics",
   "version": "3.10.0",
-  "description": "Selenium IDE code export",
+  "description": "Export Selenium IDE project contents to New Relic Synthetics",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
     "selenium",
@@ -17,12 +17,10 @@
   "main": "dist/index.js",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.10.0",
-    "code-export-javascript-mocha": "^3.10.0",
-    "code-export-python-pytest": "^3.10.0",
-    "code-export-node-nr-synthetics": "^3.10.0"
+    "code-export-utils": "^3.10.0"
   }
 }
