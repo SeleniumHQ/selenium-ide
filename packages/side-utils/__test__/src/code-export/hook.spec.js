@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Hook from '../../src/hook'
+import Hook from '../../../src/code-export/hook'
 
 describe('Hooks', () => {
   it('should clear registered commands', () => {

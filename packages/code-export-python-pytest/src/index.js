@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import exporter from 'code-export-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 import emitter from './command'
 import location from './location'
 import { generateHooks } from './hook'

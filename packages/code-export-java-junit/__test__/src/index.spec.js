@@ -28,7 +28,7 @@ function readFile(filename) {
         '..',
         '..',
         '..',
-        'code-export-utils',
+        'side-utils',
         '__test__',
         'test-files',
         filename

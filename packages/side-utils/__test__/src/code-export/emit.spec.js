@@ -15,8 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { emitLocation, emitSelection, emitOriginTracing } from '../../src/emit'
-import TestCase from '../../../selenium-ide/src/neo/models/TestCase'
+import {
+  emitLocation,
+  emitSelection,
+  emitOriginTracing,
+} from '../../../src/code-export/emit'
+import TestCase from '../../../../selenium-ide/src/neo/models/TestCase'
 
 describe('Location emitter', () => {
   it('emits by sync emitter', () => {

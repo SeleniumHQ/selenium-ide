@@ -15,10 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import render from '../../src/render'
-import { renderCommands } from '../../src/render'
-import { emitOriginTracing } from '../../src/emit'
-import TestCase from '../../../selenium-ide/src/neo/models/TestCase'
+import render from '../../../src/code-export/render'
+import { renderCommands } from '../../../src/code-export/render'
+import { emitOriginTracing } from '../../../src/code-export/emit'
+import TestCase from '../../../../selenium-ide/src/neo/models/TestCase'
 
 describe('Render', () => {
   const commandPrefixPadding = '  '

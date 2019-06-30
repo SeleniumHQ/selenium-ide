@@ -18,9 +18,9 @@
 import {
   findReusedTestMethods,
   findCommandThatOpensWindow,
-} from '../../src/find'
-import TestCase from '../../../selenium-ide/src/neo/models/TestCase'
-import Command from '../../../selenium-ide/src/neo/models/Command'
+} from '../../../src/code-export/find'
+import TestCase from '../../../../selenium-ide/src/neo/models/TestCase'
+import Command from '../../../../selenium-ide/src/neo/models/Command'
 
 describe('find', () => {
   describe('findCommandThatOpensWindow', () => {

@@ -15,16 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { sanitizeName, capitalize } from '../../src/parsers'
+import codeExport from './code-export'
 
-describe('parsers', () => {
-  it('should sanitize the name', () => {
-    expect(sanitizeName('blah blah')).toEqual('blahblah')
-  })
-  it('should trim whitespace from the name', () => {
-    expect(sanitizeName(' blah blah ')).toEqual('blahblah')
-  })
-  it('should capitalize the name', () => {
-    expect(capitalize('blahblah')).toEqual('Blahblah')
-  })
-})
+module.exports = {
+  codeExport,
+}

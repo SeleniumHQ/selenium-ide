@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { registerCommandEmitter } from '../../src/register'
+import { registerCommandEmitter } from '../../../src/code-export/register'
 
 describe('Register', () => {
   describe('Command Emitters', () => {

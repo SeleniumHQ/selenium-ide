@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import exporter from 'code-export-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll,

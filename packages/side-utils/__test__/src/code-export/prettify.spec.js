@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import prettify from '../../src/prettify'
+import prettify from '../../../src/code-export/prettify'
 
 describe('Prettify', () => {
   const commandPrefixPadding = '  '

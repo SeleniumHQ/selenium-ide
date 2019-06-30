@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { preprocessParameter } from './preprocessor'
 import StringEscape from 'js-string-escape'
+import { preprocessParameter } from './preprocessor'
 import doRender from './render'
 import { registerMethod } from './register'
 import { findReusedTestMethods, findCommandThatOpensWindow } from './find'

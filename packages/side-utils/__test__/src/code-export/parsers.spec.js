@@ -15,35 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { sanitizeName, capitalize } from '../../../src/code-export/parsers'
 
-const emitters = {
-  id: emitId,
-  value: emitValue,
-  label: emitLabel,
-  index: emitIndex,
-}
-
-export function emit(location) {
-  return exporter.emit.selection(location, emitters)
-}
-
-export default {
-  emit,
-}
-
-function emitId(id) {
-  return Promise.resolve(`By.CSS_SELECTOR, "*[id='${id}']"`)
-}
-
-function emitValue(value) {
-  return Promise.resolve(`By.CSS_SELECTOR, "*[value='${value}']"`)
-}
-
-function emitLabel(label) {
-  return Promise.resolve(`By.XPATH, "//option[. = '${label}']"`)
-}
-
-function emitIndex(index) {
-  return Promise.resolve(`By.CSS_SELECTOR, "*:nth-child(${index})"`)
-}
+describe('parsers', () => {
+  it('should sanitize the name', () => {
+    expect(sanitizeName('blah blah')).toEqual('blahblah')
+  })
+  it('should trim whitespace from the name', () => {
+    expect(sanitizeName(' blah blah ')).toEqual('blahblah')
+  })
+  it('should capitalize the name', () => {
+    expect(capitalize('blahblah')).toEqual('Blahblah')
+  })
+})

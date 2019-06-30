@@ -19,7 +19,7 @@ import {
   defaultPreprocessor,
   scriptPreprocessor,
   keysPreprocessor,
-} from '../../src/preprocessor'
+} from '../../../src/code-export/preprocessor'
 
 describe('preprocessors', () => {
   const variableLookup = varName => {
