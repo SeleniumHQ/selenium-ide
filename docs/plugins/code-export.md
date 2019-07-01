@@ -9,6 +9,8 @@ The plugins API enables any Selenium IDE plugin to export code for either:
 1. an existing language
 2. a new language
 
+__NOTE: If adding a new language, take a look at [@seleniumhq/side-utils](https://www.npmjs.com/package/@seleniumhq/side-utils). You can see an example of it in use in existing languages for code-export (e.g., [java-junit](https://github.com/SeleniumHQ/selenium-ide/tree/v3/packages/code-export-java-junit)).__
+
 ### Export config
 
 In your plugin manifest you'll need to specify that it exports languages.
