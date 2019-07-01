@@ -43,6 +43,7 @@ function RunCommand(id, command, target, value, options) {
 class PluginManager {
   constructor() {
     this.plugins = []
+    this.plugins.vendorLanguages = {}
     RegisterConfigurationHook(project => {
       return new Promise(res => {
         Promise.all(
@@ -82,6 +83,13 @@ class PluginManager {
       RegisterSuiteHook(this.emitSuite.bind(undefined, plugin))
       RegisterTestHook(this.emitTest.bind(undefined, plugin))
       if (plugin.exports) {
+        if (plugin.exports.vendor) {
+          plugin.exports.vendor.forEach(language => {
+            const id = Object.keys(language)[0]
+            const displayName = Object.values(language)[0]
+            this.plugins.vendorLanguages[id] = { displayName }
+          })
+        }
         plugin.exports.languages.forEach(language => {
           Object.keys(exporter.register).forEach(register => {
             if (register !== 'command') {
