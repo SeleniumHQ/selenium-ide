@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.11.0
+- Add the ability for new programming languages to be specified through plugins
+
 ## v3.10.0
 - Code export for JavaScript (e.g., Mocha, Node 10)
 
