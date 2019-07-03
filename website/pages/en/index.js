@@ -172,7 +172,7 @@ class Index extends React.Component {
           {
             title: 'Resilient Tests',
             content:
-              'Selenium IDE records multiple locators for each element it interacts with. If one locator fails during playback, the others will be tried until one is succesful.',
+              'Selenium IDE records multiple locators for each element it interacts with. If one locator fails during playback, the others will be tried until one is successful.',
             image: `${baseUrl}img/home/locators.png`,
             imageAlt: 'locators',
             imageAlign: 'left',
