@@ -226,7 +226,9 @@ export default class Recorder {
 
   addRecordingIndicator() {
     if (this.frameLocation === 'root' && !this.recordingIndicator) {
-      const indicatorIndex = this.window.parent.document.getElementsByTagName('IFRAME').length
+      const indicatorIndex = this.window.parent.document.getElementsByTagName(
+        'IFRAME'
+      ).length
       this.recordingIndicator = this.window.document.createElement('iframe')
       this.recordingIndicator.src = browser.runtime.getURL('/indicator.html')
       this.recordingIndicator.id = 'selenium-ide-indicator'
