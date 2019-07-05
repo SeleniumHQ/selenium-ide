@@ -85,7 +85,7 @@ window.__side.getFrameLocation = () => {
   let currentParentWindow
   while (currentWindow !== window.top) {
     currentParentWindow = currentWindow.parent
-    let frames = currentParentWindow.document.getElementsByTagName('IFRAME');
+    let frames = currentParentWindow.document.getElementsByTagName('IFRAME')
     for (let idx = 0; idx < frames.length; idx++)
       if (frames[idx].contentWindow === currentWindow) {
         frameLocation = ':' + idx + frameLocation
