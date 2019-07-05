@@ -226,7 +226,7 @@ export default class Recorder {
 
   addRecordingIndicator() {
     if (this.frameLocation === 'root' && !this.recordingIndicator) {
-      const indicatorIndex = this.window.parent.frames.length
+      const indicatorIndex = this.window.parent.document.getElementsByTagName('IFRAME').length
       this.recordingIndicator = this.window.document.createElement('iframe')
       this.recordingIndicator.src = browser.runtime.getURL('/indicator.html')
       this.recordingIndicator.id = 'selenium-ide-indicator'
@@ -299,7 +299,8 @@ export default class Recorder {
 
     while (currentWindow !== this.window.top) {
       currentParentWindow = currentWindow.parent
-      if (!currentParentWindow.frames.length) {
+      let frames = currentParentWindow.document.getElementsByTagName('IFRAME')
+      if (!frames.length) {
         break
       }
 
@@ -308,10 +309,8 @@ export default class Recorder {
         if (frameCount) recordingIndicatorIndex = frameCount.indicatorIndex
       }
 
-      for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
-        const frame = currentParentWindow.frames[idx]
-
-        if (frame === currentWindow) {
+      for (let idx = 0; idx < frames.length; idx++) {
+        if (frames[idx].contentWindow === currentWindow) {
           this.frameLocation =
             ':' +
             calculateFrameIndex({
