@@ -74,8 +74,8 @@ export default class WebDriverExecutor {
   }
 
   async cancel() {
-    if (this[state].cancellable) {
-      await this[state].cancellable.cancel()
+    if (this.cancellable) {
+      await this.cancellable.cancel()
     }
   }
 
@@ -121,6 +121,7 @@ export default class WebDriverExecutor {
   }
 
   async afterCommand(commandObject) {
+    this.cancellable = undefined
     if (commandObject.opensWindow) {
       const handle = await this.wait(
         this.waitForNewWindow,
@@ -1031,7 +1032,7 @@ export default class WebDriverExecutor {
       const cancelPromise = new Promise(res => {
         resolveCancel = res
       })
-      this[state].cancellable = {
+      this.cancellable = {
         cancel: () => {
           cancelled = true
           return cancelPromise
@@ -1043,10 +1044,10 @@ export default class WebDriverExecutor {
           if (cancelled) {
             resolveCancel()
             reject(new Error('Aborted by user'))
-            this[state].cancellable = undefined
+            this.cancellable = undefined
           } else if (value) {
             resolve(value)
-            this[state].cancellable = undefined
+            this.cancellable = undefined
           } else if (timeout && elapsed >= timeout) {
             reject(
               new TimeoutError(
@@ -1054,7 +1055,7 @@ export default class WebDriverExecutor {
                   `Wait timed out after ${elapsed}ms`
               )
             )
-            this[state].cancellable = undefined
+            this.cancellable = undefined
           } else {
             setTimeout(pollCondition, pollTimeout)
           }
