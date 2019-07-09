@@ -106,6 +106,10 @@ export default class Command {
     if (!this.canHaveTargets) {
       this.setTargets()
     }
+
+    if (this.command.indexOf('waitFor') > -1 && this.value === '') {
+      this.setValue('30000')
+    }
   }
 
   @action.bound
