@@ -425,7 +425,7 @@ async function emitMouseDown(locator) {
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     {
       level: 1,
       statement: 'builder.moveToElement(element).clickAndHold().perform();',
@@ -444,7 +444,7 @@ async function emitMouseMove(locator) {
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     { level: 1, statement: 'builder.moveToElement(element).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -458,7 +458,7 @@ async function emitMouseOut() {
       level: 1,
       statement: `WebElement element = driver.findElement(By.tagName("body"));`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     { level: 1, statement: 'builder.moveToElement(element, 0, 0).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -474,7 +474,7 @@ async function emitMouseUp(locator) {
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     {
       level: 1,
       statement: 'builder.moveToElement(element).release().perform();',
