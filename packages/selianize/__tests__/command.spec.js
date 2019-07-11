@@ -602,6 +602,14 @@ describe('command code emitter', () => {
       }\`);`
     )
   })
+  it('should emit `set window size` command', () => {
+    const command = {
+      command: 'setWindowSize',
+      target: '100x100',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `store` command', () => {
     const command = {
       command: 'store',

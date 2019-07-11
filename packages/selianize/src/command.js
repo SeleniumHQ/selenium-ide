@@ -804,7 +804,11 @@ function emitSetSpeed() {
 function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
   return Promise.resolve(
-    `await driver.manage().window().setRect({ width: ${width}, height: ${height} });`
+    `try {
+      await driver.manage().window().setRect({ width: ${width}, height: ${height} });
+    } catch(error) {
+      console.log('Unable to resize window. Skipping.'); 
+    };`
   )
 }
 
