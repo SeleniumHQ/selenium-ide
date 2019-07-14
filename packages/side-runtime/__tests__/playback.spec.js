@@ -1513,7 +1513,7 @@ describe('Playback', () => {
       await psetTimeout(2)
       await playback.pause()
 
-      expect(new Date() - d).toBeLessThan(15)
+      expect(new Date() - d).toBeLessThan(30)
     })
 
     it('should be able to stop mid-delay', async () => {
@@ -1540,7 +1540,7 @@ describe('Playback', () => {
       await psetTimeout(2)
       await playback.stop()
 
-      expect(new Date() - d).toBeLessThan(15)
+      expect(new Date() - d).toBeLessThan(30)
     })
 
     it('should be able to abort mid-delay', async () => {
@@ -1570,7 +1570,7 @@ describe('Playback', () => {
       await psetTimeout(2)
       await playback.abort()
 
-      expect(new Date() - d).toBeLessThan(15)
+      expect(new Date() - d).toBeLessThan(30)
     })
   })
 
