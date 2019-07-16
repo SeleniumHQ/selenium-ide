@@ -1,6 +1,11 @@
 # Changelog
 
-## v3.11.0
+## v3.12.0
+- Added default wait time to `wait for` commands (PR #678)
+- Added better string escaping to code export and code emitting for the command-line runner
+- Made setWindowSize optional when emitting for the runner (issue #627)
+
+## v3.11.1
 - Add the ability for new programming languages to be specified through plugins
 
 ## v3.10.0
