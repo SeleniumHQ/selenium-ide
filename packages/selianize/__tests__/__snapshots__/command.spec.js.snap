@@ -22,6 +22,8 @@ exports[`command code emitter should emit \`mouse up at\` event 1`] = `"await dr
 
 exports[`command code emitter should emit \`mouse up\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});"`;
 
+exports[`command code emitter should emit \`run script\` command 1`] = `"await driver.executeScript(\`alert('test');\\\\nalert('Im annoying');\`);"`;
+
 exports[`command code emitter should emit \`set window size\` command 1`] = `
 "try {
       await driver.manage().window().setRect({ width: 100, height: 100 });

@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import StringEscape from 'js-string-escape'
-
 const emitters = {
   id: emitId,
   name: emitName,
@@ -34,7 +32,7 @@ export function emit(location) {
     }
     const fragments = location.split('=')
     const type = fragments.shift()
-    const selector = StringEscape(fragments.join('='))
+    const selector = fragments.join('=')
     if (emitters[type]) {
       let result = await emitters[type](selector)
       res(result)

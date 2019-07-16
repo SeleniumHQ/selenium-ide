@@ -17,6 +17,7 @@
 import config from './config'
 import LocationEmitter from './location'
 import SelectionEmitter from './selection'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 const emitters = {
   open: emitOpen,
@@ -125,8 +126,16 @@ export function emit(command, options = config, snapshot) {
         return res({ skipped: true })
       try {
         let result = await emitters[command.command](
-          preprocessParameter(command.target, emitters[command.command].target),
-          preprocessParameter(command.value, emitters[command.command].value)
+          preprocessParameter(
+            command.target,
+            emitters[command.command].target,
+            command
+          ),
+          preprocessParameter(
+            command.value,
+            emitters[command.command].value,
+            command
+          )
         )
         if (command.opensWindow) result = emitNewWindowHandling(result, command)
         res(result)
@@ -151,11 +160,22 @@ export function canEmit(commandName) {
   return !!emitters[commandName]
 }
 
-function preprocessParameter(param, preprocessor) {
+function preprocessParameter(param, preprocessor, command) {
+  const escapedParam = escapeString(param, {
+    preprocessor,
+    commandName: command ? command.command : undefined,
+  })
   if (preprocessor) {
-    return preprocessor(param)
+    return preprocessor(escapedParam)
   }
-  return defaultPreprocessor(param)
+  return defaultPreprocessor(escapedParam)
+}
+
+function escapeString(string, { preprocessor, commandName }) {
+  if (commandName && commandName === 'storeJson') return string
+  else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
+    return stringEscape(string.replace(/"/g, "'"), '"')
+  else return stringEscape(string)
 }
 
 function emitNewWindowHandling(emitted, command) {

@@ -16,7 +16,9 @@
 // under the License.
 
 import codeExport from './code-export'
+import stringEscape from './string-escape'
 
 module.exports = {
   codeExport,
+  stringEscape,
 }

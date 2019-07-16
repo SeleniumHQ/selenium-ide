@@ -73,9 +73,7 @@ describe('location code emitter', () => {
   it('should escape quotes in locator strings', () => {
     const type = 'css'
     const selector = 'a[title="escaped"]'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `By.css("a[title=\\"escaped\\"]")`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit xpath locator', () => {
     const type = 'xpath'

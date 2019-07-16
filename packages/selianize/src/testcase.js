@@ -17,6 +17,7 @@
 
 import CommandEmitter from './command'
 import config from './config'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 const hooks = []
 
@@ -59,22 +60,23 @@ export function emit(test, options = config, snapshot) {
 
     if (!options.skipStdLibEmitting) {
       // emit everything
-      let emittedTest = `it("${test.name}", async () => {`
+      const testName = stringEscape(test.name)
+      let emittedTest = `it("${testName}", async () => {`
       emittedTest += setupHooks
         .join('')
         .concat(snapshot ? snapshot.setupHooks.join('') : '')
-      emittedTest += `await tests["${test.name}"](driver, vars);`
+      emittedTest += `await tests["${testName}"](driver, vars);`
       emittedTest += 'expect(true).toBeTruthy();'
       emittedTest += teardownHooks
         .join('')
         .concat(snapshot ? snapshot.teardownHooks.join('') : '')
       emittedTest += '});'
 
-      let func = `tests["${test.name}"] = async (driver, vars, opts = {}) => {`
+      let func = `tests["${testName}"] = async (driver, vars, opts = {}) => {`
       func += commands.join('')
       func += '}'
 
-      res({ id: test.id, name: test.name, test: emittedTest, function: func })
+      res({ id: test.id, name: testName, test: emittedTest, function: func })
     } else {
       // emit only additional hooks
       let snapshot = {

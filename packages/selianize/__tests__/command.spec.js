@@ -286,9 +286,7 @@ describe('command code emitter', () => {
       target: "alert('test');\nalert('Im annoying');",
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.executeScript(\`${command.target}\`);`
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `execute script` command', () => {
     const command = {

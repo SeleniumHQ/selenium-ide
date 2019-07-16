@@ -239,10 +239,9 @@ async function emitClose() {
 }
 
 function generateExpressionScript(script) {
-  const scriptString = script.script.replace(/"/g, "'")
-  return `self.driver.execute_script("return (${scriptString})"${generateScriptArguments(
-    script
-  )})`
+  return `self.driver.execute_script("return (${
+    script.script
+  })"${generateScriptArguments(script)})`
 }
 
 function generateScriptArguments(script) {

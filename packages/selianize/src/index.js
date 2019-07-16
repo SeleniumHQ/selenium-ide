@@ -22,6 +22,7 @@ import CommandEmitter from './command'
 import LocationEmitter from './location'
 import config from './config'
 import utils from './utils'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 /**
  * @typedef Project a Selenium IDE project (.side)
@@ -165,7 +166,7 @@ export function RegisterEmitter(command, emitter) {
 export function ParseError(error) {
   return error.tests
     .map(test =>
-      `## ${test.name}\n`.concat(
+      `## ${stringEscape(test.name)}\n`.concat(
         test.commands
           .map(command => `${command.index}. ${command.message}\n`)
           .join('')

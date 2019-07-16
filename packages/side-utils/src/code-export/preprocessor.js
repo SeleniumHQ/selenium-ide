@@ -15,10 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function preprocessParameter(param, preprocessor, variableLookup) {
+import stringEscape from '../string-escape'
+
+function escapeString(string, { preprocessor, commandName }) {
+  if (commandName && commandName === 'storeJson') return string
+  else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
+    return stringEscape(string.replace(/"/g, "'"), '"')
+  else return stringEscape(string)
+}
+
+export function preprocessParameter(
+  param,
+  preprocessor,
+  variableLookup,
+  commandName
+) {
+  const escapedParam = escapeString(param, { preprocessor, commandName })
   return preprocessor
-    ? preprocessor(param, variableLookup)
-    : defaultPreprocessor(param, variableLookup)
+    ? preprocessor(escapedParam, variableLookup)
+    : defaultPreprocessor(escapedParam, variableLookup)
 }
 
 export function defaultPreprocessor(param, variableLookup) {

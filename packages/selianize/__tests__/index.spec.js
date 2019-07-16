@@ -32,7 +32,7 @@ describe('Selenium code serializer', () => {
     )
     return expect(Selianize(project)).resolves.toBeDefined()
   })
-  it('should resolve to snapshots on snapshotted tests', async () => {
+  it.only('should resolve to snapshots on snapshotted tests', async () => {
     const project = JSON.parse(
       fs.readFileSync(
         path.join(__dirname, 'test-files', 'project-5-partial-snapshot.side')

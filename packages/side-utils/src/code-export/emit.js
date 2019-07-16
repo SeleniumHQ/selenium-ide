@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import StringEscape from 'js-string-escape'
+import stringEscape from '../string-escape'
 import { preprocessParameter } from './preprocessor'
 import doRender from './render'
 import { registerMethod } from './register'
@@ -31,12 +31,14 @@ export function emitCommand(
       preprocessParameter(
         command.target,
         emitter.targetPreprocessor,
-        variableLookup
+        variableLookup,
+        command.command
       ),
       preprocessParameter(
         command.value,
         emitter.valuePreprocessor,
-        variableLookup
+        variableLookup,
+        command.command
       )
     )
     if (command.opensWindow) result = emitNewWindowHandling(command, result)
@@ -50,7 +52,7 @@ export function emitLocation(location, emitters) {
   }
   const fragments = location.split('=')
   const type = fragments.shift()
-  const selector = emitEscapedText(fragments.join('='))
+  const selector = fragments.join('=')
   if (emitters[type]) {
     return emitters[type](selector)
   } else {
@@ -70,10 +72,6 @@ export function emitSelection(location, emitters) {
   } else {
     throw new Error(`Unknown selection locator ${type}`)
   }
-}
-
-export function emitEscapedText(text) {
-  return StringEscape(text)
 }
 
 async function emitCommands(commands, emitter) {
@@ -379,6 +377,6 @@ export default {
   suite: emitSuite,
   orderedSuite: emitOrderedSuite,
   test: emitTest,
-  text: emitEscapedText,
+  text: stringEscape,
   testsFromSuite: emitTestsFromSuite,
 }

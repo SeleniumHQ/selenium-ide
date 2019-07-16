@@ -21,7 +21,7 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "js-string-escape": "^1.0.1"
+    "@seleniumhq/side-utils": "^3.11.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.3.4",

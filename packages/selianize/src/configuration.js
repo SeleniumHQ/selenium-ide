@@ -16,6 +16,7 @@
 // under the License.
 
 import config from './config'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 const hooks = []
 
@@ -24,9 +25,9 @@ export async function emit(project, options = config, snapshot) {
     hooks.map(hook => hook({ name: project.name }))
   )).join('')
   if (!options.skipStdLibEmitting) {
-    return `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${
+    return `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${stringEscape(
       project.url
-    }';let vars = {};${configHooks}${snapshot ? snapshot : ''}`
+    )}';let vars = {};${configHooks}${snapshot ? snapshot : ''}`
   } else {
     if (configHooks) {
       return {

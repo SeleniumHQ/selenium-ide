@@ -396,8 +396,7 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const scriptString = script.script.replace(/"/g, "'")
-  const result = `js.executeScript("${scriptString}"${generateScriptArguments(
+  const result = `js.executeScript("${script.script}"${generateScriptArguments(
     script
   )})`
   return Promise.resolve(variableSetter(varName, result))
