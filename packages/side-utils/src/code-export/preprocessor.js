@@ -17,10 +17,10 @@
 
 import stringEscape from '../string-escape'
 
-function escapeString(string, { preprocessor, commandName }) {
-  if (commandName && commandName === 'storeJson') return string
+function escapeString(string, { preprocessor, ignoreEscaping }) {
+  if (ignoreEscaping) return string
   else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
-    return stringEscape(string.replace(/"/g, "'"), '"')
+    return string.replace(/"/g, "'")
   else return stringEscape(string)
 }
 
@@ -28,9 +28,9 @@ export function preprocessParameter(
   param,
   preprocessor,
   variableLookup,
-  commandName
+  { ignoreEscaping }
 ) {
-  const escapedParam = escapeString(param, { preprocessor, commandName })
+  const escapedParam = escapeString(param, { preprocessor, ignoreEscaping })
   return preprocessor
     ? preprocessor(escapedParam, variableLookup)
     : defaultPreprocessor(escapedParam, variableLookup)

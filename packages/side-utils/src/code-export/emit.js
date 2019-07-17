@@ -27,18 +27,19 @@ export function emitCommand(
   { variableLookup, emitNewWindowHandling }
 ) {
   if (emitter) {
+    const ignoreEscaping = command.command === 'storeJson'
     let result = emitter(
       preprocessParameter(
         command.target,
         emitter.targetPreprocessor,
         variableLookup,
-        command.command
+        { ignoreEscaping }
       ),
       preprocessParameter(
         command.value,
         emitter.valuePreprocessor,
         variableLookup,
-        command.command
+        { ignoreEscaping }
       )
     )
     if (command.opensWindow) result = emitNewWindowHandling(command, result)

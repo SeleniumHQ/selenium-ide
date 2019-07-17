@@ -125,17 +125,16 @@ export function emit(command, options = config, snapshot) {
       if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
         return res({ skipped: true })
       try {
+        const ignoreEscaping = command.command === 'storeJson'
         let result = await emitters[command.command](
           preprocessParameter(
             command.target,
             emitters[command.command].target,
-            command
+            { ignoreEscaping }
           ),
-          preprocessParameter(
-            command.value,
-            emitters[command.command].value,
-            command
-          )
+          preprocessParameter(command.value, emitters[command.command].value, {
+            ignoreEscaping,
+          })
         )
         if (command.opensWindow) result = emitNewWindowHandling(result, command)
         res(result)
@@ -160,10 +159,10 @@ export function canEmit(commandName) {
   return !!emitters[commandName]
 }
 
-function preprocessParameter(param, preprocessor, command) {
+function preprocessParameter(param, preprocessor, { ignoreEscaping }) {
   const escapedParam = escapeString(param, {
     preprocessor,
-    commandName: command ? command.command : undefined,
+    ignoreEscaping,
   })
   if (preprocessor) {
     return preprocessor(escapedParam)
@@ -171,10 +170,10 @@ function preprocessParameter(param, preprocessor, command) {
   return defaultPreprocessor(escapedParam)
 }
 
-function escapeString(string, { preprocessor, commandName }) {
-  if (commandName && commandName === 'storeJson') return string
+function escapeString(string, { preprocessor, ignoreEscaping }) {
+  if (ignoreEscaping) return string
   else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
-    return stringEscape(string.replace(/"/g, "'"), '"')
+    return string.replace(/"/g, "'")
   else return stringEscape(string)
 }
 
