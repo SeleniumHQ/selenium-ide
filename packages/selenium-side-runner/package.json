@@ -1,6 +1,6 @@
 {
   "name": "selenium-side-runner",
-  "version": "3.12.0",
+  "version": "3.12.1",
   "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
@@ -38,7 +38,7 @@
     "js-yaml": "^3.13.1",
     "rimraf": "^2.6.2",
     "selenium-webdriver": "4.0.0-alpha.4",
-    "selianize": "^3.12.0",
+    "selianize": "^3.12.1",
     "semver": "^5.5.1",
     "winston": "^2.4.0"
   },
