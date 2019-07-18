@@ -17,6 +17,7 @@
 import config from './config'
 import LocationEmitter from './location'
 import SelectionEmitter from './selection'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 const emitters = {
   open: emitOpen,
@@ -124,9 +125,16 @@ export function emit(command, options = config, snapshot) {
       if (options.skipStdLibEmitting && !emitters[command.command].isAdditional)
         return res({ skipped: true })
       try {
+        const ignoreEscaping = command.command === 'storeJson'
         let result = await emitters[command.command](
-          preprocessParameter(command.target, emitters[command.command].target),
-          preprocessParameter(command.value, emitters[command.command].value)
+          preprocessParameter(
+            command.target,
+            emitters[command.command].target,
+            { ignoreEscaping }
+          ),
+          preprocessParameter(command.value, emitters[command.command].value, {
+            ignoreEscaping,
+          })
         )
         if (command.opensWindow) result = emitNewWindowHandling(result, command)
         res(result)
@@ -151,11 +159,22 @@ export function canEmit(commandName) {
   return !!emitters[commandName]
 }
 
-function preprocessParameter(param, preprocessor) {
+function preprocessParameter(param, preprocessor, { ignoreEscaping }) {
+  const escapedParam = escapeString(param, {
+    preprocessor,
+    ignoreEscaping,
+  })
   if (preprocessor) {
-    return preprocessor(param)
+    return preprocessor(escapedParam)
   }
-  return defaultPreprocessor(param)
+  return defaultPreprocessor(escapedParam)
+}
+
+function escapeString(string, { preprocessor, ignoreEscaping }) {
+  if (ignoreEscaping) return string
+  else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
+    return string.replace(/"/g, "'")
+  else return stringEscape(string)
 }
 
 function emitNewWindowHandling(emitted, command) {
@@ -804,7 +823,11 @@ function emitSetSpeed() {
 function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
   return Promise.resolve(
-    `await driver.manage().window().setRect({ width: ${width}, height: ${height} });`
+    `try {
+      await driver.manage().window().setRect({ width: ${width}, height: ${height} });
+    } catch(error) {
+      console.log('Unable to resize window. Skipping.'); 
+    };`
   )
 }
 

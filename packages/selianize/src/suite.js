@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { stringEscape } from '@seleniumhq/side-utils'
+
 const hooks = []
 
 import config from './config'
@@ -40,6 +42,8 @@ export function emit(suite, tests, options = config, snapshot) {
     )
 
     if (!options.skipStdLibEmitting) {
+      const suiteName = stringEscape(suite.name)
+      const suiteTimeout = stringEscape(Math.floor(suite.timeout).toString())
       let testsCode = await Promise.all(
         suite.tests.map(testId => tests[testId].emitted).map(test => test.test)
       )
@@ -49,15 +53,16 @@ export function emit(suite, tests, options = config, snapshot) {
           name: tests[suite.tests[index]].emitted.name,
           code: `${code.replace(
             /^it/,
-            `jest.setTimeout(${suite.timeout * 1000});test`
+            `jest.setTimeout(${suiteTimeout * 1000});test`
           )}${hookResults}${snapshot ? snapshot.hook : ''}`,
         }))
         return res(testsCode)
       }
 
-      let result = `jest.setTimeout(${suite.timeout * 1000});describe("${
-        suite.name
-      }", () => {${hookResults}${snapshot ? snapshot.hook : ''}`
+      let result = `jest.setTimeout(${suiteTimeout *
+        1000});describe("${suiteName}", () => {${hookResults}${
+        snapshot ? snapshot.hook : ''
+      }`
 
       result += testsCode.join('')
 

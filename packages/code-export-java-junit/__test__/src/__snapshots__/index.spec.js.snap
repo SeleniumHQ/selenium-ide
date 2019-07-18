@@ -41,7 +41,7 @@ public class LoginTest {
     driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
     driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
     driver.findElement(By.cssSelector(\\"#login button\\")).click();
-    assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
+    assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\"));
   }
   @Test
   public void invalidcredentials() {
@@ -50,7 +50,7 @@ public class LoginTest {
     driver.findElement(By.id(\\"username\\")).sendKeys(\\"blah\\");
     driver.findElement(By.id(\\"password\\")).sendKeys(\\"blah\\");
     driver.findElement(By.cssSelector(\\"#login button\\")).click();
-    assertThat(driver.findElement(By.id(\\"flash\\")).getText(), is(\\"Your username is invalid!\\\\\\\\n×\\"));
+    assertThat(driver.findElement(By.id(\\"flash\\")).getText(), is(\\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\"));
   }
 }
 "
@@ -388,7 +388,7 @@ public class LoginTest {
     driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\");
     driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\");
     driver.findElement(By.cssSelector(\\"#login button\\")).click();
-    assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\n×\\"));
+    assertThat(driver.findElement(By.cssSelector(\\".flash.success\\")).getText(), is(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\"));
   }
 }
 "

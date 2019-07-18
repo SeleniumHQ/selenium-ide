@@ -20,6 +20,15 @@ import ModalState from '../stores/view/ModalState'
 import exporter from 'code-export'
 import { downloadUniqueFile } from '../IO/filesystem'
 import { normalizeTestsInSuite } from '../IO/normalize'
+import PluginManager from '../../plugin/manager'
+import { availableLanguages as languages } from 'code-export'
+const vendorLanguages = PluginManager.plugins.vendorLanguages
+
+export function availableLanguages() {
+  return Object.keys(vendorLanguages).length
+    ? { ...languages, ...vendorLanguages }
+    : languages
+}
 
 export async function exportCodeToFile(
   selectedLanguages,
@@ -30,22 +39,26 @@ export async function exportCodeToFile(
   const { url, tests } = project
   for (const language of selectedLanguages) {
     let emittedCode
-    if (test) {
-      emittedCode = await exporter.emit.test(language, {
-        url,
-        test,
-        tests,
-        project,
-        enableOriginTracing,
+    let options = {
+      url,
+      tests,
+      project,
+      enableOriginTracing,
+    }
+    options.test = test ? test : undefined
+    options.suite = suite ? normalizeTestsInSuite({ suite, tests }) : undefined
+    if (vendorLanguages.hasOwnProperty(language)) {
+      const result = await PluginManager.emitMessage({
+        action: 'export',
+        entity: 'vendor',
+        language,
+        options,
       })
+      emittedCode = result[0].response
+    } else if (test) {
+      emittedCode = await exporter.emit.test(language, options)
     } else if (suite) {
-      emittedCode = await exporter.emit.suite(language, {
-        url,
-        suite: normalizeTestsInSuite({ suite, tests }),
-        tests,
-        project,
-        enableOriginTracing,
-      })
+      emittedCode = await exporter.emit.suite(language, options)
     }
     if (emittedCode) downloadUniqueFile(emittedCode.filename, emittedCode.body)
   }

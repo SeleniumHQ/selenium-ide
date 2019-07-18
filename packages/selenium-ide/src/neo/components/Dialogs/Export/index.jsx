@@ -21,7 +21,7 @@ import Modal from '../../Modal'
 import DialogContainer from '../Dialog'
 import FlatButton from '../../FlatButton'
 import Checkbox from '../../Checkbox'
-import { availableLanguages } from 'code-export'
+import { availableLanguages } from '../../../code-export'
 import './style.css'
 
 export default class ExportDialog extends React.Component {
@@ -112,22 +112,25 @@ class ExportList extends React.Component {
     this.props.selectLanguage(e.target.checked, language)
   }
   render() {
+    const languages = availableLanguages()
     return (
       <ul className="languages">
-        {Object.keys(availableLanguages).map(language => (
-          <li key={language} className="language">
-            <input
-              type="radio"
-              value={language}
-              id={language}
-              checked={this.props.selectedLanguages.includes(language)}
-              onChange={this.handleChange.bind(this, language)}
-            />
-            <label htmlFor={language}>
-              {availableLanguages[language].displayName}
-            </label>
-          </li>
-        ))}
+        {Object.keys(languages)
+          .sort()
+          .map(language => (
+            <li key={language} className="language">
+              <input
+                type="radio"
+                value={language}
+                id={language}
+                checked={this.props.selectedLanguages.includes(language)}
+                onChange={this.handleChange.bind(this, language)}
+              />
+              <label htmlFor={language}>
+                {languages[language].displayName}
+              </label>
+            </li>
+          ))}
       </ul>
     )
   }

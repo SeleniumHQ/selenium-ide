@@ -20,8 +20,17 @@ import {
   Commands,
   ControlFlowCommandNames,
 } from '../../selenium-ide/src/neo/models/Command'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 describe('keys preprocessor', () => {
+  it('should not unescape escaped characters', () => {
+    const command = {
+      command: 'sendKeys',
+      target: 'id=t',
+      value: stringEscape('AAAAAA\\`BBBBBB'), // eslint-disable-line
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
+  })
   it('should not affect hardcoded strings', () => {
     const command = {
       command: 'sendKeys',
@@ -286,9 +295,7 @@ describe('command code emitter', () => {
       target: "alert('test');\nalert('Im annoying');",
       value: '',
     }
-    return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.executeScript(\`${command.target}\`);`
-    )
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `execute script` command', () => {
     const command = {
@@ -601,6 +608,14 @@ describe('command code emitter', () => {
         command.value
       }\`);`
     )
+  })
+  it('should emit `set window size` command', () => {
+    const command = {
+      command: 'setWindowSize',
+      target: '100x100',
+      value: '',
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
   })
   it('should emit `store` command', () => {
     const command = {

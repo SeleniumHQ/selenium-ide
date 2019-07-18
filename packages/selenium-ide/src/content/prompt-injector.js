@@ -47,6 +47,7 @@ export function detach() {
 
 function handleMessage(event, selenium) {
   if (
+    event.source &&
     event.source.top == window &&
     event.data &&
     event.data.direction == 'from-page-script'

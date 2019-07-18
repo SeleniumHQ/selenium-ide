@@ -1,6 +1,5 @@
 .log {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px 7px 5px 10px;
 }
 
 .log .index {
@@ -10,6 +9,7 @@
 
 .log .timestamp {
   font-weight: normal;
+  color: #5b5b5b;
 }
 
 .log.notice {

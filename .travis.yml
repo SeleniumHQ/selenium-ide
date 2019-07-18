@@ -6,8 +6,8 @@ cache:
   directories:
     - .peru
 node_js:
+  - "12"
   - "10"
-  - "8"
 services:
   - docker
 before_install:

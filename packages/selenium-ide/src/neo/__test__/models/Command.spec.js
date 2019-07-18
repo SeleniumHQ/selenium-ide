@@ -206,6 +206,20 @@ describe('Command', () => {
     expect(command.windowTimeout).toBe(jsRepresentation.windowTimeout)
     expect(command instanceof Command).toBeTruthy()
   })
+
+  it('should not overridden value when replace command', () => {
+    const command = new Command()
+    command.setCommand('assert text')
+    command.setValue('Hello World')
+    command.setCommand('wait for element present')
+    expect(command.value).toBe('Hello World')
+  })
+
+  it("should not set value for commands that do not start with 'wait for'", () => {
+    const command = new Command()
+    command.setCommand('click')
+    expect(command.value).toBe('')
+  })
 })
 
 describe('Commands enum', () => {

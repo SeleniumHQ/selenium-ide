@@ -34,7 +34,7 @@ Issues without a reproduction project are likely to stall.
 OS: <!-- Windows 10? OSX? -->
 Selenium IDE Version:  <!-- e.g.: 3.0.3 -->
 Selenium SIDE Runner Version:  <!-- e.g.: 0.7.0
-Please note that selenium-side-runner supports Node.js 8 - 10
+Please note that selenium-side-runner supports Node.js 10 - 12
 -->
 Node version: <!-- e.g.: 10.4
 Only required if using selenium-side-runner

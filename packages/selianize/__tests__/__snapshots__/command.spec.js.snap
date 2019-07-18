@@ -21,3 +21,18 @@ exports[`command code emitter should emit \`mouse over\` event 1`] = `"await dri
 exports[`command code emitter should emit \`mouse up at\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});"`;
 
 exports[`command code emitter should emit \`mouse up\` event 1`] = `"await driver.wait(until.elementLocated(By.id(\`button\`)), configuration.timeout);await driver.findElement(By.id(\`button\`)).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});"`;
+
+exports[`command code emitter should emit \`run script\` command 1`] = `
+"await driver.executeScript(\`alert('test');
+alert('Im annoying');\`);"
+`;
+
+exports[`command code emitter should emit \`set window size\` command 1`] = `
+"try {
+      await driver.manage().window().setRect({ width: 100, height: 100 });
+    } catch(error) {
+      console.log('Unable to resize window. Skipping.'); 
+    };"
+`;
+
+exports[`keys preprocessor should not unescape escaped characters 1`] = `"await driver.wait(until.elementLocated(By.id(\`t\`)), configuration.timeout);await driver.findElement(By.id(\`t\`)).then(element => {return element.sendKeys(\`AAAAAA\\\\\\\\\\\\\\\\\\\\\\\\\\\\\`BBBBBB\`);});"`;
