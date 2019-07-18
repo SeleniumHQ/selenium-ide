@@ -1,6 +1,6 @@
 module.exports = (input, terminatingCharacter) => {
   if (!input) return ''
-  return input.replace(/[`'"\\\n\r\u2028\u2029]/g, character => {
+  return input.replace(/[`'"\\\n\r\u2028\u2029\u005c]/g, character => {
     switch (character) {
       case `"`:
       case `'`:
@@ -16,6 +16,8 @@ module.exports = (input, terminatingCharacter) => {
         return '\\u2028'
       case '\u2029':
         return '\\u2029'
+      case '\u005c':
+        return '\\\\'
       default:
         return character
     }

@@ -34,3 +34,5 @@ exports[`command code emitter should emit \`set window size\` command 1`] = `
       console.log('Unable to resize window. Skipping.'); 
     };"
 `;
+
+exports[`keys preprocessor should not unescape escaped characters 1`] = `"await driver.wait(until.elementLocated(By.id(\`t\`)), configuration.timeout);await driver.findElement(By.id(\`t\`)).then(element => {return element.sendKeys(\`AAAAAA\\\\\\\\\\\\\\\\\\\\\\\\\\\\\`BBBBBB\`);});"`;

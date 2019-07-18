@@ -20,8 +20,17 @@ import {
   Commands,
   ControlFlowCommandNames,
 } from '../../selenium-ide/src/neo/models/Command'
+import { stringEscape } from '@seleniumhq/side-utils'
 
 describe('keys preprocessor', () => {
+  it('should not unescape escaped characters', () => {
+    const command = {
+      command: 'sendKeys',
+      target: 'id=t',
+      value: stringEscape('AAAAAA\\`BBBBBB'), // eslint-disable-line
+    }
+    return expect(CommandEmitter.emit(command)).resolves.toMatchSnapshot()
+  })
   it('should not affect hardcoded strings', () => {
     const command = {
       command: 'sendKeys',

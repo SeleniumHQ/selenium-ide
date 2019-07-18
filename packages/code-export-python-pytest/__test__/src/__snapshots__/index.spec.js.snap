@@ -26,7 +26,7 @@ class TestLogin():
     self.driver.find_element(By.ID, \\"username\\").send_keys(\\"tomsmith\\")
     self.driver.find_element(By.ID, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
     self.driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\n×\\"
+    assert self.driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\"
   
   def test_invalidcredentials(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -34,7 +34,7 @@ class TestLogin():
     self.driver.find_element(By.ID, \\"username\\").send_keys(\\"blah\\")
     self.driver.find_element(By.ID, \\"password\\").send_keys(\\"blah\\")
     self.driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
-    assert self.driver.find_element(By.ID, \\"flash\\").text == \\"Your username is invalid!\\\\n×\\"
+    assert self.driver.find_element(By.ID, \\"flash\\").text == \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\"
   
 "
 `;
@@ -268,7 +268,7 @@ class TestLogin():
     self.driver.find_element(By.ID, \\"username\\").send_keys(\\"tomsmith\\")
     self.driver.find_element(By.ID, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
     self.driver.find_element(By.CSS_SELECTOR, \\"#login button\\").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\n×\\"
+    assert self.driver.find_element(By.CSS_SELECTOR, \\".flash.success\\").text == \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\"
   
 "
 `;
