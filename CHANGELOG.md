@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.12.1
+- Fix for string escaping, to handle backslashes
+
 ## v3.12.0
 - Added default wait time to `wait for` commands (PR #678)
 - Added better string escaping to code export and code emitting for the command-line runner
