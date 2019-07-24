@@ -1163,7 +1163,7 @@ describe('command code emitter', () => {
       value: 'iterator',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `for (let i = 0; i < vars["collection"].length - 1; i++) {vars["iterator"] = vars["collection"][i];`
+      `for (let i = 0; i < vars["collection"].length; i++) {vars["iterator"] = vars["collection"][i];`
     )
   })
   it('should emit `assert` command', () => {
