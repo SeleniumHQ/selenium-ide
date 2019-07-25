@@ -135,13 +135,13 @@ The runner will automatically set the number of workers to the same number of CP
 If you have Chrome installed in a non-standard location on your machine you can specify the path so ChromeDriver knows where to look.
 
 ```sh
-selenium-side-runner -c "chromeOptions.binary='/path/to/non-standard/Chrome/install'"
+selenium-side-runner -c "goog:chromeOptions.binary='/path/to/non-standard/Chrome/install'"
 ```
 
 With Chrome specific capabilities you can also run the tests headlessly.
 
 ```sh
-selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"
+selenium-side-runner -c "goog:chromeOptions.args=[--disable-infobars, --headless]"
 ```
 
 ## A framework at your fingertips
