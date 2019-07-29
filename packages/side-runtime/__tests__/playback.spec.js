@@ -1341,6 +1341,60 @@ describe('Playback', () => {
     })
   })
 
+  describe('ignore breakpoints', () => {
+    it('should ignore breakpoints', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+            isBreakpoint: true,
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(1))
+      const playback = new Playback({
+        executor,
+        options: {
+          ignoreBreakpoints: true,
+        },
+      })
+      const cb = jest.fn()
+      playback.on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      const playbackPromise = await playback.play(test)
+
+      await playbackPromise()
+
+      const results = flat(cb.mock.calls)
+      expect(results.length).toBe(3)
+      expect(results[0].state).toBe(PlaybackStates.PREPARATION)
+      expect(results[1].state).toBe(PlaybackStates.PLAYING)
+      expect(results[2].state).toBe(PlaybackStates.FINISHED)
+
+      expect(commandResults).toMatchSnapshot()
+    })
+  })
+
   describe('delay between commands', () => {
     it('should delay between commands', async () => {
       const test = {

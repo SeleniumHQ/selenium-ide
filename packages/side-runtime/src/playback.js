@@ -43,6 +43,7 @@ export default class Playback {
     this.options = Object.assign(
       {
         pauseOnExceptions: false,
+        ignoreBreakpoints: false,
         delay: 0,
       },
       options
@@ -313,7 +314,9 @@ export default class Playback {
       }
 
       if (
-        (this.currentExecutingNode.command.isBreakpoint && !ignoreBreakpoint) ||
+        (this.currentExecutingNode.command.isBreakpoint &&
+          !ignoreBreakpoint &&
+          !this.options.ignoreBreakpoints) ||
         (this[state].playTo &&
           this[state].playTo.command === this.currentExecutingNode.command)
       ) {
