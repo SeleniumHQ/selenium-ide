@@ -175,6 +175,9 @@ export default class WebDriverExecutor {
     if (handleLocator.startsWith(prefix)) {
       const handle = handleLocator.substr(prefix.length)
       await this.driver.switchTo().window(handle)
+      await this.executeHook('onWindowSwitched', {
+        windowHandle: handle,
+      })
     } else {
       throw new Error(
         'Invalid window handle given (e.g. handle=${handleVariable})'
@@ -556,9 +559,7 @@ export default class WebDriverExecutor {
 
   async doExecuteAsyncScript(script, optionalVariable) {
     const result = await this.driver.executeAsyncScript(
-      `var callback = arguments[arguments.length - 1];${
-        script.script
-      }.then(callback).catch(callback);`,
+      `var callback = arguments[arguments.length - 1];${script.script}.then(callback).catch(callback);`,
       ...script.argv
     )
     if (optionalVariable) {
@@ -657,6 +658,10 @@ export default class WebDriverExecutor {
   async doStoreWindowHandle(variable) {
     const handle = await this.driver.getWindowHandle()
     this.variables.set(variable, handle)
+    await this.executeHook('onStoreWindowHandle', {
+      windowHandle: handle,
+      windowHandleName: variable,
+    })
   }
 
   // assertions

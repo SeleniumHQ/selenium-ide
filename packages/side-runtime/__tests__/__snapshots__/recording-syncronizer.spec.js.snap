@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`recording syncronizer should log if tried to switch to a window that has no handle 1`] = `"Tried to switch to window handle 1 without it appearing first (onWindowAppeared was not called for it)"`;
+
+exports[`recording syncronizer should sync a new window when called if onWindowSwitched was not called for it 1`] = `"return window.__side.setWindowHandle(\\"first\\", \\"default\\")"`;
+
+exports[`recording syncronizer should sync a new window when switching to it 1`] = `"return window.__side.setWindowHandle(\\"first\\", \\"default\\")"`;
+
+exports[`recording syncronizer should sync the active context 1`] = `"return window.__side.setActiveContext(\\"default\\")"`;
+
+exports[`recording syncronizer should sync the current window 1`] = `"return window.__side.setWindowHandle(\\"first\\", \\"default\\")"`;

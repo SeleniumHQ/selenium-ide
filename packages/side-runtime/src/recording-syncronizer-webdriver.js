@@ -15,17 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import _Playback from './playback'
-import _WebDriverExecutor from './webdriver'
-import { CommandType as _CommandType } from './playback-tree/command-node'
 import createRecorderSyncronizer from './recording-syncronizer'
-import createRecorderSyncronizerForWebdriverExecutor from './recording-syncronizer-webdriver'
 
-export const Playback = _Playback
-export const WebDriverExecutor = _WebDriverExecutor
-export * from './playback'
-export const CommandType = _CommandType
-export const RecordingSyncronizers = {
-  createRecorderSyncronizer,
-  createRecorderSyncronizerForWebdriverExecutor,
+export default function createRecorderSyncronizerForWebdriverExecutor({
+  executor,
+  sessionId,
+  logger,
+}) {
+  return createRecorderSyncronizer({
+    sessionId,
+    executeAsyncScript: script => executor.doExecuteAsyncScript(script),
+    switchToWindow: handle => executor.driver.switchTo().window(handle),
+    getWindowHandle: () => executor.driver.getWindowHandle(),
+    logger,
+  })
 }
