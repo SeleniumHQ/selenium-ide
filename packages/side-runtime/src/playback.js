@@ -68,6 +68,7 @@ export default class Playback {
 
   async play(test, { pauseImmediately, startingCommandIndex } = {}) {
     this._beforePlay()
+    this.commands = test.commands
     this.playbackTree = createPlaybackTree(test.commands, {
       emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
     })
@@ -461,13 +462,15 @@ export default class Playback {
       callee: test,
       caller: {
         position: this.currentExecutingNode.next,
-        tree,
+        tree: this.playbackTree,
+        commands: this.commands,
       },
     })
     this[EE].emit(PlaybackEvents.CALL_STACK_CHANGED, {
       change: CallstackChange.CALLED,
       callee: test,
     })
+    this.commands = test.commands
     this.playbackTree = tree
   }
 
@@ -582,6 +585,7 @@ export default class Playback {
       callee,
       caller: this[state].callstack.top().callee,
     })
+    this.commands = caller.commands
     this.playbackTree = caller.tree
     this.currentExecutingNode = caller.position
   }
