@@ -796,6 +796,64 @@ describe('Playback', () => {
       await playPromise()
       expect(executor.doOpen).toHaveBeenCalledTimes(2)
     })
+    it('should play to a command from a command', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: 't1',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: 't2',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: 't3',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: 't4',
+            value: '',
+          },
+        ],
+      }
+
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      await playback.playTo(test, test.commands[2], test.commands[1])
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+      expect(executor.doOpen).toHaveBeenCalledWith('t2', '', test.commands[1])
+    })
+    it('should fail to play to a point that exists, from a point that does not exist in the test', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      const playback = new Playback({
+        executor,
+      })
+      expect.assertions(1)
+      try {
+        await playback.playTo(test, test.commands[0], {})
+      } catch (err) {
+        expect(err.message).toBe('Command to start from not found in test')
+      }
+    })
   })
 
   describe('resume', () => {
