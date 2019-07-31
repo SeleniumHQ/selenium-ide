@@ -425,7 +425,7 @@ describe('webdriver executor', () => {
           .window()
           .setRect({ height: 400, width: 400 })
         await driver.get(
-          `http://localhost:${port}/mouse/out.html?x=0&y=0&w=400&h=400`
+          `http://localhost:${port}/mouse/out.html?x=0&y=0&w=500&h=500`
         )
         await expect(executor.doMouseOut('id=cont')).rejects.toThrow(
           'Unable to perform mouse out as the element takes up the entire viewport'
