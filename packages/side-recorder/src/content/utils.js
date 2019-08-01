@@ -63,10 +63,3 @@ export function getTagName(element) {
   }
   return tagName
 }
-
-export function calculateFrameIndex(opts = {}) {
-  if (opts.indicatorIndex < 0) return opts.targetFrameIndex
-  return opts.indicatorIndex < opts.targetFrameIndex
-    ? opts.targetFrameIndex - 1
-    : opts.targetFrameIndex
-}

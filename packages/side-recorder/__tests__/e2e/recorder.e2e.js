@@ -17,6 +17,7 @@
 
 import path from 'path'
 import webdriver from 'selenium-webdriver'
+import 'chromedriver'
 import engine from 'engine.io'
 import RecordPostprocessor from '@seleniumhq/side-recorder-postprocessor'
 
@@ -35,7 +36,9 @@ describe('recorder e2e', () => {
     })
     const builder = new webdriver.Builder().withCapabilities({
       browserName: 'chrome',
-      chromeOptions: {
+      // vendor prefix required as of ChromeDriver 75
+      // https://groups.google.com/d/msg/chromedriver-users/ZnGlzYfsgt4/IbEHKSW8AQAJ
+      'goog:chromeOptions': {
         // Don't set it to headless as extensions dont work in general
         // when used in headless mode
         // https://pptr.dev/#?product=Puppeteer&version=v1.12.2&show=api-working-with-chrome-extensions

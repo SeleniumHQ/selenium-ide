@@ -16,7 +16,6 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
-import { calculateFrameIndex } from './utils'
 import { handlers, observers } from './record-handlers'
 import { attach, detach } from './prompt-injector'
 
@@ -30,7 +29,6 @@ export default class Recorder {
     this.attached = false
     this.recordingState = {}
     this.frameLocation = ''
-    this.recordingIndicator = undefined
     this.inputTypes = Recorder.inputTypes
     this.recalculateFrameLocation = this.recalculateFrameLocation.bind(this)
     this.attachRecorderHandler = this.attachRecorderHandler.bind(this)
@@ -49,6 +47,7 @@ export default class Recorder {
       })
       .then(shouldAttach => {
         if (shouldAttach) {
+          this.addRecorderTracingAttribute()
           this.attach()
         }
       })
@@ -59,6 +58,10 @@ export default class Recorder {
     ;(async () => {
       await this.getFrameLocation()
     })()
+  }
+
+  addRecorderTracingAttribute() {
+    this.window.document.body.setAttribute('data-side-attach-once-loaded', '')
   }
 
   attachRecorderHandler(message, _sender, sendResponse) {
@@ -189,7 +192,6 @@ export default class Recorder {
         tabCheck: null,
       }
       attachInputListeners(this.recordingState, this.window)
-      this.addRecordingIndicator()
       attach(this.record.bind(this))
     }
   }
@@ -213,89 +215,14 @@ export default class Recorder {
     }
     this.eventListeners = {}
     this.attached = false
-    this.removeRecordingIndicator()
     detachInputListeners(this.recordingState, this.window)
     detach()
   }
 
-  getFrameCount() {
-    return browser.runtime.sendMessage({
-      requestFrameCount: true,
-    })
-  }
-
-  addRecordingIndicator() {
-    if (this.frameLocation === 'root' && !this.recordingIndicator) {
-      const indicatorIndex = this.window.parent.frames.length
-      this.recordingIndicator = this.window.document.createElement('iframe')
-      this.recordingIndicator.src = browser.runtime.getURL('/indicator.html')
-      this.recordingIndicator.id = 'selenium-ide-indicator'
-      this.recordingIndicator.style.border = '1px solid #d30100'
-      this.recordingIndicator.style.borderRadius = '50px'
-      this.recordingIndicator.style.position = 'fixed'
-      this.recordingIndicator.style.bottom = '36px'
-      this.recordingIndicator.style.right = '36px'
-      this.recordingIndicator.style.width = '400px'
-      this.recordingIndicator.style.height = '50px'
-      this.recordingIndicator.style['background-color'] = '#f7f7f7'
-      this.recordingIndicator.style['box-shadow'] =
-        '0 7px 10px 0 rgba(0,0,0,0.1)'
-      this.recordingIndicator.style.transition = 'bottom 100ms linear'
-      this.recordingIndicator.style['z-index'] = 1000000000000000
-      this.recordingIndicator.addEventListener(
-        'mouseenter',
-        function(event) {
-          event.target.style.visibility = 'hidden'
-          setTimeout(function() {
-            event.target.style.visibility = 'visible'
-          }, 1000)
-        },
-        false
-      )
-      this.window.document.body.appendChild(this.recordingIndicator)
-      browser.runtime.onMessage.addListener(function(
-        message,
-        sender, // eslint-disable-line
-        sendResponse
-      ) {
-        if (message.recordNotification) {
-          this.recordingIndicator.contentWindow.postMessage(
-            {
-              direction: 'from-recording-module',
-              command: message.command,
-              target: message.target,
-              value: message.value,
-            },
-            '*'
-          )
-          this.recordingIndicator.style.borderColor = 'black'
-          setTimeout(() => {
-            this.recordingIndicator.style.borderColor = '#d30100'
-          }, 1000)
-          sendResponse(true)
-        }
-      })
-      return browser.runtime
-        .sendMessage({
-          setFrameNumberForTab: true,
-          indicatorIndex: indicatorIndex,
-        })
-        .catch(() => {})
-    }
-  }
-  removeRecordingIndicator() {
-    if (this.frameLocation === 'root' && this.recordingIndicator) {
-      this.recordingIndicator.parentElement.removeChild(this.recordingIndicator)
-      this.recordingIndicator = undefined
-    }
-  }
-
   // set frame id
-  async getFrameLocation() {
+  getFrameLocation() {
     let currentWindow = this.window
     let currentParentWindow
-    let recordingIndicatorIndex
-    let frameCount
 
     while (currentWindow !== this.window.top) {
       currentParentWindow = currentWindow.parent
@@ -303,29 +230,18 @@ export default class Recorder {
         break
       }
 
-      if (currentParentWindow === this.window.top) {
-        frameCount = await this.getFrameCount().catch(() => {})
-        if (frameCount) recordingIndicatorIndex = frameCount.indicatorIndex
-      }
-
       for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
         const frame = currentParentWindow.frames[idx]
 
         if (frame === currentWindow) {
-          this.frameLocation =
-            ':' +
-            calculateFrameIndex({
-              indicatorIndex: recordingIndicatorIndex,
-              targetFrameIndex: idx,
-            }) +
-            this.frameLocation
+          this.frameLocation = ':' + this.frameLocation
           currentWindow = currentParentWindow
           break
         }
       }
     }
     this.frameLocation = 'root' + this.frameLocation
-    await browser.runtime
+    return browser.runtime
       .sendMessage({ frameLocation: this.frameLocation })
       .catch(() => {})
   }
@@ -333,10 +249,6 @@ export default class Recorder {
   recalculateFrameLocation(message, _sender, sendResponse) {
     if (message.recalculateFrameLocation) {
       ;(async () => {
-        this.removeRecordingIndicator()
-        setTimeout(async () => {
-          await this.addRecordingIndicator()
-        }, 100)
         this.frameLocation = ''
         await this.getFrameLocation()
         sendResponse(true)

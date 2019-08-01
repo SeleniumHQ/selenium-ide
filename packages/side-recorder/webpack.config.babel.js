@@ -108,8 +108,6 @@ module.exports = {
       { from: 'background/config.js', to: './' },
       { from: 'content/prompt.js', to: './' },
       { from: 'content/highlight.css', to: './' },
-      { from: 'content/indicator.html', to: '../' },
-      { from: 'content/indicator.js', to: './' },
       { from: 'manifest.json', to: '../' },
       { from: 'icons', to: '../icons' },
     ]),
