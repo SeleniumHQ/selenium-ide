@@ -29,10 +29,11 @@
     "copy-webpack-plugin": "^5.0.2",
     "dom-testing-library": "^3.18.2",
     "engine.io": "^3.3.2",
-    "selenium-webdriver": "^4.0.0-alpha.1",
+    "selenium-webdriver": "^4.0.0-alpha.4",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "^3.3.0",
+    "chromedriver": "^76.0.0"
   },
   "dependencies": {
     "@medv/finder": "^1.1.1",
