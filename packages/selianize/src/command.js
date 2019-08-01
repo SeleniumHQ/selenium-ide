@@ -1,4 +1,4 @@
-// Licensed to the Software Freedom Conservancy (SFC) under one
+﻿// Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The SFC licenses this file
@@ -802,7 +802,7 @@ function emitControlFlowWhile(target) {
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
   return Promise.resolve(
-    `for (let i = 0; i < vars["${collectionVarName}"].length - 1; i++) {vars["${iteratorVarName}"] = vars["${collectionVarName}"][i];`
+    `for (let i = 0; i < vars["${collectionVarName}"].length; i++) {vars["${iteratorVarName}"] = vars["${collectionVarName}"][i];`
   )
 }
 
