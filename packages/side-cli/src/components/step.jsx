@@ -26,9 +26,7 @@ export default class Step extends React.Component {
     this.state = {}
   }
   render() {
-    const children = `${this.props.command.command} | ${
-      this.props.command.target
-    } | ${this.props.command.value}`
+    const children = `${this.props.command.command} | ${this.props.command.target} | ${this.props.command.value}`
     const state = this.props.result ? this.props.result.state : undefined
     return (
       <Box>
