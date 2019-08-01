@@ -26,9 +26,6 @@ export default class WindowSession {
     // windows opened during IDE session
     this.openedWindowIds = {}
 
-    // tab count for the recording indicator
-    this.frameCountForTab = {}
-
     this.currentUsedTabId = {}
     this.currentUsedWindowId = {}
     this.currentUsedFrameLocation = {}

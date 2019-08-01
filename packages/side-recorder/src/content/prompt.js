@@ -65,7 +65,7 @@ window.__side.handler = event => {
     event.data.direction == 'from-content-script'
   ) {
     if (event.data.attach) {
-      window.__side.attach()
+      attach()
     } else if (event.data.detach) {
       window.prompt = window.__originalPrompt
       window.confirm = window.__originalConfirmation
@@ -73,6 +73,20 @@ window.__side.handler = event => {
       return
     }
   }
+}
+
+function attach() {
+  window.__side.attach()
+  removeRecorderTracingAttribute()
+}
+
+function autHasRecorderTracingAttribute() {
+  return window.document.querySelector('[data-side-attach-once-loaded]')
+}
+
+function removeRecorderTracingAttribute() {
+  if (autHasRecorderTracingAttribute())
+    window.document.body.removeAtrribute('data-side-attach-once-loaded')
 }
 
 if (window == window.top) {
@@ -183,3 +197,5 @@ window.__side.attach = () => {
     return result
   }
 }
+
+if (autHasRecorderTracingAttribute()) attach()

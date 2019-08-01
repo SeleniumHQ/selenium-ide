@@ -548,11 +548,7 @@ observers.push([
   function(mutations) {
     mutations.forEach(async mutation => {
       const removedNodes = await mutation.removedNodes
-      if (
-        removedNodes.length &&
-        removedNodes[0].nodeName === 'IFRAME' &&
-        removedNodes[0].id !== 'selenium-ide-indicator'
-      ) {
+      if (removedNodes.length && removedNodes[0].nodeName === 'IFRAME') {
         browser.runtime.sendMessage({ frameRemoved: true }).catch(() => {})
       }
     })
