@@ -87,9 +87,11 @@ export default class Playback {
     return this._play()
   }
 
-  async playTo(test, commandToStop) {
+  async playTo(test, commandToStop, commandToStart) {
     if (!test.commands.includes(commandToStop)) {
       throw new Error('Command not found in test')
+    } else if (commandToStart && !test.commands.includes(commandToStart)) {
+      throw new Error('Command to start from not found in test')
     } else {
       const playToPromise = new Promise((res, rej) => {
         this[state].playTo = {
@@ -100,7 +102,10 @@ export default class Playback {
       }).finally(() => {
         this[state].playTo = undefined
       })
-      const finish = await this.play(test)
+      const startingCommandIndex = commandToStart
+        ? test.commands.indexOf(commandToStart)
+        : undefined
+      const finish = await this.play(test, { startingCommandIndex })
       await playToPromise
 
       return finish
