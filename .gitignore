@@ -4,6 +4,7 @@ _MACOSX/
 .DS_Store
 build
 packages/selenium-ide-extension/selenium
+packages/selenium-ide/selenium/
 .peru
 .idea
 .tern-port
