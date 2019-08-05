@@ -116,8 +116,12 @@ function string(value) {
 
 function GetPropertyValue(obj1, dataToRetrieve) {
   return dataToRetrieve
-    .split('.') // split string based on `.`
+    .split('.')
     .reduce(function(o, k) {
-      return o && o[k]; // get inner property if `o` is defined else get `o` and return
-    }, obj1) // set initial value as object
+      if (/(\w+)\[(\d*)\]/.exec(k)){
+        let arr = /(\w+)\[(\d*)\]/.exec(k)
+        return o && o[arr[1]][arr[2]]
+      }
+      else {return o && o[k]} 
+    }, obj1)
 }
