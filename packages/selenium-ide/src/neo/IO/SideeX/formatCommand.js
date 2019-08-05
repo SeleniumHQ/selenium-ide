@@ -35,7 +35,7 @@ export function xlateArgument(value, variables) {
       }else if (/(\.)/.exec(r2[1])){
           let propertyAccess = /(\w+)\.(.*)/.exec(r2[1])
           if (variables.has(propertyAccess[1])){
-            let r3 = GetPropertyValue( variables.get(propertyAccess[1]), propertyAccess[2])
+            let r3 = getPropertyValue( variables.get(propertyAccess[1]), propertyAccess[2])
             if (r2.index - lastIndex > 0) {
               parts.push(
                 variables.get(string(value.substring(lastIndex, r2.index)))
@@ -114,7 +114,7 @@ function string(value) {
   }
 }
 
-function GetPropertyValue(obj1, dataToRetrieve) {
+function getPropertyValue(obj1, dataToRetrieve) {
   return dataToRetrieve
     .split('.')
     .reduce(function(o, k) {
@@ -122,6 +122,6 @@ function GetPropertyValue(obj1, dataToRetrieve) {
         let arr = /(\w+)\[(\d*)\]/.exec(k)
         return o && o[arr[1]][arr[2]]
       }
-      else {return o && o[k]} 
+      else {return o && o[k]}
     }, obj1)
 }
