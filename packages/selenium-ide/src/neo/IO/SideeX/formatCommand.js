@@ -32,6 +32,18 @@ export function xlateArgument(value, variables) {
         }
         parts.push(variables.get(r2[1]))
         lastIndex = regexp.lastIndex
+      }else if (/(\.)/.exec(r2[1])){
+          let propertyAccess = /(\w+)\.(.*)/.exec(r2[1])
+          if (variables.has(propertyAccess[1])){
+            let r3 = GetPropertyValue( variables.get(propertyAccess[1]), propertyAccess[2])
+            if (r2.index - lastIndex > 0) {
+              parts.push(
+                variables.get(string(value.substring(lastIndex, r2.index)))
+              )
+            }
+            parts.push(r3)
+            lastIndex = regexp.lastIndex
+          }
       } else if (r2[1] == 'nbsp') {
         if (r2.index - lastIndex > 0) {
           parts.push(
@@ -100,4 +112,12 @@ function string(value) {
   } else {
     return ''
   }
+}
+
+function GetPropertyValue(obj1, dataToRetrieve) {
+  return dataToRetrieve
+    .split('.') // split string based on `.`
+    .reduce(function(o, k) {
+      return o && o[k]; // get inner property if `o` is defined else get `o` and return
+    }, obj1) // set initial value as object
 }
