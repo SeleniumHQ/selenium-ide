@@ -190,9 +190,9 @@ export class CommandNode {
 
   evaluateForEach(variables) {
     let collection = variables.get(this._interpolateTarget())
-    if (collection == undefined){
+    if (collection == undefined) {
       return undefined
-    }else{
+    } else {
       variables.set(this._interpolateValue(), collection[this.timesVisited])
       return this.timesVisited < collection.length
     }
@@ -215,12 +215,11 @@ export class CommandNode {
       )
     } else if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
-      if (result == undefined){
+      if (result == undefined) {
         return Promise.resolve({
           result: 'Invalid variable provided.',
         })
-      }
-      else{
+      } else {
         return Promise.resolve(
           this._evaluationResult({ result: 'success', value: result })
         )
