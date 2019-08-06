@@ -190,10 +190,12 @@ export class CommandNode {
 
   evaluateForEach(variables) {
     let collection = variables.get(this._interpolateTarget())
-    if (!collection)
-      return Promise.resolve({ result: 'Invalid variable provided.' })
-    variables.set(this._interpolateValue(), collection[this.timesVisited])
-    return this.timesVisited < collection.length
+    if (collection == undefined){
+      return undefined
+    }else{
+      variables.set(this._interpolateValue(), collection[this.timesVisited])
+      return this.timesVisited < collection.length
+    }
   }
 
   _evaluate(commandExecutor) {
@@ -213,9 +215,16 @@ export class CommandNode {
       )
     } else if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
-      return Promise.resolve(
-        this._evaluationResult({ result: 'success', value: result })
-      )
+      if (result == undefined){
+        return Promise.resolve({
+          result: 'Invalid variable provided.',
+        })
+      }
+      else{
+        return Promise.resolve(
+          this._evaluationResult({ result: 'success', value: result })
+        )
+      }
     }
     return (this.isWebDriverCommand(commandExecutor)
       ? commandExecutor.evaluateConditional(expression)

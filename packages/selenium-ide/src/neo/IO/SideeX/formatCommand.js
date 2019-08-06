@@ -22,6 +22,7 @@ export function xlateArgument(value, variables) {
   value = value.replace(/\s+$/, '')
   let r2
   let parts = []
+
   if (/\$\{/.exec(value)) {
     const regexp = /\$\{(.*?)\}/g
     let lastIndex = 0
