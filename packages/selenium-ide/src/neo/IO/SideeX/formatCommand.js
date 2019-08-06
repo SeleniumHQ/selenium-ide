@@ -119,11 +119,11 @@ function string(value) {
 }
 
 function getPropertyValue(obj1, dataToRetrieve) {
-  return dataToRetrieve.split('.')
-  .reduce(function(o, k) {
+  return dataToRetrieve.split('.').reduce(function(o, k) {
     if (/(\w+)\[(\d*)\]/.exec(k)) {
       let arr = /(\w+)\[(\d*)\]/.exec(k)
       return o && o[arr[1]][arr[2]]
     } return o && o[k]
-  }, obj1)
+  }, obj1
+)
 }

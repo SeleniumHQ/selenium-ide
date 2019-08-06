@@ -70,7 +70,7 @@ describe('Command Node', () => {
       ''
     )
     const node = new CommandNode(command)
-    node._evaluate({variables: new Variables()}).then(result => {
+    node._evaluate({ variables: new Variables() }).then(result => {
       expect(result.result).toEqual('Invalid variable provided.')
     })
   })
