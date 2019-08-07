@@ -67,6 +67,26 @@ export function xlateArgument(value, variables) {
   }
 }
 
+export function xlateTarget(value, variables) {
+  value = value.replace(/^\s+/, '')
+  value = value.replace(/\s+$/, '')
+  console.log(variables)
+  if (variables.has(value)){
+    return variables.get(value)
+  } else if (/(\.)/.exec(value)) {
+    let propertyAccess = /(\w+)\.(.*)/.exec(value)
+    if (variables.has(propertyAccess[1])) {
+      var r3 = getPropertyValue(
+        variables.get(propertyAccess[1]),
+        propertyAccess[2]
+      )
+    return r3
+  } else return undefined
+} else {
+    return undefined
+  }
+}
+
 export function interpolateScript(script, variables) {
   let value = script.replace(/^\s+/, '').replace(/\s+$/, '')
   let r2
