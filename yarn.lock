@@ -8970,7 +8970,7 @@ scroll-into-view-if-needed@^2.2.20:
   dependencies:
     compute-scroll-into-view "1.0.11"
 
-selenium-webdriver@^4.0.0-alpha.1, selenium-webdriver@^4.0.0-alpha.4:
+selenium-webdriver@^4.0.0-alpha.4:
   version "4.0.0-alpha.4"
   resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.0.0-alpha.4.tgz#73694490e02c941d9d0bf7a36f7c49beb9372512"
   integrity sha512-etJt20d8qInkxMAHIm5SEpPBSS+CdxVcybnxzSIB/GlWErb8pIWrArz/VA6VfUW0/6tIcokepXQ5ufvdzqqk1A==
