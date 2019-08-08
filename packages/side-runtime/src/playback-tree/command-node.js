@@ -50,8 +50,8 @@ export class CommandNode {
     )
   }
 
-  isDisabled() {
-    return this.command.command.startsWith('//')
+  shouldSkip() {
+    return !!this.command.skip
   }
 
   execute(commandExecutor, args) {
@@ -62,8 +62,8 @@ export class CommandNode {
         )
       )
     }
-    if (this.isDisabled()) {
-      return Promise.resolve(this._executionResult())
+    if (this.shouldSkip()) {
+      return Promise.resolve(this._executionResult({ skipped: true }))
     }
     return commandExecutor.beforeCommand(this.command).then(() => {
       return this._executeCommand(commandExecutor, args).then(result => {
@@ -90,10 +90,11 @@ export class CommandNode {
     }
   }
 
-  _executionResult(result) {
+  _executionResult(result = {}) {
     this._incrementTimesVisited()
     return {
       next: this.isControlFlow() ? result.next : this.next,
+      skipped: result.skipped,
     }
   }
 

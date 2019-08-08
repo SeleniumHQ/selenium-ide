@@ -1574,6 +1574,266 @@ describe('Playback', () => {
     })
   })
 
+  describe.only('skip', () => {
+    it('should skip a command', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+            skip: true,
+          },
+          {
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      await (await playback.play(test))()
+      expect(executor.doOpen).toHaveBeenCalledTimes(2)
+    })
+    it('should send a skipped status for skipped commands', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+            skip: true,
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      await (await playback.play(test))()
+
+      expect(commandResults[3].state).toBe(CommandStates.SKIPPED)
+    })
+    it('should skip when playing single command', async () => {
+      const command = {
+        command: 'open',
+        target: '',
+        value: '',
+        skip: true,
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(async () => {})
+      const playback = new Playback({
+        executor,
+      })
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+
+      await playback.playSingleCommand(command)
+
+      expect(executor.doOpen).toHaveBeenCalledTimes(0)
+      expect(commandResults[1].state).toBe(CommandStates.SKIPPED)
+    })
+    it('should skip control flow commands', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'if',
+            target: '',
+            value: '',
+            skip: true,
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'end',
+            target: '',
+            value: '',
+            skip: true,
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      await (await playback.play(test))()
+
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+      expect(commandResults[1].state).toBe(CommandStates.SKIPPED)
+      expect(commandResults[5].state).toBe(CommandStates.SKIPPED)
+    })
+    it('should fail to play a test with invalid control flow structure due to skipping commands', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'if',
+            target: '',
+            value: '',
+            skip: true,
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'end',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+
+      expect.assertions(1)
+
+      try {
+        await playback.play(test)
+      } catch (err) {
+        expect(err.message).toBe('Use of end without an opening keyword')
+      }
+    })
+
+    it('should fail to play a test with undetermined control flow structure due to skipping commands', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'if',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 3,
+            command: 'end',
+            target: '',
+            value: '',
+            skip: true,
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+
+      expect.assertions(1)
+
+      try {
+        await playback.play(test)
+      } catch (err) {
+        expect(err.message).toBe('Incomplete block at if')
+      }
+    })
+
+    it('should support skipping `run` command', async () => {
+      const test = {
+        id: 1,
+        commands: [
+          {
+            id: 1,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+          {
+            id: 2,
+            command: 'run',
+            target: 'test',
+            value: '',
+            skip: true,
+          },
+          {
+            id: 3,
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen = jest.fn(() => psetTimeout(10))
+      const playback = new Playback({
+        executor,
+      })
+      const commandResults = []
+      playback.on(PlaybackEvents.COMMAND_STATE_CHANGED, r =>
+        commandResults.push(r)
+      )
+      await (await playback.play(test))()
+
+      expect(commandResults[3].state).toBe(CommandStates.SKIPPED)
+    })
+  })
+
   describe('Events', () => {
     describe("'command-state-changed'", () => {
       it('should listen to pending and pass changes', async () => {

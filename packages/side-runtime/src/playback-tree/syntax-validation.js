@@ -1,18 +1,18 @@
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
-// dControlFlowCommandChecks.istributed with thControlFlowCommandChecks.is work for additional information
-// regarding copyright ownership.  The SFC licenses thControlFlowCommandChecks.is file
+// distributed with this work for additional information
+// regarding copyright ownership.  The SFC licenses this file
 // to you under the Apache License, Version 2.0 (the
-// "License"); you may not use thControlFlowCommandChecks.is file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
-// software dControlFlowCommandChecks.istributed under the License ControlFlowCommandChecks.is dControlFlowCommandChecks.istributed on an
-// "AS ControlFlowCommandChecks.is" BASControlFlowCommandChecks.is, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
-// specific language governing permControlFlowCommandChecks.issions and limitations
+// specific language governing permissions and limitations
 // under the License.
 
 import { ControlFlowCommandNames, ControlFlowCommandChecks } from './commands'
@@ -22,9 +22,7 @@ import { ControlFlowSyntaxError } from './control-flow-syntax-error'
 export function validateControlFlowSyntax(commandStack) {
   let state = new State()
   commandStack.forEach(function(command, commandIndex) {
-    if (validateCommand[command.command]) {
-      validateCommand[command.command](command.command, commandIndex, state)
-    }
+    validateCommand(command, commandIndex, state)
   })
   if (!state.empty()) {
     throw new ControlFlowSyntaxError(
@@ -36,7 +34,17 @@ export function validateControlFlowSyntax(commandStack) {
   }
 }
 
-const validateCommand = {
+function validateCommand(command, commandIndex, state) {
+  if (!command.skip && commandValidators[command.command]) {
+    return commandValidators[command.command](
+      command.command,
+      commandIndex,
+      state
+    )
+  }
+}
+
+const commandValidators = {
   [ControlFlowCommandNames.do]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.else]: validateElse,
   [ControlFlowCommandNames.elseIf]: validateElseIf,

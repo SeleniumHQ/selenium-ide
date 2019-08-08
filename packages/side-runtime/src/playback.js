@@ -383,7 +383,7 @@ export default class Playback {
       this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
-        state: CommandStates.PASSED,
+        state: result.skipped ? CommandStates.SKIPPED : CommandStates.PASSED,
         message: undefined,
       })
       this.currentExecutingNode = result.next
@@ -404,8 +404,9 @@ export default class Playback {
       message: undefined,
     })
 
+    let result
     try {
-      await this._executeCommand(commandNode)
+      result = await this._executeCommand(commandNode)
     } catch (err) {
       if (err instanceof AssertionError || err instanceof VerificationError) {
         this[EE].emitCommandStateChange({
@@ -427,7 +428,7 @@ export default class Playback {
     this[EE].emitCommandStateChange({
       id: command.id,
       callstackIndex,
-      state: CommandStates.PASSED,
+      state: result.skipped ? CommandStates.SKIPPED : CommandStates.PASSED,
       message: undefined,
     })
   }
@@ -435,13 +436,15 @@ export default class Playback {
   async _executeCommand(commandNode) {
     const { command } = commandNode
     if (command.command === 'run') {
-      await commandNode.execute(this.executor, {
+      const result = await commandNode.execute(this.executor, {
         executorOverride: this._run,
       })
 
-      return {
-        next: this.playbackTree.startingCommandNode,
-      }
+      return result.skipped
+        ? result
+        : {
+            next: this.playbackTree.startingCommandNode,
+          }
     } else {
       const result = await commandNode.execute(this.executor)
 
@@ -635,6 +638,7 @@ const PlaybackStatesPriorities = {
 export const CommandStates = {
   EXECUTING: 'executing',
   PENDING: 'pending',
+  SKIPPED: 'skipped',
   PASSED: 'passed',
   UNDETERMINED: 'undetermined',
   FAILED: 'failed',

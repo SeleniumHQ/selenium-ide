@@ -35,11 +35,17 @@ function commandNamesEqual(command, target) {
   }
 }
 
+function isCommandEnabled(command) {
+  return command && !command.skip
+}
+
 function isBlockOpen(command) {
-  return isIf(command) || isLoop(command)
+  return isCommandEnabled(command) && (isIf(command) || isLoop(command))
 }
 
 function isConditional(command) {
+  if (!isCommandEnabled(command)) return false
+
   switch (command.command) {
     case ControlFlowCommandNames.elseIf:
     case ControlFlowCommandNames.if:
@@ -53,6 +59,8 @@ function isConditional(command) {
 }
 
 function isControlFlow(command) {
+  if (!isCommandEnabled(command)) return false
+
   switch (command.command) {
     case ControlFlowCommandNames.if:
     case ControlFlowCommandNames.elseIf:
@@ -69,34 +77,51 @@ function isControlFlow(command) {
 }
 
 function isDo(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.do)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.do)
+  )
 }
 
 function isElse(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.else)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.else)
+  )
 }
 
 function isElseIf(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.elseIf)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.elseIf)
+  )
 }
 
 function isElseOrElseIf(command) {
-  return isElseIf(command) || isElse(command)
+  return isCommandEnabled(command) && (isElseIf(command) || isElse(command))
 }
 
 function isEnd(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.end)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.end)
+  )
 }
 
 function isIf(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.if)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.if)
+  )
 }
 
 function isIfBlock(command) {
-  return isIf(command) || isElseOrElseIf(command)
+  return isCommandEnabled(command) && (isIf(command) || isElseOrElseIf(command))
 }
 
 function isLoop(command) {
+  if (!isCommandEnabled(command)) return false
+
   return (
     commandNamesEqual(command, ControlFlowCommandNames.while) ||
     commandNamesEqual(command, ControlFlowCommandNames.times) ||
@@ -106,15 +131,24 @@ function isLoop(command) {
 }
 
 function isTerminal(command) {
-  return isElse(command) || isDo(command) || isEnd(command)
+  return (
+    isCommandEnabled(command) &&
+    (isElse(command) || isDo(command) || isEnd(command))
+  )
 }
 
 function isTimes(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.times)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.times)
+  )
 }
 
 function isForEach(command) {
-  return commandNamesEqual(command, ControlFlowCommandNames.forEach)
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.forEach)
+  )
 }
 
 export const ControlFlowCommandChecks = {

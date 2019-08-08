@@ -70,21 +70,38 @@ function connectCommandNodes(_commandNodeStack) {
   let state = new State()
   commandNodeStack.forEach(function(commandNode) {
     let nextCommandNode = commandNodeStack[commandNode.index + 1]
-    if (connectCommandNode[commandNode.command.command]) {
-      connectCommandNode[commandNode.command.command](
-        commandNode,
-        nextCommandNode,
-        commandNodeStack,
-        state
-      )
-    } else {
-      connectDefault(commandNode, nextCommandNode, commandNodeStack, state)
-    }
+    connectCommandNode({
+      commandNode,
+      nextCommandNode,
+      commandNodeStack,
+      state,
+    })
   })
   return commandNodeStack
 }
 
-let connectCommandNode = {
+function connectCommandNode({
+  commandNode,
+  nextCommandNode,
+  commandNodeStack,
+  state,
+}) {
+  if (
+    commandNode.command.skip ||
+    !commandNodeConnectors[commandNode.command.command]
+  ) {
+    connectDefault(commandNode, nextCommandNode, commandNodeStack, state)
+  } else {
+    commandNodeConnectors[commandNode.command.command](
+      commandNode,
+      nextCommandNode,
+      commandNodeStack,
+      state
+    )
+  }
+}
+
+const commandNodeConnectors = {
   [ControlFlowCommandNames.do]: trackBranchOpen,
   [ControlFlowCommandNames.else]: connectNext,
   [ControlFlowCommandNames.elseIf]: connectConditional,

@@ -21,19 +21,21 @@ export function deriveCommandLevels(commandStack) {
   let level = 0
   let levels = []
   commandStack.forEach(function(command) {
-    if (levelCommand[command.command]) {
-      let result = levelCommand[command.command](command, level, levels)
-      level = result.level
-      levels = result.levels
-    } else {
-      let result = levelDefault(command, level, levels)
-      levels = result.levels
-    }
+    const result = levelCommand(command, level, levels)
+    level = result.level
+    levels = result.levels
   })
   return levels
 }
 
-let levelCommand = {
+function levelCommand(command, level, levels) {
+  if (!command.skip && commandLevelers[command.command]) {
+    return commandLevelers[command.command](command, level, levels)
+  }
+  return levelDefault(command, level, levels)
+}
+
+const commandLevelers = {
   [ControlFlowCommandNames.do]: levelBranchOpen,
   [ControlFlowCommandNames.else]: levelElse,
   [ControlFlowCommandNames.elseIf]: levelElse,
