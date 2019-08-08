@@ -623,6 +623,11 @@ export default function seed(store, numberOfSuites = 0) {
   )
   storeJson.createCommand(undefined, 'assert', 'result', 'true')
 
+  const accessVariable = store.createTestCase('access variable')
+  accessVariable.createCommand(undefined, 'storeJson', `[{"a":0}]`, 'blah')
+  accessVariable.createCommand(undefined, 'store', '${blah.a}', 'result')
+  accessVariable.createCommand(undefined, 'assert', 'result', '0')
+
   const suiteAll = store.createSuite('all tests')
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test)
@@ -640,6 +645,7 @@ export default function seed(store, numberOfSuites = 0) {
   const smokeSuite = store.createSuite('smoke')
   smokeSuite.addTestCase(checkTest)
   smokeSuite.addTestCase(clickTest)
+  smokeSuite.addTestCase(accessVariable)
   smokeSuite.addTestCase(clickAtTest)
   smokeSuite.addTestCase(executeScriptTest)
   smokeSuite.addTestCase(executeScriptArray)

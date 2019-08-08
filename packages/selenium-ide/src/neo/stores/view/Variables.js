@@ -23,7 +23,7 @@ export default class Variables {
 
   @action.bound
   get(key) {
-    if (this.storedVars.get(key) == undefined){
+    if (this.storedVars.get(key) == undefined) {
       if (/(\.)/.exec(key)) {
         let propertyAccess = /(\w+)\.(.*)/.exec(key)
         if (this.storedVars.has(propertyAccess[1])) {
@@ -33,7 +33,8 @@ export default class Variables {
           )
           return r3
         }
-      } return undefined
+      }
+      return undefined
     }
     return this.storedVars.get(key)
   }
@@ -45,7 +46,7 @@ export default class Variables {
 
   @action.bound
   has(key) {
-    if (this.storedVars.has(key) == false){
+    if (this.storedVars.has(key) == false) {
       if (/(\.)/.exec(key)) {
         let propertyAccess = /(\w+)\.(.*)/.exec(key)
         return this.storedVars.has(propertyAccess[1])
@@ -59,7 +60,7 @@ export default class Variables {
     if (this.storedVars.has(key)) this.storedVars.delete(key)
     else if (/(\.)/.exec(key)) {
       let propertyAccess = /(\w+)\.(.*)/.exec(key)
-       this.storedVars.delete(propertyAccess[1])
+      this.storedVars.delete(propertyAccess[1])
     }
   }
 
