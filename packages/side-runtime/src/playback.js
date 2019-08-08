@@ -136,8 +136,6 @@ export default class Playback {
 
       try {
         await this._playSingleCommand(command)
-      } catch (err) {
-        throw err
       } finally {
         this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
           state: PlaybackStates.BREAKPOINT,

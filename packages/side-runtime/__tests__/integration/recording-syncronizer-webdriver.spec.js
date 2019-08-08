@@ -38,6 +38,9 @@ describe('recording syncronizer webdriver', () => {
       })
     })
   })
+  afterEach(() => {
+    executor.hooks = undefined
+  })
   afterAll(async () => {
     await close()
   })
@@ -89,6 +92,7 @@ describe('recording syncronizer webdriver', () => {
       variables,
       baseUrl: `http://localhost:${port}/`,
     })
+    // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onStoreWindowHandle: async (...args) => {
         await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
@@ -145,6 +149,7 @@ describe('recording syncronizer webdriver', () => {
       variables,
       baseUrl: `http://localhost:${port}/`,
     })
+    // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onWindowAppeared,
       onWindowSwitched: async (...args) => {
@@ -193,6 +198,7 @@ describe('recording syncronizer webdriver', () => {
       variables,
       baseUrl: `http://localhost:${port}/`,
     })
+    // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onWindowAppeared,
       onWindowSwitched: async (...args) => {
@@ -241,6 +247,7 @@ describe('recording syncronizer webdriver', () => {
       variables,
       baseUrl: `http://localhost:${port}/`,
     })
+    // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onWindowAppeared,
       onWindowSwitched: async (...args) => {

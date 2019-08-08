@@ -37,6 +37,9 @@ describe('Playback using webdriver', () => {
       })
     })
   })
+  afterEach(() => {
+    executor.hooks = undefined
+  })
   afterAll(async () => {
     await close()
   })
@@ -132,7 +135,6 @@ describe('Playback using webdriver', () => {
         command: test.commands[0],
       },
     ])
-    executor.hooks = undefined
   })
   it('should inform of a new window', async () => {
     const test = {
@@ -170,7 +172,6 @@ describe('Playback using webdriver', () => {
         windowHandle: expect.stringMatching(/^CDwindow-/),
       },
     ])
-    executor.hooks = undefined
   })
   it('should wait for hook execution to complete', async () => {
     let didExecute = false
@@ -209,7 +210,6 @@ describe('Playback using webdriver', () => {
     }
     await (await playback.play(test))()
     expect(didExecute).toBeTruthy()
-    executor.hooks = undefined
   })
   it('should perform locator fallback', async () => {
     const test = {
@@ -240,6 +240,5 @@ describe('Playback using webdriver', () => {
     await (await playback.play(test))()
     const element = await driver.findElement(By.id('t'))
     expect(await element.isSelected()).toBeFalsy()
-    executor.hooks = undefined
   })
 })

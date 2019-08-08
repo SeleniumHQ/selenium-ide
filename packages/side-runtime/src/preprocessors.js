@@ -132,7 +132,9 @@ export function interpolateScript(script, variables) {
         if (r2.index - lastIndex > 0) {
           parts.push(string(value.substring(lastIndex, r2.index)))
         }
-        if (!variablesUsed.hasOwnProperty(variableName)) {
+        if (
+          !Object.prototype.hasOwnProperty.call(variablesUsed, variableName)
+        ) {
           variablesUsed[variableName] = argl
           argv.push(variables.get(variableName))
           argl++

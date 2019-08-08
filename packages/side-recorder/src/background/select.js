@@ -20,27 +20,32 @@ import browser from 'webextension-polyfill'
 let selecting
 
 export function select(tabId) {
-  return new Promise(async (res, rej) => {
-    if (selecting) {
-      await disableSelect()
-      selecting.rej(new Error('Different call for selection sent'))
-      selecting = null
-    }
-    await browser.tabs.sendMessage(tabId, {
-      action: 'select',
-      selecting: true,
-    })
-    selecting = {
-      tabId,
-      res,
-      rej,
-    }
+  return new Promise((res, rej) => {
+    ;(async () => {
+      if (selecting) {
+        await disableSelect()
+        selecting.rej(new Error('Different call for selection sent'))
+        // eslint-disable-next-line require-atomic-updates
+        selecting = null
+      }
+      await browser.tabs.sendMessage(tabId, {
+        action: 'select',
+        selecting: true,
+      })
+      // eslint-disable-next-line require-atomic-updates
+      selecting = {
+        tabId,
+        res,
+        rej,
+      }
+    })()
   })
 }
 
 export async function cancelSelect() {
   if (selecting) {
     await disableSelect()
+    // eslint-disable-next-line require-atomic-updates
     selecting = null
   }
 }
