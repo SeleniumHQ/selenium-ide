@@ -10,7 +10,6 @@
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"node_modules\"",
-    "postinstall": "lerna bootstrap",
     "watch": "lerna run --no-bail --parallel watch"
   },
   "jest": {
@@ -28,19 +27,22 @@
       "/node_modules/"
     ]
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.5.5",
+    "@testing-library/jest-dom": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.7.1",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-jest": "^22.5.1",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-jest": "^22.15.0",
     "eslint-plugin-prettier": "^3.0.1",
-    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react": "^7.14.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.7.1",
-    "jest-dom": "^3.1.4",
-    "lerna": "^3.13.4",
+    "lerna": "^3.16.4",
     "prettier": "^1.17.0",
     "stylelint": "^10.0.1",
     "stylelint-config-prettier": "^5.1.0",

@@ -21,7 +21,7 @@ app.on('ready', async () => {
     // The "9515" is the port opened by chrome driver.
     .usingServer('http://localhost:9515')
     .withCapabilities({
-      chromeOptions: {
+      'goog:chromeOptions': {
         // connect to the served electron DevTools
         debuggerAddress: 'localhost:8315',
         windowTypes: ['webview'],

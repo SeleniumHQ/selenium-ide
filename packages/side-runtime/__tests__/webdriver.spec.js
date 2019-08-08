@@ -48,7 +48,7 @@ describe('webdriver executor', () => {
       'chrome',
       {
         browserName: 'chrome',
-        chromeOptions: { args: ['headless', 'disable-gpu'] },
+        'goog:chromeOptions': { args: ['headless', 'disable-gpu'] },
       },
     ],
     [

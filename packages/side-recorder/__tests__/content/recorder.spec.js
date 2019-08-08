@@ -17,7 +17,7 @@
 
 jest.mock('../../src/content/utils')
 import Recorder from '../../src/content/recorder'
-import { fireEvent } from 'dom-testing-library'
+import { fireEvent } from '@testing-library/dom'
 import { isFirefox } from '../../src/content/utils'
 
 Recorder.prototype.record = jest.fn()

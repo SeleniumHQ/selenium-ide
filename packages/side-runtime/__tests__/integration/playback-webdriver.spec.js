@@ -44,7 +44,7 @@ describe('Playback using webdriver', () => {
     variables = new Variables()
     const builder = new webdriver.Builder().withCapabilities({
       browserName: 'chrome',
-      chromeOptions: { args: ['headless', 'disable-gpu'] },
+      'goog:chromeOptions': { args: ['headless', 'disable-gpu'] },
     })
     driver = await builder.build()
     executor = new WebDriverExecutor({ driver, implicitWait: 50 })

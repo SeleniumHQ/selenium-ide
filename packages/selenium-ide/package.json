@@ -18,8 +18,8 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "dependencies": {
-    "chromedriver": "^2.46.0",
-    "electron": "^5.0.0",
+    "chromedriver": "^76.0.0",
+    "electron": "^6.0.1",
     "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }
