@@ -23,6 +23,18 @@ export default class Variables {
 
   @action.bound
   get(key) {
+    if (this.storedVars.get(key) == undefined){
+      if (/(\.)/.exec(key)) {
+        let propertyAccess = /(\w+)\.(.*)/.exec(key)
+        if (this.storedVars.has(propertyAccess[1])) {
+          var r3 = getPropertyValue(
+            this.storedVars.get(propertyAccess[1]),
+            propertyAccess[2]
+          )
+          return r3
+        }
+      } return undefined
+    }
     return this.storedVars.get(key)
   }
 
@@ -33,16 +45,36 @@ export default class Variables {
 
   @action.bound
   has(key) {
+    if (this.storedVars.has(key) == false){
+      if (/(\.)/.exec(key)) {
+        let propertyAccess = /(\w+)\.(.*)/.exec(key)
+        return this.storedVars.has(propertyAccess[1])
+      }
+    }
     return this.storedVars.has(key)
   }
 
   @action.bound
   delete(key) {
     if (this.storedVars.has(key)) this.storedVars.delete(key)
+    else if (/(\.)/.exec(key)) {
+      let propertyAccess = /(\w+)\.(.*)/.exec(key)
+       this.storedVars.delete(propertyAccess[1])
+    }
   }
 
   @action.bound
   clear() {
     this.storedVars.clear()
   }
+}
+
+function getPropertyValue(obj1, dataToRetrieve) {
+  return dataToRetrieve.split('.').reduce(function(o, k) {
+    if (/(\w+)\[(\d*)\]/.exec(k)) {
+      let arr = /(\w+)\[(\d*)\]/.exec(k)
+      return o && o[arr[1]][arr[2]]
+    }
+    return o && o[k]
+  }, obj1)
 }
