@@ -624,9 +624,40 @@ export default function seed(store, numberOfSuites = 0) {
   storeJson.createCommand(undefined, 'assert', 'result', 'true')
 
   const accessVariable = store.createTestCase('access variable')
-  accessVariable.createCommand(undefined, 'storeJson', `[{"a":0}]`, 'blah')
-  accessVariable.createCommand(undefined, 'store', '${blah.a}', 'result')
+  accessVariable.createCommand(
+    undefined,
+    'storeJson',
+    `{"a": [{"b":0}, {"b":1}]}`,
+    'blah'
+  )
+  accessVariable.createCommand(undefined, 'store', '${blah.a[0].b}', 'result')
   accessVariable.createCommand(undefined, 'assert', 'result', '0')
+
+  const accessVariableAssert = store.createTestCase('access variable assert')
+  accessVariableAssert.createCommand(undefined, 'storeJson', `{"a":0}`, 'blah')
+  accessVariableAssert.createCommand(undefined, 'assert', 'blah.a', '0')
+
+  const accessVariableForEach = store.createTestCase('access variable for each')
+  accessVariableForEach.createCommand(
+    undefined,
+    'executeScript',
+    'return 0',
+    'result'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'storeJson',
+    `{"a":[{"b":0}, {"b":1}, {"b":2}]}`,
+    'blah'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'executeScript',
+    'return ${result} + 1',
+    'result'
+  )
+  accessVariableForEach.createCommand(undefined, 'end', '', '')
+  accessVariableForEach.createCommand(undefined, 'assert', 'result', '3')
 
   const suiteAll = store.createSuite('all tests')
   store.tests.forEach(function(test) {
