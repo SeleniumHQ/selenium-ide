@@ -71,7 +71,7 @@ export function xlateTarget(value, variables) {
   value = value.replace(/^\s+/, '')
   value = value.replace(/\s+$/, '')
   console.log(variables)
-  if (variables.has(value)){
+  if (variables.has(value)) {
     return variables.get(value)
   } else if (/(\.)/.exec(value)) {
     let propertyAccess = /(\w+)\.(.*)/.exec(value)
@@ -80,9 +80,9 @@ export function xlateTarget(value, variables) {
         variables.get(propertyAccess[1]),
         propertyAccess[2]
       )
-    return r3
-  } else return undefined
-} else {
+      return r3
+    } else return undefined
+  } else {
     return undefined
   }
 }

@@ -16,7 +16,11 @@
 // under the License.
 
 import { Commands, ArgTypes } from '../../models/Command'
-import { xlateArgument, xlateTarget, interpolateScript } from '../../IO/SideeX/formatCommand'
+import {
+  xlateArgument,
+  xlateTarget,
+  interpolateScript,
+} from '../../IO/SideeX/formatCommand'
 import { ControlFlowCommandChecks } from '../../models/Command'
 import {
   canExecuteCommand,
@@ -96,11 +100,7 @@ export class CommandNode {
         type.name === ArgTypes.conditionalExpression.name)
     ) {
       return interpolateScript(this.command.target, variables)
-    } else if (
-      type &&
-      (type.name === ArgTypes.arrayVariableName.name)
-    ) {
-      console.log("Enter If Statement!")
+    } else if (type && type.name === ArgTypes.arrayVariableName.name) {
       return xlateTarget(this.command.target, variables)
     } else if (target) {
       return xlateArgument(target, variables)
