@@ -34,7 +34,7 @@ export default class Variables {
           return r3
         }
       }
-      return undefined
+      return this.storedVars.get(key)
     }
     return this.storedVars.get(key)
   }
