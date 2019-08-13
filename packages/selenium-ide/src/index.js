@@ -15,6 +15,18 @@ app.on('ready', async () => {
   // and load the index.html of the app.
   win.loadFile(__dirname + '/index.html')
 
+  win.on('close', () => {
+    win = null
+  })
+
+  app.on('window-all-closed', () => {
+    // Respect the OSX convention of having the application in memory even
+    // after all windows have been closed
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
+
   chromedriver.start()
 
   const driver = new webdriver.Builder()
