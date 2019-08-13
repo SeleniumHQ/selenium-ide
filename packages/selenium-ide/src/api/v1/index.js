@@ -60,6 +60,11 @@ router.get('/project', (_req, res) => {
   res({ id: UiState.project.id, name: UiState.project.name })
 })
 
+router.post('/project', (_req, res) => {
+  UiState.project = _req;
+  res({ id: UiState.project.id, name: UiState.project.name })
+})
+
 router.use('/playback', playbackRouter)
 router.use('/record', recordRouter)
 router.use('/export', exportRouter)

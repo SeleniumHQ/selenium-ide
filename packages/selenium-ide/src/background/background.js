@@ -191,8 +191,16 @@ browser.runtime.onMessageExternal.addListener(
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
-        return sendResponse({ error: 'Selenium IDE is not active' })
-      })
+    if (message.verb == 'post' && message.uri == '/project') {
+        openPanel({ windowId: 0 });
+        browser.runtime.sendMessage(message);
+        sendResponse("opened extension");
+    }
+    else {
+      return sendResponse({ error: 'Selenium IDE is not active' });
+    }
+})
+
     return true
   }
 )
