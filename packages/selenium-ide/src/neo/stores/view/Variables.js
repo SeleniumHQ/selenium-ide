@@ -25,7 +25,7 @@ export default class Variables {
   get(key) {
     if (this.storedVars.get(key) == undefined) {
       if (/(\.)/.exec(key)) {
-        let propertyAccess = /(\w+)\.(.*)/.exec(key)
+        let propertyAccess = /([^\[.]+)\.(.*)/.exec(key)
         if (this.storedVars.has(propertyAccess[1])) {
           var r3 = getPropertyValue(
             this.storedVars.get(propertyAccess[1]),
@@ -59,7 +59,7 @@ export default class Variables {
   delete(key) {
     if (this.storedVars.has(key)) this.storedVars.delete(key)
     else if (/(\.)/.exec(key)) {
-      let propertyAccess = /(\w+)\.(.*)/.exec(key)
+      let propertyAccess = /([^\[.]+)\.(.*)/.exec(key)
       this.storedVars.delete(propertyAccess[1])
     }
   }
@@ -72,8 +72,8 @@ export default class Variables {
 
 function getPropertyValue(obj1, dataToRetrieve) {
   return dataToRetrieve.split('.').reduce(function(o, k) {
-    if (/(\w+)\[(\d*)\]/.exec(k)) {
-      let arr = /(\w+)\[(\d*)\]/.exec(k)
+    if (/([^\[.]+)\[(\d*)\]/.exec(k)) {
+      let arr = /([^\[.]+)\[(\d*)\]/.exec(k)
       return o && o[arr[1]][arr[2]]
     }
     return o && o[k]
