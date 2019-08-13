@@ -48,7 +48,7 @@ export default class Variables {
   has(key) {
     if (this.storedVars.has(key) == false) {
       if (/(\.)/.exec(key)) {
-        let propertyAccess = /(\w+)\.(.*)/.exec(key)
+        let propertyAccess = /([^\[.]+)\.(.*)/.exec(key)
         return this.storedVars.has(propertyAccess[1])
       }
     }
