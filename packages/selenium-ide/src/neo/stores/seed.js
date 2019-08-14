@@ -637,6 +637,31 @@ export default function seed(store, numberOfSuites = 0) {
   accessVariableAssert.createCommand(undefined, 'storeJson', `{"a":0}`, 'blah')
   accessVariableAssert.createCommand(undefined, 'assert', 'blah.a', '0')
 
+  const accessVariableArray = store.createTestCase('access variable array')
+  accessVariableArray.createCommand(
+    undefined,
+    'storeJson',
+    `[{"a":0}, {"a":1}]`,
+    'blah'
+  )
+  accessVariableArray.createCommand(undefined, 'assert', 'blah[1].a', '1')
+
+  const accessVariableNestedJson = store.createTestCase(
+    'access variable nested json'
+  )
+  accessVariableNestedJson.createCommand(
+    undefined,
+    'storeJson',
+    `[{"a":[{"b":0}, {"b":{"c":1}}]}, {"a":2}]`,
+    'blah'
+  )
+  accessVariableNestedJson.createCommand(
+    undefined,
+    'assert',
+    'blah[0].a[1].b.c',
+    '1'
+  )
+
   const accessVariableForEach = store.createTestCase('access variable for each')
   accessVariableForEach.createCommand(
     undefined,
