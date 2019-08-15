@@ -3,11 +3,7 @@ node_modules
 _MACOSX/
 .DS_Store
 build
-packages/selenium-ide-extension/selenium
-packages/selenium-ide/selenium/
-.peru
 .idea
-.tern-port
 selenium-ide.pem
 selenium-ide.crx
 yarn-error.log
