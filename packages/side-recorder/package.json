@@ -25,14 +25,14 @@
   "devDependencies": {
     "@babel/preset-env": "^7.4.1",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
-    "@testing-library/dom": "^5.6.1",
+    "@testing-library/dom": "^6.0.1",
     "babel-loader": "^8.0.5",
     "chromedriver": "^76.0.0",
     "copy-webpack-plugin": "^5.0.2",
     "engine.io": "^3.3.2",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "uglifyjs-webpack-plugin": "^2.1.2",
-    "webpack": "^4.29.6",
+    "webpack": "^4.39.2",
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
