@@ -16,7 +16,23 @@ module.exports = {
     },
     sourceType: 'module',
   },
-  plugins: ['jest', 'react', 'prettier'],
+  overrides: [
+    {
+      files: ["**/*.ts", "**/*.tsx"],
+      parser: "@typescript-eslint/parser",
+      rules: {
+        '@typescript-eslint/array-type': ['error', {default: 'generic'}],
+        '@typescript-eslint/ban-types': 'error',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {argsIgnorePattern: '^_'},
+        ],
+        'no-dupe-class-members': 'off',
+        'no-unused-vars': 'off',
+      },
+    }
+  ],
+  plugins: ['@typescript-eslint', 'jest', 'react', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
     'react/prop-types': [0],
@@ -31,4 +47,9 @@ module.exports = {
     'constructor-super': 'error',
     'valid-typeof': 'error',
   },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  }
 }
