@@ -15,7 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ArgTypes from './ArgTypes'
+import ArgTypes, { ArgType } from './ArgTypes'
+
+export interface CommandType {
+  name: string
+  description: string
+  target?: ArgType
+}
+
+export interface CommandTypes {
+  [key: string]: CommandType
+}
 
 export default {
   acceptAlert: {
@@ -616,4 +626,4 @@ export default {
     target: ArgTypes.conditionalExpression,
     value: ArgTypes.loopLimit,
   },
-}
+} as CommandTypes

@@ -15,6 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
+export interface ArgType {
+  name: string
+  description: string
+}
+
+export interface ArgTypes {
+  [key: string]: ArgType
+}
+
 export default {
   alertText: {
     name: 'alert text',
@@ -93,7 +102,7 @@ export default {
   },
   message: {
     name: 'message',
-    value: 'The message to print.',
+    description: 'The message to print.',
   },
   optionLocator: {
     name: 'option',
@@ -157,4 +166,4 @@ export default {
     name: 'xpath',
     description: 'The xpath expression to evaluate.',
   },
-}
+} as ArgTypes
