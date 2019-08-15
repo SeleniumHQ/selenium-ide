@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//@ts-ignore
 import _arg from './ArgTypes'
+//@ts-ignore
 import _cmds from './Commands'
 
 export const ArgTypes = _arg

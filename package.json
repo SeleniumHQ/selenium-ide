@@ -9,7 +9,7 @@
     "test": "jest",
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
-    "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"node_modules\"",
+    "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"packages/*/src/**/*.ts\" \"packages/*/__tests__/**/*.ts\" \"website/**/*.js\" --ignore-pattern=\"node_modules\"",
     "watch": "lerna run --no-bail --parallel watch"
   },
   "jest": {
@@ -21,7 +21,7 @@
       "./scripts/jest/test.config.js"
     ],
     "testMatch": [
-      "**/packages/**/__test?(s)__/**/*.spec.js?(x)"
+      "**/packages/**/__test?(s)__/**/*.spec.(j|t)s?(x)"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/"
@@ -31,10 +31,17 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
     "@testing-library/jest-dom": "^4.0.0",
+    "@types/jest": "^24.0.17",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.7.1",
+    "concurrently": "^4.1.1",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-jest": "^22.15.0",
@@ -47,6 +54,7 @@
     "stylelint": "^10.0.1",
     "stylelint-config-prettier": "^5.1.0",
     "stylelint-config-standard": "^18.3.0",
-    "stylelint-prettier": "^1.0.6"
+    "stylelint-prettier": "^1.0.6",
+    "typescript": "^3.5.3"
   }
 }
