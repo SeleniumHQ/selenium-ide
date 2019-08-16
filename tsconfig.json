@@ -6,7 +6,6 @@
     "declaration": true,
     "declarationMap": true,
     "composite": true,
-    "emitDeclarationOnly": true,
     // "importHelpers": true,
     // "isolatedModules": true,
 
@@ -21,10 +20,13 @@
     /* Module Resolution Options */
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": [
+      "node",
+      "jest"
+    ]
   },
   "exclude": [
-    "**/__tests__/**/*",
     "**/dist/**/*"
   ]
 }

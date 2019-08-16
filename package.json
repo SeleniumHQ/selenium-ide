@@ -10,6 +10,7 @@
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"packages/*/src/**/*.ts\" \"packages/*/__tests__/**/*.ts\" \"website/**/*.js\" --ignore-pattern=\"node_modules\"",
+    "typecheck": "tsc --noEmit",
     "watch": "lerna run --no-bail --parallel watch"
   },
   "jest": {
@@ -21,11 +22,15 @@
       "./scripts/jest/test.config.js"
     ],
     "testMatch": [
-      "**/packages/**/__test?(s)__/**/*.spec.(j|t)s?(x)"
+      "**/packages/**/__test?(s)__/**/*.spec.[jt]s?(x)"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/"
-    ]
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.tsx?$": "ts-jest"
+    }
   },
   "workspaces": [
     "packages/*"
@@ -39,6 +44,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@testing-library/jest-dom": "^4.0.0",
     "@types/jest": "^24.0.17",
+    "@types/node": "^12.7.2",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "babel-eslint": "^10.0.1",
@@ -57,6 +63,7 @@
     "stylelint-config-prettier": "^5.1.0",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-prettier": "^1.0.6",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.5.3"
   }
 }

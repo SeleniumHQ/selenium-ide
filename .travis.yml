@@ -16,5 +16,6 @@ install:
   - yarn --ignore-engines
   - yarn build
 script:
+  - yarn typecheck
   - yarn lint
   - yarn test

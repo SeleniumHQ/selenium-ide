@@ -9,8 +9,8 @@
   "scripts": {
     "build": "yarn build:js && yarn build:types",
     "build:js": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
-    "build:types": "tsc --emitDeclarationOnly",
-    "clean": "rm -rf dist",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo tsconfig.build.tsbuildinfo",
     "prepublishOnly": "yarn clean && yarn build",
     "watch": "yarn build && concurrently \"yarn build:js -w\" \"yarn build:types -w\""
   },
