@@ -27,6 +27,10 @@ module.exports = {
           'error',
           {argsIgnorePattern: '^_'},
         ],
+        '@typescript-eslint/interface-name-prefix': [
+          'error',
+          'never',
+        ],
         'no-dupe-class-members': 'off',
         'no-unused-vars': 'off',
       },
