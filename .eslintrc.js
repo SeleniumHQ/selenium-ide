@@ -21,7 +21,7 @@ module.exports = {
       files: ["**/*.ts", "**/*.tsx"],
       parser: "@typescript-eslint/parser",
       rules: {
-        '@typescript-eslint/array-type': ['error', {default: 'generic'}],
+        '@typescript-eslint/array-type': ['error', {default: 'array'}],
         '@typescript-eslint/ban-types': 'error',
         '@typescript-eslint/no-unused-vars': [
           'error',
