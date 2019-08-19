@@ -198,10 +198,11 @@ browser.runtime.onMessageExternal.addListener(
         }
         else {
           return sendResponse({ error: 'Selenium IDE is not active' });
-        })
-        return true
-      }
-    )
+        }
+      })
+    return true
+  }
+)
 
 browser.runtime.onInstalled.addListener(() => {
   // Notify updates only in production
