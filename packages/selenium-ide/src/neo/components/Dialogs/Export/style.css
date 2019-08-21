@@ -1,0 +1,26 @@
+.language-selector .search {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.language-selector .languages {
+  height: auto;
+  overflow: auto;
+  max-height: initial;
+  padding-bottom: 10px;
+}
+
+.languages .language {
+  cursor: pointer;
+  width: auto;
+  padding-top: 15px;
+}
+
+.languages .language label {
+  padding-left: 5px;
+}
+
+.languages .language input {
+  margin-top: -1px;
+  vertical-align: middle;
+}

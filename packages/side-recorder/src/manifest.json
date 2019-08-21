@@ -2,7 +2,12 @@
   "description": "Selenium IDE Recorder",
   "manifest_version": 2,
   "name": "Selenium IDE",
+<<<<<<< HEAD:packages/side-recorder/src/manifest.json
   "version": "1.0.0",
+=======
+  "version": "3.12.1",
+  "version_name": "3.12.1",
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/manifest.json
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
   "icons": {
     "16": "icons/icon16.png",

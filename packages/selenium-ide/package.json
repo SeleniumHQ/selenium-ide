@@ -1,6 +1,13 @@
 {
+<<<<<<< HEAD
   "name": "@seleniumhq/selenium-ide",
   "version": "3.5.10",
+=======
+  "name": "selenium-ide-extension",
+  "version": "3.12.1",
+  "description": "An integrated development environment for Selenium scripts",
+  "license": "Apache-2.0",
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Tomer <tomer@corevo.io>",
@@ -18,8 +25,50 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "dependencies": {
+<<<<<<< HEAD
     "chromedriver": "^76.0.0",
     "electron": "^6.0.2",
     "selenium-webdriver": "^4.0.0-alpha.4"
+=======
+    "@medv/finder": "^1.1.1",
+    "browser-webdriver": "^3.6.0",
+    "classnames": "^2.2.5",
+    "code-export": "^3.12.1",
+    "fuse.js": "^3.3.0",
+    "google-closure-library": "^20170521.0.0",
+    "js-beautify": "^1.7.5",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
+    "modifier-keys": "^1.2.1",
+    "project-name-generator": "^2.1.4",
+    "prop-types": "^15.5.10",
+    "rc-slider": "^8.4.0",
+    "react": "^16.0.0",
+    "react-autocomplete": "^1.7.2",
+    "react-contenteditable": "^2.0.5",
+    "react-dnd": "5.0.0",
+    "react-dnd-html5-backend": "^2.5.4",
+    "react-document-title": "^2.0.3",
+    "react-dom": "^16.4.2",
+    "react-dropzone": "^4.2.9",
+    "react-linkify": "^0.2.2",
+    "react-markdown": "^3.1.3",
+    "react-modal": "^3.2.1",
+    "react-split-pane": "^0.1.71",
+    "react-syntax-highlighter": "^8.0.1",
+    "react-tooltip": "^3.8.1",
+    "react-transition-group": "^2.2.1",
+    "resolve-url": "^0.2.1",
+    "scroll-into-view-if-needed": "2",
+    "selianize": "^3.12.1",
+    "string-natural-compare": "^2.0.2",
+    "styled-components": "^2.1.2",
+    "ua-parser-js": "^0.7.17",
+    "unescape": "^1.0.1",
+    "uuid": "^3.1.0",
+    "webextension-polyfill": "^0.3.1",
+    "xml-escape": "^1.1.0",
+    "xml-js": "^1.5.2"
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e
   }
 }

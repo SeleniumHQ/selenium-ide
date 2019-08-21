@@ -403,6 +403,47 @@ export default class BackgroundRecorder {
       this.windowSession.currentUsedFrameLocation[this.sessionId] =
         message.frameLocation
     }
+<<<<<<< HEAD:packages/side-recorder/src/background/recorder.js
+=======
+    if (
+      message.command.includes('Value') &&
+      typeof message.value === 'undefined'
+    ) {
+      logger.error(
+        "This element does not have property 'value'. Please change to use storeText command."
+      )
+      return
+    } else if (message.command.includes('Text') && message.value === '') {
+      logger.error(
+        "This element does not have property 'Text'. Please change to use storeValue command."
+      )
+      return
+    } else if (message.command.includes('store')) {
+      // In Google Chrome, window.prompt() must be triggered in
+      // an actived tabs of front window, so we let panel window been focused
+      browser.windows
+        .update(this.windowSession.ideWindowId, { focused: true })
+        .then(() => {
+          // Even if window has been focused, window.prompt() still failed.
+          // Delay a little time to ensure that status has been updated
+          setTimeout(() => {
+            message.value = prompt('Enter the name of the variable')
+            if (message.insertBeforeLastCommand) {
+              record(message.command, message.target, message.value, true)
+            } else {
+              this.sendRecordNotification(
+                sender.tab.id,
+                message.command,
+                message.target,
+                message.value
+              )
+              record(message.command, message.target, message.value)
+            }
+          }, 100)
+        })
+      return
+    }
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/neo/IO/SideeX/recorder.js
 
     this.sendRecordNotification(
       sender.tab.id,

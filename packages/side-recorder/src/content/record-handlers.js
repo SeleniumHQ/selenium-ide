@@ -17,6 +17,7 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
+<<<<<<< HEAD:packages/side-recorder/src/content/record-handlers.js
 import LocatorBuilders from './locator-builders'
 import { isTest, isFirefox } from './utils'
 
@@ -49,6 +50,55 @@ handlers.push([
             locatorBuilders.buildAll(event.target),
             event.target.value
           )
+=======
+import goog, { bot } from './closure-polyfill'
+import { Recorder, recorder, record } from './record-api'
+import { attach } from './prompt-recorder'
+import LocatorBuilders from './locatorBuilders'
+import { isTest, isFirefox } from '../common/utils'
+
+export { record }
+export const locatorBuilders = new LocatorBuilders(window)
+
+attach(record)
+
+Recorder.inputTypes = [
+  'text',
+  'password',
+  'file',
+  'datetime',
+  'datetime-local',
+  'date',
+  'month',
+  'time',
+  'week',
+  'number',
+  'range',
+  'email',
+  'url',
+  'search',
+  'tel',
+  'color',
+]
+Recorder.addEventHandler('type', 'change', function(event) {
+  // © Chen-Chieh Ping, SideeX Team
+  if (
+    event.target.tagName &&
+    !this.recordingState.preventType &&
+    this.recordingState.typeLock == 0 &&
+    (this.recordingState.typeLock = 1)
+  ) {
+    // END
+    let tagName = event.target.tagName.toLowerCase()
+    let type = event.target.type
+    if ('input' == tagName && Recorder.inputTypes.indexOf(type) >= 0) {
+      if (event.target.value.length > 0) {
+        record(
+          'type',
+          locatorBuilders.buildAll(event.target),
+          event.target.value
+        )
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/content/record.js
 
           // © Chen-Chieh Ping, SideeX Team
           if (this.recordingState.enterTarget != null) {
@@ -59,6 +109,7 @@ handlers.push([
               formChk = tempTarget.tagName.toLowerCase()
             }
 
+<<<<<<< HEAD:packages/side-recorder/src/content/record-handlers.js
             this.record(
               'sendKeys',
               locatorBuilders.buildAll(this.recordingState.enterTarget),
@@ -73,6 +124,14 @@ handlers.push([
             locatorBuilders.buildAll(event.target),
             event.target.value
           )
+=======
+          record(
+            'sendKeys',
+            locatorBuilders.buildAll(this.recordingState.enterTarget),
+            '${KEY_ENTER}'
+          )
+          this.recordingState.enterTarget = null
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/content/record.js
         }
       } else if ('textarea' == tagName) {
         this.record(
@@ -161,7 +220,11 @@ handlers.push([
               tempTarget = tempTarget.parentElement
               formChk = tempTarget.tagName.toLowerCase()
             }
+<<<<<<< HEAD:packages/side-recorder/src/content/record-handlers.js
             this.record(
+=======
+            record(
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/content/record.js
               'sendKeys',
               locatorBuilders.buildAll(this.recordingState.enterTarget),
               '${KEY_ENTER}'
@@ -193,7 +256,11 @@ handlers.push([
                     tempTarget = tempTarget.parentElement
                     formChk = tempTarget.tagName.toLowerCase()
                   }
+<<<<<<< HEAD:packages/side-recorder/src/content/record-handlers.js
                   this.record(
+=======
+                  record(
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/content/record.js
                     'sendKeys',
                     locatorBuilders.buildAll(this.recordingState.enterTarget),
                     '${KEY_ENTER}'
@@ -744,6 +811,11 @@ handlers.push([
               }
               options[i]._wasSelected = options[i].selected
             }
+<<<<<<< HEAD:packages/side-recorder/src/content/record-handlers.js
+=======
+            this.recordingState.preventClickTwice = true
+            options[i]._wasSelected = options[i].selected
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/content/record.js
           }
         }
       }

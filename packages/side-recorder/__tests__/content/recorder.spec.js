@@ -92,6 +92,15 @@ describe('recorder', () => {
             <button>asdfsd</button>
             <button type="submit" style="display:none">sub</button>
         </form>
+        <form id="select-form" action="/more-kakai.html">
+          <select name="cars" multiple>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+          </select>
+          <input type="submit">
+        </form>
       `)
       inputElement = window.document.querySelector('form input')
       recorder.attach()
@@ -111,8 +120,15 @@ describe('recorder', () => {
     it('keydown on input records sendKey ${KEY_ENTER}', () => {
       fireEvent.keyDown(inputElement, enterKey)
       fireEvent.keyUp(inputElement, enterKey)
+<<<<<<< HEAD:packages/side-recorder/__tests__/content/recorder.spec.js
       expect(record.mock.calls[1][0]).toEqual('sendKeys')
       expect(filter(record.mock.calls[1][1], 'type="submit"')).toBeUndefined()
+=======
+      expect(recordApi.record.mock.calls[1][0]).toEqual('sendKeys')
+      expect(
+        filter(recordApi.record.mock.calls[1][1], 'type="submit"')
+      ).toBeUndefined()
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/__test__/content/record-api.spec.js
     })
 
     it('click on button without type=submit records click', () => {
@@ -125,6 +141,15 @@ describe('recorder', () => {
       const button = window.document.querySelector("button[type='submit']")
       fireEvent.click(button)
       expect(record.mock.calls[0][0]).toEqual('click')
+    })
+
+    it('selecting from a multi-select records just `add selection`', () => {
+      const option = window.document.querySelector('#select-form > select')
+      fireEvent.change(option)
+      fireEvent.click(option)
+      expect(
+        recordApi.record.mock.calls.map(call => call[0]).includes('click')
+      ).toBeFalsy()
     })
   })
 })

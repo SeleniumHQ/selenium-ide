@@ -1,0 +1,31 @@
+{
+  "name": "selianize",
+  "version": "3.12.1",
+  "description": "Export Selenium IDE projects into javascript",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "main": "dist/selianize.cjs.js",
+  "module": "dist/selianize.esm.js",
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "yarn build",
+    "watch": "yarn build -w"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "keywords": [
+    "selenium",
+    "ide",
+    "export"
+  ],
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@seleniumhq/side-utils": "^3.12.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.3.4",
+    "rollup": "^0.57.0",
+    "rollup-plugin-babel": "^4.3.2"
+  }
+}

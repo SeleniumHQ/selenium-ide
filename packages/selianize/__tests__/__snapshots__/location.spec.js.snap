@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`location code emitter should escape quotes in locator strings 1`] = `"By.css(\`a[title=\\"escaped\\"]\`)"`;

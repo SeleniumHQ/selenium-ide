@@ -7,11 +7,24 @@
     "start": "cd packages/selenium-ide && yarn start",
     "build": "lerna run build",
     "test": "jest",
+<<<<<<< HEAD
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"packages/*/src/**/*.ts\" \"packages/*/__tests__/**/*.ts\" \"website/**/*.js\" --ignore-pattern=\"node_modules\"",
     "typecheck": "tsc --noEmit",
     "watch": "lerna run --no-bail --parallel watch"
+=======
+    "test:ext": "jest --testMatch \"**/packages/selenium-ide/tests/**/*.spec.js\"",
+    "test:runner": "cd packages/selenium-side-runner && node dist/index.js ../../tests/examples/*.side",
+    "test:webdriver": "jest --testMatch \"**/packages/browser-webdriver/tests/**/*.spec.js\"",
+    "lint": "yarn lint:scripts && yarn lint:styles",
+    "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
+    "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
+    "postinstall": "lerna bootstrap",
+    "watch": "lerna run --no-bail --parallel watch",
+    "release-prep": "yarn && peru sync && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext",
+    "postpublish": "yarn build:ext:prod && npx ./gh-release.js"
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e
   },
   "jest": {
     "testURL": "http://localhost/index.html",
@@ -56,6 +69,7 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.14.3",
     "identity-obj-proxy": "^3.0.0",
+<<<<<<< HEAD
     "jest": "^24.9.0",
     "lerna": "^3.16.4",
     "prettier": "^1.17.0",
@@ -65,5 +79,16 @@
     "stylelint-prettier": "^1.0.6",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.3"
+=======
+    "jest": "^24.3.1",
+    "lerna": "^3.4.3",
+    "prettier": "^1.14.3",
+    "stylelint": "^9.7.1",
+    "stylelint-config-prettier": "^4.0.0",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-prettier": "^1.0.3",
+    "putasset": "^4.3.2",
+    "grizzly": "^4.0.1"
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e
   }
 }

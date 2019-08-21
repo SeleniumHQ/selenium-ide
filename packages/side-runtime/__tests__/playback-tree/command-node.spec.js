@@ -15,9 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
+<<<<<<< HEAD:packages/side-runtime/__tests__/playback-tree/command-node.spec.js
 import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
 import { CommandNode } from '../../src/playback-tree/command-node'
 import Variables from '../../src/Variables'
+=======
+import Command, { ControlFlowCommandNames } from '../../../models/Command'
+import { CommandNode } from '../../../playback/playback-tree/command-node'
+import { configure } from 'mobx'
+import Variables from '../../../stores/view/Variables'
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e:packages/selenium-ide/src/neo/__test__/playback/playback-tree/command-node.spec.js
+
+configure({
+  enforceActions: 'observed',
+})
 
 describe('Command Node', () => {
   let variables
@@ -43,6 +54,43 @@ describe('Command Node', () => {
     expect(node._isRetryLimit()).toBeFalsy()
     node.timesVisited = 1000
     expect(node._isRetryLimit()).toBeTruthy()
+  })
+  it('forEach fetches count from preset variable', () => {
+    const collectionName = 'blah'
+    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      collectionName,
+      'iteratorVar'
+    )
+    const node = new CommandNode(command)
+    expect(node.evaluateForEach(variables)).toEqual(true)
+  })
+  it('forEach errors without a valid variable', () => {
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      'asdf',
+      ''
+    )
+    const node = new CommandNode(command)
+    node.evaluateForEach(variables).then(result => {
+      expect(result.result).toEqual('Invalid variable provided.')
+    })
+  })
+  it('forEach stores iterated collection entry on a variable using the provided name', () => {
+    const collectionName = 'asdf'
+    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      collectionName,
+      'iteratorVar'
+    )
+    const node = new CommandNode(command)
+    node.evaluateForEach(variables)
+    expect(variables.get('iteratorVar')).toEqual({ a: 'a1', b: 'b1' })
   })
   it('retry limit can be overriden', () => {
     const command = {

@@ -135,13 +135,13 @@ The runner will automatically set the number of workers to the same number of CP
 If you have Chrome installed in a non-standard location on your machine you can specify the path so ChromeDriver knows where to look.
 
 ```sh
-selenium-side-runner -c "chromeOptions.binary='/path/to/non-standard/Chrome/install'"
+selenium-side-runner -c "goog:chromeOptions.binary='/path/to/non-standard/Chrome/install'"
 ```
 
 With Chrome specific capabilities you can also run the tests headlessly.
 
 ```sh
-selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"
+selenium-side-runner -c "goog:chromeOptions.args=[disable-infobars, headless]"
 ```
 
 ## A framework at your fingertips
@@ -162,6 +162,29 @@ You also have the option to run a targeted subset of your tests with the `--filt
 
 ```sh
 selenium-side-runner --filter smoke
+```
+
+### Output test results to a file
+
+If you need to export test results to a file (like when running as part of a CI process for example), you can use a combination of the `--output-directory` and `--output-format` flags.
+
+`--output-directory` defines where to put test result files. It can take either an absolute or relative path.
+
+`--output-format` defines which format to use for the test result file. It can either be `jest` (e.g., JSON) or `junit` (e.g., XML). The default format is `jest` (e.g., if you don't specify a type).
+
+```sh
+selenium-side-runner --output-directory=results
+# Outputs results in `jest` frormat in `./results/projectName.json'
+```
+
+```sh
+selenium-side-runner --output-directory=results --output-format=jest
+# Outputs results in `jest` frormat in `./results/projectName.json'
+```
+
+```sh
+selenium-side-runner --output-directory=results --output-format=junit
+# Outputs results in `junit` frormat in `./results/projectName.xml'
 ```
 
 ### Specify a default configuration
@@ -347,4 +370,4 @@ proxyType: system
 
 ### Code export
 
-If you're trying to learn how to translate recorded tests into WebDriver code, or if you want to integrate recorded tests into an existing custom test framework, then what you need is code export which is on the project roadmap and will be available soon.
+If you're trying to learn how to translate recorded tests into WebDriver code, or if you want to integrate recorded tests into an existing custom test framework, then what you need is code export which is now available for select languages. You can learn more [here](code-export.md)!

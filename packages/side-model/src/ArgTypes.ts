@@ -98,7 +98,7 @@ export default {
   },
   loopLimit: {
     name: 'loop limit',
-    description: `Maximum number of times a looping control flow command can execute to protect against infinite loops.`,
+    description: `An optional argument that specifies the maximum number of times a looping control flow command can execute. This protects against infinite loops. The defaults value is set to 1000.`,
   },
   message: {
     name: 'message',
@@ -154,9 +154,7 @@ export default {
   },
   variableName: {
     name: 'variable name',
-    description: `The name of a variable (without brackets). Used to either store 
-    an expression's result in or reference for a check (e.g., with 'assert' or 
-    'verify').`,
+    description: `The name of a variable without brackets.`,
   },
   waitTime: {
     name: 'wait time',

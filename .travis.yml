@@ -3,6 +3,7 @@ language: node_js
 cache:
   yarn: true
 node_js:
+  - "12"
   - "10"
 services:
   - docker
@@ -14,7 +15,13 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 install:
   - yarn --ignore-engines
+<<<<<<< HEAD
   - yarn build
+=======
+  - yarn run lerna run build --ignore selenium-ide-extension --ignore selenium-ide-extension-boilerplate
+  - NODE_ENV="staging" yarn build:ext
+  - docker-compose up -d
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e
 script:
   - yarn typecheck
   - yarn lint

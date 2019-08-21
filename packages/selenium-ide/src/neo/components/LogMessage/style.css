@@ -1,0 +1,79 @@
+.log {
+  padding: 5px 7px 5px 10px;
+}
+
+.log .index {
+  display: inline-block;
+  width: 20px;
+}
+
+.log .timestamp {
+  font-weight: normal;
+  color: #5b5b5b;
+}
+
+.log.notice {
+  font-weight: bold;
+}
+
+.log.warn {
+  color: #dc9914;
+}
+
+.log.error {
+  color: #e80600;
+}
+
+.log .message {
+  flex-grow: 1;
+}
+
+.log .shim {
+  flex-grow: 1000;
+}
+
+.log .message::after {
+  padding: 0 5px;
+}
+
+.log.success.notice {
+  color: #23843d;
+}
+
+.log.failure.notice {
+  color: #e80600;
+}
+
+.log .log-overview {
+  display: flex;
+  align-items: center;
+}
+
+.log.success .message .status {
+  color: #23843d;
+}
+
+.log.undetermined .message .status,
+.log.awaiting .message .status {
+  color: #da920e;
+}
+
+.log.failure .message .status {
+  color: #e80600;
+}
+
+.log .details {
+  padding-left: 20px;
+}
+
+.log.failure .details {
+  color: #e80600;
+}
+
+.log a:hover {
+  text-decoration: underline;
+}
+
+.log:hover {
+  background-color: var(--hover-color);
+}

@@ -1,6 +1,10 @@
 <img src="https://www.seleniumhq.org/selenium-ide/img/selenium-ide128.png" alt="logo" height="128" align="right" />
 
+<<<<<<< HEAD
 # Selenium IDE &middot; [![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.com/SeleniumHQ/selenium-ide)
+=======
+# Selenium IDE &middot; [![Build Status](https://travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=master)](https://travis-ci.com/SeleniumHQ/selenium-ide)
+>>>>>>> 848d0409eeadf99c71d12a0e0c1e34d89d47d65e
 
 _[WIP] An integrated development environment for Selenium scripts_
 
@@ -48,8 +52,6 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 
 ## Questions or want to chat?
 
-If you have questions, check out [our FAQ](https://github.com/SeleniumHQ/selenium-ide/wiki/Frequently-Asked-Questions).
+If you have questions, check out [our FAQ](https://www.seleniumhq.org/selenium-ide/docs/en/introduction/faq/).
 
-You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC
-channel, which is also available on
-[Slack](https://seleniumhq.herokuapp.com).
+You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC channel, which is also available on [Slack](https://seleniumhq.herokuapp.com).

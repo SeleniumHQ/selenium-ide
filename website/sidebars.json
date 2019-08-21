@@ -4,6 +4,7 @@
       "introduction/getting-started",
       "introduction/command-line-runner",
       "introduction/control-flow",
+      "introduction/code-export",
       "introduction/faq"
     ],
     "API Reference": [
@@ -20,7 +21,8 @@
     "Concepts": [
       "plugins/requests",
       "plugins/error-handling",
-      "plugins/emitting-code"
+      "plugins/emitting-code",
+      "plugins/code-export"
     ],
     "Extending the IDE": [
       "plugins/adding-commands",

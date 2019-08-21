@@ -1,0 +1,22 @@
+{
+  "name": "browser-webdriver",
+  "version": "3.6.0",
+  "main": "build/webdriver.js",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "build": "yarn run browserify src/index.js -s browser-webdriver -o build/webdriver.js",
+    "watch": "yarn run watchify src/index.js -s browser-webdriver -o build/webdriver.js"
+  },
+  "files": [
+    "build/webdriver.js"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/preset-env": "^7.3.4",
+    "browserify": "^16.2.2",
+    "selenium-webdriver": "3.6.0",
+    "watchify": "^3.11.0"
+  }
+}

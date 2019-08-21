@@ -95,6 +95,14 @@ To close the `while` command block use the `end` command.
 
 The loop will retry until either the condition returns `false` or the infinite loop protection is triggered -- which defaults to `1000` attempts. You can override this default by specifying a number in the `value` input field of the `while` command.
 
+### [`forEach`](../api/commands.md#for-each)
+
+Saving the best for last, we have the ability to iterate over a collection (e.g., a JS array) and reference each item in that collection while we do it.
+
+In the `target` field you specify the name of the variable that contains the array you want to iterate over. In the `value` field you specify the name for the iterator variable you'd like to use. For each entry in the array, the commands that follow will be executed. During each iteration the contents of the current entry will be accessible through the iterator variable.
+
+![for-each-example](/selenium-ide/img/docs/control-flow/for-each.png)
+
 ## Nesting Commands
 
 You can nest control flow commands as necessary (e.g., an `if` block can go inside of a `while` block, and vice versa).
