@@ -26,7 +26,7 @@
   "devDependencies": {
     "@seleniumhq/side-model": "^3.5.10",
     "@seleniumhq/side-testkit": "^3.5.10",
-    "chromedriver": "^76.0.0",
+    "chromedriver": "^76.0.1",
     "geckodriver": "^1.16.2",
     "selenium-webdriver": "^4.0.0-alpha.4"
   },
