@@ -73,6 +73,7 @@ export const ArgTypes = {
   loopLimit: {
     name: 'loop limit',
     description: `An optional argument that specifies the maximum number of times a looping control flow command can execute. This protects against infinite loops. The defaults value is set to 1000.`,
+    isOptional: true,
   },
   message: {
     name: 'message',
@@ -111,7 +112,7 @@ export const ArgTypes = {
   },
   text: {
     name: 'text',
-    description: 'The text to verify.',
+    description: 'The text to use.',
   },
   times: {
     name: 'times',
@@ -124,7 +125,7 @@ export const ArgTypes = {
   },
   value: {
     name: 'value',
-    description: 'The value to type.',
+    description: 'The value to input.',
   },
   variableName: {
     name: 'variable name',
