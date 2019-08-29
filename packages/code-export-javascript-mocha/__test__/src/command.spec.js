@@ -207,7 +207,7 @@ describe('command code emitter', () => {
     const command = {
       command: 'clickAt',
       target: 'link=button',
-      value: '',
+      value: '10,20',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
@@ -249,7 +249,7 @@ describe('command code emitter', () => {
     const command = {
       command: 'doubleClickAt',
       target: 'link=button',
-      value: '',
+      value: '10,20',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
@@ -288,7 +288,7 @@ describe('command code emitter', () => {
   it('should emit `else` command', () => {
     const command = {
       command: ControlFlowCommandNames.else,
-      target: 'true',
+      target: '',
       value: '',
     }
     return expect(
@@ -371,11 +371,11 @@ describe('command code emitter', () => {
     const command = {
       command: 'mouseDownAt',
       target: 'id=button',
-      value: '',
+      value: '10,20',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `mouse move` event', () => {
+  it.skip('should emit `mouse move` event', () => {
     const command = {
       command: 'mouseMove',
       target: 'id=button',
@@ -387,7 +387,7 @@ describe('command code emitter', () => {
     const command = {
       command: 'mouseMoveAt',
       target: 'id=button',
-      value: '',
+      value: '10,20',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
@@ -419,7 +419,7 @@ describe('command code emitter', () => {
     const command = {
       command: 'mouseUpAt',
       target: 'id=button',
-      value: '',
+      value: '10,20',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
@@ -554,7 +554,9 @@ describe('command code emitter', () => {
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
   it('should emit `set speed`', () => {
-    return expect(prettify({ command: 'setSpeed' })).resolves.toMatchSnapshot()
+    return expect(
+      prettify({ command: 'setSpeed', target: '1000' })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `setWindowSize`', () => {
     const command = {
@@ -566,9 +568,9 @@ describe('command code emitter', () => {
   })
   it('should skip playback supported commands, that are not supported in webdriver', () => {
     return Promise.all([
-      expect(prettify({ command: 'answerOnNextPrompt' })).resolves.toBe(
-        undefined
-      ),
+      expect(
+        prettify({ command: 'answerOnNextPrompt', target: 'blah' })
+      ).resolves.toBe(undefined),
       expect(
         prettify({ command: 'chooseCancelOnNextConfirmation' })
       ).resolves.toBe(undefined),
@@ -615,7 +617,7 @@ describe('command code emitter', () => {
   it('should emit `store title` command', () => {
     const command = {
       command: 'storeTitle',
-      target: '',
+      target: 'blah',
       value: 'myVar',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
