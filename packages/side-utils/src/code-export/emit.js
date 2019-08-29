@@ -20,12 +20,39 @@ import { preprocessParameter } from './preprocessor'
 import doRender from './render'
 import { registerMethod } from './register'
 import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
+import { Commands } from '../../../selenium-ide/src/neo/models/Command/Commands'
+
+function validateCommand(command) {
+  let commandSchema = Commands.find(cmdObj => cmdObj[0] === command.command)
+  if (commandSchema) commandSchema = commandSchema[1]
+  else throw new Error(`Invalid command '${command.command}'`)
+  if (!!commandSchema.target !== !!command.target) {
+    throw new Error(
+      `Incomplete command '${
+        command.command
+      }'. Missing expected target argument.`
+    )
+  }
+  if (!!commandSchema.value !== !!command.value) {
+    const isOptional = commandSchema.value
+      ? !!commandSchema.value.isOptional
+      : false
+    if (!isOptional) {
+      throw new Error(
+        `Incomplete command '${
+          command.command
+        }'. Missing expected value argument.`
+      )
+    }
+  }
+}
 
 export function emitCommand(
   command,
   emitter,
-  { variableLookup, emitNewWindowHandling }
+  { variableLookup, emitNewWindowHandling } = {}
 ) {
+  validateCommand(command)
   if (emitter) {
     const ignoreEscaping = command.command === 'storeJson'
     let result = emitter(

@@ -14,6 +14,7 @@ export const Commands = [
       description: `Add a selection to the set of options in a multi-select element.`,
       type: TargetTypes.LOCATOR,
       target: ArgTypes.locator,
+      value: ArgTypes.value,
     },
   ],
   [
@@ -60,6 +61,7 @@ export const Commands = [
       name: 'assert confirmation',
       description:
         'Confirm that a confirmation has been rendered. The test will stop if the assert fails.',
+      target: ArgTypes.text,
     },
   ],
   [
@@ -138,6 +140,7 @@ export const Commands = [
       name: 'assert prompt',
       description:
         'Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.',
+      target: ArgTypes.text,
     },
   ],
   [
@@ -647,6 +650,8 @@ export const Commands = [
     {
       name: 'store title',
       description: 'Gets the title of the current page.',
+      target: ArgTypes.text,
+      value: ArgTypes.variableName,
     },
   ],
   [
@@ -799,7 +804,7 @@ export const Commands = [
       description: `Soft assert that the expected element has not been chosen 
         in a select menu by its option attribute. The test will continue even if the verify fails.`,
       target: ArgTypes.selectLocator,
-      value: ArgTypes.option,
+      value: ArgTypes.optionLocator,
     },
   ],
   [
@@ -832,7 +837,7 @@ export const Commands = [
       description: `Soft assert that the expected element has been chosen in 
         a select menu by its option attribute. The test will continue even if the verify fails.`,
       target: ArgTypes.selectLocator,
-      value: ArgTypes.option,
+      value: ArgTypes.optionLocator,
     },
   ],
   [

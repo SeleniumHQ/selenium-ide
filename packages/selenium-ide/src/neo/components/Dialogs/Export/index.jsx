@@ -22,6 +22,7 @@ import DialogContainer from '../Dialog'
 import FlatButton from '../../FlatButton'
 import Checkbox from '../../Checkbox'
 import { availableLanguages } from '../../../code-export'
+import ModalState from '../../../stores/view/ModalState'
 import './style.css'
 
 export default class ExportDialog extends React.Component {
@@ -73,10 +74,19 @@ class ExportContent extends React.Component {
               disabled={!this.state.selectedLanguages.length}
               type="submit"
               onClick={() => {
-                this.props.completeSelection(
-                  this.state.selectedLanguages,
-                  this.state.enableOriginTracing
-                )
+                this.props
+                  .completeSelection(
+                    this.state.selectedLanguages,
+                    this.state.enableOriginTracing
+                  )
+                  .catch(error => {
+                    this.props.cancelSelection()
+                    ModalState.showAlert({
+                      title: 'Unable to complete code export',
+                      description: error.message,
+                      confirmLabel: 'OK',
+                    })
+                  })
               }}
               style={{
                 marginRight: '0',
