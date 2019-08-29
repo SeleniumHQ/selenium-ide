@@ -20,36 +20,40 @@ import Variable from '../../src/args/variable'
 describe('variable schema', () => {
   describe('verify', () => {
     it('should verify a valid variable name', () => {
-      expect(Variable.verify('tomer')).toBeTruthy()
-      expect(Variable.verify('tomer2')).toBeTruthy()
-      expect(Variable.verify('tomer_steinfeld')).toBeTruthy()
+      expect(Variable.validate('tomer')).toBeTruthy()
+      expect(Variable.validate('tomer2')).toBeTruthy()
+      expect(Variable.validate('tomer_steinfeld')).toBeTruthy()
     })
 
     it('should throw for a variable with an invalid character', () => {
-      expect(() => Variable.verify('aå')).toThrow('Unexpected token å')
+      expect(() => Variable.validate('aå')).toThrow('Unexpected token å')
     })
 
     it('should throw for variable starting with a number', () => {
-      expect(() => Variable.verify('5a')).toThrow('Unexpected token 5')
+      expect(() => Variable.validate('5a')).toThrow('Unexpected token 5')
     })
 
     describe('property access', () => {
       it('should allow to access a property', () => {
-        expect(Variable.verify('tomer.steinfeld')).toBeTruthy()
+        expect(Variable.validate('tomer.steinfeld')).toBeTruthy()
       })
 
       it('should throw when trying to access an un-declared property', () => {
-        expect(() => Variable.verify('tomer..steinfeld')).toThrow(
+        expect(() => Variable.validate('tomer..steinfeld')).toThrow(
           'Invalid empty identifier'
         )
       })
 
       it('should throw for a variable with an invalid property', () => {
-        expect(() => Variable.verify('tomer.aå')).toThrow('Unexpected token å')
+        expect(() => Variable.validate('tomer.aå')).toThrow(
+          'Unexpected token å'
+        )
       })
 
       it('should throw for variable property starting with a number', () => {
-        expect(() => Variable.verify('tomer.5a')).toThrow('Unexpected token 5')
+        expect(() => Variable.validate('tomer.5a')).toThrow(
+          'Unexpected token 5'
+        )
       })
     })
   })

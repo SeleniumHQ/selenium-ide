@@ -35,11 +35,11 @@ describe('argument schema', () => {
       (value: number) => value === 1
     )
 
-    expect(arg.verify(1)).toBeTruthy()
-    expect(arg.verify(2)).toBeFalsy()
+    expect(arg.validate(1)).toBeTruthy()
+    expect(arg.validate(2)).toBeFalsy()
   })
 
-  describe('extentionOf', () => {
+  describe('extensionOf', () => {
     it('should not extend anything by default', () => {
       const arg = new Argument('arg', 'desc', () => false)
 
@@ -50,14 +50,14 @@ describe('argument schema', () => {
       const arg = new Argument('arg', 'desc', () => false)
       const arg2 = new Argument('arg', 'desc', () => false)
 
-      expect(arg2.extentionOf(arg)).toBeFalsy()
+      expect(arg2.extensionOf(arg)).toBeFalsy()
     })
 
     it('should extend an argument', () => {
       const arg = new Argument('arg', 'desc', () => false)
       const arg2 = new Argument('arg', 'desc', () => false, arg)
 
-      expect(arg2.extentionOf(arg)).toBeTruthy()
+      expect(arg2.extensionOf(arg)).toBeTruthy()
     })
 
     it('should extend an extended argument', () => {
@@ -65,7 +65,7 @@ describe('argument schema', () => {
       const arg2 = new Argument('arg', 'desc', () => false, arg)
       const arg3 = new Argument('arg', 'desc', () => false, arg2)
 
-      expect(arg3.extentionOf(arg)).toBeTruthy()
+      expect(arg3.extensionOf(arg)).toBeTruthy()
     })
   })
 })

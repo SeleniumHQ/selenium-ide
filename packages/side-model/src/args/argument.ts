@@ -19,27 +19,23 @@ export default class Argument<T> {
   readonly name: string
   readonly description: string
   readonly extending?: Argument<any>
-  private _verify: verificationFunction<T>
+  readonly validate: verificationFunction<T>
 
   constructor(
     name: string,
     description: string,
-    verify: verificationFunction<T>,
+    validate: verificationFunction<T>,
     extending?: Argument<any>
   ) {
     this.name = name
     this.description = description
-    this._verify = verify
+    this.validate = validate
     this.extending = extending
   }
 
-  verify(value: T): boolean {
-    return this._verify(value)
-  }
-
-  extentionOf(argument: Argument<any>): boolean {
+  extensionOf(argument: Argument<any>): boolean {
     return this.extending
-      ? this.extending === argument || this.extending.extentionOf(argument)
+      ? this.extending === argument || this.extending.extensionOf(argument)
       : false
   }
 }
