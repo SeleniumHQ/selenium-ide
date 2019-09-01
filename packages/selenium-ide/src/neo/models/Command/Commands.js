@@ -367,7 +367,7 @@ export const Commands = [
         as the body of an anonymous function.  To store the return value, use 
         the 'return' keyword and provide a variable name in the value input field.`,
       target: ArgTypes.script,
-      value: ArgTypes.variableName,
+      value: { isOptional: true, ...ArgTypes.variableName },
     },
   ],
   [
@@ -380,7 +380,7 @@ export const Commands = [
         The Promise result will be saved on the variable if you use the 'return' 
         keyword.`,
       target: ArgTypes.script,
-      value: ArgTypes.variableName,
+      value: { isOptional: true, ...ArgTypes.variableName },
     },
   ],
   [
@@ -699,7 +699,7 @@ export const Commands = [
       name: 'times',
       description: `Create a loop that executes the proceeding commands n number of times.`,
       target: ArgTypes.times,
-      value: ArgTypes.loopLimit,
+      value: { isOptional: true, ...ArgTypes.loopLimit },
     },
   ],
   [
@@ -977,7 +977,7 @@ export const Commands = [
       description: `Create a loop that executes the proceeding commands 
         repeatedly for as long as the provided conditional expression is true.`,
       target: ArgTypes.conditionalExpression,
-      value: ArgTypes.loopLimit,
+      value: { isOptional: true, ...ArgTypes.loopLimit },
     },
   ],
 ]
