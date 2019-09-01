@@ -15,9 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands as _cmds, TargetTypes as _ttypes } from './command/Commands'
-import { ArgTypes as _atypes } from './command/ArgTypes'
+import {
+  Commands as indexCommands,
+  TargetTypes as indexTargetTypes,
+  ArgTypes as indexArgTypes,
+} from '../../src/index'
+import { Commands, TargetTypes } from '../../src/command/Commands'
+import { ArgTypes } from '../../src/command/ArgTypes'
 
-export const Commands = _cmds
-export const TargetTypes = _ttypes
-export const ArgTypes = _atypes
+describe('side-model/index', () => {
+  it('exports the correct thing', () => {
+    expect(indexCommands).toBe(Commands)
+    expect(indexTargetTypes).toBe(TargetTypes)
+    expect(indexArgTypes).toBe(ArgTypes)
+  })
+})
