@@ -23,9 +23,12 @@ import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
 import { Commands } from '../../../selenium-ide/src/neo/models/Command/Commands'
 
 function validateCommand(command) {
-  let commandSchema = Commands.find(cmdObj => cmdObj[0] === command.command)
+  const commandName = command.command.startsWith('//')
+    ? command.command.substring(2)
+    : command.command
+  let commandSchema = Commands.find(cmdObj => cmdObj[0] === commandName)
   if (commandSchema) commandSchema = commandSchema[1]
-  else throw new Error(`Invalid command '${command.command}'`)
+  else throw new Error(`Invalid command '${commandName}'`)
   if (!!commandSchema.target !== !!command.target) {
     throw new Error(
       `Incomplete command '${
@@ -39,9 +42,7 @@ function validateCommand(command) {
       : false
     if (!isOptional) {
       throw new Error(
-        `Incomplete command '${
-          command.command
-        }'. Missing expected value argument.`
+        `Incomplete command '${commandName}'. Missing expected value argument.`
       )
     }
   }
@@ -246,10 +247,16 @@ async function emitTest(
       startingLevel: commandLevel,
     }
   )
-  result.commands = render(await emitCommands(test.commands, emitter), {
-    startingLevel: commandLevel,
-    originTracing,
-  })
+  result.commands = render(
+    await emitCommands(test.commands, emitter).catch(error => {
+      // prefix test name on error
+      throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
+    }),
+    {
+      startingLevel: commandLevel,
+      originTracing,
+    }
+  )
   result.inEachEnd = render(
     await hooks.inEachEnd.emit({ test, tests, project, isOptional: true }),
     {

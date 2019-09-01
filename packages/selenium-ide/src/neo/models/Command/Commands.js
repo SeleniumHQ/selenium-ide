@@ -380,7 +380,7 @@ export const Commands = [
         The Promise result will be saved on the variable if you use the 'return' 
         keyword.`,
       target: ArgTypes.script,
-      value: ArgTypes.variableName,
+      value: { isOptional: true, ...ArgTypes.variableName },
     },
   ],
   [
