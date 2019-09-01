@@ -20,12 +20,13 @@ import Argument from './argument'
 const firstTokenRegex = /[a-z_]/i
 const anyTokenRegex = /[a-z0-9_]/i
 
-export default new Argument<string>(
-  'Variable',
-  `The name of a variable (without brackets). Used to either store 
+export default new Argument({
+  name: 'Variable',
+  description: `The name of a variable (without brackets). Used to either store 
     an expression's result in or reference for a check (e.g., with 'assert' or 
     'verify').`,
-  (value: string) => {
+  identify: (value: string) => typeof value === 'string',
+  validate: (value: string) => {
     const identifiers = value.split('.')
 
     for (const identifier of identifiers) {
@@ -47,5 +48,5 @@ export default new Argument<string>(
     }
 
     return true
-  }
-)
+  },
+})

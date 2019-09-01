@@ -15,29 +15,42 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default class Argument<T> {
+export default class Argument<T, S extends Argument<any, any> = never> {
   readonly name: string
   readonly description: string
-  readonly extending?: Argument<any>
-  readonly validate: verificationFunction<T>
+  readonly extending?: S
+  readonly identify: validationFunction<T>
+  readonly validate: validationFunction<T>
 
-  constructor(
-    name: string,
-    description: string,
-    validate: verificationFunction<T>,
-    extending?: Argument<any>
-  ) {
+  constructor({
+    name,
+    description,
+    identify,
+    validate,
+    extending,
+  }: {
+    name: string
+    description: string
+    identify: validationFunction<T>
+    validate: validationFunction<T>
+    extending?: S
+  }) {
     this.name = name
     this.description = description
+    this.identify = identify
     this.validate = validate
     this.extending = extending
   }
 
-  extensionOf(argument: Argument<any>): boolean {
+  is(arg: Argument<any, any>): arg is Argument<T, S> {
+    return arg === this
+  }
+
+  extensionOf(argument: Argument<any, any>): boolean {
     return this.extending
       ? this.extending === argument || this.extending.extensionOf(argument)
       : false
   }
 }
 
-export type verificationFunction<T> = (value: T) => boolean
+export type validationFunction<T> = (value: T) => boolean
