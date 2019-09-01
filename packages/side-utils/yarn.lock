@@ -606,6 +606,11 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@seleniumhq/side-model@^3.12.1":
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.12.1.tgz#bb1540e73dba846d3307f4b188e2b963ef0e0cd6"
+  integrity sha512-iZTM2R97Ec6goajLEv6VI5AtjbGnspateBxpSOFcx24tUhoitJg1RTG/ulB1d898PWG1NckoHUQ+gPq8RIEBRQ==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

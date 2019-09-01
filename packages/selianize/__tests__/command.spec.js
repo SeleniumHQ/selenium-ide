@@ -16,10 +16,8 @@
 // under the License.
 
 import CommandEmitter, { registerEmitter } from '../src/command'
-import {
-  Commands,
-  ControlFlowCommandNames,
-} from '../../selenium-ide/src/neo/models/Command'
+import { ControlFlowCommandNames } from '../../selenium-ide/src/neo/models/Command'
+import { Commands } from '@seleniumhq/side-model'
 import { stringEscape } from '@seleniumhq/side-utils'
 
 describe('keys preprocessor', () => {
@@ -1017,9 +1015,9 @@ describe('command code emitter', () => {
     )
   })
   it('should emit all known commands', () => {
-    Commands.array.forEach(command => {
+    Commands.map(command => {
       expect(() => {
-        if (!CommandEmitter.canEmit(command)) {
+        if (!CommandEmitter.canEmit(command[0])) {
           throw new Error(`${command} has no emitter, write one!`)
         }
       }).not.toThrow()

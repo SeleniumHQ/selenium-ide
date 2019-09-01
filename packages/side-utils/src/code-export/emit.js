@@ -20,7 +20,7 @@ import { preprocessParameter } from './preprocessor'
 import doRender from './render'
 import { registerMethod } from './register'
 import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
-import { Commands } from '../../../selenium-ide/src/neo/models/Command/Commands'
+import { Commands } from '@seleniumhq/side-model'
 
 function validateCommand(command) {
   const commandName = command.command.startsWith('//')
