@@ -15,6 +15,9 @@
     "watch": "yarn build -w"
   },
   "main": "dist/index.js",
+  "dependencies": {
+    "@seleniumhq/side-model": "^3.12.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
