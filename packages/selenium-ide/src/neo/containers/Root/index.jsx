@@ -38,6 +38,7 @@ render(Panel)
 
 if (module.hot) {
   module.hot.accept('../Panel/index.jsx', () => {
+    // eslint-disable-next-line node/no-missing-require
     const NextRootContainer = require('../Panel').default
     render(NextRootContainer)
   })
