@@ -20,3 +20,7 @@ tsconfig.build.tsbuildinfo
 # auto-generated docs
 docs/api/arguments.md
 docs/api/commands.md
+
+# v3 remants when switching between branches
+packages/selenium-ide/selenium/
+.peru/
