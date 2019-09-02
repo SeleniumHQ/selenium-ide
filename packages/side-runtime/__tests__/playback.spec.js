@@ -1574,7 +1574,7 @@ describe('Playback', () => {
     })
   })
 
-  describe.only('skip', () => {
+  describe('skip', () => {
     it('should skip a command', async () => {
       const test = {
         id: 1,
