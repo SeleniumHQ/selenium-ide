@@ -16,7 +16,7 @@ module.exports = {
     },
     sourceType: 'module',
   },
-  plugins: ['jest', 'react', 'prettier'],
+  plugins: ['jest', 'react', 'prettier', 'no-only-tests'],
   rules: {
     'prettier/prettier': 'error',
     'react/prop-types': [0],
@@ -30,5 +30,6 @@ module.exports = {
     ],
     'constructor-super': 'error',
     'valid-typeof': 'error',
+    'no-only-tests/no-only-tests': 'error',
   },
 }
