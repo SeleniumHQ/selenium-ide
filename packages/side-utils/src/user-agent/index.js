@@ -17,10 +17,13 @@
 
 import parser from 'ua-parser-js'
 
-const userAgent =
-  window && window.navigator && window.navigator.userAgent
-    ? parser(window.navigator.userAgent)
-    : undefined
+const userAgent = () => {
+  try {
+    return parser(window.navigator.userAgent)
+  } catch {
+    return false
+  }
+}
 const browser = userAgent && userAgent.browser ? userAgent.browser : undefined
 const isChrome = browser && browser.name === 'Chrome'
 const isFirefox = browser && browser.name === 'Firefox'
