@@ -14,7 +14,7 @@
 // KIND, either express or implied.  See the License for the specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll,
@@ -86,7 +86,12 @@ function beforeEach() {
     startingSyntax: {
       commands: [
         { level: 0, statement: 'def setup_method(self, method):' },
-        { level: 1, statement: 'self.driver = webdriver.Firefox()' },
+        {
+          level: 1,
+          statement: `self.driver = webdriver.${
+            userAgent.browserName ? userAgent.browserName : 'Chrome'
+          }()`,
+        },
         { level: 1, statement: 'self.vars = {}' },
       ],
     },
