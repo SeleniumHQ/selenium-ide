@@ -30,25 +30,24 @@ if (isStaging) openPanel({ windowId: 0 })
 function openPanel(tab) {
   let contentWindowId = tab.windowId
   if (ideWindowId) {
-    browser.windows
+    return browser.windows
       .update(ideWindowId, {
         focused: true,
       })
       .catch(function() {
         ideWindowId == undefined
-        openPanel(tab)
+        return openPanel(tab)
       })
-    return
   } else if (!clickEnabled) {
     return
   }
 
   clickEnabled = false
-  setTimeout(function() {
-    clickEnabled = true
-  }, 1500)
-
-  openWindowFromStorageResolution()
+  //setTimeout(function() {
+  //  clickEnabled = true
+  //}, 1500)
+//return new Promise(function (resolve, reject) {
+  return openWindowFromStorageResolution()
     .then(function waitForPanelLoaded(panelWindowInfo) {
       return new Promise(function(resolve, reject) {
         let count = 0
@@ -87,6 +86,8 @@ function openPanel(tab) {
     .catch(function(e) {
       console.log(e) // eslint-disable-line no-console
     })
+//})
+
 }
 
 function openWindowFromStorageResolution() {
@@ -192,17 +193,24 @@ browser.runtime.onMessageExternal.addListener(
       .then(sendResponse)
       .catch(() => {
         if (message.verb == 'post' && message.uri == '/project') {
-          openPanel({ windowId: 0 });
-          browser.runtime.sendMessage(message);
+          initiateWindow(function() {
+            console.log("send Message")
+              browser.runtime.sendMessage(message);
+          });
           sendResponse("opened extension");
         }
         else {
           return sendResponse({ error: 'Selenium IDE is not active' });
         }
       })
-    return true
-  }
+      return true
+    }
 )
+
+function initiateWindow(callback){
+  openPanel({ windowId: 0 }).then(callback());
+}
+
 
 browser.runtime.onInstalled.addListener(() => {
   // Notify updates only in production

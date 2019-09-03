@@ -41,7 +41,7 @@ export default class WelcomeDialog extends React.Component {
   }
 }
 
-class WelcomeDialogContents extends React.Component {
+ class WelcomeDialogContents extends React.Component {
   constructor(props) {
     super(props)
     this.startRecordingInNewProject = this.startRecordingInNewProject.bind(this)

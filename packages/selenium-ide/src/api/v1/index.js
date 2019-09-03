@@ -24,6 +24,9 @@ import recordRouter from './record'
 import exportRouter from './export'
 import popupRouter from './popup'
 import UiState from '../../neo/stores/view/UiState'
+import ModalState from '../../neo/stores/view/ModalState'
+import {loadJSProject} from '../../neo/IO/filesystem'
+
 
 const router = new Router()
 
@@ -61,8 +64,10 @@ router.get('/project', (_req, res) => {
 })
 
 router.post('/project', (_req, res) => {
-  UiState.project = _req;
-  res({ id: UiState.project.id, name: UiState.project.name })
+  if (_req.id) {
+    loadJSProject(UiState.project, _req)
+    ModalState.completeWelcome();
+  }
 })
 
 router.use('/playback', playbackRouter)
