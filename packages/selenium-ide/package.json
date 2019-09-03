@@ -85,6 +85,7 @@
     "webextension-polyfill": "^0.3.1",
     "xml-escape": "^1.1.0",
     "xml-js": "^1.5.2",
-    "@seleniumhq/side-model": "^3.12.1"
+    "@seleniumhq/side-model": "^3.12.1",
+    "@seleniumhq/side-utils": "^3.12.1"
   }
 }
