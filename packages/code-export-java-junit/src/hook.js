@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll,
@@ -95,7 +95,12 @@ function beforeEach() {
       commands: [
         { level: 0, statement: '@Before' },
         { level: 0, statement: 'public void setUp() {' },
-        { level: 1, statement: 'driver = new FirefoxDriver();' },
+        {
+          level: 1,
+          statement: `driver = new ${
+            userAgent.browserName ? userAgent.browserName : 'Chrome'
+          }Driver();`,
+        },
         { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
         { level: 1, statement: 'vars = new HashMap<String, Object>();' },
       ],
@@ -122,6 +127,10 @@ function declareDependencies() {
         {
           level: 0,
           statement: 'import org.openqa.selenium.firefox.FirefoxDriver;',
+        },
+        {
+          level: 0,
+          statement: 'import org.openqa.selenium.chrome.ChromeDriver;',
         },
         { level: 0, statement: 'import org.openqa.selenium.Dimension;' },
         { level: 0, statement: 'import org.openqa.selenium.WebElement;' },
