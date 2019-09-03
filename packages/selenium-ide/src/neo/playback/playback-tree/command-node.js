@@ -189,11 +189,15 @@ export class CommandNode {
   }
 
   evaluateForEach(variables) {
-    let collection = variables.get(this._interpolateTarget())
-    if (!collection)
+    const iteratorCollection = variables.get(this._interpolateTarget())
+    if (!iteratorCollection)
       return Promise.resolve({ result: 'Invalid variable provided.' })
-    variables.set(this._interpolateValue(), collection[this.timesVisited])
-    return this.timesVisited < collection.length
+    const iteratedCollectionEntry = {
+      name: this._interpolateValue(),
+      value: iteratorCollection[this.timesVisited],
+    }
+    variables.set(iteratedCollectionEntry.name, iteratedCollectionEntry.value)
+    return this.timesVisited < iteratorCollection.length
   }
 
   _evaluate(commandExecutor) {
@@ -213,6 +217,7 @@ export class CommandNode {
       )
     } else if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
+      if (!result) this.timesVisited = 0 // reset timesVisited if loop ends, needed to support forEach recursion
       return Promise.resolve(
         this._evaluationResult({ result: 'success', value: result })
       )
