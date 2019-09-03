@@ -18,9 +18,11 @@
 import codeExport from './code-export'
 import stringEscape from './string-escape'
 import userAgent from './user-agent'
+import environment from './environment'
 
 module.exports = {
   codeExport,
   stringEscape,
   userAgent,
+  environment,
 }
