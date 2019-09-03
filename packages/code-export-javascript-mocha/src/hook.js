@@ -89,7 +89,9 @@ function beforeEach() {
         {
           level: 1,
           statement: `driver = await new Builder().forBrowser('${
-            userAgent.browserName ? userAgent.browserName : 'chrome'
+            userAgent.browserName
+              ? userAgent.browserName.toLowerCase()
+              : 'chrome'
           }').build()`,
         },
         { level: 1, statement: 'vars = {}' },
