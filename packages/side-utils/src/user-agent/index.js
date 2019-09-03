@@ -15,12 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import codeExport from './code-export'
-import stringEscape from './string-escape'
-import userAgent from './user-agent'
+import parser from 'ua-parser-js'
+
+const userAgent = parser(window.navigator.userAgent)
+const browser = userAgent && userAgent.browser ? userAgent.browser : undefined
+const isChrome = browser && browser.name === 'Chrome'
+const isFirefox = browser && browser.name === 'Firefox'
+const browserName = isChrome || isFirefox ? browser.name : undefined
 
 module.exports = {
-  codeExport,
-  stringEscape,
   userAgent,
+  browserName,
+  isChrome,
+  isFirefox,
 }
