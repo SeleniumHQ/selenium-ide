@@ -677,8 +677,14 @@ export default function seed(store, numberOfSuites = 0) {
   )
   accessVariableForEach.createCommand(
     undefined,
+    'forEach',
+    'blah.a',
+    'iterator'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
     'executeScript',
-    'return ${result} + 1',
+    'return ${result} + ${iterator.b}',
     'result'
   )
   accessVariableForEach.createCommand(undefined, 'end', '', '')
