@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-utils",
-  "version": "3.12.1",
+  "version": "3.12.2",
   "description": "Utils for Selenium IDE (e.g., code export)",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -16,7 +16,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@seleniumhq/side-model": "^3.12.1",
+    "@seleniumhq/side-model": "^3.12.2",
     "ua-parser-js": "^0.7.17"
   },
   "devDependencies": {
