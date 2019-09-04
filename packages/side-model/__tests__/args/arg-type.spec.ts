@@ -34,6 +34,30 @@ describe('ArgType', () => {
     })
   })
 
+  it('should allow undefined for optional arg-types', () => {
+    const argInput = new Argument({
+      name: 'num',
+      description: 'desc',
+      identify: (n: number) => typeof n === 'number',
+      validate: (n: number) => n === 1,
+    })
+    const at = ArgType.exact(argInput)
+
+    expect(at.validate(undefined)).toBeTruthy()
+  })
+
+  it('should not allow undefined for optional arg-types', () => {
+    const argInput = new Argument({
+      name: 'num',
+      description: 'desc',
+      identify: (n: number) => typeof n === 'number',
+      validate: (n: number) => n === 1,
+    })
+    const at = ArgType.exact(argInput).isRequired()
+
+    expect(at.validate(undefined)).toBeFalsy()
+  })
+
   describe('oneOf', () => {
     it('should identify the argument', () => {
       const numArg = new Argument({

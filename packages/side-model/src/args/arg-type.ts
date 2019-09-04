@@ -45,8 +45,11 @@ export default class ArgType<T extends Argument<any, any>[]> {
     return result
   }
 
-  validate(value: ExtractArgument<T[number]>) {
-    return (!this.required && !value) || this.identify(value).validate(value)
+  validate(value?: ExtractArgument<T[number]>) {
+    return (
+      (!this.required && value === undefined) ||
+      (value !== undefined && this.identify(value).validate(value))
+    )
   }
 
   static exact<S extends Argument<any, any>>(arg: S) {
