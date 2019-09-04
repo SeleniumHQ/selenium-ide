@@ -197,7 +197,9 @@ export class CommandNode {
       value: iteratorCollection[this.timesVisited],
     }
     variables.set(iteratedCollectionEntry.name, iteratedCollectionEntry.value)
-    return this.timesVisited < iteratorCollection.length
+    const result = this.timesVisited < iteratorCollection.length
+    if (!result) this.timesVisited = 0 // reset timesVisited if loop ends, needed to support forEach recursion
+    return result
   }
 
   _evaluate(commandExecutor) {
@@ -217,7 +219,6 @@ export class CommandNode {
       )
     } else if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
-      if (!result) this.timesVisited = 0 // reset timesVisited if loop ends, needed to support forEach recursion
       return Promise.resolve(
         this._evaluationResult({ result: 'success', value: result })
       )
