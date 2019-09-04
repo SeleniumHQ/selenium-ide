@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.12.2
+- Code export: Added command validation and error handling to notify the user of invalid commands
+- Code export: Made the exported browser name match the current browser used for the IDE
+- Control flow: Fixed a bug in forEach that prevented nested forEach command blocks from completely executing
+- Runner: Fixed an off-by one error in forEach that prevented the last item in a collection from being used (PR #752)
+- Docs: Updated runner documentation to specify required vendor prefix for browser specific options (PR #757)
+- Docs: Fixed typo (PR #784)
+
 ## v3.12.1
 - Fix for string escaping, to handle backslashes
 
