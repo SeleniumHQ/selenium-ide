@@ -117,7 +117,10 @@ export class CommandNode {
         iterator: collection[this.timesVisited],
         collection,
       })
-    else this.timesVisited = 0
+    // Reset timesVisited if loop ends, needed to support forEach recursion.
+    // It's set to -1 since the incrementer will pick it up. Setting it to
+    // 0 when called on a subsequent interation.
+    else this.timesVisited = -1
     return result
   }
 
