@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.12.3
+- Control flow: fix for off-by-one error in nested forEach command blocks
+
 ## v3.12.2
 - Code export: Added command validation and error handling to notify the user of invalid commands
 - Code export: Made the exported browser name match the current browser used for the IDE
