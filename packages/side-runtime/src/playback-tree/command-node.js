@@ -117,6 +117,7 @@ export class CommandNode {
         iterator: collection[this.timesVisited],
         collection,
       })
+    else this.timesVisited = 0
     return result
   }
 
