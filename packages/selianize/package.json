@@ -1,6 +1,6 @@
 {
   "name": "selianize",
-  "version": "3.12.1",
+  "version": "3.12.2",
   "description": "Export Selenium IDE projects into javascript",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "main": "dist/selianize.cjs.js",
@@ -21,8 +21,8 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@seleniumhq/side-utils": "^3.12.1",
-    "@seleniumhq/side-model": "^3.12.1"
+    "@seleniumhq/side-model": "^3.12.2",
+    "@seleniumhq/side-utils": "^3.12.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.3.4",
