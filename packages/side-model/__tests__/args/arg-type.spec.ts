@@ -28,33 +28,9 @@ describe('ArgType', () => {
         validate: (n: number) => n === 1,
       })
       const at = ArgType.exact(argInput)
-      const arg = at.identify(1)
 
-      expect(arg.name).toBe('num')
-      expect(arg.description).toBe('desc')
-      expect(arg.validate(2)).toBeFalsy()
-      expect(arg.validate(1)).toBeTruthy()
-    })
-
-    it('extensionOf should work', () => {
-      const argInput = new Argument({
-        name: 'num',
-        description: 'desc',
-        identify: (n: number) => typeof n === 'number',
-        validate: (n: number) => n === 1,
-      })
-      const argInput2 = new Argument({
-        name: 'num',
-        description: 'desc',
-        identify: (n: number) => typeof n === 'number',
-        validate: (n: number) => n === 2,
-        extending: argInput,
-      })
-      const at = ArgType.exact(argInput2)
-      const arg = at.identify(2)
-
-      expect(arg.validate(2)).toBeTruthy()
-      expect(arg.extensionOf(argInput)).toBeTruthy()
+      expect(at.validate(2)).toBeFalsy()
+      expect(at.validate(1)).toBeTruthy()
     })
   })
 
@@ -83,6 +59,28 @@ describe('ArgType', () => {
         expect(arg.validate(1)).toBeTruthy()
       }
     })
+
+    it('should validate the arguments', () => {
+      const numArg = new Argument({
+        name: 'num',
+        description: 'desc',
+        identify: (n: number) => typeof n === 'number',
+        validate: (n: number) => n === 1,
+      })
+      const strArg = new Argument({
+        name: 'str',
+        description: 'desc',
+        identify: (s: string) => typeof s === 'string',
+        validate: (s: string) => s === 'str',
+      })
+
+      const at = ArgType.oneOf([numArg, strArg])
+      expect(at.validate(1)).toBeTruthy()
+      expect(at.validate(2)).toBeFalsy()
+      expect(at.validate('str')).toBeTruthy()
+      expect(at.validate('tomer')).toBeFalsy()
+    })
+
     it('should work with extending', () => {
       const numArg = new Argument({
         name: 'num',
