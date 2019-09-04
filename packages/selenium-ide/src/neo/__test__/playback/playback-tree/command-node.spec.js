@@ -87,7 +87,7 @@ describe('Command Node', () => {
     node.evaluateForEach(variables)
     expect(variables.get('iteratorVar')).toEqual({ a: 'a1', b: 'b1' })
   })
-  it('forEach resets timesVisited to 0 after completing', () => {
+  it('forEach resets timesVisited to after completing', () => {
     const collection = { name: 'asdf', value: [{ a: 'a' }, { b: 'b' }] }
     variables.set(collection.name, collection.value)
     const node = new CommandNode({
@@ -97,7 +97,7 @@ describe('Command Node', () => {
     })
     node.timesVisited = collection.value.length + 1
     node.evaluateForEach(variables)
-    expect(node.timesVisited).toEqual(0)
+    expect(node.timesVisited).toEqual(-1)
   })
   it('retry limit can be overriden', () => {
     const command = new Command(
