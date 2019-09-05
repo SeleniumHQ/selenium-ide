@@ -22,6 +22,8 @@ let ideWindowId = undefined
 let master = {}
 let clickEnabled = true
 
+let isOpen = false
+
 window.master = master
 window.openedWindowIds = []
 
@@ -30,23 +32,24 @@ if (isStaging) openPanel({ windowId: 0 })
 function openPanel(tab) {
   let contentWindowId = tab.windowId
   if (ideWindowId) {
-    return browser.windows
+    browser.windows
       .update(ideWindowId, {
         focused: true,
       })
       .catch(function() {
         ideWindowId == undefined
-        return openPanel(tab)
+        openPanel(tab)
       })
+    return
   } else if (!clickEnabled) {
     return
   }
 
   clickEnabled = false
-  //setTimeout(function() {
-  //  clickEnabled = true
-  //}, 1500)
-//return new Promise(function (resolve, reject) {
+  setTimeout(function() {
+    clickEnabled = true
+  }, 1500)
+
   return openWindowFromStorageResolution()
     .then(function waitForPanelLoaded(panelWindowInfo) {
       return new Promise(function(resolve, reject) {
@@ -86,8 +89,6 @@ function openPanel(tab) {
     .catch(function(e) {
       console.log(e) // eslint-disable-line no-console
     })
-//})
-
 }
 
 function openWindowFromStorageResolution() {
@@ -106,6 +107,7 @@ function openWindowFromStorageResolution() {
         opts.top = storage.origin.top
         opts.left = storage.origin.left
       }
+      isOpen=true
       return browser.windows.create(
         Object.assign(
           {
@@ -129,6 +131,7 @@ function openWindowFromStorageResolution() {
       )
     })
 }
+
 
 function sizeIsValid(size) {
   return size && sideIsValid(size.height) && sideIsValid(size.width)
@@ -194,10 +197,8 @@ browser.runtime.onMessageExternal.addListener(
       .catch(() => {
         if (message.verb == 'post' && message.uri == '/project') {
           initiateWindow(function() {
-            console.log("send Message")
               browser.runtime.sendMessage(message);
-          });
-          sendResponse("opened extension");
+          }).then(sendResponse("opened extension"))
         }
         else {
           return sendResponse({ error: 'Selenium IDE is not active' });
@@ -208,7 +209,7 @@ browser.runtime.onMessageExternal.addListener(
 )
 
 function initiateWindow(callback){
-  openPanel({ windowId: 0 }).then(callback());
+  return openPanel({ windowId: 0 }).then(callback);
 }
 
 
