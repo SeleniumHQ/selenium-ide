@@ -24,22 +24,12 @@ describe('command', () => {
     const cmd = new Command({
       name: 'cmd',
       description: 'desc',
+      args: {},
       validate: () => true,
     })
 
     expect(cmd.name).toBe('cmd')
     expect(cmd.description).toBe('desc')
-  })
-
-  it('should have a validation function', () => {
-    const cmd = new Command({
-      name: 'cmd',
-      description: 'desc',
-      validate: (n: number) => n === 1,
-    })
-
-    expect(cmd.validate(1)).toBeTruthy()
-    expect(cmd.validate(2)).toBeFalsy()
   })
 
   it('should have an arg-type', () => {
@@ -53,9 +43,10 @@ describe('command', () => {
     const cmd = new Command({
       name: 'cmd',
       description: 'desc',
-      validate: (n: number) => at.validate(n),
+      args: { num: at },
+      validate: ({ num }) => at.validate(num),
     })
-    expect(cmd.validate(1)).toBeTruthy()
-    expect(cmd.validate(2)).toBeFalsy()
+    expect(cmd.validate({ num: 1 })).toBeTruthy()
+    expect(cmd.validate({ num: 2 })).toBeFalsy()
   })
 })

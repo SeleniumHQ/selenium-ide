@@ -15,24 +15,43 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { validationFunction } from '../args/argument'
+import ArgType, { ExtractArgument } from '../args/arg-type'
+import Argument from '../args/argument'
 
-export default class Command<T> {
+export default class Command<T extends CommandArguments> {
   readonly name: string
   readonly description: string
-  readonly validate: validationFunction<T>
+  readonly args: T
+  readonly validate: CommandValidationFunction<T>
 
   constructor({
     name,
     description,
     validate,
+    args,
   }: {
     name: string
     description: string
-    validate: validationFunction<T>
+    validate: CommandValidationFunction<T>
+    args: T
   }) {
     this.name = name
     this.description = description
+    this.args = args
     this.validate = validate
   }
 }
+
+interface CommandArguments {
+  [key: string]: ArgType<Argument<any, any>[]>
+}
+
+type ExtractArgType<A> = A extends ArgType<infer B>
+  ? ExtractArgument<B[number]> | undefined
+  : never
+type ExtractArgumentFromArgType<A extends CommandArguments> = {
+  [K in keyof A]: ExtractArgType<A[K]>
+}
+type CommandValidationFunction<A extends CommandArguments> = (
+  value: ExtractArgumentFromArgType<A>
+) => boolean
