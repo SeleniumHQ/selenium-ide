@@ -46,6 +46,9 @@ export default class ArgType<T extends Argument<any, any>[]> {
   }
 
   validate(value?: ExtractArgument<T[number]>) {
+    if (this.required && value === undefined) {
+      throw new TypeError('Argument is required')
+    }
     return (
       (!this.required && value === undefined) ||
       (value !== undefined && this.identify(value).validate(value))
@@ -61,4 +64,4 @@ export default class ArgType<T extends Argument<any, any>[]> {
   }
 }
 
-type ExtractArgument<A> = A extends Argument<infer B, any> ? B : never
+export type ExtractArgument<A> = A extends Argument<infer B, any> ? B : never

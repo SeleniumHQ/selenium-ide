@@ -55,7 +55,7 @@ describe('ArgType', () => {
     })
     const at = ArgType.exact(argInput).isRequired()
 
-    expect(at.validate(undefined)).toBeFalsy()
+    expect(() => at.validate(undefined)).toThrow('Argument is required')
   })
 
   describe('oneOf', () => {
