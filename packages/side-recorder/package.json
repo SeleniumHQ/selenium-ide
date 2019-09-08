@@ -23,9 +23,9 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.4.1",
+    "@babel/preset-env": "^7.6.0",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
-    "@testing-library/dom": "^6.1.0",
+    "@testing-library/dom": "^6.2.0",
     "babel-loader": "^8.0.5",
     "chromedriver": "^76.0.1",
     "copy-webpack-plugin": "^5.0.2",
@@ -33,7 +33,7 @@
     "selenium-webdriver": "^4.0.0-alpha.4",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.8"
   },
   "dependencies": {
     "@medv/finder": "^1.1.1",
