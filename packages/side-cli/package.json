@@ -35,6 +35,6 @@
     "ink-select-input": "^3.1.0",
     "ink-spinner": "^3.0.0",
     "react": "^16.9.0",
-    "selenium-webdriver": "^4.0.0-alpha.4"
+    "selenium-webdriver": "^4.0.0-alpha.5"
   }
 }

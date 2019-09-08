@@ -30,7 +30,7 @@
     "chromedriver": "^76.0.1",
     "copy-webpack-plugin": "^5.0.2",
     "engine.io": "^3.3.2",
-    "selenium-webdriver": "^4.0.0-alpha.4",
+    "selenium-webdriver": "^4.0.0-alpha.5",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8"

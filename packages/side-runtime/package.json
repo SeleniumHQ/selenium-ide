@@ -28,7 +28,7 @@
     "@seleniumhq/side-testkit": "^3.5.10",
     "chromedriver": "^76.0.1",
     "geckodriver": "^1.16.2",
-    "selenium-webdriver": "^4.0.0-alpha.4"
+    "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "dependencies": {
     "@seleniumhq/side-commons": "^3.5.10"
