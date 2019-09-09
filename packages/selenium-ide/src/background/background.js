@@ -22,6 +22,8 @@ let ideWindowId = undefined
 let master = {}
 let clickEnabled = true
 
+let isOpen = false
+
 window.master = master
 window.openedWindowIds = []
 
@@ -48,7 +50,7 @@ function openPanel(tab) {
     clickEnabled = true
   }, 1500)
 
-  openWindowFromStorageResolution()
+  return openWindowFromStorageResolution()
     .then(function waitForPanelLoaded(panelWindowInfo) {
       return new Promise(function(resolve, reject) {
         let count = 0
@@ -105,6 +107,7 @@ function openWindowFromStorageResolution() {
         opts.top = storage.origin.top
         opts.left = storage.origin.left
       }
+      isOpen=true
       return browser.windows.create(
         Object.assign(
           {
@@ -128,6 +131,7 @@ function openWindowFromStorageResolution() {
       )
     })
 }
+
 
 function sizeIsValid(size) {
   return size && sideIsValid(size.height) && sideIsValid(size.width)
@@ -191,11 +195,23 @@ browser.runtime.onMessageExternal.addListener(
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
-        return sendResponse({ error: 'Selenium IDE is not active' })
+        if (message.verb == 'post' && message.uri == '/project') {
+          initiateWindow(function() {
+              browser.runtime.sendMessage(message);
+          }).then(sendResponse("opened extension"))
+        }
+        else {
+          return sendResponse({ error: 'Selenium IDE is not active' });
+        }
       })
-    return true
-  }
+      return true
+    }
 )
+
+function initiateWindow(callback){
+  return openPanel({ windowId: 0 }).then(callback);
+}
+
 
 browser.runtime.onInstalled.addListener(() => {
   // Notify updates only in production
