@@ -1109,7 +1109,7 @@ describe('command code emitter', () => {
       value: 'true',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.${command.target} == ${command.value}).toBeTruthy();`
+      `expect(vars.${varName} == ${value}).toBeTruthy();`
     )
   })
   it('should emit `verify` command', () => {
@@ -1119,7 +1119,7 @@ describe('command code emitter', () => {
       value: 'true',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-        `expect(vars.${command.target} == ${command.value}).toBeTruthy();`
+        `expect(vars.${varName} == ${value}).toBeTruthy();`
     )
   })
   it('should preprocess stored variables', () => {
