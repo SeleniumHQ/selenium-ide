@@ -15,8 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
+// eslint-disable-next-line node/no-extraneous-require
 const React = require('react')
 
+// eslint-disable-next-line node/no-missing-require
 const CompLibrary = require('../../core/CompLibrary.js')
 
 const Container = CompLibrary.Container

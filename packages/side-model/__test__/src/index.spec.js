@@ -15,23 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import {
+  Commands as indexCommands,
+  TargetTypes as indexTargetTypes,
+  ArgTypes as indexArgTypes,
+} from '../../src/index'
+import { Commands, TargetTypes } from '../../src/command/Commands'
+import { ArgTypes } from '../../src/command/ArgTypes'
 
-export function normalizeTestsInSuite({ suite, tests }) {
-  if (!suite) return
-  let _suite = { ...suite }
-  _suite.tests.forEach((testId, index) => {
-    _suite.tests[index] = tests.find(test => test.id === testId).name
+describe('side-model/index', () => {
+  it('exports the correct thing', () => {
+    expect(indexCommands).toBe(Commands)
+    expect(indexTargetTypes).toBe(TargetTypes)
+    expect(indexArgTypes).toBe(ArgTypes)
   })
-  return _suite
-}
-
-export function sanitizeProjectName(projectName) {
-  let name = projectName
-  if (name.startsWith('http')) {
-    // eslint-disable-next-line node/no-deprecated-api
-    return url.parse(projectName).host
-  } else {
-    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
-  }
-}
+})

@@ -15,23 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import parser from 'ua-parser-js'
 
-export function normalizeTestsInSuite({ suite, tests }) {
-  if (!suite) return
-  let _suite = { ...suite }
-  _suite.tests.forEach((testId, index) => {
-    _suite.tests[index] = tests.find(test => test.id === testId).name
-  })
-  return _suite
-}
-
-export function sanitizeProjectName(projectName) {
-  let name = projectName
-  if (name.startsWith('http')) {
-    // eslint-disable-next-line node/no-deprecated-api
-    return url.parse(projectName).host
-  } else {
-    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
+const getUserAgent = () => {
+  try {
+    return parser(window.navigator.userAgent)
+  } catch {
+    return false
   }
+}
+const userAgent = getUserAgent()
+const browser = userAgent && userAgent.browser ? userAgent.browser : undefined
+const isChrome = browser && browser.name === 'Chrome'
+const isFirefox = browser && browser.name === 'Firefox'
+const browserName = isChrome || isFirefox ? browser.name : undefined
+
+module.exports = {
+  userAgent,
+  browserName,
+  isChrome,
+  isFirefox,
 }
