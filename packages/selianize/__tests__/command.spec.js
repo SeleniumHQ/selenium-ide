@@ -1109,7 +1109,7 @@ describe('command code emitter', () => {
       value: 'true',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.${command.target} == \`${command.value}\`).toBe(true);`
+      `expect(vars.${command.target} == \`${command.value}\`).toBeTruthy();`
     )
   })
   it('should emit `verify` command', () => {
