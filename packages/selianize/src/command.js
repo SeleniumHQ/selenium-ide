@@ -801,8 +801,6 @@ function emitControlFlowWhile(target) {
 }
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
-   //const exp = `expect(vars.${collectionVarName}).toBe('foo');`
-  //return Promise.resolve(exp)
   return Promise.resolve(
     `for (let i = 0; i < vars.${collectionVarName}.length; i++) {vars["${iteratorVarName}"]  = vars.${collectionVarName}[i];`
   )
