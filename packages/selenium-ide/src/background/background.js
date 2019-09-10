@@ -22,8 +22,6 @@ let ideWindowId = undefined
 let master = {}
 let clickEnabled = true
 
-let isOpen = false
-
 window.master = master
 window.openedWindowIds = []
 
@@ -107,7 +105,6 @@ function openWindowFromStorageResolution() {
         opts.top = storage.origin.top
         opts.left = storage.origin.left
       }
-      isOpen = true
       return browser.windows.create(
         Object.assign(
           {

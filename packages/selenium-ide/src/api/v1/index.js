@@ -67,6 +67,7 @@ router.post('/project', (_req, res) => {
     loadJSProject(UiState.project, _req)
     ModalState.completeWelcome()
   }
+  res(true)
 })
 
 router.use('/playback', playbackRouter)
