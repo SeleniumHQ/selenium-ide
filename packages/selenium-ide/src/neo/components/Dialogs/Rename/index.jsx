@@ -55,8 +55,8 @@ class RenameDialogContents extends React.Component {
         props.isNewTest || props.type === 'project'
           ? ''
           : props.value
-          ? props.value
-          : '',
+            ? props.value
+            : '',
       valid: true,
       type: props.type,
     }
@@ -72,8 +72,10 @@ class RenameDialogContents extends React.Component {
       title: this.props.isNewTest
         ? 'Name your new test'
         : this.props.type === 'project'
-        ? 'Name your new project'
-        : `${this.state.isRenaming ? 'Rename' : 'Add new'} ${this.state.type}`,
+          ? 'Name your new project'
+          : `${this.state.isRenaming ? 'Rename' : 'Add new'} ${
+              this.state.type
+            }`,
       bodyTop: this.props.isNewTest ? (
         <span>Please provide a name for your new test.</span>
       ) : this.props.type === 'project' ? (
@@ -99,8 +101,8 @@ class RenameDialogContents extends React.Component {
         this.props.isNewTest || this.props.type === 'project'
           ? 'OK'
           : this.state.isRenaming
-          ? 'rename'
-          : 'add',
+            ? 'rename'
+            : 'add',
       cancelButton: this.props.isNewTest ? 'later' : 'cancel',
       inputLabel: this.props.isNewTest
         ? 'test name'

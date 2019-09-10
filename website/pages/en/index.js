@@ -284,12 +284,13 @@ class Index extends React.Component {
 
     return (
       <React.Fragment>
-        {siteConfig.promoText && siteConfig.promoLink && (
-          <PromoHeader
-            text={siteConfig.promoText}
-            link={siteConfig.promoLink}
-          />
-        )}
+        {siteConfig.promoText &&
+          siteConfig.promoLink && (
+            <PromoHeader
+              text={siteConfig.promoText}
+              link={siteConfig.promoLink}
+            />
+          )}
         <div>
           <HomeSplash siteConfig={siteConfig} language={language} />
           <div className="home mainContainer">
