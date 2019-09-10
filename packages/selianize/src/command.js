@@ -178,11 +178,7 @@ function escapeString(string, { preprocessor, ignoreEscaping }) {
 }
 
 function emitNewWindowHandling(emitted, command) {
-  return `vars.__handles = await driver.getAllWindowHandles();${emitted}vars.${
-    command.windowHandleName
-  } = await utils.waitForWindow(driver, vars.__handles, ${
-    command.windowTimeout
-  });`
+  return `vars.__handles = await driver.getAllWindowHandles();${emitted}vars.${command.windowHandleName} = await utils.waitForWindow(driver, vars.__handles, ${command.windowTimeout});`
 }
 
 function defaultPreprocessor(param) {
@@ -804,15 +800,12 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
   return Promise.resolve(
     `for (let i = 0; i < vars.${collectionVarName}.length; i++) {vars["${iteratorVarName}"]  = vars.${collectionVarName}[i];`
   )
-
 }
 
 emitControlFlowWhile.target = scriptPreprocessor
 
 function emitAssert(varName, value) {
-  return Promise.resolve(
-    `expect(vars.${varName} == \`${value}\`).toBe(true);`
-  )
+  return Promise.resolve(`expect(vars.${varName} == \`${value}\`).toBe(true);`)
 }
 
 function emitSetSpeed() {

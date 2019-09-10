@@ -232,9 +232,7 @@ describe('command code emitter', () => {
       value: 'example input',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {return element.clear().then(() => {return element.sendKeys(\`${
-        command.value
-      }\`);});});`
+      `await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {return element.clear().then(() => {return element.sendKeys(\`${command.value}\`);});});`
     )
   })
   it('should emit `send keys` command', () => {
@@ -244,9 +242,7 @@ describe('command code emitter', () => {
       value: 'example input',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {return element.sendKeys(\`${
-        command.value
-      }\`);});`
+      `await driver.wait(until.elementLocated(By.id(\`input\`)), configuration.timeout);await driver.findElement(By.id(\`input\`)).then(element => {return element.sendKeys(\`${command.value}\`);});`
     )
   })
   it('should emit `echo` command', () => {
@@ -304,9 +300,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `vars["${command.value}"] = await driver.executeScript(\`${
-        command.target
-      }\`);`
+      `vars["${command.value}"] = await driver.executeScript(\`${command.target}\`);`
     )
   })
   it('should emit `execute async script` command', () => {
@@ -316,11 +310,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `vars["${
-        command.value
-      }"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${
-        command.target
-      }.then(callback).catch(callback);\`);`
+      `vars["${command.value}"] = await driver.executeAsyncScript(\`var callback = arguments[arguments.length - 1];${command.target}.then(callback).catch(callback);\`);`
     )
   })
   it('should emit `pause` command', () => {
@@ -400,9 +390,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.toHaveSelectedValue(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.toHaveSelectedValue(\`${command.value}\`);`
     )
   })
   it('should emit `verify not selected value` command', () => {
@@ -412,9 +400,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.not.toHaveSelectedValue(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.not.toHaveSelectedValue(\`${command.value}\`);`
     )
   })
   it('should emit `verify value` command', () => {
@@ -424,9 +410,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveValue(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveValue(\`${command.value}\`);`
     )
   })
   it('should emit `verify not text` command', () => {
@@ -436,9 +420,7 @@ describe('command code emitter', () => {
       value: 'text',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getText().then(text => {return expect(text).not.toBe(\`${
-        command.value
-      }\`)});});`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getText().then(text => {return expect(text).not.toBe(\`${command.value}\`)});});`
     )
   })
   it('should emit `verify title` command', () => {
@@ -448,9 +430,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.getTitle().then(title => {return expect(title).toBe(\`${
-        command.target
-      }\`);});`
+      `await driver.getTitle().then(title => {return expect(title).toBe(\`${command.target}\`);});`
     )
   })
   it("should emit 'verify selected label' command", () => {
@@ -460,9 +440,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getAttribute("value").then(selectedValue => {return element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {return selectedOption.getText().then(selectedLabel => {return expect(selectedLabel).toBe(\`${
-        command.value
-      }\`);});});});});`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getAttribute("value").then(selectedValue => {return element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {return selectedOption.getText().then(selectedLabel => {return expect(selectedLabel).toBe(\`${command.value}\`);});});});});`
     )
   })
   it('should emit `verify text` command', () => {
@@ -472,9 +450,7 @@ describe('command code emitter', () => {
       value: 'some text that should be here',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveText(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveText(\`${command.value}\`);`
     )
   })
   it('should emit `assert checked` command', () => {
@@ -544,9 +520,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.toHaveSelectedValue(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.toHaveSelectedValue(\`${command.value}\`);`
     )
   })
   it('should emit `assert not selected value` command', () => {
@@ -556,9 +530,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.not.toHaveSelectedValue(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`select\`)), configuration.timeout);await expect(driver.findElement(By.id(\`select\`))).resolves.not.toHaveSelectedValue(\`${command.value}\`);`
     )
   })
   it('should emit `assert title` command', () => {
@@ -568,9 +540,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.getTitle().then(title => {return expect(title).toBe(\`${
-        command.target
-      }\`);});`
+      `await driver.getTitle().then(title => {return expect(title).toBe(\`${command.target}\`);});`
     )
   })
   it("should emit 'assert selected label' command", () => {
@@ -580,9 +550,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getAttribute("value").then(selectedValue => {return element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {return selectedOption.getText().then(selectedLabel => {return expect(selectedLabel).toBe(\`${
-        command.value
-      }\`);});});});});`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getAttribute("value").then(selectedValue => {return element.findElement(By.xpath('option[@value="'+selectedValue+'"]')).then(selectedOption => {return selectedOption.getText().then(selectedLabel => {return expect(selectedLabel).toBe(\`${command.value}\`);});});});});`
     )
   })
   it('should emit `assert value` command', () => {
@@ -592,9 +560,7 @@ describe('command code emitter', () => {
       value: 'test',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveValue(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveValue(\`${command.value}\`);`
     )
   })
   it('should emit `assert text` command', () => {
@@ -604,9 +570,7 @@ describe('command code emitter', () => {
       value: 'some text that should be here',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveText(\`${
-        command.value
-      }\`);`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await expect(driver.findElement(By.id(\`test\`))).resolves.toHaveText(\`${command.value}\`);`
     )
   })
   it('should emit `set window size` command', () => {
@@ -634,9 +598,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {return element.getText().then(text => {return vars["${
-        command.value
-      }"] = text;});});`
+      `await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {return element.getText().then(text => {return vars["${command.value}"] = text;});});`
     )
   })
   it('should emit `store json` command', () => {
@@ -656,9 +618,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {return element.getAttribute("value").then(value => {return vars["${
-        command.value
-      }"] = value;});});`
+      `await driver.wait(until.elementLocated(By.id(\`someElement\`)), configuration.timeout);await driver.findElement(By.id(\`someElement\`)).then(element => {return element.getAttribute("value").then(value => {return vars["${command.value}"] = value;});});`
     )
   })
   it('should emit `store title` command', () => {
@@ -668,9 +628,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.getTitle().then(title => {return vars["${
-        command.value
-      }"] = title;});`
+      `await driver.getTitle().then(title => {return vars["${command.value}"] = title;});`
     )
   })
   it('should emit `store window handle` command', () => {
@@ -680,9 +638,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.getWindowHandle().then(handle => {return vars["${
-        command.target
-      }"] = handle;});`
+      `await driver.getWindowHandle().then(handle => {return vars["${command.target}"] = handle;});`
     )
   })
   it('should emit `store xpath count` command', () => {
@@ -692,9 +648,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.findElements(By.xpath(\`button\`)).then(elements => {return vars["${
-        command.value
-      }"] = elements.length;});`
+      `await driver.findElements(By.xpath(\`button\`)).then(elements => {return vars["${command.value}"] = elements.length;});`
     )
   })
   it('should emit `store attribute` command', () => {
@@ -704,9 +658,7 @@ describe('command code emitter', () => {
       value: 'myVar',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.xpath(\`button[3]\`)), configuration.timeout);await driver.findElement(By.xpath(\`button[3]\`)).then(element => element.getAttribute("id").then(attribute => {return vars["${
-        command.value
-      }"] = attribute;}));`
+      `await driver.wait(until.elementLocated(By.xpath(\`button[3]\`)), configuration.timeout);await driver.findElement(By.xpath(\`button[3]\`)).then(element => element.getAttribute("id").then(attribute => {return vars["${command.value}"] = attribute;}));`
     )
   })
   it('should emit `select` command', () => {
@@ -890,9 +842,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.switchTo().alert().then(alert => {return alert.getText().then(text => {expect(text).toBe(\`${
-        command.target
-      }\`);return alert.accept();});});`
+      `await driver.switchTo().alert().then(alert => {return alert.getText().then(text => {expect(text).toBe(\`${command.target}\`);return alert.accept();});});`
     )
   })
   it('should emit `assert confirmation` command', () => {
@@ -902,9 +852,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.switchTo().alert().then(alert => {return alert.getText().then(text => {return expect(text).toBe(\`${
-        command.target
-      }\`);});});`
+      `await driver.switchTo().alert().then(alert => {return alert.getText().then(text => {return expect(text).toBe(\`${command.target}\`);});});`
     )
   })
   it('should emit `assert not text` command', () => {
@@ -914,9 +862,7 @@ describe('command code emitter', () => {
       value: 'text',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getText().then(text => {return expect(text).not.toBe(\`${
-        command.value
-      }\`)});});`
+      `await driver.wait(until.elementLocated(By.id(\`test\`)), configuration.timeout);await driver.findElement(By.id(\`test\`)).then(element => {return element.getText().then(text => {return expect(text).not.toBe(\`${command.value}\`)});});`
     )
   })
   it('should emit `assert prompt` command', () => {
@@ -926,9 +872,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.switchTo().alert().then(alert => {return alert.getText().then(text => {return expect(text).toBe(\`${
-        command.target
-      }\`);});});`
+      `await driver.switchTo().alert().then(alert => {return alert.getText().then(text => {return expect(text).toBe(\`${command.target}\`);});});`
     )
   })
   it('should emit `choose ok on visible confirmation` command', () => {
@@ -958,9 +902,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.switchTo().alert().then(alert => {return alert.sendKeys(\`${
-        command.target
-      }\`).then(() => {return alert.accept();});});`
+      `await driver.switchTo().alert().then(alert => {return alert.sendKeys(\`${command.target}\`).then(() => {return alert.accept();});});`
     )
   })
   it('should emit `choose cancel on visible prompt` command', () => {
@@ -980,9 +922,7 @@ describe('command code emitter', () => {
       value: '<button>test</button>',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `await driver.wait(until.elementLocated(By.id(\`contentEditable\`)), configuration.timeout);await driver.findElement(By.id(\`contentEditable\`)).then(element => {return driver.executeScript(\`if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${
-        command.value
-      }'}\`, element);});`
+      `await driver.wait(until.elementLocated(By.id(\`contentEditable\`)), configuration.timeout);await driver.findElement(By.id(\`contentEditable\`)).then(element => {return driver.executeScript(\`if(arguments[0].contentEditable === 'true') {arguments[0].innerHTML = '${command.value}'}\`, element);});`
     )
   })
   it('should emit `submit` command', () => {
@@ -1097,9 +1037,7 @@ describe('command code emitter', () => {
       value: '',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `} else if (!!await driver.executeScript(\`return (${
-        command.target
-      })\`)) {`
+      `} else if (!!await driver.executeScript(\`return (${command.target})\`)) {`
     )
   })
   it('should emit `else` command', () => {
