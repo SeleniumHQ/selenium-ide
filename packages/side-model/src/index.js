@@ -15,23 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+import { Commands as _cmds, TargetTypes as _ttypes } from './command/Commands'
+import { ArgTypes as _atypes } from './command/ArgTypes'
 
-export function normalizeTestsInSuite({ suite, tests }) {
-  if (!suite) return
-  let _suite = { ...suite }
-  _suite.tests.forEach((testId, index) => {
-    _suite.tests[index] = tests.find(test => test.id === testId).name
-  })
-  return _suite
-}
-
-export function sanitizeProjectName(projectName) {
-  let name = projectName
-  if (name.startsWith('http')) {
-    // eslint-disable-next-line node/no-deprecated-api
-    return url.parse(projectName).host
-  } else {
-    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
-  }
-}
+export const Commands = _cmds
+export const TargetTypes = _ttypes
+export const ArgTypes = _atypes

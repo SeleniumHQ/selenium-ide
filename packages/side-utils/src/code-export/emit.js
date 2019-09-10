@@ -20,12 +20,40 @@ import { preprocessParameter } from './preprocessor'
 import doRender from './render'
 import { registerMethod } from './register'
 import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
+import { Commands } from '@seleniumhq/side-model'
+
+function validateCommand(command) {
+  const commandName = command.command.startsWith('//')
+    ? command.command.substring(2)
+    : command.command
+  let commandSchema = Commands.find(cmdObj => cmdObj[0] === commandName)
+  if (commandSchema) commandSchema = commandSchema[1]
+  else throw new Error(`Invalid command '${commandName}'`)
+  if (!!commandSchema.target !== !!command.target) {
+    throw new Error(
+      `Incomplete command '${
+        command.command
+      }'. Missing expected target argument.`
+    )
+  }
+  if (!!commandSchema.value !== !!command.value) {
+    const isOptional = commandSchema.value
+      ? !!commandSchema.value.isOptional
+      : false
+    if (!isOptional) {
+      throw new Error(
+        `Incomplete command '${commandName}'. Missing expected value argument.`
+      )
+    }
+  }
+}
 
 export function emitCommand(
   command,
   emitter,
-  { variableLookup, emitNewWindowHandling }
+  { variableLookup, emitNewWindowHandling } = {}
 ) {
+  validateCommand(command)
   if (emitter) {
     const ignoreEscaping = command.command === 'storeJson'
     let result = emitter(
@@ -219,10 +247,16 @@ async function emitTest(
       startingLevel: commandLevel,
     }
   )
-  result.commands = render(await emitCommands(test.commands, emitter), {
-    startingLevel: commandLevel,
-    originTracing,
-  })
+  result.commands = render(
+    await emitCommands(test.commands, emitter).catch(error => {
+      // prefix test name on error
+      throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
+    }),
+    {
+      startingLevel: commandLevel,
+      originTracing,
+    }
+  )
   result.inEachEnd = render(
     await hooks.inEachEnd.emit({ test, tests, project, isOptional: true }),
     {

@@ -15,23 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import url from 'url'
+const isProduction = process.env.NODE_ENV === 'production'
+const isStaging = process.env.NODE_ENV === 'staging'
+const isTest = process.env.NODE_ENV === 'test'
 
-export function normalizeTestsInSuite({ suite, tests }) {
-  if (!suite) return
-  let _suite = { ...suite }
-  _suite.tests.forEach((testId, index) => {
-    _suite.tests[index] = tests.find(test => test.id === testId).name
-  })
-  return _suite
-}
-
-export function sanitizeProjectName(projectName) {
-  let name = projectName
-  if (name.startsWith('http')) {
-    // eslint-disable-next-line node/no-deprecated-api
-    return url.parse(projectName).host
-  } else {
-    return name.replace(/([^a-z0-9 ._-]+)/gi, '')
-  }
+module.exports = {
+  isProduction,
+  isStaging,
+  isTest,
 }

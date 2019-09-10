@@ -252,6 +252,43 @@ export default function seed(store, numberOfSuites = 0) {
   )
   controlFlowForEachTest.createCommand(undefined, 'end')
 
+  const controlFlowForEachNestedTest = store.createTestCase(
+    'control flow for each (nested)'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'executeScript',
+    `return 0`,
+    'count'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'executeScript',
+    `return [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]`,
+    'numbersCol'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'forEach',
+    'numbersCol',
+    'numbers'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'forEach',
+    'numbers',
+    'number'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'executeScript',
+    'return ${count} + 1',
+    'count'
+  )
+  controlFlowForEachNestedTest.createCommand(undefined, 'end')
+  controlFlowForEachNestedTest.createCommand(undefined, 'end')
+  controlFlowForEachNestedTest.createCommand(undefined, 'assert', 'count', '15')
+
   const executeScriptTest = store.createTestCase('execute script')
   executeScriptTest.createCommand(
     undefined,
@@ -703,6 +740,7 @@ export default function seed(store, numberOfSuites = 0) {
   suiteControlFlow.addTestCase(controlFlowTimesTest)
   suiteControlFlow.addTestCase(controlFlowWhileTest)
   suiteControlFlow.addTestCase(controlFlowForEachTest)
+  suiteControlFlow.addTestCase(controlFlowForEachNestedTest)
 
   const smokeSuite = store.createSuite('smoke')
   smokeSuite.addTestCase(checkTest)
