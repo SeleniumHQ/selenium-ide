@@ -252,6 +252,72 @@ export default function seed(store, numberOfSuites = 0) {
   )
   controlFlowForEachTest.createCommand(undefined, 'end')
 
+  const accessVariable = store.createTestCase('access variable')
+  accessVariable.createCommand(
+    undefined,
+    'storeJson',
+    `{"a": [{"b":0}, {"b":1}]}`,
+    'blah'
+  )
+  accessVariable.createCommand(undefined, 'store', '${blah.a[0].b}', 'result')
+  accessVariable.createCommand(undefined, 'assert', 'result', '0')
+
+  const accessVariableAssert = store.createTestCase('access variable assert')
+  accessVariableAssert.createCommand(undefined, 'storeJson', `{"a":0}`, 'blah')
+  accessVariableAssert.createCommand(undefined, 'assert', 'blah.a', '0')
+
+  const accessVariableArray = store.createTestCase('access variable array')
+  accessVariableArray.createCommand(
+    undefined,
+    'storeJson',
+    `[{"a":0}, {"a":1}]`,
+    'blah'
+  )
+  accessVariableArray.createCommand(undefined, 'assert', 'blah[1].a', '1')
+
+  const accessVariableNestedJson = store.createTestCase(
+    'access variable nested json'
+  )
+  accessVariableNestedJson.createCommand(
+    undefined,
+    'storeJson',
+    `[{"a":[{"b":0}, {"b":{"c":1}}]}, {"a":2}]`,
+    'blah'
+  )
+  accessVariableNestedJson.createCommand(
+    undefined,
+    'assert',
+    'blah[0].a[1].b.c',
+    '1'
+  )
+
+  const accessVariableForEach = store.createTestCase('access variable for each')
+  accessVariableForEach.createCommand(
+    undefined,
+    'executeScript',
+    'return 0',
+    'result'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'storeJson',
+    `{"a":[{"b":0}, {"b":1}, {"b":2}]}`,
+    'blah'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'forEach',
+    'blah.a',
+    'iterator'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'executeScript',
+    'return ${result} + ${iterator.b}',
+    'result'
+  )
+  accessVariableForEach.createCommand(undefined, 'end', '', '')
+  accessVariableForEach.createCommand(undefined, 'assert', 'result', '3')
   const executeScriptTest = store.createTestCase('execute script')
   executeScriptTest.createCommand(
     undefined,
@@ -650,6 +716,7 @@ export default function seed(store, numberOfSuites = 0) {
   smokeSuite.addTestCase(storeTextTest)
   smokeSuite.addTestCase(submitTest)
   smokeSuite.addTestCase(confirmationDialogTest)
+  smokeSuite.addTestCase(accessVariable)
 
   const waitSuite = store.createSuite('waits')
   waitSuite.addTestCase(waitTest1)

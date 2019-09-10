@@ -802,7 +802,7 @@ function emitControlFlowWhile(target) {
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
   return Promise.resolve(
-    `for (let i = 0; i < vars["${collectionVarName}"].length; i++) {vars["${iteratorVarName}"] = vars["${collectionVarName}"][i];`
+    `for (let i = 0; i < vars.${collectionVarName}.length; i++) {vars["${iteratorVarName}"] = vars.${collectionVarName}[i];`
   )
 }
 
@@ -810,7 +810,7 @@ emitControlFlowWhile.target = scriptPreprocessor
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    'expect(`${vars["' + varName + '"]}` == "' + value + '").toBeTruthy();'
+    `expect(vars.${varName} == \`${value}\`).toBe(true);`
   )
 }
 
@@ -826,7 +826,7 @@ function emitSetWindowSize(size) {
     `try {
       await driver.manage().window().setRect({ width: ${width}, height: ${height} });
     } catch(error) {
-      console.log('Unable to resize window. Skipping.'); 
+      console.log('Unable to resize window. Skipping.');
     };`
   )
 }
