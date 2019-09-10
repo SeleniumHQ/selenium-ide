@@ -97,6 +97,7 @@ program.parse(process.argv)
 
 if (!program.args.length && !program.run) {
   program.outputHelp()
+  // eslint-disable-next-line no-process-exit
   process.exit(1)
 }
 
@@ -165,6 +166,7 @@ if (program.proxyType) {
     Object.assign(configuration, proxy)
   } catch (e) {
     winston.error(e.message)
+    // eslint-disable-next-line no-process-exit
     process.exit(1)
   }
 } else if (configuration.proxyType) {
@@ -176,6 +178,7 @@ if (program.proxyType) {
     Object.assign(configuration, proxy)
   } catch (e) {
     winston.error(e.message)
+    // eslint-disable-next-line no-process-exit
     process.exit(1)
   }
 }
@@ -225,6 +228,7 @@ if (program.outputDirectory) {
     winston.error(
       `'${format}'is not an output format, allowed values: ${allowedFormats}`
     )
+    // eslint-disable-next-line no-process-exit
     process.exit(1)
   }
 }
@@ -424,6 +428,7 @@ function handleQuit(_signal, code) {
   if (!program.run) {
     rimraf.sync(projectPath)
   }
+  // eslint-disable-next-line no-process-exit
   process.exit(code)
 }
 

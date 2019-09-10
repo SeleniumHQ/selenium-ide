@@ -14,7 +14,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestLogin():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -53,7 +53,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestControlflow():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -126,7 +126,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestLogin():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -166,7 +166,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestDefaultSuite():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -207,7 +207,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestDefaultSuite():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -256,7 +256,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestLogin():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -287,7 +287,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestValidcredentials():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -322,7 +322,7 @@ from selenium.webdriver.common.keys import Keys
 
 class TestSelectwindow():
   def setup_method(self, method):
-    self.driver = webdriver.Firefox()
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):

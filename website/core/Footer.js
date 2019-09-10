@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// eslint-disable-next-line node/no-extraneous-require
 const React = require('react')
 
 class Footer extends React.Component {

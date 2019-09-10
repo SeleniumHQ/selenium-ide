@@ -189,11 +189,20 @@ export class CommandNode {
   }
 
   evaluateForEach(variables) {
-    let collection = variables.get(this._interpolateTarget())
-    if (!collection)
+    const iteratorCollection = variables.get(this._interpolateTarget())
+    if (!iteratorCollection)
       return Promise.resolve({ result: 'Invalid variable provided.' })
-    variables.set(this._interpolateValue(), collection[this.timesVisited])
-    return this.timesVisited < collection.length
+    const iteratedCollectionEntry = {
+      name: this._interpolateValue(),
+      value: iteratorCollection[this.timesVisited],
+    }
+    variables.set(iteratedCollectionEntry.name, iteratedCollectionEntry.value)
+    const result = this.timesVisited < iteratorCollection.length
+    // Reset timesVisited if loop ends, needed to support forEach recursion.
+    // It's set to -1 since the incrementer will pick it up. Setting it to
+    // 0 when called on a subsequent interation.
+    if (!result) this.timesVisited = -1
+    return result
   }
 
   _evaluate(commandExecutor) {
