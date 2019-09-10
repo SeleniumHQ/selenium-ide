@@ -15,36 +15,40 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill'
 
-browser.runtime.sendMessage(process.env.SIDE_ID, {
-  uri: "/register",
-  verb: "post",
-  payload: {
-    name: "Selenium IDE plugin",
-    version: "1.0.0",
-    commands: [
-      {
-        id: "successfulCommand",
-        name: "successful command"
-      },
-      {
-        id: "failCommand",
-        name: "failed command"
+browser.runtime
+  .sendMessage(process.env.SIDE_ID, {
+    uri: '/register',
+    verb: 'post',
+    payload: {
+      name: 'Selenium IDE plugin',
+      version: '1.0.0',
+      commands: [
+        {
+          id: 'successfulCommand',
+          name: 'successful command',
+        },
+        {
+          id: 'failCommand',
+          name: 'failed command',
+        },
+      ],
+    },
+  })
+  .catch(console.error)
+
+browser.runtime.onMessageExternal.addListener(
+  (message, sender, sendResponse) => {
+    if (message.action === 'execute') {
+      switch (message.command.command) {
+        case 'successfulCommand':
+          sendResponse(true)
+          break
+        case 'failCommand':
+          sendResponse({ error: 'Some failure has occurred' })
+          break
       }
-    ]
-  }
-}).catch(console.error);
-
-browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
-  if (message.action === "execute") {
-    switch (message.command.command) {
-      case "successfulCommand":
-        sendResponse(true);
-        break;
-      case "failCommand":
-        sendResponse({ error: "Some failure has occurred" });
-        break;
     }
   }
-});
+)

@@ -263,15 +263,14 @@ export default class Test extends React.Component {
         >
           <span>{this.props.test.name}</span>
           {this.props.menu}
-          {this.props.removeTest &&
-            !this.props.menu && (
-              <RemoveButton
-                onClick={e => {
-                  e.stopPropagation()
-                  this.props.removeTest()
-                }}
-              />
-            )}
+          {this.props.removeTest && !this.props.menu && (
+            <RemoveButton
+              onClick={e => {
+                e.stopPropagation()
+                this.props.removeTest()
+              }}
+            />
+          )}
         </a>
         {this.props.callstack ? (
           <Callstack

@@ -99,8 +99,8 @@ export default class CommandForm extends React.Component {
               className={classNames(
                 'icon',
                 this.props.command &&
-                this.props.command.command &&
-                !this.props.command.enabled
+                  this.props.command.command &&
+                  !this.props.command.enabled
                   ? 'si-remove-comment'
                   : 'si-comment'
               )}

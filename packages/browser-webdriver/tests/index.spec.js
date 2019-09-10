@@ -109,7 +109,7 @@ describe('browser webdriver', () => {
           .usingServer(SERVER)
           .build()
         const By = window.browserWebdriver.By
-      d.get('data:text/html,<input id="f" type="file" /><div id="r"></div>'); // eslint-disable-line
+        d.get('data:text/html,<input id="f" type="file" /><div id="r"></div>') // eslint-disable-line
         d.executeScript(script)
         let up = d.findElement(By.id('f'))
         up.sendKeys(filePath)

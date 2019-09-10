@@ -31,9 +31,7 @@ function validateCommand(command) {
   else throw new Error(`Invalid command '${commandName}'`)
   if (!!commandSchema.target !== !!command.target) {
     throw new Error(
-      `Incomplete command '${
-        command.command
-      }'. Missing expected target argument.`
+      `Incomplete command '${command.command}'. Missing expected target argument.`
     )
   }
   if (!!commandSchema.value !== !!command.value) {
