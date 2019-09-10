@@ -801,16 +801,19 @@ function emitControlFlowWhile(target) {
 }
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
+   //const exp = `expect(vars.${collectionVarName}).toBe('foo');`
+  //return Promise.resolve(exp)
   return Promise.resolve(
-    `for (let i = 0; i < \`${value}\`.length; i++) {vars["${iteratorVarName}"] = vars["${collectionVarName}"][i];`
+    `for (let i = 0; i < vars.${collectionVarName}.length; i++) {vars["${iteratorVarName}"]  = vars.${collectionVarName}[i];`
   )
+
 }
 
 emitControlFlowWhile.target = scriptPreprocessor
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `expect(\`${value}\` == "' + value + '").toBeTruthy();`
+    `expect(vars.${varName} == \`${value}\`).toBe(true);`
   )
 }
 
