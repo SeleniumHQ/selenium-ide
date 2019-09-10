@@ -115,12 +115,14 @@ export default function Selianize(project, _opts, snapshot = {}) {
       )
     )
 
-    const emittedTests = tests.filter(test => !!test.id).map(test => ({
-      id: test.id,
-      name: test.name,
-      code: test.function,
-      snapshot: test.snapshot,
-    }))
+    const emittedTests = tests
+      .filter(test => !!test.id)
+      .map(test => ({
+        id: test.id,
+        name: test.name,
+        code: test.function,
+        snapshot: test.snapshot,
+      }))
     const emittedSuites = suites
       .filter(suite => !suite.skipped)
       .map((suiteCode, index) => ({

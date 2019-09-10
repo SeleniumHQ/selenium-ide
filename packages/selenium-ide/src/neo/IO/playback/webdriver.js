@@ -225,9 +225,7 @@ export default class WebDriverExecutor {
 
   async doExecuteAsyncScript(script, optionalVariable) {
     const result = await this.driver.executeAsyncScript(
-      `var callback = arguments[arguments.length - 1];${
-        script.script
-      }.then(callback).catch(callback);`,
+      `var callback = arguments[arguments.length - 1];${script.script}.then(callback).catch(callback);`,
       ...script.argv
     )
     if (optionalVariable) {

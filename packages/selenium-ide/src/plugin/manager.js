@@ -159,21 +159,23 @@ class PluginManager {
     let jest = {
       extraGlobals: [],
     }
-    let plugins = this.plugins.filter(plugin => plugin.canEmit).map(plugin => {
-      Object.assign(dependencies, plugin.dependencies)
-      if (
-        plugin.jest &&
-        plugin.jest.extraGlobals &&
-        Array.isArray(plugin.jest.extraGlobals)
-      ) {
-        jest.extraGlobals.push(...plugin.jest.extraGlobals)
-      }
-      return {
-        id: plugin.id,
-        name: plugin.name,
-        version: plugin.version,
-      }
-    })
+    let plugins = this.plugins
+      .filter(plugin => plugin.canEmit)
+      .map(plugin => {
+        Object.assign(dependencies, plugin.dependencies)
+        if (
+          plugin.jest &&
+          plugin.jest.extraGlobals &&
+          Array.isArray(plugin.jest.extraGlobals)
+        ) {
+          jest.extraGlobals.push(...plugin.jest.extraGlobals)
+        }
+        return {
+          id: plugin.id,
+          name: plugin.name,
+          version: plugin.version,
+        }
+      })
 
     return { plugins, dependencies, jest }
   }

@@ -142,9 +142,7 @@ class ModalState {
   async deleteTest(testCase) {
     const choseDelete = await this.showAlert({
       title: 'Delete test case',
-      description: `This will permanently delete '${
-        testCase.name
-      }', and remove it from all its suites`,
+      description: `This will permanently delete '${testCase.name}', and remove it from all its suites`,
       cancelLabel: 'cancel',
       confirmLabel: 'delete',
     })

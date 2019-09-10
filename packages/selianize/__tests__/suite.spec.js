@@ -51,9 +51,7 @@ describe('suite emitter', () => {
         },
       })
     ).resolves.toEqual({
-      code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${
-        tests['1'].name
-      }", async () => {await tests["example test case"](driver, vars);expect(true).toBeTruthy();});});`,
+      code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests['1'].name}", async () => {await tests["example test case"](driver, vars);expect(true).toBeTruthy();});});`,
     })
   })
   it('should emit a suite with multiple empty tests', async () => {
@@ -93,13 +91,7 @@ describe('suite emitter', () => {
         },
       })
     ).resolves.toEqual({
-      code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${
-        tests['1'].name
-      }", async () => {await tests["example test case"](driver, vars);expect(true).toBeTruthy();});it("${
-        tests['2'].name
-      }", async () => {await tests["second test case"](driver, vars);expect(true).toBeTruthy();});it("${
-        tests['3'].name
-      }", async () => {await tests["third test case"](driver, vars);expect(true).toBeTruthy();});});`,
+      code: `jest.setTimeout(30000);describe("${suite.name}", () => {it("${tests['1'].name}", async () => {await tests["example test case"](driver, vars);expect(true).toBeTruthy();});it("${tests['2'].name}", async () => {await tests["second test case"](driver, vars);expect(true).toBeTruthy();});it("${tests['3'].name}", async () => {await tests["third test case"](driver, vars);expect(true).toBeTruthy();});});`,
     })
   })
   it('should emit a parallel suite', async () => {
@@ -142,21 +134,15 @@ describe('suite emitter', () => {
     ).resolves.toEqual([
       {
         name: tests['1'].name,
-        code: `jest.setTimeout(30000);test("${
-          tests['1'].name
-        }", async () => {await tests["example test case"](driver, vars);expect(true).toBeTruthy();});`,
+        code: `jest.setTimeout(30000);test("${tests['1'].name}", async () => {await tests["example test case"](driver, vars);expect(true).toBeTruthy();});`,
       },
       {
         name: tests['2'].name,
-        code: `jest.setTimeout(30000);test("${
-          tests['2'].name
-        }", async () => {await tests["second test case"](driver, vars);expect(true).toBeTruthy();});`,
+        code: `jest.setTimeout(30000);test("${tests['2'].name}", async () => {await tests["second test case"](driver, vars);expect(true).toBeTruthy();});`,
       },
       {
         name: tests['3'].name,
-        code: `jest.setTimeout(30000);test("${
-          tests['3'].name
-        }", async () => {await tests["third test case"](driver, vars);expect(true).toBeTruthy();});`,
+        code: `jest.setTimeout(30000);test("${tests['3'].name}", async () => {await tests["third test case"](driver, vars);expect(true).toBeTruthy();});`,
       },
     ])
   })

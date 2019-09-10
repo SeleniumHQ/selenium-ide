@@ -23,9 +23,7 @@ describe('configuration code emitter', () => {
       url: 'http://www.seleniumhq.org',
     }
     return expect(ConfigurationEmitter.emit(project)).resolves.toBe(
-      `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${
-        project.url
-      }';let vars = {};`
+      `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};`
     )
   })
   it('should skip emitting project configuration when skipStdLibEmitting is set and there are no config hooks', () => {
@@ -46,9 +44,7 @@ describe('configuration code emitter', () => {
     return expect(
       ConfigurationEmitter.emit(project, undefined, snapshot)
     ).resolves.toBe(
-      `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${
-        project.url
-      }';let vars = {};${snapshot}`
+      `global.Key = require('selenium-webdriver').Key;global.URL = require('url').URL;global.BASE_URL = configuration.baseUrl || '${project.url}';let vars = {};${snapshot}`
     )
   })
   it('should emit a snapshot of the hooks when skipStdLibEmitting is set', () => {

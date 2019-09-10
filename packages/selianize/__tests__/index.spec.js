@@ -176,9 +176,7 @@ describe('Selenium code serializer', () => {
       ],
     }
     expect(ParseError(failure)).toBe(
-      `## aaba failure\n${failure.tests[0].commands[0].index}. ${
-        failure.tests[0].commands[0].message
-      }\n\n`
+      `## aaba failure\n${failure.tests[0].commands[0].index}. ${failure.tests[0].commands[0].message}\n\n`
     )
   })
 })

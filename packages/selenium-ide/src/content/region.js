@@ -323,9 +323,7 @@ function createButtons(cb) {
     removeRegion()
     const rect = calculateRectFromCoords(coords)
     cb(
-      `x: ${rect.left}, y: ${rect.top}, width: ${rect.width}, height: ${
-        rect.height
-      }`
+      `x: ${rect.left}, y: ${rect.top}, width: ${rect.width}, height: ${rect.height}`
     )
   })
   const cancel = document.createElement('button')

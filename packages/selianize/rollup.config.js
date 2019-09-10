@@ -1,7 +1,7 @@
-import babel from "rollup-plugin-babel";
-import pkg from "./package.json";
+import babel from 'rollup-plugin-babel'
+import pkg from './package.json'
 
-const externalDependencies = ["js-beautify", "js-string-escape"];
+const externalDependencies = ['js-beautify', 'js-string-escape']
 export default [
   // CommonJS (for Node) and ES module (for bundlers) build.
   // (We could have three entries in the configuration array
@@ -9,27 +9,23 @@ export default [
   // builds from a single configuration where possible, using
   // the `targets` option which can specify `dest` and `format`)
   {
-    input: "src/index.js",
+    input: 'src/index.js',
     external: externalDependencies,
-    output: [
-      { file: pkg.main, format: "cjs" }
-    ],
+    output: [{ file: pkg.main, format: 'cjs' }],
     plugins: [
       babel({
-        exclude: ["node_modules/**"]
-      })
-    ]
+        exclude: ['node_modules/**'],
+      }),
+    ],
   },
   {
-    input: "src/index.js",
+    input: 'src/index.js',
     external: externalDependencies,
-    output: [
-      { file: pkg.module, format: "es" }
-    ],
+    output: [{ file: pkg.module, format: 'es' }],
     plugins: [
       babel({
-        exclude: ["node_modules/**"]
-      })
-    ]
-  }
-];
+        exclude: ['node_modules/**'],
+      }),
+    ],
+  },
+]

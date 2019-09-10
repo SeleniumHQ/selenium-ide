@@ -134,8 +134,8 @@ configuration.server = program.server ? program.server : configuration.server
 configuration.timeout = program.timeout
   ? +program.timeout
   : configuration.timeout
-    ? +configuration.timeout
-    : DEFAULT_TIMEOUT // eslint-disable-line indent
+  ? +configuration.timeout
+  : DEFAULT_TIMEOUT // eslint-disable-line indent
 
 if (configuration.timeout === 'undefined') configuration.timeout = undefined
 
@@ -251,9 +251,7 @@ function runProject(project) {
   if (!project.suites.length) {
     return Promise.reject(
       new Error(
-        `The project ${
-          project.name
-        } has no test suites defined, create a suite using the IDE.`
+        `The project ${project.name} has no test suites defined, create a suite using the IDE.`
       )
     )
   }
@@ -306,9 +304,7 @@ function runProject(project) {
             : 'beforeEach(() => {vars = {};});afterEach(async () => (cleanup()));'
           writeJSFile(
             path.join(projectPath, sanitizeFileName(suite.name)),
-            `jest.setMock('selenium-webdriver', webdriver);\n// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${
-              code.globalConfig
-            }${suite.code}${cleanup}`
+            `jest.setMock('selenium-webdriver', webdriver);\n// This file was generated using Selenium IDE\nconst tests = require("./commons.js");${code.globalConfig}${suite.code}${cleanup}`
           )
         } else if (suite.tests.length) {
           fs.mkdirSync(path.join(projectPath, sanitizeFileName(suite.name)))
@@ -320,9 +316,7 @@ function runProject(project) {
                 sanitizeFileName(suite.name),
                 sanitizeFileName(test.name)
               ),
-              `jest.setMock('selenium-webdriver', webdriver);\n// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${
-                code.globalConfig
-              }${test.code}`
+              `jest.setMock('selenium-webdriver', webdriver);\n// This file was generated using Selenium IDE\nconst tests = require("../commons.js");${code.globalConfig}${test.code}`
             )
           })
         }

@@ -231,9 +231,7 @@ export default class BackgroundRecorder {
           'selectWindow',
           [
             [
-              `handle=\${${
-                this.windowSession.openedTabIds[testCaseId][tabId]
-              }}`,
+              `handle=\${${this.windowSession.openedTabIds[testCaseId][tabId]}}`,
             ],
           ],
           ''

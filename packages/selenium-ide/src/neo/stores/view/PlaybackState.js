@@ -133,8 +133,8 @@ class PlaybackState {
     return this.currentRunningSuite
       ? this.currentRunningSuite._tests
       : this.currentRunningTest
-        ? [this.stackCaller] // eslint-disable-line indent
-        : undefined // eslint-disable-line indent
+      ? [this.stackCaller] // eslint-disable-line indent
+      : undefined // eslint-disable-line indent
   }
 
   @computed

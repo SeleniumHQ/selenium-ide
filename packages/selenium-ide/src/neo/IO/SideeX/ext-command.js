@@ -315,9 +315,7 @@ export default class ExtCommand {
           clearInterval(interval)
           rej(
             new Error(
-              `Exceeded waiting time for new window to appear ${
-                this.windowTimeout
-              }ms`
+              `Exceeded waiting time for new window to appear ${this.windowTimeout}ms`
             )
           )
         }

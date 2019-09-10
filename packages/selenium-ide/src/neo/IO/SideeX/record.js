@@ -44,9 +44,7 @@ async function notifyPluginsOfRecordedCommand(command, test) {
     // if more than one plugin responded, warn the user
     if (results.length > 1) {
       logger.warn(
-        `More than one plugin tried to override ${
-          command.command
-        }, used response from ${results[0].plugin.name}`
+        `More than one plugin tried to override ${command.command}, used response from ${results[0].plugin.name}`
       )
     }
     const result = results[0].response

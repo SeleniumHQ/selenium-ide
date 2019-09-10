@@ -357,19 +357,18 @@ function doCommand(_res, implicitTime = Date.now(), implicitCount = 0) {
   p = Promise.resolve()
 
   return p
-    .then(
-      () =>
-        canExecuteCommand(command)
-          ? doPluginCommand(
-              PlaybackState.currentExecutingCommandNode,
-              implicitTime,
-              implicitCount
-            )
-          : doSeleniumCommand(
-              PlaybackState.currentExecutingCommandNode,
-              implicitTime,
-              implicitCount
-            )
+    .then(() =>
+      canExecuteCommand(command)
+        ? doPluginCommand(
+            PlaybackState.currentExecutingCommandNode,
+            implicitTime,
+            implicitCount
+          )
+        : doSeleniumCommand(
+            PlaybackState.currentExecutingCommandNode,
+            implicitTime,
+            implicitCount
+          )
     )
     .then(result => {
       if (result) {
