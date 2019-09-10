@@ -107,7 +107,7 @@ function openWindowFromStorageResolution() {
         opts.top = storage.origin.top
         opts.left = storage.origin.left
       }
-      isOpen=true
+      isOpen = true
       return browser.windows.create(
         Object.assign(
           {
@@ -131,7 +131,6 @@ function openWindowFromStorageResolution() {
       )
     })
 }
-
 
 function sizeIsValid(size) {
   return size && sideIsValid(size.height) && sideIsValid(size.width)
@@ -197,21 +196,19 @@ browser.runtime.onMessageExternal.addListener(
       .catch(() => {
         if (message.verb == 'post' && message.uri == '/project') {
           initiateWindow(function() {
-              browser.runtime.sendMessage(message);
-          }).then(sendResponse("opened extension"))
-        }
-        else {
-          return sendResponse({ error: 'Selenium IDE is not active' });
+            browser.runtime.sendMessage(message)
+          }).then(sendResponse('opened extension'))
+        } else {
+          return sendResponse({ error: 'Selenium IDE is not active' })
         }
       })
-      return true
-    }
+    return true
+  }
 )
 
-function initiateWindow(callback){
-  return openPanel({ windowId: 0 }).then(callback);
+function initiateWindow(callback) {
+  return openPanel({ windowId: 0 }).then(callback)
 }
-
 
 browser.runtime.onInstalled.addListener(() => {
   // Notify updates only in production
