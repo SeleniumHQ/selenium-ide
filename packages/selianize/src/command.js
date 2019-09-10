@@ -805,13 +805,10 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
 emitControlFlowWhile.target = scriptPreprocessor
 
 function emitAssert(varName, value) {
-  if ((value == "true")|| (value == "false")) {
-    var isTrue = (value == "true");
-    return Promise.resolve(
-      `expect(vars.${varName} == ${value}).toBeTruthy();`
-    )
-  }
-  else {
+  if (value == 'true' || value == 'false') {
+    var isTrue = value == 'true'
+    return Promise.resolve(`expect(vars.${varName} == ${value}).toBeTruthy();`)
+  } else {
     return Promise.resolve(
       `expect(vars.${varName} == \`${value}\`).toBeTruthy();`
     )

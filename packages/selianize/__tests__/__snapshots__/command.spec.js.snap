@@ -31,7 +31,7 @@ exports[`command code emitter should emit \`set window size\` command 1`] = `
 "try {
       await driver.manage().window().setRect({ width: 100, height: 100 });
     } catch(error) {
-      console.log('Unable to resize window. Skipping.'); 
+      console.log('Unable to resize window. Skipping.');
     };"
 `;
 
