@@ -1099,7 +1099,7 @@ describe('command code emitter', () => {
       value: 'iterator',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `for (let i = 0; i < vars.${collectionVarName}.length; i++) {vars["${iteratorVarName}"]  = vars.${collectionVarName}[i];`
+      `for (let i = 0; i < vars.${collection}.length; i++) {vars["${iterator}"]  = vars.${collection}[i];`
     )
   })
   it('should emit `assert` command', () => {
@@ -1109,7 +1109,7 @@ describe('command code emitter', () => {
       value: 'true',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `expect(vars.${varName} == \`${value}\`).toBe(true);`
+      `expect(vars.${command.target} == \`${command.value}\`).toBe(true);`
     )
   })
   it('should emit `verify` command', () => {
