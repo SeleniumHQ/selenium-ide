@@ -28,7 +28,6 @@ import ModalState from '../../neo/stores/view/ModalState'
 import { loadJSProject } from '../../neo/IO/filesystem'
 import DialogContainer from '../../neo/stores/view/ModalState'
 
-
 const router = new Router()
 
 router.get('/health', (req, res) => {
@@ -66,7 +65,7 @@ router.get('/project', (_req, res) => {
 
 router.post('/project', (req, res) => {
   if (req.id) {
-    const plugin = Manager.getPlugin(req.sender);
+    const plugin = Manager.getPlugin(req.sender)
     if (!UiState.isSaved()) {
       ModalState.showAlert({
         title: 'Load without saving',
@@ -75,25 +74,23 @@ router.post('/project', (req, res) => {
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       }).then(result => {
-        if (result){
+        if (result) {
           loadJSProject(UiState.project, req)
-          ModalState.completeWelcome();
+          ModalState.completeWelcome()
         }
       })
       res(true)
-    }
-    else  {
-      ModalState.hideWelcome();
+    } else {
+      ModalState.hideWelcome()
       ModalState.showAlert({
         title: 'Load project from Plugin',
-        description:
-          'Are you sure you want to load this project from Plugin?',
+        description: 'Are you sure you want to load this project from Plugin?',
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       }).then(result => {
-        if (result){
+        if (result) {
           loadJSProject(UiState.project, req)
-          ModalState.completeWelcome();
+          ModalState.completeWelcome()
         }
       })
       res(true)

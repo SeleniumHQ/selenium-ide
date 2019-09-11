@@ -191,10 +191,9 @@ browser.runtime.onMessageExternal.addListener(
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
-        if (message.startSideIfClosed){
+        if (message.startSideIfClosed) {
           return openPanel({ windowId: 0 })
-        }
-        else {
+        } else {
           return sendResponse({ error: 'Selenium IDE is not active' })
         }
       })
