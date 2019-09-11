@@ -63,13 +63,12 @@ router.get('/project', (_req, res) => {
 })
 
 router.post('/project', (req, res) => {
-  if (req.id) {
-    const plugin = Manager.getPlugin(req.sender)
+  if (req.project) {
     if (!UiState.isSaved()) {
       ModalState.showAlert({
         title: 'Open project without saving',
         description: `${
-          plugin.name
+          req.name
         } is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
@@ -81,18 +80,8 @@ router.post('/project', (req, res) => {
       })
       res(true)
     } else {
-      ModalState.hideWelcome()
-      ModalState.showAlert({
-        title: 'Open project',
-        description: `${plugin.name} is trying to load a project`,
-        confirmLabel: 'proceed',
-        cancelLabel: 'cancel',
-      }).then(result => {
-        if (result) {
-          loadJSProject(UiState.project, req.project)
-          ModalState.completeWelcome()
-        }
-      })
+      loadJSProject(UiState.project, req.project)
+      ModalState.completeWelcome()
       res(true)
     }
   }

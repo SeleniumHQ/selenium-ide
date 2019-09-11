@@ -4,7 +4,7 @@ title: Plugins System API
 sidebar_label: System
 ---
 
-The System API is the most basic API which Selenium IDE provides. It is not prefixed and can be called with `/`. 
+The System API is the most basic API which Selenium IDE provides. It is not prefixed and can be called with `/`.
 
 #### Opening Selenium IDE
 If the extension is installed, a request could be made by a plugin to open Selenium IDE.
@@ -59,7 +59,7 @@ Loads a project into the IDE, as if the user opened it, if the user has unsaved 
 
 ```js
 {
+  name: "your extension name"
   project: JSON parsed side file
 }
 ```
-
