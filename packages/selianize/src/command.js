@@ -178,7 +178,11 @@ function escapeString(string, { preprocessor, ignoreEscaping }) {
 }
 
 function emitNewWindowHandling(emitted, command) {
-  return `vars.__handles = await driver.getAllWindowHandles();${emitted}vars.${command.windowHandleName} = await utils.waitForWindow(driver, vars.__handles, ${command.windowTimeout});`
+  return `vars.__handles = await driver.getAllWindowHandles();${emitted}vars.${
+    command.windowHandleName
+  } = await utils.waitForWindow(driver, vars.__handles, ${
+    command.windowTimeout
+  });`
 }
 
 function defaultPreprocessor(param) {
