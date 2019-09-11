@@ -11,7 +11,7 @@ You can export either a test or suite of tests to WebDriver code by right-clicki
 ![code-export-right-click](/selenium-ide/img/docs/code-export/right-click.png)
 ![code-export-menu](/selenium-ide/img/docs/code-export/menu.png)
 
-This will save a file containing the exported code for your targret language to your browser's download directory.
+This will save a file containing the exported code for your target language to your browser's download directory.
 
 ### Origin Tracing Code Comments
 
