@@ -809,9 +809,13 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
 emitControlFlowWhile.target = scriptPreprocessor
 
 function emitAssert(varName, value) {
-  return Promise.resolve(
-    `expect(vars.${varName} == \`${value}\`).toBe(true);`
-  )
+  if (value == 'true' || value == 'false') {
+    return Promise.resolve(`expect(vars.${varName} == ${value}).toBeTruthy();`)
+  } else {
+    return Promise.resolve(
+      `expect(vars.${varName} == \`${value}\`).toBeTruthy();`
+    )
+  }
 }
 
 function emitSetSpeed() {
