@@ -48,7 +48,7 @@ function openPanel(tab) {
     clickEnabled = true
   }, 1500)
 
-  openWindowFromStorageResolution()
+  return openWindowFromStorageResolution()
     .then(function waitForPanelLoaded(panelWindowInfo) {
       return new Promise(function(resolve, reject) {
         let count = 0
@@ -191,7 +191,13 @@ browser.runtime.onMessageExternal.addListener(
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
-        return sendResponse({ error: 'Selenium IDE is not active' })
+        if (message.openSeleniumIDEIfClosed) {
+          return openPanel({ windowId: 0 }).then(() => {
+            sendResponse(true)
+          })
+        } else {
+          return sendResponse({ error: 'Selenium IDE is not active' })
+        }
       })
     return true
   }
