@@ -24,6 +24,8 @@ import recordRouter from './record'
 import exportRouter from './export'
 import popupRouter from './popup'
 import UiState from '../../neo/stores/view/UiState'
+import ModalState from '../../neo/stores/view/ModalState'
+import { loadJSProject } from '../../neo/IO/filesystem'
 
 const router = new Router()
 
@@ -58,6 +60,43 @@ router.post('/log', (req, res) => {
 
 router.get('/project', (_req, res) => {
   res({ id: UiState.project.id, name: UiState.project.name })
+})
+
+router.post('/project', (req, res) => {
+  if (req.id) {
+    const plugin = Manager.getPlugin(req.sender)
+    if (!UiState.isSaved()) {
+      ModalState.showAlert({
+        title: 'Open project without saving',
+        description: `${
+          plugin.name
+        } is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
+      }).then(result => {
+        if (result) {
+          loadJSProject(UiState.project, req.project)
+          ModalState.completeWelcome()
+        }
+      })
+      res(true)
+    } else {
+      ModalState.hideWelcome()
+      ModalState.showAlert({
+        title: 'Open project',
+        description: `${plugin.name} is trying to load a project`,
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
+      }).then(result => {
+        if (result) {
+          loadJSProject(UiState.project, req.project)
+          ModalState.completeWelcome()
+        }
+      })
+      res(true)
+    }
+  }
+  res(false)
 })
 
 router.use('/playback', playbackRouter)
