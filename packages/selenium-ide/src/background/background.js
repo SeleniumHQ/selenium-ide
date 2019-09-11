@@ -194,11 +194,7 @@ browser.runtime.onMessageExternal.addListener(
         if (message.startSideIfClosed){
           return openPanel({ windowId: 0 })
         }
-        if (message.verb == 'post' && message.uri == '/project') {
-          initiateWindow(function() {
-            browser.runtime.sendMessage(message)
-          }).then(sendResponse('opened extension'))
-        } else {
+        else {
           return sendResponse({ error: 'Selenium IDE is not active' })
         }
       })
