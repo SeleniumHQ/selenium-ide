@@ -75,7 +75,7 @@ router.post('/project', (req, res) => {
         cancelLabel: 'cancel',
       }).then(result => {
         if (result) {
-          loadJSProject(UiState.project, req)
+          loadJSProject(UiState.project, req.project)
           ModalState.completeWelcome()
         }
       })
@@ -89,7 +89,7 @@ router.post('/project', (req, res) => {
         cancelLabel: 'cancel',
       }).then(result => {
         if (result) {
-          loadJSProject(UiState.project, req)
+          loadJSProject(UiState.project, req.project)
           ModalState.completeWelcome()
         }
       })
