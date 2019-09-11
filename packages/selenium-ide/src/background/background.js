@@ -191,6 +191,9 @@ browser.runtime.onMessageExternal.addListener(
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
+        if (message.startSideIfClosed){
+          return openPanel({ windowId: 0 })
+        }
         if (message.verb == 'post' && message.uri == '/project') {
           initiateWindow(function() {
             browser.runtime.sendMessage(message)

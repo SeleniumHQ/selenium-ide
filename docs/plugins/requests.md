@@ -67,6 +67,31 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     }
 });
 ```
+#### Request to Open Selenium IDE
+If the extension is installed, a request could be made by a plugin to open SeleniumIDE. This can be made by making the following call:
+
+```js
+chrome.runtime.sendMessage("mooikfkahbdckldjjndioackbalphokd", {
+startSideIfClosed: true
+}, res=>console.log(JSON.stringify(res)));
+});
+```
+
+#### Request to Load Selenium IDE
+If the extension is installed, a request could be made by a plugin to load a specific project into SeleniumIDE. This can be made by making the following call:
+
+```js
+chrome.runtime.sendMessage("mooikfkahbdckldjjndioackbalphokd", {
+uri: "/project",
+verb: "post",
+payload: { //some side file json to load
+}, res => {
+ // boolean if the project was loaded or not
+}
+});
+```
+
+The API will prompt the user for opening a project requested by plugin.
 
 #### Async Requests
 

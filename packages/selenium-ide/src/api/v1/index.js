@@ -26,6 +26,8 @@ import popupRouter from './popup'
 import UiState from '../../neo/stores/view/UiState'
 import ModalState from '../../neo/stores/view/ModalState'
 import { loadJSProject } from '../../neo/IO/filesystem'
+import DialogContainer from '../../neo/stores/view/ModalState'
+
 
 const router = new Router()
 
@@ -62,12 +64,42 @@ router.get('/project', (_req, res) => {
   res({ id: UiState.project.id, name: UiState.project.name })
 })
 
-router.post('/project', (_req, res) => {
-  if (_req.id) {
-    loadJSProject(UiState.project, _req)
-    ModalState.completeWelcome()
+router.post('/project', (req, res) => {
+  if (req.id) {
+    const plugin = Manager.getPlugin(req.sender);
+    if (!UiState.isSaved()) {
+      ModalState.showAlert({
+        title: 'Load without saving',
+        description:
+          'Are you sure you want to load this project and lose all unsaved changes?',
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
+      }).then(result => {
+        if (result){
+          loadJSProject(UiState.project, req)
+          ModalState.completeWelcome();
+        }
+      })
+      res(true)
+    }
+    else  {
+      ModalState.hideWelcome();
+      ModalState.showAlert({
+        title: 'Load project from Plugin',
+        description:
+          'Are you sure you want to load this project from Plugin?',
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
+      }).then(result => {
+        if (result){
+          loadJSProject(UiState.project, req)
+          ModalState.completeWelcome();
+        }
+      })
+      res(true)
+    }
   }
-  res(true)
+  res(false)
 })
 
 router.use('/playback', playbackRouter)
