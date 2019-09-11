@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// eslint-disable-next-line node/no-extraneous-require
+// eslint-disable-next-line
 const React = require('react')
 
 // eslint-disable-next-line node/no-missing-require
