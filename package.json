@@ -11,7 +11,8 @@
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"packages/*/src/**/*.ts\" \"packages/*/__tests__/**/*.ts\" --ignore-pattern=\"node_modules\"",
     "typecheck": "tsc --noEmit",
-    "watch": "lerna run --no-bail --parallel watch"
+    "watch": "lerna run --no-bail --parallel watch",
+    "preinstall": "node ./scripts/check-yarn.js"
   },
   "jest": {
     "testURL": "http://localhost/index.html",
