@@ -262,7 +262,10 @@ export class CommandNode {
   }
 
   _isRetryLimit() {
-    if (ControlFlowCommandChecks.isLoop(this.command)) {
+    if (
+      ControlFlowCommandChecks.isLoop(this.command) &&
+      this.command.command !== 'forEach'
+    ) {
       let limit = 1000
       let value = Math.floor(+this.command.value)
       if (this.command.value && !isNaN(value)) {
