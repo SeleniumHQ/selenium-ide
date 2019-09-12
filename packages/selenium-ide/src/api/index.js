@@ -17,7 +17,6 @@
 
 import Router from '../router'
 import apiv1 from './v1'
-import Manager from '../plugin/manager'
 
 const router = new Router()
 router.use('/v1', apiv1)
