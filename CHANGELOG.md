@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.13.0
+- Control flow: Added optional loop limit override to `repeat if`
+- Control flow: Excuded `for each` from implicit retry limit
+- Runner: Fixed type checking bug for WebElements
+- Plugins: Added support to open the IDE and load projects (PR #804)
+- Plugins: Prevent unregistered plugins from communicating with the IDE
+
 ## v3.12.3
 - Control flow: fix for off-by-one error in nested forEach command blocks
 
