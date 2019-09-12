@@ -5,7 +5,8 @@
 - Control flow: Excuded `for each` from implicit retry limit
 - Runner: Fixed type checking bug for WebElements
 - Plugins: Added support to open the IDE and load projects (PR #804)
-- Plugins: Prevent unregistered plugins from communicating with the IDE
+- Code export: Added missing support for command registration to side-model (fixes broken code export for plugins)
+- Variables: Added improved property access on variables (PR #808)
 
 ## v3.12.3
 - Control flow: fix for off-by-one error in nested forEach command blocks
