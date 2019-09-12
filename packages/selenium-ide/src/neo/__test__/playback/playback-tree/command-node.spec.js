@@ -110,6 +110,17 @@ describe('Command Node', () => {
     node.timesVisited = 5
     expect(node._isRetryLimit()).toBeTruthy()
   })
+  it('retry limit ignored for forEach', () => {
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      '',
+      ''
+    )
+    const node = new CommandNode(command)
+    node.timesVisited = 1000
+    expect(node._isRetryLimit()).toBeFalsy()
+  })
   it('execute resolves with an error message when too many retries attempted in a loop', () => {
     const command = new Command(undefined, ControlFlowCommandNames.while, '', 2)
     const node = new CommandNode(command)
