@@ -3,7 +3,7 @@ language: node_js
 cache:
   yarn: true
 node_js:
-  - "10"
+  - "12"
 services:
   - docker
 addons:
