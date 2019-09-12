@@ -25,6 +25,7 @@
     "postinstall": "lerna bootstrap",
     "watch": "lerna run --no-bail --parallel watch",
     "release-prep": "yarn && peru sync && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext && yarn lint",
+    "preinstall": "node ./scripts/check-yarn.js",
     "postpublish": "yarn build:ext:prod && npx ./gh-release.js"
   },
   "jest": {
