@@ -15,9 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands as _cmds, TargetTypes as _ttypes } from './command/Commands'
+import {
+  Commands as _cmds,
+  TargetTypes as _ttypes,
+  registerCommand as _regCmd,
+} from './command/Commands'
 import { ArgTypes as _atypes } from './command/ArgTypes'
 
 export const Commands = _cmds
 export const TargetTypes = _ttypes
 export const ArgTypes = _atypes
+export const registerCommand = _regCmd

@@ -23,6 +23,12 @@ export const TargetTypes = {
   REGION: 'region',
 }
 
+export function registerCommand(id, command) {
+  if (Commands.find(c => c[0] === command.command))
+    throw new Error('Unable to overwrite existing command')
+  Commands.push([id, command])
+}
+
 export const Commands = [
   [
     'addSelection',
