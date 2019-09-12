@@ -27,16 +27,6 @@ export default function(message, _backgroundPage, sendResponse) {
   // The sender is always the background page since he is the one listening to the event
   // message.sender is the external extension id
   if (message.uri) {
-    if (
-      message.uri !== '/health' &&
-      message.uri !== '/register' &&
-      !Manager.hasPlugin(message.sender)
-    ) {
-      return sendResponse({
-        error:
-          'Plugin is not registered with Selenium IDE, send a request to /register first',
-      })
-    }
     router
       .run(message)
       .then(sendResponse)
