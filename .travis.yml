@@ -19,3 +19,5 @@ script:
   - yarn typecheck
   - yarn lint
   - yarn test
+env:
+  - CHROMEDRIVER_VERSION=LATEST
