@@ -22,6 +22,7 @@ import {
   Commands as _Commands,
   ArgTypes as _ArgTypes,
   TargetTypes,
+  registerCommand,
 } from '@seleniumhq/side-model'
 const EventEmitter = require('events')
 import { mergeEventEmitter } from '../../../common/events'
@@ -259,6 +260,7 @@ class CommandList {
       throw new Error(`Command with the id ${id} already exists`)
     } else {
       this.list.set(id, name)
+      registerCommand(id, name)
     }
   }
 

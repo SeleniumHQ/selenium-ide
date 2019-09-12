@@ -24,7 +24,7 @@ router.use(undefined, apiv1)
 
 export default function(message, _backgroundPage, sendResponse) {
   // The sender is always the background page since he is the one listening to the event
-  // message.id is the external extension id
+  // message.sender is the external extension id
   if (message.uri) {
     router
       .run(message)

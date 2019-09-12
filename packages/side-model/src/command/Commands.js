@@ -23,6 +23,12 @@ export const TargetTypes = {
   REGION: 'region',
 }
 
+export function registerCommand(id, command) {
+  if (Commands.find(c => c[0] === command.command))
+    throw new Error('Unable to overwrite existing command')
+  Commands.push([id, command])
+}
+
 export const Commands = [
   [
     'addSelection',
@@ -525,6 +531,7 @@ export const Commands = [
         the result of the provided conditional expression is true, it starts 
         the do loop over.  Otherwise it ends the loop.`,
       target: ArgTypes.conditionalExpression,
+      value: { isOptional: true, ...ArgTypes.loopLimit },
     },
   ],
   [
