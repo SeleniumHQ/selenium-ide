@@ -68,7 +68,9 @@ router.post('/project', (req, res) => {
     if (!UiState.isSaved()) {
       ModalState.showAlert({
         title: 'Open project without saving',
-        description: `${plugin.name} is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
+        description: `${
+          plugin.name
+        } is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       }).then(result => {
