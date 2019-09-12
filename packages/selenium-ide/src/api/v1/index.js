@@ -63,7 +63,7 @@ router.get('/project', (_req, res) => {
 })
 
 router.post('/project', (req, res) => {
-  if (req.id) {
+  if (req.project) {
     const plugin = Manager.getPlugin(req.sender)
     if (!UiState.isSaved()) {
       ModalState.showAlert({
