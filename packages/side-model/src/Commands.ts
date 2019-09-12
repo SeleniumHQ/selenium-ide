@@ -348,6 +348,7 @@ export default {
         the result of the provided conditional expression is true, it starts 
         the do loop over.  Otherwise it ends the loop.`,
     target: ArgTypes.conditionalExpression,
+    value: ArgTypes.loopLimit,
   },
   run: {
     name: 'run',
