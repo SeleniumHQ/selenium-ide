@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "chromedriver": "^76.0.1",
-    "electron": "^6.0.7",
+    "electron": "^6.0.8",
     "selenium-webdriver": "^4.0.0-alpha.5"
   }
 }
