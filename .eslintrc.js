@@ -66,6 +66,7 @@ module.exports = {
       {
         convertPath: {
           'src/**/*.js': ['src/(.+)$', 'dist/$1'],
+          'src/**/*.ts': ['src/(.+)ts$', 'dist/$1js'],
         },
       },
     ],
