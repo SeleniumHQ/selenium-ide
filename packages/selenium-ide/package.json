@@ -29,6 +29,9 @@
     "win": {
       "target": "nsis"
     },
+    "linux": {
+      "target": "AppImage"
+    },
     "fileAssociations": [
       {
         "ext": "side",
