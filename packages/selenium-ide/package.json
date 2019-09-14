@@ -1,5 +1,5 @@
 {
-  "name": "@seleniumhq/selenium-ide",
+  "name": "selenium-ide",
   "version": "3.5.10",
   "private": true,
   "description": "Selenium IDE electron app",
@@ -7,7 +7,8 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "electron src/index.js"
+    "start": "electron src/index.js",
+    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\")"
   },
   "main": "src/index.js",
   "repository": {
@@ -17,9 +18,35 @@
   "bugs": {
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
+  "build": {
+    "appId": "org.seleniumhq.selenium-ide",
+    "productName": "Selenium IDE",
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "darkModeSupport": true
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "fileAssociations": [
+      {
+        "ext": "side",
+        "name": "Selenium IDE 3 project",
+        "role": "Editor"
+      },
+      {
+        "ext": "sideproj",
+        "name": "Selenium IDE project",
+        "role": "Editor"
+      }
+    ]
+  },
   "dependencies": {
     "chromedriver": "^76.0.1",
-    "electron": "^6.0.8",
     "selenium-webdriver": "^4.0.0-alpha.5"
+  },
+  "devDependencies": {
+    "electron": "^6.0.8",
+    "electron-builder": "^21.2.0"
   }
 }
