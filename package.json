@@ -1,5 +1,5 @@
 {
-  "name": "selenium-ide",
+  "name": "selenium-ide-monorepo",
   "repository": "git@github.com:SeleniumHQ/selenium-ide.git",
   "license": "Apache-2.0",
   "private": true,
