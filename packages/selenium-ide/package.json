@@ -22,6 +22,7 @@
     "appId": "org.seleniumhq.selenium-ide",
     "productName": "Selenium IDE",
     "mac": {
+      "target": "dmg",
       "category": "public.app-category.developer-tools",
       "darkModeSupport": true
     },
