@@ -53,6 +53,12 @@ module.exports = {
     'constructor-super': 'error',
     'valid-typeof': 'error',
     'no-only-tests/no-only-tests': 'error',
+    'node/no-unpublished-require': [
+      'error',
+      {
+        allowModules: ['electron'],
+      },
+    ],
     'node/no-unsupported-features/es-syntax': 0,
     'node/no-unsupported-features/node-builtins': 0,
     'node/shebang': [
