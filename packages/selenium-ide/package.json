@@ -10,7 +10,7 @@
     "start": "electron src/main/index.js",
     "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never"
   },
-  "main": "src/index.js",
+  "main": "src/main/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
