@@ -29,15 +29,15 @@
     "babel-loader": "^8.0.5",
     "chromedriver": "^76.0.1",
     "copy-webpack-plugin": "^5.0.2",
-    "engine.io": "^3.3.2",
+    "engine.io": "^3.4.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "uglifyjs-webpack-plugin": "^2.1.2",
-    "webpack": "^4.39.3",
+    "webpack": "^4.40.2",
     "webpack-cli": "^3.3.8"
   },
   "dependencies": {
     "@medv/finder": "^1.1.1",
-    "engine.io-client": "^3.3.2",
+    "engine.io-client": "^3.4.0",
     "scroll-into-view-if-needed": "^2.2.20",
     "ua-parser-js": "^0.7.19",
     "webextension-polyfill": "^0.4.0"
