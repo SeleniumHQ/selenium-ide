@@ -8,7 +8,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "electron src/index.js",
-    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\")"
+    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never"
   },
   "main": "src/index.js",
   "repository": {
