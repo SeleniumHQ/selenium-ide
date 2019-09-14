@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from '..'
+import { Commands, ArgTypes } from '../src'
 
 describe('module', () => {
   it('should export the correct values', () => {
