@@ -9,11 +9,12 @@
     "test": "jest",
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
-    "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"packages/*/src/**/*.ts\" \"packages/*/__tests__/**/*.ts\" --ignore-pattern=\"node_modules\"",
+    "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext js --ext ts \"**/*.js\" \"**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "watch": "lerna run --no-bail --parallel watch",
     "preinstall": "node ./scripts/check-yarn.js"
   },
+  "files": [],
   "jest": {
     "testURL": "http://localhost/index.html",
     "moduleNameMapper": {

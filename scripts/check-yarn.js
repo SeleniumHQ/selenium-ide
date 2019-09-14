@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable */
 'use strict'
 
 if (!/yarn\.js$/.test(process.env.npm_execpath)) {
