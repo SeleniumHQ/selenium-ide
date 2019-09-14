@@ -1,3 +1,4 @@
+const path = require('path')
 const { app, BrowserWindow } = require('electron')
 const webdriver = require('selenium-webdriver')
 const chromedriver = require('chromedriver')
@@ -13,7 +14,7 @@ app.on('ready', async () => {
   })
 
   // and load the index.html of the app.
-  win.loadFile(__dirname + '/index.html')
+  win.loadFile(path.resolve(__dirname, '../renderer/index.html'))
 
   win.on('close', () => {
     win = null
