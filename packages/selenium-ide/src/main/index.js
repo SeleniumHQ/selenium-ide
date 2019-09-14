@@ -30,7 +30,7 @@ app.on('ready', async () => {
 
   chromedriver.start()
 
-  const driver = new webdriver.Builder()
+  const driver = await new webdriver.Builder()
     // The "9515" is the port opened by chrome driver.
     .usingServer('http://localhost:9515')
     .withCapabilities({
@@ -40,7 +40,7 @@ app.on('ready', async () => {
         windowTypes: ['webview'],
       },
     })
-    .forBrowser('electron')
+    .forBrowser('chrome')
     .build()
 
   await driver.executeScript(
