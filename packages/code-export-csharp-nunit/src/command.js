@@ -112,10 +112,10 @@ export const emitters = {
   waitForElementNotEditable: emitWaitForElementNotEditable,
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
-  webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
-  webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
-  webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
-  webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
+  webDriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  webDriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
+  webDriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
+  webDriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
   while: emitControlFlowWhile,
 }
 
@@ -137,30 +137,30 @@ function canEmit(commandName) {
 }
 
 function variableLookup(varName) {
-  return `vars.get("${varName}").toString()`
+  return `vars["${varName}"].ToString()`
 }
 
 function variableSetter(varName, value) {
-  return varName ? `vars.put("${varName}", ${value});` : ''
+  return varName ? `vars.Add("${varName}", ${value});` : ''
 }
 
+// TODO: add `using System.Threading;` to deps
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
     return `public String ${name}(int timeout) {`
   }
   const commands = [
     { level: 0, statement: 'try {' },
-    { level: 1, statement: 'Thread.sleep(timeout);' },
-    { level: 0, statement: '} catch (InterruptedException e) {' },
-    { level: 1, statement: 'e.printStackTrace();' },
+    { level: 1, statement: 'Thread.Sleep(timeout);' },
+    { level: 0, statement: '} catch(Exception e) {' },
+    { level: 1, statement: 'Console.WriteLine("{0} Exception caught.", e);' },
     { level: 0, statement: '}' },
-    { level: 0, statement: 'Set<String> whNow = driver.getWindowHandles();' },
+    { level: 0, statement: 'var whNow = Driver.WindowHandles;' },
     {
       level: 0,
-      statement:
-        'Set<String> whThen = (Set<String>) vars.get("window_handles");',
+      statement: 'var whThen = vars["window_handles"];',
     },
-    { level: 0, statement: 'if (whNow.size() > whThen.size()) {' },
+    { level: 0, statement: 'if (whNow.Count > whThen.Count) {' },
     { level: 1, statement: 'whNow.removeAll(whThen);' },
     { level: 0, statement: '}' },
     { level: 0, statement: 'return whNow.iterator().next();' },
@@ -174,7 +174,7 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `vars.put("window_handles", driver.getWindowHandles());\n${await emittedCommand}\nvars.put("${
+    `vars.Add("window_handles", Driver.WindowHandles);\n${await emittedCommand}\nvars.Add("${
       command.windowHandleName
     }", waitForWindow(${command.windowTimeout}));`
   )
@@ -182,22 +182,22 @@ async function emitNewWindowHandling(command, emittedCommand) {
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `assertEquals(vars.get("${varName}").toString(), "${value}");`
+    `Assert.That(vars["${varName}"].ToString(), Is.EqualTo("${value}"));`
   )
 }
 
 function emitAssertAlert(alertText) {
   return Promise.resolve(
-    `assertThat(driver.switchTo().alert().getText(), is("${alertText}"));`
+    `Assert.That(Driver.SwitchTo().Alert().Text, Is.EqualTo("${alertText}"));`
   )
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
   const commands = [
     { level: 0, statement: '{' },
-    { level: 1, statement: 'Alert alert = driver.switchTo().alert();' },
-    { level: 1, statement: `alert.sendKeys("${textToSend}")` },
-    { level: 1, statement: 'alert.accept();' },
+    { level: 1, statement: 'Alert alert = Driver.SwitchTo().Alert();' },
+    { level: 1, statement: `alert.SendKeys("${textToSend}")` },
+    { level: 1, statement: 'alert.Accept();' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -208,12 +208,12 @@ async function emitCheck(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `var element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'if (!element.isSelected()) {' },
-    { level: 2, statement: 'element.click();' },
+    { level: 1, statement: 'if (!element.Selected) {' },
+    { level: 2, statement: 'element.Click();' },
     { level: 1, statement: '}' },
     { level: 0, statement: '}' },
   ]
@@ -221,21 +221,21 @@ async function emitCheck(locator) {
 }
 
 function emitChooseCancelOnNextConfirmation() {
-  return Promise.resolve(`driver.switchTo().alert().dismiss();`)
+  return Promise.resolve(`Driver.SwitchTo().Alert().Dismiss();`)
 }
 
 function emitChooseOkOnNextConfirmation() {
-  return Promise.resolve(`driver.switchTo().alert().accept();`)
+  return Promise.resolve(`Driver.SwitchTo().Alert().Accept();`)
 }
 
 async function emitClick(target) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(target)}).click();`
+    `Driver.FindElement(${await location.emit(target)}).Click();`
   )
 }
 
 async function emitClose() {
-  return Promise.resolve(`driver.close();`)
+  return Promise.resolve(`Driver.Close();`)
 }
 
 function generateExpressionScript(script) {
@@ -294,7 +294,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection = (ArrayList) vars.get("${collectionVarName}");`,
+        statement: `ArrayList collection = (ArrayList) vars["${collectionVarName}"];`,
       },
       {
         level: 0,
@@ -302,7 +302,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `vars.put("${iteratorVarName}", collection.get(i));`,
+        statement: `vars.Add("${iteratorVarName}", collection.get(i));`,
       },
     ],
   })
@@ -339,12 +339,12 @@ async function emitDoubleClick(target) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         target
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
-    { level: 1, statement: 'builder.doubleClick(element).perform();' },
+    { level: 1, statement: 'Actions builder = new Actions(Driver);' },
+    { level: 1, statement: 'builder.doubleClick(element).Perform();' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -355,25 +355,25 @@ async function emitDragAndDrop(dragged, dropped) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement dragged = driver.findElement(${await location.emit(
+      statement: `WebElement dragged = Driver.FindElement(${await location.emit(
         dragged
       )});`,
     },
     {
       level: 1,
-      statement: `WebElement dropped = driver.findElement(${await location.emit(
+      statement: `WebElement dropped = Driver.FindElement(${await location.emit(
         dropped
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
-    { level: 1, statement: 'builder.dragAndDrop(dragged, dropped).perform();' },
+    { level: 1, statement: 'Actions builder = new Actions(Driver);' },
+    { level: 1, statement: 'builder.dragAndDrop(dragged, dropped).Perform();' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitEcho(message) {
-  const _message = message.startsWith('vars.get') ? message : `"${message}"`
+  const _message = message.startsWith('vars[') ? message : `"${message}"`
   return Promise.resolve(`System.out.println(${_message});`)
 }
 
@@ -382,7 +382,7 @@ async function emitEditContent(locator, content) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
@@ -411,7 +411,7 @@ async function emitExecuteAsyncScript(script, varName) {
 
 function generateScriptArguments(script) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `vars.get("${varName}")`)
+    .map(varName => `vars["${varName}"]`)
     .join(',')}`
 }
 
@@ -420,14 +420,14 @@ async function emitMouseDown(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(Driver);' },
     {
       level: 1,
-      statement: 'builder.moveToElement(element).clickAndHold().perform();',
+      statement: 'builder.MoveToElement(element).ClickAndHold().Perform();',
     },
     { level: 0, statement: '}' },
   ]
@@ -439,12 +439,12 @@ async function emitMouseMove(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
-    { level: 1, statement: 'builder.moveToElement(element).perform();' },
+    { level: 1, statement: 'Actions builder = new Actions(Driver);' },
+    { level: 1, statement: 'builder.MoveToElement(element).Perform();' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -455,10 +455,10 @@ async function emitMouseOut() {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(By.tagName("body"));`,
+      statement: `WebElement element = Driver.FindElement(By.tagName("body"));`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
-    { level: 1, statement: 'builder.moveToElement(element, 0, 0).perform();' },
+    { level: 1, statement: 'Actions builder = new Actions(Driver);' },
+    { level: 1, statement: 'builder.MoveToElement(element, 0, 0).Perform();' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -469,14 +469,14 @@ async function emitMouseUp(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(Driver);' },
     {
       level: 1,
-      statement: 'builder.moveToElement(element).release().perform();',
+      statement: 'builder.MoveToElement(element).Release().Perform();',
     },
     { level: 0, statement: '}' },
   ]
@@ -487,13 +487,13 @@ function emitOpen(target) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
     : `"${global.baseUrl}${target}"`
-  return Promise.resolve(`driver.get(${url});`)
+  return Promise.resolve(`Driver.get(${url});`)
 }
 
 async function emitPause(time) {
   const commands = [
     { level: 0, statement: 'try {' },
-    { level: 1, statement: `Thread.sleep(${time});` },
+    { level: 1, statement: `Thread.Sleep(${time});` },
     { level: 0, statement: '} catch (InterruptedException e) {' },
     { level: 1, statement: 'e.printStackTrace();' },
     { level: 0, statement: '}' },
@@ -511,10 +511,11 @@ async function emitRunScript(script) {
   )
 }
 
+// TODO: add `System.Drawing` to deps
 async function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
   return Promise.resolve(
-    `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
+    `Driver.Manage().Window.Size = new Size(${width}, ${height});`
   )
 }
 
@@ -523,15 +524,15 @@ async function emitSelect(selectElement, option) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement dropdown = driver.findElement(${await location.emit(
+      statement: `WebElement dropdown = Driver.FindElement(${await location.emit(
         selectElement
       )});`,
     },
     {
       level: 1,
-      statement: `dropdown.findElement(${await selection.emit(
+      statement: `dropdown.FindElement(${await selection.emit(
         option
-      )}).click();`,
+      )}).Click();`,
     },
     { level: 0, statement: '}' },
   ]
@@ -540,10 +541,10 @@ async function emitSelect(selectElement, option) {
 
 async function emitSelectFrame(frameLocation) {
   if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
-    return Promise.resolve('driver.switchTo().defaultContent();')
+    return Promise.resolve('Driver.SwitchTo().DefaultContent();')
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
-      `driver.switchTo().frame(${Math.floor(
+      `Driver.SwitchTo().Frame(${Math.floor(
         frameLocation.split('index=')[1]
       )});`
     )
@@ -553,11 +554,11 @@ async function emitSelectFrame(frameLocation) {
         { level: 0, statement: '{' },
         {
           level: 1,
-          statement: `WebElement element = driver.findElement(${await location.emit(
+          statement: `WebElement element = Driver.FindElement(${await location.emit(
             frameLocation
           )});`,
         },
-        { level: 1, statement: 'driver.switchTo().frame(element);' },
+        { level: 1, statement: 'Driver.SwitchTo().Frame(element);' },
         { level: 0, statement: '}' },
       ],
     })
@@ -567,11 +568,11 @@ async function emitSelectFrame(frameLocation) {
 async function emitSelectWindow(windowLocation) {
   if (/^handle=/.test(windowLocation)) {
     return Promise.resolve(
-      `driver.switchTo().window(${windowLocation.split('handle=')[1]});`
+      `Driver.SwitchTo().Window(${windowLocation.split('handle=')[1]});`
     )
   } else if (/^name=/.test(windowLocation)) {
     return Promise.resolve(
-      `driver.switchTo().window("${windowLocation.split('name=')[1]}");`
+      `Driver.SwitchTo().Window("${windowLocation.split('name=')[1]}");`
     )
   } else if (/^win_ser_/.test(windowLocation)) {
     if (windowLocation === 'win_ser_local') {
@@ -581,9 +582,9 @@ async function emitSelectWindow(windowLocation) {
           {
             level: 1,
             statement:
-              'ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());',
+              'ArrayList<String> handles = new ArrayList<String>(Driver.getWindowHandles());',
           },
-          { level: 1, statement: 'driver.switchTo().window(handles.get(0));' },
+          { level: 1, statement: 'Driver.SwitchTo().Window(handles.get(0));' },
           { level: 0, statement: '}' },
         ],
       })
@@ -595,11 +596,11 @@ async function emitSelectWindow(windowLocation) {
           {
             level: 1,
             statement:
-              'ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());',
+              'ArrayList<String> handles = new ArrayList<String>(Driver.getWindowHandles());',
           },
           {
             level: 1,
-            statement: `driver.switchTo().window(handles.get(${index}));`,
+            statement: `Driver.SwitchTo().Window(handles.get(${index}));`,
           },
           { level: 0, statement: '}' },
         ],
@@ -616,7 +617,7 @@ function generateSendKeysInput(value) {
   if (typeof value === 'object') {
     return value
       .map(s => {
-        if (s.startsWith('vars.get')) {
+        if (s.startsWith('vars[')) {
           return s
         } else if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)[1]
@@ -627,7 +628,7 @@ function generateSendKeysInput(value) {
       })
       .join(', ')
   } else {
-    if (value.startsWith('vars.get')) {
+    if (value.startsWith('vars[')) {
       return value
     } else {
       return `"${value}"`
@@ -637,9 +638,9 @@ function generateSendKeysInput(value) {
 
 async function emitSendKeys(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(
+    `Driver.FindElement(${await location.emit(
       target
-    )}).sendKeys(${generateSendKeysInput(value)});`
+    )}).SendKeys(${generateSendKeysInput(value)});`
   )
 }
 
@@ -661,7 +662,7 @@ async function emitStoreAttribute(locator, varName) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         elementLocator
       )});`,
     },
@@ -681,27 +682,27 @@ async function emitStoreAttribute(locator, varName) {
 //}
 
 async function emitStoreText(locator, varName) {
-  const result = `driver.findElement(${await location.emit(locator)}).getText()`
+  const result = `Driver.FindElement(${await location.emit(locator)}).Text`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitStoreTitle(_, varName) {
-  return Promise.resolve(variableSetter(varName, 'driver.getTitle()'))
+  return Promise.resolve(variableSetter(varName, 'Driver.Title'))
 }
 
 async function emitStoreValue(locator, varName) {
-  const result = `driver.findElement(${await location.emit(
+  const result = `Driver.FindElement(${await location.emit(
     locator
-  )}).getAttribute("value")`
+  )}).GetAttribute("value")`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitStoreWindowHandle(varName) {
-  return Promise.resolve(variableSetter(varName, 'driver.getWindowHandle()'))
+  return Promise.resolve(variableSetter(varName, 'Driver.CurrentWindowHandle'))
 }
 
 async function emitStoreXpathCount(locator, varName) {
-  const result = `driver.findElements(${await location.emit(locator)}).size()`
+  const result = `Driver.FindElements(${await location.emit(locator)}).Count`
   return Promise.resolve(variableSetter(varName, result))
 }
 
@@ -713,9 +714,9 @@ async function emitSubmit(_locator) {
 
 async function emitType(target, value) {
   return Promise.resolve(
-    `driver.findElement(${await location.emit(
+    `Driver.FindElement(${await location.emit(
       target
-    )}).sendKeys(${generateSendKeysInput(value)});`
+    )}).SendKeys(${generateSendKeysInput(value)});`
   )
 }
 
@@ -724,12 +725,12 @@ async function emitUncheck(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'if (element.isSelected()) {' },
-    { level: 2, statement: 'element.click();' },
+    { level: 1, statement: 'if (element.Selected()) {' },
+    { level: 2, statement: 'element.Click();' },
     { level: 1, statement: '}' },
     { level: 0, statement: '}' },
   ]
@@ -738,9 +739,9 @@ async function emitUncheck(locator) {
 
 async function emitVerifyChecked(locator) {
   return Promise.resolve(
-    `assertTrue(driver.findElement(${await location.emit(
+    `assertTrue(Driver.FindElement(${await location.emit(
       locator
-    )}).isSelected());`
+    )}).Selected());`
   )
 }
 
@@ -749,14 +750,14 @@ async function emitVerifyEditable(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
     {
       level: 1,
       statement:
-        'Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;',
+        'Boolean isEditable = element.Enabled() && element.GetAttribute("readonly") == null;',
     },
     { level: 1, statement: 'assertTrue(isEditable);' },
     { level: 0, statement: '}' },
@@ -769,11 +770,11 @@ async function emitVerifyElementPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
+      statement: `List<WebElement> elements = Driver.FindElements(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'assert(elements.size() > 0);' },
+    { level: 1, statement: 'assert(elements.Count > 0);' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -784,11 +785,11 @@ async function emitVerifyElementNotPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
+      statement: `List<WebElement> elements = Driver.FindElements(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'assert(elements.size() == 0);' },
+    { level: 1, statement: 'assert(elements.Count == 0);' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -796,9 +797,9 @@ async function emitVerifyElementNotPresent(locator) {
 
 async function emitVerifyNotChecked(locator) {
   return Promise.resolve(
-    `assertFalse(driver.findElement(${await location.emit(
+    `assertFalse(Driver.FindElement(${await location.emit(
       locator
-    )}).isSelected());`
+    )}).Selected());`
   )
 }
 
@@ -807,14 +808,14 @@ async function emitVerifyNotEditable(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
     {
       level: 1,
       statement:
-        'Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;',
+        'Boolean isEditable = element.Enabled && element.GetAttribute("readonly") == null;',
     },
     { level: 1, statement: 'assertFalse(isEditable);' },
     { level: 0, statement: '}' },
@@ -827,15 +828,15 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `String value = driver.findElement(${await location.emit(
+      statement: `String value = Driver.FindElement(${await location.emit(
         locator
-      )}).getAttribute("value");`,
+      )}).GetAttribute("value");`,
     },
     {
       level: 1,
-      statement: `assertThat(value, is(not("${exporter.emit.text(
+      statement: `Assert.That(value, Is.Not.EqualTo("${exporter.emit.text(
         expectedValue
-      )}")));`,
+      )}"));`,
     },
     { level: 0, statement: '}' },
   ]
@@ -843,9 +844,9 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
 }
 
 async function emitVerifyNotText(locator, text) {
-  const result = `driver.findElement(${await location.emit(locator)}).getText()`
+  const result = `Driver.FindElement(${await location.emit(locator)}).Text`
   return Promise.resolve(
-    `assertThat(${result}, is(not("${exporter.emit.text(text)}")));`
+    `Assert.That(${result}, Is.Not.EqualTo("${exporter.emit.text(text)}"));`
   )
 }
 
@@ -854,11 +855,11 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `WebElement element = Driver.FindElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'String value = element.getAttribute("value");' },
+    { level: 1, statement: 'String value = element.GetAttribute("value");' },
     {
       level: 1,
       statement: `String locator = String.format("option[@value='%s']", value);`,
@@ -866,9 +867,12 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     {
       level: 1,
       statement:
-        'String selectedText = element.findElement(By.xpath(locator)).getText();',
+        'String selectedText = element.FindElement(By.xpath(locator)).Text;',
     },
-    { level: 1, statement: `assertThat(selectedText, is("${labelValue}"));` },
+    {
+      level: 1,
+      statement: `Assert.That(selectedText, Is.EqualTo("${labelValue}"));`,
+    },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({
@@ -882,9 +886,9 @@ async function emitVerifySelectedValue(locator, value) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(
-    `assertThat(driver.findElement(${await location.emit(
+    `Assert.That(Driver.FindElement(${await location.emit(
       locator
-    )}).getText(), is("${exporter.emit.text(text)}"));`
+    )}).Text, Is.EqualTo("${exporter.emit.text(text)}"));`
   )
 }
 
@@ -893,18 +897,20 @@ async function emitVerifyValue(locator, value) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `String value = driver.findElement(${await location.emit(
+      statement: `String value = Driver.FindElement(${await location.emit(
         locator
       )}).getAttribute("value");`,
     },
-    { level: 1, statement: `assertThat(value, is("${value}"));` },
+    { level: 1, statement: `Assert.That(value, Is.EqualTo("${value}"));` },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitVerifyTitle(title) {
-  return Promise.resolve(`assertThat(driver.getTitle(), is("${title}"));`)
+  return Promise.resolve(
+    `Assert.That(Driver.getTitle(), Is.EqualTo("${title}"));`
+  )
 }
 
 async function emitWaitForElementEditable(locator, timeout) {
@@ -912,15 +918,15 @@ async function emitWaitForElementEditable(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(Driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
+      statement: `wait.until(driver => driver.FindElement(${await location.emit(
         locator
-      )}));`,
+      )}).Enabled);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -936,13 +942,13 @@ async function emitWaitForElementPresent(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(Driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.presenceOfElementLocated(${await location.emit(
+      statement: `wait.until(driver => driver.FindElement(${await location.emit(
         locator
       )}));`,
     },
@@ -956,15 +962,15 @@ async function emitWaitForElementVisible(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(Driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
+      statement: `wait.until(driver => driver.FindElement(${await location.emit(
         locator
-      )}));`,
+      )}).Displayed);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -978,15 +984,15 @@ async function emitWaitForElementNotEditable(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(Driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(${await location.emit(
+      statement: `wait.until(driver => !driver.FindElement(${await location.emit(
         locator
-      )})));`,
+      )}).Enabled);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -1000,19 +1006,15 @@ async function emitWaitForElementNotPresent(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(Driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `wait.until(driver => !driver.FindElement(${await location.emit(
         locator
-      )});`,
-    },
-    {
-      level: 1,
-      statement: 'wait.until(ExpectedConditions.stalenessOf(element));',
+      )}));`,
     },
     { level: 0, statement: '}' },
   ]
@@ -1021,20 +1023,21 @@ async function emitWaitForElementNotPresent(locator, timeout) {
   })
 }
 
+// TODO: add `using OpenQA.Selenium.Support.UI;` to deps
 async function emitWaitForElementNotVisible(locator, timeout) {
   const commands = [
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(Driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.invisibilityOfElementLocated(${await location.emit(
+      statement: `wait.until(driver => !driver.FindElement(${await location.emit(
         locator
-      )}));`,
+      )}).Displayed);`,
     },
     { level: 0, statement: '}' },
   ]
