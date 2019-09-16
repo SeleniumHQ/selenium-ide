@@ -34,7 +34,7 @@ export default function(message, _backgroundPage, sendResponse) {
     ) {
       return sendResponse({
         error:
-        'Plugin is not registered with Selenium IDE, send a request to /register first',
+          'Plugin is not registered with Selenium IDE, send a request to /register first',
       })
     }
     router

@@ -16,8 +16,6 @@
 // under the License.
 
 import Route from './route'
-import Manager from '../plugin/manager'
-
 
 export default class Router {
   constructor() {
