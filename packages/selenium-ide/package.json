@@ -8,8 +8,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "electron src/main/index.js",
-    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
-    "postinstall": "mkdir -p files && node scripts/download-driver.js"
+    "build": "yarn install-chromedriver && electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "install-chromedriver": "mkdir -p files && node scripts/download-driver.js"
   },
   "main": "src/main/index.js",
   "repository": {
