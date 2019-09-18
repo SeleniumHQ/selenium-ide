@@ -8,7 +8,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "electron src/main/index.js",
-    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never"
+    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "postinstall": "mkdir -p files && node scripts/download-driver.js"
   },
   "main": "src/main/index.js",
   "repository": {
@@ -21,6 +22,7 @@
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
     "productName": "Selenium IDE",
+    "asarUnpack": "files/*",
     "mac": {
       "target": "dmg",
       "category": "public.app-category.developer-tools",
@@ -46,11 +48,13 @@
     ]
   },
   "dependencies": {
-    "chromedriver": "^77.0.0",
+    "@seleniumhq/get-driver": "^3.5.10",
     "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
     "electron": "^6.0.9",
-    "electron-builder": "^21.2.0"
+    "electron-builder": "^21.2.0",
+    "fs-extra": "^8.1.0"
   }
 }
