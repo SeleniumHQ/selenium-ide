@@ -20,6 +20,7 @@ import * as fs from 'fs-extra'
 import * as stream from 'stream'
 import fetch from 'node-fetch'
 import * as unzipper from 'unzipper'
+import tar from 'tar'
 import {
   resolveDriverUrl,
   resolveDriverName,
@@ -53,22 +54,39 @@ export default async function downloadDriver({
   if (!res.ok) {
     throw new Error('Failed to download driver')
   }
-  res.body.pipe(unzipper.Parse()).pipe(
-    new stream.Transform({
-      objectMode: true,
-      transform: function(entry, _e, cb) {
-        const fileName = entry.path
-        if (fileName === 'chromedriver' || fileName === 'chromedriver.exe') {
-          entry
-            .pipe(fs.createWriteStream(downloadDestination))
-            .on('finish', end)
-        } else {
-          entry.autodrain()
-          cb()
-        }
-      },
-    })
-  )
+
+  if (url.endsWith('.zip')) {
+    res.body.pipe(unzipper.Parse()).pipe(
+      new stream.Transform({
+        objectMode: true,
+        transform: function(entry, _e, cb) {
+          const fileName = entry.path
+          if (
+            fileName === 'chromedriver' ||
+            fileName === 'chromedriver.exe' ||
+            fileName === 'geckodriver' ||
+            fileName === 'geckodriver.exe'
+          ) {
+            entry
+              .pipe(fs.createWriteStream(downloadDestination))
+              .on('finish', end)
+          } else {
+            entry.autodrain()
+            cb()
+          }
+        },
+      })
+    )
+  } else {
+    res.body.pipe(
+      tar.t({
+        filter: (path, _stat) => path === 'geckodriver',
+        onentry: entry => {
+          entry.pipe(fs.createWriteStream(downloadDestination)).on('close', end)
+        },
+      })
+    )
+  }
   await p
   await fs.chmod(downloadDestination, 0o755)
   return downloadDestination

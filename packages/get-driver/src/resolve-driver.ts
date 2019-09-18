@@ -37,6 +37,15 @@ export async function resolveDriverUrl({
         version
       )}/chromedriver_${getChromedriverPlatformName(platform)}.zip`
     }
+    case 'firefox': {
+      return `https://github.com/mozilla/geckodriver/releases/download/v${getGeckodriverVersion(
+        version
+      )}/geckodriver-v${getGeckodriverVersion(
+        version
+      )}-${getGeckodriverPlatformName(platform, arch)}.${
+        platform === 'win32' ? 'zip' : 'tar.gz'
+      }`
+    }
   }
 }
 
@@ -54,13 +63,14 @@ export function resolveDriverName({
   }`
 }
 
-export type Browser = 'electron' | 'chrome'
+export type Browser = 'electron' | 'chrome' | 'firefox'
 
 export type Platform = NodeJS.Platform
 
 const DriverNames: BrowserToDriver = {
   electron: 'chromedriver',
   chrome: 'chromedriver',
+  firefox: 'geckodriver',
 }
 
 function getChromedriverPlatformName(platform: Platform) {
@@ -79,6 +89,22 @@ async function getChromedriverVersion(version: string) {
     `https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${major}`
   )
   return await res.text()
+}
+
+function getGeckodriverPlatformName(platform: Platform, arch: string) {
+  if (platform === 'darwin') {
+    return 'macos'
+  } else if (platform === 'win32') {
+    return arch === 'x64' ? 'win64' : 'win32'
+  } else {
+    return arch.includes('64') ? 'linux64' : 'linux32'
+  }
+}
+
+function getGeckodriverVersion(_version: string) {
+  // https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html#supported-platforms
+  // over 10 majors have been supported via latest, returning the latest one at the time of this writing
+  return '0.25.0'
 }
 
 type MappedBrowserNames = { [key in Browser]: string }

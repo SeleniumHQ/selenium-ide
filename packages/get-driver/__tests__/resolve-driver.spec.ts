@@ -46,6 +46,18 @@ describe('resolve-driver', () => {
         'https://chromedriver.storage.googleapis.com/78.0.3904.11/chromedriver_mac64.zip'
       )
     })
+    it('should resolve a download link of a firefox driver', async () => {
+      expect(
+        await resolveDriverUrl({
+          browser: 'firefox',
+          platform: 'darwin',
+          arch: os.arch(),
+          version: '69.0.1',
+        })
+      ).toBe(
+        'https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-macos.tar.gz'
+      )
+    })
   })
   describe('resolveDriverName', () => {
     it('should resolve a driver name for mac (POSIX based)', () => {

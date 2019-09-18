@@ -56,7 +56,7 @@ describe('download-driver', () => {
     expect(stdout).toEqual(expect.stringMatching(/chromedriver/i))
   })
 
-  it('should download the driver for the current platform', async () => {
+  it('should download chromedriver for the current platform', async () => {
     expect.assertions(2)
     const chromedriver = await downloadDriver({
       downloadDirectory: tempDir,
@@ -80,6 +80,32 @@ describe('download-driver', () => {
     })
     await p
     expect(stdout).toEqual(expect.stringMatching(/chromedriver/i))
+  })
+
+  it('should download geckodriver for the current platform', async () => {
+    expect.assertions(2)
+    const geckodriver = await downloadDriver({
+      downloadDirectory: tempDir,
+      browser: 'firefox',
+      platform: os.platform(),
+      arch: os.arch(),
+      version: '69.0.1',
+    })
+    const cp = spawn(geckodriver, ['--version'])
+    let stdout = ''
+    let processExit: () => {}
+    const p = new Promise(res => {
+      processExit = res as () => {}
+    })
+    cp.stdout.on('data', data => {
+      stdout += data
+    })
+    cp.on('close', code => {
+      expect(code).toBe(0)
+      processExit()
+    })
+    await p
+    expect(stdout).toEqual(expect.stringMatching(/geckodriver/i))
   })
 
   it('should fail to download a non-existent driver', async () => {

@@ -27,11 +27,13 @@
   "dependencies": {
     "fs-extra": "^8.1.0",
     "node-fetch": "^2.6.0",
+    "tar": "^4.4.11",
     "unzipper": "^0.10.5"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
     "@types/node-fetch": "^2.5.0",
+    "@types/tar": "^4.0.3",
     "@types/unzipper": "^0.10.0"
   }
 }
