@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function resolveDriverUrl({
+import fetch from 'node-fetch'
+
+export async function resolveDriverUrl({
   browser,
   platform,
   arch,
@@ -29,6 +31,11 @@ export function resolveDriverUrl({
   switch (browser) {
     case 'electron': {
       return `https://github.com/electron/electron/releases/download/v${version}/chromedriver-v${version}-${platform}-${arch}.zip`
+    }
+    case 'chrome': {
+      return `https://chromedriver.storage.googleapis.com/${await getChromedriverVersion(
+        version
+      )}/chromedriver_${getChromedriverPlatformName(platform)}.zip`
     }
   }
 }
@@ -47,12 +54,31 @@ export function resolveDriverName({
   }`
 }
 
-export type Browser = 'electron'
+export type Browser = 'electron' | 'chrome'
 
 export type Platform = NodeJS.Platform
 
 const DriverNames: BrowserToDriver = {
   electron: 'chromedriver',
+  chrome: 'chromedriver',
+}
+
+function getChromedriverPlatformName(platform: Platform) {
+  if (platform === 'darwin') {
+    return 'mac64'
+  } else if (platform === 'win32') {
+    return 'win32'
+  } else {
+    return 'linux64'
+  }
+}
+
+async function getChromedriverVersion(version: string) {
+  const major = version.split('.')[0]
+  const res = await fetch(
+    `https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${major}`
+  )
+  return await res.text()
 }
 
 type MappedBrowserNames = { [key in Browser]: string }

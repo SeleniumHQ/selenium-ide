@@ -44,7 +44,7 @@ export default async function downloadDriver({
   const p = new Promise(res => {
     end = res as () => Promise<undefined>
   })
-  const url = resolveDriverUrl({ browser, platform, arch, version })
+  const url = await resolveDriverUrl({ browser, platform, arch, version })
   const downloadDestination = path.join(
     downloadDirectory,
     resolveDriverName({ browser, platform, version })
@@ -58,7 +58,7 @@ export default async function downloadDriver({
       objectMode: true,
       transform: function(entry, _e, cb) {
         const fileName = entry.path
-        if (fileName === 'chromedriver') {
+        if (fileName === 'chromedriver' || fileName === 'chromedriver.exe') {
           entry
             .pipe(fs.createWriteStream(downloadDestination))
             .on('finish', end)

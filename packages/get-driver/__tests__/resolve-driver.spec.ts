@@ -20,9 +20,9 @@ import { resolveDriverUrl, resolveDriverName } from '../src/resolve-driver'
 
 describe('resolve-driver', () => {
   describe('resolveDriverUrl', () => {
-    it('should resolve a download link of an electron driver', () => {
+    it('should resolve a download link of an electron driver', async () => {
       expect(
-        resolveDriverUrl({
+        await resolveDriverUrl({
           browser: 'electron',
           platform: os.platform(),
           arch: os.arch(),
@@ -32,6 +32,18 @@ describe('resolve-driver', () => {
         `https://github.com/electron/electron/releases/download/v6.0.9/chromedriver-v6.0.9-${
           os.platform
         }-${os.arch()}.zip`
+      )
+    })
+    it('should resolve a download link of a chrome driver', async () => {
+      expect(
+        await resolveDriverUrl({
+          browser: 'chrome',
+          platform: 'darwin',
+          arch: os.arch(),
+          version: '78.0.3904.11',
+        })
+      ).toBe(
+        'https://chromedriver.storage.googleapis.com/78.0.3904.11/chromedriver_mac64.zip'
       )
     })
   })
