@@ -15,4 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+const { makeError: _m } = jest.requireActual('../sh')
+
 export const sh = jest.fn()
+export const makeError = _m

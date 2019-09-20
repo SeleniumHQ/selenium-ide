@@ -47,4 +47,12 @@ describe('sh', () => {
       expect(err.code).toBe(1)
     }
   })
+  it('should fail to start a process that does not exist', async () => {
+    expect.assertions(1)
+    try {
+      await sh('command-that-does-not-exist')
+    } catch (err) {
+      expect(err.code).toBe(1)
+    }
+  })
 })

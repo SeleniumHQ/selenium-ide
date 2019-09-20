@@ -44,17 +44,31 @@ export async function sh(
     if (!code) {
       resolve({ stdout, stderr })
     } else {
-      const err = new Error(`Process exited with code ${code}`) as Error &
-        Output &
-        ErrorWithExitCode
-      err.stdout = stdout
-      err.stderr = stderr
-      err.code = code
-      reject(err)
+      reject(
+        makeError(`Process exited with code ${code}`, code, stdout, stderr)
+      )
     }
   })
 
+  cp.on('error', error => {
+    reject(makeError(error.message, 1, stdout, stderr))
+  })
+
   return await p
+}
+
+export function makeError(
+  message: string,
+  code: number,
+  stdout: string,
+  stderr: string
+) {
+  const err = new Error(message) as Error & Output & ErrorWithExitCode
+  err.stdout = stdout
+  err.stderr = stderr
+  err.code = code
+
+  return err
 }
 
 interface Output {

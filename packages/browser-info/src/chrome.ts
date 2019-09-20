@@ -46,11 +46,13 @@ export async function getBrowserInfo(channel?: ChromeChannel) {
       }
     }
   }
-  return (await Promise.all([
-    getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
-    getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
-    getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
-  ])).filter(Boolean)
+  return (await Promise.all(
+    [
+      getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
+      getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
+      getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
+    ].map(p => p.catch(() => {}))
+  )).filter(Boolean)
 }
 
 async function getChromeInfo(installLocations: string[]): Promise<BrowserInfo> {
