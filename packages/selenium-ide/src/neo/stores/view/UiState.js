@@ -67,6 +67,8 @@ class UiState {
   options = {}
   @observable
   pauseNotificationSent = false
+  @observable
+  isControlled = null
 
   constructor() {
     this.suiteStates = {}
@@ -530,6 +532,11 @@ class UiState {
   @action.bound
   saved() {
     this._project.saved()
+  }
+
+  @action.bound
+  startConnection() {
+    this.isControlled = true
   }
 }
 
