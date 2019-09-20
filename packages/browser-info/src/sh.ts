@@ -17,6 +17,7 @@
 
 import { spawn } from 'child_process'
 
+// TODO: rename this since we aren't actually spawning sh
 export async function sh(
   command: string,
   args: string[] = [],
