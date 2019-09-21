@@ -25,7 +25,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
-    "@testing-library/dom": "^6.2.0",
+    "@testing-library/dom": "^6.3.0",
     "babel-loader": "^8.0.5",
     "chromedriver": "^77.0.0",
     "copy-webpack-plugin": "^5.0.2",
