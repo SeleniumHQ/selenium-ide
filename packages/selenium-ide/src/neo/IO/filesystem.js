@@ -73,7 +73,12 @@ export function loadAsText(blob) {
 export function saveProject(_project) {
   const project = _project.toJS()
   if (UiState.isControlled) {
-    browser.runtime.sendMessage(Manager.controller.id, JSON.stringify(project))
+    const saveMessage = {
+      action: "event",
+      event: "ProjectLoaded",
+      project: JSON.stringify(project)
+    }
+    browser.runtime.sendMessage(Manager.controller.id, saveMessage)
   } else {
     downloadProject(project)
   }
