@@ -74,9 +74,9 @@ export function saveProject(_project) {
   const project = _project.toJS()
   if (UiState.isControlled) {
     const saveMessage = {
-      action: "event",
-      event: "projectLoaded",
-      project: project
+      action: 'event',
+      event: 'projectLoaded',
+      project: project,
     }
     browser.runtime.sendMessage(Manager.controller.id, saveMessage)
   } else {
