@@ -173,7 +173,7 @@ function preprocessParameter(param, preprocessor, { ignoreEscaping }) {
 function escapeString(string, { preprocessor, ignoreEscaping }) {
   if (ignoreEscaping) return string
   else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
-    return string.replace(/"/g, "'")
+    return string.replace(/`/g, "\\`")
   else return stringEscape(string)
 }
 
