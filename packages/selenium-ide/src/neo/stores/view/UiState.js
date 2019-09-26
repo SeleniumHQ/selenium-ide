@@ -538,11 +538,6 @@ class UiState {
   startConnection() {
     this.isControlled = true
   }
-
-  @action.bound
-  endConnection() {
-    this.isControlled = null
-  }
 }
 
 if (!window._state) window._state = new UiState()
