@@ -37,7 +37,9 @@ const controlledOnly = apiFn => {
       Manager.controller &&
       Manager.controller.connectionId != req.connectionId
     )
-      throw new Error('Selenium IDE is controlled by a different extension')
+      res({
+        errorcode: 'AlreadyControlledException'
+      })
     return apiFn(req, res)
   }
 }
@@ -90,7 +92,11 @@ router.post('/control', (req, res) => {
       Manager.controller.connectionId != req.connectionId) ||
     !Manager.controller
   ) {
-    if (!req.connectionId) throw new Error('No Connection Id found')
+    if (!req.connectionId) {
+      res({
+        errorcode: 'ConnectionIdUndefined'
+      })
+    }
     if (!ModalState.welcomeState.completed) {
       ModalState.hideWelcome()
     }
@@ -131,15 +137,27 @@ router.post('/connect', (req, res) => {
     UiState.startConnection()
     Manager.registerPlugin(req.controller)
     res(true)
-  } else throw new Error('No connection Id specified')
+  } else {
+    res({
+      errorcode: 'ConnectionIdUndefined'
+    })
+  }
 })
 
 router.post(
   '/project',
   controlledOnly((req, res) => {
     const plugin = Manager.getPlugin(req.sender)
-    if (!plugin) throw new Error('Plugin is not registered')
-    if (!req.project) throw new Error('Porject field not defined')
+    if (!plugin){
+      res({
+        errorcode: 'PluginNotRegistered'
+      })
+    }
+    if (!req.project){
+      res({
+        errorcode: 'ProjectUndefined'
+      })
+    }
     if (req.project) {
       if (!UiState.isSaved()) {
         WindowSession.focusIDEWindow()
