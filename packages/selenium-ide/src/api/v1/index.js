@@ -172,7 +172,6 @@ router.post('/close', (req, res) => {
           res(true)
         }
       })
-
       res(false)
     } else {
       window.close()
