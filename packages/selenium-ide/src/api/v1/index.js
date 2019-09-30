@@ -135,7 +135,7 @@ router.post('/control', (req, res) => {
   checkControl(req)
     .then(() => {
       if (UiState.isControlled) {
-        // Already in control mode with the same connection id.
+        // Already in control mode with the same connection id. 
         res(true)
       } else {
         // Already in non-control mode.
