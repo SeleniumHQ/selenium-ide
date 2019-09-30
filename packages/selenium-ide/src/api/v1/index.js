@@ -135,7 +135,7 @@ router.post('/control', (req, res) => {
   checkControl(req)
     .then(() => {
       if (UiState.isControlled) {
-        // Already in control mode with the same connection id.
+        // Already in control mode with the same connection id. 
         res(true)
       } else {
         // Already in non-control mode.
@@ -163,7 +163,9 @@ router.post('/close', (req, res) => {
     if (!UiState.isSaved()) {
       ModalState.showAlert({
         title: 'Close project without saving',
-        description: `${plugin.name} is trying to close a project, are you sure you want to load this project and lose all unsaved changes?`,
+        description: `${
+          plugin.name
+        } is trying to close a project, are you sure you want to load this project and lose all unsaved changes?`,
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       }).then(result => {
@@ -206,7 +208,9 @@ router.post('/project', (req, res) => {
         WindowSession.focusIDEWindow()
         ModalState.showAlert({
           title: 'Open project without saving',
-          description: `${plugin.name} is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
+          description: `${
+            plugin.name
+          } is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
           confirmLabel: 'proceed',
           cancelLabel: 'cancel',
         }).then(result => {
