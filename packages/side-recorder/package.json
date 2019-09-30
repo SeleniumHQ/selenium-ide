@@ -25,7 +25,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.6.2",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
-    "@testing-library/dom": "^6.4.0",
+    "@testing-library/dom": "^6.4.1",
     "babel-loader": "^8.0.5",
     "chromedriver": "^77.0.0",
     "copy-webpack-plugin": "^5.0.2",
@@ -40,6 +40,6 @@
     "engine.io-client": "^3.4.0",
     "scroll-into-view-if-needed": "^2.2.20",
     "ua-parser-js": "^0.7.19",
-    "webextension-polyfill": "^0.4.0"
+    "webextension-polyfill": "^0.5.0"
   }
 }
