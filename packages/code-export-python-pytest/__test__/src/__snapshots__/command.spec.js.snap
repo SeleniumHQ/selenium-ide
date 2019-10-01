@@ -282,7 +282,7 @@ exports[`command code emitter should emit \`store xpath count\` command 1`] = `"
 
 exports[`command code emitter should emit \`store\` command 1`] = `"self.vars[\\"myVar\\"] = \\"some value\\""`;
 
-exports[`command code emitter should emit \`submit\` command 1`] = `"raise Exception(\\"\`submit\` is not a supported command in Selenium Webself.driver. Please re-record the step in the IDE.\\")"`;
+exports[`command code emitter should emit \`submit\` command 1`] = `"raise Exception(\\"'submit' is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\")"`;
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {

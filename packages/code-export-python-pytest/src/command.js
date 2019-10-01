@@ -679,7 +679,7 @@ async function emitStoreXpathCount(locator, varName) {
 
 async function emitSubmit(_locator) {
   return Promise.resolve(
-    `raise Exception("\`submit\` is not a supported command in Selenium Webself.driver. Please re-record the step in the IDE.")`
+    `raise Exception("'submit' is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.")`
   )
 }
 
