@@ -5,7 +5,6 @@
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
     "build": "babel -d dist src --ignore=src/__test__",
-    "pkg": "pkg package.json --targets=node9-linux-x64,node9-macos-x64,node9-windows-x64 --out-path=dist/bin",
     "prepublishOnly": "yarn build",
     "watch": "yarn build -w"
   },
@@ -22,12 +21,6 @@
   ],
   "license": "Apache-2.0",
   "private": false,
-  "pkg": {
-    "scripts": [
-      "node_modules/jest-*/**/*.js",
-      "node_modules/node-gyp/**/*.js"
-    ]
-  },
   "dependencies": {
     "commander": "^2.12.2",
     "glob": "^7.1.2",
@@ -44,8 +37,6 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/preset-env": "^7.3.4",
-    "npm": "^6.0.0",
-    "pkg": "https://github.com/corevo/pkg#a5a5e8717ca7ce17f51c32b4f82883f5cea9839a"
+    "@babel/preset-env": "^7.3.4"
   }
 }

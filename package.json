@@ -22,7 +22,6 @@
     "lint": "yarn lint:scripts && yarn lint:styles",
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
-    "postinstall": "lerna bootstrap",
     "watch": "lerna run --no-bail --parallel watch",
     "release-prep": "yarn && peru sync && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext && yarn lint",
     "preinstall": "node ./scripts/check-yarn.js",
@@ -40,6 +39,9 @@
       "**/packages/**/__test?(s)__/**/*.js?(x)"
     ]
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "babel-eslint": "^10.0.1",

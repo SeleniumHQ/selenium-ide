@@ -76,11 +76,11 @@ module.exports = {
               paths: [
                 path.resolve(
                   __dirname,
-                  'node_modules/google-closure-library/closure/goog'
+                  '../../node_modules/google-closure-library/closure/goog'
                 ),
                 path.resolve(
                   __dirname,
-                  'node_modules/google-closure-library/closure/goog/debug'
+                  '../../node_modules/google-closure-library/closure/goog/debug'
                 ),
               ],
               watch: false,
@@ -102,11 +102,11 @@ module.exports = {
                 paths: [
                   path.resolve(
                     __dirname,
-                    'node_modules/google-closure-library/closure/goog'
+                    '../../node_modules/google-closure-library/closure/goog'
                   ),
                   path.resolve(
                     __dirname,
-                    'node_modules/google-closure-library/closure/goog/debug'
+                    '../../node_modules/google-closure-library/closure/goog/debug'
                   ),
                   path.resolve(__dirname, 'selenium/selenium-atoms'),
                 ],
@@ -127,7 +127,7 @@ module.exports = {
                 paths: [
                   path.resolve(
                     __dirname,
-                    'node_modules/google-closure-library/closure/goog'
+                    '../../node_modules/google-closure-library/closure/goog'
                   ),
                 ],
               },
@@ -147,11 +147,11 @@ module.exports = {
                 paths: [
                   path.resolve(
                     __dirname,
-                    'node_modules/google-closure-library/closure/goog'
+                    '../../node_modules/google-closure-library/closure/goog'
                   ),
                   path.resolve(
                     __dirname,
-                    'node_modules/google-closure-library/closure/goog/debug'
+                    '../../node_modules/google-closure-library/closure/goog/debug'
                   ),
                   path.resolve(__dirname, 'selenium/third_party/wgxpath'),
                   path.resolve(__dirname, 'selenium/atoms'),
@@ -173,7 +173,7 @@ module.exports = {
                 paths: [
                   path.resolve(
                     __dirname,
-                    'node_modules/google-closure-library/closure/goog'
+                    '../../node_modules/google-closure-library/closure/goog'
                   ),
                   path.resolve(__dirname, 'selenium/atoms'),
                   path.resolve(__dirname, 'selenium/selenium-atoms'),
