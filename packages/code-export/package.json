@@ -22,6 +22,7 @@
   "dependencies": {
     "code-export-java-junit": "^3.12.1",
     "code-export-javascript-mocha": "^3.12.1",
-    "code-export-python-pytest": "^3.12.1"
+    "code-export-python-pytest": "^3.12.1",
+    "code-export-csharp-xunit" : "^3.12.1"
   }
 }
