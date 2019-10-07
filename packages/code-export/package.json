@@ -24,6 +24,5 @@
     "code-export-javascript-mocha": "^3.13.0",
     "code-export-python-pytest": "^3.13.0",
     "code-export-csharp-xunit" : "^3.13.0"
-
   }
 }

@@ -48,7 +48,7 @@
   "dependencies": {
     "@medv/finder": "^1.1.1",
     "@seleniumhq/side-model": "^3.13.0",
-    "@seleniumhq/side-utils": "^3.12.1",
+    "@seleniumhq/side-utils": "^3.13.0",
     "browser-webdriver": "^3.12.2",
     "classnames": "^2.2.5",
     "code-export": "^3.13.0",

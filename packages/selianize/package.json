@@ -22,7 +22,7 @@
   "private": false,
   "dependencies": {
     "@seleniumhq/side-model": "^3.13.0",
-    "@seleniumhq/side-utils": "^3.12.1"
+    "@seleniumhq/side-utils": "^3.13.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.3.4",
