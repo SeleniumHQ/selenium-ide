@@ -212,7 +212,7 @@ Object {
 exports[`command code emitter should emit \`mouse down at\` event 1`] = `
 "{
   IWebElement element = driver.FindElement(By.Id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element).ClickAndHold().Perform();
 }"
 `;
@@ -220,7 +220,7 @@ exports[`command code emitter should emit \`mouse down at\` event 1`] = `
 exports[`command code emitter should emit \`mouse down\` command 1`] = `
 "{
   IWebElement element = driver.FindElement(By.Id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element).ClickAndHold().Perform();
 }"
 `;
@@ -228,7 +228,7 @@ exports[`command code emitter should emit \`mouse down\` command 1`] = `
 exports[`command code emitter should emit \`mouse move at\` event 1`] = `
 "{
   IWebElement element = driver.FindElement(By.Id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element).Perform();
 }"
 `;
@@ -244,7 +244,7 @@ exports[`command code emitter should emit \`mouse move\` event 1`] = `
 exports[`command code emitter should emit \`mouse out\` event 1`] = `
 "{
   IWebElement element = driver.FindElement(By.tagName(\\"body\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element, 0, 0).Perform();
 }"
 `;
@@ -252,7 +252,7 @@ exports[`command code emitter should emit \`mouse out\` event 1`] = `
 exports[`command code emitter should emit \`mouse over\` event 1`] = `
 "{
   IWebElement element = driver.FindElement(By.Id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element).Perform();
 }"
 `;
@@ -260,7 +260,7 @@ exports[`command code emitter should emit \`mouse over\` event 1`] = `
 exports[`command code emitter should emit \`mouse up at\` event 1`] = `
 "{
   IWebElement element = driver.FindElement(By.Id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element).Release().Perform();
 }"
 `;
@@ -268,7 +268,7 @@ exports[`command code emitter should emit \`mouse up at\` event 1`] = `
 exports[`command code emitter should emit \`mouse up\` event 1`] = `
 "{
   IWebElement element = driver.FindElement(By.Id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.MoveToElement(element).Release().Perform();
 }"
 `;

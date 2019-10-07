@@ -417,7 +417,7 @@ async function emitMouseDown(locator) {
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     {
       level: 1,
       statement: 'builder.MoveToElement(element).ClickAndHold().Perform();',
@@ -436,7 +436,7 @@ async function emitMouseMove(locator) {
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     { level: 1, statement: 'builder.MoveToElement(element).Perform();' },
     { level: 0, statement: '}' },
   ]
@@ -450,7 +450,7 @@ async function emitMouseOut() {
       level: 1,
       statement: `IWebElement element = driver.FindElement(By.tagName("body"));`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     { level: 1, statement: 'builder.MoveToElement(element, 0, 0).Perform();' },
     { level: 0, statement: '}' },
   ]
@@ -466,7 +466,7 @@ async function emitMouseUp(locator) {
         locator
       )});`,
     },
-    { level: 1, statement: 'Action builder = new Actions(driver);' },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
     {
       level: 1,
       statement: 'builder.MoveToElement(element).Release().Perform();',
