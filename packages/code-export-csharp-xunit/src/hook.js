@@ -44,10 +44,7 @@ export function generateHooks() {
 function afterAll() {
   const params = {
     startingSyntax: {
-      commands: [
-        { level: 0, statement: '@AfterAll' },
-        { level: 0, statement: 'public void finalTearDown() {' },
-      ],
+      commands: [{ level: 0, statement: 'public void finalTearDown() {' }],
     },
     endingSyntax: {
       commands: [{ level: 0, statement: '}' }],
@@ -61,9 +58,9 @@ function afterEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '@After' },
         { level: 0, statement: 'public void tearDown() {' },
-        { level: 1, statement: 'driver.quit();' },
+        { level: 1, statement: 'driver.Quit();' },
+        { level: 1, statement: 'driver.Dispose();' },
       ],
     },
     endingSyntax: {
@@ -76,10 +73,7 @@ function afterEach() {
 function beforeAll() {
   const params = {
     startingSyntax: {
-      commands: [
-        { level: 0, statement: '@BeforeAll' },
-        { level: 0, statement: 'public void initialSetUp() {' },
-      ],
+      commands: [{ level: 0, statement: 'public void initialSetUp() {' }],
     },
     endingSyntax: {
       commands: [{ level: 0, statement: '}' }],
@@ -111,40 +105,12 @@ function declareDependencies() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'import org.junit.Test;' },
-        { level: 0, statement: 'import org.junit.Before;' },
-        { level: 0, statement: 'import org.junit.After;' },
-        { level: 0, statement: 'import static org.junit.Assert.*;' },
-        { level: 0, statement: 'import static org.hamcrest.CoreMatchers.is;' },
-        { level: 0, statement: 'import static org.hamcrest.core.IsNot.not;' },
-        { level: 0, statement: 'import org.openqa.selenium.By;' },
-        { level: 0, statement: 'import org.openqa.selenium.WebDriver;' },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.firefox.FirefoxDriver;',
-        },
-        { level: 0, statement: 'import org.openqa.selenium.Dimension;' },
-        { level: 0, statement: 'import org.openqa.selenium.WebElement;' },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.interactions.Actions;',
-        },
-        {
-          level: 0,
-          statement:
-            'import org.openqa.selenium.support.ui.ExpectedConditions;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.support.ui.WebDriverWait;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.JavascriptExecutor;',
-        },
-        { level: 0, statement: 'import org.openqa.selenium.Alert;' },
-        { level: 0, statement: 'import org.openqa.selenium.Keys;' },
-        { level: 0, statement: 'import java.util.*;' },
+        { level: 0, statement: 'using System;' },
+        { level: 0, statement: 'using System.Collections.Generic;' },
+        { level: 0, statement: 'using OpenQA.Selenium;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
+        { level: 0, statement: 'using Xunit;' },
       ],
     },
   }
@@ -158,9 +124,12 @@ function declareVariables() {
         { level: 0, statement: 'private WebDriver driver;' },
         {
           level: 0,
-          statement: 'private Map<String, Object> vars;',
+          statement: 'private IDictionary<String, Object> vars;',
         },
-        { level: 0, statement: 'JavascriptExecutor js;' },
+        {
+          level: 0,
+          statement: 'IJavaScriptExecutor js;',
+        },
       ],
     },
   }
