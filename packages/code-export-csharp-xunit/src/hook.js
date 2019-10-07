@@ -110,6 +110,7 @@ function declareDependencies() {
         { level: 0, statement: 'using OpenQA.Selenium;' },
         { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
         { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Interactions;' },
         { level: 0, statement: 'using Xunit;' },
       ],
     },
