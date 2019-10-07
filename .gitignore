@@ -21,3 +21,6 @@ website/i18n
 # auto-generated docs
 docs/api/arguments.md
 docs/api/commands.md
+
+# master remnants from switching locally
+*.tsbuildinfo

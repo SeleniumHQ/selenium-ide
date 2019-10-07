@@ -87,6 +87,18 @@ describe('Command Node', () => {
     node.evaluateForEach(variables)
     expect(variables.get('iteratorVar')).toEqual({ a: 'a1', b: 'b1' })
   })
+  it('forEach resets timesVisited to after completing', () => {
+    const collection = { name: 'asdf', value: [{ a: 'a' }, { b: 'b' }] }
+    variables.set(collection.name, collection.value)
+    const node = new CommandNode({
+      command: ControlFlowCommandNames.forEach,
+      target: collection.name,
+      value: 'iteratorVar',
+    })
+    node.timesVisited = collection.value.length + 1
+    node.evaluateForEach(variables)
+    expect(node.timesVisited).toEqual(-1)
+  })
   it('retry limit can be overriden', () => {
     const command = new Command(
       undefined,
@@ -97,6 +109,17 @@ describe('Command Node', () => {
     const node = new CommandNode(command)
     node.timesVisited = 5
     expect(node._isRetryLimit()).toBeTruthy()
+  })
+  it('retry limit ignored for forEach', () => {
+    const command = new Command(
+      undefined,
+      ControlFlowCommandNames.forEach,
+      '',
+      ''
+    )
+    const node = new CommandNode(command)
+    node.timesVisited = 1000
+    expect(node._isRetryLimit()).toBeFalsy()
   })
   it('execute resolves with an error message when too many retries attempted in a loop', () => {
     const command = new Command(undefined, ControlFlowCommandNames.while, '', 2)

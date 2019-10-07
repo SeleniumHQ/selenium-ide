@@ -252,6 +252,43 @@ export default function seed(store, numberOfSuites = 0) {
   )
   controlFlowForEachTest.createCommand(undefined, 'end')
 
+  const controlFlowForEachNestedTest = store.createTestCase(
+    'control flow for each (nested)'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'executeScript',
+    `return 0`,
+    'count'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'executeScript',
+    `return [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]`,
+    'numbersCol'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'forEach',
+    'numbersCol',
+    'numbers'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'forEach',
+    'numbers',
+    'number'
+  )
+  controlFlowForEachNestedTest.createCommand(
+    undefined,
+    'executeScript',
+    'return ${count} + 1',
+    'count'
+  )
+  controlFlowForEachNestedTest.createCommand(undefined, 'end')
+  controlFlowForEachNestedTest.createCommand(undefined, 'end')
+  controlFlowForEachNestedTest.createCommand(undefined, 'assert', 'count', '15')
+
   const executeScriptTest = store.createTestCase('execute script')
   executeScriptTest.createCommand(
     undefined,
@@ -623,6 +660,73 @@ export default function seed(store, numberOfSuites = 0) {
   )
   storeJson.createCommand(undefined, 'assert', 'result', 'true')
 
+  const accessVariable = store.createTestCase('access variable')
+  accessVariable.createCommand(
+    undefined,
+    'storeJson',
+    `{"a": [{"b":0}, {"b":1}]}`,
+    'blah'
+  )
+  accessVariable.createCommand(undefined, 'store', '${blah.a[0].b}', 'result')
+  accessVariable.createCommand(undefined, 'assert', 'result', '0')
+
+  const accessVariableAssert = store.createTestCase('access variable assert')
+  accessVariableAssert.createCommand(undefined, 'storeJson', `{"a":0}`, 'blah')
+  accessVariableAssert.createCommand(undefined, 'assert', 'blah.a', '0')
+
+  const accessVariableArray = store.createTestCase('access variable array')
+  accessVariableArray.createCommand(
+    undefined,
+    'storeJson',
+    `[{"a":0}, {"a":1}]`,
+    'blah'
+  )
+  accessVariableArray.createCommand(undefined, 'assert', 'blah[1].a', '1')
+
+  const accessVariableNestedJson = store.createTestCase(
+    'access variable nested json'
+  )
+  accessVariableNestedJson.createCommand(
+    undefined,
+    'storeJson',
+    `[{"a":[{"b":0}, {"b":{"c":1}}]}, {"a":2}]`,
+    'blah'
+  )
+  accessVariableNestedJson.createCommand(
+    undefined,
+    'assert',
+    'blah[0].a[1].b.c',
+    '1'
+  )
+
+  const accessVariableForEach = store.createTestCase('access variable for each')
+  accessVariableForEach.createCommand(
+    undefined,
+    'executeScript',
+    'return 0',
+    'result'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'storeJson',
+    `{"a":[{"b":0}, {"b":1}, {"b":2}]}`,
+    'blah'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'forEach',
+    'blah.a',
+    'iterator'
+  )
+  accessVariableForEach.createCommand(
+    undefined,
+    'executeScript',
+    'return ${result} + ${iterator.b}',
+    'result'
+  )
+  accessVariableForEach.createCommand(undefined, 'end', '', '')
+  accessVariableForEach.createCommand(undefined, 'assert', 'result', '3')
+
   const suiteAll = store.createSuite('all tests')
   store.tests.forEach(function(test) {
     suiteAll.addTestCase(test)
@@ -636,11 +740,13 @@ export default function seed(store, numberOfSuites = 0) {
   suiteControlFlow.addTestCase(controlFlowTimesTest)
   suiteControlFlow.addTestCase(controlFlowWhileTest)
   suiteControlFlow.addTestCase(controlFlowForEachTest)
+  suiteControlFlow.addTestCase(controlFlowForEachNestedTest)
 
   const smokeSuite = store.createSuite('smoke')
   smokeSuite.addTestCase(checkTest)
   smokeSuite.addTestCase(clickTest)
   smokeSuite.addTestCase(clickAtTest)
+  smokeSuite.addTestCase(accessVariable)
   smokeSuite.addTestCase(executeScriptTest)
   smokeSuite.addTestCase(executeScriptArray)
   smokeSuite.addTestCase(executeScriptPrimitives)

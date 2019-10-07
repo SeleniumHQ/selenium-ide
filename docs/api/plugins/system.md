@@ -6,6 +6,15 @@ sidebar_label: System
 
 The System API is the most basic API which Selenium IDE provides. It is not prefixed and can be called with `/`. 
 
+#### Opening Selenium IDE
+If the extension is installed, a request could be made by a plugin to open Selenium IDE.
+
+```js
+{
+  openSeleniumIDEIfClosed: true
+}
+```
+
 ### `GET /health`
 
 Used for plugin health checks, see [Plugin Health Checks](../../plugins/health-checks).
@@ -30,6 +39,9 @@ Logs that explain plugin usage, or status should be logged here.
 - `type` - log type, `undefined` is an info log, while `error` will appear red, and `warn` will appear orange.
 - `message` - `string` message, any links will be automatically linkified.
 
+#### Returns
+Returns `true` if the log was added.
+
 ### `GET /project`
 
 Fetches the `id` and `name` of the currently loaded project.
@@ -41,6 +53,13 @@ Fetches the `id` and `name` of the currently loaded project.
 }
 ```
 
-#### Returns
+### `POST /project`
 
-Returns `true` if the log was added.
+Loads a project into the IDE, as if the user opened it, if the user has unsaved changes a dialog will ask him before doing so.
+
+```js
+{
+  project: JSON parsed side file
+}
+```
+

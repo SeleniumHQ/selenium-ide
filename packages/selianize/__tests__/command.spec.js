@@ -16,10 +16,8 @@
 // under the License.
 
 import CommandEmitter, { registerEmitter } from '../src/command'
-import {
-  Commands,
-  ControlFlowCommandNames,
-} from '../../selenium-ide/src/neo/models/Command'
+import { ControlFlowCommandNames } from '../../selenium-ide/src/neo/models/Command'
+import { Commands } from '@seleniumhq/side-model'
 import { stringEscape } from '@seleniumhq/side-utils'
 
 describe('keys preprocessor', () => {
@@ -1017,9 +1015,9 @@ describe('command code emitter', () => {
     )
   })
   it('should emit all known commands', () => {
-    Commands.array.forEach(command => {
+    Commands.map(command => {
       expect(() => {
-        if (!CommandEmitter.canEmit(command)) {
+        if (!CommandEmitter.canEmit(command[0])) {
           throw new Error(`${command} has no emitter, write one!`)
         }
       }).not.toThrow()
@@ -1163,7 +1161,9 @@ describe('command code emitter', () => {
       value: 'iterator',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      `for (let i = 0; i < vars["collection"].length; i++) {vars["iterator"] = vars["collection"][i];`
+      `for (let i = 0; i < vars.${command.target}.length; i++) {vars["${
+        command.value
+      }"]  = vars.${command.target}[i];`
     )
   })
   it('should emit `assert` command', () => {
@@ -1173,11 +1173,7 @@ describe('command code emitter', () => {
       value: 'true',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'expect(`${vars["' +
-        command.target +
-        '"]}` == "' +
-        command.value +
-        '").toBeTruthy();'
+      `expect(vars.${command.target} == ${command.value}).toBeTruthy();`
     )
   })
   it('should emit `verify` command', () => {
@@ -1187,11 +1183,7 @@ describe('command code emitter', () => {
       value: 'true',
     }
     return expect(CommandEmitter.emit(command)).resolves.toBe(
-      'expect(`${vars["' +
-        command.target +
-        '"]}` == "' +
-        command.value +
-        '").toBeTruthy();'
+      `expect(vars.${command.target} == ${command.value}).toBeTruthy();`
     )
   })
   it('should preprocess stored variables', () => {
