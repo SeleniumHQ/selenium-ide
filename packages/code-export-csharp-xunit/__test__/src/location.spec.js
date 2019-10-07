@@ -29,28 +29,28 @@ describe('location code emitter', () => {
     }).toThrow('Unknown locator notExists')
   })
   it('should emit Id locator', () => {
-    const type = 'Id'
+    const type = 'id'
     const selector = 'someId'
     return expect(emit(`${type}=${selector}`)).resolves.toBe(
       `By.Id("${selector}")`
     )
   })
   it('should emit Link locator', () => {
-    const type = 'Link'
+    const type = 'link'
     const selector = 'someLink'
     return expect(emit(`${type}=${selector}`)).resolves.toBe(
       `By.LinkText("${selector}")`
     )
   })
   it('should emit LinkText locator', () => {
-    const type = 'LinkText'
+    const type = 'linkText'
     const selector = 'someLink'
     return expect(emit(`${type}=${selector}`)).resolves.toBe(
       `By.LinkText("${selector}")`
     )
   })
   it('should emit PartialLinkText locator', () => {
-    const type = 'PartialLinkText'
+    const type = 'partialLinkText'
     const selector = 'someLink'
     return expect(emit(`${type}=${selector}`)).resolves.toBe(
       `By.PartialLinkText("${selector}")`
@@ -76,21 +76,21 @@ describe('location code emitter', () => {
     return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit XPath locator', () => {
-    const type = 'XPath'
+    const type = 'xpath'
     const selector = 'someXpath'
     return expect(emit(`${type}=${selector}`)).resolves.toBe(
       `By.XPath("${selector}")`
     )
   })
-  it('should emit implicit XPath locator', () => {
-    const selector = '//test=XPath'
-    return expect(emit(selector)).resolves.toBe(`By.XPath("${selector}")`)
-  })
-  it('should emit name locator', () => {
-    const type = 'name'
-    const selector = 'someName'
-    return expect(emit(`${type}=${selector}`)).resolves.toBe(
-      `By.Name("${selector}")`
-    )
-  })
+})
+it('should emit implicit XPath locator', () => {
+  const selector = '//test=XPath'
+  return expect(emit(selector)).resolves.toBe(`By.XPath("${selector}")`)
+})
+it('should emit name locator', () => {
+  const type = 'name'
+  const selector = 'someName'
+  return expect(emit(`${type}=${selector}`)).resolves.toBe(
+    `By.Name("${selector}")`
+  )
 })

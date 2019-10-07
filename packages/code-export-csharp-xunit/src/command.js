@@ -150,7 +150,7 @@ function emitWaitForWindow() {
   }
   const commands = [
     { level: 0, statement: 'Thread.Sleep(timeout);' },
-    { level: 1, statement: 'Console.WriteLine("Main thread exits.");' },
+    { level: 0, statement: 'Console.WriteLine("Main thread exits.");' },
     { level: 0, statement: 'var whNow = driver.WindowHandles;' },
     { level: 0, statement: 'var whThen = this.vars["WindowHandles"];' },
     { level: 0, statement: 'if (whNow.Count > whThen.Count) {' },
@@ -295,7 +295,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `this.vars["${iteratorVarName}"] = collection.get(i));`,
+        statement: `this.vars["${iteratorVarName}"] = collection[i];`,
       },
     ],
   })
@@ -480,7 +480,7 @@ function emitOpen(target) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
     : `"${global.baseUrl}${target}"`
-  return Promise.resolve(`driver.get(${url});`)
+  return Promise.resolve(`driver.Url = ${url};`)
 }
 
 async function emitPause(time) {
@@ -573,7 +573,7 @@ async function emitSelectWindow(windowLocation) {
             statement:
               'ArrayList<String> handles = new ArrayList<String>(driver.WindowHandles;',
           },
-          { level: 1, statement: 'driver.SwitchTo().Window(handles.get(0));' },
+          { level: 1, statement: 'driver.SwitchTo().Window(handles[0]);' },
           { level: 0, statement: '}' },
         ],
       })
@@ -589,7 +589,7 @@ async function emitSelectWindow(windowLocation) {
           },
           {
             level: 1,
-            statement: `driver.SwitchTo().window(handles.get(${index}));`,
+            statement: `driver.SwitchTo().Window(handles[${index}]);`,
           },
           { level: 0, statement: '}' },
         ],
