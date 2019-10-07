@@ -534,7 +534,7 @@ async function emitSelectFrame(frameLocation) {
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
       `driver.SwitchTo().Frame(${Math.floor(
-        frameLocation.Split('index=')[1]
+        frameLocation.split('index=')[1]
       )});`
     )
   } else {

@@ -87,7 +87,7 @@ function beforeEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '@Before' },
+        { level: 0, statement: '\n' },
         { level: 0, statement: 'public void setUp() {' },
         { level: 1, statement: 'driver = new FirefoxDriver();' },
         { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
