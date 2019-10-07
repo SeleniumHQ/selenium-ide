@@ -20,7 +20,6 @@ export const availableLanguages = {
   'python-pytest': require('code-export-python-pytest'),
   'javascript-mocha': require('code-export-javascript-mocha'),
   'csharp-xunit': require('code-export-csharp-xunit'),
-
 }
 
 function registerCommand(language, command, emitter) {

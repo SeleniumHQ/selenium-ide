@@ -152,7 +152,7 @@ function emitWaitForWindow() {
     { level: 0, statement: 'Thread.Sleep(timeout);' },
     { level: 1, statement: 'Console.WriteLine("Main thread exits.");' },
     { level: 0, statement: 'var whNow = driver.WindowHandles;' },
-    { level: 0, statement:'var whThen = this.vars["WindowHandles"];' },
+    { level: 0, statement: 'var whThen = this.vars["WindowHandles"];' },
     { level: 0, statement: 'if (whNow.Count > whThen.Count) {' },
     { level: 1, statement: 'whNow.RemoveAll(whThen);' },
     { level: 0, statement: '}' },
@@ -485,7 +485,7 @@ function emitOpen(target) {
 
 async function emitPause(time) {
   const commands = [
-    { level: 0, statement: 'Thread.Sleep(time);' },
+    { level: 1, statement: `Thread.Sleep(${time});` },
     { level: 1, statement: 'Console.WriteLine("Main thread exits.");' },
   ]
   return Promise.resolve({ commands })
