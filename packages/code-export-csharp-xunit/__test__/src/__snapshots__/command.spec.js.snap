@@ -300,7 +300,7 @@ exports[`command code emitter should emit \`select window\` to select a window b
 exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
 "{
   ArrayList<String> handles = new ArrayList<String>(driver.WindowHandles;
-  driver.SwitchTo().window(handles.get(12));
+  driver.SwitchTo().Window(handles[12]);
 }"
 `;
 
@@ -309,7 +309,7 @@ exports[`command code emitter should emit \`select window\` to select a window b
 exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `
 "{
   ArrayList<String> handles = new ArrayList<String>(driver.WindowHandles;
-  driver.SwitchTo().Window(handles.get(0));
+  driver.SwitchTo().Window(handles[0]);
 }"
 `;
 
