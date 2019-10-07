@@ -199,8 +199,8 @@ function handleInternalMessage(message) {
       })
       .then(() => {
         openPanel({ windowId: 0 }).then(() => {
-          var payload = { ...message };
-          delete payload.restart;
+          var payload = { ...message }
+          delete payload.restart
 
           const newMessage = {
             uri: '/_connect',
@@ -234,9 +234,8 @@ browser.runtime.onMessageExternal.addListener(
     let payload = message.payload
 
     payload.sender = sender.id
-    if (message.uri === '/_connect' || message.uri === '/_close')
-    {
-      return sendResponse(false);
+    if (message.uri === '/_connect' || message.uri === '/_close') {
+      return sendResponse(false)
     }
     browser.runtime
       .sendMessage(message)
