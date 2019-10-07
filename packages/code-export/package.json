@@ -1,6 +1,6 @@
 {
   "name": "code-export",
-  "version": "3.12.1",
+  "version": "3.13.0",
   "description": "Selenium IDE code export",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -20,9 +20,9 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.12.1",
-    "code-export-javascript-mocha": "^3.12.1",
-    "code-export-python-pytest": "^3.12.1",
-    "code-export-csharp-xunit" : "^3.12.1"
+    "code-export-java-junit": "^3.13.0",
+    "code-export-javascript-mocha": "^3.13.0",
+    "code-export-python-pytest": "^3.13.0",
+    "code-export-csharp-xunit" : "^3.13.0"
   }
 }
