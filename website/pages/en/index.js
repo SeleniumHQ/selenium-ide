@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// eslint-disable-next-line
 const React = require('react')
 
+// eslint-disable-next-line node/no-missing-require
 const CompLibrary = require('../../core/CompLibrary.js')
 
 const MarkdownBlock = CompLibrary.MarkdownBlock /* Used to read markdown */

@@ -24,7 +24,8 @@
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
     "postinstall": "lerna bootstrap",
     "watch": "lerna run --no-bail --parallel watch",
-    "release-prep": "yarn && peru sync && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext",
+    "release-prep": "yarn && peru sync && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext && yarn lint",
+    "preinstall": "node ./scripts/check-yarn.js",
     "postpublish": "yarn build:ext:prod && npx ./gh-release.js"
   },
   "jest": {
@@ -48,6 +49,8 @@
     "eslint-plugin-jest": "^21.27.1",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-no-only-tests": "^2.3.1",
+    "eslint-plugin-node": "^9.2.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.3.1",
     "lerna": "^3.4.3",

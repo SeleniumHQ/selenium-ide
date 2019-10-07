@@ -34,6 +34,7 @@ process.versions = JSON.parse(`
 }
 `)
 
+// eslint-disable-next-line node/no-deprecated-api
 process.binding = name => {
   if (name === 'constants') {
     return JSON.parse(`

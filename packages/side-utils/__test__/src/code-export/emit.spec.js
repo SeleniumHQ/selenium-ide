@@ -16,11 +16,58 @@
 // under the License.
 
 import {
+  emitCommand,
   emitLocation,
   emitSelection,
   emitOriginTracing,
 } from '../../../src/code-export/emit'
 import TestCase from '../../../../selenium-ide/src/neo/models/TestCase'
+import Command from '../../../../selenium-ide/src/neo/models/Command'
+
+describe('Command emitter', () => {
+  describe('validation', () => {
+    it('invalid command', () => {
+      let command = new Command(undefined, 'chec')
+      return expect(() => {
+        emitCommand(command)
+      }).toThrow("Invalid command 'chec'")
+    })
+    it('missing target param', () => {
+      let command = new Command(undefined, 'check')
+      return expect(() => {
+        emitCommand(command)
+      }).toThrow("Incomplete command 'check'. Missing expected target argument")
+    })
+    it('missing value param', () => {
+      let command = new Command(undefined, 'assertNotSelectedValue', 'blah')
+      return expect(() => {
+        emitCommand(command)
+      }).toThrow(
+        "Incomplete command 'assertNotSelectedValue'. Missing expected value argument"
+      )
+    })
+    it('optional param not provided', async () => {
+      let command = new Command(undefined, 'times', 10)
+      await expect(emitCommand(command)).resolves
+      command = new Command(undefined, 'while', true)
+      await expect(emitCommand(command)).resolves
+      command = new Command(undefined, 'executeScript', 'return "blah"')
+      return expect(emitCommand(command)).resolves
+    })
+    it("single param commands don't trigger validation", () => {
+      let command = new Command(undefined, 'assertAlert', 'asdf')
+      return expect(() => {
+        emitCommand(command)
+      }).not.toThrow()
+    })
+    it('works for disabled commands', () => {
+      let command = new Command(undefined, '//assertAlert', 'asdf')
+      return expect(() => {
+        emitCommand(command)
+      }).not.toThrow()
+    })
+  })
+})
 
 describe('Location emitter', () => {
   it('emits by sync emitter', () => {

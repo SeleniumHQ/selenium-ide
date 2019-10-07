@@ -18,8 +18,12 @@
 import { action, computed, observable, toJS } from 'mobx'
 import uuidv4 from 'uuid/v4'
 import Fuse from 'fuse.js'
-import { Commands as _Commands, TargetTypes } from './Commands'
-import { ArgTypes as _ArgTypes } from './ArgTypes'
+import {
+  Commands as _Commands,
+  ArgTypes as _ArgTypes,
+  TargetTypes,
+  registerCommand,
+} from '@seleniumhq/side-model'
 const EventEmitter = require('events')
 import { mergeEventEmitter } from '../../../common/events'
 
@@ -256,6 +260,7 @@ class CommandList {
       throw new Error(`Command with the id ${id} already exists`)
     } else {
       this.list.set(id, name)
+      registerCommand(id, name)
     }
   }
 

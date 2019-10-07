@@ -212,7 +212,7 @@ Object {
 exports[`command code emitter should emit \`mouse down at\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).clickAndHold().perform();
 }"
 `;
@@ -220,7 +220,7 @@ exports[`command code emitter should emit \`mouse down at\` event 1`] = `
 exports[`command code emitter should emit \`mouse down\` command 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).clickAndHold().perform();
 }"
 `;
@@ -228,7 +228,7 @@ exports[`command code emitter should emit \`mouse down\` command 1`] = `
 exports[`command code emitter should emit \`mouse move at\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).perform();
 }"
 `;
@@ -236,7 +236,7 @@ exports[`command code emitter should emit \`mouse move at\` event 1`] = `
 exports[`command code emitter should emit \`mouse move\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).perform();
 }"
 `;
@@ -244,7 +244,7 @@ exports[`command code emitter should emit \`mouse move\` event 1`] = `
 exports[`command code emitter should emit \`mouse out\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.tagName(\\"body\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element, 0, 0).perform();
 }"
 `;
@@ -252,7 +252,7 @@ exports[`command code emitter should emit \`mouse out\` event 1`] = `
 exports[`command code emitter should emit \`mouse over\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).perform();
 }"
 `;
@@ -260,7 +260,7 @@ exports[`command code emitter should emit \`mouse over\` event 1`] = `
 exports[`command code emitter should emit \`mouse up at\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).release().perform();
 }"
 `;
@@ -268,7 +268,7 @@ exports[`command code emitter should emit \`mouse up at\` event 1`] = `
 exports[`command code emitter should emit \`mouse up\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"button\\"));
-  Action builder = new Actions(driver);
+  Actions builder = new Actions(driver);
   builder.moveToElement(element).release().perform();
 }"
 `;
