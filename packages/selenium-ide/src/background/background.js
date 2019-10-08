@@ -181,29 +181,32 @@ browser.runtime.onConnect.addListener(function(m) {
   port = m
 })
 
-browser.runtime.onMessage.addListener(restart)
+browser.runtime.onMessage.addListener(handleInternalMessage)
 
-function restart(message) {
+function handleInternalMessage(message) {
   if (
-    message.control &&
+    message.restart &&
     message.controller.connectionId &&
     message.controller.id
   ) {
-    const newMessage = {
-      uri: '/connect',
-      verb: 'post',
-      payload: message,
-    }
     ideWindowId = undefined
 
     browser.runtime
       .sendMessage({
-        uri: '/close',
+        uri: '/_close',
         verb: 'post',
         payload: null,
       })
       .then(() => {
         openPanel({ windowId: 0 }).then(() => {
+          var payload = { ...message }
+          delete payload.restart
+
+          const newMessage = {
+            uri: '/_connect',
+            verb: 'post',
+            payload: payload,
+          }
           browser.runtime
             .sendMessage(newMessage)
             .then(
@@ -231,30 +234,31 @@ browser.runtime.onMessageExternal.addListener(
     let payload = message.payload
 
     payload.sender = sender.id
-    if (message.uri == '/connect') return false
+    if (message.uri === '/_connect' || message.uri === '/_close') {
+      return sendResponse(false)
+    }
     browser.runtime
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
         if (message.uri == '/control' && message.verb == 'post') {
-          const newMessage = {
-            uri: '/connect',
-            verb: 'post',
-            payload: {
-              control: true,
-              controller: {
-                id: payload.sender,
-                name: payload.name,
-                connectionId: payload.connectionId,
-                version: payload.version,
-                commands: payload.commands,
-                dependencies: payload.dependencies,
-                jest: payload.jest,
-                exports: payload.exports,
-              },
-            },
-          }
           return openPanel({ windowId: 0 }).then(() => {
+            const newMessage = {
+              uri: '/_connect',
+              verb: 'post',
+              payload: {
+                controller: {
+                  id: payload.sender,
+                  name: payload.name,
+                  connectionId: payload.connectionId,
+                  version: payload.version,
+                  commands: payload.commands,
+                  dependencies: payload.dependencies,
+                  jest: payload.jest,
+                  exports: payload.exports,
+                },
+              },
+            }
             browser.runtime.sendMessage(newMessage).then(sendResponse)
           })
         } else if (message.openSeleniumIDEIfClosed) {
