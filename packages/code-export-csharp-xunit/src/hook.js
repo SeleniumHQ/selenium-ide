@@ -73,7 +73,10 @@ function afterEach() {
 function beforeAll() {
   const params = {
     startingSyntax: {
-      commands: [{ level: 0, statement: 'public void initialSetUp() {' }],
+      commands: [
+        { level: 0, statement: '[Fact]' }
+        { level: 0, statement: 'public void initialSetUp() {' }
+      ],
     },
     endingSyntax: {
       commands: [{ level: 0, statement: '}' }],
@@ -87,11 +90,10 @@ function beforeEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '\n' },
         { level: 0, statement: 'public void setUp() {' },
         { level: 1, statement: 'driver = new FirefoxDriver();' },
-        { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
-        { level: 1, statement: 'vars = new HashMap<String, Object>();' },
+        { level: 1, statement: 'js = (IJavascriptExecutor) driver;' },
+        { level: 1, statement: 'vars = new Dictionary<String, Object>();' },
       ],
     },
     endingSyntax: {
@@ -109,6 +111,7 @@ function declareDependencies() {
         { level: 0, statement: 'using System.Collections.Generic;' },
         { level: 0, statement: 'using OpenQA.Selenium;' },
         { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Firefox;' },
         { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
         { level: 0, statement: 'using OpenQA.Selenium.Interactions;' },
         { level: 0, statement: 'using Xunit;' },
@@ -122,7 +125,7 @@ function declareVariables() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'private WebDriver driver;' },
+        { level: 0, statement: 'private IWebDriver driver;' },
         {
           level: 0,
           statement: 'private IDictionary<String, Object> vars;',

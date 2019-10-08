@@ -175,13 +175,13 @@ async function emitNewWindowHandling(command, emittedCommand) {
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `Assert.Equals(this.vars["${varName}"].ToString(), "${value}");`
+    `Assert.Equal(this.vars["${varName}"].ToString(), "${value}");`
   )
 }
 
 function emitAssertAlert(AlertText) {
   return Promise.resolve(
-    `Assert.Equals(driver.SwitchTo().Alert().Text, is("${AlertText}"));`
+    `Assert.Equal(driver.SwitchTo().Alert().Text, ${AlertText});`
   )
 }
 
@@ -348,13 +348,13 @@ async function emitDragAndDrop(dragged, dropped) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement dragged = driver.FindElement(${await location.emit(
+      statement: `IWebElement dragged = driver.FindElement(${await location.emit(
         dragged
       )});`,
     },
     {
       level: 1,
-      statement: `WebElement dropped = driver.FindElement(${await location.emit(
+      statement: `IWebElement dropped = driver.FindElement(${await location.emit(
         dropped
       )});`,
     },
@@ -480,7 +480,7 @@ function emitOpen(target) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
     : `"${global.baseUrl}${target}"`
-  return Promise.resolve(`driver.Url = ${url};`)
+  return Promise.resolve(`driver.Navigate().GoToUrl(@"${url}");`)
 }
 
 async function emitPause(time) {
@@ -513,7 +513,7 @@ async function emitSelect(selectElement, option) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement dropdown = driver.FindElement(${await location.emit(
+      statement: `IWebElement dropdown = driver.FindElement(${await location.emit(
         selectElement
       )});`,
     },
@@ -757,7 +757,7 @@ async function emitVerifyElementPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<WebElement> elements = driver.FindElements(${await location.emit(
+      statement: `IReadOnlyCollection<IWebElement> elements = driver.FindElements(${await location.emit(
         locator
       )});`,
     },
@@ -772,7 +772,7 @@ async function emitVerifyElementNotPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<WebElement> elements = driver.FindElements(${await location.emit(
+      statement: `IReadOnlyCollection<IWebElement> elements = driver.FindElements(${await location.emit(
         locator
       )});`,
     },
@@ -821,9 +821,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
     },
     {
       level: 1,
-      statement: `Assert.Equals(value, is(not("${exporter.emit.text(
-        expectedValue
-      )}")));`,
+      statement: `Assert.Equal(value, ${exporter.emit.text(expectedValue)});`,
     },
     { level: 0, statement: '}' },
   ]
@@ -833,7 +831,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
 async function emitVerifyNotText(locator, text) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
   return Promise.resolve(
-    `Assert.Equals(${result}, is(not("${exporter.emit.text(text)}")));`
+    `Assert.Equal(${result}, ${exporter.emit.text(text)});`
   )
 }
 
@@ -858,7 +856,7 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     },
     {
       level: 1,
-      statement: `Assert.Equals(selectedText, is("${labelValue}"));`,
+      statement: `Assert.Equal(selectedText, ${labelValue});`,
     },
     { level: 0, statement: '}' },
   ]
@@ -873,9 +871,9 @@ async function emitVerifySelectedValue(locator, value) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(
-    `Assert.Equals(driver.FindElement(${await location.emit(
+    `Assert.Equal(driver.FindElement(${await location.emit(
       locator
-    )}).Text, is("${exporter.emit.text(text)}"));`
+    )}).Text, "${exporter.emit.text(text)});`
   )
 }
 
@@ -888,14 +886,14 @@ async function emitVerifyValue(locator, value) {
         locator
       )}).GetAttribute("value");`,
     },
-    { level: 1, statement: `Assert.Equals(value, is("${value}"));` },
+    { level: 1, statement: `Assert.Equal(value, ${value});` },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitVerifyTitle(title) {
-  return Promise.resolve(`Assert.Equals(driver.Title, is("${title}"));`)
+  return Promise.resolve(`Assert.Equal(driver.Title, ${title});`)
 }
 
 async function emitWaitForElementEditable(locator, timeout) {
