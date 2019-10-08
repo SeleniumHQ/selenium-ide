@@ -59,7 +59,7 @@ function checkControl(req) {
 function controlledOnly(req, res) {
   return checkControl(req).catch(() => {
     res(errors.cannotAccessInControlMode)
-    return errors.cannotAccessInControlMode
+    return Promise.reject();
   })
 }
 
@@ -86,7 +86,10 @@ function tryOverrideControl(req) {
         jest: req.jest,
         exports: req.exports,
       }
-      browser.runtime.sendMessage({ restart: true, controller: plugin })
+      return browser.runtime.sendMessage({ restart: true, controller: plugin })
+    }
+    else {
+      return Promise.reject();
     }
   })
 }
