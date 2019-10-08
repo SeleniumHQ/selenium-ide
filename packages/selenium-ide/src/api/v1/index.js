@@ -59,7 +59,7 @@ function checkControl(req) {
 function controlledOnly(req, res) {
   return checkControl(req).catch(() => {
     res(errors.cannotAccessInControlMode)
-    return Promise.reject();
+    return Promise.reject()
   })
 }
 
@@ -87,9 +87,8 @@ function tryOverrideControl(req) {
         exports: req.exports,
       }
       return browser.runtime.sendMessage({ restart: true, controller: plugin })
-    }
-    else {
-      return Promise.reject();
+    } else {
+      return Promise.reject()
     }
   })
 }
@@ -165,7 +164,9 @@ router.post('/close', (req, res) => {
     if (!UiState.isSaved()) {
       ModalState.showAlert({
         title: 'Close project without saving',
-        description: `${plugin.name} is trying to close a project, are you sure you want to load this project and lose all unsaved changes?`,
+        description: `${
+          plugin.name
+        } is trying to close a project, are you sure you want to load this project and lose all unsaved changes?`,
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       }).then(result => {
@@ -209,7 +210,9 @@ router.post('/project', (req, res) => {
       WindowSession.focusIDEWindow()
       ModalState.showAlert({
         title: 'Open project without saving',
-        description: `${plugin.name} is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
+        description: `${
+          plugin.name
+        } is trying to load a project, are you sure you want to load this project and lose all unsaved changes?`,
         confirmLabel: 'proceed',
         cancelLabel: 'cancel',
       }).then(result => {
