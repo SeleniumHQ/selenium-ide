@@ -181,7 +181,6 @@ browser.runtime.onConnect.addListener(function(m) {
   port = m
 })
 
-
 browser.runtime.onMessage.addListener(handleInternalMessage)
 
 function handleInternalMessage(message) {
