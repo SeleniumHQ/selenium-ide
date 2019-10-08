@@ -46,7 +46,7 @@ const errors = {
   },
   missingProject: {
     errorCode: 'MissingProject',
-    error: 'Plugin is not registered',
+    error: 'Project is missing',
   },
 }
 
