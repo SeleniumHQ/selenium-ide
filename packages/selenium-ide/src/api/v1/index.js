@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import browser from 'webextension-polyfill'
 import Router from '../../router'
 import Manager from '../../plugin/manager'
 import logger from '../../neo/stores/view/Logs'
@@ -175,7 +176,6 @@ router.post('/close', (req, res) => {
           res(true)
         }
       })
-
       res(false)
     } else {
       window.close()
