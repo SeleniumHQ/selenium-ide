@@ -74,8 +74,7 @@ function beforeAll() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '[Fact]' }
-        { level: 0, statement: 'public void initialSetUp() {' }
+        { level: 0, statement: '[Fact]\npublic void initialSetUp() {' },
       ],
     },
     endingSyntax: {
@@ -90,10 +89,10 @@ function beforeEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'public void setUp() {' },
-        { level: 1, statement: 'driver = new FirefoxDriver();' },
-        { level: 1, statement: 'js = (IJavascriptExecutor) driver;' },
-        { level: 1, statement: 'vars = new Dictionary<String, Object>();' },
+        { level: 0, statement: '' },
+        { level: 2, statement: 'driver = new FirefoxDriver();' },
+        { level: 2, statement: 'js = (IJavaScriptExecutor) driver;' },
+        { level: 2, statement: 'vars = new Dictionary<String, Object>();' },
       ],
     },
     endingSyntax: {
@@ -125,14 +124,14 @@ function declareVariables() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'private IWebDriver driver;' },
+        { level: 0, statement: 'public IWebDriver driver;' },
         {
           level: 0,
-          statement: 'private IDictionary<String, Object> vars;',
+          statement: 'public IDictionary<String, Object> vars;',
         },
         {
           level: 0,
-          statement: 'IJavaScriptExecutor js;',
+          statement: 'public IJavaScriptExecutor js;',
         },
       ],
     },
