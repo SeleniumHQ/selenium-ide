@@ -8,7 +8,6 @@
   top: 6px;
   left: 0;
   right: 0;
-  max-width: 200px;
   margin: 0 auto;
   height: 25px;
   z-index: 100;
@@ -17,10 +16,12 @@
 .background-pause
 {
   background: #fffcc5;
+  max-width: 200px;
 }
 
 .background-controlled {
   background: #b4d6fa;
+  max-width: 300px;
 }
 
 .state-banner .state-toolbar {
