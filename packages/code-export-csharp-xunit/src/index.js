@@ -19,6 +19,7 @@ import { codeExport as exporter } from '@seleniumhq/side-utils'
 import emitter from './command'
 import location from './location'
 import { generateHooks } from './hook'
+import _default from 'diff-sequences'
 
 // Define language options
 export const displayName = 'C# xUnit'
@@ -34,7 +35,7 @@ opts.generateMethodDeclaration = generateMethodDeclaration
 
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
 function generateTestDeclaration(name) {
-  return `[Fact]\npublic void ${exporter.parsers.uncapitalize(
+  return `[Fact]\npublic void ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
   )}() {`
 }
@@ -42,7 +43,7 @@ function generateMethodDeclaration(name) {
   return `public void ${exporter.parsers.sanitizeName(name)}() {`
 }
 function generateSuiteDeclaration(name) {
-  return `public class ${exporter.parsers.capitalize(
+  return `namespace ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
   )}Test {`
 }
