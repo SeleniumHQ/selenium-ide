@@ -24,7 +24,7 @@ const emitters = {
   beforeEach,
   declareDependencies,
   declareMethods: empty,
-  declareVariables,
+  declareVariables: empty,
   inEachBegin: empty,
   inEachEnd: empty,
 }
@@ -72,12 +72,28 @@ function beforeEach() {
         { level: 0, statement: '}' },
         {
           level: 0,
-          statement: `public class TestSuite : IClassFixture<DriverFixture> {`,
+          statement: `public class TestSuite : IClassFixture<DriverFixture>`,
         },
+        { level: 0, statement: '{' },
+        { level: 1, statement: 'public IWebDriver driver;' },
+        {
+          level: 1,
+          statement: 'public IDictionary<String, Object> vars;',
+        },
+        {
+          level: 1,
+          statement: 'public IJavaScriptExecutor js;\n',
+        },
+        { level: 1, statement: 'public TestSuite (DriverFixture _dF)' },
+        { level: 1, statement: '{' },
+        { level: 2, statement: 'this.dF = _dF;' },
+        { level: 2, statement: 'driver = this.dF.driver;' },
+        { level: 2, statement: 'js = this.dF.js;' },
+        { level: 2, statement: 'vars = this.dF.vars;' },
       ],
-      endingSyntax: {
-        commands: [{ level: 0, statement: '}' }],
-      },
+    },
+    endingSyntax: {
+      commands: [{ level: 1, statement: '}' }],
     },
   }
   return params
@@ -99,25 +115,6 @@ function declareDependencies() {
         { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
         { level: 0, statement: 'using OpenQA.Selenium.Interactions;' },
         { level: 0, statement: 'using Xunit;' },
-      ],
-    },
-  }
-  return params
-}
-
-function declareVariables() {
-  const params = {
-    startingSyntax: {
-      commands: [
-        { level: 0, statement: 'public IWebDriver driver;' },
-        {
-          level: 0,
-          statement: 'public IDictionary<String, Object> vars;',
-        },
-        {
-          level: 0,
-          statement: 'public IJavaScriptExecutor js;',
-        },
       ],
     },
   }

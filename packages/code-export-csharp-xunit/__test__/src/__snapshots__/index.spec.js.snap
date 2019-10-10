@@ -11,9 +11,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace LoginTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -27,7 +24,19 @@ namespace LoginTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   [Fact]
   public void Validcredentials() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
@@ -61,9 +70,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace ControlflowTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -77,7 +83,19 @@ namespace ControlflowTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   [Fact]
   public void Controlflowif() {
     this.vars[\\"myVar\\"] = js.executeScript(\\"return 'a'\\")
@@ -154,9 +172,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace LoginTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -170,7 +185,19 @@ namespace LoginTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\"))).Click();
@@ -205,9 +232,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace DefaultSuiteTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -221,7 +245,19 @@ namespace DefaultSuiteTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   public String waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
@@ -263,9 +299,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace DefaultSuiteTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -279,7 +312,19 @@ namespace DefaultSuiteTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   public String waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
@@ -330,9 +375,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace LoginTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -346,7 +388,19 @@ namespace LoginTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   [Fact]
   public void Login() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
@@ -371,9 +425,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace ValidcredentialsTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -387,7 +438,19 @@ namespace ValidcredentialsTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\"))).Click();
@@ -416,9 +479,6 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 namespace SelectwindowTest {
-  public IWebDriver driver;
-  public IDictionary<String, Object> vars;
-  public IJavaScriptExecutor js;
   public class DriverFixture : IDisposable
   {
     public DriverFixture()
@@ -432,7 +492,19 @@ namespace SelectwindowTest {
       driver.Dispose()
     }
   }
-  public class TestSuite : IClassFixture<DriverFixture> {
+  public class TestSuite : IClassFixture<DriverFixture>
+  {
+    public IWebDriver driver;
+    public IDictionary<String, Object> vars;
+    public IJavaScriptExecutor js;
+
+    public TestSuite (DriverFixture _dF)
+    {
+      this.dF = _dF;
+      driver = this.dF.driver;
+      js = this.dF.js;
+      vars = this.dF.vars;
+    }
   public String waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
