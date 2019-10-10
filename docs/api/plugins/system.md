@@ -64,21 +64,10 @@ Loads a project into the IDE, as if the user opened it, if the user has unsaved 
 ```
 ### `POST /control`
 
-Start a connection with a specific connection Id from another chrome extension. When this connection is accepted by the user, Selenium IDE restarts and registers the caller, and the extension takes exclusive control of Selenium IDE until user closes Selenium IDE or another connection is accepted. When this mode is on, the save to computer functionality gets overritten by sending the side file to the extension controlling Selenium IDE. When in this mode, the user needs to add connectionId variable to make other API calls such as `POST /project`, `GET /project`, `POST /log`, `POST /register`.
+Start a connection from another chrome extension. When this connection is accepted by the user, Selenium IDE restarts and registers the caller, and the extension takes exclusive control of Selenium IDE until user closes Selenium IDE or another connection is accepted. When this mode is on, the save to computer functionality gets overwritten by sending the side file to the extension controlling Selenium IDE.
 
-The payload of this call is the same manifesto used to register a plugin, in addition to the connection Id, which states the instance of the connection.
+The payload of this call is identical to the payload of `POST /register` call.
 
 ### `POST /close`
 
-Closes Selenium IDE.
-
-### `POST /connect`
-
-Internal API call only. Used to make all modifications to Selenium IDE when establishing a connection.
-
-```js
-{
-  controlled: true,
-  controller: JSON plugin manifesto with connection Id 
-}
-```
+When Selenium IDE is controlled by another chrome extension, the controller extension can use this API to close the IDE window. If user have any unsaved changes, it will prompt user to whether give up the changes or ignore the close. No payload is needed.
