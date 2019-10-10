@@ -184,11 +184,7 @@ browser.runtime.onConnect.addListener(function(m) {
 browser.runtime.onMessage.addListener(handleInternalMessage)
 
 function handleInternalMessage(message) {
-  if (
-    message.restart &&
-    message.controller &&
-    message.controller.id
-  ) {
+  if (message.restart && message.controller && message.controller.id) {
     ideWindowId = undefined
 
     browser.runtime
