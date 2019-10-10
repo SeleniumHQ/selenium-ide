@@ -19,7 +19,7 @@ import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll: empty,
-  afterEach,
+  afterEach: empty,
   beforeAll: empty,
   beforeEach,
   declareDependencies,
@@ -51,7 +51,7 @@ function beforeEach() {
         {
           level: 1,
           statement:
-            'public IDictionary<String, Object>() vars {get; private set;}',
+            'public IDictionary<String, Object> vars {get; private set;}',
         },
         {
           level: 1,
@@ -99,7 +99,7 @@ function beforeEach() {
         { level: 1, statement: '{' },
         { level: 2, statement: 'this.dF = _dF;' },
         { level: 2, statement: 'this.driver = _dF.driver;' },
-        { level: 2, statement: 'this.js = (IJavaScriptExecutor)driver' },
+        { level: 2, statement: 'this.js = (IJavaScriptExecutor)driver;' },
         { level: 2, statement: 'this.vars = _dF.vars;' },
       ],
     },
@@ -108,10 +108,6 @@ function beforeEach() {
     },
   }
   return params
-}
-
-function afterEach() {
-  return '}'
 }
 
 function declareDependencies() {

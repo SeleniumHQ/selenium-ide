@@ -14,7 +14,7 @@ namespace LoginTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -39,7 +39,7 @@ namespace LoginTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   [Fact]
@@ -78,7 +78,7 @@ namespace ControlflowTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -103,7 +103,7 @@ namespace ControlflowTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   [Fact]
@@ -185,7 +185,7 @@ namespace LoginTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -210,7 +210,7 @@ namespace LoginTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   public void login() {
@@ -250,7 +250,7 @@ namespace DefaultSuiteTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -275,7 +275,7 @@ namespace DefaultSuiteTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
@@ -322,7 +322,7 @@ namespace DefaultSuiteTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -347,7 +347,7 @@ namespace DefaultSuiteTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
@@ -403,7 +403,7 @@ namespace LoginTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -428,7 +428,7 @@ namespace LoginTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   [Fact]
@@ -458,7 +458,7 @@ namespace ValidcredentialsTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -483,7 +483,7 @@ namespace ValidcredentialsTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   public void login() {
@@ -517,7 +517,7 @@ namespace SelectwindowTest {
   public class DriverFixture : IDisposable
   {
     public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object>() vars {get; private set;}
+    public IDictionary<String, Object> vars {get; private set;}
     public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
@@ -542,7 +542,7 @@ namespace SelectwindowTest {
     {
       this.dF = _dF;
       this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
