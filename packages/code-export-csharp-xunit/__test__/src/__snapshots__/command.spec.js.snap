@@ -117,9 +117,9 @@ exports[`command code emitter should emit \`choose cancel on visible prompt\` co
 
 exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `"driver.SwitchTo().Alert().Accept();"`;
 
-exports[`command code emitter should emit \`click at\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\"))).Click();"`;
+exports[`command code emitter should emit \`click at\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\")).Click();"`;
 
-exports[`command code emitter should emit \`click\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\"))).Click();"`;
+exports[`command code emitter should emit \`click\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\")).Click();"`;
 
 exports[`command code emitter should emit \`close\` command 1`] = `"driver.Close();"`;
 
@@ -489,7 +489,7 @@ Object {
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
-driver.FindElement(By.CssSelector(\\"button\\"))).Click();
+driver.FindElement(By.CssSelector(\\"button\\")).Click();
 this.vars[\\"undefined\\" = this.WaitForWindow(2000));"
 `;
 

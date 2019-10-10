@@ -227,7 +227,7 @@ function emitChooseOkOnNextConfirmation() {
 
 async function emitClick(target) {
   return Promise.resolve(
-    `driver.FindElement(${await location.emit(target)})).Click();`
+    `driver.FindElement(${await location.emit(target)}).Click();`
   )
 }
 

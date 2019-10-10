@@ -13,19 +13,24 @@ using Xunit;
 namespace LoginTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -33,9 +38,9 @@ namespace LoginTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   [Fact]
   public void Validcredentials() {
@@ -43,7 +48,7 @@ namespace LoginTest {
     driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
-    driver.FindElement(By.CssSelector(\\"#login button\\"))).Click();
+    driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
     Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
   }
   [Fact]
@@ -52,7 +57,7 @@ namespace LoginTest {
     driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"blah\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"blah\\");
-    driver.FindElement(By.CssSelector(\\"#login button\\"))).Click();
+    driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
     Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\");
   }
 }
@@ -72,19 +77,24 @@ using Xunit;
 namespace ControlflowTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -92,9 +102,9 @@ namespace ControlflowTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   [Fact]
   public void Controlflowif() {
@@ -174,19 +184,24 @@ using Xunit;
 namespace LoginTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -194,16 +209,16 @@ namespace LoginTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
-    driver.FindElement(By.LinkText(\\"Form Authentication\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
     driver.FindElement(By.Id(\\"password\\")).SendKeys(this.vars[\\"password\\"].ToString());
-    driver.FindElement(By.CssSelector(\\".fa\\"))).Click();
+    driver.FindElement(By.CssSelector(\\".fa\\")).Click();
   }
   [Fact]
   public void Invalidcredentials() {
@@ -234,19 +249,24 @@ using Xunit;
 namespace DefaultSuiteTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -254,9 +274,9 @@ namespace DefaultSuiteTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
     try {
@@ -275,7 +295,7 @@ namespace DefaultSuiteTest {
   public void selectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
-    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
     Assert.Equal(driver.Title, \\"New Window\\");
@@ -301,19 +321,24 @@ using Xunit;
 namespace DefaultSuiteTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -321,9 +346,9 @@ namespace DefaultSuiteTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
     try {
@@ -342,7 +367,7 @@ namespace DefaultSuiteTest {
   public void selectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
-    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
     Assert.Equal(driver.Title, \\"New Window\\");
@@ -355,7 +380,7 @@ namespace DefaultSuiteTest {
   public void Selectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
-    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
     Assert.Equal(driver.Title, \\"New Window\\");
@@ -377,19 +402,24 @@ using Xunit;
 namespace LoginTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -397,9 +427,9 @@ namespace LoginTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   [Fact]
   public void Login() {
@@ -407,7 +437,7 @@ namespace LoginTest {
     driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
-    driver.FindElement(By.CssSelector(\\"#login button\\"))).Click();
+    driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
     Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
   }
 }
@@ -427,19 +457,24 @@ using Xunit;
 namespace ValidcredentialsTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -447,16 +482,16 @@ namespace ValidcredentialsTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
-    driver.FindElement(By.LinkText(\\"Form Authentication\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
     driver.FindElement(By.Id(\\"password\\")).SendKeys(this.vars[\\"password\\"].ToString());
-    driver.FindElement(By.CssSelector(\\".fa\\"))).Click();
+    driver.FindElement(By.CssSelector(\\".fa\\")).Click();
   }
   [Fact]
   public void Validcredentials() {
@@ -481,19 +516,24 @@ using Xunit;
 namespace SelectwindowTest {
   public class DriverFixture : IDisposable
   {
+    public IWebDriver driver {get; private set;}
+    public IDictionary<String, Object>() vars {get; private set;}
+    public IJavaScriptExecutor js {get; private set;}
     public DriverFixture()
       {
-      driver = new ChromeDriver {get; private set;}
-      js = (IJavaScriptExecutor) driver {get; private set;};
-      vars = new Dictionary<String, Object>() {get; private set;};
+      this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor) driver;
+      this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
-      driver.Dispose()
+      driver.Close();
+      driver.Dispose();
     }
   }
   public class TestSuite : IClassFixture<DriverFixture>
   {
+    DriverFixture dF;
     public IWebDriver driver;
     public IDictionary<String, Object> vars;
     public IJavaScriptExecutor js;
@@ -501,9 +541,9 @@ namespace SelectwindowTest {
     public TestSuite (DriverFixture _dF)
     {
       this.dF = _dF;
-      driver = this.dF.driver;
-      js = this.dF.js;
-      vars = this.dF.vars;
+      this.driver = _dF.driver;
+      this.js = (IJavaScriptExecutor)driver
+      this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
     try {
@@ -523,9 +563,9 @@ namespace SelectwindowTest {
   public void Selectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/\\");
     driver.Manage().Window.Size = new System.Drawing.Size(1260, 1027);
-    driver.FindElement(By.LinkText(\\"Multiple Windows\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Multiple Windows\\")).Click();
     this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
-    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     this.vars[\\"root\\"] = driver.CurrentWindowHandle
     driver.SwitchTo().Window(this.vars[\\"win9625\\"].ToString());

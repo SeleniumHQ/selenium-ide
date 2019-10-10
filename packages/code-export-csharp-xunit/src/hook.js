@@ -47,27 +47,37 @@ function beforeEach() {
       commands: [
         { level: 0, statement: 'public class DriverFixture : IDisposable' },
         { level: 0, statement: '{' },
+        { level: 1, statement: 'public IWebDriver driver {get; private set;}' },
+        {
+          level: 1,
+          statement:
+            'public IDictionary<String, Object>() vars {get; private set;}',
+        },
+        {
+          level: 1,
+          statement: 'public IJavaScriptExecutor js {get; private set;}',
+        },
         { level: 1, statement: 'public DriverFixture()' },
         { level: 2, statement: '{' },
         {
           level: 2,
-          statement: `driver = new ${
+          statement: `this.driver = new ${
             userAgent.browserName ? userAgent.browserName : 'Chrome'
-          }Driver {get; private set;}`,
+          }Driver();`,
         },
         {
           level: 2,
-          statement: 'js = (IJavaScriptExecutor) driver {get; private set;};',
+          statement: 'this.js = (IJavaScriptExecutor) driver;',
         },
         {
           level: 2,
-          statement:
-            'vars = new Dictionary<String, Object>() {get; private set;};',
+          statement: 'this.vars = new Dictionary<String, Object>();',
         },
         { level: 1, statement: '}' },
         { level: 1, statement: 'public void Dispose()' },
         { level: 1, statement: '{' },
-        { level: 2, statement: 'driver.Dispose()' },
+        { level: 2, statement: 'driver.Close();' },
+        { level: 2, statement: 'driver.Dispose();' },
         { level: 1, statement: '}' },
         { level: 0, statement: '}' },
         {
@@ -75,6 +85,7 @@ function beforeEach() {
           statement: `public class TestSuite : IClassFixture<DriverFixture>`,
         },
         { level: 0, statement: '{' },
+        { level: 1, statement: 'DriverFixture dF;' },
         { level: 1, statement: 'public IWebDriver driver;' },
         {
           level: 1,
@@ -87,9 +98,9 @@ function beforeEach() {
         { level: 1, statement: 'public TestSuite (DriverFixture _dF)' },
         { level: 1, statement: '{' },
         { level: 2, statement: 'this.dF = _dF;' },
-        { level: 2, statement: 'driver = this.dF.driver;' },
-        { level: 2, statement: 'js = this.dF.js;' },
-        { level: 2, statement: 'vars = this.dF.vars;' },
+        { level: 2, statement: 'this.driver = _dF.driver;' },
+        { level: 2, statement: 'this.js = (IJavaScriptExecutor)driver' },
+        { level: 2, statement: 'this.vars = _dF.vars;' },
       ],
     },
     endingSyntax: {
