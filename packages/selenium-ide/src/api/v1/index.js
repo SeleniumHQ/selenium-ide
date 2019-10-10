@@ -51,8 +51,7 @@ const errors = {
   },
 }
 
-function isFromController(req)
-{
+function isFromController(req) {
   return Manager.controller && manager.controller.id === req.sender;
 }
 
@@ -133,12 +132,9 @@ router.get('/project', (_req, res) => {
 })
 
 router.post('/control', (req, res) => {
-  if(isFromController(req))
-  {
+  if(isFromController(req)) {
     res(true)
-  }
-  else
-  {
+  } else {
     tryOverrideControl(req)
       .then(() => res(true))
       .catch(() => res(false))
