@@ -138,10 +138,6 @@ class PluginManager {
     return this.plugins.find(p => p.id === pluginId)
   }
 
-  unregisterAllPlugins() {
-    return (this.plugins = [])
-  }
-
   validatePluginExport(project) {
     function validatePlugin(plugin) {
       return sendMessage(plugin.id, {

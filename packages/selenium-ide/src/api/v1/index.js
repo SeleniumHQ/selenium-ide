@@ -28,6 +28,7 @@ import UiState from '../../neo/stores/view/UiState'
 import WindowSession from '../../neo/IO/window-session'
 import ModalState from '../../neo/stores/view/ModalState'
 import { loadJSProject } from '../../neo/IO/filesystem'
+import manager from '../../plugin/manager'
 
 const router = new Router()
 
@@ -38,34 +39,32 @@ const errors = {
   },
   missingPlugin: {
     errorCode: 'MissingPlugin',
-    error: 'Plugin is not registered',
+    error: 'Plugin is not registered.',
   },
-  missingConnectionId: {
-    errorCode: 'MissingConnectionId',
-    error: 'No connection Id specified',
+  missingController: {
+    errorCode: 'missingController',
+    error: 'No controller specified.',
   },
   missingProject: {
     errorCode: 'MissingProject',
-    error: 'Project is missing',
+    error: 'Project is missing.',
   },
 }
 
-function checkControl(req) {
-  return Manager.controller &&
-    Manager.controller.connectionId != req.connectionId
-    ? Promise.reject()
-    : Promise.resolve()
+function isFromController(req) {
+  return Manager.controller && manager.controller.id === req.sender;
 }
 
 function controlledOnly(req, res) {
-  return checkControl(req).catch(() => {
+  if (!Manager.controller || isFromController(req)) {
+    return Promise.resolve()
+  } else {
     res(errors.cannotAccessInControlMode)
     return Promise.reject()
-  })
+  }
 }
 
 function tryOverrideControl(req) {
-  if (!req.connectionId) return
   if (!ModalState.welcomeState.completed) {
     ModalState.hideWelcome()
   }
@@ -80,7 +79,6 @@ function tryOverrideControl(req) {
       const plugin = {
         id: req.sender,
         name: req.name,
-        connectionId: req.connectionId,
         version: req.version,
         commands: req.commands,
         dependencies: req.dependencies,
@@ -134,24 +132,13 @@ router.get('/project', (_req, res) => {
 })
 
 router.post('/control', (req, res) => {
-  checkControl(req)
-    .then(() => {
-      if (UiState.isControlled) {
-        // Already in control mode with the same connection id.
-        res(true)
-      } else {
-        // Already in non-control mode.
-        tryOverrideControl(req)
-          .then(() => res(true))
-          .catch(() => res(false))
-      }
-    })
-    .catch(() => {
-      // Already in control mode but another connection come.
-      tryOverrideControl(req)
-        .then(() => res(true))
-        .catch(() => res(false))
-    })
+  if(isFromController(req)) {
+    res(true)
+  } else {
+    tryOverrideControl(req)
+      .then(() => res(true))
+      .catch(() => res(false))
+  }
 })
 
 router.post('/close', (req, res) => {
@@ -184,19 +171,19 @@ router.post('/close', (req, res) => {
   })
 })
 
-router.post('/_close', res => {
+router.post('/privateClose', res => {
   window.close()
   res(true)
 })
 
-router.post('/_connect', (req, res) => {
-  if (req.controller.connectionId) {
+router.post('/privateConnect', (req, res) => {
+  if (req.controller && req.controller.id) {
     Manager.controller = req.controller
     UiState.startConnection()
     Manager.registerPlugin(req.controller)
     return res(true)
   } else {
-    return res(errors.missingConnectionId)
+    return res(errors.missingController)
   }
 })
 

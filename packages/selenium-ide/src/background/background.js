@@ -186,14 +186,14 @@ browser.runtime.onMessage.addListener(handleInternalMessage)
 function handleInternalMessage(message) {
   if (
     message.restart &&
-    message.controller.connectionId &&
+    message.controller &&
     message.controller.id
   ) {
     ideWindowId = undefined
 
     browser.runtime
       .sendMessage({
-        uri: '/_close',
+        uri: '/privateClose',
         verb: 'post',
         payload: null,
       })
@@ -203,7 +203,7 @@ function handleInternalMessage(message) {
           delete payload.restart
 
           const newMessage = {
-            uri: '/_connect',
+            uri: '/privateConnect',
             verb: 'post',
             payload: payload,
           }
@@ -234,7 +234,7 @@ browser.runtime.onMessageExternal.addListener(
     let payload = message.payload
 
     payload.sender = sender.id
-    if (message.uri === '/_connect' || message.uri === '/_close') {
+    if (message.uri === '/privateConnect' || message.uri === '/privateClose') {
       return sendResponse(false)
     }
     browser.runtime
@@ -244,13 +244,12 @@ browser.runtime.onMessageExternal.addListener(
         if (message.uri == '/control' && message.verb == 'post') {
           return openPanel({ windowId: 0 }).then(() => {
             const newMessage = {
-              uri: '/_connect',
+              uri: '/privateConnect',
               verb: 'post',
               payload: {
                 controller: {
                   id: payload.sender,
                   name: payload.name,
-                  connectionId: payload.connectionId,
                   version: payload.version,
                   commands: payload.commands,
                   dependencies: payload.dependencies,
