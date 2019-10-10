@@ -1,5 +1,4 @@
-.pause-banner {
-  background: #fffcc5;
+.state-banner {
   border: 1px solid #cecece;
   border-radius: 2px;
   display: flex;
@@ -15,30 +14,22 @@
   z-index: 100;
 }
 
-.connected-mode {
-  background: #b4d6fa;
-  border: 1px solid #cecece;
-  border-radius: 2px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  top: 6px;
-  left: 0;
-  right: 0;
-  max-width: 300px;
-  margin: 0 auto;
-  height: 25px;
-  z-index: 100;
+.background-pause
+{
+  background: #fffcc5;
 }
 
-.pause-banner .debug-toolbar {
+.background-controlled {
+  background: #b4d6fa;
+}
+
+.state-banner .state-toolbar {
   text-align: center;
   height: inherit;
   display: flex;
   align-items: center;
 }
 
-.pause-banner .debug-toolbar > span {
+.state-banner .state-toolbar > span {
   padding: 0 5px;
 }

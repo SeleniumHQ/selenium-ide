@@ -27,16 +27,16 @@ export default class PauseBanner extends React.Component {
   render() {
     if (PlaybackState.isPlaying && PlaybackState.paused) {
       return (
-        <div className="pause-banner">
-          <div className="debug-toolbar">
+        <div className="state-banner background-pause">
+          <div className="state-toolbar">
             <span>Paused in debugger</span>
           </div>
         </div>
       )
     } else if (UiState.isControlled) {
       return (
-        <div className="connected-mode">
-          <div className="connected-mode">
+        <div className="state-banner background-controlled">
+          <div className="state-toolbar">
             <span>Controlled by {Manager.controller.name} </span>
           </div>
         </div>
