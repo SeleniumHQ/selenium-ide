@@ -15,12 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
 
 const emitters = {
-  afterAll,
+  afterAll: empty,
   afterEach,
-  beforeAll,
+  beforeAll: empty,
   beforeEach,
   declareDependencies,
   declareMethods: empty,
@@ -41,65 +41,50 @@ export function generateHooks() {
   return result
 }
 
-function afterAll() {
+function beforeEach() {
   const params = {
     startingSyntax: {
-      commands: [{ level: 0, statement: 'public void finalTearDown() {' }],
+      commands: [
+        { level: 0, statement: 'public class DriverFixture : IDisposable' },
+        { level: 0, statement: '{' },
+        { level: 1, statement: 'public DriverFixture()' },
+        { level: 2, statement: '{' },
+        {
+          level: 2,
+          statement: `driver = new ${
+            userAgent.browserName ? userAgent.browserName : 'Chrome'
+          }Driver {get; private set;}`,
+        },
+        {
+          level: 2,
+          statement: 'js = (IJavaScriptExecutor) driver {get; private set;};',
+        },
+        {
+          level: 2,
+          statement:
+            'vars = new Dictionary<String, Object>() {get; private set;};',
+        },
+        { level: 1, statement: '}' },
+        { level: 1, statement: 'public void Dispose()' },
+        { level: 1, statement: '{' },
+        { level: 2, statement: 'driver.Dispose()' },
+        { level: 1, statement: '}' },
+        { level: 0, statement: '}' },
+        {
+          level: 0,
+          statement: `public class TestSuite : IClassFixture<DriverFixture> {`,
+        },
+      ],
+      endingSyntax: {
+        commands: [{ level: 0, statement: '}' }],
+      },
     },
-    endingSyntax: {
-      commands: [{ level: 0, statement: '}' }],
-    },
-    registrationLevel: 1,
   }
   return params
 }
 
 function afterEach() {
-  const params = {
-    startingSyntax: {
-      commands: [
-        { level: 0, statement: 'public void tearDown() {' },
-        { level: 1, statement: 'driver.Quit();' },
-        { level: 1, statement: 'driver.Dispose();' },
-      ],
-    },
-    endingSyntax: {
-      commands: [{ level: 0, statement: '}' }],
-    },
-  }
-  return params
-}
-
-function beforeAll() {
-  const params = {
-    startingSyntax: {
-      commands: [
-        { level: 0, statement: '[Fact]\npublic void initialSetUp() {' },
-      ],
-    },
-    endingSyntax: {
-      commands: [{ level: 0, statement: '}' }],
-    },
-    registrationLevel: 1,
-  }
-  return params
-}
-
-function beforeEach() {
-  const params = {
-    startingSyntax: {
-      commands: [
-        { level: 0, statement: '' },
-        { level: 2, statement: 'driver = new FirefoxDriver();' },
-        { level: 2, statement: 'js = (IJavaScriptExecutor) driver;' },
-        { level: 2, statement: 'vars = new Dictionary<String, Object>();' },
-      ],
-    },
-    endingSyntax: {
-      commands: [{ level: 0, statement: '}' }],
-    },
-  }
-  return params
+  return '}'
 }
 
 function declareDependencies() {
