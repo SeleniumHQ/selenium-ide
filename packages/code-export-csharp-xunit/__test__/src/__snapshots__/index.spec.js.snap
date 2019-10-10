@@ -6,39 +6,45 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class LoginTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace LoginTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   [Fact]
-  public void validcredentials() {
-    driver.Url = \\"http://the-internet.herokuapp.com/login\\";
-    driver.Manage().Window.Size=new System.Drawing.Size(1440, 1177);
+  public void Validcredentials() {
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
+    driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
-    Assert.Equals(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, is(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\"));
+    driver.FindElement(By.CssSelector(\\"#login button\\"))).Click();
+    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
   }
   [Fact]
-  public void invalidcredentials() {
-    driver.Url = \\"http://the-internet.herokuapp.com/login\\";
-    driver.Manage().Window.Size=new System.Drawing.Size(1440, 1177);
+  public void Invalidcredentials() {
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
+    driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"blah\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"blah\\");
-    Assert.Equals(driver.FindElement(By.Id(\\"flash\\")).Text, is(\\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\"));
+    driver.FindElement(By.CssSelector(\\"#login button\\"))).Click();
+    Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\");
   }
 }
 "
@@ -50,84 +56,88 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class ControlflowTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace ControlflowTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   [Fact]
-  public void controlflowif() {
+  public void Controlflowif() {
     this.vars[\\"myVar\\"] = js.executeScript(\\"return 'a'\\")
-    if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", this.vars[\\"myVar\\"])) {
+    if ((Boolean) js.executeScript(return (\\"arguments[0] === 'a'\\"), this.vars[myVar])) {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'a'\\")
-    } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", this.vars[\\"myVar\\"])) {
+    } else if ((Boolean) js.executeScript(return (\\"arguments[0] === 'b'\\"), this.vars[myVar])) {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'b'\\")
     } else {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'c'\\")
     }
-    Assert.Equals(this.vars[\\"output\\"].ToString(), \\"a\\");
+    Assert.Equal(this.vars[\\"output\\"].ToString(), \\"a\\");
   }
   [Fact]
-  public void controlflowelseif() {
+  public void Controlflowelseif() {
     this.vars[\\"myVar\\"] = js.executeScript(\\"return 'b'\\")
-    if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", this.vars[\\"myVar\\"])) {
+    if ((Boolean) js.executeScript(return (\\"arguments[0] === 'a'\\"), this.vars[myVar])) {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'a'\\")
-    } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", this.vars[\\"myVar\\"])) {
+    } else if ((Boolean) js.executeScript(return (\\"arguments[0] === 'b'\\"), this.vars[myVar])) {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'b'\\")
     } else {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'c'\\")
     }
-    Assert.Equals(this.vars[\\"output\\"].ToString(), \\"b\\");
+    Assert.Equal(this.vars[\\"output\\"].ToString(), \\"b\\");
   }
   [Fact]
-  public void controlflowelse() {
+  public void Controlflowelse() {
     this.vars[\\"myVar\\"] = js.executeScript(\\"return 'c'\\")
-    if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", this.vars[\\"myVar\\"])) {
+    if ((Boolean) js.executeScript(return (\\"arguments[0] === 'a'\\"), this.vars[myVar])) {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'a'\\")
-    } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", this.vars[\\"myVar\\"])) {
+    } else if ((Boolean) js.executeScript(return (\\"arguments[0] === 'b'\\"), this.vars[myVar])) {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'b'\\")
     } else {
       this.vars[\\"output\\"] = js.executeScript(\\"return 'c'\\")
     }
-    Assert.Equals(this.vars[\\"output\\"].ToString(), \\"c\\");
+    Assert.Equal(this.vars[\\"output\\"].ToString(), \\"c\\");
   }
   [Fact]
-  public void controlflowdo() {
+  public void Controlflowdo() {
     this.vars[\\"check\\"] = js.executeScript(\\"return 1\\")
     do {
-      this.vars[\\"check\\"] = js.executeScript(\\"return arguments[0] + 1\\", this.vars[\\"check\\"])
-    } while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", this.vars[\\"check\\"]));
-    Assert.Equals(this.vars[\\"check\\"].ToString(), \\"3\\");
+      this.vars[\\"check\\"] = js.executeScript(\\"return arguments[0] + 1, this.vars[check]\\")
+    } while ((Boolean) js.executeScript(return (\\"arguments[0] < 3\\"), this.vars[check]));
+    Assert.Equal(this.vars[\\"check\\"].ToString(), \\"3\\");
   }
   [Fact]
-  public void controlflowtimes() {
+  public void Controlflowtimes() {
     this.vars[\\"check\\"] = js.executeScript(\\"return 1\\")
     Integer times = 2;
     for(int i = 0; i < times; i++) {
-      this.vars[\\"check\\"] = js.executeScript(\\"return arguments[0] + 1\\", this.vars[\\"check\\"])
+      this.vars[\\"check\\"] = js.executeScript(\\"return arguments[0] + 1, this.vars[check]\\")
     }
-    Assert.Equals(this.vars[\\"check\\"].ToString(), \\"3\\");
+    Assert.Equal(this.vars[\\"check\\"].ToString(), \\"3\\");
   }
   [Fact]
-  public void controlflowwhile() {
+  public void Controlflowwhile() {
     this.vars[\\"check\\"] = js.executeScript(\\"return 1\\")
-    while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", this.vars[\\"check\\"])) {
-      this.vars[\\"check\\"] = js.executeScript(\\"return arguments[0] + 1\\", this.vars[\\"check\\"])
+    while ((Boolean) js.executeScript(return (\\"arguments[0] < 3\\"), this.vars[check])) {
+      this.vars[\\"check\\"] = js.executeScript(\\"return arguments[0] + 1, this.vars[check]\\")
     }
-    Assert.Equals(this.vars[\\"check\\"].ToString(), \\"3\\");
+    Assert.Equal(this.vars[\\"check\\"].ToString(), \\"3\\");
   }
 }
 "
@@ -139,39 +149,43 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class LoginTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace LoginTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   public void login() {
-    driver.Url = \\"https://the-internet.herokuapp.com/\\";
-    
+    driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
+    driver.FindElement(By.LinkText(\\"Form Authentication\\"))).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
     driver.FindElement(By.Id(\\"password\\")).SendKeys(this.vars[\\"password\\"].ToString());
-    
+    driver.FindElement(By.CssSelector(\\".fa\\"))).Click();
   }
   [Fact]
-  public void invalidcredentials() {
+  public void Invalidcredentials() {
     this.vars[\\"username\\"] = \\"blah\\"
     this.vars[\\"password\\"] = \\"blah\\"
     login();
   }
   [Fact]
-  public void validcredentials() {
+  public void Validcredentials() {
     this.vars[\\"username\\"] = \\"tomsmith\\"
     this.vars[\\"password\\"] = \\"SuperSecretPassword!\\"
     login();
@@ -186,27 +200,35 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class DefaultSuiteTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace DefaultSuiteTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   public String waitForWindow(int timeout) {
-    Thread.Sleep(timeout);
-    Console.WriteLine(\\"Main thread exits.\\");
+    try {
+      Thread.Sleep(timeout);
+    }
+    catch {
+      Console.WriteLine(\\"{0} Exception caught.\\", e);
+    }
     var whNow = driver.WindowHandles;
     var whThen = this.vars[\\"WindowHandles\\"];
     if (whNow.Count > whThen.Count) {
@@ -215,13 +237,15 @@ public class DefaultSuiteTest {
     return whNow.GetEnumerator().MoveNext();
   }
   public void selectwindow() {
-    driver.Url = \\"http://the-internet.herokuapp.com/windows\\";
-    
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
+    this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
+    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
-    Assert.Equals(driver.Title, is(\\"New Window\\"));
+    Assert.Equal(driver.Title, \\"New Window\\");
   }
   [Fact]
-  public void reuse() {
+  public void Reuse() {
     selectwindow();
   }
 }
@@ -234,27 +258,35 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class DefaultSuiteTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace DefaultSuiteTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   public String waitForWindow(int timeout) {
-    Thread.Sleep(timeout);
-    Console.WriteLine(\\"Main thread exits.\\");
+    try {
+      Thread.Sleep(timeout);
+    }
+    catch {
+      Console.WriteLine(\\"{0} Exception caught.\\", e);
+    }
     var whNow = driver.WindowHandles;
     var whThen = this.vars[\\"WindowHandles\\"];
     if (whNow.Count > whThen.Count) {
@@ -263,20 +295,25 @@ public class DefaultSuiteTest {
     return whNow.GetEnumerator().MoveNext();
   }
   public void selectwindow() {
-    driver.Url = \\"http://the-internet.herokuapp.com/windows\\";
-    
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
+    this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
+    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
-    Assert.Equals(driver.Title, is(\\"New Window\\"));
+    Assert.Equal(driver.Title, \\"New Window\\");
   }
   [Fact]
-  public void reuse() {
+  public void Reuse() {
     selectwindow();
   }
   [Fact]
-  public void selectwindow() {
-    driver.Url = \\"http://the-internet.herokuapp.com/windows\\";
+  public void Selectwindow() {
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
+    this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
+    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    this.vars[\\"undefined\\" = this.WaitForWindow(2000));
     driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
-    Assert.Equals(driver.Title, is(\\"New Window\\"));
+    Assert.Equal(driver.Title, \\"New Window\\");
   }
 }
 "
@@ -288,31 +325,36 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class LoginTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace LoginTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   [Fact]
-  public void login() {
-    driver.Url = \\"http://the-internet.herokuapp.com/login\\";
-    driver.Manage().Window.Size=new System.Drawing.Size(1440, 1177);
+  public void Login() {
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
+    driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
-    Assert.Equals(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, is(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\"));
+    driver.FindElement(By.CssSelector(\\"#login button\\"))).Click();
+    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
   }
 }
 "
@@ -324,33 +366,37 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class ValidcredentialsTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace ValidcredentialsTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   public void login() {
-    driver.Url = \\"https://the-internet.herokuapp.com/\\";
-    
+    driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
+    driver.FindElement(By.LinkText(\\"Form Authentication\\"))).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
     driver.FindElement(By.Id(\\"password\\")).SendKeys(this.vars[\\"password\\"].ToString());
-    
+    driver.FindElement(By.CssSelector(\\".fa\\"))).Click();
   }
   [Fact]
-  public void validcredentials() {
+  public void Validcredentials() {
     this.vars[\\"username\\"] = \\"tomsmith\\"
     this.vars[\\"password\\"] = \\"SuperSecretPassword!\\"
     login();
@@ -365,27 +411,35 @@ using System;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-public class SelectwindowTest {
-  private WebDriver driver;
-  private IDictionary<String, Object> vars;
-  IJavaScriptExecutor js;
-  
-
-  public void setUp() {
-    driver = new FirefoxDriver();
-    js = (JavascriptExecutor) driver;
-    vars = new HashMap<String, Object>();
+namespace SelectwindowTest {
+  public IWebDriver driver;
+  public IDictionary<String, Object> vars;
+  public IJavaScriptExecutor js;
+  public class DriverFixture : IDisposable
+  {
+    public DriverFixture()
+      {
+      driver = new ChromeDriver {get; private set;}
+      js = (IJavaScriptExecutor) driver {get; private set;};
+      vars = new Dictionary<String, Object>() {get; private set;};
+    }
+    public void Dispose()
+    {
+      driver.Dispose()
+    }
   }
-  public void tearDown() {
-    driver.Quit();
-    driver.Dispose();
-  }
+  public class TestSuite : IClassFixture<DriverFixture> {
   public String waitForWindow(int timeout) {
-    Thread.Sleep(timeout);
-    Console.WriteLine(\\"Main thread exits.\\");
+    try {
+      Thread.Sleep(timeout);
+    }
+    catch {
+      Console.WriteLine(\\"{0} Exception caught.\\", e);
+    }
     var whNow = driver.WindowHandles;
     var whThen = this.vars[\\"WindowHandles\\"];
     if (whNow.Count > whThen.Count) {
@@ -394,14 +448,18 @@ public class SelectwindowTest {
     return whNow.GetEnumerator().MoveNext();
   }
   [Fact]
-  public void selectwindow() {
-    driver.Url = \\"http://the-internet.herokuapp.com/\\";
-    driver.Manage().Window.Size=new System.Drawing.Size(1260, 1027);
-    this.vars[\\"root\\"] = driver.WindowHandle
+  public void Selectwindow() {
+    driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/\\");
+    driver.Manage().Window.Size = new System.Drawing.Size(1260, 1027);
+    driver.FindElement(By.LinkText(\\"Multiple Windows\\"))).Click();
+    this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
+    driver.FindElement(By.LinkText(\\"Click Here\\"))).Click();
+    this.vars[\\"undefined\\" = this.WaitForWindow(2000));
+    this.vars[\\"root\\"] = driver.CurrentWindowHandle
     driver.SwitchTo().Window(this.vars[\\"win9625\\"].ToString());
-    Assert.Equals(driver.Title, is(\\"New Window\\"));
+    Assert.Equal(driver.Title, \\"New Window\\");
     driver.SwitchTo().Window(this.vars[\\"root\\"].ToString());
-    Assert.Equals(driver.Title, is(\\"The Internet\\"));
+    Assert.Equal(driver.Title, \\"The Internet\\");
   }
 }
 "
