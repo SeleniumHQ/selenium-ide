@@ -710,7 +710,7 @@ async function emitSubmit(_locator) {
 }
 
 async function emitType(target, value) {
-  return Promise.resolve( 
+  return Promise.resolve(
     `driver.FindElement(${await location.emit(
       target
     )}).SendKeys(${generateSendKeysInput(value)});`
