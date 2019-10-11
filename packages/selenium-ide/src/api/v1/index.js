@@ -171,12 +171,13 @@ router.post('/close', (req, res) => {
   })
 })
 
-router.post('/privateClose', res => {
+//Using '/private/' as a prefix for internal APIs
+router.post('/private/close', res => {
   window.close()
   res(true)
 })
 
-router.post('/privateConnect', (req, res) => {
+router.post('/private/connect', (req, res) => {
   if (req.controller && req.controller.id) {
     Manager.controller = req.controller
     UiState.startConnection()
