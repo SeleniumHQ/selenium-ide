@@ -42,6 +42,7 @@ function RunCommand(id, command, target, value, options) {
 
 class PluginManager {
   constructor() {
+    this.controller = null
     this.plugins = []
     this.plugins.vendorLanguages = {}
     RegisterConfigurationHook(project => {
@@ -174,7 +175,6 @@ class PluginManager {
         version: plugin.version,
       }
     })
-
     return { plugins, dependencies, jest }
   }
 

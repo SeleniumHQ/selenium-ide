@@ -157,7 +157,7 @@ You can see an example of this being implemented in `packages/code-export-java-j
 
 Once you've got everything else in place, it's time to wire it up for use in the UI.
 
-This is possible in [`packages/code-export/src/index.js`](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export/src/index.js). 
+This is possible in [`packages/code-export/src/index.js`](https://github.com/SeleniumHQ/selenium-ide/blob/v3/packages/code-export/src/index.js).
 
 You will need to add your language to `availableLanguages`.
 
