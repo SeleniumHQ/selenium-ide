@@ -1,6 +1,6 @@
 {
   "name": "browser-webdriver",
-  "version": "3.12.2",
+  "version": "3.14.0",
   "main": "build/webdriver.js",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
