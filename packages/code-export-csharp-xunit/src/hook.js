@@ -53,10 +53,6 @@ function beforeEach() {
           statement:
             'public IDictionary<String, Object> vars {get; private set;}',
         },
-        {
-          level: 1,
-          statement: 'public IJavaScriptExecutor js {get; private set;}',
-        },
         { level: 1, statement: 'public DriverFixture()' },
         { level: 2, statement: '{' },
         {
@@ -64,10 +60,6 @@ function beforeEach() {
           statement: `this.driver = new ${
             userAgent.browserName ? userAgent.browserName : 'Chrome'
           }Driver();`,
-        },
-        {
-          level: 2,
-          statement: 'this.js = (IJavaScriptExecutor) driver;',
         },
         {
           level: 2,
@@ -80,12 +72,16 @@ function beforeEach() {
         { level: 2, statement: 'driver.Dispose();' },
         { level: 1, statement: '}' },
         { level: 0, statement: '}' },
+      ],
+    },
+    endingSyntax: {
+      commands: [
         {
           level: 0,
           statement: `public class TestSuite : IClassFixture<DriverFixture>`,
         },
         { level: 0, statement: '{' },
-        { level: 1, statement: 'DriverFixture dF;' },
+        { level: 1, statement: 'DriverFixture _dF;' },
         { level: 1, statement: 'public IWebDriver driver;' },
         {
           level: 1,
@@ -97,14 +93,12 @@ function beforeEach() {
         },
         { level: 1, statement: 'public TestSuite (DriverFixture _dF)' },
         { level: 1, statement: '{' },
-        { level: 2, statement: 'this.dF = _dF;' },
+        { level: 2, statement: 'this._dF = _dF;' },
         { level: 2, statement: 'this.driver = _dF.driver;' },
         { level: 2, statement: 'this.js = (IJavaScriptExecutor)driver;' },
         { level: 2, statement: 'this.vars = _dF.vars;' },
+        { level: 1, statement: '}' },
       ],
-    },
-    endingSyntax: {
-      commands: [{ level: 1, statement: '}' }],
     },
   }
   return params

@@ -452,7 +452,7 @@ async function emitMouseOut() {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `IWebElement element = driver.FindElement(By.tagName("body"));`,
+      statement: `IWebElement element = driver.FindElement(By.TagName("body"));`,
     },
     { level: 1, statement: 'Actions builder = new Actions(driver);' },
     { level: 1, statement: 'builder.MoveToElement(element, 0, 0).Perform();' },

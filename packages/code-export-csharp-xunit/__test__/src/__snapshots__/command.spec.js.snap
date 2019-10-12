@@ -243,7 +243,7 @@ exports[`command code emitter should emit \`mouse move\` event 1`] = `
 
 exports[`command code emitter should emit \`mouse out\` event 1`] = `
 "{
-  IWebElement element = driver.FindElement(By.tagName(\\"body\\"));
+  IWebElement element = driver.FindElement(By.TagName(\\"body\\"));
   Actions builder = new Actions(driver);
   builder.MoveToElement(element, 0, 0).Perform();
 }"
