@@ -270,6 +270,7 @@ export default class Panel extends React.Component {
     Logger.clearLogs()
     newProject.setModified(false)
   }
+
   componentWillUnmount() {
     if (isProduction) {
       clearInterval(this.moveInterval)

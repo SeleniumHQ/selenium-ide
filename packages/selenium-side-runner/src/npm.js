@@ -15,17 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-let npm
-
-try {
-  npm = require('global-npm')
-} catch (err) {
-  if (err.code === 'MODULE_NOT_FOUND') {
-    npm = require('npm')
-  } else {
-    throw err
-  }
-}
+const npm = require('global-npm')
 
 function install() {
   return new Promise((res, rej) => {
