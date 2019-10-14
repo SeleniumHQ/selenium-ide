@@ -937,7 +937,7 @@ async function emitWaitForElementPresent(locator, timeout) {
       level: 1,
       statement: `WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
