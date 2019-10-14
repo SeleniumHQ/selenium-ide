@@ -1,5 +1,4 @@
-.pause-banner {
-  background: #fffcc5;
+.state-banner {
   border: 1px solid #cecece;
   border-radius: 2px;
   display: flex;
@@ -9,19 +8,28 @@
   top: 6px;
   left: 0;
   right: 0;
-  max-width: 200px;
   margin: 0 auto;
   height: 25px;
   z-index: 100;
 }
 
-.pause-banner .debug-toolbar {
+.background-pause {
+  background: #fffcc5;
+  max-width: 200px;
+}
+
+.background-controlled {
+  background: #b4d6fa;
+  max-width: 300px;
+}
+
+.state-banner .state-toolbar {
   text-align: center;
   height: inherit;
   display: flex;
   align-items: center;
 }
 
-.pause-banner .debug-toolbar > span {
+.state-banner .state-toolbar > span {
   padding: 0 5px;
 }

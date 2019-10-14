@@ -76,21 +76,37 @@ export function saveProject(_project) {
   UiState.saved()
 }
 
+function sendSaveProjectEvent(project) {
+  const saveMessage = {
+    action: 'event',
+    event: 'saveProject',
+    options: {
+      project,
+    },
+  }
+  browser.runtime.sendMessage(Manager.controller.id, saveMessage)
+}
+
 function downloadProject(project) {
   return exportProject(project).then(snapshot => {
     if (snapshot) {
       project.snapshot = snapshot
       Object.assign(project, Manager.emitDependencies())
     }
-    return browser.downloads.download({
-      filename: sanitizeProjectName(project.name) + '.side',
-      url: createBlob(
-        'application/json',
-        beautify(JSON.stringify(project), { indent_size: 2 })
-      ),
-      saveAs: true,
-      conflictAction: 'overwrite',
-    })
+    if (UiState.isControlled) {
+      //If in control mode, send the project in a message and skip downloading
+      sendSaveProjectEvent(project)
+    } else {
+      browser.downloads.download({
+        filename: sanitizeProjectName(project.name) + '.side',
+        url: createBlob(
+          'application/json',
+          beautify(JSON.stringify(project), { indent_size: 2 })
+        ),
+        saveAs: true,
+        conflictAction: 'overwrite',
+      })
+    }
   })
 }
 

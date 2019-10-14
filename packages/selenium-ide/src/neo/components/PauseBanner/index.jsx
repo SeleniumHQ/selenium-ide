@@ -19,18 +19,28 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import PlaybackState from '../../stores/view/PlaybackState'
 import './style.css'
+import UiState from '../../stores/view/UiState'
+import Manager from '../../../plugin/manager'
 
 @observer
 export default class PauseBanner extends React.Component {
   render() {
-    return PlaybackState.isPlaying && PlaybackState.paused ? (
-      <div className="pause-banner">
-        <div className="debug-toolbar">
-          <span>Paused in debugger</span>
+    if (PlaybackState.isPlaying && PlaybackState.paused) {
+      return (
+        <div className="state-banner background-pause">
+          <div className="state-toolbar">
+            <span>Paused in debugger</span>
+          </div>
         </div>
-      </div>
-    ) : (
-      <div />
-    )
+      )
+    } else if (UiState.isControlled) {
+      return (
+        <div className="state-banner background-controlled">
+          <div className="state-toolbar">
+            <span>Controlled by {Manager.controller.name} </span>
+          </div>
+        </div>
+      )
+    } else return <div />
   }
 }

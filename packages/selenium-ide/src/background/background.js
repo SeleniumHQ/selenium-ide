@@ -181,17 +181,82 @@ browser.runtime.onConnect.addListener(function(m) {
   port = m
 })
 
+browser.runtime.onMessage.addListener(handleInternalMessage)
+
+function handleInternalMessage(message) {
+  if (message.restart && message.controller && message.controller.id) {
+    ideWindowId = undefined
+
+    browser.runtime
+      .sendMessage({
+        uri: '/private/close',
+        verb: 'post',
+        payload: null,
+      })
+      .then(() => {
+        openPanel({ windowId: 0 }).then(() => {
+          var payload = { ...message }
+          delete payload.restart
+
+          const newMessage = {
+            uri: '/private/connect',
+            verb: 'post',
+            payload: payload,
+          }
+          browser.runtime
+            .sendMessage(newMessage)
+            .then(
+              browser.runtime.sendMessage(message.controller.id, {
+                connected: true,
+              })
+            )
+            .catch(() => {
+              browser.runtime.sendMessage(
+                message.controller.id,
+                'Error Connecting to Selenium IDE'
+              )
+            })
+        })
+      })
+  }
+}
+
 browser.runtime.onMessageExternal.addListener(
   (message, sender, sendResponse) => {
     if (!message.payload) {
       message.payload = {}
     }
-    message.payload.sender = sender.id
+
+    let payload = message.payload
+
+    payload.sender = sender.id
+    if (message.uri.startsWith('/private/')) {
+      return sendResponse(false)
+    }
     browser.runtime
       .sendMessage(message)
       .then(sendResponse)
       .catch(() => {
-        if (message.openSeleniumIDEIfClosed) {
+        if (message.uri == '/control' && message.verb == 'post') {
+          return openPanel({ windowId: 0 }).then(() => {
+            const newMessage = {
+              uri: '/private/connect',
+              verb: 'post',
+              payload: {
+                controller: {
+                  id: payload.sender,
+                  name: payload.name,
+                  version: payload.version,
+                  commands: payload.commands,
+                  dependencies: payload.dependencies,
+                  jest: payload.jest,
+                  exports: payload.exports,
+                },
+              },
+            }
+            browser.runtime.sendMessage(newMessage).then(sendResponse)
+          })
+        } else if (message.openSeleniumIDEIfClosed) {
           return openPanel({ windowId: 0 }).then(() => {
             sendResponse(true)
           })

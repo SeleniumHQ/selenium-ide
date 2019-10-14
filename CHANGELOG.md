@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.14.0
+- Added experimental support for controlled extension mode
+
 ## v3.13.0
 - Control flow: Added optional loop limit override to `repeat if`
 - Control flow: Excuded `for each` from implicit retry limit
