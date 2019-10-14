@@ -95,6 +95,7 @@ selenium == 4.0.0a1
 ```sh
 > pip3 install -r ./requirements.txt
 ```
+
 ### C# xUnit
 
 The exported code for C# xUnit is built to work with C#, xUnit, and the latest version of Selenium 4.
@@ -102,12 +103,13 @@ The exported code for C# xUnit is built to work with C#, xUnit, and the latest v
 You should be able to install with dotnet tools and run it after installing these dependencies (e.g., with either `Install-Package Selenium.WebDriver` or `dotnet add package Selenium.WebDriver`).
 
 In your project file, the below should be added. 
+
 ```
 "Selenium.WebDriver": {
               "target": "Package",
               "version": "[x.xx.x, )"
             }
-            ```
+```
 
 ```sh
 > dotnet add package Selenium.WebDriver
