@@ -468,7 +468,7 @@ exports[`command code emitter should emit \`waitForElementNotVisible\` command 1
 
 exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5);
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
   wait.Until(c => c.FindElement(By.CssSelector(\\"#blah\\")));
 }"
 `;
