@@ -106,20 +106,20 @@ while condition:",
 
 exports[`command code emitter should emit \`double click at\` command 1`] = `
 "element = self.driver.find_element(By.LINK_TEXT, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.double_click(element).perform()"
 `;
 
 exports[`command code emitter should emit \`double click\` command 1`] = `
 "element = self.driver.find_element(By.LINK_TEXT, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.double_click(element).perform()"
 `;
 
 exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
 "dragged = self.driver.find_element(By.LINK_TEXT, \\"dragged\\")
 dropped = self.driver.find_element(By.LINK_TEXT, \\"dropped\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.drag_and_drop(dragged, dropped).perform()"
 `;
 
@@ -177,49 +177,49 @@ Object {
 
 exports[`command code emitter should emit \`mouse down at\` event 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).click_and_hold().perform()"
 `;
 
 exports[`command code emitter should emit \`mouse down\` command 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).click_and_hold().perform()"
 `;
 
 exports[`command code emitter should emit \`mouse move at\` event 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).perform()"
 `;
 
 exports[`command code emitter should emit \`mouse move\` event 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).perform()"
 `;
 
 exports[`command code emitter should emit \`mouse out\` event 1`] = `
 "element = self.driver.find_element(By.CSS_SELECTOR, \\"body\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element, 0, 0).perform()"
 `;
 
 exports[`command code emitter should emit \`mouse over\` event 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).perform()"
 `;
 
 exports[`command code emitter should emit \`mouse up at\` event 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).release().perform()"
 `;
 
 exports[`command code emitter should emit \`mouse up\` event 1`] = `
 "element = self.driver.find_element(By.ID, \\"button\\")
-actions = ActionChains(driver)
+actions = ActionChains(self.driver)
 actions.move_to_element(element).release().perform()"
 `;
 
@@ -282,7 +282,7 @@ exports[`command code emitter should emit \`store xpath count\` command 1`] = `"
 
 exports[`command code emitter should emit \`store\` command 1`] = `"self.vars[\\"myVar\\"] = \\"some value\\""`;
 
-exports[`command code emitter should emit \`submit\` command 1`] = `"raise Exception(\\"\`submit\` is not a supported command in Selenium Webself.driver. Please re-record the step in the IDE.\\")"`;
+exports[`command code emitter should emit \`submit\` command 1`] = `"raise Exception(\\"'submit' is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\")"`;
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
