@@ -94,7 +94,7 @@ function beforeEach() {
     startingSyntax: {
       commands: [
         { level: 0, statement: '[SetUp]' },
-        { level: 0, statement: 'public new void SetUp() {' },
+        { level: 0, statement: 'public void SetUp() {' },
         {
           level: 1,
           statement: `this.Driver = new ${
@@ -117,7 +117,7 @@ function declareDependencies() {
     startingSyntax: {
       commands: [
         { level: 0, statement: 'using System;' },
-        { level: 0, statement: 'using System.Collections.Generic;' },
+        { level: 0, statement: 'using System.Collections;' },
         { level: 0, statement: 'using OpenQA.Selenium;' },
         { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
         { level: 0, statement: 'using OpenQA.Selenium.Firefox;' },
@@ -134,10 +134,10 @@ function declareVariables() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'private WebDriver Driver;' },
+        { level: 0, statement: 'private IWebDriver Driver;' },
         {
           level: 0,
-          statement: 'private vars;',
+          statement: 'private Hashtable vars;',
         },
         { level: 0, statement: 'private IJavaScriptExecutor js;' },
       ],
