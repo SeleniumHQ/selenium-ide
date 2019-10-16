@@ -37,7 +37,7 @@ function readFile(filename) {
   )
 }
 
-describe.skip('Code Export Java JUnit Selenium', () => {
+describe('Code Export Java JUnit Selenium', () => {
   it('should export a test', async () => {
     const project = readFile('single-test.side')
     const results = await emitTest({

@@ -45,8 +45,8 @@ function afterAll() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '@AfterAll' },
-        { level: 0, statement: 'public void finalTearDown() {' },
+        { level: 0, statement: '[OneTimeTearDown]' },
+        { level: 0, statement: 'public void FinalTearDown() {' },
       ],
     },
     endingSyntax: {
@@ -61,9 +61,9 @@ function afterEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '@After' },
-        { level: 0, statement: 'public void tearDown() {' },
-        { level: 1, statement: 'driver.quit();' },
+        { level: 0, statement: '[TearDown]' },
+        { level: 0, statement: 'protected void TearDown() {' },
+        { level: 1, statement: 'Driver.Quit();' },
       ],
     },
     endingSyntax: {
@@ -77,8 +77,8 @@ function beforeAll() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '@BeforeAll' },
-        { level: 0, statement: 'public void initialSetUp() {' },
+        { level: 0, statement: '[OneTimeSetUp]' },
+        { level: 0, statement: 'public void InitialSetUp() {' },
       ],
     },
     endingSyntax: {
@@ -93,16 +93,16 @@ function beforeEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: '@Before' },
-        { level: 0, statement: 'public void setUp() {' },
+        { level: 0, statement: '[SetUp]' },
+        { level: 0, statement: 'public new void SetUp() {' },
         {
           level: 1,
-          statement: `driver = new ${
+          statement: `this.Driver = new ${
             userAgent.browserName ? userAgent.browserName : 'Chrome'
           }Driver();`,
         },
-        { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
-        { level: 1, statement: 'vars = new HashMap<String, Object>();' },
+        { level: 1, statement: 'this.js = (IJavaScriptExecutor)Driver;' },
+        { level: 1, statement: 'this.vars = new Hashtable();' },
       ],
     },
     endingSyntax: {
@@ -116,44 +116,14 @@ function declareDependencies() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'import org.junit.Test;' },
-        { level: 0, statement: 'import org.junit.Before;' },
-        { level: 0, statement: 'import org.junit.After;' },
-        { level: 0, statement: 'import static org.junit.Assert.*;' },
-        { level: 0, statement: 'import static org.hamcrest.CoreMatchers.is;' },
-        { level: 0, statement: 'import static org.hamcrest.core.IsNot.not;' },
-        { level: 0, statement: 'import org.openqa.selenium.By;' },
-        { level: 0, statement: 'import org.openqa.selenium.WebDriver;' },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.firefox.FirefoxDriver;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.chrome.ChromeDriver;',
-        },
-        { level: 0, statement: 'import org.openqa.selenium.Dimension;' },
-        { level: 0, statement: 'import org.openqa.selenium.WebElement;' },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.interactions.Actions;',
-        },
-        {
-          level: 0,
-          statement:
-            'import org.openqa.selenium.support.ui.ExpectedConditions;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.support.ui.WebDriverWait;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.JavascriptExecutor;',
-        },
-        { level: 0, statement: 'import org.openqa.selenium.Alert;' },
-        { level: 0, statement: 'import org.openqa.selenium.Keys;' },
-        { level: 0, statement: 'import java.util.*;' },
+        { level: 0, statement: 'using System;' },
+        { level: 0, statement: 'using System.Collections.Generic;' },
+        { level: 0, statement: 'using OpenQA.Selenium;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Firefox;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
+        { level: 0, statement: 'using OpenQA.Selenium.Interactions;' },
+        { level: 0, statement: 'using NUnit.Framework;' },
       ],
     },
   }
@@ -164,12 +134,12 @@ function declareVariables() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'private WebDriver driver;' },
+        { level: 0, statement: 'private WebDriver Driver;' },
         {
           level: 0,
-          statement: 'private Map<String, Object> vars;',
+          statement: 'private vars;',
         },
-        { level: 0, statement: 'JavascriptExecutor js;' },
+        { level: 0, statement: 'private IJavaScriptExecutor js;' },
       ],
     },
   }

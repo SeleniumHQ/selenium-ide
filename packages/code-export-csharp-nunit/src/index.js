@@ -21,12 +21,12 @@ import location from './location'
 import { generateHooks } from './hook'
 
 // Define language options
-export const displayName = 'Java JUnit'
+export const displayName = 'C# NUnit'
 
 export let opts = {}
 opts.emitter = emitter
 opts.hooks = generateHooks()
-opts.fileExtension = '.java'
+opts.fileExtension = '.cs'
 opts.commandPrefixPadding = '  '
 opts.terminatingKeyword = '}'
 opts.commentPrefix = '//'
@@ -34,7 +34,7 @@ opts.generateMethodDeclaration = generateMethodDeclaration
 
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
 function generateTestDeclaration(name) {
-  return `@Test\npublic void ${exporter.parsers.uncapitalize(
+  return `[Test]\npublic void ${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
   )}() {`
 }
@@ -42,7 +42,7 @@ function generateMethodDeclaration(name) {
   return `public void ${exporter.parsers.sanitizeName(name)}() {`
 }
 function generateSuiteDeclaration(name) {
-  return `public class ${exporter.parsers.capitalize(
+  return `[TestFixture]\npublic class ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
   )}Test {`
 }
