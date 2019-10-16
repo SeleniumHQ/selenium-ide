@@ -136,16 +136,14 @@ function canEmit(commandName) {
   return !!emitters[commandName]
 }
 
-// TODO: add `Hashtable vars = new Hashtable();` to beforeEach hook
 function variableLookup(varName) {
-  return `vars["${varName}"].ToString()`
+  return `this.vars["${varName}"].ToString()`
 }
 
 function variableSetter(varName, value) {
-  return varName ? `vars.Add("${varName}", ${value});` : ''
+  return varName ? `this.vars["${varName}"] = ${value};` : ''
 }
 
-// TODO: add `using System.Threading;` to deps
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
     return `public String ${name}(int timeout) {`
@@ -159,7 +157,7 @@ function emitWaitForWindow() {
     { level: 0, statement: 'var whNow = Driver.WindowHandles;' },
     {
       level: 0,
-      statement: 'var whThen = vars["WindowHandles"];',
+      statement: 'var whThen = this.vars["WindowHandles"];',
     },
     { level: 0, statement: 'if (whNow.Count > whThen.Count) {' },
     { level: 1, statement: 'whNow.removeAll(whThen);' },
@@ -175,15 +173,15 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `vars.Add("WindowHandles", Driver.WindowHandles);\n${await emittedCommand}\nvars.Add("${
+    `this.vars["WindowHandles"] = Driver.WindowHandles;\n${await emittedCommand}\nthis.vars["${
       command.windowHandleName
-    }", waitForWindow(${command.windowTimeout}));`
+    }"] = waitForWindow(${command.windowTimeout});`
   )
 }
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `Assert.That(vars["${varName}"].ToString(), Is.EqualTo("${value}"));`
+    `Assert.That(this.vars["${varName}"].ToString(), Is.EqualTo("${value}"));`
   )
 }
 
@@ -303,7 +301,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `vars.Add("${iteratorVarName}", collection[i]);`,
+        statement: `this.vars["${iteratorVarName}"] = collection[i];`,
       },
     ],
   })
@@ -374,7 +372,7 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitEcho(message) {
-  const _message = message.startsWith('vars[') ? message : `"${message}"`
+  const _message = message.startsWith('this.vars[') ? message : `"${message}"`
   return Promise.resolve(`Console.WriteLine(${_message});`)
 }
 
@@ -412,7 +410,7 @@ async function emitExecuteAsyncScript(script, varName) {
 
 function generateScriptArguments(script) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `vars["${varName}"]`)
+    .map(varName => `this.vars["${varName}"]`)
     .join(',')}`
 }
 
@@ -630,7 +628,7 @@ function generateSendKeysInput(value) {
       })
       .join(', ')
   } else {
-    if (value.startsWith('vars[')) {
+    if (value.startsWith('this.vars[')) {
       return value
     } else {
       return `"${value}"`
@@ -1021,7 +1019,6 @@ async function emitWaitForElementNotPresent(locator, timeout) {
   })
 }
 
-// TODO: add `using OpenQA.Selenium.Support.UI;` to deps
 async function emitWaitForElementNotVisible(locator, timeout) {
   const commands = [
     { level: 0, statement: '{' },

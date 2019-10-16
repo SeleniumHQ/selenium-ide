@@ -102,7 +102,10 @@ function beforeEach() {
           }Driver();`,
         },
         { level: 1, statement: 'this.js = (IJavaScriptExecutor)this.Driver;' },
-        { level: 1, statement: 'this.vars = new Hashtable();' },
+        {
+          level: 1,
+          statement: 'this.vars = new Dictionary<String, Object>();',
+        },
       ],
     },
     endingSyntax: {
@@ -137,7 +140,7 @@ function declareVariables() {
         { level: 0, statement: 'private IWebDriver Driver;' },
         {
           level: 0,
-          statement: 'private Hashtable vars;',
+          statement: 'private IDictionary<String, Object> vars;',
         },
         { level: 0, statement: 'private IJavaScriptExecutor js;' },
       ],
