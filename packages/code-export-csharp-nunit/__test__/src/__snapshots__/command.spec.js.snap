@@ -156,13 +156,13 @@ exports[`command code emitter should emit \`echo\` command with variables 1`] = 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "{
   var element = Driver.FindElement(By.Id(\\"contentEditable\\"));
-  js.executeScript(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element);
+  this.js.ExecuteScript(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element);
 }"
 `;
 
 exports[`command code emitter should emit \`else if\` command 1`] = `
 Object {
-  "body": "} else if ((Boolean) js.executeScript(\\"return (true)\\")) {",
+  "body": "} else if ((Boolean) this.js.ExecuteScript(\\"return (true)\\")) {",
   "endingLevel": 1,
 }
 `;
@@ -181,24 +181,24 @@ Object {
 }
 `;
 
-exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars.Add(\\"myVar\\", js.executeAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\"));"`;
+exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars.Add(\\"myVar\\", this.js.executeAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\"));"`;
 
-exports[`command code emitter should emit \`execute script\` command 1`] = `"vars.Add(\\"myVar\\", js.executeScript(\\"javascript\\"));"`;
+exports[`command code emitter should emit \`execute script\` command 1`] = `"vars.Add(\\"myVar\\", this.js.ExecuteScript(\\"javascript\\"));"`;
 
-exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars.Add(\\"myVar\\", js.executeScript(\\"return 'a'\\"));"`;
+exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars.Add(\\"myVar\\", this.js.ExecuteScript(\\"return 'a'\\"));"`;
 
 exports[`command code emitter should emit \`forEach\` command 1`] = `
 Object {
   "body": "ArrayList collection = (ArrayList) this.vars[\\"collection\\"];
-for (int i = 0; i < collection.Count() - 1; i++) {
-  vars.Add(\\"iteratorVar\\", collection.get(i));",
+for (int i = 0; i < collection.Count - 1; i++) {
+  vars.Add(\\"iteratorVar\\", collection[i]);",
   "endingLevel": 1,
 }
 `;
 
 exports[`command code emitter should emit \`if\` command 1`] = `
 Object {
-  "body": "if ((Boolean) js.executeScript(\\"return (true)\\")) {",
+  "body": "if ((Boolean) this.js.ExecuteScript(\\"return (true)\\")) {",
   "endingLevel": 1,
 }
 `;
@@ -276,9 +276,9 @@ exports[`command code emitter should emit \`remove selection\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while ((Boolean) js.executeScript(\\"return (true)\\"));"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while ((Boolean) this.js.ExecuteScript(\\"return (true)\\"));"`;
 
-exports[`command code emitter should emit \`run script\` command 1`] = `"js.executeScript(\\"alert('test');alert('Im annoying');\\");"`;
+exports[`command code emitter should emit \`run script\` command 1`] = `"this.js.ExecuteScript(\\"alert('test');alert('Im annoying');\\");"`;
 
 exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase();"`;
 
@@ -289,7 +289,7 @@ exports[`command code emitter should emit \`select window\` to select a window b
 exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
 "{
   ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles);
-  Driver.SwitchTo().Window(handles.get(12));
+  Driver.SwitchTo().Window(handles[12]);
 }"
 `;
 
@@ -298,7 +298,7 @@ exports[`command code emitter should emit \`select window\` to select a window b
 exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `
 "{
   ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles());
-  Driver.SwitchTo().Window(handles.get(0));
+  Driver.SwitchTo().Window(handles[0]);
 }"
 `;
 
@@ -343,7 +343,7 @@ exports[`command code emitter should emit \`submit\` command 1`] = `"throw new E
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
-  "body": "Integer times = 5;
+  "body": "var times = 5;
 for(int i = 0; i < times; i++) {",
   "endingLevel": 1,
 }
@@ -467,7 +467,7 @@ exports[`command code emitter should emit \`waitForElementVisible\` command 1`] 
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
-  "body": "while ((Boolean) js.executeScript(\\"return (true)\\")) {",
+  "body": "while ((Boolean) this.js.ExecuteScript(\\"return (true)\\")) {",
   "endingLevel": 1,
 }
 `;

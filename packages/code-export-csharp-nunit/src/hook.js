@@ -101,7 +101,7 @@ function beforeEach() {
             userAgent.browserName ? userAgent.browserName : 'Chrome'
           }Driver();`,
         },
-        { level: 1, statement: 'this.js = (IJavaScriptExecutor)Driver;' },
+        { level: 1, statement: 'this.js = (IJavaScriptExecutor)this.Driver;' },
         { level: 1, statement: 'this.vars = new Hashtable();' },
       ],
     },

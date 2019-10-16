@@ -18,7 +18,7 @@ public class LoginTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -65,7 +65,7 @@ public class ControlflowTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -74,62 +74,62 @@ public class ControlflowTest {
   }
   [Test]
   public void controlflowif() {
-    vars.Add(\\"myVar\\", js.executeScript(\\"return 'a'\\"));
-    if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'a'\\"));
-    } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'b'\\"));
+    vars.Add(\\"myVar\\", this.js.ExecuteScript(\\"return 'a'\\"));
+    if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'a'\\"));
+    } else if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'b'\\"));
     } else {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'c'\\"));
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'c'\\"));
     }
     Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"a\\"));
   }
   [Test]
   public void controlflowelseif() {
-    vars.Add(\\"myVar\\", js.executeScript(\\"return 'b'\\"));
-    if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'a'\\"));
-    } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'b'\\"));
+    vars.Add(\\"myVar\\", this.js.ExecuteScript(\\"return 'b'\\"));
+    if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'a'\\"));
+    } else if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'b'\\"));
     } else {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'c'\\"));
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'c'\\"));
     }
     Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"b\\"));
   }
   [Test]
   public void controlflowelse() {
-    vars.Add(\\"myVar\\", js.executeScript(\\"return 'c'\\"));
-    if ((Boolean) js.executeScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'a'\\"));
-    } else if ((Boolean) js.executeScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'b'\\"));
+    vars.Add(\\"myVar\\", this.js.ExecuteScript(\\"return 'c'\\"));
+    if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'a'\\"));
+    } else if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'b'\\"));
     } else {
-      vars.Add(\\"output\\", js.executeScript(\\"return 'c'\\"));
+      vars.Add(\\"output\\", this.js.ExecuteScript(\\"return 'c'\\"));
     }
     Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"c\\"));
   }
   [Test]
   public void controlflowdo() {
-    vars.Add(\\"check\\", js.executeScript(\\"return 1\\"));
+    vars.Add(\\"check\\", this.js.ExecuteScript(\\"return 1\\"));
     do {
-      vars.Add(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]));
-    } while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
+      vars.Add(\\"check\\", this.js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]));
+    } while ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
     Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowtimes() {
-    vars.Add(\\"check\\", js.executeScript(\\"return 1\\"));
-    Integer times = 2;
+    vars.Add(\\"check\\", this.js.ExecuteScript(\\"return 1\\"));
+    var times = 2;
     for(int i = 0; i < times; i++) {
-      vars.Add(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]));
+      vars.Add(\\"check\\", this.js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]));
     }
     Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowwhile() {
-    vars.Add(\\"check\\", js.executeScript(\\"return 1\\"));
-    while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
-      vars.Add(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]));
+    vars.Add(\\"check\\", this.js.ExecuteScript(\\"return 1\\"));
+    while ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
+      vars.Add(\\"check\\", this.js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]));
     }
     Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
@@ -155,7 +155,7 @@ public class LoginTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -203,7 +203,7 @@ public class DefaultSuiteTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -257,7 +257,7 @@ public class DefaultSuiteTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -320,7 +320,7 @@ public class LoginTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -358,7 +358,7 @@ public class ValidcredentialsTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]
@@ -400,7 +400,7 @@ public class SelectwindowTest {
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)Driver;
+    this.js = (IJavaScriptExecutor)this.Driver;
     this.vars = new Hashtable();
   }
   [TearDown]

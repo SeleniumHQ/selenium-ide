@@ -241,7 +241,7 @@ async function emitClose() {
 
 function generateExpressionScript(script) {
   const scriptString = script.script.replace(/"/g, "'")
-  return `(Boolean) js.executeScript("return (${scriptString})"${generateScriptArguments(
+  return `(Boolean) this.js.ExecuteScript("return (${scriptString})"${generateScriptArguments(
     script
   )})`
 }
@@ -299,11 +299,11 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 0,
-        statement: `for (int i = 0; i < collection.Count() - 1; i++) {`,
+        statement: `for (int i = 0; i < collection.Count - 1; i++) {`,
       },
       {
         level: 1,
-        statement: `vars.Add("${iteratorVarName}", collection.get(i));`,
+        statement: `vars.Add("${iteratorVarName}", collection[i]);`,
       },
     ],
   })
@@ -320,7 +320,7 @@ function emitControlFlowRepeatIf(script) {
 
 function emitControlFlowTimes(target) {
   const commands = [
-    { level: 0, statement: `Integer times = ${target};` },
+    { level: 0, statement: `var times = ${target};` },
     { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
   ]
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })
@@ -389,7 +389,7 @@ async function emitEditContent(locator, content) {
     },
     {
       level: 1,
-      statement: `js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
+      statement: `this.js.ExecuteScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -397,14 +397,14 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const result = `js.executeScript("${script.script}"${generateScriptArguments(
-    script
-  )})`
+  const result = `this.js.ExecuteScript("${
+    script.script
+  }"${generateScriptArguments(script)})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  const result = `js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+  const result = `this.js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
@@ -508,7 +508,9 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `js.executeScript("${script.script}${generateScriptArguments(script)}");`
+    `this.js.ExecuteScript("${script.script}${generateScriptArguments(
+      script
+    )}");`
   )
 }
 
@@ -584,7 +586,7 @@ async function emitSelectWindow(windowLocation) {
             statement:
               'ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles());',
           },
-          { level: 1, statement: 'Driver.SwitchTo().Window(handles.get(0));' },
+          { level: 1, statement: 'Driver.SwitchTo().Window(handles[0]);' },
           { level: 0, statement: '}' },
         ],
       })
@@ -600,7 +602,7 @@ async function emitSelectWindow(windowLocation) {
           },
           {
             level: 1,
-            statement: `Driver.SwitchTo().Window(handles.get(${index}));`,
+            statement: `Driver.SwitchTo().Window(handles[${index}]);`,
           },
           { level: 0, statement: '}' },
         ],
