@@ -606,6 +606,19 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@seleniumhq/side-model@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.14.0.tgz#d875707c88536ca67d35a929ba6f5cbce0f3ce5d"
+  integrity sha512-si8dipFgknUpGHJrRzeWIIlHsWis4RaLDbCdMoIgiqmKqimetBYm2b/qsFqhtgC/oL6ER5VdfO/f1fmPemWHTA==
+
+"@seleniumhq/side-utils@^3.12.2":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-utils/-/side-utils-3.14.0.tgz#f3d7a785299b5a1802ea0423f1adf18442fd1c66"
+  integrity sha512-0zht8R7UgnnpoZ0ZklNbLg3tBa5YTf/YzWc4RKeTdqBMgfm0m7IpJRxwL94A2WuJh6cEgUPMVpKQNpHTb5aEfA==
+  dependencies:
+    "@seleniumhq/side-model" "^3.14.0"
+    ua-parser-js "^0.7.17"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -2015,6 +2028,11 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
   integrity sha1-yy4SAwZ+DI3h9hQJS5/kVwTqYAM=
+
+ua-parser-js@^0.7.17:
+  version "0.7.20"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.20.tgz#7527178b82f6a62a0f243d1f94fd30e3e3c21098"
+  integrity sha512-8OaIKfzL5cpx8eCMAhhvTlft8GYF8b2eQr6JkCyVdrgjcytyOmPCXrqXFcUnhonRpLlh5yxEZVohm6mzaowUOw==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
