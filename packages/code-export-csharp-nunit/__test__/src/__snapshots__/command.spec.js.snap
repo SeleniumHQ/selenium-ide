@@ -189,7 +189,8 @@ exports[`command code emitter should emit \`execute script\` command with return
 
 exports[`command code emitter should emit \`forEach\` command 1`] = `
 Object {
-  "body": "ArrayList collection = (ArrayList) this.vars[\\"collection\\"];
+  "body": "ArrayList collection = new ArrayList();
+collection.Add(this.vars[\\"collection\\"]);
 for (int i = 0; i < collection.Count - 1; i++) {
   this.vars[\\"iteratorVar\\"] = collection[i];",
   "endingLevel": 1,
