@@ -293,7 +293,11 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection = (ArrayList) this.vars["${collectionVarName}"];`,
+        statement: `ArrayList collection = new ArrayList();`,
+      },
+      {
+        level: 0,
+        statement: `collection.Add(this.vars["${collectionVarName}"]);`,
       },
       {
         level: 0,
