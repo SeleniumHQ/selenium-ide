@@ -121,6 +121,7 @@ function declareDependencies() {
       commands: [
         { level: 0, statement: 'using System;' },
         { level: 0, statement: 'using System.Collections;' },
+        { level: 0, statement: 'using System.Collections.Generic;' },
         { level: 0, statement: 'using OpenQA.Selenium;' },
         { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
         { level: 0, statement: 'using OpenQA.Selenium.Firefox;' },
@@ -140,7 +141,8 @@ function declareVariables() {
         { level: 0, statement: 'private IWebDriver Driver;' },
         {
           level: 0,
-          statement: 'private IDictionary<String, Object> vars;',
+          statement:
+            'public IDictionary<String, Object> vars {get; private set;}',
         },
         { level: 0, statement: 'private IJavaScriptExecutor js;' },
       ],
