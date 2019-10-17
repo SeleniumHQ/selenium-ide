@@ -19,12 +19,12 @@ import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll: empty,
-  afterEach: empty,
+  afterEach,
   beforeAll: empty,
   beforeEach,
   declareDependencies,
   declareMethods: empty,
-  declareVariables: empty,
+  declareVariables,
   inEachBegin: empty,
   inEachEnd: empty,
 }
@@ -45,60 +45,43 @@ function beforeEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'public class DriverFixture : IDisposable' },
-        { level: 0, statement: '{' },
-        { level: 1, statement: 'public IWebDriver driver {get; private set;}' },
-        {
-          level: 1,
-          statement:
-            'public IDictionary<String, Object> vars {get; private set;}',
-        },
-        { level: 1, statement: 'public DriverFixture()' },
-        { level: 2, statement: '{' },
+        { level: 1, statement: `public SuiteTests()` },
+        { level: 1, statement: `{` },
         {
           level: 2,
           statement: `this.driver = new ${
-            userAgent.browserName ? userAgent.browserName : 'Chrome'
+            userAgent.browserName ? userAgent.browserName : `Chrome`
           }Driver();`,
         },
         {
           level: 2,
-          statement: 'this.vars = new Dictionary<String, Object>();',
+          statement: `this.js = (IJavaScriptExecutor)driver;`,
         },
-        { level: 1, statement: '}' },
-        { level: 1, statement: 'public void Dispose()' },
-        { level: 1, statement: '{' },
-        { level: 2, statement: 'driver.Close();' },
-        { level: 2, statement: 'driver.Dispose();' },
-        { level: 1, statement: '}' },
-        { level: 0, statement: '}' },
+        {
+          level: 2,
+          statement: `this.vars = new Dictionary<String, Object>();`,
+        },
       ],
     },
     endingSyntax: {
+      commands: [{ level: 1, statement: '}' }],
+    },
+  }
+  return params
+}
+
+function afterEach() {
+  const params = {
+    startingSyntax: {
       commands: [
-        {
-          level: 0,
-          statement: `public class TestSuite : IClassFixture<DriverFixture>`,
-        },
-        { level: 0, statement: '{' },
-        { level: 1, statement: 'DriverFixture _dF;' },
-        { level: 1, statement: 'public IWebDriver driver;' },
-        {
-          level: 1,
-          statement: 'public IDictionary<String, Object> vars;',
-        },
-        {
-          level: 1,
-          statement: 'public IJavaScriptExecutor js;\n',
-        },
-        { level: 1, statement: 'public TestSuite (DriverFixture _dF)' },
-        { level: 1, statement: '{' },
-        { level: 2, statement: 'this._dF = _dF;' },
-        { level: 2, statement: 'this.driver = _dF.driver;' },
-        { level: 2, statement: 'this.js = (IJavaScriptExecutor)driver;' },
-        { level: 2, statement: 'this.vars = _dF.vars;' },
-        { level: 1, statement: '}' },
+        { level: 1, statement: `public void Dispose()` },
+        { level: 1, statement: `{` },
+        { level: 2, statement: `driver.Close();` },
+        { level: 2, statement: `driver.Dispose();` },
       ],
+    },
+    endingSyntax: {
+      commands: [{ level: 1, statement: '}' }],
     },
   }
   return params
@@ -108,14 +91,33 @@ function declareDependencies() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'using System;' },
-        { level: 0, statement: 'using System.Collections.Generic;' },
-        { level: 0, statement: 'using OpenQA.Selenium;' },
-        { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
-        { level: 0, statement: 'using OpenQA.Selenium.Firefox;' },
-        { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
-        { level: 0, statement: 'using OpenQA.Selenium.Interactions;' },
-        { level: 0, statement: 'using Xunit;' },
+        { level: 0, statement: `using System;` },
+        { level: 0, statement: `using System.Collections.Generic;` },
+        { level: 0, statement: `using OpenQA.Selenium;` },
+        { level: 0, statement: `using OpenQA.Selenium.Chrome;` },
+        { level: 0, statement: `using OpenQA.Selenium.Firefox;` },
+        { level: 0, statement: `using OpenQA.Selenium.Support.UI;` },
+        { level: 0, statement: `using OpenQA.Selenium.Interactions;` },
+        { level: 0, statement: `using Xunit;` },
+      ],
+    },
+  }
+  return params
+}
+
+function declareVariables() {
+  const params = {
+    startingSyntax: {
+      commands: [
+        { level: 1, statement: `public IWebDriver driver {get; private set;}` },
+        {
+          level: 1,
+          statement: `public IDictionary<String, Object> vars {get; private set;}`,
+        },
+        {
+          level: 1,
+          statement: `public IJavaScriptExecutor js {get; private set;}`,
+        },
       ],
     },
   }

@@ -132,7 +132,7 @@ Object {
 
 exports[`command code emitter should emit \`double click at\` command 1`] = `
 "{
-  IWebElement element = driver.FindElement(By.LinkText(\\"button\\")));
+  IWebElement element = driver.FindElement(By.LinkText(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.DoubleClick(element).Perform();
 }"
@@ -140,7 +140,7 @@ exports[`command code emitter should emit \`double click at\` command 1`] = `
 
 exports[`command code emitter should emit \`double click\` command 1`] = `
 "{
-  IWebElement element = driver.FindElement(By.LinkText(\\"button\\")));
+  IWebElement element = driver.FindElement(By.LinkText(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.DoubleClick(element).Perform();
 }"

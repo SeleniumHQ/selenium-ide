@@ -10,34 +10,20 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
       driver.Close();
       driver.Dispose();
-    }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
-  {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
     }
   [Fact]
   public void Validcredentials() {
@@ -71,34 +57,20 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
       driver.Close();
       driver.Dispose();
-    }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
-  {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
     }
   [Fact]
   public void Controlflowif() {
@@ -175,13 +147,14 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
@@ -189,22 +162,8 @@ using Xunit;
       driver.Close();
       driver.Dispose();
     }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
+  public void login() 
   {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
-    }
-  public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
@@ -237,34 +196,20 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
       driver.Close();
       driver.Dispose();
-    }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
-  {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
     try {
@@ -280,7 +225,8 @@ using Xunit;
     }
     return whNow.GetEnumerator().MoveNext();
   }
-  public void selectwindow() {
+  public void selectwindow() 
+  {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
@@ -306,34 +252,20 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
       driver.Close();
       driver.Dispose();
-    }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
-  {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
     try {
@@ -349,7 +281,8 @@ using Xunit;
     }
     return whNow.GetEnumerator().MoveNext();
   }
-  public void selectwindow() {
+  public void selectwindow() 
+  {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     this.vars[\\"WindowHandles\\"] = this.driver.WindowHandles
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
@@ -384,34 +317,20 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
       driver.Close();
       driver.Dispose();
-    }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
-  {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
     }
   [Fact]
   public void Login() {
@@ -436,13 +355,14 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
@@ -450,22 +370,8 @@ using Xunit;
       driver.Close();
       driver.Dispose();
     }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
+  public void login() 
   {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
-    }
-  public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
@@ -492,34 +398,20 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-  public class DriverFixture : IDisposable
-  {
+public class SuiteTests : IDisposable {
     public IWebDriver driver {get; private set;}
     public IDictionary<String, Object> vars {get; private set;}
-    public DriverFixture()
-      {
+    public IJavaScriptExecutor js {get; private set;}
+    public SuiteTests()
+    {
       this.driver = new ChromeDriver();
+      this.js = (IJavaScriptExecutor)driver;
       this.vars = new Dictionary<String, Object>();
     }
     public void Dispose()
     {
       driver.Close();
       driver.Dispose();
-    }
-  }
-  public class TestSuite : IClassFixture<DriverFixture>
-  {
-    DriverFixture _dF;
-    public IWebDriver driver;
-    public IDictionary<String, Object> vars;
-    public IJavaScriptExecutor js;
-
-    public TestSuite (DriverFixture _dF)
-    {
-      this._dF = _dF;
-      this.driver = _dF.driver;
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = _dF.vars;
     }
   public String waitForWindow(int timeout) {
     try {

@@ -39,8 +39,13 @@ function generateTestDeclaration(name) {
     exporter.parsers.sanitizeName(name)
   )}() {`
 }
+
+function generateSuiteDeclaration() {
+  return `public class SuiteTests : IDisposable {`
+}
+
 function generateMethodDeclaration(name) {
-  return `public void ${exporter.parsers.sanitizeName(name)}() {`
+  return `public void ${exporter.parsers.sanitizeName(name)}() \n{`
 }
 
 function generateFilename(name) {
@@ -66,8 +71,10 @@ export async function emitTest({
     project,
   })
   const suiteName = test.name
+  const suiteDeclaration = generateSuiteDeclaration()
   var _suite = await exporter.emit.suite(result, tests, {
     ...opts,
+    suiteDeclaration,
     suiteName,
     project,
   })
@@ -91,8 +98,10 @@ export async function emitSuite({
     generateTestDeclaration,
     project,
   })
+  const suiteDeclaration = generateSuiteDeclaration()
   var _suite = await exporter.emit.suite(result, tests, {
     ...opts,
+    suiteDeclaration,
     suite,
     project,
   })

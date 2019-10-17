@@ -338,7 +338,7 @@ async function emitDoubleClick(target) {
       level: 1,
       statement: `IWebElement element = driver.FindElement(${await location.emit(
         target
-      )}));`,
+      )});`,
     },
     { level: 1, statement: 'Actions builder = new Actions(driver);' },
     { level: 1, statement: 'builder.DoubleClick(element).Perform();' },
