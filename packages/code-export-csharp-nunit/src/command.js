@@ -180,8 +180,12 @@ async function emitNewWindowHandling(command, emittedCommand) {
 }
 
 function emitAssert(varName, value) {
+  const _value =
+    value === 'true' || value === 'false'
+      ? exporter.parsers.capitalize(value)
+      : value
   return Promise.resolve(
-    `Assert.That(this.vars["${varName}"].ToString(), Is.EqualTo("${value}"));`
+    `Assert.That(this.vars["${varName}"].ToString(), Is.EqualTo("${_value}"));`
   )
 }
 
@@ -293,19 +297,19 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection = new ArrayList();`,
+        statement: `var ${collectionVarName}Enum = ((IReadOnlyCollection<object>)this.vars["${collectionVarName}"]).ToList().GetEnumerator();`,
       },
       {
         level: 0,
-        statement: `collection.Add(this.vars["${collectionVarName}"]);`,
+        statement: `while (${collectionVarName}Enum.MoveNext())`,
       },
       {
         level: 0,
-        statement: `for (int i = 0; i < collection.Count - 1; i++) {`,
+        statement: `{`,
       },
       {
         level: 1,
-        statement: `this.vars["${iteratorVarName}"] = collection[i];`,
+        statement: `this.vars["${iteratorVarName}"] = ${collectionVarName}Enum.Current;`,
       },
     ],
   })

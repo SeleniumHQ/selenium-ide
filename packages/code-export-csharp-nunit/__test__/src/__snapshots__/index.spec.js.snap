@@ -5,6 +5,7 @@ exports[`Code Export Java JUnit Selenium should export a suite 1`] = `
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -53,6 +54,7 @@ exports[`Code Export Java JUnit Selenium should export a suite that uses control
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -144,6 +146,7 @@ exports[`Code Export Java JUnit Selenium should export a suite with a reused tes
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -193,6 +196,7 @@ exports[`Code Export Java JUnit Selenium should export a suite with commands tha
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -248,6 +252,7 @@ exports[`Code Export Java JUnit Selenium should export a suite with just one new
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -312,6 +317,7 @@ exports[`Code Export Java JUnit Selenium should export a test 1`] = `
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -351,6 +357,7 @@ exports[`Code Export Java JUnit Selenium should export a test with a reused test
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -394,6 +401,7 @@ exports[`Code Export Java JUnit Selenium should export a test with commands that
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
