@@ -82,7 +82,7 @@ export const emitters = {
   setWindowSize: emitSetWindowSize,
   store: emitStore,
   storeAttribute: emitStoreAttribute,
-  //storeJson: emitStoreJson,
+  storeJson: emitStoreJson,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
@@ -690,10 +690,11 @@ async function emitStoreAttribute(locator, varName) {
   return Promise.resolve({ commands })
 }
 
-//async function emitStoreJson(_json, _varName) {
-//  // TODO
-//  return Promise.resolve('')
-//}
+async function emitStoreJson(_json, _varName) {
+  return Promise.resolve(
+    'throw new System.Exception("The `storeJson` command is not yet implemented for this language.");'
+  )
+}
 
 async function emitStoreText(locator, varName) {
   const result = `Driver.FindElement(${await location.emit(locator)}).Text`

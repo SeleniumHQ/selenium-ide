@@ -605,7 +605,7 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it.skip('should emit `store json` command', () => {
+  it('should emit `store json` command', () => {
     const command = {
       command: 'storeJson',
       target: '[{"a":0}]',

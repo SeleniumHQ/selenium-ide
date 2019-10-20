@@ -326,6 +326,8 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
 }"
 `;
 
+exports[`command code emitter should emit \`store json\` command 1`] = `"throw new System.Exception(\\"The \`storeJson\` command is not yet implemented for this language.\\");"`;
+
 exports[`command code emitter should emit \`store text\` command 1`] = `"this.vars[\\"myVar\\"] = Driver.FindElement(By.Id(\\"someElement\\")).Text;"`;
 
 exports[`command code emitter should emit \`store title\` command 1`] = `"this.vars[\\"myVar\\"] = Driver.Title;"`;
