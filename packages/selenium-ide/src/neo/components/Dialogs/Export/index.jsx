@@ -65,7 +65,7 @@ class ExportContent extends React.Component {
   render() {
     return (
       <DialogContainer
-        title="Select languages"
+        title="Select language"
         onRequestClose={this.props.cancel}
         renderFooter={() => (
           <span className="right">
