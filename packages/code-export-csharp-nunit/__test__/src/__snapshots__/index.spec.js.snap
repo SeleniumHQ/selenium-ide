@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -55,6 +56,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -147,6 +149,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -197,6 +200,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -224,12 +228,13 @@ public class DefaultSuiteTest {
     } catch(Exception e) {
       Console.WriteLine(\\"{0} Exception caught.\\", e);
     }
-    var whNow = Driver.WindowHandles;
-    var whThen = this.vars[\\"WindowHandles\\"];
+    var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();
+    var whThen = ((IReadOnlyCollection<object>)this.vars[\\"WindowHandles\\"]).ToList();
     if (whNow.Count > whThen.Count) {
-      whNow.removeAll(whThen);
+      return whNow.Except(whThen).First().ToString();
+    } else {
+      return whNow.First().ToString();
     }
-    return whNow.GetEnumerator().MoveNext();
   }
   public void selectwindow() {
     Driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
@@ -253,6 +258,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -280,12 +286,13 @@ public class DefaultSuiteTest {
     } catch(Exception e) {
       Console.WriteLine(\\"{0} Exception caught.\\", e);
     }
-    var whNow = Driver.WindowHandles;
-    var whThen = this.vars[\\"WindowHandles\\"];
+    var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();
+    var whThen = ((IReadOnlyCollection<object>)this.vars[\\"WindowHandles\\"]).ToList();
     if (whNow.Count > whThen.Count) {
-      whNow.removeAll(whThen);
+      return whNow.Except(whThen).First().ToString();
+    } else {
+      return whNow.First().ToString();
     }
-    return whNow.GetEnumerator().MoveNext();
   }
   public void selectwindow() {
     Driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
@@ -318,6 +325,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -358,6 +366,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -402,6 +411,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -429,12 +439,13 @@ public class SelectwindowTest {
     } catch(Exception e) {
       Console.WriteLine(\\"{0} Exception caught.\\", e);
     }
-    var whNow = Driver.WindowHandles;
-    var whThen = this.vars[\\"WindowHandles\\"];
+    var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();
+    var whThen = ((IReadOnlyCollection<object>)this.vars[\\"WindowHandles\\"]).ToList();
     if (whNow.Count > whThen.Count) {
-      whNow.removeAll(whThen);
+      return whNow.Except(whThen).First().ToString();
+    } else {
+      return whNow.First().ToString();
     }
-    return whNow.GetEnumerator().MoveNext();
   }
   [Test]
   public void selectwindow() {

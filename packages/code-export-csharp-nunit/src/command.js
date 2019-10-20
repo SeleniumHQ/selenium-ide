@@ -154,15 +154,21 @@ function emitWaitForWindow() {
     { level: 0, statement: '} catch(Exception e) {' },
     { level: 1, statement: 'Console.WriteLine("{0} Exception caught.", e);' },
     { level: 0, statement: '}' },
-    { level: 0, statement: 'var whNow = Driver.WindowHandles;' },
     {
       level: 0,
-      statement: 'var whThen = this.vars["WindowHandles"];',
+      statement:
+        'var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();',
+    },
+    {
+      level: 0,
+      statement:
+        'var whThen = ((IReadOnlyCollection<object>)this.vars["WindowHandles"]).ToList();',
     },
     { level: 0, statement: 'if (whNow.Count > whThen.Count) {' },
-    { level: 1, statement: 'whNow.removeAll(whThen);' },
+    { level: 1, statement: 'return whNow.Except(whThen).First().ToString();' },
+    { level: 0, statement: '} else {' },
+    { level: 1, statement: 'return whNow.First().ToString();' },
     { level: 0, statement: '}' },
-    { level: 0, statement: 'return whNow.GetEnumerator().MoveNext();' },
   ]
   return Promise.resolve({
     name: 'waitForWindow',
