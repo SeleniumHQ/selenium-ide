@@ -950,9 +950,9 @@ async function emitWaitForElementPresent(locator, timeout) {
     },
     {
       level: 1,
-      statement: `wait.Until(driver => driver.FindElement(${await location.emit(
+      statement: `wait.Until(driver => driver.FindElements(${await location.emit(
         locator
-      )}));`,
+      )}).Count > 0);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -1014,9 +1014,9 @@ async function emitWaitForElementNotPresent(locator, timeout) {
     },
     {
       level: 1,
-      statement: `wait.Until(driver => !driver.FindElement(${await location.emit(
+      statement: `wait.Until(driver => driver.FindElements(${await location.emit(
         locator
-      )}));`,
+      )}).Count == 0);`,
     },
     { level: 0, statement: '}' },
   ]
