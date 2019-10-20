@@ -3,9 +3,9 @@
 exports[`command code emitter should emit 'assert selected label' command 1`] = `
 "{
   var element = Driver.FindElement(By.Id(\\"test\\"));
-  String value = element.GetAttribute(\\"value\\");
-  String locator = String.format(\\"option[@value='%s']\\", value);
-  String selectedText = element.FindElement(By.xpath(locator)).Text;
+  string value = element.GetAttribute(\\"value\\");
+  string locator = string.Format(\\"option[@value='%s']\\", value);
+  string selectedText = element.FindElement(By.XPath(locator)).Text;
   Assert.That(selectedText, Is.EqualTo(\\"test\\"));
 }"
 `;
@@ -13,9 +13,9 @@ exports[`command code emitter should emit 'assert selected label' command 1`] = 
 exports[`command code emitter should emit 'verify selected label' command 1`] = `
 "{
   var element = Driver.FindElement(By.Id(\\"test\\"));
-  String value = element.GetAttribute(\\"value\\");
-  String locator = String.format(\\"option[@value='%s']\\", value);
-  String selectedText = element.FindElement(By.xpath(locator)).Text;
+  string value = element.GetAttribute(\\"value\\");
+  string locator = string.Format(\\"option[@value='%s']\\", value);
+  string selectedText = element.FindElement(By.XPath(locator)).Text;
   Assert.That(selectedText, Is.EqualTo(\\"test\\"));
 }"
 `;
@@ -51,10 +51,8 @@ exports[`command code emitter should emit \`assert element not present\` command
 `;
 
 exports[`command code emitter should emit \`assert element present\` command 1`] = `
-"{
-  List<var> elements = Driver.FindElements(By.Id(\\"element\\"));
-  Assert.True(elements.Count > 0);
-}"
+"List<object> elements = Driver.FindElements(By.Id(\\"element\\"));
+Assert.True(elements.Count > 0);"
 `;
 
 exports[`command code emitter should emit \`assert not checked\` command 1`] = `"Assert.False(Driver.FindElement(By.Id(\\"check\\")).Selected);"`;
@@ -69,7 +67,7 @@ exports[`command code emitter should emit \`assert not editable\` command 1`] = 
 
 exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
 "{
-  String value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  string value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
   Assert.That(value, Is.Not.EqualTo(\\"test\\"));
 }"
 `;
@@ -80,7 +78,7 @@ exports[`command code emitter should emit \`assert prompt\` command 1`] = `"Asse
 
 exports[`command code emitter should emit \`assert selected value\` command 1`] = `
 "{
-  String value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  string value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
   Assert.That(value, Is.EqualTo(\\"test\\"));
 }"
 `;
@@ -91,7 +89,7 @@ exports[`command code emitter should emit \`assert title\` command 1`] = `"Asser
 
 exports[`command code emitter should emit \`assert value\` command 1`] = `
 "{
-  String value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  string value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
   Assert.That(value, Is.EqualTo(\\"test\\"));
 }"
 `;
@@ -289,7 +287,7 @@ exports[`command code emitter should emit \`select window\` to select a window b
 
 exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
 "{
-  ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles);
+  ArrayList<string> handles = new ArrayList<string>(Driver.WindowHandles);
   Driver.SwitchTo().Window(handles[12]);
 }"
 `;
@@ -298,7 +296,7 @@ exports[`command code emitter should emit \`select window\` to select a window b
 
 exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `
 "{
-  ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles());
+  ArrayList<string> handles = new ArrayList<string>(Driver.WindowHandles());
   Driver.SwitchTo().Window(handles[0]);
 }"
 `;
@@ -312,7 +310,7 @@ exports[`command code emitter should emit \`select\` command 1`] = `
 
 exports[`command code emitter should emit \`send keys\` command 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"example input\\");"`;
 
-exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"SuperSecretPassword!\\", Keys.ENTER);"`;
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"SuperSecretPassword!\\", + Keys.Enter);"`;
 
 exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(this.vars[\\"blah\\"].ToString());"`;
 
@@ -323,7 +321,7 @@ exports[`command code emitter should emit \`setWindowSize\` 1`] = `"Driver.Manag
 exports[`command code emitter should emit \`store attribute\` command 1`] = `
 "{
   var element = Driver.FindElement(By.XPath(\\"button[3]\\"));
-  String attribute = element.GetAttribute(\\"id\\");
+  string attribute = element.GetAttribute(\\"id\\");
   this.vars[\\"myVar\\"] = attribute;
 }"
 `;
@@ -340,7 +338,7 @@ exports[`command code emitter should emit \`store xpath count\` command 1`] = `"
 
 exports[`command code emitter should emit \`store\` command 1`] = `"this.vars[\\"myVar\\"] = \\"some value\\";"`;
 
-exports[`command code emitter should emit \`submit\` command 1`] = `"throw new Error(\\"\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\");"`;
+exports[`command code emitter should emit \`submit\` command 1`] = `"throw new System.Exception(\\"\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\");"`;
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
@@ -379,10 +377,8 @@ exports[`command code emitter should emit \`verify element not present\` command
 `;
 
 exports[`command code emitter should emit \`verify element present\` command 1`] = `
-"{
-  List<var> elements = Driver.FindElements(By.Id(\\"element\\"));
-  Assert.True(elements.Count > 0);
-}"
+"List<object> elements = Driver.FindElements(By.Id(\\"element\\"));
+Assert.True(elements.Count > 0);"
 `;
 
 exports[`command code emitter should emit \`verify not checked\` command 1`] = `"Assert.False(Driver.FindElement(By.Id(\\"check\\")).Selected);"`;
@@ -397,7 +393,7 @@ exports[`command code emitter should emit \`verify not editable\` command 1`] = 
 
 exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
 "{
-  String value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  string value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
   Assert.That(value, Is.Not.EqualTo(\\"test\\"));
 }"
 `;
@@ -406,7 +402,7 @@ exports[`command code emitter should emit \`verify not text\` command 1`] = `"As
 
 exports[`command code emitter should emit \`verify selected value\` command 1`] = `
 "{
-  String value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  string value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
   Assert.That(value, Is.EqualTo(\\"test\\"));
 }"
 `;
@@ -417,7 +413,7 @@ exports[`command code emitter should emit \`verify title\` command 1`] = `"Asser
 
 exports[`command code emitter should emit \`verify value\` command 1`] = `
 "{
-  String value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  string value = Driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
   Assert.That(value, Is.EqualTo(\\"test\\"));
 }"
 `;

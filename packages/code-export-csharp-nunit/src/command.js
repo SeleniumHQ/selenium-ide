@@ -146,7 +146,7 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `public String ${name}(int timeout) {`
+    return `public string ${name}(int timeout) {`
   }
   const commands = [
     { level: 0, statement: 'try {' },
@@ -590,7 +590,7 @@ async function emitSelectWindow(windowLocation) {
           {
             level: 1,
             statement:
-              'ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles());',
+              'ArrayList<string> handles = new ArrayList<string>(Driver.WindowHandles());',
           },
           { level: 1, statement: 'Driver.SwitchTo().Window(handles[0]);' },
           { level: 0, statement: '}' },
@@ -604,7 +604,7 @@ async function emitSelectWindow(windowLocation) {
           {
             level: 1,
             statement:
-              'ArrayList<String> handles = new ArrayList<String>(Driver.WindowHandles);',
+              'ArrayList<string> handles = new ArrayList<string>(Driver.WindowHandles);',
           },
           {
             level: 1,
@@ -629,12 +629,12 @@ function generateSendKeysInput(value) {
           return s
         } else if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)[1]
-          return `Keys.${key}`
+          return `Keys.${exporter.parsers.capitalize(key.toLowerCase())}`
         } else {
           return `"${s}"`
         }
       })
-      .join(', ')
+      .join(' + ')
   } else {
     if (value.startsWith('this.vars[')) {
       return value
@@ -676,7 +676,7 @@ async function emitStoreAttribute(locator, varName) {
     },
     {
       level: 1,
-      statement: `String attribute = element.GetAttribute("${attributeName}");`,
+      statement: `string attribute = element.GetAttribute("${attributeName}");`,
     },
     { level: 1, statement: `${variableSetter(varName, 'attribute')}` },
     { level: 0, statement: '}' },
@@ -716,7 +716,7 @@ async function emitStoreXpathCount(locator, varName) {
 
 async function emitSubmit(_locator) {
   return Promise.resolve(
-    `throw new Error("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
+    `throw new System.Exception("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
   )
 }
 
@@ -773,15 +773,13 @@ async function emitVerifyEditable(locator) {
 
 async function emitVerifyElementPresent(locator) {
   const commands = [
-    { level: 0, statement: '{' },
     {
-      level: 1,
-      statement: `List<var> elements = Driver.FindElements(${await location.emit(
+      level: 0,
+      statement: `var elements = Driver.FindElements(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Assert.True(elements.Count > 0);' },
-    { level: 0, statement: '}' },
+    { level: 0, statement: 'Assert.True(elements.Count > 0);' },
   ]
   return Promise.resolve({ commands })
 }
@@ -791,7 +789,7 @@ async function emitVerifyElementNotPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<var> elements = Driver.FindElements(${await location.emit(
+      statement: `var elements = Driver.FindElements(${await location.emit(
         locator
       )});`,
     },
@@ -834,7 +832,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `String value = Driver.FindElement(${await location.emit(
+      statement: `string value = Driver.FindElement(${await location.emit(
         locator
       )}).GetAttribute("value");`,
     },
@@ -865,15 +863,15 @@ async function emitVerifySelectedLabel(locator, labelValue) {
         locator
       )});`,
     },
-    { level: 1, statement: 'String value = element.GetAttribute("value");' },
+    { level: 1, statement: 'string value = element.GetAttribute("value");' },
     {
       level: 1,
-      statement: `String locator = String.format("option[@value='%s']", value);`,
+      statement: `string locator = string.Format("option[@value='%s']", value);`,
     },
     {
       level: 1,
       statement:
-        'String selectedText = element.FindElement(By.xpath(locator)).Text;',
+        'string selectedText = element.FindElement(By.XPath(locator)).Text;',
     },
     {
       level: 1,
@@ -903,7 +901,7 @@ async function emitVerifyValue(locator, value) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `String value = Driver.FindElement(${await location.emit(
+      statement: `string value = Driver.FindElement(${await location.emit(
         locator
       )}).GetAttribute("value");`,
     },

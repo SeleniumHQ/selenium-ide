@@ -104,7 +104,7 @@ function beforeEach() {
         { level: 1, statement: 'this.js = (IJavaScriptExecutor)this.Driver;' },
         {
           level: 1,
-          statement: 'this.vars = new Dictionary<String, Object>();',
+          statement: 'this.vars = new Dictionary<string, object>();',
         },
       ],
     },
@@ -143,7 +143,7 @@ function declareVariables() {
         {
           level: 0,
           statement:
-            'public IDictionary<String, Object> vars {get; private set;}',
+            'public IDictionary<string, object> vars {get; private set;}',
         },
         { level: 0, statement: 'private IJavaScriptExecutor js;' },
       ],

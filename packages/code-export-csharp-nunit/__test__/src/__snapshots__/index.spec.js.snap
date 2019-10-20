@@ -15,13 +15,13 @@ using NUnit.Framework;
 [TestFixture]
 public class LoginTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -64,13 +64,13 @@ using NUnit.Framework;
 [TestFixture]
 public class ControlflowTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -156,13 +156,13 @@ using NUnit.Framework;
 [TestFixture]
 public class LoginTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -206,19 +206,19 @@ using NUnit.Framework;
 [TestFixture]
 public class DefaultSuiteTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
     Driver.Quit();
   }
-  public String waitForWindow(int timeout) {
+  public string waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
     } catch(Exception e) {
@@ -262,19 +262,19 @@ using NUnit.Framework;
 [TestFixture]
 public class DefaultSuiteTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
     Driver.Quit();
   }
-  public String waitForWindow(int timeout) {
+  public string waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
     } catch(Exception e) {
@@ -327,13 +327,13 @@ using NUnit.Framework;
 [TestFixture]
 public class LoginTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -367,13 +367,13 @@ using NUnit.Framework;
 [TestFixture]
 public class ValidcredentialsTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -411,19 +411,19 @@ using NUnit.Framework;
 [TestFixture]
 public class SelectwindowTest {
   private IWebDriver Driver;
-  public IDictionary<String, Object> vars {get; private set;}
+  public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
     this.Driver = new ChromeDriver();
     this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<String, Object>();
+    this.vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
     Driver.Quit();
   }
-  public String waitForWindow(int timeout) {
+  public string waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
     } catch(Exception e) {
