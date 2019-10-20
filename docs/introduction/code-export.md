@@ -23,6 +23,7 @@ This will place inline code comments in the exported file with details about the
 
 Currently, export to the following languages and test frameworks is supported.
 
+- C# NUnit
 - Java JUnit
 - JavaScript Mocha
 - Python pytest
@@ -30,6 +31,43 @@ Currently, export to the following languages and test frameworks is supported.
 We intend to support all of the officially supported programming language bindings for Selenium (e.g., Java, JavaScript, C#, Python, and Ruby) in at least one testing framework for each language.
 
 Contributions are welcome to help add new languages and test frameworks for a given language. See [How To Contribute](code-export.md#how-to-contribute) for details on how.
+
+### C# NUnit
+
+The exported code for C# NUnit is built to work with the [.NET Core](https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial/install), NUnit 3.11, and the latest version of Selenium.
+
+To create a new boilerplate project to work with NUnit use the `dotnet new` command.
+
+```sh
+dotnet new nunit -n NUnit-Tests --framework netcoreapp2.0
+```
+
+With the following `.csproj` file you can install the correct packages and versions by using the `dotnet restore` command.
+
+```xml
+<!-- filename: example.csproj -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Selenium.Support" Version="4.0.0-alpha03" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.0.0-alpha03" />
+  </ItemGroup>
+
+</Project>
+```
+
+```sh
+> dotnet restore example.csproj
+```
 
 ### Java JUnit
 

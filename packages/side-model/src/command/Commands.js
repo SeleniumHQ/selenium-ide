@@ -276,7 +276,7 @@ export const Commands = [
         (e.g., 0,0 is the top left corner of the element) and are mostly used 
         to check effects that relay on them, for example the material ripple effect.`,
       target: ArgTypes.locator,
-      value: ArgTypes.coord,
+      value: { isOptional: true, ...ArgTypes.coord },
     },
   ],
   [
