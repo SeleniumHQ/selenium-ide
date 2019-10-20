@@ -45,13 +45,13 @@ exports[`command code emitter should emit \`assert editable\` command 1`] = `
 
 exports[`command code emitter should emit \`assert element not present\` command 1`] = `
 "{
-  List<var> elements = Driver.FindElements(By.Id(\\"element\\"));
+  var elements = Driver.FindElements(By.Id(\\"element\\"));
   Assert.True(elements.Count == 0);
 }"
 `;
 
 exports[`command code emitter should emit \`assert element present\` command 1`] = `
-"List<object> elements = Driver.FindElements(By.Id(\\"element\\"));
+"var elements = Driver.FindElements(By.Id(\\"element\\"));
 Assert.True(elements.Count > 0);"
 `;
 
@@ -310,7 +310,7 @@ exports[`command code emitter should emit \`select\` command 1`] = `
 
 exports[`command code emitter should emit \`send keys\` command 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"example input\\");"`;
 
-exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"SuperSecretPassword!\\", + Keys.Enter);"`;
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"SuperSecretPassword!\\" + Keys.Enter);"`;
 
 exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"Driver.FindElement(By.Id(\\"input\\")).SendKeys(this.vars[\\"blah\\"].ToString());"`;
 
@@ -371,13 +371,13 @@ exports[`command code emitter should emit \`verify editable\` command 1`] = `
 
 exports[`command code emitter should emit \`verify element not present\` command 1`] = `
 "{
-  List<var> elements = Driver.FindElements(By.Id(\\"element\\"));
+  var elements = Driver.FindElements(By.Id(\\"element\\"));
   Assert.True(elements.Count == 0);
 }"
 `;
 
 exports[`command code emitter should emit \`verify element present\` command 1`] = `
-"List<object> elements = Driver.FindElements(By.Id(\\"element\\"));
+"var elements = Driver.FindElements(By.Id(\\"element\\"));
 Assert.True(elements.Count > 0);"
 `;
 
