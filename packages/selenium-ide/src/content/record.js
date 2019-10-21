@@ -295,8 +295,12 @@ Recorder.addEventHandler(
   'dragAndDrop',
   'mousedown',
   function(event) {
-    mousedown = undefined
-    selectMousedown = undefined
+    if(event.type == "mousedown" && event.button == 2)
+    {
+      record("mouseDown", locatorBuilders.buildAll(event.target), '');
+      return;
+    }
+
     if (
       event.clientX < window.document.documentElement.clientWidth &&
       event.clientY < window.document.documentElement.clientHeight
@@ -334,6 +338,12 @@ Recorder.addEventHandler(
   'dragAndDrop',
   'mouseup',
   function(event) {
+    if(event.type == "mouseup" && event.button == 2)
+    {
+      record("mouseUp", locatorBuilders.buildAll(event.target), '');
+      return;
+    }
+
     function getSelectionText() {
       let text = ''
       let activeEl = window.document.activeElement
@@ -436,6 +446,7 @@ Recorder.addEventHandler(
 
       if (mousedown && mousedown.target !== event.target && !(x + y)) {
         record('mouseDown', locatorBuilders.buildAll(mousedown.target), '')
+        
         record('mouseUp', locatorBuilders.buildAll(event.target), '')
       } else if (mousedown && mousedown.target === event.target) {
         let target = locatorBuilders.buildAll(mousedown.target)
@@ -644,7 +655,7 @@ Recorder.addEventHandler(
   'contextmenu',
   function(event) {
     record("contextMenu", locatorBuilders.buildAll(event.target), '');
-    
+
     // let myPort = browser.runtime.connect()
     // let tmpText = locatorBuilders.buildAll(event.target)
     // let tmpVal = bot.dom.getVisibleText(event.target)
