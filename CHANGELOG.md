@@ -1,8 +1,5 @@
 # Changelog
 
-## v3.15.0
-- Code export for C# (e.g., xUnit)
-
 ## v3.14.0
 - Added experimental support for controlled extension mode
 
