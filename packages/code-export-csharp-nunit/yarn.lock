@@ -611,7 +611,7 @@
   resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.14.0.tgz#d875707c88536ca67d35a929ba6f5cbce0f3ce5d"
   integrity sha512-si8dipFgknUpGHJrRzeWIIlHsWis4RaLDbCdMoIgiqmKqimetBYm2b/qsFqhtgC/oL6ER5VdfO/f1fmPemWHTA==
 
-"@seleniumhq/side-utils@^3.12.2":
+"@seleniumhq/side-utils@^3.14.0":
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/@seleniumhq/side-utils/-/side-utils-3.14.0.tgz#f3d7a785299b5a1802ea0423f1adf18442fd1c66"
   integrity sha512-0zht8R7UgnnpoZ0ZklNbLg3tBa5YTf/YzWc4RKeTdqBMgfm0m7IpJRxwL94A2WuJh6cEgUPMVpKQNpHTb5aEfA==
