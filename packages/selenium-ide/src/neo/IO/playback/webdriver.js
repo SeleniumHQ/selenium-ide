@@ -156,6 +156,11 @@ export default class WebDriverExecutor {
     await element.click()
   }
 
+  async doRightClick(locator) {
+    const element = await waitForElement(locator, this.driver)
+    await element.click(2)
+  }
+
   async doClickAt(locator, coordString) {
     const coords = coordString.split(',')
     const element = await waitForElement(locator, this.driver)

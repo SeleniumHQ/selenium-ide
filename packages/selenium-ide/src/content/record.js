@@ -643,32 +643,26 @@ Recorder.addEventHandler(
   'contextMenu',
   'contextmenu',
   function(event) {
-    let myPort = browser.runtime.connect()
-    let tmpTarget = locatorBuilders.buildAll(event.target)
-    myPort.onMessage.addListener(function(m) {
-      if (m.cmd.includes('Text') || m.cmd.includes('Label')) {
-        let tmpText = bot.dom.getVisibleText(event.target)
-        record(m.cmd, tmpTarget, tmpText)
-      } else if (m.cmd.includes('Title')) {
-        let tmpTitle = goog.string.normalizeSpaces(
-          event.target.ownerDocument.title
-        )
-        record(m.cmd, [[tmpTitle]], '')
-      } else if (
-        m.cmd.includes('Present') ||
-        m.cmd.includes('Checked') ||
-        m.cmd.includes('Editable') ||
-        m.cmd.includes('Selected') ||
-        m.cmd.includes('Visible') ||
-        m.cmd === 'mouseOver'
-      ) {
-        record(m.cmd, tmpTarget, '')
-      } else if (m.cmd.includes('Value')) {
-        let tmpValue = event.target.value
-        record(m.cmd, tmpTarget, tmpValue)
-      }
-      myPort.onMessage.removeListener(this)
-    })
+    record("contextMenu", locatorBuilders.buildAll(event.target), '');
+    
+    // let myPort = browser.runtime.connect()
+    // let tmpText = locatorBuilders.buildAll(event.target)
+    // let tmpVal = bot.dom.getVisibleText(event.target)
+    // let tmpTitle = goog.string.normalizeSpaces(event.target.ownerDocument.title)
+
+
+    // myPort.onMessage.addListener(function(m) {
+    //   if (m.cmd.includes('Text')) {
+    //     record(m.cmd, tmpText, tmpVal)
+    //   } else if (m.cmd.includes('Title')) {
+    //     record(m.cmd, [[tmpTitle]], '')
+    //   } else if (m.cmd.includes('Value')) {
+    //     record(m.cmd, tmpText, event.target.value)
+    //   } else if (m.cmd === 'mouseOver') {
+    //     record('mouseOver', locatorBuilders.buildAll(event.target), '')
+    //   }
+    //   myPort.onMessage.removeListener(this)
+    // })
   },
   true
 )
