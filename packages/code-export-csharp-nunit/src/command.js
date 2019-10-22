@@ -409,9 +409,9 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const result = `js.ExecuteScript("${
-    script.script
-  }"${generateScriptArguments(script)})`
+  const result = `js.ExecuteScript("${script.script}"${generateScriptArguments(
+    script
+  )})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
@@ -520,9 +520,7 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `js.ExecuteScript("${script.script}${generateScriptArguments(
-      script
-    )}");`
+    `js.ExecuteScript("${script.script}${generateScriptArguments(script)}");`
   )
 }
 
