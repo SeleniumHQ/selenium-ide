@@ -45,6 +45,8 @@ export const emitters = {
   chooseOkOnNextConfirmation: skip,
   click: emitClick,
   clickAt: emitClick,
+  contextMenu: emitContext,
+  contextMenuAt: emitContext,
   close: emitClose,
   debugger: skip,
   do: emitControlFlowDo,
@@ -233,6 +235,22 @@ async function emitClick(target) {
   return Promise.resolve(
     `driver.findElement(${await location.emit(target)}).click();`
   )
+}
+
+async function emitContext(target) {
+  const commands = [
+    { level: 0, statement: '{' },
+    {
+      level: 1,
+      statement: `WebElement element = driver.findElement(${await location.emit(
+        target
+      )});`,
+    },
+    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'builder.contextClick(element).perform();' },
+    { level: 0, statement: '}' },
+  ]
+  return Promise.resolve({ commands })
 }
 
 async function emitClose() {
