@@ -20,9 +20,9 @@ public class LoginTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -70,9 +70,9 @@ public class ControlflowTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -80,64 +80,64 @@ public class ControlflowTest {
   }
   [Test]
   public void controlflowif() {
-    this.vars[\\"myVar\\"] = this.js.ExecuteScript(\\"return 'a'\\");
-    if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'a')\\", this.vars[\\"myVar\\"])) {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'a'\\");
-    } else if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'b')\\", this.vars[\\"myVar\\"])) {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'b'\\");
+    vars[\\"myVar\\"] = js.ExecuteScript(\\"return 'a'\\");
+    if ((Boolean) js.ExecuteScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'a'\\");
+    } else if ((Boolean) js.ExecuteScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'b'\\");
     } else {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'c'\\");
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.That(this.vars[\\"output\\"].ToString(), Is.EqualTo(\\"a\\"));
+    Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"a\\"));
   }
   [Test]
   public void controlflowelseif() {
-    this.vars[\\"myVar\\"] = this.js.ExecuteScript(\\"return 'b'\\");
-    if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'a')\\", this.vars[\\"myVar\\"])) {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'a'\\");
-    } else if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'b')\\", this.vars[\\"myVar\\"])) {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'b'\\");
+    vars[\\"myVar\\"] = js.ExecuteScript(\\"return 'b'\\");
+    if ((Boolean) js.ExecuteScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'a'\\");
+    } else if ((Boolean) js.ExecuteScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'b'\\");
     } else {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'c'\\");
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.That(this.vars[\\"output\\"].ToString(), Is.EqualTo(\\"b\\"));
+    Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"b\\"));
   }
   [Test]
   public void controlflowelse() {
-    this.vars[\\"myVar\\"] = this.js.ExecuteScript(\\"return 'c'\\");
-    if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'a')\\", this.vars[\\"myVar\\"])) {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'a'\\");
-    } else if ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] === 'b')\\", this.vars[\\"myVar\\"])) {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'b'\\");
+    vars[\\"myVar\\"] = js.ExecuteScript(\\"return 'c'\\");
+    if ((Boolean) js.ExecuteScript(\\"return (arguments[0] === 'a')\\", vars[\\"myVar\\"])) {
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'a'\\");
+    } else if ((Boolean) js.ExecuteScript(\\"return (arguments[0] === 'b')\\", vars[\\"myVar\\"])) {
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'b'\\");
     } else {
-      this.vars[\\"output\\"] = this.js.ExecuteScript(\\"return 'c'\\");
+      vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.That(this.vars[\\"output\\"].ToString(), Is.EqualTo(\\"c\\"));
+    Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"c\\"));
   }
   [Test]
   public void controlflowdo() {
-    this.vars[\\"check\\"] = this.js.ExecuteScript(\\"return 1\\");
+    vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
     do {
-      this.vars[\\"check\\"] = this.js.ExecuteScript(\\"return arguments[0] + 1\\", this.vars[\\"check\\"]);
-    } while ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] < 3)\\", this.vars[\\"check\\"]));
-    Assert.That(this.vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
+      vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
+    } while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
+    Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowtimes() {
-    this.vars[\\"check\\"] = this.js.ExecuteScript(\\"return 1\\");
+    vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
     var times = 2;
     for(int i = 0; i < times; i++) {
-      this.vars[\\"check\\"] = this.js.ExecuteScript(\\"return arguments[0] + 1\\", this.vars[\\"check\\"]);
+      vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.That(this.vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
+    Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowwhile() {
-    this.vars[\\"check\\"] = this.js.ExecuteScript(\\"return 1\\");
-    while ((Boolean) this.js.ExecuteScript(\\"return (arguments[0] < 3)\\", this.vars[\\"check\\"])) {
-      this.vars[\\"check\\"] = this.js.ExecuteScript(\\"return arguments[0] + 1\\", this.vars[\\"check\\"]);
+    vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
+    while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
+      vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.That(this.vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
+    Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
 }
 "
@@ -163,9 +163,9 @@ public class LoginTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -174,20 +174,20 @@ public class LoginTest {
   public void login() {
     Driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     Driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
-    Driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
-    Driver.FindElement(By.Id(\\"password\\")).SendKeys(this.vars[\\"password\\"].ToString());
+    Driver.FindElement(By.Id(\\"username\\")).SendKeys(vars[\\"username\\"].ToString());
+    Driver.FindElement(By.Id(\\"password\\")).SendKeys(vars[\\"password\\"].ToString());
     Driver.FindElement(By.CssSelector(\\".fa\\")).Click();
   }
   [Test]
   public void invalidcredentials() {
-    this.vars[\\"username\\"] = \\"blah\\";
-    this.vars[\\"password\\"] = \\"blah\\";
+    vars[\\"username\\"] = \\"blah\\";
+    vars[\\"password\\"] = \\"blah\\";
     login();
   }
   [Test]
   public void validcredentials() {
-    this.vars[\\"username\\"] = \\"tomsmith\\";
-    this.vars[\\"password\\"] = \\"SuperSecretPassword!\\";
+    vars[\\"username\\"] = \\"tomsmith\\";
+    vars[\\"password\\"] = \\"SuperSecretPassword!\\";
     login();
   }
 }
@@ -214,9 +214,9 @@ public class DefaultSuiteTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -229,7 +229,7 @@ public class DefaultSuiteTest {
       Console.WriteLine(\\"{0} Exception caught.\\", e);
     }
     var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();
-    var whThen = ((IReadOnlyCollection<object>)this.vars[\\"WindowHandles\\"]).ToList();
+    var whThen = ((IReadOnlyCollection<object>)vars[\\"WindowHandles\\"]).ToList();
     if (whNow.Count > whThen.Count) {
       return whNow.Except(whThen).First().ToString();
     } else {
@@ -238,10 +238,10 @@ public class DefaultSuiteTest {
   }
   public void selectwindow() {
     Driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
-    this.vars[\\"WindowHandles\\"] = Driver.WindowHandles;
+    vars[\\"WindowHandles\\"] = Driver.WindowHandles;
     Driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
-    this.vars[\\"win9425\\"] = waitForWindow(2000);
-    Driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
+    vars[\\"win9425\\"] = waitForWindow(2000);
+    Driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.That(Driver.Title, Is.EqualTo(\\"New Window\\"));
   }
   [Test]
@@ -272,9 +272,9 @@ public class DefaultSuiteTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -287,7 +287,7 @@ public class DefaultSuiteTest {
       Console.WriteLine(\\"{0} Exception caught.\\", e);
     }
     var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();
-    var whThen = ((IReadOnlyCollection<object>)this.vars[\\"WindowHandles\\"]).ToList();
+    var whThen = ((IReadOnlyCollection<object>)vars[\\"WindowHandles\\"]).ToList();
     if (whNow.Count > whThen.Count) {
       return whNow.Except(whThen).First().ToString();
     } else {
@@ -296,10 +296,10 @@ public class DefaultSuiteTest {
   }
   public void selectwindow() {
     Driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
-    this.vars[\\"WindowHandles\\"] = Driver.WindowHandles;
+    vars[\\"WindowHandles\\"] = Driver.WindowHandles;
     Driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
-    this.vars[\\"win9425\\"] = waitForWindow(2000);
-    Driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
+    vars[\\"win9425\\"] = waitForWindow(2000);
+    Driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.That(Driver.Title, Is.EqualTo(\\"New Window\\"));
   }
   [Test]
@@ -309,10 +309,10 @@ public class DefaultSuiteTest {
   [Test]
   public void selectwindow() {
     Driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
-    this.vars[\\"WindowHandles\\"] = Driver.WindowHandles;
+    vars[\\"WindowHandles\\"] = Driver.WindowHandles;
     Driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
-    this.vars[\\"win9425\\"] = waitForWindow(2000);
-    Driver.SwitchTo().Window(this.vars[\\"win9425\\"].ToString());
+    vars[\\"win9425\\"] = waitForWindow(2000);
+    Driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.That(Driver.Title, Is.EqualTo(\\"New Window\\"));
   }
 }
@@ -339,9 +339,9 @@ public class LoginTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -380,9 +380,9 @@ public class ValidcredentialsTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -391,14 +391,14 @@ public class ValidcredentialsTest {
   public void login() {
     Driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     Driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
-    Driver.FindElement(By.Id(\\"username\\")).SendKeys(this.vars[\\"username\\"].ToString());
-    Driver.FindElement(By.Id(\\"password\\")).SendKeys(this.vars[\\"password\\"].ToString());
+    Driver.FindElement(By.Id(\\"username\\")).SendKeys(vars[\\"username\\"].ToString());
+    Driver.FindElement(By.Id(\\"password\\")).SendKeys(vars[\\"password\\"].ToString());
     Driver.FindElement(By.CssSelector(\\".fa\\")).Click();
   }
   [Test]
   public void validcredentials() {
-    this.vars[\\"username\\"] = \\"tomsmith\\";
-    this.vars[\\"password\\"] = \\"SuperSecretPassword!\\";
+    vars[\\"username\\"] = \\"tomsmith\\";
+    vars[\\"password\\"] = \\"SuperSecretPassword!\\";
     login();
   }
 }
@@ -425,9 +425,9 @@ public class SelectwindowTest {
   private IJavaScriptExecutor js;
   [SetUp]
   public void SetUp() {
-    this.Driver = new ChromeDriver();
-    this.js = (IJavaScriptExecutor)this.Driver;
-    this.vars = new Dictionary<string, object>();
+    Driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)Driver;
+    vars = new Dictionary<string, object>();
   }
   [TearDown]
   protected void TearDown() {
@@ -440,7 +440,7 @@ public class SelectwindowTest {
       Console.WriteLine(\\"{0} Exception caught.\\", e);
     }
     var whNow = ((IReadOnlyCollection<object>)Driver.WindowHandles).ToList();
-    var whThen = ((IReadOnlyCollection<object>)this.vars[\\"WindowHandles\\"]).ToList();
+    var whThen = ((IReadOnlyCollection<object>)vars[\\"WindowHandles\\"]).ToList();
     if (whNow.Count > whThen.Count) {
       return whNow.Except(whThen).First().ToString();
     } else {
@@ -452,13 +452,13 @@ public class SelectwindowTest {
     Driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/\\");
     Driver.Manage().Window.Size = new System.Drawing.Size(1260, 1027);
     Driver.FindElement(By.LinkText(\\"Multiple Windows\\")).Click();
-    this.vars[\\"WindowHandles\\"] = Driver.WindowHandles;
+    vars[\\"WindowHandles\\"] = Driver.WindowHandles;
     Driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
-    this.vars[\\"win9625\\"] = waitForWindow(2000);
-    this.vars[\\"root\\"] = Driver.CurrentWindowHandle;
-    Driver.SwitchTo().Window(this.vars[\\"win9625\\"].ToString());
+    vars[\\"win9625\\"] = waitForWindow(2000);
+    vars[\\"root\\"] = Driver.CurrentWindowHandle;
+    Driver.SwitchTo().Window(vars[\\"win9625\\"].ToString());
     Assert.That(Driver.Title, Is.EqualTo(\\"New Window\\"));
-    Driver.SwitchTo().Window(this.vars[\\"root\\"].ToString());
+    Driver.SwitchTo().Window(vars[\\"root\\"].ToString());
     Assert.That(Driver.Title, Is.EqualTo(\\"The Internet\\"));
   }
 }
