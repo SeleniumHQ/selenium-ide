@@ -97,14 +97,14 @@ function beforeEach() {
         { level: 0, statement: 'public void SetUp() {' },
         {
           level: 1,
-          statement: `this.Driver = new ${
+          statement: `Driver = new ${
             userAgent.browserName ? userAgent.browserName : 'Chrome'
           }Driver();`,
         },
-        { level: 1, statement: 'this.js = (IJavaScriptExecutor)this.Driver;' },
+        { level: 1, statement: 'js = (IJavaScriptExecutor)Driver;' },
         {
           level: 1,
-          statement: 'this.vars = new Dictionary<string, object>();',
+          statement: 'vars = new Dictionary<string, object>();',
         },
       ],
     },

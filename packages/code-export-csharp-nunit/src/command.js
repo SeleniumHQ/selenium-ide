@@ -137,11 +137,11 @@ function canEmit(commandName) {
 }
 
 function variableLookup(varName) {
-  return `this.vars["${varName}"].ToString()`
+  return `vars["${varName}"].ToString()`
 }
 
 function variableSetter(varName, value) {
-  return varName ? `this.vars["${varName}"] = ${value};` : ''
+  return varName ? `vars["${varName}"] = ${value};` : ''
 }
 
 function emitWaitForWindow() {
@@ -162,7 +162,7 @@ function emitWaitForWindow() {
     {
       level: 0,
       statement:
-        'var whThen = ((IReadOnlyCollection<object>)this.vars["WindowHandles"]).ToList();',
+        'var whThen = ((IReadOnlyCollection<object>)vars["WindowHandles"]).ToList();',
     },
     { level: 0, statement: 'if (whNow.Count > whThen.Count) {' },
     { level: 1, statement: 'return whNow.Except(whThen).First().ToString();' },
@@ -179,7 +179,7 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `this.vars["WindowHandles"] = Driver.WindowHandles;\n${await emittedCommand}\nthis.vars["${
+    `vars["WindowHandles"] = Driver.WindowHandles;\n${await emittedCommand}\nvars["${
       command.windowHandleName
     }"] = waitForWindow(${command.windowTimeout});`
   )
@@ -191,7 +191,7 @@ function emitAssert(varName, value) {
       ? exporter.parsers.capitalize(value)
       : value
   return Promise.resolve(
-    `Assert.That(this.vars["${varName}"].ToString(), Is.EqualTo("${_value}"));`
+    `Assert.That(vars["${varName}"].ToString(), Is.EqualTo("${_value}"));`
   )
 }
 
@@ -249,7 +249,7 @@ async function emitClose() {
 
 function generateExpressionScript(script) {
   const scriptString = script.script.replace(/"/g, "'")
-  return `(Boolean) this.js.ExecuteScript("return (${scriptString})"${generateScriptArguments(
+  return `(Boolean) js.ExecuteScript("return (${scriptString})"${generateScriptArguments(
     script
   )})`
 }
@@ -303,7 +303,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `var ${collectionVarName}Enum = ((IReadOnlyCollection<object>)this.vars["${collectionVarName}"]).ToList().GetEnumerator();`,
+        statement: `var ${collectionVarName}Enum = ((IReadOnlyCollection<object>)vars["${collectionVarName}"]).ToList().GetEnumerator();`,
       },
       {
         level: 0,
@@ -315,7 +315,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `this.vars["${iteratorVarName}"] = ${collectionVarName}Enum.Current;`,
+        statement: `vars["${iteratorVarName}"] = ${collectionVarName}Enum.Current;`,
       },
     ],
   })
@@ -386,7 +386,7 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitEcho(message) {
-  const _message = message.startsWith('this.vars[') ? message : `"${message}"`
+  const _message = message.startsWith('vars[') ? message : `"${message}"`
   return Promise.resolve(`Console.WriteLine(${_message});`)
 }
 
@@ -401,7 +401,7 @@ async function emitEditContent(locator, content) {
     },
     {
       level: 1,
-      statement: `this.js.ExecuteScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
+      statement: `js.ExecuteScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -409,14 +409,14 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const result = `this.js.ExecuteScript("${
+  const result = `js.ExecuteScript("${
     script.script
   }"${generateScriptArguments(script)})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  const result = `this.js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+  const result = `js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
@@ -424,7 +424,7 @@ async function emitExecuteAsyncScript(script, varName) {
 
 function generateScriptArguments(script) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `this.vars["${varName}"]`)
+    .map(varName => `vars["${varName}"]`)
     .join(',')}`
 }
 
@@ -520,7 +520,7 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `this.js.ExecuteScript("${script.script}${generateScriptArguments(
+    `js.ExecuteScript("${script.script}${generateScriptArguments(
       script
     )}");`
   )
@@ -631,7 +631,7 @@ function generateSendKeysInput(value) {
   if (typeof value === 'object') {
     return value
       .map(s => {
-        if (s.startsWith('this.vars[')) {
+        if (s.startsWith('vars[')) {
           return s
         } else if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)[1]
@@ -642,7 +642,7 @@ function generateSendKeysInput(value) {
       })
       .join(' + ')
   } else {
-    if (value.startsWith('this.vars[')) {
+    if (value.startsWith('vars[')) {
       return value
     } else {
       return `"${value}"`
