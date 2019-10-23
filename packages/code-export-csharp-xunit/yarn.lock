@@ -606,17 +606,17 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@seleniumhq/side-model@^3.14.0":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.14.0.tgz#d875707c88536ca67d35a929ba6f5cbce0f3ce5d"
-  integrity sha512-si8dipFgknUpGHJrRzeWIIlHsWis4RaLDbCdMoIgiqmKqimetBYm2b/qsFqhtgC/oL6ER5VdfO/f1fmPemWHTA==
+"@seleniumhq/side-model@^3.13.0":
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.13.0.tgz#ef54fbadfbfa65c5f34e14298d6d394fb37a28fc"
+  integrity sha512-Z//rC2Dh3KdNHC0lAV9pLMRrqRABrFzeIU/rosrRvZ+qooUOv+WNg+ullaqCKllxAmZxnxMOyu04V4Tx8Mz/Tg==
 
-"@seleniumhq/side-utils@^3.14.0":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@seleniumhq/side-utils/-/side-utils-3.14.0.tgz#f3d7a785299b5a1802ea0423f1adf18442fd1c66"
-  integrity sha512-0zht8R7UgnnpoZ0ZklNbLg3tBa5YTf/YzWc4RKeTdqBMgfm0m7IpJRxwL94A2WuJh6cEgUPMVpKQNpHTb5aEfA==
+"@seleniumhq/side-utils@^3.12.1":
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-utils/-/side-utils-3.13.0.tgz#e85690f5c2cef4b096aec0923922345244d50a11"
+  integrity sha512-GiYaH9yLcxMeCyC0CujBmeu5F1tw1ik3jfKPDJRcb+qlZUW/d3zqG/d/a8hPN7RxhODAvM0girYAXmDo8S3+hw==
   dependencies:
-    "@seleniumhq/side-model" "^3.14.0"
+    "@seleniumhq/side-model" "^3.13.0"
     ua-parser-js "^0.7.17"
 
 abbrev@1:

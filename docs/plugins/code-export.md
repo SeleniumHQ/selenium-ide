@@ -25,7 +25,7 @@ To augment an existing language, use the `languages` key and specify which ones 
   }
 ```
 
-The currently available language ids `"java-junit"`, `"javascript-mocha"`, and `"python-pytest"`.
+The currently available language ids `"java-junit"`, `"javascript-mocha"`, `"python-pytest"`, and `"csharp-xunit"`.
 
 <u>Add a new language</u>
 
