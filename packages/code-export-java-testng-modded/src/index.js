@@ -36,7 +36,7 @@ opts.generateMethodDeclaration = generateMethodDeclaration
 function generateTestDeclaration(name) {
   return `@Test\npublic void ${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
-  )}() {`
+  )}(ITestContext itc) {\n${opts.commandPrefixPadding}init(itc)`
 }
 function generateMethodDeclaration(name) {
   return `public void ${exporter.parsers.sanitizeName(name)}() {`

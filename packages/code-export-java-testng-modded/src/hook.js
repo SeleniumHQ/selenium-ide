@@ -61,8 +61,10 @@ function declareDependencies() {
   const params = {
     startingSyntax: {
       commands: [
+        { level: 0, statement: 'import com.jedox.qa.framework.testexec.Loader;'},
         { level: 0, statement: 'import org.testng.annotations.Test;' },
         { level: 0, statement: 'import static org.testng.Assert.*;' },
+        { level: 0, statement: 'import org.testng.ITestContext;'},
         { level: 0, statement: 'import static org.hamcrest.CoreMatchers.is;' },
         { level: 0, statement: 'import static org.hamcrest.core.IsNot.not;' },
         { level: 0, statement: 'import org.openqa.selenium.By;' },
@@ -109,7 +111,7 @@ function declareVariables() {
       commands: [
         {
           level: 0,
-          statement: 'private Map<String, Object> vars;',
+          statement: 'private Map<String, Object> vars = new HashMap()<>;'
         }
       ],
     },
