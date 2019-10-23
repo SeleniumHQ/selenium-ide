@@ -80,7 +80,7 @@ public class SuiteTests : IDisposable {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.Equal(this.vars[\\"output\\"].ToString(), \\"a\\");
+    Assert.Equal(vars[\\"output\\"].ToString(), \\"a\\");
   }
   [Fact]
   public void Controlflowelseif() {
@@ -92,7 +92,7 @@ public class SuiteTests : IDisposable {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.Equal(this.vars[\\"output\\"].ToString(), \\"b\\");
+    Assert.Equal(vars[\\"output\\"].ToString(), \\"b\\");
   }
   [Fact]
   public void Controlflowelse() {
@@ -104,7 +104,7 @@ public class SuiteTests : IDisposable {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.Equal(this.vars[\\"output\\"].ToString(), \\"c\\");
+    Assert.Equal(vars[\\"output\\"].ToString(), \\"c\\");
   }
   [Fact]
   public void Controlflowdo() {
@@ -112,7 +112,7 @@ public class SuiteTests : IDisposable {
     do {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     } while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
-    Assert.Equal(this.vars[\\"check\\"].ToString(), \\"3\\");
+    Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
   }
   [Fact]
   public void Controlflowtimes() {
@@ -121,7 +121,7 @@ public class SuiteTests : IDisposable {
     for(int i = 0; i < times; i++) {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.Equal(this.vars[\\"check\\"].ToString(), \\"3\\");
+    Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
   }
   [Fact]
   public void Controlflowwhile() {
@@ -129,7 +129,7 @@ public class SuiteTests : IDisposable {
     while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.Equal(this.vars[\\"check\\"].ToString(), \\"3\\");
+    Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
   }
 }
 "

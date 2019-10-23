@@ -87,7 +87,7 @@ exports[`command code emitter should emit \`assert value\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.Equal(this.vars[\\"varrrName\\"].ToString(), \\"blah\\");"`;
+exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.Equal(vars[\\"varrrName\\"].ToString(), \\"blah\\");"`;
 
 exports[`command code emitter should emit \`verify checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
 
@@ -150,4 +150,4 @@ exports[`command code emitter should emit \`verify value\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.Equal(this.vars[\\"varrrName\\"].ToString(), \\"blah\\");"`;
+exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.Equal(vars[\\"varrrName\\"].ToString(), \\"blah\\");"`;

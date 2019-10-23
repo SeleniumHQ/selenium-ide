@@ -40,7 +40,7 @@ Command.emitters.verify = emitAssert
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `Assert.Equal(this.vars["${varName}"].ToString(), "${value}");`
+    `Assert.Equal(vars["${varName}"].ToString(), "${value}");`
   )
 }
 
