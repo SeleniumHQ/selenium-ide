@@ -17,26 +17,27 @@
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
 import { Command, location } from 'code-export-csharp-commons'
+const emitters = { ...Command.emitters }
 
-exporter.register.preprocessors(Command.emitters)
+exporter.register.preprocessors(emitters)
 
 function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters: Command.emitters })
+  exporter.register.emitter({ command, emitter, emitters: emitters })
 }
 
 function emit(command) {
-  return exporter.emit.command(command, Command.emitters[command.command], {
+  return exporter.emit.command(command, emitters[command.command], {
     variableLookup: Command.variableLookup,
     emitNewWindowHandling: Command.extras.emitNewWindowHandling,
   })
 }
 
 function canEmit(commandName) {
-  return !!Command.emitters[commandName]
+  return !!emitters[commandName]
 }
 
-Command.emitters.assert = emitAssert
-Command.emitters.verify = emitAssert
+emitters.assert = emitAssert
+emitters.verify = emitAssert
 
 function emitAssert(varName, value) {
   return Promise.resolve(
@@ -44,9 +45,9 @@ function emitAssert(varName, value) {
   )
 }
 
-Command.emitters.assertAlert = emitAssertAlert
-Command.emitters.assertConfirmation = emitAssertAlert
-Command.emitters.assertPrompt = emitAssertAlert
+emitters.assertAlert = emitAssertAlert
+emitters.assertConfirmation = emitAssertAlert
+emitters.assertPrompt = emitAssertAlert
 
 function emitAssertAlert(AlertText) {
   return Promise.resolve(
@@ -54,8 +55,8 @@ function emitAssertAlert(AlertText) {
   )
 }
 
-Command.emitters.assertChecked = emitVerifyChecked
-Command.emitters.verifyChecked = emitVerifyChecked
+emitters.assertChecked = emitVerifyChecked
+emitters.verifyChecked = emitVerifyChecked
 
 async function emitVerifyChecked(locator) {
   return Promise.resolve(
@@ -63,8 +64,8 @@ async function emitVerifyChecked(locator) {
   )
 }
 
-Command.emitters.assertEditable = emitVerifyEditable
-Command.emitters.verifyEditable = emitVerifyEditable
+emitters.assertEditable = emitVerifyEditable
+emitters.verifyEditable = emitVerifyEditable
 
 async function emitVerifyEditable(locator) {
   const commands = [
@@ -86,8 +87,8 @@ async function emitVerifyEditable(locator) {
   return Promise.resolve({ commands })
 }
 
-Command.emitters.assertElementPresent = emitVerifyElementPresent
-Command.emitters.verifyElementPresent = emitVerifyElementPresent
+emitters.assertElementPresent = emitVerifyElementPresent
+emitters.verifyElementPresent = emitVerifyElementPresent
 
 async function emitVerifyElementPresent(locator) {
   const commands = [
@@ -104,8 +105,8 @@ async function emitVerifyElementPresent(locator) {
   return Promise.resolve({ commands })
 }
 
-Command.emitters.assertElementNotPresent = emitVerifyElementNotPresent
-Command.emitters.verifyElementNotPresent = emitVerifyElementNotPresent
+emitters.assertElementNotPresent = emitVerifyElementNotPresent
+emitters.verifyElementNotPresent = emitVerifyElementNotPresent
 
 async function emitVerifyElementNotPresent(locator) {
   const commands = [
@@ -122,8 +123,8 @@ async function emitVerifyElementNotPresent(locator) {
   return Promise.resolve({ commands })
 }
 
-Command.emitters.assertNotChecked = emitVerifyNotChecked
-Command.emitters.verifyNotChecked = emitVerifyNotChecked
+emitters.assertNotChecked = emitVerifyNotChecked
+emitters.verifyNotChecked = emitVerifyNotChecked
 
 async function emitVerifyNotChecked(locator) {
   return Promise.resolve(
@@ -133,8 +134,8 @@ async function emitVerifyNotChecked(locator) {
   )
 }
 
-Command.emitters.assertNotEditable = emitVerifyNotEditable
-Command.emitters.verifyNotEdtiable = emitVerifyNotEditable
+emitters.assertNotEditable = emitVerifyNotEditable
+emitters.verifyNotEdtiable = emitVerifyNotEditable
 
 async function emitVerifyNotEditable(locator) {
   const commands = [
@@ -156,8 +157,8 @@ async function emitVerifyNotEditable(locator) {
   return Promise.resolve({ commands })
 }
 
-Command.emitters.assertNotSelectedValue = emitVerifyNotSelectedValue
-Command.emitters.verifyNotSelectedValue = emitVerifyNotSelectedValue
+emitters.assertNotSelectedValue = emitVerifyNotSelectedValue
+emitters.verifyNotSelectedValue = emitVerifyNotSelectedValue
 
 async function emitVerifyNotSelectedValue(locator, expectedValue) {
   const commands = [
@@ -179,8 +180,8 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
   return Promise.resolve({ commands })
 }
 
-Command.emitters.assertNotText = emitVerifyNotText
-Command.emitters.verifyNotText = emitVerifyNotText
+emitters.assertNotText = emitVerifyNotText
+emitters.verifyNotText = emitVerifyNotText
 
 async function emitVerifyNotText(locator, text) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
@@ -189,8 +190,8 @@ async function emitVerifyNotText(locator, text) {
   )
 }
 
-Command.emitters.assertSelectedLabel = emitVerifySelectedLabel
-Command.emitters.verifySelectedLabel = emitVerifySelectedLabel
+emitters.assertSelectedLabel = emitVerifySelectedLabel
+emitters.verifySelectedLabel = emitVerifySelectedLabel
 
 async function emitVerifySelectedLabel(locator, labelValue) {
   const commands = [
@@ -222,9 +223,9 @@ async function emitVerifySelectedLabel(locator, labelValue) {
   })
 }
 
-Command.emitters.assertSelectedValue = emitVerifyValue
-Command.emitters.verifySelectedValue = emitVerifyValue
-Command.emitters.assertValue = emitVerifyValue
+emitters.assertSelectedValue = emitVerifyValue
+emitters.verifySelectedValue = emitVerifyValue
+emitters.assertValue = emitVerifyValue
 
 async function emitVerifyValue(locator, value) {
   const commands = [
@@ -241,8 +242,8 @@ async function emitVerifyValue(locator, value) {
   return Promise.resolve({ commands })
 }
 
-Command.emitters.assertText = emitVerifyText
-Command.emitters.verifyText = emitVerifyText
+emitters.assertText = emitVerifyText
+emitters.verifyText = emitVerifyText
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(
@@ -252,8 +253,8 @@ async function emitVerifyText(locator, text) {
   )
 }
 
-Command.emitters.assertTitle = emitVerifyTitle
-Command.emitters.verifyTitle = emitVerifyTitle
+emitters.assertTitle = emitVerifyTitle
+emitters.verifyTitle = emitVerifyTitle
 
 async function emitVerifyTitle(title) {
   return Promise.resolve(`Assert.Equal(driver.Title, "${title}");`)
