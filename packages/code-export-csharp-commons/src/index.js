@@ -16,6 +16,7 @@
 // under the License.
 
 import Command from './command'
+import location from './location'
 
 const opts = {}
 opts.fileExtension = '.cs'
@@ -25,5 +26,6 @@ opts.commentPrefix = '//'
 
 module.exports = {
   Command,
+  location,
   opts,
 }

@@ -63,7 +63,7 @@ function afterEach() {
       commands: [
         { level: 0, statement: '[TearDown]' },
         { level: 0, statement: 'protected void TearDown() {' },
-        { level: 1, statement: 'Driver.Quit();' },
+        { level: 1, statement: 'driver.Quit();' },
       ],
     },
     endingSyntax: {
@@ -97,11 +97,11 @@ function beforeEach() {
         { level: 0, statement: 'public void SetUp() {' },
         {
           level: 1,
-          statement: `Driver = new ${
+          statement: `driver = new ${
             userAgent.browserName ? userAgent.browserName : 'Chrome'
           }Driver();`,
         },
-        { level: 1, statement: 'js = (IJavaScriptExecutor)Driver;' },
+        { level: 1, statement: 'js = (IJavaScriptExecutor)driver;' },
         {
           level: 1,
           statement: 'vars = new Dictionary<string, object>();',
@@ -140,7 +140,7 @@ function declareVariables() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'private IWebDriver Driver;' },
+        { level: 0, statement: 'private IWebDriver driver;' },
         {
           level: 0,
           statement:
