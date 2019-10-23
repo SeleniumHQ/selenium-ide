@@ -107,8 +107,40 @@ export async function emitSuite({
   })
   return {
     filename: generateFilename(suite.name),
-    body: exporter.emit.orderedSuite(_suite),
+    body: emitOrderedSuite(_suite),
   }
+}
+
+function emitOrderedSuite(emittedSuite) {
+  let result = ''
+  result += emittedSuite.headerComment
+  result += emittedSuite.dependencies
+  result += emittedSuite.suiteDeclaration
+  result += emittedSuite.variables
+  //result += emittedSuite.beforeAll
+  result += emittedSuite.beforeEach
+  result += emittedSuite.afterEach
+  //result += emittedSuite.afterAll
+  result += emittedSuite.methods
+  if (emittedSuite.tests.testDeclaration) {
+    const test = emittedSuite.tests
+    result += test.testDeclaration
+    result += test.inEachBegin
+    result += test.commands
+    result += test.inEachEnd
+    result += test.testEnd
+  } else {
+    for (const testName in emittedSuite.tests) {
+      const test = emittedSuite.tests[testName]
+      result += test.testDeclaration
+      result += test.inEachBegin
+      result += test.commands
+      result += test.inEachEnd
+      result += test.testEnd
+    }
+  }
+  result += emittedSuite.suiteEnd
+  return result
 }
 
 export default {
