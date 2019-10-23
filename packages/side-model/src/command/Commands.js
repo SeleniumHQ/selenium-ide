@@ -280,6 +280,27 @@ export const Commands = [
     },
   ],
   [
+    'contextMenu',
+    {
+      name: 'context menu',
+      type: TargetTypes.LOCATOR,
+      description: `Opens context menu on a target element (e.g., a link, button, checkbox, or radio button).`,
+      target: _ArgTypes.ArgTypes.locator
+    }
+  ],
+  [
+    'contextMenuAt',
+    {
+      name: 'context menu at',
+      type: TargetTypes.LOCATOR,
+      description: `Opens context menu on target element (e.g., a link, button, checkbox, 
+        or radio button). The coordinates are relative to the target element 
+        (e.g., 0,0 is the top left corner of the element) and are mostly used 
+        to check effects that relay on them, for example the material ripple effect.`,
+      target: _ArgTypes.ArgTypes.locator
+    }
+  ],
+  [
     'close',
     {
       name: 'close',
