@@ -17,7 +17,7 @@
 
 export const availableLanguages = {
   'csharp-nunit': require('code-export-csharp-nunit'),
-  //'csharp-xunit': require('code-export-csharp-xunit'),
+  'csharp-xunit': require('code-export-csharp-xunit'),
   'java-junit': require('code-export-java-junit'),
   'java-testng-modded': require('code-export-java-testng-modded'),
   'javascript-mocha': require('code-export-javascript-mocha'),
