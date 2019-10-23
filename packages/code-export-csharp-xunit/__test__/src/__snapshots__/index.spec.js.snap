@@ -11,20 +11,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   [Fact]
   public void Validcredentials() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
@@ -58,20 +57,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   [Fact]
   public void Controlflowif() {
     this.vars[\\"myVar\\"] = js.executeScript(\\"return 'a'\\")
@@ -148,20 +146,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   public void login() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
@@ -197,20 +194,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   public String waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
@@ -253,20 +249,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   public String waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);
@@ -318,20 +313,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   [Fact]
   public void Login() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/login\\");
@@ -356,20 +350,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   public void login() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
@@ -399,20 +392,19 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 public class SuiteTests : IDisposable {
-    public IWebDriver driver {get; private set;}
-    public IDictionary<String, Object> vars {get; private set;}
-    public IJavaScriptExecutor js {get; private set;}
-    public SuiteTests()
-    {
-      this.driver = new ChromeDriver();
-      this.js = (IJavaScriptExecutor)driver;
-      this.vars = new Dictionary<String, Object>();
-    }
-    public void Dispose()
-    {
-      driver.Close();
-      driver.Dispose();
-    }
+  public IWebDriver driver {get; private set;}
+  public IDictionary<String, Object> vars {get; private set;}
+  public IJavaScriptExecutor js {get; private set;}
+  public SuiteTests()
+  {
+    driver = new ChromeDriver();
+    js = (IJavaScriptExecutor)driver;
+    vars = new Dictionary<String, Object>();
+  }
+  public void Dispose()
+  {
+    driver.Quit();
+  }
   public String waitForWindow(int timeout) {
     try {
       Thread.Sleep(timeout);

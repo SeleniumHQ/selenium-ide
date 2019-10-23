@@ -45,26 +45,26 @@ function beforeEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 1, statement: `public SuiteTests()` },
-        { level: 1, statement: `{` },
+        { level: 0, statement: `public SuiteTests()` },
+        { level: 0, statement: `{` },
         {
-          level: 2,
-          statement: `this.driver = new ${
+          level: 1,
+          statement: `driver = new ${
             userAgent.browserName ? userAgent.browserName : `Chrome`
           }Driver();`,
         },
         {
-          level: 2,
-          statement: `this.js = (IJavaScriptExecutor)driver;`,
+          level: 1,
+          statement: `js = (IJavaScriptExecutor)driver;`,
         },
         {
-          level: 2,
-          statement: `this.vars = new Dictionary<String, Object>();`,
+          level: 1,
+          statement: `vars = new Dictionary<String, Object>();`,
         },
       ],
     },
     endingSyntax: {
-      commands: [{ level: 1, statement: '}' }],
+      commands: [{ level: 0, statement: '}' }],
     },
   }
   return params
@@ -74,14 +74,13 @@ function afterEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 1, statement: `public void Dispose()` },
-        { level: 1, statement: `{` },
-        { level: 2, statement: `driver.Close();` },
-        { level: 2, statement: `driver.Dispose();` },
+        { level: 0, statement: `public void Dispose()` },
+        { level: 0, statement: `{` },
+        { level: 1, statement: `driver.Quit();` },
       ],
     },
     endingSyntax: {
-      commands: [{ level: 1, statement: '}' }],
+      commands: [{ level: 0, statement: '}' }],
     },
   }
   return params
@@ -109,13 +108,13 @@ function declareVariables() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 1, statement: `public IWebDriver driver {get; private set;}` },
+        { level: 0, statement: `public IWebDriver driver {get; private set;}` },
         {
-          level: 1,
+          level: 0,
           statement: `public IDictionary<String, Object> vars {get; private set;}`,
         },
         {
-          level: 1,
+          level: 0,
           statement: `public IJavaScriptExecutor js {get; private set;}`,
         },
       ],
