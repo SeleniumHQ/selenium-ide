@@ -15,29 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-utils'
-import { Command } from 'code-export-csharp-commons'
+import Command from './command'
 
-exporter.register.preprocessors(Command.emitters)
+const opts = {}
+opts.fileExtension = '.cs'
+opts.commandPrefixPadding = '  '
+opts.terminatingKeyword = '}'
+opts.commentPrefix = '//'
 
-function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters: Command.emitters })
-}
-
-function emit(command) {
-  return exporter.emit.command(command, Command.emitters[command.command], {
-    variableLookup: Command.variableLookup,
-    emitNewWindowHandling: Command.extras.emitNewWindowHandling,
-  })
-}
-
-function canEmit(commandName) {
-  return !!Command.emitters[commandName]
-}
-
-export default {
-  canEmit,
-  emit,
-  register,
-  extras: { emitWaitForWindow: Command.extras.emitWaitForWindow },
+module.exports = {
+  Command,
+  opts,
 }

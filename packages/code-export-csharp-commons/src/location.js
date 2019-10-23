@@ -16,28 +16,45 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
-import { Command } from 'code-export-csharp-commons'
 
-exporter.register.preprocessors(Command.emitters)
-
-function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters: Command.emitters })
+const emitters = {
+  id: emitId,
+  name: emitName,
+  link: emitLink,
+  linkText: emitLink,
+  partialLinkText: emitPartialLinkText,
+  css: emitCss,
+  xpath: emitXpath,
 }
 
-function emit(command) {
-  return exporter.emit.command(command, Command.emitters[command.command], {
-    variableLookup: Command.variableLookup,
-    emitNewWindowHandling: Command.extras.emitNewWindowHandling,
-  })
-}
-
-function canEmit(commandName) {
-  return !!Command.emitters[commandName]
+export function emit(location) {
+  return exporter.emit.location(location, emitters)
 }
 
 export default {
-  canEmit,
   emit,
-  register,
-  extras: { emitWaitForWindow: Command.extras.emitWaitForWindow },
+}
+
+function emitId(selector) {
+  return Promise.resolve(`By.Id("${selector}")`)
+}
+
+function emitName(selector) {
+  return Promise.resolve(`By.Name("${selector}")`)
+}
+
+function emitLink(selector) {
+  return Promise.resolve(`By.LinkText("${selector}")`)
+}
+
+function emitPartialLinkText(selector) {
+  return Promise.resolve(`By.PartialLinkText("${selector}")`)
+}
+
+function emitCss(selector) {
+  return Promise.resolve(`By.CssSelector("${selector}")`)
+}
+
+function emitXpath(selector) {
+  return Promise.resolve(`By.XPath("${selector}")`)
 }

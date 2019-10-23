@@ -16,28 +16,34 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
-import { Command } from 'code-export-csharp-commons'
 
-exporter.register.preprocessors(Command.emitters)
-
-function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters: Command.emitters })
+const emitters = {
+  id: emitId,
+  value: emitValue,
+  label: emitLabel,
+  index: emitIndex,
 }
 
-function emit(command) {
-  return exporter.emit.command(command, Command.emitters[command.command], {
-    variableLookup: Command.variableLookup,
-    emitNewWindowHandling: Command.extras.emitNewWindowHandling,
-  })
-}
-
-function canEmit(commandName) {
-  return !!Command.emitters[commandName]
+export function emit(location) {
+  return exporter.emit.selection(location, emitters)
 }
 
 export default {
-  canEmit,
   emit,
-  register,
-  extras: { emitWaitForWindow: Command.extras.emitWaitForWindow },
+}
+
+function emitId(id) {
+  return Promise.resolve(`By.CssSelector("*[id='${id}']")`)
+}
+
+function emitValue(value) {
+  return Promise.resolve(`By.CssSelector("*[value='${value}']")`)
+}
+
+function emitLabel(label) {
+  return Promise.resolve(`By.XPath("//option[. = '${label}']")`)
+}
+
+function emitIndex(index) {
+  return Promise.resolve(`By.CssSelector("*:nth-child(${index})")`)
 }

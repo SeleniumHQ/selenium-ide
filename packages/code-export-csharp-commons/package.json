@@ -1,7 +1,7 @@
 {
-  "name": "code-export-csharp-nunit",
+  "name": "code-export-csharp-commons",
   "version": "3.14.0",
-  "description": "Export Selenium IDE project contents to C# NUnit",
+  "description": "Commons for exporting Selenium IDE project contents to C#",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
     "selenium",
@@ -19,9 +19,5 @@
     "@babel/cli": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.5"
-  },
-  "dependencies": {
-    "@seleniumhq/side-utils": "^3.14.0",
-    "code-export-csharp-commons": "^3.14.0"
   }
 }
