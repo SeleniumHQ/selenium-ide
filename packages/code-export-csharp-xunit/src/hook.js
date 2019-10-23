@@ -92,6 +92,8 @@ function declareDependencies() {
       commands: [
         { level: 0, statement: `using System;` },
         { level: 0, statement: `using System.Collections.Generic;` },
+        { level: 0, statement: `using System.Linq;` },
+        { level: 0, statement: 'using System.Threading;' },
         { level: 0, statement: `using OpenQA.Selenium;` },
         { level: 0, statement: `using OpenQA.Selenium.Chrome;` },
         { level: 0, statement: `using OpenQA.Selenium.Firefox;` },
