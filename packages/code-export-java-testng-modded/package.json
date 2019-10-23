@@ -1,7 +1,7 @@
 {
-  "name": "@seleniumhq/code-export",
-  "version": "3.17.0",
-  "description": "Selenium IDE code export",
+  "name": "code-export-java-testng-modded",
+  "version": "3.14.0",
+  "description": "Export Selenium IDE project contents to Java TestNG",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
     "selenium",
@@ -9,7 +9,7 @@
     "export"
   ],
   "license": "Apache-2.0",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "babel -d dist src --ignore=__test__",
     "watch": "yarn build -w"
@@ -17,14 +17,10 @@
   "main": "dist/index.js",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.14.0",
-    "code-export-javascript-mocha": "^3.14.0",
-    "code-export-python-pytest": "^3.14.0",
-    "code-export-csharp-nunit": "^3.14.0",
-    "code-export-csharp-xunit" : "^3.14.0",
-    "code-export-java-testng-modded" : "^3.14.0"
+    "@seleniumhq/side-utils": "^3.14.0"
   }
 }
