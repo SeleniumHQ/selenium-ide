@@ -21,6 +21,7 @@ export const availableLanguages = {
   'java-junit': require('code-export-java-junit'),
   'javascript-mocha': require('code-export-javascript-mocha'),
   'python-pytest': require('code-export-python-pytest'),
+  'ruby-rspec': require('code-export-ruby-rspec'),
 }
 
 function registerCommand(language, command, emitter) {
