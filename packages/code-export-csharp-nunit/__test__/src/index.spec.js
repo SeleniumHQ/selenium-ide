@@ -37,8 +37,8 @@ function readFile(filename) {
   )
 }
 
-describe('Code Export C# NUnit Selenium', () => {
-  it.only('should export a test', async () => {
+describe('Code Export C# NUnit', () => {
+  it('should export a test', async () => {
     const project = readFile('single-test.side')
     const results = await emitTest({
       baseUrl: project.url,

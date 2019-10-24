@@ -37,7 +37,7 @@ function readFile(filename) {
   )
 }
 
-describe('Code Export C# xUnit Selenium', () => {
+describe('Code Export C# xUnit', () => {
   it('should export a test', async () => {
     const project = readFile('single-test.side')
     const results = await emitTest({
