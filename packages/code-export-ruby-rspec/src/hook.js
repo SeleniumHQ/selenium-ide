@@ -88,11 +88,11 @@ function beforeEach() {
         { level: 0, statement: 'before(:each) do' },
         {
           level: 1,
-          statement: `@driver = Selenium::WebDriver.for(:${
+          statement: `@driver = Selenium::WebDriver.for :${
             userAgent.browserName
               ? userAgent.browserName.toLowerCase()
               : 'chrome'
-          }()`,
+          }`,
         },
         { level: 1, statement: '@vars = {}' },
       ],
