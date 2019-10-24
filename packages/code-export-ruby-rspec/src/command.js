@@ -175,19 +175,19 @@ async function emitNewWindowHandling(command, emittedCommand) {
 function emitAssert(varName, value) {
   let _value
   if (value === 'true' || value === 'false') {
-    _value = exporter.parsers.capitalize(value)
+    _value = value
   } else if (value === '0' || !!Number(value)) {
     _value = value
   }
   const result = _value
-    ? `expect(@vars["${varName}"]).to equal(${_value})`
-    : `expect(@vars["${varName}"]).to equal('${value}')`
+    ? `expect(@vars["${varName}"]).to eq(${_value})`
+    : `expect(@vars["${varName}"]).to eq('${value}')`
   return Promise.resolve(result)
 }
 
 function emitAssertAlert(alertText) {
   return Promise.resolve(
-    `expect(@driver.switch_to.alert.text).to equal('${alertText}')`
+    `expect(@driver.switch_to.alert.text).to eq('${alertText}')`
   )
 }
 
@@ -276,9 +276,8 @@ function emitControlFlowElseIf(script) {
 
 function emitControlFlowEnd() {
   return Promise.resolve({
-    commands: [{ level: 0, statement: `` }],
+    commands: [{ level: 0, statement: `end` }],
     startingLevelAdjustment: -1,
-    skipEmitting: true,
   })
 }
 
@@ -315,10 +314,13 @@ function emitControlFlowRepeatIf(script) {
     commands: [
       {
         level: 0,
-        statement: `break if ${generateExpressionScript(script)}`,
+        statement: `break if !${generateExpressionScript(script)}`,
+      },
+      {
+        level: -1,
+        statement: `end`,
       },
     ],
-    endingLevelAdjustment: -1,
   })
 }
 
@@ -726,7 +728,7 @@ async function emitVerifyElementNotPresent(locator) {
         locator
       )})`,
     },
-    { level: 0, statement: 'expect(elements.length).to equal(0)' },
+    { level: 0, statement: 'expect(elements.length).to eq(0)' },
   ]
   return Promise.resolve({ commands })
 }
@@ -762,7 +764,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
     },
     {
       level: 0,
-      statement: `expect(value).not_to equal("${exporter.emit.text(
+      statement: `expect(value).not_to eq("${exporter.emit.text(
         expectedValue
       )}")`,
     },
@@ -780,7 +782,7 @@ async function emitVerifyNotText(locator, text) {
     },
     {
       level: 0,
-      statement: `expect(text).not_to equal("${exporter.emit.text(text)}")`,
+      statement: `expect(text).not_to eq("${exporter.emit.text(text)}")`,
     },
   ]
   return Promise.resolve({ commands })
@@ -802,7 +804,7 @@ async function emitVerifySelectedLabel(locator, labelValue) {
       level: 0,
       statement: 'selected_text = element.find_element(:xpath, locator).text',
     },
-    { level: 0, statement: `expect(selected_text).to equal("${labelValue}")` },
+    { level: 0, statement: `expect(selected_text).to eq("${labelValue}")` },
   ]
   return Promise.resolve({
     commands,
@@ -815,7 +817,7 @@ async function emitVerifyText(locator, text) {
       level: 0,
       statement: `expect(@driver.find_element(${await location.emit(
         locator
-      )}).text).to equal("${exporter.emit.text(text)}")`,
+      )}).text).to eq("${exporter.emit.text(text)}")`,
     },
   ]
   return Promise.resolve({ commands })
@@ -829,13 +831,13 @@ async function emitVerifyValue(locator, value) {
         locator
       )}).attribute("value")`,
     },
-    { level: 0, statement: `expect(value).to equal("${value}")` },
+    { level: 0, statement: `expect(value).to eq("${value}")` },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitVerifyTitle(title) {
-  return Promise.resolve(`expect(@driver.title).to equal("${title}")`)
+  return Promise.resolve(`expect(@driver.title).to eq("${title}")`)
 }
 
 async function emitWaitForElementEditable(locator, timeout) {

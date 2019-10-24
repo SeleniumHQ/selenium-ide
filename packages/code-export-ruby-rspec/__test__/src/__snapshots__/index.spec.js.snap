@@ -6,7 +6,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'Login' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -18,7 +18,7 @@ describe 'Login' do
     @driver.find_element(:id, \\"username\\").send_keys(\\"tomsmith\\")
     @driver.find_element(:id, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
     @driver.find_element(:css, \\"#login button\\").click
-    expect(@driver.find_element(:css, \\".flash.success\\").text).to equal(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    expect(@driver.find_element(:css, \\".flash.success\\").text).to eq(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
   end
   it 'invalidcredentials' do
     @driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -26,7 +26,7 @@ describe 'Login' do
     @driver.find_element(:id, \\"username\\").send_keys(\\"blah\\")
     @driver.find_element(:id, \\"password\\").send_keys(\\"blah\\")
     @driver.find_element(:css, \\"#login button\\").click
-    expect(@driver.find_element(:id, \\"flash\\").text).to equal(\\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\")
+    expect(@driver.find_element(:id, \\"flash\\").text).to eq(\\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\")
   end
 end
 "
@@ -38,7 +38,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'Controlflow' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -52,7 +52,8 @@ describe 'Controlflow' do
       @vars[\\"output\\"] = @driver.execute_script(\\"return 'b'\\")
     else
       @vars[\\"output\\"] = @driver.execute_script(\\"return 'c'\\")
-    expect(@vars[\\"output\\"]).to equal('a')
+    end
+    expect(@vars[\\"output\\"]).to eq('a')
   end
   it 'controlflowelseif' do
     @vars[\\"myVar\\"] = @driver.execute_script(\\"return 'b'\\")
@@ -62,7 +63,8 @@ describe 'Controlflow' do
       @vars[\\"output\\"] = @driver.execute_script(\\"return 'b'\\")
     else
       @vars[\\"output\\"] = @driver.execute_script(\\"return 'c'\\")
-    expect(@vars[\\"output\\"]).to equal('b')
+    end
+    expect(@vars[\\"output\\"]).to eq('b')
   end
   it 'controlflowelse' do
     @vars[\\"myVar\\"] = @driver.execute_script(\\"return 'c'\\")
@@ -72,26 +74,30 @@ describe 'Controlflow' do
       @vars[\\"output\\"] = @driver.execute_script(\\"return 'b'\\")
     else
       @vars[\\"output\\"] = @driver.execute_script(\\"return 'c'\\")
-    expect(@vars[\\"output\\"]).to equal('c')
+    end
+    expect(@vars[\\"output\\"]).to eq('c')
   end
   it 'controlflowdo' do
     @vars[\\"check\\"] = @driver.execute_script(\\"return 1\\")
     loop do
       @vars[\\"check\\"] = @driver.execute_script(\\"return arguments[0] + 1\\", @vars[\\"check\\"])
-      break if @driver.execute_script(\\"return (arguments[0] < 3)\\", @vars[\\"check\\"])
-    expect(@vars[\\"check\\"]).to equal(3)
+      break if !@driver.execute_script(\\"return (arguments[0] < 3)\\", @vars[\\"check\\"])
+    end
+    expect(@vars[\\"check\\"]).to eq(3)
   end
   it 'controlflowtimes' do
     @vars[\\"check\\"] = @driver.execute_script(\\"return 1\\")
     2.times do
       @vars[\\"check\\"] = @driver.execute_script(\\"return arguments[0] + 1\\", @vars[\\"check\\"])
-    expect(@vars[\\"check\\"]).to equal(3)
+    end
+    expect(@vars[\\"check\\"]).to eq(3)
   end
   it 'controlflowwhile' do
     @vars[\\"check\\"] = @driver.execute_script(\\"return 1\\")
     while @driver.execute_script(\\"return (arguments[0] < 3)\\", @vars[\\"check\\"]) do
       @vars[\\"check\\"] = @driver.execute_script(\\"return arguments[0] + 1\\", @vars[\\"check\\"])
-    expect(@vars[\\"check\\"]).to equal(3)
+    end
+    expect(@vars[\\"check\\"]).to eq(3)
   end
 end
 "
@@ -103,7 +109,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'Login' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -136,7 +142,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'DefaultSuite' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -154,7 +160,7 @@ describe 'DefaultSuite' do
     @driver.find_element(:link_text, \\"Click Here\\").click
     @vars[\\"win9425\\"] = wait_for_window(2000)
     @driver.switch_to.window(@vars[\\"win9425\\"])
-    expect(@driver.title).to equal(\\"New Window\\")
+    expect(@driver.title).to eq(\\"New Window\\")
   end
   it 'reuse' do
     selectwindow()
@@ -169,7 +175,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'DefaultSuite' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -187,7 +193,7 @@ describe 'DefaultSuite' do
     @driver.find_element(:link_text, \\"Click Here\\").click
     @vars[\\"win9425\\"] = wait_for_window(2000)
     @driver.switch_to.window(@vars[\\"win9425\\"])
-    expect(@driver.title).to equal(\\"New Window\\")
+    expect(@driver.title).to eq(\\"New Window\\")
   end
   it 'reuse' do
     selectwindow()
@@ -198,7 +204,7 @@ describe 'DefaultSuite' do
     @driver.find_element(:link_text, \\"Click Here\\").click
     @vars[\\"win9425\\"] = wait_for_window(2000)
     @driver.switch_to.window(@vars[\\"win9425\\"])
-    expect(@driver.title).to equal(\\"New Window\\")
+    expect(@driver.title).to eq(\\"New Window\\")
   end
 end
 "
@@ -210,7 +216,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'Login' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -222,7 +228,7 @@ describe 'Login' do
     @driver.find_element(:id, \\"username\\").send_keys(\\"tomsmith\\")
     @driver.find_element(:id, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
     @driver.find_element(:css, \\"#login button\\").click
-    expect(@driver.find_element(:css, \\".flash.success\\").text).to equal(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    expect(@driver.find_element(:css, \\".flash.success\\").text).to eq(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
   end
 end
 "
@@ -234,7 +240,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'Validcredentials' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -262,7 +268,7 @@ require 'selenium-webdriver'
 require 'json'
 describe 'Selectwindow' do
   before(:each) do
-    @driver = Selenium::WebDriver.for(:chrome()
+    @driver = Selenium::WebDriver.for :chrome
     @vars = {}
   end
   after(:each) do
@@ -283,9 +289,9 @@ describe 'Selectwindow' do
     @vars[\\"win9625\\"] = wait_for_window(2000)
     @vars[\\"root\\"] = @driver.window_handle
     @driver.switch_to.window(@vars[\\"win9625\\"])
-    expect(@driver.title).to equal(\\"New Window\\")
+    expect(@driver.title).to eq(\\"New Window\\")
     @driver.switch_to.window(@vars[\\"root\\"])
-    expect(@driver.title).to equal(\\"The Internet\\")
+    expect(@driver.title).to eq(\\"The Internet\\")
   end
 end
 "

@@ -4,14 +4,14 @@ exports[`command code emitter should emit 'assert selected label' command 1`] = 
 "element = @driver.find_element(:id, \\"test\\")
 locator = \\"option[@value='\\" + element.attribute(\\"value\\") + \\"']\\"
 selected_text = element.find_element(:xpath, locator).text
-expect(selected_text).to equal(\\"test\\")"
+expect(selected_text).to eq(\\"test\\")"
 `;
 
 exports[`command code emitter should emit 'verify selected label' command 1`] = `
 "element = @driver.find_element(:id, \\"test\\")
 locator = \\"option[@value='\\" + element.attribute(\\"value\\") + \\"']\\"
 selected_text = element.find_element(:xpath, locator).text
-expect(selected_text).to equal(\\"test\\")"
+expect(selected_text).to eq(\\"test\\")"
 `;
 
 exports[`command code emitter should emit \`add selection\` command 1`] = `
@@ -25,11 +25,11 @@ alert.send_keys(\\"an answer\\")
 alert.accept()"
 `;
 
-exports[`command code emitter should emit \`assert alert\` command 1`] = `"expect(@driver.switch_to.alert.text).to equal('an alert')"`;
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"expect(@driver.switch_to.alert.text).to eq('an alert')"`;
 
 exports[`command code emitter should emit \`assert checked\` command 1`] = `"expect(@driver.find_element(:id, \\"check\\").selected?).to be_truthy"`;
 
-exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"expect(@driver.switch_to.alert.text).to equal('a confirmation')"`;
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"expect(@driver.switch_to.alert.text).to eq('a confirmation')"`;
 
 exports[`command code emitter should emit \`assert editable\` command 1`] = `
 "element = @driver.find_element(:id, \\"text\\")
@@ -38,7 +38,7 @@ expect(element.enabled?).to be_truthy"
 
 exports[`command code emitter should emit \`assert element not present\` command 1`] = `
 "elements = @driver.find_elements(:id, \\"element\\")
-expect(elements.length).to equal(0)"
+expect(elements.length).to eq(0)"
 `;
 
 exports[`command code emitter should emit \`assert element present\` command 1`] = `
@@ -55,31 +55,31 @@ expect(element.enabled?).to be_falsey"
 
 exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
 "value = @driver.find_element(:id, \\"select\\").attribute(\\"value\\")
-expect(value).not_to equal(\\"test\\")"
+expect(value).not_to eq(\\"test\\")"
 `;
 
 exports[`command code emitter should emit \`assert not text\` command 1`] = `
 "text = @driver.find_element(:id, \\"test\\").text
-expect(text).not_to equal(\\"text\\")"
+expect(text).not_to eq(\\"text\\")"
 `;
 
-exports[`command code emitter should emit \`assert prompt\` command 1`] = `"expect(@driver.switch_to.alert.text).to equal('a prompt')"`;
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"expect(@driver.switch_to.alert.text).to eq('a prompt')"`;
 
 exports[`command code emitter should emit \`assert selected value\` command 1`] = `
 "value = @driver.find_element(:id, \\"select\\").attribute(\\"value\\")
-expect(value).to equal(\\"test\\")"
+expect(value).to eq(\\"test\\")"
 `;
 
-exports[`command code emitter should emit \`assert text\` command 1`] = `"expect(@driver.find_element(:id, \\"test\\").text).to equal(\\"some text that should be here\\")"`;
+exports[`command code emitter should emit \`assert text\` command 1`] = `"expect(@driver.find_element(:id, \\"test\\").text).to eq(\\"some text that should be here\\")"`;
 
-exports[`command code emitter should emit \`assert title\` command 1`] = `"expect(@driver.title).to equal(\\"example title\\")"`;
+exports[`command code emitter should emit \`assert title\` command 1`] = `"expect(@driver.title).to eq(\\"example title\\")"`;
 
 exports[`command code emitter should emit \`assert value\` command 1`] = `
 "value = @driver.find_element(:id, \\"select\\").attribute(\\"value\\")
-expect(value).to equal(\\"test\\")"
+expect(value).to eq(\\"test\\")"
 `;
 
-exports[`command code emitter should emit \`assert\` command 1`] = `"expect(@vars[\\"varrrName\\"]).to equal('blah')"`;
+exports[`command code emitter should emit \`assert\` command 1`] = `"expect(@vars[\\"varrrName\\"]).to eq('blah')"`;
 
 exports[`command code emitter should emit \`check\` command 1`] = `
 "element = @driver.find_element(:id, \\"f\\")
@@ -144,8 +144,8 @@ Object {
 
 exports[`command code emitter should emit \`end\` command 1`] = `
 Object {
+  "body": "end",
   "endingLevel": 0,
-  "skipEmitting": true,
 }
 `;
 
@@ -296,7 +296,7 @@ expect(element.enabled?).to be_truthy"
 
 exports[`command code emitter should emit \`verify element not present\` command 1`] = `
 "elements = @driver.find_elements(:id, \\"element\\")
-expect(elements.length).to equal(0)"
+expect(elements.length).to eq(0)"
 `;
 
 exports[`command code emitter should emit \`verify element present\` command 1`] = `
@@ -313,29 +313,29 @@ expect(element.enabled?).to be_falsey"
 
 exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
 "value = @driver.find_element(:id, \\"select\\").attribute(\\"value\\")
-expect(value).not_to equal(\\"test\\")"
+expect(value).not_to eq(\\"test\\")"
 `;
 
 exports[`command code emitter should emit \`verify not text\` command 1`] = `
 "text = @driver.find_element(:id, \\"test\\").text
-expect(text).not_to equal(\\"text\\")"
+expect(text).not_to eq(\\"text\\")"
 `;
 
 exports[`command code emitter should emit \`verify selected value\` command 1`] = `
 "value = @driver.find_element(:id, \\"select\\").attribute(\\"value\\")
-expect(value).to equal(\\"test\\")"
+expect(value).to eq(\\"test\\")"
 `;
 
-exports[`command code emitter should emit \`verify text\` command 1`] = `"expect(@driver.find_element(:id, \\"test\\").text).to equal(\\"some text that should be here\\")"`;
+exports[`command code emitter should emit \`verify text\` command 1`] = `"expect(@driver.find_element(:id, \\"test\\").text).to eq(\\"some text that should be here\\")"`;
 
-exports[`command code emitter should emit \`verify title\` command 1`] = `"expect(@driver.title).to equal(\\"example title\\")"`;
+exports[`command code emitter should emit \`verify title\` command 1`] = `"expect(@driver.title).to eq(\\"example title\\")"`;
 
 exports[`command code emitter should emit \`verify value\` command 1`] = `
 "value = @driver.find_element(:id, \\"select\\").attribute(\\"value\\")
-expect(value).to equal(\\"test\\")"
+expect(value).to eq(\\"test\\")"
 `;
 
-exports[`command code emitter should emit \`verify\` command 1`] = `"expect(@vars[\\"varrrName\\"]).to equal('blah')"`;
+exports[`command code emitter should emit \`verify\` command 1`] = `"expect(@vars[\\"varrrName\\"]).to eq('blah')"`;
 
 exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { @driver.find_element(:css, \\"#blah\\").enabled? }"`;
 

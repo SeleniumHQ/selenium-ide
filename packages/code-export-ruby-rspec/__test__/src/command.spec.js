@@ -25,10 +25,11 @@ import { codeExport as exporter } from '@seleniumhq/side-utils'
 
 const commandPrefixPadding = opts.commandPrefixPadding
 
-async function prettify(command, { fullPayload } = {}) {
+async function prettify(command, { fullPayload, startingLevel } = {}) {
   const commandBlock = await Command.emit(command)
   const result = exporter.prettify(commandBlock, {
     commandPrefixPadding,
+    startingLevel,
   })
   return fullPayload ? result : result.body
 }
@@ -453,7 +454,9 @@ describe('command code emitter', () => {
       target: 'true',
       value: '',
     }
-    return expect(prettify(command)).resolves.toMatchSnapshot()
+    return expect(
+      prettify(command, { startingLevel: 1 })
+    ).resolves.toMatchSnapshot()
   })
   it('should emit `run` command', () => {
     const command = {
