@@ -221,7 +221,10 @@ exports[`command code emitter should emit \`remove selection\` command 1`] = `
 dropdown.find_element(:xpath, \\"//option[. = 'A label']\\").click"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"break if @driver.execute_script(\\"return (true)\\")"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"  break if !@driver.execute_script(\\"return (true)\\")
+end"
+`;
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"@driver.execute_script(\\"alert('test');alert('Im annoying');\\")"`;
 
@@ -341,7 +344,15 @@ exports[`command code emitter should emit \`waitForElementEditable\` command 1`]
 
 exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { !@driver.find_element(:css, \\"#blah\\").enabled? }"`;
 
-exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { !@driver.find_element(:css, \\"#blah\\") }"`;
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `
+"Selenium::WebDriver::Wait.new(timeout: 5).until do
+  begin
+    !@driver.find_element(:css, \\"#blah\\")
+  rescue Selenium::WebDriver::Error::NoSuchElementError
+    true
+  end
+end"
+`;
 
 exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { !@driver.find_element(:css, \\"#blah\\").displayed? }"`;
 

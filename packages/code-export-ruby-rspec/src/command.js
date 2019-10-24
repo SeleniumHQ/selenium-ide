@@ -903,10 +903,23 @@ async function emitWaitForElementNotPresent(locator, timeout) {
     {
       level: 0,
       statement: `Selenium::WebDriver::Wait.new(timeout: ${timeout /
-        1000}).until { !@driver.find_element(${await location.emit(
-        locator
-      )}) }`,
+        1000}).until do`,
     },
+    {
+      level: 1,
+      statement: 'begin',
+    },
+    {
+      level: 2,
+      statement: `!@driver.find_element(${await location.emit(locator)})`,
+    },
+    {
+      level: 1,
+      statement: 'rescue Selenium::WebDriver::Error::NoSuchElementError',
+    },
+    { level: 2, statement: 'true' },
+    { level: 1, statement: 'end' },
+    { level: 0, statement: 'end' },
   ]
   return Promise.resolve({
     commands,
