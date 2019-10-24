@@ -61,6 +61,7 @@ function declareDependencies() {
   const params = {
     startingSyntax: {
       commands: [
+        { level: 0, statement: 'package com.jedox.qa.test.selenium_ide;'},
         { level: 0, statement: 'import com.jedox.qa.framework.testexec.Loader;'},
         { level: 0, statement: 'import org.testng.annotations.Test;' },
         { level: 0, statement: 'import static org.testng.Assert.*;' },

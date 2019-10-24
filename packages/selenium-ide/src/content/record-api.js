@@ -27,6 +27,10 @@ function Recorder(window) {
   this.eventListeners = {}
   this.attached = false
   this.recordingState = {}
+  this.jdxContext = {}
+  this.jdxConsts = {
+    dblClickSpan: 200
+  }
 }
 
 Recorder.eventHandlers = {}

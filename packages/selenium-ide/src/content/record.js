@@ -111,16 +111,21 @@ Recorder.addEventHandler(
   function(event) {
     if (
       event.button == 0 &&
-      !this.recordingState.preventClick &&
       eventIsTrusted(event)
-    ) {
-      if (!this.recordingState.preventClickTwice) {
-        record('click', locatorBuilders.buildAll(event.target), '')
-        this.recordingState.preventClickTwice = true
-      }
-      setTimeout(() => {
-        this.recordingState.preventClickTwice = false
-      }, 30)
+    ) {      
+      const locators = locatorBuilders.buildAll(event.target);
+
+      if(this.jdxContext && this.jdxContext.clickTimeoutId)
+        return;
+      
+      this.jdxContext.clickTimeoutId = setTimeout(function(ctx){
+        if(!ctx.jdxContext.doubleClicked)
+          record('click', locators , '');
+        
+        ctx.jdxContext.doubleClicked = false;
+        ctx.jdxContext.clickTimeoutId = null;
+      }, this.jdxConsts.dblClickSpan, this);
+
     }
   },
   true
@@ -133,6 +138,7 @@ Recorder.addEventHandler(
   'dblclick',
   function(event) {
     record('doubleClick', locatorBuilders.buildAll(event.target), '')
+    this.jdxContext.doubleClicked = true;
   },
   true
 )
@@ -289,179 +295,192 @@ Recorder.addEventHandler(
 )
 // END
 
+
+
 let mousedown, mouseup, selectMouseup, selectMousedown, mouseoverQ, clickLocator
-// © Shuo-Heng Shih, SideeX Team
+
 Recorder.addEventHandler(
-  'dragAndDrop',
-  'mousedown',
-  function(event) {
-    if(event.type == "mousedown" && event.button == 2)
+  "cellClickOrContext",
+  "mousedown",
+  function(e)
+  {
+    if(e.target.classList.value == "gridCell" || e.target.classList.contains("customCursor"))
     {
-      record("mouseDown", locatorBuilders.buildAll(event.target), '');
-      return;
-    }
-
-    if (
-      event.clientX < window.document.documentElement.clientWidth &&
-      event.clientY < window.document.documentElement.clientHeight
-    ) {
-      mousedown = event
-      mouseup = setTimeout(() => {
-        mousedown = undefined
-      }, 200)
-
-      selectMouseup = setTimeout(() => {
-        selectMousedown = event
-      }, 200)
-    }
-    mouseoverQ = []
-
-    if (event.target.nodeName) {
-      let tagName = event.target.nodeName.toLowerCase()
-      if ('option' == tagName) {
-        let parent = event.target.parentNode
-        if (parent.multiple) {
-          let options = parent.options
-          for (let i = 0; i < options.length; i++) {
-            options[i]._wasSelected = options[i].selected
-          }
-        }
-      }
+        record(e.button == 2 ? 'contextMenu' : 'click', locatorBuilders.buildAll(e.target), '');
+        this.jdxContext.contextAlreadyRecorded = true;
     }
   },
   true
 )
-// END
 
-// © Shuo-Heng Shih, SideeX Team
-Recorder.addEventHandler(
-  'dragAndDrop',
-  'mouseup',
-  function(event) {
-    if(event.type == "mouseup" && event.button == 2)
-    {
-      record("mouseUp", locatorBuilders.buildAll(event.target), '');
-      return;
-    }
+// // © Shuo-Heng Shih, SideeX Team
+// Recorder.addEventHandler(
+//   'dragAndDrop',
+//   'mousedown',
+//   function(event) {
+//     if(event.type == "mousedown" && event.button == 2)
+//     {
+//       record("mouseDown", locatorBuilders.buildAll(event.target), '');
+//       return;
+//     }
 
-    function getSelectionText() {
-      let text = ''
-      let activeEl = window.document.activeElement
-      let activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null
-      if (activeElTagName == 'textarea' || activeElTagName == 'input') {
-        text = activeEl.value.slice(
-          activeEl.selectionStart,
-          activeEl.selectionEnd
-        )
-      } else if (window.getSelection) {
-        text = window.getSelection().toString()
-      }
-      return text.trim()
-    }
-    clearTimeout(selectMouseup)
-    if (selectMousedown) {
-      let x = event.clientX - selectMousedown.clientX
-      let y = event.clientY - selectMousedown.clientY
+//     if (
+//       event.clientX < window.document.documentElement.clientWidth &&
+//       event.clientY < window.document.documentElement.clientHeight
+//     ) {
+//       mousedown = event
+//       mouseup = setTimeout(() => {
+//         mousedown = undefined
+//       }, 200)
 
-      if (
-        selectMousedown &&
-        event.button === 0 &&
-        x + y &&
-        (event.clientX < window.document.documentElement.clientWidth &&
-          event.clientY < window.document.documentElement.clientHeight) &&
-        getSelectionText() === ''
-      ) {
-        let sourceRelateX =
-          selectMousedown.pageX -
-          selectMousedown.target.getBoundingClientRect().left -
-          window.scrollX
-        let sourceRelateY =
-          selectMousedown.pageY -
-          selectMousedown.target.getBoundingClientRect().top -
-          window.scrollY
-        let targetRelateX, targetRelateY
-        if (
-          !!mouseoverQ.length &&
-          mouseoverQ[1].relatedTarget == mouseoverQ[0].target &&
-          mouseoverQ[0].target == event.target
-        ) {
-          targetRelateX =
-            event.pageX -
-            mouseoverQ[1].target.getBoundingClientRect().left -
-            window.scrollX
-          targetRelateY =
-            event.pageY -
-            mouseoverQ[1].target.getBoundingClientRect().top -
-            window.scrollY
-          record(
-            'mouseDownAt',
-            locatorBuilders.buildAll(selectMousedown.target),
-            sourceRelateX + ',' + sourceRelateY
-          )
-          record(
-            'mouseMoveAt',
-            locatorBuilders.buildAll(mouseoverQ[1].target),
-            targetRelateX + ',' + targetRelateY
-          )
-          record(
-            'mouseUpAt',
-            locatorBuilders.buildAll(mouseoverQ[1].target),
-            targetRelateX + ',' + targetRelateY
-          )
-        } else {
-          targetRelateX =
-            event.pageX -
-            event.target.getBoundingClientRect().left -
-            window.scrollX
-          targetRelateY =
-            event.pageY -
-            event.target.getBoundingClientRect().top -
-            window.scrollY
-          record(
-            'mouseDownAt',
-            locatorBuilders.buildAll(event.target),
-            targetRelateX + ',' + targetRelateY
-          )
-          record(
-            'mouseMoveAt',
-            locatorBuilders.buildAll(event.target),
-            targetRelateX + ',' + targetRelateY
-          )
-          record(
-            'mouseUpAt',
-            locatorBuilders.buildAll(event.target),
-            targetRelateX + ',' + targetRelateY
-          )
-        }
-      }
-    } else {
-      clickLocator = undefined
-      mouseup = undefined
-      let x = 0
-      let y = 0
-      if (mousedown) {
-        x = event.clientX - mousedown.clientX
-        y = event.clientY - mousedown.clientY
-      }
+//       selectMouseup = setTimeout(() => {
+//         selectMousedown = event
+//       }, 200)
+//     }
+//     mouseoverQ = []
 
-      if (mousedown && mousedown.target !== event.target && !(x + y)) {
-        record('mouseDown', locatorBuilders.buildAll(mousedown.target), '')
+//     if (event.target.nodeName) {
+//       let tagName = event.target.nodeName.toLowerCase()
+//       if ('option' == tagName) {
+//         let parent = event.target.parentNode
+//         if (parent.multiple) {
+//           let options = parent.options
+//           for (let i = 0; i < options.length; i++) {
+//             options[i]._wasSelected = options[i].selected
+//           }
+//         }
+//       }
+//     }
+//   },
+//   true
+// )
+// // END
+
+// // © Shuo-Heng Shih, SideeX Team
+// Recorder.addEventHandler(
+//   'dragAndDrop',
+//   'mouseup',
+//   function(event) {
+//     if(event.type == "mouseup" && event.button == 2)
+//     {
+//       record("mouseUp", locatorBuilders.buildAll(event.target), '');
+//       return;
+//     }
+
+//     function getSelectionText() {
+//       let text = ''
+//       let activeEl = window.document.activeElement
+//       let activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null
+//       if (activeElTagName == 'textarea' || activeElTagName == 'input') {
+//         text = activeEl.value.slice(
+//           activeEl.selectionStart,
+//           activeEl.selectionEnd
+//         )
+//       } else if (window.getSelection) {
+//         text = window.getSelection().toString()
+//       }
+//       return text.trim()
+//     }
+//     clearTimeout(selectMouseup)
+//     if (selectMousedown) {
+//       let x = event.clientX - selectMousedown.clientX
+//       let y = event.clientY - selectMousedown.clientY
+
+//       if (
+//         selectMousedown &&
+//         event.button === 0 &&
+//         x + y &&
+//         (event.clientX < window.document.documentElement.clientWidth &&
+//           event.clientY < window.document.documentElement.clientHeight) &&
+//         getSelectionText() === ''
+//       ) {
+//         let sourceRelateX =
+//           selectMousedown.pageX -
+//           selectMousedown.target.getBoundingClientRect().left -
+//           window.scrollX
+//         let sourceRelateY =
+//           selectMousedown.pageY -
+//           selectMousedown.target.getBoundingClientRect().top -
+//           window.scrollY
+//         let targetRelateX, targetRelateY
+//         if (
+//           !!mouseoverQ.length &&
+//           mouseoverQ[1].relatedTarget == mouseoverQ[0].target &&
+//           mouseoverQ[0].target == event.target
+//         ) {
+//           targetRelateX =
+//             event.pageX -
+//             mouseoverQ[1].target.getBoundingClientRect().left -
+//             window.scrollX
+//           targetRelateY =
+//             event.pageY -
+//             mouseoverQ[1].target.getBoundingClientRect().top -
+//             window.scrollY
+//           record(
+//             'mouseDownAt',
+//             locatorBuilders.buildAll(selectMousedown.target),
+//             sourceRelateX + ',' + sourceRelateY
+//           )
+//           record(
+//             'mouseMoveAt',
+//             locatorBuilders.buildAll(mouseoverQ[1].target),
+//             targetRelateX + ',' + targetRelateY
+//           )
+//           record(
+//             'mouseUpAt',
+//             locatorBuilders.buildAll(mouseoverQ[1].target),
+//             targetRelateX + ',' + targetRelateY
+//           )
+//         } else {
+//           targetRelateX =
+//             event.pageX -
+//             event.target.getBoundingClientRect().left -
+//             window.scrollX
+//           targetRelateY =
+//             event.pageY -
+//             event.target.getBoundingClientRect().top -
+//             window.scrollY
+//           record(
+//             'mouseDownAt',
+//             locatorBuilders.buildAll(event.target),
+//             targetRelateX + ',' + targetRelateY
+//           )
+//           record(
+//             'mouseMoveAt',
+//             locatorBuilders.buildAll(event.target),
+//             targetRelateX + ',' + targetRelateY
+//           )
+//           record(
+//             'mouseUpAt',
+//             locatorBuilders.buildAll(event.target),
+//             targetRelateX + ',' + targetRelateY
+//           )
+//         }
+//       }
+//     } else {
+//       clickLocator = undefined
+//       mouseup = undefined
+//       let x = event.clientX - mousedown.clientX
+//       let y = event.clientY - mousedown.clientY
+
+//       if (mousedown && mousedown.target !== event.target && !(x + y)) {
+//         record('mouseDown', locatorBuilders.buildAll(mousedown.target), '')
         
-        record('mouseUp', locatorBuilders.buildAll(event.target), '')
-      } else if (mousedown && mousedown.target === event.target) {
-        let target = locatorBuilders.buildAll(mousedown.target)
-        // setTimeout(function() {
-        //     if (!self.clickLocator)
-        //         record("click", target, '');
-        // }.bind(this), 100);
-      }
-    }
-    mousedown = undefined
-    selectMousedown = undefined
-    mouseoverQ = undefined
-  },
-  true
-)
+//         record('mouseUp', locatorBuilders.buildAll(event.target), '')
+//       } else if (mousedown && mousedown.target === event.target) {
+//         let target = locatorBuilders.buildAll(mousedown.target)
+//         // setTimeout(function() {
+//         //     if (!self.clickLocator)
+//         //         record("click", target, '');
+//         // }.bind(this), 100);
+//       }
+//     }
+//     mousedown = undefined
+//     selectMousedown = undefined
+//     mouseoverQ = undefined
+//   },
+//   true
+// )
 // END
 
 let dropLocator, dragstartLocator
@@ -557,17 +576,17 @@ Recorder.addEventHandler(
 
 let mouseoutLocator = undefined
 // © Shuo-Heng Shih, SideeX Team
-Recorder.addEventHandler(
-  'mouseOut',
-  'mouseout',
-  function(event) {
-    if (mouseoutLocator !== null && event.target === mouseoutLocator) {
-      record('mouseOut', locatorBuilders.buildAll(event.target), '')
-    }
-    mouseoutLocator = undefined
-  },
-  true
-)
+// Recorder.addEventHandler(
+//   'mouseOut',
+//   'mouseout',
+//   function(event) {
+//     if (mouseoutLocator !== null && event.target === mouseoutLocator) {
+//       record('mouseOut', locatorBuilders.buildAll(event.target), '')
+//     }
+//     mouseoutLocator = undefined
+//   },
+//   true
+// )
 // END
 
 Recorder.addMutationObserver(
@@ -617,7 +636,7 @@ Recorder.addMutationObserver(
         nodeInsertedLocator = undefined
       }
       if (nodeInsertedLocator) {
-        record('mouseOver', nodeInsertedAttrChange, '')
+        // record('mouseOver', nodeInsertedAttrChange, '')
         mouseoutLocator = nodeInsertedLocator
         nodeInsertedLocator = undefined
         nodeInsertedAttrChange = undefined
@@ -654,8 +673,10 @@ Recorder.addEventHandler(
   'contextMenu',
   'contextmenu',
   function(event) {
-    record("contextMenu", locatorBuilders.buildAll(event.target), '');
+    if(!this.jdxContext.contextAlreadyRecorded)
+      record("contextMenu", locatorBuilders.buildAll(event.target), '');
 
+    this.jdxContext.contextAlreadyRecorded = false;
     // let myPort = browser.runtime.connect()
     // let tmpText = locatorBuilders.buildAll(event.target)
     // let tmpVal = bot.dom.getVisibleText(event.target)
