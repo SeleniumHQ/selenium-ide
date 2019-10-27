@@ -304,7 +304,7 @@ Recorder.addEventHandler(
   "mousedown",
   function(e)
   {
-    if(e.target.classList.value == "gridCell" || e.target.classList.contains("customCursor"))
+    if(e.target.classList.value == "gridCell" || (e.target.classList.contains("cursorField") && e.button == 2 ))
     {
         record(e.button == 2 ? 'contextMenu' : 'click', locatorBuilders.buildAll(e.target), '');
         this.jdxContext.contextAlreadyRecorded = true;
