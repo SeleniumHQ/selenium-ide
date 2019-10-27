@@ -112,7 +112,7 @@ function declareVariables() {
       commands: [
         {
           level: 0,
-          statement: 'private Map<String, Object> vars = new HashMap()<>;'
+          statement: 'private Map<String, Object> vars = new HashMap<>();'
         }
       ],
     },
