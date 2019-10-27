@@ -16,6 +16,7 @@
 // under the License.
 
 import * as os from 'os'
+import nock from 'nock'
 import { resolveDriverUrl, resolveDriverName } from '../src/resolve-driver'
 
 describe('resolve-driver', () => {
@@ -35,6 +36,9 @@ describe('resolve-driver', () => {
       )
     })
     it('should resolve a download link of a chrome driver', async () => {
+      const scope = nock('https://chromedriver.storage.googleapis.com')
+        .get('/LATEST_RELEASE_78')
+        .reply(200, '78.0.3904.11')
       expect(
         await resolveDriverUrl({
           browser: 'chrome',
@@ -45,6 +49,7 @@ describe('resolve-driver', () => {
       ).toBe(
         'https://chromedriver.storage.googleapis.com/78.0.3904.11/chromedriver_mac64.zip'
       )
+      scope.done()
     })
     it('should resolve a download link of a firefox driver', async () => {
       expect(

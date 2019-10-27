@@ -34,6 +34,7 @@
     "@types/fs-extra": "^8.0.0",
     "@types/node-fetch": "^2.5.2",
     "@types/tar": "^4.0.3",
-    "@types/unzipper": "^0.10.0"
+    "@types/unzipper": "^0.10.0",
+    "nock": "^11.6.0"
   }
 }
