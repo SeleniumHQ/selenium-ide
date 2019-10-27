@@ -60,9 +60,13 @@ describe('Command emitter', () => {
         emitCommand(command)
       }).not.toThrow()
     })
-    it('works for disabled commands', () => {
+    it('ignores disabled commands', async () => {
       let command = new Command(undefined, '//assertAlert', 'asdf')
-      return expect(() => {
+      await expect(() => {
+        emitCommand(command)
+      }).not.toThrow()
+      command = new Command(undefined, '//blah')
+      await expect(() => {
         emitCommand(command)
       }).not.toThrow()
     })

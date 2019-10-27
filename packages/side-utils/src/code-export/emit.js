@@ -23,28 +23,28 @@ import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
 import { Commands } from '@seleniumhq/side-model'
 
 function validateCommand(command) {
-  const commandName = command.command.startsWith('//')
-    ? command.command.substring(2)
-    : command.command
-  let commandSchema = Commands.find(cmdObj => cmdObj[0] === commandName)
-  if (commandSchema) commandSchema = commandSchema[1]
-  else throw new Error(`Invalid command '${commandName}'`)
-  if (!!commandSchema.target !== !!command.target) {
-    const isOptional = !!commandSchema.target.isOptional
-    if (!isOptional) {
-      throw new Error(
-        `Incomplete command '${
-          command.command
-        }'. Missing expected target argument.`
-      )
+  const commandName = command.command
+  if (!commandName.startsWith('//')) {
+    let commandSchema = Commands.find(cmdObj => cmdObj[0] === commandName)
+    if (commandSchema) commandSchema = commandSchema[1]
+    else throw new Error(`Invalid command '${commandName}'`)
+    if (!!commandSchema.target !== !!command.target) {
+      const isOptional = !!commandSchema.target.isOptional
+      if (!isOptional) {
+        throw new Error(
+          `Incomplete command '${
+            command.command
+          }'. Missing expected target argument.`
+        )
+      }
     }
-  }
-  if (!!commandSchema.value !== !!command.value) {
-    const isOptional = !!commandSchema.value.isOptional
-    if (!isOptional) {
-      throw new Error(
-        `Incomplete command '${commandName}'. Missing expected value argument.`
-      )
+    if (!!commandSchema.value !== !!command.value) {
+      const isOptional = !!commandSchema.value.isOptional
+      if (!isOptional) {
+        throw new Error(
+          `Incomplete command '${commandName}'. Missing expected value argument.`
+        )
+      }
     }
   }
 }
