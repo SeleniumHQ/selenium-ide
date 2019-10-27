@@ -23,6 +23,7 @@ import FlatButton from '../../FlatButton'
 import Checkbox from '../../Checkbox'
 import { availableLanguages } from '../../../code-export'
 import ModalState from '../../../stores/view/ModalState'
+import UiState from '../../../stores/view/UiState'
 import './style.css'
 
 export default class ExportDialog extends React.Component {
@@ -48,7 +49,7 @@ class ExportContent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedLanguages: ['java-junit'],
+      selectedLanguages: [UiState.selectedExportLanguage],
       enableOriginTracing: false,
     }
   }
@@ -57,6 +58,7 @@ class ExportContent extends React.Component {
     completeSelection: PropTypes.func.isRequired,
   }
   selectLanguage(_isSelected, language) {
+    UiState.selectedExportLanguage = language
     this.setState({ selectedLanguages: [language] })
   }
   toggleOriginTracing() {

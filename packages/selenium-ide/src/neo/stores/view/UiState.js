@@ -69,6 +69,8 @@ class UiState {
   pauseNotificationSent = false
   @observable
   isControlled = null
+  @observable
+  selectedExportLanguage = 'java-junit'
 
   constructor() {
     this.suiteStates = {}
