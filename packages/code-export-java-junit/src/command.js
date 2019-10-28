@@ -290,19 +290,21 @@ function emitControlFlowIf(script) {
 }
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
+  const collectionName = exporter.parsers.capitalize(collectionVarName)
+  const iteratorName = exporter.parsers.capitalize(iteratorVarName)
   return Promise.resolve({
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection = (ArrayList) vars.get("${collectionVarName}");`,
+        statement: `ArrayList collection${collectionName} = (ArrayList) vars.get("${collectionVarName}");`,
       },
       {
         level: 0,
-        statement: `for (int i = 0; i < collection.size() - 1; i++) {`,
+        statement: `for (int i${iteratorName} = 0; i < collection${collectionName}.size() - 1; i${iteratorName}++) {`,
       },
       {
         level: 1,
-        statement: `vars.put("${iteratorVarName}", collection.get(i));`,
+        statement: `vars.put("${iteratorVarName}", collection${collectionName}.get(i));`,
       },
     ],
   })

@@ -195,9 +195,9 @@ exports[`command code emitter should emit \`execute script\` command with return
 
 exports[`command code emitter should emit \`forEach\` command 1`] = `
 Object {
-  "body": "ArrayList collection = (ArrayList) vars.get(\\"collection\\");
-for (int i = 0; i < collection.size() - 1; i++) {
-  vars.put(\\"iteratorVar\\", collection.get(i));",
+  "body": "ArrayList collectionCollection = (ArrayList) vars.get(\\"collection\\");
+for (int iIteratorVar = 0; i < collectionCollection.size() - 1; iIteratorVar++) {
+  vars.put(\\"iteratorVar\\", collectionCollection.get(i));",
   "endingLevel": 1,
 }
 `;
