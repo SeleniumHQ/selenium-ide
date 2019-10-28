@@ -58,7 +58,7 @@ class ExportContent extends React.Component {
     completeSelection: PropTypes.func.isRequired,
   }
   selectLanguage(_isSelected, language) {
-    UiState.selectedExportLanguage = language
+    UiState.selectExportLanguage(language)
     this.setState({ selectedLanguages: [language] })
   }
   toggleOriginTracing() {

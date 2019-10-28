@@ -70,13 +70,18 @@ class UiState {
   @observable
   isControlled = null
   @observable
-  selectedExportLanguage = 'java-junit'
+  selectedExportLanguage = null
 
   constructor() {
     this.suiteStates = {}
     this.filterFunction = this.filterFunction.bind(this)
     this.observePristine()
     storage.get().then(data => {
+      if (data.selectedExportLanguage !== undefined) {
+        this.selectExportLanguage(data.selectedExportLanguage)
+      } else {
+        this.selectExportLanguage('java-junit')
+      }
       if (
         data.consoleSize !== undefined &&
         data.consoleSize >= this.minConsoleHeight
@@ -403,6 +408,14 @@ class UiState {
   @action.bound
   setSelectingTarget(isSelecting) {
     this.isSelectingTarget = isSelecting
+  }
+
+  @action.bound
+  selectExportLanguage(language) {
+    this.selectedExportLanguage = language
+    storage.set({
+      selectedExportLanguage: language,
+    })
   }
 
   @action.bound
