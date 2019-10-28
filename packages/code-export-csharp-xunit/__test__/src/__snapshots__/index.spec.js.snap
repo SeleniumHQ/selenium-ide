@@ -12,6 +12,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+namespace Login
+{
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
@@ -45,7 +47,7 @@ public class SuiteTests : IDisposable {
     Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\");
   }
 }
-"
+}"
 `;
 
 exports[`Code Export C# xUnit should export a suite that uses control flow commands 1`] = `
@@ -60,6 +62,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+namespace Controlflow
+{
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
@@ -136,7 +140,7 @@ public class SuiteTests : IDisposable {
     Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
   }
 }
-"
+}"
 `;
 
 exports[`Code Export C# xUnit should export a suite with a reused test method 1`] = `
@@ -151,6 +155,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+namespace Login
+{
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
@@ -186,7 +192,7 @@ public class SuiteTests : IDisposable {
     login();
   }
 }
-"
+}"
 `;
 
 exports[`Code Export C# xUnit should export a suite with commands that open a new window inside of a reused test method 1`] = `
@@ -201,6 +207,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+namespace DefaultSuite
+{
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
@@ -243,7 +251,7 @@ public class SuiteTests : IDisposable {
     selectwindow();
   }
 }
-"
+}"
 `;
 
 exports[`Code Export C# xUnit should export a suite with just one new window util method when there are multiple commands that open a new window 1`] = `
@@ -258,6 +266,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+namespace DefaultSuite
+{
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
@@ -309,7 +319,7 @@ public class SuiteTests : IDisposable {
     Assert.Equal(driver.Title, \\"New Window\\");
   }
 }
-"
+}"
 `;
 
 exports[`Code Export C# xUnit should export a test 1`] = `

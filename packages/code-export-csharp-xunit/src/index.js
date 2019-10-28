@@ -48,6 +48,12 @@ function generateMethodDeclaration(name) {
   return `public void ${exporter.parsers.sanitizeName(name)}() \n{`
 }
 
+function generateNamespace(name) {
+  return `namespace ${exporter.parsers.capitalize(
+    exporter.parsers.sanitizeName(name)
+  )}\n{\n`
+}
+
 function generateFilename(name) {
   return `${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
@@ -107,14 +113,15 @@ export async function emitSuite({
   })
   return {
     filename: generateFilename(suite.name),
-    body: emitOrderedSuite(_suite),
+    body: emitOrderedSuite(_suite, suite.name),
   }
 }
 
-function emitOrderedSuite(emittedSuite) {
+function emitOrderedSuite(emittedSuite, name) {
   let result = ''
   result += emittedSuite.headerComment
   result += emittedSuite.dependencies
+  result += `${generateNamespace(name)}`
   result += emittedSuite.suiteDeclaration
   result += emittedSuite.variables
   //result += emittedSuite.beforeAll
@@ -140,6 +147,7 @@ function emitOrderedSuite(emittedSuite) {
     }
   }
   result += emittedSuite.suiteEnd
+  result += '}' // terminate namespace
   return result
 }
 
