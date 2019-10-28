@@ -69,9 +69,47 @@ With the following `.csproj` file you can install the correct packages and versi
 > dotnet restore example.csproj
 ```
 
+### C# xUnit
+
+The exported code for C# xUnit is built to work with C#, xUnit, and the latest version of Selenium.
+
+Just like C# Nunit, you can install it with dotnet tools and run it after installing these dependencies (e.g., with either `Install-Package Selenium.WebDriver` or `dotnet add package Selenium.WebDriver`).
+
+To create a new boilerplate project to work with xUnit use the `dotnet new` command.
+
+```sh
+> dotnet new xUnitTests
+```
+
+With the following `.csproj` file you can install the correct packages and versions by using the `dotnet restore` command.
+
+```xml
+<!-- filename: example.csproj -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Selenium.Support" Version="4.0.0-alpha03" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.0.0-alpha03" />
+  </ItemGroup>
+
+</Project>
+```
+
+```sh
+> dotnet restore example.csproj
+```
+
 ### Java JUnit
 
-The exported code for Java JUnit is built to work with Java 8, JUnit 4.12, and the latest version of Selenium 3.
+The exported code for Java JUnit is built to work with Java 8, JUnit 4.12, and the latest version of Selenium.
 
 You should be able to take the exported Java file and place it into a standard Maven directory structure with a `pom.xml` file listing these dependencies and run it.
 
@@ -94,7 +132,7 @@ Here's a sample `pom.xml` to help you get started.
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>3.141.59</version>
+      <version>4.0.0-alpha-3</version>
     </dependency>
   </dependencies>
 </project>
@@ -102,7 +140,7 @@ Here's a sample `pom.xml` to help you get started.
 
 ### JavaScript Mocha
 
-The exported code for JavaScript Mocha is built to work with Node 10, Mocha 6.1.x, and the latest version of Selenium 4.
+The exported code for JavaScript Mocha is built to work with Node 10, Mocha 6.1.x, and the latest version of Selenium.
 
 You should be able to take the exported JavaScript file and run it after installing these dependencies (e.g., with `npm install`).
 
@@ -119,7 +157,7 @@ Here's a sample `package.json` to help you get started.
 
 ### Python pytest
 
-The exported code for Python pytest is built to work with Python 3, pytest 4.6.x, and the latest version of Selenium 4.
+The exported code for Python pytest is built to work with Python 3, pytest 4.6.x, and the latest version of Selenium.
 
 You should be able to take the exported JavaScript file and run it after installing these dependencies (e.g., with `pip3 install`).
 
@@ -134,23 +172,23 @@ selenium == 4.0.0a1
 > pip3 install -r ./requirements.txt
 ```
 
-### C# xUnit
+### Ruby RSpec
 
-The exported code for C# xUnit is built to work with C#, xUnit, and the latest version of Selenium 4.
+The exported code for Ruby Rspec is built to work with Ruby 2.6.x, RSpec 3.9.x, and the latest version of Selenium.
 
-You should be able to install with dotnet tools and run it after installing these dependencies (e.g., with either `Install-Package Selenium.WebDriver` or `dotnet add package Selenium.WebDriver`).
-
-In your project file, the below should be added. 
+Through the use of [Bundler](https://www.google.com/search?q=bundler) and the following `Gemfile` you can install the necessary dependencies.
 
 ```
-"Selenium.WebDriver": {
-              "target": "Package",
-              "version": "[x.xx.x, )"
-            }
+# Gemfile
+source 'https://rubygems.org'
+
+gem 'selenium-webdriver'
+gem 'rspec'
 ```
 
 ```sh
-> dotnet add package Selenium.WebDriver
+> gem install bunder
+> bundle install
 ```
 
 ## How To Contribute
