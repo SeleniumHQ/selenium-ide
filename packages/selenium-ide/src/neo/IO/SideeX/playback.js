@@ -413,6 +413,7 @@ function getPluginOptions(node) {
     isNested: !!PlaybackState.callstack.length,
     runId: PlaybackState.runId,
     testId: PlaybackState.currentRunningTest.id,
+    originalTestId: PlaybackState.originalCalledTest.id,
     frameId: executor.getCurrentPlayingFrameId(),
     tabId: executor.getCurrentPlayingTabId(),
     windowId: executor.getCurrentPlayingWindowId(),

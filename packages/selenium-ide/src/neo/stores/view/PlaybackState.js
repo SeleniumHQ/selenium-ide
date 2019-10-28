@@ -53,6 +53,8 @@ class PlaybackState {
   @observable
   currentRunningTest = null
   @observable
+  originalCalledTest = null
+  @observable
   currentRunningSuite = null
   @observable
   isSingleCommandRunning = false
@@ -351,6 +353,7 @@ class PlaybackState {
       this.resetState()
       if (!this.currentRunningSuite) this.runId = uuidv4()
       this.currentRunningTest = test
+      this.originalCalledTest = test
       this.testsCount = 1
       let currentPlayingIndex = 0
       if (command && command instanceof Command) {
@@ -427,6 +430,7 @@ class PlaybackState {
         this.forceTestCaseFailure = false
         this.aborted = false
         this.currentRunningTest = UiState.selectedTest.test
+        this.originalCalledTest = UiState.selectedTest.test
         this.runningQueue = [command]
         this.isSingleCommandRunning = true
         this.play().then(() => {
@@ -476,6 +480,7 @@ class PlaybackState {
       this._testsToRun.shift()
     // pull the next test off the test queue for execution
     this.currentRunningTest = this._testsToRun.shift()
+    this.originalCalledTest = this._testsToRun.shift()
     this.runningQueue = this.currentRunningTest.commands.slice()
     this.clearStack()
     this.errors = 0
@@ -702,6 +707,7 @@ class PlaybackState {
   cleanupCurrentRunningVariables() {
     this.currentRunningTest = undefined
     this.currentRunningSuite = undefined
+    this.originalCalledTest = undefined
   }
 
   @action.bound
