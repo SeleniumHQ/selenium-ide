@@ -17,6 +17,7 @@ website/i18n
 tsconfig.tsbuildinfo
 tsconfig.build.tsbuildinfo
 files
+drivers
 
 # auto-generated docs
 docs/api/arguments.md

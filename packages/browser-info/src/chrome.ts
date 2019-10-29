@@ -105,10 +105,14 @@ export async function getBrowserInfo(channel?: ChromeChannel) {
 
 async function getChromeInfo(installLocations: string[]): Promise<BrowserInfo> {
   for await (let binary of installLocations) {
-    const { stdout } = await sh(binary, ['--version'])
-    return {
-      binary,
-      ...parseChromeEdition(stdout),
+    try {
+      const { stdout } = await sh(binary, ['--version'])
+      return {
+        binary,
+        ...parseChromeEdition(stdout),
+      }
+      // eslint-disable-next-line
+    } catch {
     }
   }
   throw new Error('Unable to find Chrome installation')
