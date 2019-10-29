@@ -15,10 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import path from 'path'
 import { promisify } from 'util'
-import 'chromedriver'
-import 'geckodriver'
 import webdriver, { By, WebElement } from 'selenium-webdriver'
+import chrome from 'selenium-webdriver/chrome'
+import firefox from 'selenium-webdriver/firefox'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
 import { ControlFlowCommandNames } from '../src/playback-tree/commands'
@@ -26,6 +27,12 @@ import Variables from '../src/Variables'
 import WebDriverExecutor from '../src/webdriver'
 
 jest.setTimeout(30000)
+const chromeService = new chrome.ServiceBuilder(
+  path.resolve(path.join(__dirname, '../../../drivers/chromedriver'))
+)
+const firefoxService = new firefox.ServiceBuilder(
+  path.resolve(path.join(__dirname, '../../../drivers/geckodriver'))
+)
 
 describe('webdriver executor', () => {
   it('should implement all the Selenium commands', () => {
@@ -72,7 +79,10 @@ describe('webdriver executor', () => {
     })
     beforeAll(async () => {
       variables = new Variables()
-      const builder = new webdriver.Builder().withCapabilities(capabilities)
+      const builder = new webdriver.Builder()
+        .withCapabilities(capabilities)
+        .setChromeService(chromeService)
+        .setFirefoxService(firefoxService)
       driver = await builder.build()
       executor = new WebDriverExecutor({ driver })
       await executor.init({ variables })

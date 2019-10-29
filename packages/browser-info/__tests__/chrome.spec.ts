@@ -50,7 +50,7 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.stable)
       } catch (err) {
-        expect(err.code).toBe(1)
+        expect(err.message).toBe('Unable to find Chrome installation')
       }
     })
     it('should get all chrome info', async () => {
@@ -152,7 +152,7 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.stable)
       } catch (err) {
-        expect(err.code).toBe(1)
+        expect(err.message).toBe('Unable to find Chrome installation')
       }
     })
     it('should fail to get canary chrome channel since it is not available on linux', async () => {

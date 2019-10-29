@@ -17,9 +17,8 @@ before_install:
 install:
   - yarn --ignore-engines
   - yarn build
+  - yarn download-drivers
 script:
   - yarn typecheck
   - yarn lint
   - yarn test
-env:
-  - CHROMEDRIVER_VERSION=LATEST

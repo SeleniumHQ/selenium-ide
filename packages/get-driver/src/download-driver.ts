@@ -34,12 +34,14 @@ export default async function downloadDriver({
   platform,
   arch,
   version,
+  artifactName,
 }: {
   downloadDirectory: string
   browser: Browser
   platform: Platform
   arch: string
   version: string
+  artifactName?: string
 }) {
   let end: () => Promise<undefined>
   const p = new Promise(res => {
@@ -48,7 +50,7 @@ export default async function downloadDriver({
   const url = await resolveDriverUrl({ browser, platform, arch, version })
   const downloadDestination = path.join(
     downloadDirectory,
-    resolveDriverName({ browser, platform, version })
+    artifactName || resolveDriverName({ browser, platform, version })
   )
   const res = await fetch(url)
   if (!res.ok) {

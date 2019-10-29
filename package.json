@@ -12,7 +12,8 @@
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext js --ext ts \"**/*.js\" \"**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "watch": "lerna run --no-bail --parallel watch",
-    "preinstall": "node ./scripts/check-yarn.js"
+    "preinstall": "node ./scripts/check-yarn.js",
+    "download-drivers": "node ./scripts/download-drivers.js"
   },
   "files": [],
   "jest": {
@@ -59,6 +60,7 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.14.3",
+    "fs-extra": "^8.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
     "lerna": "^3.16.4",
