@@ -15,8 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import * as os from 'os'
 import { sh } from './sh'
 
+// Extrapolated from https://chromium.googlesource.com/chromium/src/+/master/chrome/test/chromedriver/chrome/chrome_finder_mac.mm
 const CHROME_STABLE_MACOS_INSTALL_LOCATIONS = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   '~/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -32,27 +34,73 @@ const CHROME_CANARY_MACOS_INSTALL_LOCATIONS = [
   '~/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
 ]
 
+// Taken from https://chromium.googlesource.com/chromium/src/+/master/chrome/test/chromedriver/chrome/chrome_finder.cc
+const CHROME_STABLE_LINUX_INSTALL_LOCATIONS = [
+  '/usr/local/sbin/google-chrome',
+  '/usr/local/bin/google-chrome',
+  '/usr/sbin/google-chrome',
+  '/usr/bin/google-chrome',
+  '/sbin/google-chrome',
+  '/bin/google-chrome',
+  '/opt/google/chrome/google-chrome',
+]
+
+const CHROME_BETA_LINUX_INSTALL_LOCATIONS = [
+  '/usr/local/sbin/google-chrome-beta',
+  '/usr/local/bin/google-chrome-beta',
+  '/usr/sbin/google-chrome-beta',
+  '/usr/bin/google-chrome-beta',
+  '/sbin/google-chrome-beta',
+  '/bin/google-chrome-beta',
+  '/opt/google/chrome-beta/google-chrome-beta',
+]
+
 export async function getBrowserInfo(channel?: ChromeChannel) {
-  if (channel) {
-    switch (channel) {
-      case ChromeChannel.stable: {
-        return await getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS)
-      }
-      case ChromeChannel.beta: {
-        return await getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS)
-      }
-      case ChromeChannel.canary: {
-        return await getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS)
+  const platform = os.platform()
+  if (platform === 'darwin') {
+    if (channel) {
+      switch (channel) {
+        case ChromeChannel.stable: {
+          return await getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS)
+        }
+        case ChromeChannel.beta: {
+          return await getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS)
+        }
+        case ChromeChannel.canary: {
+          return await getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS)
+        }
       }
     }
+    return (await Promise.all(
+      [
+        getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
+        getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
+        getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
+      ].map(p => p.catch(() => {}))
+    )).filter(Boolean)
+  } else if (platform === 'linux') {
+    if (channel) {
+      switch (channel) {
+        case ChromeChannel.stable: {
+          return await getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS)
+        }
+        case ChromeChannel.beta: {
+          return await getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS)
+        }
+        default: {
+          throw new Error(`Unsupported channel ${channel}`)
+        }
+      }
+    }
+    return (await Promise.all(
+      [
+        getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS),
+        getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS),
+      ].map(p => p.catch(() => {}))
+    )).filter(Boolean)
+  } else {
+    throw new Error('Unsupported platform')
   }
-  return (await Promise.all(
-    [
-      getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
-      getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
-      getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
-    ].map(p => p.catch(() => {}))
-  )).filter(Boolean)
 }
 
 async function getChromeInfo(installLocations: string[]): Promise<BrowserInfo> {
