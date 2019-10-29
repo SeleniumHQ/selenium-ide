@@ -57,10 +57,20 @@ describe('resolve-driver', () => {
           browser: 'firefox',
           platform: 'darwin',
           arch: os.arch(),
-          version: '69.0.1',
+          version: '59.0',
         })
       ).toBe(
         'https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-macos.tar.gz'
+      )
+      expect(
+        await resolveDriverUrl({
+          browser: 'firefox',
+          platform: 'darwin',
+          arch: os.arch(),
+          version: '70.0',
+        })
+      ).toBe(
+        'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-macos.tar.gz'
       )
     })
   })

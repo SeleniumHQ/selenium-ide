@@ -101,10 +101,13 @@ function getGeckodriverPlatformName(platform: Platform, arch: string) {
   }
 }
 
-function getGeckodriverVersion(_version: string) {
+function getGeckodriverVersion(version: string) {
   // https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html#supported-platforms
-  // over 10 majors have been supported via latest, returning the latest one at the time of this writing
-  return '0.25.0'
+  const major = parseInt(version.split('.')[0])
+  if (major < 60) {
+    return '0.25.0'
+  }
+  return '0.26.0'
 }
 
 type MappedBrowserNames = { [key in Browser]: string }
