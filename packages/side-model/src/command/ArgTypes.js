@@ -101,6 +101,11 @@ export const ArgTypes = {
     description:
       'An option locator, typically just an option label (e.g. "John Smith").',
   },
+  optionalFlag: {
+    name: 'optional flag',
+    description: `Specify a configuration option to alter the command's behavior (e.g., --disable-assertions for the run command).`,
+    isOptional: true,
+  },
   pattern: {
     name: 'text',
     description: `An exact string match. Support for pattern matching is in the 

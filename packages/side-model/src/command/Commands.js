@@ -540,6 +540,7 @@ export const Commands = [
       name: 'run',
       description: 'Runs a test case from the current project.',
       target: ArgTypes.testCase,
+      value: { isOptional: true, ...ArgTypes.optionalFlag },
     },
   ],
   [

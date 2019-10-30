@@ -489,8 +489,10 @@ export default class ExtCommand {
     this.setCurrentPlayingTabId(-1)
   }
 
-  async doRun(target) {
-    return PlaybackState.callTestCase(target)
+  async doRun(target, value) {
+    return PlaybackState.callTestCase(target, {
+      assertionsDisabled: value.includes('--disable-assertions'),
+    })
   }
 
   async doMouseOver(locator, _, top) {

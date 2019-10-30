@@ -53,8 +53,6 @@ class PlaybackState {
   @observable
   currentRunningTest = null
   @observable
-  originalCalledTest = null
-  @observable
   currentRunningSuite = null
   @observable
   isSingleCommandRunning = false
@@ -105,6 +103,8 @@ class PlaybackState {
     this.variables = new Variables()
     this.extCommand = new ExtCommand(WindowSession)
     this.browserDriver = new WebDriverExecutor()
+    this.originalCalledTest = undefined
+    this.playbackOptions = {}
 
     reaction(
       () => this.paused,
@@ -759,7 +759,7 @@ class PlaybackState {
   }
 
   @action.bound
-  callTestCase(_testCase) {
+  callTestCase(_testCase, playbackOptions) {
     let testCase = _testCase
     if (typeof testCase === 'string') {
       testCase = this.testMap[testCase]
@@ -771,6 +771,7 @@ class PlaybackState {
       caller: this.currentRunningTest,
       callee: testCase,
       position: this.currentExecutingCommandNode,
+      playbackOptions: PlaybackState.playbackOptions,
     })
     UiState.selectTest(
       this.stackCaller,
@@ -779,7 +780,10 @@ class PlaybackState {
       true
     )
     this.currentRunningTest = testCase
+    this.playbackOptions = playbackOptions
     this.runningQueue = testCase.commands.slice()
+    if (this.playbackOptions.assertionsDisabled)
+      this.logger.warn('Assertions have been disabled for this test.')
     let playbackTree = createPlaybackTree(this.runningQueue)
     this.setCurrentExecutingCommandNode(playbackTree.startingCommandNode)
     return playbackTree.startingCommandNode
@@ -789,6 +793,7 @@ class PlaybackState {
   unwindTestCase() {
     const top = this.callstack.pop()
     this.currentRunningTest = top.caller
+    this.playbackOptions = top.playbackOptions
     this.setCurrentExecutingCommandNode(top.position.next)
     this.runningQueue = top.caller.commands.slice()
     UiState.selectTest(
@@ -816,6 +821,7 @@ class PlaybackState {
   resetState() {
     this.clearCommandStates()
     this.clearStack()
+    this.playbackOptions = {}
     this.variables.clear()
     this.finishedTestsCount = 0
     this.noStatisticsEffects = false

@@ -392,12 +392,16 @@ function doSeleniumCommand(commandNode, implicitTime, implicitCount) {
           implicitCount
         )
       } else {
-        let isVerify = /^verify/.test(command)
-        PlaybackState.setCommandState(
-          id,
-          isVerify ? PlaybackStates.Failed : PlaybackStates.Fatal,
-          result.result
-        )
+        if (PlaybackState.playbackOptions.assertionsDisabled) {
+          PlaybackState.setCommandState(id, PlaybackStates.Passed)
+        } else {
+          let isVerify = /^verify/.test(command)
+          PlaybackState.setCommandState(
+            id,
+            isVerify ? PlaybackStates.Failed : PlaybackStates.Fatal,
+            result.result
+          )
+        }
         return result
       }
     } else {
@@ -409,13 +413,14 @@ function doSeleniumCommand(commandNode, implicitTime, implicitCount) {
 
 function getPluginOptions(node) {
   return {
+    assertionsDisabled: !!PlaybackState.playbackOptions.assertionsDisabled,
     commandId: node.command.id,
-    isNested: !!PlaybackState.callstack.length,
-    runId: PlaybackState.runId,
-    testId: PlaybackState.currentRunningTest.id,
-    originalTestId: PlaybackState.originalCalledTest.id,
     frameId: executor.getCurrentPlayingFrameId(),
+    isNested: !!PlaybackState.callstack.length,
+    originalTestId: PlaybackState.originalCalledTest.id,
+    runId: PlaybackState.runId,
     tabId: executor.getCurrentPlayingTabId(),
+    testId: PlaybackState.currentRunningTest.id,
     windowId: executor.getCurrentPlayingWindowId(),
   }
 }
