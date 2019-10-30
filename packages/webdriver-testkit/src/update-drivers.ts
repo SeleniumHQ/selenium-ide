@@ -15,19 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// eslint-disable-next-line node/no-unpublished-require
-const fs = require('fs-extra')
-const path = require('path')
-const os = require('os')
-const { chrome } = require('../packages/browser-info')
-const { downloadDriver } = require('../packages/get-driver')
+import * as fs from 'fs-extra'
+import os from 'os'
+import { Chrome } from '@seleniumhq/browser-info'
+import { downloadDriver } from '@seleniumhq/get-driver'
+import { CACHE_PATH } from './cache'
 
-;(async () => {
-  const downloadDirectory = path.join(__dirname, '../drivers')
+export async function updateDrivers() {
+  const downloadDirectory = CACHE_PATH
   await fs.mkdirp(downloadDirectory)
 
-  console.log('downloading chromedriver...')
-  const chromeInfo = await chrome.getBrowserInfo(chrome.ChromeChannel.stable)
+  console.log('updating chromedriver...')
+  const chromeInfo = (await Chrome.getBrowserInfo(
+    Chrome.ChromeChannel.stable
+  )) as Chrome.BrowserInfo
   await downloadDriver({
     downloadDirectory,
     browser: 'chrome',
@@ -37,7 +38,7 @@ const { downloadDriver } = require('../packages/get-driver')
     artifactName: 'chromedriver',
   })
 
-  console.log('downloading geckodriver...')
+  console.log('updating geckodriver...')
   await downloadDriver({
     downloadDirectory,
     browser: 'firefox',
@@ -46,4 +47,4 @@ const { downloadDriver } = require('../packages/get-driver')
     version: '70.0', // hard coded until browser-info will support firefox
     artifactName: 'geckodriver',
   })
-})()
+}

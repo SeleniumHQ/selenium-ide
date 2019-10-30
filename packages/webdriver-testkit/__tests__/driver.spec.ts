@@ -15,10 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import * as index from '../src'
+import { createHeadlessChrome, createHeadlessFirefox } from '../src/driver'
 
-describe('browser-info', () => {
-  it('should export all the required things', () => {
-    expect(index.Chrome.getBrowserInfo).toBeDefined()
+jest.setTimeout(30000)
+
+describe('driver testkit', () => {
+  it('should create headless chrome', async () => {
+    const driver = await createHeadlessChrome()
+    await driver.quit()
+  })
+
+  it('should create headless firefox', async () => {
+    const driver = await createHeadlessFirefox()
+    await driver.quit()
   })
 })

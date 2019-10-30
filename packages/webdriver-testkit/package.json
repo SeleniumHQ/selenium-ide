@@ -1,18 +1,20 @@
 {
-  "name": "@seleniumhq/side-runtime",
+  "name": "@seleniumhq/webdriver-testkit",
   "version": "3.5.10",
   "private": true,
-  "description": "Selenium IDE playback and execution",
+  "description": "Manage test driver installation",
   "author": "Tomer <tomer@corevo.io>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
-    "clean": "rm -rf dist",
+    "build": "tsc",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "prepublishOnly": "yarn clean && yarn build",
-    "watch": "yarn build -w"
+    "watch": "yarn build -w",
+    "download-drivers": "node ./scripts/download-drivers.js"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -24,13 +26,14 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@seleniumhq/side-model": "^3.5.10",
-    "@seleniumhq/side-testkit": "^3.5.10",
-    "@seleniumhq/webdriver-testkit": "^3.5.10",
+    "@types/fs-extra": "^8.0.1",
+    "@types/selenium-webdriver": "^4.0.5",
     "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "dependencies": {
-    "@seleniumhq/side-commons": "^3.5.10"
+    "@seleniumhq/browser-info": "*",
+    "@seleniumhq/get-driver": "*",
+    "fs-extra": "^8.1.0"
   },
   "peerDependencies": {
     "selenium-webdriver": "^4.0.0-alpha.5"

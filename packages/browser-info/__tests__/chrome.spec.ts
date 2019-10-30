@@ -18,9 +18,10 @@
 jest.mock('os')
 jest.mock('../src/sh')
 import * as os from 'os'
-import { getBrowserInfo, ChromeChannel } from '../src/chrome'
+import { Chrome } from '../src/chrome'
 import { sh, makeError } from '../src/sh'
 
+const { getBrowserInfo, ChromeChannel } = Chrome
 const mockSh = (sh as unknown) as jest.Mock<any, any>
 const mockPlatform = (os.platform as unknown) as jest.Mock<any, any>
 

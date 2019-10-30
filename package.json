@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "watch": "lerna run --no-bail --parallel watch",
     "preinstall": "node ./scripts/check-yarn.js",
-    "download-drivers": "node ./scripts/download-drivers.js"
+    "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"
   },
   "files": [],
   "jest": {
@@ -60,7 +60,6 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.14.3",
-    "fs-extra": "^8.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
     "lerna": "^3.16.4",

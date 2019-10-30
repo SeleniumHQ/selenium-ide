@@ -15,11 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import path from 'path'
 import { promisify } from 'util'
-import webdriver, { By, WebElement } from 'selenium-webdriver'
-import chrome from 'selenium-webdriver/chrome'
-import firefox from 'selenium-webdriver/firefox'
+import { By, WebElement } from 'selenium-webdriver'
+import {
+  createHeadlessChrome,
+  createHeadlessFirefox,
+} from '@seleniumhq/webdriver-testkit'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
 import { ControlFlowCommandNames } from '../src/playback-tree/commands'
@@ -27,12 +28,6 @@ import Variables from '../src/Variables'
 import WebDriverExecutor from '../src/webdriver'
 
 jest.setTimeout(30000)
-const chromeService = new chrome.ServiceBuilder(
-  path.resolve(path.join(__dirname, '../../../drivers/chromedriver'))
-)
-const firefoxService = new firefox.ServiceBuilder(
-  path.resolve(path.join(__dirname, '../../../drivers/geckodriver'))
-)
 
 describe('webdriver executor', () => {
   it('should implement all the Selenium commands', () => {
@@ -51,18 +46,9 @@ describe('webdriver executor', () => {
     })
   })
   describe.each([
-    [
-      'chrome',
-      {
-        browserName: 'chrome',
-        'goog:chromeOptions': { args: ['headless', 'disable-gpu'] },
-      },
-    ],
-    [
-      'firefox',
-      { browserName: 'firefox', 'moz:firefoxOptions': { args: ['-headless'] } },
-    ],
-  ])('commands on %s', (_browserName, capabilities) => {
+    ['chrome', createHeadlessChrome],
+    ['firefox', createHeadlessFirefox],
+  ])('commands on %s', (_browserName, createDriver) => {
     const app = createStaticSite()
     let port, close, driver, executor, variables
     beforeAll(async () => {
@@ -79,11 +65,7 @@ describe('webdriver executor', () => {
     })
     beforeAll(async () => {
       variables = new Variables()
-      const builder = new webdriver.Builder()
-        .withCapabilities(capabilities)
-        .setChromeService(chromeService)
-        .setFirefoxService(firefoxService)
-      driver = await builder.build()
+      driver = await createDriver()
       executor = new WebDriverExecutor({ driver })
       await executor.init({ variables })
     })

@@ -35,6 +35,7 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': ['error', 'never'],
         'no-dupe-class-members': 'off',
         'no-unused-vars': 'off',
+        'no-inner-declarations': 0, // for typescript namespace
       },
     },
   ],

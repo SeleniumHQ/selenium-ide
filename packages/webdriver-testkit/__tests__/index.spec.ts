@@ -17,8 +17,11 @@
 
 import * as index from '../src'
 
-describe('browser-info', () => {
+describe('webdriver-testkit', () => {
   it('should export all the required things', () => {
-    expect(index.Chrome.getBrowserInfo).toBeDefined()
+    expect(index.updateDrivers).toBeDefined()
+    expect(index.createDriver).toBeDefined()
+    expect(index.createHeadlessChrome).toBeDefined()
+    expect(index.createHeadlessFirefox).toBeDefined()
   })
 })
