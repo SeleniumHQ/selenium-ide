@@ -15,6 +15,4 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// export * as chrome from './chrome' is invalid in typescript
-import * as _chrome from './chrome'
-export const chrome = _chrome
+export * from './chrome'

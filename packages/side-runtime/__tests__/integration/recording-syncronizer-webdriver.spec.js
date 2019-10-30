@@ -15,10 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import path from 'path'
 import { promisify } from 'util'
-import webdriver from 'selenium-webdriver'
-import chrome from 'selenium-webdriver/chrome'
+import { createHeadlessChrome } from '@seleniumhq/webdriver-testkit'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import Playback from '../../src/playback'
 import Variables from '../../src/Variables'
@@ -26,9 +24,6 @@ import WebDriverExecutor from '../../src/webdriver'
 import createRecorderSyncronizerForWebdriverExecutor from '../../src/recording-syncronizer-webdriver'
 
 jest.setTimeout(30000)
-const chromeService = new chrome.ServiceBuilder(
-  path.resolve(path.join(__dirname, '../../../../drivers/chromedriver'))
-)
 
 describe('recording syncronizer webdriver', () => {
   const app = createStaticSite()
@@ -50,13 +45,7 @@ describe('recording syncronizer webdriver', () => {
   })
   beforeAll(async () => {
     variables = new Variables()
-    const builder = new webdriver.Builder()
-      .withCapabilities({
-        browserName: 'chrome',
-        'goog:chromeOptions': { args: ['headless', 'disable-gpu'] },
-      })
-      .setChromeService(chromeService)
-    driver = await builder.build()
+    driver = await createHeadlessChrome()
     executor = new WebDriverExecutor({ driver, implicitWait: 50 })
   })
   afterAll(async () => {

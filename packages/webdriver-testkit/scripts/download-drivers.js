@@ -15,10 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import * as index from '../src'
+const { updateDrivers } = require('../')
 
-describe('browser-info', () => {
-  it('should export all the required things', () => {
-    expect(index.Chrome.getBrowserInfo).toBeDefined()
-  })
-})
+updateDrivers()

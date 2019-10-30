@@ -15,10 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import * as index from '../src'
+import path from 'path'
 
-describe('browser-info', () => {
-  it('should export all the required things', () => {
-    expect(index.Chrome.getBrowserInfo).toBeDefined()
-  })
-})
+export const CACHE_PATH = path.join(__dirname, '../../../drivers')

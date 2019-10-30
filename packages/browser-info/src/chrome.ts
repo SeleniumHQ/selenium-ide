@@ -55,88 +55,91 @@ const CHROME_BETA_LINUX_INSTALL_LOCATIONS = [
   '/opt/google/chrome-beta/google-chrome-beta',
 ]
 
-export async function getBrowserInfo(channel?: ChromeChannel) {
-  const platform = os.platform()
-  if (platform === 'darwin') {
-    if (channel) {
-      switch (channel) {
-        case ChromeChannel.stable: {
-          return await getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS)
-        }
-        case ChromeChannel.beta: {
-          return await getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS)
-        }
-        case ChromeChannel.canary: {
-          return await getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS)
-        }
-      }
-    }
-    return (await Promise.all(
-      [
-        getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
-        getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
-        getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
-      ].map(p => p.catch(() => {}))
-    )).filter(Boolean)
-  } else if (platform === 'linux') {
-    if (channel) {
-      switch (channel) {
-        case ChromeChannel.stable: {
-          return await getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS)
-        }
-        case ChromeChannel.beta: {
-          return await getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS)
-        }
-        default: {
-          throw new Error(`Unsupported channel ${channel}`)
+export namespace Chrome {
+  export async function getBrowserInfo(channel?: ChromeChannel) {
+    const platform = os.platform()
+    if (platform === 'darwin') {
+      if (channel) {
+        switch (channel) {
+          case ChromeChannel.stable: {
+            return await getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS)
+          }
+          case ChromeChannel.beta: {
+            return await getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS)
+          }
+          case ChromeChannel.canary: {
+            return await getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS)
+          }
         }
       }
-    }
-    return (await Promise.all(
-      [
-        getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS),
-        getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS),
-      ].map(p => p.catch(() => {}))
-    )).filter(Boolean)
-  } else {
-    throw new Error('Unsupported platform')
-  }
-}
-
-async function getChromeInfo(installLocations: string[]): Promise<BrowserInfo> {
-  for await (let binary of installLocations) {
-    try {
-      const { stdout } = await sh(binary, ['--version'])
-      return {
-        binary,
-        ...parseChromeEdition(stdout),
+      return (await Promise.all(
+        [
+          getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
+          getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
+          getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
+        ].map(p => p.catch(() => {}))
+      )).filter(Boolean) as BrowserInfo[]
+    } else if (platform === 'linux') {
+      if (channel) {
+        switch (channel) {
+          case ChromeChannel.stable: {
+            return await getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS)
+          }
+          case ChromeChannel.beta: {
+            return await getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS)
+          }
+          default: {
+            throw new Error(`Unsupported channel ${channel}`)
+          }
+        }
       }
-      // eslint-disable-next-line
-    } catch {
+      return (await Promise.all(
+        [
+          getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS),
+          getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS),
+        ].map(p => p.catch(() => {}))
+      )).filter(Boolean) as BrowserInfo[]
+    } else {
+      throw new Error('Unsupported platform')
     }
   }
-  throw new Error('Unable to find Chrome installation')
-}
 
-function parseChromeEdition(output: string) {
-  const [version, channel] = output
-    .split('\n')[0]
-    .replace('Google Chrome ', '')
-    .split(' ')
-  return {
-    version,
-    channel: channel ? (channel as ChromeChannel) : ChromeChannel.stable,
+  async function getChromeInfo(
+    installLocations: string[]
+  ): Promise<BrowserInfo> {
+    for await (let binary of installLocations) {
+      try {
+        const { stdout } = await sh(binary, ['--version'])
+        return {
+          binary,
+          ...parseChromeEdition(stdout),
+        }
+        // eslint-disable-next-line
+      } catch {}
+    }
+    throw new Error('Unable to find Chrome installation')
   }
-}
 
-export interface BrowserInfo {
-  channel: ChromeChannel
-  binary: string
-  version: string
-}
+  function parseChromeEdition(output: string) {
+    const [version, channel] = output
+      .split('\n')[0]
+      .replace('Google Chrome ', '')
+      .split(' ')
+    return {
+      version,
+      channel: channel ? (channel as ChromeChannel) : ChromeChannel.stable,
+    }
+  }
 
-export enum ChromeChannel {
-  stable = 'stable',
-  beta = 'beta',
-  canary = 'canary',
+  export interface BrowserInfo {
+    channel: ChromeChannel
+    binary: string
+    version: string
+  }
+
+  export enum ChromeChannel {
+    stable = 'stable',
+    beta = 'beta',
+    canary = 'canary',
+  }
 }
