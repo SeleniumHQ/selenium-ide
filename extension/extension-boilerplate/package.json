@@ -42,6 +42,7 @@
     "webpack": "^3.5.6"
   },
   "dependencies": {
-    "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5"
+    "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5",
+    "ua-parser-js": "^0.7.19"
   }
 }
