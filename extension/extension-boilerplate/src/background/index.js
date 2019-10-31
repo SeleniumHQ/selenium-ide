@@ -15,26 +15,59 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill'
+import UAParser from 'ua-parser-js'
 
-browser.runtime.sendMessage(process.env.SIDE_ID, {
-  uri: "/register",
-  verb: "post",
-  payload: {
-    name: "Selenium IDE plugin",
-    version: "1.0.0",
-    commands: [
-      {
-        id: "successfulCommand",
-        name: "successful command"
-      },
-      {
-        id: "failCommand",
-        name: "failed command"
-      }
-    ]
-  }
-}).catch(console.error);
+const parser = new UAParser(window.navigator.userAgent)
+const browserName = parser.getBrowser().name
+const isChrome = browserName === 'Chrome'
+const isFirefox = browserName === 'Firefox'
+
+function getId() {
+  if (process.env.SIDE_ID) return process.env.SIDE_ID
+  return isChrome
+    ? 'mooikfkahbdckldjjndioackbalphokd'
+    : isFirefox
+    ? '{a6fd85ed-e919-4a43-a5af-8da18bda539f}'
+    : ''
+}
+
+const seideId = getId()
+
+function startPolling(payload) {
+  setInterval(() => {
+    browser.runtime
+      .sendMessage(seideId, {
+        uri: '/health',
+        verb: 'get',
+      })
+      .catch(res => ({ error: res.message }))
+      .then(res => {
+        if (!res) {
+          browser.runtime.sendMessage(seideId, {
+            uri: '/register',
+            verb: 'post',
+            payload,
+          })
+        }
+      })
+  }, 1000)
+}
+
+startPolling({
+  name: "Selenium IDE plugin",
+  version: "1.0.0",
+  commands: [
+    {
+      id: "successfulCommand",
+      name: "successful command"
+    },
+    {
+      id: "failCommand",
+      name: "failed command"
+    }
+  ]
+})
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.action === "execute") {
@@ -47,4 +80,5 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         break;
     }
   }
+  sendResponse(undefined);
 });
