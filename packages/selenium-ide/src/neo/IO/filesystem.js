@@ -150,7 +150,7 @@ let previousFile = null
 // eslint-disable-next-line
 function createBlob(mimeType, data) {
   const blob = new Blob([data], {
-    type: 'text/plain',
+    type: mimeType,
   })
   // If we are replacing a previously generated file we need to
   // manually revoke the object URL to avoid memory leaks.
