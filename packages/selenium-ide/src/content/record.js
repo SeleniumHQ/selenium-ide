@@ -644,10 +644,18 @@ Recorder.addEventHandler(
         let tmpText = bot.dom.getVisibleText(event.target)
         record(m.cmd, tmpTarget, tmpText)
       } else if (m.cmd.includes('Title')) {
-        let tmpTitle = goog.string.normalizeSpaces(event.target.ownerDocument.title)
+        let tmpTitle = goog.string.normalizeSpaces(
+          event.target.ownerDocument.title
+        )
         record(m.cmd, [[tmpTitle]], '')
-      } else if (m.cmd.includes('Present') || m.cmd.includes('Checked') || m.cmd.includes('Editable')
-          || m.cmd.includes('Selected') || m.cmd.includes('Visible') || m.cmd === 'mouseOver') {
+      } else if (
+        m.cmd.includes('Present') ||
+        m.cmd.includes('Checked') ||
+        m.cmd.includes('Editable') ||
+        m.cmd.includes('Selected') ||
+        m.cmd.includes('Visible') ||
+        m.cmd === 'mouseOver'
+      ) {
         record(m.cmd, tmpTarget, '')
       } else if (m.cmd.includes('Value')) {
         let tmpValue = event.target.value

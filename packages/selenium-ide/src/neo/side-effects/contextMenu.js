@@ -32,91 +32,91 @@ function createContextMenus() {
     title: 'Checked',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertEditable',
     title: 'Editable',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertNotChecked',
     title: 'Not Checked',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertNotEditable',
     title: 'Not Editable',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertElementNotPresent',
     title: 'Not Present',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertNotSelectedValue',
     title: 'Not Selected Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertNotText',
     title: 'Not Text',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertElementPresent',
     title: 'Present',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertSelectedLabel',
     title: 'Selected Label',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertSelectedValue',
     title: 'Selected Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertText',
     title: 'Text',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'assertTitle',
     title: 'Title',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
-   browser.contextMenus.create({
+  browser.contextMenus.create({
     id: 'assertValue',
     title: 'Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'assert'
+    parentId: 'assert',
   })
   browser.contextMenus.create({
     id: 'store',
@@ -129,21 +129,21 @@ function createContextMenus() {
     title: 'Text',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'store'
+    parentId: 'store',
   })
   browser.contextMenus.create({
     id: 'storeTitle',
     title: 'Title',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'store'
+    parentId: 'store',
   })
-   browser.contextMenus.create({
+  browser.contextMenus.create({
     id: 'storeValue',
     title: 'Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'store'
+    parentId: 'store',
   })
   browser.contextMenus.create({
     id: 'verify',
@@ -156,91 +156,91 @@ function createContextMenus() {
     title: 'Checked',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyEditable',
     title: 'Editable',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyNotChecked',
     title: 'Not Checked',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyNotEditable',
     title: 'Not Editable',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyElementNotPresent',
     title: 'Not Present',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyNotSelectedValue',
     title: 'Not Selected Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyNotText',
     title: 'Not Text',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyElementPresent',
     title: 'Present',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifySelectedLabel',
     title: 'Selected Label',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifySelectedValue',
     title: 'Selected Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyText',
     title: 'Text',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'verifyTitle',
     title: 'Title',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
-   browser.contextMenus.create({
+  browser.contextMenus.create({
     id: 'verifyValue',
     title: 'Value',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'verify'
+    parentId: 'verify',
   })
   browser.contextMenus.create({
     id: 'waitFor',
@@ -253,42 +253,42 @@ function createContextMenus() {
     title: 'Editable',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'waitFor'
+    parentId: 'waitFor',
   })
   browser.contextMenus.create({
     id: 'waitForElementNotEditable',
     title: 'Not Editable',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'waitFor'
+    parentId: 'waitFor',
   })
   browser.contextMenus.create({
     id: 'waitForElementNotPresent',
     title: 'Not Present',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'waitFor'
+    parentId: 'waitFor',
   })
   browser.contextMenus.create({
     id: 'waitForElementNotVisible',
     title: 'Not Visible',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'waitFor'
+    parentId: 'waitFor',
   })
   browser.contextMenus.create({
     id: 'waitForElementPresent',
     title: 'Present',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'waitFor'
+    parentId: 'waitFor',
   })
   browser.contextMenus.create({
     id: 'waitForElementVisible',
     title: 'Visible',
     documentUrlPatterns: ['<all_urls>'],
     contexts: ['all'],
-    parentId: 'waitFor'
+    parentId: 'waitFor',
   })
 }
 
