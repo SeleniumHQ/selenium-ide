@@ -60,7 +60,12 @@ export async function exportCodeToFile(
     } else if (suite) {
       emittedCode = await exporter.emit.suite(language, options)
     }
-    if (emittedCode) downloadUniqueFile(emittedCode.filename, emittedCode.body)
+    if (emittedCode)
+      downloadUniqueFile(
+        emittedCode.filename,
+        emittedCode.body,
+        `application/${language}`
+      )
   }
   ModalState.cancelCodeExport()
 }

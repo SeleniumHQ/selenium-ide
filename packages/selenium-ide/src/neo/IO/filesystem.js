@@ -100,7 +100,7 @@ function downloadProject(project) {
       browser.downloads.download({
         filename: sanitizeProjectName(project.name) + '.side',
         url: createBlob(
-          'application/json',
+          'application/side',
           beautify(JSON.stringify(project), { indent_size: 2 })
         ),
         saveAs: true,
@@ -137,10 +137,10 @@ function exportProject(project) {
   })
 }
 
-export function downloadUniqueFile(filename, body) {
+export function downloadUniqueFile(filename, body, mimeType = 'text/plain') {
   browser.downloads.download({
     filename,
-    url: createBlob('text/plain', body),
+    url: createBlob(mimeType, body),
     saveAs: true,
     conflictAction: 'overwrite',
   })
