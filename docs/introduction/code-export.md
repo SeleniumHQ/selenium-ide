@@ -24,13 +24,14 @@ This will place inline code comments in the exported file with details about the
 Currently, export to the following languages and test frameworks is supported.
 
 - C# NUnit
+- C# xUnit
 - Java JUnit
 - JavaScript Mocha
 - Python pytest
 
-We intend to support all of the officially supported programming language bindings for Selenium (e.g., Java, JavaScript, C#, Python, and Ruby) in at least one testing framework for each language.
+We support all of the officially supported programming language bindings for Selenium (e.g., C#, Java, JavaScript, Python, and Ruby) in at least one testing framework for each language.
 
-Contributions are welcome to help add new languages and test frameworks for a given language. See [How To Contribute](code-export.md#how-to-contribute) for details on how.
+Contributions are welcome to help add new test frameworks for a given language. See [How To Contribute](code-export.md#how-to-contribute) for details on how.
 
 ### C# NUnit
 
