@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`location code emitter should emit css locator 1`] = `":css, 'someCss'"`;
+
+exports[`location code emitter should emit css locator with \`=\` sign 1`] = `":css, 'a[title=JScript]'"`;
+
+exports[`location code emitter should emit id locator 1`] = `":id, 'someId'"`;
+
+exports[`location code emitter should emit implicit xpath locator 1`] = `":xpath, '//test=xpath'"`;
+
+exports[`location code emitter should emit link locator 1`] = `":link_text, 'someLink'"`;
+
+exports[`location code emitter should emit linkText locator 1`] = `":link_text, 'someLink'"`;
+
+exports[`location code emitter should emit name locator 1`] = `":name, 'someName'"`;
+
+exports[`location code emitter should emit partialLinkText locator 1`] = `":partial_link_text, 'someLink'"`;
+
+exports[`location code emitter should emit xpath locator 1`] = `":xpath, 'someXpath'"`;
+
+exports[`location code emitter should escape quotes in locator strings 1`] = `":css, 'a[title=\\"escaped\\"]'"`;

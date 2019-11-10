@@ -31,29 +31,21 @@ describe('selection location code emitter', () => {
   it('should emit label locator', () => {
     const type = 'label'
     const selector = 'a label'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:xpath, "//option[. = '${selector}']"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit id locator', () => {
     const type = 'id'
     const selector = 'someId'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:css, "*[id='${selector}']"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit value locator', () => {
     const type = 'value'
     const selector = 'someValue'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:css, "*[value='${selector}']"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit index locator', () => {
     const type = 'index'
     const selector = '2'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:css, "*:nth-child(${selector})"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
 })
