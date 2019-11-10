@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Plugins Playback API · Selenium IDE</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;p&gt;The Playback API is for the playback capabilities of Selenium IDE.&lt;/p&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Plugins Playback API · Selenium IDE"/><meta property="og:type" content="website"/><meta property="og:url" content="https://selenium.dev/selenium-ide/index.html"/><meta property="og:description" content="&lt;p&gt;The Playback API is for the playback capabilities of Selenium IDE.&lt;/p&gt;
+"/><meta property="og:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><link rel="shortcut icon" href="/selenium-ide/img/selenium-ide32.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://selenium.dev/selenium-ide/blog/atom.xml" title="Selenium IDE Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://selenium.dev/selenium-ide/blog/feed.xml" title="Selenium IDE Blog RSS Feed"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-80983440-1', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/selenium-ide/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/selenium-ide/"><img class="logo" src="/selenium-ide/img/selenium-ide128.png" alt="Selenium IDE"/><h2 class="headerTitleWithLogo">Selenium IDE</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/selenium-ide/docs/en/introduction/getting-started" target="_self">Docs</a></li><li class=""><a href="/selenium-ide/docs/en/api/commands" target="_self">API</a></li><li class="siteNavGroupActive"><a href="/selenium-ide/docs/en/plugins/plugins-getting-started" target="_self">Plugins</a></li><li class=""><a href="/selenium-ide/blog/" target="_self">Blog</a></li><li class=""><a href="/selenium-ide/help" target="_self">Help</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>API Reference</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/plugins-getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/extension-id">Selenium IDE Extension ID</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/health-checks">Health Checks</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Concepts</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/requests">Requests</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/error-handling">Error Handling</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/emitting-code">Emitting Code</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/code-export">Exporting Code</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Extending the IDE</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/adding-commands">Adding Commands</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/ide-events">IDE Events</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/emitting-setup-teardown">Emitting Setup &amp; Teardown</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/introduction">Introduction</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/system">System</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/playback">Playback</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/record">Record</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/popup">Popup</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/export">Export</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Plugins Playback API</h1></header><article><div><span><p>The Playback API is for the playback capabilities of Selenium IDE.</p>
+<p>It is prefixed with <code>/playback</code>.</p>
+<h3><a class="anchor" aria-hidden="true" id="get-playback-location"></a><a href="#get-playback-location" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>GET /playback/location</code></h3>
+<p>Used to resolve a locator using Selenium IDE.</p>
+<pre><code class="hljs css language-js">{
+  <span class="hljs-attr">uri</span>: <span class="hljs-string">"/playback/location"</span>,
+  <span class="hljs-attr">verb</span>: <span class="hljs-string">"get"</span>,
+  <span class="hljs-attr">location</span>: <span class="hljs-string">"valid IDE locator"</span>
+}
+</code></pre>
+<ul>
+<li><code>location</code> - a valid Selenium IDE locator (e.g. <code>css=input.submit</code>).</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="returns"></a><a href="#returns" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h4>
+<p>Returns an <code>xpath</code> to the element if it was found, or an error if not.</p>
+<h3><a class="anchor" aria-hidden="true" id="post-playback-command"></a><a href="#post-playback-command" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>POST /playback/command</code></h3>
+<p>Used to change the state of a command (e.g. passed, failed, etc...).</p>
+<pre><code class="hljs css language-js">{
+  <span class="hljs-attr">uri</span>: <span class="hljs-string">"/playback/command"</span>,
+  <span class="hljs-attr">verb</span>: <span class="hljs-string">"post"</span>,
+  <span class="hljs-attr">commandId</span>: <span class="hljs-string">"the command's id"</span>,
+  <span class="hljs-attr">state</span>: <span class="hljs-string">"valid state"</span>,
+  <span class="hljs-attr">message</span>: <span class="hljs-string">"a message to show the user"</span>
+}
+</code></pre>
+<ul>
+<li><code>commandId</code> - a command ID to a command that appears in the current running test case.</li>
+<li><code>state</code> - a valid command state: (<code>failed</code>, <code>fatal</code>, <code>passed</code>, <code>pending</code>, <code>undetermined</code>).</li>
+<li><code>message</code> - optional, a message to show the user, note that not all command states support showing a message.</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="returns-1"></a><a href="#returns-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h4>
+<p>Returns <code>true</code> if the command state was changed.</p>
+<h3><a class="anchor" aria-hidden="true" id="post-playback-log"></a><a href="#post-playback-log" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>POST /playback/log</code></h3>
+<p>Used for <code>playback</code> logs, meaning when that the user can filter by playback logs group.</p>
+<p>Logs that playback progress, or status should be logged here.</p>
+<p>API is the same as <a href="/selenium-ide/docs/en/api/plugins/system#post-log">system logs</a>.</p>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/19/2019</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/selenium-ide/docs/en/api/plugins/system"><span class="arrow-prev">← </span><span>System</span></a><a class="docs-next button" href="/selenium-ide/docs/en/api/plugins/record"><span>Record</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/selenium-ide/" class="nav-home"><img src="/selenium-ide/img/selenium-ide64.png" alt="Selenium IDE" width="64"/></a><div><h5>Docs</h5><a href="/selenium-ide/docs/en/introduction/getting-started">Getting Started</a><a href="/selenium-ide/docs/en/api/commands">API Reference</a><a href="/selenium-ide/docs/en/plugins/plugins-getting-started">Build a Plugin</a></div><div><h5>Community</h5><a href="https://seleniumhq.herokuapp.com/" target="_blank" rel="noreferrer noopener">Slack</a><a href="https://webchat.freenode.net/" target="_blank" rel="noreferrer noopener">irc (#selenium)</a><a href="https://groups.google.com/forum/#!forum/selenium-users" target="_blank" rel="noreferrer noopener">Google group</a></div><div><h5>More</h5><a href="/selenium-ide/blog">Blog</a><a href="https://github.com/seleniumhq/selenium-ide" target="_blank" rel="noreferrer noopener">GitHub</a><a class="github-button" href="https://github.com/seleniumhq/selenium-ide" data-icon="octicon-star" data-count-href="/seleniumhq/selenium-ide/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><a href="/selenium-ide/legacy">Legacy IDE</a></div></section><section class="copyright">Copyright © 2019 Software Freedom Conservancy (SFC)</section></footer></div></body></html>

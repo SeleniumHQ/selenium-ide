@@ -1,0 +1,734 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Commands · Selenium IDE</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;h2&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; id=&quot;add-selection&quot;&gt;&lt;/a&gt;&lt;a href=&quot;#add-selection&quot; aria-hidden=&quot;true&quot; class=&quot;hash-link&quot;&gt;&lt;svg class=&quot;hash-link-icon&quot; aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;&lt;code&gt;add selection&lt;/code&gt;&lt;/h2&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Commands · Selenium IDE"/><meta property="og:type" content="website"/><meta property="og:url" content="https://selenium.dev/selenium-ide/index.html"/><meta property="og:description" content="&lt;h2&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; id=&quot;add-selection&quot;&gt;&lt;/a&gt;&lt;a href=&quot;#add-selection&quot; aria-hidden=&quot;true&quot; class=&quot;hash-link&quot;&gt;&lt;svg class=&quot;hash-link-icon&quot; aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;&lt;code&gt;add selection&lt;/code&gt;&lt;/h2&gt;
+"/><meta property="og:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><link rel="shortcut icon" href="/selenium-ide/img/selenium-ide32.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://selenium.dev/selenium-ide/blog/atom.xml" title="Selenium IDE Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://selenium.dev/selenium-ide/blog/feed.xml" title="Selenium IDE Blog RSS Feed"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-80983440-1', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/selenium-ide/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/selenium-ide/"><img class="logo" src="/selenium-ide/img/selenium-ide128.png" alt="Selenium IDE"/><h2 class="headerTitleWithLogo">Selenium IDE</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/selenium-ide/docs/en/introduction/getting-started" target="_self">Docs</a></li><li class="siteNavGroupActive siteNavItemActive"><a href="/selenium-ide/docs/en/api/commands" target="_self">API</a></li><li class=""><a href="/selenium-ide/docs/en/plugins/plugins-getting-started" target="_self">Plugins</a></li><li class=""><a href="/selenium-ide/blog/" target="_self">Blog</a></li><li class=""><a href="/selenium-ide/help" target="_self">Help</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>API Reference</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/introduction/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/introduction/command-line-runner">Command-line Runner</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/introduction/control-flow">Control Flow</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/introduction/code-export">Code Export</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/introduction/faq">Frequently Asked Questions</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul><li class="navListItem navListItemActive"><a class="navItem" href="/selenium-ide/docs/en/api/commands">Commands</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/arguments">Arguments</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Commands</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="add-selection"></a><a href="#add-selection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>add selection</code></h2>
+<p>Add a selection to the set of options in a multi-select element.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#value">value</a>: The value to input.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="answer-on-next-prompt"></a><a href="#answer-on-next-prompt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>answer on next prompt</code></h2>
+<p>Affects the next alert prompt. This command will send the specified answer string to it. If the alert is already present, then use &quot;webdriver answer on visible prompt&quot; instead.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#answer">answer</a>: The answer to give in response to the prompt pop-up.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert"></a><a href="#assert" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert</code></h2>
+<p>Check that a variable is an expected value. The variable's value will be converted to a string for comparison. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#expectedvalue">expected value</a>: The result you expect a variable to contain (e.g., true, false,
+or some other value).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-alert"></a><a href="#assert-alert" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert alert</code></h2>
+<p>Confirm that an alert has been rendered with the provided text. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#alerttext">alert text</a>: text to check</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-checked"></a><a href="#assert-checked" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert checked</code></h2>
+<p>Confirm that the target element has been checked. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-confirmation"></a><a href="#assert-confirmation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert confirmation</code></h2>
+<p>Confirm that a confirmation has been rendered. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-editable"></a><a href="#assert-editable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert editable</code></h2>
+<p>Confirm that the target element is editable. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-element-present"></a><a href="#assert-element-present" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert element present</code></h2>
+<p>Confirm that the target element is present somewhere on the page. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-element-not-present"></a><a href="#assert-element-not-present" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert element not present</code></h2>
+<p>Confirm that the target element is not present anywhere on the page. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-not-checked"></a><a href="#assert-not-checked" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert not checked</code></h2>
+<p>Confirm that the target element has not been checked. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-not-editable"></a><a href="#assert-not-editable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert not editable</code></h2>
+<p>Confirm that the target element is not editable. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-not-selected-value"></a><a href="#assert-not-selected-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert not selected value</code></h2>
+<p>Confirm that the value attribute of the selected option in a dropdown element does not contain the provided value. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-not-text"></a><a href="#assert-not-text" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert not text</code></h2>
+<p>Confirm that the text of an element does not contain the provided value. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-prompt"></a><a href="#assert-prompt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert prompt</code></h2>
+<p>Confirm that a JavaScript prompt has been rendered. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-selected-value"></a><a href="#assert-selected-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert selected value</code></h2>
+<p>Confirm that the value attribute of the selected option in a dropdown element contains the provided value. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-selected-label"></a><a href="#assert-selected-label" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert selected label</code></h2>
+<p>Confirm that the label of the selected option in a dropdown element contains the provided value. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-text"></a><a href="#assert-text" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert text</code></h2>
+<p>Confirm that the text of an element contains the provided value. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-title"></a><a href="#assert-title" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert title</code></h2>
+<p>Confirm the title of the current page contains the provided text. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="assert-value"></a><a href="#assert-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>assert value</code></h2>
+<p>Confirm the (whitespace-trimmed) value of an input field (or anything else with a value parameter). For checkbox/radio elements, the value will be &quot;on&quot; or &quot;off&quot; depending on whether the element is checked or not. The test will stop if the assert fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="check"></a><a href="#check" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>check</code></h2>
+<p>Check a toggle-button (checkbox/radio).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="choose-cancel-on-next-confirmation"></a><a href="#choose-cancel-on-next-confirmation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>choose cancel on next confirmation</code></h2>
+<p>Affects the next confirmation alert. This command will cancel it. If the alert is already present, then use &quot;webdriver choose cancel on visible confirmation&quot; instead.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="choose-cancel-on-next-prompt"></a><a href="#choose-cancel-on-next-prompt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>choose cancel on next prompt</code></h2>
+<p>Affects the next alert prompt. This command will cancel it. If the alert is already present, then use &quot;webdriver choose cancel on visible prompt&quot; instead.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="choose-ok-on-next-confirmation"></a><a href="#choose-ok-on-next-confirmation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>choose ok on next confirmation</code></h2>
+<p>Affects the next confirmation alert. This command will accept it. If the alert is already present, then use &quot;webdriver choose ok on visible confirmation&quot; instead.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="click"></a><a href="#click" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>click</code></h2>
+<p>Clicks on a target element (e.g., a link, button, checkbox, or radio button).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="click-at"></a><a href="#click-at" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>click at</code></h2>
+<p>Clicks on a target element (e.g., a link, button, checkbox, or radio button). The coordinates are relative to the target element (e.g., 0,0 is the top left corner of the element) and are mostly used to check effects that relay on them, for example the material ripple effect.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#coordstring">coord string</a>: Specifies the x,y position (e.g., - 10,20) of the mouse event
+relative to the element found from a locator.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="close"></a><a href="#close" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>close</code></h2>
+<p>Closes the current window. There is no need to close the initial window, IDE will re-use it; closing it may cause a performance penalty on the test.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="debugger"></a><a href="#debugger" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>debugger</code></h2>
+<p>Breaks the execution and enters debugger</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="do"></a><a href="#do" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>do</code></h2>
+<p>Create a loop that executes the proceeding commands at least once. Terminate the branch with the repeat if command.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="double-click"></a><a href="#double-click" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>double click</code></h2>
+<p>Double clicks on an element (e.g., a link, button, checkbox, or radio button).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="double-click-at"></a><a href="#double-click-at" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>double click at</code></h2>
+<p>Double clicks on a target element (e.g., a link, button, checkbox, or radio button). The coordinates are relative to the target element (e.g., 0,0 is the top left corner of the element) and are mostly used to check effects that relay on them, for example the material ripple effect.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#coordstring">coord string</a>: Specifies the x,y position (e.g., - 10,20) of the mouse event
+relative to the element found from a locator.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="drag-and-drop-to-object"></a><a href="#drag-and-drop-to-object" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>drag and drop to object</code></h2>
+<p>Drags an element and drops it on another element.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locatorofobjecttobedragged">locator of object to be dragged</a>: The locator of element to be dragged.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locatorofdragdestinationobject">locator of drag destination object</a>: The locator of an element whose location (e.g., the center-most
+pixel within it) will be the point where locator of object to be dragged is
+dropped.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="echo"></a><a href="#echo" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>echo</code></h2>
+<p>Prints the specified message into the third table cell in your Selenese tables. Useful for debugging.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#message">message</a>: The message to print.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="edit-content"></a><a href="#edit-content" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>edit content</code></h2>
+<p>Sets the value of a content editable element as if you typed in it.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#value">value</a>: The value to input.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="else"></a><a href="#else" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>else</code></h2>
+<p>Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="else-if"></a><a href="#else-if" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>else if</code></h2>
+<p>Part of an if block. Execute the commands in this branch when an if condition has not been met. Terminate the branch with the end command.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#conditionalexpression">conditional expression</a>: JavaScript expression that returns a boolean result for use
+in control flow commands.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="end"></a><a href="#end" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>end</code></h2>
+<p>Terminates a control flow block for if, while, and times.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="execute-script"></a><a href="#execute-script" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>execute script</code></h2>
+<p>Executes a snippet of JavaScript in the context of the currently selected frame or window. The script fragment will be executed as the body of an anonymous function. To store the return value, use the 'return' keyword and provide a variable name in the value input field.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#script">script</a>: The JavaScript snippet to run.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="execute-async-script"></a><a href="#execute-async-script" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>execute async script</code></h2>
+<p>Executes an async snippet of JavaScript in the context of the currently selected frame or window. The script fragment will be executed as the body of an anonymous function and must return a Promise. The Promise result will be saved on the variable if you use the 'return' keyword.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#script">script</a>: The JavaScript snippet to run.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="for-each"></a><a href="#for-each" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>for each</code></h2>
+<p>Create a loop that executes the proceeding commands for each item in a given collection.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#arrayvariablename">array variable name</a>: The name of a variable containing a JavaScript array.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#iteratorvariablename">iterator variable name</a>: The name of the variable used when iterating over a collection in a looping control flow command (e.g., for each).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="if"></a><a href="#if" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>if</code></h2>
+<p>Create a conditional branch in your test. Terminate the branch with the end command.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#conditionalexpression">conditional expression</a>: JavaScript expression that returns a boolean result for use
+in control flow commands.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-down"></a><a href="#mouse-down" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse down</code></h2>
+<p>Simulates a user pressing the left mouse button (without releasing it yet).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-down-at"></a><a href="#mouse-down-at" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse down at</code></h2>
+<p>Simulates a user pressing the left mouse button (without releasing it yet) at the specified location.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#coordstring">coord string</a>: Specifies the x,y position (e.g., - 10,20) of the mouse event
+relative to the element found from a locator.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-move-at"></a><a href="#mouse-move-at" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse move at</code></h2>
+<p>Simulates a user pressing the mouse button (without releasing it yet) on the specified element.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#coordstring">coord string</a>: Specifies the x,y position (e.g., - 10,20) of the mouse event
+relative to the element found from a locator.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-out"></a><a href="#mouse-out" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse out</code></h2>
+<p>Simulates a user moving the mouse pointer away from the specified element.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-over"></a><a href="#mouse-over" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse over</code></h2>
+<p>Simulates a user hovering a mouse over the specified element.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-up"></a><a href="#mouse-up" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse up</code></h2>
+<p>Simulates the event that occurs when the user releases the mouse button (e.g., stops holding the button down).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="mouse-up-at"></a><a href="#mouse-up-at" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>mouse up at</code></h2>
+<p>Simulates the event that occurs when the user releases the mouse button (e.g., stops holding the button down) at the specified location.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#coordstring">coord string</a>: Specifies the x,y position (e.g., - 10,20) of the mouse event
+relative to the element found from a locator.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="open"></a><a href="#open" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>open</code></h2>
+<p>Opens a URL and waits for the page to load before proceeding. This accepts both relative and absolute URLs.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#url">url</a>: The URL to open (may be relative or absolute).</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="pause"></a><a href="#pause" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>pause</code></h2>
+<p>Wait for the specified amount of time.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="remove-selection"></a><a href="#remove-selection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>remove selection</code></h2>
+<p>Remove a selection from the set of selected options in a multi-select element using an option locator.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#option">option</a>: An option locator, typically just an option label (e.g. &quot;John Smith&quot;).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="repeat-if"></a><a href="#repeat-if" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>repeat if</code></h2>
+<p>Terminate a 'do' control flow branch conditionally. If the result of the provided conditional expression is true, it starts the do loop over. Otherwise it ends the loop.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#conditionalexpression">conditional expression</a>: JavaScript expression that returns a boolean result for use
+in control flow commands.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="run"></a><a href="#run" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>run</code></h2>
+<p>Runs a test case from the current project.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#testcase">test case</a>: Test case name from the project.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="run-script"></a><a href="#run-script" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>run script</code></h2>
+<p>Creates a new &quot;script&quot; tag in the body of the current test window, and adds the specified text into the body of the command. Beware that JS exceptions thrown in these script tags aren't managed by Selenium, so you should probably wrap your script in try/catch blocks if there is any chance that the script will throw an exception.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#script">script</a>: The JavaScript snippet to run.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="select"></a><a href="#select" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>select</code></h2>
+<p>Select an element from a drop-down menu using an option locator. Option locators provide different ways of specifying a select element (e.g., label=, value=, id=, index=). If no option locator prefix is provided, a match on the label will be attempted.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#option">option</a>: An option locator, typically just an option label (e.g. &quot;John Smith&quot;).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="select-frame"></a><a href="#select-frame" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>select frame</code></h2>
+<p>Selects a frame within the current window. You can select a frame by its 0-based index number (e.g., select the first frame with &quot;index=0&quot;, or the third frame with &quot;index=2&quot;). For nested frames you will need to invoke this command multiple times (once for each frame in the tree until you reach your desired frame). You can select the parent frame with &quot;relative=parent&quot;. To return to the top of the page use &quot;relative=top&quot;.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="select-window"></a><a href="#select-window" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>select window</code></h2>
+<p>Selects a popup window using a window locator. Once a popup window has been selected, all commands will go to that window. Window locators use handles to select windows.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#windowhandle">window handle</a>: A handle representing a specific page (tab, or window).</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="send-keys"></a><a href="#send-keys" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>send keys</code></h2>
+<p>Simulates keystroke events on the specified element, as though you typed the value key-by-key. This simulates a real user typing every character in the specified string; it is also bound by the limitations of a real user, like not being able to type into a invisible or read only elements. This is useful for dynamic UI widgets (like auto-completing combo boxes) that require explicit key events. Unlike the simple &quot;type&quot; command, which forces the specified value into the page directly, this command will not replace the existing content.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#keysequence">key sequence</a>: A sequence of keys to type, can be used to send key strokes (e.g. ${KEY_ENTER}).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="set-speed"></a><a href="#set-speed" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>set speed</code></h2>
+<p>Set execution speed (e.g., set the millisecond length of a delay which will follow each Selenium operation). By default, there is no such delay, e.g., the delay is 0 milliseconds. This setting is global, and will affect all test runs, until changed.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="set-window-size"></a><a href="#set-window-size" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>set window size</code></h2>
+<p>Set the browser's window size, including the browser's interface.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#resolution">resolution</a>: Specify a window resolution using WidthxHeight. (e.g., 1280x800).</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store"></a><a href="#store" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store</code></h2>
+<p>Save a target string as a variable for easy re-use.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-attribute"></a><a href="#store-attribute" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store attribute</code></h2>
+<p>Gets the value of an element attribute. The value of the attribute may differ across browsers (this is the case for the &quot;style&quot; attribute, for example).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#attributelocator">attribute locator</a>: An element locator followed by an @ sign and then the name of
+the attribute, e.g. &quot;foo@bar&quot;.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-json"></a><a href="#store-json" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store json</code></h2>
+<p>undefined</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#json">json</a>: A string representation of a JavaScript object.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-text"></a><a href="#store-text" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store text</code></h2>
+<p>Gets the text of an element and stores it for later use. This works for any element that contains text.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-title"></a><a href="#store-title" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store title</code></h2>
+<p>Gets the title of the current page.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-value"></a><a href="#store-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store value</code></h2>
+<p>Gets the value of element and stores it for later use. This works for any input type element.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-window-handle"></a><a href="#store-window-handle" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store window handle</code></h2>
+<p>Gets the handle of the current page.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#windowhandle">window handle</a>: A handle representing a specific page (tab, or window).</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="store-xpath-count"></a><a href="#store-xpath-count" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>store xpath count</code></h2>
+<p>Gets the number of nodes that match the specified xpath (e.g. &quot;//table&quot; would give the number of tables).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#xpath">xpath</a>: The xpath expression to evaluate.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="submit"></a><a href="#submit" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>submit</code></h2>
+<p>Submit the specified form. This is particularly useful for forms without submit buttons, e.g. single-input &quot;Search&quot; forms.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#formlocator">form locator</a>: An element locator for the form you want to submit.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="times"></a><a href="#times" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>times</code></h2>
+<p>Create a loop that executes the proceeding commands n number of times.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#times">times</a>: The number of attempts a times control flow loop will execute
+the commands within its block.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#looplimit">loop limit</a>: An optional argument that specifies the maximum number of times a looping control flow command can execute. This protects against infinite loops. The defaults value is set to 1000.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="type"></a><a href="#type" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>type</code></h2>
+<p>Sets the value of an input field, as though you typed it in. Can also be used to set the value of combo boxes, check boxes, etc. In these cases, value should be the value of the option selected, not the visible text. Chrome only: If a file path is given it will be uploaded to the input (for type=file), NOTE: XPath locators are not supported.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#value">value</a>: The value to input.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="uncheck"></a><a href="#uncheck" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>uncheck</code></h2>
+<p>Uncheck a toggle-button (checkbox/radio).</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify"></a><a href="#verify" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify</code></h2>
+<p>Soft assert that a variable is an expected value. The variable's value will be converted to a string for comparison. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#variablename">variable name</a>: The name of a variable without brackets.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#expectedvalue">expected value</a>: The result you expect a variable to contain (e.g., true, false,
+or some other value).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-checked"></a><a href="#verify-checked" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify checked</code></h2>
+<p>Soft assert that a toggle-button (checkbox/radio) has been checked. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-editable"></a><a href="#verify-editable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify editable</code></h2>
+<p>Soft assert whether the specified input element is editable (e.g., hasn't been disabled). The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-element-present"></a><a href="#verify-element-present" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify element present</code></h2>
+<p>Soft assert that the specified element is somewhere on the page. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-element-not-present"></a><a href="#verify-element-not-present" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify element not present</code></h2>
+<p>Soft assert that the specified element is not somewhere on the page. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-not-checked"></a><a href="#verify-not-checked" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify not checked</code></h2>
+<p>Soft assert that a toggle-button (checkbox/radio) has not been checked. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-not-editable"></a><a href="#verify-not-editable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify not editable</code></h2>
+<p>Soft assert whether the specified input element is not editable (e.g., hasn't been disabled). The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-not-selected-value"></a><a href="#verify-not-selected-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify not selected value</code></h2>
+<p>Soft assert that the expected element has not been chosen in a select menu by its option attribute. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#option">option</a>: An option locator, typically just an option label (e.g. &quot;John Smith&quot;).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-not-text"></a><a href="#verify-not-text" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify not text</code></h2>
+<p>Soft assert the text of an element is not present. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-selected-label"></a><a href="#verify-selected-label" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify selected label</code></h2>
+<p>Soft assert the visible text for a selected option in the specified select element. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-selected-value"></a><a href="#verify-selected-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify selected value</code></h2>
+<p>Soft assert that the expected element has been chosen in a select menu by its option attribute. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#selectlocator">select locator</a>: An element locator identifying a drop-down menu.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#option">option</a>: An option locator, typically just an option label (e.g. &quot;John Smith&quot;).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-text"></a><a href="#verify-text" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify text</code></h2>
+<p>Soft assert the text of an element is present. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-title"></a><a href="#verify-title" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify title</code></h2>
+<p>Soft assert the title of the current page contains the provided text. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: The text to use.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="verify-value"></a><a href="#verify-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>verify value</code></h2>
+<p>Soft assert the (whitespace-trimmed) value of an input field (or anything else with a value parameter). For checkbox/radio elements, the value will be &quot;on&quot; or &quot;off&quot; depending on whether the element is checked or not. The test will continue even if the verify fails.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#text">text</a>: An exact string match. Support for pattern matching is in the
+works. See <a href="https://github.com/SeleniumHQ/selenium-ide/issues/141">https://github.com/SeleniumHQ/selenium-ide/issues/141</a> for details.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="wait-for-element-editable"></a><a href="#wait-for-element-editable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait for element editable</code></h2>
+<p>Wait for an element to be editable.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="wait-for-element-not-editable"></a><a href="#wait-for-element-not-editable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait for element not editable</code></h2>
+<p>Wait for an element to not be editable.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="wait-for-element-not-present"></a><a href="#wait-for-element-not-present" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait for element not present</code></h2>
+<p>Wait for a target element to not be present on the page.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="wait-for-element-not-visible"></a><a href="#wait-for-element-not-visible" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait for element not visible</code></h2>
+<p>Wait for a target element to not be visible on the page.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="wait-for-element-present"></a><a href="#wait-for-element-present" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait for element present</code></h2>
+<p>Wait for a target element to be present on the page.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="wait-for-element-visible"></a><a href="#wait-for-element-visible" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait for element visible</code></h2>
+<p>Wait for a target element to be visible on the page.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#locator">locator</a>: An element locator.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#waittime">wait time</a>: The amount of time to wait (in milliseconds).</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="webdriver-answer-on-visible-prompt"></a><a href="#webdriver-answer-on-visible-prompt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>webdriver answer on visible prompt</code></h2>
+<p>Affects a currently showing alert prompt. This command instructs Selenium to provide the specified answer to it. If the alert has not appeared yet then use &quot;answer on next prompt&quot; instead.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><a href="/selenium-ide/docs/en/api/arguments#answer">answer</a>: The answer to give in response to the prompt pop-up.</li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="webdriver-choose-cancel-on-visible-confirmation"></a><a href="#webdriver-choose-cancel-on-visible-confirmation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>webdriver choose cancel on visible confirmation</code></h2>
+<p>Affects a currently showing confirmation alert. This command instructs Selenium to cancel it. If the alert has not appeared yet then use &quot;choose cancel on next confirmation&quot; instead.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="webdriver-choose-cancel-on-visible-prompt"></a><a href="#webdriver-choose-cancel-on-visible-prompt" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>webdriver choose cancel on visible prompt</code></h2>
+<p>Affects a currently showing alert prompt. This command instructs Selenium to cancel it. If the alert has not appeared yet then use &quot;choose cancel on next prompt&quot; instead.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="webdriver-choose-ok-on-visible-confirmation"></a><a href="#webdriver-choose-ok-on-visible-confirmation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>webdriver choose ok on visible confirmation</code></h2>
+<p>Affects a currently showing confirmation alert. This command instructs Selenium to accept it. If the alert has not appeared yet then use &quot;choose ok on next confirmation&quot; instead.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="while"></a><a href="#while" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>while</code></h2>
+<p>Create a loop that executes the proceeding commands repeatedly for as long as the provided conditional expression is true.</p>
+<p><strong>arguments</strong></p>
+<ul>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#conditionalexpression">conditional expression</a>: JavaScript expression that returns a boolean result for use
+in control flow commands.</p></li>
+<li><p><a href="/selenium-ide/docs/en/api/arguments#looplimit">loop limit</a>: An optional argument that specifies the maximum number of times a looping control flow command can execute. This protects against infinite loops. The defaults value is set to 1000.</p></li>
+</ul>
+<hr>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 12/27/2018</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/selenium-ide/docs/en/introduction/faq"><span class="arrow-prev">← </span><span>Frequently Asked Questions</span></a><a class="docs-next button" href="/selenium-ide/docs/en/api/arguments"><span>Arguments</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#add-selection"><code>add selection</code></a></li><li><a href="#answer-on-next-prompt"><code>answer on next prompt</code></a></li><li><a href="#assert"><code>assert</code></a></li><li><a href="#assert-alert"><code>assert alert</code></a></li><li><a href="#assert-checked"><code>assert checked</code></a></li><li><a href="#assert-confirmation"><code>assert confirmation</code></a></li><li><a href="#assert-editable"><code>assert editable</code></a></li><li><a href="#assert-element-present"><code>assert element present</code></a></li><li><a href="#assert-element-not-present"><code>assert element not present</code></a></li><li><a href="#assert-not-checked"><code>assert not checked</code></a></li><li><a href="#assert-not-editable"><code>assert not editable</code></a></li><li><a href="#assert-not-selected-value"><code>assert not selected value</code></a></li><li><a href="#assert-not-text"><code>assert not text</code></a></li><li><a href="#assert-prompt"><code>assert prompt</code></a></li><li><a href="#assert-selected-value"><code>assert selected value</code></a></li><li><a href="#assert-selected-label"><code>assert selected label</code></a></li><li><a href="#assert-text"><code>assert text</code></a></li><li><a href="#assert-title"><code>assert title</code></a></li><li><a href="#assert-value"><code>assert value</code></a></li><li><a href="#check"><code>check</code></a></li><li><a href="#choose-cancel-on-next-confirmation"><code>choose cancel on next confirmation</code></a></li><li><a href="#choose-cancel-on-next-prompt"><code>choose cancel on next prompt</code></a></li><li><a href="#choose-ok-on-next-confirmation"><code>choose ok on next confirmation</code></a></li><li><a href="#click"><code>click</code></a></li><li><a href="#click-at"><code>click at</code></a></li><li><a href="#close"><code>close</code></a></li><li><a href="#debugger"><code>debugger</code></a></li><li><a href="#do"><code>do</code></a></li><li><a href="#double-click"><code>double click</code></a></li><li><a href="#double-click-at"><code>double click at</code></a></li><li><a href="#drag-and-drop-to-object"><code>drag and drop to object</code></a></li><li><a href="#echo"><code>echo</code></a></li><li><a href="#edit-content"><code>edit content</code></a></li><li><a href="#else"><code>else</code></a></li><li><a href="#else-if"><code>else if</code></a></li><li><a href="#end"><code>end</code></a></li><li><a href="#execute-script"><code>execute script</code></a></li><li><a href="#execute-async-script"><code>execute async script</code></a></li><li><a href="#for-each"><code>for each</code></a></li><li><a href="#if"><code>if</code></a></li><li><a href="#mouse-down"><code>mouse down</code></a></li><li><a href="#mouse-down-at"><code>mouse down at</code></a></li><li><a href="#mouse-move-at"><code>mouse move at</code></a></li><li><a href="#mouse-out"><code>mouse out</code></a></li><li><a href="#mouse-over"><code>mouse over</code></a></li><li><a href="#mouse-up"><code>mouse up</code></a></li><li><a href="#mouse-up-at"><code>mouse up at</code></a></li><li><a href="#open"><code>open</code></a></li><li><a href="#pause"><code>pause</code></a></li><li><a href="#remove-selection"><code>remove selection</code></a></li><li><a href="#repeat-if"><code>repeat if</code></a></li><li><a href="#run"><code>run</code></a></li><li><a href="#run-script"><code>run script</code></a></li><li><a href="#select"><code>select</code></a></li><li><a href="#select-frame"><code>select frame</code></a></li><li><a href="#select-window"><code>select window</code></a></li><li><a href="#send-keys"><code>send keys</code></a></li><li><a href="#set-speed"><code>set speed</code></a></li><li><a href="#set-window-size"><code>set window size</code></a></li><li><a href="#store"><code>store</code></a></li><li><a href="#store-attribute"><code>store attribute</code></a></li><li><a href="#store-json"><code>store json</code></a></li><li><a href="#store-text"><code>store text</code></a></li><li><a href="#store-title"><code>store title</code></a></li><li><a href="#store-value"><code>store value</code></a></li><li><a href="#store-window-handle"><code>store window handle</code></a></li><li><a href="#store-xpath-count"><code>store xpath count</code></a></li><li><a href="#submit"><code>submit</code></a></li><li><a href="#times"><code>times</code></a></li><li><a href="#type"><code>type</code></a></li><li><a href="#uncheck"><code>uncheck</code></a></li><li><a href="#verify"><code>verify</code></a></li><li><a href="#verify-checked"><code>verify checked</code></a></li><li><a href="#verify-editable"><code>verify editable</code></a></li><li><a href="#verify-element-present"><code>verify element present</code></a></li><li><a href="#verify-element-not-present"><code>verify element not present</code></a></li><li><a href="#verify-not-checked"><code>verify not checked</code></a></li><li><a href="#verify-not-editable"><code>verify not editable</code></a></li><li><a href="#verify-not-selected-value"><code>verify not selected value</code></a></li><li><a href="#verify-not-text"><code>verify not text</code></a></li><li><a href="#verify-selected-label"><code>verify selected label</code></a></li><li><a href="#verify-selected-value"><code>verify selected value</code></a></li><li><a href="#verify-text"><code>verify text</code></a></li><li><a href="#verify-title"><code>verify title</code></a></li><li><a href="#verify-value"><code>verify value</code></a></li><li><a href="#wait-for-element-editable"><code>wait for element editable</code></a></li><li><a href="#wait-for-element-not-editable"><code>wait for element not editable</code></a></li><li><a href="#wait-for-element-not-present"><code>wait for element not present</code></a></li><li><a href="#wait-for-element-not-visible"><code>wait for element not visible</code></a></li><li><a href="#wait-for-element-present"><code>wait for element present</code></a></li><li><a href="#wait-for-element-visible"><code>wait for element visible</code></a></li><li><a href="#webdriver-answer-on-visible-prompt"><code>webdriver answer on visible prompt</code></a></li><li><a href="#webdriver-choose-cancel-on-visible-confirmation"><code>webdriver choose cancel on visible confirmation</code></a></li><li><a href="#webdriver-choose-cancel-on-visible-prompt"><code>webdriver choose cancel on visible prompt</code></a></li><li><a href="#webdriver-choose-ok-on-visible-confirmation"><code>webdriver choose ok on visible confirmation</code></a></li><li><a href="#while"><code>while</code></a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/selenium-ide/" class="nav-home"><img src="/selenium-ide/img/selenium-ide64.png" alt="Selenium IDE" width="64"/></a><div><h5>Docs</h5><a href="/selenium-ide/docs/en/introduction/getting-started">Getting Started</a><a href="/selenium-ide/docs/en/api/commands">API Reference</a><a href="/selenium-ide/docs/en/plugins/plugins-getting-started">Build a Plugin</a></div><div><h5>Community</h5><a href="https://seleniumhq.herokuapp.com/" target="_blank" rel="noreferrer noopener">Slack</a><a href="https://webchat.freenode.net/" target="_blank" rel="noreferrer noopener">irc (#selenium)</a><a href="https://groups.google.com/forum/#!forum/selenium-users" target="_blank" rel="noreferrer noopener">Google group</a></div><div><h5>More</h5><a href="/selenium-ide/blog">Blog</a><a href="https://github.com/seleniumhq/selenium-ide" target="_blank" rel="noreferrer noopener">GitHub</a><a class="github-button" href="https://github.com/seleniumhq/selenium-ide" data-icon="octicon-star" data-count-href="/seleniumhq/selenium-ide/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><a href="/selenium-ide/legacy">Legacy IDE</a></div></section><section class="copyright">Copyright © 2019 Software Freedom Conservancy (SFC)</section></footer></div></body></html>

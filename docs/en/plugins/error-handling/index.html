@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Error Handling · Selenium IDE</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;p&gt;If you encounter a failure when executing a command and need to fail the test case because of it, you&#x27;ll have to respond with an error to the IDE.&lt;/p&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Error Handling · Selenium IDE"/><meta property="og:type" content="website"/><meta property="og:url" content="https://selenium.dev/selenium-ide/index.html"/><meta property="og:description" content="&lt;p&gt;If you encounter a failure when executing a command and need to fail the test case because of it, you&#x27;ll have to respond with an error to the IDE.&lt;/p&gt;
+"/><meta property="og:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><link rel="shortcut icon" href="/selenium-ide/img/selenium-ide32.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://selenium.dev/selenium-ide/blog/atom.xml" title="Selenium IDE Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://selenium.dev/selenium-ide/blog/feed.xml" title="Selenium IDE Blog RSS Feed"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-80983440-1', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/selenium-ide/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/selenium-ide/"><img class="logo" src="/selenium-ide/img/selenium-ide128.png" alt="Selenium IDE"/><h2 class="headerTitleWithLogo">Selenium IDE</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/selenium-ide/docs/en/introduction/getting-started" target="_self">Docs</a></li><li class=""><a href="/selenium-ide/docs/en/api/commands" target="_self">API</a></li><li class="siteNavGroupActive"><a href="/selenium-ide/docs/en/plugins/plugins-getting-started" target="_self">Plugins</a></li><li class=""><a href="/selenium-ide/blog/" target="_self">Blog</a></li><li class=""><a href="/selenium-ide/help" target="_self">Help</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Concepts</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/plugins-getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/extension-id">Selenium IDE Extension ID</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/health-checks">Health Checks</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Concepts</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/requests">Requests</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/selenium-ide/docs/en/plugins/error-handling">Error Handling</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/emitting-code">Emitting Code</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/code-export">Exporting Code</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Extending the IDE</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/adding-commands">Adding Commands</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/ide-events">IDE Events</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/plugins/emitting-setup-teardown">Emitting Setup &amp; Teardown</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/introduction">Introduction</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/system">System</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/playback">Playback</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/record">Record</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/popup">Popup</a></li><li class="navListItem"><a class="navItem" href="/selenium-ide/docs/en/api/plugins/export">Export</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Error Handling</h1></header><article><div><span><p>If you encounter a failure when executing a command and need to fail the test case because of it, you'll have to respond with an error to the IDE.</p>
+<p>Since JSON doesn't support Error serializations, a standard was made by the IDE.</p>
+<h2><a class="anchor" aria-hidden="true" id="error"></a><a href="#error" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Error</h2>
+<p>An error object is a normal JavaScript object, that when sent to the IDE, will be parsed as an error.</p>
+<pre><code class="hljs css language-js">{
+  <span class="hljs-attr">status</span>: <span class="hljs-string">"fatal"</span>,
+  <span class="hljs-attr">error</span>: <span class="hljs-string">"This command can't be run individually, please run the test case."</span>
+}
+</code></pre>
+<ul>
+<li><code>status</code> - optional, can be <code>undefined</code> or <code>fatal</code>, a fatal error will fail the test, a non-fatal error will continue execution, useful for the <code>verify</code> commands.</li>
+<li><code>error</code> - required, message to be printed to the user.</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="sending-the-error"></a><a href="#sending-the-error" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Sending the Error</h2>
+<p>When encountering an error during execution, you can reply with the error object using <code>sendResponse</code>.</p>
+<pre><code class="hljs css language-js">browser.runtime.onMessageExternal.addListener(<span class="hljs-function">(<span class="hljs-params">message, sender, sendResponse</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (message.action === <span class="hljs-string">"execute"</span> &amp;&amp; message.command &amp;&amp; message.command.command === <span class="hljs-string">"myFailingCommand"</span>) {
+      executingSomeFunctionalityThatWillEventuallyFail(message.command).catch(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> sendResponse({ <span class="hljs-attr">error</span>: error.message, <span class="hljs-attr">status</span>: <span class="hljs-string">"fatal"</span> });
+      });
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }
+});
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/21/2019</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/selenium-ide/docs/en/plugins/requests"><span class="arrow-prev">← </span><span>Requests</span></a><a class="docs-next button" href="/selenium-ide/docs/en/plugins/emitting-code"><span>Emitting Code</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#error">Error</a></li><li><a href="#sending-the-error">Sending the Error</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/selenium-ide/" class="nav-home"><img src="/selenium-ide/img/selenium-ide64.png" alt="Selenium IDE" width="64"/></a><div><h5>Docs</h5><a href="/selenium-ide/docs/en/introduction/getting-started">Getting Started</a><a href="/selenium-ide/docs/en/api/commands">API Reference</a><a href="/selenium-ide/docs/en/plugins/plugins-getting-started">Build a Plugin</a></div><div><h5>Community</h5><a href="https://seleniumhq.herokuapp.com/" target="_blank" rel="noreferrer noopener">Slack</a><a href="https://webchat.freenode.net/" target="_blank" rel="noreferrer noopener">irc (#selenium)</a><a href="https://groups.google.com/forum/#!forum/selenium-users" target="_blank" rel="noreferrer noopener">Google group</a></div><div><h5>More</h5><a href="/selenium-ide/blog">Blog</a><a href="https://github.com/seleniumhq/selenium-ide" target="_blank" rel="noreferrer noopener">GitHub</a><a class="github-button" href="https://github.com/seleniumhq/selenium-ide" data-icon="octicon-star" data-count-href="/seleniumhq/selenium-ide/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><a href="/selenium-ide/legacy">Legacy IDE</a></div></section><section class="copyright">Copyright © 2019 Software Freedom Conservancy (SFC)</section></footer></div></body></html>

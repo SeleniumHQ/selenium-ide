@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Selenium IDE Blog</title>
+        <link>https://selenium.dev/selenium-ide/blog</link>
+        <description>The best place to stay up-to-date with the latest Selenium IDE news and events.</description>
+        <lastBuildDate>Wed, 05 Dec 2018 06:00:00 GMT</lastBuildDate>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <generator>Feed for Node.js</generator>
+        <image>
+            <title>Selenium IDE Blog</title>
+            <url>https://selenium.dev/selenium-ide/img/selenium-ide128.png</url>
+            <link>https://selenium.dev/selenium-ide/blog</link>
+        </image>
+        <copyright>Copyright © 2019 Software Freedom Conservancy (SFC)</copyright>
+        <item>
+            <title><![CDATA[The Difficulties of Selecting Windows]]></title>
+            <link>https://selenium.dev/selenium-ide/blog/2018/12/05/the-difficulties-of-select-window.html</link>
+            <guid>https://selenium.dev/selenium-ide/blog/2018/12/05/the-difficulties-of-select-window.html</guid>
+            <pubDate>Wed, 05 Dec 2018 06:00:00 GMT</pubDate>
+            <description><![CDATA[<p>When recording a test case, more often than not, window management becomes an issue,
+the test case may open a popup, or follow a <code>target=_blank</code> link.
+Nonetheless, Selenium IDE is expected to follow, and record, recording the window and tab
+switching in such a way, that there is no need for manual fixing post-recording.</p>
+<p>But here lies the issue <strong>selecting windows is stateful</strong>.</p>
+]]></description>
+        </item>
+    </channel>
+</rss>

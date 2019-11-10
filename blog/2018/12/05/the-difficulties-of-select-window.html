@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>The Difficulties of Selecting Windows · Selenium IDE</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="When recording a test case, more often than not, window management becomes an issue,"/><link rel="canonical" href="https://corevo.io/the-difficulties-of-select-window/"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="The Difficulties of Selecting Windows · Selenium IDE"/><meta property="og:type" content="website"/><meta property="og:url" content="https://selenium.dev/selenium-ide/blog/2018/12/05/the-difficulties-of-select-window"/><meta property="og:description" content="When recording a test case, more often than not, window management becomes an issue,"/><meta property="og:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://selenium.dev/selenium-ide/img/selenium-ide128.png"/><link rel="shortcut icon" href="/selenium-ide/img/selenium-ide32.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://selenium.dev/selenium-ide/blog/atom.xml" title="Selenium IDE Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://selenium.dev/selenium-ide/blog/feed.xml" title="Selenium IDE Blog RSS Feed"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-80983440-1', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><link rel="stylesheet" href="/selenium-ide/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/selenium-ide/"><img class="logo" src="/selenium-ide/img/selenium-ide128.png" alt="Selenium IDE"/><h2 class="headerTitleWithLogo">Selenium IDE</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/selenium-ide/docs/en/introduction/getting-started" target="_self">Docs</a></li><li class=""><a href="/selenium-ide/docs/en/api/commands" target="_self">API</a></li><li class=""><a href="/selenium-ide/docs/en/plugins/plugins-getting-started" target="_self">Plugins</a></li><li class="siteNavGroupActive"><a href="/selenium-ide/blog/" target="_self">Blog</a></li><li class=""><a href="/selenium-ide/help" target="_self">Help</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Recent Posts</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Recent Posts</h3><ul><li class="navListItem navListItemActive"><a class="navItem" href="/selenium-ide/blog/2018/12/05/the-difficulties-of-select-window">The Difficulties of Selecting Windows</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer postContainer blogContainer"><div class="wrapper"><div class="lonePost"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle"><a href="/selenium-ide/blog/2018/12/05/the-difficulties-of-select-window">The Difficulties of Selecting Windows</a></h1><p class="post-meta">December 5, 2018</p><div class="authorBlock"><p class="post-authorName"><a href="https://twitter.com/corevous" target="_blank" rel="noreferrer noopener">Tomer Steinfeld</a></p><div class="authorPhoto"><a href="https://twitter.com/corevous" target="_blank" rel="noreferrer noopener"><img src="https://www.gravatar.com/avatar/5291d34ae8774a78fc61c6bd430f8425" alt="Tomer Steinfeld"/></a></div></div></header><div><span><p>When recording a test case, more often than not, window management becomes an issue,
+the test case may open a popup, or follow a <code>target=_blank</code> link.
+Nonetheless, Selenium IDE is expected to follow, and record, recording the window and tab
+switching in such a way, that there is no need for manual fixing post-recording.</p>
+<p>But here lies the issue <strong>selecting windows is stateful</strong>.</p>
+<!--truncate-->
+<h2><a class="anchor" aria-hidden="true" id="the-evolution-of-select-window"></a><a href="#the-evolution-of-select-window" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The evolution of Select Window</h2>
+<p>Select window was initially introduced in the legacy IDE (a.k.a selectWindow),
+It too knew back then, that windows can't be followed based on any of their
+defining properties: title, url, etc...<br>
+Instead, it generated a temporary ID for each window, requiring the user to
+manually intervene and give each one a permanent ID, this was enabled by the fact
+that the IDE overrode <code>_blank</code> targets, and instead redirected the call to
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/open"><code>window.open</code></a>.</p>
+<p>Later on SideeX came along, their solution was more intuitive, but short sighted.
+Their idea was to tap into <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webNavigation/onCreatedNavigationTarget"><code>browser.webNavigation.onCreatedNavigationTarget</code></a>,
+this event lets the IDE know when a new tab or window is opened, and it's creation cause.
+This easily lead to mapping the tree of open tabs, giving them all IDs based on their
+order of appearance.<br>
+This way, the user naturally can select whichever window they want, without much
+thought on what's being done behind the scenes.</p>
+<p>Both solutions have shortcomings. The legacy solution required the user to know
+the state of the opened tabs at all times, and to give the same ID each time the
+same window was to be called.<br>
+SideeX on the other hand, did not think about future additions to the IDE, now
+having control flow commands, windows may never be opened, even if they were
+during recording, or worse, windows could be opened in a loop which further
+complicates the tracking mechanism.</p>
+<h2><a class="anchor" aria-hidden="true" id="the-middleman-solution"></a><a href="#the-middleman-solution" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The middleman solution</h2>
+<p>By this point we know two things:</p>
+<ul>
+<li>We can't let the user manually figure out the window layout.</li>
+<li>We can't rely on the windows to identify them, by properties nor index.</li>
+</ul>
+<p>Instead we'll use a <strong>middleman solution</strong>, I call it that because it is
+a solution that both requires the user to name their windows, and it follows
+the windows consistently and immediately post-recording.<br>
+When we realize that a window was opened, instead of generating an ID based
+on it's order of appearance, its handle will be saved to a variable that the
+user will name.<br>
+<img src="/selenium-ide/img/blog/1-select-window.png" alt="Select Window" title="Click specifies it's opened window handle name">
+From this point, we can reliably refer to the window by an ID rather than index.
+<img src="/selenium-ide/img/blog/1-commands.png" alt="Test Steps" title="Using the named handle to switch to the window"></p>
+<p>The <code>click</code> commands can now specify it opens a new window, the user can then
+give the window a name, and set the timeout to wait for that window to appear.<br>
+While recording the IDE will assume to wait 2 seconds, and will generate a name
+for the window.</p>
+<h2><a class="anchor" aria-hidden="true" id="release-plan"></a><a href="#release-plan" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Release plan</h2>
+<p>Opening IDE projects with newer versions of the IDE will automatically migrate
+the test scripts to use the new <code>select window</code> command.<br>
+The migration will try to recognize when a new window is opened and will set
+that command as <em>opens window</em>, will generate a handle name and set the timeout
+to 2 seconds.<br>
+In some cases where the IDE will fail to recognize which commands initiates the
+opening of the window, the test case will fail, and the user will have to amend
+the migration.<br>
+Moreover the IDE will save the initial window's handle using the new <code>store current window handle</code> command in test cases where the user switches back and forth to
+and from the initial window.</p>
+<p>The current plan is to land the change as part of the 3.5 release, in preparation
+for playback using WebDriver.</p>
+<p>Special thanks to <a href="https://twitter.com/tourdedave">@tourdedave</a> for editing.</p>
+</span></div></div><span style="color:rgba(0, 0, 0, 0.7)">Originally published at <a href="https://corevo.io/the-difficulties-of-select-window/">corevo.io</a>.</span><div class="blogSocialSection"></div></div><div class="blog-recent"><a class="button" href="/selenium-ide/blog">Recent Posts</a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#the-evolution-of-select-window">The evolution of Select Window</a></li><li><a href="#the-middleman-solution">The middleman solution</a></li><li><a href="#release-plan">Release plan</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/selenium-ide/" class="nav-home"><img src="/selenium-ide/img/selenium-ide64.png" alt="Selenium IDE" width="64"/></a><div><h5>Docs</h5><a href="/selenium-ide/docs/en/introduction/getting-started">Getting Started</a><a href="/selenium-ide/docs/en/api/commands">API Reference</a><a href="/selenium-ide/docs/en/plugins/plugins-getting-started">Build a Plugin</a></div><div><h5>Community</h5><a href="https://seleniumhq.herokuapp.com/" target="_blank" rel="noreferrer noopener">Slack</a><a href="https://webchat.freenode.net/" target="_blank" rel="noreferrer noopener">irc (#selenium)</a><a href="https://groups.google.com/forum/#!forum/selenium-users" target="_blank" rel="noreferrer noopener">Google group</a></div><div><h5>More</h5><a href="/selenium-ide/blog">Blog</a><a href="https://github.com/seleniumhq/selenium-ide" target="_blank" rel="noreferrer noopener">GitHub</a><a class="github-button" href="https://github.com/seleniumhq/selenium-ide" data-icon="octicon-star" data-count-href="/seleniumhq/selenium-ide/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><a href="/selenium-ide/legacy">Legacy IDE</a></div></section><section class="copyright">Copyright © 2019 Software Freedom Conservancy (SFC)</section></footer></div></body></html>
