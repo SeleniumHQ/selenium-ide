@@ -860,7 +860,7 @@ async function emitWaitForText(locator, text) {
     {
       level: 0,
       statement: `Selenium::WebDriver::Wait.new(timeout: ${timeout /
-      1000}).until { @driver.find_element(${await location.emit(
+        1000}).until { @driver.find_element(${await location.emit(
         locator
       )}).text == "${text}" }`,
     },
