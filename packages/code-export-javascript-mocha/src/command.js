@@ -426,7 +426,7 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const scriptString = script.script.replace(/"/g, "'")
+  const scriptString = script.script.replace(/`/g, '\\`')
   const result = `await driver.executeScript("${scriptString}"${generateScriptArguments(
     script
   )})`
