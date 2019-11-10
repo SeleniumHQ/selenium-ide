@@ -644,6 +644,35 @@ function waitUntil(condition, target, timeout, failureMessage) {
   })
 }
 
+function waitUntilText(condition, target, text, timeout, failureMessage) {
+  if (!timeout) {
+    throw new Error('Timeout not specified.')
+  }
+  return new Promise(function(resolve, reject) {
+    let count = 0
+    let retryInterval = 100
+    let result
+    let interval = setInterval(function() {
+      if (count > timeout) {
+        clearInterval(interval)
+        reject(failureMessage)
+      }
+      try {
+        result = condition(target, text)
+      } catch (error) {
+        clearInterval(interval)
+        reject(error.message)
+      }
+      if (!result) {
+        count += retryInterval
+      } else if (result) {
+        clearInterval(interval)
+        resolve()
+      }
+    }, retryInterval)
+  })
+}
+
 Selenium.prototype.doWaitForElementPresent = function(locator, timeout) {
   return waitUntil(
     this.isElementPresent.bind(this),
@@ -695,6 +724,16 @@ Selenium.prototype.doWaitForElementNotEditable = function(locator, timeout) {
     locator,
     timeout,
     'Element still editable within the timeout specified.'
+  )
+}
+
+Selenium.prototype.doWaitForText = function(locator, text) {
+  return waitUntilText(
+    isText.bind(this),
+    locator,
+    text,
+    this.defaultTimeout,
+    'Element did not have text within the timeout specified.'
   )
 }
 
@@ -2465,6 +2504,27 @@ Selenium.prototype.isEditable = function(locator) {
     }
   }
   return true
+}
+
+function isText(locator, text) {
+  try {
+    return this.isText(locator, text)
+  } catch (error) {
+    unableToLocateTargetElementError()
+  }
+}
+
+Selenium.prototype.isText = function(locator, text) {
+  /**
+   * Determines whether the specified element text value matches the parameter
+   *
+   * @param locator an <a href="#locators">element locator</a>
+   * @param text a string
+   * @return boolean true if the element text matches, false otherwise
+   */
+  let element = this.browserbot.findElement(locator)
+  let elementText = bot.dom.getVisibleText(element).trim()
+  return elementText == text
 }
 
 Selenium.prototype.getAllButtons = function() {

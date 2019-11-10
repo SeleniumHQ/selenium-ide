@@ -420,6 +420,8 @@ exports[`command code emitter should emit \`waitForElementPresent\` command 1`] 
 
 exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"await driver.wait(until.elementIsVisible(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
 
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"await driver.wait(until.elementTextIs(await driver.findElement(By.css(\\"#blah\\")), 'text'), 30000)"`;
+
 exports[`command code emitter should emit \`while\` command 1`] = `"while(!!await driver.executeScript(\\"return (true)\\")) {"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `

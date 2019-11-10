@@ -117,6 +117,7 @@ const emitters = {
   waitForElementNotVisible: emitWaitForElementNotVisible,
   waitForElementEditable: emitWaitForElementEditable,
   waitForElementNotEditable: emitWaitForElementNotEditable,
+  waitForText: emitWaitForText,
 }
 
 export function emit(command, options = config, snapshot) {
@@ -882,3 +883,13 @@ async function emitWaitForElementNotEditable(locator, timeout) {
     )})), ${Math.floor(timeout)});`
   )
 }
+
+async function emitWaitForText(locator, text) {
+  const timeout = 30000
+  return Promise.resolve(
+    `await driver.wait(until.elementTextIs(await driver.findElement(${await LocationEmitter.emit(
+      locator
+    )}), \`${text}\`), ${Math.floor(timeout)});`
+  )
+}
+
