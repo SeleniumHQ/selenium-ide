@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.15.0
+ - Code export C# xUnit PR #845
+ - Code export C# NUnit
+ - Code export C# Ruby RSpec
+ - Added persistence to language selection in code export
+ - Fix variable bug in Java code export when using nested for loops
+ - Fix ActionChains in Python code export PR #827
+ - Updated code export command validation to ignore commented out commands
+ - Updated plugin boilerplate PR #859
+ - Added property access to variables PR #808 (added in the previous release but not noted)
+ - Fix for the wrong filetype being used when saving a project or using code export
+ - Made it so assertions in nested tests can be disabled from the run command
+
 ## v3.14.0
 - Added experimental support for controlled extension mode
 
