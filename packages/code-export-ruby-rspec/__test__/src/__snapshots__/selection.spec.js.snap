@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`selection location code emitter should emit id locator 1`] = `":css, \\"*[id='someId']\\""`;
+
+exports[`selection location code emitter should emit index locator 1`] = `":css, '*:nth-child(2)'"`;
+
+exports[`selection location code emitter should emit label locator 1`] = `":xpath, \\"//option[. = 'a label']\\""`;
+
+exports[`selection location code emitter should emit value locator 1`] = `":css, \\"*[value='someValue']\\""`;

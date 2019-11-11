@@ -13,20 +13,20 @@ describe 'Login' do
     @driver.quit
   end
   it 'validcredentials' do
-    @driver.get(\\"http://the-internet.herokuapp.com/login\\")
+    @driver.get('http://the-internet.herokuapp.com/login')
     @driver.manage.resize_to(1440, 1177)
-    @driver.find_element(:id, \\"username\\").send_keys(\\"tomsmith\\")
-    @driver.find_element(:id, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
-    @driver.find_element(:css, \\"#login button\\").click
-    expect(@driver.find_element(:css, \\".flash.success\\").text).to eq(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    @driver.find_element(:id, 'username').send_keys('tomsmith')
+    @driver.find_element(:id, 'password').send_keys('SuperSecretPassword!')
+    @driver.find_element(:css, '#login button').click
+    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\\\\\\\\\n×')
   end
   it 'invalidcredentials' do
-    @driver.get(\\"http://the-internet.herokuapp.com/login\\")
+    @driver.get('http://the-internet.herokuapp.com/login')
     @driver.manage.resize_to(1440, 1177)
-    @driver.find_element(:id, \\"username\\").send_keys(\\"blah\\")
-    @driver.find_element(:id, \\"password\\").send_keys(\\"blah\\")
-    @driver.find_element(:css, \\"#login button\\").click
-    expect(@driver.find_element(:id, \\"flash\\").text).to eq(\\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\")
+    @driver.find_element(:id, 'username').send_keys('blah')
+    @driver.find_element(:id, 'password').send_keys('blah')
+    @driver.find_element(:css, '#login button').click
+    expect(@driver.find_element(:id, 'flash').text).to eq('Your username is invalid!\\\\\\\\\\\\\\\\n×')
   end
 end
 "
@@ -45,59 +45,59 @@ describe 'Controlflow' do
     @driver.quit
   end
   it 'controlflowif' do
-    @vars[\\"myVar\\"] = @driver.execute_script(\\"return 'a'\\")
-    if @driver.execute_script(\\"return (arguments[0] === 'a')\\", @vars[\\"myVar\\"])
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'a'\\")
-    elsif @driver.execute_script(\\"return (arguments[0] === 'b')\\", @vars[\\"myVar\\"])
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'b'\\")
+    @vars['myVar'] = @driver.execute_script('return \\\\'a\\\\'')
+    if @driver.execute_script(\\"return (arguments[0] === 'a')\\", @vars['myVar'])
+      @vars['output'] = @driver.execute_script('return \\\\'a\\\\'')
+    elsif @driver.execute_script(\\"return (arguments[0] === 'b')\\", @vars['myVar'])
+      @vars['output'] = @driver.execute_script('return \\\\'b\\\\'')
     else
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'c'\\")
+      @vars['output'] = @driver.execute_script('return \\\\'c\\\\'')
     end
-    expect(@vars[\\"output\\"]).to eq('a')
+    expect(@vars['output']).to eq('a')
   end
   it 'controlflowelseif' do
-    @vars[\\"myVar\\"] = @driver.execute_script(\\"return 'b'\\")
-    if @driver.execute_script(\\"return (arguments[0] === 'a')\\", @vars[\\"myVar\\"])
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'a'\\")
-    elsif @driver.execute_script(\\"return (arguments[0] === 'b')\\", @vars[\\"myVar\\"])
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'b'\\")
+    @vars['myVar'] = @driver.execute_script('return \\\\'b\\\\'')
+    if @driver.execute_script(\\"return (arguments[0] === 'a')\\", @vars['myVar'])
+      @vars['output'] = @driver.execute_script('return \\\\'a\\\\'')
+    elsif @driver.execute_script(\\"return (arguments[0] === 'b')\\", @vars['myVar'])
+      @vars['output'] = @driver.execute_script('return \\\\'b\\\\'')
     else
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'c'\\")
+      @vars['output'] = @driver.execute_script('return \\\\'c\\\\'')
     end
-    expect(@vars[\\"output\\"]).to eq('b')
+    expect(@vars['output']).to eq('b')
   end
   it 'controlflowelse' do
-    @vars[\\"myVar\\"] = @driver.execute_script(\\"return 'c'\\")
-    if @driver.execute_script(\\"return (arguments[0] === 'a')\\", @vars[\\"myVar\\"])
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'a'\\")
-    elsif @driver.execute_script(\\"return (arguments[0] === 'b')\\", @vars[\\"myVar\\"])
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'b'\\")
+    @vars['myVar'] = @driver.execute_script('return \\\\'c\\\\'')
+    if @driver.execute_script(\\"return (arguments[0] === 'a')\\", @vars['myVar'])
+      @vars['output'] = @driver.execute_script('return \\\\'a\\\\'')
+    elsif @driver.execute_script(\\"return (arguments[0] === 'b')\\", @vars['myVar'])
+      @vars['output'] = @driver.execute_script('return \\\\'b\\\\'')
     else
-      @vars[\\"output\\"] = @driver.execute_script(\\"return 'c'\\")
+      @vars['output'] = @driver.execute_script('return \\\\'c\\\\'')
     end
-    expect(@vars[\\"output\\"]).to eq('c')
+    expect(@vars['output']).to eq('c')
   end
   it 'controlflowdo' do
-    @vars[\\"check\\"] = @driver.execute_script(\\"return 1\\")
+    @vars['check'] = @driver.execute_script('return 1')
     loop do
-      @vars[\\"check\\"] = @driver.execute_script(\\"return arguments[0] + 1\\", @vars[\\"check\\"])
-      break if !@driver.execute_script(\\"return (arguments[0] < 3)\\", @vars[\\"check\\"])
+      @vars['check'] = @driver.execute_script('return arguments[0] + 1', @vars['check'])
+      break if !@driver.execute_script(\\"return (arguments[0] < 3)\\", @vars['check'])
     end
-    expect(@vars[\\"check\\"]).to eq(3)
+    expect(@vars['check']).to eq(3)
   end
   it 'controlflowtimes' do
-    @vars[\\"check\\"] = @driver.execute_script(\\"return 1\\")
+    @vars['check'] = @driver.execute_script('return 1')
     2.times do
-      @vars[\\"check\\"] = @driver.execute_script(\\"return arguments[0] + 1\\", @vars[\\"check\\"])
+      @vars['check'] = @driver.execute_script('return arguments[0] + 1', @vars['check'])
     end
-    expect(@vars[\\"check\\"]).to eq(3)
+    expect(@vars['check']).to eq(3)
   end
   it 'controlflowwhile' do
-    @vars[\\"check\\"] = @driver.execute_script(\\"return 1\\")
-    while @driver.execute_script(\\"return (arguments[0] < 3)\\", @vars[\\"check\\"]) do
-      @vars[\\"check\\"] = @driver.execute_script(\\"return arguments[0] + 1\\", @vars[\\"check\\"])
+    @vars['check'] = @driver.execute_script('return 1')
+    while @driver.execute_script(\\"return (arguments[0] < 3)\\", @vars['check']) do
+      @vars['check'] = @driver.execute_script('return arguments[0] + 1', @vars['check'])
     end
-    expect(@vars[\\"check\\"]).to eq(3)
+    expect(@vars['check']).to eq(3)
   end
 end
 "
@@ -116,20 +116,20 @@ describe 'Login' do
     @driver.quit
   end
   def login
-    @driver.get(\\"https://the-internet.herokuapp.com/\\")
-    @driver.find_element(:link_text, \\"Form Authentication\\").click
-    @driver.find_element(:id, \\"username\\").send_keys(@vars[\\"username\\"])
-    @driver.find_element(:id, \\"password\\").send_keys(@vars[\\"password\\"])
-    @driver.find_element(:css, \\".fa\\").click
+    @driver.get('https://the-internet.herokuapp.com/')
+    @driver.find_element(:link_text, 'Form Authentication').click
+    @driver.find_element(:id, 'username').send_keys(@vars['username'])
+    @driver.find_element(:id, 'password').send_keys(@vars['password'])
+    @driver.find_element(:css, '.fa').click
   end
   it 'invalidcredentials' do
-    @vars[\\"username\\"] = \\"blah\\"
-    @vars[\\"password\\"] = \\"blah\\"
+    @vars['username'] = 'blah'
+    @vars['password'] = 'blah'
     login()
   end
   it 'validcredentials' do
-    @vars[\\"username\\"] = \\"tomsmith\\"
-    @vars[\\"password\\"] = \\"SuperSecretPassword!\\"
+    @vars['username'] = 'tomsmith'
+    @vars['password'] = 'SuperSecretPassword!'
     login()
   end
 end
@@ -151,16 +151,16 @@ describe 'DefaultSuite' do
   def wait_for_window(self, timeout = 2):
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
-    wh_then = @vars[\\"window_handles\\"]
+    wh_then = @vars['window_handles']
     wh_now.find { |window| window != wh_then.first
   end
   def selectwindow
-    @driver.get(\\"http://the-internet.herokuapp.com/windows\\")
-    @vars[\\"window_handles\\"] = @driver.window_handles
-    @driver.find_element(:link_text, \\"Click Here\\").click
-    @vars[\\"win9425\\"] = wait_for_window(2000)
-    @driver.switch_to.window(@vars[\\"win9425\\"])
-    expect(@driver.title).to eq(\\"New Window\\")
+    @driver.get('http://the-internet.herokuapp.com/windows')
+    @vars['window_handles'] = @driver.window_handles
+    @driver.find_element(:link_text, 'Click Here').click
+    @vars['win9425'] = wait_for_window(2000)
+    @driver.switch_to.window(@vars['win9425'])
+    expect(@driver.title).to eq('New Window')
   end
   it 'reuse' do
     selectwindow()
@@ -184,27 +184,27 @@ describe 'DefaultSuite' do
   def wait_for_window(self, timeout = 2):
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
-    wh_then = @vars[\\"window_handles\\"]
+    wh_then = @vars['window_handles']
     wh_now.find { |window| window != wh_then.first
   end
   def selectwindow
-    @driver.get(\\"http://the-internet.herokuapp.com/windows\\")
-    @vars[\\"window_handles\\"] = @driver.window_handles
-    @driver.find_element(:link_text, \\"Click Here\\").click
-    @vars[\\"win9425\\"] = wait_for_window(2000)
-    @driver.switch_to.window(@vars[\\"win9425\\"])
-    expect(@driver.title).to eq(\\"New Window\\")
+    @driver.get('http://the-internet.herokuapp.com/windows')
+    @vars['window_handles'] = @driver.window_handles
+    @driver.find_element(:link_text, 'Click Here').click
+    @vars['win9425'] = wait_for_window(2000)
+    @driver.switch_to.window(@vars['win9425'])
+    expect(@driver.title).to eq('New Window')
   end
   it 'reuse' do
     selectwindow()
   end
   it 'selectwindow' do
-    @driver.get(\\"http://the-internet.herokuapp.com/windows\\")
-    @vars[\\"window_handles\\"] = @driver.window_handles
-    @driver.find_element(:link_text, \\"Click Here\\").click
-    @vars[\\"win9425\\"] = wait_for_window(2000)
-    @driver.switch_to.window(@vars[\\"win9425\\"])
-    expect(@driver.title).to eq(\\"New Window\\")
+    @driver.get('http://the-internet.herokuapp.com/windows')
+    @vars['window_handles'] = @driver.window_handles
+    @driver.find_element(:link_text, 'Click Here').click
+    @vars['win9425'] = wait_for_window(2000)
+    @driver.switch_to.window(@vars['win9425'])
+    expect(@driver.title).to eq('New Window')
   end
 end
 "
@@ -223,12 +223,12 @@ describe 'Login' do
     @driver.quit
   end
   it 'login' do
-    @driver.get(\\"http://the-internet.herokuapp.com/login\\")
+    @driver.get('http://the-internet.herokuapp.com/login')
     @driver.manage.resize_to(1440, 1177)
-    @driver.find_element(:id, \\"username\\").send_keys(\\"tomsmith\\")
-    @driver.find_element(:id, \\"password\\").send_keys(\\"SuperSecretPassword!\\")
-    @driver.find_element(:css, \\"#login button\\").click
-    expect(@driver.find_element(:css, \\".flash.success\\").text).to eq(\\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    @driver.find_element(:id, 'username').send_keys('tomsmith')
+    @driver.find_element(:id, 'password').send_keys('SuperSecretPassword!')
+    @driver.find_element(:css, '#login button').click
+    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\\\\\\\\\n×')
   end
 end
 "
@@ -247,15 +247,15 @@ describe 'Validcredentials' do
     @driver.quit
   end
   def login
-    @driver.get(\\"https://the-internet.herokuapp.com/\\")
-    @driver.find_element(:link_text, \\"Form Authentication\\").click
-    @driver.find_element(:id, \\"username\\").send_keys(@vars[\\"username\\"])
-    @driver.find_element(:id, \\"password\\").send_keys(@vars[\\"password\\"])
-    @driver.find_element(:css, \\".fa\\").click
+    @driver.get('https://the-internet.herokuapp.com/')
+    @driver.find_element(:link_text, 'Form Authentication').click
+    @driver.find_element(:id, 'username').send_keys(@vars['username'])
+    @driver.find_element(:id, 'password').send_keys(@vars['password'])
+    @driver.find_element(:css, '.fa').click
   end
   it 'validcredentials' do
-    @vars[\\"username\\"] = \\"tomsmith\\"
-    @vars[\\"password\\"] = \\"SuperSecretPassword!\\"
+    @vars['username'] = 'tomsmith'
+    @vars['password'] = 'SuperSecretPassword!'
     login()
   end
 end
@@ -277,21 +277,21 @@ describe 'Selectwindow' do
   def wait_for_window(self, timeout = 2):
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
-    wh_then = @vars[\\"window_handles\\"]
+    wh_then = @vars['window_handles']
     wh_now.find { |window| window != wh_then.first
   end
   it 'selectwindow' do
-    @driver.get(\\"http://the-internet.herokuapp.com/\\")
+    @driver.get('http://the-internet.herokuapp.com/')
     @driver.manage.resize_to(1260, 1027)
-    @driver.find_element(:link_text, \\"Multiple Windows\\").click
-    @vars[\\"window_handles\\"] = @driver.window_handles
-    @driver.find_element(:link_text, \\"Click Here\\").click
-    @vars[\\"win9625\\"] = wait_for_window(2000)
-    @vars[\\"root\\"] = @driver.window_handle
-    @driver.switch_to.window(@vars[\\"win9625\\"])
-    expect(@driver.title).to eq(\\"New Window\\")
-    @driver.switch_to.window(@vars[\\"root\\"])
-    expect(@driver.title).to eq(\\"The Internet\\")
+    @driver.find_element(:link_text, 'Multiple Windows').click
+    @vars['window_handles'] = @driver.window_handles
+    @driver.find_element(:link_text, 'Click Here').click
+    @vars['win9625'] = wait_for_window(2000)
+    @vars['root'] = @driver.window_handle
+    @driver.switch_to.window(@vars['win9625'])
+    expect(@driver.title).to eq('New Window')
+    @driver.switch_to.window(@vars['root'])
+    expect(@driver.title).to eq('The Internet')
   end
 end
 "

@@ -138,11 +138,11 @@ function canEmit(commandName) {
 }
 
 function variableLookup(varName) {
-  return `@vars["${varName}"]`
+  return `@vars['${varName}']`
 }
 
 function variableSetter(varName, value) {
-  return varName ? `@vars["${varName}"] = ${value}` : ''
+  return varName ? `@vars['${varName}'] = ${value}` : ''
 }
 
 function emitWaitForWindow() {
@@ -154,7 +154,7 @@ function emitWaitForWindow() {
     { level: 0, statement: 'wh_now = @driver.window_handles' },
     {
       level: 0,
-      statement: 'wh_then = @vars["window_handles"]',
+      statement: `wh_then = @vars['window_handles']`,
     },
     { level: 0, statement: 'wh_now.find { |window| window != wh_then.first' },
   ]
@@ -167,9 +167,9 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `@vars["window_handles"] = @driver.window_handles\n${await emittedCommand}\n@vars["${
+    `@vars['window_handles'] = @driver.window_handles\n${await emittedCommand}\n@vars['${
       command.windowHandleName
-    }"] = wait_for_window(${command.windowTimeout})`
+    }'] = wait_for_window(${command.windowTimeout})`
   )
 }
 
@@ -181,8 +181,8 @@ function emitAssert(varName, value) {
     _value = value
   }
   const result = _value
-    ? `expect(@vars["${varName}"]).to eq(${_value})`
-    : `expect(@vars["${varName}"]).to eq('${value}')`
+    ? `expect(@vars['${varName}']).to eq(${_value})`
+    : `expect(@vars['${varName}']).to eq('${value}')`
   return Promise.resolve(result)
 }
 
@@ -195,7 +195,7 @@ function emitAssertAlert(alertText) {
 function emitAnswerOnNextPrompt(textToSend) {
   const commands = [
     { level: 0, statement: 'alert = @driver.switch_to.alert' },
-    { level: 0, statement: `alert.send_keys("${textToSend}")` },
+    { level: 0, statement: `alert.send_keys('${textToSend}')` },
     { level: 0, statement: 'alert.accept()' },
   ]
   return Promise.resolve({ commands })
@@ -243,7 +243,7 @@ function generateExpressionScript(script) {
 
 function generateScriptArguments(script) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `@vars["${varName}"]`)
+    .map(varName => `@vars['${varName}']`)
     .join(',')}`
 }
 
@@ -296,7 +296,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `collection = @vars["${collectionVarName}"]`,
+        statement: `collection = @vars['${collectionVarName}']`,
       },
       {
         level: 0,
@@ -304,7 +304,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `@vars["${iteratorVarName}"] = item`,
+        statement: `@vars['${iteratorVarName}'] = item`,
       },
     ],
   })
@@ -375,7 +375,7 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitEcho(message) {
-  const _message = message.startsWith('@vars[') ? message : `"${message}"`
+  const _message = message.startsWith('@vars[') ? message : `'${message}'`
   return Promise.resolve(`puts(${_message})`)
 }
 
@@ -396,8 +396,8 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const scriptString = script.script.replace(/"/g, "'")
-  const result = `@driver.execute_script("${scriptString}"${generateScriptArguments(
+  const scriptString = script.script.replace(/'/g, "\\'")
+  const result = `@driver.execute_script('${scriptString}'${generateScriptArguments(
     script
   )})`
   return Promise.resolve(variableSetter(varName, result))
@@ -472,8 +472,8 @@ async function emitMouseUp(locator) {
 
 function emitOpen(target) {
   const url = /^(file|http|https):\/\//.test(target)
-    ? `"${target}"`
-    : `"${global.baseUrl}${target}"`
+    ? `'${target}'`
+    : `'${global.baseUrl}${target}'`
   return Promise.resolve(`@driver.get(${url})`)
 }
 
@@ -544,7 +544,7 @@ async function emitSelectWindow(windowLocation) {
     )
   } else if (/^name=/.test(windowLocation)) {
     return Promise.resolve(
-      `@driver.switch_to.window("${windowLocation.split('name=')[1]}")`
+      `@driver.switch_to.window('${windowLocation.split('name=')[1]}')`
     )
   } else if (/^win_ser_/.test(windowLocation)) {
     if (windowLocation === 'win_ser_local') {
@@ -584,7 +584,7 @@ function generateSendKeysInput(value) {
           const key = s.match(/\['(.*)'\]/)[1]
           return `:${key.toLowerCase()}`
         } else {
-          return `"${s}"`
+          return `'${s}'`
         }
       })
       .join(', ')
@@ -592,7 +592,7 @@ function generateSendKeysInput(value) {
     if (value.startsWith('@vars[')) {
       return value
     } else {
-      return `"${value}"`
+      return `'${value}'`
     }
   }
 }
@@ -612,7 +612,7 @@ function emitSetSpeed() {
 }
 
 async function emitStore(value, varName) {
-  return Promise.resolve(variableSetter(varName, `"${value}"`))
+  return Promise.resolve(variableSetter(varName, `'${value}'`))
 }
 
 async function emitStoreAttribute(locator, varName) {
@@ -624,7 +624,7 @@ async function emitStoreAttribute(locator, varName) {
       level: 0,
       statement: `attribute = @driver.find_element(${await location.emit(
         elementLocator
-      )}).attribute("${attributeName}")`,
+      )}).attribute('${attributeName}')`,
     },
     { level: 0, statement: `${variableSetter(varName, 'attribute')}` },
   ]
@@ -647,7 +647,7 @@ async function emitStoreTitle(_, varName) {
 async function emitStoreValue(locator, varName) {
   const result = `@driver.find_element(${await location.emit(
     locator
-  )}).attribute("value")`
+  )}).attribute('value')`
   return Promise.resolve(variableSetter(varName, result))
 }
 
@@ -761,13 +761,13 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
       level: 0,
       statement: `value = @driver.find_element(${await location.emit(
         locator
-      )}).attribute("value")`,
+      )}).attribute('value')`,
     },
     {
       level: 0,
-      statement: `expect(value).not_to eq("${exporter.emit.text(
+      statement: `expect(value).not_to eq('${exporter.emit.text(
         expectedValue
-      )}")`,
+      )}')`,
     },
   ]
   return Promise.resolve({ commands })
@@ -783,7 +783,7 @@ async function emitVerifyNotText(locator, text) {
     },
     {
       level: 0,
-      statement: `expect(text).not_to eq("${exporter.emit.text(text)}")`,
+      statement: `expect(text).not_to eq('${exporter.emit.text(text)}')`,
     },
   ]
   return Promise.resolve({ commands })
@@ -799,13 +799,13 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     },
     {
       level: 0,
-      statement: `locator = "option[@value='" + element.attribute("value") + "']"`,
+      statement: `locator = "option[@value='" + element.attribute('value') + "']"`,
     },
     {
       level: 0,
       statement: 'selected_text = element.find_element(:xpath, locator).text',
     },
-    { level: 0, statement: `expect(selected_text).to eq("${labelValue}")` },
+    { level: 0, statement: `expect(selected_text).to eq('${labelValue}')` },
   ]
   return Promise.resolve({
     commands,
@@ -818,7 +818,7 @@ async function emitVerifyText(locator, text) {
       level: 0,
       statement: `expect(@driver.find_element(${await location.emit(
         locator
-      )}).text).to eq("${exporter.emit.text(text)}")`,
+      )}).text).to eq('${exporter.emit.text(text)}')`,
     },
   ]
   return Promise.resolve({ commands })
@@ -830,15 +830,15 @@ async function emitVerifyValue(locator, value) {
       level: 0,
       statement: `value = @driver.find_element(${await location.emit(
         locator
-      )}).attribute("value")`,
+      )}).attribute('value')`,
     },
-    { level: 0, statement: `expect(value).to eq("${value}")` },
+    { level: 0, statement: `expect(value).to eq('${value}')` },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitVerifyTitle(title) {
-  return Promise.resolve(`expect(@driver.title).to eq("${title}")`)
+  return Promise.resolve(`expect(@driver.title).to eq('${title}')`)
 }
 
 async function emitWaitForElementEditable(locator, timeout) {

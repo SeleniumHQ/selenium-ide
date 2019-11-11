@@ -45,5 +45,5 @@ function emitLabel(label) {
 }
 
 function emitIndex(index) {
-  return Promise.resolve(`:css, "*:nth-child(${index})"`)
+  return Promise.resolve(`:css, '*:nth-child(${index})'`)
 }

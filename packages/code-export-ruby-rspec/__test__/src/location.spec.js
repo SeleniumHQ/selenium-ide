@@ -31,66 +31,50 @@ describe('location code emitter', () => {
   it('should emit id locator', () => {
     const type = 'id'
     const selector = 'someId'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(`:id, "someId"`)
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit link locator', () => {
     const type = 'link'
     const selector = 'someLink'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:link_text, "someLink"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit linkText locator', () => {
     const type = 'linkText'
     const selector = 'someLink'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:link_text, "someLink"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit partialLinkText locator', () => {
     const type = 'partialLinkText'
     const selector = 'someLink'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:partial_link_text, "someLink"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit css locator', () => {
     const type = 'css'
     const selector = 'someCss'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:css, "someCss"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit css locator with `=` sign', () => {
     const type = 'css'
     const selector = 'a[title=JScript]'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:css, "a[title=JScript]"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should escape quotes in locator strings', () => {
     const type = 'css'
     const selector = 'a[title="escaped"]'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:css, "a[title="escaped"]"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit xpath locator', () => {
     const type = 'xpath'
     const selector = 'someXpath'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:xpath, "someXpath"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
   it('should emit implicit xpath locator', () => {
     const selector = '//test=xpath'
-    return expect(emit(selector)).resolves.toEqual(`:xpath, "//test=xpath"`)
+    return expect(emit(selector)).resolves.toMatchSnapshot()
   })
   it('should emit name locator', () => {
     const type = 'name'
     const selector = 'someName'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `:name, "someName"`
-    )
+    return expect(emit(`${type}=${selector}`)).resolves.toMatchSnapshot()
   })
 })

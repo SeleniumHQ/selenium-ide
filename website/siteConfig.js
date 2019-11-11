@@ -23,7 +23,7 @@ const _users = [
 const siteConfig = {
   title: 'Selenium IDE', // Title for your website.
   tagline: 'Open source record and playback test automation for the web',
-  url: 'https://www.seleniumhq.org', // Your website URL
+  url: 'https://selenium.dev', // Your website URL
   baseUrl: '/selenium-ide/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
