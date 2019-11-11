@@ -480,7 +480,7 @@ class PlaybackState {
       this._testsToRun.shift()
     // pull the next test off the test queue for execution
     this.currentRunningTest = this._testsToRun.shift()
-    this.originalCalledTest = this._testsToRun.shift()
+    this.originalCalledTest = this.currentRunningTest
     this.runningQueue = this.currentRunningTest.commands.slice()
     this.clearStack()
     this.errors = 0
