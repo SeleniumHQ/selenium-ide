@@ -154,17 +154,43 @@ async function emitMethod(
   ]
 }
 
-export function emitOriginTracing(test, { commentPrefix }) {
+export function emitOriginTracing(
+  test,
+  { commentPrefix },
+  enableOriginTracing,
+  enableDescriptionAsComment
+) {
   let result = []
-  result.push(commentPrefix + ` Test name: ${test.name}`)
-  result.push(commentPrefix + ' Step # | name | target | value | comment')
+  if (enableOriginTracing) {
+    result.push(commentPrefix + ` Test name: ${test.name}`)
+    let topRow = commentPrefix + ' Step # | name | target | value'
+    if (!enableDescriptionAsComment) {
+      topRow += ' | comment'
+    }
+    result.push(topRow)
+  }
   test.commands.forEach((command, index) => {
-    result.push(
-      commentPrefix +
+    let row = ''
+    if (enableOriginTracing) {
+      row =
+        commentPrefix +
         ` ${index + 1} | ${command.command} | ${command.target} | ${
           command.value
-        } | ${command.comment}`
-    )
+        }`
+      if (enableDescriptionAsComment) {
+        if (command.comment) {
+          row += '\n'
+        }
+      } else {
+        row += ` | ${command.comment}`
+      }
+    }
+    if (enableDescriptionAsComment) {
+      if (command.comment) {
+        row += commentPrefix + ` ${command.comment}`
+      }
+    }
+    result.push(row)
   })
   return result
 }
@@ -183,6 +209,7 @@ async function emitTest(
     emitter,
     generateMethodDeclaration,
     enableOriginTracing,
+    enableDescriptionAsComment,
     project,
   } = {}
 ) {
@@ -234,9 +261,12 @@ async function emitTest(
   }
 
   // prepare origin tracing code commands if enabled
-  const originTracing = enableOriginTracing
-    ? emitOriginTracing(test, { commentPrefix })
-    : undefined
+  const originTracing = emitOriginTracing(
+    test,
+    { commentPrefix },
+    enableOriginTracing,
+    enableDescriptionAsComment
+  )
 
   // prepare result object
   result.testDeclaration = render(testDeclaration, {
@@ -256,6 +286,7 @@ async function emitTest(
     {
       startingLevel: commandLevel,
       originTracing,
+      enableOriginTracing,
     }
   )
   result.inEachEnd = render(
@@ -273,7 +304,12 @@ async function emitTestsFromSuite(
   tests,
   suite,
   languageOpts,
-  { enableOriginTracing, generateTestDeclaration, project }
+  {
+    enableOriginTracing,
+    enableDescriptionAsComment,
+    generateTestDeclaration,
+    project,
+  }
 ) {
   let result = {}
   for (const testName of suite.tests) {
@@ -283,6 +319,7 @@ async function emitTestsFromSuite(
       ...languageOpts,
       testDeclaration,
       enableOriginTracing,
+      enableDescriptionAsComment,
       project,
     })
   }

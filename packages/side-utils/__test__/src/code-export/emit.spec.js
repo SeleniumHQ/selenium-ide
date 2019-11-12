@@ -138,11 +138,25 @@ describe('Trace emitter', () => {
     const test = new TestCase()
     test.createCommand(undefined, 'a', 'foo', 'bar')
     test.createCommand(undefined, 'b', 'baz', 'qux', 'a comment')
-    expect(emitOriginTracing(test, { commentPrefix: '//' })).toEqual([
+    expect(emitOriginTracing(test, { commentPrefix: '//' }, true, false)).toEqual([
       '// Test name: Untitled Test',
       '// Step # | name | target | value | comment',
       '// 1 | a | foo | bar | ',
       '// 2 | b | baz | qux | a comment',
+    ])
+    expect(emitOriginTracing(test, { commentPrefix: '//' }, true, true)).toEqual([
+      '// Test name: Untitled Test',
+      '// Step # | name | target | value',
+      '// 1 | a | foo | bar',
+      '// 2 | b | baz | qux\n// a comment',
+    ])
+    expect(emitOriginTracing(test, { commentPrefix: '//' }, false, true)).toEqual([
+      '',
+      '// a comment',
+    ])
+    expect(emitOriginTracing(test, { commentPrefix: '//' }, false, false)).toEqual([
+      '',
+      '',
     ])
   })
 })

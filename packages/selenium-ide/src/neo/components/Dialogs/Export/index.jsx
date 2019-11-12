@@ -64,6 +64,11 @@ class ExportContent extends React.Component {
   toggleOriginTracing() {
     this.setState({ enableOriginTracing: !this.state.enableOriginTracing })
   }
+  toggleDescriptionAsComment() {
+    this.setState({
+      enableDescriptionAsComment: !this.state.enableDescriptionAsComment,
+    })
+  }
   render() {
     return (
       <DialogContainer
@@ -79,7 +84,8 @@ class ExportContent extends React.Component {
                 this.props
                   .completeSelection(
                     this.state.selectedLanguages,
-                    this.state.enableOriginTracing
+                    this.state.enableOriginTracing,
+                    this.state.enableDescriptionAsComment
                   )
                   .catch(error => {
                     this.props.cancelSelection()
@@ -109,6 +115,12 @@ class ExportContent extends React.Component {
           checked={this.state.enableOriginTracing}
           form={true}
           onChange={this.toggleOriginTracing.bind(this)}
+        />
+        <Checkbox
+          label="Include step description as a separate comment"
+          checked={this.state.enableDescriptionAsComment}
+          form={true}
+          onChange={this.toggleDescriptionAsComment.bind(this)}
         />
       </DialogContainer>
     )
