@@ -127,13 +127,14 @@ export function recordCommand(command, target, value, index, select = false) {
   if (isEmpty(test.commands)) {
     addInitialCommands()
   }
-  const newCommand = test.createCommand(index ? index : getInsertionIndex(test))
+  let commandIndex = index ? index : getInsertionIndex(test)
+  const newCommand = test.createCommand(commandIndex)
   newCommand.setCommand(command)
   newCommand.setTarget(target)
   newCommand.setValue(value)
 
   if (select) {
-    UiState.selectCommand(newCommand)
+    UiState.selectCommand(newCommand, commandIndex)
   }
 
   UiState.lastRecordedCommand = newCommand

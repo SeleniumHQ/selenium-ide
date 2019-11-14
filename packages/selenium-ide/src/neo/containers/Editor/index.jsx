@@ -50,16 +50,19 @@ export default class Editor extends React.Component {
       return newCommand
     }
   }
-  removeCommand(index, command) {
+  removeCommand(index) {
     const { test } = this.props
-    test.removeCommand(command)
-    if (UiState.selectedCommand === command) {
+    UiState.selectedCommands.forEach(command => test.removeCommand(command))
+    if (UiState.selectedCommands.indexOf(UiState.selectedCommand) > -1) {
       if (test.commands.length > index) {
-        UiState.selectCommand(test.commands[index])
+        UiState.selectCommand(test.commands[index], index)
       } else if (test.commands.length) {
-        UiState.selectCommand(test.commands[test.commands.length - 1])
+        UiState.selectCommand(
+          test.commands[test.commands.length - 1],
+          test.commands.length - 1
+        )
       } else {
-        UiState.selectCommand(UiState.pristineCommand)
+        UiState.selectCommand(UiState.pristineCommand, 0)
       }
     }
   }
@@ -94,6 +97,9 @@ export default class Editor extends React.Component {
           selectedCommand={
             UiState.selectedCommand ? UiState.selectedCommand.id : null
           }
+          selectedCommands={UiState.selectedCommands}
+          addToSelectedCommands={UiState.addToSelectedCommands}
+          clearSelectedCommands={UiState.clearSelectedCommands}
           selectCommand={UiState.selectCommand}
           addCommand={this.addCommand}
           removeCommand={this.removeCommand}

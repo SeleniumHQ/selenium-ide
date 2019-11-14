@@ -109,6 +109,7 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props)
     this.state = { project }
+    this.selectAllCommands = this.selectAllCommands.bind(this)
     this.parseKeyDown = this.parseKeyDown.bind(this)
     this.keyDownHandler = window.document.body.onkeydown = this.handleKeyDown.bind(
       this
@@ -170,6 +171,14 @@ export default class Panel extends React.Component {
     } else if (keyComb.onlyPrimary && keyComb.key === 'O' && this.openFile) {
       e.preventDefault()
       this.openFile()
+    } else if (
+      keyComb.onlyPrimary &&
+      keyComb.key === 'A' &&
+      e.target.localName !== 'input' &&
+      e.target.localName !== 'textarea'
+    ) {
+      e.preventDefault()
+      this.selectAllCommands()
     } else if (keyComb.onlyPrimary && keyComb.key === '1') {
       // test view
       e.preventDefault()
@@ -278,9 +287,21 @@ export default class Panel extends React.Component {
       window.removeEventListener('beforeunload', this.quitHandler)
     }
   }
+  onClick() {
+    UiState.clearSelectedCommands()
+  }
+  selectAllCommands() {
+    UiState.clearSelectedCommands()
+    UiState.selectCommandByIndex(0)
+    UiState.selectAllCommands()
+  }
   render() {
     return (
-      <div className="container" onKeyDown={this.handleKeyDownAlt.bind(this)}>
+      <div
+        className="container"
+        onKeyDown={this.handleKeyDownAlt.bind(this)}
+        onClick={this.onClick.bind(this)}
+      >
         <SuiteDropzone
           loadProject={loadProject.bind(undefined, this.state.project)}
         >

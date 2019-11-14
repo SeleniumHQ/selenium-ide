@@ -40,6 +40,7 @@ export default class TestTable extends React.Component {
       this.props.commands,
       this.detectNewCommand
     )
+    this.selectCommandByRange = this.selectCommandByRange.bind(this)
     this.commandLevels = []
     this.node = null
   }
@@ -52,6 +53,9 @@ export default class TestTable extends React.Component {
     removeCommand: PropTypes.func,
     swapCommands: PropTypes.func,
     clearAllCommands: PropTypes.func,
+    clearSelectedCommands: PropTypes.func,
+    addToSelectedCommands: PropTypes.func,
+    selectedCommands: PropTypes.array,
   }
   detectNewCommand(change) {
     this.newCommand = change.added[0]
@@ -79,6 +83,27 @@ export default class TestTable extends React.Component {
   }
   handleScroll() {
     UiState.selectedTest.test.scrollY = this.node.scrollTop
+  }
+  selectCommandByRange(lastCommandSelected) {
+    if (this.props.selectedCommands.length > 1) {
+      const fromIndex = this.props.selectedCommands[
+        this.props.selectedCommands.length - 2
+      ].index
+      const toIndex = lastCommandSelected.index
+      if (fromIndex < toIndex) {
+        for (let i = fromIndex; i <= toIndex; i++) {
+          UiState.selectCommand(this.props.commands[i], i, {
+            isCommandTarget: false,
+          })
+        }
+      } else {
+        for (let i = fromIndex; i >= toIndex; i--) {
+          UiState.selectCommand(this.props.commands[i], i, {
+            isCommandTarget: false,
+          })
+        }
+      }
+    }
   }
   render() {
     if (this.props.commands)
@@ -130,8 +155,16 @@ export default class TestTable extends React.Component {
                             ).state
                           : ''
                       )}
-                      selected={this.props.selectedCommand === command.id}
+                      selected={
+                        this.props.selectedCommand === command.id ||
+                        !!this.props.selectedCommands.find(
+                          cmd => cmd.id === command.id
+                        )
+                      }
+                      focus={this.props.selectedCommand === command.id}
                       readOnly={PlaybackState.isPlaying}
+                      addToSelectedCommands={this.props.addToSelectedCommands}
+                      clearSelectedCommands={this.props.clearSelectedCommands}
                       singleCommandExecutionEnabled={
                         PlaybackState.isSingleCommandExecutionEnabled
                       }
@@ -155,6 +188,7 @@ export default class TestTable extends React.Component {
                       pasteFromClipboard={UiState.pasteFromClipboard}
                       clearAllCommands={this.props.clearAllCommands}
                       setSectionFocus={UiState.setSectionFocus}
+                      selectByRange={this.selectCommandByRange}
                       level={this.commandLevels[index]}
                     />
                   ))
@@ -162,6 +196,10 @@ export default class TestTable extends React.Component {
                     <TestRow
                       key={UiState.displayedTest.id}
                       selected={
+                        this.props.selectedCommand ===
+                        UiState.pristineCommand.id
+                      }
+                      focus={
                         this.props.selectedCommand ===
                         UiState.pristineCommand.id
                       }
@@ -174,6 +212,9 @@ export default class TestTable extends React.Component {
                       moveSelection={UiState.selectCommandByIndex}
                       pasteFromClipboard={UiState.pasteFromClipboard}
                       setSectionFocus={UiState.setSectionFocus}
+                      addToSelectedCommands={this.props.addToSelectedCommands}
+                      clearSelectedCommands={this.props.clearSelectedCommands}
+                      selectByRange={this.selectCommandByRange}
                     />
                   )
               : null}
