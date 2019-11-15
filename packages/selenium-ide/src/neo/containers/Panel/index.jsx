@@ -270,6 +270,35 @@ export default class Panel extends React.Component {
     Logger.clearLogs()
     newProject.setModified(false)
   }
+  async doLoadProject(file) {
+    if (!UiState.isSaved()) {
+      const choseProceed = await ModalState.showAlert({
+        title: 'Load without saving',
+        description:
+          'Are you sure you would like to load a new project without saving the current one?',
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
+      })
+      if (choseProceed) {
+        await UiState.stopRecording({ nameNewTest: false })
+        loadProject(this.state.project, file)
+      }
+    } else if (UiState.isRecording) {
+      const choseProceed = await ModalState.showAlert({
+        title: 'Stop recording',
+        description:
+          'Leaving this project and loading a new one will stop the recording process. Would you like to continue?',
+        confirmLabel: 'proceed',
+        cancelLabel: 'cancel',
+      })
+      if (choseProceed) {
+        await UiState.stopRecording({ nameNewTest: false })
+        loadProject(this.state.project, file)
+      }
+    } else {
+      loadProject(this.state.project, file)
+    }
+  }
 
   componentWillUnmount() {
     if (isProduction) {
@@ -281,9 +310,7 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div className="container" onKeyDown={this.handleKeyDownAlt.bind(this)}>
-        <SuiteDropzone
-          loadProject={loadProject.bind(undefined, this.state.project)}
-        >
+        <SuiteDropzone loadProject={this.doLoadProject.bind(this)}>
           <SplitPane
             split="horizontal"
             minSize={UiState.minContentHeight}
@@ -303,7 +330,7 @@ export default class Panel extends React.Component {
                 openFile={openFile => {
                   this.openFile = openFile
                 }}
-                load={loadProject.bind(undefined, this.state.project)}
+                load={this.doLoadProject.bind(this)}
                 save={() => saveProject(this.state.project)}
                 new={this.loadNewProject.bind(this)}
               />
