@@ -94,7 +94,12 @@ function beforeEach() {
     startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: '@Before' },
-        { level: 0, statement: 'public void setUp() {' },
+        {
+          level: 0,
+          statement: `public void setUp() ${
+            gridUrl ? 'throws MalformedURLException ' : ''
+          }{`,
+        },
         {
           level: 1,
           statement: gridUrl
@@ -164,6 +169,8 @@ function declareDependencies() {
         { level: 0, statement: 'import org.openqa.selenium.Alert;' },
         { level: 0, statement: 'import org.openqa.selenium.Keys;' },
         { level: 0, statement: 'import java.util.*;' },
+        { level: 0, statement: 'import java.net.MalformedURLException;' },
+        { level: 0, statement: 'import java.net.URL;' },
       ],
     },
   }

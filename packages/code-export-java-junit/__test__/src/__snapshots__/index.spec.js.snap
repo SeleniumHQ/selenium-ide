@@ -23,6 +23,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class LoginTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -82,6 +84,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class ControlflowTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -184,6 +188,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class LoginTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -244,6 +250,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class DefaultSuiteTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -310,6 +318,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class DefaultSuiteTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -385,6 +395,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class LoginTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -435,12 +447,14 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class LoginTest {
   private WebDriver driver;
   private Map<String, Object> vars;
   JavascriptExecutor js;
   @Before
-  public void setUp() {
+  public void setUp() throws MalformedURLException {
     driver = new RemoteWebDriver(new URL(\\"http://localhost:4444/wd/hub\\"), DesiredCapabilities.firefox());
     js = (JavascriptExecutor) driver;
     vars = new HashMap<String, Object>();
@@ -485,6 +499,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class ValidcredentialsTest {
   private WebDriver driver;
   private Map<String, Object> vars;
@@ -539,6 +555,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 public class SelectwindowTest {
   private WebDriver driver;
   private Map<String, Object> vars;
