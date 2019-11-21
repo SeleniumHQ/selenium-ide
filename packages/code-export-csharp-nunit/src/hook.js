@@ -91,15 +91,17 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: {
+    startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: '[SetUp]' },
         { level: 0, statement: 'public void SetUp() {' },
         {
           level: 1,
-          statement: `driver = new ${
-            userAgent.browserName ? userAgent.browserName : 'Chrome'
-          }Driver();`,
+          statement: gridUrl
+            ? `driver = new RemoteWebDriver(new Uri("${gridUrl}"), new ${
+                browserName ? browserName : 'Chrome'
+              }Options().ToCapabilities());`
+            : `driver = new ${browserName ? browserName : 'Chrome'}Driver();`,
         },
         { level: 1, statement: 'js = (IJavaScriptExecutor)driver;' },
         {
@@ -107,7 +109,7 @@ function beforeEach() {
           statement: 'vars = new Dictionary<string, object>();',
         },
       ],
-    },
+    }),
     endingSyntax: {
       commands: [{ level: 0, statement: '}' }],
     },
