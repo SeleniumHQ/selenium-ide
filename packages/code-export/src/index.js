@@ -62,7 +62,7 @@ function registerAfterAll(language, emitter) {
 
 function emitTest(
   language,
-  { url, test, tests, project, enableOriginTracing }
+  { url, test, tests, project, enableOriginTracing, beforeEachOptions }
 ) {
   return availableLanguages[language].default.emit.test({
     baseUrl: url,
@@ -70,12 +70,13 @@ function emitTest(
     tests,
     project,
     enableOriginTracing,
+    beforeEachOptions,
   })
 }
 
 export function emitSuite(
   language,
-  { url, suite, tests, project, enableOriginTracing }
+  { url, suite, tests, project, enableOriginTracing, beforeEachOptions }
 ) {
   return availableLanguages[language].default.emit.suite({
     baseUrl: url,
@@ -83,6 +84,7 @@ export function emitSuite(
     tests,
     project,
     enableOriginTracing,
+    beforeEachOptions,
   })
 }
 

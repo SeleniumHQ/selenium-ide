@@ -22,6 +22,7 @@ import { downloadUniqueFile } from '../IO/filesystem'
 import { normalizeTestsInSuite } from '../IO/normalize'
 import PluginManager from '../../plugin/manager'
 import { availableLanguages as languages } from 'code-export'
+import { userAgent } from '@seleniumhq/side-utils'
 const vendorLanguages = PluginManager.plugins.vendorLanguages
 
 export function availableLanguages() {
@@ -33,7 +34,7 @@ export function availableLanguages() {
 export async function exportCodeToFile(
   selectedLanguages,
   { test, suite },
-  { enableOriginTracing }
+  { enableOriginTracing, beforeEachOptions }
 ) {
   const project = UiState.project.toJS()
   const { url, tests } = project
@@ -44,6 +45,10 @@ export async function exportCodeToFile(
       tests,
       project,
       enableOriginTracing,
+      beforeEachOptions: {
+        browserName: userAgent.browserName,
+        ...beforeEachOptions,
+      },
     }
     options.test = test ? test : undefined
     options.suite = suite ? normalizeTestsInSuite({ suite, tests }) : undefined

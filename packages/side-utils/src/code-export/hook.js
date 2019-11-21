@@ -32,18 +32,24 @@ export default class Hook {
   }
 
   async emit(
-    { isOptional, test, suite, tests, project } = { isOptional: false }
+    { isOptional, test, suite, tests, project, startingSyntaxOptions } = {
+      isOptional: false,
+    }
   ) {
     const commands = []
     let registeredCommandLevel = 0
     if (this.startingSyntax) {
-      if (this.startingSyntax.commands) {
-        this.startingSyntax.commands.forEach(command => {
+      const _startingSyntax =
+        typeof this.startingSyntax === 'function'
+          ? this.startingSyntax(startingSyntaxOptions)
+          : this.startingSyntax
+      if (_startingSyntax.commands) {
+        _startingSyntax.commands.forEach(command => {
           commands.push(command)
           registeredCommandLevel = command.level
         })
       } else {
-        commands.push({ level: 0, statement: this.startingSyntax })
+        commands.push({ level: 0, statement: _startingSyntax })
       }
     }
     const name = test ? test.name : suite ? suite.name : undefined
