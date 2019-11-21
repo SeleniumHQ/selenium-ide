@@ -73,6 +73,8 @@ class UiState {
   selectedExportLanguage = null
   @observable
   specifiedRemoteUrl = null
+  @observable
+  gridConfigEnabled = null
 
   constructor() {
     this.suiteStates = {}
@@ -89,6 +91,9 @@ class UiState {
           ? data.specifiedRemoteUrl
           : 'http://localhost:4444/wd/hub'
       )
+      data.gridConfigEnabled
+        ? (this.gridConfigEnabled = data.gridConfigEnabled)
+        : (this.gridConfigEnabled = false)
       if (
         data.consoleSize !== undefined &&
         data.consoleSize >= this.minConsoleHeight
@@ -430,6 +435,14 @@ class UiState {
     this.specifiedRemoteUrl = url
     storage.set({
       specifiedRemoteUrl: url,
+    })
+  }
+
+  @action.bound
+  toggleGridConfig() {
+    this.gridConfigEnabled = !this.gridConfigEnabled
+    storage.set({
+      gridConfigEnabled: this.gridConfigEnabled,
     })
   }
 

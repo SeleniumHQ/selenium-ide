@@ -52,7 +52,7 @@ class ExportContent extends React.Component {
     this.state = {
       selectedLanguages: [UiState.selectedExportLanguage],
       enableOriginTracing: false,
-      enableGridConfig: false,
+      enableGridConfig: UiState.gridConfigEnabled,
       gridConfigUrl: UiState.specifiedRemoteUrl,
     }
   }
@@ -68,6 +68,7 @@ class ExportContent extends React.Component {
     this.setState({ enableOriginTracing: !this.state.enableOriginTracing })
   }
   toggleGridConfig() {
+    UiState.toggleGridConfig()
     this.setState({ enableGridConfig: !this.state.enableGridConfig })
   }
   onUrlChange(input) {
