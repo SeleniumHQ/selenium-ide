@@ -83,20 +83,22 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: {
+    startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: 'before(:each) do' },
         {
           level: 1,
-          statement: `@driver = Selenium::WebDriver.for :${
-            userAgent.browserName
-              ? userAgent.browserName.toLowerCase()
-              : 'chrome'
-          }`,
+          statement: gridUrl
+            ? `@driver = Selenium::WebDriver.for(:remote, url: '${gridUrl}', desired_capabilities: Selenium::WebDriver::Remote::Capabilities.${
+                browserName ? browserName.toLowerCase() : 'chrome'
+              })`
+            : `@driver = Selenium::WebDriver.for :${
+                browserName ? browserName.toLowerCase() : 'chrome'
+              }`,
         },
         { level: 1, statement: '@vars = {}' },
       ],
-    },
+    }),
     endingSyntax: {
       commands: [{ level: 0, statement: 'end' }],
     },
