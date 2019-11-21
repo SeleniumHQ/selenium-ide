@@ -48,6 +48,20 @@ describe('Code Export Python pytest', () => {
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
+  it('should export a test with grid execution', async () => {
+    const project = readFile('single-test.side')
+    const results = await emitTest({
+      baseUrl: project.url,
+      test: project.tests[0],
+      tests: project.tests,
+      beforeEachOptions: {
+        browserName: 'Firefox',
+        gridUrl: 'http://localhost:4444/wd/hub',
+      },
+    })
+    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
+  })
   it('should export a suite', async () => {
     const project = normalizeProject(readFile('single-suite.side'))
     const results = await emitSuite({
