@@ -51,7 +51,7 @@
     "@seleniumhq/side-utils": "^3.15.0",
     "browser-webdriver": "^3.14.0",
     "classnames": "^2.2.5",
-    "code-export": "^3.15.0",
+    "@seleniumhq/code-export": "^3.15.0",
     "fuse.js": "^3.3.0",
     "google-closure-library": "^20170521.0.0",
     "js-beautify": "^1.7.5",

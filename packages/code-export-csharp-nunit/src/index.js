@@ -17,7 +17,7 @@
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
 import emitter from './command'
-import { location } from 'code-export-csharp-commons'
+import { location } from '@seleniumhq/code-export-csharp-commons'
 import { generateHooks } from './hook'
 
 // Define language options

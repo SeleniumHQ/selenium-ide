@@ -34,7 +34,7 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
-import { sanitizeProjectName } from './normalize'
+import { project as projectProcessor } from '@seleniumhq/side-utils'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -98,7 +98,7 @@ function downloadProject(project) {
       sendSaveProjectEvent(project)
     } else {
       browser.downloads.download({
-        filename: sanitizeProjectName(project.name) + '.side',
+        filename: projectProcessor.sanitizeProjectName(project.name) + '.side',
         url: createBlob(
           'application/side',
           beautify(JSON.stringify(project), { indent_size: 2 })
