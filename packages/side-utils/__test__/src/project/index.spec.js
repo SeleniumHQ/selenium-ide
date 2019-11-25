@@ -20,20 +20,13 @@ import path from 'path'
 import {
   normalizeTestsInSuite,
   sanitizeProjectName,
-} from '../../../../src/neo/IO/normalize'
+} from '../../../src/project'
 
 describe('Normalize Project', () => {
   it('converts suite.tests guids to names', () => {
     const project = JSON.parse(
       fs.readFileSync(
-        path.join(
-          __dirname,
-          '..',
-          '..',
-          '..',
-          'test-files',
-          'single-suite.side'
-        )
+        path.join(__dirname, '..', '..', 'test-files', 'single-suite.side')
       )
     )
     const normalizedSuite = normalizeTestsInSuite({

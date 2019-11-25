@@ -35,3 +35,8 @@ export function sanitizeProjectName(projectName) {
     return name.replace(/([^a-z0-9 ._-]+)/gi, '')
   }
 }
+
+module.exports = {
+  normalizeTestsInSuite,
+  sanitizeProjectName,
+}
