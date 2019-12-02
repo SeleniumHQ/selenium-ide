@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export",
-  "version": "3.16.0",
+  "version": "3.16.1",
   "description": "Selenium IDE code export",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -23,7 +23,7 @@
     "@seleniumhq/code-export-csharp-nunit": "^3.16.0",
     "@seleniumhq/code-export-csharp-xunit": "^3.16.0",
     "@seleniumhq/code-export-java-junit": "^3.16.0",
-    "@seleniumhq/code-export-javascript-mocha": "^3.16.0",
+    "@seleniumhq/code-export-javascript-mocha": "^3.16.1",
     "@seleniumhq/code-export-python-pytest": "^3.16.0",
     "@seleniumhq/code-export-ruby-rspec": "^3.16.0"
   }

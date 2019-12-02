@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide-extension",
-  "version": "3.16.0",
+  "version": "3.16.1",
   "description": "An integrated development environment for Selenium scripts",
   "license": "Apache-2.0",
   "private": true,
@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@medv/finder": "^1.1.1",
-    "@seleniumhq/code-export": "^3.16.0",
+    "@seleniumhq/code-export": "^3.16.1",
     "@seleniumhq/side-model": "^3.15.0",
     "@seleniumhq/side-utils": "^3.16.0",
     "browser-webdriver": "^3.14.0",
