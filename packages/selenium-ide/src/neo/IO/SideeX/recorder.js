@@ -381,12 +381,12 @@ export default class BackgroundRecorder {
       typeof message.value === 'undefined'
     ) {
       logger.error(
-        "This element does not have property 'value'. Please change to use storeText command."
+        "This element does not have property 'Value'. Please change to use a 'Text' command instead."
       )
       return
     } else if (message.command.includes('Text') && message.value === '') {
       logger.error(
-        "This element does not have property 'Text'. Please change to use storeValue command."
+        "This element does not have property 'Text'. Please change to use a 'Value' command instead."
       )
       return
     } else if (message.command.includes('store')) {
