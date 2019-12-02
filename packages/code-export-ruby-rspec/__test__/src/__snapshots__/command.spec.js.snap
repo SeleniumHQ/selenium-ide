@@ -360,6 +360,8 @@ exports[`command code emitter should emit \`waitForElementPresent\` command 1`] 
 
 exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { @driver.find_element(:css, '#blah').displayed? }"`;
 
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 30).until { @driver.find_element(:css, '#blah').text == \\"text\\" }"`;
+
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
   "body": "while @driver.execute_script(\\"return (true)\\") do",

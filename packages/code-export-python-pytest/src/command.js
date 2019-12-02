@@ -113,6 +113,7 @@ export const emitters = {
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
   webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  waitForText: emitWaitForText,
   webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
   webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
   webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
@@ -860,6 +861,19 @@ async function emitWaitForElementEditable(locator, timeout) {
       statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.element_to_be_clickable((${await location.emit(
         locator
       )})))`,
+    },
+  ]
+  return Promise.resolve({ commands })
+}
+
+async function emitWaitForText(locator, text) {
+  const timeout = 30000
+  const commands = [
+    {
+      level: 0,
+      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.text_to_be_present_in_element((${await location.emit(
+        locator
+      )}), "${text}"))`,
     },
   ]
   return Promise.resolve({ commands })

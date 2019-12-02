@@ -480,6 +480,13 @@ exports[`command code emitter should emit \`waitForElementVisible\` command 1`] 
 }"
 `;
 
+exports[`command code emitter should emit \`waitForText\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, 30);
+  wait.until(ExpectedConditions.textToBe(By.cssSelector(\\"#blah\\"), \\"text\\"));
+}"
+`;
+
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
   "body": "while ((Boolean) js.executeScript(\\"return (true)\\")) {",

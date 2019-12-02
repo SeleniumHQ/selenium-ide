@@ -934,6 +934,16 @@ export const Commands = [
     },
   ],
   [
+    'waitForText',
+    {
+      name: 'wait for text',
+      type: TargetTypes.LOCATOR,
+      description: 'Wait for the text of an element to be equal to the value.',
+      target: ArgTypes.locator,
+      value: ArgTypes.text,
+    },
+  ],
+  [
     'webdriverAnswerOnVisiblePrompt',
     {
       name: 'webdriver answer on visible prompt',

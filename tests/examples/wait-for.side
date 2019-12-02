@@ -183,13 +183,45 @@
       "targets": [],
       "value": "Hello World!"
     }]
+  },{
+    "id": "9f5e67e9-0c09-4978-880d-497d6071f5ad",
+    "name": "wait for text",
+    "commands": [{
+      "id": "8bbe6aea-3643-487b-bf2d-7e1f6f46fe05",
+      "comment": "",
+      "command": "open",
+      "target": "dynamic_loading/1",
+      "targets": [],
+      "value": ""
+    },{
+      "id": "13eb827b-1138-46d2-8b24-eb19116ce12f",
+      "comment": "",
+      "command": "click",
+      "target": "css=#start button",
+      "targets": [],
+      "value": ""
+    },{
+      "id": "06494654-f259-4628-9213-6aa21fddbe02",
+      "comment": "",
+      "command": "waitForText",
+      "target": "css=#finish",
+      "targets": [],
+      "value": "Hello World!"
+    },{
+      "id": "dfda5717-cb07-48d4-a785-475ef253e085",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=#finish",
+      "targets": [],
+      "value": "Hello World!"
+    }]
   }],
   "suites": [{
     "id": "ee5ed249-db27-45ab-9ef0-296e983d799c",
     "name": "wait for",
     "parallel": true,
     "timeout": 3000,
-    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e","b2baf643-63af-4c47-820e-a215d79d6f2f","b2baf643-63af-4c47-820e-a215d79d6f2g","b2baf643-63af-4c47-820e-a215d79d6f2h"]
+    "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e","b2baf643-63af-4c47-820e-a215d79d6f2f", "b2baf643-63af-4c47-820e-a215d79d6f2g","b2baf643-63af-4c47-820e-a215d79d6f2h","9f5e67e9-0c09-4978-880d-497d6071f5ad"]
   }],
   "urls": ["http://the-internet.herokuapp.com/"],
   "plugins": [],

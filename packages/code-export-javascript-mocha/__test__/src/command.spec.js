@@ -838,6 +838,14 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should emit `waitForText` command', () => {
+    const command = {
+      command: 'waitForText',
+      target: 'css=#blah',
+      value: 'text',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `answer on visible prompt` command', () => {
     const command = {
       command: 'webdriverAnswerOnVisiblePrompt',
