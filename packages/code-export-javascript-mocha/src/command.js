@@ -540,7 +540,9 @@ async function emitRunScript(script) {
 
 async function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
-  return Promise.resolve(`await driver.setRect(${width}, ${height})`)
+  return Promise.resolve(
+    `await driver.manage().window().setRect(${width}, ${height})`
+  )
 }
 
 async function emitSelect(selectElement, option) {
