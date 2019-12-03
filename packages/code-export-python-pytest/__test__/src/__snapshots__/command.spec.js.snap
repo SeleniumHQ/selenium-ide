@@ -360,6 +360,8 @@ exports[`command code emitter should emit \`waitForElementPresent\` command 1`] 
 
 exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"WebDriverWait(self.driver, 5000).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"WebDriverWait(self.driver, 30000).until(expected_conditions.text_to_be_present_in_element((By.CSS_SELECTOR, \\"#blah\\"), \\"text\\"))"`;
+
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
   "body": "while self.driver.execute_script(\\"return (true)\\"):",

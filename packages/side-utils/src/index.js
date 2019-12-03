@@ -19,10 +19,12 @@ import codeExport from './code-export'
 import stringEscape from './string-escape'
 import userAgent from './user-agent'
 import environment from './environment'
+import project from './project'
 
 module.exports = {
   codeExport,
   stringEscape,
   userAgent,
   environment,
+  project,
 }

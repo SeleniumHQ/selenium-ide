@@ -1,6 +1,6 @@
 {
-  "name": "code-export-csharp-commons",
-  "version": "3.15.0",
+  "name": "@seleniumhq/code-export-csharp-commons",
+  "version": "3.16.0",
   "description": "Commons for exporting Selenium IDE project contents to C#",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -9,7 +9,7 @@
     "export"
   ],
   "license": "Apache-2.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "babel -d dist src --ignore=__test__",
     "watch": "yarn build -w"

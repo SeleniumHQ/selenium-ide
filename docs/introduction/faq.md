@@ -41,6 +41,7 @@ There are certain circumstances where the built in wait strategies in the IDE ar
 - `wait for element not editable`
 - `wait for element not present`
 - `wait for element not visible`
+- `wait for text`
 
 ### How can I use regex in text verifications?
 

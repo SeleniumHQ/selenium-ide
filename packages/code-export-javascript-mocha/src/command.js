@@ -113,6 +113,7 @@ export const emitters = {
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
   webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  waitForText: emitWaitForText,
   webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
   webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
   webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
@@ -540,7 +541,9 @@ async function emitRunScript(script) {
 
 async function emitSetWindowSize(size) {
   const [width, height] = size.split('x')
-  return Promise.resolve(`await driver.setRect(${width}, ${height})`)
+  return Promise.resolve(
+    `await driver.manage().window().setRect(${width}, ${height})`
+  )
 }
 
 async function emitSelect(selectElement, option) {
@@ -969,6 +972,15 @@ async function emitWaitForElementNotEditable(locator, timeout) {
     `await driver.wait(until.elementIsDisabled(await driver.findElement(${await location.emit(
       locator
     )})), ${Math.floor(timeout)})`
+  )
+}
+
+async function emitWaitForText(locator, text) {
+  const timeout = 30000
+  return Promise.resolve(
+    `await driver.wait(until.elementTextIs(await driver.findElement(${await location.emit(
+      locator
+    )}), '${text}'), ${Math.floor(timeout)})`
   )
 }
 

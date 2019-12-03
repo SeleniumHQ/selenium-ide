@@ -17,7 +17,7 @@
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
 import emitter from './command'
-import { location } from 'code-export-csharp-commons'
+import { location } from '@seleniumhq/code-export-csharp-commons'
 import { generateHooks } from './hook'
 
 // Define language options
@@ -59,6 +59,7 @@ export async function emitTest({
   tests,
   project,
   enableOriginTracing,
+  beforeEachOptions,
   enableDescriptionAsComment,
 }) {
   global.baseUrl = baseUrl
@@ -77,6 +78,7 @@ export async function emitTest({
     suiteDeclaration,
     suiteName,
     project,
+    beforeEachOptions,
   })
   return {
     filename: generateFilename(test.name),
@@ -91,6 +93,7 @@ export async function emitSuite({
   tests,
   project,
   enableOriginTracing,
+  beforeEachOptions,
   enableDescriptionAsComment,
 }) {
   global.baseUrl = baseUrl
@@ -106,6 +109,7 @@ export async function emitSuite({
     suiteDeclaration,
     suite,
     project,
+    beforeEachOptions,
   })
   return {
     filename: generateFilename(suite.name),

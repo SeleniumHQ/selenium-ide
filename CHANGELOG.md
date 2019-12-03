@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.16.1
+- Fix for playbackOptions becoming undefined when running nested tests
+- Fix for window resizing in javascript-mocha code export
+
+## v3.16.0
+- Added the option to specify a remote Grid URL for code export
+- Made code-export packages public so SIDE plugin maintainers can automate code generation for end-to-end testing if needed
+
 ## v3.15.1
  - Fix bug in playback which skips tests in suites
 

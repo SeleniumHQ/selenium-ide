@@ -21,6 +21,7 @@ import Modal from '../../Modal'
 import DialogContainer from '../Dialog'
 import FlatButton from '../../FlatButton'
 import Checkbox from '../../Checkbox'
+import Input from '../../FormInput'
 import { availableLanguages } from '../../../code-export'
 import ModalState from '../../../stores/view/ModalState'
 import UiState from '../../../stores/view/UiState'
@@ -51,6 +52,8 @@ class ExportContent extends React.Component {
     this.state = {
       selectedLanguages: [UiState.selectedExportLanguage],
       enableOriginTracing: false,
+      enableGridConfig: UiState.gridConfigEnabled,
+      gridConfigUrl: UiState.specifiedRemoteUrl,
     }
   }
   static propTypes = {
@@ -69,6 +72,14 @@ class ExportContent extends React.Component {
       enableDescriptionAsComment: !this.state.enableDescriptionAsComment,
     })
   }
+  toggleGridConfig() {
+    UiState.toggleGridConfig()
+    this.setState({ enableGridConfig: !this.state.enableGridConfig })
+  }
+  onUrlChange(input) {
+    UiState.specifyRemoteUrl(input)
+    this.setState({ gridConfigUrl: input })
+  }
   render() {
     return (
       <DialogContainer
@@ -85,6 +96,11 @@ class ExportContent extends React.Component {
                   .completeSelection(
                     this.state.selectedLanguages,
                     this.state.enableOriginTracing,
+                    {
+                      gridUrl: this.state.enableGridConfig
+                        ? this.state.gridConfigUrl
+                        : undefined,
+                    },
                     this.state.enableDescriptionAsComment
                   )
                   .catch(error => {
@@ -122,6 +138,25 @@ class ExportContent extends React.Component {
           form={true}
           onChange={this.toggleDescriptionAsComment.bind(this)}
         />
+        <Checkbox
+          label="Export for use on Selenium Grid"
+          checked={this.state.enableGridConfig}
+          form={true}
+          onChange={this.toggleGridConfig.bind(this)}
+        />
+        {this.state.enableGridConfig ? (
+          <Input
+            id="grid-url"
+            name="grid-url"
+            label="Remote URL"
+            value={this.state.gridConfigUrl}
+            onChange={value => {
+              this.onUrlChange(value)
+            }}
+          />
+        ) : (
+          undefined
+        )}
       </DialogContainer>
     )
   }

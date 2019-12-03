@@ -60,6 +60,7 @@ export async function emitTest({
   tests,
   project,
   enableOriginTracing,
+  beforeEachOptions,
   enableDescriptionAsComment,
 }) {
   global.baseUrl = baseUrl
@@ -78,6 +79,7 @@ export async function emitTest({
     suiteDeclaration,
     suiteName,
     project,
+    beforeEachOptions,
   })
   return {
     filename: generateFilename(test.name),
@@ -92,6 +94,7 @@ export async function emitSuite({
   tests,
   project,
   enableOriginTracing,
+  beforeEachOptions,
   enableDescriptionAsComment,
 }) {
   global.baseUrl = baseUrl
@@ -107,6 +110,7 @@ export async function emitSuite({
     suiteDeclaration,
     suite,
     project,
+    beforeEachOptions,
   })
   return {
     filename: generateFilename(suite.name),

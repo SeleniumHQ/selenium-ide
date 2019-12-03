@@ -771,7 +771,7 @@ class PlaybackState {
       caller: this.currentRunningTest,
       callee: testCase,
       position: this.currentExecutingCommandNode,
-      playbackOptions: PlaybackState.playbackOptions,
+      playbackOptions: this.playbackOptions,
     })
     UiState.selectTest(
       this.stackCaller,
@@ -793,7 +793,9 @@ class PlaybackState {
   unwindTestCase() {
     const top = this.callstack.pop()
     this.currentRunningTest = top.caller
-    this.playbackOptions = top.playbackOptions
+    this.playbackOptions = {
+      assertionsDisabled: !!top.playbackOptions.assertionsDisabled,
+    }
     this.setCurrentExecutingCommandNode(top.position.next)
     this.runningQueue = top.caller.commands.slice()
     UiState.selectTest(

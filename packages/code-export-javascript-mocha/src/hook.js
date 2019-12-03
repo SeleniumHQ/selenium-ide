@@ -14,7 +14,7 @@
 // KIND, either express or implied.  See the License for the specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll,
@@ -83,20 +83,18 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: {
+    startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: 'beforeEach(async function() {' },
         {
           level: 1,
           statement: `driver = await new Builder().forBrowser('${
-            userAgent.browserName
-              ? userAgent.browserName.toLowerCase()
-              : 'chrome'
-          }').build()`,
+            browserName ? browserName.toLowerCase() : 'chrome'
+          }')${gridUrl ? `.usingServer('${gridUrl}')` : ''}.build()`,
         },
         { level: 1, statement: 'vars = {}' },
       ],
-    },
+    }),
     endingSyntax: {
       commands: [{ level: 0, statement: '})' }],
     },

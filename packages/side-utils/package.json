@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-utils",
-  "version": "3.15.0",
+  "version": "3.16.0",
   "description": "Utils for Selenium IDE (e.g., code export)",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [

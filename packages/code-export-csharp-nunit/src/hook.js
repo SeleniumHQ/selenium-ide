@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll,
@@ -91,15 +91,17 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: {
+    startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: '[SetUp]' },
         { level: 0, statement: 'public void SetUp() {' },
         {
           level: 1,
-          statement: `driver = new ${
-            userAgent.browserName ? userAgent.browserName : 'Chrome'
-          }Driver();`,
+          statement: gridUrl
+            ? `driver = new RemoteWebDriver(new Uri("${gridUrl}"), new ${
+                browserName ? browserName : 'Chrome'
+              }Options().ToCapabilities());`
+            : `driver = new ${browserName ? browserName : 'Chrome'}Driver();`,
         },
         { level: 1, statement: 'js = (IJavaScriptExecutor)driver;' },
         {
@@ -107,7 +109,7 @@ function beforeEach() {
           statement: 'vars = new Dictionary<string, object>();',
         },
       ],
-    },
+    }),
     endingSyntax: {
       commands: [{ level: 0, statement: '}' }],
     },
@@ -127,6 +129,7 @@ function declareDependencies() {
         { level: 0, statement: 'using OpenQA.Selenium;' },
         { level: 0, statement: 'using OpenQA.Selenium.Chrome;' },
         { level: 0, statement: 'using OpenQA.Selenium.Firefox;' },
+        { level: 0, statement: `using OpenQA.Selenium.Remote;` },
         { level: 0, statement: 'using OpenQA.Selenium.Support.UI;' },
         { level: 0, statement: 'using OpenQA.Selenium.Interactions;' },
         { level: 0, statement: 'using NUnit.Framework;' },

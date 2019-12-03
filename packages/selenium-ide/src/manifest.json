@@ -2,8 +2,8 @@
   "description": "Selenium Record and Playback tool for ease of getting acquainted with Selenium WebDriver.",
   "manifest_version": 2,
   "name": "Selenium IDE",
-  "version": "3.15.1",
-  "version_name": "3.15.1",
+  "version": "3.16.1",
+  "version_name": "3.16.1",
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
   "icons": {
     "16": "icons/icon16.png",

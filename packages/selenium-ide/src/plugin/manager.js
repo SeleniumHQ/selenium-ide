@@ -21,7 +21,7 @@ import {
   RegisterTestHook,
   RegisterEmitter,
 } from 'selianize'
-import exporter from 'code-export'
+import exporter from '@seleniumhq/code-export'
 import { Commands, ArgTypes } from '../neo/models/Command'
 import { registerCommand } from './commandExecutor'
 import { sendMessage } from './communication'

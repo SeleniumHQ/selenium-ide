@@ -16,7 +16,7 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
-import { Command } from 'code-export-csharp-commons'
+import { Command } from '@seleniumhq/code-export-csharp-commons'
 
 exporter.register.preprocessors(Command.emitters)
 

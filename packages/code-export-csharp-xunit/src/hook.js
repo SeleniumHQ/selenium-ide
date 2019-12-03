@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll: empty,
@@ -43,15 +43,17 @@ export function generateHooks() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: {
+    startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: `public SuiteTests()` },
         { level: 0, statement: `{` },
         {
           level: 1,
-          statement: `driver = new ${
-            userAgent.browserName ? userAgent.browserName : `Chrome`
-          }Driver();`,
+          statement: gridUrl
+            ? `driver = new RemoteWebDriver(new Uri("${gridUrl}"), new ${
+                browserName ? browserName : 'Chrome'
+              }Options().ToCapabilities());`
+            : `driver = new ${browserName ? browserName : 'Chrome'}Driver();`,
         },
         {
           level: 1,
@@ -62,7 +64,7 @@ function beforeEach() {
           statement: `vars = new Dictionary<String, Object>();`,
         },
       ],
-    },
+    }),
     endingSyntax: {
       commands: [{ level: 0, statement: '}' }],
     },
@@ -97,6 +99,7 @@ function declareDependencies() {
         { level: 0, statement: `using OpenQA.Selenium;` },
         { level: 0, statement: `using OpenQA.Selenium.Chrome;` },
         { level: 0, statement: `using OpenQA.Selenium.Firefox;` },
+        { level: 0, statement: `using OpenQA.Selenium.Remote;` },
         { level: 0, statement: `using OpenQA.Selenium.Support.UI;` },
         { level: 0, statement: `using OpenQA.Selenium.Interactions;` },
         { level: 0, statement: `using Xunit;` },

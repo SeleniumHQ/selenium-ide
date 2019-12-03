@@ -464,6 +464,13 @@ exports[`command code emitter should emit \`waitForElementVisible\` command 1`] 
 }"
 `;
 
+exports[`command code emitter should emit \`waitForText\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(30));
+  wait.Until(driver => driver.FindElement(By.CssSelector(\\"#blah\\")).Text == \\"text\\");
+}"
+`;
+
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
   "body": "while ((Boolean) js.ExecuteScript(\\"return (true)\\")) {",

@@ -17,7 +17,7 @@
 
 import Router from '../../router'
 import { Location } from 'selianize'
-import exporter from 'code-export'
+import exporter from '@seleniumhq/code-export'
 
 const router = new Router()
 

@@ -71,6 +71,10 @@ class UiState {
   isControlled = null
   @observable
   selectedExportLanguage = null
+  @observable
+  specifiedRemoteUrl = null
+  @observable
+  gridConfigEnabled = null
 
   constructor() {
     this.suiteStates = {}
@@ -82,6 +86,14 @@ class UiState {
       } else {
         this.selectExportLanguage('java-junit')
       }
+      this.specifyRemoteUrl(
+        data.specifiedRemoteUrl
+          ? data.specifiedRemoteUrl
+          : 'http://localhost:4444/wd/hub'
+      )
+      data.gridConfigEnabled
+        ? (this.gridConfigEnabled = data.gridConfigEnabled)
+        : (this.gridConfigEnabled = false)
       if (
         data.consoleSize !== undefined &&
         data.consoleSize >= this.minConsoleHeight
@@ -415,6 +427,22 @@ class UiState {
     this.selectedExportLanguage = language
     storage.set({
       selectedExportLanguage: language,
+    })
+  }
+
+  @action.bound
+  specifyRemoteUrl(url) {
+    this.specifiedRemoteUrl = url
+    storage.set({
+      specifiedRemoteUrl: url,
+    })
+  }
+
+  @action.bound
+  toggleGridConfig() {
+    this.gridConfigEnabled = !this.gridConfigEnabled
+    storage.set({
+      gridConfigEnabled: this.gridConfigEnabled,
     })
   }
 

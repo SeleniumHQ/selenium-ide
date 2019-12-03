@@ -566,6 +566,22 @@ export default function seed(store, numberOfSuites = 0) {
     'css=#input-example input'
   )
 
+  const waitTest6 = store.createTestCase('wait for text')
+  waitTest6.createCommand(undefined, 'open', '/dynamic_loading/1')
+  waitTest6.createCommand(undefined, 'clickAt', 'css=#start button')
+  waitTest6.createCommand(
+    undefined,
+    'waitForText',
+    'css=#finish',
+    'Hello World!'
+  )
+  waitTest6.createCommand(
+    undefined,
+    'assertText',
+    'css=#finish',
+    'Hello World!'
+  )
+
   const locatorFallbackTest = store.createTestCase('locator fallback')
   locatorFallbackTest.createCommand(undefined, 'open', '/dynamic_loading/2')
   locatorFallbackTest.createCommand(undefined, 'click', 'css=button')

@@ -17,11 +17,11 @@
 
 import UiState from '../stores/view/UiState'
 import ModalState from '../stores/view/ModalState'
-import exporter from 'code-export'
+import exporter from '@seleniumhq/code-export'
+import { availableLanguages as languages } from '@seleniumhq/code-export'
 import { downloadUniqueFile } from '../IO/filesystem'
-import { normalizeTestsInSuite } from '../IO/normalize'
 import PluginManager from '../../plugin/manager'
-import { availableLanguages as languages } from 'code-export'
+import { userAgent, project as projectProcessor } from '@seleniumhq/side-utils'
 const vendorLanguages = PluginManager.plugins.vendorLanguages
 
 export function availableLanguages() {
@@ -33,7 +33,7 @@ export function availableLanguages() {
 export async function exportCodeToFile(
   selectedLanguages,
   { test, suite },
-  { enableOriginTracing, enableDescriptionAsComment }
+  { enableOriginTracing, beforeEachOptions, enableDescriptionAsComment }
 ) {
   const project = UiState.project.toJS()
   const { url, tests } = project
@@ -44,10 +44,16 @@ export async function exportCodeToFile(
       tests,
       project,
       enableOriginTracing,
+      beforeEachOptions: {
+        browserName: userAgent.browserName,
+        ...beforeEachOptions,
+      },
       enableDescriptionAsComment,
     }
     options.test = test ? test : undefined
-    options.suite = suite ? normalizeTestsInSuite({ suite, tests }) : undefined
+    options.suite = suite
+      ? projectProcessor.normalizeTestsInSuite({ suite, tests })
+      : undefined
     if (vendorLanguages.hasOwnProperty(language)) {
       const result = await PluginManager.emitMessage({
         action: 'export',

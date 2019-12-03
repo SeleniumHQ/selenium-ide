@@ -303,7 +303,7 @@ exports[`command code emitter should emit \`send keys\` command with a variable 
 
 exports[`command code emitter should emit \`set speed\` 1`] = `"console.log(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
 
-exports[`command code emitter should emit \`setWindowSize\` 1`] = `"await driver.setRect(1440, 1177)"`;
+exports[`command code emitter should emit \`setWindowSize\` 1`] = `"await driver.manage().window().setRect(1440, 1177)"`;
 
 exports[`command code emitter should emit \`store attribute\` command 1`] = `
 "{
@@ -419,6 +419,8 @@ exports[`command code emitter should emit \`waitForElementNotVisible\` command 1
 exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `"await driver.wait(until.elementLocated(By.css(\\"#blah\\")), 5000)"`;
 
 exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"await driver.wait(until.elementIsVisible(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
+
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"await driver.wait(until.elementTextIs(await driver.findElement(By.css(\\"#blah\\")), 'text'), 30000)"`;
 
 exports[`command code emitter should emit \`while\` command 1`] = `"while(!!await driver.executeScript(\\"return (true)\\")) {"`;
 

@@ -340,6 +340,7 @@ async function emitSuite(
     hooks,
     suite,
     project,
+    beforeEachOptions,
   } = {}
 ) {
   // preamble
@@ -370,7 +371,12 @@ async function emitSuite(
     }
   )
   result.beforeEach = render(
-    await hooks.beforeEach.emit({ suite, tests, project }),
+    await hooks.beforeEach.emit({
+      suite,
+      tests,
+      project,
+      startingSyntaxOptions: beforeEachOptions,
+    }),
     {
       startingLevel: testLevel,
     }

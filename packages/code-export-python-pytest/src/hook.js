@@ -14,7 +14,7 @@
 // KIND, either express or implied.  See the License for the specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter, userAgent } from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 
 const emitters = {
   afterAll,
@@ -83,18 +83,22 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: {
+    startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: 'def setup_method(self, method):' },
         {
           level: 1,
-          statement: `self.driver = webdriver.${
-            userAgent.browserName ? userAgent.browserName : 'Chrome'
-          }()`,
+          statement: gridUrl
+            ? `self.driver = webdriver.Remote(command_executor='${gridUrl}', desired_capabilities=DesiredCapabilities.${
+                browserName ? browserName.toUpperCase() : 'CHROME'
+              })`
+            : `self.driver = webdriver.${
+                browserName ? browserName : 'Chrome'
+              }()`,
         },
         { level: 1, statement: 'self.vars = {}' },
       ],
-    },
+    }),
     endingSyntax: {
       commands: [{ level: 0, statement: '' }],
     },
@@ -132,6 +136,11 @@ function declareDependencies() {
         {
           level: 0,
           statement: 'from selenium.webdriver.common.keys import Keys',
+        },
+        {
+          level: 0,
+          statement:
+            'from selenium.webdriver.common.desired_capabilities import DesiredCapabilities',
         },
         {
           level: 0,
