@@ -6,7 +6,7 @@ sidebar_label: Getting Started
 
 Plugins can extend Selenium IDE's default behavior, through adding additional commands and locators, bootstrapping setup before and after test runs, and affecting the recording process.  
 
-Selenium IDE is using the WebExtension standard to work in modern browsers (to learn more, you can check out Mozilla's <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension" target="_blank" rel="noopener noreferrer">Your first extension</a> article). Communicating between the extensions is handled via the <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/sendMessage" target="_blank" rel="noopener noreferrer">external messaging protocol</a>, you can view an example of that <a href="https://github.com/SeleniumHQ/selenium-ide/tree/v3/packages/extension-boilerplate" target="_blank" rel="noopener noreferrer">here</a>.  
+Selenium IDE is using the WebExtension standard to work in modern browsers (to learn more, you can check out Mozilla's <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension" target="_blank" rel="noopener noreferrer">Your first extension</a> article). Communicating between the extensions is handled via the <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/sendMessage" target="_blank" rel="noopener noreferrer">external messaging protocol</a>, you can view an example of that <a href="https://github.com/SeleniumHQ/selenium-ide/tree/v3/extension/extension-boilerplate" target="_blank" rel="noopener noreferrer">here</a>.  
 
 This article assumes knowledge in WebExtension development, and will only discuss Selenium IDE specific capabilities.
 
