@@ -107,7 +107,6 @@ export function emitSuite(
 }
 
 export function emitCommand(language, { command, target, value }) {
-  console.log(availableLanguages[language].default)
   return availableLanguages[language].default.emit.command({
     command,
     target,
