@@ -88,6 +88,15 @@ export function emitSuite(
   })
 }
 
+export function emitCommand(language, { command, target, value }) {
+  console.log(availableLanguages[language].default)
+  return availableLanguages[language].default.emit.command({
+    command,
+    target,
+    value
+  })
+}
+
 export function emitLocator(language, input) {
   return availableLanguages[language].default.emit.locator(input)
 }
@@ -107,6 +116,7 @@ export default {
   emit: {
     test: emitTest,
     suite: emitSuite,
+    command: emitCommand,
     locator: emitLocator,
   },
 }

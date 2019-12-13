@@ -120,6 +120,7 @@ export default {
     test: emitTest,
     suite: emitSuite,
     locator: location.emit,
+    command: emitter.emit,
   },
   register: {
     command: emitter.register,
