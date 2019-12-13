@@ -110,7 +110,7 @@ export function emitCommand(language, { command, target, value }) {
   return availableLanguages[language].default.emit.command({
     command,
     target,
-    value
+    value,
   })
 }
 
