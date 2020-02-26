@@ -39,6 +39,8 @@ export default class ExportDialog extends React.Component {
         className="stripped language-selector"
         isOpen={this.props.isExporting}
         onRequestClose={this.props.cancelSelection}
+        modalTitle={ExportContent.modalTitleElement}
+        modalDescription={ExportContent.modalDescriptionElement}
       >
         <ExportContent {...this.props} />
       </Modal>
@@ -47,6 +49,8 @@ export default class ExportDialog extends React.Component {
 }
 
 class ExportContent extends React.Component {
+  static modalTitleElement = "renameTitle";
+  static modalDescriptionElement = "renameDescription";
   constructor(props) {
     super(props)
     this.state = {
@@ -114,6 +118,8 @@ class ExportContent extends React.Component {
             </FlatButton>
           </span>
         )}
+        modalTitle={ExportContent.modalTitleElement}
+        modalDescription={ExportContent.modalDescriptionElement}
       >
         <ExportList
           selectedLanguages={this.state.selectedLanguages}

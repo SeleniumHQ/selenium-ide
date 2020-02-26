@@ -63,6 +63,7 @@ export default class AutoComplete extends React.Component {
                 color: '#a3a3a3',
                 cursor: 'pointer',
               }}
+              aria-label={props.placeholder}
             />
           </span>
         )}

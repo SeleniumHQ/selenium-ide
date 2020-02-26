@@ -42,12 +42,16 @@ export default class Record extends React.Component {
                 { primaryKey: true }
               )}</span></p>`
         }
+        data-event="focus"
+        data-event-off="blur"
+
       >
         <ActionButton
           disabled={this.props.disabled}
           isActive={this.props.isRecording}
           onClick={this.props.onClick}
           className="si-record"
+          aria-label={ this.props.isRecording ? "Stop recording" : "Start recording" }
         />
       </div>
     )

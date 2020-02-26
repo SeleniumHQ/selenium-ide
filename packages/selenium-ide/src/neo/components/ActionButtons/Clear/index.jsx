@@ -26,6 +26,7 @@ export default class ClearButton extends React.Component {
         data-tip="<p>Clear log</p>"
         {...this.props}
         className={classNames('si-clear', this.props.className)}
+        aria-label="Clear log"
       /> // eslint-disable-line react/prop-types
     )
   }

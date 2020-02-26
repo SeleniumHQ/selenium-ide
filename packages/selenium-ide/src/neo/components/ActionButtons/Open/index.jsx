@@ -64,12 +64,20 @@ export class OpenInput extends React.Component {
     return (
       <React.Fragment>
         <input
+          data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse(
+            'o',
+            { primaryKey: true }
+          )}</span></p>`}
+          data-event="focus"
+          data-event-off="blur"
           id={this.id}
           ref={input => {
             this.input = input
           }}
           type="file"
           onChange={this.handleChange}
+          data-event="focus"
+          data-event-off="blur"
         />
         <label
           data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse(
@@ -77,9 +85,11 @@ export class OpenInput extends React.Component {
             { primaryKey: true }
           )}</span></p>`}
           htmlFor={this.id}
-          onFocus={() => {
-            this.input.focus()
+          onFocus={(evt) => {
+            this.input.focus();
           }}
+          data-event="focus"
+          data-event-off="blur"
         >
           {this.props.labelMarkup}
         </label>

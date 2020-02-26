@@ -75,6 +75,9 @@ export default class ToolBar extends React.Component {
                   { primaryKey: true, shiftKey: true }
                 )}</span></p>`
           }
+          data-event="focus"
+          data-event-off="blur"
+          aria-label={PlaybackState.canPlaySuite ? "Run all tests in suite" : "Run all tests"}
         />
         <PlayCurrent
           isActive={!PlaybackState.paused && PlaybackState.isPlayingTest}
@@ -104,6 +107,8 @@ export default class ToolBar extends React.Component {
                     { primaryKey: true }
                   )}</span></p>`
             }
+            data-event="focus"
+            data-event-off="blur"
             onClick={PlaybackState.pauseOrResume}
           />
         ) : null}

@@ -270,6 +270,7 @@ export default class Test extends React.Component {
                   e.stopPropagation()
                   this.props.removeTest()
                 }}
+                aria-label="Remove test"
               />
             )}
         </a>

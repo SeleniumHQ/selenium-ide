@@ -36,9 +36,13 @@ export default class DialogContainer extends React.Component {
     renderImage: PropTypes.func,
     renderFooter: PropTypes.func,
     onRequestClose: PropTypes.func,
+    modalTitle: PropTypes.string,
+    modalDescription: PropTypes.string,
   }
   static defaultProps = {
     type: 'info',
+    modalTitle: 'dialogTitle',
+    modalDescription: 'dialogDescription',
   }
   handleKeyDown(event) {
     event.persist()
@@ -68,7 +72,7 @@ export default class DialogContainer extends React.Component {
           {coverImage && (
             <div className="dialog__cover-image">{coverImage}</div>
           )}
-          <div className="dialog__title">
+          <div id={this.props.modalTitle} className="dialog__title">
             {this.props.renderTitle ? (
               this.props.renderTitle()
             ) : (
@@ -80,6 +84,7 @@ export default class DialogContainer extends React.Component {
               onClick={
                 this.props.onRequestClose ? this.props.onRequestClose : null
               }
+              aria-label="Close"
               style={{
                 color: 'white',
                 position: 'absolute',
