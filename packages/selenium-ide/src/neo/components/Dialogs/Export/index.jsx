@@ -17,6 +17,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import {get} from 'lodash'
 import Modal from '../../Modal'
 import DialogContainer from '../Dialog'
 import FlatButton from '../../FlatButton'
@@ -53,11 +54,15 @@ class ExportContent extends React.Component {
   static modalDescriptionElement = 'renameDescription'
   constructor(props) {
     super(props)
+
+    this.DEF_EXPORT_PACKAGE = "com.jedox.qa.engines.testng_web.test.selenium_ide";
+
     this.state = {
       selectedLanguages: [UiState.selectedExportLanguage],
       enableOriginTracing: false,
       enableGridConfig: UiState.gridConfigEnabled,
       gridConfigUrl: UiState.specifiedRemoteUrl,
+      exportPackage: ModalState.exportPayload && get(Object.values(ModalState.exportPayload)[0], 'additionalOpts.exportPackage', this.DEF_EXPORT_PACKAGE) || this.DEF_EXPORT_PACKAGE
     }
   }
   static propTypes = {
@@ -84,6 +89,24 @@ class ExportContent extends React.Component {
     UiState.specifyRemoteUrl(input)
     this.setState({ gridConfigUrl: input })
   }
+  onExportPackageChange(input)
+  {
+      if(ModalState.exportPayload)
+      {
+          console.log("Payload is defined");
+          Object.values(ModalState.exportPayload).forEach(function(e){
+              console.log(e);
+
+              if(!e.additionalOpts)
+                e.additionalOpts = {};
+
+              e.additionalOpts.exportPackage = input
+          })
+      }
+      console.log(input);
+      this.setState({ exportPackage: input});
+  }
+
   render() {
     return (
       <DialogContainer
@@ -164,6 +187,22 @@ class ExportContent extends React.Component {
         ) : (
           undefined
         )}
+
+        {this.state.selectedLanguages.every(l => l.toLowerCase().includes("java")) ? (
+          <Input
+            id="export-package"
+            name="export-package"
+            label="Export package"
+            value={this.state.exportPackage}
+            onChange={value => {
+              this.onExportPackageChange(value)
+            }}
+          />
+        ) : (
+          undefined
+        )}
+
+
       </DialogContainer>
     )
   }

@@ -20,11 +20,6 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.14.0",
-    "code-export-javascript-mocha": "^3.14.0",
-    "code-export-python-pytest": "^3.14.0",
-    "code-export-csharp-nunit": "^3.14.0",
-    "code-export-csharp-xunit" : "^3.14.0",
-    "code-export-java-testng-modded" : "^3.14.0"
+	"code-export-java-testng-modded" : "^3.14.0"
   }
 }

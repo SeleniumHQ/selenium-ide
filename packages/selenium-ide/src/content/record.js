@@ -120,7 +120,7 @@ Recorder.addEventHandler(
       
       this.jdxContext.clickTimeoutId = setTimeout(function(ctx){
         if(!ctx.jdxContext.doubleClicked)
-          record('click', locators , '');
+          ctx.record('click', locators , '');
         
         ctx.jdxContext.doubleClicked = false;
         ctx.jdxContext.clickTimeoutId = null;

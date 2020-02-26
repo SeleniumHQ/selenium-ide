@@ -562,6 +562,10 @@ class UiState {
     if (addToCache) this._project.addUrl(url)
   }
 
+  getGlobalOpts() {
+    return this._project.globalOpts;
+  }
+
   @action.bound
   projectChanged() {
     this.selectedTest = {}

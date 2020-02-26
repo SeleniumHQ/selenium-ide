@@ -32,6 +32,8 @@ export default class TestCase {
   selectedCommand = null
   @observable
   scrollY = null
+  @observable
+  additionalOpts = {}
 
   constructor(id = uuidv4(), name = 'Untitled Test') {
     this.id = id
@@ -155,8 +157,13 @@ export default class TestCase {
       id: this.id,
       name: this.name,
       commands: this.commands.map(c => c.export()),
+      additionalOpts: this.additionalOpts
     }
   }
+
+//   exportInterfaced() {
+//     return Object.assign(this.export(), ) this.export()
+//   }
 
   dispose() {
     this.changeDisposer()
@@ -167,7 +174,7 @@ export default class TestCase {
     const test = new TestCase(jsRep.id)
     test.setName(jsRep.name)
     test.commands.replace(jsRep.commands.map(Command.fromJS))
-
+    test.additionalOpts = jsRep.additionalOpts;
     return test
   }
 }

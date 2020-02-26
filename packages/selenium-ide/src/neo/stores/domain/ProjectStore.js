@@ -40,6 +40,8 @@ export default class ProjectStore {
   @observable
   _urls = []
   @observable
+  globalOpts = {}
+  @observable
   version = VERSIONS[VERSIONS.length - 1]
 
   constructor(name = 'Untitled Project') {
@@ -219,6 +221,7 @@ export default class ProjectStore {
   fromJS(jsRep) {
     this.name = jsRep.name
     this.setUrl(jsRep.url)
+    this.globalOpts = jsRep.globalOpts;
     this._tests.replace(jsRep.tests.map(TestCase.fromJS))
     this._suites.replace(
       jsRep.suites.map(suite => Suite.fromJS(suite, this.tests))
@@ -246,6 +249,7 @@ export default class ProjectStore {
       version: this.version,
       name: this.name,
       url: this.url,
+      globalOpts: this.globalOpts,
       tests: this._tests.map(t => t.export()),
       suites: this._suites.map(s => s.export()),
       urls: this._urls,
