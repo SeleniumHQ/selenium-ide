@@ -70,7 +70,8 @@ function declareDependencies(exportObject) {
         },
         {
           level: 0,
-          statement: 'import com.jedox.qa.framework.testexec.Loader;',
+          statement:
+            'import com.jedox.qa.engines.testng_web.framework.testexec.Loader;',
         },
         { level: 0, statement: 'import org.testng.annotations.Test;' },
         { level: 0, statement: 'import static org.testng.Assert.*;' },

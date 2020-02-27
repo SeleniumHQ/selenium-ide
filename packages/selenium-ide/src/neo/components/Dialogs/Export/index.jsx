@@ -64,6 +64,8 @@ class ExportContent extends React.Component {
       gridConfigUrl: UiState.specifiedRemoteUrl,
       exportPackage: ModalState.exportPayload && get(Object.values(ModalState.exportPayload)[0], 'additionalOpts.exportPackage', this.DEF_EXPORT_PACKAGE) || this.DEF_EXPORT_PACKAGE
     }
+
+    this.onExportPackageChange(this.state.exportPackage);
   }
   static propTypes = {
     cancelSelection: PropTypes.func.isRequired,
@@ -103,7 +105,7 @@ class ExportContent extends React.Component {
               e.additionalOpts.exportPackage = input
           })
       }
-      console.log(input);
+
       this.setState({ exportPackage: input});
   }
 

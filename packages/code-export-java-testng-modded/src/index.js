@@ -70,6 +70,9 @@ export async function emitTest({
   enableOriginTracing,
   beforeEachOptions,
 }) {
+  // regen hooks
+  opts.hooks = generateHooks(test)
+
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
   const result = await exporter.emit.test(test, tests, {
