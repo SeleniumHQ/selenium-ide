@@ -54,7 +54,10 @@ export async function registerMethod(
     typeof methodDeclaration === 'object'
       ? methodDeclaration.body
       : methodDeclaration
-  if (!(await hooks.declareMethods.isRegistered(methodDeclaration))) {
+  if (
+    hooks.declareMethods &&
+    !(await hooks.declareMethods.isRegistered(methodDeclaration))
+  ) {
     result.forEach(statement => {
       hooks.declareMethods.register(() => {
         return statement

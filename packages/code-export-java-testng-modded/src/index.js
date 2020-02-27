@@ -34,10 +34,19 @@ opts.generateMethodDeclaration = generateMethodDeclaration
 
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
 function generateTestDeclaration(name) {
-  return `@Test\npublic void ${exporter.parsers.uncapitalize(
+  let ret = `public void ${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
-  )}(ITestContext itc) {\n${opts.commandPrefixPadding}init(itc);`
+  )}() {`
+
+  if (name.toLowerCase().includes('export_')) {
+    let parts = name.split('_')
+    if (parts.length !== 2) throw "you can't use _ separator more than once.. "
+
+    ret = `@Test(groups="${parts[1]}")\n` + ret
+  }
+  return ret
 }
+
 function generateMethodDeclaration(name) {
   return `public void ${exporter.parsers.sanitizeName(name)}() {`
 }
@@ -59,6 +68,7 @@ export async function emitTest({
   tests,
   project,
   enableOriginTracing,
+  beforeEachOptions,
 }) {
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
@@ -75,6 +85,7 @@ export async function emitTest({
     suiteDeclaration,
     suiteName,
     project,
+    beforeEachOptions,
   })
   return {
     filename: generateFilename(test.name),
@@ -89,7 +100,11 @@ export async function emitSuite({
   tests,
   project,
   enableOriginTracing,
+  beforeEachOptions,
 }) {
+  // regen hooks
+  opts.hooks = generateHooks(suite)
+
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
     enableOriginTracing,
@@ -102,6 +117,7 @@ export async function emitSuite({
     suiteDeclaration,
     suite,
     project,
+    beforeEachOptions,
   })
   return {
     filename: generateFilename(suite.name),

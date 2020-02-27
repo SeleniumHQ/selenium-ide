@@ -16,7 +16,7 @@
 // under the License.
 
 export function sanitizeName(input) {
-  return input.replace(/([^a-z0-9]+)/gi, '')
+  return input.replace(/([^a-z0-9_]+)/gi, '')
 }
 
 export function capitalize(input) {

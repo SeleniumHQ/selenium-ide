@@ -19,7 +19,7 @@ import { codeExport as exporter } from '@seleniumhq/side-utils'
 import location from './location'
 import selection from './selection'
 
-const DEF_TIMEOUT = 30000;
+const DEF_TIMEOUT = 30000
 
 export const emitters = {
   addSelection: emitSelect,
@@ -116,6 +116,7 @@ export const emitters = {
   waitForElementNotEditable: emitWaitForElementNotEditable,
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
+  waitForText: emitWaitForText,
   webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
   webdriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
   webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
@@ -208,7 +209,7 @@ function emitAnswerOnNextPrompt(textToSend) {
 }
 
 async function emitCheck(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -235,24 +236,22 @@ function emitChooseOkOnNextConfirmation() {
 }
 
 async function emitClick(target) {
-  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT);
-  
-  return Promise.resolve(
-    { 
-      commands: preCommands.commands.concat(
-        [
-          {
-            level:0,
-            statement: `driver.findElement(${await location.emit(target)}).click();`
-          }
-        ]
-      )
-    }
-  )
+  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT)
+
+  return Promise.resolve({
+    commands: preCommands.commands.concat([
+      {
+        level: 0,
+        statement: `driver.findElement(${await location.emit(
+          target
+        )}).click();`,
+      },
+    ]),
+  })
 }
 
 async function emitContext(target) {
-  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -325,19 +324,21 @@ function emitControlFlowIf(script) {
 }
 
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
+  const collectionName = exporter.parsers.capitalize(collectionVarName)
+  const iteratorName = exporter.parsers.capitalize(iteratorVarName)
   return Promise.resolve({
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection = (ArrayList) vars.get("${collectionVarName}");`,
+        statement: `ArrayList collection${collectionName} = (ArrayList) vars.get("${collectionVarName}");`,
       },
       {
         level: 0,
-        statement: `for (int i = 0; i < collection.size() - 1; i++) {`,
+        statement: `for (int i${iteratorName} = 0; i < collection${collectionName}.size() - 1; i${iteratorName}++) {`,
       },
       {
         level: 1,
-        statement: `vars.put("${iteratorVarName}", collection.get(i));`,
+        statement: `vars.put("${iteratorVarName}", collection${collectionName}.get(i));`,
       },
     ],
   })
@@ -370,8 +371,8 @@ function emitControlFlowWhile(script) {
 }
 
 async function emitDoubleClick(target) {
-  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT);
-  
+  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT)
+
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -388,9 +389,13 @@ async function emitDoubleClick(target) {
 }
 
 async function emitDragAndDrop(dragged, dropped) {
-  const preCommands = [];
-  preCommands = preCommands.concat(await emitWaitForElementVisible(dragged, DEF_TIMEOUT).commands);
-  preCommands = preCommands.concat(await emitWaitForElementVisible(dropped, DEF_TIMEOUT).commands);
+  let preCommands = []
+  preCommands = preCommands.concat(
+    await emitWaitForElementVisible(dragged, DEF_TIMEOUT).commands
+  )
+  preCommands = preCommands.concat(
+    await emitWaitForElementVisible(dropped, DEF_TIMEOUT).commands
+  )
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -418,8 +423,7 @@ async function emitEcho(message) {
 }
 
 async function emitEditContent(locator, content) {
-  
-  const preCommands = await emitWaitForElementEditable(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementEditable(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -459,7 +463,7 @@ function generateScriptArguments(script) {
 }
 
 async function emitMouseDown(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -480,7 +484,7 @@ async function emitMouseDown(locator) {
 }
 
 async function emitMouseMove(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -498,7 +502,6 @@ async function emitMouseMove(locator) {
 }
 
 async function emitMouseOut() {
-
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -513,7 +516,7 @@ async function emitMouseOut() {
 }
 
 async function emitMouseUp(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -562,11 +565,13 @@ async function emitRunScript(script) {
 }
 
 async function emitSetWindowSize(size) {
-  return Promise.resolve("");
+  const [width, height] = size.split('x')
+  return Promise.resolve(
+    `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
+  )
 }
 
 async function emitSelect(selectElement, option) {
-
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -587,7 +592,6 @@ async function emitSelect(selectElement, option) {
 }
 
 async function emitSelectFrame(frameLocation) {
- 
   if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
     return Promise.resolve('driver.switchTo().defaultContent();')
   } else if (/^index=/.test(frameLocation)) {
@@ -597,7 +601,10 @@ async function emitSelectFrame(frameLocation) {
       )});`
     )
   } else {
-    const preCommands = await emitWaitForElementVisible(frameLocation, DEF_TIMEOUT);
+    const preCommands = await emitWaitForElementVisible(
+      frameLocation,
+      DEF_TIMEOUT
+    )
 
     return Promise.resolve({
       commands: preCommands.commands.concat([
@@ -687,22 +694,18 @@ function generateSendKeysInput(value) {
 }
 
 async function emitSendKeys(target, value) {
-  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT)
 
-  return Promise.resolve(
-    {
-      commands: preCommands.commands.concat(
-          [
-            {
-            level:0,
-              statement: `driver.findElement(${await location.emit(
-                  target
-                )}).sendKeys(${generateSendKeysInput(value)});`
-            }
-          ]
-        ) 
-    }
-  )
+  return Promise.resolve({
+    commands: preCommands.commands.concat([
+      {
+        level: 0,
+        statement: `driver.findElement(${await location.emit(
+          target
+        )}).sendKeys(${generateSendKeysInput(value)});`,
+      },
+    ]),
+  })
 }
 
 function emitSetSpeed() {
@@ -720,7 +723,10 @@ async function emitStoreAttribute(locator, varName) {
   const elementLocator = locator.slice(0, attributePos)
   const attributeName = locator.slice(attributePos + 1)
 
-  const preCommands = await emitWaitForElementVisible(elementLocator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(
+    elementLocator,
+    DEF_TIMEOUT
+  )
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -776,26 +782,22 @@ async function emitSubmit(_locator) {
 }
 
 async function emitType(target, value) {
-  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(target, DEF_TIMEOUT)
 
-  return Promise.resolve(
-    {
-      commands: preCommands.commands.concat(
-        [
-          {
-            level:0,
-            statement:`driver.findElement(${await location.emit(
-              target
-            )}).sendKeys(${generateSendKeysInput(value)});`
-          }
-        ]
-      )
-    }
-  )
+  return Promise.resolve({
+    commands: preCommands.commands.concat([
+      {
+        level: 0,
+        statement: `driver.findElement(${await location.emit(
+          target
+        )}).sendKeys(${generateSendKeysInput(value)});`,
+      },
+    ]),
+  })
 }
 
 async function emitUncheck(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -814,24 +816,20 @@ async function emitUncheck(locator) {
 }
 
 async function emitVerifyChecked(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   return Promise.resolve(
-    preCommands.commands.concat(
-      {
-        level:0,
-        statement: `assertTrue(driver.findElement(${await location.emit(
-            locator
-          )}).isSelected());`
-      }
-    )
+    preCommands.commands.concat({
+      level: 0,
+      statement: `assertTrue(driver.findElement(${await location.emit(
+        locator
+      )}).isSelected());`,
+    })
   )
-  
 }
 
 async function emitVerifyEditable(locator) {
-
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -883,26 +881,22 @@ async function emitVerifyElementNotPresent(locator) {
 }
 
 async function emitVerifyNotChecked(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
-  return Promise.resolve(
-    {
-      commands : preCommands.commands.concat(
-        [
-          {
-            level:0,
-            statement: `assertFalse(driver.findElement(${await location.emit(
-                locator
-              )}).isSelected());`
-          }
-        ]
-      )
-    }
-  )
+  return Promise.resolve({
+    commands: preCommands.commands.concat([
+      {
+        level: 0,
+        statement: `assertFalse(driver.findElement(${await location.emit(
+          locator
+        )}).isSelected());`,
+      },
+    ]),
+  })
 }
 
 async function emitVerifyNotEditable(locator) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const commands = [
     { level: 0, statement: '{' },
@@ -924,8 +918,8 @@ async function emitVerifyNotEditable(locator) {
 }
 
 async function emitVerifyNotSelectedValue(locator, expectedValue) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
-  
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
+
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -946,26 +940,24 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
 }
 
 async function emitVerifyNotText(locator, text) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
   const result = `driver.findElement(${await location.emit(locator)}).getText()`
-  return Promise.resolve(
-    {
-      commands: preCommands.commands.concat(
-        [
-          {
-            level:0,
-            statement: `assertThat(${result}, is(not("${exporter.emit.text(text)}")));`
-          }
-        ]
-      )
-    }
-  )
+  return Promise.resolve({
+    commands: preCommands.commands.concat([
+      {
+        level: 0,
+        statement: `assertThat(${result}, is(not("${exporter.emit.text(
+          text
+        )}")));`,
+      },
+    ]),
+  })
 }
 
 async function emitVerifySelectedLabel(locator, labelValue) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
-  
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
+
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -997,27 +989,22 @@ async function emitVerifySelectedValue(locator, value) {
 }
 
 async function emitVerifyText(locator, text) {
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
 
-  return Promise.resolve(
-    {
-      commands: preCommands.commands.concat(
-        [
-          {
-            level:0,
-            statement:`assertThat(driver.findElement(${await location.emit(
-                locator
-              )}).getText(), is("${exporter.emit.text(text)}"));`
-          }
-        ]
-      )
-    }
-  ) 
+  return Promise.resolve({
+    commands: preCommands.commands.concat([
+      {
+        level: 0,
+        statement: `assertThat(driver.findElement(${await location.emit(
+          locator
+        )}).getText(), is("${exporter.emit.text(text)}"));`,
+      },
+    ]),
+  })
 }
 
 async function emitVerifyValue(locator, value) {
-
-  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT);
+  const preCommands = await emitWaitForElementVisible(locator, DEF_TIMEOUT)
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -1050,6 +1037,27 @@ async function emitWaitForElementEditable(locator, timeout) {
       statement: `wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
         locator
       )}));`,
+    },
+    { level: 0, statement: '}' },
+  ]
+  return Promise.resolve({ commands })
+}
+
+async function emitWaitForText(locator, text) {
+  const timeout = 30000
+  const commands = [
+    { level: 0, statement: '{' },
+    {
+      level: 1,
+      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+        timeout / 1000
+      )});`,
+    },
+    {
+      level: 1,
+      statement: `wait.until(ExpectedConditions.textToBe(${await location.emit(
+        locator
+      )}, "${text}"));`,
     },
     { level: 0, statement: '}' },
   ]

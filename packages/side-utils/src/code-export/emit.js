@@ -393,24 +393,29 @@ async function emitSuite(
       startingLevel: testLevel,
     }
   )
-  result.methods = render(
-    await hooks.declareMethods.emit({
-      suite,
-      tests,
-      project,
-      isOptional: true,
-    }),
-    {
-      startingLevel: testLevel,
-    }
-  )
+
+  result.methods =
+    (hooks.declareMethods &&
+      render(
+        await hooks.declareMethods.emit({
+          suite,
+          tests,
+          project,
+          isOptional: true,
+        }),
+        {
+          startingLevel: testLevel,
+        }
+      )) ||
+    ''
   result.tests = body
   result.suiteEnd = render(terminatingKeyword, {
     startingLevel: suiteLevel,
   })
 
   // cleanup
-  hooks.declareMethods.clearRegister()
+  if(hooks.declareMethods)
+    hooks.declareMethods.clearRegister()
 
   return result
 }

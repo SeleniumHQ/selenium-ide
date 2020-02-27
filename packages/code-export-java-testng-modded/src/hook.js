@@ -23,49 +23,58 @@ const emitters = {
   beforeAll,
   beforeEach,
   declareDependencies,
-  declareMethods: empty,
   declareVariables,
   inEachBegin: empty,
   inEachEnd: empty,
 }
 
-function generate(hookName) {
-  return new exporter.hook(emitters[hookName]())
+function generate(hookName, exportObject) {
+  return new exporter.hook(emitters[hookName](exportObject))
 }
 
-export function generateHooks() {
+export function generateHooks(exportObject) {
   let result = {}
   Object.keys(emitters).forEach(hookName => {
-    result[hookName] = generate(hookName)
+    result[hookName] = generate(hookName, exportObject)
   })
   return result
 }
 
 function afterAll() {
-  return {};
+  return {}
 }
 
 function afterEach() {
-  return {};
+  return {}
 }
 
 function beforeAll() {
-  return {};
+  return {}
 }
 
 function beforeEach() {
-  return {};
+  return {}
 }
 
-function declareDependencies() {
+function declareDependencies(exportObject) {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'package com.jedox.qa.test.selenium_ide;'},
-        { level: 0, statement: 'import com.jedox.qa.framework.testexec.Loader;'},
+        {
+          level: 0,
+          statement:
+            `package ${(exportObject &&
+              exportObject.additionalOpts &&
+              exportObject.additionalOpts.exportPackage) ||
+              'com.jedox.qa.default'}` + ';',
+        },
+        {
+          level: 0,
+          statement: 'import com.jedox.qa.framework.testexec.Loader;',
+        },
         { level: 0, statement: 'import org.testng.annotations.Test;' },
         { level: 0, statement: 'import static org.testng.Assert.*;' },
-        { level: 0, statement: 'import org.testng.ITestContext;'},
+        { level: 0, statement: 'import org.testng.ITestContext;' },
         { level: 0, statement: 'import static org.hamcrest.CoreMatchers.is;' },
         { level: 0, statement: 'import static org.hamcrest.core.IsNot.not;' },
         { level: 0, statement: 'import org.openqa.selenium.By;' },
@@ -112,8 +121,8 @@ function declareVariables() {
       commands: [
         {
           level: 0,
-          statement: 'private Map<String, Object> vars = new HashMap<>();'
-        }
+          statement: 'private Map<String, Object> vars = new HashMap<>();',
+        },
       ],
     },
   }

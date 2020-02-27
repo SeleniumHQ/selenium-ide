@@ -20,6 +20,6 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-	"code-export-java-testng-modded" : "^3.14.0"
+	"code-export-java-testng-modded" : "^3.16.0"
   }
 }
