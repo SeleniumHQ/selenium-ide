@@ -96,8 +96,8 @@ export default class CommandForm extends React.Component {
             />
             <FlatButton
               data-tip="<p>Enable/Disable command</p>"
-              data-event="focus"
-              data-event-off="blur"
+              data-event="focus mouseenter"
+              data-event-off="blur mouseleave"
               className={classNames(
                 'icon',
                 this.props.command &&
@@ -121,8 +121,8 @@ export default class CommandForm extends React.Component {
                   ? '<p>Modify new window configuration</p>'
                   : '<p>Add new window configuration</p>'
               }
-              data-event="focus"
-              data-event-off="blur"
+              data-event="focus mouseenter"
+              data-event-off="blur mouseleave"
               className={classNames(
                 'new-window-button',
                 'icon',
@@ -169,8 +169,8 @@ export default class CommandForm extends React.Component {
               className={classNames('icon', 'si-select', {
                 active: this.props.isSelecting,
               })}
-              data-event="focus"
-              data-event-off="blur"
+              data-event="focus mouseenter"
+              data-event-off="blur mouseleave"
               disabled={
                 this.props.command
                   ? !this.parseCommandTargetType(this.props.command.command)
@@ -180,8 +180,8 @@ export default class CommandForm extends React.Component {
             />
             <FlatButton
               data-tip="<p>Find target in page</p>"
-              data-event="focus"
-              data-event-off="blur"
+              data-event="focus mouseenter"
+              data-event-off="blur mouseleave"
               className="icon si-search"
               disabled={
                 this.props.command

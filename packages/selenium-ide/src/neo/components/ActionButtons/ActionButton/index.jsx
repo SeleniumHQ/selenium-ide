@@ -31,8 +31,8 @@ export default class ActionButton extends React.Component {
     return (
       <button
         type="button"
-        data-event="focus"
-        data-event-off="blur"
+        data-event="focus mouseenter"
+        data-event-off="blur mouseleave"
         {...props}
         className={classNames(
           'btn-action',

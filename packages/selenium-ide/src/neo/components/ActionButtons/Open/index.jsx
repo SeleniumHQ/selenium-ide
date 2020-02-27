@@ -64,32 +64,38 @@ export class OpenInput extends React.Component {
     return (
       <React.Fragment>
         <input
-          data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse(
-            'o',
-            { primaryKey: true }
-          )}</span></p>`}
-          data-event="focus"
-          data-event-off="blur"
           id={this.id}
           ref={input => {
             this.input = input
           }}
           type="file"
           onChange={this.handleChange}
-          data-event="focus"
-          data-event-off="blur"
+          onFocus={(evt) => {
+            if (this.label) {
+              this.label.dispatchEvent(new Event('focusexternal'));
+            }
+          }}
+          onBlur={(evt) => {
+            if (this.label) {
+              this.label.dispatchEvent(new Event('blurexternal'));
+            }
+          }}
         />
         <label
+          ref={label => {
+            this.label = label
+          }}
           data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse(
             'o',
             { primaryKey: true }
           )}</span></p>`}
+          // We need special events because Focus and Blur are lost before the tooltip is shown
+          data-event="focusexternal mouseenter"
+          data-event-off="blurexternal mouseleave"
           htmlFor={this.id}
           onFocus={(evt) => {
             this.input.focus();
           }}
-          data-event="focus"
-          data-event-off="blur"
         >
           {this.props.labelMarkup}
         </label>

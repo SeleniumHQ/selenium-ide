@@ -29,8 +29,8 @@ export default class FlatButton extends React.Component {
     delete props.buttonRef
     return (
       <span data-tip={dataTip}
-            data-event="focus"
-            data-event-off="blur">
+      data-event="focus mouseenter"
+      data-event-off="blur mouseleave">
         <button
           type="button"
           ref={this.props.buttonRef}

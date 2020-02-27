@@ -42,8 +42,8 @@ export default class Record extends React.Component {
                 { primaryKey: true }
               )}</span></p>`
         }
-        data-event="focus"
-        data-event-off="blur"
+        data-event="focus mouseenter"
+        data-event-off="blur mouseleave"
 
       >
         <ActionButton

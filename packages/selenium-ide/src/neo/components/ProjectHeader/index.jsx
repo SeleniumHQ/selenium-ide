@@ -69,6 +69,7 @@ export default class ProjectHeader extends React.Component {
             onChange={this.handleChange}
             html={this.props.title}
             aria-label="Change the project name"
+            role="textbox"
           />
           <i className="si-pencil" />
         </div>
