@@ -70,7 +70,8 @@ export default class AutoComplete extends React.Component {
           <div
             key={this.props.getItemKey ? this.props.getItemKey(item) : item}
             style={{
-              background: isHighlighted ? '#f3f3f3' : 'white',
+              background: isHighlighted ? '#5c5c5c' : 'white',
+              color: isHighlighted ? 'white': '#3f3f3f',
               padding: '8px',
             }}
           >

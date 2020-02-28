@@ -54,9 +54,12 @@ if (!isTest) {
 }
 
 if (userAgent.os.name === 'Windows') {
-  require('../../styles/conditional/scrollbar.css')
-  require('../../styles/conditional/button-direction.css')
+  require('../../styles/conditional/scrollbar.css')  
   require('../../styles/conditional/text.css')
+}
+
+if (userAgent.os.name === 'Mac OS') {
+  require('../../styles/conditional/button-direction.css')
 }
 
 const project = observable(new ProjectStore(''))

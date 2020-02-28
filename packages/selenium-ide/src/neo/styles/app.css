@@ -6,7 +6,7 @@
   --hover-color: #f3f3f3;
   --active-color: #d8ebfb;
   --selected-color: #e8f1f8;
-  --selected-border-color: #5cb3ff;
+  --selected-border-color: #539ADF;
 }
 
 html {
@@ -43,10 +43,6 @@ a:visited {
   color: #505050;
 }
 
-a:focus {
-  outline: 0;
-}
-
 a.link {
   color: #333;
   text-decoration: underline;
@@ -73,12 +69,6 @@ textarea {
 textarea {
   resize: none;
   font-family: inherit;
-}
-
-input:focus,
-textarea:focus {
-  border-color: #40a6ff;
-  outline: 0;
 }
 
 input:disabled,

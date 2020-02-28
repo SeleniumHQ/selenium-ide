@@ -82,7 +82,6 @@ class ExportContent extends React.Component {
         onRequestClose={this.props.cancel}
         renderFooter={() => (
           <span className="right">
-            <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
             <FlatButton
               disabled={!this.state.selectedLanguages.length}
               type="submit"
@@ -112,6 +111,7 @@ class ExportContent extends React.Component {
             >
               export
             </FlatButton>
+            <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
           </span>
         )}
       >

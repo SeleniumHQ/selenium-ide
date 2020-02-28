@@ -45,11 +45,8 @@
 }
 
 .test > a.selected {
-  background-color: var(--selected-color);
-}
-
-.test:focus > a.selected {
-  background-color: var(--active-color);
+  background-color: #5c5c5c;
+  color: white;
 }
 
 .test > a.executing {

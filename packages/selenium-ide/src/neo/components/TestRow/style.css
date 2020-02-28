@@ -9,6 +9,7 @@
 
 .test-table tbody tr {
   cursor: pointer;
+  outline: none;
 }
 
 .test-table tbody tr td {
@@ -55,7 +56,7 @@
 }
 
 .test-table tbody tr:focus {
-  outline: 0;
+  
 }
 
 .test-table tbody tr.passed td {
