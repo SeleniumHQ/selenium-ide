@@ -70,14 +70,14 @@ export class OpenInput extends React.Component {
           }}
           type="file"
           onChange={this.handleChange}
-          onFocus={(evt) => {
+          onFocus={() => {
             if (this.label) {
-              this.label.dispatchEvent(new Event('focusexternal'));
+              this.label.dispatchEvent(new Event('focusexternal'))
             }
           }}
-          onBlur={(evt) => {
+          onBlur={() => {
             if (this.label) {
-              this.label.dispatchEvent(new Event('blurexternal'));
+              this.label.dispatchEvent(new Event('blurexternal'))
             }
           }}
         />
@@ -93,8 +93,8 @@ export class OpenInput extends React.Component {
           data-event="focusexternal mouseenter"
           data-event-off="blurexternal mouseleave"
           htmlFor={this.id}
-          onFocus={(evt) => {
-            this.input.focus();
+          onFocus={() => {
+            this.input.focus()
           }}
         >
           {this.props.labelMarkup}

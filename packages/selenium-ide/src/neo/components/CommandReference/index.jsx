@@ -23,95 +23,139 @@ import classNames from 'classnames'
 
 @observer
 export default class CommandReference extends React.Component {
-    static propTypes = {
-        children: PropTypes.node,
-        currentCommand: PropTypes.object,
-    }
-    unknownCommand() {
-        return ( <div className = { classNames('command-reference', 'unknown-command') } >
-            <strong > Unknown command name provided. </strong> </div>
-        )
-    }
-    linkForArgument(param) {
-        return `https://www.seleniumhq.org/selenium-ide/docs/en/api/arguments/#${param.name
+  static propTypes = {
+    children: PropTypes.node,
+    currentCommand: PropTypes.object,
+  }
+  unknownCommand() {
+    return (
+      <div className={classNames('command-reference', 'unknown-command')}>
+        <strong> Unknown command name provided. </strong>{' '}
+      </div>
+    )
+  }
+  linkForArgument(param) {
+    return `https://www.seleniumhq.org/selenium-ide/docs/en/api/arguments/#${param.name
       .replace(/ /g, '')
       .toLowerCase()}`
+  }
+  argument(param) {
+    if (param.name !== '' || param.description !== '') {
+      return (
+        <li className="argument">
+          {' '}
+          {!this.props.currentCommand.plugin ? (
+            <a
+              href={this.linkForArgument(param)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: '#3a709e',
+              }}
+            >
+              {param.name}{' '}
+            </a>
+          ) : (
+            param.name
+          )}{' '}
+          -{param.description}{' '}
+        </li>
+      )
     }
-    argument(param) {
-        if (param.name !== '' || param.description !== '') {
-            return ( <li className = "argument" > {!this.props.currentCommand.plugin ? ( <a href = { this.linkForArgument(param) }
-                        target = "_blank"
-                        rel = "noopener noreferrer"
-                        style = {
-                            {
-                                color: '#3a709e',
-                            }
-                        } >
-                        { param.name } </a>
-                    ) : (
-                        param.name
-                    )
-                } { ' ' } -
-                { param.description } </li>
-            )
-        }
-    }
-    commandSignature() {
-        return ( <li className = "signature" > {
-                this.props.currentCommand.name &&
-                (!this.props.currentCommand.plugin ? ( <a className = "link"
-                    href = { `https://www.seleniumhq.org/selenium-ide/docs/en/api/commands/#${this.props.currentCommand.name
+  }
+  commandSignature() {
+    return (
+      <li className="signature">
+        {' '}
+        {this.props.currentCommand.name &&
+          (!this.props.currentCommand.plugin ? (
+            <a
+              className="link"
+              href={`https://www.seleniumhq.org/selenium-ide/docs/en/api/commands/#${this.props.currentCommand.name
                 .replace(/ /g, '-')
-                .toLowerCase()}` }
-                    target = "_blank"
-                    rel = "noopener noreferrer" >
-                    <strong className = "name" > { this.props.currentCommand.name } </strong> </a>
-                ) : ( <strong className = "name" > { this.props.currentCommand.name } </strong>
-                ))
-            } { ' ' } {
-                this.props.currentCommand.target &&
-                    (!this.props.currentCommand.plugin ? ( <a className = "link"
-                        href = { this.linkForArgument(this.props.currentCommand.target) }
-                        target = "_blank"
-                        rel = "noopener noreferrer" >
-                        <em className = "target" > { this.props.currentCommand.target.name } </em> </a>
-                    ) : ( <em className = "target" > { this.props.currentCommand.target.name } </em>
-                    ))
-            } {
-                this.props.currentCommand.value && ( <React.Fragment >
-                    <span > , </span> {
-                        !this.props.currentCommand.plugin ? ( <a className = "link"
-                            href = { this.linkForArgument(this.props.currentCommand.value) }
-                            target = "_blank"
-                            rel = "noopener noreferrer" >
-                            <em className = "value" > { this.props.currentCommand.value.name } </em> </a>
-                        ) : ( <em className = "value" > { this.props.currentCommand.value.name } </em>
-                        )
-                    } </React.Fragment>
-                )
-            } </li>
-        )
+                .toLowerCase()}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <strong className="name">
+                {' '}
+                {this.props.currentCommand.name}{' '}
+              </strong>{' '}
+            </a>
+          ) : (
+            <strong className="name"> {this.props.currentCommand.name} </strong>
+          ))}{' '}
+        {this.props.currentCommand.target &&
+          (!this.props.currentCommand.plugin ? (
+            <a
+              className="link"
+              href={this.linkForArgument(this.props.currentCommand.target)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <em className="target">
+                {' '}
+                {this.props.currentCommand.target.name}{' '}
+              </em>{' '}
+            </a>
+          ) : (
+            <em className="target">
+              {' '}
+              {this.props.currentCommand.target.name}{' '}
+            </em>
+          ))}{' '}
+        {this.props.currentCommand.value && (
+          <React.Fragment>
+            <span> , </span>{' '}
+            {!this.props.currentCommand.plugin ? (
+              <a
+                className="link"
+                href={this.linkForArgument(this.props.currentCommand.value)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <em className="value">
+                  {' '}
+                  {this.props.currentCommand.value.name}{' '}
+                </em>{' '}
+              </a>
+            ) : (
+              <em className="value">
+                {' '}
+                {this.props.currentCommand.value.name}{' '}
+              </em>
+            )}{' '}
+          </React.Fragment>
+        )}{' '}
+      </li>
+    )
+  }
+  render() {
+    if (!(this.props.currentCommand && this.props.currentCommand.name)) {
+      return this.unknownCommand()
+    } else {
+      return (
+        <div className="command-reference" id="Reference">
+          <ul>
+            {' '}
+            {this.props.currentCommand.name && this.commandSignature()}{' '}
+            {this.props.currentCommand.description && (
+              <li className="description">
+                {' '}
+                {this.props.currentCommand.description}{' '}
+              </li>
+            )}{' '}
+            {(this.props.currentCommand.target ||
+              this.props.currentCommand.value) && (
+              <li className="arguments"> arguments: </li>
+            )}{' '}
+            {this.props.currentCommand.target &&
+              this.argument(this.props.currentCommand.target)}{' '}
+            {this.props.currentCommand.value &&
+              this.argument(this.props.currentCommand.value)}{' '}
+          </ul>{' '}
+        </div>
+      )
     }
-    render() {
-        if (!(this.props.currentCommand && this.props.currentCommand.name)) {
-            return this.unknownCommand()
-        } else {
-            return ( <div className = "command-reference" id = "Reference" >
-                <ul> { this.props.currentCommand.name && this.commandSignature() } {
-                    this.props.currentCommand.description && ( <li className = "description" > { this.props.currentCommand.description } </li>
-                    )
-                } {
-                    (this.props.currentCommand.target ||
-                        this.props.currentCommand.value) && ( <li className = "arguments" > arguments: </li>
-                    )
-                } {
-                    this.props.currentCommand.target &&
-                        this.argument(this.props.currentCommand.target)
-                } {
-                    this.props.currentCommand.value &&
-                        this.argument(this.props.currentCommand.value)
-                } </ul> </div>
-            )
-        }
-    }
+  }
 }

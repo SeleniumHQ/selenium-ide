@@ -259,7 +259,11 @@ class TestRow extends React.Component {
     )
     const listMenu =
       !this.props.isPristine && !this.props.readOnly ? (
-        <ListMenu width={300} padding={-5} opener={<MoreButton aria-label="More options"/>}>
+        <ListMenu
+          width={300}
+          padding={-5}
+          opener={<MoreButton aria-label="More options" />}
+        >
           <ListMenuItem
             label={parse('x', { primaryKey: true })}
             onClick={this.cut}

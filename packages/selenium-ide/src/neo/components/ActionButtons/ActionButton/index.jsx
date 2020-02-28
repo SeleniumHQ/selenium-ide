@@ -22,7 +22,7 @@ import './style.css'
 
 export default class ActionButton extends React.Component {
   static defaultProps = {
-    "aria-label": "",
+    'aria-label': '',
   }
   render() {
     const props = { ...this.props }
@@ -47,6 +47,6 @@ export default class ActionButton extends React.Component {
   static propTypes = {
     className: PropTypes.string.isRequired,
     isActive: PropTypes.bool,
-    "aria-label": PropTypes.string,
+    'aria-label': PropTypes.string,
   }
 }

@@ -51,8 +51,8 @@ export default class SuiteSettings extends React.Component {
 }
 
 class SuiteSettingsContent extends React.Component {
-  static modalTitleElement = "suiteSettingsTitle";
-  static modalDescriptionElement = "suiteSettingsDescription";
+  static modalTitleElement = 'suiteSettingsTitle'
+  static modalDescriptionElement = 'suiteSettingsDescription'
   constructor(props) {
     super(props)
     this.state = {

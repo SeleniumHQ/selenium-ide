@@ -50,8 +50,8 @@ export default class ImportDialog extends React.Component {
 }
 
 class ImportDialogContent extends React.Component {
-  static modalTitleElement = "importTitle";
-  static modalDescriptionElement = "importDescription";
+  static modalTitleElement = 'importTitle'
+  static modalDescriptionElement = 'importDescription'
   constructor(props) {
     super(props)
     this.state = {

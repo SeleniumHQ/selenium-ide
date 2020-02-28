@@ -49,8 +49,8 @@ export default class RenameDialog extends React.Component {
 }
 
 class RenameDialogContents extends React.Component {
-  static modalTitleElement = "renameTitle";
-  static modalDescriptionElement = "renameDescription";
+  static modalTitleElement = 'renameTitle'
+  static modalDescriptionElement = 'renameDescription'
   constructor(props) {
     super(props)
     this.state = {
@@ -81,11 +81,18 @@ class RenameDialogContents extends React.Component {
               this.state.type
             }`,
       bodyTop: this.props.isNewTest ? (
-        <span id="renameDescription">Please provide a name for your new test.</span>
+        <span id="renameDescription">
+          Please provide a name for your new test.
+        </span>
       ) : this.props.type === 'project' ? (
-        <span id="renameDescription">Please provide a name for your new project.</span>
+        <span id="renameDescription">
+          Please provide a name for your new project.
+        </span>
       ) : (
-        <span className="hidden" id="renameDescription">{`Please provide a name for your ${this.state.type}.`}</span>
+        <span
+          className="hidden"
+          id="renameDescription"
+        >{`Please provide a name for your ${this.state.type}.`}</span>
       ),
       bodyBottom: this.props.isNewTest ? (
         <span>

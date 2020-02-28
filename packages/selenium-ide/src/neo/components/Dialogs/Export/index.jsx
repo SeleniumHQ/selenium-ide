@@ -49,8 +49,8 @@ export default class ExportDialog extends React.Component {
 }
 
 class ExportContent extends React.Component {
-  static modalTitleElement = "renameTitle";
-  static modalDescriptionElement = "renameDescription";
+  static modalTitleElement = 'renameTitle'
+  static modalDescriptionElement = 'renameDescription'
   constructor(props) {
     super(props)
     this.state = {

@@ -30,11 +30,12 @@ export default class BaseUrlDialog extends React.Component {
   }
   render() {
     return (
-      <Modal 
-          className="stripped" 
-          isOpen={this.props.isSelectingUrl}
-          modalTitle={BaseUrlDialogContents.modalTitleElement}
-          modalDescription={BaseUrlDialogContents.modalDescriptionElement}>
+      <Modal
+        className="stripped"
+        isOpen={this.props.isSelectingUrl}
+        modalTitle={BaseUrlDialogContents.modalTitleElement}
+        modalDescription={BaseUrlDialogContents.modalDescriptionElement}
+      >
         <BaseUrlDialogContents {...this.props} />
       </Modal>
     )
@@ -42,8 +43,8 @@ export default class BaseUrlDialog extends React.Component {
 }
 
 class BaseUrlDialogContents extends React.Component {
-  static modalTitleElement = "baseUrlTitle";
-  static modalDescriptionElement = "baseUrlDescription";
+  static modalTitleElement = 'baseUrlTitle'
+  static modalDescriptionElement = 'baseUrlDescription'
   constructor(props) {
     super(props)
     this.state = {

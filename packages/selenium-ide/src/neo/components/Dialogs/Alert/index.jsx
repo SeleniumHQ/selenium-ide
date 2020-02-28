@@ -59,8 +59,8 @@ export default class AlertDialog extends React.Component {
     this.state.res(status)
   }
   render() {
-    const modalTitleElement = "alertTitle";
-    const modalDescriptionElement = "alertDescription";
+    const modalTitleElement = 'alertTitle'
+    const modalDescriptionElement = 'alertDescription'
 
     return (
       <Modal

@@ -48,8 +48,8 @@ export default class NewWindowConfigurationDialog extends React.Component {
 }
 
 class NewWindowInput extends React.Component {
-  static modalTitleElement = "newWindowConfigurationTitle";
-  static modalDescriptionElement = "newWindowConfigurationDescription";
+  static modalTitleElement = 'newWindowConfigurationTitle'
+  static modalDescriptionElement = 'newWindowConfigurationDescription'
   static propTypes = {
     cancel: PropTypes.func.isRequired,
     command: PropTypes.object.isRequired,

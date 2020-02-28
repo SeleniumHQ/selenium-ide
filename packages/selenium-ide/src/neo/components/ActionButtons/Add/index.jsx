@@ -22,7 +22,7 @@ import classNames from 'classnames'
 
 export default class AddButton extends React.Component {
   static defaultProps = {
-    "aria-label": "Add",
+    'aria-label': 'Add',
   }
   render() {
     return (
@@ -33,6 +33,6 @@ export default class AddButton extends React.Component {
     )
   }
   static propTypes = {
-    "aria-label": PropTypes.string,
+    'aria-label': PropTypes.string,
   }
 }

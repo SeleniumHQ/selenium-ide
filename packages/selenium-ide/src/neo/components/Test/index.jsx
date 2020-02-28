@@ -302,7 +302,11 @@ export class MenuTest extends React.Component {
   render() {
     /* eslint-disable react/prop-types */
     const listMenu = (
-      <ListMenu width={130} padding={-5} opener={<MoreButton aria-label="More options"/>}>
+      <ListMenu
+        width={130}
+        padding={-5}
+        opener={<MoreButton aria-label="More options" />}
+      >
         <ListMenuItem
           onClick={() =>
             this.props.renameTest(this.props.test.name).then(name => {

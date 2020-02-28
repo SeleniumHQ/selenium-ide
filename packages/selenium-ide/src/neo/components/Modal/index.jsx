@@ -55,8 +55,8 @@ export default class Modal extends React.Component {
   static defaultProps = {
     duration: 100,
     transitionStyles: transitionStyles,
-    modalTitle: "modalTitle",
-    modalDescription: "modalDescription",
+    modalTitle: 'modalTitle',
+    modalDescription: 'modalDescription',
   }
   render() {
     return (
@@ -73,7 +73,7 @@ export default class Modal extends React.Component {
             aria={{
               labelledby: this.props.modalTitle,
               describedby: this.props.modalDescription,
-              modal: "true"
+              modal: 'true',
             }}
           >
             <div

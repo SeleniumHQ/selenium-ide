@@ -77,7 +77,11 @@ export default class ToolBar extends React.Component {
           }
           data-event="focus mouseenter"
           data-event-off="blur mouseleave"
-          aria-label={PlaybackState.canPlaySuite ? "Run all tests in suite" : "Run all tests"}
+          aria-label={
+            PlaybackState.canPlaySuite
+              ? 'Run all tests in suite'
+              : 'Run all tests'
+          }
         />
         <PlayCurrent
           isActive={!PlaybackState.paused && PlaybackState.isPlayingTest}

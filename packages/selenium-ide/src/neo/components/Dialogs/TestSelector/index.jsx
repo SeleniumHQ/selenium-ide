@@ -49,8 +49,8 @@ export default class TestSelector extends React.Component {
 }
 
 class TestSelectorContent extends React.Component {
-  static modalTitleElement = "testTitle";
-  static modalDescriptionElement = "testDescription";
+  static modalTitleElement = 'testTitle'
+  static modalDescriptionElement = 'testDescription'
   constructor(props) {
     super(props)
     this.state = {
