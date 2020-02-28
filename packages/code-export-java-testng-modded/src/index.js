@@ -32,17 +32,31 @@ opts.terminatingKeyword = '}'
 opts.commentPrefix = '//'
 opts.generateMethodDeclaration = generateMethodDeclaration
 
+/*
+  To patch for my need, I'll send bound generateTestDeclaration with exportedObject ( suite or test ), so I can get a
+  package and name...
+ */
+
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
 function generateTestDeclaration(name) {
-  let ret = `public void ${exporter.parsers.uncapitalize(
+  let pkg = ''
+  let cls = ''
+  let testName = exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
-  )}() {`
+  )
+
+  if (this && this.name && this.additionalOpts && this.additionalOpts.package) {
+    pkg = this.additionalOpts.package + '.'
+    cls = exporter.parsers.capitalize(exporter.parsers.sanitizeName(this.name)) + '.'
+  }
+
+  let ret = `public void ${testName}() {`
 
   if (name.toLowerCase().includes('test_')) {
     let parts = name.split('_')
     if (parts.length !== 2) throw "you can't use _ separator more than once.. "
 
-    ret = `@Test(groups="${parts[1]}")\n` + ret
+    ret = `@Test(groups="${pkg}${cls}${parts[1]}")\n` + ret
   }
   return ret
 }
@@ -72,6 +86,9 @@ export async function emitTest({
 }) {
   // regen hooks
   opts.hooks = generateHooks(test)
+
+  // eslint-disable-next-line no-func-assign
+  generateTestDeclaration = generateTestDeclaration.bind(test)
 
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
@@ -107,6 +124,9 @@ export async function emitSuite({
 }) {
   // regen hooks
   opts.hooks = generateHooks(suite)
+
+  // eslint-disable-next-line no-func-assign
+  generateTestDeclaration = generateTestDeclaration.bind(suite)
 
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
