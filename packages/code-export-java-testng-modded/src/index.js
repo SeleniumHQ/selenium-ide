@@ -38,7 +38,7 @@ function generateTestDeclaration(name) {
     exporter.parsers.sanitizeName(name)
   )}() {`
 
-  if (name.toLowerCase().includes('export_')) {
+  if (name.toLowerCase().includes('test_')) {
     let parts = name.split('_')
     if (parts.length !== 2) throw "you can't use _ separator more than once.. "
 

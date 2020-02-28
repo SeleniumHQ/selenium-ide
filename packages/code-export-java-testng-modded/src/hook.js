@@ -65,7 +65,7 @@ function declareDependencies(exportObject) {
           statement:
             `package ${(exportObject &&
               exportObject.additionalOpts &&
-              exportObject.additionalOpts.exportPackage) ||
+              exportObject.additionalOpts.package) ||
               'com.jedox.qa.default'}` + ';',
         },
         {

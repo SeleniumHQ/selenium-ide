@@ -55,17 +55,24 @@ class ExportContent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.DEF_EXPORT_PACKAGE = "com.jedox.qa.engines.testng_web.test.selenium_ide";
+    this.DEF_PACKAGE = "com.jedox.qa.engines.testng_web.test.selenium_ide";
 
     this.state = {
       selectedLanguages: [UiState.selectedExportLanguage],
       enableOriginTracing: false,
       enableGridConfig: UiState.gridConfigEnabled,
       gridConfigUrl: UiState.specifiedRemoteUrl,
-      exportPackage: ModalState.exportPayload && get(Object.values(ModalState.exportPayload)[0], 'additionalOpts.exportPackage', this.DEF_EXPORT_PACKAGE) || this.DEF_EXPORT_PACKAGE
+      package:
+        (ModalState.exportPayload &&
+          get(
+            Object.values(ModalState.exportPayload)[0],
+            'additionalOpts.package',
+            this.DEF_PACKAGE
+          )) ||
+        this.DEF_PACKAGE,
     }
 
-    this.onExportPackageChange(this.state.exportPackage);
+    this.onExportPackageChange(this.state.package);
   }
   static propTypes = {
     cancelSelection: PropTypes.func.isRequired,
@@ -95,18 +102,15 @@ class ExportContent extends React.Component {
   {
       if(ModalState.exportPayload)
       {
-          console.log("Payload is defined");
           Object.values(ModalState.exportPayload).forEach(function(e){
-              console.log(e);
-
               if(!e.additionalOpts)
                 e.additionalOpts = {};
 
-              e.additionalOpts.exportPackage = input
+              e.additionalOpts.package = input
           })
       }
 
-      this.setState({ exportPackage: input});
+      this.setState({ package: input});
   }
 
   render() {
@@ -195,7 +199,7 @@ class ExportContent extends React.Component {
             id="export-package"
             name="export-package"
             label="Export package"
-            value={this.state.exportPackage}
+            value={this.state.package}
             onChange={value => {
               this.onExportPackageChange(value)
             }}
