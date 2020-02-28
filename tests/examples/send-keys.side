@@ -45,7 +45,7 @@
       "id": "5628fe89-f130-40cb-b52e-244a41cd6516",
       "comment": "",
       "command": "click",
-      "target": "css=.g a",
+      "target": "css=.g a[href='https://www.selenium.dev/selenium-ide/']",
       "targets": [],
       "value": ""
     }, {
