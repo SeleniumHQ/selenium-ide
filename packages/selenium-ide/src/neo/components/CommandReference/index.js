@@ -30,7 +30,7 @@ export default class CommandReference extends React.Component {
   unknownCommand() {
     return (
       <div className={classNames('command-reference', 'unknown-command')}>
-        <strong> Unknown command name provided. </strong>{' '}
+        <strong>Unknown command name provided.</strong>
       </div>
     )
   }
@@ -43,7 +43,6 @@ export default class CommandReference extends React.Component {
     if (param.name !== '' || param.description !== '') {
       return (
         <li className="argument">
-          {' '}
           {!this.props.currentCommand.plugin ? (
             <a
               href={this.linkForArgument(param)}
@@ -53,12 +52,12 @@ export default class CommandReference extends React.Component {
                 color: '#3a709e',
               }}
             >
-              {param.name}{' '}
+              {param.name}
             </a>
           ) : (
             param.name
           )}{' '}
-          -{param.description}{' '}
+          - {param.description}
         </li>
       )
     }
@@ -66,7 +65,6 @@ export default class CommandReference extends React.Component {
   commandSignature() {
     return (
       <li className="signature">
-        {' '}
         {this.props.currentCommand.name &&
           (!this.props.currentCommand.plugin ? (
             <a
@@ -77,13 +75,10 @@ export default class CommandReference extends React.Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <strong className="name">
-                {' '}
-                {this.props.currentCommand.name}{' '}
-              </strong>{' '}
+              <strong className="name">{this.props.currentCommand.name}</strong>
             </a>
           ) : (
-            <strong className="name"> {this.props.currentCommand.name} </strong>
+            <strong className="name">{this.props.currentCommand.name}</strong>
           ))}{' '}
         {this.props.currentCommand.target &&
           (!this.props.currentCommand.plugin ? (
@@ -94,19 +89,15 @@ export default class CommandReference extends React.Component {
               rel="noopener noreferrer"
             >
               <em className="target">
-                {' '}
-                {this.props.currentCommand.target.name}{' '}
-              </em>{' '}
+                {this.props.currentCommand.target.name}
+              </em>
             </a>
           ) : (
-            <em className="target">
-              {' '}
-              {this.props.currentCommand.target.name}{' '}
-            </em>
-          ))}{' '}
+            <em className="target">{this.props.currentCommand.target.name}</em>
+          ))}
         {this.props.currentCommand.value && (
           <React.Fragment>
-            <span> , </span>{' '}
+            <span>, </span>
             {!this.props.currentCommand.plugin ? (
               <a
                 className="link"
@@ -115,18 +106,14 @@ export default class CommandReference extends React.Component {
                 rel="noopener noreferrer"
               >
                 <em className="value">
-                  {' '}
-                  {this.props.currentCommand.value.name}{' '}
-                </em>{' '}
+                  {this.props.currentCommand.value.name}
+                </em>
               </a>
             ) : (
-              <em className="value">
-                {' '}
-                {this.props.currentCommand.value.name}{' '}
-              </em>
-            )}{' '}
+              <em className="value">{this.props.currentCommand.value.name}</em>
+            )}
           </React.Fragment>
-        )}{' '}
+        )}
       </li>
     )
   }
@@ -135,25 +122,23 @@ export default class CommandReference extends React.Component {
       return this.unknownCommand()
     } else {
       return (
-        <div className="command-reference" id="Reference">
+        <div className="command-reference">
           <ul>
-            {' '}
-            {this.props.currentCommand.name && this.commandSignature()}{' '}
+            {this.props.currentCommand.name && this.commandSignature()}
             {this.props.currentCommand.description && (
               <li className="description">
-                {' '}
-                {this.props.currentCommand.description}{' '}
+                {this.props.currentCommand.description}
               </li>
-            )}{' '}
+            )}
             {(this.props.currentCommand.target ||
               this.props.currentCommand.value) && (
-              <li className="arguments"> arguments: </li>
-            )}{' '}
+              <li className="arguments">arguments:</li>
+            )}
             {this.props.currentCommand.target &&
-              this.argument(this.props.currentCommand.target)}{' '}
+              this.argument(this.props.currentCommand.target)}
             {this.props.currentCommand.value &&
-              this.argument(this.props.currentCommand.value)}{' '}
-          </ul>{' '}
+              this.argument(this.props.currentCommand.value)}
+          </ul>
         </div>
       )
     }
