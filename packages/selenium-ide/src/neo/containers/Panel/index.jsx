@@ -137,7 +137,6 @@ export default class Panel extends React.Component {
         })
       }, 3000)
     }
-    this.tootipRef = React.createRef();
   }
   handleResize(currWindow) {
     UiState.setWindowHeight(currWindow.innerHeight)
@@ -344,7 +343,7 @@ export default class Panel extends React.Component {
             project={this.state.project}
             createNewProject={this.createNewProject.bind(this)}
           />
-          <Tooltip ref={this.tootipRef}/>
+          <Tooltip />
         </SuiteDropzone>
       </div>
     )

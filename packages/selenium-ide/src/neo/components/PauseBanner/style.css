@@ -1,35 +1,67 @@
 .state-banner {
-  border: 1px solid #cecece;
-  border-radius: 2px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  top: 6px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  height: 25px;
-  z-index: 100;
+    border: 1px solid #cecece;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 6px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    height: 25px;
+    z-index: 100;
 }
 
 .background-pause {
-  background: #fffcc5;
-  max-width: 200px;
+    background: #fffcc5;
+    max-width: 200px;
 }
 
 .background-controlled {
-  background: #b4d6fa;
-  max-width: 300px;
+    background: #b4d6fa;
+    max-width: 300px;
 }
 
 .state-banner .state-toolbar {
-  text-align: center;
-  height: inherit;
-  display: flex;
-  align-items: center;
+    text-align: center;
+    height: inherit;
+    display: flex;
+    align-items: center;
 }
 
-.state-banner .state-toolbar > span {
-  padding: 0 5px;
+.state-banner .state-toolbar>span {
+    padding: 0 5px;
+}
+
+@media only screen and (max-width: 620px) {
+    .background-controlled {
+        max-width: 35%;
+        padding: 5px 15px 5px 15px;
+        height: auto;
+        display: inline-block;
+    }
+    .state-banner .state-toolbar>span {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: initial;
+    }
+}
+
+@media only screen and (max-width: 520px) {
+    .background-controlled {
+        max-width: 25%;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .background-controlled {
+        width: 10px;
+        right: -15%;
+    }
+    .state-banner .state-toolbar>span {
+        padding: 0;
+    }
 }

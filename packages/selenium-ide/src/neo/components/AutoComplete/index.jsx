@@ -19,12 +19,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Autocomplete from 'react-autocomplete'
 import uuidv4 from 'uuid/v4'
+import { observable } from 'mobx'
 
 export default class AutoComplete extends React.Component {
   constructor(props) {
     super(props)
     this.id = uuidv4()
+    this.spanRef = React.createRef()
   }
+
   static propTypes = {
     getItemKey: PropTypes.func,
     renderDefaultStyledItem: PropTypes.func,
@@ -33,8 +36,10 @@ export default class AutoComplete extends React.Component {
     return (
       <Autocomplete
         getItemValue={item => item}
-        renderInput={props => (
+        renderInput={props => {
+          return (
           <span
+            ref={this.spanRef}
             style={{
               display: 'block',
               position: 'relative',
@@ -48,6 +53,10 @@ export default class AutoComplete extends React.Component {
                 paddingRight: '22px',
                 boxSizing: 'border-box',
               }}
+              aria-label={props.placeholder}
+              role="combobox"
+              aria-haspopup="listbox"
+              aria-controls={`${this.id}_autocomplete_menu`}
             />
             <label
               htmlFor={this.props.id || this.id}
@@ -63,12 +72,22 @@ export default class AutoComplete extends React.Component {
                 color: '#a3a3a3',
                 cursor: 'pointer',
               }}
-              aria-label={props.placeholder}
             />
           </span>
-        )}
-        renderItem={(item, isHighlighted) => (
-          <div
+          )
+        }}
+        renderItem={(item, isHighlighted) => {
+          var idItem = `${this.id}_${this.props.getItemKey ? this.props.getItemKey(item) : item}`
+          var input;
+          if (this.spanRef.current && this.spanRef.current && this.spanRef.current.children.length > 0) {
+            input = this.spanRef.current.children[0];
+          }
+          if (input && isHighlighted) {
+            input.setAttribute("aria-activedescendant", idItem)
+          }
+          return (
+          <li
+            id={idItem}
             key={this.props.getItemKey ? this.props.getItemKey(item) : item}
             style={{
               background: isHighlighted ? '#f3f3f3' : 'white',
@@ -78,20 +97,24 @@ export default class AutoComplete extends React.Component {
             {this.props.renderDefaultStyledItem
               ? this.props.renderDefaultStyledItem(item, isHighlighted)
               : item}
-          </div>
-        )}
-        menuStyle={{
-          zIndex: 5,
-          borderRadius: '3px',
-          border: '1px solid #DEDEDE',
-          boxShadow: '0 0 3px 0 rgba(0,0,0,0.3)',
-          background: 'rgba(255, 255, 255, 0.9)',
-          padding: '2px 0',
-          fontSize: '90%',
-          position: 'fixed',
-          overflow: 'auto',
-          maxHeight: '30%',
-          boxSizing: 'border-box',
+          </li>
+        )}}
+        renderMenu={(items, value, style) => {
+          return <ul id={`${this.id}_autocomplete_menu`} style={{
+            ...style,
+            zIndex: 5,
+            borderRadius: '3px',
+            border: '1px solid #DEDEDE',
+            boxShadow: '0 0 3px 0 rgba(0,0,0,0.3)',
+            background: 'rgba(255, 255, 255, 0.9)',
+            padding: '2px 0',
+            fontSize: '90%',
+            position: 'fixed',
+            overflow: 'auto',
+            maxHeight: '30%',
+            boxSizing: 'border-box',
+            maxHeight: '50%'
+          }} children={items}/>
         }}
         {...this.props}
       />
