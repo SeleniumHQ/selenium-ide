@@ -69,7 +69,7 @@ class BaseUrlDialogContents extends React.Component {
             style={{
               display: 'flex',
             }}
-          >            
+          >
             <FlatButton
               type="submit"
               disabled={!this.urlRegex.test(this.state.url)}

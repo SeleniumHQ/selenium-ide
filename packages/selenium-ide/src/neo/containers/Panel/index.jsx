@@ -54,7 +54,7 @@ if (!isTest) {
 }
 
 if (userAgent.os.name === 'Windows') {
-  require('../../styles/conditional/scrollbar.css')  
+  require('../../styles/conditional/scrollbar.css')
   require('../../styles/conditional/text.css')
 }
 

@@ -87,7 +87,7 @@ class SuiteSettingsContent extends React.Component {
         title="Suite properties"
         onRequestClose={this.props.cancel}
         renderFooter={() => (
-          <span className="right">            
+          <span className="right">
             <FlatButton
               type="submit"
               onClick={() => {

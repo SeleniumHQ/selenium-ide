@@ -88,7 +88,7 @@ class TestSelectorContent extends React.Component {
         title="Select tests"
         onRequestClose={this.props.cancel}
         renderFooter={() => (
-          <span className="right">            
+          <span className="right">
             <FlatButton
               type="submit"
               onClick={() => {

@@ -133,7 +133,7 @@ class NewWindowInput extends React.Component {
             >
               {'confirm'}
             </FlatButton>
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>            
+            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
           </div>
         )}
         onRequestClose={this.props.cancel}

@@ -81,7 +81,7 @@ export default class AlertDialog extends React.Component {
                 <FlatButton onClick={this.close.bind(this, false)}>
                   {this.state.options.cancelLabel}
                 </FlatButton>
-              ) : null}              
+              ) : null}
             </span>
           )}
           onRequestClose={this.close.bind(this, false)}
