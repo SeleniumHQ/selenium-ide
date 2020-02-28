@@ -1,5 +1,5 @@
 .btn {
-  color: #000000;
+  color: #000;
   background-color: #f5f5f5;
   padding: 10px 20px;
   margin: 5px 8px;
@@ -25,7 +25,7 @@
 }
 
 .btn:disabled {
-  color: rgba(0,0,0,.2);  
+  color: rgba(0, 0, 0, 0.2);
   cursor: not-allowed;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .btn.icon:hover:not(:disabled) {
-  color: #539ADF;
+  color: #539adf;
 }
 
 .btn.icon.active {

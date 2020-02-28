@@ -55,10 +55,6 @@
   background-color: #fffcc5;
 }
 
-.test-table tbody tr:focus {
-  
-}
-
 .test-table tbody tr.passed td {
   color: #008425;
 }
