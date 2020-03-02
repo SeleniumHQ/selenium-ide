@@ -47,7 +47,7 @@ function generateTestDeclaration(name) {
 
   if (this && this.name && this.additionalOpts && this.additionalOpts.package) {
     pkg = this.additionalOpts.package + '.'
-    cls = exporter.parsers.capitalize(exporter.parsers.sanitizeName(this.name)) + '.'
+    cls = exporter.parsers.capitalize(exporter.parsers.sanitizeName(this.name)) + 'Test.'
   }
 
   let ret = `public void ${testName}() {`
