@@ -92,7 +92,18 @@ Recorder.addEventHandler('type', 'change', function(event) {
     } else if ('textarea' == tagName) {
       record('type', locatorBuilders.buildAll(event.target), event.target.value)
     }
-  }
+
+    console.log(event.target);
+
+    if(event.target.classList.contains("inputField") && event.target.id && event.target.id.includes("inputField"))
+    {
+        record(
+            'sendKeys',
+            locatorBuilders.buildAll(event.target),
+            '${KEY_ENTER}'
+        )
+    }
+}
   this.recordingState.typeLock = 0
 })
 
@@ -112,16 +123,16 @@ Recorder.addEventHandler(
     if (
       event.button == 0 &&
       eventIsTrusted(event)
-    ) {      
+    ) {
       const locators = locatorBuilders.buildAll(event.target);
 
       if(this.jdxContext && this.jdxContext.clickTimeoutId)
         return;
-      
+
       this.jdxContext.clickTimeoutId = setTimeout(function(ctx){
         if(!ctx.jdxContext.doubleClicked)
-          ctx.record('click', locators , '');
-        
+            record('click', locators , '');
+
         ctx.jdxContext.doubleClicked = false;
         ctx.jdxContext.clickTimeoutId = null;
       }, this.jdxConsts.dblClickSpan, this);
@@ -465,7 +476,7 @@ Recorder.addEventHandler(
 
 //       if (mousedown && mousedown.target !== event.target && !(x + y)) {
 //         record('mouseDown', locatorBuilders.buildAll(mousedown.target), '')
-        
+
 //         record('mouseUp', locatorBuilders.buildAll(event.target), '')
 //       } else if (mousedown && mousedown.target === event.target) {
 //         let target = locatorBuilders.buildAll(mousedown.target)

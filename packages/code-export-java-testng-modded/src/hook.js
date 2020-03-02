@@ -78,6 +78,7 @@ function declareDependencies(exportObject) {
         { level: 0, statement: 'import org.testng.ITestContext;' },
         { level: 0, statement: 'import static org.hamcrest.CoreMatchers.is;' },
         { level: 0, statement: 'import static org.hamcrest.core.IsNot.not;' },
+        { level: 0, statement: 'import static org.hamcrest.MatcherAssert.*;' },
         { level: 0, statement: 'import org.openqa.selenium.By;' },
         { level: 0, statement: 'import org.openqa.selenium.WebDriver;' },
         {
