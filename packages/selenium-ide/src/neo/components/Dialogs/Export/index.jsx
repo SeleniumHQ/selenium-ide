@@ -55,7 +55,7 @@ class ExportContent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.DEF_PACKAGE = "com.jedox.qa.engines.testng_web.test.selenium_ide";
+    this.DEF_PACKAGE = "com.jedox.qa.engines.testng_web.selenium_ide";
 
     this.state = {
       selectedLanguages: [UiState.selectedExportLanguage],

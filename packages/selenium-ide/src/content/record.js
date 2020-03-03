@@ -93,8 +93,6 @@ Recorder.addEventHandler('type', 'change', function(event) {
       record('type', locatorBuilders.buildAll(event.target), event.target.value)
     }
 
-    console.log(event.target);
-
     if(event.target.classList.contains("inputField") && event.target.id && event.target.id.includes("inputField"))
     {
         record(
