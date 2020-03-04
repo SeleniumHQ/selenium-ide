@@ -313,9 +313,7 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div className="container" onKeyDown={this.handleKeyDownAlt.bind(this)} style={{ minHeight: UiState.minContentHeight + UiState.minConsoleHeight + 'px'}}>
-        <SuiteDropzone
-          <SuiteDropzone loadProject={this.doLoadProject.bind(this)}>
-        >
+        <SuiteDropzone loadProject={this.doLoadProject.bind(this)}>
           <SplitPane
             split="horizontal"
             minSize={UiState.minContentHeight}
