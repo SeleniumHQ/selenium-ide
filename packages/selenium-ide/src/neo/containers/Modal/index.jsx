@@ -119,11 +119,13 @@ export default class Modal extends Component {
           completeSelection={(
             selectedLanguages,
             enableOriginTracing,
-            beforeEachOptions
+            beforeEachOptions,
+            enableDescriptionAsComment
           ) =>
             exportCodeToFile(selectedLanguages, ModalState.exportPayload, {
               enableOriginTracing,
               beforeEachOptions,
+              enableDescriptionAsComment,
             })
           }
         />

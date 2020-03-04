@@ -290,6 +290,13 @@ function createContextMenus() {
     contexts: ['all'],
     parentId: 'waitFor',
   })
+  browser.contextMenus.create({
+    id: 'waitForText',
+    title: 'Text',
+    documentUrlPatterns: ['<all_urls>'],
+    contexts: ['all'],
+    parentId: 'waitFor',
+  })
 }
 
 function destroyContextMenus() {

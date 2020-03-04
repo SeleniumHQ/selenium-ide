@@ -67,6 +67,11 @@ class ExportContent extends React.Component {
   toggleOriginTracing() {
     this.setState({ enableOriginTracing: !this.state.enableOriginTracing })
   }
+  toggleDescriptionAsComment() {
+    this.setState({
+      enableDescriptionAsComment: !this.state.enableDescriptionAsComment,
+    })
+  }
   toggleGridConfig() {
     UiState.toggleGridConfig()
     this.setState({ enableGridConfig: !this.state.enableGridConfig })
@@ -94,7 +99,8 @@ class ExportContent extends React.Component {
                       gridUrl: this.state.enableGridConfig
                         ? this.state.gridConfigUrl
                         : undefined,
-                    }
+                    },
+                    this.state.enableDescriptionAsComment
                   )
                   .catch(error => {
                     this.props.cancelSelection()
@@ -125,6 +131,12 @@ class ExportContent extends React.Component {
           checked={this.state.enableOriginTracing}
           form={true}
           onChange={this.toggleOriginTracing.bind(this)}
+        />
+        <Checkbox
+          label="Include step description as a separate comment"
+          checked={this.state.enableDescriptionAsComment}
+          form={true}
+          onChange={this.toggleDescriptionAsComment.bind(this)}
         />
         <Checkbox
           label="Export for use on Selenium Grid"
