@@ -20,7 +20,13 @@ import prettify from './prettify'
 export default function render(
   commandPrefixPadding,
   input,
-  { startingLevel, newLineCount, fullPayload, originTracing } = {}
+  {
+    startingLevel,
+    newLineCount,
+    fullPayload,
+    originTracing,
+    enableOriginTracing,
+  } = {}
 ) {
   if (!startingLevel) startingLevel = 0
   if (!newLineCount) newLineCount = 1
@@ -31,6 +37,7 @@ export default function render(
       startingLevel,
       commandPrefixPadding,
       originTracing,
+      enableOriginTracing,
     })
   } else {
     const result = prettify(input, {
@@ -46,27 +53,37 @@ export default function render(
 
 export function renderCommands(
   commands,
-  { startingLevel, commandPrefixPadding, originTracing } = {}
+  {
+    startingLevel,
+    commandPrefixPadding,
+    originTracing,
+    enableOriginTracing,
+  } = {}
 ) {
   let result = ''
   let endingLevel = startingLevel
-  const originTitle = originTracing ? originTracing.splice(0, 2) : undefined
-  if (originTitle) {
+
+  if (enableOriginTracing) {
+    const originTitle = originTracing.splice(0, 2)
     result += render(commandPrefixPadding, originTitle.join('\n'), {
       startingLevel: endingLevel,
     })
   }
   commands.forEach((command, index) => {
-    if (originTracing) {
-      const originRecord = render(commandPrefixPadding, originTracing[index], {
-        startingLevel: endingLevel,
-      })
-      result += originRecord
-    }
     if (command) {
+      if (originTracing && originTracing[index]) {
+        let rows = originTracing[index].split('\n')
+        rows.forEach(row => {
+          let originRecord = render(commandPrefixPadding, row, {
+            startingLevel: endingLevel,
+          })
+          result += originRecord
+        })
+      }
       const commandBlock = render(commandPrefixPadding, command, {
         startingLevel: endingLevel,
         fullPayload: true,
+        enableOriginTracing: enableOriginTracing,
       })
       endingLevel = commandBlock.endingLevel
       if (!commandBlock.skipEmitting) {

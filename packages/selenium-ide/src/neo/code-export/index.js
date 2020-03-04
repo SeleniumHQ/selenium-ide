@@ -33,7 +33,7 @@ export function availableLanguages() {
 export async function exportCodeToFile(
   selectedLanguages,
   { test, suite },
-  { enableOriginTracing, beforeEachOptions }
+  { enableOriginTracing, beforeEachOptions, enableDescriptionAsComment }
 ) {
   const project = UiState.project.toJS()
   const { url, tests } = project
@@ -48,6 +48,7 @@ export async function exportCodeToFile(
         browserName: userAgent.browserName,
         ...beforeEachOptions,
       },
+      enableDescriptionAsComment,
     }
     options.test = test ? test : undefined
     options.suite = suite

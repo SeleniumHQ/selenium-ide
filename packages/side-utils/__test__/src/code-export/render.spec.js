@@ -27,16 +27,47 @@ describe('Render', () => {
   it('should render with command tracing', () => {
     const test = new TestCase()
     test.createCommand(undefined, 'a')
-    test.createCommand(undefined, 'b')
-    const originTracing = emitOriginTracing(test, { commentPrefix })
+    test.createCommand(undefined, 'b', undefined, undefined, 'comment')
     const commandStatements = ['blah', 'andblah']
-    const result = renderCommands(commandStatements, {
+    let originTracing = emitOriginTracing(test, { commentPrefix }, true, false)
+    let result = renderCommands(commandStatements, {
       startingLevel: 1,
       commandPrefixPadding,
       originTracing,
+      enableOriginTracing: true,
     })
     expect(result).toMatch(
-      `${commandPrefixPadding}${commentPrefix} Test name: Untitled Test\n${commandPrefixPadding}${commentPrefix} Step # | name | target | value | comment\n${commandPrefixPadding}${commentPrefix} 1 | a |  |  | \n${commandPrefixPadding}blah\n${commandPrefixPadding}${commentPrefix} 2 | b |  |  | \n${commandPrefixPadding}andblah`
+      `${commandPrefixPadding}${commentPrefix} Test name: Untitled Test\n${commandPrefixPadding}${commentPrefix} Step # | name | target | value | comment\n${commandPrefixPadding}${commentPrefix} 1 | a |  |  | \n${commandPrefixPadding}blah\n${commandPrefixPadding}${commentPrefix} 2 | b |  |  | comment\n${commandPrefixPadding}andblah`
+    )
+    originTracing = emitOriginTracing(test, { commentPrefix }, true, true)
+    result = renderCommands(commandStatements, {
+      startingLevel: 1,
+      commandPrefixPadding,
+      originTracing,
+      enableOriginTracing: true,
+    })
+    expect(result).toMatch(
+      `${commandPrefixPadding}${commentPrefix} Test name: Untitled Test\n${commandPrefixPadding}${commentPrefix} Step # | name | target | value\n${commandPrefixPadding}${commentPrefix} 1 | a |  | \n${commandPrefixPadding}blah\n${commandPrefixPadding}${commentPrefix} 2 | b |  | \n${commandPrefixPadding}${commentPrefix} comment\n${commandPrefixPadding}andblah`
+    )
+    originTracing = emitOriginTracing(test, { commentPrefix }, false, true)
+    result = renderCommands(commandStatements, {
+      startingLevel: 1,
+      commandPrefixPadding,
+      originTracing,
+      enableOriginTracing: false,
+    })
+    expect(result).toMatch(
+      `${commandPrefixPadding}blah\n${commandPrefixPadding}${commentPrefix} comment\n${commandPrefixPadding}andblah`
+    )
+    originTracing = emitOriginTracing(test, { commentPrefix }, false, false)
+    result = renderCommands(commandStatements, {
+      startingLevel: 1,
+      commandPrefixPadding,
+      originTracing,
+      enableOriginTracing: false,
+    })
+    expect(result).toMatch(
+      `${commandPrefixPadding}blah\n${commandPrefixPadding}andblah`
     )
   })
   it('should render without command tracing', () => {
