@@ -62,9 +62,8 @@ export async function emitTest({
   beforeEachOptions,
   enableDescriptionAsComment,
 }) {
-
   // regenerate hooks with exported object
-  opts.hooks = generateHooks(test);
+  opts.hooks = generateHooks(test)
 
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
@@ -100,9 +99,8 @@ export async function emitSuite({
   beforeEachOptions,
   enableDescriptionAsComment,
 }) {
-
   // regenerate hooks with exported object;
-  opts.hooks = generateHooks(suite);
+  opts.hooks = generateHooks(suite)
 
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {

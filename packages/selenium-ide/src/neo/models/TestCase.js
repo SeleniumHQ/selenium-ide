@@ -157,7 +157,7 @@ export default class TestCase {
       id: this.id,
       name: this.name,
       commands: this.commands.map(c => c.export()),
-      additionalOpts: this.additionalOpts
+      additionalOpts: this.additionalOpts,
     }
   }
 
@@ -170,7 +170,7 @@ export default class TestCase {
     const test = new TestCase(jsRep.id)
     test.setName(jsRep.name)
     test.commands.replace(jsRep.commands.map(Command.fromJS))
-    test.additionalOpts = jsRep.additionalOpts;
+    test.additionalOpts = jsRep.additionalOpts
     return test
   }
 }

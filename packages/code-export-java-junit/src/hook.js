@@ -175,14 +175,15 @@ function declareDependencies(exportObject) {
     },
   }
 
-  if(exportObject && exportObject.additionalOpts && exportObject.additionalOpts.package)
-  {
-    params.startingSyntax.commands.unshift(
-      {
-        level : 0,
-        statement : `package ${exportObject.additionalOpts.package};`
-      }
-    )
+  if (
+    exportObject &&
+    exportObject.additionalOpts &&
+    exportObject.additionalOpts.package
+  ) {
+    params.startingSyntax.commands.unshift({
+      level: 0,
+      statement: `package ${exportObject.additionalOpts.package};`,
+    })
   }
 
   return params

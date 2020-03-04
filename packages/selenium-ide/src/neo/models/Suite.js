@@ -172,7 +172,7 @@ export default class Suite {
       parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id),
-      additionalOpts: this.additionalOpts
+      additionalOpts: this.additionalOpts,
     }
   }
 
@@ -186,7 +186,7 @@ export default class Suite {
     suite._tests.replace(
       jsRep.tests.map(testId => projectTests.find(({ id }) => id === testId))
     )
-    suite.additionalOpts = jsRep.additionalOpts || {};
+    suite.additionalOpts = jsRep.additionalOpts || {}
 
     return suite
   }
