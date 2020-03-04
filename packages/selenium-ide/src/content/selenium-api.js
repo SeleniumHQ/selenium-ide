@@ -2510,7 +2510,7 @@ function isText(locator, text) {
   try {
     return this.isText(locator, text)
   } catch (error) {
-    unableToLocateTargetElementError()
+    return false
   }
 }
 
@@ -2524,7 +2524,7 @@ Selenium.prototype.isText = function(locator, text) {
    */
   let element = this.browserbot.findElement(locator)
   let elementText = bot.dom.getVisibleText(element).trim()
-  return elementText == text
+  return elementText === text
 }
 
 Selenium.prototype.getAllButtons = function() {
