@@ -155,6 +155,7 @@ export default class TestCase {
       id: this.id,
       name: this.name,
       commands: this.commands.map(c => c.export()),
+	  modified: this.modified,
     }
   }
 
