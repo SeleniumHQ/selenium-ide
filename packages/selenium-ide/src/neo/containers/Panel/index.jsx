@@ -283,7 +283,7 @@ export default class Panel extends React.Component {
   }
   render() {
     return (
-      <div className="container" onKeyDown={this.handleKeyDownAlt.bind(this)}>
+      <div className="container" onKeyDown={this.handleKeyDownAlt.bind(this)} style={{ minHeight: UiState.minContentHeight + UiState.minConsoleHeight + 'px'}}>
         <SuiteDropzone
           loadProject={loadProject.bind(undefined, this.state.project)}
         >
