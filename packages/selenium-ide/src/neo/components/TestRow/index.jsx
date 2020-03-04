@@ -108,6 +108,7 @@ class TestRow extends React.Component {
   static propTypes = {
     index: PropTypes.number,
     selected: PropTypes.bool,
+    focus: PropTypes.bool,
     className: PropTypes.string,
     status: PropTypes.string,
     readOnly: PropTypes.bool,
@@ -131,11 +132,14 @@ class TestRow extends React.Component {
     setSectionFocus: PropTypes.func,
     onContextMenu: PropTypes.func,
     setContextMenu: PropTypes.func,
+    addToSelectedCommands: PropTypes.func,
+    clearSelectedCommands: PropTypes.func,
+    selectByRange: PropTypes.func,
     level: PropTypes.number,
     scrollToLastPos: PropTypes.func,
   }
   componentDidMount() {
-    if (this.props.selected) {
+    if (this.props.focus) {
       this.props.scrollToLastPos()
       this.props.setSectionFocus('editor', () => {
         this.node.focus()
@@ -143,7 +147,7 @@ class TestRow extends React.Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if (this.props.selected && !prevProps.selected) {
+    if (this.props.focus && !prevProps.focus) {
       this.scrollToRowIfNeeded(this.node)
       this.node.focus()
       this.props.setSectionFocus('editor', () => {
@@ -185,6 +189,7 @@ class TestRow extends React.Component {
       this.props.executeCommand(this.props.command)
     } else if (this.props.moveSelection && noModifiers && e.key === 'ArrowUp') {
       e.preventDefault()
+      this.props.clearSelectedCommands()
       this.props.moveSelection(this.props.index - 1)
     } else if (
       this.props.moveSelection &&
@@ -192,6 +197,7 @@ class TestRow extends React.Component {
       e.key === 'ArrowDown'
     ) {
       e.preventDefault()
+      this.props.clearSelectedCommands()
       this.props.moveSelection(this.props.index + 1)
     } else if (!this.props.isPristine && onlyPrimary && key === 'X') {
       this.cut()
@@ -199,6 +205,8 @@ class TestRow extends React.Component {
       this.copy()
     } else if (onlyPrimary && key === 'V') {
       this.paste()
+    } else if (key === 'TAB') {
+      this.props.clearSelectedCommands()
     }
   }
   scrollToRowIfNeeded(rowNode) {
@@ -214,12 +222,13 @@ class TestRow extends React.Component {
     }
   }
   copy() {
-    this.props.copyToClipboard(this.props.command)
+    this.props.copyToClipboard()
   }
   cut() {
     if (!this.props.readOnly) {
-      this.props.copyToClipboard(this.props.command)
-      this.props.remove(this.props.index, this.props.command)
+      this.props.copyToClipboard()
+      this.props.remove(this.props.index)
+      this.props.clearSelectedCommands()
     }
   }
   paste() {
@@ -227,8 +236,21 @@ class TestRow extends React.Component {
       this.props.pasteFromClipboard(this.props.index)
     }
   }
-  select() {
-    this.props.select(this.props.command)
+  select(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    this.props.select(this.props.command, this.props.index)
+    if ((event.ctrlKey || event.metaKey || event.shiftKey) === false) {
+      // call from onClick while we are not holding any of the special keys
+      this.props.clearSelectedCommands()
+    }
+
+    if (event.shiftKey) {
+      this.props.selectByRange(this.props.command)
+      return
+    }
+
+    this.props.addToSelectedCommands(this.props.command, this.props.index)
   }
   remove() {
     if (!this.props.readOnly) {
@@ -359,7 +381,9 @@ class TestRow extends React.Component {
         tabIndex={this.props.selected ? '0' : '-1'}
         onContextMenu={
           !this.props.isPristine && !this.props.readOnly
-            ? this.props.onContextMenu
+            ? e => {
+                return this.props.onContextMenu(e)
+              }
             : null
         }
         onClick={this.select}
@@ -369,7 +393,6 @@ class TestRow extends React.Component {
             : undefined
         }}
         onKeyDown={this.handleKeyDown.bind(this)}
-        onFocus={this.select}
         style={{
           opacity: this.props.isDragging ? '0' : '1',
         }}
