@@ -4,10 +4,6 @@
   background-color: #fff;
 }
 
-.test:focus {
-  outline: 0;
-}
-
 .test .name {
   display: flex;
   align-items: center;
@@ -47,6 +43,12 @@
 .test > a.selected {
   background-color: #5c5c5c;
   color: white;
+}
+
+.test > a.selected > button.btn-action {
+  color: white;
+  opacity: 1;
+  background-color: #5c5c5c;
 }
 
 .test > a.executing {
