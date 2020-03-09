@@ -20,6 +20,7 @@ import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import { configure } from 'mobx'
 import Panel from '../Panel'
+import { isJDXQACompatible, getJDXCfg } from '../../../common/utils'
 
 configure({
   enforceActions: 'observed',
@@ -34,7 +35,25 @@ const render = Component => {
   )
 }
 
-render(Panel)
+if (isJDXQACompatible) {
+  fetch(getJDXCfg().SERVER_URL + ':' + getJDXCfg().SERVER_PORT + '/healthz')
+    .then(resp => resp.json())
+    .then(json => {
+      if (!json.VERSION) {
+        alert("QA server didn't provide version info")
+        window.close()
+      }
+      render(Panel)
+    })
+    .catch(err => {
+      alert(
+        'QA server is not available, please start it and then run the extension'
+      )
+      window.close()
+    })
+} else {
+  render(Panel)
+}
 
 if (module.hot) {
   module.hot.accept('../Panel/index.jsx', () => {

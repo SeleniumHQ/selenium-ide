@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "start": "env NODE_ENV=test webpack-dev-server --hot",
-    "build": "rm -rf build && env NODE_ENV=production webpack",
-    "build:dev": "webpack",
+    "build": "rm -rf build && env NODE_ENV=production JDX_QA_COMPATIBLE=true webpack",
+    "build:dev": "env JDX_QA_COMPATIBLE=true webpack",
     "build-chrome": "./build.sh build ../../selenium-ide.pem 1>/dev/null && mkdir -p dist && mv build.crx dist/selenium-ide.crx && echo \"Wrote dist/selenium-ide.crx\"",
     "build-firefox": "web-ext sign -s build -a dist --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET --id=$(cat ../../.web-extension-id)",
     "version": "node scripts/version.js && git add src/manifest.json",

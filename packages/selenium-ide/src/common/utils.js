@@ -10,3 +10,10 @@ export function isChrome() {
 export function isFirefox() {
   _userAgent.isFirefox
 }
+
+export function getJDXCfg() {
+  return {
+    SERVER_URL: 'http://localhost',
+    SERVER_PORT: 8888,
+  }
+}

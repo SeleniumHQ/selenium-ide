@@ -60,8 +60,6 @@ if (userAgent.os.name === 'Windows') {
 
 const project = observable(new ProjectStore(''))
 
-console.log(isJDXQACompatible);
-
 UiState.setProject(project)
 
 if (isProduction) {
@@ -266,7 +264,7 @@ export default class Panel extends React.Component {
   async createNewProject() {
     const name = await ModalState.renameProject()
     const newProject = observable(new ProjectStore(name))
-    createDefaultSuite(newProject)
+    createDefaultSuite(newProject, { suite: name })
     loadJSProject(this.state.project, newProject.toJS())
     Logger.clearLogs()
     newProject.setModified(false)
