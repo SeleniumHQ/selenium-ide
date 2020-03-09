@@ -34,7 +34,7 @@ import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import { userAgent as parsedUA } from '../../common/utils'
-import { project as projectProcessor } from '@seleniumhq/side-utils'
+import { project as projectProcessor, environment as env } from '@seleniumhq/side-utils'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -138,12 +138,18 @@ function exportProject(project) {
 }
 
 export function downloadUniqueFile(filename, body, mimeType = 'text/plain') {
-  browser.downloads.download({
-    filename,
-    url: createBlob(mimeType, body),
-    saveAs: true,
-    conflictAction: 'overwrite',
-  })
+  if(env.jdxQACompatible)
+  {
+
+    console.log('Hello world');
+  } else {
+    browser.downloads.download({
+      filename,
+      url: createBlob(mimeType, body),
+      saveAs: true,
+      conflictAction: 'overwrite',
+    })
+  }
 }
 
 let previousFile = null

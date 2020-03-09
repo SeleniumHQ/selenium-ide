@@ -3,6 +3,7 @@ export const isProduction = environment.isProduction
 export const isStaging = environment.isStaging
 export const isTest = environment.isTest
 export const userAgent = _userAgent.userAgent
+export const isJDXQACompatible = environment.jdxQACompatible
 export function isChrome() {
   _userAgent.isChrome
 }

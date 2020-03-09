@@ -43,7 +43,7 @@ import '../../styles/app.css'
 import '../../styles/font.css'
 import '../../styles/layout.css'
 import '../../styles/resizer.css'
-import { isProduction, isTest, userAgent } from '../../../common/utils'
+import {isJDXQACompatible, isProduction, isTest, userAgent} from '../../../common/utils'
 import Logger from '../../stores/view/Logs'
 
 import { loadProject, saveProject, loadJSProject } from '../../IO/filesystem'
@@ -59,6 +59,8 @@ if (userAgent.os.name === 'Windows') {
 }
 
 const project = observable(new ProjectStore(''))
+
+console.log(isJDXQACompatible);
 
 UiState.setProject(project)
 

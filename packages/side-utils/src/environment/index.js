@@ -18,9 +18,11 @@
 const isProduction = process.env.NODE_ENV === 'production'
 const isStaging = process.env.NODE_ENV === 'staging'
 const isTest = process.env.NODE_ENV === 'test'
+const jdxQACompatible = process.env.JDX_QA_COMPATIBLE === 'true'
 
 module.exports = {
   isProduction,
   isStaging,
   isTest,
+  jdxQACompatible,
 }

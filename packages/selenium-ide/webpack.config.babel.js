@@ -325,6 +325,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        JDX_QA_COMPATIBLE: JSON.stringify(process.env.JDX_QA_COMPATIBLE),
         USE_WEBDRIVER: JSON.stringify(process.env.USE_WEBDRIVER),
       },
     }),
