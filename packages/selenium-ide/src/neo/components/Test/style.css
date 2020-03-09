@@ -41,14 +41,7 @@
 }
 
 .test > a.selected {
-  background-color: #5c5c5c;
-  color: white;
-}
-
-.test > a.selected > button.btn-action {
-  color: white;
-  opacity: 1;
-  background-color: #5c5c5c;
+  background-color: var(--selected-color);
 }
 
 .test > a.executing {

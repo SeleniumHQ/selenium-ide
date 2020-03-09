@@ -37,7 +37,6 @@
 }
 
 .header .title:focus {
-  border-color: #cecece;
   cursor: initial;
 }
 
