@@ -115,16 +115,17 @@ class WelcomeDialogContents extends React.Component {
         <div>
           <div>What would you like to do?</div>
           <ul className="welcome-dialog__options">
-            <li>
-              <a onClick={this.startRecordingInNewProject}>
-                Record a new test in a new project
-              </a>
-            </li>
+            {/* There is no need for this, less options less error */}
+            {/*<li>*/}
+            {/*  <a onClick={this.startRecordingInNewProject}>*/}
+            {/*    Record a new test in a new project*/}
+            {/*  </a>*/}
+            {/*</li>*/}
             <li className="file-open">
               <OpenInput
                 onFileSelected={this.openProject}
                 labelMarkup={<div>Open an existing project</div>}
-              />
+            />
             </li>
             <li>
               <a onClick={this.createNewProject}>Create a new project</a>

@@ -77,9 +77,11 @@ class RenameDialogContents extends React.Component {
         ? 'Name your new test'
         : this.props.type === 'project'
           ? 'Name your new project'
-          : `${this.state.isRenaming ? 'Rename' : 'Add new'} ${
-              this.state.type
-            }`,
+          : this.props.type === 'package'
+            ? 'Set package'
+            : `${this.state.isRenaming ? 'Rename' : 'Add new'} ${
+                this.props.type
+              }`,
       bodyTop: this.props.isNewTest ? (
         <span id="renameDescription">
           Please provide a name for your new test.
@@ -109,7 +111,7 @@ class RenameDialogContents extends React.Component {
         undefined
       ),
       submitButton:
-        this.props.isNewTest || this.props.type === 'project'
+        this.props.isNewTest || this.props.type === 'project' || this.props.type === 'package'
           ? 'OK'
           : this.state.isRenaming
             ? 'rename'
@@ -117,7 +119,7 @@ class RenameDialogContents extends React.Component {
       cancelButton: this.props.isNewTest ? 'later' : 'cancel',
       inputLabel: this.props.isNewTest
         ? 'test name'
-        : this.state.type + ' name',
+        : this.props.type + ' name',
     }
     return (
       <DialogContainer
@@ -142,16 +144,34 @@ class RenameDialogContents extends React.Component {
             }}
             key="ok"
           >
-            {content.submitButton}
-          </FlatButton>,
-        ]}
+            <FlatButton
+              disabled={this.props.isNewTest && !!this.state.value}
+              onClick={this.props.cancel}
+            >
+              {content.cancelButton}
+            </FlatButton>
+            <FlatButton
+              type="submit"
+              disabled={!this.state.value || !this.state.valid}
+              onClick={() => {
+                this.props.setValue(this.state.value)
+                this.setState({ value: '' })
+              }}
+              style={{
+                marginRight: '0',
+              }}
+            >
+              {content.submitButton}
+            </FlatButton>
+          </span>
+        )}
         onRequestClose={this.props.cancel}
         modalTitle={RenameDialogContents.modalTitleElement}
         modalDescription={RenameDialogContents.modalDescriptionElement}
       >
         {content.bodyTop}
         <LabelledInput
-          name={this.state.type + 'Name'}
+          name={this.props.type + 'Name'}
           label={content.inputLabel}
           value={this.state.value}
           onChange={this.handleChange.bind(this)}

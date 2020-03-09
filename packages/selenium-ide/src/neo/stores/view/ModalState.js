@@ -242,6 +242,14 @@ class ModalState {
   }
 
   @action.bound
+  renamePackage(defPackage) {
+    return this.rename(
+      Types.package,
+      defPackage
+    )
+  }
+
+  @action.bound
   toggleNewWindowConfiguration() {
     this.newWindowConfigurationState = !this.newWindowConfigurationState
   }
@@ -259,6 +267,7 @@ const Types = {
   test: 'test case',
   suite: 'suite',
   project: 'project',
+  package: 'package',
 }
 
 if (!window._modalState) window._modalState = new ModalState()

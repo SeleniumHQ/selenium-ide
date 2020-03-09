@@ -43,7 +43,12 @@ import '../../styles/app.css'
 import '../../styles/font.css'
 import '../../styles/layout.css'
 import '../../styles/resizer.css'
-import {isJDXQACompatible, isProduction, isTest, userAgent} from '../../../common/utils'
+import {
+  isJDXQACompatible,
+  isProduction,
+  isTest,
+  userAgent,
+} from '../../../common/utils'
 import Logger from '../../stores/view/Logs'
 
 import { loadProject, saveProject, loadJSProject } from '../../IO/filesystem'
@@ -57,23 +62,35 @@ if (userAgent.os.name === 'Windows') {
   require('../../styles/conditional/scrollbar.css')
   require('../../styles/conditional/text.css')
 }
-
+//
 const project = observable(new ProjectStore(''))
 
 UiState.setProject(project)
 
 if (isProduction) {
-  createDefaultSuite(project, { suite: '', test: '' })
+  createDefaultSuite(project, { suite: '', test: '' },  true)
 } else {
   seed(project)
 }
+
 project.setModified(false)
 
-function createDefaultSuite(
+async function createDefaultSuite(
   aProject,
-  name = { suite: 'Default Suite', test: 'Untitled' }
+  name = { suite: 'Default Suite', test: 'Untitled' },
+  no_pkg
 ) {
   const suite = aProject.createSuite(name.suite)
+
+  if(suite && isJDXQACompatible && !no_pkg) {
+
+    let pkg = await ModalState.renamePackage('')
+
+    if (!suite.additionalOpts) suite.additionalOpts = {}
+
+    suite.additionalOpts.package = pkg
+  }
+
   const test = aProject.createTestCase(name.test)
   suite.addTestCase(test)
   UiState.selectTest(test)
@@ -264,7 +281,7 @@ export default class Panel extends React.Component {
   async createNewProject() {
     const name = await ModalState.renameProject()
     const newProject = observable(new ProjectStore(name))
-    createDefaultSuite(newProject, { suite: name })
+    await createDefaultSuite(newProject, { suite: name })
     loadJSProject(this.state.project, newProject.toJS())
     Logger.clearLogs()
     newProject.setModified(false)
