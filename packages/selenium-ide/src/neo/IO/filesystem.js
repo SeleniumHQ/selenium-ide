@@ -43,6 +43,8 @@ import {
   environment as env,
 } from '@seleniumhq/side-utils'
 
+import exporter from '@seleniumhq/code-export'
+
 export function getFile(path) {
   const browserName = parsedUA.browser.name
   return (() => {
@@ -106,19 +108,25 @@ function downloadProject(project) {
     } else if (env.jdxQACompatible === true) {
       postJSON(getJDXServerURL('/save_project/'), 'post', project)
         .then(e => {
-          if (e.data.error) {
+          if (e.data.status === 'ERROR') {
             ModalState.showAlert({
-              title: 'Error saving project',
-              description: e.data.error,
+              title: 'ERROR',
+              description: e.data.message,
               confirmLabel: 'close',
             })
             return
           }
+
+          ModalState.showAlert({
+            title: 'SUCCESS',
+            description: e.data.message,
+            confirmLabel: 'close',
+          })
           // save java export .. ?
         })
         .catch(e => {
           ModalState.showAlert({
-            title: 'Error saving project',
+            title: 'ERROR',
             description: e.message,
             confirmLabel: 'close',
           })
