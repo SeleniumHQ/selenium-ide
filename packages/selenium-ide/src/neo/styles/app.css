@@ -83,6 +83,14 @@ textarea::placeholder {
   color: #a0a0a0;
 }
 
+* {
+  outline: 0;
+}
+
+:focus {
+  outline: auto 1px #4d90fe;
+}
+
 hr {
   background-color: #e5e5e5;
   border: 0;

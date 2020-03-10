@@ -23,7 +23,7 @@
 
 .file-input > input:focus ~ label {
   box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.7);
-  outline: auto 1px -webkit-focus-ring-color;
+  outline: auto 1px #4d90fe;
 }
 
 .file-input > label > i {
