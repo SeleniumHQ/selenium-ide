@@ -62,13 +62,22 @@ class RenameDialogContents extends React.Component {
             ? props.value
             : '',
       valid: true,
+      validErrorMsg: '',
       type: props.type,
     }
   }
   handleChange(inputValue) {
+    let verifyResult = this.props.verify(inputValue)
+
+    if (verifyResult['isValid'] === undefined) verifyResult['isValid'] = false
+
+    if (verifyResult['errorMsg'] === undefined)
+      verifyResult['errorMsg'] = 'Error message is not defined'
+
     this.setState({
       value: inputValue,
-      valid: this.props.verify(inputValue),
+      valid: verifyResult.isValid,
+      validErrorMsg: verifyResult.errorMsg,
     })
   }
   render() {
@@ -111,7 +120,9 @@ class RenameDialogContents extends React.Component {
         undefined
       ),
       submitButton:
-        this.props.isNewTest || this.props.type === 'project' || this.props.type === 'package'
+        this.props.isNewTest ||
+        this.props.type === 'project' ||
+        this.props.type === 'package'
           ? 'OK'
           : this.state.isRenaming
             ? 'rename'
@@ -178,9 +189,7 @@ class RenameDialogContents extends React.Component {
           autoFocus
         />
         {!this.state.valid && (
-          <span className="message">
-            A {this.props.type} with this name already exists
-          </span>
+          <span className="message">{this.state.validErrorMsg}</span>
         )}
         {content.bodyBottom}
       </DialogContainer>

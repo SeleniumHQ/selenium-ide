@@ -17,7 +17,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { DEFAULT_TIMEOUT } from '../../../models/Suite'
+import { DEFAULT_TIMEOUT, DEFAULT_PACKAGE } from '../../../models/Suite'
 import Modal from '../../Modal'
 import DialogContainer from '../Dialog'
 import Input from '../../FormInput'
@@ -59,12 +59,14 @@ class SuiteSettingsContent extends React.Component {
       timeout: props.timeout ? props.timeout : '',
       isParallel: !!props.isParallel,
       persistSession: !!props.persistSession,
+      package: props.package,
     }
   }
   static propTypes = {
     isEditing: PropTypes.bool,
     timeout: PropTypes.number,
     isParallel: PropTypes.bool,
+    package: PropTypes.string,
     persistSession: PropTypes.bool,
     submit: PropTypes.func,
     cancel: PropTypes.func,
@@ -84,35 +86,40 @@ class SuiteSettingsContent extends React.Component {
       persistSession: e.target.checked,
     })
   }
+
+  onPackageChange(value) {
+    this.setState({
+      package: value,
+    })
+  }
+
   render() {
     const persistSession = !this.state.isParallel && this.state.persistSession
     return (
       <DialogContainer
         title="Suite properties"
         onRequestClose={this.props.cancel}
-        buttons={[
-          <FlatButton onClick={this.props.cancel} key="cancel">
-            cancel
-          </FlatButton>,
-          <FlatButton
-            type="submit"
-            onClick={() => {
-              this.props.submit({
-                timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
-                isParallel: this.state.isParallel,
-                persistSession: this.state.persistSession,
-              })
-            }}
-            style={{
-              marginRight: '0',
-            }}
-            key="ok"
-          >
-            submit
-          </FlatButton>,
-        ]}
-        modalTitle={SuiteSettingsContent.modalTitleElement}
-        modalDescription={SuiteSettingsContent.modalDescriptionElement}
+        renderFooter={() => (
+          <span className="right">
+            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
+            <FlatButton
+              type="submit"
+              onClick={() => {
+                this.props.submit({
+                  timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
+                  isParallel: this.state.isParallel,
+                  persistSession: this.state.persistSession,
+                  pkg: this.state.package || DEFAULT_PACKAGE,
+                })
+              }}
+              style={{
+                marginRight: '0',
+              }}
+            >
+              submit
+            </FlatButton>
+          </span>
+        )}
       >
         <div className="form-contents">
           <Input
@@ -124,6 +131,17 @@ class SuiteSettingsContent extends React.Component {
             width={130}
             onChange={this.onTimeoutChange.bind(this)}
           />
+
+          <Input
+            name="suite-package"
+            type="string"
+            label="Package"
+            placeholder={DEFAULT_PACKAGE}
+            value={this.state.package}
+            width={130}
+            onChange={this.onPackageChange.bind(this)}
+          />
+
           <Checkbox
             label="Run in parallel"
             checked={this.state.isParallel}

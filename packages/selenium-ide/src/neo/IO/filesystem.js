@@ -33,8 +33,15 @@ import Selianize, { ParseError } from 'selianize'
 import Manager from '../../plugin/manager'
 import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
-import { userAgent as parsedUA } from '../../common/utils'
-import { project as projectProcessor, environment as env } from '@seleniumhq/side-utils'
+import {
+  getJDXServerURL,
+  postJSON,
+  userAgent as parsedUA,
+} from '../../common/utils'
+import {
+  project as projectProcessor,
+  environment as env,
+} from '@seleniumhq/side-utils'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -96,6 +103,26 @@ function downloadProject(project) {
     if (UiState.isControlled) {
       //If in control mode, send the project in a message and skip downloading
       sendSaveProjectEvent(project)
+    } else if (env.jdxQACompatible === true) {
+      postJSON(getJDXServerURL('/save_project/'), 'post', project)
+        .then(e => {
+          if (e.data.error) {
+            ModalState.showAlert({
+              title: 'Error saving project',
+              description: e.data.error,
+              confirmLabel: 'close',
+            })
+            return
+          }
+          // save java export .. ?
+        })
+        .catch(e => {
+          ModalState.showAlert({
+            title: 'Error saving project',
+            description: e.message,
+            confirmLabel: 'close',
+          })
+        })
     } else {
       browser.downloads.download({
         filename: projectProcessor.sanitizeProjectName(project.name) + '.side',
@@ -138,18 +165,12 @@ function exportProject(project) {
 }
 
 export function downloadUniqueFile(filename, body, mimeType = 'text/plain') {
-  if(env.jdxQACompatible)
-  {
-
-    console.log('Hello world');
-  } else {
-    browser.downloads.download({
-      filename,
-      url: createBlob(mimeType, body),
-      saveAs: true,
-      conflictAction: 'overwrite',
-    })
-  }
+  browser.downloads.download({
+    filename,
+    url: createBlob(mimeType, body),
+    saveAs: true,
+    conflictAction: 'overwrite',
+  })
 }
 
 let previousFile = null

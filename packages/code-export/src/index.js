@@ -16,12 +16,12 @@
 // under the License.
 
 export const availableLanguages = {
-//   'csharp-nunit': require('@seleniumhq/code-export-csharp-nunit'),
-//   'csharp-xunit': require('@seleniumhq/code-export-csharp-xunit'),
-//   'java-junit': require('@seleniumhq/code-export-java-junit'),
+  //   'csharp-nunit': require('@seleniumhq/code-export-csharp-nunit'),
+  //   'csharp-xunit': require('@seleniumhq/code-export-csharp-xunit'),
+  //   'java-junit': require('@seleniumhq/code-export-java-junit'),
   'java-testng-modded': require('code-export-java-testng-modded'),
-//   'javascript-mocha': require('@seleniumhq/code-export-javascript-mocha'),
-//   'ruby-rspec': require('@seleniumhq/code-export-ruby-rspec'),
+  //   'javascript-mocha': require('@seleniumhq/code-export-javascript-mocha'),
+  //   'ruby-rspec': require('@seleniumhq/code-export-ruby-rspec'),
 }
 
 function registerCommand(language, command, emitter) {

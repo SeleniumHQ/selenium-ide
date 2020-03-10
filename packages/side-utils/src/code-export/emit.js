@@ -414,8 +414,7 @@ async function emitSuite(
   })
 
   // cleanup
-  if(hooks.declareMethods)
-    hooks.declareMethods.clearRegister()
+  if (hooks.declareMethods) hooks.declareMethods.clearRegister()
 
   return result
 }

@@ -22,6 +22,8 @@ import TestCase from './TestCase'
 
 export const DEFAULT_TIMEOUT = 300
 
+export const DEFAULT_PACKAGE = 'com.jedox.qa.engines.testng_web.selenium_ide'
+
 export default class Suite {
   id = null
   @observable
@@ -41,7 +43,7 @@ export default class Suite {
   @observable
   additionalOpts = {}
 
-  constructor(id = uuidv4(), name = 'Untitled Suite') {
+  constructor(id = uuidv4(), name = 'UntitledSuite') {
     this.id = id
     this.name = name
     this.changeTestsDisposer = reaction(
@@ -98,6 +100,11 @@ export default class Suite {
     if (!this.isParallel) {
       this.persistSession = persistSession
     }
+  }
+
+  @action.bound
+  setPackage(pkg) {
+    this.additionalOpts.package = pkg
   }
 
   @action.bound
@@ -172,7 +179,7 @@ export default class Suite {
       parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id),
-      additionalOpts: this.additionalOpts
+      additionalOpts: this.additionalOpts,
     }
   }
 
@@ -186,7 +193,7 @@ export default class Suite {
     suite._tests.replace(
       jsRep.tests.map(testId => projectTests.find(({ id }) => id === testId))
     )
-    suite.additionalOpts = jsRep.additionalOpts || {};
+    suite.additionalOpts = jsRep.additionalOpts || {}
 
     return suite
   }

@@ -67,11 +67,63 @@ class ModalState {
   @action
   rename(type, value, opts = { isNewTest: false }) {
     const verifyName = name => {
+      // object like this should be returned
+      let retObject = {
+        isValid: true,
+        errorMsg: '',
+      }
+
+      if (name === value) return retObject
+
       let names
       if (type === Types.test) names = UiState._project.tests
       else if (type === Types.suite) names = UiState._project.suites
 
-      return name === value || this.nameIsUnique(name, names)
+      if (!this.nameIsUnique(name, names))
+        return {
+          isValid: false,
+          errorMsg: `A ${type} with this name already exists`,
+        }
+
+      if (
+        type === Types.test &&
+        !name.match(name.match(/^[A-Za-z]+[A-Za-z0-9]+$/g))
+      )
+        return {
+          isValid: false,
+          errorMsg: `A ${type} must start with letter, and can contain only letters and numbers in it's name`,
+        }
+
+      if (
+        (type === Types.suite || type === Types.project) &&
+        !name.match(name.match(/^[A-Z]+[A-Za-z0-9]+$/g))
+      )
+        return {
+          isValid: false,
+          errorMsg: `A ${type} must start with uppercase letter, and can contain only letters and numbers in it's name`,
+        }
+
+      if (
+        type === Types.suite &&
+        !name.match(name.match(/^[A-Z]+[A-Za-z0-9]+$/g))
+      )
+        return {
+          isValid: false,
+          errorMsg: `A ${type} must start with uppercase letter, and can contain only letters and numbers in it's name`,
+        }
+
+      if (
+        type === Types.package &&
+        !name.match(
+          name.match(/^([a-z_$][a-z\p{N}_$]*\.)*[a-z$][a-z\p{N}_$]*$/g)
+        )
+      )
+        return {
+          isValid: false,
+          errorMsg: `A ${type} can contain only lowercase letters, numbers, . and _. Can end only on letter or number`,
+        }
+
+      return retObject
     }
     return new Promise(res => {
       this.renameState = {
@@ -81,7 +133,7 @@ class ModalState {
         verify: verifyName,
         isNewTest: opts.isNewTest,
         done: name => {
-          if (verifyName(name)) {
+          if (verifyName(name).isValid) {
             res(name)
             if (type === Types.test) {
               this.renameRunCommands(this.renameState.original, name)
@@ -188,11 +240,13 @@ class ModalState {
       editing: true,
       isParallel: suite.isParallel,
       persistSession: suite.persistSession,
+      package: suite.additionalOpts && suite.additionalOpts.package,
       timeout: suite.timeout,
-      done: ({ isParallel, persistSession, timeout }) => {
+      done: ({ isParallel, persistSession, timeout, pkg }) => {
         suite.setTimeout(timeout)
         suite.setParallel(isParallel)
         suite.setPersistSession(persistSession)
+        suite.setPackage(pkg)
         this.cancelSuiteSettings()
       },
     }
@@ -243,10 +297,7 @@ class ModalState {
 
   @action.bound
   renamePackage(defPackage) {
-    return this.rename(
-      Types.package,
-      defPackage
-    )
+    return this.rename(Types.package, defPackage)
   }
 
   @action.bound

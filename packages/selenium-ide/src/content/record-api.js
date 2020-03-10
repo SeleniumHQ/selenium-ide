@@ -29,7 +29,7 @@ function Recorder(window) {
   this.recordingState = {}
   this.jdxContext = {}
   this.jdxConsts = {
-    dblClickSpan: 500
+    dblClickSpan: 500,
   }
 }
 

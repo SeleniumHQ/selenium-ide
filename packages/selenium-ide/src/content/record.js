@@ -93,15 +93,14 @@ Recorder.addEventHandler('type', 'change', function(event) {
       record('type', locatorBuilders.buildAll(event.target), event.target.value)
     }
 
-    if(event.target.classList.contains("inputField") && event.target.id && event.target.id.includes("inputField"))
-    {
-        record(
-            'sendKeys',
-            locatorBuilders.buildAll(event.target),
-            '${KEY_ENTER}'
-        )
+    if (
+      event.target.classList.contains('inputField') &&
+      event.target.id &&
+      event.target.id.includes('inputField')
+    ) {
+      record('sendKeys', locatorBuilders.buildAll(event.target), '${KEY_ENTER}')
     }
-}
+  }
   this.recordingState.typeLock = 0
 })
 
@@ -118,23 +117,21 @@ Recorder.addEventHandler(
   'clickAt',
   'click',
   function(event) {
-    if (
-      event.button == 0 &&
-      eventIsTrusted(event)
-    ) {
-      const locators = locatorBuilders.buildAll(event.target);
+    if (event.button == 0 && eventIsTrusted(event)) {
+      const locators = locatorBuilders.buildAll(event.target)
 
-      if(this.jdxContext && this.jdxContext.clickTimeoutId)
-        return;
+      if (this.jdxContext && this.jdxContext.clickTimeoutId) return
 
-      this.jdxContext.clickTimeoutId = setTimeout(function(ctx){
-        if(!ctx.jdxContext.doubleClicked)
-            record('click', locators , '');
+      this.jdxContext.clickTimeoutId = setTimeout(
+        function(ctx) {
+          if (!ctx.jdxContext.doubleClicked) record('click', locators, '')
 
-        ctx.jdxContext.doubleClicked = false;
-        ctx.jdxContext.clickTimeoutId = null;
-      }, this.jdxConsts.dblClickSpan, this);
-
+          ctx.jdxContext.doubleClicked = false
+          ctx.jdxContext.clickTimeoutId = null
+        },
+        this.jdxConsts.dblClickSpan,
+        this
+      )
     }
   },
   true
@@ -147,7 +144,7 @@ Recorder.addEventHandler(
   'dblclick',
   function(event) {
     record('doubleClick', locatorBuilders.buildAll(event.target), '')
-    this.jdxContext.doubleClicked = true;
+    this.jdxContext.doubleClicked = true
   },
   true
 )
@@ -304,19 +301,22 @@ Recorder.addEventHandler(
 )
 // END
 
-
-
 let mousedown, mouseup, selectMouseup, selectMousedown, mouseoverQ, clickLocator
 
 Recorder.addEventHandler(
-  "cellClickOrContext",
-  "mousedown",
-  function(e)
-  {
-    if(e.target.classList.value == "gridCell" || (e.target.classList.contains("cursorField") && e.button == 2 ))
-    {
-        record(e.button == 2 ? 'contextMenu' : 'click', locatorBuilders.buildAll(e.target), '');
-        this.jdxContext.contextAlreadyRecorded = true;
+  'cellClickOrContext',
+  'mousedown',
+  function(e) {
+    if (
+      e.target.classList.value == 'gridCell' ||
+      (e.target.classList.contains('cursorField') && e.button == 2)
+    ) {
+      record(
+        e.button == 2 ? 'contextMenu' : 'click',
+        locatorBuilders.buildAll(e.target),
+        ''
+      )
+      this.jdxContext.contextAlreadyRecorded = true
     }
   },
   true
@@ -682,15 +682,14 @@ Recorder.addEventHandler(
   'contextMenu',
   'contextmenu',
   function(event) {
-    if(!this.jdxContext.contextAlreadyRecorded)
-      record("contextMenu", locatorBuilders.buildAll(event.target), '');
+    if (!this.jdxContext.contextAlreadyRecorded)
+      record('contextMenu', locatorBuilders.buildAll(event.target), '')
 
-    this.jdxContext.contextAlreadyRecorded = false;
+    this.jdxContext.contextAlreadyRecorded = false
     // let myPort = browser.runtime.connect()
     // let tmpText = locatorBuilders.buildAll(event.target)
     // let tmpVal = bot.dom.getVisibleText(event.target)
     // let tmpTitle = goog.string.normalizeSpaces(event.target.ownerDocument.title)
-
 
     // myPort.onMessage.addListener(function(m) {
     //   if (m.cmd.includes('Text')) {

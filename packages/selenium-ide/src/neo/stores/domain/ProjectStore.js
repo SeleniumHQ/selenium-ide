@@ -221,7 +221,7 @@ export default class ProjectStore {
   fromJS(jsRep) {
     this.name = jsRep.name
     this.setUrl(jsRep.url)
-    this.globalOpts = jsRep.globalOpts;
+    this.globalOpts = jsRep.globalOpts
     this._tests.replace(jsRep.tests.map(TestCase.fromJS))
     this._suites.replace(
       jsRep.suites.map(suite => Suite.fromJS(suite, this.tests))

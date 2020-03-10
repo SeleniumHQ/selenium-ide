@@ -125,7 +125,7 @@ class WelcomeDialogContents extends React.Component {
               <OpenInput
                 onFileSelected={this.openProject}
                 labelMarkup={<div>Open an existing project</div>}
-            />
+              />
             </li>
             <li>
               <a onClick={this.createNewProject}>Create a new project</a>
