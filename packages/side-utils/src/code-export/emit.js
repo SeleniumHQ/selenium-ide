@@ -21,6 +21,7 @@ import doRender from './render'
 import { registerMethod } from './register'
 import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
 import { Commands } from '@seleniumhq/side-model'
+import {isJDXQACompatible} from "selenium-ide-extension/src/common/utils";
 
 function validateCommand(command) {
   const commandName = command.command
@@ -314,6 +315,7 @@ async function emitTestsFromSuite(
   let result = {}
   for (const testName of suite.tests) {
     const test = tests.find(test => test.name === testName)
+    if (test.name.includes('.') && isJDXQACompatible) continue
     const testDeclaration = generateTestDeclaration(test.name)
     result[test.name] = await emitTest(test, tests, {
       ...languageOpts,

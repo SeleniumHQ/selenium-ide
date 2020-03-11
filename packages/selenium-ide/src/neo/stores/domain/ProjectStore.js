@@ -21,6 +21,7 @@ import naturalCompare from 'string-natural-compare'
 import TestCase from '../../models/TestCase'
 import Suite from '../../models/Suite'
 import { VERSIONS } from '../../IO/migrate'
+import { isJDXQACompatible } from '../../../common/utils'
 
 export default class ProjectStore {
   @observable
@@ -44,7 +45,7 @@ export default class ProjectStore {
   @observable
   version = VERSIONS[VERSIONS.length - 1]
 
-  constructor(name = 'Untitled Project') {
+  constructor(name = 'UntitledProject') {
     this.name = name
     this.changedTestDisposer = reaction(
       () => this._tests.find(({ modified }) => modified),
@@ -165,6 +166,9 @@ export default class ProjectStore {
         test.name = `${test.name} (${foundNumber})`
       }
       this._tests.push(test)
+
+      if (isJDXQACompatible) this.suites.forEach(s => s.addTestCase(test))
+
       return test
     }
   }

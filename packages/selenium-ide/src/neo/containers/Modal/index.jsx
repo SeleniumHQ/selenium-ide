@@ -64,6 +64,11 @@ export default class Modal extends Component {
           type={ModalState.renameState.type}
           value={ModalState.renameState.value}
           verify={ModalState.renameState.verify}
+          autocompleteItems={ModalState.renameState.autocompleteItems}
+          autocompleteItemsFilter={
+            ModalState.renameState.autocompleteItemsFilter
+          }
+          strictAutocomplete={ModalState.renameState.strictAutocomplete}
           setValue={ModalState.renameState ? ModalState.renameState.done : null}
           cancel={ModalState.renameState.cancel}
           isNewTest={ModalState.renameState.isNewTest}

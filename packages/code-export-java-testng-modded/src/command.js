@@ -554,8 +554,11 @@ async function emitPause(time) {
   return Promise.resolve({ commands })
 }
 
-async function emitRun(testName) {
-  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
+async function emitRun() {
+  // run won't be emitted as command..
+  // We'll have to handle this differently.
+  // return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
+  return Promise.resolve('');
 }
 
 async function emitRunScript(script) {
@@ -564,11 +567,8 @@ async function emitRunScript(script) {
   )
 }
 
-async function emitSetWindowSize(size) {
-  const [width, height] = size.split('x')
-  return Promise.resolve(
-    `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
-  )
+async function emitSetWindowSize() {
+  return Promise.resolve('')
 }
 
 async function emitSelect(selectElement, option) {

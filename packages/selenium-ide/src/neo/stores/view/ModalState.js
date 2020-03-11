@@ -17,6 +17,7 @@
 
 import { action, observable } from 'mobx'
 import UiState from './UiState'
+import { getJDXServerURL, isJDXQACompatible } from '../../../common/utils'
 
 class ModalState {
   @observable
@@ -65,7 +66,15 @@ class ModalState {
   }
 
   @action
-  rename(type, value, opts = { isNewTest: false }) {
+  rename(
+    type,
+    value,
+    opts = {
+      isNewTest: false,
+      autocompleteItems: null,
+      autocompleteItemsFilter: null,
+    }
+  ) {
     const verifyName = name => {
       // object like this should be returned
       let retObject = {
@@ -87,36 +96,26 @@ class ModalState {
 
       if (
         type === Types.test &&
-        !name.match(name.match(/^[A-Za-z]+[A-Za-z0-9]+$/g))
+        !name.match(
+          /^((([a-z]+[a-z0-9_]*[a-z]+\.)*([a-z][a-z_0-9]+[^_.])*)*([A-Z]+[a-zA-Z]*[0-9]*[#]?))*([a-zA-Z][a-z_A-Z0-9]+[^_.])+$/g
+        )
       )
         return {
           isValid: false,
-          errorMsg: `A ${type} must start with letter, and can contain only letters and numbers in it's name`,
+          errorMsg: `A ${type} must start with letter, and can contain only letters, numbers and . in it's name`,
         }
 
       if (
         (type === Types.suite || type === Types.project) &&
-        !name.match(name.match(/^[A-Z]+[A-Za-z0-9]+$/g))
+        !name.match(/^[A-Z]+[A-Za-z0-9]+$/g)
       )
         return {
           isValid: false,
           errorMsg: `A ${type} must start with uppercase letter, and can contain only letters and numbers in it's name`,
         }
-
-      if (
-        type === Types.suite &&
-        !name.match(name.match(/^[A-Z]+[A-Za-z0-9]+$/g))
-      )
-        return {
-          isValid: false,
-          errorMsg: `A ${type} must start with uppercase letter, and can contain only letters and numbers in it's name`,
-        }
-
       if (
         type === Types.package &&
-        !name.match(
-          name.match(/^([a-z_$][a-z\p{N}_$]*\.)*[a-z$][a-z\p{N}_$]*$/g)
-        )
+        !name.match(/^(([a-z]+[a-z0-9_]*[a-z]+\.)*([a-z][a-z_0-9]+[^_.])+)$/g)
       )
         return {
           isValid: false,
@@ -127,6 +126,9 @@ class ModalState {
     }
     return new Promise(res => {
       this.renameState = {
+        autocompleteItems: opts.autocompleteItems,
+        strictAutocomplete: opts.strictAutocomplete,
+        autocompleteItemsFilter: opts.autocompleteItemsFilter,
         original: value,
         value,
         type,
@@ -168,12 +170,37 @@ class ModalState {
 
   @action.bound
   createTest() {
-    this.renameTest(undefined).then(name => {
-      if (name) {
-        const test = this._project.createTestCase(name)
-        UiState.selectTest(test)
-      }
-    })
+    if (isJDXQACompatible === true) {
+      fetch(getJDXServerURL('/autocomplete'))
+        .then(e => e.json())
+        .then(json => {
+          this.renameTest(undefined, {
+            autocompleteItems: json,
+            strictAutocomplete: name =>
+              name.includes('.') || name.includes('#'),
+            autocompleteItemsFilter: item => item.startsWith(p)
+          }).then(name => {
+            if (name) {
+              const test = this._project.createTestCase(name)
+              UiState.selectTest(test)
+            }
+          })
+        })
+        .catch(e => {
+          this.showAlert({
+            title: 'ERROR',
+            description: JSON.stringify(e),
+            confirmLabel: 'close',
+          })
+        })
+    } else {
+      this.renameTest(undefined).then(name => {
+        if (name) {
+          const test = this._project.createTestCase(name)
+          UiState.selectTest(test)
+        }
+      })
+    }
   }
 
   @action.bound

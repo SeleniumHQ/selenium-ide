@@ -31,6 +31,7 @@ import ExecutionPlan from '../../components/ExecutionPlan'
 import Runs from '../../components/Runs'
 import AddButton from '../../components/ActionButtons/Add'
 import './style.css'
+import { isJDXQACompatible } from '../../../common/utils'
 
 @observer
 export default class Navigation extends React.Component {
@@ -92,15 +93,13 @@ export default class Navigation extends React.Component {
               aria-label="Add new test"
             />
           )}
-          {UiState.selectedView === 'Test suites' && (
-            <AddButton
-              data-tip={'<p>Add new test suite</p>'}
-              data-event="focus mouseenter"
-              data-event-off="blur mouseleave"
-              onClick={ModalState.createSuite}
-              aria-label="Add new test suite"
-            />
-          )}
+          {UiState.selectedView === 'Test suites' &&
+            !isJDXQACompatible && (
+              <AddButton
+                data-tip={'<p>Add new test suite</p>'}
+                onClick={ModalState.createSuite}
+              />
+            )}
         </VerticalTabBar>
         <Provider renameTest={ModalState.renameTest}>
           <React.Fragment>

@@ -32,35 +32,46 @@ opts.terminatingKeyword = '}'
 opts.commentPrefix = '//'
 opts.generateMethodDeclaration = generateMethodDeclaration
 
-/*
-  To patch for my need, I'll send bound generateTestDeclaration with exportedObject ( suite or test ), so I can get a
-  package and name...
- */
-
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
-function generateTestDeclaration(name) {
+function generateTestDeclaration(tests, name) {
   let pkg = ''
   let cls = ''
+
+  if (
+    !this ||
+    !this.name ||
+    !this.additionalOpts ||
+    !this.additionalOpts.package
+  ) {
+    throw new Error('Package and name must be specified')
+  }
+
+  pkg = this.additionalOpts.package
+  cls = exporter.parsers.sanitizeName(this.name)
+
   let testName = exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
   )
 
-  if (this && this.name && this.additionalOpts && this.additionalOpts.package) {
-    pkg = this.additionalOpts.package + '.'
-    cls =
-      exporter.parsers.capitalize(exporter.parsers.sanitizeName(this.name)) +
-      'Test.'
+  let thisTest = tests.find(e => e.name === name)
+
+  if (thisTest === undefined) throw new Error('This should be impossible')
+
+  let dependency = ''
+
+  let runCommand = thisTest.commands.find(c => c.command === 'run')
+
+  if (runCommand !== undefined) {
+    if (runCommand.target.includes('.')) dependency = runCommand.target
+    else dependency = `${pkg}.${cls}#${runCommand.target}`
   }
 
-  let ret = `public void ${testName}() {`
+  let clsGroup = `${pkg}.${cls}`
+  let methodGroup = `${clsGroup}#${name}`
 
-  if (name.toLowerCase().includes('test_')) {
-    let parts = name.split('_')
-    if (parts.length !== 2) throw "you can't use _ separator more than once.. "
-
-    ret = `@Test(groups="${pkg}${cls}${parts[1]}")\n` + ret
-  }
-  return ret
+  return `@Test(groups={"${clsGroup}", "${methodGroup}"}${
+    dependency ? `, dependsOnGroups={"${dependency}"` : ''
+  })\npublic void ${testName}() {`
 }
 
 function generateMethodDeclaration(name) {
@@ -69,12 +80,10 @@ function generateMethodDeclaration(name) {
 function generateSuiteDeclaration(name) {
   return `public class ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
-  )}Test extends Loader {`
+  )} extends Loader {`
 }
 function generateFilename(name) {
-  return `${exporter.parsers.capitalize(
-    exporter.parsers.sanitizeName(name)
-  )}Test${opts.fileExtension}`
+  return `${exporter.parsers.sanitizeName(name)}${opts.fileExtension}`
 }
 
 // Emit an individual test, wrapped in a suite (using the test name as the suite name)
@@ -84,13 +93,14 @@ export async function emitTest({
   tests,
   project,
   enableOriginTracing,
+  enableDescriptionAsComment,
   beforeEachOptions,
 }) {
   // regen hooks
   opts.hooks = generateHooks(test)
 
   // eslint-disable-next-line no-func-assign
-  generateTestDeclaration = generateTestDeclaration.bind(test)
+  generateTestDeclaration = generateTestDeclaration.bind(test, tests)
 
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
@@ -98,6 +108,7 @@ export async function emitTest({
     ...opts,
     testDeclaration,
     enableOriginTracing,
+    enableDescriptionAsComment,
     project,
   })
   const suiteName = test.name
@@ -123,16 +134,18 @@ export async function emitSuite({
   project,
   enableOriginTracing,
   beforeEachOptions,
+  enableDescriptionAsComment,
 }) {
   // regen hooks
   opts.hooks = generateHooks(suite)
 
   // eslint-disable-next-line no-func-assign
-  generateTestDeclaration = generateTestDeclaration.bind(suite)
+  generateTestDeclaration = generateTestDeclaration.bind(suite, tests)
 
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
     enableOriginTracing,
+    enableDescriptionAsComment,
     generateTestDeclaration,
     project,
   })
