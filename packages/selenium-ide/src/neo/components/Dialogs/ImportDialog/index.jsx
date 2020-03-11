@@ -88,11 +88,11 @@ class ImportDialogContent extends React.Component {
     return (
       <DialogContainer
         title="Import suite"
-        renderFooter={() => (
-          <span className="right">
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-          </span>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+        ]}
         onRequestClose={this.props.cancel}
       >
         <p>

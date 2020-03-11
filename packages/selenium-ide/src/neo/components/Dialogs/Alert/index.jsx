@@ -68,22 +68,21 @@ export default class AlertDialog extends React.Component {
         <DialogContainer
           type={this.state.options.type ? this.state.options.type : 'info'}
           title={this.state.options.title}
-          renderFooter={() => (
-            <span className="right">
-              {this.state.options.cancelLabel ? (
-                <FlatButton onClick={this.close.bind(this, false)}>
-                  {this.state.options.cancelLabel}
-                </FlatButton>
-              ) : null}
-              <FlatButton
-                type="submit"
-                onClick={this.close.bind(this, true)}
-                autoFocus
-              >
-                {this.state.options.confirmLabel || 'OK'}
+          buttons={[
+            this.state.options.cancelLabel ? (
+              <FlatButton onClick={this.close.bind(this, false)} key="cancel">
+                {this.state.options.cancelLabel}
               </FlatButton>
-            </span>
-          )}
+            ) : null,
+            <FlatButton
+              type="submit"
+              onClick={this.close.bind(this, true)}
+              key="ok"
+              autoFocus
+            >
+              {this.state.options.confirmLabel || 'OK'}
+            </FlatButton>,
+          ]}
           onRequestClose={this.close.bind(this, false)}
         >
           {this.state.options.isMarkdown ? (

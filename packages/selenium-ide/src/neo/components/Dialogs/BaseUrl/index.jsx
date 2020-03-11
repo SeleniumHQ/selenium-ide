@@ -63,25 +63,21 @@ class BaseUrlDialogContents extends React.Component {
             : "Set your project's base URL"
         }
         type={this.props.isInvalid ? 'warn' : 'info'}
-        renderFooter={() => (
-          <div
-            className="right"
-            style={{
-              display: 'flex',
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            disabled={!this.urlRegex.test(this.state.url)}
+            onClick={() => {
+              this.props.onUrlSelection(this.state.url)
             }}
+            key="ok"
           >
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-            <FlatButton
-              type="submit"
-              disabled={!this.urlRegex.test(this.state.url)}
-              onClick={() => {
-                this.props.onUrlSelection(this.state.url)
-              }}
-            >
-              {this.props.confirmLabel || 'confirm'}
-            </FlatButton>
-          </div>
-        )}
+            {this.props.confirmLabel || 'confirm'}
+          </FlatButton>,
+        ]}
         onRequestClose={this.props.cancel}
       >
         <p>

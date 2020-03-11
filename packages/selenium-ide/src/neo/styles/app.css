@@ -88,7 +88,7 @@ textarea::placeholder {
 }
 
 :focus {
-  outline: var(--selected-border-color) 1px dashed;
+  outline: var(--selected-border-color) 1px solid;
 }
 
 hr {

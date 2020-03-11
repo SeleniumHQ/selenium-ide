@@ -122,20 +122,21 @@ class NewWindowInput extends React.Component {
       <DialogContainer
         title="New Window Configuration"
         type={this.state.isInvalidName ? 'warn' : 'info'}
-        renderFooter={() => (
-          <div className="right">
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-            <FlatButton
-              type="submit"
-              disabled={
-                this.state.isInvalidName || this.state.options.windowName === ''
-              }
-              onClick={this.onSubmit}
-            >
-              {'confirm'}
-            </FlatButton>
-          </div>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            disabled={
+              this.state.isInvalidName || this.state.options.windowName === ''
+            }
+            onClick={this.onSubmit}
+            key="ok"
+          >
+            {'confirm'}
+          </FlatButton>,
+        ]}
         onRequestClose={this.props.cancel}
       >
         {this.state.isConfigEnabled ? (

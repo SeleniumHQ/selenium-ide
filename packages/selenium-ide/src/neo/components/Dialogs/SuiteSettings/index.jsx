@@ -86,26 +86,27 @@ class SuiteSettingsContent extends React.Component {
       <DialogContainer
         title="Suite properties"
         onRequestClose={this.props.cancel}
-        renderFooter={() => (
-          <span className="right">
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-            <FlatButton
-              type="submit"
-              onClick={() => {
-                this.props.submit({
-                  timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
-                  isParallel: this.state.isParallel,
-                  persistSession: this.state.persistSession,
-                })
-              }}
-              style={{
-                marginRight: '0',
-              }}
-            >
-              submit
-            </FlatButton>
-          </span>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            onClick={() => {
+              this.props.submit({
+                timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
+                isParallel: this.state.isParallel,
+                persistSession: this.state.persistSession,
+              })
+            }}
+            style={{
+              marginRight: '0',
+            }}
+            key="ok"
+          >
+            submit
+          </FlatButton>,
+        ]}
       >
         <div className="form-contents">
           <Input
