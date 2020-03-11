@@ -70,6 +70,11 @@ export default class AlertDialog extends React.Component {
           title={this.state.options.title}
           renderFooter={() => (
             <span className="right">
+              {this.state.options.cancelLabel ? (
+                <FlatButton onClick={this.close.bind(this, false)}>
+                  {this.state.options.cancelLabel}
+                </FlatButton>
+              ) : null}
               <FlatButton
                 type="submit"
                 onClick={this.close.bind(this, true)}
@@ -77,11 +82,6 @@ export default class AlertDialog extends React.Component {
               >
                 {this.state.options.confirmLabel || 'OK'}
               </FlatButton>
-              {this.state.options.cancelLabel ? (
-                <FlatButton onClick={this.close.bind(this, false)}>
-                  {this.state.options.cancelLabel}
-                </FlatButton>
-              ) : null}
             </span>
           )}
           onRequestClose={this.close.bind(this, false)}

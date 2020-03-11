@@ -124,6 +124,7 @@ class NewWindowInput extends React.Component {
         type={this.state.isInvalidName ? 'warn' : 'info'}
         renderFooter={() => (
           <div className="right">
+            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
             <FlatButton
               type="submit"
               disabled={
@@ -133,7 +134,6 @@ class NewWindowInput extends React.Component {
             >
               {'confirm'}
             </FlatButton>
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
           </div>
         )}
         onRequestClose={this.props.cancel}

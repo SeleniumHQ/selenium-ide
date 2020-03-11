@@ -89,6 +89,7 @@ class TestSelectorContent extends React.Component {
         onRequestClose={this.props.cancel}
         renderFooter={() => (
           <span className="right">
+            <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
             <FlatButton
               type="submit"
               onClick={() => {
@@ -102,7 +103,6 @@ class TestSelectorContent extends React.Component {
             >
               select
             </FlatButton>
-            <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
           </span>
         )}
       >

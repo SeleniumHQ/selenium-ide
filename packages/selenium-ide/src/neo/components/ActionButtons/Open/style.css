@@ -23,7 +23,7 @@
 
 .file-input > input:focus ~ label {
   box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.7);
-  outline: auto 1px #4d90fe;
+  outline: var(--selected-border-color) 1px auto;
 }
 
 .file-input > label > i {

@@ -120,6 +120,12 @@ class RenameDialogContents extends React.Component {
             }}
           >
             <FlatButton
+              disabled={this.props.isNewTest && !!this.state.value}
+              onClick={this.props.cancel}
+            >
+              {content.cancelButton}
+            </FlatButton>
+            <FlatButton
               type="submit"
               disabled={!this.state.value || !this.state.valid}
               onClick={() => {
@@ -130,12 +136,6 @@ class RenameDialogContents extends React.Component {
               }}
             >
               {content.submitButton}
-            </FlatButton>
-            <FlatButton
-              disabled={this.props.isNewTest && !!this.state.value}
-              onClick={this.props.cancel}
-            >
-              {content.cancelButton}
             </FlatButton>
           </span>
         )}

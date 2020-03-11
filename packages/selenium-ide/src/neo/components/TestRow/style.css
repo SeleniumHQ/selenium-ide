@@ -9,7 +9,7 @@
 
 .test-table tbody tr {
   cursor: pointer;
-  outline: none;
+  outline: 0;
 }
 
 .test-table tbody tr td {
