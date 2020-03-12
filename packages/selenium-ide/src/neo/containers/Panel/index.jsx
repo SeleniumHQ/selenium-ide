@@ -64,20 +64,12 @@ if (userAgent.os.name === 'Windows') {
 }
 //
 const project = observable(new ProjectStore(''))
-
 UiState.setProject(project)
-
-if (isProduction) {
-  createDefaultSuite(project, { suite: '', test: '' }, true)
-} else {
-  seed(project)
-}
-
 project.setModified(false)
 
 async function createDefaultSuite(
   aProject,
-  name = { suite: 'Default Suite', test: 'Untitled' },
+  name = { suite: 'DefaultSuite', test: 'Untitled' },
   no_pkg
 ) {
   const suite = aProject.createSuite(name.suite)
@@ -91,8 +83,7 @@ async function createDefaultSuite(
   }
 
   const test = aProject.createTestCase(name.test)
-  if (!isJDXQACompatible)
-    suite.addTestCase(test)
+  if (!isJDXQACompatible) suite.addTestCase(test)
 
   UiState.selectTest(test)
 }
@@ -369,18 +360,28 @@ export default class Panel extends React.Component {
                   size={UiState.navigationWidth}
                   onChange={UiState.resizeNavigation}
                 >
-                  <Navigation
-                    tests={UiState.filteredTests}
-                    suites={this.state.project.suites}
-                    duplicateTest={this.state.project.duplicateTestCase}
-                  />
-                  <Editor
-                    url={this.state.project.url}
-                    urls={this.state.project.urls}
-                    setUrl={this.state.project.setUrl}
-                    test={UiState.displayedTest}
-                    callstackIndex={UiState.selectedTest.stack}
-                  />
+                  {UiState.filteredTests &&
+                  this.state.project &&
+                  this.state.project.suites ? (
+                    <Navigation
+                      tests={UiState.filteredTests}
+                      suites={this.state.project.suites}
+                      duplicateTest={this.state.project.duplicateTestCase}
+                    />
+                  ) : (
+                    undefined
+                  )}
+                  {UiState.displayedTest &&
+                  this.state.project &&
+                  UiState.selectedTest ? (
+                    <Editor
+                      project={this.state.project}
+                      test={UiState.displayedTest}
+                      callstackIndex={UiState.selectedTest.stack}
+                    />
+                  ) : (
+                    undefined
+                  )}
                 </SplitPane>
               </div>
             </div>

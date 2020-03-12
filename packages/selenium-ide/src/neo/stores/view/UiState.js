@@ -137,7 +137,9 @@ class UiState {
 
   @computed
   get filteredTests() {
-    return this._project.tests.filter(this.filterFunction)
+    return (
+      (this._project && this._project.tests.filter(this.filterFunction)) || []
+    )
   }
 
   @computed
