@@ -18,6 +18,7 @@
 import { action, observable } from 'mobx'
 import UiState from './UiState'
 import { getJDXServerURL, isJDXQACompatible } from '../../../common/utils'
+import { last, first } from 'lodash'
 
 class ModalState {
   @observable
@@ -75,8 +76,65 @@ class ModalState {
       autocompleteItemsFilter: null,
     }
   ) {
+    const verifyClassName = name => {
+      return (
+        name.match(/^[a-z0-9_]+$/gi) &&
+        first(name).match(/[A-Z]+/g) &&
+        last(name) !== '_'
+      )
+    }
+
+    const verifySimpleTestName = name => {
+      return (
+        name.match(/^[a-z0-9_]+$/gi) &&
+        first(name).match(/[a-z]+/gi) &&
+        last(name) !== '_'
+      )
+    }
+
+    const verifyTestName = name => {
+      if (!name.match(/^[a-z0-9_#.]+$/gi)) return false
+
+      // complex ?
+      if (name.includes('.')) {
+        if (!name.includes('#')) return false
+        //split by last dot
+        let parts = name.split(/\.(?=[^\.]+$)/)
+
+        if (parts.length !== 2) return false
+
+        let pkg = parts[0]
+        let [cls, test] =
+          parts[1].split('#').length === 2 ? parts[1].split('#') : ['', '']
+
+        return (
+          verifyPackageName(pkg) &&
+          verifyClassName(cls) &&
+          verifySimpleTestName(test)
+        )
+      } else {
+        return verifySimpleTestName(name)
+      }
+    }
+
+    const verifyPackageName = name => {
+      return (
+        name.match(/^[a-z0-9_.]+$/g) &&
+        !name
+          .split('.')
+          .some(
+            part =>
+              !part ||
+              first(part).match(/\d+/g) ||
+              first(part) === '_' ||
+              last(part) === '_'
+          )
+      )
+    }
+
     const verifyName = name => {
       // object like this should be returned
+
       let retObject = {
         isValid: true,
         errorMsg: '',
@@ -88,18 +146,19 @@ class ModalState {
       if (type === Types.test) names = UiState._project.tests
       else if (type === Types.suite) names = UiState._project.suites
 
+      if (!name)
+        return {
+          isValid: false,
+          errorMsg: `A ${type} is not defined`,
+        }
+
       if (!this.nameIsUnique(name, names))
         return {
           isValid: false,
           errorMsg: `A ${type} with this name already exists`,
         }
 
-      if (
-        type === Types.test &&
-        !name.match(
-          /^((([a-z]+[a-z0-9_]*[a-z]+\.)*([a-z][a-z_0-9]+[^_.])*)*([A-Z]+[a-zA-Z]*[0-9]*[#]?))*([a-zA-Z][a-z_A-Z0-9]+[^_.])+$/g
-        )
-      )
+      if (type === Types.test && !verifyTestName(name))
         return {
           isValid: false,
           errorMsg: `A ${type} must start with letter, and can contain only letters, numbers and . in it's name`,
@@ -107,16 +166,14 @@ class ModalState {
 
       if (
         (type === Types.suite || type === Types.project) &&
-        !name.match(/^[A-Z]+[A-Za-z0-9]+$/g)
+        !verifyClassName(name)
       )
         return {
           isValid: false,
-          errorMsg: `A ${type} must start with uppercase letter, and can contain only letters and numbers in it's name`,
+          errorMsg: `A ${type} must start with uppercase letter, and can contain only letters, numbers and _ in it's name, must not end in _`,
         }
-      if (
-        type === Types.package &&
-        !name.match(/^(([a-z]+[a-z0-9_]*[a-z]+\.)*([a-z][a-z_0-9]+[^_.])+)$/g)
-      )
+
+      if (type === Types.package && !verifyPackageName(name))
         return {
           isValid: false,
           errorMsg: `A ${type} can contain only lowercase letters, numbers, . and _. Can end only on letter or number`,
@@ -178,7 +235,7 @@ class ModalState {
             autocompleteItems: json,
             strictAutocomplete: name =>
               name.includes('.') || name.includes('#'),
-            autocompleteItemsFilter: item => item.startsWith(p)
+            autocompleteItemsFilter: item => !item.startsWith('TODO'), // TODO
           }).then(name => {
             if (name) {
               const test = this._project.createTestCase(name)

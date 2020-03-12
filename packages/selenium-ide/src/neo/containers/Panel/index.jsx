@@ -91,7 +91,9 @@ async function createDefaultSuite(
   }
 
   const test = aProject.createTestCase(name.test)
-  suite.addTestCase(test)
+  if (!isJDXQACompatible)
+    suite.addTestCase(test)
+
   UiState.selectTest(test)
 }
 

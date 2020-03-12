@@ -25,7 +25,7 @@ import classNames from 'classnames'
 import './style.css'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import {isJDXQACompatible} from "../../../../common/utils";
+import { isJDXQACompatible } from '../../../../common/utils'
 
 export default class RenameDialog extends React.Component {
   static propTypes = {
@@ -68,19 +68,32 @@ class RenameDialogContents extends React.Component {
       validErrorMsg: '',
       type: props.type,
     }
+
+    this.handleChange = this.handleChange.bind(this)
   }
-  handleChange(inputValue) {
+  // eslint-disable-next-line no-unused-vars
+  handleChange(event = null, inputValue) {
     let verifyResult = this.props.verify(inputValue)
 
-    let strictAC =
-      typeof this.props.strictAutocomplete == 'boolean'
-        ? this.props.strictAutocomplete
-        : this.props.strictAutocomplete(inputValue)
+    if (this.props.autocompleteItems) {
+      let strictAC = false
 
-    if (strictAC && !this.props.autocompleteItems.includes(inputValue)) {
-      verifyResult = {
-        isValid: false,
-        errorMsg: 'Value must be matching one of the provided options',
+      if (this.props.strictAutocomplete) {
+        switch (typeof this.props.strictAutocomplete) {
+          case 'boolean':
+            strictAC = this.props.strictAutocomplete
+            break
+          case 'function':
+            strictAC = this.props.strictAutocomplete(inputValue || '')
+            break
+        }
+      }
+
+      if (strictAC && !this.props.autocompleteItems.includes(inputValue)) {
+        verifyResult = {
+          isValid: false,
+          errorMsg: 'Value must be matching one of the provided options',
+        }
       }
     }
     if (verifyResult['isValid'] === undefined) verifyResult['isValid'] = false
@@ -89,9 +102,9 @@ class RenameDialogContents extends React.Component {
       verifyResult['errorMsg'] = 'Error message is not defined'
 
     this.setState({
+      value: inputValue,
       valid: verifyResult.isValid,
       validErrorMsg: verifyResult.errorMsg,
-      value: inputValue,
     })
   }
   render() {
@@ -201,18 +214,22 @@ class RenameDialogContents extends React.Component {
             options={this.props.autocompleteItems}
             id="flat-demo"
             freeSolo
-            selectOnFocus
             disableOpenOnFocus
-            /* eslint-disable-next-line no-unused-vars */
-            onChange={(e, val) => this.handleChange(val)}
+            value={this.state.value}
+            onChange={this.handleChange}
+            getOptionDisabled={opt =>
+              this.props.autocompleteItemsFilter
+                ? !this.props.autocompleteItemsFilter(opt)
+                : false
+            }
+            onInputChange={this.handleChange}
             renderInput={params => (
               <TextField
                 {...params}
-                onChange={e => this.handleChange(e.target.value)}
-                name={this.props.type + 'Name'}
-                value={this.state.value}
                 label={content.inputLabel}
                 margin="normal"
+                variant="outlined"
+                fullWidth
               />
             )}
           />
@@ -221,7 +238,7 @@ class RenameDialogContents extends React.Component {
             name={this.props.type + 'Name'}
             label={content.inputLabel}
             value={this.state.value}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleChange.bind(this, null)}
             autoFocus
           />
         )}
@@ -236,6 +253,7 @@ class RenameDialogContents extends React.Component {
   static propTypes = {
     isEditing: PropTypes.bool,
     autocompleteItems: PropTypes.array,
+    autocompleteItemsFilter: PropTypes.func,
     type: PropTypes.string,
     value: PropTypes.string,
     verify: PropTypes.func,
