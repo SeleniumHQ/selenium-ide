@@ -54,7 +54,7 @@ export default class DialogContainer extends React.Component {
     if (!this.props.buttons) {
       return null
     }
-    var buttons = (UiState.dialogButtonDirection === 'reverse'
+    var buttons = (UiState.dialogButtonDirection === 'reversed'
       ? this.props.buttons.slice().reverse()
       : this.props.buttons
     ).filter(button => button !== null)
