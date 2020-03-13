@@ -23,7 +23,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const autoprefixer = require('autoprefixer')
 
-const isProduction = process.env.NODE_ENV === 'production'
+const isProduction = false
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),

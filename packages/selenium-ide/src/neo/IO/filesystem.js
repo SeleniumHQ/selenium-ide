@@ -113,7 +113,7 @@ async function jdxSave(project) {
   return postJSON(getJDXServerURL('/save_project/'), 'post', {
     project,
     code_export,
-  })
+  }).catch(e => throw e.response)
 }
 
 function downloadProject(project) {
