@@ -315,7 +315,7 @@ async function emitTestsFromSuite(
   let result = {}
   for (const testName of suite.tests) {
     const test = tests.find(test => test.name === testName)
-    if (test.name.includes('.') && isJDXQACompatible) continue
+    if (isJDXQACompatible && test.external) continue
     const testDeclaration = generateTestDeclaration(test.name)
     result[test.name] = await emitTest(test, tests, {
       ...languageOpts,

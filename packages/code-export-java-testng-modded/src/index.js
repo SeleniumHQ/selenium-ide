@@ -99,11 +99,8 @@ export async function emitTest({
   // regen hooks
   opts.hooks = generateHooks(test)
 
-  // eslint-disable-next-line no-func-assign
-  generateTestDeclaration = generateTestDeclaration.bind(test, tests)
-
   global.baseUrl = baseUrl
-  const testDeclaration = generateTestDeclaration(test.name)
+  const testDeclaration = generateTestDeclaration.bind(test, tests)(test.name)
   const result = await exporter.emit.test(test, tests, {
     ...opts,
     testDeclaration,
@@ -139,14 +136,11 @@ export async function emitSuite({
   // regen hooks
   opts.hooks = generateHooks(suite)
 
-  // eslint-disable-next-line no-func-assign
-  generateTestDeclaration = generateTestDeclaration.bind(suite, tests)
-
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
     enableOriginTracing,
     enableDescriptionAsComment,
-    generateTestDeclaration,
+    generateTestDeclaration: generateTestDeclaration.bind(suite, tests),
     project,
   })
   const suiteDeclaration = generateSuiteDeclaration(suite.name)

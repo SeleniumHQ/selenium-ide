@@ -34,10 +34,12 @@ export default class TestCase {
   scrollY = null
   @observable
   additionalOpts = {}
+  @observable
+  external = false
 
   constructor(id = uuidv4(), name = 'UntitledTest') {
     this.id = id
-    this.name = name
+    this.setName(name, false)
     this.changeDisposer = reaction(
       () =>
         this.commands.map(({ command, target, targets, value }) => ({
@@ -69,9 +71,16 @@ export default class TestCase {
   }
 
   @action.bound
-  setName(name) {
+  setName(name, isModified = true) {
     this.name = name
-    this.modified = true
+
+    this.external = this.isComplex(name)
+
+    this.modified = isModified
+  }
+
+  isComplex(name) {
+    return name.includes('.')
   }
 
   @action.bound
@@ -156,7 +165,8 @@ export default class TestCase {
     return {
       id: this.id,
       name: this.name,
-      commands: this.commands.map(c => c.export()),
+      external: this.external,
+      commands: this.external ? [] : this.commands.map(c => c.export()),
       additionalOpts: this.additionalOpts,
     }
   }
@@ -173,8 +183,8 @@ export default class TestCase {
   static fromJS = function(jsRep) {
     const test = new TestCase(jsRep.id)
     test.setName(jsRep.name)
-    test.commands.replace(jsRep.commands.map(Command.fromJS))
-    test.additionalOpts = jsRep.additionalOpts
+    test.commands.replace((jsRep.commands || []).map(Command.fromJS))
+    test.additionalOpts = jsRep.additionalOpts || {};
     return test
   }
 }
