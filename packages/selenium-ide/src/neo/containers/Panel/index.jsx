@@ -375,7 +375,9 @@ export default class Panel extends React.Component {
                   this.state.project &&
                   UiState.selectedTest ? (
                     <Editor
-                      project={this.state.project}
+                      url={this.state.project.url}
+                      urls={this.state.project.urls}
+                      setUrl={this.state.project.setUrl}
                       test={UiState.displayedTest}
                       callstackIndex={UiState.selectedTest.stack}
                     />
