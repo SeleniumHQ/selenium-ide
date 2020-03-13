@@ -46,9 +46,6 @@ export default class SuiteList extends React.Component {
               editSettings={() => {
                 this.props.editSettings(suite)
               }}
-              remove={() => {
-                this.props.removeSuite(suite)
-              }}
               codeExport={() => {
                 this.props.codeExport({ suite: suite.export() })
               }}

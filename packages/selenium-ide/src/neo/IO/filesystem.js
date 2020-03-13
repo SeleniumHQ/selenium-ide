@@ -108,7 +108,6 @@ async function jdxSave(project) {
     },
     true
   )
-  console.log(code_export)
 
   return postJSON(getJDXServerURL('/save_project/'), 'post', {
     project,

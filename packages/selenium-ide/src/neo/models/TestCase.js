@@ -18,6 +18,7 @@
 import { action, observable, reaction } from 'mobx'
 import uuidv4 from 'uuid/v4'
 import Command from './Command'
+import { postJSON } from '../../common/utils'
 
 export default class TestCase {
   id = null
@@ -75,6 +76,29 @@ export default class TestCase {
     this.name = name
 
     this.external = this.isComplex(name)
+
+    if (this.external) {
+      let payload = [
+        {
+          comment: '',
+          id: 'd6fe7bf7-8333-4c51-bb9d-04022b1cc216',
+          targets: [],
+          value: '',
+          command: 'echo',
+          target: 'hello world',
+        },
+        {
+          comment: '',
+          id: 'd3138eff-2a82-481a-a3a6-e041ce85e50f',
+          targets: [],
+          value: '',
+          command: 'echo',
+          target: 'whatever',
+        },
+      ]
+
+      this.commands.splice(0, Infinity, ...(payload || []).map(Command.fromJS))
+    }
 
     this.modified = isModified
   }
@@ -183,8 +207,10 @@ export default class TestCase {
   static fromJS = function(jsRep) {
     const test = new TestCase(jsRep.id)
     test.setName(jsRep.name)
-    test.commands.replace((jsRep.commands || []).map(Command.fromJS))
-    test.additionalOpts = jsRep.additionalOpts || {}
+    if (!test.external) {
+      test.commands.replace((jsRep.commands || []).map(Command.fromJS))
+      test.additionalOpts = jsRep.additionalOpts || {}
+    }
     return test
   }
 }

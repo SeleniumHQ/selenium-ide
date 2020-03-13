@@ -81,7 +81,14 @@ export default class Editor extends React.Component {
   }
   render() {
     return (
-      <main className="editor" onKeyDown={this.handleKeyDown.bind(this)}>
+      <main
+        className={
+          this.props.test && this.props.test.external
+            ? 'editor disabled'
+            : 'editor'
+        }
+        onKeyDown={this.handleKeyDown.bind(this)}
+      >
         <ToolBar />
         <UrlBar
           url={this.props.url}

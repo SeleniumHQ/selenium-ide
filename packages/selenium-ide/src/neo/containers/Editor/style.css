@@ -11,3 +11,8 @@
 .editor .test-table-body {
   flex-grow: 1;
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
