@@ -558,7 +558,7 @@ async function emitRun() {
   // run won't be emitted as command..
   // We'll have to handle this differently.
   // return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
-  return Promise.resolve('');
+  return Promise.resolve('')
 }
 
 async function emitRunScript(script) {

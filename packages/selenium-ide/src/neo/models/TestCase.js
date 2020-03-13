@@ -184,7 +184,7 @@ export default class TestCase {
     const test = new TestCase(jsRep.id)
     test.setName(jsRep.name)
     test.commands.replace((jsRep.commands || []).map(Command.fromJS))
-    test.additionalOpts = jsRep.additionalOpts || {};
+    test.additionalOpts = jsRep.additionalOpts || {}
     return test
   }
 }

@@ -99,7 +99,7 @@ class ModalState {
       if (name.includes('.')) {
         if (!name.includes('#')) return false
         //split by last dot
-        let parts = name.split(/\.(?=[^\.]+$)/)
+        let parts = name.split(/\.(?=[^.]+$)/)
 
         if (parts.length !== 2) return false
 

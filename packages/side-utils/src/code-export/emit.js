@@ -21,7 +21,7 @@ import doRender from './render'
 import { registerMethod } from './register'
 import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
 import { Commands } from '@seleniumhq/side-model'
-import {isJDXQACompatible} from "selenium-ide-extension/src/common/utils";
+import { isJDXQACompatible } from 'selenium-ide-extension/src/common/utils'
 
 function validateCommand(command) {
   const commandName = command.command

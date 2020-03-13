@@ -47,9 +47,9 @@ if (isJDXQACompatible) {
     })
     .catch(err => {
       alert(
-        `QA server is not available, please start it and then run the extension [ ${
-          JSON.stringify(err)
-        } ]`
+        `QA server is not available, please start it and then run the extension [ ${JSON.stringify(
+          err
+        )} ]`
       )
       window.close()
     })

@@ -43,6 +43,7 @@ import {
   environment as env,
 } from '@seleniumhq/side-utils'
 
+// eslint-disable-next-line no-unused-vars
 import exporter from '@seleniumhq/code-export'
 
 export function getFile(path) {
