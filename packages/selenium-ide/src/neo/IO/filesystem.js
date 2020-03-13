@@ -19,11 +19,11 @@ import browser from 'webextension-polyfill'
 import { js_beautify as beautify } from 'js-beautify'
 import UpgradeProject from './migrate'
 import {
-  verifyFile,
   FileTypes,
-  migrateTestCase,
   migrateProject,
+  migrateTestCase,
   migrateUrls,
+  verifyFile,
 } from './legacy/migrate'
 import TestCase from '../models/TestCase'
 import UiState from '../stores/view/UiState'
@@ -39,12 +39,12 @@ import {
   userAgent as parsedUA,
 } from '../../common/utils'
 import {
-  project as projectProcessor,
   environment as env,
+  project as projectProcessor,
 } from '@seleniumhq/side-utils'
-
+import { cloneDeep } from 'lodash'
 // eslint-disable-next-line no-unused-vars
-import exporter from '@seleniumhq/code-export'
+import { exportCodeToFile } from '../code-export'
 
 export function getFile(path) {
   const browserName = parsedUA.browser.name
@@ -97,6 +97,25 @@ function sendSaveProjectEvent(project) {
   browser.runtime.sendMessage(Manager.controller.id, saveMessage)
 }
 
+async function jdxSave(project) {
+  const code_export = await exportCodeToFile(
+    ['java-testng-modded'],
+    { suite: cloneDeep(project.suites[0]) },
+    {
+      enableDescriptionAsComment: false,
+      beforeEachOptions: {},
+      enableOriginTracing: false,
+    },
+    true
+  )
+  console.log(code_export)
+
+  return postJSON(getJDXServerURL('/save_project/'), 'post', {
+    project,
+    code_export,
+  })
+}
+
 function downloadProject(project) {
   return exportProject(project).then(snapshot => {
     if (snapshot) {
@@ -107,17 +126,12 @@ function downloadProject(project) {
       //If in control mode, send the project in a message and skip downloading
       sendSaveProjectEvent(project)
     } else if (env.jdxQACompatible === true) {
-      postJSON(getJDXServerURL('/save_project/'), 'post', project)
+      jdxSave(project)
         .then(e => {
           if (e.data.status === 'ERROR') {
-            ModalState.showAlert({
-              title: 'ERROR',
-              description: e.data.message,
-              confirmLabel: 'close',
-            })
+            showError(e.data.message)
             return
           }
-
           ModalState.showAlert({
             title: 'SUCCESS',
             description: e.data.message,
@@ -125,13 +139,7 @@ function downloadProject(project) {
           })
           // save java export .. ?
         })
-        .catch(e => {
-          ModalState.showAlert({
-            title: 'ERROR',
-            description: e.message,
-            confirmLabel: 'close',
-          })
-        })
+        .catch(e => showError(JSON.stringify(e)))
     } else {
       browser.downloads.download({
         filename: projectProcessor.sanitizeProjectName(project.name) + '.side',
@@ -143,6 +151,14 @@ function downloadProject(project) {
         conflictAction: 'overwrite',
       })
     }
+  })
+}
+
+function showError(errorMsg) {
+  ModalState.showAlert({
+    title: 'ERROR',
+    description: errorMsg,
+    confirmLabel: 'close',
   })
 }
 
