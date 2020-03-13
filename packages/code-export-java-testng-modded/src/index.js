@@ -70,7 +70,7 @@ function generateTestDeclaration(tests, name) {
   let methodGroup = `${clsGroup}#${name}`
 
   return `@Test(groups={"${clsGroup}", "${methodGroup}"}${
-    dependency ? `, dependsOnGroups={"${dependency}"` : ''
+    dependency ? `, dependsOnGroups={"${dependency}"}` : ''
   })\npublic void ${testName}() {`
 }
 
