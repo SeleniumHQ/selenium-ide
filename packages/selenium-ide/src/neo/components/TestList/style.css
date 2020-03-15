@@ -1,9 +1,14 @@
 .tests {
   max-height: 0;
-  overflow-x: hidden;
   overflow-y: auto;
   transition: max-height 300ms linear;
   list-style: none;
+  display: table;
+}
+
+.tests_div {
+  overflow-x: scroll;
+  flex-grow: 1;
 }
 
 .tests.active {
@@ -13,4 +18,5 @@
 
 .tests li {
   margin: 7px 0;
+  display: block;
 }
