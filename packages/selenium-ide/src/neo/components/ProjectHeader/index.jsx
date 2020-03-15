@@ -68,6 +68,8 @@ export default class ProjectHeader extends React.Component {
             onKeyDown={this.handleKeyDown}
             onChange={this.handleChange}
             html={this.props.title}
+            aria-label="Change the project name"
+            role="textbox"
           />
           <i className="si-pencil" />
         </div>
@@ -85,7 +87,7 @@ export default class ProjectHeader extends React.Component {
           <ListMenu
             width={250}
             padding={-5}
-            opener={<MoreButton canFocus={true} />}
+            opener={<MoreButton canFocus={true} aria-label="More options" />}
           >
             <ListMenuItem href="https://www.seleniumhq.org/selenium-ide/docs/en/introduction/command-line-runner/">
               {'Running in CI'}

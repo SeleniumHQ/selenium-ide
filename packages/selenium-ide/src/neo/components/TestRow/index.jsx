@@ -259,7 +259,11 @@ class TestRow extends React.Component {
     )
     const listMenu =
       !this.props.isPristine && !this.props.readOnly ? (
-        <ListMenu width={300} padding={-5} opener={<MoreButton />}>
+        <ListMenu
+          width={300}
+          padding={-5}
+          opener={<MoreButton aria-label="More options" />}
+        >
           <ListMenuItem
             label={parse('x', { primaryKey: true })}
             onClick={this.cut}
@@ -373,6 +377,8 @@ class TestRow extends React.Component {
         style={{
           opacity: this.props.isDragging ? '0' : '1',
         }}
+        role="row"
+        aria-label="Test information"
       >
         <td>
           {!this.props.isPristine ? (

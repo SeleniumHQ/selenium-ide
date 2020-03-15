@@ -41,6 +41,8 @@ export default class SuiteSettings extends React.Component {
         className="stripped suite-settings-dialog"
         isOpen={this.props.isEditing}
         onRequestClose={this.props.cancel}
+        modalTitle={SuiteSettingsContent.modalTitleElement}
+        modalDescription={SuiteSettingsContent.modalDescriptionElement}
       >
         <SuiteSettingsContent {...this.props} />
       </Modal>
@@ -49,6 +51,8 @@ export default class SuiteSettings extends React.Component {
 }
 
 class SuiteSettingsContent extends React.Component {
+  static modalTitleElement = 'suiteSettingsTitle'
+  static modalDescriptionElement = 'suiteSettingsDescription'
   constructor(props) {
     super(props)
     this.state = {
@@ -106,6 +110,8 @@ class SuiteSettingsContent extends React.Component {
             </FlatButton>
           </span>
         )}
+        modalTitle={SuiteSettingsContent.modalTitleElement}
+        modalDescription={SuiteSettingsContent.modalDescriptionElement}
       >
         <div className="form-contents">
           <Input

@@ -21,6 +21,9 @@ import classNames from 'classnames'
 import './style.css'
 
 export default class ActionButton extends React.Component {
+  static defaultProps = {
+    'aria-label': '',
+  }
   render() {
     const props = { ...this.props }
 
@@ -28,12 +31,15 @@ export default class ActionButton extends React.Component {
     return (
       <button
         type="button"
+        data-event="focus mouseenter"
+        data-event-off="blur mouseleave"
         {...props}
         className={classNames(
           'btn-action',
           { active: this.props.isActive },
           this.props.className
         )}
+        aria-label={props['aria-label']}
       />
     )
   }
@@ -41,5 +47,6 @@ export default class ActionButton extends React.Component {
   static propTypes = {
     className: PropTypes.string.isRequired,
     isActive: PropTypes.bool,
+    'aria-label': PropTypes.string,
   }
 }

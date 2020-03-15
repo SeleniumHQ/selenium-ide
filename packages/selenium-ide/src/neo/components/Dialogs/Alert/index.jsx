@@ -59,11 +59,16 @@ export default class AlertDialog extends React.Component {
     this.state.res(status)
   }
   render() {
+    const modalTitleElement = 'alertTitle'
+    const modalDescriptionElement = 'alertDescription'
+
     return (
       <Modal
         className={classNames('stripped', 'alert')}
         isOpen={this.state.isOpen}
         onRequestClose={this.close.bind(this, false)}
+        modalTitle={modalTitleElement}
+        modalDescription={modalDescriptionElement}
       >
         <DialogContainer
           type={this.state.options.type ? this.state.options.type : 'info'}
@@ -85,6 +90,8 @@ export default class AlertDialog extends React.Component {
             </span>
           )}
           onRequestClose={this.close.bind(this, false)}
+          modalTitle={modalTitleElement}
+          modalDescription={modalDescriptionElement}
         >
           {this.state.options.isMarkdown ? (
             <Markdown className="markdown">

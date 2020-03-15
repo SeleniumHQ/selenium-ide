@@ -86,13 +86,19 @@ export default class Navigation extends React.Component {
           {UiState.selectedView === 'Tests' && (
             <AddButton
               data-tip={'<p>Add new test</p>'}
+              data-event="focus mouseenter"
+              data-event-off="blur mouseleave"
               onClick={ModalState.createTest}
+              aria-label="Add new test"
             />
           )}
           {UiState.selectedView === 'Test suites' && (
             <AddButton
               data-tip={'<p>Add new test suite</p>'}
+              data-event="focus mouseenter"
+              data-event-off="blur mouseleave"
               onClick={ModalState.createSuite}
+              aria-label="Add new test suite"
             />
           )}
         </VerticalTabBar>
