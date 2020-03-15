@@ -1,5 +1,5 @@
 .tests {
-  max-height: 0;
+  max-height: 100%;
   overflow-y: auto;
   transition: max-height 300ms linear;
   list-style: none;
@@ -8,12 +8,18 @@
 
 .tests_div {
   overflow-x: scroll;
+  transition: max-height 300ms linear;
+  max-height: 0;
   flex-grow: 1;
+}
+
+.tests_div.active {
+  max-height: 100%;
+  transition: max-height 300ms linear;
 }
 
 .tests.active {
   max-height: 100%;
-  transition: max-height 300ms linear;
 }
 
 .tests li {

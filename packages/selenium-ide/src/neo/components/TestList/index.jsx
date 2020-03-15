@@ -40,8 +40,8 @@ export default class TestList extends Component {
   }
   render() {
     return (
-      <div className={'tests_div'}>
-        <ul className={classNames('tests', { active: !this.props.collapsed })}>
+      <div className={classNames('tests_div', { active: !this.props.collapsed })}>
+        <ul className={classNames('tests')}>
           {this.props.tests.map((test, index) => (
             <li key={test.id}>
               {this.props.noMenu ? (
