@@ -40,142 +40,146 @@ export default class TestList extends Component {
   }
   render() {
     return (
-      <ul className={classNames('tests', { active: !this.props.collapsed })}>
-        {this.props.tests.map((test, index) => (
-          <li key={test.id}>
-            {this.props.noMenu ? (
-              <Test
-                key={test.id}
-                className={PlaybackState.testState.get(test.id)}
-                callstack={
-                  PlaybackState.stackCaller === test
-                    ? PlaybackState.callstack
-                    : undefined
-                }
-                selectedStackIndex={
-                  PlaybackState.stackCaller === test
-                    ? UiState.selectedTest.stack
-                    : undefined
-                }
-                index={index}
-                test={test}
-                suite={this.props.suite}
-                selected={
-                  UiState.selectedTest.test &&
-                  test.id === UiState.selectedTest.test.id
-                }
-                isExecuting={
-                  PlaybackState.isPlaying &&
-                  PlaybackState.stackCaller &&
-                  PlaybackState.stackCaller.id === test.id
-                }
-                paused={
-                  PlaybackState.stackCaller &&
-                  PlaybackState.stackCaller.id === test.id &&
-                  PlaybackState.paused
-                }
-                changed={test.modified}
-                selectTest={UiState.selectTest}
-                moveSelectionUp={() => {
-                  UiState.selectTestByIndex(index - 1)
-                }}
-                moveSelectionDown={() => {
-                  UiState.selectTestByIndex(index + 1)
-                }}
-                setSectionFocus={UiState.setSectionFocus}
-              />
-            ) : this.props.suite ? (
-              <DraggableTest
-                className={PlaybackState.testState.get(test.id)}
-                index={index}
-                test={test}
-                suite={this.props.suite}
-                selected={
-                  UiState.selectedTest.test &&
-                  test.id === UiState.selectedTest.test.id &&
-                  this.props.suite.id ===
-                    (UiState.selectedTest.suite
-                      ? UiState.selectedTest.suite.id
-                      : undefined)
-                }
-                isExecuting={
-                  PlaybackState.isPlaying &&
-                  PlaybackState.stackCaller &&
-                  PlaybackState.stackCaller.id === test.id
-                }
-                paused={
-                  PlaybackState.stackCaller &&
-                  PlaybackState.stackCaller.id === test.id &&
-                  PlaybackState.paused
-                }
-                changed={test.modified}
-                selectTest={UiState.selectTest}
-                removeTest={
-                  this.props.removeTest
-                    ? () => {
-                        this.props.removeTest(test)
-                      }
-                    : undefined
-                }
-                swapTests={this.props.suite.swapTestCases}
-                moveSelectionUp={() => {
-                  UiState.selectTestByIndex(index - 1, this.props.suite)
-                }}
-                moveSelectionDown={() => {
-                  UiState.selectTestByIndex(index + 1, this.props.suite)
-                }}
-                setSectionFocus={UiState.setSectionFocus}
-              />
-            ) : (
-              <MenuTest
-                key={test.id}
-                className={PlaybackState.testState.get(test.id)}
-                index={index}
-                test={test}
-                selected={
-                  UiState.selectedTest.test &&
-                  test.id === UiState.selectedTest.test.id
-                }
-                isExecuting={
-                  PlaybackState.isPlaying &&
-                  PlaybackState.stackCaller &&
-                  PlaybackState.stackCaller.id === test.id
-                }
-                paused={
-                  PlaybackState.stackCaller &&
-                  PlaybackState.stackCaller.id === test.id &&
-                  PlaybackState.paused
-                }
-                changed={test.modified}
-                selectTest={UiState.selectTest}
-                renameTest={this.props.renameTest}
-                duplicateTest={() => {
-                  this.props.duplicateTest(test)
-                }}
-                removeTest={
-                  this.props.removeTest
-                    ? () => {
-                        this.props.removeTest(test)
-                      }
-                    : undefined
-                }
-                codeExport={() => {
-                  this.props.codeExport({
-                    test: test.export(),
-                  })
-                }}
-                moveSelectionUp={() => {
-                  UiState.selectTestByIndex(index - 1)
-                }}
-                moveSelectionDown={() => {
-                  UiState.selectTestByIndex(index + 1)
-                }}
-                setSectionFocus={UiState.setSectionFocus}
-              />
-            )}
-          </li>
-        ))}
-      </ul>
+      <div
+        className={classNames('tests_div', { active: !this.props.collapsed })}
+      >
+        <ul className={classNames('tests')}>
+          {this.props.tests.map((test, index) => (
+            <li key={test.id}>
+              {this.props.noMenu ? (
+                <Test
+                  key={test.id}
+                  className={PlaybackState.testState.get(test.id)}
+                  callstack={
+                    PlaybackState.stackCaller === test
+                      ? PlaybackState.callstack
+                      : undefined
+                  }
+                  selectedStackIndex={
+                    PlaybackState.stackCaller === test
+                      ? UiState.selectedTest.stack
+                      : undefined
+                  }
+                  index={index}
+                  test={test}
+                  suite={this.props.suite}
+                  selected={
+                    UiState.selectedTest.test &&
+                    test.id === UiState.selectedTest.test.id
+                  }
+                  isExecuting={
+                    PlaybackState.isPlaying &&
+                    PlaybackState.stackCaller &&
+                    PlaybackState.stackCaller.id === test.id
+                  }
+                  paused={
+                    PlaybackState.stackCaller &&
+                    PlaybackState.stackCaller.id === test.id &&
+                    PlaybackState.paused
+                  }
+                  changed={test.modified}
+                  selectTest={UiState.selectTest}
+                  moveSelectionUp={() => {
+                    UiState.selectTestByIndex(index - 1)
+                  }}
+                  moveSelectionDown={() => {
+                    UiState.selectTestByIndex(index + 1)
+                  }}
+                  setSectionFocus={UiState.setSectionFocus}
+                />
+              ) : this.props.suite ? (
+                <DraggableTest
+                  className={PlaybackState.testState.get(test.id)}
+                  index={index}
+                  test={test}
+                  suite={this.props.suite}
+                  selected={
+                    UiState.selectedTest.test &&
+                    test.id === UiState.selectedTest.test.id &&
+                    this.props.suite.id ===
+                      (UiState.selectedTest.suite
+                        ? UiState.selectedTest.suite.id
+                        : undefined)
+                  }
+                  isExecuting={
+                    PlaybackState.isPlaying &&
+                    PlaybackState.stackCaller &&
+                    PlaybackState.stackCaller.id === test.id
+                  }
+                  paused={
+                    PlaybackState.stackCaller &&
+                    PlaybackState.stackCaller.id === test.id &&
+                    PlaybackState.paused
+                  }
+                  changed={test.modified}
+                  selectTest={UiState.selectTest}
+                  removeTest={
+                    this.props.removeTest
+                      ? () => {
+                          this.props.removeTest(test)
+                        }
+                      : undefined
+                  }
+                  swapTests={this.props.suite.swapTestCases}
+                  moveSelectionUp={() => {
+                    UiState.selectTestByIndex(index - 1, this.props.suite)
+                  }}
+                  moveSelectionDown={() => {
+                    UiState.selectTestByIndex(index + 1, this.props.suite)
+                  }}
+                  setSectionFocus={UiState.setSectionFocus}
+                />
+              ) : (
+                <MenuTest
+                  key={test.id}
+                  className={PlaybackState.testState.get(test.id)}
+                  index={index}
+                  test={test}
+                  selected={
+                    UiState.selectedTest.test &&
+                    test.id === UiState.selectedTest.test.id
+                  }
+                  isExecuting={
+                    PlaybackState.isPlaying &&
+                    PlaybackState.stackCaller &&
+                    PlaybackState.stackCaller.id === test.id
+                  }
+                  paused={
+                    PlaybackState.stackCaller &&
+                    PlaybackState.stackCaller.id === test.id &&
+                    PlaybackState.paused
+                  }
+                  changed={test.modified}
+                  selectTest={UiState.selectTest}
+                  renameTest={this.props.renameTest}
+                  duplicateTest={() => {
+                    this.props.duplicateTest(test)
+                  }}
+                  removeTest={
+                    this.props.removeTest
+                      ? () => {
+                          this.props.removeTest(test)
+                        }
+                      : undefined
+                  }
+                  codeExport={() => {
+                    this.props.codeExport({
+                      test: test.export(),
+                    })
+                  }}
+                  moveSelectionUp={() => {
+                    UiState.selectTestByIndex(index - 1)
+                  }}
+                  moveSelectionDown={() => {
+                    UiState.selectTestByIndex(index + 1)
+                  }}
+                  setSectionFocus={UiState.setSectionFocus}
+                />
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     )
   }
 }
