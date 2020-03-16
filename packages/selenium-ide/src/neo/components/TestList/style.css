@@ -8,7 +8,7 @@
 }
 
 .tests_div {
-  overflow-x: scroll;
+  overflow-x: auto;
   transition: max-height 300ms linear;
   max-height: 0;
   flex-grow: 1;
