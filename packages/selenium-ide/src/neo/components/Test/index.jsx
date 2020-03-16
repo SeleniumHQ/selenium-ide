@@ -235,6 +235,7 @@ export default class Test extends React.Component {
         style={{
           opacity: this.props.isDragging ? '0' : '1',
         }}
+        role="Link"
       >
         <a
           ref={button => {
@@ -270,6 +271,7 @@ export default class Test extends React.Component {
                   e.stopPropagation()
                   this.props.removeTest()
                 }}
+                aria-label="Remove test"
               />
             )}
         </a>
@@ -300,7 +302,11 @@ export class MenuTest extends React.Component {
   render() {
     /* eslint-disable react/prop-types */
     const listMenu = (
-      <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+      <ListMenu
+        width={130}
+        padding={-5}
+        opener={<MoreButton aria-label="More options" />}
+      >
         <ListMenuItem
           onClick={() =>
             this.props.renameTest(this.props.test.name).then(name => {

@@ -39,6 +39,8 @@ export default class TestSelector extends React.Component {
         className="stripped test-selector"
         isOpen={this.props.isEditing}
         onRequestClose={this.props.cancelSelection}
+        modalTitle={TestSelectorContent.modalTitleElement}
+        modalDescription={TestSelectorContent.modalDescriptionElement}
       >
         <TestSelectorContent {...this.props} />
       </Modal>
@@ -47,6 +49,8 @@ export default class TestSelector extends React.Component {
 }
 
 class TestSelectorContent extends React.Component {
+  static modalTitleElement = 'testTitle'
+  static modalDescriptionElement = 'testDescription'
   constructor(props) {
     super(props)
     this.state = {
@@ -106,6 +110,8 @@ class TestSelectorContent extends React.Component {
             select
           </FlatButton>,
         ]}
+        modalTitle={TestSelectorContent.modalTitleElement}
+        modalDescription={TestSelectorContent.modalDescriptionElement}
       >
         <SearchBar
           inputRef={input => {

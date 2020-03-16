@@ -31,6 +31,7 @@ export default class NewButton extends React.Component {
         )}</span></p>`}
         {...props}
         className={classNames('si-new-project', this.props.className)}
+        aria-label="Create new project"
       /> // eslint-disable-line react/prop-types
     )
   }

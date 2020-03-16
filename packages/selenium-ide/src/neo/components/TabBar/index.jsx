@@ -74,6 +74,8 @@ export default class TabBar extends React.Component {
                 })}
                 href="#"
                 onClick={this.handleClick.bind(this, tab.name, index)}
+                role="tab"
+                aria-controls={tab.name}
               >
                 {tab.name}
               </a>

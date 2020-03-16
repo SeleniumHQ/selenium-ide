@@ -49,10 +49,14 @@ export default class Modal extends React.Component {
     children: PropTypes.node,
     transitionStyles: PropTypes.object,
     onRequestClose: PropTypes.func,
+    modalTitle: PropTypes.string,
+    modalDescription: PropTypes.string,
   }
   static defaultProps = {
     duration: 100,
     transitionStyles: transitionStyles,
+    modalTitle: 'modalTitle',
+    modalDescription: 'modalDescription',
   }
   render() {
     return (
@@ -66,6 +70,11 @@ export default class Modal extends React.Component {
             closeTimeoutMS={this.props.duration}
             onRequestClose={this.props.onRequestClose}
             overlayClassName="modal-overlay"
+            aria={{
+              labelledby: this.props.modalTitle,
+              describedby: this.props.modalDescription,
+              modal: 'true',
+            }}
           >
             <div
               className={classNames('modal', this.props.className)}

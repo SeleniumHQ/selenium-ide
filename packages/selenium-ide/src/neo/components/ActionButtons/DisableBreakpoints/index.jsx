@@ -30,6 +30,7 @@ export default class DisableBreakpointsButton extends React.Component {
         )}</span></p>`}
         {...this.props}
         className={classNames('si-disable-breakpoints', this.props.className)}
+        aria-label="Disable breakpoints"
       /> // eslint-disable-line react/prop-types
     )
   }

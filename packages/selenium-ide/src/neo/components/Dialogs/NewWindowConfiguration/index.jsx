@@ -38,6 +38,8 @@ export default class NewWindowConfigurationDialog extends React.Component {
         className={classNames('stripped', 'new-window-dialog')}
         isOpen={this.props.isOpen}
         onRequestClose={this.props.cancel}
+        modalTitle={NewWindowInput.modalTitleElement}
+        modalDescription={NewWindowInput.modalDescriptionElement}
       >
         <NewWindowInput {...this.props} />
       </Modal>
@@ -46,6 +48,8 @@ export default class NewWindowConfigurationDialog extends React.Component {
 }
 
 class NewWindowInput extends React.Component {
+  static modalTitleElement = 'newWindowConfigurationTitle'
+  static modalDescriptionElement = 'newWindowConfigurationDescription'
   static propTypes = {
     cancel: PropTypes.func.isRequired,
     command: PropTypes.object.isRequired,
@@ -138,6 +142,8 @@ class NewWindowInput extends React.Component {
           </FlatButton>,
         ]}
         onRequestClose={this.props.cancel}
+        modalTitle={NewWindowInput.modalTitleElement}
+        modalDescription={NewWindowInput.modalDescriptionElement}
       >
         {this.state.isConfigEnabled ? (
           <p

@@ -63,5 +63,6 @@
     "stylelint-prettier": "^1.0.3",
     "putasset": "^4.3.2",
     "grizzly": "^4.0.1"
-  }
+  },
+  "dependencies": {}
 }
