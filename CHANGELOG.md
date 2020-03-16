@@ -5,6 +5,7 @@
 - a11y: color & design PR 972 (https://github.com/SeleniumHQ/selenium-ide/issues/965)
 - a11y: announce recording has started PR 974 (https://github.com/SeleniumHQ/selenium-ide/issues/964)
 - a11y: support labels, roles, tooltips, and focus order PR 973 (https://github.com/SeleniumHQ/selenium-ide/issues/963)
+- a11y: long test names can be scrolled into view PR 987 (https://github.com/SeleniumHQ/selenium-ide/pull/987)
 - add waitForText command PR 869 & 980 (https://github.com/SeleniumHQ/selenium-ide/issues/980)
 - code export: add option to output command description on its own line PR 878
 - add commands to context menu PR 867 & 899
