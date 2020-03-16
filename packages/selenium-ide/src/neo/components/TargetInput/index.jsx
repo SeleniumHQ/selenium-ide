@@ -39,6 +39,7 @@ export default class TargetInput extends React.Component {
     label: PropTypes.string.isRequired,
     targets: MobxPropTypes.arrayOrObservableArray,
     disabled: PropTypes.bool,
+    isRunCmdTarget: PropTypes.bool,
     value: PropTypes.string,
     onChange: PropTypes.func,
   }
@@ -51,11 +52,14 @@ export default class TargetInput extends React.Component {
       >
         <AutoComplete
           id={this.props.name}
-          getItemValue={item => item[0]}
+          getItemValue={
+            this.props.isRunCmdTarget ? item => item : item => item[0]
+          }
           items={this.props.targets.slice()}
-          renderDefaultStyledItem={item => (
-            <TargetSuggestion locator={item[0]} strategy={item[1]} />
-          )}
+          renderDefaultStyledItem={
+            !this.props.isRunCmdTarget &&
+            (item => <TargetSuggestion locator={item[0]} strategy={item[1]} />)
+          }
           value={this.props.value}
           inputProps={{ name: this.props.name, disabled: this.props.disabled }}
           onChange={e => {
