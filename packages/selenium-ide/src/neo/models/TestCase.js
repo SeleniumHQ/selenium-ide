@@ -18,7 +18,8 @@
 import { action, observable, reaction } from 'mobx'
 import uuidv4 from 'uuid/v4'
 import Command from './Command'
-import { postJSON } from '../../common/utils'
+import { getJDXServerURL } from '../../common/utils'
+import { Channels, Logger } from '../stores/view/Logs'
 
 export default class TestCase {
   id = null
@@ -39,6 +40,7 @@ export default class TestCase {
   external = false
 
   constructor(id = uuidv4(), name = 'UntitledTest') {
+    this.logger = new Logger(Channels.SYSTEM)
     this.id = id
     this.setName(name, false)
     this.changeDisposer = reaction(
@@ -76,28 +78,21 @@ export default class TestCase {
     this.name = name
 
     this.external = this.isComplex(name)
-
     if (this.external) {
-      let payload = [
-        {
-          comment: '',
-          id: 'd6fe7bf7-8333-4c51-bb9d-04022b1cc216',
-          targets: [],
-          value: '',
-          command: 'echo',
-          target: 'hello world',
-        },
-        {
-          comment: '',
-          id: 'd3138eff-2a82-481a-a3a6-e041ce85e50f',
-          targets: [],
-          value: '',
-          command: 'echo',
-          target: 'whatever',
-        },
-      ]
-
-      this.commands.splice(0, Infinity, ...(payload || []).map(Command.fromJS))
+      fetch(getJDXServerURL('/inject') + `?tm=${encodeURIComponent(this.name)}`)
+        .then(e => e.json())
+        .then(
+          action(resp => {
+            this.commands.splice(
+              0,
+              Infinity,
+              ...(resp.commands || []).map(Command.fromJS)
+            )
+          })
+        )
+        .catch(e => {
+          this.logger.error(`Couldn't fetch commands for test ${this.name}`)
+        })
     }
 
     this.modified = isModified
