@@ -32,6 +32,10 @@ input[type='checkbox'].checkbox + label span {
     box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
+input[type='checkbox'].checkbox:focus + label span {
+  outline: var(--selected-border-color) 1px solid;
+}
+
 input[type='checkbox'].checkbox:disabled + label span {
   color: rgba(128, 128, 128, 0.6);
   background-color: whitesmoke;

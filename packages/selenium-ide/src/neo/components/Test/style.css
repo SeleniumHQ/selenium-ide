@@ -4,10 +4,6 @@
   background-color: #fff;
 }
 
-.test:focus {
-  outline: 0;
-}
-
 .test .name {
   display: flex;
   align-items: center;
@@ -46,10 +42,6 @@
 
 .test > a.selected {
   background-color: var(--selected-color);
-}
-
-.test:focus > a.selected {
-  background-color: var(--active-color);
 }
 
 .test > a.executing {

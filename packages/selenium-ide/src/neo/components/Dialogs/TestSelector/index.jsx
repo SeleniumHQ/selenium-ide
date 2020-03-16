@@ -91,24 +91,25 @@ class TestSelectorContent extends React.Component {
       <DialogContainer
         title="Select tests"
         onRequestClose={this.props.cancel}
-        renderFooter={() => (
-          <span className="right">
-            <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
-            <FlatButton
-              type="submit"
-              onClick={() => {
-                this.props.completeSelection(
-                  Object.values(this.state.selectedTests).filter(t => !!t)
-                )
-              }}
-              style={{
-                marginRight: '0',
-              }}
-            >
-              select
-            </FlatButton>
-          </span>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancelSelection} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            onClick={() => {
+              this.props.completeSelection(
+                Object.values(this.state.selectedTests).filter(t => !!t)
+              )
+            }}
+            style={{
+              marginRight: '0',
+            }}
+            key="ok"
+          >
+            select
+          </FlatButton>,
+        ]}
         modalTitle={TestSelectorContent.modalTitleElement}
         modalDescription={TestSelectorContent.modalDescriptionElement}
       >
