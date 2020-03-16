@@ -28,6 +28,7 @@ export default class PlayAllButton extends React.Component {
           'r',
           { primaryKey: true, shiftKey: true }
         )}</span></p>`}
+        aria-label="Run all tests in suite"
         {...this.props}
         className={classNames('si-play-all', this.props.className)}
       /> // eslint-disable-line react/prop-types

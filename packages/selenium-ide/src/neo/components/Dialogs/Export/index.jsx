@@ -40,6 +40,8 @@ export default class ExportDialog extends React.Component {
         className="stripped language-selector"
         isOpen={this.props.isExporting}
         onRequestClose={this.props.cancelSelection}
+        modalTitle={ExportContent.modalTitleElement}
+        modalDescription={ExportContent.modalDescriptionElement}
       >
         <ExportContent {...this.props} />
       </Modal>
@@ -48,6 +50,8 @@ export default class ExportDialog extends React.Component {
 }
 
 class ExportContent extends React.Component {
+  static modalTitleElement = 'renameTitle'
+  static modalDescriptionElement = 'renameDescription'
   constructor(props) {
     super(props)
 
@@ -111,41 +115,44 @@ class ExportContent extends React.Component {
       <DialogContainer
         title="Select language"
         onRequestClose={this.props.cancel}
-        renderFooter={() => (
-          <span className="right">
-            <FlatButton onClick={this.props.cancelSelection}>cancel</FlatButton>
-            <FlatButton
-              disabled={!this.state.selectedLanguages.length}
-              type="submit"
-              onClick={() => {
-                this.props
-                  .completeSelection(
-                    this.state.selectedLanguages,
-                    this.state.enableOriginTracing,
-                    {
-                      gridUrl: this.state.enableGridConfig
-                        ? this.state.gridConfigUrl
-                        : undefined,
-                    },
-                    this.state.enableDescriptionAsComment
-                  )
-                  .catch(error => {
-                    this.props.cancelSelection()
-                    ModalState.showAlert({
-                      title: 'Unable to complete code export',
-                      description: error.message,
-                      confirmLabel: 'OK',
-                    })
+        buttons={[
+          <FlatButton onClick={this.props.cancelSelection} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            disabled={!this.state.selectedLanguages.length}
+            type="submit"
+            onClick={() => {
+              this.props
+                .completeSelection(
+                  this.state.selectedLanguages,
+                  this.state.enableOriginTracing,
+                  {
+                    gridUrl: this.state.enableGridConfig
+                      ? this.state.gridConfigUrl
+                      : undefined,
+                  },
+                  this.state.enableDescriptionAsComment
+                )
+                .catch(error => {
+                  this.props.cancelSelection()
+                  ModalState.showAlert({
+                    title: 'Unable to complete code export',
+                    description: error.message,
+                    confirmLabel: 'OK',
                   })
-              }}
-              style={{
-                marginRight: '0',
-              }}
-            >
-              export
-            </FlatButton>
-          </span>
-        )}
+                })
+            }}
+            style={{
+              marginRight: '0',
+            }}
+            key="ok"
+          >
+            export
+          </FlatButton>,
+        ]}
+        modalTitle={ExportContent.modalTitleElement}
+        modalDescription={ExportContent.modalDescriptionElement}
       >
         <ExportList
           selectedLanguages={this.state.selectedLanguages}

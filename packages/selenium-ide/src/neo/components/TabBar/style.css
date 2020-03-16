@@ -24,7 +24,6 @@
 
 .tabbar a:focus {
   background-color: #e5e5e5;
-  outline: 0;
 }
 
 .tabbar .underline {

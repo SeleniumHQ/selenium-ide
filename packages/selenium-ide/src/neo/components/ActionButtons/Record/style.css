@@ -3,12 +3,12 @@
 }
 
 .si-record {
-  color: #ec2f2a;
+  color: #b00000;
   animation: none;
 }
 
 .si-record:hover {
-  color: #f56660;
+  color: #de2a00;
 }
 
 .si-record.active::before {

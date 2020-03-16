@@ -1,11 +1,10 @@
 .btn {
-  color: #656565;
+  color: #000;
   background-color: #f5f5f5;
   padding: 10px 20px;
   margin: 5px 8px;
   border: 1px solid transparent;
   border-radius: 4px;
-  outline: 0;
   text-transform: capitalize;
   box-shadow: inset -1px 1px 1px 0 transparent;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
@@ -16,17 +15,13 @@
   color: #333;
 }
 
-.btn:focus {
-  border-color: rgba(0, 0, 0, 0.25);
-}
-
 .btn:active {
   background-color: #eee;
   box-shadow: inset -1px 1px 1px 0 #cacaca;
 }
 
 .btn:disabled {
-  color: #a9a9a9;
+  color: rgba(0, 0, 0, 0.2);
   cursor: not-allowed;
 }
 
@@ -38,20 +33,15 @@
   border-radius: 2px;
 }
 
-.btn.icon:focus {
-  border-color: #40a6ff;
-}
-
 .btn.icon:active {
   box-shadow: inset -1px 1px 1px 0 #ececec;
 }
 
 .btn.icon:hover:not(:disabled) {
-  color: #40a6ff;
+  color: #539adf;
 }
 
 .btn.icon.active {
-  border-color: #40a6ff;
   background-color: #e3f2ff;
 }
 

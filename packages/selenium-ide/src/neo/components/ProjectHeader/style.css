@@ -37,9 +37,7 @@
 }
 
 .header .title:focus {
-  border-color: #cecece;
   cursor: initial;
-  outline: 0;
 }
 
 .header:hover .title ~ i {

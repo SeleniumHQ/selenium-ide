@@ -56,19 +56,28 @@ export default class LogMessage extends React.Component {
         >
           <div className="log-overview">
             {this.props.log.index && (
-              <span className="index">{this.props.log.index}.</span>
+              <span className="index" tabIndex="0">
+                {this.props.log.index}.
+              </span>
             )}
             <span className="message">
               {this.props.log.message}
-              <span className="status"> {statusMessage}</span>
+              <span className="status" tabIndex="0">
+                {' '}
+                {statusMessage}
+              </span>
             </span>
             {(this.props.log.status === LogTypes.Running ||
               this.props.log.status === LogTypes.Awaiting) && <Spinner />}
             <span className="shim" />
-            <span className="timestamp">{timestamp}</span>
+            <time className="timestamp" dateTime={timestamp} tabIndex="0">
+              {timestamp}
+            </time>
           </div>
           {this.props.log.description && (
-            <div className="details">{this.props.log.description}</div>
+            <div className="details" tabIndex="0">
+              {this.props.log.description}
+            </div>
           )}
         </Linkify>
       </li>

@@ -1,5 +1,6 @@
 footer.console {
   border-top: 1px #cecece solid;
+  margin-top: -1px;
 }
 
 .console .viewport {

@@ -16,10 +16,14 @@
 // under the License.
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
 
 export default class AddButton extends React.Component {
+  static defaultProps = {
+    'aria-label': 'Add',
+  }
   render() {
     return (
       <ActionButton
@@ -27,5 +31,8 @@ export default class AddButton extends React.Component {
         className={classNames('si-add', this.props.className)}
       /> // eslint-disable-line react/prop-types
     )
+  }
+  static propTypes = {
+    'aria-label': PropTypes.string,
   }
 }

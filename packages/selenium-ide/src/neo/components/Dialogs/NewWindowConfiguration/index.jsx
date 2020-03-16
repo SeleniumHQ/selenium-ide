@@ -38,6 +38,8 @@ export default class NewWindowConfigurationDialog extends React.Component {
         className={classNames('stripped', 'new-window-dialog')}
         isOpen={this.props.isOpen}
         onRequestClose={this.props.cancel}
+        modalTitle={NewWindowInput.modalTitleElement}
+        modalDescription={NewWindowInput.modalDescriptionElement}
       >
         <NewWindowInput {...this.props} />
       </Modal>
@@ -46,6 +48,8 @@ export default class NewWindowConfigurationDialog extends React.Component {
 }
 
 class NewWindowInput extends React.Component {
+  static modalTitleElement = 'newWindowConfigurationTitle'
+  static modalDescriptionElement = 'newWindowConfigurationDescription'
   static propTypes = {
     cancel: PropTypes.func.isRequired,
     command: PropTypes.object.isRequired,
@@ -122,21 +126,24 @@ class NewWindowInput extends React.Component {
       <DialogContainer
         title="New Window Configuration"
         type={this.state.isInvalidName ? 'warn' : 'info'}
-        renderFooter={() => (
-          <div className="right">
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-            <FlatButton
-              type="submit"
-              disabled={
-                this.state.isInvalidName || this.state.options.windowName === ''
-              }
-              onClick={this.onSubmit}
-            >
-              {'confirm'}
-            </FlatButton>
-          </div>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            disabled={
+              this.state.isInvalidName || this.state.options.windowName === ''
+            }
+            onClick={this.onSubmit}
+            key="ok"
+          >
+            {'confirm'}
+          </FlatButton>,
+        ]}
         onRequestClose={this.props.cancel}
+        modalTitle={NewWindowInput.modalTitleElement}
+        modalDescription={NewWindowInput.modalDescriptionElement}
       >
         {this.state.isConfigEnabled ? (
           <p

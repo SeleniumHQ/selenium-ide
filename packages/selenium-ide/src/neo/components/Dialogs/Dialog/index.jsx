@@ -20,6 +20,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import RemoveButton from '../../ActionButtons/Remove'
 import warn from '../../../assets/images/warning.png'
+import UiState from '../../../stores/view/UiState'
 import './style.css'
 
 const images = {
@@ -32,13 +33,18 @@ export default class DialogContainer extends React.Component {
     title: PropTypes.string,
     type: PropTypes.oneOf(['info', 'warn']).isRequired,
     children: PropTypes.node,
+    buttons: PropTypes.array,
     renderTitle: PropTypes.func,
     renderImage: PropTypes.func,
     renderFooter: PropTypes.func,
     onRequestClose: PropTypes.func,
+    modalTitle: PropTypes.string,
+    modalDescription: PropTypes.string,
   }
   static defaultProps = {
     type: 'info',
+    modalTitle: 'dialogTitle',
+    modalDescription: 'dialogDescription',
   }
   handleKeyDown(event) {
     event.persist()
@@ -47,6 +53,18 @@ export default class DialogContainer extends React.Component {
       this.props.onRequestClose()
     }
   }
+
+  renderButtons() {
+    if (!this.props.buttons) {
+      return null
+    }
+    const buttons = (UiState.dialogButtonDirection === 'reversed'
+      ? this.props.buttons.slice().reverse()
+      : this.props.buttons
+    ).filter(button => button !== null)
+    return <div className="right">{buttons}</div>
+  }
+
   render() {
     const coverImage = this.props.renderImage ? (
       this.props.renderImage()
@@ -68,7 +86,7 @@ export default class DialogContainer extends React.Component {
           {coverImage && (
             <div className="dialog__cover-image">{coverImage}</div>
           )}
-          <div className="dialog__title">
+          <div id={this.props.modalTitle} className="dialog__title">
             {this.props.renderTitle ? (
               this.props.renderTitle()
             ) : (
@@ -80,6 +98,7 @@ export default class DialogContainer extends React.Component {
               onClick={
                 this.props.onRequestClose ? this.props.onRequestClose : null
               }
+              aria-label="Close"
               style={{
                 color: 'white',
                 position: 'absolute',
@@ -96,8 +115,11 @@ export default class DialogContainer extends React.Component {
             }}
           >
             <div className="dialog__main">{this.props.children}</div>
-            {this.props.renderFooter ? (
-              <div className="dialog__footer">{this.props.renderFooter()}</div>
+            {this.props.renderFooter || this.props.buttons ? (
+              <div className="dialog__footer">
+                {this.renderButtons()}
+                {this.props.renderFooter ? this.props.renderFooter() : null}
+              </div>
             ) : null}
           </form>
         </div>

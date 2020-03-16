@@ -24,7 +24,9 @@ export default class AutoComplete extends React.Component {
   constructor(props) {
     super(props)
     this.id = uuidv4()
+    this.spanRef = React.createRef()
   }
+
   static propTypes = {
     getItemKey: PropTypes.func,
     renderDefaultStyledItem: PropTypes.func,
@@ -33,64 +35,99 @@ export default class AutoComplete extends React.Component {
     return (
       <Autocomplete
         getItemValue={item => item}
-        renderInput={props => (
-          <span
-            style={{
-              display: 'block',
-              position: 'relative',
-            }}
-          >
-            <input
-              id={this.props.id || this.id}
-              {...props}
+        renderInput={props => {
+          return (
+            <span
+              ref={this.spanRef}
               style={{
-                width: '100%',
-                paddingRight: '22px',
+                display: 'block',
+                position: 'relative',
+              }}
+            >
+              <input
+                id={this.props.id || this.id}
+                {...props}
+                style={{
+                  width: '100%',
+                  paddingRight: '22px',
+                  boxSizing: 'border-box',
+                }}
+                aria-label={props.placeholder}
+                role="combobox"
+                aria-haspopup="listbox"
+                aria-controls={`${this.id}_autocomplete_menu`}
+              />
+              <label
+                htmlFor={this.props.id || this.id}
+                className="si-caret-wide"
+                style={{
+                  position: 'absolute',
+                  top: '0',
+                  bottom: '0',
+                  right: '5px',
+                  margin: 'auto 0',
+                  fontSize: '16px',
+                  height: '16px',
+                  color: '#a3a3a3',
+                  cursor: 'pointer',
+                }}
+              />
+            </span>
+          )
+        }}
+        renderItem={(item, isHighlighted) => {
+          var idItem = `${this.id}_${
+            this.props.getItemKey ? this.props.getItemKey(item) : item
+          }`
+          var input
+          if (
+            this.spanRef.current &&
+            this.spanRef.current &&
+            this.spanRef.current.children.length > 0
+          ) {
+            input = this.spanRef.current.children[0]
+          }
+          if (input && isHighlighted) {
+            input.setAttribute('aria-activedescendant', idItem)
+          }
+          return (
+            <li
+              id={idItem}
+              key={this.props.getItemKey ? this.props.getItemKey(item) : item}
+              style={{
+                background: isHighlighted ? '#5c5c5c' : 'white',
+                color: isHighlighted ? 'white' : '#3f3f3f',
+                padding: '8px',
+              }}
+            >
+              {this.props.renderDefaultStyledItem
+                ? this.props.renderDefaultStyledItem(item, isHighlighted)
+                : item}
+            </li>
+          )
+        }}
+        renderMenu={(items, _value, style) => {
+          return (
+            <ul
+              id={`${this.id}_autocomplete_menu`}
+              style={{
+                ...style,
+                zIndex: 5,
+                borderRadius: '3px',
+                border: '1px solid #DEDEDE',
+                boxShadow: '0 0 3px 0 rgba(0,0,0,0.3)',
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: '2px 0',
+                fontSize: '90%',
+                position: 'fixed',
+                overflow: 'auto',
+                maxHeight: '30%',
                 boxSizing: 'border-box',
               }}
-            />
-            <label
-              htmlFor={this.props.id || this.id}
-              className="si-caret-wide"
-              style={{
-                position: 'absolute',
-                top: '0',
-                bottom: '0',
-                right: '5px',
-                margin: 'auto 0',
-                fontSize: '16px',
-                height: '16px',
-                color: '#a3a3a3',
-                cursor: 'pointer',
-              }}
-            />
-          </span>
-        )}
-        renderItem={(item, isHighlighted) => (
-          <div
-            key={this.props.getItemKey ? this.props.getItemKey(item) : item}
-            style={{
-              background: isHighlighted ? '#f3f3f3' : 'white',
-              padding: '8px',
-            }}
-          >
-            {this.props.renderDefaultStyledItem
-              ? this.props.renderDefaultStyledItem(item, isHighlighted)
-              : item}
-          </div>
-        )}
-        menuStyle={{
-          zIndex: 5,
-          borderRadius: '3px',
-          border: '1px solid #DEDEDE',
-          boxShadow: '0 0 3px 0 rgba(0,0,0,0.3)',
-          background: 'rgba(255, 255, 255, 0.9)',
-          padding: '2px 0',
-          fontSize: '90%',
-          position: 'fixed',
-          overflow: 'auto',
-          maxHeight: '30%',
-          boxSizing: 'border-box',
+            >
+              {items}
+            </ul>
+          )
         }}
         {...this.props}
       />

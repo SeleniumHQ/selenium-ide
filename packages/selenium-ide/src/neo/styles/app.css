@@ -6,11 +6,11 @@
   --hover-color: #f3f3f3;
   --active-color: #d8ebfb;
   --selected-color: #e8f1f8;
-  --selected-border-color: #5cb3ff;
+  --selected-border-color: #4d90fe;
 }
 
 html {
-  overflow: hidden;
+  overflow: auto;
 }
 
 body {
@@ -43,10 +43,6 @@ a:visited {
   color: #505050;
 }
 
-a:focus {
-  outline: 0;
-}
-
 a.link {
   color: #333;
   text-decoration: underline;
@@ -75,12 +71,6 @@ textarea {
   font-family: inherit;
 }
 
-input:focus,
-textarea:focus {
-  border-color: #40a6ff;
-  outline: 0;
-}
-
 input:disabled,
 textarea:disabled {
   background-color: whitesmoke;
@@ -91,6 +81,14 @@ textarea:disabled {
 input::placeholder,
 textarea::placeholder {
   color: #a0a0a0;
+}
+
+* {
+  outline: 0;
+}
+
+:focus {
+  outline: var(--selected-border-color) 1px solid;
 }
 
 hr {
@@ -122,7 +120,7 @@ code,
 }
 
 .passed {
-  color: #276d3a;
+  color: #276533;
 }
 
 .failed {
@@ -132,4 +130,12 @@ code,
 .action-text,
 .btn {
   text-transform: capitalize;
+}
+
+.hidden {
+  height: 0;
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+  display: none;
 }
