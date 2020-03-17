@@ -45,7 +45,7 @@
     "bootstrap.html",
     "indicator.html"
   ],
-  "content_security_policy": "script-src 'self' 'sha256-W7QWmGne6B9hjKtOqoGmUFOPgpFcUo4Nr/yyMqtgXcU=' 'sha256-4cgtnhJWZr038A2+gTGcUgQL2QsJao6c0AiTxYYo6c8=' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'sha256-W7QWmGne6B9hjKtOqoGmUFOPgpFcUo4Nr/yyMqtgXcU=' 'sha256-g0sGx5oQNWQA7+VAX6oocWOlrBzbLK0jggpU/mFFNHE=' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
     {
       "matches": [
