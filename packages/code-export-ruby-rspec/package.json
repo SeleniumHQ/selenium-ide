@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-ruby-rspec",
-  "version": "3.16.0",
+  "version": "3.17.0",
   "description": "Export Selenium IDE project contents to Ruby RSpec",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -21,6 +21,6 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "@seleniumhq/side-utils": "^3.16.0"
+    "@seleniumhq/side-utils": "^3.17.0"
   }
 }

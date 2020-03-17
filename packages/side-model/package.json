@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-model",
-  "version": "3.15.0",
+  "version": "3.17.0",
   "description": "Data for Selenium IDE",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
