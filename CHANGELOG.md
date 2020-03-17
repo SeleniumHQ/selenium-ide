@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v3.17.0
 - a11y: support resize text PR 972 (https://github.com/SeleniumHQ/selenium-ide/issues/975)
 - a11y: color & design PR 972 (https://github.com/SeleniumHQ/selenium-ide/issues/965)
 - a11y: announce recording has started PR 974 (https://github.com/SeleniumHQ/selenium-ide/issues/964)
