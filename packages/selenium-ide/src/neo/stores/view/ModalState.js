@@ -352,7 +352,7 @@ class ModalState {
   renameRunCommands(original, newName) {
     UiState._project.tests.forEach(test => {
       test.commands.forEach(command => {
-        if (command.command === 'run' && command.target === original) {
+        if ((command.command === 'run' || command.command === 'dependsOn' ) && command.target === original) {
           command.setTarget(newName)
         }
       })

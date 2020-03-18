@@ -495,6 +495,12 @@ export default class ExtCommand {
     })
   }
 
+  async doDependsOn(target, value) {
+    return PlaybackState.callTestCase(target, {
+      assertionsDisabled: value.includes('--disable-assertions'),
+    })
+  }
+
   async doMouseOver(locator, _, top) {
     const browserName = parsedUA.browser.name
     if (browserName === 'Chrome') {
@@ -882,6 +888,7 @@ export default class ExtCommand {
       case 'selectFrame':
       case 'selectWindow':
       case 'run':
+      case 'dependsOn':
       case 'setWindowSize':
       case 'setSpeed':
       case 'store':

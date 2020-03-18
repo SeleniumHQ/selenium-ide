@@ -172,7 +172,10 @@ export class CommandNode {
       this.isExtCommand(commandExecutor)
     ) {
       return {
-        next: this.command.command !== 'run' ? this.next : result,
+        next:
+          this.command.command !== 'run' && this.command.command !== 'dependsOn'
+            ? this.next
+            : result,
       }
     } else if (canExecuteCommand(this.command.command)) {
       return { next: this.next, result }

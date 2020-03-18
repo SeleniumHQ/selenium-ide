@@ -565,6 +565,16 @@ export const Commands = [
     },
   ],
   [
+    'dependsOn',
+    {
+      name: 'depends on',
+      description:
+        'Runs a test case from the current project. But exports as TestNG dependsOnGroups',
+      target: ArgTypes.testCase,
+      value: { isOptional: true, ...ArgTypes.optionalFlag },
+    },
+  ],
+  [
     'runScript',
     {
       name: 'run script',

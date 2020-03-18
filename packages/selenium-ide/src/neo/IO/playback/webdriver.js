@@ -442,6 +442,10 @@ export default class WebDriverExecutor {
   async doRun(target) {
     return Promise.resolve(PlaybackState.callTestCase(target))
   }
+
+  async doDependsOn(target) {
+    return Promise.resolve(PlaybackState.callTestCase(target))
+  }
 }
 
 async function waitForElement(locator, driver) {

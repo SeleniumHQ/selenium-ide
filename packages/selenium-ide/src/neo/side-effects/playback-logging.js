@@ -148,7 +148,7 @@ export default class PlaybackLogger {
       if (status.state !== PlaybackStates.Pending) {
         // In pending the description is used as the message
         log.setDescription(status.message)
-        if (command.command === 'run') {
+        if (command.command === 'run' || command.command === 'dependsOn') {
           log.setMessage(`run ${command.target}`)
         }
       }
@@ -163,7 +163,7 @@ export default class PlaybackLogger {
       return false
     } else if (command.command === 'echo') {
       return false
-    } else if (command.command === 'run' && state !== PlaybackStates.Fatal) {
+    } else if ((command.command === 'run' || command.command === 'dependsOn' ) && state !== PlaybackStates.Fatal) {
       return false
     } else {
       return true

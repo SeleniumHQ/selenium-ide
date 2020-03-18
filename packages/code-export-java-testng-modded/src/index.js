@@ -59,7 +59,7 @@ function generateTestDeclaration(tests, name) {
 
   let dependency = ''
 
-  let runCommand = thisTest.commands.find(c => c.command === 'run')
+  let runCommand = thisTest.commands.find(c => c.command === 'dependsOn')
 
   if (runCommand !== undefined) {
     if (runCommand.target.includes('.')) dependency = runCommand.target
