@@ -36,7 +36,6 @@ export async function exportCodeToFile(
   { enableOriginTracing, beforeEachOptions, enableDescriptionAsComment },
   retCodeObject
 ) {
-  console.log(arguments);
   const project = UiState.project.toJS()
   const { url, tests } = project
   for (const language of selectedLanguages) {
@@ -67,15 +66,10 @@ export async function exportCodeToFile(
     } else if (test) {
       emittedCode = await exporter.emit.test(language, options)
     } else if (suite) {
-      console.log('Emiitting fucking suites')
       emittedCode = await exporter.emit.suite(language, options)
     }
 
-    console.log(emittedCode)
-
     if (retCodeObject) return emittedCode
-
-    console.log(emittedCode)
 
     if (emittedCode)
       downloadUniqueFile(
