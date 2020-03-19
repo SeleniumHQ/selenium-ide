@@ -70,7 +70,7 @@ function generateTestDeclaration(tests, name) {
   let clsGroup = `${pkg}.${cls}`
   let methodGroup = `${clsGroup}#${name}`
 
-  return `@Test(groups={"${clsGroup}", "${methodGroup}"}${
+  return `@Test(groups={${testName.includes('___proxy') ? '' : '"' + clsGroup + '",'}"${methodGroup}"}${
     dependency ? `, dependsOnGroups={"${dependency}"}` : ''
   })\npublic void ${testName}() {`
 }
