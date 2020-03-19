@@ -565,6 +565,15 @@ export const Commands = [
     },
   ],
   [
+    'execMethod',
+    {
+      name: 'exec method',
+      description: 'Runs a  method.. ',
+      target: ArgTypes.testCase,
+      value: { isOptional: true },
+    },
+  ],
+  [
     'dependsOn',
     {
       name: 'depends on',

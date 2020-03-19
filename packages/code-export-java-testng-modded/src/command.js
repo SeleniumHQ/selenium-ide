@@ -76,7 +76,8 @@ export const emitters = {
   pause: emitPause,
   removeSelection: emitSelect,
   repeatIf: emitControlFlowRepeatIf,
-  run: emitRun,
+  //run: emitRun,
+  execMethod: emitExecMethod,
   runScript: emitRunScript,
   select: emitSelect,
   selectFrame: emitSelectFrame,
@@ -559,6 +560,22 @@ async function emitRun() {
   // We'll have to handle this differently.
   // return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
   return Promise.resolve('')
+}
+async function emitExecMethod(testName) {
+  if (testName.includes('.')) {
+    let parts = testName.split('#')
+
+    if (parts.length !== 2) throw 'Not valid'
+
+    let clsName = parts[0]
+    let methodName = parts[1]
+
+    return Promise.resolve(
+      `(new ${clsName}()).${exporter.parsers.uncapitalize(methodName)}();`
+    )
+  } else {
+    return Promise.resolve(`${exporter.parsers.uncapitalize(testName)}();`)
+  }
 }
 
 async function emitRunScript(script) {

@@ -19,6 +19,7 @@ import { codeExport as exporter } from '@seleniumhq/side-utils'
 import emitter from './command'
 import location from './location'
 import { generateHooks } from './hook'
+import uuidv4 from 'uuid/v4'
 
 // Define language options
 export const displayName = 'Java TestNG Modded'
@@ -133,6 +134,40 @@ export async function emitSuite({
   beforeEachOptions,
   enableDescriptionAsComment,
 }) {
+
+  tests.filter(t => t.external === false).forEach(t => {
+    if (t.commands.length && t.commands[0].command === 'run') {
+      let runCommand = t.commands[0]
+      let target = runCommand.target
+
+      let n = `___${target.replace(/\./g, '_').replace('#', '__')}___${
+        t.name
+      }____proxy`
+
+      tests.push({
+        id: uuidv4(),
+        name: n,
+        external: false,
+        commands: [
+          {
+            id: uuidv4(),
+            command: 'execMethod',
+            target: target,
+            comment: '',
+            value: '',
+          },
+        ],
+      })
+
+      t.commands[0].command = 'dependsOn'
+      t.commands[0].target = n
+
+      suite.tests.push(n)
+    }
+  })
+
+  // look for run,
+
   // regen hooks
   opts.hooks = generateHooks(suite)
 
