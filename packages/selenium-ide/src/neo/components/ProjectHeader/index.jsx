@@ -27,6 +27,8 @@ import SaveButton from '../ActionButtons/Save'
 import MoreButton from '../ActionButtons/More'
 import ListMenu, { ListMenuItem } from '../ListMenu'
 import './style.css'
+import Button from '@material-ui/core/Button'
+import { getJDXServerURL, axiosJSON } from '../../../common/utils'
 
 @observer
 export default class ProjectHeader extends React.Component {
@@ -53,6 +55,24 @@ export default class ProjectHeader extends React.Component {
   handleChange(e) {
     this.props.changeName(e.target.value)
   }
+
+  refreshResources(e) {
+    // haha
+    let bodies = document.getElementsByTagName('body')
+    if (bodies.length === 1) {
+      bodies[0].style.pointerEvents = 'none'
+      bodies[0].style.opacity = '0.7'
+    }
+    axiosJSON(getJDXServerURL('/refresh_resources'), 'GET', {})
+      .catch(e => alert(e))
+      .finally(() => {
+        if (bodies.length === 1) {
+          bodies[0].style.pointerEvents = 'auto'
+          bodies[0].style.opacity = '1'
+        }
+      })
+  }
+
   render() {
     return (
       <div className={classNames('header', { changed: this.props.changed })}>
@@ -62,18 +82,13 @@ export default class ProjectHeader extends React.Component {
           }${this.props.changed ? '*' : ''}`}
         />
         <div>
-          <span className="title-prefix">Project: </span>
-          <ContentEditable
-            className="title"
-            onKeyDown={this.handleKeyDown}
-            onChange={this.handleChange}
-            html={this.props.title}
-            aria-label="Change the project name"
-            role="textbox"
-          />
+          <span className="title-prefix">Project: {this.props.title} </span>
           <i className="si-pencil" />
         </div>
         <span className="buttons">
+          <Button color="primary" onClick={this.refreshResources}>
+            Refresh resources
+          </Button>
           <NewButton onClick={this.props.new} />
           <OpenButton
             onFileSelected={this.props.load}

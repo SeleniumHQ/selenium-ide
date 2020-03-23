@@ -35,7 +35,7 @@ import chromeGetFile from './filesystem/chrome'
 import firefoxGetFile from './filesystem/firefox'
 import {
   getJDXServerURL,
-  postJSON,
+  axiosJSON,
   userAgent as parsedUA,
 } from '../../common/utils'
 import {
@@ -109,7 +109,7 @@ async function jdxSave(project) {
     true
   )
 
-  return postJSON(getJDXServerURL('/save_project/'), 'post', {
+  return axiosJSON(getJDXServerURL('/save_project/'), 'post', {
     project,
     code_export,
   }).catch(e => throw e.response)

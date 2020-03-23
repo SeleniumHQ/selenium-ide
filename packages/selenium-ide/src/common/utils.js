@@ -25,7 +25,7 @@ export function getJDXServerURL(path) {
   return getJDXCfg().SERVER_URL + ':' + getJDXCfg().SERVER_PORT + path
 }
 
-export function postJSON(url, method, data) {
+export function axiosJSON(url, method, data) {
   if (!url) {
     url = getJDXServerURL('/')
   }
