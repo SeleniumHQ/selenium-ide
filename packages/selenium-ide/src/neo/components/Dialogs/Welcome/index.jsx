@@ -92,7 +92,7 @@ class WelcomeDialogContents extends React.Component {
               Welcome to Selenium IDE!
             </div>
             <div className="welcome-dialog__subtitle">
-              Version {project.version}
+              Version {project.version} - JDX edition
             </div>
           </div>
         )}
