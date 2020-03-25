@@ -203,7 +203,6 @@ class RenameDialogContents extends React.Component {
             id="flat-demo"
             freeSolo
             disableOpenOnFocus
-            value={this.state.value}
             onChange={this.handleChange}
             getOptionDisabled={opt =>
               this.props.autocompleteItemsFilter
@@ -215,6 +214,7 @@ class RenameDialogContents extends React.Component {
               <TextField
                 {...params}
                 label={content.inputLabel}
+                value={this.state.value}
                 margin="normal"
                 variant="outlined"
                 fullWidth
