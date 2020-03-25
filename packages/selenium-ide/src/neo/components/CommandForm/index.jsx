@@ -159,11 +159,12 @@ export default class CommandForm extends React.Component {
               label="Target"
               value={this.props.command ? this.props.command.target : ''}
               isRunCmdTarget={
-                this.props.command && this.props.command.command === 'run'
+                this.props.command && (this.props.command.command === 'run' || this.props.command.command === 'dependsOn')
               }
               targets={
                 this.props.command
-                  ? this.props.command.command === 'run'
+                  ? this.props.command.command === 'run' ||
+                    this.props.command.command === 'dependsOn'
                     ? UiState.project.tests
                         .map(t => {
                           return t.name
