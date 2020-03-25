@@ -127,10 +127,6 @@ function downloadProject(project) {
     } else if (env.jdxQACompatible === true) {
       jdxSave(project)
         .then(e => {
-          if (e.data.status === 'ERROR') {
-            showError(e.data.message)
-            return
-          }
           ModalState.showAlert({
             title: 'SUCCESS',
             description: e.data.message,
@@ -138,7 +134,7 @@ function downloadProject(project) {
           })
           // save java export .. ?
         })
-        .catch(e => showError(JSON.stringify(e)))
+        .catch(e => showError(e.data.message || JSON.stringify(e)))
     } else {
       browser.downloads.download({
         filename: projectProcessor.sanitizeProjectName(project.name) + '.side',
@@ -158,6 +154,7 @@ function showError(errorMsg) {
     title: 'ERROR',
     description: errorMsg,
     confirmLabel: 'close',
+    type: 'warn',
   })
 }
 
