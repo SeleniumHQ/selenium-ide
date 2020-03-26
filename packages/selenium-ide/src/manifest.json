@@ -1,10 +1,10 @@
 {
   "description": "Selenium Record and Playback tool for ease of getting acquainted with Selenium WebDriver.",
   "manifest_version": 2,
-  "name": "Selenium IDE",
+  "name": "JDX Selenium IDE",
   "version": "3.17.0",
   "version_name": "3.17.0",
-  "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
+  "homepage_url": "https://github.com/MarkoMackic/selenium-ide",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
