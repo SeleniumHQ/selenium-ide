@@ -53,6 +53,7 @@
     "@seleniumhq/code-export": "^3.17.0",
     "@seleniumhq/side-model": "^3.17.0",
     "@seleniumhq/side-utils": "^3.17.0",
+    "axios": "^0.19.2",
     "browser-webdriver": "^3.14.0",
     "classnames": "^2.2.5",
     "fuse.js": "^3.3.0",
