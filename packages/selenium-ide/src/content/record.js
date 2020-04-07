@@ -117,7 +117,7 @@ Recorder.addEventHandler(
   'clickAt',
   'click',
   function(event) {
-    if (event.button == 0 && eventIsTrusted(event)) {
+    if (event.button == 0 && eventIsTrusted(event) && !window._isSelecting) {
       const locators = locatorBuilders.buildAll(event.target)
 
       if (this.jdxContext && this.jdxContext.clickTimeoutId) return

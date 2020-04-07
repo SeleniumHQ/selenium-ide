@@ -126,6 +126,9 @@ function doCommands(request, _sender, sendResponse) {
   }
   if (request.selectMode) {
     sendResponse(true)
+
+    window._isSelecting = request.selecting;
+
     if (request.selecting && request.element) {
       targetSelector = new TargetSelector(
         function(element, win) {
