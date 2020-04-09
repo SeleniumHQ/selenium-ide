@@ -70,7 +70,7 @@ function generateTestDeclaration(tests, name) {
   let clsGroup = `${pkg}.${cls}`
   let methodGroup = `${clsGroup}#${name}`
 
-  return `@Test(groups={${testName.includes('___proxy') ? '' : '"' + clsGroup + '",'}"${methodGroup}"}${
+  return `@org.testng.annotations.Test(groups={${testName.includes('___proxy') ? '' : '"' + clsGroup + '",'}"${methodGroup}"}${
     dependency ? `, dependsOnGroups={"${dependency}"}` : ''
   })\npublic void ${testName}() {`
 }
@@ -81,7 +81,7 @@ function generateMethodDeclaration(name) {
 function generateSuiteDeclaration(name) {
   return `public class ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
-  )} extends Loader {`
+  )} extends com.jedox.qa.engines.testng_web.framework.testexec.Loader {`
 }
 function generateFilename(name) {
   return `${exporter.parsers.sanitizeName(name)}${opts.fileExtension}`

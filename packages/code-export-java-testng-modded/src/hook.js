@@ -67,50 +67,7 @@ function declareDependencies(exportObject) {
               exportObject.additionalOpts &&
               exportObject.additionalOpts.package) ||
               'com.jedox.qa.default'}` + ';',
-        },
-        {
-          level: 0,
-          statement:
-            'import com.jedox.qa.engines.testng_web.framework.testexec.Loader;',
-        },
-        { level: 0, statement: 'import org.testng.annotations.Test;' },
-        { level: 0, statement: 'import static org.testng.Assert.*;' },
-        { level: 0, statement: 'import org.testng.ITestContext;' },
-        { level: 0, statement: 'import static org.hamcrest.CoreMatchers.is;' },
-        { level: 0, statement: 'import static org.hamcrest.core.IsNot.not;' },
-        { level: 0, statement: 'import static org.hamcrest.MatcherAssert.*;' },
-        { level: 0, statement: 'import org.openqa.selenium.By;' },
-        { level: 0, statement: 'import org.openqa.selenium.WebDriver;' },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.firefox.FirefoxDriver;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.chrome.ChromeDriver;',
-        },
-        { level: 0, statement: 'import org.openqa.selenium.Dimension;' },
-        { level: 0, statement: 'import org.openqa.selenium.WebElement;' },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.interactions.Actions;',
-        },
-        {
-          level: 0,
-          statement:
-            'import org.openqa.selenium.support.ui.ExpectedConditions;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.support.ui.WebDriverWait;',
-        },
-        {
-          level: 0,
-          statement: 'import org.openqa.selenium.JavascriptExecutor;',
-        },
-        { level: 0, statement: 'import org.openqa.selenium.Alert;' },
-        { level: 0, statement: 'import org.openqa.selenium.Keys;' },
-        { level: 0, statement: 'import java.util.*;' },
+        }
       ],
     },
   }
@@ -123,7 +80,7 @@ function declareVariables() {
       commands: [
         {
           level: 0,
-          statement: 'private Map<String, Object> vars = new HashMap<>();',
+          statement: 'private java.util.Map<String, Object> vars = new java.util.HashMap<>();',
         },
       ],
     },

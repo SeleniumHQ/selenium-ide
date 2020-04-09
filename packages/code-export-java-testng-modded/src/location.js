@@ -36,25 +36,25 @@ export default {
 }
 
 function emitId(selector) {
-  return Promise.resolve(`By.id("${selector}")`)
+  return Promise.resolve(`org.openqa.selenium.By.id("${selector}")`)
 }
 
 function emitName(selector) {
-  return Promise.resolve(`By.name("${selector}")`)
+  return Promise.resolve(`org.openqa.selenium.By.name("${selector}")`)
 }
 
 function emitLink(selector) {
-  return Promise.resolve(`By.linkText("${selector}")`)
+  return Promise.resolve(`org.openqa.selenium.By.linkText("${selector}")`)
 }
 
 function emitPartialLinkText(selector) {
-  return Promise.resolve(`By.partialLinkText("${selector}")`)
+  return Promise.resolve(`org.openqa.selenium.By.partialLinkText("${selector}")`)
 }
 
 function emitCss(selector) {
-  return Promise.resolve(`By.cssSelector("${selector}")`)
+  return Promise.resolve(`org.openqa.selenium.By.cssSelector("${selector}")`)
 }
 
 function emitXpath(selector) {
-  return Promise.resolve(`By.xpath("${selector}")`)
+  return Promise.resolve(`org.openqa.selenium.By.xpath("${selector}")`)
 }

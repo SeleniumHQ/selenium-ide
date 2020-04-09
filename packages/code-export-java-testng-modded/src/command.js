@@ -160,11 +160,11 @@ function emitWaitForWindow() {
     { level: 0, statement: '} catch (InterruptedException e) {' },
     { level: 1, statement: 'e.printStackTrace();' },
     { level: 0, statement: '}' },
-    { level: 0, statement: 'Set<String> whNow = driver.getWindowHandles();' },
+    { level: 0, statement: 'java.util.Set<String> whNow = driver.getWindowHandles();' },
     {
       level: 0,
       statement:
-        'Set<String> whThen = (Set<String>) vars.get("window_handles");',
+        'java.util.Set<String> whThen = (Set<String>) vars.get("window_handles");',
     },
     { level: 0, statement: 'if (whNow.size() > whThen.size()) {' },
     { level: 1, statement: 'whNow.removeAll(whThen);' },
@@ -188,20 +188,20 @@ async function emitNewWindowHandling(command, emittedCommand) {
 
 function emitAssert(varName, value) {
   return Promise.resolve(
-    `assertEquals(vars.get("${varName}").toString(), "${value}");`
+    `org.testng.Assert.assertEquals(vars.get("${varName}").toString(), "${value}");`
   )
 }
 
 function emitAssertAlert(alertText) {
   return Promise.resolve(
-    `assertThat(driver.switchTo().alert().getText(), is("${alertText}"));`
+    `org.hamcrest.MatcherAssert.assertThat(driver.switchTo().alert().getText(), org.hamcrest.CoreMatchers.is("${alertText}"));`
   )
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
   const commands = [
     { level: 0, statement: '{' },
-    { level: 1, statement: 'Alert alert = driver.switchTo().alert();' },
+    { level: 1, statement: 'org.openqa.selenium.Alert alert = driver.switchTo().alert();' },
     { level: 1, statement: `alert.sendKeys("${textToSend}")` },
     { level: 1, statement: 'alert.accept();' },
     { level: 0, statement: '}' },
@@ -216,7 +216,7 @@ async function emitCheck(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
@@ -258,11 +258,11 @@ async function emitContext(target) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         target
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     { level: 1, statement: 'builder.contextClick(element).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -331,7 +331,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection${collectionName} = (ArrayList) vars.get("${collectionVarName}");`,
+        statement: `java.util.ArrayList collection${collectionName} = (java.util.ArrayList) vars.get("${collectionVarName}");`,
       },
       {
         level: 0,
@@ -378,11 +378,11 @@ async function emitDoubleClick(target) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         target
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     { level: 1, statement: 'builder.doubleClick(element).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -401,17 +401,17 @@ async function emitDragAndDrop(dragged, dropped) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement dragged = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement dragged = driver.findElement(${await location.emit(
         dragged
       )});`,
     },
     {
       level: 1,
-      statement: `WebElement dropped = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement dropped = driver.findElement(${await location.emit(
         dropped
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     { level: 1, statement: 'builder.dragAndDrop(dragged, dropped).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -430,7 +430,7 @@ async function emitEditContent(locator, content) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
@@ -470,11 +470,11 @@ async function emitMouseDown(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     {
       level: 1,
       statement: 'builder.moveToElement(element).clickAndHold().perform();',
@@ -491,11 +491,11 @@ async function emitMouseMove(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     { level: 1, statement: 'builder.moveToElement(element).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -507,9 +507,9 @@ async function emitMouseOut() {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(By.tagName("body"));`,
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(By.tagName("body"));`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     { level: 1, statement: 'builder.moveToElement(element, 0, 0).perform();' },
     { level: 0, statement: '}' },
   ]
@@ -523,11 +523,11 @@ async function emitMouseUp(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'Actions builder = new Actions(driver);' },
+    { level: 1, statement: 'org.openqa.selenium.interactions.Actions builder = new org.openqa.selenium.interactions.Actions(driver);' },
     {
       level: 1,
       statement: 'builder.moveToElement(element).release().perform();',
@@ -593,7 +593,7 @@ async function emitSelect(selectElement, option) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement dropdown = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement dropdown = driver.findElement(${await location.emit(
         selectElement
       )});`,
     },
@@ -628,7 +628,7 @@ async function emitSelectFrame(frameLocation) {
         { level: 0, statement: '{' },
         {
           level: 1,
-          statement: `WebElement element = driver.findElement(${await location.emit(
+          statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
             frameLocation
           )});`,
         },
@@ -656,7 +656,7 @@ async function emitSelectWindow(windowLocation) {
           {
             level: 1,
             statement:
-              'ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());',
+              'java.util.ArrayList<String> handles = new java.util.ArrayList<String>(driver.getWindowHandles());',
           },
           { level: 1, statement: 'driver.switchTo().window(handles.get(0));' },
           { level: 0, statement: '}' },
@@ -670,7 +670,7 @@ async function emitSelectWindow(windowLocation) {
           {
             level: 1,
             statement:
-              'ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());',
+              'java.util.ArrayList<String> handles = new java.util.ArrayList<String>(driver.getWindowHandles());',
           },
           {
             level: 1,
@@ -695,7 +695,7 @@ function generateSendKeysInput(value) {
           return s
         } else if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)[1]
-          return `Keys.${key}`
+          return `org.openqa.selenium.Keys.${key}`
         } else {
           return `"${s}"`
         }
@@ -748,7 +748,7 @@ async function emitStoreAttribute(locator, varName) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         elementLocator
       )});`,
     },
@@ -820,7 +820,7 @@ async function emitUncheck(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
@@ -838,7 +838,7 @@ async function emitVerifyChecked(locator) {
   return Promise.resolve(
     preCommands.commands.concat({
       level: 0,
-      statement: `assertTrue(driver.findElement(${await location.emit(
+      statement: `org.testng.Assert.assertTrue(driver.findElement(${await location.emit(
         locator
       )}).isSelected());`,
     })
@@ -852,7 +852,7 @@ async function emitVerifyEditable(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
@@ -861,7 +861,7 @@ async function emitVerifyEditable(locator) {
       statement:
         'Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;',
     },
-    { level: 1, statement: 'assertTrue(isEditable);' },
+    { level: 1, statement: 'org.testng.Assert.assertTrue(isEditable);' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands: preCommands.commands.concat(commands) })
@@ -872,11 +872,11 @@ async function emitVerifyElementPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
+      statement: `java.util.List<org.openqa.selenium.WebElement> elements = driver.findElements(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'assertTrue(elements.size() > 0);' },
+    { level: 1, statement: 'org.testng.Assert.assertTrue(elements.size() > 0);' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -887,11 +887,11 @@ async function emitVerifyElementNotPresent(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
+      statement: `List<org.openqa.selenium.WebElement> elements = driver.findElements(${await location.emit(
         locator
       )});`,
     },
-    { level: 1, statement: 'assertTrue(elements.size() == 0);' },
+    { level: 1, statement: 'org.testng.Assert.assertTrue(elements.size() == 0);' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -904,7 +904,7 @@ async function emitVerifyNotChecked(locator) {
     commands: preCommands.commands.concat([
       {
         level: 0,
-        statement: `assertFalse(driver.findElement(${await location.emit(
+        statement: `org.testng.Assert.assertFalse(driver.findElement(${await location.emit(
           locator
         )}).isSelected());`,
       },
@@ -919,7 +919,7 @@ async function emitVerifyNotEditable(locator) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
@@ -928,7 +928,7 @@ async function emitVerifyNotEditable(locator) {
       statement:
         'Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;',
     },
-    { level: 1, statement: 'assertFalse(isEditable);' },
+    { level: 1, statement: 'org.testng.Assert.assertFalse(isEditable);' },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands: preCommands.commands.concat(commands) })
@@ -947,7 +947,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
     },
     {
       level: 1,
-      statement: `assertThat(value, is(not("${exporter.emit.text(
+      statement: `org.hamcrest.MatcherAssert.assertThat(value, org.hamcrest.CoreMatchers.is(org.hamcrest.CoreMatchers.not("${exporter.emit.text(
         expectedValue
       )}")));`,
     },
@@ -964,7 +964,7 @@ async function emitVerifyNotText(locator, text) {
     commands: preCommands.commands.concat([
       {
         level: 0,
-        statement: `assertThat(${result}, is(not("${exporter.emit.text(
+        statement: `org.hamcrest.MatcherAssert.assertThat(${result}, org.hamcrest.CoreMatchers.is(org.hamcrest.CoreMatchers.not("${exporter.emit.text(
           text
         )}")));`,
       },
@@ -979,7 +979,7 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
@@ -991,9 +991,9 @@ async function emitVerifySelectedLabel(locator, labelValue) {
     {
       level: 1,
       statement:
-        'String selectedText = element.findElement(By.xpath(locator)).getText();',
+        'String selectedText = element.findElement(org.openqa.selenium.By.xpath(locator)).getText();',
     },
-    { level: 1, statement: `assertThat(selectedText, is("${labelValue}"));` },
+    { level: 1, statement: `org.hamcrest.MatcherAssert.assertThat(selectedText, org.hamcrest.CoreMatchers.is("${labelValue}"));` },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({
@@ -1012,9 +1012,9 @@ async function emitVerifyText(locator, text) {
     commands: preCommands.commands.concat([
       {
         level: 0,
-        statement: `assertThat(driver.findElement(${await location.emit(
+        statement: `org.hamcrest.MatcherAssert.assertThat(driver.findElement(${await location.emit(
           locator
-        )}).getText(), is("${exporter.emit.text(text)}"));`,
+        )}).getText(), org.hamcrest.CoreMatchers.is("${exporter.emit.text(text)}"));`,
       },
     ]),
   })
@@ -1030,14 +1030,14 @@ async function emitVerifyValue(locator, value) {
         locator
       )}).getAttribute("value");`,
     },
-    { level: 1, statement: `assertThat(value, is("${value}"));` },
+    { level: 1, statement: `org.hamcrest.MatcherAssert.assertThat(value, org.hamcrest.CoreMatchers.is("${value}"));` },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands: preCommands.commands.concat(commands) })
 }
 
 async function emitVerifyTitle(title) {
-  return Promise.resolve(`assertThat(driver.getTitle(), is("${title}"));`)
+  return Promise.resolve(`org.hamcrest.MatcherAssert.assertThat(driver.getTitle(), org.hamcrest.CoreMatchers.is("${title}"));`)
 }
 
 async function emitWaitForElementEditable(locator, timeout) {
@@ -1045,13 +1045,13 @@ async function emitWaitForElementEditable(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.elementToBeClickable(${await location.emit(
+      statement: `wait.until(org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable(${await location.emit(
         locator
       )}));`,
     },
@@ -1066,13 +1066,13 @@ async function emitWaitForText(locator, text) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.textToBe(${await location.emit(
+      statement: `wait.until(org.openqa.selenium.support.ui.ExpectedConditions.textToBe(${await location.emit(
         locator
       )}, "${text}"));`,
     },
@@ -1090,13 +1090,13 @@ async function emitWaitForElementPresent(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.presenceOfElementLocated(${await location.emit(
+      statement: `wait.until(org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated(${await location.emit(
         locator
       )}));`,
     },
@@ -1110,13 +1110,13 @@ async function emitWaitForElementVisible(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.visibilityOfElementLocated(${await location.emit(
+      statement: `wait.until(org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated(${await location.emit(
         locator
       )}));`,
     },
@@ -1132,13 +1132,13 @@ async function emitWaitForElementNotEditable(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(${await location.emit(
+      statement: `wait.until(org.openqa.selenium.support.ui.ExpectedConditions.not(ExpectedConditions.elementToBeClickable(${await location.emit(
         locator
       )})));`,
     },
@@ -1154,19 +1154,19 @@ async function emitWaitForElementNotPresent(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
+      statement: `org.openqa.selenium.WebElement element = driver.findElement(${await location.emit(
         locator
       )});`,
     },
     {
       level: 1,
-      statement: 'wait.until(ExpectedConditions.stalenessOf(element));',
+      statement: 'wait.until(org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf(element));',
     },
     { level: 0, statement: '}' },
   ]
@@ -1180,13 +1180,13 @@ async function emitWaitForElementNotVisible(locator, timeout) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
         timeout / 1000
       )});`,
     },
     {
       level: 1,
-      statement: `wait.until(ExpectedConditions.invisibilityOfElementLocated(${await location.emit(
+      statement: `wait.until(org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated(${await location.emit(
         locator
       )}));`,
     },
