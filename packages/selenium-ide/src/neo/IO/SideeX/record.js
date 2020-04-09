@@ -34,6 +34,7 @@ async function notifyPluginsOfRecordedCommand(command, test) {
     event: 'commandRecorded',
     options: {
       tabId: WindowSession.currentUsedTabId[test.id],
+      commandId: command.id,
       command: command.command,
       target: command.target,
       targets: command.targets,
