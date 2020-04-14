@@ -27,7 +27,7 @@
     "@seleniumhq/side-model": "^3.5.10",
     "@seleniumhq/side-testkit": "^3.5.10",
     "@seleniumhq/webdriver-testkit": "^3.5.10",
-    "selenium-webdriver": "^4.0.0-alpha.5"
+    "selenium-webdriver": "^4.0.0-alpha.7"
   },
   "dependencies": {
     "@seleniumhq/side-commons": "^3.5.10"
