@@ -114,10 +114,12 @@ describe('webdriver executor', () => {
         await driver.get(`http://localhost:${port}/select.html`)
         const element = await driver.findElement(By.id('mult'))
         expect(
-          (await driver.executeScript(
-            'return arguments[0].selectedOptions',
-            element
-          )).length
+          (
+            await driver.executeScript(
+              'return arguments[0].selectedOptions',
+              element
+            )
+          ).length
         ).toBe(0)
         await executor.doAddSelection('id=mult', 'label=Volvo')
         const selections = await driver.executeScript(
@@ -129,17 +131,21 @@ describe('webdriver executor', () => {
         await executor.doAddSelection('id=mult', 'value=volvo')
         // no deselections by mistake
         expect(
-          (await driver.executeScript(
-            'return arguments[0].selectedOptions',
-            element
-          )).length
+          (
+            await driver.executeScript(
+              'return arguments[0].selectedOptions',
+              element
+            )
+          ).length
         ).toBe(1)
         await executor.doAddSelection('id=mult', 'value=audi')
         expect(
-          (await driver.executeScript(
-            'return arguments[0].selectedOptions',
-            element
-          )).length
+          (
+            await driver.executeScript(
+              'return arguments[0].selectedOptions',
+              element
+            )
+          ).length
         ).toBe(2)
       })
     })
@@ -484,10 +490,12 @@ describe('webdriver executor', () => {
         await opt1.click()
         await opt4.click()
         expect(
-          (await driver.executeScript(
-            'return arguments[0].selectedOptions',
-            element
-          )).length
+          (
+            await driver.executeScript(
+              'return arguments[0].selectedOptions',
+              element
+            )
+          ).length
         ).toBe(2)
         await executor.doRemoveSelection('id=mult', 'label=Volvo')
         const selections = await driver.executeScript(
@@ -498,17 +506,21 @@ describe('webdriver executor', () => {
         await executor.doRemoveSelection('id=mult', 'value=volvo')
         // no selections by mistake
         expect(
-          (await driver.executeScript(
-            'return arguments[0].selectedOptions',
-            element
-          )).length
+          (
+            await driver.executeScript(
+              'return arguments[0].selectedOptions',
+              element
+            )
+          ).length
         ).toBe(1)
         await executor.doRemoveSelection('id=mult', 'value=audi')
         expect(
-          (await driver.executeScript(
-            'return arguments[0].selectedOptions',
-            element
-          )).length
+          (
+            await driver.executeScript(
+              'return arguments[0].selectedOptions',
+              element
+            )
+          ).length
         ).toBe(0)
       })
     })

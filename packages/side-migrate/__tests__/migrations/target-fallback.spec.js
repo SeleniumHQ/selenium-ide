@@ -35,7 +35,10 @@ describe('project migrator', () => {
             {
               command: 'click',
               target: 'something',
-              targets: [['first', 'strat'], ['second', 'start']],
+              targets: [
+                ['first', 'strat'],
+                ['second', 'start'],
+              ],
               value: '',
             },
           ],
@@ -56,7 +59,10 @@ describe('project migrator', () => {
             {
               command: 'click',
               target: 'something',
-              targetFallback: [['first', 'strat'], ['second', 'start']],
+              targetFallback: [
+                ['first', 'strat'],
+                ['second', 'start'],
+              ],
               value: '',
             },
           ],

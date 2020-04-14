@@ -24,9 +24,9 @@ const { downloadDriver } = require('@seleniumhq/get-driver')
 ;(async () => {
   const downloadDirectory = path.join(__dirname, '../files')
   const pkg = require('electron/package.json')
-  const chromedrivers = (await fs.readdir(
-    path.join(__dirname, '../files')
-  )).filter(file => file.startsWith('chromedriver'))
+  const chromedrivers = (
+    await fs.readdir(path.join(__dirname, '../files'))
+  ).filter(file => file.startsWith('chromedriver'))
 
   let shouldDownload = true
   for await (let chromedriver of chromedrivers) {

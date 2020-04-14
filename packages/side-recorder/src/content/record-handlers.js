@@ -345,8 +345,8 @@ handlers.push([
         selectMousedown &&
         event.button === 0 &&
         x + y &&
-        (event.clientX < window.document.documentElement.clientWidth &&
-          event.clientY < window.document.documentElement.clientHeight) &&
+        event.clientX < window.document.documentElement.clientWidth &&
+        event.clientY < window.document.documentElement.clientHeight &&
         getSelectionText() === ''
       ) {
         let sourceRelateX =

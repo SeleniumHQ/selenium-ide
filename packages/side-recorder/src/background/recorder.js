@@ -220,7 +220,9 @@ export default class BackgroundRecorder {
           'selectWindow',
           [
             [
-              `handle=\${${this.windowSession.openedTabIds[this.sessionId][tabId]}}`,
+              `handle=\${${
+                this.windowSession.openedTabIds[this.sessionId][tabId]
+              }}`,
             ],
           ],
           ''
@@ -513,10 +515,12 @@ export default class BackgroundRecorder {
           focused: true,
         }
       )
-      const tab = (await browser.tabs.query({
-        windowId: win.id,
-        active: true,
-      }))[0]
+      const tab = (
+        await browser.tabs.query({
+          windowId: win.id,
+          active: true,
+        })
+      )[0]
       this.windowSession.currentUsedTabId[this.sessionId] = tab.id
       this.reattachToTab(tab.id)
     } else if (

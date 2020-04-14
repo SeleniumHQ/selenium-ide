@@ -56,7 +56,10 @@ describe('Command Node', () => {
   })
   it('forEach fetches count from preset variable', () => {
     const collectionName = 'blah'
-    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
+    variables.set(collectionName, [
+      { a: 'a1', b: 'b1' },
+      { a: 'a2', b: 'b2' },
+    ])
     const command = {
       command: ControlFlowCommandNames.forEach,
       target: collectionName,
@@ -78,7 +81,10 @@ describe('Command Node', () => {
   })
   it('forEach stores iterated collection entry on a variable using the provided name', () => {
     const collectionName = 'asdf'
-    variables.set(collectionName, [{ a: 'a1', b: 'b1' }, { a: 'a2', b: 'b2' }])
+    variables.set(collectionName, [
+      { a: 'a1', b: 'b1' },
+      { a: 'a2', b: 'b2' },
+    ])
     const command = {
       command: ControlFlowCommandNames.forEach,
       target: collectionName,
