@@ -34,6 +34,12 @@ The move to Electron is a work in progress. We will post updates as progress is 
 - Build the extension  
 `yarn build` and then
 `yarn watch` for faster incremental builds
+- Run Tests
+To run the tests you need to do the following
+```bash
+yarn download-drivers 
+yarn test
+```
 
 ## What now?
 
