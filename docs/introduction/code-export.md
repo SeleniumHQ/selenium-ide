@@ -26,6 +26,7 @@ Currently, export to the following languages and test frameworks is supported.
 - C# NUnit
 - C# xUnit
 - Java JUnit
+- Java Selenide
 - JavaScript Mocha
 - Python pytest
 
@@ -137,6 +138,59 @@ Here's a sample `pom.xml` to help you get started.
     </dependency>
   </dependencies>
 </project>
+```
+
+### Java Selenide
+
+The exported code for Java Selenide is built to work with Java 8, JUnit 5, and the latest version of Selenide.
+
+You should be able to take the exported Java file and place it into a standard Maven directory structure with a `pom.xml` or `build.gradle` file listing these dependencies and run it.
+
+Here's a sample `pom.xml` to help you get started.
+
+```xml
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-ide-java-selenide-code-export</artifactId>
+  <version>1</version>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+        <groupId>com.codeborne</groupId>
+        <artifactId>selenide</artifactId>
+        <version>5.11.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.6.2</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+Or `build.gradle`:
+
+```
+apply plugin: 'java'
+
+group 'selenium-ide-java-selenide-code-export'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+	testCompile "org.junit.jupiter:junit-jupiter-api:5.6.2"
+	compile "com.codeborne:selenide:5.11.1"
+}
 ```
 
 ### JavaScript Mocha

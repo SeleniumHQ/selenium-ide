@@ -19,6 +19,7 @@ export const availableLanguages = {
   'csharp-nunit': require('@seleniumhq/code-export-csharp-nunit'),
   'csharp-xunit': require('@seleniumhq/code-export-csharp-xunit'),
   'java-junit': require('@seleniumhq/code-export-java-junit'),
+  'java-selenide': require('@seleniumhq/code-export-java-selenide'),
   'javascript-mocha': require('@seleniumhq/code-export-javascript-mocha'),
   'python-pytest': require('@seleniumhq/code-export-python-pytest'),
   'ruby-rspec': require('@seleniumhq/code-export-ruby-rspec'),

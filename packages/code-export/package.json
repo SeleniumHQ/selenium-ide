@@ -23,6 +23,7 @@
     "@seleniumhq/code-export-csharp-nunit": "^3.17.0",
     "@seleniumhq/code-export-csharp-xunit": "^3.17.0",
     "@seleniumhq/code-export-java-junit": "^3.17.0",
+    "@seleniumhq/code-export-java-selenide": "^3.17.0",
     "@seleniumhq/code-export-javascript-mocha": "^3.17.0",
     "@seleniumhq/code-export-python-pytest": "^3.17.0",
     "@seleniumhq/code-export-ruby-rspec": "^3.17.0"

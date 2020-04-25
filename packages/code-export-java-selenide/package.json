@@ -1,0 +1,26 @@
+{
+  "name": "@seleniumhq/code-export-java-selenide",
+  "version": "3.17.0",
+  "description": "Export Selenium IDE project contents to Java Selenide",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "keywords": [
+    "selenium",
+    "ide",
+    "export"
+  ],
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "build": "babel -d dist src --ignore=__test__",
+    "watch": "yarn build -w"
+  },
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.5"
+  },
+  "dependencies": {
+    "@seleniumhq/side-utils": "^3.17.0"
+  }
+}
