@@ -129,7 +129,13 @@ async function emitMethod(
     generateMethodDeclaration,
     terminatingKeyword,
     emitter,
-    overrideCommandEmitting,
+  } = {},
+  {
+    render,
+    startingLevel,
+    commentPrefix,
+    enableOriginTracing,
+    enableDescriptionAsComment
   } = {}
 ) {
   const methodDeclaration = generateMethodDeclaration(method.name)
@@ -140,16 +146,32 @@ async function emitMethod(
     _terminatingKeyword = methodDeclaration.terminatingKeyword
   }
   let result
-  if (overrideCommandEmitting) {
+  if (render) {
+    // prepare origin tracing code commands if enabled
+    const originTracing = emitOriginTracing(
+      method,
+      { commentPrefix },
+      enableOriginTracing,
+      enableDescriptionAsComment
+    )
+    result = render(await emitCommands(method.commands, emitter).catch(error => {
+        // prefix method name on error
+        throw new Error(`Method '${method.name}' has a problem: ${error.message}`)
+      }),
+      {
+        startingLevel: startingLevel,
+        originTracing,
+        enableOriginTracing,
+      }
+    ).replace(/\n+$/m, '')
+  } else {
     result = method.commands.map(
       cmd => `${commandPrefixPadding.repeat(cmd.level) + cmd.statement}`
-    )
-  } else {
-    result = await emitCommands(method.commands, emitter)
+    ).join(`\n${commandPrefixPadding}`).replace(/^/, commandPrefixPadding)
   }
   return [
     _methodDeclaration,
-    result.join(`\n${commandPrefixPadding}`).replace(/^/, commandPrefixPadding),
+    result,
     _terminatingKeyword,
   ]
 }
@@ -236,7 +258,6 @@ async function emitTest(
           commandPrefixPadding,
           generateMethodDeclaration: method.generateMethodDeclaration,
           terminatingKeyword,
-          overrideCommandEmitting: true,
         })
         await registerMethod(method.name, result, {
           generateMethodDeclaration: method.generateMethodDeclaration,
@@ -253,6 +274,12 @@ async function emitTest(
       commandPrefixPadding,
       generateMethodDeclaration,
       terminatingKeyword,
+    }, {
+      render,
+      startingLevel: testLevel,
+      commentPrefix,
+      enableOriginTracing,
+      enableDescriptionAsComment
     })
     await registerMethod(method.name, result, {
       generateMethodDeclaration,
