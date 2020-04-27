@@ -1151,7 +1151,7 @@ async function emitWaitForElementNotEditable(locator, timeout) {
 
 async function emitWaitForElementNotPresent(locator, timeout) {
   const commands = [
-    { level: 0, statement: '{' },
+    { level: 0, statement: 'try{' },
     {
       level: 1,
       statement: `org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, ${Math.floor(
@@ -1168,7 +1168,7 @@ async function emitWaitForElementNotPresent(locator, timeout) {
       level: 1,
       statement: 'wait.until(org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf(element));',
     },
-    { level: 0, statement: '}' },
+    { level: 0, statement: '}catch(Exception e){e.printStackTrace();}' },
   ]
   return Promise.resolve({
     commands,
