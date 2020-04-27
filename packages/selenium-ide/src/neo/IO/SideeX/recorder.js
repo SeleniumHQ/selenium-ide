@@ -568,6 +568,7 @@ export default class BackgroundRecorder {
   async createNewRecordingWindow(testCaseId, url) {
     const win = await browser.windows.create({
       url,
+      state: "maximized"
     })
     const tab = win.tabs[0]
     this.lastAttachedTabId = tab.id
