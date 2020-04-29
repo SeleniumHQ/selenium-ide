@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import {codeExport as exporter} from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-utils'
 import location from './location'
 import selection from './selection'
 
@@ -123,7 +123,7 @@ export const emitters = {
 exporter.register.preprocessors(emitters)
 
 function register(command, emitter) {
-  exporter.register.emitter({command, emitter, emitters})
+  exporter.register.emitter({ command, emitter, emitters })
 }
 
 function emit(command) {
@@ -151,7 +151,11 @@ function emitWaitForWindow() {
   }
   const commands = [
     { level: 0, statement: 'Selenide.sleep(timeout);' },
-    { level: 0, statement: 'Set<String> whNow = WebDriverRunner.getWebDriver().getWindowHandles();' },
+    {
+      level: 0,
+      statement:
+        'Set<String> whNow = WebDriverRunner.getWebDriver().getWindowHandles();',
+    },
     {
       level: 0,
       statement:
@@ -190,9 +194,7 @@ function emitAssertAlert(alertText) {
 }
 
 function emitAnswerOnNextPrompt(textToSend) {
-  return Promise.resolve(
-    `Selenide.prompt("${textToSend}");`
-  )
+  return Promise.resolve(`Selenide.prompt("${textToSend}");`)
 }
 
 async function emitCheck(locator) {
@@ -210,9 +212,7 @@ function emitChooseOkOnNextConfirmation() {
 }
 
 async function emitClick(target) {
-  return Promise.resolve(
-    `$(${await location.emit(target)}).click();`
-  )
+  return Promise.resolve(`$(${await location.emit(target)}).click();`)
 }
 
 async function emitClose() {
@@ -228,14 +228,14 @@ function generateExpressionScript(script) {
 
 function emitControlFlowDo() {
   return Promise.resolve({
-    commands: [{level: 0, statement: 'do {'}],
+    commands: [{ level: 0, statement: 'do {' }],
     endingLevelAdjustment: 1,
   })
 }
 
 function emitControlFlowElse() {
   return Promise.resolve({
-    commands: [{level: 0, statement: '} else {'}],
+    commands: [{ level: 0, statement: '} else {' }],
     startingLevelAdjustment: -1,
     endingLevelAdjustment: +1,
   })
@@ -256,7 +256,7 @@ function emitControlFlowElseIf(script) {
 
 function emitControlFlowEnd() {
   return Promise.resolve({
-    commands: [{level: 0, statement: `}`}],
+    commands: [{ level: 0, statement: `}` }],
     startingLevelAdjustment: -1,
   })
 }
@@ -264,7 +264,7 @@ function emitControlFlowEnd() {
 function emitControlFlowIf(script) {
   return Promise.resolve({
     commands: [
-      {level: 0, statement: `if (${generateExpressionScript(script)}) {`},
+      { level: 0, statement: `if (${generateExpressionScript(script)}) {` },
     ],
     endingLevelAdjustment: 1,
   })
@@ -294,7 +294,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
 function emitControlFlowRepeatIf(script) {
   return Promise.resolve({
     commands: [
-      {level: 0, statement: `} while (${generateExpressionScript(script)});`},
+      { level: 0, statement: `} while (${generateExpressionScript(script)});` },
     ],
     startingLevelAdjustment: -1,
   })
@@ -302,30 +302,30 @@ function emitControlFlowRepeatIf(script) {
 
 function emitControlFlowTimes(target) {
   const commands = [
-    {level: 0, statement: `Integer times = ${target};`},
-    {level: 0, statement: 'for(int i = 0; i < times; i++) {'},
+    { level: 0, statement: `Integer times = ${target};` },
+    { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
   ]
-  return Promise.resolve({commands, endingLevelAdjustment: 1})
+  return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 
 function emitControlFlowWhile(script) {
   return Promise.resolve({
     commands: [
-      {level: 0, statement: `while (${generateExpressionScript(script)}) {`},
+      { level: 0, statement: `while (${generateExpressionScript(script)}) {` },
     ],
     endingLevelAdjustment: 1,
   })
 }
 
 async function emitDoubleClick(target) {
-  return Promise.resolve(
-    `$(${await location.emit(target)}).doubleClick();`
-  )
+  return Promise.resolve(`$(${await location.emit(target)}).doubleClick();`)
 }
 
 async function emitDragAndDrop(dragged, dropped) {
   return Promise.resolve(
-    `$(${await location.emit(dragged)}).dragAndDropTo(${await location.emit(dropped)});`
+    `$(${await location.emit(dragged)}).dragAndDropTo(${await location.emit(
+      dropped
+    )});`
   )
 }
 
@@ -336,24 +336,26 @@ async function emitEcho(message) {
 
 async function emitEditContent(locator, content) {
   const commands = [
-    {level: 0, statement: '{'},
+    { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `SelenideElement element = $(${await location.emit(locator)});`,
+      statement: `SelenideElement element = $(${await location.emit(
+        locator
+      )});`,
     },
     {
       level: 1,
       statement: `Selenide.executeJavaScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
     },
-    {level: 0, statement: '}'},
+    { level: 0, statement: '}' },
   ]
-  return Promise.resolve({commands})
+  return Promise.resolve({ commands })
 }
 
 async function emitExecuteScript(script, varName) {
-  const result = `Selenide.executeJavaScript("${script.script}"${generateScriptArguments(
-    script
-  )})`
+  const result = `Selenide.executeJavaScript("${
+    script.script
+  }"${generateScriptArguments(script)})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
@@ -372,13 +374,17 @@ function generateScriptArguments(script) {
 
 async function emitMouseDown(locator) {
   return Promise.resolve(
-    `Selenide.actions().moveToElement($(${await location.emit(locator)})).clickAndHold().perform();`
+    `Selenide.actions().moveToElement($(${await location.emit(
+      locator
+    )})).clickAndHold().perform();`
   )
 }
 
 async function emitMouseMove(locator) {
   return Promise.resolve(
-    `Selenide.actions().moveToElement($(${await location.emit(locator)})).perform();`
+    `Selenide.actions().moveToElement($(${await location.emit(
+      locator
+    )})).perform();`
   )
 }
 
@@ -390,7 +396,9 @@ async function emitMouseOut() {
 
 async function emitMouseUp(locator) {
   return Promise.resolve(
-    `Selenide.actions().moveToElement($(${await location.emit(locator)})).release().perform();`
+    `Selenide.actions().moveToElement($(${await location.emit(
+      locator
+    )})).release().perform();`
   )
 }
 
@@ -411,7 +419,9 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `Selenide.executeJavaScript("${script.script}${generateScriptArguments(script)}");`
+    `Selenide.executeJavaScript("${script.script}${generateScriptArguments(
+      script
+    )}");`
   )
 }
 
@@ -456,19 +466,23 @@ async function emitSelectWindow(windowLocation) {
   } else if (/^win_ser_/.test(windowLocation)) {
     if (windowLocation === 'win_ser_local') {
       return Promise.resolve({
-        commands: [{
-          level: 0,
-          statement: 'Selenide.switchTo().window(0);'
-        }]
-      });
+        commands: [
+          {
+            level: 0,
+            statement: 'Selenide.switchTo().window(0);',
+          },
+        ],
+      })
     } else {
       const index = parseInt(windowLocation.substr('win_ser_'.length))
       return Promise.resolve({
-        commands: [{
-          level: 0,
-          statement: `Selenide.switchTo().window(${index});`
-        }]
-      });
+        commands: [
+          {
+            level: 0,
+            statement: `Selenide.switchTo().window(${index});`,
+          },
+        ],
+      })
     }
   } else {
     return Promise.reject(
@@ -521,15 +535,17 @@ async function emitStoreAttribute(locator, varName) {
   const elementLocator = locator.slice(0, attributePos)
   const attributeName = locator.slice(attributePos + 1)
   const commands = [
-    {level: 0, statement: '{'},
+    { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `String attribute = $(${await location.emit(elementLocator)}).getAttribute("${attributeName}");`,
+      statement: `String attribute = $(${await location.emit(
+        elementLocator
+      )}).getAttribute("${attributeName}");`,
     },
-    {level: 1, statement: `${variableSetter(varName, 'attribute')}`},
-    {level: 0, statement: '}'},
+    { level: 1, statement: `${variableSetter(varName, 'attribute')}` },
+    { level: 0, statement: '}' },
   ]
-  return Promise.resolve({commands})
+  return Promise.resolve({ commands })
 }
 
 async function emitStoreText(locator, varName) {
@@ -547,7 +563,9 @@ async function emitStoreValue(locator, varName) {
 }
 
 async function emitStoreWindowHandle(varName) {
-  return Promise.resolve(variableSetter(varName, 'WebDriverRunner.getWebDriver().getWindowHandle()'))
+  return Promise.resolve(
+    variableSetter(varName, 'WebDriverRunner.getWebDriver().getWindowHandle()')
+  )
 }
 
 async function emitStoreXpathCount(locator, varName) {
@@ -556,9 +574,7 @@ async function emitStoreXpathCount(locator, varName) {
 }
 
 async function emitSubmit(locator) {
-  return Promise.resolve(
-    `$(${await location.emit(locator)}).submit();`
-  )
+  return Promise.resolve(`$(${await location.emit(locator)}).submit();`)
 }
 
 async function emitType(target, value) {
@@ -586,15 +602,11 @@ async function emitVerifyEditable(locator) {
 }
 
 async function emitVerifyElementPresent(locator) {
-  return Promise.resolve(
-    `$(${await location.emit(locator)}).should(exist);`
-  )
+  return Promise.resolve(`$(${await location.emit(locator)}).should(exist);`)
 }
 
 async function emitVerifyElementNotPresent(locator) {
-  return Promise.resolve(
-    `$(${await location.emit(locator)}).shouldNot(exist);`
-  )
+  return Promise.resolve(`$(${await location.emit(locator)}).shouldNot(exist);`)
 }
 
 async function emitVerifyNotChecked(locator) {
@@ -611,19 +623,25 @@ async function emitVerifyNotEditable(locator) {
 
 async function emitVerifyNotSelectedValue(locator, expectedValue) {
   return Promise.resolve(
-    `$(${await location.emit(locator)}).shouldNotHave(value("${exporter.emit.text(expectedValue)}"));`
+    `$(${await location.emit(
+      locator
+    )}).shouldNotHave(value("${exporter.emit.text(expectedValue)}"));`
   )
 }
 
 async function emitVerifyNotText(locator, text) {
   return Promise.resolve(
-    `$(${await location.emit(locator)}).shouldNotHave(text("${exporter.emit.text(text)}"));`
+    `$(${await location.emit(
+      locator
+    )}).shouldNotHave(text("${exporter.emit.text(text)}"));`
   )
 }
 
 async function emitVerifySelectedLabel(locator, labelValue) {
   return Promise.resolve(
-    `$(${await location.emit(locator)}).getSelectedOption().shouldHave(text("${labelValue}"));`
+    `$(${await location.emit(
+      locator
+    )}).getSelectedOption().shouldHave(text("${labelValue}"));`
   )
 }
 
@@ -633,7 +651,9 @@ async function emitVerifySelectedValue(locator, value) {
 
 async function emitVerifyText(locator, text) {
   return Promise.resolve(
-    `$(${await location.emit(locator)}).shouldHave(text("${exporter.emit.text(text)}"));`
+    `$(${await location.emit(locator)}).shouldHave(text("${exporter.emit.text(
+      text
+    )}"));`
   )
 }
 
@@ -658,9 +678,7 @@ async function emitWaitForElementEditable(locator, timeout) {
     },
     {
       level: 1,
-      statement: `$(${await location.emit(
-        locator
-      )}).shouldBe(enabled);`,
+      statement: `$(${await location.emit(locator)}).shouldBe(enabled);`,
     },
     { level: 0, statement: '}' },
   ]

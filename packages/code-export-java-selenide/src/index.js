@@ -125,7 +125,12 @@ export default {
   },
   register: {
     command: emitter.register,
+    variable: opts.hooks.declareVariables.register,
     dependency: opts.hooks.declareDependencies.register,
+    beforeAll: opts.hooks.beforeAll.register,
+    beforeEach: opts.hooks.beforeEach.register,
+    afterEach: opts.hooks.afterEach.register,
+    afterAll: opts.hooks.afterAll.register,
     inEachBegin: opts.hooks.inEachBegin.register,
     inEachEnd: opts.hooks.inEachEnd.register,
   },

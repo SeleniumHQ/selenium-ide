@@ -1,12 +1,12 @@
-"use strict";
+'use strict'
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.emit = emit;
-exports.default = void 0;
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+})
+exports.emit = emit
+exports.default = void 0
 
-var _sideUtils = require("@seleniumhq/side-utils");
+var _sideUtils = require('@seleniumhq/side-utils')
 
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
@@ -31,38 +31,38 @@ const emitters = {
   linkText: emitLink,
   partialLinkText: emitPartialLinkText,
   css: emitCss,
-  xpath: emitXpath
-};
+  xpath: emitXpath,
+}
 
 function emit(location) {
-  return _sideUtils.codeExport.emit.location(location, emitters);
+  return _sideUtils.codeExport.emit.location(location, emitters)
 }
 
 var _default = {
-  emit
-};
-exports.default = _default;
+  emit,
+}
+exports.default = _default
 
 function emitId(selector) {
-  return Promise.resolve(`Selectors.byId("${selector}")`);
+  return Promise.resolve(`Selectors.byId("${selector}")`)
 }
 
 function emitName(selector) {
-  return Promise.resolve(`Selectors.byName("${selector}")`);
+  return Promise.resolve(`Selectors.byName("${selector}")`)
 }
 
 function emitLink(selector) {
-  return Promise.resolve(`Selectors.byLinkText("${selector}")`);
+  return Promise.resolve(`Selectors.byLinkText("${selector}")`)
 }
 
 function emitPartialLinkText(selector) {
-  return Promise.resolve(`Selectors.byPartialLinkText("${selector}")`);
+  return Promise.resolve(`Selectors.byPartialLinkText("${selector}")`)
 }
 
 function emitCss(selector) {
-  return Promise.resolve(`"${selector}"`);
+  return Promise.resolve(`"${selector}"`)
 }
 
 function emitXpath(selector) {
-  return Promise.resolve(`Selectors.byXpath("${selector}")`);
+  return Promise.resolve(`Selectors.byXpath("${selector}")`)
 }
