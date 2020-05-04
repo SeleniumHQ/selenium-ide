@@ -323,7 +323,7 @@ describe('select window', function() {
   }
   it('select window', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/\\")
-    await driver.manage().window().setRect(1260, 1027)
+    await driver.manage().window().setRect({ width: 1260, height: 1027 })
     await driver.findElement(By.linkText(\\"Multiple Windows\\")).click()
     vars[\\"windowHandles\\"] = await driver.getAllWindowHandles()
     await driver.findElement(By.linkText(\\"Click Here\\")).click()
