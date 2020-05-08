@@ -29,7 +29,9 @@ function validateCommand(command) {
     if (commandSchema) commandSchema = commandSchema[1]
     else throw new Error(`Invalid command '${commandName}'`)
     if (!!commandSchema.target !== !!command.target) {
-      const isOptional = !!commandSchema.target.isOptional
+      const isOptional = commandSchema.target
+        ? !!commandSchema.target.isOptional
+        : true;
       if (!isOptional) {
         throw new Error(
           `Incomplete command '${
@@ -39,7 +41,9 @@ function validateCommand(command) {
       }
     }
     if (!!commandSchema.value !== !!command.value) {
-      const isOptional = !!commandSchema.value.isOptional
+      const isOptional = commandSchema.value
+        ? !!commandSchema.value.isOptional
+        : true;
       if (!isOptional) {
         throw new Error(
           `Incomplete command '${commandName}'. Missing expected value argument.`
