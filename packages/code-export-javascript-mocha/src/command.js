@@ -404,7 +404,7 @@ async function emitDragAndDrop(dragged, dropped) {
 }
 
 async function emitEcho(message) {
-  const _message = message.startsWith('vars[') ? message : `'${message}'`
+  const _message = message.startsWith('vars[') ? message : `"${message}"`
   return Promise.resolve(`console.log(${_message})`)
 }
 

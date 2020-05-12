@@ -153,7 +153,7 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"console.log(\\"blah\\")"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"console.log(vars[\\'blah\\'])"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"console.log(vars[\\"blah\\"])"`;
 
 exports[`command code emitter should emit \`echo`\` command with variable if there is assignment 1`] = `"console.log(\\"myVar=vars[\\'myVar\\']\\")"`
 
