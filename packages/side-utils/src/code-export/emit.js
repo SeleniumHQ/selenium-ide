@@ -31,7 +31,7 @@ function validateCommand(command) {
     if (!!commandSchema.target !== !!command.target) {
       const isOptional = commandSchema.target
         ? !!commandSchema.target.isOptional
-        : true;
+        : true
       if (!isOptional) {
         throw new Error(
           `Incomplete command '${
@@ -43,7 +43,7 @@ function validateCommand(command) {
     if (!!commandSchema.value !== !!command.value) {
       const isOptional = commandSchema.value
         ? !!commandSchema.value.isOptional
-        : true;
+        : true
       if (!isOptional) {
         throw new Error(
           `Incomplete command '${commandName}'. Missing expected value argument.`
