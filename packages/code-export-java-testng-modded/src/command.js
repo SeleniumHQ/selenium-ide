@@ -947,9 +947,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
     },
     {
       level: 1,
-      statement: `org.hamcrest.MatcherAssert.assertThat(value, org.hamcrest.CoreMatchers.is(org.hamcrest.CoreMatchers.not("${exporter.emit.text(
-        expectedValue
-      )}")));`,
+      statement: `org.hamcrest.MatcherAssert.assertThat(value, org.hamcrest.CoreMatchers.is(org.hamcrest.CoreMatchers.not("${expectedValue}")));`,
     },
     { level: 0, statement: '}' },
   ]
@@ -964,9 +962,7 @@ async function emitVerifyNotText(locator, text) {
     commands: preCommands.commands.concat([
       {
         level: 0,
-        statement: `org.hamcrest.MatcherAssert.assertThat(${result}, org.hamcrest.CoreMatchers.is(org.hamcrest.CoreMatchers.not("${exporter.emit.text(
-          text
-        )}")));`,
+        statement: `org.hamcrest.MatcherAssert.assertThat(${result}, org.hamcrest.CoreMatchers.is(org.hamcrest.CoreMatchers.not("${text}")));`,
       },
     ]),
   })
@@ -1014,7 +1010,7 @@ async function emitVerifyText(locator, text) {
         level: 0,
         statement: `org.hamcrest.MatcherAssert.assertThat(driver.findElement(${await location.emit(
           locator
-        )}).getText(), org.hamcrest.CoreMatchers.is("${exporter.emit.text(text)}"));`,
+        )}).getText(), org.hamcrest.CoreMatchers.is("${text}"));`,
       },
     ]),
   })
