@@ -485,7 +485,8 @@ function emitOpen(target) {
 }
 
 async function emitPause(time) {
-  const commands = [{ level: 0, statement: `time.sleep(${time})` }]
+  const sec = time / 1000
+  const commands = [{ level: 0, statement: `time.sleep(${sec})` }]
   return Promise.resolve({ commands })
 }
 
