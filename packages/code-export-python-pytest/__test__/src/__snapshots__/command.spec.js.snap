@@ -225,7 +225,7 @@ actions.move_to_element(element).release().perform()"
 
 exports[`command code emitter should emit \`open\` with absolute url 1`] = `"self.driver.get(\\"https://www.seleniumhq.org/\\")"`;
 
-exports[`command code emitter should emit \`pause\` command 1`] = `"time.sleep(300)"`;
+exports[`command code emitter should emit \`pause\` command 1`] = `"time.sleep(0.3)"`;
 
 exports[`command code emitter should emit \`remove selection\` command 1`] = `
 "dropdown = self.driver.find_element(By.CSS_SELECTOR, \\"select\\")
