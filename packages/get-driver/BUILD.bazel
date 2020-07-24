@@ -1,0 +1,40 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:jest.bzl", "jest_test")
+
+exports_files(["tsconfig.json"], visibility=["//visibility:public"])
+
+ts_library(
+    name="build",
+    srcs=glob(["src/*.ts"]),
+    deps=[
+        "@npm//@types/node",
+        "@npm//fs-extra",
+        "@npm//node-fetch",
+        "@npm//tar",
+        "@npm//unzipper"
+    ],
+)
+
+ts_library(
+    name="test_lib",
+    srcs=glob(["__tests__/*.ts"]),
+    deps=[
+        "@npm//@types/node",
+        "@npm//@babel/core",
+        "@npm//@babel/preset-env",
+        "@npm//@jest/transform",
+        "@npm//babel-jest",
+        "@npm//@types/mocha",
+        "@npm//jest",
+        "@npm//@types/jest"
+    ],
+)
+
+jest_test(
+    name="test",
+    srcs=[":test_lib"],
+    jest_config=":jest.config.js",
+    deps=[
+        ":build"
+    ]
+)
