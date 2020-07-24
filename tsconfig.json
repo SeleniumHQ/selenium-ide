@@ -6,6 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "composite": true,
+    "resolveJsonModule": false,
     // "importHelpers": true,
     // "isolatedModules": true,
 
@@ -15,12 +16,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
+    "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true,
 
     /* Module Resolution Options */
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
     "types": [
       "node",
       "jest"
