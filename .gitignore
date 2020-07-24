@@ -18,6 +18,7 @@ tsconfig.tsbuildinfo
 tsconfig.build.tsbuildinfo
 files
 drivers
+bazel-*
 
 # auto-generated docs
 docs/api/arguments.md

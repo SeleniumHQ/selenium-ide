@@ -1,0 +1,9 @@
+filegroup(
+    name="license",
+    srcs=[
+        "LICENSE",
+        "NOTICE",
+    ],
+    visibility=["//visibility:public"],
+)
+exports_files(["tsconfig.json"])
