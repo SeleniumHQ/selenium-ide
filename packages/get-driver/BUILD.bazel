@@ -9,7 +9,6 @@ ts_library(
     deps=[
         "@npm//@types/node",
         "@npm//fs-extra",
-        "@npm//stream",
         "@npm//node-fetch",
         "@npm//tar",
         "@npm//unzipper"
