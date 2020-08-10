@@ -6,6 +6,7 @@ exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 ts_library(
     name="build",
     srcs=glob(["src/*.ts"]),
+    visibility=["//visibility:public"],
     deps=[
         "@npm//@types/node",
         "@npm//fs-extra",

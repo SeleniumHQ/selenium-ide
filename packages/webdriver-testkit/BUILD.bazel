@@ -1,0 +1,15 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:jest.bzl", "jest_test")
+
+exports_files(["tsconfig.json"], visibility=["//visibility:public"])
+
+ts_library(
+    name="build",
+    srcs=glob(["src/*.ts"]),
+    deps=[
+        "@npm//@types/node",
+        "@npm//fs-extra",
+        "@npm//selenium-webdriver",
+        "@seleniumhq/browser-info"
+    ]
+)
