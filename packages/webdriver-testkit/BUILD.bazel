@@ -10,6 +10,7 @@ ts_library(
         "@npm//@types/node",
         "@npm//fs-extra",
         "@npm//selenium-webdriver",
-        "//packages/browser-info:build"
+        "//packages/browser-info:build",
+        "//packages/get-driver:build"
     ]
 )

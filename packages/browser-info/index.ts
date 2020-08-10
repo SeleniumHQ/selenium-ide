@@ -15,4 +15,4 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export * from './chrome'
+export * from './src/chrome';

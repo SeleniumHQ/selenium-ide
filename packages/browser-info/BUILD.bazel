@@ -6,9 +6,14 @@ exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 
 ts_library(
     name="build",
-    module_root = "src",
     module_name="@seleniumhq/browser-info",
-    srcs=glob(["src/*.ts"]),
+    srcs= glob(
+        include = ["**/*.ts"],
+        exclude = [
+            "__tests__/*",
+            "src/__mocks__/*"
+        ]
+    ),
     visibility=["//visibility:public"],
     deps=[
         "@npm//@types/node"
@@ -28,13 +33,6 @@ ts_library(
         "@npm//jest",
         "@npm//@types/jest"
     ],
-)
-
-pkg_npm(
-    name = "browser-info",
-    package_name = "@seleniumhq/browser-info",
-    visibility=["//visibility:public"],
-    srcs = glob(["src/*.ts"])
 )
 
 jest_test(
