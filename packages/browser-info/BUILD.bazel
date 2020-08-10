@@ -6,6 +6,8 @@ exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 
 ts_library(
     name="build",
+    module_root = "src",
+    module_name="@seleniumhq/browser-info",
     srcs=glob(["src/*.ts"]),
     visibility=["//visibility:public"],
     deps=[
