@@ -6,8 +6,9 @@ exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 ts_library(
     name="build",
     module_name="@seleniumhq/get-driver",
+    module_root="src",
     srcs=glob(
-        include = ["**/*.ts"],
+        include = ["src/*.ts"],
         exclude = [
             "__tests__/*",
         ]

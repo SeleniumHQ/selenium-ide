@@ -15,4 +15,5 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export * from './src/chrome';
+export { default as downloadDriver } from './download-driver'
+export * from './resolve-driver'
