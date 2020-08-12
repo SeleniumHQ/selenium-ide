@@ -1,11 +1,21 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("//:jest.bzl", "jest_test")
 
 exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 
 ts_library(
     name="build",
-    srcs=glob(["src/*.ts"]),
+    module_name="@seleniumhq/browser-info",
+    module_root="src",
+    srcs= glob(
+        include = ["src/*.ts"],
+        exclude = [
+            "__tests__/*",
+            "src/__mocks__/*"
+        ]
+    ),
+    visibility=["//visibility:public"],
     deps=[
         "@npm//@types/node"
     ],

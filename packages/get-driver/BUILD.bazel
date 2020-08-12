@@ -5,7 +5,15 @@ exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 
 ts_library(
     name="build",
-    srcs=glob(["src/*.ts"]),
+    module_name="@seleniumhq/get-driver",
+    module_root="src",
+    srcs=glob(
+        include = ["src/*.ts"],
+        exclude = [
+            "__tests__/*",
+        ]
+    ),
+    visibility=["//visibility:public"],
     deps=[
         "@npm//@types/node",
         "@npm//fs-extra",
