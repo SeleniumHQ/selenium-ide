@@ -1,0 +1,14 @@
+load("@npm//webpack-cli:index.bzl", webpack = "webpack_cli")
+
+webpack(
+    name = "build",
+    args = [
+        "--config",
+        "$(location webpack.config.babel.js)"
+    ],
+    data = [
+        "webpack.config.babel.js",
+        "@npm//copy-webpack-plugin",
+        "@npm//uglifyjs-webpack-plugin"
+    ],
+)
