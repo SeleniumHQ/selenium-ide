@@ -3,4 +3,5 @@ module.exports = {
   reporters: ['default', './jest-reporter'],
   transform: { '^.+\\.jsx?$': 'babel-jest' },
   testMatch: ['__tests__/*'],
+  resolver: './jest-resolver.js',
 }
