@@ -13,7 +13,7 @@ def jest_test(name, srcs, deps, jest_config, **kwargs):
     ]
     templated_args.extend(["--config", "$(rootpath %s)" % jest_config])
     for src in srcs:
-        templated_args.extend(["--runTestsByPath", "$(rootpath %s)" % src])
+        templated_args.extend(["--runTestsByPath", "$(locations %s)" % src])
 
     data = [jest_config] + srcs + deps + ["jest-reporter.js"]
     _jest_test(

@@ -25,6 +25,7 @@ ts_library(
     name="test_lib",
     srcs=glob(["__tests__/*.ts"]),
     deps=[
+        ":build",
         "@npm//@types/node",
         "@npm//@babel/core",
         "@npm//@babel/preset-env",
@@ -36,11 +37,16 @@ ts_library(
     ],
 )
 
+filegroup(
+    name = "browser-info-tests",
+    srcs = [":test_lib"],
+    output_group = "es5_sources",
+)
+
 jest_test(
     name = "test",
-    srcs=[":test_lib"],
+    srcs = [":test_lib"],
     jest_config=":jest.config.js",
     deps = [
-        ":build"
     ]
 )
