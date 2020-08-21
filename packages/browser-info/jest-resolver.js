@@ -1,14 +1,14 @@
-const resolve = require('resolve');
+const resolve = require('resolve')
 
 /**
  * @typedef {{
-    basedir: string;
-    browser?: boolean;
-    defaultResolver: (request: string, options: ResolverOptions) => string;
-    extensions?: readonly string[];
-    moduleDirectory?: readonly string[];
-    paths?: readonly string[];
-    rootDir?: string;
+    basedir: string
+    browser?: boolean
+    defaultResolver: (request: string, options: ResolverOptions) => string
+    extensions?: readonly string[]
+    moduleDirectory?: readonly string[]
+    paths?: readonly string[]
+    rootDir?: string
   }} ResolverOptions
  */
 
@@ -22,12 +22,12 @@ module.exports = (request, options) => {
       basedir: options.basedir,
       extensions: options.extensions,
       preserveSymlinks: true,
-    });
+    })
   } catch (e) {
     if (e.code === 'MODULE_NOT_FOUND') {
-      cosole.log('module not found');
-      return options.defaultResolver(request, options);
+      cosole.log('module not found')
+      return options.defaultResolver(request, options)
     }
-    throw e;
+    throw e
   }
-};
+}
