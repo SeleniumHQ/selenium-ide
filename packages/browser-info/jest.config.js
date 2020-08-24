@@ -2,6 +2,5 @@ module.exports = {
   testEnvironment: 'node',
   reporters: ['default', './jest-reporter'],
   transform: { '^.+\\.jsx?$': 'babel-jest' },
-  testMatch: ['__tests__/*'],
-  resolver: './jest-resolver.js',
+  testMatch: ['__tests__/*.ts'],
 }

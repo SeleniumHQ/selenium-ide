@@ -46,7 +46,7 @@ filegroup(
 jest_test(
     name = "test",
     srcs = [":browser-info-tests"],
-    jest_config=":jest.config.js",
     deps = [
     ],
+    jest_config=":jest.config.js",
 )
