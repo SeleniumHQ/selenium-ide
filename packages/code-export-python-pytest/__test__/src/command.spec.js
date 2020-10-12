@@ -272,7 +272,7 @@ describe('command code emitter', () => {
   it('should emit `echo` command with variables', () => {
     const command = {
       command: 'echo',
-      target: '${blah}',
+      target: 'blah = ${blah}',
       value: '',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()

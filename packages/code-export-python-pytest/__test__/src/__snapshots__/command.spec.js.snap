@@ -123,9 +123,9 @@ actions = ActionChains(self.driver)
 actions.drag_and_drop(dragged, dropped).perform()"
 `;
 
-exports[`command code emitter should emit \`echo\` command 1`] = `"print(str(\\"blah\\"))"`;
+exports[`command code emitter should emit \`echo\` command 1`] = `"print(\\"blah\\")"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(str(self.vars[\\"blah\\"]))"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(\\"blah = {}\\".format(self.vars[\\"blah\\"]))"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "element = self.driver.find_element(By.ID, \\"contentEditable\\")
