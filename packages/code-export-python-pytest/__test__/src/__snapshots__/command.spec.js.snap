@@ -253,11 +253,6 @@ exports[`command code emitter should emit \`select\` command 1`] = `
 dropdown.find_element(By.XPATH, \\"//option[. = 'A label']\\").click()"
 `;
 
-exports[`command code emitter should emit \`select\` command with variable 1`] = `
-"dropdown = self.driver.find_element(By.CSS_SELECTOR, \\"select\\")
-dropdown.find_element(By.XPATH, \\"//option[. = '{}']\\".format(self.vars[\\\\\\"foo\\\\\\"])).click()"
-`;
-
 exports[`command code emitter should emit \`send keys\` command 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"example input\\")"`;
 
 exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"SuperSecretPassword!\\", Keys.ENTER)"`;

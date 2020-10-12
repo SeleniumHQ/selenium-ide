@@ -479,14 +479,6 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `select` command with variable', () => {
-    const command = {
-      command: 'select',
-      target: 'css=select',
-      value: 'label=self.vars["foo"]',
-    }
-    return expect(prettify(command)).resolves.toMatchSnapshot()
-  })
   it('should emit `select frame` to select the top frame', () => {
     const command = {
       command: 'selectFrame',
