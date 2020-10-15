@@ -1,7 +1,7 @@
 {
-  "name": "code-export",
-  "version": "3.8.1",
-  "description": "Selenium IDE code export",
+  "name": "code-export-python-django-liveserver",
+  "version": "0.0.1",
+  "description": "Export Selenium IDE project contents to Python Django Liveserver",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
     "selenium",
@@ -17,11 +17,10 @@
   "main": "dist/index.js",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "code-export-java-junit": "^3.8.1",
-    "code-export-python-pytest": "^3.8.1",
-    "code-export-python-django-liveserver": "^0.0.1"
+    "code-export-utils": "^3.8.1"
   }
 }

@@ -18,6 +18,7 @@
 export const availableLanguages = {
   'java-junit': require('code-export-java-junit'),
   'python-pytest': require('code-export-python-pytest'),
+  'python-django-liveserver': require('code-export-python-django-liveserver'),
 }
 
 function registerCommand(language, command, emitter) {
