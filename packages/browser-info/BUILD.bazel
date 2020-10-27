@@ -45,8 +45,17 @@ filegroup(
 
 jest_test(
     name = "test",
-    srcs = [":browser-info-tests"],
-    deps = [
+    srcs=glob(["__tests__/*.js"]),
+    deps=[
+        ":build",
+        "@npm//@types/node",
+        "@npm//@babel/core",
+        "@npm//@babel/preset-env",
+        "@npm//@jest/transform",
+        "@npm//babel-jest",
+        "@npm//@types/mocha",
+        "@npm//jest",
+        "@npm//@types/jest"
     ],
     jest_config=":jest.config.js",
 )
