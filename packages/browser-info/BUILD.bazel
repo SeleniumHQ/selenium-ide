@@ -1,6 +1,6 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
-load("//:jest.bzl", "jest_test")
+load("@npm//jest-cli:index.bzl", "jest_test")
 
 exports_files(["tsconfig.json"], visibility=["//visibility:public"])
 
@@ -22,40 +22,31 @@ ts_library(
 )
 
 ts_library(
-    name="test_lib",
-    srcs=glob(["__tests__/*.ts"]),
-    deps=[
-        ":build",
-        "@npm//@types/node",
-        "@npm//@babel/core",
-        "@npm//@babel/preset-env",
-        "@npm//@jest/transform",
-        "@npm//babel-jest",
-        "@npm//@types/mocha",
-        "@npm//jest",
-        "@npm//@types/jest"
+    name = "test_lib",
+    srcs = glob([
+        "**/*.ts"
+    ]),
+    deps = [
+        "@npm//@types"
     ],
-)
-
-filegroup(
-    name = "browser-info-tests",
-    srcs = [":test_lib"],
-    output_group = "es5_sources",
 )
 
 jest_test(
     name = "test",
-    srcs=glob(["__tests__/*.js"]),
-    deps=[
-        ":build",
-        "@npm//@types/node",
-        "@npm//@babel/core",
-        "@npm//@babel/preset-env",
-        "@npm//@jest/transform",
-        "@npm//babel-jest",
-        "@npm//@types/mocha",
-        "@npm//jest",
-        "@npm//@types/jest"
+    args = [
+        "--no-cache",
+        "--no-watchman",
+        "--ci",
+        "--colors",
+        "--config",
+        "jest.config.js"
     ],
-    jest_config=":jest.config.js",
+    data = [
+        ":test_lib",
+        "//:jest.config.js"
+    ],
+    tags = [
+        "no-bazelci-windows",
+        "no-bazelci-mac",
+    ],
 )

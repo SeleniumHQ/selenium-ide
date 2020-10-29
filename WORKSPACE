@@ -18,9 +18,6 @@ load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
 yarn_install(
     name = "npm",
-    data = [
-        "//:packages/patches/jest-haste-map+24.9.0.patch",
-    ],
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
 )
