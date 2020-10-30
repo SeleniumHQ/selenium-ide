@@ -44,9 +44,5 @@ jest_test(
     data = [
         ":test_lib",
         "//:jest.config.js"
-    ],
-    tags = [
-        "no-bazelci-windows",
-        "no-bazelci-mac",
-    ],
+    ]
 )
