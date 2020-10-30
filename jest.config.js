@@ -1,10 +1,3 @@
-// module.exports = {
-//   testEnvironment: 'node',
-//   reporters: ['default', './jest-reporter'],
-//   transform: { '^.+\\.jsx?$': 'babel-jest' },
-//   testMatch: ['__tests__/*.ts'],
-// }
-
 module.exports = {
   testEnvironment: 'node',
   reporters: ['default'],
