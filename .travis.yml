@@ -24,4 +24,4 @@ script:
   - yarn typecheck
   - yarn lint
   - yarn test
-  - bazel run packages/side-recorder:test
+  - bazel run packages/side-migrate:test
