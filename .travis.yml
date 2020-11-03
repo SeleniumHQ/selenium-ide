@@ -14,8 +14,6 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y dpkg
   - sudo apt-get install -y google-chrome-stable
-  - curl -L -o bazelisk "https://github.com/bazelbuild/bazelisk/releases/download/v1.3.0/bazelisk-linux-amd64"
-  - chmod +x bazelisk && sudo mv bazelisk /usr/local/bin/bazel
 install:
   - yarn --ignore-engines
   - yarn build
@@ -24,4 +22,3 @@ script:
   - yarn typecheck
   - yarn lint
   - yarn test
-  - bazel run packages/side-migrate:test
