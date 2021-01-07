@@ -7,27 +7,3 @@ babel(
        '--root-mode upward -d dist src --extensions ".js,.jsx,.ts,.tsx" --source-maps true'
     ]
 )
-
-filegroup(
-    name = "test_lib",
-    srcs = glob([
-        "**/*.js"
-    ]),
-)
-
-jest_test(
-    name = "test",
-    args = [
-        "--no-cache",
-        "--no-watchman",
-        "--ci",
-        "--colors",
-        "--config",
-        "babel.config.js",
-        "--updateSnapshot"
-    ],
-    data = [
-        ":test_lib",
-        "//:babel.config.js"
-    ]
-)
