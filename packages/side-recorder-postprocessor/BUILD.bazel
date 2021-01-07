@@ -1,5 +1,4 @@
 load("@npm//@babel/cli:index.bzl", "babel")
-load("@npm//jest-cli:index.bzl", "jest_test")
 
 babel(
     name = "build",
