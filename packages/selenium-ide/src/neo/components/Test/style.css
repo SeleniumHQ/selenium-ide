@@ -30,6 +30,10 @@
   opacity: 1;
 }
 
+.test:focus .name > button {
+  opacity: 1;
+}
+
 .test > a {
   cursor: pointer;
   border-top: 1px solid transparent;
