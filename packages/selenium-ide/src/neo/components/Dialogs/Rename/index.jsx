@@ -39,6 +39,8 @@ export default class RenameDialog extends React.Component {
         className={classNames('stripped', 'rename-dialog')}
         isOpen={this.props.isEditing}
         onRequestClose={this.props.cancel}
+        modalTitle={RenameDialogContents.modalTitleElement}
+        modalDescription={RenameDialogContents.modalDescriptionElement}
       >
         <RenameDialogContents {...this.props} />
       </Modal>
@@ -47,6 +49,8 @@ export default class RenameDialog extends React.Component {
 }
 
 class RenameDialogContents extends React.Component {
+  static modalTitleElement = 'renameTitle'
+  static modalDescriptionElement = 'renameDescription'
   constructor(props) {
     super(props)
     this.state = {
@@ -77,11 +81,18 @@ class RenameDialogContents extends React.Component {
               this.state.type
             }`,
       bodyTop: this.props.isNewTest ? (
-        <span>Please provide a name for your new test.</span>
+        <span id="renameDescription">
+          Please provide a name for your new test.
+        </span>
       ) : this.props.type === 'project' ? (
-        <span>Please provide a name for your new project.</span>
+        <span id="renameDescription">
+          Please provide a name for your new project.
+        </span>
       ) : (
-        undefined
+        <span
+          className="hidden"
+          id="renameDescription"
+        >{`Please provide a name for your ${this.state.type}.`}</span>
       ),
       bodyBottom: this.props.isNewTest ? (
         <span>
@@ -112,34 +123,31 @@ class RenameDialogContents extends React.Component {
       <DialogContainer
         title={content.title}
         type={this.state.valid ? 'info' : 'warn'}
-        renderFooter={() => (
-          <span
-            className="right"
-            style={{
-              display: 'flex',
-            }}
+        buttons={[
+          <FlatButton
+            disabled={this.props.isNewTest && !!this.state.value}
+            onClick={this.props.cancel}
+            key="cancel"
           >
-            <FlatButton
-              disabled={this.props.isNewTest && !!this.state.value}
-              onClick={this.props.cancel}
-            >
-              {content.cancelButton}
-            </FlatButton>
-            <FlatButton
-              type="submit"
-              disabled={!this.state.value || !this.state.valid}
-              onClick={() => {
-                this.props.setValue(this.state.value)
-              }}
-              style={{
-                marginRight: '0',
-              }}
-            >
-              {content.submitButton}
-            </FlatButton>
-          </span>
-        )}
+            {content.cancelButton}
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            disabled={!this.state.value || !this.state.valid}
+            onClick={() => {
+              this.props.setValue(this.state.value)
+            }}
+            style={{
+              marginRight: '0',
+            }}
+            key="ok"
+          >
+            {content.submitButton}
+          </FlatButton>,
+        ]}
         onRequestClose={this.props.cancel}
+        modalTitle={RenameDialogContents.modalTitleElement}
+        modalDescription={RenameDialogContents.modalDescriptionElement}
       >
         {content.bodyTop}
         <LabelledInput

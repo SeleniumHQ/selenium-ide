@@ -18,6 +18,8 @@
 const UiState = {}
 UiState.changeView = jest.fn()
 UiState.selectNextCommand = jest.fn()
+UiState.clearViewCache = jest.fn()
+UiState.projectChanged = jest.fn()
 UiState.isRecording = false
 UiState.startRecording = () => {
   UiState.isRecording = UiState.isRecording ? false : true

@@ -93,7 +93,11 @@ class Suite extends React.Component {
   }
   render() {
     const listMenu = (
-      <ListMenu width={130} padding={-5} opener={<MoreButton />}>
+      <ListMenu
+        width={130}
+        padding={-5}
+        opener={<MoreButton aria-label="More options" />}
+      >
         <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
         <ListMenuItem
           onClick={() =>

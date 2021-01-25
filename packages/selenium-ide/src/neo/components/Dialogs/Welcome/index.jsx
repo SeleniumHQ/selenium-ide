@@ -31,7 +31,12 @@ import './style.css'
 export default class WelcomeDialog extends React.Component {
   render() {
     return (
-      <Modal className="stripped" isOpen={!this.props.isWelcomed}>
+      <Modal
+        className="stripped"
+        isOpen={!this.props.isWelcomed}
+        modalTitle={WelcomeDialogContents.modalTitleElement}
+        modalDescription={WelcomeDialogContents.modalDescriptionElement}
+      >
         <WelcomeDialogContents {...this.props} />
       </Modal>
     )
@@ -42,6 +47,8 @@ export default class WelcomeDialog extends React.Component {
 }
 
 class WelcomeDialogContents extends React.Component {
+  static modalTitleElement = 'welcomeTitle'
+  static modalDescriptionElement = 'welcomeDescription'
   constructor(props) {
     super(props)
     this.startRecordingInNewProject = this.startRecordingInNewProject.bind(this)
@@ -102,6 +109,8 @@ class WelcomeDialogContents extends React.Component {
             .
           </p>
         )}
+        modalTitle={WelcomeDialogContents.modalTitleElement}
+        modalDescription={WelcomeDialogContents.modalDescriptionElement}
       >
         <div>
           <div>What would you like to do?</div>

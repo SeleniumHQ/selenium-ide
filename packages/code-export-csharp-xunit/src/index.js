@@ -68,6 +68,7 @@ export async function emitTest({
   project,
   enableOriginTracing,
   beforeEachOptions,
+  enableDescriptionAsComment,
 }) {
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
@@ -75,6 +76,7 @@ export async function emitTest({
     ...opts,
     testDeclaration,
     enableOriginTracing,
+    enableDescriptionAsComment,
     project,
   })
   const suiteName = test.name
@@ -100,10 +102,12 @@ export async function emitSuite({
   project,
   enableOriginTracing,
   beforeEachOptions,
+  enableDescriptionAsComment,
 }) {
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
     enableOriginTracing,
+    enableDescriptionAsComment,
     generateTestDeclaration,
     project,
   })

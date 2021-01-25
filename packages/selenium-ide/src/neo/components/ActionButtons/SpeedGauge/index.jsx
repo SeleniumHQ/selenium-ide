@@ -41,6 +41,7 @@ export default class SpeedGaugeButton extends React.Component {
           { active: this.props.isMenuOpen },
           this.props.className
         )}
+        aria-label="Test execution speed"
       >
         <i className="si-caret" />
       </ActionButton>

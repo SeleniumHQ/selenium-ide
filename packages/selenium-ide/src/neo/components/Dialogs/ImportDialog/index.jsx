@@ -40,6 +40,8 @@ export default class ImportDialog extends React.Component {
         className="stripped import-dialog"
         isOpen={this.props.isImporting}
         onRequestClose={this.props.cancel}
+        modalTitle={ImportDialogContent.modalTitleElement}
+        modalDescription={ImportDialogContent.modalDescriptionElement}
       >
         <ImportDialogContent {...this.props} />
       </Modal>
@@ -48,6 +50,8 @@ export default class ImportDialog extends React.Component {
 }
 
 class ImportDialogContent extends React.Component {
+  static modalTitleElement = 'importTitle'
+  static modalDescriptionElement = 'importDescription'
   constructor(props) {
     super(props)
     this.state = {
@@ -88,12 +92,14 @@ class ImportDialogContent extends React.Component {
     return (
       <DialogContainer
         title="Import suite"
-        renderFooter={() => (
-          <span className="right">
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-          </span>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+        ]}
         onRequestClose={this.props.cancel}
+        modalTitle={ImportDialogContent.modalTitleElement}
+        modalDescription={ImportDialogContent.modalDescriptionElement}
       >
         <p>
           In order to fully import your legacy Selenium IDE suite, you need to

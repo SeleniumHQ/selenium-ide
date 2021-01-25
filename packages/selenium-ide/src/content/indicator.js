@@ -6,8 +6,11 @@ var handleMessage = (function() {
     '/icons/icon_light128.png'
   )
   var lastTimeoutHandle = 0
+
   function resetContent() {
     content.innerText = 'Selenium IDE is recording...'
+    content.setAttribute('aria-label', 'Selenium IDE is recording...')
+    content.setAttribute('role', 'alert')
     content.style.color = '#E80600'
     circle.style.animation = 'fadeIn 1s infinite alternate'
     circle.style.visibility = 'visible'

@@ -485,7 +485,8 @@ function emitOpen(target) {
 }
 
 async function emitPause(time) {
-  const commands = [{ level: 0, statement: `time.sleep(${time})` }]
+  const sec = time / 1000
+  const commands = [{ level: 0, statement: `time.sleep(${sec})` }]
   return Promise.resolve({ commands })
 }
 
@@ -855,10 +856,11 @@ async function emitVerifyTitle(title) {
 }
 
 async function emitWaitForElementEditable(locator, timeout) {
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.element_to_be_clickable((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until(expected_conditions.element_to_be_clickable((${await location.emit(
         locator
       )})))`,
     },
@@ -868,10 +870,11 @@ async function emitWaitForElementEditable(locator, timeout) {
 
 async function emitWaitForText(locator, text) {
   const timeout = 30000
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.text_to_be_present_in_element((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until(expected_conditions.text_to_be_present_in_element((${await location.emit(
         locator
       )}), "${text}"))`,
     },
@@ -884,10 +887,11 @@ function skip() {
 }
 
 async function emitWaitForElementPresent(locator, timeout) {
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.presence_of_element_located((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until(expected_conditions.presence_of_element_located((${await location.emit(
         locator
       )})))`,
     },
@@ -896,10 +900,11 @@ async function emitWaitForElementPresent(locator, timeout) {
 }
 
 async function emitWaitForElementVisible(locator, timeout) {
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.visibility_of_element_located((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until(expected_conditions.visibility_of_element_located((${await location.emit(
         locator
       )})))`,
     },
@@ -910,10 +915,11 @@ async function emitWaitForElementVisible(locator, timeout) {
 }
 
 async function emitWaitForElementNotEditable(locator, timeout) {
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until_not(expected_conditions.element_to_be_clickable((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until_not(expected_conditions.element_to_be_clickable((${await location.emit(
         locator
       )})))`,
     },
@@ -924,10 +930,11 @@ async function emitWaitForElementNotEditable(locator, timeout) {
 }
 
 async function emitWaitForElementNotPresent(locator, timeout) {
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.invisibility_of_element_located((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until(expected_conditions.invisibility_of_element_located((${await location.emit(
         locator
       )})))`,
     },
@@ -938,10 +945,11 @@ async function emitWaitForElementNotPresent(locator, timeout) {
 }
 
 async function emitWaitForElementNotVisible(locator, timeout) {
+  const sec = timeout / 1000
   const commands = [
     {
       level: 0,
-      statement: `WebDriverWait(self.driver, ${timeout}).until(expected_conditions.invisibility_of_element_located((${await location.emit(
+      statement: `WebDriverWait(self.driver, ${sec}).until(expected_conditions.invisibility_of_element_located((${await location.emit(
         locator
       )})))`,
     },

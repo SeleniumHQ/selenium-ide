@@ -38,6 +38,7 @@ export default class SaveButton extends React.Component {
           { pulse: this.props.unsaved },
           this.props.className
         )}
+        aria-label="Save project"
       /> // eslint-disable-line react/prop-types
     )
   }

@@ -41,6 +41,8 @@ export default class SuiteSettings extends React.Component {
         className="stripped suite-settings-dialog"
         isOpen={this.props.isEditing}
         onRequestClose={this.props.cancel}
+        modalTitle={SuiteSettingsContent.modalTitleElement}
+        modalDescription={SuiteSettingsContent.modalDescriptionElement}
       >
         <SuiteSettingsContent {...this.props} />
       </Modal>
@@ -49,6 +51,8 @@ export default class SuiteSettings extends React.Component {
 }
 
 class SuiteSettingsContent extends React.Component {
+  static modalTitleElement = 'suiteSettingsTitle'
+  static modalDescriptionElement = 'suiteSettingsDescription'
   constructor(props) {
     super(props)
     this.state = {
@@ -86,26 +90,29 @@ class SuiteSettingsContent extends React.Component {
       <DialogContainer
         title="Suite properties"
         onRequestClose={this.props.cancel}
-        renderFooter={() => (
-          <span className="right">
-            <FlatButton onClick={this.props.cancel}>cancel</FlatButton>
-            <FlatButton
-              type="submit"
-              onClick={() => {
-                this.props.submit({
-                  timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
-                  isParallel: this.state.isParallel,
-                  persistSession: this.state.persistSession,
-                })
-              }}
-              style={{
-                marginRight: '0',
-              }}
-            >
-              submit
-            </FlatButton>
-          </span>
-        )}
+        buttons={[
+          <FlatButton onClick={this.props.cancel} key="cancel">
+            cancel
+          </FlatButton>,
+          <FlatButton
+            type="submit"
+            onClick={() => {
+              this.props.submit({
+                timeout: parseInt(this.state.timeout) || DEFAULT_TIMEOUT,
+                isParallel: this.state.isParallel,
+                persistSession: this.state.persistSession,
+              })
+            }}
+            style={{
+              marginRight: '0',
+            }}
+            key="ok"
+          >
+            submit
+          </FlatButton>,
+        ]}
+        modalTitle={SuiteSettingsContent.modalTitleElement}
+        modalDescription={SuiteSettingsContent.modalDescriptionElement}
       >
         <div className="form-contents">
           <Input

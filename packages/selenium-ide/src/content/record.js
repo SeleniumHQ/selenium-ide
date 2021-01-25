@@ -295,6 +295,8 @@ Recorder.addEventHandler(
   'dragAndDrop',
   'mousedown',
   function(event) {
+    mousedown = undefined
+    selectMousedown = undefined
     if (
       event.clientX < window.document.documentElement.clientWidth &&
       event.clientY < window.document.documentElement.clientHeight
@@ -425,8 +427,12 @@ Recorder.addEventHandler(
     } else {
       clickLocator = undefined
       mouseup = undefined
-      let x = event.clientX - mousedown.clientX
-      let y = event.clientY - mousedown.clientY
+      let x = 0
+      let y = 0
+      if (mousedown) {
+        x = event.clientX - mousedown.clientX
+        y = event.clientY - mousedown.clientY
+      }
 
       if (mousedown && mousedown.target !== event.target && !(x + y)) {
         record('mouseDown', locatorBuilders.buildAll(mousedown.target), '')

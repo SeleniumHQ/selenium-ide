@@ -8,4 +8,5 @@
   overflow: auto;
   max-height: initial;
   padding: 0;
+  display: block;
 }

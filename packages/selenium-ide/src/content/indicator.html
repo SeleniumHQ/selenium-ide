@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +12,7 @@
             font-size: 22px;
             font-weight: 200;
         }
+        
         #circle {
             height: 10px;
             width: 10px;
@@ -20,31 +22,37 @@
             animation: fadeIn 1s infinite alternate;
             visibility: visible;
         }
+        
         #content {
-          color: #E80600;
-          text-align: center;
+            color: #E80600;
+            text-align: center;
         }
+        
         @keyframes fadeIn {
-          from { opacity: 0; }
+            from {
+                opacity: 0;
+            }
         }
     </style>
-  </head>
-  <body>
-      <div style="display: flex;align-items: center;flex-direction: row;margin: 10px;">
-          <img id="ide-img" style="width: 28px;margin: 0 10px;" />
-          <div style="height: 28px;border-left: 1px solid #c6c6c6;"></div>
-          <div id="circle"></div>
-          <span id="content">
+</head>
+
+<body>
+    <div style="display: flex;align-items: center;flex-direction: row;margin: 10px;" aria-live="assertive">
+        <img id="ide-img" style="width: 28px;margin: 0 10px;" />
+        <div style="height: 28px;border-left: 1px solid #c6c6c6;"></div>
+        <div id="circle"></div>
+        <span id="content" aria-label="Selenium IDE is recording..." role="alert">
               Selenium IDE is recording...
           </span>
-      </div>
-      <script>
-          var url = (chrome || browser).runtime.getURL("assets/indicator.js");
-          var e = document.createElement("script");
-          e.type = "text/javascript";
-          e.async = true;
-          e.src = url;
-          document.body.appendChild(e);
-      </script>
-  </body>
+    </div>
+    <script>
+        var url = (chrome || browser).runtime.getURL("assets/indicator.js");
+        var e = document.createElement("script");
+        e.type = "text/javascript";
+        e.async = true;
+        e.src = url;
+        document.body.appendChild(e);
+    </script>
+</body>
+
 </html>
