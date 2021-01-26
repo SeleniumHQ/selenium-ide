@@ -27,7 +27,7 @@ export default class MoreButton extends React.Component {
     return (
       <ActionButton
         tabIndex={this.props.canFocus ? '0' : '-1'}
-        aria-expended={this.props.isMenuOpen}
+        aria-expanded={this.props.isMenuOpen}
         {...props}
         className={classNames(
           { 'no-focus': !this.props.canFocus },
