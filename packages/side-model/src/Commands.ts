@@ -531,7 +531,7 @@ export default {
   verifyNotEditable: {
     name: 'verify not editable',
     description: `Soft assert whether the specified input element is not 
-        editable (e.g., hasn't been disabled). The test will continue even if the verify fails.`,
+        editable (e.g., has been disabled). The test will continue even if the verify fails.`,
     target: ArgTypes.locator,
   },
   verifyNotSelectedValue: {
