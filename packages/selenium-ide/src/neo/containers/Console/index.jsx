@@ -89,10 +89,18 @@ export default class Console extends React.Component {
         </TabBar>
         <div className="viewport" ref={this.setViewportRef}>
           {this.state.tab === 'Log' && (
-            <LogList output={output} scrollTo={this.scroll} id="Log" role="tabpanel" />
+            <LogList
+              output={output}
+              scrollTo={this.scroll}
+              id="Log" role="tabpanel"
+            />
           )}
           {this.state.tab === 'Reference' && (
-            <CommandReference currentCommand={command} id="Reference" role="tabpanel" />
+            <CommandReference
+              currentCommand={command}
+              id="Reference"
+              role="tabpanel"
+            />
           )}
         </div>
       </footer>

@@ -29,7 +29,10 @@ export default class CommandReference extends React.Component {
   }
   unknownCommand(props) {
     return (
-      <div className={classNames('command-reference', 'unknown-command')} {...props}>
+      <div
+        className={classNames('command-reference', 'unknown-command')}
+        {...props}
+      >
         <strong>Unknown command name provided.</strong>
       </div>
     )
@@ -118,8 +121,8 @@ export default class CommandReference extends React.Component {
     )
   }
   render() {
-    var props = {...this.props}
-    delete props.currentCommand;
+    var props = { ...this.props }
+    delete props.currentCommand
     if (!(this.props.currentCommand && this.props.currentCommand.name)) {
       return this.unknownCommand(props)
     } else {
