@@ -92,7 +92,8 @@ export default class Console extends React.Component {
             <LogList
               output={output}
               scrollTo={this.scroll}
-              id="Log" role="tabpanel"
+              id="Log"
+              role="tabpanel"
             />
           )}
           {this.state.tab === 'Reference' && (

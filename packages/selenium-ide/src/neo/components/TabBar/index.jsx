@@ -62,7 +62,7 @@ export default class TabBar extends React.Component {
     var delta = 0
     if (event.keyCode === 39) {
       delta = 1
-    } else if(event.keyCode === 37) {
+    } else if (event.keyCode === 37) {
       delta = -1
     }
     if (delta !== 0) {
