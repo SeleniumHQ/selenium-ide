@@ -76,7 +76,9 @@ export default class AutoComplete extends React.Component {
           )
         }}
         renderItem={(item, isHighlighted) => {
-          var itemKey = this.props.getItemKey ? this.props.getItemKey(item) : item
+          var itemKey = this.props.getItemKey
+            ? this.props.getItemKey(item)
+            : item
           var idItem = `${this.id}_${itemKey}`
           var input
           if (
