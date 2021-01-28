@@ -108,6 +108,7 @@ class TestRow extends React.Component {
   static propTypes = {
     index: PropTypes.number,
     selected: PropTypes.bool,
+    lastSelected: PropTypes.bool,
     className: PropTypes.string,
     status: PropTypes.string,
     readOnly: PropTypes.bool,
@@ -133,9 +134,11 @@ class TestRow extends React.Component {
     setContextMenu: PropTypes.func,
     level: PropTypes.number,
     scrollToLastPos: PropTypes.func,
+    selectCommandByRange: PropTypes.func,
   }
   componentDidMount() {
     if (this.props.selected) {
+      this.node.focus()
       this.props.scrollToLastPos()
       this.props.setSectionFocus('editor', () => {
         this.node.focus()
@@ -143,7 +146,11 @@ class TestRow extends React.Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if (this.props.selected && !prevProps.selected) {
+    if (
+      this.props.selected &&
+      !prevProps.lastSelected &&
+      this.props.lastSelected
+    ) {
       this.scrollToRowIfNeeded(this.node)
       this.node.focus()
       this.props.setSectionFocus('editor', () => {
@@ -170,7 +177,7 @@ class TestRow extends React.Component {
       noModifiers &&
       (e.key === 'Delete' || e.key == 'Backspace')
     ) {
-      this.remove()
+      this.remove(this.props.index)
     } else if (!this.props.isPristine && noModifiers && key === 'B') {
       this.props.command.toggleBreakpoint()
     } else if (!this.props.isPristine && noModifiers && key === 'S') {
@@ -185,6 +192,9 @@ class TestRow extends React.Component {
       this.props.executeCommand(this.props.command)
     } else if (this.props.moveSelection && noModifiers && e.key === 'ArrowUp') {
       e.preventDefault()
+      if (!e.shiftKey) {
+        this.props.clearAllSelectedCommands()
+      }
       this.props.moveSelection(this.props.index - 1)
     } else if (
       this.props.moveSelection &&
@@ -192,6 +202,9 @@ class TestRow extends React.Component {
       e.key === 'ArrowDown'
     ) {
       e.preventDefault()
+      if (!e.shiftKey) {
+        this.props.clearAllSelectedCommands()
+      }
       this.props.moveSelection(this.props.index + 1)
     } else if (!this.props.isPristine && onlyPrimary && key === 'X') {
       this.cut()
@@ -219,7 +232,7 @@ class TestRow extends React.Component {
   cut() {
     if (!this.props.readOnly) {
       this.props.copyToClipboard(this.props.command)
-      this.props.remove(this.props.index, this.props.command)
+      this.props.remove()
     }
   }
   paste() {
@@ -227,12 +240,38 @@ class TestRow extends React.Component {
       this.props.pasteFromClipboard(this.props.index)
     }
   }
-  select() {
+  select(e) {
+    if (
+      (e.type == 'contextmenu' || e.type == 'mousedown') &&
+      this.props.selected
+    ) {
+      return
+    }
+
+    if (e.type == 'click' && (e.shiftKey || this.props.lastSelected)) {
+      if (!e.shiftKey) {
+        this.props.clearAllSelectedCommands()
+        this.props.select(this.props.command)
+      }
+      return
+    }
+
+    if (e && e.shiftKey === false) {
+      this.props.clearAllSelectedCommands()
+    }
+    if (this.props.isPristine) {
+      this.props.clearAllSelectedCommands()
+    }
+    if (e && e.shiftKey && !this.props.isPristine) {
+      this.props.selectCommandByRange(this.props.index)
+    }
+
     this.props.select(this.props.command)
   }
-  remove() {
+
+  remove(index) {
     if (!this.props.readOnly) {
-      this.props.remove(this.props.index, this.props.command)
+      this.props.remove(index)
     }
   }
   async clearAll() {
@@ -282,7 +321,12 @@ class TestRow extends React.Component {
           >
             Paste
           </ListMenuItem>
-          <ListMenuItem label="Del" onClick={this.remove}>
+          <ListMenuItem
+            label="Del"
+            onClick={() => {
+              this.remove(this.props.index)
+            }}
+          >
             Delete
           </ListMenuItem>
           <ListMenuSeparator />
@@ -367,13 +411,14 @@ class TestRow extends React.Component {
             : null
         }
         onClick={this.select}
+        onFocus={this.select}
+        onMouseDown={this.select}
         onDoubleClick={() => {
           this.props.executeCommand && this.props.singleCommandExecutionEnabled
             ? this.props.executeCommand(this.props.command)
             : undefined
         }}
         onKeyDown={this.handleKeyDown.bind(this)}
-        onFocus={this.select}
         style={{
           opacity: this.props.isDragging ? '0' : '1',
         }}

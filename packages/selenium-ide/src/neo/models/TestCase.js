@@ -31,6 +31,8 @@ export default class TestCase {
   @observable
   selectedCommand = null
   @observable
+  selectedCommands = []
+  @observable
   scrollY = null
 
   constructor(id = uuidv4(), name = 'Untitled Test') {
