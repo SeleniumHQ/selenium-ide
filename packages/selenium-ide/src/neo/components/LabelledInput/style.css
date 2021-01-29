@@ -8,6 +8,7 @@
   font-size: 12px;
   line-height: 17px;
   padding: 5px;
+  border-color: rgba(0, 0, 0, 0.55);
 }
 
 .labelled-input > label {

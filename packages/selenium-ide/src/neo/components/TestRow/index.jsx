@@ -133,6 +133,13 @@ class TestRow extends React.Component {
     setContextMenu: PropTypes.func,
     level: PropTypes.number,
     scrollToLastPos: PropTypes.func,
+    headers: {
+      commandIndexId: PropTypes.string,
+      commandId: PropTypes.string,
+      targetId: PropTypes.string,
+      valueId: PropTypes.string,
+      moreButtonsId: PropTypes.string,
+    },
   }
   componentDidMount() {
     if (this.props.selected) {
@@ -380,7 +387,7 @@ class TestRow extends React.Component {
         role="row"
         aria-label="Test information"
       >
-        <td>
+        <td headers={this.props.headers.commandIndexId}>
           {!this.props.isPristine ? (
             <a
               className="break-toggle"
@@ -411,6 +418,7 @@ class TestRow extends React.Component {
           className={classNames('command', {
             cell__alternate: this.props.command.comment,
           })}
+          headers={this.props.headers.commandId}
         >
           {commandIndentation}
           <CommandName>{this.props.command.displayedName}</CommandName>
@@ -419,6 +427,7 @@ class TestRow extends React.Component {
           className={classNames({
             cell__alternate: this.props.command.comment,
           })}
+          headers={this.props.headers.targetId}
         >
           <MultilineEllipsis lines={3}>
             {this.props.command.target}
@@ -428,12 +437,13 @@ class TestRow extends React.Component {
           className={classNames({
             cell__alternate: this.props.command.comment,
           })}
+          headers={this.props.headers.valueId}
         >
           <MultilineEllipsis lines={3}>
             {this.props.command.value}
           </MultilineEllipsis>
         </td>
-        <td className="buttons">
+        <td className="buttons" headers={this.props.headers.moreButtonsId}>
           {!this.props.isPristine && !this.props.readOnly ? listMenu : <div />}
         </td>
       </tr>
