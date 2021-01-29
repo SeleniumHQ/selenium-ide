@@ -33,7 +33,7 @@ export default class TabBar extends React.Component {
       },
     }
     this.tabRefs = this.props.tabs.map(() => React.createRef())
-    this.forcusIndex = defaultIndex
+    this.focusIndex = defaultIndex
   }
   static propTypes = {
     children: PropTypes.node,
@@ -77,10 +77,9 @@ export default class TabBar extends React.Component {
     return (
       <div
         className="tabbar"
-        role="tablist"
         onKeyDown={this.handleKeyDown.bind(this)}
       >
-        <ul>
+        <ul role="tablist">
           {this.props.tabs.map((tab, index) => (
             <li
               key={tab.name}
