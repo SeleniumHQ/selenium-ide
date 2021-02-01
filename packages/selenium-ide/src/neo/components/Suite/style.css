@@ -47,6 +47,10 @@
   opacity: 1;
 }
 
+.project:focus button {
+  opacity: 1;
+}
+
 .projects .test > button {
   font-size: 18px;
 }

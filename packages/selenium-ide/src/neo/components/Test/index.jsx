@@ -305,7 +305,7 @@ export class MenuTest extends React.Component {
       <ListMenu
         width={130}
         padding={-5}
-        opener={<MoreButton aria-label="More options" />}
+        opener={<MoreButton aria-label="More options" canFocus={true} />}
       >
         <ListMenuItem
           onClick={() =>
