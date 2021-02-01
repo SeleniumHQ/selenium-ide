@@ -209,7 +209,12 @@ export default class CommandForm extends React.Component {
             disabled={!this.props.command}
             onChange={this.props.command ? this.props.command.setComment : null}
           />
-          <input tabIndex="-1" type="submit" onClick={this.props.onSubmit} />
+          <input
+            tabIndex="-1"
+            type="submit"
+            onClick={this.props.onSubmit}
+            aria-hidden="true"
+          />
         </form>
       </div>
     )
