@@ -381,9 +381,21 @@ async function emitDragAndDrop(dragged, dropped) {
   return Promise.resolve({ commands })
 }
 
+function translateToPythonString(str) {
+  const regExp = /self.vars\["\w+"]/
+  const vars = str.match(regExp)
+
+  if (vars && vars.length > 0) {
+    const fmtStr = str.replace(regExp, '{}')
+    return `"${fmtStr}".format(${vars.join(', ')})`
+  }
+
+  return `"${str}"`
+}
+
 async function emitEcho(message) {
-  const _message = message.startsWith('self.vars[') ? message : `"${message}"`
-  return Promise.resolve(`print(str(${_message}))`)
+  const _message = translateToPythonString(message)
+  return Promise.resolve(`print(${_message})`)
 }
 
 async function emitEditContent(locator, content) {
