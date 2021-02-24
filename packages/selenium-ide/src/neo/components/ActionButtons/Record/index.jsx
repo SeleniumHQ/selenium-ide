@@ -18,6 +18,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ActionButton from '../ActionButton'
+import UiState from '../../../stores/view/UiState'
 import { parse } from 'modifier-keys'
 import './style.css'
 
@@ -33,14 +34,16 @@ export default class Record extends React.Component {
         className="record"
         data-tip={
           this.props.isRecording
-            ? `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${parse(
-                'u',
-                { primaryKey: true }
-              )}</span></p>`
-            : `<p>Start recording <span style="color: #929292;padding-left: 5px;">${parse(
-                'u',
-                { primaryKey: true }
-              )}</span></p>`
+            ? `<p>Stop recording <span style="color: #929292;padding-left: 5px;">${
+                !UiState.keyboardShortcutsEnabled
+                  ? ''
+                  : parse('u', { primaryKey: true })
+              }</span></p>`
+            : `<p>Start recording <span style="color: #929292;padding-left: 5px;">${
+                !UiState.keyboardShortcutsEnabled
+                  ? ''
+                  : parse('u', { primaryKey: true })
+              }</span></p>`
         }
         data-event="focus mouseenter"
         data-event-off="blur mouseleave"

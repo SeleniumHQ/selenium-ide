@@ -17,7 +17,6 @@
 
 import React from 'react'
 import { observer } from 'mobx-react'
-import { parse } from 'modifier-keys'
 import PlayAll from '../../components/ActionButtons/PlayAll'
 import PlayCurrent from '../../components/ActionButtons/PlayCurrent'
 import Pause from '../../components/ActionButtons/Pause'
@@ -29,6 +28,7 @@ import PauseExceptions from '../../components/ActionButtons/PauseExceptions'
 import Record from '../../components/ActionButtons/Record'
 import GaugeMenu from '../GaugeMenu'
 import UiState from '../../stores/view/UiState'
+import { parse } from 'modifier-keys'
 import PlaybackState from '../../stores/view/PlaybackState'
 import ModalState from '../../stores/view/ModalState'
 import './style.css'
@@ -66,14 +66,16 @@ export default class ToolBar extends React.Component {
           onClick={this.playAll}
           data-tip={
             PlaybackState.canPlaySuite
-              ? `<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${parse(
-                  'r',
-                  { primaryKey: true, shiftKey: true }
-                )}</span></p>`
-              : `<p>Run all tests <span style="color: #929292;padding-left: 5px;">${parse(
-                  'r',
-                  { primaryKey: true, shiftKey: true }
-                )}</span></p>`
+              ? `<p>Run all tests in suite <span style="color: #929292;padding-left: 5px;">${
+                  !UiState.keyboardShortcutsEnabled
+                    ? ''
+                    : parse('r', { primaryKey: true, shiftKey: true })
+                }</span></p>`
+              : `<p>Run all tests <span style="color: #929292;padding-left: 5px;">${
+                  !UiState.keyboardShortcutsEnabled
+                    ? ''
+                    : parse('r', { primaryKey: true, shiftKey: true })
+                }</span></p>`
           }
           data-event="focus mouseenter"
           data-event-off="blur mouseleave"
@@ -102,14 +104,16 @@ export default class ToolBar extends React.Component {
             isActive={PlaybackState.paused}
             data-tip={
               !PlaybackState.paused
-                ? `<p>Pause test execution <span style="color: #929292;padding-left: 5px;">${parse(
-                    'p',
-                    { primaryKey: true }
-                  )}</span></p>`
-                : `<p>Resume test execution <span style="color: #929292;padding-left: 5px;">${parse(
-                    'p',
-                    { primaryKey: true }
-                  )}</span></p>`
+                ? `<p>Pause test execution <span style="color: #929292;padding-left: 5px;">${
+                    !UiState.keyboardShortcutsEnabled
+                      ? ''
+                      : parse('p', { primaryKey: true })
+                  }</span></p>`
+                : `<p>Resume test execution <span style="color: #929292;padding-left: 5px;">${
+                    !UiState.keyboardShortcutsEnabled
+                      ? ''
+                      : parse('p', { primaryKey: true })
+                  }</span></p>`
             }
             data-event="focus mouseenter"
             data-event-off="blur mouseleave"

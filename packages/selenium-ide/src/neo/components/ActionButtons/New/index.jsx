@@ -19,16 +19,18 @@ import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
 import { parse } from 'modifier-keys'
+import UiState from '../../../stores/view/UiState'
 
 export default class NewButton extends React.Component {
   render() {
     const props = { ...this.props }
     return (
       <ActionButton
-        data-tip={`<p>Create new project <span style="color: #929292;padding-left: 5px;">${parse(
-          'n',
-          { primaryKey: true, shiftKey: true }
-        )}</span></p>`}
+        data-tip={`<p>Create new project <span style="color: #929292;padding-left: 5px;">${
+          !UiState.keyboardShortcutsEnabled
+            ? ''
+            : parse('n', { primaryKey: true, shiftKey: true })
+        }</span></p>`}
         {...props}
         className={classNames('si-new-project', this.props.className)}
         aria-label="Create new project"

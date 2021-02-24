@@ -19,6 +19,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import uuidv4 from 'uuid/v4'
 import { parse } from 'modifier-keys'
+import UiState from '../../../stores/view/UiState'
 import './style.css'
 
 export default class OpenButton extends React.Component {
@@ -85,10 +86,11 @@ export class OpenInput extends React.Component {
           ref={label => {
             this.label = label
           }}
-          data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${parse(
-            'o',
-            { primaryKey: true }
-          )}</span></p>`}
+          data-tip={`<p>Open project <span style="color: #929292;padding-left: 5px;">${
+            !UiState.keyboardShortcutsEnabled
+              ? ''
+              : parse('o', { primaryKey: true })
+          }</span></p>`}
           // We need special events because Focus and Blur are lost before the tooltip is shown
           data-event="focusexternal mouseenter"
           data-event-off="blurexternal mouseleave"
