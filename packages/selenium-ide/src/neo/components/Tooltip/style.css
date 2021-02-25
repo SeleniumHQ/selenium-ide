@@ -1,6 +1,8 @@
 .se-tooltip {
   cursor: pointer !important;
-  pointer-events: none !important;
+
+  /* pointer-events = none, will send the hover to the buttons or elements behind the tooltip, this is not expected and confusing. */
+  pointer-events: inherit !important;
   padding: 0 !important;
   border: none !important;
   background: transparent !important;
