@@ -6,7 +6,7 @@
 
 .labelled-input > input {
   font-size: 12px;
-  line-height: 17px;
+  line-height: max(17px, 1.5em);
   padding: 5px;
   border-color: rgba(0, 0, 0, 0.55);
 }

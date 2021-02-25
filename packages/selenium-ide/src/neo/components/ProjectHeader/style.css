@@ -17,7 +17,7 @@
   border: 1px transparent solid;
   border-radius: 4px;
   font-size: 14px;
-  line-height: 17px;
+  line-height: max(17px, 1.5em);
   min-height: 17px;
   padding: 3px 26px 3px 6px;
   font-weight: bold;

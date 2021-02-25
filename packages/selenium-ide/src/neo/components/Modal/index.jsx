@@ -21,6 +21,7 @@ import ReactModal from 'react-modal'
 import { Transition } from 'react-transition-group'
 import classNames from 'classnames'
 import './style.css'
+import UiState from '../../stores/view/UiState'
 
 const transitionStyles = {
   entering: {
@@ -63,7 +64,10 @@ export default class Modal extends React.Component {
       <Transition in={this.props.isOpen} timeout={this.props.duration}>
         {status => (
           <ReactModal
-            className="modal-content"
+            className={classNames(
+              'modal-content',
+              UiState.isBigSpacingEnabled ? ' enable-big-spacing' : ''
+            )}
             isOpen={this.props.isOpen}
             ariaHideApp={false}
             shouldCloseOnOverlayClick={true}

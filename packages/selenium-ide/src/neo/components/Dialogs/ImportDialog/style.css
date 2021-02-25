@@ -54,7 +54,7 @@
 .import-dialog ul li::before {
   content: '✓';
   text-align: center;
-  line-height: 14px;
+  line-height: max(14px, 1.5em);
   font-size: 14px;
   width: 14px;
   height: 14px;

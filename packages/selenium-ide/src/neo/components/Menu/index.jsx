@@ -21,6 +21,7 @@ import PropTypes from 'prop-types'
 import ReactModal from 'react-modal'
 import classNames from 'classnames'
 import { Transition } from 'react-transition-group'
+import UiState from '../../stores/view/UiState'
 import './style.css'
 
 export const MenuDirections = {
@@ -158,7 +159,11 @@ class Menu extends React.Component {
       <Transition in={this.props.isOpen} timeout={duration}>
         {status => (
           <ReactModal
-            className={classNames('menu', 'content')}
+            className={classNames(
+              'menu',
+              'content',
+              UiState.isBigSpacingEnabled ? 'enable-big-spacing' : ''
+            )}
             isOpen={this.props.isOpen}
             ariaHideApp={false}
             shouldCloseOnOverlayClick={true}

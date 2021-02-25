@@ -75,10 +75,7 @@ export default class TabBar extends React.Component {
   }
   render() {
     return (
-      <div
-        className="tabbar"
-        onKeyDown={this.handleKeyDown.bind(this)}
-      >
+      <div className="tabbar" onKeyDown={this.handleKeyDown.bind(this)}>
         <ul role="tablist">
           {this.props.tabs.map((tab, index) => (
             <li
