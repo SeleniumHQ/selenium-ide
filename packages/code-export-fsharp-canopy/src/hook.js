@@ -111,7 +111,7 @@ function beforeEach() {
         { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
         */
         { level: 1, statement: `start ${browserName ? browserName.toLowerCase() : 'chrome'}`},
-        { level: 1, statement: 'let vars = new Dictionary<string, object>()' },
+        { level: 1, statement: 'let vars = new Dictionary()' },
       ],
     }),
     endingSyntax: {
