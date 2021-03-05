@@ -27,6 +27,7 @@ import SaveButton from '../ActionButtons/Save'
 import MoreButton from '../ActionButtons/More'
 import ListMenu, { ListMenuItem } from '../ListMenu'
 import './style.css'
+import UiState from '../../stores/view/UiState'
 
 @observer
 export default class ProjectHeader extends React.Component {
@@ -97,6 +98,11 @@ export default class ProjectHeader extends React.Component {
             </ListMenuItem>
             <ListMenuItem href="https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/">
               {'Help'}
+            </ListMenuItem>
+            <ListMenuItem onClick={() => UiState.toggleKeyboardShortcuts()}>
+              {`${
+                UiState.keyboardShortcutsEnabled ? 'Disable' : 'Enable'
+              } the Keyboard Shortcuts`}
             </ListMenuItem>
           </ListMenu>
         </span>
