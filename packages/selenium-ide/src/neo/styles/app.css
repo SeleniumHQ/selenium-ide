@@ -120,11 +120,11 @@ code,
 }
 
 .passed {
-  color: #276533;
+  color: #276533 !important;
 }
 
 .failed {
-  color: #df0006;
+  color: #df0006 !important;
 }
 
 .action-text,

@@ -78,6 +78,8 @@ class UiState {
   specifiedRemoteUrl = null
   @observable
   gridConfigEnabled = null
+  @observable
+  _keyboardShortcutsEnabled = true
 
   dialogButtonDirection = 'normal'
 
@@ -222,6 +224,11 @@ class UiState {
       this.selectedTest.stack < PlaybackState.callstack.length
       ? PlaybackState.callstack[this.selectedTest.stack].callee
       : this.selectedTest.test
+  }
+
+  @computed
+  get keyboardShortcutsEnabled() {
+    return this._keyboardShortcutsEnabled
   }
 
   @action.bound
@@ -594,6 +601,11 @@ class UiState {
   @action.bound
   startConnection() {
     this.isControlled = true
+  }
+
+  @action.bound
+  toggleKeyboardShortcuts() {
+    this._keyboardShortcutsEnabled = !this._keyboardShortcutsEnabled
   }
 }
 

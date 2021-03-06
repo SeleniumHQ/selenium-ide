@@ -19,15 +19,17 @@ import React from 'react'
 import ActionButton from '../ActionButton'
 import classNames from 'classnames'
 import { parse } from 'modifier-keys'
+import UiState from '../../../stores/view/UiState'
 
 export default class PlayCurrentButton extends React.Component {
   render() {
     return (
       <ActionButton
-        data-tip={`<p>Run current test <span style="color: #929292;padding-left: 5px;">${parse(
-          'r',
-          { primaryKey: true }
-        )}</span></p>`}
+        data-tip={`<p>Run current test <span style="color: #929292;padding-left: 5px;">${
+          !UiState.keyboardShortcutsEnabled
+            ? ''
+            : parse('r', { primaryKey: true })
+        }</span></p>`}
         {...this.props}
         className={classNames('si-play', this.props.className)}
       /> // eslint-disable-line react/prop-types

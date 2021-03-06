@@ -104,6 +104,11 @@ export default class ProjectHeader extends React.Component {
                 UiState.isBigSpacingEnabled ? 'normal' : 'more'
               } space between letters and words.`}
             </ListMenuItem>
+            <ListMenuItem onClick={() => UiState.toggleKeyboardShortcuts()}>
+              {`${
+                UiState.keyboardShortcutsEnabled ? 'Disable' : 'Enable'
+              } the Keyboard Shortcuts`}
+            </ListMenuItem>
           </ListMenu>
         </span>
       </div>
