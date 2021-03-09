@@ -43,6 +43,8 @@ class UiState {
   @observable
   isRecording = false
   @observable
+  isBigSpacingEnabled = false
+  @observable
   lastRecordedCommand = null
   @observable
   isSelectingTarget = false
@@ -130,6 +132,11 @@ class UiState {
   @action.bound
   setProject(project) {
     this._project = project
+  }
+
+  @action.bound
+  toggleBigSpacingEnabled() {
+    this.isBigSpacingEnabled = !this.isBigSpacingEnabled
   }
 
   @computed

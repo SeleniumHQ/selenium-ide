@@ -108,7 +108,7 @@
 
 .test-table tbody tr td:first-child span.index {
   color: #8b8b8b;
-  line-height: 16px;
+  line-height: max(16px, 1.5em);
   width: 22px;
   text-align: right;
 }

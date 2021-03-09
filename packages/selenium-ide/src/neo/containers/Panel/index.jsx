@@ -315,7 +315,10 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div
-        className="container"
+        className={classNames(
+          'container',
+          UiState.isBigSpacingEnabled ? 'enable-big-spacing' : ''
+        )}
         onKeyDown={this.handleKeyDownAlt.bind(this)}
         style={{
           minHeight: UiState.minContentHeight + UiState.minConsoleHeight + 'px',
