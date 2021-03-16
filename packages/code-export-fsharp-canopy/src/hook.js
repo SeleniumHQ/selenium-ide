@@ -112,6 +112,12 @@ function beforeEach() {
         */
         { level: 1, statement: `start ${browserName ? browserName.toLowerCase() : 'chrome'}`},
         { level: 1, statement: 'let vars = new Dictionary()' },
+        { level: 1, statement: 'let findByHref href f webdriver =' },
+        { level: 2, statement: 'try' },
+        { level: 3, statement: `let cssSelector = sprintf "a[href*='%s']" href` },
+        { level: 3, statement: 'f(By.CssSelector(cssSelector)) |> List.ofSeq' },
+        { level: 2, statement: 'with | ex -> []' },
+        { level: 1, statement: 'addFinder findByHref'}
       ],
     }),
     endingSyntax: {
