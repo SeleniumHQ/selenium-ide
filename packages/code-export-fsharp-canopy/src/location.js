@@ -44,11 +44,11 @@ function emitName(selector) {
 }
 
 function emitLink(selector) {
-  return Promise.resolve(`"a[href*='${selector}']"`)
+  return Promise.resolve(`"${selector}"`)
 }
 
 function emitPartialLinkText(selector) {
-  return Promise.resolve(`By.partialLinkText("${selector}")`)
+  return Promise.resolve(`"${selector}"`)
 }
 
 function emitCss(selector) {
