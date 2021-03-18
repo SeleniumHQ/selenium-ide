@@ -133,7 +133,7 @@ function declareDependencies() {
       commands: [
         { level: 0, statement: 'open canopy.classic' },
         { level: 0, statement: 'open canopy.runner.classic' },
-        { level: 0, statement: 'open System.Collections.Generic' },
+        { level: 0, statement: 'open System.Linq' },
         { level: 0, statement: 'open OpenQA.Selenium'},
         { level: 0, statement: 'open OpenQA.Selenium.Interactions'},
       ],

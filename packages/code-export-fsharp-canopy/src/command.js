@@ -145,15 +145,15 @@ function variableSetter(varName, value) {
   return varName ? `vars.add("${varName}", ${value})` : ''
 }
 
-//TODO indent toList()
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
     return `let ${name} timeout = {`
   }
   const commands = [
-    { level: 0, statement: '(browser.WindowHandles.ToList(), vars.["window_handles"].ToList()) ||> (fun whNow whThen ->'},
-    { level: 1, statement: ' if whNow.Count > whThen.Count then whNow.Except(whThen).First().ToString() else whNow.First().ToString()'},
-    { level: 0, statement: ')'}
+    { level: 0, statement: 'sleep timeout'},
+    { level: 0, statement: '(fun whNow whThen ->'},
+    { level: 5, statement: 'if whNow.Count > whThen.Count then whNow.Except(whThen).First().ToString() else whNow.First().ToString()'},
+    { level: 0, statement: ') (browser.WindowHandles.ToList()) (vars.["window_handles"].ToList())'},
   ]
   return Promise.resolve({
     name: 'waitForWindow',
@@ -217,7 +217,7 @@ async function emitClose() {
 
 function generateExpressionScript(script) {
   const scriptString = script.script.replace(/"/g, "'")
-  return `(browser :?> IJavaScriptExecutor).executeScript("return (${scriptString})"${generateScriptArguments(
+  return `(browser :?> IJavaScriptExecutor).ExecuteScript("return (${scriptString})"${generateScriptArguments(
     script
   )})`
 }
@@ -266,13 +266,12 @@ function emitControlFlowIf(script) {
   })
 }
 
-//TODO type spec
 function emitControlFlowForEach(collectionVarName, iteratorVarName) {
   return Promise.resolve({
     commands: [
       {
         level: 0,
-        statement: `let ${collectionVarName}Enum = ((IReadOnlyCollection<object>)vars["${collectionVarName}"]).ToList().GetEnumerator()`,
+        statement: `let ${collectionVarName}Enum = vars.["${collectionVarName}"].ToList().GetEnumerator()`,
       },
       {
         level: 0,
@@ -422,7 +421,7 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `js "${script.script}${generateScriptArguments(script)}"`
+    `(browser :?> IJavaScriptExecutor).ExecuteScript("${script.script}${generateScriptArguments(script)}")`
   )
 }
 
@@ -691,17 +690,14 @@ async function emitVerifyTitle(title) {
 
 async function emitWaitForElementEditable(locator, timeout) {
   const commands = [
-    { level: 0, statement: 'waitFor (fun () ->' },
-    { level: 1, statement: `element ${await location.emit(locator)}`},
-    { level: 1, statement: `|> (fun elem -> elem.Displayed = true && elem.Enabled = true)`},
-    { level: 0, statement: ')'},
+    { level: 0, statement: `waitFor (fun () -> (element ${await location.emit(locator)}).Enabled)` },
   ]
   return Promise.resolve({ commands })
 }
 
 async function emitWaitForText(locator, text) {
   const commands = [
-    { level: 0, statement: `waitFor (fun text -> ${await location.emit(locator)} == "${text}")` },
+    { level: 0, statement: `waitFor (fun () -> ${await location.emit(locator)} == "${text}")` },
   ]
   return Promise.resolve({ commands })
 }
@@ -713,7 +709,7 @@ function skip() {
 async function emitWaitForElementPresent(locator, timeout) {
   const commands = [
     { level: 0, statement: `waitFor (fun () -> (elements ${await location.emit(
-      locator)}).Length > 0 )`},
+      locator)}).Length > 0)`},
   ]
   return Promise.resolve({ commands })
 }
@@ -721,20 +717,16 @@ async function emitWaitForElementPresent(locator, timeout) {
 async function emitWaitForElementVisible(locator, timeout) {
   const commands = [
     { level: 0, statement: `waitFor (fun () -> (element ${await location.emit(
-      locator)}).Displayed = true )`},
+      locator)}).Displayed)`},
   ]
   return Promise.resolve({
     commands,
   })
 }
 
-//TODO indent
 async function emitWaitForElementNotEditable(locator, timeout) {
   const commands = [
-    { level: 0, statement: 'waitFor (fun () ->' },
-    { level: 1, statement: `element ${await location.emit(locator)}`},
-    { level: 1, statement: `|> (fun elem -> not (elem.Displayed = true && elem.Enabled = true))`},
-    { level: 0, statement: ')'},
+    { level: 0, statement: `waitFor (fun () -> not (element ${await location.emit(locator)}).Enabled)` },
   ]
   return Promise.resolve({
     commands,
@@ -754,9 +746,7 @@ async function emitWaitForElementNotPresent(locator, timeout) {
 
 async function emitWaitForElementNotVisible(locator, timeout) {
   const commands = [
-    { level: 0, statement: 'waitFor (fun () ->' },
-    { level: 1, statement: `not (element ${await location.emit(locator)}).Displayed`},
-    { level: 0, statement: ')'},
+    { level: 0, statement: `waitFor (fun () -> not (element ${await location.emit(locator)}).Displayed)` },
   ]
   return Promise.resolve({
     commands,
