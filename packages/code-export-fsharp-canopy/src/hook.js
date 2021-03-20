@@ -60,12 +60,11 @@ function afterEach() {
   const params = {
     startingSyntax: {
       commands: [
-        { level: 0, statement: 'after (fun _ ->' },
-        { level: 1, statement: 'quit()' },
+        { level: 0, statement: 'after quit' },
       ],
     },
     endingSyntax: {
-      commands: [{ level: 0, statement: ')' }],
+      commands: [{ level: 0, statement: '' }],
     },
   }
   return params
@@ -111,10 +110,11 @@ function beforeEach() {
         { level: 1, statement: 'js = (JavascriptExecutor) driver;' },
         */
         { level: 1, statement: `start ${browserName ? browserName.toLowerCase() : 'chrome'}`},
-        { level: 1, statement: 'let vars = new Dictionary()' },
+        { level: 1, statement: `vars <- Dictionary<string, obj>()`},
+        { level: 1, statement: `jsExec <- (browser :?> IJavaScriptExecutor)`},
         { level: 1, statement: 'let findByHref href f webdriver =' },
         { level: 2, statement: 'try' },
-        { level: 3, statement: `let cssSelector = sprintf "a[href*='%s']" href` },
+        { level: 3, statement: `let cssSelector = $"a[href*='{href}']"` },
         { level: 3, statement: 'f(By.CssSelector(cssSelector)) |> List.ofSeq' },
         { level: 2, statement: 'with | ex -> []' },
         { level: 1, statement: 'addFinder findByHref'}
@@ -133,6 +133,7 @@ function declareDependencies() {
       commands: [
         { level: 0, statement: 'open canopy.classic' },
         { level: 0, statement: 'open canopy.runner.classic' },
+        { level: 0, statement: 'open System.Collections.Generic'},
         { level: 0, statement: 'open System.Linq' },
         { level: 0, statement: 'open OpenQA.Selenium'},
         { level: 0, statement: 'open OpenQA.Selenium.Interactions'},
