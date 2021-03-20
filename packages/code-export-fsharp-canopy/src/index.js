@@ -44,7 +44,8 @@ function generateMethodDeclaration(name) {
 function generateSuiteDeclaration(name) {
   return `let ${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
-  )} () =\n${opts.commandPrefixPadding}context "${exporter.parsers.capitalize(exporter.parsers.sanitizeName(name))}"`
+    )} () =\n${opts.commandPrefixPadding}context "${exporter.parsers.capitalize(exporter.parsers.sanitizeName(name))}"\n${opts.commandPrefixPadding}
+    let mutable vars = null\n${opts.commandPrefixPadding}let mutable jsExec = null`
 }
 function generateFilename(name) {
   return `${exporter.parsers.capitalize(
