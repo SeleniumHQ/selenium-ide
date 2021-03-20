@@ -16,6 +16,7 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { opts } from '.'
 import location from './location'
 import selection from './selection'
 
@@ -82,7 +83,7 @@ export const emitters = {
   setWindowSize: emitSetWindowSize,
   store: emitStore,
   storeAttribute: emitStoreAttribute,
-  //storeJson: emitStoreJson,
+  storeJson: emitStoreJson,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
@@ -142,7 +143,7 @@ function variableLookup(varName) {
 }
 
 function variableSetter(varName, value) {
-  return varName ? `vars.add("${varName}", ${value})` : ''
+  return varName ? `vars.["${varName}"] <- ${value}` : ''
 }
 
 function emitWaitForWindow() {
@@ -164,15 +165,19 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(command, emittedCommand) {
   return Promise.resolve(
-    `vars.add("window_handles", browser.WindowHandles)\n${await emittedCommand}\nvars.add("${
+    `vars.["window_handles"] <- browser.WindowHandles\n${await emittedCommand}\nvars.["${
       command.windowHandleName
-    }", waitForWindow(${command.windowTimeout}))`
+    }"] <- waitForWindow(${command.windowTimeout})`
   )
 }
 
 function emitAssert(varName, value) {
+  const _value =
+    value === 'true' || value === 'false'
+      ? exporter.parsers.capitalize(value)
+      : value
   return Promise.resolve(
-    `vars.["${varName}"].ToString() === "${value}"`
+    `vars.["${varName}"].ToString() === "${_value}"`
   )
 }
 
@@ -217,14 +222,14 @@ async function emitClose() {
 
 function generateExpressionScript(script) {
   const scriptString = script.script.replace(/"/g, "'")
-  return `(browser :?> IJavaScriptExecutor).ExecuteScript("return (${scriptString})"${generateScriptArguments(
+  return `jsExec.ExecuteScript("return (${scriptString})"${generateScriptArguments(
     script
   )})`
 }
 
 function emitControlFlowDo() {
   return Promise.resolve({
-    commands: [{ level: 0, statement: 'do' }],
+    commands: [{ level: 0, statement: 'while (fun () ->' }],
     endingLevelAdjustment: 1,
   })
 }
@@ -242,7 +247,7 @@ function emitControlFlowElseIf(script) {
     commands: [
       {
         level: 0,
-        statement: `elif ${generateExpressionScript(script)} then`,
+        statement: `elif (${generateExpressionScript(script)}):?> bool then`,
       },
     ],
     startingLevelAdjustment: -1,
@@ -260,7 +265,7 @@ function emitControlFlowEnd() {
 function emitControlFlowIf(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `if ${generateExpressionScript(script)} then` },
+      { level: 0, statement: `if (${generateExpressionScript(script)}):?> bool then` },
     ],
     endingLevelAdjustment: 1,
   })
@@ -271,7 +276,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
     commands: [
       {
         level: 0,
-        statement: `let ${collectionVarName}Enum = vars.["${collectionVarName}"].ToList().GetEnumerator()`,
+        statement: `let mutable ${collectionVarName}Enum = (vars.["${collectionVarName}"]:?> IReadOnlyCollection<obj>).ToList().GetEnumerator()`,
       },
       {
         level: 0,
@@ -279,7 +284,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 1,
-        statement: `vars["${iteratorVarName}"] = ${collectionVarName}Enum.Current`,
+        statement: `vars.["${iteratorVarName}"] <- ${collectionVarName}Enum.Current`,
       },
     ],
   })
@@ -288,7 +293,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
 function emitControlFlowRepeatIf(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `while (${generateExpressionScript(script)}) do ignore None` },
+      { level: 0, statement: `${opts.commandPrefixPadding}(${generateExpressionScript(script)}):?> bool) () do ()` },
     ],
     startingLevelAdjustment: -1,
   })
@@ -304,7 +309,7 @@ function emitControlFlowTimes(target) {
 function emitControlFlowWhile(script) {
   return Promise.resolve({
     commands: [
-      { level: 0, statement: `while ${generateExpressionScript(script)} do` },
+      { level: 0, statement: `while (${generateExpressionScript(script)}):?> bool do` },
     ],
     endingLevelAdjustment: 1,
   })
@@ -326,14 +331,14 @@ async function emitDragAndDrop(dragged, dropped) {
 
 async function emitEcho(message) {
   const _message = message.startsWith('vars.[') ? message : `"${message}"`
-  return Promise.resolve(`printfn ${_message}`)
+  return Promise.resolve(`printfn "%s" (${_message})`)
 }
 
 async function emitEditContent(locator, content) {
   const commands = [
     {
       level: 0,
-      statement: `(browser :?> IJavaScriptExecutor).ExecuteScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", (element ${await location.emit(
+      statement: `jsExec.ExecuteScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", (element ${await location.emit(
         locator
       )}))`,
     },
@@ -342,14 +347,14 @@ async function emitEditContent(locator, content) {
 }
 
 async function emitExecuteScript(script, varName) {
-  const result = `(browser :?> IJavaScriptExecutor).ExecuteScript("${script.script}"${generateScriptArguments(
+  const result = `jsExec.ExecuteScript("${script.script}"${generateScriptArguments(
     script
   )})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitExecuteAsyncScript(script, varName) {
-  const result = `(browser :?> IJavaScriptExecutor).ExecuteAsyncScript("var callback = arguments[arguments.length - 1];${
+  const result = `jsExec.ExecuteAsyncScript("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
@@ -421,7 +426,7 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `(browser :?> IJavaScriptExecutor).ExecuteScript("${script.script}${generateScriptArguments(script)}")`
+    `jsExec.ExecuteScript("${script.script}${generateScriptArguments(script)}")`
   )
 }
 
@@ -442,8 +447,10 @@ async function emitSelect(selectElement, option) {
 }
 
 async function emitSelectFrame(frameLocation) {
-  if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
+  if (frameLocation === 'relative=top') {
     return Promise.resolve('browser.SwitchTo().DefaultContent() |> ignore')
+  } else if (frameLocation === 'relative=parent') {
+    return Promise.resolve('browser.SwitchTo().ParentFrame() |> ignore')
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
       `browser.SwitchTo().Frame(${Math.floor(
@@ -547,10 +554,9 @@ async function emitStoreAttribute(locator, varName) {
   return Promise.resolve({ commands })
 }
 
-//async function emitStoreJson(_json, _varName) {
-//  // TODO
-//  return Promise.resolve('')
-//}
+async function emitStoreJson(_json, _varName) {
+  return Promise.resolve('failwith "The `storeJson` command is not yet implemented for this language."')
+}
 
 async function emitStoreText(locator, varName) {
   const result = `read ${await location.emit(locator)}`
@@ -562,7 +568,7 @@ async function emitStoreTitle(_, varName) {
 }
 
 async function emitStoreValue(locator, varName) {
-  const result = `(element ${await location.emit(locator)}).getAttribute("value")`
+  const result = `(element ${await location.emit(locator)}).GetAttribute("value")`
   return Promise.resolve(variableSetter(varName, result))
 }
 
@@ -577,7 +583,7 @@ async function emitStoreXpathCount(locator, varName) {
 
 async function emitSubmit(_locator) {
   return Promise.resolve(
-    `failWith "\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE."`
+    `failwith "\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE."`
   )
 }
 
@@ -643,9 +649,9 @@ async function emitVerifyNotEditable(locator) {
 async function emitVerifyNotSelectedValue(locator, expectedValue) {
   const commands = [
     { level: 0, 
-      statement: `notContains (element ${await location.emit(locator)}.GetAttribute("value")) ${exporter.emit.text(
+      statement: `assert((element ${await location.emit(locator)}).GetAttribute("value") <> "${exporter.emit.text(
         expectedValue
-      )}`},
+      )}")`},
   ]
   return Promise.resolve({ commands })
 }
@@ -659,8 +665,8 @@ async function emitVerifyNotText(locator, text) {
 async function emitVerifySelectedLabel(locator, labelValue) {
   const commands = [
     { level: 0, statement: `(element ${await location.emit(locator)}).GetAttribute("value")` },
-    { level: 0, statement: `|> (fun value -> "option[@value='" + value + "']")`},
-    { level: 0, statement: `|> (fun locator -> locator == ${labelValue})`},
+    { level: 0, statement: `|> (fun value -> $"//option[@value='{value}']")`},
+    { level: 0, statement: `|> (fun locator -> locator == "${labelValue}")`},
   ]
   return Promise.resolve({
     commands,
@@ -679,7 +685,7 @@ async function emitVerifyText(locator, text) {
 
 async function emitVerifyValue(locator, value) {
   const commands = [
-    { level: 0, statement: `(element ${await location.emit(locator)}).GetAttribute("value") === ${value}` },
+    { level: 0, statement: `(element ${await location.emit(locator)}).GetAttribute("value") === "${value}"` },
   ]
   return Promise.resolve({ commands })
 }
@@ -735,7 +741,7 @@ async function emitWaitForElementNotEditable(locator, timeout) {
 
 async function emitWaitForElementNotPresent(locator, timeout) {
   const commands = [
-    { level: 0, statement: `waitFor (fun () -> (elements ${await location.emit(
+    { level: 0, statement: `waitFor (fun () -> (unreliableElements ${await location.emit(
       locator
     )}).Length = 0)`}
   ]
