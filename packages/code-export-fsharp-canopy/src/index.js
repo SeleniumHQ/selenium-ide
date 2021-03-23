@@ -42,7 +42,7 @@ function generateMethodDeclaration(name) {
   return `member this.${exporter.parsers.sanitizeName(name)}() =`
 }
 function generateSuiteDeclaration(name) {
-  return `let ${exporter.parsers.uncapitalize(
+  return `let ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
     )} () =\n${opts.commandPrefixPadding}context "${exporter.parsers.capitalize(exporter.parsers.sanitizeName(name))}"\n${opts.commandPrefixPadding}
     let mutable vars = null\n${opts.commandPrefixPadding}let mutable jsExec = null`
