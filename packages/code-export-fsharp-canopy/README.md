@@ -1,3 +1,3 @@
-# code-export-java-junit
+# code-export-fsharp-canopy
 
-Java JUnit code export for Selenium IDE.
+F# Canopy code export for Selenium IDE.
