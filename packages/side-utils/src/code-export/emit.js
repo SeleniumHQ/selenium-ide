@@ -127,8 +127,10 @@ async function emitMethod(
   {
     commandPrefixPadding,
     generateMethodDeclaration,
+    level,
     terminatingKeyword,
     emitter,
+    render,
     overrideCommandEmitting,
   } = {}
 ) {
@@ -141,17 +143,16 @@ async function emitMethod(
   }
   let result
   if (overrideCommandEmitting) {
-    result = method.commands.map(
-      cmd => `${commandPrefixPadding.repeat(cmd.level) + cmd.statement}`
-    )
+    result = method.commands
+      .map(cmd => `${commandPrefixPadding.repeat(cmd.level) + cmd.statement}`)
+      .join(`\n${commandPrefixPadding}`)
+      .replace(/^/, commandPrefixPadding)
   } else {
-    result = await emitCommands(method.commands, emitter)
+    result = render(await emitCommands(method.commands, emitter), {
+      startingLevel: level,
+    })
   }
-  return [
-    _methodDeclaration,
-    result.join(`\n${commandPrefixPadding}`).replace(/^/, commandPrefixPadding),
-    _terminatingKeyword,
-  ]
+  return [_methodDeclaration, result, _terminatingKeyword]
 }
 
 export function emitOriginTracing(
@@ -235,6 +236,8 @@ async function emitTest(
           emitter,
           commandPrefixPadding,
           generateMethodDeclaration: method.generateMethodDeclaration,
+          level: testLevel,
+          render,
           terminatingKeyword,
           overrideCommandEmitting: true,
         })
@@ -252,6 +255,8 @@ async function emitTest(
       emitter,
       commandPrefixPadding,
       generateMethodDeclaration,
+      level: testLevel,
+      render,
       terminatingKeyword,
     })
     await registerMethod(method.name, result, {
