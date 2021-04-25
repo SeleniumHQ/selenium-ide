@@ -2,9 +2,9 @@ name: Selenium IDE Test Workflow
 
 on:
   push:
-    branches: [ v3-workflow-test ]
+    branches: [ v3 ]
   pull_request:
-    branches: [ v3-workflow-test ]
+    branches: [ v3 ]
 
 jobs:
   build:
