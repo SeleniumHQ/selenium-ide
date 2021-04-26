@@ -15,8 +15,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: Install Firefox
-        uses: browser-actions/setup-firefox@latest
       - name: Install Peru
         run: pip3 install peru
       - name: Sync Peru
