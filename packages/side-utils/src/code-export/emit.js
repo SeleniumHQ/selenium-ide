@@ -129,7 +129,13 @@ async function emitMethod(
     generateMethodDeclaration,
     terminatingKeyword,
     emitter,
-    overrideCommandEmitting,
+  } = {},
+  {
+    render,
+    startingLevel,
+    commentPrefix,
+    enableOriginTracing,
+    enableDescriptionAsComment,
   } = {}
 ) {
   const methodDeclaration = generateMethodDeclaration(method.name)
@@ -140,18 +146,34 @@ async function emitMethod(
     _terminatingKeyword = methodDeclaration.terminatingKeyword
   }
   let result
-  if (overrideCommandEmitting) {
-    result = method.commands.map(
-      cmd => `${commandPrefixPadding.repeat(cmd.level) + cmd.statement}`
+  if (render) {
+    // prepare origin tracing code commands if enabled
+    const originTracing = emitOriginTracing(
+      method,
+      { commentPrefix },
+      enableOriginTracing,
+      enableDescriptionAsComment
     )
+    result = render(
+      await emitCommands(method.commands, emitter).catch(error => {
+        // prefix method name on error
+        throw new Error(
+          `Method '${method.name}' has a problem: ${error.message}`
+        )
+      }),
+      {
+        startingLevel: startingLevel,
+        originTracing,
+        enableOriginTracing,
+      }
+    ).replace(/\n+$/m, '')
   } else {
-    result = await emitCommands(method.commands, emitter)
+    result = method.commands
+      .map(cmd => `${commandPrefixPadding.repeat(cmd.level) + cmd.statement}`)
+      .join(`\n${commandPrefixPadding}`)
+      .replace(/^/, commandPrefixPadding)
   }
-  return [
-    _methodDeclaration,
-    result.join(`\n${commandPrefixPadding}`).replace(/^/, commandPrefixPadding),
-    _terminatingKeyword,
-  ]
+  return [_methodDeclaration, result, _terminatingKeyword]
 }
 
 export function emitOriginTracing(
@@ -236,7 +258,6 @@ async function emitTest(
           commandPrefixPadding,
           generateMethodDeclaration: method.generateMethodDeclaration,
           terminatingKeyword,
-          overrideCommandEmitting: true,
         })
         await registerMethod(method.name, result, {
           generateMethodDeclaration: method.generateMethodDeclaration,
@@ -248,12 +269,22 @@ async function emitTest(
 
   // handle reused test methods (e.g., commands that use the `run` command)
   for (const method of methods) {
-    const result = await emitMethod(method, {
-      emitter,
-      commandPrefixPadding,
-      generateMethodDeclaration,
-      terminatingKeyword,
-    })
+    const result = await emitMethod(
+      method,
+      {
+        emitter,
+        commandPrefixPadding,
+        generateMethodDeclaration,
+        terminatingKeyword,
+      },
+      {
+        render,
+        startingLevel: testLevel,
+        commentPrefix,
+        enableOriginTracing,
+        enableDescriptionAsComment,
+      }
+    )
     await registerMethod(method.name, result, {
       generateMethodDeclaration,
       hooks,
