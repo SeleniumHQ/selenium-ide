@@ -149,8 +149,14 @@ async function emitMethod(
       .replace(/^/, commandPrefixPadding)
   } else {
     result = render(await emitCommands(method.commands, emitter), {
+      newLineCount: 0,
       startingLevel: level,
     })
+    // Remove any trailing newlines on result to avoid double newlines
+    // when the array gets converted to a string
+    if (result.slice(-1) === '\n') {
+      result = result.slice(0, -1)
+    }
   }
   return [_methodDeclaration, result, _terminatingKeyword]
 }

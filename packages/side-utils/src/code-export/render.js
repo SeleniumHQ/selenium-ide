@@ -21,16 +21,13 @@ export default function render(
   commandPrefixPadding,
   input,
   {
-    startingLevel,
-    newLineCount,
-    fullPayload,
+    startingLevel = 0,
+    newLineCount = 1,
+    fullPayload = false,
     originTracing,
     enableOriginTracing,
   } = {}
 ) {
-  if (!startingLevel) startingLevel = 0
-  if (!newLineCount) newLineCount = 1
-  if (!fullPayload) fullPayload = false
   if (Array.isArray(input)) {
     // e.g., an array of emitted command strings to be stitched together
     return renderCommands(input, {
