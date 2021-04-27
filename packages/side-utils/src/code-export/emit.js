@@ -152,8 +152,9 @@ async function emitMethod(
       newLineCount: 0,
       startingLevel: level,
     })
-    // Remove any trailing newlines on result to avoid double newlines
-    // when the array gets converted to a string
+    // Remove any trailing newlines on result to avoid double newlines.
+    // Newlines get added when the final array elements are combined,
+    // so any trailing newlines result in awkward empty lines.
     if (result.slice(-1) === '\n') {
       result = result.slice(0, -1)
     }
