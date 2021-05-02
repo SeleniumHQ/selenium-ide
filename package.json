@@ -2,6 +2,7 @@
   "name": "selenium-ide",
   "repository": "git@github.com:SeleniumHQ/selenium-ide.git",
   "license": "Apache-2.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
