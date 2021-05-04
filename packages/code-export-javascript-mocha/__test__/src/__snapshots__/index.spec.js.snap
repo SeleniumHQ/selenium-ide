@@ -132,7 +132,9 @@ describe('login', function() {
     await driver.findElement(By.linkText(\\"Form Authentication\\")).click()
     await driver.findElement(By.id(\\"username\\")).sendKeys(vars[\\"username\\"])
     await driver.findElement(By.id(\\"password\\")).sendKeys(vars[\\"password\\"])
-    await driver.findElement(By.css(\\".fa\\")).click()
+    if (!!await driver.executeScript(\\"return (true)\\")) {
+      await driver.findElement(By.css(\\".fa\\")).click()
+    }
   }
   it('invalid credentials', async function() {
     vars[\\"username\\"] = \\"blah\\"
@@ -285,7 +287,9 @@ describe('valid credentials', function() {
     await driver.findElement(By.linkText(\\"Form Authentication\\")).click()
     await driver.findElement(By.id(\\"username\\")).sendKeys(vars[\\"username\\"])
     await driver.findElement(By.id(\\"password\\")).sendKeys(vars[\\"password\\"])
-    await driver.findElement(By.css(\\".fa\\")).click()
+    if (!!await driver.executeScript(\\"return (true)\\")) {
+      await driver.findElement(By.css(\\".fa\\")).click()
+    }
   }
   it('valid credentials', async function() {
     vars[\\"username\\"] = \\"tomsmith\\"
