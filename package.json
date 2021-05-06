@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit --composite false",
     "watch": "lerna run --no-bail --parallel watch",
     "preinstall": "node ./scripts/check-yarn.js",
+    "postinstall": "lerna run postinstall --stream",
     "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"
   },
   "files": [],

@@ -4,6 +4,7 @@ const { spawn } = require('child_process')
 const { app, BrowserWindow } = require('electron')
 const webdriver = require('selenium-webdriver')
 const { resolveDriverName } = require('@seleniumhq/get-driver')
+const injectSeleniumIDEV3 = require('@seleniumhq/selenium-ide-v3-wrapper')
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
@@ -14,6 +15,9 @@ app.on('ready', async () => {
     height: 840,
     webPreferences: { nodeIntegration: true, webviewTag: true },
   })
+
+  // Inject v3 of Selenium IDE into this thing
+  injectSeleniumIDEV3(win)
 
   // and load the index.html of the app.
   win.loadFile(path.resolve(__dirname, '../renderer/index.html'))
@@ -41,7 +45,9 @@ app.on('ready', async () => {
           version: process.versions.electron,
         })
       )
-      .replace('app.asar', 'app.asar.unpacked')
+      .replace('app.asar', 'app.asar.unpacked'),
+    [],
+    { env: process.env, stdio: 'inherit' }
   )
 
   const driver = await new webdriver.Builder()

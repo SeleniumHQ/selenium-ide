@@ -49,12 +49,13 @@
   },
   "dependencies": {
     "@seleniumhq/get-driver": "^3.5.10",
+    "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
     "selenium-webdriver": "^4.0.0-alpha.7"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
-    "electron": "^7.0.0",
-    "electron-builder": "^21.2.0",
+    "electron": "^12.0.6",
+    "electron-builder": "^22.10.5",
     "fs-extra": "^8.1.0"
   }
 }
