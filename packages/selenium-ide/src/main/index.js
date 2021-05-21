@@ -1,14 +1,14 @@
 const path = require('path')
-const os = require('os')
-const { spawn } = require('child_process')
 const { app, BrowserWindow } = require('electron')
 const webdriver = require('selenium-webdriver')
-const { resolveDriverName } = require('@seleniumhq/get-driver')
-const injectSeleniumIDEV3 = require('@seleniumhq/selenium-ide-v3-wrapper')
+const chromedriver = require('./chromedriver')
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
 app.on('ready', async () => {
+  // Let chromdriver fully start up
+  await chromedriver()
+
   // Create the browser window.
   let win = new BrowserWindow({
     width: 1460,
@@ -33,22 +33,6 @@ app.on('ready', async () => {
       app.quit()
     }
   })
-
-  spawn(
-    path
-      .resolve(
-        __dirname,
-        '../../files',
-        resolveDriverName({
-          browser: 'electron',
-          platform: os.platform(),
-          version: process.versions.electron,
-        })
-      )
-      .replace('app.asar', 'app.asar.unpacked'),
-    [],
-    { env: process.env, stdio: 'inherit' }
-  )
 
   const driver = await new webdriver.Builder()
     // The "9515" is the port opened by chrome driver.
