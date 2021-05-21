@@ -10,7 +10,7 @@ app.on('ready', async () => {
   await chromedriver()
 
   // Create the browser window.
-  let win = new BrowserWindow({
+  let recordedWindow = new BrowserWindow({
     width: 1460,
     height: 840,
     webPreferences: { nodeIntegration: true, webviewTag: true },
@@ -19,11 +19,15 @@ app.on('ready', async () => {
   // Inject v3 of Selenium IDE into this thing
   injectSeleniumIDEV3(win)
 
+  const pathToRenderer = require.resolve('@seleniumhq/selenium-ide-renderer')
   // and load the index.html of the app.
-  win.loadFile(path.resolve(__dirname, '../renderer/index.html'))
-
-  win.on('close', () => {
-    win = null
+  recordedWindow.loadFile(pathToRenderer)
+  recordedWindow.on('ready-to-show', () => {
+    recordedWindow.show()
+    recordedWindow.focus()
+  })
+  recordedWindow.on('close', () => {
+    recordedWindow = null
   })
 
   app.on('window-all-closed', () => {
@@ -46,8 +50,4 @@ app.on('ready', async () => {
     })
     .forBrowser('chrome')
     .build()
-
-  await driver.executeScript(
-    'document.getElementById("aut").src = "https://google.com"'
-  )
 })

@@ -30,6 +30,9 @@ module.exports = {
     background: ['./background'],
     record: ['./content'],
   },
+  optimization: {
+    minimize: true,
+  },
   output: {
     path: path.resolve(__dirname, 'build/assets'),
     filename: '[name].js',

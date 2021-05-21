@@ -71,6 +71,13 @@ module.exports = {
         },
       },
     ],
+    'node/no-missing-require': [
+      'error',
+      {
+        allowModules: ['electron'],
+        tryExtensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.node'],
+      },
+    ],
     'node/no-missing-import': [
       'error',
       {

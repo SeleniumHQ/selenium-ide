@@ -6,9 +6,6 @@
     "declaration": true,
     "declarationMap": true,
     "composite": true,
-    // "importHelpers": true,
-    // "isolatedModules": true,
-
     "strict": true,
 
     /* Additional Checks */

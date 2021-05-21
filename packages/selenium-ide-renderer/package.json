@@ -1,0 +1,35 @@
+{
+  "name": "@seleniumhq/selenium-ide-renderer",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Selenium IDE electron app renderer",
+  "author": "Todd Tarsi <tarsitodd@gmail.com>",
+  "homepage": "http://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
+  },
+  "dependencies": {
+    "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
+    "electron-tabs": "git+ssh://git@github.com/toddtarsi/electron-tabs.git#work-without-node-anything"
+  },
+  "devDependencies": {
+    "babel-loader": "8.2.2",
+    "css-loader": "5.2.4",
+    "sass": "1.32.13",
+    "sass-loader": "11.1.1",
+    "style-loader": "2.0.0",
+    "typescript": "4.2.4",
+    "ts-loader": "9.1.2",
+    "webpack": "5.37.0"
+  }
+}
