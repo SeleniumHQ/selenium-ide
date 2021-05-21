@@ -13,7 +13,11 @@ app.on('ready', async () => {
   let recordedWindow = new BrowserWindow({
     width: 1460,
     height: 840,
-    webPreferences: { nodeIntegration: true, webviewTag: true },
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      preload: path.join(__dirname, 'bridge', 'index.js'),
+    },
   })
 
   const loadSeleniumIDEV3 = require('@seleniumhq/selenium-ide-v3-wrapper/runtime/load')
