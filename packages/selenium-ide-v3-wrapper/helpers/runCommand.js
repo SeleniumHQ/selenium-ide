@@ -1,12 +1,11 @@
 const { spawn } = require('child_process')
-const { join } = require('path')
+const seleniumIDEV3RepoPath = require('../constants/repoPath')
 
-const seleniumDir = join(process.cwd(), 'node_modules', 'selenium-ide')
 module.exports = (command, args = []) => {
-  console.log('Running', command, 'in', seleniumDir)
+  console.log('Running', command, 'in', seleniumIDEV3RepoPath)
   return new Promise(resolve => {
     const build = spawn(command, args, {
-      cwd: seleniumDir,
+      cwd: seleniumIDEV3RepoPath,
       env: process.env,
       stdio: 'inherit',
     })

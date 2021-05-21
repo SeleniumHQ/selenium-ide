@@ -10,7 +10,6 @@
     "selenium-ide": "git+ssh://git@github.com/toddtarsi/selenium-ide.git#v3-with-v4-compat"
   },
   "scripts": {
-    "build": "node scripts/build",
-    "postinstall": "node scripts/postinstall"
+    "build": "node scripts/postinstall && node scripts/build"
   }
 }

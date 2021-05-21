@@ -16,8 +16,9 @@ app.on('ready', async () => {
     webPreferences: { nodeIntegration: true, webviewTag: true },
   })
 
+  const loadSeleniumIDEV3 = require('@seleniumhq/selenium-ide-v3-wrapper/runtime/load')
   // Inject v3 of Selenium IDE into this thing
-  injectSeleniumIDEV3(win)
+  loadSeleniumIDEV3(recordedWindow)
 
   const pathToRenderer = require.resolve('@seleniumhq/selenium-ide-renderer')
   // and load the index.html of the app.
