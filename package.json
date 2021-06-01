@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
-    "build": "lerna run build --verbose",
+    "build": "lerna run build --loglevel verbose",
     "test": "jest",
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",

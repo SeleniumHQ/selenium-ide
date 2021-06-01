@@ -47,6 +47,7 @@
     ]
   },
   "dependencies": {
+    "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
     "@seleniumhq/selenium-ide-renderer": "0.0.1",
     "electron-chromedriver": "^12.0.0",
     "selenium-webdriver": "^4.0.0-alpha.7"
