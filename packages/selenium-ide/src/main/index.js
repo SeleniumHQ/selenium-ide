@@ -3,8 +3,8 @@ const path = require('path')
 const seleniumIDEV3DistPath = require('@seleniumhq/selenium-ide-v3-wrapper/constants/distPath')
 const webdriver = require('selenium-webdriver')
 const chromedriver = require('../chromedriver')
-const initMainIPC = require('./ipc/main')
-const addTab = require('./ipc/commands/addTab')
+const initMainIPC = require('./IPCManager/main')
+const addTab = require('./IPCManager/commands/addTab')
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
@@ -18,7 +18,7 @@ app.on('ready', async () => {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: path.join(__dirname, 'ipc', 'preload.js'),
+      preload: path.join(__dirname, 'IPCManager', 'preload.js'),
     },
   })
   // TODO: Install custom extensions before Selenium IDE v3
@@ -32,8 +32,7 @@ app.on('ready', async () => {
   // Render the tab management system
   const pathToRenderer = require.resolve('@seleniumhq/selenium-ide-renderer')
   mainWindow.loadFile(pathToRenderer)
-  // Add the Selenium IDE v3 extension as a tab to the app
-  addTab(mainWindow)(null, `${extension.url}index.html`)
+  addTab(mainWindow, `${extension.url}/index.html`)
 
   // Just a bit of focus passing
   mainWindow.on('ready-to-show', () => {
