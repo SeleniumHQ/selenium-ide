@@ -1,14 +1,6 @@
-import TabGroup, { TabOptions } from 'electron-tabs'
-import 'electron-tabs/electron-tabs.css'
+import { LoadedWindow } from './types'
 
-const startingTab: TabOptions = {
-  title: 'Selenium IDE Controller',
-  src: 'chrome-extension://mooikfkahbdckldjjndioackbalphokd/index.html',
-  visible: true,
-}
+const { seleniumIDE } = window as LoadedWindow
 
-const tabGroup = new TabGroup({
-  newTab: startingTab,
-})
-
-tabGroup.addTab(startingTab)
+// Let the client define its API using the ipcRenderer .on listeners
+seleniumIDE.server.lifecycle.init(null)

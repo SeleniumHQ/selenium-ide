@@ -1,38 +1,38 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
-const seleniumIDEV3DistPath = require('@seleniumhq/selenium-ide-v3-wrapper/constants/distPath')
-const webdriver = require('selenium-webdriver')
-const chromedriver = require('../chromedriver')
-const initMainIPC = require('./IPCManager/main')
-const addTab = require('./IPCManager/commands/addTab')
+import { app, BrowserWindow } from 'electron'
+import path from 'path'
+import seleniumIDEV3DistPath from '@seleniumhq/selenium-ide-v3-wrapper/constants/distPath'
+import webdriver from 'selenium-webdriver'
+import chromedriver from './chromedriver'
+import loadAPI from './api/loadServer'
+import { Config } from './types'
 
+const pathToRenderer = require.resolve('@seleniumhq/selenium-ide-renderer')
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
-
 app.on('ready', async () => {
   // Let chromedriver fully start up
   await chromedriver(app)
   // Make the main window
-  let mainWindow = new BrowserWindow({
+  let mainWindow: Electron.BrowserWindow = new BrowserWindow({
     width: 1460,
     height: 840,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: path.join(__dirname, 'IPCManager', 'preload.js'),
+      preload: path.join(__dirname, 'api', 'loadClient.js'),
     },
   })
+  const config: Config = {
+    app,
+    window: mainWindow,
+  }
+  const api = await loadAPI(config)
+  config.api = api
   // TODO: Install custom extensions before Selenium IDE v3
   // Install Selenium IDE v3 into the main window window
-  const extension = await mainWindow.webContents.session.loadExtension(
-    seleniumIDEV3DistPath
-  )
-  // Set up the IPC channels so that the client can make elevated permission
-  // requests to Electron in a safe and controllable manner
-  initMainIPC(mainWindow)
-  // Render the tab management system
-  const pathToRenderer = require.resolve('@seleniumhq/selenium-ide-renderer')
+  // Load our main page
+  const extension = await api.server.extensions.load(seleniumIDEV3DistPath)
+  config.extension = extension
   mainWindow.loadFile(pathToRenderer)
-  addTab(mainWindow, `${extension.url}/index.html`)
 
   // Just a bit of focus passing
   mainWindow.on('ready-to-show', () => {
@@ -43,7 +43,7 @@ app.on('ready', async () => {
   // Getting things in a row so that re-activating an app with no windows
   // on Darwin recreates the main window again
   mainWindow.on('close', () => {
-    mainWindow = null
+    mainWindow = undefined
   })
 
   app.on('window-all-closed', () => {

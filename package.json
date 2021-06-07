@@ -11,7 +11,7 @@
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext js --ext ts \"**/*.js\" \"**/*.ts\"",
     "typecheck": "tsc --noEmit --composite false",
-    "watch": "lerna run --no-bail --parallel watch",
+    "watch": "lerna run --parallel watch",
     "preinstall": "node ./scripts/check-yarn.js",
     "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"
   },
@@ -47,7 +47,7 @@
     "@babel/preset-typescript": "^7.6.0",
     "@testing-library/jest-dom": "^4.2.1",
     "@types/jest": "^24.0.21",
-    "@types/node": "^12.12.3",
+    "@types/node": "^15.12.1",
     "@types/selenium-webdriver": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",

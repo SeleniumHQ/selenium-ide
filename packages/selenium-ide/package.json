@@ -7,10 +7,11 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "electron src/main/index.js",
-    "build": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never"
+    "start": "electron dist/core/index.js",
+    "build": "tsc && electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "watch": "tsc -w"
   },
-  "main": "src/main/index.js",
+  "main": "dist/core/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
@@ -49,12 +50,16 @@
   "dependencies": {
     "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
     "@seleniumhq/selenium-ide-renderer": "0.0.1",
+    "lodash": "4.17.21",
+    "electron": "^12.0.6",
     "electron-chromedriver": "^12.0.0",
-    "selenium-webdriver": "^4.0.0-alpha.7"
+    "selenium-webdriver": "^4.0.0-alpha.7",
+    "typescript": "4.3.2"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.170",
+    "@types/electron": "1.6.10",
     "@types/fs-extra": "^8.0.0",
-    "electron": "^12.0.6",
     "electron-builder": "^22.10.5",
     "fs-extra": "^8.1.0"
   }

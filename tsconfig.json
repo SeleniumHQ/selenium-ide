@@ -19,11 +19,33 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "types": [
+      "electron",
       "node",
       "jest"
     ]
   },
+  "references": [
+    {
+      "path": "./packages/browser-info"
+    },
+    {
+      "path": "./packages/get-driver"
+    },
+    {
+      "path": "./packages/selenium-ide"
+    },
+    {
+      "path": "./packages/selenium-ide-renderer"
+    },
+    {
+      "path": "./packages/side-model"
+    },
+    {
+      "path": "./packages/webdriver-testkit"
+    },
+  ],
   "exclude": [
-    "**/dist/**/*"
+    "**/dist/**/*",
+    "**/node_modules"
   ]
 }

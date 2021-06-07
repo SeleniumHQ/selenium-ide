@@ -1,8 +1,8 @@
-const { spawn } = require('child_process')
-const { resolve, join } = require('path')
+import { spawn } from 'child_process'
+import { resolve, join } from 'path'
 
 const chromedriverPath = resolve(
-  join(__dirname, '..', '..', 'node_modules', '.bin', 'chromedriver')
+  join(__dirname, '..', '..', '..', 'node_modules', '.bin', 'chromedriver')
 )
 
 /**
@@ -12,12 +12,12 @@ const chromedriverPath = resolve(
  *   3. Return successfully if this occurs, or promote the failure if it doesn't work
  *   4. When Electron is quitting, close the child chromedriver process
  */
-module.exports = app =>
+export default (app: Electron.App) =>
   new Promise((resolve, reject) => {
     const chromedriver = spawn(chromedriverPath, [], {
       env: process.env,
     })
-    chromedriver.stdout.on('data', out => {
+    chromedriver.stdout.on('data', (out: string) => {
       const outStr = `${out}`
       const fullyStarted = outStr.includes(
         'ChromeDriver was started successfully.'
@@ -27,11 +27,11 @@ module.exports = app =>
         resolve(chromedriver)
       }
     })
-    chromedriver.stderr.on('data', err => {
+    chromedriver.stderr.on('data', (err: string) => {
       const errStr = `${err}`
       console.error(errStr)
     })
-    chromedriver.on('close', code => {
+    chromedriver.on('close', (code: number) => {
       if (code) reject(code)
     })
 
