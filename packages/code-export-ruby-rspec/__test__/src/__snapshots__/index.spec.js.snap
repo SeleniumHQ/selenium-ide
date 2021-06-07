@@ -150,11 +150,11 @@ describe 'DefaultSuite' do
   after(:each) do
     @driver.quit
   end
-  def wait_for_window(self, timeout = 2):
+  def wait_for_window(timeout = 2)
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
     wh_then = @vars['window_handles']
-    wh_now.find { |window| window != wh_then.first
+    wh_now.find { |window| window != wh_then.first }
   end
   def selectwindow
     @driver.get('http://the-internet.herokuapp.com/windows')
@@ -183,11 +183,11 @@ describe 'DefaultSuite' do
   after(:each) do
     @driver.quit
   end
-  def wait_for_window(self, timeout = 2):
+  def wait_for_window(timeout = 2)
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
     wh_then = @vars['window_handles']
-    wh_now.find { |window| window != wh_then.first
+    wh_now.find { |window| window != wh_then.first }
   end
   def selectwindow
     @driver.get('http://the-internet.herokuapp.com/windows')
@@ -302,11 +302,11 @@ describe 'Selectwindow' do
   after(:each) do
     @driver.quit
   end
-  def wait_for_window(self, timeout = 2):
+  def wait_for_window(timeout = 2)
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
     wh_then = @vars['window_handles']
-    wh_now.find { |window| window != wh_then.first
+    wh_now.find { |window| window != wh_then.first }
   end
   it 'selectwindow' do
     @driver.get('http://the-internet.herokuapp.com/')
