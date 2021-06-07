@@ -15,7 +15,7 @@
  *
  */
 
-import browser from 'webextension-polyfill'
+import browser from '../compat/v4/webextension-polyfill'
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
 import SeleniumError from './SeleniumError'
 import { selenium } from './commands-api'

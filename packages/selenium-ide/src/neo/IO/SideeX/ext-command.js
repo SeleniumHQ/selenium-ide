@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../../../compat/v4/webextension-polyfill'
 import Debugger, { convertLocator } from '../debugger'
 import PlaybackState from '../../stores/view/PlaybackState'
 import { Logger, Channels, output } from '../../stores/view/Logs'

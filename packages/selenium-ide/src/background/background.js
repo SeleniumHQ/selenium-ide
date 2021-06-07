@@ -15,7 +15,7 @@
  *
  */
 
-import browser from 'webextension-polyfill'
+import browser from '../compat/v4/webextension-polyfill'
 import { isStaging } from '../common/utils'
 
 let ideWindowId = undefined

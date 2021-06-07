@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../compat/v4/webextension-polyfill'
 import FatalError from '../errors/fatal'
 import NoResponseError from '../errors/no-response'
 import Manager from './manager'

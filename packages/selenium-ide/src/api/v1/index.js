@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../../compat/v4/webextension-polyfill'
 import Router from '../../router'
 import Manager from '../../plugin/manager'
 import logger from '../../neo/stores/view/Logs'

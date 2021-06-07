@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill'
+import browser from '../../compat/v4/webextension-polyfill'
 import { reaction } from 'mobx'
 import UiState from '../stores/view/UiState'
 

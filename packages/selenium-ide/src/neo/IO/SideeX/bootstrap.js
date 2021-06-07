@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../../../compat/v4/webextension-polyfill'
 import WindowSession from '../window-session'
 
 if (browser && browser.runtime && browser.runtime.onMessage) {
