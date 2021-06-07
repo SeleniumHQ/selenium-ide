@@ -34,11 +34,11 @@
 
 .tabbar.vertical a:hover {
   color: #0c0c0c;
-  background-color: #f3f3f3;
+  background-color: #d8ebfb;
 }
 
 .tabbar.vertical a:focus {
-  background-color: #f3f3f3;
+  background-color: #d8ebfb;
 }
 
 .tabbar.vertical a:focus > span {

@@ -11,13 +11,15 @@
   color: #de2a00;
 }
 
-.si-record.active::before {
+.si-record.active::after {
   animation: fadeIn 500ms infinite alternate;
-  background: red;
-  width: 8px;
-  height: 8px;
-  display: block;
-  margin: auto;
+  border: red 4px solid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -4px -4px;
+  width: 0;
+  height: 0;
   content: '';
 }
 

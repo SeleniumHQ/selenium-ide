@@ -36,6 +36,7 @@ export default class Tooltip extends React.Component {
         ref={this.reactTooltipRef}
         afterShow={() => this.setState({ show: true })}
         afterHide={() => this.setState({ show: false })}
+        delayHide={500}
         {...this.props}
       />
     )

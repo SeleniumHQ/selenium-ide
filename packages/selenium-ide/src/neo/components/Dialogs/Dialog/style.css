@@ -33,7 +33,7 @@
 
 .dialog .dialog__title h2 {
   font-size: 14px;
-  line-height: 18px;
+  line-height: max(18px, 1.5em);
 }
 
 .dialog .dialog__contents {
@@ -60,5 +60,5 @@
 
 .dialog p {
   font-size: 14px;
-  line-height: 19px;
+  line-height: max(19px, 1.5em);
 }

@@ -43,6 +43,8 @@ class UiState {
   @observable
   isRecording = false
   @observable
+  isBigSpacingEnabled = false
+  @observable
   lastRecordedCommand = null
   @observable
   isSelectingTarget = false
@@ -76,6 +78,8 @@ class UiState {
   specifiedRemoteUrl = null
   @observable
   gridConfigEnabled = null
+  @observable
+  _keyboardShortcutsEnabled = true
 
   dialogButtonDirection = 'normal'
 
@@ -128,6 +132,11 @@ class UiState {
   @action.bound
   setProject(project) {
     this._project = project
+  }
+
+  @action.bound
+  toggleBigSpacingEnabled() {
+    this.isBigSpacingEnabled = !this.isBigSpacingEnabled
   }
 
   @computed
@@ -215,6 +224,11 @@ class UiState {
       this.selectedTest.stack < PlaybackState.callstack.length
       ? PlaybackState.callstack[this.selectedTest.stack].callee
       : this.selectedTest.test
+  }
+
+  @computed
+  get keyboardShortcutsEnabled() {
+    return this._keyboardShortcutsEnabled
   }
 
   @action.bound
@@ -587,6 +601,11 @@ class UiState {
   @action.bound
   startConnection() {
     this.isControlled = true
+  }
+
+  @action.bound
+  toggleKeyboardShortcuts() {
+    this._keyboardShortcutsEnabled = !this._keyboardShortcutsEnabled
   }
 }
 

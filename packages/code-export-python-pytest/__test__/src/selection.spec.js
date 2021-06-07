@@ -35,6 +35,13 @@ describe('selection location code emitter', () => {
       `By.XPATH, "//option[. = '${selector}']"`
     )
   })
+  it('should emit label locator with variable', () => {
+    const type = 'label'
+    const selector = 'self.vars["label"]'
+    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
+      `By.XPATH, "//option[. = '{}']".format(${selector})`
+    )
+  })
   it('should emit id locator', () => {
     const type = 'id'
     const selector = 'someId'

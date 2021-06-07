@@ -76,9 +76,10 @@ export default class AutoComplete extends React.Component {
           )
         }}
         renderItem={(item, isHighlighted) => {
-          var idItem = `${this.id}_${
-            this.props.getItemKey ? this.props.getItemKey(item) : item
-          }`
+          var itemKey = this.props.getItemKey
+            ? this.props.getItemKey(item)
+            : item
+          var idItem = `${this.id}_${itemKey}`
           var input
           if (
             this.spanRef.current &&
@@ -93,7 +94,8 @@ export default class AutoComplete extends React.Component {
           return (
             <li
               id={idItem}
-              key={this.props.getItemKey ? this.props.getItemKey(item) : item}
+              key={itemKey}
+              aria-label={itemKey}
               style={{
                 background: isHighlighted ? '#5c5c5c' : 'white',
                 color: isHighlighted ? 'white' : '#3f3f3f',
