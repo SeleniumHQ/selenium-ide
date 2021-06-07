@@ -301,11 +301,11 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
       },
       {
         level: 0,
-        statement: `for (int i${iteratorName} = 0; i < collection${collectionName}.size() - 1; i${iteratorName}++) {`,
+        statement: `for (int i${iteratorName} = 0; i${iteratorName} < collection${collectionName}.size(); i${iteratorName}++) {`,
       },
       {
         level: 1,
-        statement: `vars.put("${iteratorVarName}", collection${collectionName}.get(i));`,
+        statement: `vars.put("${iteratorVarName}", collection${collectionName}.get(i${iteratorName}));`,
       },
     ],
   })
@@ -510,7 +510,7 @@ async function emitRun(testName) {
 
 async function emitRunScript(script) {
   return Promise.resolve(
-    `js.executeScript("${script.script}${generateScriptArguments(script)}");`
+    `js.executeScript("${script.script}"${generateScriptArguments(script)});`
   )
 }
 
