@@ -22,6 +22,7 @@ export const availableLanguages = {
   'javascript-mocha': require('@seleniumhq/code-export-javascript-mocha'),
   'python-pytest': require('@seleniumhq/code-export-python-pytest'),
   'ruby-rspec': require('@seleniumhq/code-export-ruby-rspec'),
+  'fsharp-canopy': require('@seleniumhq/code-export-fsharp-canopy'),
 }
 
 function registerCommand(language, command, emitter) {

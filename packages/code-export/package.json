@@ -25,6 +25,7 @@
     "@seleniumhq/code-export-java-junit": "^3.17.0",
     "@seleniumhq/code-export-javascript-mocha": "^3.17.0",
     "@seleniumhq/code-export-python-pytest": "^3.17.0",
-    "@seleniumhq/code-export-ruby-rspec": "^3.17.0"
+    "@seleniumhq/code-export-ruby-rspec": "^3.17.0",
+    "@seleniumhq/code-export-fsharp-canopy": "^0.0.1"
   }
 }
