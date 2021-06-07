@@ -277,6 +277,14 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should emit `echo` command with variable if there is assignment', () => {
+    const command = {
+      command: 'echo',
+      target: 'myVar=${myVar}',
+      value: '',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `edit content` command', () => {
     const command = {
       command: 'editContent',
