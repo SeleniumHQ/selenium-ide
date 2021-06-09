@@ -158,7 +158,28 @@ export default class CommandForm extends React.Component {
               name="target"
               label="Target"
               value={this.props.command ? this.props.command.target : ''}
-              targets={this.props.command ? this.props.command.targets : []}
+              isRunCmdTarget={
+                this.props.command && this.props.command.command === 'run'
+              }
+              targets={
+                this.props.command
+                  ? this.props.command.command === 'run'
+                    ? UiState.project.tests
+                        .map(t => {
+                          return t.name
+                        })
+                        .filter(name =>
+                          name
+                            .toLowerCase()
+                            .includes(
+                              (this.props.command &&
+                                this.props.command.target.toLowerCase()) ||
+                                ''
+                            )
+                        )
+                    : this.props.command.targets
+                  : []
+              }
               disabled={!this.props.command}
               onChange={
                 this.props.command ? this.props.command.setTarget : null
