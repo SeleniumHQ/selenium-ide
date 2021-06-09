@@ -17,6 +17,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { get } from 'lodash'
 import Modal from '../../Modal'
 import DialogContainer from '../Dialog'
 import FlatButton from '../../FlatButton'
@@ -53,12 +54,25 @@ class ExportContent extends React.Component {
   static modalDescriptionElement = 'renameDescription'
   constructor(props) {
     super(props)
+
+    this.DEF_PACKAGE = ''
+
     this.state = {
       selectedLanguages: [UiState.selectedExportLanguage],
       enableOriginTracing: false,
       enableGridConfig: UiState.gridConfigEnabled,
       gridConfigUrl: UiState.specifiedRemoteUrl,
+      package:
+        (ModalState.exportPayload &&
+          get(
+            Object.values(ModalState.exportPayload)[0],
+            'additionalOpts.package',
+            this.DEF_PACKAGE
+          )) ||
+        this.DEF_PACKAGE,
     }
+
+    this.onExportPackageChange(this.state.package)
   }
   static propTypes = {
     cancelSelection: PropTypes.func.isRequired,
@@ -84,6 +98,18 @@ class ExportContent extends React.Component {
     UiState.specifyRemoteUrl(input)
     this.setState({ gridConfigUrl: input })
   }
+  onExportPackageChange(input) {
+    if (ModalState.exportPayload) {
+      Object.values(ModalState.exportPayload).forEach(function(e) {
+        if (!e.additionalOpts) e.additionalOpts = {}
+
+        e.additionalOpts.package = input
+      })
+    }
+
+    this.setState({ package: input })
+  }
+
   render() {
     return (
       <DialogContainer
@@ -159,6 +185,22 @@ class ExportContent extends React.Component {
             value={this.state.gridConfigUrl}
             onChange={value => {
               this.onUrlChange(value)
+            }}
+          />
+        ) : (
+          undefined
+        )}
+
+        {this.state.selectedLanguages.every(l =>
+          l.toLowerCase().includes('java')
+        ) ? (
+          <Input
+            id="export-package"
+            name="export-package"
+            label="Export package"
+            value={this.state.package}
+            onChange={value => {
+              this.onExportPackageChange(value)
             }}
           />
         ) : (
