@@ -248,8 +248,8 @@ export default class ProjectStore {
       url: this.url,
       tests: this._tests.map(t => t.export()),
       suites: this._suites.map(s => s.export()),
-      urls: this._urls,
-      plugins: this.plugins,
+      urls: this._urls.slice (),
+      plugins: this.plugins.slice (),
     })
   }
 }
