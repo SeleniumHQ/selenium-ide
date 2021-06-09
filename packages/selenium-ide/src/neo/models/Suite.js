@@ -170,6 +170,7 @@ export default class Suite {
       parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id),
+	  modified: modified,
     }
   }
 
