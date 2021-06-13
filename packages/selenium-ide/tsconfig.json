@@ -2,11 +2,11 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*"],
   "compilerOptions": {
-    "outDir": "dist/core",
+    "outDir": "dist",
     "rootDir": "src",
     "types": [
-      "node",
-      "electron"
+      "electron",
+      "webpack-env"
     ]
   }
 }

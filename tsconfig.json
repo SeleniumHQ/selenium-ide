@@ -35,9 +35,6 @@
       "path": "./packages/selenium-ide"
     },
     {
-      "path": "./packages/selenium-ide-renderer"
-    },
-    {
       "path": "./packages/side-model"
     },
     {

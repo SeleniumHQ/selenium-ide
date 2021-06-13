@@ -7,9 +7,12 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "electron dist/core/index.js",
-    "build": "tsc && electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
-    "watch": "tsc -w"
+    "copy:tsconfig": "cp ./tsconfig.json ./dist/tsconfig.json",
+    "start": "electron dist/main-bundle.js",
+    "build": "run-s build:webpack build:electron",
+    "build:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:webpack": "webpack",
+    "watch": "webpack --watch"
   },
   "main": "dist/core/index.js",
   "repository": {
@@ -49,18 +52,26 @@
   },
   "dependencies": {
     "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
-    "@seleniumhq/selenium-ide-renderer": "0.0.1",
     "lodash": "4.17.21",
     "electron": "^12.0.6",
     "electron-chromedriver": "^12.0.0",
-    "selenium-webdriver": "^4.0.0-alpha.7",
-    "typescript": "4.3.2"
+    "selenium-webdriver": "4.0.0-beta.4"
   },
   "devDependencies": {
     "@types/lodash": "4.14.170",
     "@types/electron": "1.6.10",
     "@types/fs-extra": "^8.0.0",
+    "@types/webpack-env": "1.16.0",
+    "copy-webpack-plugin": "9.0.0",
+    "css-loader": "5.2.4",
     "electron-builder": "^22.10.5",
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "npm-run-all": "4.1.5",
+    "sass": "1.32.13",
+    "sass-loader": "11.1.1",
+    "style-loader": "2.0.0",
+    "ts-loader": "9.2.3",
+    "typescript": "4.3.2",
+    "webpack": "5.37.0"
   }
 }

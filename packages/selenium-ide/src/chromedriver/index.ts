@@ -4,6 +4,7 @@ import { resolve, join } from 'path'
 const chromedriverPath = resolve(
   join(__dirname, '..', '..', '..', 'node_modules', '.bin', 'chromedriver')
 )
+const successMessage = 'ChromeDriver was started successfully.'
 
 /**
  * This module is just an async function that does the following:
@@ -19,11 +20,9 @@ export default (app: Electron.App) =>
     })
     chromedriver.stdout.on('data', (out: string) => {
       const outStr = `${out}`
-      const fullyStarted = outStr.includes(
-        'ChromeDriver was started successfully.'
-      )
+      const fullyStarted = outStr.includes(successMessage)
       if (fullyStarted) {
-        console.log('Continuing execution')
+        console.log(successMessage)
         resolve(chromedriver)
       }
     })
@@ -32,7 +31,10 @@ export default (app: Electron.App) =>
       console.error(errStr)
     })
     chromedriver.on('close', (code: number) => {
-      if (code) reject(code)
+      if (code) {
+        console.warn('ChromeDriver has exited with code', code)
+        reject(code)
+      }
     })
 
     app.on('before-quit', () => {
