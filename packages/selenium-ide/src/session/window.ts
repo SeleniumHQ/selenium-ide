@@ -4,6 +4,7 @@ import rendererPath from '../constants/rendererPath'
 import { Session } from '../types'
 
 export default buildWindow
+
 async function buildWindow(_session: Session): Promise<BrowserWindow> {
   // Make the main window
   const window = new BrowserWindow({
