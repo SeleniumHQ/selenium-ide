@@ -123,9 +123,9 @@ actions = ActionChains(self.driver)
 actions.drag_and_drop(dragged, dropped).perform()"
 `;
 
-exports[`command code emitter should emit \`echo\` command 1`] = `"print(str(\\"blah\\"))"`;
+exports[`command code emitter should emit \`echo\` command 1`] = `"print(\\"blah\\")"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(str(self.vars[\\"blah\\"]))"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(\\"blah = {}\\".format(self.vars[\\"blah\\"]))"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "element = self.driver.find_element(By.ID, \\"contentEditable\\")
@@ -225,7 +225,7 @@ actions.move_to_element(element).release().perform()"
 
 exports[`command code emitter should emit \`open\` with absolute url 1`] = `"self.driver.get(\\"https://www.seleniumhq.org/\\")"`;
 
-exports[`command code emitter should emit \`pause\` command 1`] = `"time.sleep(300)"`;
+exports[`command code emitter should emit \`pause\` command 1`] = `"time.sleep(0.3)"`;
 
 exports[`command code emitter should emit \`remove selection\` command 1`] = `
 "dropdown = self.driver.find_element(By.CSS_SELECTOR, \\"select\\")
@@ -348,19 +348,19 @@ assert value == \\"test\\""
 
 exports[`command code emitter should emit \`verify\` command 1`] = `"assert(self.vars[\\"varrrName\\"] == \\"blah\\")"`;
 
-exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `"WebDriverWait(self.driver, 5000).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, \\"#blah\\")))"`;
+exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
-exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `"WebDriverWait(self.driver, 5000).until_not(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, \\"#blah\\")))"`;
+exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `"WebDriverWait(self.driver, 5).until_not(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
-exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `"WebDriverWait(self.driver, 5000).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
-exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `"WebDriverWait(self.driver, 5000).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
-exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `"WebDriverWait(self.driver, 5000).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
-exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"WebDriverWait(self.driver, 5000).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
 
-exports[`command code emitter should emit \`waitForText\` command 1`] = `"WebDriverWait(self.driver, 30000).until(expected_conditions.text_to_be_present_in_element((By.CSS_SELECTOR, \\"#blah\\"), \\"text\\"))"`;
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"WebDriverWait(self.driver, 30).until(expected_conditions.text_to_be_present_in_element((By.CSS_SELECTOR, \\"#blah\\"), \\"text\\"))"`;
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {

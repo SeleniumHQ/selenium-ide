@@ -26,6 +26,7 @@ import OpenButton from '../ActionButtons/Open'
 import SaveButton from '../ActionButtons/Save'
 import MoreButton from '../ActionButtons/More'
 import ListMenu, { ListMenuItem } from '../ListMenu'
+import UiState from '../../stores/view/UiState'
 import './style.css'
 
 @observer
@@ -97,6 +98,16 @@ export default class ProjectHeader extends React.Component {
             </ListMenuItem>
             <ListMenuItem href="https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/">
               {'Help'}
+            </ListMenuItem>
+            <ListMenuItem onClick={() => UiState.toggleBigSpacingEnabled()}>
+              {`Put ${
+                UiState.isBigSpacingEnabled ? 'normal' : 'more'
+              } space between letters and words.`}
+            </ListMenuItem>
+            <ListMenuItem onClick={() => UiState.toggleKeyboardShortcuts()}>
+              {`${
+                UiState.keyboardShortcutsEnabled ? 'Disable' : 'Enable'
+              } the Keyboard Shortcuts`}
             </ListMenuItem>
           </ListMenu>
         </span>

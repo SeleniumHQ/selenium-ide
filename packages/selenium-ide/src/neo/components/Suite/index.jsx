@@ -96,7 +96,7 @@ class Suite extends React.Component {
       <ListMenu
         width={130}
         padding={-5}
-        opener={<MoreButton aria-label="More options" />}
+        opener={<MoreButton aria-label="More options" canFocus={true} />}
       >
         <ListMenuItem onClick={this.props.selectTests}>Add tests</ListMenuItem>
         <ListMenuItem

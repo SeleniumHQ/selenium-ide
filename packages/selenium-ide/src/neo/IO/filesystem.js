@@ -169,8 +169,8 @@ export function loadProject(project, file) {
       confirmLabel: 'close',
     })
   }
-  loadAsText(file).then(contents => {
-    if (/\.side$/.test(file.name)) {
+  return loadAsText(file).then(contents => {
+    if (/\.side$/i.test(file.name)) {
       loadJSProject(project, UpgradeProject(JSON.parse(contents)))
     } else {
       try {

@@ -57,6 +57,13 @@
       ],
       "value": "${password}"
     }, {
+      "id": "0ac586f1-37a8-4059-9e67-241da62f8905",
+      "comment": "",
+      "command": "if",
+      "target": "true",
+      "targets": [],
+      "value": ""
+    }, {
       "id": "8081fd74-50b1-4f5c-95f1-c171519b8700",
       "comment": "",
       "command": "click",
@@ -67,6 +74,13 @@
         ["xpath=//i", "xpath:position"],
         ["xpath=//i[contains(.,' Login')]", "xpath:innerText"]
       ],
+      "value": ""
+    }, {
+      "id": "ca185097-14b4-4bd1-bdad-380a71bb067b",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
       "value": ""
     }]
   }, {

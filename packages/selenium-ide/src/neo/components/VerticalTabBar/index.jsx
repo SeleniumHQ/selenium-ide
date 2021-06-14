@@ -17,6 +17,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import UiState from '../../stores/view/UiState'
 import { parse } from 'modifier-keys'
 import ListMenu, { ListMenuItem } from '../ListMenu'
 import { MenuDirections } from '../Menu'
@@ -71,7 +72,11 @@ export default class VerticalTabBar extends React.Component {
             {this.props.tabs.map((tab, i) => (
               <ListMenuItem
                 key={tab}
-                label={parse(`${i + 1}`, { primaryKey: true })}
+                label={
+                  !UiState.keyboardShortcutsEnabled
+                    ? `${i + 1}`
+                    : parse(`${i + 1}`, { primaryKey: true })
+                }
                 onClick={this.handleClick.bind(this, tab)}
               >
                 {tab}

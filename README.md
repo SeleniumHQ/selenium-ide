@@ -19,6 +19,7 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 ### Pre-packaged
 - [Chrome extension](https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd)
 - [Firefox extension](https://addons.mozilla.org/en-GB/firefox/addon/selenium-ide/)
+- [Edge extension](https://microsoftedge.microsoft.com/addons/detail/selenium-ide/ajdpfmkffanmkhejnopjppegokpogffp)
 
 ## Prerequisites
 

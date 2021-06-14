@@ -51,3 +51,21 @@
   padding: 5px;
   flex-grow: 1;
 }
+
+.hidden-visualy-screen-reader-visible {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.test-table .hidden-visualy-screen-reader-visible {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
+  clip: rect(1px, 1px, 1px, 1px);
+}

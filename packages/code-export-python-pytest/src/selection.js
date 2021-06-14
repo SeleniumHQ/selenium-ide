@@ -41,6 +41,9 @@ function emitValue(value) {
 }
 
 function emitLabel(label) {
+  if (label.startsWith('self.vars[')) {
+    return Promise.resolve(`By.XPATH, "//option[. = '{}']".format(${label})`)
+  }
   return Promise.resolve(`By.XPATH, "//option[. = '${label}']"`)
 }
 

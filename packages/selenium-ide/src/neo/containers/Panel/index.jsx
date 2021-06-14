@@ -156,6 +156,12 @@ export default class Panel extends React.Component {
     }
   }
   handleKeyDown(e) {
+    // We want to enable disabling these Key Combinations for Accessibility
+    if (!UiState.keyboardShortcutsEnabled) {
+      e.preventDefault()
+      return
+    }
+
     const keyComb = this.parseKeyDown(e)
     // when editing these, remember to edit the button's tooltip as well
     if (keyComb.primaryAndShift && keyComb.key === 'N') {
@@ -309,7 +315,10 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div
-        className="container"
+        className={classNames(
+          'container',
+          UiState.isBigSpacingEnabled ? 'enable-big-spacing' : ''
+        )}
         onKeyDown={this.handleKeyDownAlt.bind(this)}
         style={{
           minHeight: UiState.minContentHeight + UiState.minConsoleHeight + 'px',

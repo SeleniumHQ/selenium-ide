@@ -27,8 +27,11 @@ export default class LogList extends React.Component {
     this.props.scrollTo(10000)
   }
   render() {
+    var props = { ...this.props }
+    delete props.output
+    delete props.scrollTo
     return (
-      <div className="logs" id="Log">
+      <div className="logs" {...props}>
         <ul>
           {this.props.output.logs.map(log => (
             <LogMessage key={log.id} log={log} />

@@ -62,7 +62,7 @@ textarea {
   color: #3f3f3f;
   border-radius: 2px;
   font-size: 12px;
-  line-height: 17px;
+  line-height: max(17px, 1.5em);
   padding: 2px 5px;
 }
 
@@ -120,11 +120,11 @@ code,
 }
 
 .passed {
-  color: #276533;
+  color: #276533 !important;
 }
 
 .failed {
-  color: #df0006;
+  color: #df0006 !important;
 }
 
 .action-text,
@@ -138,4 +138,17 @@ code,
   margin: 0;
   padding: 0;
   display: none;
+}
+
+.container.enable-big-spacing,
+.modal-content.enable-big-spacing,
+.menu.content.enable-big-spacing,
+.container.enable-big-spacing input,
+.modal-content.enable-big-spacing input,
+.menu.content.enable-big-spacing input,
+.container.enable-big-spacing button,
+.modal-content.enable-big-spacing button,
+.menu.content.enable-big-spacing button {
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
 }

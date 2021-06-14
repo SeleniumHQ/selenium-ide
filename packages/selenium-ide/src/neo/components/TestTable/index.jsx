@@ -115,6 +115,43 @@ export default class TestTable extends React.Component {
         )}
       >
         <table>
+          {/* thead is invisiable to the user but it is visible to the Screen Reader */}
+          <caption
+            className={classNames('hidden-visualy-screen-reader-visible')}
+            tabIndex={-1}
+          >
+            Commands, targets and Values
+          </caption>
+          <thead
+            className={classNames('hidden-visualy-screen-reader-visible')}
+            tabIndex={-1}
+          >
+            <tr
+              className={classNames('hidden-visualy-screen-reader-visible')}
+              tabIndex={-1}
+            >
+              <th
+                id="th_command_position"
+                scope="col"
+                className={classNames('hidden-visualy-screen-reader-visible')}
+                tabIndex={-1}
+              >
+                Command Position
+              </th>
+              <th id="th_command" scope="col">
+                Command
+              </th>
+              <th id="th_target" scope="col">
+                Target
+              </th>
+              <th id="th_value" scope="col">
+                Value
+              </th>
+              <th id="th_more_buttons" scope="col">
+                More options
+              </th>
+            </tr>
+          </thead>
           <tbody>
             {this.props.commands
               ? this.props.commands
@@ -156,6 +193,13 @@ export default class TestTable extends React.Component {
                       clearAllCommands={this.props.clearAllCommands}
                       setSectionFocus={UiState.setSectionFocus}
                       level={this.commandLevels[index]}
+                      headers={{
+                        commandIndexId: 'th_command_position',
+                        commandId: 'th_command',
+                        targetId: 'th_target',
+                        valueId: 'th_value',
+                        moreButtonsId: 'th_more_buttons',
+                      }}
                     />
                   ))
                   .concat(
@@ -174,6 +218,13 @@ export default class TestTable extends React.Component {
                       moveSelection={UiState.selectCommandByIndex}
                       pasteFromClipboard={UiState.pasteFromClipboard}
                       setSectionFocus={UiState.setSectionFocus}
+                      headers={{
+                        commandIndexId: 'th_command_position',
+                        commandId: 'th_command',
+                        targetId: 'th_target',
+                        valueId: 'th_value',
+                        moreButtonsId: 'th_more_buttons',
+                      }}
                     />
                   )
               : null}
