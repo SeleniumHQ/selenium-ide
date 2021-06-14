@@ -2,12 +2,6 @@ import { BrowserView, BrowserWindow } from 'electron'
 import curryN from 'lodash/fp/curryN'
 import { ApiHandler, Session } from '../../../types'
 
-/**
- * This code isn't used, but I kept it around
- * because this represents the right way that the client
- * requests elevated permission actions from Electron
- */
-
 const setActiveControllerView = (
   window: BrowserWindow,
   controllerView: BrowserView
@@ -49,6 +43,8 @@ export default curryN(
   async ({ api, tabManager, window }: Session, selectedTabID: number) => {
     const { getActive, get, select } = tabManager
     const activeTabID = getActive()
+    const selectedTab = select(selectedTabID)
+    setActiveControllerView(window, selectedTab)
     /**
      * Reasons not to inactivate the prior window:
      * 1. It never existed (first window is selected)
@@ -60,8 +56,6 @@ export default curryN(
         setInactiveControllerView(activeTab)
       }
     }
-    const selectedTab = select(selectedTabID)
-    setActiveControllerView(window, selectedTab)
     await api.client.tabs.select(selectedTabID)
   }
 ) as ApiHandler

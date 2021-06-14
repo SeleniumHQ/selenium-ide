@@ -18,7 +18,7 @@ export default processAPI('server', ({ path }) => (...args: any[]) =>
   new Promise(resolve => {
     console.debug(`Received command ${path} with args`, ...args)
     ipcRenderer.once(`${path}.complete`, (_event, ...args2) => {
-      console.debug(`Replying to ${path} with results ${args2}`)
+      console.debug('Replying to', path, 'with results', args2)
       resolve(args2)
     })
     ipcRenderer.send(path, ...args)

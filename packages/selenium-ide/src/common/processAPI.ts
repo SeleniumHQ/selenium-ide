@@ -3,6 +3,7 @@ import { ApiShape } from '../types'
 
 const resolvers = {
   client: require.context('../../src/api/client', true, /.ts$/),
+  events: require.context('../../src/api/events', true, /.ts$/),
   server: require.context('../../src/api/server', true, /.ts$/),
 }
 const prefix = './'
@@ -13,19 +14,20 @@ const suffixLength = suffix.length
 type LoadArg = () => any
 type HandlerArgs = { load: LoadArg; path: string }
 type HandlerFunc = (args: HandlerArgs) => any
-export default (apiGroup: string, handler: HandlerFunc): ApiShape => {
+
+export default (
+  apiGroup: 'client' | 'events' | 'server',
+  handler: HandlerFunc
+): ApiShape => {
   const api: ApiShape = {}
-  if (apiGroup !== 'client' && apiGroup !== 'server') {
-    throw new Error(`Invalid api group supplied ${apiGroup}!`)
-  }
   const resolver = resolvers[apiGroup]
-  resolver.keys().forEach((loadPath: string) => {
-    const apiPath = loadPath
+  resolver.keys().forEach((path: string) => {
+    const apiPath = path
       .slice(prefixLength, -suffixLength)
       .split('/')
       .join('.')
     const handlerArgs = {
-      load: () => resolver(loadPath).default,
+      load: () => resolver(path).default,
       path: apiPath,
     }
     set(api, apiPath, handler(handlerArgs))

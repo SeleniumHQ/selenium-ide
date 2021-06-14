@@ -1,16 +1,16 @@
 import { BrowserWindow } from 'electron'
 import preloadScriptPath from '../constants/preloadScriptPath'
 import rendererPath from '../constants/rendererPath'
+import { Session } from '../types'
 
-export default async function buildWindow(): Promise<BrowserWindow> {
+export default buildWindow
+async function buildWindow(_session: Session): Promise<BrowserWindow> {
   // Make the main window
   const window = new BrowserWindow({
     width: 1460,
     height: 840,
-    tabbingIdentifier: 'myTabs',
     webPreferences: {
       contextIsolation: true,
-      nativeWindowOpen: true,
       nodeIntegration: false,
       preload: preloadScriptPath,
     },

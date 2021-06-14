@@ -12,7 +12,12 @@ export interface ApiShape {
 
 export interface Api {
   client: ApiShape
+  events: ApiShape
   server: ApiShape
+}
+
+export interface Config {
+  activateDebuggerInBrowserview: boolean
 }
 
 export interface PersistedCore {
@@ -22,10 +27,29 @@ export interface PersistedCore {
 export interface Session extends PersistedCore {
   api: Api
   app: Electron.App
+  config: Config
   driver: Driver
   extension: Electron.Extension
+  extensionView: Electron.BrowserView
   tabManager: TabManager
   window: Electron.BrowserWindow
 }
 
 export type LoadedWindow = Window & typeof globalThis & { seleniumIDE: Api }
+
+export interface TabDelta {
+  active?: boolean
+  status?: string
+  title?: string
+  url?: string
+  windowId?: number
+}
+export interface TabShim {
+  active: boolean
+  id: number
+  status: string
+  title: string
+  url: string
+  windowId: number
+}
+

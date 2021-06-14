@@ -1,5 +1,8 @@
-import { ApiHandler, LoadedWindow } from '../../../types'
+import { ApiHandler, LoadedWindow, TabShim } from '../../../types'
 
+/**
+ * Just very minimally adding buttons
+ */
 const CloseButtonHTMLTemplate = `
   <span class="etabs-tab-buttons">
     <button class="etabs-tab-button-close">×</button>
@@ -11,13 +14,16 @@ const HTMLTemplate = (title: string, allowClose: boolean): string => `
     <span class="etabs-tab-title" title="${title}">
       ${title}
     </span>
+    <span class="etabs-tab-buttons">
+    </span>
     ${allowClose ? CloseButtonHTMLTemplate : ''}
   </div>
 `
 
-const addTab: ApiHandler = (id, title, options = {}) => {
+const addTab: ApiHandler = (tab: TabShim, options = {}) => {
+  const { id, title } = tab
   const { seleniumIDE } = window as LoadedWindow
-  const allowClose = !options.locked
+  const allowClose = !options.isSelenium
   const tabsContainer = document.querySelector('.etabs-tabs') as Element
   const div = document.createElement('div')
   div.id = `tab-${id}`
@@ -33,5 +39,6 @@ const addTab: ApiHandler = (id, title, options = {}) => {
       tabsContainer.removeChild(div)
     })
   }
+  return tab
 }
 export default addTab

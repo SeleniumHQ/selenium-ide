@@ -8,9 +8,9 @@ export default (session: Session) =>
     const handler = load()(session)
     const { window } = session
     ipcMain.on(path, async (_event, ...args) => {
-      console.debug(`Received command ${path} with args`, ...args)
+      console.debug('Received command', path, 'with args', ...args)
       let results = await handler(...args)
-      console.debug(`Replying to ${path} with results ${results}`)
+      console.debug('Replying to', path, 'with results', results)
       window.webContents.send(`${path}.complete`, results)
     })
     return handler
