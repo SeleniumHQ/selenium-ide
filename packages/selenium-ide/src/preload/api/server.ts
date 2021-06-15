@@ -1,5 +1,7 @@
 import { ipcRenderer } from 'electron'
+import serverAPI from '../../api/server'
 import processAPI from '../../common/processAPI'
+import { PromiseApiMapper } from '../../types'
 
 /**
  * This module uses the preload step to establish secured IPC channels
@@ -14,13 +16,15 @@ import processAPI from '../../common/processAPI'
 
  * The reason for this is to get 
  */
-export default processAPI('server', ({ path }) => (...args: any[]) =>
-  new Promise(resolve => {
-    console.debug(`Received command ${path} with args`, ...args)
-    ipcRenderer.once(`${path}.complete`, (_event, ...args2) => {
-      console.debug('Replying to', path, 'with results', args2)
-      resolve(args2)
+export default processAPI<typeof serverAPI, PromiseApiMapper<typeof serverAPI>>(
+  serverAPI,
+  path => (...args: any[]) =>
+    new Promise(resolve => {
+      console.debug(`Received command ${path} with args`, ...args)
+      ipcRenderer.once(`${path}.complete`, (_event, ...args2) => {
+        console.debug('Replying to', path, 'with results', args2)
+        resolve(args2)
+      })
+      ipcRenderer.send(path, ...args)
     })
-    ipcRenderer.send(path, ...args)
-  })
 )

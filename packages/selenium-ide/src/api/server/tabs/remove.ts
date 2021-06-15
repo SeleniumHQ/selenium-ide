@@ -1,19 +1,16 @@
-import curryN from 'lodash/fp/curryN'
-import { ApiHandler, Session } from '../../../types'
+import { TabData } from '../../../types'
+import { Session } from '../../../types/server'
 
-export default curryN(
-  2,
-  async (
-    { api, tabManager, window }: Session,
-    tabID: number
-  ): Promise<void> => {
+export default ({ api, tabs, window }: Session) => async (tabID: number): Promise<TabData> => {
     // Add our Selenium IDE v3 page as a tab
-    const { getActive, getIDFromIndex, remove } = tabManager
-    const view = remove(tabID)
+    const { getActive, readIndex } = tabs
+    const { data, view } = tabs.remove(tabID)
     window.removeBrowserView(view)
     if (getActive() === tabID) {
-      const firstTabID = getIDFromIndex(0)
+      const firstTabID = readIndex(0)
       await api.server.tabs.select(firstTabID)
+      await api.server
     }
+    return data
   }
-) as ApiHandler
+)

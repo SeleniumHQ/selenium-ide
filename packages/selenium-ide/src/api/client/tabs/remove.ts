@@ -1,6 +1,4 @@
-import { ApiHandler } from '../../../types'
-
-const removeTab: ApiHandler = id => {
+const removeTab = (id: number): void => {
   const tabsContainer = document.querySelector('.etabs-tabs') as Element
   const div = document.querySelector(`#tab-${id}`) as Element
   tabsContainer.removeChild(div)

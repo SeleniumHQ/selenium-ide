@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron'
 import preloadScriptPath from '../constants/preloadScriptPath'
 import rendererPath from '../constants/rendererPath'
-import { Session } from '../types'
+import { Session } from '../types/server'
 
 export default buildWindow
 

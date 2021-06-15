@@ -33,9 +33,14 @@ const preloadConfig = {
   filename: 'preload',
   target: 'electron-preload',
 }
+const rendererConfig = {
+  entry: path.join(__dirname, 'src', 'renderer', 'index.ts'),
+  filename: 'renderer',
+  target: 'electron-renderer',
+}
 const mainConfig = {
   entry: path.join(__dirname, 'src', 'index.ts'),
   filename: 'main',
   target: 'electron-main',
 }
-module.exports = [preloadConfig, mainConfig].map(base)
+module.exports = [preloadConfig, rendererConfig, mainConfig].map(base)

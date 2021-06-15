@@ -3,7 +3,7 @@ import Driver from './driver'
 import Extension from './extension'
 import Tabs from './tabs'
 import Window from './window'
-import { Config, Session } from '../types'
+import { Config, Session } from '../types/server'
 
 export default createSession
 
@@ -11,25 +11,19 @@ async function createSession(
   app: Electron.App,
   config: Config
 ): Promise<Session> {
-  const session: Session = {
-    api: (null as unknown) as Session['api'],
+  const session: Partial<Session> = {
     app,
     config,
-    driver: (null as unknown) as Session['driver'],
-    extension: (null as unknown) as Session['extension'],
-    extensionView: (null as unknown) as Session['extensionView'],
-    tabManager: await Tabs(),
-    window: (null as unknown) as Session['window'],
   }
-  session.window = await Window(session)
+  session.window = await Window(session as Session)
   session.driver = await Driver()
-  session.api = await Api(session)
+  session.api = await Api(session as Session)
+  session.tabs = await Tabs(session as Session)
   session.extension = await Extension(session.api)
-  console.log('Running tab shim')
-  const extensionTabShim = await session.api.server.tabs.add(
+  const extensionTabData = await session.api.server.tabs.create(
     `${session.extension.url}index.html`,
     'Selenium IDE Controller'
   )
-  session.extensionView = session.tabManager.get(extensionTabShim.id)
-  return session
+  session.extensionView = session.tabs.read(extensionTabData.id).view
+  return session as Session
 }

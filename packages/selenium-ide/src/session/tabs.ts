@@ -1,67 +1,67 @@
-import { TabShim } from '../types'
+import { TabData } from '../types'
+import { Session } from '../types/server'
 
-interface ShimOverrides {
-  title: string
-  url: string
+interface TabsEntry {
+  view: Electron.BrowserView
+  data: TabData
 }
 
-const getTabManager = () => {
+const buildTabManager = (session: Session) => {
   let activeTabID: number = 0
-  const tabs: Electron.BrowserView[] = []
   const tabIDs: number[] = []
+  const tabs: TabsEntry[] = []
 
-  const add = (view: Electron.BrowserView): number => {
+  const makeData = (view: Electron.BrowserView, url: string): TabData => {
     const tabID = view.webContents.id
-    tabs.push(view)
-    tabIDs.push(tabID)
-    return tabID
-  }
-
-  const get = (tabID: number): Electron.BrowserView => {
-    const index = tabIDs.indexOf(tabID)
-    return tabs[index]
-  }
-
-  const getShim = (tabID: number, { title, url }: ShimOverrides): TabShim => {
-    const view = tabs[tabIDs.indexOf(tabID)]
     return {
       active: tabID === activeTabID,
       id: tabID,
-      status: view.webContents.isLoading() ? 'loading' : 'complete',
-      title: title || view.webContents.getTitle(),
-      url: url || view.webContents.getURL(),
+      status: 'loading',
+      title: 'Loading...',
+      url,
       windowId: tabID,
     }
   }
 
-  const getIDFromIndex = (index: number): number => {
-    return tabIDs[index]
-  }
-
-  const getActive = (): number => activeTabID
-
-  const select = (tabID: number): Electron.BrowserView => {
-    activeTabID = tabID
-    return get(tabID)
-  }
-
-  const remove = (tabID: number): Electron.BrowserView => {
+  const read = (tabID: number): TabsEntry => {
     const index = tabIDs.indexOf(tabID)
-    const [tab] = tabs.splice(index, 1)
-    tabIDs.splice(index, 1)
-    return tab
+    return tabs[index]
   }
 
   return {
-    add,
-    get,
-    getActive,
-    getIDFromIndex,
-    getShim,
-    remove,
-    select,
+    create: (view: Electron.BrowserView, url: string): TabsEntry => {
+      const tabID = view.webContents.id
+      const tab = { data: makeData(view, url), view }
+      tabs.push(tab)
+      tabIDs.push(tabID)
+      session.api.events.tabs.onUpdated(tab.data)
+      return tab
+    },
+    remove: (tabID: number): TabsEntry => {
+      const index = tabIDs.indexOf(tabID)
+      const [tab] = tabs.splice(index, 1)
+      tabIDs.splice(index, 1)
+      session.api.events.tabs.onUpdated(tab.data)
+      return tab
+    },
+    getActive: (): number => activeTabID,
+    read,
+    readIndex: (index: number): TabsEntry => tabs[index],
+    select: (tabID: number): TabsEntry => {
+      activeTabID = tabID
+      const tab = read(tabID)
+      session.api.events.tabs.onActivated(tab.data)
+      return tab
+    },
+    update: (tabID: number, data: Partial<TabData>): TabsEntry => {
+      const tab = read(tabID)
+      const tabData = Object.assign(tab.data, data)
+      session.api.events.tabs.onUpdated(tabData)
+      tab.data = tabData
+      return tab
+    },
   }
 }
 
-export type TabManager = ReturnType<typeof getTabManager>
-export default getTabManager
+export type TabManager = ReturnType<typeof buildTabManager>
+export default buildTabManager

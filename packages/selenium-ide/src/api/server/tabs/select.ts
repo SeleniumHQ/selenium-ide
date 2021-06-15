@@ -1,6 +1,5 @@
 import { BrowserView, BrowserWindow } from 'electron'
-import curryN from 'lodash/fp/curryN'
-import { ApiHandler, Session } from '../../../types'
+import { Session } from '../../../types/server'
 
 const setActiveControllerView = (
   window: BrowserWindow,
@@ -10,7 +9,7 @@ const setActiveControllerView = (
   controllerView.setBounds({
     x: 0,
     y: 33,
-    width: bounds.width,
+    width: bounds.width / 2,
     // We leave a bit of extra margin here to deal with this:
     // https://github.com/electron/electron/issues/13468#issuecomment-445441789
     height: bounds.height - 50,
@@ -38,24 +37,25 @@ const setInactiveControllerView = (controllerView: BrowserView) => {
   })
 }
 
-export default curryN(
-  2,
-  async ({ api, tabManager, window }: Session, selectedTabID: number) => {
-    const { getActive, get, select } = tabManager
-    const activeTabID = getActive()
-    const selectedTab = select(selectedTabID)
-    setActiveControllerView(window, selectedTab)
-    /**
-     * Reasons not to inactivate the prior window:
-     * 1. It never existed (first window is selected)
-     * 2. Its just been deleted
-     */
-    const activeTab = get(activeTabID)
-    if (activeTabID !== null) {
-      if (activeTab) {
-        setInactiveControllerView(activeTab)
-      }
+export default ({ api, tabs, window }: Session) => async (
+  selectedTabID: number
+) => {
+  const { getActive, read, select } = tabs
+  const activeTabID = getActive()
+  const selectedTab = select(selectedTabID).view
+  setActiveControllerView(window, selectedTab)
+  api.events.tabs.onUpdated({ id: selectedTabID, active: true })
+  /**
+   * Reasons not to inactivate the prior window:
+   * 1. It never existed (first window is selected)
+   * 2. Its just been removed
+   */
+  if (activeTabID !== null) {
+    const activeTab = read(activeTabID)
+    if (activeTab) {
+      setInactiveControllerView(activeTab.view)
+      api.events.tabs.onUpdated({ id: activeTabID, active: false })
     }
-    await api.client.tabs.select(selectedTabID)
   }
-) as ApiHandler
+  await api.client.tabs.select(selectedTabID)
+}

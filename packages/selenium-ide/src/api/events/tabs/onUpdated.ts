@@ -1,10 +1,13 @@
-import { Session, TabDelta, TabShim } from '../../../types'
+import { TabDelta, TabData } from '../../../types'
+import { Session } from '../../../types/server'
 
 /**
  * Shim from our shape to this event:
  * https://developer.chrome.com/docs/extensions/reference/tabs/#event-onUpdated
  */
-type BrowserTabsOnUpdatedShape = [number, TabDelta, TabShim]
-export default (_session: Session) => (
-  tab: TabShim
-): BrowserTabsOnUpdatedShape => [tab.id, tab, tab]
+export type BrowserTabsUpdateArgs = [number, TabDelta, TabData]
+export default (_session: Session) => (tab: TabData): BrowserTabsUpdateArgs => [
+  tab.id,
+  tab,
+  tab,
+]

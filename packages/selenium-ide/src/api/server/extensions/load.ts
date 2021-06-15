@@ -1,8 +1,4 @@
-import curryN from 'lodash/fp/curryN'
-import { ApiHandler, Session } from '../../../types'
+import { Session } from '../../../types/server'
 
-export default curryN(
-  2,
-  async ({ window }: Session, path: string) =>
-    await window.webContents.session.loadExtension(path)
-) as ApiHandler
+export default ({ window }: Session) => async (path: string) =>
+  await window.webContents.session.loadExtension(path)

@@ -1,6 +1,6 @@
 import { contextBridge } from 'electron'
 import api from './api'
-import { LoadedWindow } from '../types'
+import { LoadedWindow } from '../types/client'
 
 /**
  * Binds our API on initialization

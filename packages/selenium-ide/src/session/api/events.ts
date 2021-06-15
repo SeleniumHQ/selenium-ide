@@ -1,17 +1,27 @@
 import { ipcMain } from 'electron'
-import { ApiShape, Session } from '../../types'
+import { DirectApiMapper } from '../../types'
+import { Session } from '../../types/server'
+import eventsAPI from '../../api/events'
 import processAPI from '../../common/processAPI'
 
-export default (session: Session): ApiShape =>
-  processAPI('events', ({ load, path }) => {
-    const formatter = load()(session)
-    return (...args: any[]) =>
-      new Promise(resolve => {
-        ipcMain.once(`${path}.received`, (_event, ...args2) => {
-          resolve(args2)
-        })
-        const formattedArgs = formatter(...args)
-        console.debug('Broadcasting', path, 'with', ...formattedArgs)
-        session.extensionView.webContents.send(path, ...formattedArgs)
-      })
+export default (session: Session): DirectApiMapper<typeof eventsAPI> =>
+  processAPI(eventsAPI, (path, handler) => {
+    const formatter = handler(session)
+    const listeners: Electron.WebContents[] = []
+    ipcMain.on(`${path}.addListener`, event => {
+      if (!listeners.includes(event.sender)) {
+        listeners.push(event.sender)
+      }
+    })
+    ipcMain.on(`${path}.removeListener`, event => {
+      const index = listeners.indexOf(event.sender)
+      if (index !== -1) {
+        listeners.splice(index, 1)
+      }
+    })
+    return (...args: any[]) => {
+      const formattedArgs = formatter(...args)
+      console.debug('Broadcasting', path, 'with', ...formattedArgs)
+      listeners.forEach(webContents => webContents.send(path, ...formattedArgs))
+    }
   })

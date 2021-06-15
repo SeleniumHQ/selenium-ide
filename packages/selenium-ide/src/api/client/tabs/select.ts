@@ -1,7 +1,5 @@
-import { ApiHandler } from '../../../types'
-
 const activeTabClass = 'etabs-tab.active'
-const selectTab: ApiHandler = id => {
+const selectTab = (id: number): void => {
   const tabsContainer = document.querySelector('.etabs-tabs') as Element
   tabsContainer.childNodes.forEach((node: ChildNode): void => {
     const el = node as HTMLElement
