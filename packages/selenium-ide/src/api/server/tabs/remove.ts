@@ -8,7 +8,7 @@ export default ({ api, tabs, window }: Session) => async (tabID: number): Promis
     window.removeBrowserView(view)
     if (getActive() === tabID) {
       const firstTabID = readIndex(0)
-      await api.server.tabs.select(firstTabID)
+      await api.server.tabs.select(firstTabID.view.webContents.id)
       await api.server
     }
     return data
