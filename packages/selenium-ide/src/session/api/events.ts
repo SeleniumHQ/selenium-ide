@@ -1,11 +1,11 @@
 import { ipcMain } from 'electron'
-import { DirectApiMapper } from '../../types'
+import { ReturnApiMapper } from '../../types'
 import { Session } from '../../types/server'
 import eventsAPI from '../../api/events'
 import processAPI from '../../common/processAPI'
 
 export default (session: Session) =>
-  processAPI<typeof eventsAPI, DirectApiMapper<typeof eventsAPI>>(
+  processAPI<typeof eventsAPI, ReturnApiMapper<typeof eventsAPI>>(
     eventsAPI,
     (path, handler) => {
       const formatter = handler(session)

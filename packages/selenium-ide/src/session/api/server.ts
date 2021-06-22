@@ -9,13 +9,12 @@ export default (session: Session) =>
   processAPI<typeof serverAPI, ReturnApiMapper<typeof serverAPI>>(
     serverAPI,
     (path, handler) => {
-      const { window } = session
       const handlerWithSession = handler(session)
-      ipcMain.on(path, async (_event, ...args) => {
+      ipcMain.on(path, async (event, ...args) => {
         console.debug('Received command', path, 'with args', ...args)
         let results = await handlerWithSession(...args)
         console.debug('Replying to', path, 'with results', results)
-        window.webContents.send(`${path}.complete`, results)
+        event.sender.send(`${path}.complete`, results)
       })
       return handlerWithSession
     }

@@ -1,4 +1,4 @@
 import { Session } from '../../../types/server'
 
-export default ({ window }: Session) => async (path: string) =>
-  await window.webContents.session.loadExtension(path)
+export default (session: Session) => async (path: string) =>
+  await session.window.webContents.session.loadExtension(path)

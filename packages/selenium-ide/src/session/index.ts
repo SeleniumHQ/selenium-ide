@@ -1,7 +1,7 @@
 import Api from './api'
 import Driver from './driver'
 import Extension from './extension'
-import Tabs from './tabs'
+import Tabs from './recorder'
 import Window from './window'
 import { Config, Session } from '../types/server'
 
@@ -16,13 +16,12 @@ async function createSession(
     config,
   }
   session.window = await Window(session as Session)
-  session.driver = await Driver()
+  session.driver = Driver(session as Session)
   session.api = await Api(session as Session)
   session.tabs = await Tabs(session as Session)
   session.extension = await Extension(session.api)
   const extensionTabData = await session.api.server.tabs.create(
-    `${session.extension.url}index.html`,
-    'Selenium IDE Controller'
+    `${session.extension.url}index.html`
   )
   session.extensionView = session.tabs.read(extensionTabData.id).view
   return session as Session

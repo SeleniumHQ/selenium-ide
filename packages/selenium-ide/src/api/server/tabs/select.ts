@@ -9,7 +9,7 @@ const setActiveControllerView = (
   controllerView.setBounds({
     x: 0,
     y: 33,
-    width: bounds.width / 2,
+    width: bounds.width,
     // We leave a bit of extra margin here to deal with this:
     // https://github.com/electron/electron/issues/13468#issuecomment-445441789
     height: bounds.height - 50,
@@ -37,25 +37,26 @@ const setInactiveControllerView = (controllerView: BrowserView) => {
   })
 }
 
-export default ({ api, tabs, window }: Session) => async (
-  selectedTabID: number
-) => {
+export default (session: Session) => async (selectedTabID: number) => {
+  const { api, tabs, window } = session
   const { getActive, read, select } = tabs
   const activeTabID = getActive()
-  const selectedTab = select(selectedTabID).view
-  setActiveControllerView(window, selectedTab)
-  api.events.tabs.onUpdated({ id: selectedTabID, active: true })
-  /**
-   * Reasons not to inactivate the prior window:
-   * 1. It never existed (first window is selected)
-   * 2. Its just been removed
-   */
-  if (activeTabID !== null) {
-    const activeTab = read(activeTabID)
-    if (activeTab) {
-      setInactiveControllerView(activeTab.view)
-      api.events.tabs.onUpdated({ id: activeTabID, active: false })
+  if (selectedTabID !== activeTabID) {
+    const selectedTab = select(selectedTabID)
+    setActiveControllerView(window, selectedTab.view)
+    tabs.update(selectedTabID, { active: true })
+    /**
+     * Reasons not to inactivate the prior window:
+     * 1. It never existed (first window is selected)
+     * 2. Its just been removed
+     */
+    if (activeTabID !== null) {
+      const activeTab = read(activeTabID)
+      if (activeTab) {
+        setInactiveControllerView(activeTab.view)
+        tabs.update(activeTabID, { active: false })
+      }
     }
+    await api.client.tabs.select(selectedTabID)
   }
-  await api.client.tabs.select(selectedTabID)
 }

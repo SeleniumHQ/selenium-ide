@@ -5,13 +5,12 @@ import { Session } from '../types/server'
 
 export default buildWindow
 
-async function buildWindow(_session: Session): Promise<BrowserWindow> {
+async function buildWindow(_session: Session): BrowserWindow {
   // Make the main window
   const window = new BrowserWindow({
     width: 1460,
     height: 840,
     webPreferences: {
-      contextIsolation: true,
       nodeIntegration: false,
       preload: preloadScriptPath,
     },

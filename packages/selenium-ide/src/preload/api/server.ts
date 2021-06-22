@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron'
 import serverAPI from '../../api/server'
 import processAPI from '../../common/processAPI'
-import { PromiseApiMapper } from '../../types'
+import { ReturnApiMapper } from '../../types'
 
 /**
  * This module uses the preload step to establish secured IPC channels
@@ -16,7 +16,7 @@ import { PromiseApiMapper } from '../../types'
 
  * The reason for this is to get 
  */
-export default processAPI<typeof serverAPI, PromiseApiMapper<typeof serverAPI>>(
+export default processAPI<typeof serverAPI, ReturnApiMapper<typeof serverAPI>>(
   serverAPI,
   path => (...args: any[]) =>
     new Promise(resolve => {

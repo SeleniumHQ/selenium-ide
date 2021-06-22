@@ -1,5 +1,5 @@
-import { Driver } from 'selenium-webdriver/chrome'
 import { TabManager } from '../session/tabs'
+import { Driver } from '../session/driver'
 import { ServerApi } from '../session/api'
 
 export interface Config {

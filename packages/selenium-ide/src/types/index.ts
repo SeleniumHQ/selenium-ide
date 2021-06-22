@@ -4,14 +4,6 @@ export interface Config {
   activateDebuggerInBrowserview: boolean
 }
 
-export interface TabDelta {
-  active?: boolean
-  status?: string
-  title?: string
-  url?: string
-  windowId?: number
-}
-
 export interface TabData {
   active: boolean
   id: number
@@ -49,8 +41,12 @@ export interface EventApiHandler<Handler extends ApiHandler> {
   removeListener: (listener: Handler) => void
 }
 
-export type EventApiMapper<API> = {
+export type HandlerFromReturnType<Type extends (...args: any) => any[]> = (
+  ...args: ReturnType<Type>
+) => void
+
+export type EventReturnApiMapper<API> = {
   [P in keyof API]: API[P] extends ApiHandler
-    ? EventApiHandler<API[P]>
-    : EventApiMapper<API[P]>
+    ? EventApiHandler<HandlerFromReturnType<ReturnType<API[P]>>>
+    : EventReturnApiMapper<API[P]>
 }

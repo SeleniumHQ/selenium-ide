@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "3.5.10",
+  "version": "0.0.1",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Tomer <tomer@corevo.io>",

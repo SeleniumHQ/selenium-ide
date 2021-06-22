@@ -3,13 +3,17 @@ import { TabData } from '../../../types'
 import { Session } from '../../../types/server'
 import preloadScriptPath from '../../../constants/preloadScriptPath'
 
-export default ({ api, config, extension, tabs, window }: Session) => async (
-  url: string
-): Promise<TabData> => {
-  // Only our approved extension gets bootstrapped, for now
+export default (session: Session) => async (url: string): Promise<TabData> => {
+  const { api, config, extension, tabs, window } = session
+  // Only our approved extension has access to preload scripts, for now
+  // This might change for playback scripts and stuff
   const isExtension = url.startsWith(extension.url)
   const browserViewOptions = isExtension
-    ? { webPreferences: { preload: preloadScriptPath } }
+    ? {
+        webPreferences: {
+          preload: preloadScriptPath,
+        },
+      }
     : {}
   // Constructing and registering the page
   const browserView = new BrowserView(browserViewOptions)
