@@ -5,7 +5,7 @@ import { Session } from '../types/server'
 
 export default buildWindow
 
-async function buildWindow(_session: Session): BrowserWindow {
+async function buildWindow(_session: Session): Promise<BrowserWindow> {
   // Make the main window
   const window = new BrowserWindow({
     width: 1460,

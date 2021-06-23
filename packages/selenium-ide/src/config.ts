@@ -1,7 +1,6 @@
-import { Config } from './types'
-
-const config: Config = {
+const config = {
   activateDebuggerInBrowserview: true,
+  logChromedriver: true,
 }
 
 export default config

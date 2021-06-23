@@ -2,9 +2,9 @@ import webdriver, { Capabilities, WebDriver } from 'selenium-webdriver'
 import { Session } from '../types/server'
 
 interface DriverOptions<Cap extends Capabilities> {
-  browser: 'chrome'
-  capabilities: Cap
-  server: string
+  browser?: 'chrome'
+  capabilities?: Cap
+  server?: string
 }
 
 interface DriverShape {

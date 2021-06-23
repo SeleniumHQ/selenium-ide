@@ -1,3 +1,4 @@
+import { contextBridge } from 'electron'
 import api from './api'
 import { LoadedWindow } from '../types/client'
 
@@ -7,8 +8,8 @@ import { LoadedWindow } from '../types/client'
 process.once('loaded', async () => {
   /**
    * Expose it in the main context
-   * contextBridge.exposeInMainWorld('seleniumIDE', api)
    */
+  contextBridge.exposeInMainWorld('seleniumIDE', api)
   /**
    * Expose it in the preload context as well
    */

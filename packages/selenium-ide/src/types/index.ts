@@ -1,8 +1,8 @@
+import config from '../config'
+
 export type ApiHandler = (...args: any[]) => any
 
-export interface Config {
-  activateDebuggerInBrowserview: boolean
-}
+export type Config = typeof config
 
 export interface TabData {
   active: boolean

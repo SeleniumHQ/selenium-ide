@@ -1,5 +1,5 @@
 import extensions from './extensions'
-import tabs from './recorder'
+import tabs from './tabs'
 import window from './window'
 
 export default {

@@ -1,7 +1,7 @@
 import Api from './api'
 import Driver from './driver'
 import Extension from './extension'
-import Tabs from './recorder'
+import Tabs from './tabs'
 import Window from './window'
 import { Config, Session } from '../types/server'
 

@@ -1,4 +1,4 @@
-import tabs from './recorder'
+import tabs from './tabs'
 
 export default {
   tabs,

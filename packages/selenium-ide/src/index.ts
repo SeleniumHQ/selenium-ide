@@ -4,12 +4,9 @@ import chromedriver from './chromedriver'
 import createSession from './session'
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
-console.log('Hello?!?')
 app.on('ready', async () => {
-  console.log('Starting chromedriver')
   // Let chromedriver fully start up
-  await chromedriver(app)
-  console.log('Creating session')
+  await chromedriver(app, config)
   // Create a window level data object containing everything we need
   await createSession(app, config)
 })
