@@ -19,6 +19,11 @@ const base = ({ entry, filename, target }) => ({
     ],
   },
   resolve: {
+    alias: {
+      browser: path.resolve(__dirname, 'src/browser'),
+      main: path.resolve(__dirname, 'src/main'),
+      polyfill: path.resolve(__dirname, 'src/polyfill'),
+    },
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
@@ -29,17 +34,17 @@ const base = ({ entry, filename, target }) => ({
 })
 
 const preloadConfig = {
-  entry: path.join(__dirname, 'src', 'preload', 'index.ts'),
+  entry: path.join(__dirname, 'src', 'browser', 'preload', 'index.ts'),
   filename: 'preload',
   target: 'electron-preload',
 }
 const rendererConfig = {
-  entry: path.join(__dirname, 'src', 'renderer', 'index.ts'),
+  entry: path.join(__dirname, 'src', 'browser', 'renderer', 'index.ts'),
   filename: 'renderer',
   target: 'electron-renderer',
 }
 const mainConfig = {
-  entry: path.join(__dirname, 'src', 'index.ts'),
+  entry: path.join(__dirname, 'src', 'main', 'index.ts'),
   filename: 'main',
   target: 'electron-main',
 }

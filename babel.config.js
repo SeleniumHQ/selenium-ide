@@ -4,8 +4,8 @@ const path = require('path')
 module.exports = {
   babelrcRoots: fs
     .readdirSync(path.join(__dirname, 'packages'))
-    .map(dirname => path.join(__dirname, 'packages', dirname))
-    .filter(dirpath => {
+    .map((dirname) => path.join(__dirname, 'packages', dirname))
+    .filter((dirpath) => {
       const stats = fs.statSync(dirpath)
 
       return stats.isDirectory()
@@ -21,7 +21,7 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: {
-          node: '8',
+          node: '14',
         },
       },
     ],

@@ -26,20 +26,27 @@ module.exports = {
       files: ['**/*.ts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',
       rules: {
+        'import/no-unresolved': 'error',
         '@typescript-eslint/array-type': ['error', { default: 'array' }],
         '@typescript-eslint/ban-types': 'error',
         '@typescript-eslint/no-unused-vars': [
           'error',
           { argsIgnorePattern: '^_' },
         ],
-        '@typescript-eslint/interface-name-prefix': ['error', 'never'],
         'no-dupe-class-members': 'off',
         'no-unused-vars': 'off',
         'no-inner-declarations': 0, // for typescript namespace
       },
     },
   ],
-  plugins: ['@typescript-eslint', 'jest', 'react', 'prettier', 'no-only-tests'],
+  plugins: [
+    '@typescript-eslint',
+    'import',
+    'jest',
+    'react',
+    'prettier',
+    'no-only-tests',
+  ],
   rules: {
     'prettier/prettier': 'error',
     'react/prop-types': [0],
@@ -87,8 +94,18 @@ module.exports = {
     ],
   },
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        package: ['./tsconfig.json', './packages/*/tsconfig.json'],
+      },
+    },
     react: {
       version: 'detect',
     },
   },
+  root: true,
 }

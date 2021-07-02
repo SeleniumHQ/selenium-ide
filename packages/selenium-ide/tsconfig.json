@@ -2,11 +2,13 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*"],
   "compilerOptions": {
+    "paths": {
+      "browser/*": ["./src/browser/*"],
+      "polyfill/*": ["./src/polyfill/*"],
+      "main/*": ["./src/main/*"],
+    },
     "outDir": "dist",
     "rootDir": "src",
-    "types": [
-      "electron",
-      "webpack-env"
-    ]
+    "types": ["electron", "webpack-env"]
   }
 }
