@@ -6,14 +6,8 @@ export type VariadicArgs = any[]
 export type ApiHandler = (...args: any) => any
 
 export interface PolyfillEntry {
-  browser: (name: string, context: LoadedWindow) => any
-  main?: (name: string, context: Session) => any
-}
-
-export interface PolyfillResult {
-  [key: string]: {
-    [key: string]: any
-  }
+  browser: (path: string, context: LoadedWindow) => any
+  main: (path: string, context: Session) => any
 }
 
 export interface PolyfillNamespace {
@@ -24,7 +18,15 @@ export interface BasePolyfill {
   [key: string]: PolyfillNamespace
 }
 
-export type PolyfillHandler = (name: string, entry: PolyfillEntry) => any
+export type PolyfillHandler = (path: string, handler: PolyfillEntry) => any
+
+export type SimplePolyfillNamespace = {
+  [key: string]: any
+}
+
+export type SimplePolyfill = {
+  [key: string]: SimplePolyfillNamespace
+}
 
 export interface TabData {
   active: boolean

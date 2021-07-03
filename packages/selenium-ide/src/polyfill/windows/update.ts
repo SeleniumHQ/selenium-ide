@@ -1,18 +1,23 @@
-import Handler from 'browser/helpers/Handler'
-import { Session } from 'main/types'
-
-export const browser = Handler()
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
 
 export interface UpdateWindowOptions {
   focused?: boolean
 }
 
-export const main =
-  (_path: string, session: Session) =>
-  async (windowId: number, options: UpdateWindowOptions): Promise<void> => {
+export type Shape = (
+  windowID: number,
+  options: UpdateWindowOptions
+) => Promise<void>
+
+export const browser = browserHandler<Shape>()
+
+export const main = mainHandler<Shape>(
+  (_path, session) => async (windowID, options) => {
     const { windows } = session
     // Only our approved extension gets bootstrapped, for now
     if (options.focused) {
-      windows.select(windowId)
+      windows.select(windowID)
     }
   }
+)

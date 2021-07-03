@@ -1,18 +1,22 @@
 import { BrowserWindow } from 'electron'
-import Handler from 'browser/helpers/Handler'
+import browserHandler from 'browser/helpers/Handler'
 import rendererPath from 'main/constants/rendererPath'
 import preloadPath from 'main/constants/preloadScriptPath'
-import { Session } from 'main/types'
+import mainHandler from 'main/helpers/Handler'
 import { WindowData } from '../types'
 
 export interface CreateWindowOpts {
   url?: string
 }
 
-export const browser = Handler<[CreateWindowOpts], [WindowData]>()
+export type Shape = (opts?: CreateWindowOpts) => Promise<WindowData>
 
-export const main =
-  (_path: string, session: Session) => (opts?: CreateWindowOpts) =>
+export const browser = browserHandler<Shape>()
+
+export const main = mainHandler<Shape>(
+  (_path, session) => (opts) =>
+    // We need this fn to be async as well as inside a promise
+    // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       const { api, extensions, windows } = session
       // Make the main window
@@ -20,7 +24,6 @@ export const main =
         width: 1460,
         height: 840,
         webPreferences: {
-          contextIsolation: true,
           nodeIntegration: false,
           preload: preloadPath,
         },
@@ -41,12 +44,15 @@ export const main =
 
       // Wire up events
       const entry = windows.create(window)
-      window.on('closed', () => api.windows.onRemoved(windows.getData(entry)))
+      const windowData = windows.getData(entry)
+      window.on('closed', () =>
+        api.windows.onRemoved.dispatchEvent(windowData.id)
+      )
       window.on('focus', () =>
-        api.windows.onFocusChanged(windows.getData(entry))
+        api.windows.onFocusChanged.dispatchEvent(windowData.id)
       )
       window.webContents.once('dom-ready', async () => {
-        api.windows.onCreated(windows.getData(entry))
+        api.windows.onCreated.dispatchEvent(windowData)
 
         // Handle url param
         if (opts?.url) {
@@ -56,6 +62,7 @@ export const main =
             windowId: entry.window.id,
           })
         }
-        resolve(session.windows.getData(entry))
+        resolve(windowData)
       })
     })
+)

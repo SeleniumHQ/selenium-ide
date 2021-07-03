@@ -1,16 +1,19 @@
-import Handler from 'browser/helpers/Handler'
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
 import { TabData } from 'polyfill/types'
-import { Session } from 'main/types'
-
-export const browser = Handler()
 
 export interface AddTabOptions {
   isExtension?: boolean
 }
 
-export const main =
-  (_path: string, session: Session) =>
-  async (tabID: number, tabData: Partial<TabData>): Promise<TabData> => {
+export type Shape = (
+  tabID: number,
+  tabData: Partial<TabData>
+) => Promise<TabData>
+
+export const browser = browserHandler<Shape>()
+export const main = mainHandler<Shape>(
+  (_path, session) => async (tabID, tabData) => {
     const { windows } = session
     const { tabs } = windows.withTab(tabID)
     // Only our approved extension gets bootstrapped, for now
@@ -22,3 +25,4 @@ export const main =
     tabs.update(tabID, tabData)
     return tab.data
   }
+)

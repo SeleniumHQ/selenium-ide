@@ -1,12 +1,14 @@
-import Handler from 'browser/helpers/Handler'
-import { Session } from 'main/types'
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
+import { TabData } from 'polyfill/types'
 
-export const browser = Handler()
+export type Shape = (tabID: number) => Promise<TabData>
 
-export const main =
-  (_path: string, session: Session) => async (tabID: number) => {
-    const { windows } = session
-    const { withTab } = windows
-    const { tabs } = withTab(tabID)
-    return tabs.read(tabID).data
-  }
+export const browser = browserHandler<Shape>()
+
+export const main = mainHandler<Shape>((_path, session) => async (tabID) => {
+  const { windows } = session
+  const { withTab } = windows
+  const { tabs } = withTab(tabID)
+  return tabs.read(tabID).data
+})

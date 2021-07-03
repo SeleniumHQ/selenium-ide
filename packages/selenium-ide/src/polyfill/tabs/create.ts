@@ -1,10 +1,9 @@
 import { BrowserView } from 'electron'
-import Handler from 'browser/helpers/Handler'
+import browserHandler from 'browser/helpers/Handler'
 import preloadPath from 'main/constants/preloadScriptPath'
+import mainHandler from 'main/helpers/Handler'
 import { Session } from 'main/types'
 import { TabData } from 'polyfill/types'
-
-export const browser = Handler()
 
 const extensionPreferences = {
   webPreferences: {
@@ -36,9 +35,14 @@ const getOptions = (
   }
 }
 
-export const main =
-  (_path: string, session: Session) =>
-  async (urlOrOpts: string | Partial<CreateTabOptions>): Promise<TabData> => {
+export type Shape = (
+  urlOrOpts: string | Partial<CreateTabOptions>
+) => Promise<TabData>
+
+export const browser = browserHandler<Shape>()
+
+export const main = mainHandler<Shape>(
+  (_path, session) => async (urlOrOpts) => {
     const { active, url, windowId } = getOptions(session, urlOrOpts)
     const { api, windows } = session
     const { tabs, window } = windows.read(windowId)
@@ -66,3 +70,4 @@ export const main =
     }
     return tabData
   }
+)

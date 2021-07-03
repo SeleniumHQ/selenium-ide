@@ -3,8 +3,10 @@ import { Polyfill } from 'polyfill/index'
 import { Session } from './types'
 
 export type MainPolyfillMapper = {
-  [NS in keyof Polyfill]: {
-    [P in keyof Polyfill[NS]]: ReturnType<Polyfill[NS][P]['main']>
+  [Namespace in keyof Polyfill]: {
+    [Handler in keyof Polyfill[Namespace]]: ReturnType<
+      Polyfill[Namespace][Handler]['main']
+    >
   }
 }
 

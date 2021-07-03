@@ -2,9 +2,15 @@ import processPolyfill from 'polyfill/process'
 import { Polyfill } from 'polyfill/index'
 import { LoadedWindow } from './types'
 
+/**
+ * This Converts the chrome API type to something usable
+ * from the front end
+ */
 export type BrowserPolyfillMapper = {
-  [NS in keyof Polyfill]: {
-    [P in keyof Polyfill[NS]]: ReturnType<Polyfill[NS][P]['browser']>
+  [Namespace in keyof Polyfill]: {
+    [Handler in keyof Polyfill[Namespace]]: ReturnType<
+      Polyfill[Namespace][Handler]['browser']
+    >
   }
 }
 

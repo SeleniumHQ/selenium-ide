@@ -1,5 +1,5 @@
-import EventListener from 'browser/helpers/EventListener'
-
+import browserEventListener from 'browser/helpers/EventListener'
+import mainEventListener from 'main/helpers/EventListener'
 export interface OnClickData {
   checked: boolean
   editable: boolean
@@ -15,4 +15,7 @@ export interface OnClickData {
   wasChecked: boolean
 }
 
-export const browser = EventListener<[OnClickData]>()
+export type Shape = (data: OnClickData) => void
+
+export const browser = browserEventListener<[OnClickData]>()
+export const main = mainEventListener<[Partial<OnClickData>]>()

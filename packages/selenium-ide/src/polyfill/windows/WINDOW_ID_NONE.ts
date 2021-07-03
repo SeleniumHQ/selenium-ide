@@ -1,4 +1,4 @@
-import Constant from 'browser/helpers/Constant'
+import browserConstant from '../__helpers/Constant'
 
-export const browser = Constant('')
+export const browser = browserConstant('')
 export const main = browser

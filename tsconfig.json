@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "lib": ["es2017", "dom"],
+    "lib": ["es5", "es6", "es2017", "dom", "dom.iterable"],
     "declaration": true,
     "declarationMap": true,
     "composite": true,
@@ -18,11 +18,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": [
-      "electron",
-      "node",
-      "jest"
-    ]
+    "types": ["electron", "node", "jest"]
   },
   "references": [
     {
@@ -39,10 +35,7 @@
     },
     {
       "path": "./packages/webdriver-testkit"
-    },
+    }
   ],
-  "exclude": [
-    "**/dist/**/*",
-    "**/node_modules"
-  ]
+  "exclude": ["**/dist/**/*", "**/node_modules"]
 }

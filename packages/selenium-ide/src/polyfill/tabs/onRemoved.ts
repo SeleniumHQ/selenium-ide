@@ -1,8 +1,5 @@
-import EventListener from 'browser/helpers/EventListener'
-import { TabData } from 'polyfill/types'
-import { Session } from 'main/types'
-
-export const browser = EventListener()
+import browserEventListener from 'browser/helpers/EventListener'
+import mainEventListener from 'main/helpers/EventListener'
 
 /**
  * Shim from our shape to this event:
@@ -14,7 +11,6 @@ export type ChromeTabsRemoveInfo = {
   windowId?: number
 }
 export type ChromeTabsOnRemoved = [number, ChromeTabsRemoveInfo]
-export const main =
-  (_path: string, _session: Session) =>
-  (tab: TabData): ChromeTabsOnRemoved =>
-    [tab.id, { isWindowClosing: false, windowId: tab.windowId }]
+
+export const browser = browserEventListener<ChromeTabsOnRemoved>()
+export const main = mainEventListener<ChromeTabsOnRemoved>()

@@ -1,8 +1,7 @@
-import EventListener from 'browser/helpers/EventListener'
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
 import { ipcRenderer } from 'electron'
-import { Session } from 'main/types'
-
-export const browser = EventListener()
+import { VariadicArgs } from 'polyfill/types'
 
 let _messageID = 1
 /**
@@ -17,10 +16,13 @@ function getMessageID() {
   return id
 }
 
-export const main = (session: Session) =>
-  async (tabID: number, ...args: any[]) => {
-    const { windows } = session
-    const tab = windows.getTab(tabID)
-    const messageID = getMessageID()
-    ipcRenderer.sendTo
-  }
+export type Shape = (tabID: number, ...args: VariadicArgs) => void
+
+export const browser = browserHandler<Shape>()
+
+export const main = mainHandler<Shape>((path, session) => (tabID, ...args) => {
+  const { windows } = session
+  const tab = windows.getTab(tabID)
+  const messageID = getMessageID()
+  ipcRenderer.sendTo(tab.view.webContents.id, path, messageID, ...args)
+})

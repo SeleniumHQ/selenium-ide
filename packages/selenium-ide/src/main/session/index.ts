@@ -1,4 +1,4 @@
-import { App } from 'electron'
+import { App, Menu } from 'electron'
 import Api from '../polyfill'
 import background from './background'
 import Driver from './driver'
@@ -14,6 +14,7 @@ export default async function createSession(
     app,
     config,
     extensions,
+    menu: new Menu(),
   }
   session.background = background(session as Session)
   session.api = await Api(session as Session)

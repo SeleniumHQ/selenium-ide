@@ -1,9 +1,17 @@
-import ProxyObject from 'browser/helpers/ProxyObject'
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
+import { LoadedWindow } from 'browser/types'
 import { Session } from 'main/types'
+import browserProxyTrap from '../__helpers/ProxyTrap'
 
-export const main = (_path: string, session: Session) => () =>
-  session.background
+export type Shape = () => Promise<Session['background']>
 
-export const browser = ProxyObject<Session['background']>(
-  'runtime.setBackgroundPage'
-)
+export const main = mainHandler((_path, session) => () => session.background)
+
+export const browser = browserHandler<Shape>({
+  transform: browserProxyTrap<Session['background'], LoadedWindow>(
+    async (background, window) => {
+      await window.sideAPI.runtime.setBackgroundPage(background)
+    }
+  ),
+})

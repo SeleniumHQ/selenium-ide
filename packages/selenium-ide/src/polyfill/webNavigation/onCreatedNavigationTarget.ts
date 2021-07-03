@@ -1,3 +1,6 @@
-import EventListener from 'browser/helpers/EventListener'
+import browserEventListener from 'browser/helpers/EventListener'
+import mainEventListener from 'main/helpers/EventListener'
 
-export const browser = EventListener()
+export const browser = browserEventListener()
+
+export const main = mainEventListener()

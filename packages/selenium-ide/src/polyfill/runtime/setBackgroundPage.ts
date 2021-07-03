@@ -1,10 +1,12 @@
 import { Session } from 'main/types'
-import Handler from 'browser/helpers/Handler'
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
 
-export const browser = Handler()
+export type Shape = (background: Session['background']) => Promise<void>
+export const browser = browserHandler<Shape>()
 
-export const main =
-  (_path: string, session: Session) =>
-  async (background: Session['background']) => {
+export const main = mainHandler<Shape>(
+  (_path, session) => async (background) => {
     session.background = background
   }
+)

@@ -1,16 +1,12 @@
-import EventListener from 'browser/helpers/EventListener'
-import { Session } from 'main/types'
-import { WindowData } from 'polyfill/types'
-
-export const browser = EventListener()
+import browserEventListener from 'browser/helpers/EventListener'
+import mainEventListener from 'main/helpers/EventListener'
 
 /**
  * Shim from our shape to this event:
  * https://developer.chrome.com/docs/extensions/reference/windows/#event-onFocusChanged
  */
 
-export type ChromeWindowsOnFocusChanged = [number]
-export const main =
-  (_path: string, _session: Session) =>
-  (window: WindowData): ChromeWindowsOnFocusChanged =>
-    [window.id]
+export type WindowsOnFocusChanged = [number]
+
+export const browser = browserEventListener<WindowsOnFocusChanged>()
+export const main = mainEventListener<WindowsOnFocusChanged>()

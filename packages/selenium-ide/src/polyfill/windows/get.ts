@@ -1,11 +1,13 @@
-import Handler from 'browser/helpers/Handler'
-import { Session } from 'main/types'
+import browserHandler from 'browser/helpers/Handler'
+import mainHandler from 'main/helpers/Handler'
+import { WindowData } from '../types'
 
-export const browser = Handler()
+export type Shape = (windowId: number) => WindowData
 
-export const main =
-  (_path: string, session: Session) => async (windowId: number) => {
-    // Make the main window
-    const { windows } = session
-    return windows.getData(windows.read(windowId))
-  }
+export const browser = browserHandler<Shape>()
+
+export const main = mainHandler<Shape>((_path, session) => (windowId) => {
+  // Make the main window
+  const { windows } = session
+  return windows.getData(windows.read(windowId))
+})

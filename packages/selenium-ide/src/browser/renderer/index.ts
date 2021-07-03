@@ -38,14 +38,13 @@ sideAPI.tabs.onCreated.addListener((tab, options = {}) => {
     closeButton.addEventListener('click', (e) => {
       e.preventDefault()
       e.stopPropagation()
-      sideAPI.tabs.remove(id)
+      await sideAPI.tabs.remove(id)
       tabsContainer.removeChild(div)
     })
   }
 })
 
 sideAPI.tabs.onUpdated.addListener((id, tabChanges, tabData) => {
-  sideAPI.tabs.update(tabData)
   const activeTabClass = 'etabs-tab.active'
   const tab = document.querySelector(`#tab-${id}`) as Element
   if (tabChanges.active === false) {
