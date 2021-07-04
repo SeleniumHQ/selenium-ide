@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../../../compat/v4/webextension-polyfill'
 import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
@@ -85,11 +85,7 @@ function firefox57WorkaroundForBlankPanel() {
   // The trick to display content is to resize the window...
   // We do not check the browser since this doesn't affect chrome at all
 
-  function getCurrentWindow() {
-    return browser.windows.getCurrent()
-  }
-
-  getCurrentWindow().then(currentWindow => {
+  browser.windows.getCurrent().then(currentWindow => {
     const updateInfo = {
       width: currentWindow.width,
       height: currentWindow.height + 1, // 1 pixel more than original size...

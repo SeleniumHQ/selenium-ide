@@ -15,7 +15,8 @@
  *
  */
 
-import browser from '../compat/v4/webextension-polyfill'
+import { userAgent } from '@seleniumhq/side-utils'
+import browser from 'webextension-polyfill'
 import { isStaging } from '../common/utils'
 
 let ideWindowId = undefined
@@ -24,8 +25,6 @@ let clickEnabled = true
 
 window.master = master
 window.openedWindowIds = []
-
-if (isStaging) openPanel({ windowId: 0 })
 
 function openPanel(tab) {
   let contentWindowId = tab.windowId
@@ -145,44 +144,6 @@ function pointIsValid(point) {
   return point >= 0 && point.constructor.name === 'Number'
 }
 
-browser.browserAction.onClicked.addListener(openPanel)
-
-browser.windows.onRemoved.addListener(function(windowId) {
-  let keys = Object.keys(master)
-  for (let key of keys) {
-    if (master[key] === windowId) {
-      delete master[key]
-      if (keys.length === 1) {
-        browser.contextMenus.removeAll()
-      }
-    }
-  }
-  if (windowId === ideWindowId) {
-    ideWindowId = undefined
-    Promise.all(
-      window.openedWindowIds.map(windowId =>
-        browser.windows.remove(windowId).catch(() => {
-          /* Window was removed previously by the user */
-        })
-      )
-    ).then(() => {
-      window.openedWindowIds = []
-    })
-  }
-})
-
-let port
-
-browser.contextMenus.onClicked.addListener(function(info) {
-  port.postMessage({ cmd: info.menuItemId })
-})
-
-browser.runtime.onConnect.addListener(function(m) {
-  port = m
-})
-
-browser.runtime.onMessage.addListener(handleInternalMessage)
-
 function handleInternalMessage(message) {
   if (message.restart && message.controller && message.controller.id) {
     ideWindowId = undefined
@@ -221,58 +182,99 @@ function handleInternalMessage(message) {
   }
 }
 
-browser.runtime.onMessageExternal.addListener(
-  (message, sender, sendResponse) => {
-    if (!message.payload) {
-      message.payload = {}
-    }
+if (!userAgent.isElectron) {
+  if (isStaging) openPanel({ windowId: 0 })
 
-    let payload = message.payload
+  browser.browserAction.onClicked.addListener(openPanel)
 
-    payload.sender = sender.id
-    if (message.uri.startsWith('/private/')) {
-      return sendResponse(false)
-    }
-    browser.runtime
-      .sendMessage(message)
-      .then(sendResponse)
-      .catch(() => {
-        if (message.uri == '/control' && message.verb == 'post') {
-          return openPanel({ windowId: 0 }).then(() => {
-            const newMessage = {
-              uri: '/private/connect',
-              verb: 'post',
-              payload: {
-                controller: {
-                  id: payload.sender,
-                  name: payload.name,
-                  version: payload.version,
-                  commands: payload.commands,
-                  dependencies: payload.dependencies,
-                  jest: payload.jest,
-                  exports: payload.exports,
-                },
-              },
-            }
-            browser.runtime.sendMessage(newMessage).then(sendResponse)
-          })
-        } else if (message.openSeleniumIDEIfClosed) {
-          return openPanel({ windowId: 0 }).then(() => {
-            sendResponse(true)
-          })
-        } else {
-          return sendResponse({ error: 'Selenium IDE is not active' })
+  browser.windows.onRemoved.addListener(function(windowId) {
+    let keys = Object.keys(master)
+    for (let key of keys) {
+      if (master[key] === windowId) {
+        delete master[key]
+        if (keys.length === 1) {
+          browser.contextMenus.removeAll()
         }
+      }
+    }
+    if (windowId === ideWindowId) {
+      ideWindowId = undefined
+      Promise.all(
+        window.openedWindowIds.map(windowId =>
+          browser.windows.remove(windowId).catch(() => {
+            /* Window was removed previously by the user */
+          })
+        )
+      ).then(() => {
+        window.openedWindowIds = []
       })
-    return true
-  }
-)
+    }
+  })
 
-browser.runtime.onInstalled.addListener(() => {
-  // Notify updates only in production
-  if (process.env.NODE_ENV === 'production') {
-    browser.storage.local.set({
-      updated: true,
-    })
-  }
-})
+  let port
+
+  browser.contextMenus.onClicked.addListener(function(info) {
+    port.postMessage({ cmd: info.menuItemId })
+  })
+
+  browser.runtime.onConnect.addListener(function(m) {
+    port = m
+  })
+
+  browser.runtime.onMessage.addListener(handleInternalMessage)
+  browser.runtime.onMessageExternal.addListener(
+    (message, sender, sendResponse) => {
+      if (!message.payload) {
+        message.payload = {}
+      }
+
+      let payload = message.payload
+
+      payload.sender = sender.id
+      if (message.uri.startsWith('/private/')) {
+        return sendResponse(false)
+      }
+      browser.runtime
+        .sendMessage(message)
+        .then(sendResponse)
+        .catch(() => {
+          if (message.uri == '/control' && message.verb == 'post') {
+            return openPanel({ windowId: 0 }).then(() => {
+              const newMessage = {
+                uri: '/private/connect',
+                verb: 'post',
+                payload: {
+                  controller: {
+                    id: payload.sender,
+                    name: payload.name,
+                    version: payload.version,
+                    commands: payload.commands,
+                    dependencies: payload.dependencies,
+                    jest: payload.jest,
+                    exports: payload.exports,
+                  },
+                },
+              }
+              browser.runtime.sendMessage(newMessage).then(sendResponse)
+            })
+          } else if (message.openSeleniumIDEIfClosed) {
+            return openPanel({ windowId: 0 }).then(() => {
+              sendResponse(true)
+            })
+          } else {
+            return sendResponse({ error: 'Selenium IDE is not active' })
+          }
+        })
+      return true
+    }
+  )
+
+  browser.runtime.onInstalled.addListener(() => {
+    // Notify updates only in production
+    if (process.env.NODE_ENV === 'production') {
+      browser.storage.local.set({
+        updated: true,
+      })
+    }
+  })
+}
