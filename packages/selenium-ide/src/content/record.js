@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../compat/v4/webextension-polyfill'
 import goog, { bot } from './closure-polyfill'
 import { Recorder, recorder, record } from './record-api'
 import { attach } from './prompt-recorder'

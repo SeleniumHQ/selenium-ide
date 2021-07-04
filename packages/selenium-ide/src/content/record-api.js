@@ -15,7 +15,7 @@
  *
  */
 
-import browser from 'webextension-polyfill'
+import browser from '../compat/v4/webextension-polyfill'
 import { calculateFrameIndex } from './utils'
 
 let contentSideexTabId = -1

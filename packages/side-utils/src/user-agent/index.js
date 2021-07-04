@@ -26,6 +26,7 @@ const getUserAgent = () => {
 }
 const userAgent = getUserAgent()
 const browser = userAgent && userAgent.browser ? userAgent.browser : undefined
+const isElectron = userAgent && userAgent.ua.includes('Electron')
 const isChrome = browser && browser.name === 'Chrome'
 const isFirefox = browser && browser.name === 'Firefox'
 const browserName = isChrome || isFirefox ? browser.name : undefined
@@ -34,5 +35,6 @@ module.exports = {
   userAgent,
   browserName,
   isChrome,
+  isElectron,
   isFirefox,
 }

@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-import browser from 'webextension-polyfill'
+import browser from '../compat/v4/webextension-polyfill'
 import './closure-polyfill'
 import TargetSelector from './targetSelector'
 import Selenium from './selenium-api'

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import browser from '../../../compat/v4/webextension-polyfill'
 import UiState from '../../stores/view/UiState'
 import WindowSession from '../window-session'
 import { Commands, ArgTypes } from '../../models/Command'

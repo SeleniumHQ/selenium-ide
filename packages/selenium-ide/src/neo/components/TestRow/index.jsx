@@ -133,13 +133,13 @@ class TestRow extends React.Component {
     setContextMenu: PropTypes.func,
     level: PropTypes.number,
     scrollToLastPos: PropTypes.func,
-    headers: {
+    headers: PropTypes.shape({
       commandIndexId: PropTypes.string,
       commandId: PropTypes.string,
       targetId: PropTypes.string,
       valueId: PropTypes.string,
       moreButtonsId: PropTypes.string,
-    },
+    }),
   }
   componentDidMount() {
     if (this.props.selected) {
