@@ -21,9 +21,9 @@ const HTMLTemplate = (title: string, allowClose: boolean): string => `
 `
 
 const { sideAPI } = window as LoadedWindow
-sideAPI.tabs.onCreated.addListener((tab, options = {}) => {
-  const { id, title } = tab
-  const allowClose = !options.isExtension
+sideAPI.tabs.onCreated.addListener((tab) => {
+  const { id, title, url } = tab
+  const allowClose = url.startsWith('chrome-extension://')
   const tabsContainer = document.querySelector('.etabs-tabs') as Element
   if (!tabsContainer) {
     return
@@ -35,7 +35,7 @@ sideAPI.tabs.onCreated.addListener((tab, options = {}) => {
   div.addEventListener('click', () => sideAPI.tabs.select(id))
   if (allowClose) {
     const closeButton = div.querySelector('.etabs-tab-button-close') as Element
-    closeButton.addEventListener('click', (e) => {
+    closeButton.addEventListener('click', async (e) => {
       e.preventDefault()
       e.stopPropagation()
       await sideAPI.tabs.remove(id)
@@ -44,7 +44,7 @@ sideAPI.tabs.onCreated.addListener((tab, options = {}) => {
   }
 })
 
-sideAPI.tabs.onUpdated.addListener((id, tabChanges, tabData) => {
+sideAPI.tabs.onUpdated.addListener((id, tabChanges) => {
   const activeTabClass = 'etabs-tab.active'
   const tab = document.querySelector(`#tab-${id}`) as Element
   if (tabChanges.active === false) {

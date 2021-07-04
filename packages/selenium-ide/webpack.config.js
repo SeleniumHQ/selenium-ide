@@ -20,8 +20,14 @@ const base = ({ entry, filename, target }) => ({
   },
   resolve: {
     alias: {
-      browser: path.resolve(__dirname, 'src/browser'),
-      main: path.resolve(__dirname, 'src/main'),
+      browser:
+        filename === 'main'
+          ? path.resolve(__dirname, 'src/stub')
+          : path.resolve(__dirname, 'src/browser'),
+      main:
+        filename === 'main'
+          ? path.resolve(__dirname, 'src/main')
+          : path.resolve(__dirname, 'src/stub'),
       polyfill: path.resolve(__dirname, 'src/polyfill'),
     },
     extensions: ['.tsx', '.ts', '.js'],

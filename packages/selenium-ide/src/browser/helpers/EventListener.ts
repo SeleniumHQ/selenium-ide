@@ -17,6 +17,7 @@ const baseListener = <ARGS extends VariadicArgs>(
   return {
     addListener(listener) {
       console.debug(path, 'listener added')
+      ipcRenderer.send(`${path}.addListener`)
       listeners.push(listener)
     },
     hasListener(listener) {
@@ -27,6 +28,7 @@ const baseListener = <ARGS extends VariadicArgs>(
     },
     removeListener(listener) {
       const index = listeners.indexOf(listener)
+      ipcRenderer.send(`${path}.removeListener`)
       if (index === -1) {
         throw new Error(`Unable to remove listener for ${path} ${listener}`)
       }

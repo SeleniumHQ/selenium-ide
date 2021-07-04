@@ -1,7 +1,6 @@
 import { MenuItem } from 'electron'
 import browserHandler from 'browser/helpers/Handler'
 import mainHandler from 'main/helpers/Handler'
-
 export interface CreateContextMenuOptions {
   checked: boolean
   contexts: string[]

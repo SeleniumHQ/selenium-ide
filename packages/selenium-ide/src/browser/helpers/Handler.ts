@@ -12,7 +12,8 @@ const doAPI = <HANDLER extends ApiHandler>(
       console.debug('Reply from server', path, 'with results', args2)
       resolve(args2 as ReturnType<HANDLER>)
     })
-    ipcRenderer.send(path, ...(args as Parameters<HANDLER>))
+    // @ts-ignore
+    ipcRenderer.send(path, ...args)
   })
 
 interface HandlerConfig {
@@ -25,7 +26,7 @@ const defaultHandlerConfig: HandlerConfig = {
 
 const Handler =
   <HANDLER extends ApiHandler>(config = defaultHandlerConfig) =>
-  (path: string, _window: LoadedWindow) =>
+  (path: string, window: LoadedWindow) =>
   async (...args: Parameters<HANDLER>): Promise<ReturnType<HANDLER>> => {
     console.debug(path, 'api called', ...(args as any))
     const maybeCallback = args[args.length - 1]
@@ -38,13 +39,13 @@ const Handler =
      */
     const serverResult = await doAPI<HANDLER>(path, ...argsWithoutCallback)
     const transform = config.transform || identity
-    const result = transform(serverResult)
+    const result = transform(serverResult, window)
     console.debug(path, 'api complete', result)
     /**
      * Processing the result
      */
     if (isCallback) {
-      return maybeCallback(...result)
+      return maybeCallback(result)
     }
     if (result.length === 1) {
       return result[0]

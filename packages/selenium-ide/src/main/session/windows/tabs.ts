@@ -37,7 +37,7 @@ const buildTabManager = (session: Session, window: BrowserWindow) => {
       const tab = { data: makeData(view, url), view }
       tabs.push(tab)
       tabIDs.push(tabID)
-      session.api.tabs.onUpdated(tab.data, tab.data)
+      session.api.tabs.onUpdated.dispatchEvent(tabID, tab.data, tab.data)
       return tab
     },
     getActive: (): number => activeTabID,
@@ -57,19 +57,25 @@ const buildTabManager = (session: Session, window: BrowserWindow) => {
       const index = tabIDs.indexOf(tabID)
       const [tab] = tabs.splice(index, 1)
       tabIDs.splice(index, 1)
-      session.api.tabs.onRemoved(tab.data)
+      session.api.tabs.onRemoved.dispatchEvent(tab.data.id, {
+        isWindowClosing: false,
+        windowId: window.id,
+      })
       return tab
     },
     select: (tabID: number): TabEntry => {
       activeTabID = tabID
       const tab = read(tabID)
-      session.api.tabs.onActivated(tab.data)
+      session.api.tabs.onActivated.dispatchEvent({
+        tabId: tab.data.id,
+        windowId: window.id,
+      })
       return tab
     },
     update: (tabID: number, changeInfo: Partial<TabData>): TabEntry => {
       const tab = read(tabID)
       const tabData = Object.assign(tab.data, changeInfo)
-      session.api.tabs.onUpdated(changeInfo, tabData)
+      session.api.tabs.onUpdated.dispatchEvent(tabID, changeInfo, tabData)
       tab.data = tabData
       return tab
     },

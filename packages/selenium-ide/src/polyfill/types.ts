@@ -3,7 +3,7 @@ import { Session } from 'main/types'
 
 export type VariadicArgs = any[]
 
-export type ApiHandler = (...args: any) => any
+export type ApiHandler = (...args: any[]) => any
 
 export interface PolyfillEntry {
   browser: (path: string, context: LoadedWindow) => any
@@ -20,12 +20,12 @@ export interface BasePolyfill {
 
 export type PolyfillHandler = (path: string, handler: PolyfillEntry) => any
 
-export type SimplePolyfillNamespace = {
+export type GenericPolyfillNamespace = {
   [key: string]: any
 }
 
-export type SimplePolyfill = {
-  [key: string]: SimplePolyfillNamespace
+export type GenericPolyfill = {
+  [key: string]: GenericPolyfillNamespace
 }
 
 export interface TabData {

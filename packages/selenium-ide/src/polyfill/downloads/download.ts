@@ -1,5 +1,4 @@
 import browserHandler from 'browser/helpers/Handler'
-import { promises as fs } from 'fs'
 import mainHandler from 'main/helpers/Handler'
 
 let counter = 0
@@ -26,7 +25,7 @@ export const main = mainHandler<Shape>(
     async ({ filename, body, conflictAction }) => {
       const uniqueFilename =
         conflictAction === 'uniquify' ? getUniqueFilename(filename) : filename
-      await fs.writeFile(uniqueFilename, body, 'utf8')
+      await require('fs').promises.writeFile(uniqueFilename, body, 'utf8')
       return 1
     }
 )

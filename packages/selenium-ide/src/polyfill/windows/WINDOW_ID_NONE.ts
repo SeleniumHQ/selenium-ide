@@ -1,4 +1,6 @@
-import browserConstant from '../__helpers/Constant'
+import browserConstant from '../helpers/Constant'
 
-export const browser = browserConstant('')
-export const main = browser
+const shared = browserConstant('')
+
+export const browser = shared
+export const main = shared

@@ -1,13 +1,15 @@
-import { ipcMain } from 'electron'
+import { ipcMain, WebContents } from 'electron'
 import get from 'lodash/fp/get'
 import { VariadicArgs } from 'polyfill/types'
 import { Session } from '../types'
 
+export type ListenerFn<ARGS extends VariadicArgs> = (...args: ARGS) => void
 export interface BaseListener<ARGS extends VariadicArgs> {
-  addListener: (listener: (...args: ARGS) => void) => void
-  hasListener: (listener: (...args: ARGS) => void) => boolean
-  dispatchEvent: (...args: ARGS) => void
-  removeListener: (listener: (...args: ARGS) => void) => void
+  addListener: (listener: ListenerFn<ARGS>) => void
+  hasListener: (listener: ListenerFn<ARGS>) => boolean
+  dispatchEvent: ListenerFn<ARGS>
+  listeners: ListenerFn<ARGS>[]
+  removeListener: (listener: ListenerFn<ARGS>) => void
 }
 
 const baseListener = <ARGS extends VariadicArgs>(
@@ -19,12 +21,13 @@ const baseListener = <ARGS extends VariadicArgs>(
       console.debug(path, 'listener added')
       listeners.push(listener)
     },
-    hasListener(listener) {
-      return listeners.includes(listener)
-    },
     dispatchEvent(...args) {
       listeners.forEach((fn) => fn(...args))
     },
+    hasListener(listener) {
+      return listeners.includes(listener)
+    },
+    listeners,
     removeListener(listener) {
       const index = listeners.indexOf(listener)
       if (index === -1) {
@@ -38,7 +41,42 @@ const baseListener = <ARGS extends VariadicArgs>(
 
 const wrappedListener = <ARGS extends VariadicArgs>(path: string) => {
   const api = baseListener<ARGS>(path)
-  ipcMain.on(path, (_event, ...args) => api.dispatchEvent(...(args as ARGS)))
+  const senders: WebContents[] = []
+  const senderCounts: number[] = []
+  const senderFns: ListenerFn<ARGS>[] = []
+
+  ipcMain.on(`${path}.addListener`, ({ sender }) => {
+    const index = senders.indexOf(sender)
+    if (index !== -1) {
+      senderCounts[index] += 1
+      return
+    }
+    senders.push(sender)
+    senderCounts.push(1)
+    const senderFn = (...args: ARGS) => {
+      sender.send(path, ...args)
+    }
+    senderFns.push(senderFn)
+    api.addListener(senderFn)
+  })
+
+  ipcMain.on(`${path}.removeListener`, ({ sender }) => {
+    const index = senders.indexOf(sender)
+    if (index !== -1) {
+      senderCounts[index] -= 1
+      if (senderCounts[index] === 0) {
+        senders.splice(index, 1)
+        senderCounts.splice(index, 1)
+        const [senderFn] = senderFns.splice(index, 1)
+        api.removeListener(senderFn)
+      }
+      return
+    }
+  })
+
+  ipcMain.on(path, (_event, ...args) => {
+    api.dispatchEvent(...(args as ARGS))
+  })
   return api
 }
 

@@ -1,5 +1,3 @@
-const config = {
+export default {
   logChromedriver: true,
 }
-
-export default config

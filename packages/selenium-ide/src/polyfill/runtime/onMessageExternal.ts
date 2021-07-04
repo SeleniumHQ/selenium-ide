@@ -17,4 +17,5 @@ export interface OnMessageExternalData {
 }
 
 export const browser = browserEventListener<[OnMessageExternalData]>()
+
 export const main = mainEventListener<[OnMessageExternalData]>()

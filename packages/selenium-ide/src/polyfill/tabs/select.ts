@@ -42,26 +42,28 @@ export type Shape = (selectedTabID: number) => Promise<void>
 
 export const browser = browserHandler<Shape>()
 
-export const main = mainHandler<Shape>((_path, session) => async (selectedTabID) => {
-  const { windows } = session
-  const { tabs, window } = windows.withTab(selectedTabID)
-  const { getActive, read, select } = tabs
-  const activeTabID = getActive()
-  if (selectedTabID !== activeTabID) {
-    const selectedTab = select(selectedTabID)
-    setActiveControllerView(window, selectedTab.view)
-    tabs.update(selectedTabID, { active: true })
-    /**
-     * Reasons not to inactivate the prior window:
-     * 1. It never existed (first window is selected)
-     * 2. Its just been removed
-     */
-    if (activeTabID !== null) {
-      const activeTab = read(activeTabID)
-      if (activeTab) {
-        setInactiveControllerView(activeTab.view)
-        tabs.update(activeTabID, { active: false })
+export const main = mainHandler<Shape>(
+  (_path, session) => async (selectedTabID) => {
+    const { windows } = session
+    const { tabs, window } = windows.withTab(selectedTabID)
+    const { getActive, read, select } = tabs
+    const activeTabID = getActive()
+    if (selectedTabID !== activeTabID) {
+      const selectedTab = select(selectedTabID)
+      setActiveControllerView(window, selectedTab.view)
+      tabs.update(selectedTabID, { active: true })
+      /**
+       * Reasons not to inactivate the prior window:
+       * 1. It never existed (first window is selected)
+       * 2. Its just been removed
+       */
+      if (activeTabID !== null) {
+        const activeTab = read(activeTabID)
+        if (activeTab) {
+          setInactiveControllerView(activeTab.view)
+          tabs.update(activeTabID, { active: false })
+        }
       }
     }
   }
-})
+)
