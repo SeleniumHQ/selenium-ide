@@ -2,7 +2,7 @@ import { app } from 'electron'
 import config from './config'
 import chromedriver from './chromedriver'
 import createSession from './session'
-import SIDEPath from './constants/extensionPath'
+import SIDEPath from '@seleniumhq/selenium-ide-v3-wrapper/constants/distPath'
 
 let extensions: string[] = [SIDEPath]
 app.commandLine.appendSwitch('remote-debugging-port', '8315')

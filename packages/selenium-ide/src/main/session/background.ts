@@ -5,7 +5,7 @@ export interface Background {
   openedWindowIds: number[]
   [key: string]: number[] | { [key: string]: string }
 }
-const background = (_session: Session) => ({
+const background = (_session: Session): Background => ({
   master: {},
   openedWindowIds: [],
 })

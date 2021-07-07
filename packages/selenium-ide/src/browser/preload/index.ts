@@ -1,6 +1,6 @@
 import { contextBridge } from 'electron'
 import polyfill from '../polyfill'
-import { LoadedWindow } from '../types'
+import { LoadedWindow } from 'browser/types'
 
 /**
  * Binds our API on initialization

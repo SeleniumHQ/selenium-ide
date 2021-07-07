@@ -5,6 +5,7 @@ export type VariadicArgs = any[]
 
 export type ApiHandler = (...args: any[]) => any
 
+export type ApiArrayHandler = (...args: any[]) => any[]
 export interface PolyfillEntry {
   browser: (path: string, context: LoadedWindow) => any
   main: (path: string, context: Session) => any

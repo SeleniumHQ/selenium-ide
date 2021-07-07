@@ -1,7 +1,7 @@
 import { App, Menu } from 'electron'
 import config from './config'
 import { Background } from './session/background'
-import { WindowManager } from './session/windows'
+import WindowsList from './session/classes/windows/List'
 import { Driver } from './session/driver'
 import { MainPolyfillMapper } from './polyfill'
 
@@ -18,7 +18,7 @@ export interface Session extends PersistedCore {
   extensions: string[]
   menu: Menu
   config: Config
-  windows: WindowManager
+  windows: WindowsList
 }
 
 export type SessionApiHandler = (
