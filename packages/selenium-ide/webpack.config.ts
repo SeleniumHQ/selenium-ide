@@ -1,6 +1,12 @@
 const path = require('path')
 
-const base = ({ entry, filename, target }) => ({
+interface BaseParameters {
+  entry: string
+  filename: string
+  target: string
+}
+
+const base = ({ entry, filename, target }: BaseParameters) => ({
   entry,
   // Workaround for ws module trying to require devDependencies
   externals: ['utf-8-validate', 'bufferutil'],
@@ -20,6 +26,7 @@ const base = ({ entry, filename, target }) => ({
   },
   resolve: {
     alias: {
+      api: path.resolve(__dirname, 'src/api'),
       browser:
         filename === 'main'
           ? path.resolve(__dirname, 'src/stub')
@@ -28,7 +35,6 @@ const base = ({ entry, filename, target }) => ({
         filename === 'main'
           ? path.resolve(__dirname, 'src/main')
           : path.resolve(__dirname, 'src/stub'),
-      polyfill: path.resolve(__dirname, 'src/polyfill'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },

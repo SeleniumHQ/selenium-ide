@@ -56,15 +56,23 @@
   },
   "dependencies": {
     "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
+    "autoprefixer": "^10.2.6",
     "lodash": "4.17.21",
     "electron": "^12.0.6",
     "electron-chromedriver": "^12.0.0",
-    "selenium-webdriver": "4.0.0-beta.4"
+    "electron-store": "^8.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "tailwindcss": "^2.2.4",
+    "selenium-webdriver": "4.0.0-beta.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/lodash": "4.14.170",
     "@types/electron": "1.6.10",
     "@types/fs-extra": "^8.0.0",
+    "@types/react": "^17.0.14",
+    "@types/react-dom": "^17.0.9",
     "@types/webpack-env": "1.16.0",
     "copy-webpack-plugin": "9.0.0",
     "css-loader": "5.2.4",

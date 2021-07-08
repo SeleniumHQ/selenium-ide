@@ -1,9 +1,8 @@
 import { App, Menu } from 'electron'
 import config from './config'
-import { Background } from './session/background'
-import WindowsList from './session/classes/windows/List'
 import { Driver } from './session/driver'
-import { MainPolyfillMapper } from './polyfill'
+import storage from './storage'
+import { MainApiMapper } from './api'
 
 export type Config = typeof config
 
@@ -13,12 +12,10 @@ export interface PersistedCore {
 }
 
 export interface Session extends PersistedCore {
-  api: MainPolyfillMapper
-  background: Background
-  extensions: string[]
+  api: MainApiMapper
+  storage: typeof storage
   menu: Menu
   config: Config
-  windows: WindowsList
 }
 
 export type SessionApiHandler = (

@@ -1,8 +1,7 @@
 import { Session } from 'main/types'
-import Polyfill from './polyfill'
+import Api from './api'
 
-export type LoadedWindow = Window &
-  typeof globalThis & { sideAPI: typeof Polyfill }
+export type LoadedWindow = Window & typeof globalThis & { sideAPI: typeof Api }
 
 export type CurriedApiField<Config extends any[], Shape> = (
   ...args: Config

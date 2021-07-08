@@ -1,5 +1,5 @@
 import { contextBridge } from 'electron'
-import polyfill from '../polyfill'
+import api from '../api'
 import { LoadedWindow } from 'browser/types'
 
 /**
@@ -9,9 +9,9 @@ process.once('loaded', async () => {
   /**
    * Expose it in the main context
    */
-  contextBridge.exposeInMainWorld('sideAPI', polyfill)
+  contextBridge.exposeInMainWorld('sideAPI', api)
   /**
    * Expose it in the preload context as well
    */
-  ;(window as LoadedWindow).sideAPI = polyfill
+  ;(window as LoadedWindow).sideAPI = api
 })

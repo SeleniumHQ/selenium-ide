@@ -2,9 +2,10 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*"],
   "compilerOptions": {
+    "jsx": "react",
     "paths": {
+      "api/*": ["./src/api/*"],
       "browser/*": ["./src/browser/*"],
-      "polyfill/*": ["./src/polyfill/*"],
       "main/*": ["./src/main/*"],
     },
     "outDir": "dist",

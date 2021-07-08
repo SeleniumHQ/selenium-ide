@@ -1,5 +1,5 @@
 import { LoadedWindow } from 'browser/types'
-import { WindowData } from 'polyfill/types'
+import { WindowData } from 'api/types'
 
 /**
  * Just very minimally adding buttons
