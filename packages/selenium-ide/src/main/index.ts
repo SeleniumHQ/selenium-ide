@@ -2,14 +2,13 @@ import { app } from 'electron'
 import config from './config'
 import chromedriver from './chromedriver'
 import createSession from './session'
-import storage from './storage'
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 app.on('ready', async () => {
   // Let chromedriver fully start up
   await chromedriver(app, config)
   // Create a window level data object containing everything we need
-  await createSession(app, config, storage)
+  await createSession(app, config)
 })
 
 let allWindowsClosed = false
@@ -27,6 +26,6 @@ app.on('window-all-closed', () => {
 app.on('activate', async () => {
   if (allWindowsClosed) {
     allWindowsClosed = false
-    await createSession(app, config, storage)
+    await createSession(app, config)
   }
 })

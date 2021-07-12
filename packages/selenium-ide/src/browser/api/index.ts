@@ -1,6 +1,6 @@
 import processApi from 'api/process'
 import { Api } from 'api/index'
-import { LoadedWindow } from 'browser/types'
+import { LoadedWindow } from '../types'
 
 /**
  * This Converts the chrome API type to something usable

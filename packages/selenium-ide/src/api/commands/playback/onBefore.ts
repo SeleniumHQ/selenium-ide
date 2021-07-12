@@ -3,10 +3,10 @@ import mainEventListener from 'main/api/classes/EventListener'
 
 export type OnBeforePlayback = [
   {
-    suite: number
-    test: number
-    startStep: number
-    endStep: number
+    suite: string
+    test: string
+    startIndex: number
+    endIndex: number
   }
 ]
 

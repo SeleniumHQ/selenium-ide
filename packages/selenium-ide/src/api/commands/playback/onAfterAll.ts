@@ -3,7 +3,7 @@ import mainEventListener from 'main/api/classes/EventListener'
 
 export type OnAfterAllPlayback = [
   {
-    suite: number
+    suite: string
   }
 ]
 

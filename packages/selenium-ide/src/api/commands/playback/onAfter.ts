@@ -3,9 +3,9 @@ import mainEventListener from 'main/api/classes/EventListener'
 
 export type OnAfterPlayback = [
   {
-    suite: number
-    test: number
-    step: number
+    suite: string
+    test: string
+    endIndex: number
     status: 'success' | 'failure'
     error?: string
   }

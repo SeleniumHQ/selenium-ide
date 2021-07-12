@@ -1,391 +1,103 @@
-import { Session } from '../types'
+// import { Session } from '../types'
 
 const commands = {
-  add_selection:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  answer_on_next_prompt:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_alert:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_checked:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_confirmation:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_editable:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_element_present:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_element_not_present:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_not_checked:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_not_editable:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_not_selected_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_not_text:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_prompt:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_selected_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_selected_label:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_text:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_title:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  assert_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  check:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  choose_cancel_on_next_confirmation:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  choose_cancel_on_next_prompt:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  choose_ok_on_next_confirmation:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  click:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  click_at:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  close:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  debugger:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  do:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  double_click:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  double_click_at:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  drag_and_drop_to_object:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  echo:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  edit_content:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  else:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  else_if:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  end:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  execute_script:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  execute_async_script:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  for_each:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  if:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_down:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_down_at:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_move_at:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_out:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_over:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_up:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  mouse_up_at:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  open:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  pause:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  remove_selection:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  repeat_if:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  run:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  run_script:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  select:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  select_frame:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  select_window:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  send_keys:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  set_speed:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  set_window_size:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_attribute:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_json:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_text:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_title:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_window_handle:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  store_xpath_count:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  submit:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  times:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  type:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  uncheck:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_checked:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_editable:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_element_present:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_element_not_present:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_not_checked:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_not_editable:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_not_selected_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_not_text:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_selected_label:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_selected_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_text:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_title:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  verify_value:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_element_editable:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_element_not_editable:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_element_not_present:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_element_not_visible:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_element_present:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_element_visible:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  wait_for_text:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  webdriver_answer_on_visible_prompt:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  webdriver_choose_cancel_on_visible_confirmation:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  webdriver_choose_cancel_on_visible_prompt:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  webdriver_choose_ok_on_visible_confirmation:
-    (session: Session) =>
-    async (...args: any[]) => {},
-
-  while:
-    (session: Session) =>
-    async (...args: any[]) => {},
+  add_selection: () => async () => {},
+  answer_on_next_prompt: () => async () => {},
+  assert: () => async () => {},
+  assert_alert: () => async () => {},
+  assert_checked: () => async () => {},
+  assert_confirmation: () => async () => {},
+  assert_editable: () => async () => {},
+  assert_element_present: () => async () => {},
+  assert_element_not_present: () => async () => {},
+  assert_not_checked: () => async () => {},
+  assert_not_editable: () => async () => {},
+  assert_not_selected_value: () => async () => {},
+  assert_not_text: () => async () => {},
+  assert_prompt: () => async () => {},
+  assert_selected_value: () => async () => {},
+  assert_selected_label: () => async () => {},
+  assert_text: () => async () => {},
+  assert_title: () => async () => {},
+  assert_value: () => async () => {},
+  check: () => async () => {},
+  choose_cancel_on_next_confirmation: () => async () => {},
+  choose_cancel_on_next_prompt: () => async () => {},
+  choose_ok_on_next_confirmation: () => async () => {},
+  click: () => async () => {},
+  click_at: () => async () => {},
+  close: () => async () => {},
+  debugger: () => async () => {},
+  do: () => async () => {},
+  double_click: () => async () => {},
+  double_click_at: () => async () => {},
+  drag_and_drop_to_object: () => async () => {},
+  echo: () => async () => {},
+  edit_content: () => async () => {},
+  else: () => async () => {},
+  else_if: () => async () => {},
+  end: () => async () => {},
+  execute_script: () => async () => {},
+  execute_async_script: () => async () => {},
+  for_each: () => async () => {},
+  if: () => async () => {},
+  mouse_down: () => async () => {},
+  mouse_down_at: () => async () => {},
+  mouse_move_at: () => async () => {},
+  mouse_out: () => async () => {},
+  mouse_over: () => async () => {},
+  mouse_up: () => async () => {},
+  mouse_up_at: () => async () => {},
+  open: () => async () => {},
+  pause: () => async () => {},
+  remove_selection: () => async () => {},
+  repeat_if: () => async () => {},
+  run: () => async () => {},
+  run_script: () => async () => {},
+  select: () => async () => {},
+  select_frame: () => async () => {},
+  select_window: () => async () => {},
+  send_keys: () => async () => {},
+  set_speed: () => async () => {},
+  set_window_size: () => async () => {},
+  store: () => async () => {},
+  store_attribute: () => async () => {},
+  store_json: () => async () => {},
+  store_text: () => async () => {},
+  store_title: () => async () => {},
+  store_value: () => async () => {},
+  store_window_handle: () => async () => {},
+  store_xpath_count: () => async () => {},
+  submit: () => async () => {},
+  times: () => async () => {},
+  type: () => async () => {},
+  uncheck: () => async () => {},
+  verify: () => async () => {},
+  verify_checked: () => async () => {},
+  verify_editable: () => async () => {},
+  verify_element_present: () => async () => {},
+  verify_element_not_present: () => async () => {},
+  verify_not_checked: () => async () => {},
+  verify_not_editable: () => async () => {},
+  verify_not_selected_value: () => async () => {},
+  verify_not_text: () => async () => {},
+  verify_selected_label: () => async () => {},
+  verify_selected_value: () => async () => {},
+  verify_text: () => async () => {},
+  verify_title: () => async () => {},
+  verify_value: () => async () => {},
+  wait_for_element_editable: () => async () => {},
+  wait_for_element_not_editable: () => async () => {},
+  wait_for_element_not_present: () => async () => {},
+  wait_for_element_not_visible: () => async () => {},
+  wait_for_element_present: () => async () => {},
+  wait_for_element_visible: () => async () => {},
+  wait_for_text: () => async () => {},
+  webdriver_answer_on_visible_prompt: () => async () => {},
+  webdriver_choose_cancel_on_visible_confirmation: () => async () => {},
+  webdriver_choose_cancel_on_visible_prompt: () => async () => {},
+  webdriver_choose_ok_on_visible_confirmation: () => async () => {},
+  while: () => async () => {},
 }
+
+export default commands

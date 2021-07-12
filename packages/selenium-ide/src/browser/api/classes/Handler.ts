@@ -1,18 +1,17 @@
 import { ipcRenderer } from 'electron'
 import identity from 'lodash/fp/identity'
-import { ApiHandler, ApiArrayHandler } from 'api/types'
+import { ApiHandler, ApiPromiseHandler, ThenArg } from 'api/types'
 import { LoadedWindow } from '../../types'
 
-const doAPI = <HANDLER extends ApiArrayHandler>(
+const doAPI = <HANDLER extends ApiPromiseHandler>(
   path: string,
   ...args: Parameters<HANDLER>
-): Promise<[...ReturnType<HANDLER>]> =>
-  new Promise((resolve) => {
-    ipcRenderer.once(`${path}.complete`, (_event, ...args2) => {
-      console.debug('Reply from server', path, 'with results', args2)
-      resolve(args2 as [...ReturnType<HANDLER>])
+): Promise<ThenArg<ReturnType<HANDLER>>> =>
+  new Promise<ThenArg<ReturnType<HANDLER>>>((resolve) => {
+    ipcRenderer.once(`${path}.complete`, (_event, result) => {
+      console.debug('Reply from server', path, 'with results', result)
+      resolve(result as ThenArg<ReturnType<HANDLER>>)
     })
-    // @ts-ignore
     ipcRenderer.send(path, ...args)
   })
 
@@ -25,12 +24,12 @@ const defaultHandlerConfig: HandlerConfig = {
 }
 
 const Handler =
-  <HANDLER extends ApiHandler>(config = defaultHandlerConfig) =>
+  <HANDLER extends ApiPromiseHandler>(config = defaultHandlerConfig) =>
   (path: string, window: LoadedWindow) => {
     const transform = config.transform(path, window) || identity
     return async (
       ...args: Parameters<HANDLER>
-    ): Promise<ReturnType<HANDLER>> => {
+    ): Promise<ThenArg<ReturnType<HANDLER>>> => {
       console.debug(path, 'api called', ...(args as any))
       const maybeCallback = args[args.length - 1]
       const isCallback = typeof maybeCallback === 'function'
@@ -48,9 +47,6 @@ const Handler =
        */
       if (isCallback) {
         return maybeCallback(...result)
-      }
-      if (result.length === 1) {
-        return result[0]
       }
       return result
     }

@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "0.0.1",
+  "version": "4.0.1",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Tomer <tomer@corevo.io>",
@@ -55,8 +55,6 @@
     ]
   },
   "dependencies": {
-    "@seleniumhq/selenium-ide-v3-wrapper": "0.0.1",
-    "autoprefixer": "^10.2.6",
     "lodash": "4.17.21",
     "electron": "^12.0.6",
     "electron-chromedriver": "^12.0.0",
@@ -64,8 +62,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "tailwindcss": "^2.2.4",
-    "selenium-webdriver": "4.0.0-beta.4",
-    "uuid": "^8.3.2"
+    "selenium-webdriver": "4.0.0-beta.4"
   },
   "devDependencies": {
     "@types/lodash": "4.14.170",
@@ -75,13 +72,10 @@
     "@types/react-dom": "^17.0.9",
     "@types/webpack-env": "1.16.0",
     "copy-webpack-plugin": "9.0.0",
-    "css-loader": "5.2.4",
     "electron-builder": "^22.10.5",
     "fs-extra": "^8.1.0",
+    "html-webpack-plugin": "^5.3.2",
     "npm-run-all": "4.1.5",
-    "sass": "1.32.13",
-    "sass-loader": "11.1.1",
-    "style-loader": "2.0.0",
     "ts-loader": "9.2.3",
     "typescript": "^4.3.2",
     "webpack": "5.37.0"
