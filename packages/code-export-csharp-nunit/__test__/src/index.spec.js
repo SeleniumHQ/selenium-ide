@@ -17,7 +17,13 @@
 
 import fs from 'fs'
 import path from 'path'
-import { emitTest, emitSuite, _emitMethod, _findTestByName } from '../../src'
+import codeExport, {
+  emitTest,
+  emitSuite,
+  _emitMethod,
+  _findTestByName,
+} from '../../src'
+import Command from '../../src/command'
 import { project as projectProcessor } from '@seleniumhq/side-utils'
 
 function readFile(filename) {
@@ -131,6 +137,9 @@ describe('Code Export C# NUnit', () => {
     })
     expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
+  })
+  it('should export the command emitter', () => {
+    expect(Command.emit).toStrictEqual(codeExport.emit.command)
   })
 })
 
