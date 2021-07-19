@@ -139,7 +139,7 @@ describe('Code Export Python pytest', () => {
     expect(results.body).toMatchSnapshot()
   })
   it('should export the command emitter', () => {
-    expect(Command.emit).toStrictEqual(codeExport.emit.command.apply)
+    expect(Command.emit).toStrictEqual(codeExport.emit.command)
   })
 })
 
