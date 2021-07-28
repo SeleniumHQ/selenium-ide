@@ -18,7 +18,7 @@ describe('login', function() {
   })
   it('valid credentials', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    await driver.manage().window().setRect(1440, 1177)
+    await driver.manage().window().setRect({ width: 1440, height: 1177 })
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
@@ -26,7 +26,7 @@ describe('login', function() {
   })
   it('invalid credentials', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    await driver.manage().window().setRect(1440, 1177)
+    await driver.manage().window().setRect({ width: 1440, height: 1177 })
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"blah\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"blah\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
@@ -132,7 +132,9 @@ describe('login', function() {
     await driver.findElement(By.linkText(\\"Form Authentication\\")).click()
     await driver.findElement(By.id(\\"username\\")).sendKeys(vars[\\"username\\"])
     await driver.findElement(By.id(\\"password\\")).sendKeys(vars[\\"password\\"])
-    await driver.findElement(By.css(\\".fa\\")).click()
+    if (!!await driver.executeScript(\\"return (true)\\")) {
+      await driver.findElement(By.css(\\".fa\\")).click()
+    }
   }
   it('invalid credentials', async function() {
     vars[\\"username\\"] = \\"blah\\"
@@ -254,7 +256,7 @@ describe('login', function() {
   })
   it('login', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    await driver.manage().window().setRect(1440, 1177)
+    await driver.manage().window().setRect({ width: 1440, height: 1177 })
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
@@ -285,7 +287,9 @@ describe('valid credentials', function() {
     await driver.findElement(By.linkText(\\"Form Authentication\\")).click()
     await driver.findElement(By.id(\\"username\\")).sendKeys(vars[\\"username\\"])
     await driver.findElement(By.id(\\"password\\")).sendKeys(vars[\\"password\\"])
-    await driver.findElement(By.css(\\".fa\\")).click()
+    if (!!await driver.executeScript(\\"return (true)\\")) {
+      await driver.findElement(By.css(\\".fa\\")).click()
+    }
   }
   it('valid credentials', async function() {
     vars[\\"username\\"] = \\"tomsmith\\"
@@ -323,7 +327,7 @@ describe('select window', function() {
   }
   it('select window', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/\\")
-    await driver.manage().window().setRect(1260, 1027)
+    await driver.manage().window().setRect({ width: 1260, height: 1027 })
     await driver.findElement(By.linkText(\\"Multiple Windows\\")).click()
     vars[\\"windowHandles\\"] = await driver.getAllWindowHandles()
     await driver.findElement(By.linkText(\\"Click Here\\")).click()
@@ -356,7 +360,7 @@ describe('login', function() {
   })
   it('login', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/login\\")
-    await driver.manage().window().setRect(1440, 1177)
+    await driver.manage().window().setRect({ width: 1440, height: 1177 })
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()

@@ -1,3 +1,17 @@
+.project .title:before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.project > a.passed .title:before{
+  content: '✓';
+}
+.project a.failed .title:before {
+  content: '✗';
+}
+
 .project {
   padding-left: 7px;
   margin-left: 2px;
@@ -44,6 +58,10 @@
 }
 
 .project:hover button {
+  opacity: 1;
+}
+
+.project:focus button {
   opacity: 1;
 }
 

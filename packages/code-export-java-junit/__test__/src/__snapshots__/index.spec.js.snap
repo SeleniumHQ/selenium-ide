@@ -209,7 +209,9 @@ public class LoginTest {
     driver.findElement(By.linkText(\\"Form Authentication\\")).click();
     driver.findElement(By.id(\\"username\\")).sendKeys(vars.get(\\"username\\").toString());
     driver.findElement(By.id(\\"password\\")).sendKeys(vars.get(\\"password\\").toString());
-    driver.findElement(By.cssSelector(\\".fa\\")).click();
+    if ((Boolean) js.executeScript(\\"return (true)\\")) {
+      driver.findElement(By.cssSelector(\\".fa\\")).click();
+    }
   }
   @Test
   public void invalidcredentials() {
@@ -520,7 +522,9 @@ public class ValidcredentialsTest {
     driver.findElement(By.linkText(\\"Form Authentication\\")).click();
     driver.findElement(By.id(\\"username\\")).sendKeys(vars.get(\\"username\\").toString());
     driver.findElement(By.id(\\"password\\")).sendKeys(vars.get(\\"password\\").toString());
-    driver.findElement(By.cssSelector(\\".fa\\")).click();
+    if ((Boolean) js.executeScript(\\"return (true)\\")) {
+      driver.findElement(By.cssSelector(\\".fa\\")).click();
+    }
   }
   @Test
   public void validcredentials() {

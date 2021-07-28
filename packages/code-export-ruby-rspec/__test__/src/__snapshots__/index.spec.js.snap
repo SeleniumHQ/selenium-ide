@@ -120,7 +120,9 @@ describe 'Login' do
     @driver.find_element(:link_text, 'Form Authentication').click
     @driver.find_element(:id, 'username').send_keys(@vars['username'])
     @driver.find_element(:id, 'password').send_keys(@vars['password'])
-    @driver.find_element(:css, '.fa').click
+    if @driver.execute_script(\\"return (true)\\")
+      @driver.find_element(:css, '.fa').click
+    end
   end
   it 'invalidcredentials' do
     @vars['username'] = 'blah'
@@ -148,11 +150,11 @@ describe 'DefaultSuite' do
   after(:each) do
     @driver.quit
   end
-  def wait_for_window(self, timeout = 2):
+  def wait_for_window(timeout = 2)
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
     wh_then = @vars['window_handles']
-    wh_now.find { |window| window != wh_then.first
+    wh_now.find { |window| window != wh_then.first }
   end
   def selectwindow
     @driver.get('http://the-internet.herokuapp.com/windows')
@@ -181,11 +183,11 @@ describe 'DefaultSuite' do
   after(:each) do
     @driver.quit
   end
-  def wait_for_window(self, timeout = 2):
+  def wait_for_window(timeout = 2)
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
     wh_then = @vars['window_handles']
-    wh_now.find { |window| window != wh_then.first
+    wh_now.find { |window| window != wh_then.first }
   end
   def selectwindow
     @driver.get('http://the-internet.herokuapp.com/windows')
@@ -275,7 +277,9 @@ describe 'Validcredentials' do
     @driver.find_element(:link_text, 'Form Authentication').click
     @driver.find_element(:id, 'username').send_keys(@vars['username'])
     @driver.find_element(:id, 'password').send_keys(@vars['password'])
-    @driver.find_element(:css, '.fa').click
+    if @driver.execute_script(\\"return (true)\\")
+      @driver.find_element(:css, '.fa').click
+    end
   end
   it 'validcredentials' do
     @vars['username'] = 'tomsmith'
@@ -298,11 +302,11 @@ describe 'Selectwindow' do
   after(:each) do
     @driver.quit
   end
-  def wait_for_window(self, timeout = 2):
+  def wait_for_window(timeout = 2)
     sleep(round(timeout / 1000))
     wh_now = @driver.window_handles
     wh_then = @vars['window_handles']
-    wh_now.find { |window| window != wh_then.first
+    wh_now.find { |window| window != wh_then.first }
   end
   it 'selectwindow' do
     @driver.get('http://the-internet.herokuapp.com/')

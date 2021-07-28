@@ -1,0 +1,40 @@
+name: Selenium IDE Test Workflow
+
+on:
+  push:
+    branches: [ v3 ]
+  pull_request:
+    branches: [ v3 ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install Peru
+        run: pip3 install peru
+      - name: Sync Peru
+        run: peru sync
+      - name: Install dependencies
+        run: yarn --ignore-engines
+      - name: Install depedencies to website
+        run: cd website && yarn && cd ..
+      - name: Build packages via lerna
+        run: yarn run lerna run build --ignore selenium-ide-extension --ignore selenium-ide-extension-boilerplate
+      - name: Build Selenium IDE
+        run: NODE_ENV="staging" yarn build:ext
+      - name: Start Docker Compose
+        run: docker-compose up -d
+      - name: Run linter
+        run: yarn lint
+        continue-on-error: true
+      - name: Run tests
+        run: yarn test
+      - name: Run webdriver tests
+        run: yarn test:webdriver
+      - name: Run selenium tests
+        run: yarn test:runner --server http://localhost:4444/wd/hub --force

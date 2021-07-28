@@ -508,7 +508,7 @@ async function emitPause(time) {
   const commands = [
     { level: 0, statement: 'try {' },
     { level: 1, statement: `Thread.Sleep(${time});` },
-    { level: 0, statement: '} catch {' },
+    { level: 0, statement: '} catch (Exception e) {' },
     { level: 1, statement: 'Console.WriteLine("{0} Exception caught.", e);' },
     { level: 0, statement: '}' },
   ]

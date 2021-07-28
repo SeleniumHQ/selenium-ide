@@ -179,7 +179,9 @@ public class LoginTest {
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(vars[\\"username\\"].ToString());
     driver.FindElement(By.Id(\\"password\\")).SendKeys(vars[\\"password\\"].ToString());
-    driver.FindElement(By.CssSelector(\\".fa\\")).Click();
+    if ((Boolean) js.ExecuteScript(\\"return (true)\\")) {
+      driver.FindElement(By.CssSelector(\\".fa\\")).Click();
+    }
   }
   [Test]
   public void invalidcredentials() {
@@ -400,7 +402,9 @@ public class ValidcredentialsTest {
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(vars[\\"username\\"].ToString());
     driver.FindElement(By.Id(\\"password\\")).SendKeys(vars[\\"password\\"].ToString());
-    driver.FindElement(By.CssSelector(\\".fa\\")).Click();
+    if ((Boolean) js.ExecuteScript(\\"return (true)\\")) {
+      driver.FindElement(By.CssSelector(\\".fa\\")).Click();
+    }
   }
   [Test]
   public void validcredentials() {

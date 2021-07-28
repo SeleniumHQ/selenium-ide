@@ -46,16 +46,16 @@
 .si-record {
   position: relative;
 }
-.si-record::after,
-.si-record-circle::before {
+.si-record::before,
+.si-record-circle::after {
   content: '\e91f';
+}
+.si-record::after,
+.si-record-out::after {
+  content: '\e920';
   position: absolute;
   top: 0;
   left: 0;
-}
-.si-record::before,
-.si-record-out::before {
-  content: '\e920';
 }
 .si-download::before {
   content: '\e905';

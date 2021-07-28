@@ -23,17 +23,17 @@ import './style.css'
 export default class TabBar extends React.Component {
   constructor(props) {
     super(props)
+    var defaultIndex = props.defaultTab
+      ? props.tabs.indexOf(props.defaultTab)
+      : 0
     this.state = {
-      activeTab: props.defaultTab
-        ? {
-            tab: props.defaultTab,
-            index: props.tabs.indexOf(props.defaultTab),
-          }
-        : {
-            tab: props.tabs[0],
-            index: 0,
-          },
+      activeTab: {
+        tab: props.defaultTab || props.tabs[defaultIndex],
+        index: defaultIndex,
+      },
     }
+    this.tabRefs = this.props.tabs.map(() => React.createRef())
+    this.focusIndex = defaultIndex
   }
   static propTypes = {
     children: PropTypes.node,
@@ -53,14 +53,30 @@ export default class TabBar extends React.Component {
       this.setState({
         activeTab: { tab, index },
       })
+      this.focusIndex = index
       if (this.props.tabChanged) this.props.tabChanged(tab)
     }
     if (this.props.tabClicked) this.props.tabClicked(tab)
   }
+  handleKeyDown(event) {
+    var delta = 0
+    if (event.keyCode === 39) {
+      delta = 1
+    } else if (event.keyCode === 37) {
+      delta = -1
+    }
+    if (delta !== 0) {
+      // We need focus index a separate index variable to achieve circular focus order, otherwise next focus will not go beyond +1/-1 index of active Tab position.
+      this.focusIndex =
+        (this.focusIndex + delta + this.props.tabs.length) %
+        this.props.tabs.length
+      this.tabRefs[this.focusIndex].current.focus()
+    }
+  }
   render() {
     return (
-      <div className="tabbar">
-        <ul>
+      <div className="tabbar" onKeyDown={this.handleKeyDown.bind(this)}>
+        <ul role="tablist">
           {this.props.tabs.map((tab, index) => (
             <li
               key={tab.name}
@@ -76,6 +92,9 @@ export default class TabBar extends React.Component {
                 onClick={this.handleClick.bind(this, tab.name, index)}
                 role="tab"
                 aria-controls={tab.name}
+                aria-selected={this.state.activeTab.index === index}
+                tabIndex={this.state.activeTab.index === index ? 0 : -1}
+                ref={this.tabRefs[index]}
               >
                 {tab.name}
               </a>

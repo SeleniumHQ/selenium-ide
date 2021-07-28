@@ -1,6 +1,20 @@
+.name span:before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.name.passed span:before{
+  content: '✓';
+}
+.name.failed span::before {
+  content: '✗';
+}
+
 .test {
   font-size: 13px;
-  line-height: 24px;
+  line-height: max(24px, 1.5em);
   background-color: #fff;
 }
 
@@ -27,6 +41,10 @@
 }
 
 .test:hover .name > button {
+  opacity: 1;
+}
+
+.test:focus .name > button {
   opacity: 1;
 }
 

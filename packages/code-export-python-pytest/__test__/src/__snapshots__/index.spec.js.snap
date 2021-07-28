@@ -140,7 +140,8 @@ class TestLogin():
     self.driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
     self.driver.find_element(By.ID, \\"username\\").send_keys(self.vars[\\"username\\"])
     self.driver.find_element(By.ID, \\"password\\").send_keys(self.vars[\\"password\\"])
-    self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
+    if self.driver.execute_script(\\"return (true)\\"):
+      self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
   
   def test_invalidcredentials(self):
     self.vars[\\"username\\"] = \\"blah\\"
@@ -305,7 +306,8 @@ class TestValidcredentials():
     self.driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
     self.driver.find_element(By.ID, \\"username\\").send_keys(self.vars[\\"username\\"])
     self.driver.find_element(By.ID, \\"password\\").send_keys(self.vars[\\"password\\"])
-    self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
+    if self.driver.execute_script(\\"return (true)\\"):
+      self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
   
   def test_validcredentials(self):
     self.vars[\\"username\\"] = \\"tomsmith\\"

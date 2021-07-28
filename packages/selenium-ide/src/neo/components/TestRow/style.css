@@ -68,6 +68,21 @@
   color: #e80600;
 }
 
+.test-table tbody tr td.command span:after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.test-table tbody tr.passed td.command span:after {
+  content: '✓';
+}
+.test-table tbody tr.failed td.command span:after,
+.test-table tbody tr.fatal td.command span:after {
+  content: '✗';
+}
+
 .test-table tbody tr td:first-child {
   position: relative;
   flex: initial;
@@ -93,7 +108,7 @@
 
 .test-table tbody tr td:first-child span.index {
   color: #8b8b8b;
-  line-height: 16px;
+  line-height: max(16px, 1.5em);
   width: 22px;
   text-align: right;
 }

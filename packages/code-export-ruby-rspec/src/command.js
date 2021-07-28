@@ -147,7 +147,7 @@ function variableSetter(varName, value) {
 
 function emitWaitForWindow() {
   const generateMethodDeclaration = name => {
-    return `def ${name}(self, timeout = 2):`
+    return `def ${name}(timeout = 2)`
   }
   const commands = [
     { level: 0, statement: 'sleep(round(timeout / 1000))' },
@@ -156,7 +156,7 @@ function emitWaitForWindow() {
       level: 0,
       statement: `wh_then = @vars['window_handles']`,
     },
-    { level: 0, statement: 'wh_now.find { |window| window != wh_then.first' },
+    { level: 0, statement: 'wh_now.find { |window| window != wh_then.first }' },
   ]
   return Promise.resolve({
     name: 'wait_for_window',
