@@ -1,17 +1,19 @@
 import { App, Menu } from 'electron'
 import Api from '../api'
 import { Config, Session } from '../types'
-import DialogsController from './controllers/dialogs'
-import DriverController from './controllers/driver'
+import ArgTypesController from './controllers/ArgTypes'
+import CommandsController from './controllers/Commands'
+import DialogsController from './controllers/Dialogs'
+import DriverController from './controllers/Driver'
 import PlaybackController from './controllers/Playback'
 import PluginsController from './controllers/Plugins'
 import ProjectsController from './controllers/Projects'
 import RecorderController from './controllers/Recorder'
+import StateController from './controllers/State'
 import SuitesController from './controllers/Suites'
 import TestsController from './controllers/Tests'
 import VariablesController from './controllers/Variables'
 import WindowsController from './controllers/Windows'
-import * as splashConfig from 'browser/panels/Splash/config'
 
 export default async function createSession(
   app: App,
@@ -23,7 +25,10 @@ export default async function createSession(
     config,
     dialogs: new DialogsController(),
     menu: new Menu(),
+    state: new StateController(),
   }
+  partialSession.argTypes = new ArgTypesController(partialSession as Session)
+  partialSession.commands = new CommandsController(partialSession as Session)
   partialSession.driver = new DriverController(partialSession as Session)
   partialSession.playback = new PlaybackController(partialSession as Session)
   partialSession.plugins = new PluginsController(partialSession as Session)
@@ -37,7 +42,7 @@ export default async function createSession(
   const session = partialSession as Session
 
   // Creating the window for project selection
-  session.windows.open(splashConfig)
+  session.windows.open('splash')
 
   return session
 }

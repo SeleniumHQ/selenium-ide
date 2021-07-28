@@ -1,0 +1,126 @@
+/**
+ * Wrapper stuff
+ */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+/**
+ * Flexbox
+ */
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex: 1 1 auto;
+}
+.flex-initial {
+  flex: 0 0 auto;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+
+/**
+ * Overflow
+ */
+.overflow-y {
+  overflow-y: auto;
+}
+
+/**
+ * Height
+ */
+.height-100 {
+  height: 100%;
+}
+
+/**
+ * Width
+ */
+.width-100 {
+  width: 100%;
+}
+
+/**
+ * Height x Width
+ */
+.fill {
+  height: 100%;
+  width: 100%;
+}
+
+/**
+ * Border
+ */
+.bt {
+  border-top: 1px solid;
+}
+
+.br {
+  border-right: 1px solid;
+}
+
+/**
+ * Margin
+ */
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+.m-4 {
+  margin: 1rem;
+}
+
+/**
+ * Padding
+ */
+.pt-0 {
+  padding-top: 0;
+}
+
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+/**
+ * Text-Align
+ */
+.centered {
+  text-align: center;
+}
+
+/**
+ * Line-Height
+ */
+.lh-36 {
+  line-height: 36px !important;
+}
+
+/**
+ * Buttons
+ */
+.button {
+  cursor: pointer;
+}

@@ -7,7 +7,7 @@ export default class SuitesController {
     this.session = session
   }
   session: Session
-  async addTest(suiteID: string, testID: string): Promise<SuiteShape> {
+  async addTest(suiteID: string, testID: string): Promise<void> {
     const project = this.session.projects.project as ProjectShape
     const suite = project.suites.find(
       (suite) => suite.id === suiteID
@@ -15,9 +15,8 @@ export default class SuitesController {
     if (suite.tests.indexOf(testID) !== -1) {
       suite.tests.push(testID)
     }
-    return suite
   }
-  async removeTest(suiteID: string, testID: string): Promise<SuiteShape> {
+  async removeTest(suiteID: string, testID: string): Promise<void> {
     const project = this.session.projects.project as ProjectShape
     const suite = project.suites.find(
       (suite) => suite.id === suiteID
@@ -26,13 +25,12 @@ export default class SuitesController {
     if (index !== -1) {
       suite.tests.splice(index, 1)
     }
-    return suite
   }
   async reorderTest(
     suiteID: string,
     testID: string,
     newIndex: number
-  ): Promise<SuiteShape> {
+  ): Promise<void> {
     const project = this.session.projects.project as ProjectShape
     const suite = project.suites.find(
       (suite) => suite.id === suiteID
@@ -40,7 +38,6 @@ export default class SuitesController {
     const prevIndex = suite.tests.indexOf(testID)
     suite.tests.splice(prevIndex, 1)
     suite.tests.splice(newIndex, 0, testID)
-    return suite
   }
   async create(): Promise<SuiteShape> {
     const project = this.session.projects.project as ProjectShape

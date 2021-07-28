@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-// eslint-disable-next-line node/no-unpublished-import
-import CopyWebpackPlugin from 'copy-webpack-plugin'
+import kebabCase from 'lodash/fp/kebabCase'
 // eslint-disable-next-line node/no-unpublished-import
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 
@@ -20,14 +19,13 @@ const configs = [
   },
 ]
 
-const panels = fs.readdirSync(path.join(__dirname, 'src', 'browser', 'panels'))
-panels.forEach((element) => {
-  const elementPath = path.join(__dirname, 'src', 'browser', 'panels', element)
+const windows = fs.readdirSync(
+  path.join(__dirname, 'src', 'browser', 'windows')
+)
+windows.forEach((element) => {
+  const elementPath = path.join(__dirname, 'src', 'browser', 'windows', element)
   const preloadPath = path.join(elementPath, 'preload.ts')
-  const filecaseElement = element
-    .replace(/([A-Z])/g, '-$1')
-    .slice(1)
-    .toLowerCase()
+  const filecaseElement = kebabCase(element)
   if (fs.existsSync(preloadPath)) {
     configs.push({
       entry: preloadPath,
@@ -60,6 +58,14 @@ function getConfig({ entry, filename, target }: BaseParameters) {
           loader: 'ts-loader',
           exclude: /node_modules/,
         },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'url-loader',
+        },
       ],
     },
     resolve: {
@@ -80,32 +86,12 @@ function getConfig({ entry, filename, target }: BaseParameters) {
 }
 
 function getBrowserPlugins(filename) {
-  const tailwindDist = path.join(
-    require.resolve('tailwindcss'),
-    '..',
-    '..',
-    'dist'
-  )
-  const pluginCopy = new CopyWebpackPlugin({
-    patterns: [
-      {
-        from: path.join(tailwindDist, 'tailwind.min.css'),
-        to: path.join(__dirname, 'dist'),
-      },
-      {
-        from: path.join(tailwindDist, 'tailwind-dark.min.css'),
-        to: path.join(__dirname, 'dist'),
-      },
-    ],
-  })
   const pluginHTML = new HtmlWebpackPlugin({
     filename: `${filename.slice(0, -9)}.html`,
     inject: false,
     templateContent: () => `
       <html>
         <head>
-          <link rel="stylesheet" href="tailwind.min.css">
-          <link rel="stylesheet" href="tailwind-dark.min.css">
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>
@@ -114,5 +100,5 @@ function getBrowserPlugins(filename) {
       </html>
     `,
   })
-  return [pluginCopy, pluginHTML]
+  return [pluginHTML]
 }

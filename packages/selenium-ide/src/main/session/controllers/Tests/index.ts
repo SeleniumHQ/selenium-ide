@@ -7,48 +7,56 @@ export default class TestsController {
   constructor(session: Session) {
     this.session = session
   }
+
   session: Session
+
   async addStep(
     testID: string,
     index: number,
-    step: CommandShape
-  ): Promise<TestShape> {
+    stepFields: Partial<CommandShape>
+  ): Promise<CommandShape> {
     const project = this.session.projects.project as ProjectShape
     const test = project.tests.find((test) => test.id === testID) as TestShape
+    const step = (
+      stepFields.id ? stepFields : merge(this.create(), stepFields)
+    ) as CommandShape
     test.commands.splice(index, 0, step)
-    return test
+    return step
   }
-  async removeStep(testID: string, stepID: string): Promise<TestShape> {
+
+  async removeStep(testID: string, stepID: string): Promise<boolean> {
     const project = this.session.projects.project as ProjectShape
     const test = project.tests.find((test) => test.id === testID) as TestShape
     const index = test.commands.findIndex((step) => step.id === stepID)
     test.commands.splice(index, 1)
-    return test
+    return true
   }
+
   async updateStep(
     testID: string,
     stepID: string,
     step: Partial<CommandShape>
-  ): Promise<TestShape> {
+  ): Promise<CommandShape> {
     const project = this.session.projects.project as ProjectShape
     const test = project.tests.find((test) => test.id === testID) as TestShape
     const index = test.commands.findIndex((step) => step.id === stepID)
     test.commands[index] = merge(test.commands[index], step)
-    test.commands.splice(index, 1)
-    return test
+    return test.commands[index]
   }
+
   async reorderStep(
     testID: string,
     stepID: string,
     newIndex: number
-  ): Promise<TestShape> {
+  ): Promise<boolean> {
     const project = this.session.projects.project as ProjectShape
     const test = project.tests.find((test) => test.id === testID) as TestShape
     const index = test.commands.findIndex((step) => step.id === stepID)
     const [step] = test.commands.splice(index, 1)
     test.commands.splice(newIndex, 0, step)
-    return test
+    return true
   }
+
   async create(): Promise<TestShape> {
     return {
       id: randomUUID(),
@@ -56,7 +64,8 @@ export default class TestsController {
       commands: [],
     }
   }
-  async delete(testID: string): Promise<ProjectShape> {
+
+  async delete(testID: string): Promise<boolean> {
     const project = this.session.projects.project as ProjectShape
     const testIndex = project.tests.findIndex((test) => test.id === testID)
     project.tests.splice(testIndex, 1)
@@ -66,12 +75,13 @@ export default class TestsController {
         suite.tests.splice(index, 1)
       }
     })
-    return project
+    return true
   }
-  async rename(testID: string, name: string): Promise<TestShape> {
+
+  async rename(testID: string, name: string): Promise<boolean> {
     const project = this.session.projects.project as ProjectShape
     const test = project.tests.find((test) => test.id === testID) as TestShape
     test.name = name
-    return test
+    return true
   }
 }

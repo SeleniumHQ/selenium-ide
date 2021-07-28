@@ -1,6 +1,6 @@
-import * as projectEditorConfig from 'browser/panels/ProjectEditor/config'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
+import defaultProject from 'api/models/project'
 import { ProjectShape } from 'api/types'
 import RecentProjects from './Recent'
 
@@ -8,13 +8,15 @@ export default class ProjectsController {
   constructor(session: Session) {
     this.session = session
     this.recentProjects = new RecentProjects(session)
+    this.project = defaultProject
   }
   recentProjects: RecentProjects
-  project?: ProjectShape
+  project: ProjectShape
   session: Session
-  onProjectLoaded(): void {
-    this.session.windows.open(projectEditorConfig)
+  onProjectLoaded(project: ProjectShape): void {
+    this.project = project
     this.session.windows.close('splash')
+    this.session.windows.open('project-editor')
   }
   async getActive(): Promise<ProjectShape> {
     return this.project as ProjectShape
@@ -23,10 +25,10 @@ export default class ProjectsController {
     return this.recentProjects.get()
   }
   async new(): Promise<ProjectShape> {
-    this.project = {
+    const starterProject: ProjectShape = {
       id: '',
       version: '3.0',
-      name: 'New Suite',
+      name: 'New Project',
       url: 'http://www.google.com',
       urls: ['http://www.google.com'],
       plugins: [],
@@ -40,10 +42,13 @@ export default class ProjectsController {
         },
       },
     }
-    return this.project
+    this.onProjectLoaded(starterProject)
+    return starterProject
   }
   async load(filepath: string): Promise<ProjectShape> {
-    return this.load_v3(filepath)
+    const project = await this.load_v3(filepath)
+    this.onProjectLoaded(project)
+    return project
   }
   async save(filepath: string): Promise<boolean> {
     return this.save_v3(filepath)

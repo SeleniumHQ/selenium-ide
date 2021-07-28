@@ -31,7 +31,6 @@ export default class DriverController {
       .withCapabilities(capabilities)
       .forBrowser(browser)
       .build()
-    debugger
     return driver
   }
 }

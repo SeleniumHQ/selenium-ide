@@ -1,5 +1,16 @@
+export { CommandShape } from './models/project/command'
+export { ConfigShape } from './models/config'
+export { ProjectShape } from './models/project/project'
+export { SnapshotShape } from './models/project/snapshot'
+export { SnapshotTestShape } from './models/project/snapshotTest'
+export { StateShape } from './models/state'
+export { SuiteShape } from './models/project/suite'
+export { TestShape } from './models/project/test'
+
 import { LoadedWindow } from 'browser/types'
 import { Session } from 'main/types'
+import { ProjectShape } from './models/project/project'
+import { StateShape } from './models/state'
 
 export type VariadicArgs = any[]
 
@@ -29,71 +40,26 @@ export type GenericApi = {
   [key: string]: GenericApiNamespace
 }
 
-export interface TabData {
-  active: boolean
-  id: number
-  status: string
-  title: string
-  url: string
-  windowId: number
-  [key: string]: boolean | number | string
+export interface CoreSessionData {
+  project: ProjectShape
+  state: StateShape
 }
 
-export interface WindowData {
-  focused: boolean
-  id: number
-  tabs: TabData[]
-  [key: string]: boolean | number | TabData[]
+export type RequestData<Type extends ApiHandler> = {
+  params: Parameters<Type>
+  result: AsyncReturnType<Type> | null
 }
-export interface CommandShape {
-  id: string
-  comment: string
-  command: string
-  target: string
-  targets: [string, string][]
-  value: string
-}
+export type Mutator<Type extends ApiHandler> = (
+  session: CoreSessionData,
+  req: RequestData<Type>
+) => void
 
-export interface TestShape {
-  id: string
-  name: string
-  commands: CommandShape[]
-}
-
-export interface SuiteShape {
-  id: string
-  name: string
-  persistSession: boolean
-  parallel: boolean
-  timeout: number
-  tests: string[]
-}
-
-export interface SnapshotTestShape {
-  id: string
-  snapshot: {
-    commands: { [key: string]: '\n' }
-    setupHooks: []
-    teardownHooks: []
-  }
-}
-
-export interface SnapshotsShape {
-  tests: SnapshotTestShape[]
-  dependencies: { [key: string]: string }
-  jest: {
-    extraGlobals: string[]
-  }
-}
-
-export interface ProjectShape {
-  id: string
-  version: '2.0' | '3.0'
-  name: string
-  url: string
-  urls: string[]
-  plugins: any[]
-  tests: TestShape[]
-  suites: SuiteShape[]
-  snapshot: SnapshotsShape
-}
+// This is shamelessly copied from here:
+// https://www.jpwilliams.dev/how-to-unpack-the-return-type-of-a-promise-in-typescript
+export type AsyncReturnType<T extends (...args: any) => any> = T extends (
+  ...args: any
+) => Promise<infer U>
+  ? U
+  : T extends (...args: any) => infer U
+  ? U
+  : any
