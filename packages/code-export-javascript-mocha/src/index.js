@@ -122,6 +122,7 @@ export default {
   emit: {
     test: emitTest,
     suite: emitSuite,
+    command: emitter.emit,
     locator: location.emit,
   },
   register: {
