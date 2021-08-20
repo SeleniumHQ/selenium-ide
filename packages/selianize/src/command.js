@@ -120,6 +120,9 @@ const emitters = {
   waitForText: emitWaitForText,
 }
 
+/** list of commands that should escape vars in their value */
+const escapeVarsInValue = new Set(['editContent'])
+
 export function emit(command, options = config, snapshot) {
   return new Promise(async (res, rej) => {
     if (emitters[command.command]) {
@@ -135,6 +138,7 @@ export function emit(command, options = config, snapshot) {
           ),
           preprocessParameter(command.value, emitters[command.command].value, {
             ignoreEscaping,
+            escapeVar: escapeVarsInValue.has(command.command) && emitEscapeString,
           })
         )
         if (command.opensWindow) result = emitNewWindowHandling(result, command)
@@ -160,7 +164,8 @@ export function canEmit(commandName) {
   return !!emitters[commandName]
 }
 
-function preprocessParameter(param, preprocessor, { ignoreEscaping }) {
+/** escapeVar is an optional function to escape variable occurrances during code emission */
+function preprocessParameter(param, preprocessor, { ignoreEscaping, escapeVar }) {
   const escapedParam = escapeString(param, {
     preprocessor,
     ignoreEscaping,
@@ -168,7 +173,7 @@ function preprocessParameter(param, preprocessor, { ignoreEscaping }) {
   if (preprocessor) {
     return preprocessor(escapedParam)
   }
-  return defaultPreprocessor(escapedParam)
+  return defaultPreprocessor(escapedParam, escapeVar)
 }
 
 function escapeString(string, { preprocessor, ignoreEscaping }) {
@@ -186,8 +191,16 @@ function emitNewWindowHandling(emitted, command) {
   });`
 }
 
-function defaultPreprocessor(param) {
-  return param ? param.replace(/\$\{/g, '${vars.') : param
+/** emit an escaping replacement expression for a value */
+function emitEscapeString(str) {
+    return `${str}.replace(/\\\\/g, '\\\\\\\\').replace(/\\n/g, '\\\\n').replace(/\\'/g, '\\\\\\\'')`
+}
+
+/** escapeVar is an optional function to escape variable occurrances during code emission */
+function defaultPreprocessor(param, escapeVar) {
+  return param && escapeVar ? param.replace(/\$\{([^}]+)\}/g, '$${'+escapeVar('vars.$1', param)+ '}')
+    : param ? param.replace(/\$\{/g, '${vars.')
+    : param
 }
 
 export function scriptPreprocessor(script) {
