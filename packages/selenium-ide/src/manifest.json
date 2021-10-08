@@ -22,11 +22,9 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "webRequest",
     "contextMenus",
     "downloads",
     "webNavigation",
-    "notifications",
     "storage",
     "debugger",
     "<all_urls>"
