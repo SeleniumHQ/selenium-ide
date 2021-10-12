@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
-    "electron": "^9.4.0",
+    "electron": "^11.5.0",
     "electron-builder": "^21.2.0",
     "fs-extra": "^8.1.0"
   }

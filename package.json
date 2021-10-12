@@ -71,7 +71,7 @@
     "@typescript-eslint/parser": "^2.6.0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
-    "electron": "^9.4.0",
+    "electron": "^11.5.0",
     "electron-builder": "^21.2.0",
     "eslint": "^6.5.0",
     "eslint-config-prettier": "^6.3.0",
