@@ -17,7 +17,7 @@
   "main": "dist/index.js",
   "dependencies": {
     "@seleniumhq/side-model": "^3.17.0",
-    "ua-parser-js": "^0.7.17"
+    "ua-parser-js": "0.7.28"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
