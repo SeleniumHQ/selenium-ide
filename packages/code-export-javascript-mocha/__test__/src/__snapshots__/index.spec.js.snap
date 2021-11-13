@@ -116,7 +116,7 @@ exports[`Code Export JavaScript Mocha should export a suite with a reused test m
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
-describe('login', function() {
+describe('Reused methods', function() {
   this.timeout(30000)
   let driver
   let vars
@@ -136,6 +136,9 @@ describe('login', function() {
       await driver.findElement(By.css(\\".fa\\")).click()
     }
   }
+  async function tinymethod() {
+    vars[\\"value\\"] = \\"field\\"
+  }
   it('invalid credentials', async function() {
     vars[\\"username\\"] = \\"blah\\"
     vars[\\"password\\"] = \\"blah\\"
@@ -145,6 +148,12 @@ describe('login', function() {
     vars[\\"username\\"] = \\"tomsmith\\"
     vars[\\"password\\"] = \\"SuperSecretPassword!\\"
     login()
+  })
+  it('two methods', async function() {
+    vars[\\"username\\"] = \\"blah\\"
+    vars[\\"password\\"] = \\"blah\\"
+    login()
+    tinymethod()
   })
 })
 "
