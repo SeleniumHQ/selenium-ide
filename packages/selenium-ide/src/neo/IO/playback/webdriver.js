@@ -160,7 +160,7 @@ export default class WebDriverExecutor {
     const coords = coordString.split(',')
     const element = await waitForElement(locator, this.driver)
     await this.driver
-      .actions()
+      .actions
       .mouseMove(element, { x: coords[0], y: coords[1] })
       .click()
       .perform()
@@ -169,7 +169,7 @@ export default class WebDriverExecutor {
   async doDoubleClick(locator) {
     const element = await waitForElement(locator, this.driver)
     await this.driver
-      .actions()
+      .actions
       .doubleClick(element)
       .perform()
   }

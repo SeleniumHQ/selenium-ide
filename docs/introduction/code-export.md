@@ -151,7 +151,7 @@ Here's a sample `package.json` to help you get started.
 {
   "dependencies": {
     "mocha": "^6.1.4",
-    "selenium-webdriver": "^4.0.0-alpha.3"
+    "selenium-webdriver": "^4.0.0"
   }
 }
 ```

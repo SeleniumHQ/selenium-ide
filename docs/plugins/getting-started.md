@@ -78,7 +78,7 @@ Plugins provide the IDE with a manifest that declares their changes and addition
     }
   ],
   dependencies: {
-    "selenium-webdriver": "3.6.0"
+    "selenium-webdriver": "^4.0.0"
   }
 }
 ```

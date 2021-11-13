@@ -311,7 +311,7 @@ async function emitDoubleClick(target) {
       target
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       target
-    )}).then(element => {return driver.actions({bridge: true}).doubleClick(element).perform();});`
+    )}).then(element => {return driver.actions.doubleClick(element).perform();});`
   )
 }
 
@@ -325,7 +325,7 @@ async function emitDragAndDrop(dragged, dropzone) {
       dragged
     )}).then(dragged => {return driver.findElement(${await LocationEmitter.emit(
       dropzone
-    )}).then(dropzone => {return driver.actions({bridge: true}).dragAndDrop(dragged, dropzone).perform();});});`
+    )}).then(dropzone => {return driver.actions.dragAndDrop(dragged, dropzone).perform();});});`
   )
 }
 
@@ -669,7 +669,7 @@ async function emitMouseDown(locator) {
       locator
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       locator
-    )}).then(element => {return driver.actions({bridge: true}).move({origin: element}).press().perform();});`
+    )}).then(element => {return driver.actions.move({origin: element}).press().perform();});`
   )
 }
 
@@ -679,7 +679,7 @@ async function emitMouseUp(locator) {
       locator
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       locator
-    )}).then(element => {return driver.actions({bridge: true}).move({origin: element}).release().perform();});`
+    )}).then(element => {return driver.actions.move({origin: element}).release().perform();});`
   )
 }
 
@@ -689,13 +689,13 @@ async function emitMouseMove(locator) {
       locator
     )}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(
       locator
-    )}).then(element => {return driver.actions({bridge: true}).move({origin: element}).perform();});`
+    )}).then(element => {return driver.actions.move({origin: element}).perform();});`
   )
 }
 
 async function emitMouseOut(_locator) {
   return Promise.resolve(
-    `await driver.actions({bridge: true}).move({x: 0, y: 0}).perform();`
+    `await driver.actions.move({x: 0, y: 0}).perform();`
   )
 }
 
