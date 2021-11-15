@@ -138,7 +138,8 @@ export function emit(command, options = config, snapshot) {
           ),
           preprocessParameter(command.value, emitters[command.command].value, {
             ignoreEscaping,
-            escapeVar: escapeVarsInValue.has(command.command) && emitEscapeString,
+            escapeVar:
+              escapeVarsInValue.has(command.command) && emitEscapeString,
           })
         )
         if (command.opensWindow) result = emitNewWindowHandling(result, command)
@@ -165,7 +166,11 @@ export function canEmit(commandName) {
 }
 
 /** escapeVar is an optional function to escape variable occurrances during code emission */
-function preprocessParameter(param, preprocessor, { ignoreEscaping, escapeVar }) {
+function preprocessParameter(
+  param,
+  preprocessor,
+  { ignoreEscaping, escapeVar }
+) {
   const escapedParam = escapeString(param, {
     preprocessor,
     ignoreEscaping,
@@ -193,14 +198,16 @@ function emitNewWindowHandling(emitted, command) {
 
 /** emit an escaping replacement expression for a value */
 function emitEscapeString(str) {
-    return `${str}.replace(/\\\\/g, '\\\\\\\\').replace(/\\n/g, '\\\\n').replace(/\\'/g, '\\\\\\\'')`
+  return `${str}.replace(/\\\\/g, '\\\\\\\\').replace(/\\n/g, '\\\\n').replace(/\\'/g, '\\\\\\'')`
 }
 
 /** escapeVar is an optional function to escape variable occurrances during code emission */
 function defaultPreprocessor(param, escapeVar) {
-  return param && escapeVar ? param.replace(/\$\{([^}]+)\}/g, '$${'+escapeVar('vars.$1', param)+ '}')
-    : param ? param.replace(/\$\{/g, '${vars.')
+  return param && escapeVar
+    ? param.replace(/\$\{([^}]+)\}/g, '$${' + escapeVar('vars.$1', param) + '}')
     : param
+      ? param.replace(/\$\{/g, '${vars.')
+      : param
 }
 
 export function scriptPreprocessor(script) {
