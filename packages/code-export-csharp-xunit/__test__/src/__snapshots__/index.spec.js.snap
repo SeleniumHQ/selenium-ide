@@ -158,7 +158,7 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-namespace Login
+namespace Reusedmethods
 {
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
@@ -184,6 +184,10 @@ public class SuiteTests : IDisposable {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
+  public void tinymethod() 
+  {
+    vars[\\"value\\"] = \\"field\\";
+  }
   [Fact]
   public void Invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
@@ -195,6 +199,13 @@ public class SuiteTests : IDisposable {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
     login();
+  }
+  [Fact]
+  public void Twomethods() {
+    vars[\\"username\\"] = \\"blah\\";
+    vars[\\"password\\"] = \\"blah\\";
+    login();
+    tinymethod();
   }
 }
 }"

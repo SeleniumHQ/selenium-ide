@@ -160,7 +160,7 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
 [TestFixture]
-public class LoginTest {
+public class ReusedmethodsTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
@@ -183,6 +183,9 @@ public class LoginTest {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
+  public void tinymethod() {
+    vars[\\"value\\"] = \\"field\\";
+  }
   [Test]
   public void invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
@@ -194,6 +197,13 @@ public class LoginTest {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
     login();
+  }
+  [Test]
+  public void twomethods() {
+    vars[\\"username\\"] = \\"blah\\";
+    vars[\\"password\\"] = \\"blah\\";
+    login();
+    tinymethod();
   }
 }
 "

@@ -109,6 +109,17 @@
       "value": ""
     }]
   }, {
+    "id": "01472588-f710-45f6-a3db-3c931e23a37f",
+    "name": "tiny method",
+    "commands": [{
+      "id": "169d75ba-2626-41e2-8516-a3114d7d8d14",
+      "comment": "",
+      "command": "store",
+      "target": "field",
+      "targets": [],
+      "value": "value"
+    }]
+  }, {
     "id": "01472588-f710-45f6-a3db-3c931e23a37e",
     "name": "invalid credentials",
     "commands": [{
@@ -133,14 +144,46 @@
       "targets": [],
       "value": ""
     }]
+  }, {
+    "id": "01472588-f710-45f6-a3db-3c931e23a37g",
+    "name": "two methods",
+    "commands": [{
+      "id": "169d75ba-2626-41e2-8516-a3114d7d8d15",
+      "comment": "",
+      "command": "store",
+      "target": "blah",
+      "targets": [],
+      "value": "username"
+    }, {
+      "id": "6959737f-8a00-4a07-b238-c990eaf53b29",
+      "comment": "",
+      "command": "store",
+      "target": "blah",
+      "targets": [],
+      "value": "password"
+    }, {
+      "id": "3e5ed8a5-088a-4b7a-a52d-b47afa233b91",
+      "comment": "",
+      "command": "run",
+      "target": "login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3e5ed8a5-088a-4b7a-a52d-b47afa233b93",
+      "comment": "",
+      "command": "run",
+      "target": "tiny method",
+      "targets": [],
+      "value": ""
+    }]
   }],
   "suites": [{
     "id": "ee5f025f-40bf-4295-9a57-c916a4b47c70",
-    "name": "login",
+    "name": "Reused methods",
     "persistSession": false,
     "parallel": false,
     "timeout": 300,
-    "tests": ["01472588-f710-45f6-a3db-3c931e23a37e", "0b10e1b2-df70-46c2-8c66-13bdf462f4b2"]
+    "tests": ["01472588-f710-45f6-a3db-3c931e23a37e", "0b10e1b2-df70-46c2-8c66-13bdf462f4b2", "01472588-f710-45f6-a3db-3c931e23a37g"]
   }],
   "urls": ["https://the-internet.herokuapp.com/"],
   "plugins": []
