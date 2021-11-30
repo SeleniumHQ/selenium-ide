@@ -66,7 +66,7 @@ For Internet Explorer, you'll need to be running on Windows, and you'll also nee
 > npm install -g iedriver
 ```
 
-There's some additional setup required for IEDriver to work. Details avaialble [here](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration).
+There's some additional setup required for IEDriver to work. Details available [here](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration).
 
 ### Safari
 

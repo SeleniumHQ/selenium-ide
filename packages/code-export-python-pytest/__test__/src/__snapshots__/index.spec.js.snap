@@ -127,7 +127,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-class TestLogin():
+class TestReusedmethods():
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -143,6 +143,9 @@ class TestLogin():
     if self.driver.execute_script(\\"return (true)\\"):
       self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
   
+  def tinymethod(self):
+    self.vars[\\"value\\"] = \\"field\\"
+  
   def test_invalidcredentials(self):
     self.vars[\\"username\\"] = \\"blah\\"
     self.vars[\\"password\\"] = \\"blah\\"
@@ -152,6 +155,12 @@ class TestLogin():
     self.vars[\\"username\\"] = \\"tomsmith\\"
     self.vars[\\"password\\"] = \\"SuperSecretPassword!\\"
     self.login()
+  
+  def test_twomethods(self):
+    self.vars[\\"username\\"] = \\"blah\\"
+    self.vars[\\"password\\"] = \\"blah\\"
+    self.login()
+    self.tinymethod()
   
 "
 `;

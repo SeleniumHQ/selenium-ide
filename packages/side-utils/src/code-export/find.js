@@ -15,16 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function findReusedTestMethods(test, tests, _results) {
-  const results = _results ? _results : []
+export function deduplicateReusedTestMethods(testMethods) {
+  return testMethods.filter((entry, index) => {
+    const firstEntryIndex = testMethods.findIndex(
+      entry2 => entry2.name === entry.name
+    )
+    const isFirstEntry = firstEntryIndex === index
+    return isFirstEntry
+  })
+}
+
+export function findReusedTestMethods(test, tests) {
+  let results = []
   for (const command of test.commands) {
     if (command.command === 'run') {
       const reusedTest = tests.find(test => test.name === command.target)
       results.push({ name: reusedTest.name, commands: reusedTest.commands })
-      return findReusedTestMethods(reusedTest, tests, results)
+      results = results.concat(findReusedTestMethods(reusedTest, tests))
     }
   }
-  return results
+  return deduplicateReusedTestMethods(results)
 }
 
 export function findCommandThatOpensWindow(test, tests) {
