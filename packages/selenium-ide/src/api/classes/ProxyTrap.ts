@@ -32,7 +32,7 @@ const ProxyTrap =
     ): LAYER => {
       const validator = {
         get(target: LAYER, key: string | number | symbol): MaybeVagueShape {
-          // @ts-ignore
+          // @ts-expect-error
           const val: MaybeVagueShape = target[key]
           if (isVagueShape(val)) {
             return proxyLayer(val, (value) => {

@@ -1,5 +1,9 @@
-import webdriver from 'selenium-webdriver'
+import { resolveBrowserVersion } from '@seleniumhq/get-driver'
+import { ChildProcess } from 'child_process'
+import webdriver, { WebDriver } from 'selenium-webdriver'
 import { Session } from '../../../types'
+import downloadDriver from './download'
+import startDriver from './start'
 
 interface DriverOptions {
   browser?: 'chrome'
@@ -16,6 +20,8 @@ export default class DriverController {
     this.session = session
   }
   session: Session
+  driver?: WebDriver
+  driverProcess?: ChildProcess
   async build({
     browser = 'chrome',
     capabilities = {
@@ -31,6 +37,36 @@ export default class DriverController {
       .withCapabilities(capabilities)
       .forBrowser(browser)
       .build()
+    this.driver = driver
     return driver
+  }
+  async download(version: string) {
+    return downloadDriver(version)
+  }
+  async getBrowserPath(): Promise<string> {
+    return this.session.store.get('config.browserPath')
+  }
+  async getBrowserVersion(): Promise<string> {
+    const path = await this.getBrowserPath()
+    const version = await resolveBrowserVersion(path)
+    return version as string
+  }
+  async setBrowserPath(browserPath: string): Promise<boolean> {
+    this.session.store.set('config.browserPath', browserPath)
+    return true
+  }
+  async startProcess(version: string): Promise<null | string> {
+    const results = await startDriver(this.session)(version)
+    if (results.success) {
+      this.driverProcess = results.driver
+      return null
+    }
+    return results.error
+  }
+  async stopProcess(): Promise<null | string> {
+    if (this.driverProcess) {
+      this.driverProcess.kill()
+    }
+    return null
   }
 }

@@ -1,4 +1,4 @@
-import storage from '../../../storage'
+import storage from '../../../store'
 import { Session } from '../../../types'
 
 const addToBeginning = (prevList: string[], entry: string) => {

@@ -1,21 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import ReactDOM from 'react-dom'
-import { LoadedWindow } from 'browser/types'
 import Grid from '@material-ui/core/Grid'
 import AppWrapper from 'browser/components/AppWrapper'
-import { useImmer } from 'use-immer'
-import defaultProject from 'api/models/project'
 import defaultTest from 'api/models/project/test'
 import defaultCommand from 'api/models/project/command'
-import defaultState from 'api/models/state'
-import { CommandShape, CoreSessionData, TestShape } from 'api/types'
+import { CommandShape, TestShape } from 'api/types'
 import loadingID from '../../../api/constants/loadingID'
 import TestControls from './components/TestControls'
 import TestList from './components/TestList'
 import CommandList from './components/CommandList'
 import CommandEditor from './components/CommandEditor'
-
-const { sideAPI } = window as LoadedWindow
+import subscribeToSession from 'browser/helpers/subscribeToSession'
 
 const hasID =
   (id2: string) =>
@@ -23,32 +18,17 @@ const hasID =
     id2 === id
 
 const ProjectEditor = () => {
-  const [session, updateSession] = useImmer<CoreSessionData>({
-    project: defaultProject,
-    state: defaultState,
-  })
-  const { project } = session
+  const session = subscribeToSession()
+  const {
+    project,
+    state: { activeCommandID, activeTestID, commands },
+  } = session
 
-  useEffect(() => {
-    Promise.all([sideAPI.commands.get(), sideAPI.projects.getActive()]).then(
-      ([commandTypes, project]) => {
-        updateSession((session) => {
-          session.state.commands = commandTypes
-          session.project = project
-          session.state.activeTest = project.tests[0].id
-          session.state.activeCommand = project.tests[0].commands[0].id
-        })
-      }
-    )
-  }, [])
-
-  const activeTestID = session.state.activeTest
   const activeTest = useMemo(
     () => project.tests.find(hasID(activeTestID)) || defaultTest,
     [activeTestID, project]
   ) as TestShape
 
-  const activeCommandID = session.state.activeCommand
   const activeCommand = useMemo(
     () => activeTest.commands.find(hasID(activeCommandID)) || defaultCommand,
     [activeCommandID, activeTest]
@@ -62,21 +42,20 @@ const ProjectEditor = () => {
     <AppWrapper>
       <Grid className="fill" container spacing={0}>
         <Grid className="height-100" item xs={3}>
-          <TestList
-            activeTest={activeTestID}
-            tests={project.tests}
-            setActiveTest={sideAPI.state.setActiveTest}
-          />
+          <TestList activeTest={activeTestID} tests={project.tests} />
         </Grid>
         <Grid className="height-100" item xs={9}>
           <div className="flex flex-col height-100">
             <TestControls test={activeTest} />
             <CommandList
               activeCommand={activeCommandID}
-              setActiveCommand={sideAPI.state.setActiveCommand}
               commands={activeTest.commands}
             />
-            <CommandEditor command={activeCommand} testID={activeTestID} />
+            <CommandEditor
+              commands={commands}
+              command={activeCommand}
+              testID={activeTestID}
+            />
           </div>
         </Grid>
       </Grid>

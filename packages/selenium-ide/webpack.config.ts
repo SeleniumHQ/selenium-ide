@@ -85,11 +85,12 @@ function getConfig({ entry, filename, target }: BaseParameters) {
   }
 }
 
-function getBrowserPlugins(filename) {
+function getBrowserPlugins(filename: string) {
   const pluginHTML = new HtmlWebpackPlugin({
     filename: `${filename.slice(0, -9)}.html`,
     inject: false,
     templateContent: () => `
+      <!doctype html>
       <html>
         <head>
           <script defer src="${filename}-bundle.js"></script>

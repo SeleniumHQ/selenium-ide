@@ -1,23 +1,33 @@
-import { CoreSessionData, TestShape } from 'api/types'
+import update from 'lodash/fp/update'
+import { CommandShape, CoreSessionData, Mutator, TestShape } from 'api/types'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
 
 export type Shape = Session['tests']['reorderStep']
 
-export const mutator = (
+export const mutator: Mutator<Shape> = (
   session: CoreSessionData,
-  testID: string,
-  stepID: string,
-  newIndex: number
-) => {
-  const test = session.project.tests.find(
-    (test) => test.id === testID
-  ) as TestShape
-  const index = test.commands.findIndex((step) => step.id === stepID)
-  const [step] = test.commands.splice(index, 1)
-  test.commands.splice(newIndex, 0, step)
-}
+  { params: [testID, stepID, newIndex] }
+) =>
+  update(
+    'project.tests',
+    (tests: TestShape[]) => {
+      const testIndex = tests.findIndex((test) => test.id === testID)
+      return update(
+        `${testIndex}.commands`,
+        (commands: CommandShape[]) => {
+          const index = commands.findIndex((step) => step.id === stepID)
+          const newCommands = commands.slice(0)
+          const [step] = newCommands.splice(index, 1)
+          newCommands.splice(newIndex, 0, step)
+          return newCommands
+        },
+        tests
+      )
+    },
+    session
+  )
 
 export const browser = browserHandler<Shape>()
 

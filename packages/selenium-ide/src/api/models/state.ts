@@ -8,8 +8,8 @@ import loadingID from 'api/constants/loadingID'
  */
 
 export interface StateShape {
-  activeCommand: string
-  activeTest: string
+  activeCommandID: string
+  activeTestID: string
   breakpoints: string[]
   commands: CommandTypes
   status: 'idle' | 'paused' | 'playing' | 'recording'
@@ -23,8 +23,8 @@ export interface StateShape {
 
 export type Shape = StateShape
 const action: StateShape = {
-  activeCommand: loadingID,
-  activeTest: loadingID,
+  activeCommandID: loadingID,
+  activeTestID: loadingID,
   breakpoints: [],
   commands: {},
   status: 'idle',

@@ -1,46 +1,48 @@
 import { ipcMain } from 'electron'
 import { ApiHandler, Mutator } from 'api/types'
-import { Session } from '../../types'
+import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
+
+export type AsyncHandler<HANDLER extends ApiHandler> = (
+  ...args: Parameters<HANDLER>
+) => Promise<ReturnType<HANDLER>>
+
+export type HandlerFactory<HANDLER extends ApiHandler> = (
+  path: string,
+  session: Session
+) => AsyncHandler<HANDLER>
 
 const defaultHandler = <HANDLER extends ApiHandler>(
   path: string,
-  session: Session,
-  mutator?: Mutator<any>
-) => {
+  session: Session
+): AsyncHandler<HANDLER> => {
   const [namespace, method] = path.split('.')
-  return async (...args: Parameters<HANDLER>) => {
-    // @ts-ignore
-    const sessionClass = session[namespace]
-    const result: ReturnType<HANDLER> = await sessionClass[method](...args)
-    if (mutator) {
-      mutator(getCore(session), {
-        params: args,
-        result,
-      })
-    }
-    return result
+  const controller = session[namespace as SessionControllerKeys]
+  if (controller && method in controller) {
+    // @ts-expect-error
+    return controller[method].bind(controller) as AsyncHandler<HANDLER>
   }
+  throw new Error(`Missing method for path ${path}`)
 }
 
 const Handler =
   <HANDLER extends ApiHandler>(
-    factory: <HANDLER extends ApiHandler>(
-      path: string,
-      session: Session,
-      mutator?: Mutator<any>
-    ) => (
-      ...args: Parameters<HANDLER>
-    ) => Promise<ReturnType<HANDLER>> = defaultHandler
+    factory: HandlerFactory<HANDLER> = defaultHandler
   ) =>
-  (path: string, session: Session, mutator?: Mutator<any>) => {
-    const handler = factory<HANDLER>(path, session, mutator)
+  (path: string, session: Session, mutator?: Mutator<HANDLER>) => {
+    const handler = factory(path, session)
     ipcMain.on(path, async (_event, ...args) => {
-      console.log('Received API Request', path, ...args)
-      const result = await handler(...(args as Parameters<HANDLER>))
-
-      console.log('Resolved API Request', path, result)
-      ipcMain.emit(`${path}.complete`, { params: args, result })
+      console.debug('Received API Request', path, ...args)
+      const params = args as Parameters<HANDLER>
+      const result = await handler(...params)
+      console.debug('Resolved API Request', path, result)
+      if (mutator) {
+        const newState = mutator(getCore(session), { params, result })
+        session.projects.project = newState.project
+        session.state.state = newState.state
+        session.api.state.onMutate.dispatchEvent(path, { params, result })
+      }
+      session.windows.broadcast(`${path}.complete`, result)
     })
     return handler
   }

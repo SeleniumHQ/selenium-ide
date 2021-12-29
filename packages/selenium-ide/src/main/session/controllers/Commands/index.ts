@@ -6,7 +6,8 @@ export default class CommandsController {
     this.session = session
   }
   session: Session
-  async get() {
+  async init() {
+    this.session.state.state.commands = Commands
     return Commands
   }
 }

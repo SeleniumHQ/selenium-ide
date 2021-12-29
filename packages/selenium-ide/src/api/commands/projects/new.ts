@@ -5,9 +5,10 @@ import { Mutator } from 'api/types'
 
 export type Shape = Session['projects']['new']
 
-export const mutator: Mutator<Shape> = (session, { result }) => {
-  session.project = result
-}
+export const mutator: Mutator<Shape> = (session, { result }) => ({
+  ...session,
+  project: result,
+})
 
 export const browser = browserHandler<Shape>()
 

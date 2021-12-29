@@ -1,5 +1,4 @@
 export { CommandShape } from './models/project/command'
-export { ConfigShape } from './models/config'
 export { ProjectShape } from './models/project/project'
 export { SnapshotShape } from './models/project/snapshot'
 export { SnapshotTestShape } from './models/project/snapshotTest'
@@ -22,6 +21,7 @@ export type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 export interface ApiEntry {
   browser: (path: string, context: LoadedWindow) => any
   main: (path: string, context: Session) => any
+  mutator?: (...args: any[]) => any
 }
 
 export interface ApiNamespace {
@@ -47,12 +47,12 @@ export interface CoreSessionData {
 
 export type RequestData<Type extends ApiHandler> = {
   params: Parameters<Type>
-  result: AsyncReturnType<Type> | null
+  result: Awaited<Promise<ReturnType<Type>>>
 }
 export type Mutator<Type extends ApiHandler> = (
   session: CoreSessionData,
   req: RequestData<Type>
-) => void
+) => CoreSessionData
 
 // This is shamelessly copied from here:
 // https://www.jpwilliams.dev/how-to-unpack-the-return-type-of-a-promise-in-typescript

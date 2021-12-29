@@ -6,12 +6,13 @@ import Select from '@material-ui/core/Select'
 import Stack from '@material-ui/core/Stack'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import { CommandShape } from 'api/types'
+import { CommandShape, CoreSessionData } from 'api/types'
 import sideAPI from 'browser/helpers/getSideAPI'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useMemo } from 'react'
 
 export interface CommandEditorProps {
   command: CommandShape
+  commands: CoreSessionData['state']['commands']
   testID: string
 }
 
@@ -20,22 +21,17 @@ export interface MiniCommandShape {
   name: string
 }
 
-const CommandEditor: FC<CommandEditorProps> = ({ command, testID }) => {
-  const [commands, setCommands] = useState<MiniCommandShape[]>([])
-  useEffect(() => {
-    sideAPI.commands.get().then((commandsMap) => {
-      setCommands(
-        Object.entries(commandsMap).map(([id, { name }]) => ({ id, name }))
-      )
-    })
-  }, [])
-
-  if (commands.length === 0) {
-    return (
-      <Typography variant="subtitle1">
-        Please load a project or create a new one
-      </Typography>
-    )
+const CommandEditor: FC<CommandEditorProps> = ({
+  command,
+  commands,
+  testID,
+}) => {
+  const commandsList = useMemo(
+    () => Object.entries(commands).map(([id, { name }]) => ({ id, name })),
+    []
+  )
+  if (commandsList.length === 0) {
+    return <Typography variant="subtitle1">Loading...</Typography>
   }
   const updateField = (name: string) => (e: any) => {
     sideAPI.tests.updateStep(testID, command.id, {
@@ -76,7 +72,7 @@ const CommandEditor: FC<CommandEditorProps> = ({ command, testID }) => {
           size="small"
           value={command.command}
         >
-          {commands.map((cmd) => (
+          {commandsList.map((cmd) => (
             <MenuItem key={cmd.id} value={cmd.id}>
               {cmd.name}
             </MenuItem>

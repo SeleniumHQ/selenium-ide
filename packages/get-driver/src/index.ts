@@ -15,5 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+export { default as defaultBrowserPath } from './default-browser-path'
 export { default as downloadDriver } from './download-driver'
+export { default as resolveBrowserVersion } from './resolve-browser-version'
 export * from './resolve-driver'

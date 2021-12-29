@@ -1,6 +1,6 @@
 import { CommandShape } from 'api/types'
 import loadingID from 'api/constants/loadingID'
-import command from './Command'
+import command from './command'
 
 export interface TestShape {
   id: string

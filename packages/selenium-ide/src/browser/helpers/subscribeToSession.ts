@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { useImmer } from 'use-immer'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import defaultProject from 'api/models/project'
 import defaultState from 'api/models/state'
 import { CoreSessionData } from 'api/types'
@@ -7,25 +6,29 @@ import { LoadedWindow } from 'browser/types'
 
 const { sideAPI } = window as LoadedWindow
 
+const performSubscription = async (
+  updateSession: Dispatch<SetStateAction<CoreSessionData>>
+) => {
+  const session = await sideAPI.state.get()
+  updateSession(session)
+  sideAPI.state.onMutate.addListener((path, data) => {
+    const [namespace, method] = path.split('.')
+    console.log('Queueing Mutator', path, data)
+    updateSession((session) => {
+      console.log('Running Mutator', path, data)
+      // @ts-expect-error
+      return sideAPI.mutators[namespace][method](session, data)
+    })
+  })
+}
+
 export default () => {
-  const [session, updateSession] = useImmer<CoreSessionData>({
+  const [session, updateSession] = useState<CoreSessionData>({
     project: defaultProject,
     state: defaultState,
   })
   useEffect(() => {
-    Promise.all([sideAPI.commands.get(), sideAPI.projects.getActive()]).then(
-      ([commandTypes, project]) => {
-        updateSession((session) => {
-          session.state.commands = commandTypes
-          session.project = project
-          session.state.activeTest = project.tests[0].id
-          session.state.activeCommand = project.tests[0].commands[0].id
-        })
-      }
-    )
-    sideAPI.state.onMutate.addListener((path, { params, result }) => {
-
-    }))
+    performSubscription(updateSession)
   }, [])
-  return [session, updateSession]
+  return session
 }

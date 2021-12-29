@@ -31,6 +31,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
           })
         )
         win.loadFile(join(__dirname, `${filename}.html`))
+        win.webContents.openDevTools()
         return win
       }
       return [key, windowLoader]
@@ -53,17 +54,19 @@ export default class WindowsController {
     this.windows = {}
   }
   session: Session
-
   windowLoaders: WindowLoaderMap
   windows: { [key: string]: BrowserWindow }
-  async open(name: string): Promise<BrowserWindow> {
-    if (!this.windowLoaders[name]) {
-      throw new Error(`Invalid window name supplied '${name}'!`)
-    }
-    const window = this.windowLoaders[name]()
-    this.windows[name] = window
-    return window
+
+  async broadcast(path: string, ...args: any) {
+    Object.values(this.windows).forEach((window) => {
+      window.webContents.send(path, ...args)
+    })
   }
+
+  async get(name: string): Promise<BrowserWindow> {
+    return this.windows[name]
+  }
+
   async close(name: string): Promise<boolean> {
     const window = this.windows[name]
     if (!window) {
@@ -71,6 +74,18 @@ export default class WindowsController {
     }
     delete this.windows[name]
     window.close()
+    return true
+  }
+
+  async open(name: string): Promise<boolean> {
+    if (!this.windowLoaders[name]) {
+      throw new Error(`Invalid window name supplied '${name}'!`)
+    }
+    if (this.windows[name]) {
+      return false
+    }
+    const window = this.windowLoaders[name]()
+    this.windows[name] = window
     return true
   }
 }

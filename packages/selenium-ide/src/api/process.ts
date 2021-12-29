@@ -10,7 +10,7 @@ export default <FinalApi extends GenericApi>(handler: ApiHandler): FinalApi => {
       const endpoint = namespace[ep] as ApiEntry
       entry[ep] = handler(`${ns}.${ep}`, endpoint)
     }
-    // @ts-ignore
+    // @ts-expect-error
     api[ns] = entry as ApiNamespace
   }
   return api as FinalApi

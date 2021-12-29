@@ -9,9 +9,10 @@ const doAPI = <HANDLER extends ApiPromiseHandler>(
 ): Promise<ThenArg<ReturnType<HANDLER>>> =>
   new Promise<ThenArg<ReturnType<HANDLER>>>((resolve) => {
     ipcRenderer.once(`${path}.complete`, (_event, result) => {
-      console.debug('Reply from server', path, 'with results', result)
+      console.log('Reply from server', path, 'with results', result)
       resolve(result as ThenArg<ReturnType<HANDLER>>)
     })
+    console.log('Emitting to server', path, 'with args', args)
     ipcRenderer.send(path, ...args)
   })
 

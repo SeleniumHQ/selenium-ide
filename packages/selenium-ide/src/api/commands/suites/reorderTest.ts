@@ -1,3 +1,4 @@
+import update from 'lodash/fp/update'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
@@ -6,15 +7,21 @@ import { Mutator, SuiteShape } from 'api/types'
 export type Shape = Session['suites']['reorderTest']
 
 export const mutator: Mutator<Shape> = (
-  { project },
+  session,
   { params: [suiteID, testID, newIndex] }
-) => {
-  const { suites } = project
-  const suite = suites.find((suite) => suite.id === suiteID) as SuiteShape
-  const prevIndex = suite.tests.indexOf(testID)
-  suite.tests.splice(prevIndex, 1)
-  suite.tests.splice(newIndex, 0, testID)
-}
+) =>
+  update(
+    'project.suites',
+    (suites: SuiteShape[]) => {
+      const suiteIndex = suites.findIndex((suite) => suite.id === suiteID)
+      return update(`${suiteIndex}.tests`, (tests: SuiteShape['tests']) => {
+        const newTests = tests.filter((id) => id !== testID)
+        newTests.splice(newIndex, 0, testID)
+        return newTests
+      })
+    },
+    session
+  )
 
 export const browser = browserHandler<Shape>()
 

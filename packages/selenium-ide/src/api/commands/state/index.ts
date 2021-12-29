@@ -1,3 +1,4 @@
+export * as get from './get'
 export * as onMutate from './onMutate'
 export * as setActiveCommand from './setActiveCommand'
 export * as setActiveTest from './setActiveTest'

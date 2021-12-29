@@ -4,7 +4,6 @@ import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay'
 import PauseIcon from '@material-ui/icons/Pause'
 import StopIcon from '@material-ui/icons/Stop'
 import RecordIcon from '@material-ui/icons/FiberManualRecord'
-
 import { TestShape } from 'api/types'
 import React, { FC } from 'react'
 
@@ -12,7 +11,7 @@ export interface TestControlsProps {
   test: TestShape
 }
 
-const TestControls: FC<TestControlsProps> = ({ test }) => (
+const TestControls: FC<TestControlsProps> = () => (
   <div className="flex flex-initial flex-row">
     <Tooltip title="Play" aria-label="play">
       <PlayArrowIcon className="button m-2" />

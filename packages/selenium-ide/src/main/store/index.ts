@@ -1,3 +1,4 @@
+import config from './config'
 import Store from 'electron-store'
 
 interface WindowPositionBound {
@@ -7,7 +8,8 @@ interface WindowPositionBound {
   height: number
 }
 
-interface Schema {
+export interface StorageSchema {
+  config: typeof config
   plugins: string[]
   recentProjects: string[]
   windowPositionBounds: {
@@ -15,8 +17,9 @@ interface Schema {
   }
 }
 
-export default new Store<Schema>({
+export default new Store<StorageSchema>({
   defaults: {
+    config,
     plugins: [],
     recentProjects: [],
     windowPositionBounds: {},

@@ -14,6 +14,7 @@ export default class ProjectsController {
   project: ProjectShape
   session: Session
   onProjectLoaded(project: ProjectShape): void {
+    this.session.commands.init()
     this.project = project
     this.session.windows.close('splash')
     this.session.windows.open('project-editor')

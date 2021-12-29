@@ -2,8 +2,11 @@ import { CoreSessionData } from 'api/types'
 import { BrowserWindowConstructorOptions, Menu } from 'electron'
 import { Session } from 'main/types'
 import Api from './api'
+import ApiMutators from './api/mutator'
 
-export type LoadedWindow = Window & typeof globalThis & { sideAPI: typeof Api }
+export type FullBrowserAPI = typeof Api & { mutators: typeof ApiMutators }
+export type LoadedWindow = Window &
+  typeof globalThis & { sideAPI: FullBrowserAPI }
 
 export type CurriedApiField<Config extends any[], Shape> = (
   ...args: Config

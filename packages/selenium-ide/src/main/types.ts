@@ -1,5 +1,6 @@
 import { App, Menu } from 'electron'
-import config from './config'
+import Store from 'electron-store'
+import config from './store/config'
 import ArgTypesController from './session/controllers/ArgTypes'
 import CommandsController from './session/controllers/Commands'
 import DialogsController from './session/controllers/Dialogs'
@@ -14,15 +15,17 @@ import TestsController from './session/controllers/Tests'
 import VariablesController from './session/controllers/Variables'
 import WindowsController from './session/controllers/Windows'
 import { MainApiMapper } from './api'
+import { StorageSchema } from './store'
 
 export type Config = typeof config
+
+export type Storage = Store<StorageSchema>
 
 export interface Session {
   api: MainApiMapper
   app: App
   argTypes: ArgTypesController
   commands: CommandsController
-  config: Config
   dialogs: DialogsController
   driver: DriverController
   menu: Menu
@@ -31,11 +34,14 @@ export interface Session {
   projects: ProjectsController
   recorder: RecorderController
   state: StateController
+  store: Storage
   suites: SuitesController
   tests: TestsController
   variables: VariablesController
   windows: WindowsController
 }
+
+export type SessionControllerKeys = keyof Omit<Session, 'app' | 'api'>
 
 export type SessionApiHandler = (
   path: string,

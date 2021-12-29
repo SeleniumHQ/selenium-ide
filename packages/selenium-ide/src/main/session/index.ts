@@ -1,6 +1,6 @@
 import { App, Menu } from 'electron'
 import Api from '../api'
-import { Config, Session } from '../types'
+import { Session, Storage } from '../types'
 import ArgTypesController from './controllers/ArgTypes'
 import CommandsController from './controllers/Commands'
 import DialogsController from './controllers/Dialogs'
@@ -17,15 +17,14 @@ import WindowsController from './controllers/Windows'
 
 export default async function createSession(
   app: App,
-  config: Config
+  store: Storage
 ): Promise<Session> {
   // Building our session object
   const partialSession: Partial<Session> = {
     app,
-    config,
     dialogs: new DialogsController(),
     menu: new Menu(),
-    state: new StateController(),
+    store,
   }
   partialSession.argTypes = new ArgTypesController(partialSession as Session)
   partialSession.commands = new CommandsController(partialSession as Session)
@@ -34,6 +33,7 @@ export default async function createSession(
   partialSession.plugins = new PluginsController(partialSession as Session)
   partialSession.projects = new ProjectsController(partialSession as Session)
   partialSession.recorder = new RecorderController(partialSession as Session)
+  partialSession.state = new StateController(partialSession as Session)
   partialSession.suites = new SuitesController(partialSession as Session)
   partialSession.tests = new TestsController(partialSession as Session)
   partialSession.variables = new VariablesController(partialSession as Session)
@@ -41,8 +41,8 @@ export default async function createSession(
   partialSession.api = await Api(partialSession as Session)
   const session = partialSession as Session
 
-  // Creating the window for project selection
-  session.windows.open('splash')
+  // Get the underlying driver going
+  session.windows.open('chromedriver')
 
   return session
 }
