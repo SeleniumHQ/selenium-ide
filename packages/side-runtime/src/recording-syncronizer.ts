@@ -15,28 +15,44 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { WebDriver } from 'selenium-webdriver'
+import { WebDriverExecutor } from '.'
+
+export interface RecorderSyncronizerInput {
+  sessionId: string
+  executeAsyncScript: WebDriverExecutor['doExecuteAsyncScript']
+  switchToWindow: (handle: string) => Promise<void>
+  getWindowHandle: WebDriver['getWindowHandle']
+  logger: Console
+}
+
+export interface WindowFnInput {
+  windowHandle: string
+  windowHandleName: string
+}
+
 export default function createRecorderSyncronizer({
   sessionId,
   executeAsyncScript,
   switchToWindow,
   getWindowHandle,
   logger,
-}) {
-  const pendingWindows = {}
-  const syncedWindows = {}
+}: RecorderSyncronizerInput) {
+  const pendingWindows: Record<string, string> = {}
+  const syncedWindows: Record<string, string> = {}
 
-  async function onStoreWindowHandle({ windowHandle, windowHandleName }) {
+  async function onStoreWindowHandle({ windowHandle, windowHandleName }: WindowFnInput) {
     pendingWindows[windowHandle] = windowHandleName
     await syncWindowHandle(windowHandle)
   }
 
-  async function onWindowAppeared({ windowHandle, windowHandleName }) {
+  async function onWindowAppeared({ windowHandle, windowHandleName }: WindowFnInput) {
     if (!syncedWindows[windowHandle]) {
       pendingWindows[windowHandle] = windowHandleName
     }
   }
 
-  async function onWindowSwitched({ windowHandle }) {
+  async function onWindowSwitched({ windowHandle }: WindowFnInput) {
     if (pendingWindows[windowHandle]) {
       await syncWindowHandle(windowHandle)
     } else if (!syncedWindows[windowHandle] && logger) {
@@ -47,9 +63,10 @@ export default function createRecorderSyncronizer({
   }
 
   async function syncActiveContext() {
-    await executeAsyncScript(
-      `return window.__side.setActiveContext("${sessionId}")`
-    )
+    await executeAsyncScript({
+      script: `return window.__side.setActiveContext("${sessionId}")`,
+      argv: [],
+    })
   }
 
   async function syncAllPendingWindows() {
@@ -67,10 +84,11 @@ export default function createRecorderSyncronizer({
     }
   }
 
-  async function syncWindowHandle(windowHandle) {
-    await executeAsyncScript(
-      `return window.__side.setWindowHandle("${pendingWindows[windowHandle]}", "${sessionId}")`
-    )
+  async function syncWindowHandle(windowHandle: string) {
+    await executeAsyncScript({
+      script: `return window.__side.setWindowHandle("${pendingWindows[windowHandle]}", "${sessionId}")`,
+      argv: []
+    })
     syncedWindows[windowHandle] = pendingWindows[windowHandle]
     delete pendingWindows[windowHandle]
   }

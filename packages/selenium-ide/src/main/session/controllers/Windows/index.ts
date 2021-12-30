@@ -31,7 +31,6 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
           })
         )
         win.loadFile(join(__dirname, `${filename}.html`))
-        win.webContents.openDevTools()
         return win
       }
       return [key, windowLoader]

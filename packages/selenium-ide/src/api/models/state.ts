@@ -9,6 +9,7 @@ import loadingID from 'api/constants/loadingID'
 
 export interface StateShape {
   activeCommandID: string
+  activeSuiteID: string
   activeTestID: string
   breakpoints: string[]
   commands: CommandTypes
@@ -24,6 +25,7 @@ export interface StateShape {
 export type Shape = StateShape
 const action: StateShape = {
   activeCommandID: loadingID,
+  activeSuiteID: loadingID,
   activeTestID: loadingID,
   breakpoints: [],
   commands: {},

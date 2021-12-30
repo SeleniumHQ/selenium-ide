@@ -15,27 +15,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const stack = Symbol('stack')
-
-export default class Callstack {
+export default class Variables {
   constructor() {
-    this[stack] = []
+    this.storedVars = new Map()
+  }
+  storedVars: Map<string, any>
+
+  get(key: string) {
+    return this.storedVars.get(key)
   }
 
-  get length() {
-    return this[stack].length
+  set(key: string, value: any) {
+    this.storedVars.set(key, value)
   }
 
-  call(procedure) {
-    this[stack].push(procedure)
+  has(key: string) {
+    return this.storedVars.has(key)
   }
 
-  unwind() {
-    if (!this.length) throw new Error('Call stack is empty')
-    return this[stack].pop()
+  delete(key: string) {
+    if (this.storedVars.has(key)) this.storedVars.delete(key)
   }
 
-  top() {
-    return this[stack][this[stack].length - 1]
+  clear() {
+    this.storedVars.clear()
   }
 }

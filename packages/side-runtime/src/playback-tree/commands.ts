@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { CommandShape } from "@seleniumhq/side-model"
+
 export const ControlFlowCommandNames = {
   do: 'do',
   else: 'else',
@@ -27,7 +29,7 @@ export const ControlFlowCommandNames = {
   while: 'while',
 }
 
-function commandNamesEqual(command, target) {
+function commandNamesEqual(command: CommandShape, target: string) {
   if (command) {
     return command.command === target
   } else {
@@ -35,15 +37,15 @@ function commandNamesEqual(command, target) {
   }
 }
 
-function isCommandEnabled(command) {
+function isCommandEnabled(command: CommandShape) {
   return command && !command.skip
 }
 
-function isBlockOpen(command) {
+function isBlockOpen(command: CommandShape) {
   return isCommandEnabled(command) && (isIf(command) || isLoop(command))
 }
 
-function isConditional(command) {
+function isConditional(command: CommandShape) {
   if (!isCommandEnabled(command)) return false
 
   switch (command.command) {
@@ -58,7 +60,7 @@ function isConditional(command) {
   }
 }
 
-function isControlFlow(command) {
+function isControlFlow(command: CommandShape) {
   if (!isCommandEnabled(command)) return false
 
   switch (command.command) {
@@ -76,50 +78,50 @@ function isControlFlow(command) {
   }
 }
 
-function isDo(command) {
+function isDo(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.do)
   )
 }
 
-function isElse(command) {
+function isElse(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.else)
   )
 }
 
-function isElseIf(command) {
+function isElseIf(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.elseIf)
   )
 }
 
-function isElseOrElseIf(command) {
+function isElseOrElseIf(command: CommandShape) {
   return isCommandEnabled(command) && (isElseIf(command) || isElse(command))
 }
 
-function isEnd(command) {
+function isEnd(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.end)
   )
 }
 
-function isIf(command) {
+function isIf(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.if)
   )
 }
 
-function isIfBlock(command) {
+function isIfBlock(command: CommandShape) {
   return isCommandEnabled(command) && (isIf(command) || isElseOrElseIf(command))
 }
 
-function isLoop(command) {
+function isLoop(command: CommandShape) {
   if (!isCommandEnabled(command)) return false
 
   return (
@@ -130,21 +132,21 @@ function isLoop(command) {
   )
 }
 
-function isTerminal(command) {
+function isTerminal(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     (isElse(command) || isDo(command) || isEnd(command))
   )
 }
 
-function isTimes(command) {
+function isTimes(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.times)
   )
 }
 
-function isForEach(command) {
+function isForEach(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
     commandNamesEqual(command, ControlFlowCommandNames.forEach)

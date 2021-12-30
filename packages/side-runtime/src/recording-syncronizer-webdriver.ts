@@ -15,24 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export class State {
-  constructor() {
-    this._state = []
-  }
+import { WebDriverExecutor } from '.'
+import createRecorderSyncronizer from './recording-syncronizer'
+import { ScriptShape } from './webdriver'
 
-  empty() {
-    return this._state.length === 0
-  }
+export interface RecorderSynchronizerInput {
+  executor: WebDriverExecutor
+  sessionId: string
+  logger: Console
+}
 
-  push(obj) {
-    this._state.push(obj)
-  }
-
-  pop() {
-    this._state.pop()
-  }
-
-  top() {
-    return this._state[this._state.length - 1]
-  }
+export default function createRecorderSyncronizerForWebdriverExecutor({
+  executor,
+  sessionId,
+  logger,
+}: RecorderSynchronizerInput) {
+  return createRecorderSyncronizer({
+    sessionId,
+    executeAsyncScript: (script: ScriptShape) => executor.doExecuteAsyncScript(script),
+    switchToWindow: (handle: string) => executor.driver.switchTo().window(handle),
+    getWindowHandle: () => executor.driver.getWindowHandle(),
+    logger,
+  })
 }

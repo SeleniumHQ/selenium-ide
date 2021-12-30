@@ -1,5 +1,5 @@
+import { ProjectShape, SuiteShape } from '@seleniumhq/side-model'
 import { Session } from 'main/types'
-import { ProjectShape, SuiteShape } from 'api/types'
 import { randomUUID } from 'crypto'
 
 export default class SuitesController {

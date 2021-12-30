@@ -1,7 +1,7 @@
+import { ProjectShape } from '@seleniumhq/side-model'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import defaultProject from 'api/models/project'
-import { ProjectShape } from 'api/types'
 import RecentProjects from './Recent'
 
 export default class ProjectsController {

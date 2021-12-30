@@ -1,5 +1,6 @@
+import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import update from 'lodash/fp/update'
-import { CommandShape, CoreSessionData, Mutator, TestShape } from 'api/types'
+import { CoreSessionData, Mutator } from 'api/types'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'

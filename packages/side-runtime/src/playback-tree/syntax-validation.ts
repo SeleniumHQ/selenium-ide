@@ -18,8 +18,9 @@
 import { ControlFlowCommandNames, ControlFlowCommandChecks } from './commands'
 import { State } from './state'
 import { ControlFlowSyntaxError } from './control-flow-syntax-error'
+import { CommandShape } from '@seleniumhq/side-model'
 
-export function validateControlFlowSyntax(commandStack) {
+export function validateControlFlowSyntax(commandStack: CommandShape[]) {
   let state = new State()
   commandStack.forEach(function(command, commandIndex) {
     validateCommand(command, commandIndex, state)
@@ -34,7 +35,7 @@ export function validateControlFlowSyntax(commandStack) {
   }
 }
 
-function validateCommand(command, commandIndex, state) {
+function validateCommand(command: CommandShape, commandIndex: number, state: State) {
   if (!command.skip && commandValidators[command.command]) {
     return commandValidators[command.command](
       command.command,
@@ -56,11 +57,11 @@ const commandValidators = {
   [ControlFlowCommandNames.while]: trackControlFlowBranchOpen,
 }
 
-function trackControlFlowBranchOpen(commandName, commandIndex, state) {
+function trackControlFlowBranchOpen(commandName: string, commandIndex: number, state: State) {
   state.push({ command: commandName, index: commandIndex })
 }
 
-function validateElse(commandName, commandIndex, state) {
+function validateElse(commandName: string, commandIndex: number, state: State) {
   if (!ControlFlowCommandChecks.isIfBlock(state.top())) {
     throw new ControlFlowSyntaxError(
       'An else used outside of an if block',
@@ -76,7 +77,7 @@ function validateElse(commandName, commandIndex, state) {
   state.push({ command: commandName, index: commandIndex })
 }
 
-function validateElseIf(commandName, commandIndex, state) {
+function validateElseIf(commandName: string, commandIndex: number, state: State) {
   if (!ControlFlowCommandChecks.isIfBlock(state.top())) {
     throw new ControlFlowSyntaxError(
       'An else if used outside of an if block',
@@ -92,7 +93,7 @@ function validateElseIf(commandName, commandIndex, state) {
   state.push({ command: commandName, index: commandIndex })
 }
 
-function validateEnd(commandName, commandIndex, state) {
+function validateEnd(commandName: string, commandIndex: number, state: State) {
   if (ControlFlowCommandChecks.isBlockOpen(state.top())) {
     state.pop()
   } else if (ControlFlowCommandChecks.isElseOrElseIf(state.top())) {
@@ -106,14 +107,14 @@ function validateEnd(commandName, commandIndex, state) {
   }
 }
 
-function validateRepeatIf(_commandName, commandIndex, state) {
+function validateRepeatIf(_commandName: string, commandIndex: number, state: State) {
   if (!ControlFlowCommandChecks.isDo(state.top())) {
     repeatIfError(commandIndex)
   }
   state.pop()
 }
 
-export function repeatIfError(commandIndex) {
+export function repeatIfError(commandIndex?: number) {
   throw new ControlFlowSyntaxError(
     'A repeat if used without a do block',
     commandIndex

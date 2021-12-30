@@ -20,11 +20,9 @@ const ProjectEditor = () => {
   const loadProject = async () => {
     const response = await sideAPI.dialogs.open()
     if (response.canceled) return
-    await sideAPI.commands.init()
     await sideAPI.projects.load(response.filePaths[0])
   }
   const newProject = async () => {
-    await sideAPI.commands.init()
     await sideAPI.projects.new()
   }
 

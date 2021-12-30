@@ -31,7 +31,13 @@
       "path": "./packages/selenium-ide"
     },
     {
+      "path": "./packages/side-commons"
+    },
+    {
       "path": "./packages/side-model"
+    },
+    {
+      "path": "./packages/side-runtime"
     },
     {
       "path": "./packages/webdriver-testkit"

@@ -1,4 +1,4 @@
-import { CommandShape } from 'api/types'
+import { CommandShape } from '@seleniumhq/side-model'
 import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
 import Table from '@material-ui/core/Table'

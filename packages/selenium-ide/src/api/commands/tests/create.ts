@@ -1,4 +1,4 @@
-import { ProjectShape, TestShape } from 'api/types'
+import { ProjectShape, TestShape } from '@seleniumhq/side-model'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'

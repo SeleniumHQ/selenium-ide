@@ -1,6 +1,6 @@
+import { CommandShape, ProjectShape, TestShape } from '@seleniumhq/side-model'
 import merge from 'lodash/fp/merge'
 import { Session } from 'main/types'
-import { CommandShape, ProjectShape, TestShape } from 'api/types'
 import { randomUUID } from 'crypto'
 
 export default class TestsController {

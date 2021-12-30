@@ -15,12 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default class VerificationError extends Error {
-  constructor(...argv) {
-    super(argv)
+export default class AssertionError extends Error {
+  constructor(...argv: string[]) {
+    super(argv.join(' '))
 
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, VerificationError)
+      Error.captureStackTrace(this, AssertionError)
     }
   }
 }

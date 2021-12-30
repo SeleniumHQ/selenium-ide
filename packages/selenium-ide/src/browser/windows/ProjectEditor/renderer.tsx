@@ -1,10 +1,10 @@
+import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import React, { useMemo } from 'react'
 import ReactDOM from 'react-dom'
 import Grid from '@material-ui/core/Grid'
 import AppWrapper from 'browser/components/AppWrapper'
 import defaultTest from 'api/models/project/test'
 import defaultCommand from 'api/models/project/command'
-import { CommandShape, TestShape } from 'api/types'
 import loadingID from '../../../api/constants/loadingID'
 import TestControls from './components/TestControls'
 import TestList from './components/TestList'
@@ -19,10 +19,8 @@ const hasID =
 
 const ProjectEditor = () => {
   const session = subscribeToSession()
-  const {
-    project,
-    state: { activeCommandID, activeTestID, commands },
-  } = session
+  const { project, state } = session
+  const { activeCommandID, activeTestID, commands } = state
 
   const activeTest = useMemo(
     () => project.tests.find(hasID(activeTestID)) || defaultTest,
@@ -46,7 +44,7 @@ const ProjectEditor = () => {
         </Grid>
         <Grid className="height-100" item xs={9}>
           <div className="flex flex-col height-100">
-            <TestControls test={activeTest} />
+            <TestControls state={state} />
             <CommandList
               activeCommand={activeCommandID}
               commands={activeTest.commands}

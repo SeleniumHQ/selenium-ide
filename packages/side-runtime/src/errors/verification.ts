@@ -15,17 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import _Playback from './playback'
-import _WebDriverExecutor from './webdriver'
-import { CommandType as _CommandType } from './playback-tree/command-node'
-import createRecorderSyncronizer from './recording-syncronizer'
-import createRecorderSyncronizerForWebdriverExecutor from './recording-syncronizer-webdriver'
+export default class VerificationError extends Error {
+  constructor(...argv: string[]) {
+    super(argv.join(' '))
 
-export const Playback = _Playback
-export const WebDriverExecutor = _WebDriverExecutor
-export * from './playback'
-export const CommandType = _CommandType
-export const RecordingSyncronizers = {
-  createRecorderSyncronizer,
-  createRecorderSyncronizerForWebdriverExecutor,
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, VerificationError)
+    }
+  }
 }

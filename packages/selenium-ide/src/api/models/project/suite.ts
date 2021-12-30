@@ -1,13 +1,5 @@
+import { SuiteShape } from '@seleniumhq/side-model'
 import loadingID from 'api/constants/loadingID'
-
-export interface SuiteShape {
-  id: string
-  name: string
-  persistSession: boolean
-  parallel: boolean
-  timeout: number
-  tests: string[]
-}
 
 export type Shape = SuiteShape
 const suite: SuiteShape = {

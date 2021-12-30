@@ -16,8 +16,9 @@
 // under the License.
 
 export class ControlFlowSyntaxError extends SyntaxError {
-  constructor(message, index) {
+  constructor(message: string, index?: number) {
     super(message)
     this.index = index
   }
+  index?: number
 }

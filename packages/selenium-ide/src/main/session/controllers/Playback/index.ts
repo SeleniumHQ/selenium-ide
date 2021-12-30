@@ -17,10 +17,11 @@ export default class PlaybackController {
   async resume() {
     this.isPlaying = true
   }
-  async start(testID: string, playRange = PlaybackController.defaultPlayRange) {
+  async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
+    await this.session.driver.build({})
   }
   async stop() {
     this.isPlaying = false

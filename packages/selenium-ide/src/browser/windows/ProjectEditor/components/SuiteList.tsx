@@ -1,36 +1,36 @@
+import { SuiteShape } from '@seleniumhq/side-model'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemButton from '@material-ui/core/ListItemButton'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
-import { TestShape } from '@seleniumhq/side-model'
 import React, { FC } from 'react'
 import { LoadedWindow } from 'browser/types'
 
-export interface TestListProps {
-  activeTest: string
-  tests: TestShape[]
+export interface SuiteListProps {
+  activeSuite: string
+  Suites: SuiteShape[]
 }
 
 const {
   sideAPI: {
-    state: { setActiveTest },
+    state: { setActiveSuite },
   },
 } = window as LoadedWindow
 
-const TestList: FC<TestListProps> = ({ activeTest, tests }) => (
+const SuiteList: FC<SuiteListProps> = ({ activeSuite, Suites }) => (
   <List
     className="overflow-y pt-0 fill br"
     dense
     sx={{ borderColor: 'primary.main' }}
-    subheader={<ListSubheader className="lh-36">Tests</ListSubheader>}
+    subheader={<ListSubheader className="lh-36">Suites</ListSubheader>}
   >
-    {tests.map((test) => {
-      const id = test.id
+    {Suites.map((Suite) => {
+      const id = Suite.id
       return (
-        <ListItem disablePadding key={id} onClick={() => setActiveTest(id)}>
-          <ListItemButton disableRipple selected={id === activeTest}>
-            <ListItemText>{test.name}</ListItemText>
+        <ListItem disablePadding key={id} onClick={() => setActiveSuite(id)}>
+          <ListItemButton disableRipple selected={id === activeSuite}>
+            <ListItemText>{Suite.name}</ListItemText>
           </ListItemButton>
         </ListItem>
       )
@@ -38,4 +38,4 @@ const TestList: FC<TestListProps> = ({ activeTest, tests }) => (
   </List>
 )
 
-export default TestList
+export default SuiteList

@@ -4,30 +4,52 @@ import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay'
 import PauseIcon from '@material-ui/icons/Pause'
 import StopIcon from '@material-ui/icons/Stop'
 import RecordIcon from '@material-ui/icons/FiberManualRecord'
-import { TestShape } from 'api/types'
+import { StateShape } from 'api/types'
+import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
 
 export interface TestControlsProps {
-  test: TestShape
+  state: StateShape
 }
 
-const TestControls: FC<TestControlsProps> = () => (
+const activeStates = ['recording', 'playing']
+
+const TestControls: FC<TestControlsProps> = ({ state }) => (
   <div className="flex flex-initial flex-row">
-    <Tooltip title="Play" aria-label="play">
-      <PlayArrowIcon className="button m-2" />
-    </Tooltip>
-    <Tooltip title="Play Suite" aria-label="play-suite">
-      <PlaylistPlayIcon className="button m-2" />
-    </Tooltip>
-    <Tooltip title="Pause" aria-label="pause">
-      <PauseIcon className="button m-2" />
-    </Tooltip>
-    <Tooltip title="Stop" aria-label="stop">
-      <StopIcon className="button m-2" />
-    </Tooltip>
-    <Tooltip title="Record" aria-label="record">
-      <RecordIcon className="button m-2" color="error" />
-    </Tooltip>
+    {activeStates.includes(state.status) ? (
+      <>
+        <Tooltip title="Pause" aria-label="pause">
+          <PauseIcon
+            className="button m-2"
+            onClick={() => sideAPI.playback.pause()}
+          />
+        </Tooltip>
+        <Tooltip title="Stop" aria-label="stop">
+          <StopIcon
+            className="button m-2"
+            onClick={() => sideAPI.playback.stop()}
+          />
+        </Tooltip>
+      </>
+    ) : (
+      <>
+        <Tooltip title="Play" aria-label="play">
+          <PlayArrowIcon
+            className="button m-2"
+            onClick={() => sideAPI.playback.play(state.activeTestID)}
+          />
+        </Tooltip>
+        <Tooltip title="Play Suite" aria-label="play-suite">
+          <PlaylistPlayIcon
+            className="button m-2"
+            onClick={() => sideAPI.playback.play(state.activeTestID)}
+          />
+        </Tooltip>
+        <Tooltip title="Record" aria-label="record">
+          <RecordIcon className="button m-2" color="error" />
+        </Tooltip>
+      </>
+    )}
   </div>
 )
 

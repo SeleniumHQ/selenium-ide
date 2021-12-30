@@ -15,28 +15,40 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default class Variables {
+import { TestShape } from "@seleniumhq/side-model"
+import { PlaybackTree } from "./playback-tree"
+import { CommandNode } from "./playback-tree/command-node"
+
+const stack = Symbol('stack')
+
+export interface CallShape {
+  callee: Partial<TestShape>
+  caller?: {
+    position: CommandNode,
+    tree: PlaybackTree,
+    commands: TestShape['commands'],
+  }
+}
+
+export default class Callstack {
   constructor() {
-    this.storedVars = new Map()
+    this[stack] = []
+  }
+  [stack]: CallShape[]
+  get length() {
+    return this[stack].length
   }
 
-  get(key) {
-    return this.storedVars.get(key)
+  call(procedure: CallShape) {
+    this[stack].push(procedure)
   }
 
-  set(key, value) {
-    this.storedVars.set(key, value)
+  unwind() {
+    if (!this.length) throw new Error('Call stack is empty')
+    return this[stack].pop()
   }
 
-  has(key) {
-    return this.storedVars.has(key)
-  }
-
-  delete(key) {
-    if (this.storedVars.has(key)) this.storedVars.delete(key)
-  }
-
-  clear() {
-    this.storedVars.clear()
+  top() {
+    return this[stack][this[stack].length - 1]
   }
 }

@@ -1,6 +1,7 @@
 import { resolveBrowserVersion } from '@seleniumhq/get-driver'
+import { WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { ChildProcess } from 'child_process'
-import webdriver, { WebDriver } from 'selenium-webdriver'
+import webdriver from 'selenium-webdriver'
 import { Session } from '../../../types'
 import downloadDriver from './download'
 import startDriver from './start'
@@ -20,7 +21,8 @@ export default class DriverController {
     this.session = session
   }
   session: Session
-  driver?: WebDriver
+  // @ts-expect-error
+  driver: typeof WebDriverExecutor
   driverProcess?: ChildProcess
   async build({
     browser = 'chrome',
@@ -32,13 +34,15 @@ export default class DriverController {
     // The "9515" is the port opened by chrome driver.
     server = 'http://localhost:9515',
   }: DriverOptions) {
-    const driver = await new webdriver.Builder()
-      .usingServer(server)
-      .withCapabilities(capabilities)
-      .forBrowser(browser)
-      .build()
-    this.driver = driver
-    return driver
+    const driver = new WebDriverExecutor({
+      capabilities,
+      server,
+    })
+    driver.init({
+      baseUrl: this.session.projects.project.url,
+      
+    })
+    return this.driver
   }
   async download(version: string) {
     return downloadDriver(version)

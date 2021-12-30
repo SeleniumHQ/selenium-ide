@@ -16,10 +16,11 @@
 // under the License.
 
 import { ControlFlowCommandNames } from './commands'
+import { CommandShape } from '@seleniumhq/side-model'
 
-export function deriveCommandLevels(commandStack) {
+export function deriveCommandLevels(commandStack: CommandShape[]): number[] {
   let level = 0
-  let levels = []
+  let levels: number[] = []
   commandStack.forEach(function(command) {
     const result = levelCommand(command, level, levels)
     level = result.level
@@ -28,7 +29,44 @@ export function deriveCommandLevels(commandStack) {
   return levels
 }
 
-function levelCommand(command, level, levels) {
+export type LevelCommand = (
+  command: CommandShape,
+  level: number,
+  levels: number[]
+) => ({
+  level: number
+  levels: number[]
+})
+
+const levelDefault: LevelCommand = (_command, level, _levels) => {
+  let levels = [..._levels]
+  levels.push(level)
+  return { level, levels }
+}
+
+const levelBranchOpen: LevelCommand = (_command, level, _levels) => {
+  let levels = [..._levels]
+  levels.push(level)
+  level++
+  return { level, levels }
+}
+
+const levelBranchEnd: LevelCommand = (_command, level, _levels) => {
+  let levels = [..._levels]
+  level--
+  levels.push(level)
+  return { level, levels }
+}
+
+const levelElse: LevelCommand = (_command, level, _levels) => {
+  let levels = [..._levels]
+  level--
+  levels.push(level)
+  level++
+  return { level, levels }
+}
+
+const levelCommand: LevelCommand = (command, level, levels) => {
   if (!command.skip && commandLevelers[command.command]) {
     return commandLevelers[command.command](command, level, levels)
   }
@@ -45,32 +83,4 @@ const commandLevelers = {
   [ControlFlowCommandNames.repeatIf]: levelBranchEnd,
   [ControlFlowCommandNames.times]: levelBranchOpen,
   [ControlFlowCommandNames.while]: levelBranchOpen,
-}
-
-function levelDefault(_command, level, _levels) {
-  let levels = [..._levels]
-  levels.push(level)
-  return { level, levels }
-}
-
-function levelBranchOpen(_command, level, _levels) {
-  let levels = [..._levels]
-  levels.push(level)
-  level++
-  return { level, levels }
-}
-
-function levelBranchEnd(_command, level, _levels) {
-  let levels = [..._levels]
-  level--
-  levels.push(level)
-  return { level, levels }
-}
-
-function levelElse(_command, level, _levels) {
-  let levels = [..._levels]
-  level--
-  levels.push(level)
-  level++
-  return { level, levels }
 }

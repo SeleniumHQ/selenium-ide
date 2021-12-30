@@ -1,4 +1,4 @@
-import { ProjectShape } from './project/project'
+import { ProjectShape } from '@seleniumhq/side-model'
 import { StateShape } from './state'
 
 export interface AppState {

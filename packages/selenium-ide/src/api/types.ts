@@ -1,15 +1,9 @@
-export { CommandShape } from './models/project/command'
-export { ProjectShape } from './models/project/project'
-export { SnapshotShape } from './models/project/snapshot'
-export { SnapshotTestShape } from './models/project/snapshotTest'
-export { StateShape } from './models/state'
-export { SuiteShape } from './models/project/suite'
-export { TestShape } from './models/project/test'
-
+import { ProjectShape } from '@seleniumhq/side-model'
 import { LoadedWindow } from 'browser/types'
 import { Session } from 'main/types'
-import { ProjectShape } from './models/project/project'
 import { StateShape } from './models/state'
+
+export { StateShape } from './models/state'
 
 export type VariadicArgs = any[]
 

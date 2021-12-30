@@ -15,46 +15,75 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { Fn } from '@seleniumhq/side-commons'
+import { CommandShape } from '@seleniumhq/side-model'
+import { WebDriverExecutor } from '..'
 import { interpolateScript } from '../preprocessors'
+import { CommandNodeOptions } from '../types'
+import Variables from '../Variables'
+import { WebDriverExecutorCondEvalResult } from '../webdriver'
 import { ControlFlowCommandChecks } from './commands'
 
+export interface CommandExecutorOptions {
+  executorOverride?: Fn
+}
+
+export interface CommandExecutionResult {
+  next?: Fn
+  skipped?: boolean
+  value?: any
+}
+
 export class CommandNode {
-  constructor(command, { emitControlFlowEvent } = {}) {
+  constructor(
+    command: CommandShape,
+    { emitControlFlowEvent }: CommandNodeOptions = {}
+  ) {
     this.command = command
     this.next = undefined
     this.left = undefined
     this.right = undefined
-    this.index
-    this.level
+    this.index = 0
+    this.level = 0
     this.timesVisited = 0
     this.emitControlFlowEvent = emitControlFlowEvent
       ? emitControlFlowEvent
       : () => {}
   }
+  command: CommandShape
+  emitControlFlowEvent: Fn
+  next?: CommandNode
+  left?: CommandNode
+  right?: CommandNode
+  index: number
+  level: number
+  timesVisited: number
 
-  isExtCommand(executor) {
+  /* I'm not sure what this does yet, so I'm putting it on a shelf atm
+  isExtCommand(executor: CommandNode): boolean {
     return !!(
       typeof executor.isExtCommand === 'function' &&
       executor.isExtCommand(this.command.command)
     )
   }
+  */
 
-  isControlFlow() {
+  isControlFlow(): boolean {
     return !!(this.left || this.right)
   }
 
-  isTerminal() {
+  isTerminal(): boolean {
     return (
       ControlFlowCommandChecks.isTerminal(this.command) ||
       this.command.command === ''
     )
   }
 
-  shouldSkip() {
+  shouldSkip(): boolean {
     return !!this.command.skip
   }
 
-  execute(commandExecutor, args) {
+  execute(commandExecutor: WebDriverExecutor, args?: CommandExecutorOptions) {
     if (this._isRetryLimit()) {
       return Promise.reject(
         new Error(
@@ -66,7 +95,7 @@ export class CommandNode {
       return Promise.resolve(this._executionResult({ skipped: true }))
     }
     return commandExecutor.beforeCommand(this.command).then(() => {
-      return this._executeCommand(commandExecutor, args).then(result => {
+      return this._executeCommand(commandExecutor, args).then((result: any) => {
         return commandExecutor.afterCommand(this.command).then(() => {
           return this._executionResult(result)
         })
@@ -74,7 +103,7 @@ export class CommandNode {
     })
   }
 
-  _executeCommand(commandExecutor, { executorOverride } = {}) {
+  _executeCommand(commandExecutor: WebDriverExecutor, { executorOverride }: CommandExecutorOptions = {}) {
     if (executorOverride) {
       return executorOverride(this.command.target, this.command.value)
     } else if (this.isControlFlow()) {
@@ -82,6 +111,7 @@ export class CommandNode {
     } else if (this.isTerminal()) {
       return Promise.resolve()
     } else {
+      // @ts-expect-error
       return commandExecutor[commandExecutor.name(this.command.command)](
         this.command.target,
         this.command.value,
@@ -90,7 +120,7 @@ export class CommandNode {
     }
   }
 
-  _executionResult(result = {}) {
+  _executionResult(result: CommandExecutionResult = {}) {
     this._incrementTimesVisited()
     return {
       next: this.isControlFlow() ? result.next : this.next,
@@ -98,12 +128,12 @@ export class CommandNode {
     }
   }
 
-  evaluateForEach(variables) {
+  evaluateForEach(variables: Variables): boolean | string {
     let collection = variables.get(
       interpolateScript(this.command.target, variables).script
     )
     if (!collection)
-      return Promise.resolve({ result: 'Invalid variable provided.' })
+      return 'Invalid variable provided.'
     variables.set(
       interpolateScript(this.command.value, variables).script,
       collection[this.timesVisited]
@@ -124,7 +154,7 @@ export class CommandNode {
     return result
   }
 
-  _evaluate(commandExecutor) {
+  _evaluate(commandExecutor: WebDriverExecutor) {
     let expression = interpolateScript(
       this.command.target,
       commandExecutor.variables
@@ -145,15 +175,15 @@ export class CommandNode {
         })
       }
       return this._evaluationResult({
-        value: result,
+        value: Boolean(result),
       })
     }
-    return commandExecutor.evaluateConditional(expression).then(result => {
+    return commandExecutor.evaluateConditional(expression).then((result) => {
       return this._evaluationResult(result)
     })
   }
 
-  _evaluationResult(result) {
+  _evaluationResult(result: WebDriverExecutorCondEvalResult) {
     if (result.value) {
       return {
         next: this.right,
@@ -178,6 +208,7 @@ export class CommandNode {
       }
       return this.timesVisited >= limit
     }
+    return true
   }
 }
 

@@ -15,7 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import webdriver from 'selenium-webdriver'
+import webdriver, {
+  Capabilities,
+  Condition as ConditionShape,
+  WebDriver,
+  WebElement as WebElementShape,
+  WebElementCondition as WebElementConditionShape,
+} from 'selenium-webdriver'
 import { absolutifyUrl } from './utils'
 import {
   composePreprocessors,
@@ -24,6 +30,9 @@ import {
   interpolateScript,
 } from './preprocessors'
 import { AssertionError, VerificationError } from './errors'
+import Variables from './Variables'
+import { Fn } from '@seleniumhq/side-commons'
+import { CommandShape } from '@seleniumhq/side-model'
 
 const {
   By,
@@ -37,37 +46,85 @@ const {
 const { TimeoutError } = webdriver.error
 
 const POLL_TIMEOUT = 50
-const DEFAULT_CAPABILITIES = {
+export type ExpandedCapabilities = Partial<Capabilities> & {
+  browserName: string
+}
+const DEFAULT_CAPABILITIES: ExpandedCapabilities = {
   browserName: 'chrome',
 }
 
 const state = Symbol('state')
 
+export interface WebDriverExecutorConstructorArgs {
+  capabilities?: ExpandedCapabilities
+  driver?: WebDriver
+  hooks?: any
+  implicitWait?: number
+  server?: string
+}
+
+export interface WebDriverExecutorInitOptions {
+  baseUrl: string
+  logger: Console
+  variables: Variables
+}
+
+export interface WebDriverExecutorCondEvalResult {
+  value: boolean
+}
+
+export interface ScriptShape {
+  script: string
+  argv: any[]
+}
+
 export default class WebDriverExecutor {
-  constructor({ driver, capabilities, server, hooks, implicitWait }) {
+  constructor({
+    driver,
+    capabilities,
+    server,
+    hooks,
+    implicitWait,
+  }: WebDriverExecutorConstructorArgs) {
     if (driver) {
       this.driver = driver
     } else {
       this.capabilities = capabilities || DEFAULT_CAPABILITIES
       this.server = server
     }
-
+    this.initialized = false
     this.implicitWait = implicitWait || 5 * 1000
     this.hooks = hooks
 
     this.waitForNewWindow = this.waitForNewWindow.bind(this)
   }
+  baseUrl?: string
+  // @ts-expect-error
+  variables: Variables
+  cancellable?: { cancel: () => void }
+  capabilities?: ExpandedCapabilities
+  // @ts-expect-error
+  driver: WebDriver
+  server?: string
+  hooks: any
+  implicitWait: number
+  initialized: boolean
+  logger?: Console;
+  [state]?: any
 
-  async init({ baseUrl, logger, variables }) {
+  async init({ baseUrl, logger, variables }: WebDriverExecutorInitOptions) {
     this.baseUrl = baseUrl
     this.variables = variables
     this.logger = logger
     this[state] = {}
 
     if (!this.driver) {
+      const { browserName, ...capabilities } = this
+        .capabilities as ExpandedCapabilities
       this.driver = await new webdriver.Builder()
-        .withCapabilities(this.capabilities)
-        .usingServer(this.server)
+        .withCapabilities(capabilities)
+        .usingServer(this.server as string)
+        .forBrowser(browserName)
         .build()
     }
     this.initialized = true
@@ -82,6 +139,7 @@ export default class WebDriverExecutor {
   async cleanup() {
     if (this.initialized) {
       await this.driver.quit()
+      // @ts-expect-error
       this.driver = undefined
       this.initialized = false
     }
@@ -93,26 +151,27 @@ export default class WebDriverExecutor {
     return true
   }
 
-  name(command) {
+  name(command: string) {
     if (!command) {
       return 'skip'
     }
 
     const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
     const func = 'do' + upperCase
+    // @ts-expect-error
     if (!this[func]) {
       throw new Error(`Unknown command ${command}`)
     }
     return func
   }
 
-  async executeHook(hook, ...args) {
+  async executeHook(hook: string, ...args: any[]) {
     if (this.hooks && this.hooks[hook]) {
       await this.hooks[hook].apply(this, args)
     }
   }
 
-  async beforeCommand(commandObject) {
+  async beforeCommand(commandObject: CommandShape) {
     if (commandObject.opensWindow) {
       this[state].openedWindows = await this.driver.getAllWindowHandles()
     }
@@ -120,14 +179,14 @@ export default class WebDriverExecutor {
     await this.executeHook('onBeforeCommand', { command: commandObject })
   }
 
-  async afterCommand(commandObject) {
+  async afterCommand(commandObject: CommandShape) {
     this.cancellable = undefined
     if (commandObject.opensWindow) {
-      const handle = await this.wait(
-        this.waitForNewWindow,
+      const handle = await this.wait<string | undefined>(
+        this.waitForNewWindow(),
         commandObject.windowTimeout
       )
-      this.variables.set(commandObject.windowHandleName, handle)
+      this.variables.set(commandObject.windowHandleName as string, handle)
 
       await this.executeHook('onWindowAppeared', {
         command: commandObject,
@@ -142,11 +201,12 @@ export default class WebDriverExecutor {
   async waitForNewWindow() {
     const currentHandles = await this.driver.getAllWindowHandles()
     return currentHandles.find(
-      handle => !this[state].openedWindows.includes(handle)
+      (handle) => !this[state].openedWindows.includes(handle)
     )
   }
 
-  registerCommand(commandName, fn) {
+  registerCommand(commandName: string, fn: Fn) {
+    // @ts-expect-error
     this['do' + commandName.charAt(0).toUpperCase() + commandName.slice(1)] = fn
   }
 
@@ -158,11 +218,11 @@ export default class WebDriverExecutor {
 
   // window commands
 
-  async doOpen(url) {
-    await this.driver.get(absolutifyUrl(url, this.baseUrl))
+  async doOpen(url: string) {
+    await this.driver.get(absolutifyUrl(url, this.baseUrl as string))
   }
 
-  async doSetWindowSize(widthXheight) {
+  async doSetWindowSize(widthXheight: string) {
     const [width, height] = widthXheight.split('x')
     await this.driver
       .manage()
@@ -170,7 +230,7 @@ export default class WebDriverExecutor {
       .setSize(parseInt(width), parseInt(height))
   }
 
-  async doSelectWindow(handleLocator) {
+  async doSelectWindow(handleLocator: string) {
     const prefix = 'handle='
     if (handleLocator.startsWith(prefix)) {
       const handle = handleLocator.substr(prefix.length)
@@ -189,7 +249,7 @@ export default class WebDriverExecutor {
     await this.driver.close()
   }
 
-  async doSelectFrame(locator) {
+  async doSelectFrame(locator: string) {
     const targetLocator = this.driver.switchTo()
     if (locator === 'relative=top') {
       await targetLocator.defaultContent()
@@ -211,22 +271,30 @@ export default class WebDriverExecutor {
 
   // mouse commands
 
-  async doAddSelection(locator, optionLocator, commandObject = {}) {
+  async doAddSelection(
+    locator: string,
+    optionLocator: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
     )
     const option = await element.findElement(parseOptionLocator(optionLocator))
-    const selections = await this.driver.executeScript(
+    const selections = (await this.driver.executeScript(
       'return arguments[0].selectedOptions',
       element
-    )
+    )) as WebElementShape[]
     if (!(await findElement(selections, option))) {
       await option.click()
     }
   }
 
-  async doRemoveSelection(locator, optionLocator, commandObject = {}) {
+  async doRemoveSelection(
+    locator: string,
+    optionLocator: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -240,13 +308,13 @@ export default class WebDriverExecutor {
     const selections = await this.driver.executeScript(
       'return arguments[0].selectedOptions',
       element
-    )
+    ) as WebElementShape[]
     if (await findElement(selections, option)) {
       await option.click()
     }
   }
 
-  async doCheck(locator, _, commandObject = {}) {
+  async doCheck(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -256,7 +324,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doUncheck(locator, _, commandObject = {}) {
+  async doUncheck(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -266,7 +334,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doClick(locator, _, commandObject = {}) {
+  async doClick(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -274,7 +342,7 @@ export default class WebDriverExecutor {
     await element.click()
   }
 
-  async doClickAt(locator, coordString, commandObject = {}) {
+  async doClickAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -287,18 +355,15 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doDoubleClick(locator, _, commandObject = {}) {
+  async doDoubleClick(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
     )
-    await this.driver
-      .actions({ bridge: true })
-      .doubleClick(element)
-      .perform()
+    await this.driver.actions({ bridge: true }).doubleClick(element).perform()
   }
 
-  async doDoubleClickAt(locator, coordString, commandObject = {}) {
+  async doDoubleClickAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -311,7 +376,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doDragAndDropToObject(dragLocator, dropLocator, commandObject = {}) {
+  async doDragAndDropToObject(dragLocator: string, dropLocator: string, commandObject: Partial<CommandShape> = {}) {
     const drag = await this.waitForElement(
       dragLocator,
       commandObject.targetFallback
@@ -326,7 +391,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseDown(locator, _, commandObject = {}) {
+  async doMouseDown(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -338,7 +403,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseDownAt(locator, coordString, commandObject = {}) {
+  async doMouseDownAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -351,7 +416,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseMoveAt(locator, coordString, commandObject = {}) {
+  async doMouseMoveAt(locator:string, coordString: string, commandObject: Partial<CommandShape> = {}) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -363,12 +428,12 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseOut(locator, _, commandObject = {}) {
+  async doMouseOut(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
     )
-    const [rect, vp] = await this.driver.executeScript(
+    const [rect, vp]: [DOMRect, { height: number, width: number }] = await this.driver.executeScript(
       'return [arguments[0].getBoundingClientRect(), {height: window.innerHeight, width: window.innerWidth}];',
       element
     )
@@ -399,7 +464,7 @@ export default class WebDriverExecutor {
     }
     // try left
     else if (rect.left > 0) {
-      const x = parseInt(-(rect.right / 2))
+      const x = -rect.right / 2
       return await this.driver
         .actions({ bridge: true })
         .move({ origin: element, x })
@@ -411,7 +476,7 @@ export default class WebDriverExecutor {
     )
   }
 
-  async doMouseOver(locator, _, commandObject = {}) {
+  async doMouseOver(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -422,7 +487,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseUp(locator, _, commandObject = {}) {
+  async doMouseUp(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -434,7 +499,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseUpAt(locator, coordString, commandObject = {}) {
+  async doMouseUpAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -447,7 +512,7 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doSelect(locator, optionLocator, commandObject = {}) {
+  async doSelect(locator: string, optionLocator: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -458,7 +523,7 @@ export default class WebDriverExecutor {
 
   // keyboard commands
 
-  async doEditContent(locator, value, commandObject = {}) {
+  async doEditContent(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -470,7 +535,7 @@ export default class WebDriverExecutor {
     )
   }
 
-  async doType(locator, value, commandObject = {}) {
+  async doType(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -479,7 +544,7 @@ export default class WebDriverExecutor {
     await element.sendKeys(value)
   }
 
-  async doSendKeys(locator, value, commandObject = {}) {
+  async doSendKeys(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -489,32 +554,32 @@ export default class WebDriverExecutor {
 
   // wait commands
 
-  async doWaitForElementEditable(locator, timeout) {
+  async doWaitForElementEditable(locator: string, timeout: string) {
     const element = await this.driver.findElement(parseLocator(locator))
     await this.wait(
-      async () => await this.isElementEditable(element),
+      this.isElementEditable(element),
       parseInt(timeout),
       'Timed out waiting for element to be editable'
     )
   }
 
-  async doWaitForElementNotEditable(locator, timeout) {
+  async doWaitForElementNotEditable(locator: string, timeout: string) {
     const element = await this.driver.findElement(parseLocator(locator))
     await this.wait(
-      async () => !(await this.isElementEditable(element)),
+      this.isElementEditable(element),
       parseInt(timeout),
       'Timed out waiting for element to not be editable'
     )
   }
 
-  async doWaitForElementPresent(locator, timeout) {
+  async doWaitForElementPresent(locator: string, timeout: string) {
     await this.wait(
       until.elementLocated(parseLocator(locator)),
       parseInt(timeout)
     )
   }
 
-  async doWaitForElementNotPresent(locator, timeout) {
+  async doWaitForElementNotPresent(locator: string, timeout: string) {
     const parsedLocator = parseLocator(locator)
     const elements = await this.driver.findElements(parsedLocator)
     if (elements.length !== 0) {
@@ -522,17 +587,17 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doWaitForElementVisible(locator, timeout) {
-    const startTime = new Date()
-    const element = await this.wait(
+  async doWaitForElementVisible(locator: string, timeout: string) {
+    const startTime = Date.now()
+    const element = await this.wait<WebElementShape>(
       until.elementLocated(parseLocator(locator)),
       parseInt(timeout)
-    )
-    const elapsed = new Date() - startTime
-    await this.wait(until.elementIsVisible(element), timeout - elapsed)
+    ) as WebElementShape
+    const elapsed = Date.now() - startTime
+    await this.wait(until.elementIsVisible(element), parseInt(timeout) - elapsed)
   }
 
-  async doWaitForElementNotVisible(locator, timeout) {
+  async doWaitForElementNotVisible(locator: string, timeout: string) {
     const parsedLocator = parseLocator(locator)
     const elements = await this.driver.findElements(parsedLocator)
 
@@ -543,11 +608,11 @@ export default class WebDriverExecutor {
 
   // script commands
 
-  async doRunScript(script) {
+  async doRunScript(script: ScriptShape) {
     await this.driver.executeScript(script.script, ...script.argv)
   }
 
-  async doExecuteScript(script, optionalVariable) {
+  async doExecuteScript(script: ScriptShape, optionalVariable?: string) {
     const result = await this.driver.executeScript(
       script.script,
       ...script.argv
@@ -557,7 +622,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doExecuteAsyncScript(script, optionalVariable) {
+  async doExecuteAsyncScript(script: ScriptShape, optionalVariable?: string) {
     const result = await this.driver.executeAsyncScript(
       `var callback = arguments[arguments.length - 1];${script.script}.then(callback).catch(callback);`,
       ...script.argv
@@ -570,20 +635,14 @@ export default class WebDriverExecutor {
   // alert commands
 
   async doAcceptAlert() {
-    await this.driver
-      .switchTo()
-      .alert()
-      .accept()
+    await this.driver.switchTo().alert().accept()
   }
 
   async doAcceptConfirmation() {
-    await this.driver
-      .switchTo()
-      .alert()
-      .accept()
+    await this.driver.switchTo().alert().accept()
   }
 
-  async doAnswerPrompt(optAnswer) {
+  async doAnswerPrompt(optAnswer?: string) {
     const alert = await this.driver.switchTo().alert()
     if (optAnswer) {
       await alert.sendKeys(optAnswer)
@@ -592,27 +651,21 @@ export default class WebDriverExecutor {
   }
 
   async doDismissConfirmation() {
-    await this.driver
-      .switchTo()
-      .alert()
-      .dismiss()
+    await this.driver.switchTo().alert().dismiss()
   }
 
   async doDismissPrompt() {
-    await this.driver
-      .switchTo()
-      .alert()
-      .dismiss()
+    await this.driver.switchTo().alert().dismiss()
   }
 
   // store commands
 
-  async doStore(string, variable) {
+  async doStore(string: string, variable: string) {
     this.variables.set(variable, string)
     return Promise.resolve()
   }
 
-  async doStoreAttribute(attributeLocator, variable) {
+  async doStoreAttribute(attributeLocator: string, variable: string) {
     const attributePos = attributeLocator.lastIndexOf('@')
     const elementLocator = attributeLocator.slice(0, attributePos)
     const attributeName = attributeLocator.slice(attributePos + 1)
@@ -622,17 +675,17 @@ export default class WebDriverExecutor {
     this.variables.set(variable, value)
   }
 
-  async doStoreElementCount(locator, variable) {
+  async doStoreElementCount(locator: string, variable: string) {
     const elements = await this.driver.findElements(parseLocator(locator))
     this.variables.set(variable, elements.length)
   }
 
-  async doStoreJson(json, variable) {
+  async doStoreJson(json: string, variable: string) {
     this.variables.set(variable, JSON.parse(json))
     return Promise.resolve()
   }
 
-  async doStoreText(locator, variable, commandObject = {}) {
+  async doStoreText(locator: string, variable: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -641,12 +694,12 @@ export default class WebDriverExecutor {
     this.variables.set(variable, text)
   }
 
-  async doStoreTitle(variable) {
+  async doStoreTitle(variable: string) {
     const title = await this.driver.getTitle()
     this.variables.set(variable, title)
   }
 
-  async doStoreValue(locator, variable, commandObject = {}) {
+  async doStoreValue(locator: string, variable: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -655,7 +708,7 @@ export default class WebDriverExecutor {
     this.variables.set(variable, value)
   }
 
-  async doStoreWindowHandle(variable) {
+  async doStoreWindowHandle(variable: string) {
     const handle = await this.driver.getWindowHandle()
     this.variables.set(variable, handle)
     await this.executeHook('onStoreWindowHandle', {
@@ -666,7 +719,7 @@ export default class WebDriverExecutor {
 
   // assertions
 
-  async doAssert(variableName, value) {
+  async doAssert(variableName: string, value: string) {
     const variable = `${this.variables.get(variableName)}`
     if (variable != value) {
       throw new AssertionError(
@@ -675,7 +728,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertAlert(expectedText) {
+  async doAssertAlert(expectedText: string) {
     const alert = await this.driver.switchTo().alert()
     const actualText = await alert.getText()
     if (actualText !== expectedText) {
@@ -689,7 +742,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertConfirmation(expectedText) {
+  async doAssertConfirmation(expectedText: string) {
     const alert = await this.driver.switchTo().alert()
     const actualText = await alert.getText()
     if (actualText !== expectedText) {
@@ -703,7 +756,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertEditable(locator, _, commandObject = {}) {
+  async doAssertEditable(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -713,7 +766,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotEditable(locator, _, commandObject = {}) {
+  async doAssertNotEditable(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -723,7 +776,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertPrompt(expectedText) {
+  async doAssertPrompt(expectedText: string) {
     const alert = await this.driver.switchTo().alert()
     const actualText = await alert.getText()
     if (actualText !== expectedText) {
@@ -737,7 +790,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertTitle(title) {
+  async doAssertTitle(title: string) {
     const actualTitle = await this.driver.getTitle()
     if (title != actualTitle) {
       throw new AssertionError(
@@ -746,18 +799,18 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertElementPresent(locator, _, commandObject = {}) {
+  async doAssertElementPresent(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     await this.waitForElement(locator, commandObject.targetFallback)
   }
 
-  async doAssertElementNotPresent(locator) {
+  async doAssertElementNotPresent(locator: string) {
     const elements = await this.driver.findElements(parseLocator(locator))
     if (elements.length) {
       throw new AssertionError('Unexpected element was found in page')
     }
   }
 
-  async doAssertText(locator, value, commandObject = {}) {
+  async doAssertText(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -770,7 +823,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotText(locator, value, commandObject = {}) {
+  async doAssertNotText(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -783,7 +836,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertValue(locator, value, commandObject = {}) {
+  async doAssertValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -797,7 +850,7 @@ export default class WebDriverExecutor {
   }
 
   // not generally implemented
-  async doAssertNotValue(locator, value, commandObject = {}) {
+  async doAssertNotValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -810,7 +863,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertChecked(locator, _, commandObject = {}) {
+  async doAssertChecked(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -820,7 +873,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotChecked(locator, _, commandObject = {}) {
+  async doAssertNotChecked(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -830,7 +883,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertSelectedValue(locator, value, commandObject = {}) {
+  async doAssertSelectedValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -843,7 +896,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotSelectedValue(locator, value, commandObject = {}) {
+  async doAssertNotSelectedValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -856,7 +909,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertSelectedLabel(locator, label, commandObject = {}) {
+  async doAssertSelectedLabel(locator: string, label: string, commandObject: Partial<CommandShape> = {}) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -877,10 +930,14 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotSelectedLabel(locator, label, commandObject = {}) {
+  async doAssertNotSelectedLabel(
+    locator: string,
+    label: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
-      commandObject.targetFallback
+      commandObject?.targetFallback
     )
     const selectedValue = await element.getAttribute('value')
     const selectedOption = await element.findElement(
@@ -900,13 +957,13 @@ export default class WebDriverExecutor {
     throw new Error('`debugger` is not supported in this run mode')
   }
 
-  async doEcho(string) {
+  async doEcho(string: string) {
     if (this.logger) {
       this.logger.log(`echo: ${string}`)
     }
   }
 
-  async doPause(time) {
+  async doPause(time: number) {
     await this.driver.sleep(time)
   }
 
@@ -918,7 +975,9 @@ export default class WebDriverExecutor {
     throw new Error('`set speed` is not supported in this run mode')
   }
 
-  async evaluateConditional(script) {
+  async evaluateConditional(
+    script: ScriptShape
+  ): Promise<WebDriverExecutorCondEvalResult> {
     const result = await this.driver.executeScript(
       `return (${script.script})`,
       ...script.argv
@@ -928,13 +987,16 @@ export default class WebDriverExecutor {
     }
   }
 
-  async waitForElement(locator, fallback) {
+  async waitForElement(
+    locator: string,
+    fallback: string[] = []
+  ): Promise<WebElementShape> {
     const elementLocator = parseLocator(locator)
     try {
-      return await this.wait(
+      return (await this.wait<WebElementShape>(
         until.elementLocated(elementLocator),
         this.implicitWait
-      )
+      )) as WebElementShape
     } catch (err) {
       if (fallback) {
         for (let i = 0; i < fallback.length; i++) {
@@ -950,7 +1012,7 @@ export default class WebDriverExecutor {
     }
   }
 
-  async isElementEditable(element) {
+  async isElementEditable(element: WebElementShape) {
     const { enabled, readonly } = await this.driver.executeScript(
       'return { enabled: !arguments[0].disabled, readonly: arguments[0].readOnly };',
       element
@@ -958,12 +1020,12 @@ export default class WebDriverExecutor {
     return enabled && !readonly
   }
 
-  async wait(
-    condition,
-    timeout = 0,
-    message = undefined,
-    pollTimeout = POLL_TIMEOUT
-  ) {
+  async wait<T extends any>(
+    condition: Promise<T> | ConditionShape<T> | WebElementConditionShape,
+    timeout: number = 0,
+    message: string = '',
+    pollTimeout: number = POLL_TIMEOUT
+  ): Promise<T | Error> {
     if (typeof timeout !== 'number' || timeout < 0) {
       throw TypeError('timeout must be a number >= 0: ' + timeout)
     }
@@ -972,7 +1034,7 @@ export default class WebDriverExecutor {
       throw TypeError('pollTimeout must be a number >= 0: ' + pollTimeout)
     }
 
-    if (condition && typeof condition.then === 'function') {
+    if (isConditionPromiseLike(condition)) {
       return new Promise((resolve, reject) => {
         if (!timeout) {
           resolve(condition)
@@ -980,7 +1042,7 @@ export default class WebDriverExecutor {
         }
 
         let start = Date.now()
-        let timer = setTimeout(function() {
+        let timer: NodeJS.Timeout | null = setTimeout(function () {
           timer = null
           reject(
             new TimeoutError(
@@ -994,11 +1056,11 @@ export default class WebDriverExecutor {
         const clearTimer = () => timer && clearTimeout(timer)
 
         condition.then(
-          function(value) {
+          function (value: T) {
             clearTimer()
             resolve(value)
           },
-          function(error) {
+          function (error: Error) {
             clearTimer()
             reject(error)
           }
@@ -1006,7 +1068,8 @@ export default class WebDriverExecutor {
       })
     }
 
-    let fn = condition
+    // @ts-expect-error
+    let fn: Fn = condition
     if (condition instanceof Condition) {
       message = message || condition.description()
       fn = condition.fn
@@ -1033,8 +1096,8 @@ export default class WebDriverExecutor {
     let result = new Promise((resolve, reject) => {
       const startTime = Date.now()
       let cancelled = false
-      let resolveCancel
-      const cancelPromise = new Promise(res => {
+      let resolveCancel: Fn
+      const cancelPromise = new Promise((res) => {
         resolveCancel = res
       })
       this.cancellable = {
@@ -1044,7 +1107,7 @@ export default class WebDriverExecutor {
         },
       }
       const pollCondition = async () => {
-        evaluateCondition().then(value => {
+        evaluateCondition().then((value) => {
           const elapsed = Date.now() - startTime
           if (cancelled) {
             resolveCancel()
@@ -1072,7 +1135,7 @@ export default class WebDriverExecutor {
     if (condition instanceof WebElementCondition) {
       result = new WebElementPromise(
         driver,
-        result.then(function(value) {
+        result.then(function (value) {
           if (!(value instanceof WebElement)) {
             throw TypeError(
               'WebElementCondition did not resolve to a WebElement: ' +
@@ -1083,8 +1146,16 @@ export default class WebDriverExecutor {
         })
       )
     }
-    return result
+    return result as T
   }
+}
+
+function isConditionPromiseLike<T>(
+  condition: ConditionShape<T> | (Promise<T>) | WebElementConditionShape
+): condition is Promise<T> {
+  return (
+    condition && typeof (condition as Promise<T>).then === 'function'
+  )
 }
 
 WebDriverExecutor.prototype.doOpen = composePreprocessors(
@@ -1387,19 +1458,22 @@ WebDriverExecutor.prototype.doEcho = composePreprocessors(
   WebDriverExecutor.prototype.doEcho
 )
 
-function createVerifyCommands(Executor) {
+function createVerifyCommands(Executor: WebDriverExecutor) {
+  // @ts-expect-error
   Object.getOwnPropertyNames(Executor.prototype)
-    .filter(command => /^doAssert/.test(command))
-    .forEach(assertion => {
+    .filter((command) => /^doAssert/.test(command))
+    .forEach((assertion) => {
       const verify = assertion.replace('doAssert', 'doVerify')
+      // @ts-expect-error
       Executor.prototype[verify] = {
         // creating the function inside an object since function declared in an
         // object are named after the property, thus creating dyanmic named funcs
         // also in order to be able to call(this) the function has to be normal
         // declaration rather than arrow, as arrow will be bound to
         // createVerifyCommands context which is undefined
-        [verify]: async function(...args) {
+        [verify]: async function (...args: any[]) {
           try {
+            // @ts-expect-error
             return await Executor.prototype[assertion].call(this, ...args)
           } catch (err) {
             if (err instanceof AssertionError) {
@@ -1412,14 +1486,15 @@ function createVerifyCommands(Executor) {
     })
 }
 
+// @ts-expect-error
 createVerifyCommands(WebDriverExecutor)
 
-function parseLocator(locator) {
+function parseLocator(locator: string) {
   if (/^\/\//.test(locator)) {
     return By.xpath(locator)
   }
   const fragments = locator.split('=')
-  const type = fragments.shift()
+  const type = fragments.shift() as keyof typeof LOCATORS
   const selector = fragments.join('=')
   if (LOCATORS[type] && selector) {
     return LOCATORS[type](selector)
@@ -1428,9 +1503,9 @@ function parseLocator(locator) {
   }
 }
 
-function parseOptionLocator(locator) {
+function parseOptionLocator(locator: string) {
   const fragments = locator.split('=')
-  const type = fragments.shift()
+  const type = fragments.shift() as keyof typeof OPTIONS_LOCATORS
   const selector = fragments.join('=')
   if (OPTIONS_LOCATORS[type] && selector) {
     return OPTIONS_LOCATORS[type](selector)
@@ -1444,8 +1519,8 @@ function parseOptionLocator(locator) {
   }
 }
 
-function parseCoordString(coord) {
-  const [x, y] = coord.split(',').map(n => parseInt(n))
+function parseCoordString(coord: string) {
+  const [x, y] = coord.split(',').map((n) => parseInt(n))
 
   return {
     x,
@@ -1453,7 +1528,7 @@ function parseCoordString(coord) {
   }
 }
 
-function preprocessKeys(_str, variables) {
+function preprocessKeys(_str: string, variables: Variables) {
   const str = interpolateString(_str, variables)
   let keys = []
   let match = str.match(/\$\{\w+\}/g)
@@ -1462,7 +1537,7 @@ function preprocessKeys(_str, variables) {
   } else {
     let i = 0
     while (i < str.length) {
-      let currentKey = match.shift(),
+      let currentKey = match.shift() as string,
         currentKeyIndex = str.indexOf(currentKey, i)
       if (currentKeyIndex > i) {
         // push the string before the current key
@@ -1472,7 +1547,8 @@ function preprocessKeys(_str, variables) {
       if (currentKey) {
         if (/^\$\{KEY_\w+\}/.test(currentKey)) {
           // is a key
-          let keyName = currentKey.match(/\$\{KEY_(\w+)\}/)[1]
+          let keyName = (currentKey.match(/\$\{KEY_(\w+)\}/) as [string, string])[1]
+          // @ts-expect-error
           let key = Key[keyName]
           if (key) {
             keys.push(key)
@@ -1505,13 +1581,16 @@ const LOCATORS = {
 }
 
 const OPTIONS_LOCATORS = {
-  id: id => By.css(`*[id="${id}"]`),
-  value: value => By.css(`*[value="${value}"]`),
-  label: label => By.xpath(`//option[. = '${label}']`),
-  index: index => By.css(`*:nth-child(${index})`),
+  id: (id: string) => By.css(`*[id="${id}"]`),
+  value: (value: string) => By.css(`*[value="${value}"]`),
+  label: (label: string) => By.xpath(`//option[. = '${label}']`),
+  index: (index: string) => By.css(`*:nth-child(${index})`),
 }
 
-async function findElement(elements, element) {
+async function findElement(
+  elements: WebElementShape[],
+  element: WebElementShape
+) {
   const id = await element.getId()
   for (let i = 0; i < elements.length; i++) {
     if ((await elements[i].getId()) === id) {

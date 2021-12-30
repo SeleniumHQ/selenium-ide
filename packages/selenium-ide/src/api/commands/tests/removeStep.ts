@@ -1,7 +1,8 @@
+import { TestShape } from '@seleniumhq/side-model'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
-import { CoreSessionData, TestShape } from 'api/types'
+import { CoreSessionData } from 'api/types'
 
 export type Shape = Session['tests']['removeStep']
 

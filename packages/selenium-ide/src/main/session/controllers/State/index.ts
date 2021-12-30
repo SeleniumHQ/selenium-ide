@@ -19,10 +19,13 @@ export default class StateController {
   async setActiveCommand(_commandID: string): Promise<boolean> {
     return true
   }
+  async setActiveSuite(_suiteID: string): Promise<boolean> {
+    return true
+  }
   async setActiveTest(_testID: string): Promise<boolean> {
     return true
   }
-  async toggleBreakpoint(_commandID: string): Promise<boolean> {
+  async toggleBreakpoint(_stepID: string): Promise<boolean> {
     return true
   }
 }

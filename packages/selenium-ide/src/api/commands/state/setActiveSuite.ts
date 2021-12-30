@@ -4,12 +4,15 @@ import { Session } from 'main/types'
 import { Mutator } from 'api/types'
 import loadingID from 'api/constants/loadingID'
 
-export type Shape = Session['state']['setActiveTest']
+export type Shape = Session['state']['setActiveSuite']
 
 export const mutator: Mutator<Shape> = (
   session,
-  { params: [activeTestID] }
+  { params: [activeSuiteID] }
 ) => {
+  const activeTestID =
+    session.project.suites.find((s) => s.id === activeSuiteID)?.tests?.[0] ??
+    loadingID
   const activeCommandID =
     session.project.tests.find((t) => t.id === activeTestID)?.commands?.[0]
       ?.id ?? loadingID
@@ -17,6 +20,7 @@ export const mutator: Mutator<Shape> = (
     ...session,
     state: {
       ...session.state,
+      activeSuiteID,
       activeTestID,
       activeCommandID,
     },

@@ -15,12 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default class AssertionError extends Error {
-  constructor(...argv) {
-    super(argv)
+export class State {
+  constructor() {
+    this._state = []
+  }
+  _state: any[]
+  empty() {
+    return this._state.length === 0
+  }
 
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, AssertionError)
-    }
+  push(obj: any) {
+    this._state.push(obj)
+  }
+
+  pop() {
+    this._state.pop()
+  }
+
+  top() {
+    return this._state[this._state.length - 1]
   }
 }

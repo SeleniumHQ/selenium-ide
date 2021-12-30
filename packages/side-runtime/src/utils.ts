@@ -15,6 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function absolutifyUrl(targetUrl, baseUrl) {
+export function absolutifyUrl(targetUrl: string, baseUrl: string): string {
   return new URL(targetUrl, baseUrl).href
 }

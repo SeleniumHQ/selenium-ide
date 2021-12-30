@@ -4,7 +4,7 @@ import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
 import { Mutator } from 'api/types'
 
-export type Shape = Session['playback']['start']
+export type Shape = Session['playback']['play']
 
 const setToPlay = set('state.status', 'playing')
 export const mutator: Mutator<Shape> = (session) => setToPlay(session)

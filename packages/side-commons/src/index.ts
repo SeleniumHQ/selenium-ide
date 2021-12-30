@@ -15,18 +15,5 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import createRecorderSyncronizer from './recording-syncronizer'
-
-export default function createRecorderSyncronizerForWebdriverExecutor({
-  executor,
-  sessionId,
-  logger,
-}) {
-  return createRecorderSyncronizer({
-    sessionId,
-    executeAsyncScript: script => executor.doExecuteAsyncScript(script),
-    switchToWindow: handle => executor.driver.switchTo().window(handle),
-    getWindowHandle: () => executor.driver.getWindowHandle(),
-    logger,
-  })
-}
+export * as events from './events'
+export * from './types'
