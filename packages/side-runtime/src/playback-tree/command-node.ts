@@ -20,7 +20,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { WebDriverExecutor } from '..'
 import { interpolateScript } from '../preprocessors'
 import { CommandNodeOptions } from '../types'
-import Variables from '../Variables'
+import Variables from '../variables'
 import { WebDriverExecutorCondEvalResult } from '../webdriver'
 import { ControlFlowCommandChecks } from './commands'
 
@@ -208,7 +208,7 @@ export class CommandNode {
       }
       return this.timesVisited >= limit
     }
-    return true
+    return false
   }
 }
 

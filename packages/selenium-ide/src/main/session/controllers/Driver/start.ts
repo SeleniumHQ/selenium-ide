@@ -40,7 +40,7 @@ const startDriver: StartDriver =
             '..',
             'files',
             resolveDriverName({
-              browser: 'electron',
+              browser: 'chrome',
               platform: os.platform(),
               version: version,
             })
@@ -49,7 +49,8 @@ const startDriver: StartDriver =
       )
       if (fs.existsSync(driverPath)) {
         const driver = spawn(driverPath, args, {
-          env: process.env,
+          env: {},
+          shell: true,
         })
         driver.stdout.on('data', (out: string) => {
           const outStr = `${out}`

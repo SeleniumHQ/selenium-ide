@@ -15,14 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import _Playback from './playback'
+export {default as Playback} from './playback'
+export {default as Variables} from './variables'
 export {default as WebDriverExecutor} from './webdriver'
 import { CommandType as _CommandType } from './playback-tree/command-node'
 import createRecorderSyncronizer from './recording-syncronizer'
 import createRecorderSyncronizerForWebdriverExecutor from './recording-syncronizer-webdriver'
 
-export const Playback = _Playback
 export * from './playback'
+export * from './types'
 export const CommandType = _CommandType
 export const RecordingSyncronizers = {
   createRecorderSyncronizer,

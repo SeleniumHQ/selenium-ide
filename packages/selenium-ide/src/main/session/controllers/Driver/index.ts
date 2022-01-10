@@ -1,8 +1,7 @@
-import { resolveBrowserVersion } from '@seleniumhq/get-driver'
+import { Chrome } from '@seleniumhq/browser-info'
 import { WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { ChildProcess } from 'child_process'
-import webdriver from 'selenium-webdriver'
-import { Session } from '../../../types'
+import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
 import startDriver from './start'
 
@@ -10,10 +9,16 @@ interface DriverOptions {
   browser?: 'chrome'
   capabilities?: {
     'goog:chromeOptions': {
-      debuggerAddress: string
+      debuggerAddress?: string
+      w3c?: boolean
     }
   }
   server?: string
+}
+
+export interface BrowsersInfo {
+  browsers: BrowserInfo[]
+  selected: BrowserInfo
 }
 
 export default class DriverController {
@@ -22,42 +27,46 @@ export default class DriverController {
   }
   session: Session
   // @ts-expect-error
-  driver: typeof WebDriverExecutor
+  driver: WebDriverExecutor
   driverProcess?: ChildProcess
   async build({
     browser = 'chrome',
     capabilities = {
       'goog:chromeOptions': {
-        debuggerAddress: 'localhost:8315',
+        // debuggerAddress: 'localhost:6813',
+        w3c: true,
       },
     },
     // The "9515" is the port opened by chrome driver.
     server = 'http://localhost:9515',
   }: DriverOptions) {
-    const driver = new WebDriverExecutor({
-      capabilities,
+    this.driver = new WebDriverExecutor({
+      capabilities: { ...capabilities, browserName: browser },
       server,
-    })
-    driver.init({
-      baseUrl: this.session.projects.project.url,
-      
     })
     return this.driver
   }
   async download(version: string) {
     return downloadDriver(version)
   }
-  async getBrowserPath(): Promise<string> {
-    return this.session.store.get('config.browserPath')
+  async listBrowsers(): Promise<BrowsersInfo> {
+    const chromeBrowserInfo = await Chrome.getBrowserInfo()
+    const chromeBrowserInfoArr = Array.isArray(chromeBrowserInfo)
+      ? chromeBrowserInfo
+      : [chromeBrowserInfo]
+    const ourChromeBrowserInfo: BrowserInfo[] = chromeBrowserInfoArr.map(
+      (info) => ({
+        version: info.version,
+        browser: 'chrome',
+      })
+    )
+    return {
+      browsers: ourChromeBrowserInfo,
+      selected: this.session.store.get('browserInfo'),
+    }
   }
-  async getBrowserVersion(): Promise<string> {
-    const path = await this.getBrowserPath()
-    const version = await resolveBrowserVersion(path)
-    return version as string
-  }
-  async setBrowserPath(browserPath: string): Promise<boolean> {
-    this.session.store.set('config.browserPath', browserPath)
-    return true
+  async selectBrowser(selected: BrowserInfo): Promise<void> {
+    this.session.store.set('browserInfo', selected)
   }
   async startProcess(version: string): Promise<null | string> {
     const results = await startDriver(this.session)(version)

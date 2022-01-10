@@ -16,7 +16,7 @@
 // under the License.
 
 import { Fn } from "@seleniumhq/side-commons"
-import Variables from "./Variables"
+import Variables from "./variables"
 
 const nbsp = String.fromCharCode(160)
 

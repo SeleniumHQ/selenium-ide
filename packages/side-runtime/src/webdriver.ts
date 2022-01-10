@@ -30,7 +30,7 @@ import {
   interpolateScript,
 } from './preprocessors'
 import { AssertionError, VerificationError } from './errors'
-import Variables from './Variables'
+import Variables from './variables'
 import { Fn } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
 
@@ -48,6 +48,7 @@ const { TimeoutError } = webdriver.error
 const POLL_TIMEOUT = 50
 export type ExpandedCapabilities = Partial<Capabilities> & {
   browserName: string
+  'goog:chromeOptions'?: Record<string, boolean | number | string>
 }
 const DEFAULT_CAPABILITIES: ExpandedCapabilities = {
   browserName: 'chrome',
@@ -227,7 +228,7 @@ export default class WebDriverExecutor {
     await this.driver
       .manage()
       .window()
-      .setSize(parseInt(width), parseInt(height))
+      .setRect({ width: parseInt(width), height: parseInt(height) })
   }
 
   async doSelectWindow(handleLocator: string) {

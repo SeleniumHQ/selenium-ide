@@ -37,7 +37,7 @@ const downloadDriver = async (browserVersion: string) => {
   }
 
   if (shouldDownload) {
-    console.log('downloading chromedriver for the matched chrome version...')
+    console.log(`downloading chromedriver for chrome version ${browserVersion}...`)
     await doDownloadDriver({
       downloadDirectory,
       browser: 'chrome',

@@ -29,9 +29,6 @@ export async function resolveDriverUrl({
   version: string
 }) {
   switch (browser) {
-    case 'electron': {
-      return `https://github.com/electron/electron/releases/download/v${version}/chromedriver-v${version}-${platform}-${arch}.zip`
-    }
     case 'chrome': {
       return `https://chromedriver.storage.googleapis.com/${await getChromedriverVersion(
         version
@@ -63,12 +60,11 @@ export function resolveDriverName({
   }`
 }
 
-export type Browser = 'electron' | 'chrome' | 'firefox'
+export type Browser = 'chrome' | 'firefox'
 
 export type Platform = NodeJS.Platform
 
 const DriverNames: BrowserToDriver = {
-  electron: 'chromedriver',
   chrome: 'chromedriver',
   firefox: 'geckodriver',
 }

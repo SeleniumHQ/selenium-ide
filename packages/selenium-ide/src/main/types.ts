@@ -1,3 +1,5 @@
+import { Chrome } from '@seleniumhq/browser-info'
+import { Browser } from '@seleniumhq/get-driver'
 import { App, Menu } from 'electron'
 import Store from 'electron-store'
 import config from './store/config'
@@ -16,6 +18,15 @@ import VariablesController from './session/controllers/Variables'
 import WindowsController from './session/controllers/Windows'
 import { MainApiMapper } from './api'
 import { StorageSchema } from './store'
+
+export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
+  browser: Browser
+}
+
+export interface BrowsersInfo {
+  browsers: BrowserInfo[]
+  selected: BrowserInfo
+}
 
 export type Config = typeof config
 

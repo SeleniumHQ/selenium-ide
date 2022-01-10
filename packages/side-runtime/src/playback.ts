@@ -20,12 +20,12 @@ import { events, Fn } from '@seleniumhq/side-commons'
 import { createPlaybackTree, PlaybackTree } from './playback-tree'
 import { AssertionError, VerificationError } from './errors'
 import Callstack from './callstack'
-import Variables from './Variables'
+import Variables from './variables'
 import { WebDriverExecutor } from '.'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import { CommandNode } from './playback-tree/command-node'
 
-const EE = Symbol('event-emitter')
+const EE = 'event-emitter'
 const state = Symbol('state')
 const DELAY_INTERVAL = 10
 
@@ -35,7 +35,7 @@ export interface PlaybackConstructorArgs {
   baseUrl: string
   variables: Variables
   getTestByName: (name: string) => TestShape
-  options: PlaybackConstructorOptions
+  options?: Partial<PlaybackConstructorOptions>
 }
 export interface PlaybackConstructorOptions {
   pauseOnExceptions: boolean
@@ -60,7 +60,7 @@ export default class Playback {
     baseUrl,
     variables,
     getTestByName,
-    options,
+    options = {},
   }: PlaybackConstructorArgs) {
     this.executor = executor
     this.baseUrl = baseUrl
@@ -342,10 +342,10 @@ export default class Playback {
     if (!this.currentExecutingNode && this[state].callstack.length > 1) {
       this._unwind()
     }
-
     if (this.currentExecutingNode) {
       const command = this.currentExecutingNode.command
       const callstackIndex = this[state].callstack.length - 1
+      console.log(this.currentExecutingNode.command, this[state])
       this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
@@ -396,6 +396,7 @@ export default class Playback {
       try {
         result = await this._executeCommand(this.currentExecutingNode)
       } catch (err) {
+        console.error('Execute error', err)
         if (err instanceof AssertionError) {
           this[EE].emitCommandStateChange({
             id: command.id,
@@ -445,6 +446,7 @@ export default class Playback {
 
       return await this._executionLoop()
     }
+    throw new Error('Uh oh, why am I here?!?')
   }
 
   async _playSingleCommand(command: CommandShape) {

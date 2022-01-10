@@ -72,7 +72,7 @@
     "lodash": "4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "selenium-webdriver": "4.0.0-beta.4",
+    "selenium-webdriver": "^4.1.0",
     "spectron": "15.0.0",
     "use-immer": "0.6.0"
   },

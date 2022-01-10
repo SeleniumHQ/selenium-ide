@@ -10,6 +10,18 @@ export default class TestsController {
 
   session: Session
 
+  getByID(id: string): TestShape {
+    return this.session.projects.project.tests.find(
+      (t) => t.id === id
+    ) as TestShape
+  }
+
+  getByName(name: string): TestShape {
+    return this.session.projects.project.tests.find(
+      (t) => t.name === name
+    ) as TestShape
+  }
+
   async addStep(
     testID: string,
     index: number,
