@@ -60,3 +60,7 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 If you have questions, check out [our FAQ](https://www.seleniumhq.org/selenium-ide/docs/en/introduction/faq/).
 
 You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC channel, which is also available on [Slack](https://seleniumhq.herokuapp.com).
+
+## For Mozilla Reviewers
+
+The use of CSP and eval is necessary for a record & playback tool (including inject JavaScript PER user commands). There is no other way to do this so please don't disable our add on again.
