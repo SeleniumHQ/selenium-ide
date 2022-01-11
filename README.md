@@ -63,4 +63,4 @@ You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC chan
 
 ## For Mozilla Reviewers
 
-The use of CSP and eval is necessary for a record & playback tool (including inject JavaScript PER user commands). There is no other way to do this so please don't disable our add on again.
+Using CSP and eval is necessary for a browser-based tool that implements the webdriver API for recording and playback, since part of that spec allows users to inject javascript commands and perform ad-hoc evaluations of the results. Please don't disable us for this.
