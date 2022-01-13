@@ -56,6 +56,6 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 
 If you have questions, check out [our FAQ](https://github.com/SeleniumHQ/selenium-ide/wiki/Frequently-Asked-Questions).
 
-You can also find us on on the [#selenium](irc://freenode.net/selenium) IRC
+You can also find us on the [#selenium](irc://freenode.net/selenium) IRC
 channel, which is also available on
 [Slack](https://www.selenium.dev/support/#ChatRoom).
