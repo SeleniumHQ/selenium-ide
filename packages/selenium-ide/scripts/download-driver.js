@@ -15,35 +15,35 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import * as fs from 'fs-extra'
-import * as path from 'path'
-import * as os from 'os'
-import { downloadDriver as doDownloadDriver } from '@seleniumhq/get-driver'
+// eslint-disable-next-line node/no-unpublished-require
+const fs = require('fs-extra')
+const path = require('path')
+const os = require('os')
+const { downloadDriver } = require('@seleniumhq/get-driver')
 
-const downloadDriver = async (browserVersion: string) => {
+;(async () => {
   const downloadDirectory = path.join(__dirname, '../files')
+  const pkg = require('electron/package.json')
   const chromedrivers = (
     await fs.readdir(path.join(__dirname, '../files'))
-  ).filter((file) => file.startsWith('chromedriver'))
+  ).filter(file => file.startsWith('chromedriver'))
 
   let shouldDownload = true
   for await (let chromedriver of chromedrivers) {
-    const [, version] = chromedriver.split('-v')
-    if (version === browserVersion) {
+    const [_, version] = chromedriver.split('-v')
+    if (version === pkg.version) {
       shouldDownload = false
     }
   }
 
   if (shouldDownload) {
-    console.log(`downloading chromedriver for chrome version ${browserVersion}...`)
-    await doDownloadDriver({
+    console.log('downloading chromedriver for this electron version...')
+    await downloadDriver({
       downloadDirectory,
-      browser: 'chrome',
+      browser: 'electron',
       platform: os.platform(),
       arch: os.arch(),
-      version: browserVersion,
+      version: pkg.version,
     })
   }
-}
-
-export default downloadDriver
+})()

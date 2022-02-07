@@ -1,12 +1,13 @@
 import { Chrome } from '@seleniumhq/browser-info'
 import { WebDriverExecutor } from '@seleniumhq/side-runtime'
+import { version as ElectronVersion } from 'electron/package.json';
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
 import startDriver from './start'
 
 interface DriverOptions {
-  browser?: 'chrome'
+  browser?: 'chrome' | 'electron' | 'firefox'
   capabilities?: {
     'goog:chromeOptions': {
       debuggerAddress?: string
@@ -30,18 +31,18 @@ export default class DriverController {
   driver: WebDriverExecutor
   driverProcess?: ChildProcess
   async build({
-    browser = 'chrome',
-    capabilities = {
-      'goog:chromeOptions': {
-        // debuggerAddress: 'localhost:6813',
-        w3c: true,
-      },
-    },
+    browser = 'electron',
+    // capabilities = {
+    //   'goog:chromeOptions': {
+    //     debuggerAddress: 'localhost:6813',
+    //     w3c: true,
+    //   },
+    // },
     // The "9515" is the port opened by chrome driver.
     server = 'http://localhost:9515',
   }: DriverOptions) {
     this.driver = new WebDriverExecutor({
-      capabilities: { ...capabilities, browserName: browser },
+      capabilities: { browserName: browser },
       server,
     })
     return this.driver
@@ -60,8 +61,12 @@ export default class DriverController {
         browser: 'chrome',
       })
     )
+    const ourElectronBrowserInfo: BrowserInfo = {
+      browser: 'electron',
+      version: ElectronVersion,
+    }
     return {
-      browsers: ourChromeBrowserInfo,
+      browsers: [ourElectronBrowserInfo].concat(ourChromeBrowserInfo),
       selected: this.session.store.get('browserInfo'),
     }
   }

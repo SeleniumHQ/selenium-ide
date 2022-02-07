@@ -267,6 +267,7 @@ export default class Playback {
     // we kill regardless of wether the test is paused to keep the
     // behavior consistent
 
+    // @ts-expect-error
     await this.executor.kill()
 
     // play will throw but the user will catch it with this.play()

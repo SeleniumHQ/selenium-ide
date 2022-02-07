@@ -32,7 +32,7 @@ const browserFromString = (browserString: string): BrowserInfo => {
 const ProjectEditor = () => {
   const [browserInfo, setBrowserInfo] = useState<BrowsersInfo>({
     browsers: [],
-    selected: { browser: 'chrome', version: '' },
+    selected: { browser: 'electron', version: '' },
   })
   const [driverStatus, setDriverStatus] =
     useState<keyof typeof driverStates>('LIST_BROWSERS')
@@ -42,11 +42,11 @@ const ProjectEditor = () => {
       case driverStateKeys.LIST_BROWSERS:
         sideAPI.driver.listBrowsers().then(async (info) => {
           setBrowserInfo(info)
-          if (info.selected.version) {
-            setDriverStatus(driverStateKeys.DOWNLOADING_DRIVER)
-          } else {
+          // if (info.selected.version) {
+          //   setDriverStatus(driverStateKeys.DOWNLOADING_DRIVER)
+          // } else {
             setDriverStatus(driverStateKeys.SELECT_BROWSER)
-          }
+          // }
         })
         break
       case driverStateKeys.SELECTED_BROWSER:
@@ -108,7 +108,7 @@ const ProjectEditor = () => {
               </MenuItem>
               {browserInfo.browsers.map((browser, index) => (
                 <MenuItem key={index} value={browserToString(browser)}>
-                  Chrome - {browser.version}
+                  {browser.browser} - {browser.version}
                 </MenuItem>
               ))}
             </Select>
