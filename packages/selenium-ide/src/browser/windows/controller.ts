@@ -1,3 +1,7 @@
 export * as Chromedriver from './Chromedriver/controller'
-export * as ProjectEditor from './ProjectEditor/controller'
+export * as ProjectCommandEditor from './ProjectCommandEditor/controller'
+export * as ProjectPlaybackControls from './ProjectPlaybackControls/controller'
+export * as ProjectPlaybackWindow from './ProjectPlaybackWindow/controller'
+export * as ProjectTestCommandList from './ProjectTestCommandList/controller'
+export * as ProjectTestList from './ProjectTestList/controller'
 export * as Splash from './Splash/controller'

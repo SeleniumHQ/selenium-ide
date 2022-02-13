@@ -1,4 +1,4 @@
-import { Grid, MenuItem, Select, Typography } from '@material-ui/core'
+import { Button, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 import { Browser } from '@seleniumhq/get-driver'
 import AppWrapper from 'browser/components/AppWrapper'
 import { LoadedWindow } from 'browser/types'
@@ -23,7 +23,7 @@ const driverStateKeys = Object.fromEntries(
 ) as Record<DriverStateKeys, DriverStateKeys>
 
 const browserToString = (browser: BrowserInfo): string =>
-  `chrome|${browser.version}`
+  `${browser.browser}|${browser.version}`
 const browserFromString = (browserString: string): BrowserInfo => {
   const [browser, version] = browserString.split('|')
   return { browser: browser as Browser, version }
@@ -32,7 +32,7 @@ const browserFromString = (browserString: string): BrowserInfo => {
 const ProjectEditor = () => {
   const [browserInfo, setBrowserInfo] = useState<BrowsersInfo>({
     browsers: [],
-    selected: { browser: 'electron', version: '' },
+    selected: { browser: 'chrome', version: '' },
   })
   const [driverStatus, setDriverStatus] =
     useState<keyof typeof driverStates>('LIST_BROWSERS')
@@ -42,11 +42,11 @@ const ProjectEditor = () => {
       case driverStateKeys.LIST_BROWSERS:
         sideAPI.driver.listBrowsers().then(async (info) => {
           setBrowserInfo(info)
-          // if (info.selected.version) {
-          //   setDriverStatus(driverStateKeys.DOWNLOADING_DRIVER)
-          // } else {
+          if (info.selected.version) {
+            setDriverStatus(driverStateKeys.DOWNLOADING_DRIVER)
+          } else {
             setDriverStatus(driverStateKeys.SELECT_BROWSER)
-          // }
+          }
         })
         break
       case driverStateKeys.SELECTED_BROWSER:
@@ -55,12 +55,12 @@ const ProjectEditor = () => {
         })
         break
       case driverStateKeys.DOWNLOADING_DRIVER:
-        sideAPI.driver.download(browserInfo.selected.version).then(() => {
+        sideAPI.driver.download(browserInfo.selected).then(() => {
           setDriverStatus(driverStateKeys.STARTING_DRIVER)
         })
         break
       case driverStateKeys.STARTING_DRIVER:
-        sideAPI.driver.startProcess(browserInfo.selected.version).then(() => {
+        sideAPI.driver.startProcess(browserInfo.selected).then(() => {
           setDriverStatus(driverStateKeys.COMPLETE)
         })
         break
@@ -80,10 +80,11 @@ const ProjectEditor = () => {
         ...info,
         selected: browser,
       }))
-      setDriverStatus(driverStateKeys.SELECTED_BROWSER)
     }
   }
-
+  const confirmBrowserSelection = () => {
+    setDriverStatus(driverStateKeys.SELECTED_BROWSER)
+  }
   return (
     <AppWrapper>
       <Grid className="centered pt-4" container spacing={2}>
@@ -94,25 +95,37 @@ const ProjectEditor = () => {
           </Typography>
         </Grid>
         {driverStatus === driverStateKeys.SELECT_BROWSER && (
-          <Grid item xs={12}>
-            <Select
-              label="Command"
-              labelId="command-label"
-              size="small"
-              onChange={processBrowserSelection}
-              placeholder="Please select a browser"
-              value={browserToString(browserInfo.selected)}
-            >
-              <MenuItem key={-1} value={"chrome|"}>
-                Please select a browser
-              </MenuItem>
-              {browserInfo.browsers.map((browser, index) => (
-                <MenuItem key={index} value={browserToString(browser)}>
-                  {browser.browser} - {browser.version}
+          <>
+            <Grid item xs={2} />
+            <Grid item xs={4}>
+              <Select
+                label="Command"
+                labelId="command-label"
+                size="small"
+                onChange={processBrowserSelection}
+                placeholder="Please select a browser"
+                value={browserToString(browserInfo.selected)}
+              >
+                <MenuItem key={-1} value={'chrome|'}>
+                  Please select a browser
                 </MenuItem>
-              ))}
-            </Select>
-          </Grid>
+                {browserInfo.browsers.map((browser, index) => (
+                  <MenuItem key={index} value={browserToString(browser)}>
+                    {browser.browser} - {browser.version}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                disabled={!browserInfo.selected.version}
+                onClick={confirmBrowserSelection}
+              >
+                Confirm
+              </Button>
+            </Grid>
+            <Grid item xs={2} />
+          </>
         )}
       </Grid>
     </AppWrapper>

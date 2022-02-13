@@ -3,7 +3,7 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import * as os from 'os'
 import { resolveDriverName } from '@seleniumhq/get-driver'
-import { Session } from '../../../types'
+import { BrowserInfo, Session } from '../../../types'
 
 const successMessage = 'was started successfully.'
 export interface DriverStartSuccess {
@@ -25,28 +25,42 @@ export interface DriverStartFailure {
 
 export type StartDriver = (
   session: Session
-) => (version: string) => Promise<DriverStartSuccess | DriverStartFailure>
+) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 const startDriver: StartDriver =
   ({ app, store }) =>
-  (version) =>
+  ({ browser, version }) =>
     new Promise((resolve, reject) => {
       let initialized = false
       const logDriver = store.get('config.logDriver')
       const args = logDriver ? ['--verbose'] : []
-      const driverPath = path.resolve(
-        path
-          .join(
-            __dirname,
-            '..',
-            'files',
-            resolveDriverName({
-              browser: 'chrome',
-              platform: os.platform(),
-              version: version,
-            })
-          )
-          .replace('app.asar', 'app.asar.unpacked')
-      )
+      const driverPath =
+        browser === 'electron'
+          ? path.resolve(
+              path.join(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'node_modules',
+                'electron-chromedriver',
+                'bin',
+                'chromedriver'
+              )
+            )
+          : path.resolve(
+              path
+                .join(
+                  __dirname,
+                  '..',
+                  'files',
+                  resolveDriverName({
+                    browser: browser,
+                    platform: os.platform(),
+                    version: version,
+                  })
+                )
+                .replace('app.asar', 'app.asar.unpacked')
+            )
       if (fs.existsSync(driverPath)) {
         const driver = spawn(driverPath, args, {
           env: {},

@@ -9,8 +9,7 @@
   "scripts": {
     "copy:tsconfig": "cp ./tsconfig.json ./dist/tsconfig.json",
     "start": "electron dist/main-bundle.js",
-    "build": "run-s build:chromedriver build:webpack build:electron",
-    "build:chromedriver": "mkdir -p files && node scripts/download-driver.js",
+    "build": "run-s build:webpack build:electron",
     "build:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:webpack": "webpack",
     "watch": "webpack --watch"
@@ -76,7 +75,7 @@
     "use-immer": "0.6.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "6.0.0-beta.57",
+    "@electron-forge/cli": "6.0.0-beta.63",
     "@types/copy-webpack-plugin": "8.0.1",
     "@types/electron": "1.6.10",
     "@types/fs-extra": "^8.0.0",
@@ -85,8 +84,9 @@
     "@types/react-dom": "^17.0.9",
     "@types/webpack-env": "1.16.0",
     "css-loader": "^6.1.0",
-    "electron": "^16.0.5",
-    "electron-builder": "^22.10.5",
+    "electron": "^16.0.8",
+    "electron-builder": "^22.14.13",
+    "electron-chromedriver": "16.0.0",
     "html-webpack-plugin": "^5.3.2",
     "npm-run-all": "^4.1.5",
     "style-loader": "^3.1.0",

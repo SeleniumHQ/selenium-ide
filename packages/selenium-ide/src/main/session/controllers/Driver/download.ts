@@ -19,8 +19,13 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import * as os from 'os'
 import { downloadDriver as doDownloadDriver } from '@seleniumhq/get-driver'
+import { BrowserInfo } from 'main/types'
 
-const downloadDriver = async (browserVersion: string) => {
+const downloadDriver = async (browserInfo: BrowserInfo) => {
+  if (browserInfo.browser === 'electron') {
+    console.log('Electron is builtin, skipping');
+    return;
+  }
   const downloadDirectory = path.join(__dirname, '../files')
   const chromedrivers = (
     await fs.readdir(path.join(__dirname, '../files'))
@@ -29,19 +34,19 @@ const downloadDriver = async (browserVersion: string) => {
   let shouldDownload = true
   for await (let chromedriver of chromedrivers) {
     const [, version] = chromedriver.split('-v')
-    if (version === browserVersion) {
+    if (version === browserInfo.version) {
       shouldDownload = false
     }
   }
 
   if (shouldDownload) {
-    console.log(`downloading chromedriver for chrome version ${browserVersion}...`)
+    console.log(`downloading chromedriver for chrome version ${browserInfo.version}...`)
     await doDownloadDriver({
       downloadDirectory,
       browser: 'chrome',
       platform: os.platform(),
       arch: os.arch(),
-      version: browserVersion,
+      version: browserInfo.version,
     })
   }
 }

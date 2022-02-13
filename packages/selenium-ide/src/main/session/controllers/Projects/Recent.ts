@@ -1,5 +1,5 @@
-import storage from '../../../store'
-import { Session } from '../../../types'
+import storage from 'main/store'
+import { Session } from 'main/types'
 
 const addToBeginning = (prevList: string[], entry: string) => {
   const list = prevList.slice()

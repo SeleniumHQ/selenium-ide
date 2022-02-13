@@ -34,9 +34,16 @@ windows.forEach((element) => {
     })
   }
   const rendererPath = path.join(elementPath, 'renderer.tsx')
+  const rendererFallbackPath = path.join(elementPath, 'renderer.ts')
   if (fs.existsSync(rendererPath)) {
     configs.push({
       entry: rendererPath,
+      filename: `${filecaseElement}-renderer`,
+      target: 'electron-renderer',
+    })
+  } else if (fs.existsSync(rendererFallbackPath)) {
+    configs.push({
+      entry: rendererFallbackPath,
       filename: `${filecaseElement}-renderer`,
       target: 'electron-renderer',
     })

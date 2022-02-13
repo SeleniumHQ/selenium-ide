@@ -30,7 +30,7 @@ export async function resolveDriverUrl({
 }) {
   switch (browser) {
     case 'electron': {
-      return `https://github.com/electron/electron/releases/download/v${version}/chromedriver-v${version}-${platform}-${arch}.zip`
+      throw new Error('Installation of electron browser handled by electron-chromedriver package');
     }
     case 'chrome': {
       return `https://chromedriver.storage.googleapis.com/${await getChromedriverVersion(

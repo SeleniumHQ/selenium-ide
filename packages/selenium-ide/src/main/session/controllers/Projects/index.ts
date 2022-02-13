@@ -13,11 +13,33 @@ export default class ProjectsController {
   recentProjects: RecentProjects
   project: ProjectShape
   session: Session
-  onProjectLoaded(project: ProjectShape): void {
+  async onProjectLoaded(project: ProjectShape): Promise<void> {
     this.session.commands.init()
     this.project = project
     this.session.windows.close('splash')
-    this.session.windows.open('project-editor')
+    await this.session.windows.open('project-playback-window')
+    await this.session.windows.open('project-test-list')
+    await this.session.windows.open('project-test-command-list')
+    await this.session.windows.open('project-playback-controls')
+    await this.session.windows.open('project-command-editor')
+
+    const childWindows = [
+      await this.session.windows.get('project-test-list'),
+      await this.session.windows.get('project-test-command-list'),
+      await this.session.windows.get('project-playback-controls'),
+      await this.session.windows.get('project-command-editor'),
+    ];
+    const mainWindow = await this.session.windows.get('project-playback-window');
+    mainWindow.on("focus", () => {
+      childWindows.forEach((win) => {
+        win.showInactive();
+      })
+    })
+    mainWindow.on("blur", () => {
+      childWindows.forEach((win) => {
+        win.hide();
+      })
+    })
   }
   async getActive(): Promise<ProjectShape> {
     return this.project as ProjectShape

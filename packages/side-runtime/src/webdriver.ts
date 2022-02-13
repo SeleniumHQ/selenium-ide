@@ -48,7 +48,7 @@ const { TimeoutError } = webdriver.error
 const POLL_TIMEOUT = 50
 export type ExpandedCapabilities = Partial<Capabilities> & {
   browserName: string
-  'goog:chromeOptions'?: Record<string, boolean | number | string>
+  'goog:chromeOptions'?: Record<string, boolean | number | string | string[]>
 }
 const DEFAULT_CAPABILITIES: ExpandedCapabilities = {
   browserName: 'chrome',
@@ -127,6 +127,17 @@ export default class WebDriverExecutor {
         .usingServer(this.server as string)
         .forBrowser(browserName)
         .build()
+    }
+    const handles = await this.driver.getAllWindowHandles()
+    console.log('Iterating handles', handles)
+    await this.driver.switchTo().window(handles[0])
+    for (let i = 0, ii = handles.length; i !== ii; i++) {
+      await this.driver.switchTo().window(handles[i])
+      const isPlaybackWindow = await this.driver.executeScript('return window.playback;');
+      console.log('Is playback window?', isPlaybackWindow)
+      if (isPlaybackWindow) {
+        break
+      }
     }
     this.initialized = true
   }
@@ -306,16 +317,20 @@ export default class WebDriverExecutor {
     }
 
     const option = await element.findElement(parseOptionLocator(optionLocator))
-    const selections = await this.driver.executeScript(
+    const selections = (await this.driver.executeScript(
       'return arguments[0].selectedOptions',
       element
-    ) as WebElementShape[]
+    )) as WebElementShape[]
     if (await findElement(selections, option)) {
       await option.click()
     }
   }
 
-  async doCheck(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doCheck(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -325,7 +340,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doUncheck(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doUncheck(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -335,7 +354,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doClick(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doClick(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -343,7 +366,11 @@ export default class WebDriverExecutor {
     await element.click()
   }
 
-  async doClickAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
+  async doClickAt(
+    locator: string,
+    coordString: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -356,7 +383,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doDoubleClick(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doDoubleClick(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -364,7 +395,11 @@ export default class WebDriverExecutor {
     await this.driver.actions({ bridge: true }).doubleClick(element).perform()
   }
 
-  async doDoubleClickAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
+  async doDoubleClickAt(
+    locator: string,
+    coordString: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -377,7 +412,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doDragAndDropToObject(dragLocator: string, dropLocator: string, commandObject: Partial<CommandShape> = {}) {
+  async doDragAndDropToObject(
+    dragLocator: string,
+    dropLocator: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const drag = await this.waitForElement(
       dragLocator,
       commandObject.targetFallback
@@ -392,7 +431,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseDown(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseDown(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -404,7 +447,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseDownAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseDownAt(
+    locator: string,
+    coordString: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -417,7 +464,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseMoveAt(locator:string, coordString: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseMoveAt(
+    locator: string,
+    coordString: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -429,15 +480,20 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseOut(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseOut(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
     )
-    const [rect, vp]: [DOMRect, { height: number, width: number }] = await this.driver.executeScript(
-      'return [arguments[0].getBoundingClientRect(), {height: window.innerHeight, width: window.innerWidth}];',
-      element
-    )
+    const [rect, vp]: [DOMRect, { height: number; width: number }] =
+      await this.driver.executeScript(
+        'return [arguments[0].getBoundingClientRect(), {height: window.innerHeight, width: window.innerWidth}];',
+        element
+      )
 
     // try top
     if (rect.top > 0) {
@@ -477,7 +533,11 @@ export default class WebDriverExecutor {
     )
   }
 
-  async doMouseOver(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseOver(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -488,7 +548,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseUp(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseUp(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -500,7 +564,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doMouseUpAt(locator: string, coordString: string, commandObject: Partial<CommandShape> = {}) {
+  async doMouseUpAt(
+    locator: string,
+    coordString: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const coords = parseCoordString(coordString)
     const element = await this.waitForElement(
       locator,
@@ -513,7 +581,11 @@ export default class WebDriverExecutor {
       .perform()
   }
 
-  async doSelect(locator: string, optionLocator: string, commandObject: Partial<CommandShape> = {}) {
+  async doSelect(
+    locator: string,
+    optionLocator: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -524,7 +596,11 @@ export default class WebDriverExecutor {
 
   // keyboard commands
 
-  async doEditContent(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doEditContent(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -536,7 +612,11 @@ export default class WebDriverExecutor {
     )
   }
 
-  async doType(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doType(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -545,7 +625,11 @@ export default class WebDriverExecutor {
     await element.sendKeys(value)
   }
 
-  async doSendKeys(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doSendKeys(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -590,12 +674,15 @@ export default class WebDriverExecutor {
 
   async doWaitForElementVisible(locator: string, timeout: string) {
     const startTime = Date.now()
-    const element = await this.wait<WebElementShape>(
+    const element = (await this.wait<WebElementShape>(
       until.elementLocated(parseLocator(locator)),
       parseInt(timeout)
-    ) as WebElementShape
+    )) as WebElementShape
     const elapsed = Date.now() - startTime
-    await this.wait(until.elementIsVisible(element), parseInt(timeout) - elapsed)
+    await this.wait(
+      until.elementIsVisible(element),
+      parseInt(timeout) - elapsed
+    )
   }
 
   async doWaitForElementNotVisible(locator: string, timeout: string) {
@@ -686,7 +773,11 @@ export default class WebDriverExecutor {
     return Promise.resolve()
   }
 
-  async doStoreText(locator: string, variable: string, commandObject: Partial<CommandShape> = {}) {
+  async doStoreText(
+    locator: string,
+    variable: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -700,7 +791,11 @@ export default class WebDriverExecutor {
     this.variables.set(variable, title)
   }
 
-  async doStoreValue(locator: string, variable: string, commandObject: Partial<CommandShape> = {}) {
+  async doStoreValue(
+    locator: string,
+    variable: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -757,7 +852,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertEditable(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertEditable(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -767,7 +866,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotEditable(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertNotEditable(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -800,7 +903,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertElementPresent(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertElementPresent(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     await this.waitForElement(locator, commandObject.targetFallback)
   }
 
@@ -811,7 +918,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertText(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertText(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -824,7 +935,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotText(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertNotText(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -837,7 +952,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertValue(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -851,7 +970,11 @@ export default class WebDriverExecutor {
   }
 
   // not generally implemented
-  async doAssertNotValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertNotValue(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -864,7 +987,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertChecked(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertChecked(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -874,7 +1001,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotChecked(locator: string, _: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertNotChecked(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -884,7 +1015,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertSelectedValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertSelectedValue(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -897,7 +1032,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertNotSelectedValue(locator: string, value: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertNotSelectedValue(
+    locator: string,
+    value: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -910,7 +1049,11 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doAssertSelectedLabel(locator: string, label: string, commandObject: Partial<CommandShape> = {}) {
+  async doAssertSelectedLabel(
+    locator: string,
+    label: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
     const element = await this.waitForElement(
       locator,
       commandObject.targetFallback
@@ -1152,11 +1295,9 @@ export default class WebDriverExecutor {
 }
 
 function isConditionPromiseLike<T>(
-  condition: ConditionShape<T> | (Promise<T>) | WebElementConditionShape
+  condition: ConditionShape<T> | Promise<T> | WebElementConditionShape
 ): condition is Promise<T> {
-  return (
-    condition && typeof (condition as Promise<T>).then === 'function'
-  )
+  return condition && typeof (condition as Promise<T>).then === 'function'
 }
 
 WebDriverExecutor.prototype.doOpen = composePreprocessors(
@@ -1548,7 +1689,9 @@ function preprocessKeys(_str: string, variables: Variables) {
       if (currentKey) {
         if (/^\$\{KEY_\w+\}/.test(currentKey)) {
           // is a key
-          let keyName = (currentKey.match(/\$\{KEY_(\w+)\}/) as [string, string])[1]
+          let keyName = (
+            currentKey.match(/\$\{KEY_(\w+)\}/) as [string, string]
+          )[1]
           // @ts-expect-error
           let key = Key[keyName]
           if (key) {

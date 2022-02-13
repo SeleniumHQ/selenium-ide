@@ -3,7 +3,6 @@ import { WindowConfig } from 'browser/types'
 import { BrowserWindow } from 'electron'
 import { existsSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
-import merge from 'lodash/fp/merge'
 import { Session } from 'main/types'
 import { join } from 'path'
 
@@ -23,13 +22,13 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
       const hasPreload = existsSync(preloadPath)
       const windowLoader: WindowLoaderFactory = (session: Session) => () => {
         if (menus) menus(session.menu)
-        const win = new BrowserWindow(
-          merge(window, {
-            webPreferences: {
-              preload: hasPreload ? preloadPath : undefined,
-            },
-          })
-        )
+        const windowConfig = window(session);
+        const win = new BrowserWindow({
+          ...windowConfig,
+          webPreferences: {
+            preload: hasPreload ? preloadPath : undefined,
+          },
+        })
         win.loadFile(join(__dirname, `${filename}.html`))
         return win
       }
