@@ -15,7 +15,7 @@ export interface TestControlsProps {
 const activeStates = ['recording', 'playing']
 
 const TestControls: FC<TestControlsProps> = ({ state }) => (
-  <div className="flex flex-initial flex-row">
+  <div className="outside-v-nav">
     {activeStates.includes(state.status) ? (
       <>
         <Tooltip title="Pause" aria-label="pause">

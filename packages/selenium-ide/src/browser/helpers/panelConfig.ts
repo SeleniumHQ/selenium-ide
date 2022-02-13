@@ -9,6 +9,7 @@ const panelConfig: BrowserWindowConstructorOptions = {
   maximizable: false,
   closable: false,
   focusable: false,
+  resizable: false,
 }
 
 export default panelConfig;

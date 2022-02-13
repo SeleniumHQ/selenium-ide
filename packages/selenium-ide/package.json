@@ -10,6 +10,7 @@
     "copy:tsconfig": "cp ./tsconfig.json ./dist/tsconfig.json",
     "start": "electron dist/main-bundle.js",
     "build": "run-s build:webpack build:electron",
+    "build:electron:import": "tsc --build ./electron-import",
     "build:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:webpack": "webpack",
     "watch": "webpack --watch"

@@ -129,12 +129,12 @@ export default class WebDriverExecutor {
         .build()
     }
     const handles = await this.driver.getAllWindowHandles()
-    console.log('Iterating handles', handles)
     await this.driver.switchTo().window(handles[0])
     for (let i = 0, ii = handles.length; i !== ii; i++) {
       await this.driver.switchTo().window(handles[i])
-      const isPlaybackWindow = await this.driver.executeScript('return window.playback;');
-      console.log('Is playback window?', isPlaybackWindow)
+      const isPlaybackWindow = await this.driver.executeScript(
+        'return window.playback;'
+      )
       if (isPlaybackWindow) {
         break
       }
@@ -235,11 +235,18 @@ export default class WebDriverExecutor {
   }
 
   async doSetWindowSize(widthXheight: string) {
-    const [width, height] = widthXheight.split('x')
-    await this.driver
-      .manage()
-      .window()
-      .setRect({ width: parseInt(width), height: parseInt(height) })
+    const [width, height] = widthXheight.split('x').map((v) => parseInt(v))
+    console.log('Doing this?', width, height)
+    const rect = await this.driver.manage().window().getRect()
+    const x = rect.x + Math.floor(rect.width / 2) - Math.floor(width / 2)
+    const y = rect.y + Math.floor(rect.height / 2) - Math.floor(height / 2)
+    console.log('Doing this!', width, height, x, y)
+    await this.driver.manage().window().setRect({
+      x,
+      y,
+      height,
+      width,
+    })
   }
 
   async doSelectWindow(handleLocator: string) {

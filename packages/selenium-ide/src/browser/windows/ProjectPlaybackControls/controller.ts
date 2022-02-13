@@ -7,7 +7,7 @@ export const window: WindowConfig['window'] = () => {
   return {
     ...panelConfig,
     x: Math.floor(display.bounds.width / 2 - 200),
-    y: 10,
+    y: 20,
     width: 400,
     height: 38,
     title: 'Playback Controls',

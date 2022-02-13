@@ -60,8 +60,8 @@ const CommandEditor: FC<CommandEditorProps> = ({
     )
   }
   return (
-    <Grid className="fill" container spacing={0}>
-      <Grid className="height-100" item xs={6}>
+    <Grid className="outside-v-nav" container spacing={0}>
+      <Grid item xs={6}>
         <Stack
           className="flex flex-initial flex-col p-4 bt"
           sx={{ borderColor: 'primary.main' }}
@@ -84,6 +84,22 @@ const CommandEditor: FC<CommandEditorProps> = ({
             </Select>
           </FormControl>
           <FormControl>
+            <TextField
+              label="Value"
+              onChange={updateField('value')}
+              size="small"
+              value={command.value}
+            />
+          </FormControl>
+        </Stack>
+      </Grid>
+      <Grid item xs={6}>
+        <Stack
+          className="flex flex-initial flex-col p-4 bt"
+          sx={{ borderColor: 'primary.main' }}
+          spacing={1}
+        >
+          <FormControl>
             <Autocomplete
               freeSolo
               inputValue={command.target}
@@ -95,22 +111,6 @@ const CommandEditor: FC<CommandEditorProps> = ({
               )}
               size="small"
               value={command.target}
-            />
-          </FormControl>
-        </Stack>
-      </Grid>
-      <Grid className="height-100" item xs={6}>
-        <Stack
-          className="flex flex-initial flex-col p-4 bt"
-          sx={{ borderColor: 'primary.main' }}
-          spacing={1}
-        >
-          <FormControl>
-            <TextField
-              label="Value"
-              onChange={updateField('value')}
-              size="small"
-              value={command.value}
             />
           </FormControl>
           <FormControl>

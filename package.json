@@ -13,6 +13,7 @@
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext js --ext ts \"**/*.js\" \"**/*.ts\"",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "lerna run --parallel watch",
+    "watch:ts": "tsc --build --watch",
     "preinstall": "node ./scripts/check-yarn.js",
     "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"
   },

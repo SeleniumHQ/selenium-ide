@@ -1,10 +1,13 @@
 // import { Chrome } from '@seleniumhq/browser-info'
 import { WebDriverExecutor } from '@seleniumhq/side-runtime'
-import { version as ElectronVersion } from 'electron/package.json'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
 import startDriver from './start'
+
+// Escape hatch to avoid dealing with rootDir complexities in TS
+// https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
+const ElectronVersion = require('electron/package.json').version
 
 type WindowType = 'webview'
 interface DriverOptions {

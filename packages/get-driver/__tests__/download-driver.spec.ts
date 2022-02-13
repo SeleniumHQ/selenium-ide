@@ -42,13 +42,13 @@ describe('download-driver', () => {
     const cp = spawn(chromedriver, ['--version'])
     let stdout = ''
     let processExit: () => {}
-    const p = new Promise(res => {
+    const p = new Promise((res) => {
       processExit = res as () => {}
     })
-    cp.stdout.on('data', data => {
+    cp.stdout.on('data', (data) => {
       stdout += data
     })
-    cp.on('close', code => {
+    cp.on('close', (code) => {
       expect(code).toBe(0)
       processExit()
     })
@@ -68,13 +68,13 @@ describe('download-driver', () => {
     const cp = spawn(chromedriver, ['--version'])
     let stdout = ''
     let processExit: () => {}
-    const p = new Promise(res => {
+    const p = new Promise((res) => {
       processExit = res as () => {}
     })
-    cp.stdout.on('data', data => {
+    cp.stdout.on('data', (data) => {
       stdout += data
     })
-    cp.on('close', code => {
+    cp.on('close', (code) => {
       expect(code).toBe(0)
       processExit()
     })
@@ -94,13 +94,13 @@ describe('download-driver', () => {
     const cp = spawn(geckodriver, ['--version'])
     let stdout = ''
     let processExit: () => {}
-    const p = new Promise(res => {
+    const p = new Promise((res) => {
       processExit = res as () => {}
     })
-    cp.stdout.on('data', data => {
+    cp.stdout.on('data', (data) => {
       stdout += data
     })
-    cp.on('close', code => {
+    cp.on('close', (code) => {
       expect(code).toBe(0)
       processExit()
     })
@@ -119,6 +119,7 @@ describe('download-driver', () => {
         version: '6.0.9',
       })
     } catch (err) {
+      // @ts-expect-error
       expect(err.message).toBe('Failed to download driver')
     }
   })

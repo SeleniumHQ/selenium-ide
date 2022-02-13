@@ -5,19 +5,24 @@ import AppWrapper from 'browser/components/AppWrapper'
 import subscribeToSession from 'browser/helpers/subscribeToSession'
 import CommandEditor from './components/CommandEditor'
 import { getActiveCommand, getActiveTest } from 'browser/helpers/getActiveData'
+import PanelNav from 'browser/components/PanelNav'
 
 const ProjectCommandEditor = () => {
   const session = subscribeToSession()
-  const { project: { id }, state: { commands }} = session;
-  const activeTest = getActiveTest(session);
-  const activeCommand = getActiveCommand(session);
+  const {
+    project: { id },
+    state: { commands },
+  } = session
+  const activeTest = getActiveTest(session)
+  const activeCommand = getActiveCommand(session)
 
   if (id == loadingID) {
-    return <div className="flex-col w-full">Loading</div>
+    return null
   }
 
   return (
-    <AppWrapper>
+    <AppWrapper className='no-overflow-y'>
+      <PanelNav vertical />
       <CommandEditor
         commands={commands}
         command={activeCommand}

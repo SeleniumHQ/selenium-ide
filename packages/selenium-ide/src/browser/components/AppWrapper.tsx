@@ -9,7 +9,11 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import '../index.css'
 
-const AppWrapper: FC<any> = ({ children }) => {
+interface AppWrapperProps {
+  className?: string;
+}
+
+const AppWrapper: FC<AppWrapperProps> = ({ children, className = "" }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   const theme = React.useMemo(
@@ -25,7 +29,9 @@ const AppWrapper: FC<any> = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Paper className="fill">{children}</Paper>
+      <Paper className={`fill ${className}`} elevation={2} square>
+        {children}
+      </Paper>
     </ThemeProvider>
   )
 }

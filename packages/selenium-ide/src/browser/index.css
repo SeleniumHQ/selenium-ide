@@ -30,10 +30,20 @@ html, body, #root {
 }
 
 /**
+ * Position
+ */
+.p-fixed {
+  position: fixed;
+}
+
+/**
  * Overflow
  */
 .overflow-y {
   overflow-y: auto;
+}
+.no-overflow-y {
+  overflow-y: hidden;
 }
 
 /**
@@ -123,4 +133,48 @@ html, body, #root {
  */
 .button {
   cursor: pointer;
+}
+
+/**
+ * Opacity
+ */
+.opaque {
+  opacity: 1;
+  z-index: 10;
+}
+
+/**
+ * Electron drag handler
+ */
+.draggable {
+  -webkit-app-region: drag;
+}
+/**
+ * Navbars on panel UX
+ */
+.panel-nav {
+  position: fixed;
+  top: 0;
+  height: 10px;
+  width: 100%;
+}
+.panel-v-nav {
+  position: fixed;
+  left: 0;
+  height: 100%;
+  width: 10px;
+}
+.outside-v-nav {
+  padding-left: 11px;
+  width: 100%;
+}
+.outside-nav {
+  height: 100%;
+  padding-top: 11px;
+}
+
+.playback-text {
+  position: absolute;
+  top: 45%;
+  padding: 24px;
 }

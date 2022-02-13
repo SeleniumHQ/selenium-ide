@@ -1,5 +1,16 @@
 import { WindowConfig } from 'browser/types'
+import Electron from 'electron'
 
-export const window: WindowConfig['window'] = () => ({
-  title: 'Playback Window',
-})
+const dimensions = {
+  height: 600,
+  width: 800,
+}
+export const window: WindowConfig['window'] = () => {
+  const display = Electron.screen.getPrimaryDisplay()
+  return {
+    ...dimensions,
+    x: Math.floor(display.bounds.width / 2) - Math.floor(dimensions.width / 2) - 150,
+    y: Math.floor(display.bounds.height / 2) - Math.floor(dimensions.height / 2),
+    title: 'Playback Window',
+  }
+}

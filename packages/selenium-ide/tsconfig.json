@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "include": ["src/**/*", "scripts"],
   "compilerOptions": {
     "jsx": "react",
@@ -11,5 +11,6 @@
     "outDir": "dist",
     "rootDir": "src",
     "types": ["electron", "webpack-env"]
-  }
+  },
+  "exclude": ["**/dist/**/*", "**/node_modules"]
 }

@@ -7,9 +7,9 @@ export const window: WindowConfig['window'] = () => {
   return {
     ...panelConfig,
     x: display.bounds.width - 500,
-    y: Math.floor(display.bounds.height / 2 - 400),
+    y: Math.floor(display.bounds.height / 2 - 310),
     width: 500,
-    height: 800,
+    height: 600,
     title: 'Command List',
   }
 }
