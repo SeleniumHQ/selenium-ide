@@ -215,4 +215,4 @@ export class CommandNode {
 export const CommandType = {
   LOOP: 'loop',
   CONDITIONAL: 'conditional',
-}
+} as const

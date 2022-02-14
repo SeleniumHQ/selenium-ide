@@ -23,7 +23,7 @@ import Callstack from './callstack'
 import Variables from './variables'
 import { WebDriverExecutor } from '.'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
-import { CommandNode } from './playback-tree/command-node'
+import { CommandNode, CommandType } from './playback-tree/command-node'
 
 const EE = 'event-emitter'
 const state = Symbol('state')
@@ -94,7 +94,12 @@ export default class Playback {
   getTestByName: PlaybackConstructorArgs['getTestByName']
   logger: Console
   options: PlaybackConstructorOptions;
-  [state]: { [key: string]: any };
+  [state]: {
+    initialized?: boolean
+    lastSentCommandState?: PlaybackEventShapes['COMMAND_STATE_CHANGED']
+    exitCondition?: keyof typeof PlaybackStatesPriorities
+    [key: string]: any
+  };
   [EE]: ExtendedEventEmitter
   initialized?: boolean
   commands?: CommandShape[]
@@ -346,7 +351,6 @@ export default class Playback {
     if (this.currentExecutingNode) {
       const command = this.currentExecutingNode.command
       const callstackIndex = this[state].callstack.length - 1
-      console.log(this.currentExecutingNode.command, this[state])
       this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
@@ -522,17 +526,19 @@ export default class Playback {
     const tree = createPlaybackTree(test.commands, {
       emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
     })
+    const caller = {
+      position: (this.currentExecutingNode as CommandNode).next,
+      tree: this.playbackTree,
+      commands: this.commands,
+    }
     this[state].callstack.call({
       callee: test,
-      caller: {
-        position: (this.currentExecutingNode as CommandNode).next,
-        tree: this.playbackTree,
-        commands: this.commands,
-      },
+      caller,
     })
     this[EE].emit(PlaybackEvents.CALL_STACK_CHANGED, {
       change: CallstackChange.CALLED,
       callee: test,
+      caller,
     })
     this.commands = test.commands
     this.playbackTree = tree
@@ -541,11 +547,9 @@ export default class Playback {
   async _finishPlaying() {
     this[state].playPromise = undefined
     this[state].isPlaying = undefined
-    if (
-      this[state].lastSentCommandState &&
-      this[state].lastSentCommandState.state === CommandStates.EXECUTING
-    ) {
-      const { id, callstackIndex } = this[state].lastSentCommandState
+    if (this[state].lastSentCommandState?.state === CommandStates.EXECUTING) {
+      const { id, callstackIndex } = this[state]
+        .lastSentCommandState as PlaybackEventShapes['COMMAND_STATE_CHANGED']
       this[EE].emitCommandStateChange({
         id,
         callstackIndex,
@@ -654,15 +658,41 @@ export default class Playback {
     this.currentExecutingNode = caller.position
   }
 
-  _setExitCondition(condition: string) {
+  _setExitCondition(condition: keyof typeof PlaybackStatesPriorities) {
     if (!this[state].exitCondition) {
       this[state].exitCondition = condition
     } else if (
       PlaybackStatesPriorities[condition] >
-      PlaybackStatesPriorities[this[state].exitCondition]
+      PlaybackStatesPriorities[this[state].exitCondition as keyof typeof PlaybackStatesPriorities]
     ) {
       this[state].exitCondition = condition
     }
+  }
+}
+
+export interface PlaybackEventShapes {
+  COMMAND_STATE_CHANGED: {
+    id: string
+    callstackIndex: number
+    state: typeof CommandStates[keyof typeof CommandStates]
+    message?: string
+  }
+  PLAYBACK_STATE_CHANGED: {
+    state: typeof PlaybackStates[keyof typeof PlaybackStates]
+  }
+  CALL_STACK_CHANGED: {
+    change: typeof CallstackChange[keyof typeof CallstackChange]
+    callee: Pick<TestShape, 'commands'>
+    caller: {
+      position: CommandNode['next']
+      tree: PlaybackTree
+      commands: CommandShape[]
+    }
+  }
+  CONTROL_FLOW_CHANGED: {
+    commandId: string
+    type: typeof CommandType[]
+    end: boolean
   }
 }
 
@@ -671,7 +701,7 @@ export const PlaybackEvents = {
   PLAYBACK_STATE_CHANGED: 'playback-state-changed',
   CALL_STACK_CHANGED: 'call-stack-changed',
   CONTROL_FLOW_CHANGED: 'control-flow-changed',
-}
+} as const
 
 export const PlaybackStates = {
   PREPARATION: 'prep',
@@ -683,7 +713,7 @@ export const PlaybackStates = {
   BREAKPOINT: 'breakpoint',
   STOPPED: 'stopped',
   ABORTED: 'aborted',
-}
+} as const
 
 const PlaybackStatesPriorities = {
   [PlaybackStates.FINISHED]: 0,
@@ -691,7 +721,7 @@ const PlaybackStatesPriorities = {
   [PlaybackStates.ERRORED]: 2,
   [PlaybackStates.STOPPED]: 3,
   [PlaybackStates.ABORTED]: 4,
-}
+} as const
 
 export const CommandStates = {
   EXECUTING: 'executing',
@@ -701,9 +731,9 @@ export const CommandStates = {
   UNDETERMINED: 'undetermined',
   FAILED: 'failed',
   ERRORED: 'errored',
-}
+} as const
 
 export const CallstackChange = {
   CALLED: 'called',
   UNWINDED: 'unwinded',
-}
+} as const

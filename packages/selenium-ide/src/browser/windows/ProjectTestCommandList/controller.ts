@@ -6,6 +6,7 @@ export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...panelConfig,
+    focusable: true,
     x: display.bounds.width - 500,
     y: Math.floor(display.bounds.height / 2 - 310),
     width: 500,

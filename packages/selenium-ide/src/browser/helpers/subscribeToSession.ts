@@ -15,9 +15,10 @@ const performSubscription = async (
     const [namespace, method] = path.split('.')
     console.log('Queueing Mutator', path, data)
     updateSession((session) => {
-      console.log('Running Mutator', path, data)
       // @ts-expect-error
-      return sideAPI.mutators[namespace][method](session, data)
+      const newSession = sideAPI.mutators[namespace][method](session, data)
+      console.log('Running Mutator', path, data, session, newSession)
+      return newSession
     })
   })
 }

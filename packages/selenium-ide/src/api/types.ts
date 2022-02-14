@@ -43,6 +43,10 @@ export type RequestData<Type extends ApiHandler> = {
   params: Parameters<Type>
   result: Awaited<Promise<ReturnType<Type>>>
 }
+export type EventMutator<Type extends any> = (
+  session: CoreSessionData,
+  req: Type
+) => CoreSessionData
 export type Mutator<Type extends ApiHandler> = (
   session: CoreSessionData,
   req: RequestData<Type>

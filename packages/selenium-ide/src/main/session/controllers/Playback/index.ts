@@ -1,16 +1,23 @@
-import { Playback, PlaybackEvents, Variables } from '@seleniumhq/side-runtime'
+import {
+  Playback,
+  PlaybackEvents,
+  PlaybackEventShapes,
+  Variables,
+} from '@seleniumhq/side-runtime'
 import { Session } from 'main/types'
 
 export default class PlaybackController {
   constructor(session: Session) {
     this.session = session
+    this.handleCommandStateChanged = this.handleCommandStateChanged.bind(this)
   }
   static defaultPlayRange = [0, -1]
   currentStepIndex: null | number = null
   isPlaying = false
   playRange = [0, -1]
   playingTest = ''
-  playback?: Playback
+  // @ts-expect-error
+  playback: Playback
   session: Session
 
   async pause() {
@@ -31,16 +38,44 @@ export default class PlaybackController {
       logger: console,
       variables: new Variables(),
     })
-    Object.keys(PlaybackEvents).forEach((key) => {
-      playback['event-emitter'].addListener(key, (event) => {
-        console.log('Event', key, event)
-      })
-    })
+    this.playback = playback
+    playback['event-emitter'].addListener(
+      PlaybackEvents.PLAYBACK_STATE_CHANGED,
+      this.handlePlaybackStateChanged
+    )
     playback.play(this.session.tests.getByID(testID), {
       startingCommandIndex: playRange[0],
     })
-    this.playback = playback
   }
+  handleCommandStateChanged = (
+    e: PlaybackEventShapes['COMMAND_STATE_CHANGED']
+  ) => {
+    this.session.api.playback.onStepUpdate.dispatchEvent(e)
+  }
+  handlePlaybackStateChanged = (
+    e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
+  ) => {
+    switch (e.state) {
+      case 'prep':
+        this.playback['event-emitter'].addListener(
+          PlaybackEvents.COMMAND_STATE_CHANGED,
+          this.handleCommandStateChanged
+        )
+        break
+      case 'aborted':
+      case 'breakpoint':
+      case 'errored':
+      case 'failed':
+      case 'finished':
+      case 'stopped':
+        this.playback['event-emitter'].removeListener(
+          PlaybackEvents.COMMAND_STATE_CHANGED,
+          this.handleCommandStateChanged
+        )
+    }
+    this.session.api.playback.onPlayUpdate.dispatchEvent(e)
+  }
+
   async stop() {
     this.isPlaying = false
     this.currentStepIndex = 0

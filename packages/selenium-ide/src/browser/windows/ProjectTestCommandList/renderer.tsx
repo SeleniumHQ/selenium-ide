@@ -13,7 +13,7 @@ const ProjectTestCommandList = () => {
 
   const {
     project: { id },
-    state: { activeCommandID },
+    state: { activeCommandID, playback },
   } = session
   if (id == loadingID) {
     return null
@@ -25,6 +25,7 @@ const ProjectTestCommandList = () => {
       <CommandList
         activeCommand={activeCommandID}
         commands={activeTest.commands}
+        commandStates={playback.commands}
       />
     </AppWrapper>
   )

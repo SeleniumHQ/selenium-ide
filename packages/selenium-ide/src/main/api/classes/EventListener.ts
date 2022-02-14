@@ -1,5 +1,7 @@
 import { ipcMain, WebContents } from 'electron'
-import { VariadicArgs } from 'api/types'
+import { EventMutator, VariadicArgs } from 'api/types'
+import { Session } from 'main/types'
+import getCore from '../helpers/getCore'
 
 export type ListenerFn<ARGS extends VariadicArgs> = (...args: ARGS) => void
 export interface BaseListener<ARGS extends VariadicArgs> {
@@ -11,7 +13,9 @@ export interface BaseListener<ARGS extends VariadicArgs> {
 }
 
 const baseListener = <ARGS extends VariadicArgs>(
-  path: string
+  path: string,
+  session: Session,
+  mutator?: EventMutator<ARGS>
 ): BaseListener<ARGS> => {
   const listeners: any[] = []
   return {
@@ -20,6 +24,12 @@ const baseListener = <ARGS extends VariadicArgs>(
       listeners.push(listener)
     },
     dispatchEvent(...args) {
+      if (mutator) {
+        const newState = mutator(getCore(session), args)
+        session.projects.project = newState.project
+        session.state.state = newState.state
+        session.api.state.onMutate.dispatchEvent(path, args)
+      }
       listeners.forEach((fn) => fn(...args))
     },
     hasListener(listener) {
@@ -37,8 +47,12 @@ const baseListener = <ARGS extends VariadicArgs>(
   }
 }
 
-const wrappedListener = <ARGS extends VariadicArgs>(path: string) => {
-  const api = baseListener<ARGS>(path)
+const wrappedListener = <ARGS extends VariadicArgs>(
+  path: string,
+  session: Session,
+  mutator?: EventMutator<ARGS>
+) => {
+  const api = baseListener<ARGS>(path, session, mutator)
   const senders: WebContents[] = []
   const senderCounts: number[] = []
   const senderFns: ListenerFn<ARGS>[] = []
@@ -82,7 +96,7 @@ interface EventListenerConfig {}
 
 const EventListener =
   <ARGS extends VariadicArgs>(_config?: EventListenerConfig) =>
-  (path: string) =>
-    wrappedListener<ARGS>(path)
+  (path: string, session: Session, mutator?: EventMutator<ARGS>) =>
+    wrappedListener<ARGS>(path, session, mutator)
 
 export default EventListener

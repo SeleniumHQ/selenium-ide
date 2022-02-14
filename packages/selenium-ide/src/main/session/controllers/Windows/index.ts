@@ -1,12 +1,12 @@
 import * as windowConfigs from 'browser/windows/controller'
 import { WindowConfig } from 'browser/types'
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import { existsSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import { join } from 'path'
 
-export type WindowLoader = () => BrowserWindow
+export type WindowLoader = (opts?: BrowserWindowConstructorOptions) => BrowserWindow
 export interface WindowLoaderMap {
   [key: string]: WindowLoader
 }
@@ -20,18 +20,21 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
       const filename = kebabCase(key)
       const preloadPath = join(__dirname, `${filename}-preload-bundle.js`)
       const hasPreload = existsSync(preloadPath)
-      const windowLoader: WindowLoaderFactory = (session: Session) => () => {
-        if (menus) menus(session.menu)
-        const windowConfig = window(session);
-        const win = new BrowserWindow({
-          ...windowConfig,
-          webPreferences: {
-            preload: hasPreload ? preloadPath : undefined,
-          },
-        })
-        win.loadFile(join(__dirname, `${filename}.html`))
-        return win
-      }
+      const windowLoader: WindowLoaderFactory =
+        (session: Session) =>
+        (options: BrowserWindowConstructorOptions = {}) => {
+          if (menus) menus(session.menu)
+          const windowConfig = window(session)
+          const win = new BrowserWindow({
+            ...windowConfig,
+            webPreferences: {
+              preload: hasPreload ? preloadPath : undefined,
+            },
+            ...options,
+          })
+          win.loadFile(join(__dirname, `${filename}.html`))
+          return win
+        }
       return [key, windowLoader]
     }
   )
@@ -75,14 +78,14 @@ export default class WindowsController {
     return true
   }
 
-  async open(name: string): Promise<boolean> {
+  async open(name: string, opts: BrowserWindowConstructorOptions = {}): Promise<boolean> {
     if (!this.windowLoaders[name]) {
       throw new Error(`Invalid window name supplied '${name}'!`)
     }
     if (this.windows[name]) {
       return false
     }
-    const window = this.windowLoaders[name]()
+    const window = this.windowLoaders[name](opts)
     this.windows[name] = window
     return true
   }

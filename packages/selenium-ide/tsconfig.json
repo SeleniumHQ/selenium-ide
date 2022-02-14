@@ -12,5 +12,4 @@
     "rootDir": "src",
     "types": ["electron", "webpack-env"]
   },
-  "exclude": ["**/dist/**/*", "**/node_modules"]
 }

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
     "target": "es2017",
     "module": "commonjs",
     "lib": ["es5", "es6", "es2017", "es2019", "dom", "dom.iterable"],
@@ -20,5 +19,5 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "types": ["node", "jest"]
-  },
+  }
 }

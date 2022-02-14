@@ -178,3 +178,25 @@ html, body, #root {
   top: 45%;
   padding: 24px;
 }
+
+.command-state-executing {
+  background-color: blue;
+}
+.command-state-pending {
+  background-color: yellow;
+}
+.command-state-skipped {
+  background-color: orange;
+}
+.command-state-passed {
+  background-color: green;
+}
+.command-state-undetermined {
+  background-color: palevioletred;
+}
+.command-state-failed {
+  background-color: orangered;
+}
+.command-state-errored {
+  background-color: red;
+}

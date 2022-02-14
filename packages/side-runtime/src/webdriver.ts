@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { BrowserWindow } from 'electron';
 import webdriver, {
   Capabilities,
   Condition as ConditionShape,
@@ -107,6 +108,9 @@ export default class WebDriverExecutor {
   // @ts-expect-error
   driver: WebDriver
   server?: string
+  // @ts-expect-error
+  window: BrowserWindow;
+  windowHandle?: string;
   hooks: any
   implicitWait: number
   initialized: boolean
@@ -136,9 +140,11 @@ export default class WebDriverExecutor {
         'return window.playback;'
       )
       if (isPlaybackWindow) {
+        this.windowHandle = handles[i];
         break
       }
     }
+    this.window = BrowserWindow.getFocusedWindow() as BrowserWindow;
     this.initialized = true
   }
 
@@ -236,14 +242,10 @@ export default class WebDriverExecutor {
 
   async doSetWindowSize(widthXheight: string) {
     const [width, height] = widthXheight.split('x').map((v) => parseInt(v))
-    console.log('Doing this?', width, height)
-    const rect = await this.driver.manage().window().getRect()
-    const x = rect.x + Math.floor(rect.width / 2) - Math.floor(width / 2)
-    const y = rect.y + Math.floor(rect.height / 2) - Math.floor(height / 2)
-    console.log('Doing this!', width, height, x, y)
-    await this.driver.manage().window().setRect({
-      x,
-      y,
+    const bounds = await this.window.getBounds();
+    await this.window.setBounds({
+      x: bounds.x + Math.floor(bounds.width / 2) - Math.floor(width / 2),
+      y: bounds.y + Math.floor(bounds.height / 2) - Math.floor(height / 2),
       height,
       width,
     })
