@@ -1,0 +1,48 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//jest-cli:index.bzl", "jest_test")
+
+exports_files(["tsconfig.json"], visibility=["//visibility:public"])
+
+ts_library(
+    name="build",
+    srcs=glob(["src/*.ts"]),
+    deps=[
+        "@npm//@types/node",
+        "@npm//fs-extra",
+        "@npm//selenium-webdriver",
+        "//packages/browser-info:build",
+        "//packages/get-driver:build"
+    ],
+    visibility=["//visibility:public"],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob([
+        "**/*.ts"
+    ]),
+    deps = [
+        "@npm//@types",
+        "@npm//@types/node",
+        "@npm//fs-extra",
+        "@npm//selenium-webdriver",
+        "//packages/browser-info:build",
+        "//packages/get-driver:build"
+    ],
+)
+
+jest_test(
+    name = "test",
+    args = [
+        "--no-cache",
+        "--no-watchman",
+        "--ci",
+        "--colors",
+        "--config",
+        "jest.config.js"
+    ],
+    data = [
+        ":test_lib",
+        "//:jest.config.js"
+    ]
+)

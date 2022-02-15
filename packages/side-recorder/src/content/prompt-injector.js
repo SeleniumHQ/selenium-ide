@@ -49,6 +49,7 @@ function attachPromptRecorder(record) {
   if (window === window.top) {
     window.addEventListener('message', function(event) {
       if (
+        event.source &&
         event.source.top == window &&
         event.data &&
         event.data.direction == 'from-page-script'

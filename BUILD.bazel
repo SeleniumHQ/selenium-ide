@@ -1,0 +1,9 @@
+filegroup(
+    name="license",
+    srcs=[
+        "LICENSE",
+        "NOTICE",
+    ],
+    visibility=["//visibility:public"],
+)
+exports_files(["tsconfig.json", "jest.config.js", "babel.config.js", "test.config.js"], visibility=["//visibility:public"])

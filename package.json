@@ -10,7 +10,7 @@
     "test": "jest",
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
-    "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext js --ext ts \"**/*.js\" \"**/*.ts\"",
+    "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "lerna run --parallel watch",
     "watch:ts": "tsc --build --watch",
@@ -40,6 +40,14 @@
   "workspaces": [
     "packages/*"
   ],
+  "dependencies": {
+    "@seleniumhq/get-driver": "^3.5.10",
+    "fs-extra": "^8.1.0",
+    "node-fetch": "^2.6.0",
+    "selenium-webdriver": "^4.0.0-alpha.7",
+    "tar": "^5.0.5",
+    "unzipper": "^0.10.5"
+  },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
@@ -47,7 +55,13 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-typescript": "^7.6.0",
+    "@bazel/bazel": "^2.1.0",
+    "@bazel/buildifier": "^0.22.0",
+    "@bazel/ibazel": "^0.10.3",
+    "@bazel/jasmine": "^2.0.0-rc.0",
+    "@bazel/typescript": "^2.0.0",
     "@testing-library/jest-dom": "^4.2.1",
+    "@types/fs-extra": "^8.0.0",
     "@types/jest": "^24.0.21",
     "@types/node": "^15.12.1",
     "@types/selenium-webdriver": "^4.0.16",
@@ -66,6 +80,7 @@
     "eslint-plugin-react": "^7.28.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
+    "jest-cli": "26.1.0",
     "lerna": "^3.16.4",
     "prettier": "^2.3.2",
     "stylelint": "^11.0.0",

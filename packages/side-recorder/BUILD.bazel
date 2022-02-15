@@ -1,0 +1,42 @@
+load("@npm//webpack-cli:index.bzl", webpack = "webpack_cli")
+load("@npm//jest-cli:index.bzl", "jest_test")
+
+webpack(
+    name = "build",
+    args = [
+        "--config",
+        "$(location webpack.config.babel.js)"
+    ],
+    data = [
+        "webpack.config.babel.js",
+        "@npm//copy-webpack-plugin",
+        "@npm//uglifyjs-webpack-plugin"
+    ],
+)
+
+filegroup(
+    name = "test_lib",
+    srcs = glob([
+        "**/*.js"
+    ]),
+)
+
+jest_test(
+    name = "test",
+    args = [
+        "--no-cache",
+        "--no-watchman",
+        "--ci",
+        "--colors",
+        "--config",
+        "babel.config.js",
+        "--setupFilesAfterEnv",
+        "./test.config.js",
+        "--updateSnapshot"
+    ],
+    data = [
+        ":test_lib",
+        "//:babel.config.js",
+        "//:test.config.js"
+    ]
+)
