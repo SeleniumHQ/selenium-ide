@@ -30,7 +30,6 @@ export default class PlaybackController {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
-    await this.session.driver.build({})
     const playback = new Playback({
       baseUrl: this.session.projects.project.url,
       executor: this.session.driver.driver,

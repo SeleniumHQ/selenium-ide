@@ -30,6 +30,7 @@ export interface BrowsersInfo {
 export default class DriverController {
   constructor(session: Session) {
     this.session = session
+    this.build({})
   }
   session: Session
   // @ts-expect-error
@@ -53,7 +54,6 @@ export default class DriverController {
       },
       server,
     })
-    return this.driver
   }
   async download(info: BrowserInfo) {
     return downloadDriver(info)

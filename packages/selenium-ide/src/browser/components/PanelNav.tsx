@@ -8,7 +8,6 @@ interface PanelNavProps {
 const PanelNav: React.FC<PanelNavProps> = ({ children, vertical }) => (
   <Paper
     className={vertical ? 'draggable panel-v-nav' : 'draggable panel-nav'}
-    elevation={6}
     square
     variant="outlined"
   >

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { BrowserWindow } from 'electron';
+import { BrowserWindow } from 'electron'
 import webdriver, {
   Capabilities,
   Condition as ConditionShape,
@@ -109,8 +109,8 @@ export default class WebDriverExecutor {
   driver: WebDriver
   server?: string
   // @ts-expect-error
-  window: BrowserWindow;
-  windowHandle?: string;
+  window: BrowserWindow
+  windowHandle?: string
   hooks: any
   implicitWait: number
   initialized: boolean
@@ -132,19 +132,20 @@ export default class WebDriverExecutor {
         .forBrowser(browserName)
         .build()
     }
-    const handles = await this.driver.getAllWindowHandles()
-    await this.driver.switchTo().window(handles[0])
-    for (let i = 0, ii = handles.length; i !== ii; i++) {
-      await this.driver.switchTo().window(handles[i])
-      const isPlaybackWindow = await this.driver.executeScript(
-        'return window.playback;'
-      )
-      if (isPlaybackWindow) {
-        this.windowHandle = handles[i];
-        break
+    if (!this.windowHandle) {
+      const handles = await this.driver.getAllWindowHandles()
+      for (let i = 0, ii = handles.length; i !== ii; i++) {
+        await this.driver.switchTo().window(handles[i])
+        const isPlaybackWindow = await this.driver.executeScript(
+          'return window.playback;'
+        )
+        if (isPlaybackWindow) {
+          this.windowHandle = handles[i]
+          break
+        }
       }
     }
-    this.window = BrowserWindow.getFocusedWindow() as BrowserWindow;
+    this.window = BrowserWindow.getFocusedWindow() as BrowserWindow
     this.initialized = true
   }
 
@@ -242,7 +243,7 @@ export default class WebDriverExecutor {
 
   async doSetWindowSize(widthXheight: string) {
     const [width, height] = widthXheight.split('x').map((v) => parseInt(v))
-    const bounds = await this.window.getBounds();
+    const bounds = await this.window.getBounds()
     await this.window.setBounds({
       x: bounds.x + Math.floor(bounds.width / 2) - Math.floor(width / 2),
       y: bounds.y + Math.floor(bounds.height / 2) - Math.floor(height / 2),

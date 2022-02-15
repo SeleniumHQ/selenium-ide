@@ -1,11 +1,11 @@
+import loadingID from 'api/constants/loadingID'
+import AppWrapper from 'browser/components/AppWrapper'
+import PanelNav from 'browser/components/PanelNav'
+import { getActiveTest } from 'browser/helpers/getActiveData'
+import subscribeToSession from 'browser/helpers/subscribeToSession'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AppWrapper from 'browser/components/AppWrapper'
-import loadingID from '../../../api/constants/loadingID'
 import CommandList from './components/CommandList'
-import subscribeToSession from 'browser/helpers/subscribeToSession'
-import { getActiveTest } from 'browser/helpers/getActiveData'
-import PanelNav from 'browser/components/PanelNav'
 
 const ProjectTestCommandList = () => {
   const session = subscribeToSession()

@@ -1,11 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
 import loadingID from 'api/constants/loadingID'
 import AppWrapper from 'browser/components/AppWrapper'
-import subscribeToSession from 'browser/helpers/subscribeToSession'
-import CommandEditor from './components/CommandEditor'
-import { getActiveCommand, getActiveTest } from 'browser/helpers/getActiveData'
 import PanelNav from 'browser/components/PanelNav'
+import { getActiveCommand, getActiveTest } from 'browser/helpers/getActiveData'
+import subscribeToSession from 'browser/helpers/subscribeToSession'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import CommandEditor from './components/CommandEditor'
 
 const ProjectCommandEditor = () => {
   const session = subscribeToSession()

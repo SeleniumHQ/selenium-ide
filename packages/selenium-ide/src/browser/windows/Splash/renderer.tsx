@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
-import { LoadedWindow } from 'browser/types'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import List from '@material-ui/core/List'
@@ -9,6 +6,9 @@ import ListItemButton from '@material-ui/core/ListItemButton'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import AppWrapper from 'browser/components/AppWrapper'
+import { LoadedWindow } from 'browser/types'
+import React, { useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
 
 const { sideAPI } = window as LoadedWindow
 
