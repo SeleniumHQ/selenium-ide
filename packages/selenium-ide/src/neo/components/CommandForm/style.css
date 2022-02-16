@@ -3,7 +3,7 @@
 }
 
 .command-form form > * {
-  max-width: 480px;
+  width: 123em;
 }
 
 .command-form .form-input:first-child > div {
