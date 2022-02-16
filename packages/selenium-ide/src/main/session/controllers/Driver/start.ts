@@ -1,9 +1,9 @@
+import { resolveDriverName } from '@seleniumhq/get-driver'
 import { ChildProcess, spawn } from 'child_process'
 import * as fs from 'fs-extra'
+import { BrowserInfo, Session } from 'main/types'
 import * as path from 'path'
 import * as os from 'os'
-import { resolveDriverName } from '@seleniumhq/get-driver'
-import { BrowserInfo, Session } from '../../../types'
 
 const successMessage = 'was started successfully.'
 export interface DriverStartSuccess {

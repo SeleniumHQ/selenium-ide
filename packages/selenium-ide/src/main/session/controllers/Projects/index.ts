@@ -36,9 +36,9 @@ export default class ProjectsController {
       })
     })
     mainWindow.on("blur", () => {
-      // childWindows.forEach((win) => {
-      //   win.hide();
-      // })
+      childWindows.forEach((win) => {
+        win.hide();
+      })
     })
     mainWindow.on("closed", () => {
       childWindows.forEach((win) => {

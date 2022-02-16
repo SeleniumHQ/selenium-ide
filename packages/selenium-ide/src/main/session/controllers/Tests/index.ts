@@ -1,5 +1,4 @@
-import { CommandShape, ProjectShape, TestShape } from '@seleniumhq/side-model'
-import merge from 'lodash/fp/merge'
+import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 
@@ -23,49 +22,30 @@ export default class TestsController {
   }
 
   async addStep(
-    testID: string,
-    index: number,
-    stepFields: Partial<CommandShape>
-  ): Promise<CommandShape> {
-    const project = this.session.projects.project as ProjectShape
-    const test = project.tests.find((test) => test.id === testID) as TestShape
-    const step = (
-      stepFields.id ? stepFields : merge(this.create(), stepFields)
-    ) as CommandShape
-    test.commands.splice(index, 0, step)
-    return step
+    _testID: string,
+    _index: number,
+    _stepFields: Partial<CommandShape>
+  ): Promise<boolean> {
+    return true
   }
 
-  async removeStep(testID: string, stepID: string): Promise<boolean> {
-    const project = this.session.projects.project as ProjectShape
-    const test = project.tests.find((test) => test.id === testID) as TestShape
-    const index = test.commands.findIndex((step) => step.id === stepID)
-    test.commands.splice(index, 1)
+  async removeStep(_testID: string, _stepID: string): Promise<boolean> {
     return true
   }
 
   async updateStep(
-    testID: string,
-    stepID: string,
-    step: Partial<CommandShape>
-  ): Promise<CommandShape> {
-    const project = this.session.projects.project as ProjectShape
-    const test = project.tests.find((test) => test.id === testID) as TestShape
-    const index = test.commands.findIndex((step) => step.id === stepID)
-    test.commands[index] = merge(test.commands[index], step)
-    return test.commands[index]
+    _testID: string,
+    _stepID: string,
+    _step: Partial<CommandShape>
+  ): Promise<boolean> {
+    return true
   }
 
   async reorderStep(
-    testID: string,
-    stepID: string,
-    newIndex: number
+    _testID: string,
+    _stepID: string,
+    _newIndex: number
   ): Promise<boolean> {
-    const project = this.session.projects.project as ProjectShape
-    const test = project.tests.find((test) => test.id === testID) as TestShape
-    const index = test.commands.findIndex((step) => step.id === stepID)
-    const [step] = test.commands.splice(index, 1)
-    test.commands.splice(newIndex, 0, step)
     return true
   }
 
@@ -77,23 +57,11 @@ export default class TestsController {
     }
   }
 
-  async delete(testID: string): Promise<boolean> {
-    const project = this.session.projects.project as ProjectShape
-    const testIndex = project.tests.findIndex((test) => test.id === testID)
-    project.tests.splice(testIndex, 1)
-    project.suites.forEach((suite) => {
-      const index = suite.tests.indexOf(testID)
-      if (index !== -1) {
-        suite.tests.splice(index, 1)
-      }
-    })
+  async delete(_testID: string): Promise<boolean> {
     return true
   }
 
-  async rename(testID: string, name: string): Promise<boolean> {
-    const project = this.session.projects.project as ProjectShape
-    const test = project.tests.find((test) => test.id === testID) as TestShape
-    test.name = name
+  async rename(_testID: string, _name: string): Promise<boolean> {
     return true
   }
 }

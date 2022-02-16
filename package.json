@@ -7,6 +7,7 @@
     "start": "cd packages/selenium-ide && yarn start",
     "build": "lerna run build --loglevel verbose",
     "clean": "lerna run clean --loglevel verbose",
+    "clean:nuke": "rm -rf node_modules packages/*/node_modules packages/*/dist",
     "test": "jest",
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",

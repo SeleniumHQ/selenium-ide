@@ -7,6 +7,7 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
+    "clean": "rm -rf dist files",
     "copy:tsconfig": "cp ./tsconfig.json ./dist/tsconfig.json",
     "start": "electron dist/main-bundle.js",
     "build": "run-s build:webpack build:electron",
