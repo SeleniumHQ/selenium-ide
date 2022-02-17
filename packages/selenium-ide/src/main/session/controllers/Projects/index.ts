@@ -3,6 +3,7 @@ import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import defaultProject from 'api/models/project'
 import RecentProjects from './Recent'
+import { BrowserWindow } from 'electron'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -28,19 +29,26 @@ export default class ProjectsController {
       await this.session.windows.get('project-test-command-list'),
       await this.session.windows.get('project-playback-controls'),
       await this.session.windows.get('project-command-editor'),
-    ];
-    const mainWindow = await this.session.windows.get('project-playback-window');
-    mainWindow.on("focus", () => {
+    ]
+    const mainWindow = await this.session.windows.get('project-playback-window')
+    mainWindow.on('focus', () => {
       childWindows.forEach((win) => {
-        win.showInactive();
+        win.showInactive()
       })
     })
-    mainWindow.on("blur", () => {
-      childWindows.forEach((win) => {
-        win.hide();
-      })
+    mainWindow.on('blur', () => {
+      const windows = BrowserWindow.getAllWindows()
+      const anyWindowFocused = windows.reduce((focused, window) => {
+        if (focused) return true
+        return window.isFocused()
+      }, false)
+      if (!anyWindowFocused) {
+        childWindows.forEach((win) => {
+          win.hide()
+        })
+      }
     })
-    mainWindow.on("closed", () => {
+    mainWindow.on('closed', () => {
       childWindows.forEach((win) => {
         win.destroy()
       })
