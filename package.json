@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
     "build": "yarn build:ts && yarn build:ide",
-    "build:ide": "lerna run --scope selenium-ide --loglevel verbose build",
+    "build:ide": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build",
     "build:ts": "tsc --build --verbose",
     "clean": "lerna run clean --loglevel verbose",
     "clean:nuke": "git clean -fdx",
@@ -16,7 +16,7 @@
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "yarn watch:ts & yarn watch:ide",
-    "watch:ide": "lerna run --scope selenium-ide --loglevel verbose watch",
+    "watch:ide": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose watch",
     "watch:ts": "tsc --build --verbose --watch",
     "preinstall": "node ./scripts/check-yarn.js",
     "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"

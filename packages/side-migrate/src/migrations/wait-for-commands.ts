@@ -18,7 +18,7 @@
 import { ProjectShape } from "@seleniumhq/side-model"
 
 export default function migrate(project: ProjectShape) {
-  let r = Object.assign({}, project)
+  let r: ProjectShape = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
       commands: test.commands.map(c => {

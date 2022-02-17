@@ -1143,7 +1143,7 @@ export default class WebDriverExecutor {
 
   async waitForElement(
     locator: string,
-    fallback: string[] = []
+    fallback: [string, string][] = []
   ): Promise<WebElementShape> {
     const elementLocator = parseLocator(locator)
     try {
