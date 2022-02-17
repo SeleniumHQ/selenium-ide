@@ -18,7 +18,6 @@ export const mutator: Mutator<Shape> = (
   const stepIndex = session.project.tests[testIndex].commands.findIndex(
     hasID(stepID)
   )
-  console.log(session.project.tests[0].commands[0])
   const updatedSession = update(
     `project.tests[${testIndex}].commands[${stepIndex}]`,
     (command: CommandShape) => merge(command, step),
