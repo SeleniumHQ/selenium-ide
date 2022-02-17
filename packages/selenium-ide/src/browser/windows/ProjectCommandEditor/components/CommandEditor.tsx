@@ -105,7 +105,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
               inputValue={command.target}
               onChange={updateField('target')}
               onInputChange={updateFieldAutoComplete('target')}
-              options={command.targets.map((target) => target[0])}
+              options={(command.targets ?? []).map((target) => target[0])}
               renderInput={(params) => (
                 <TextField {...params} label="Target" size="small" />
               )}
