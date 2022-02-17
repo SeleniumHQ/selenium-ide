@@ -20,6 +20,7 @@ files
 drivers
 *.d.ts.map
 *.d.ts
+!packages/side-migrate/src/types.d.ts
 
 # auto-generated docs
 docs/api/arguments.md
