@@ -13,11 +13,11 @@ const performSubscription = async (
   updateSession(session)
   sideAPI.state.onMutate.addListener((path, data) => {
     const [namespace, method] = path.split('.')
-    console.log('Queueing Mutator', path, data)
+    // console.log('Queueing Mutator', path, data)
     updateSession((session) => {
       // @ts-expect-error
       const newSession = sideAPI.mutators[namespace][method](session, data)
-      console.log('Running Mutator', path, data, session, newSession)
+      // console.log('Running Mutator', path, data, session, newSession)
       return newSession
     })
   })
