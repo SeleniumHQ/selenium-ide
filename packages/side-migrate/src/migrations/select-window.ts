@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default function migrate(project) {
+import { CommandShape, ProjectShape } from "@seleniumhq/side-model"
+
+export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
@@ -27,9 +29,9 @@ export default function migrate(project) {
 
 migrate.version = '2.0'
 
-function migrateCommands(commands) {
+function migrateCommands(commands: CommandShape[]) {
   let needsToAddRootStore = false
-  let windowNamesCache = {}
+  let windowNamesCache: Record<string, string> = {}
   for (let i = 0; i < commands.length; i++) {
     let command = commands[i]
     if (command.command === 'selectWindow') {
@@ -63,8 +65,11 @@ function migrateCommands(commands) {
   }
   if (needsToAddRootStore) {
     commands.splice(1, 0, {
+      comment: '',
       command: 'storeWindowHandle',
+      id: 'asdfghjk-12345678-asdfghjk-12345678',
       target: 'root',
+      targets: [],
       value: '',
     })
   }

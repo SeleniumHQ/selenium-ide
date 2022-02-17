@@ -15,16 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default function migrate(project) {
+import { CommandShape, ProjectShape } from '@seleniumhq/side-model'
+
+export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
-  r.tests = r.tests.map(test => {
+  r.tests = r.tests.map((test) => {
     const commands = addAcceptAlert(test.commands)
     return Object.assign({}, test, {
       commands: commands
-        .filter(c => !commandsToRemove.includes(c.command))
-        .map(c => {
+        .filter((c) => !commandsToRemove.includes(c.command))
+        .map((c) => {
+          // @ts-expect-error
           if (commandsToReplace[c.command]) {
             return Object.assign({}, c, {
+              // @ts-expect-error
               command: commandsToReplace[c.command],
             })
           }
@@ -35,12 +39,13 @@ export default function migrate(project) {
   return r
 }
 
-function addAcceptAlert(commands) {
+function addAcceptAlert(commands: CommandShape[]) {
   let cmds = [...commands]
   for (let i = 0; i < cmds.length; i++) {
     if (cmds[i].command === 'assertAlert') {
       cmds.splice(i + 1, 0, {
         command: 'acceptAlert',
+        id: `added-accept-alert-${i}`,
         target: '',
         value: '',
       })

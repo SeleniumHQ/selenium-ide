@@ -15,19 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from '@seleniumhq/side-model'
+import { Commands, ArgTypes, ProjectShape } from '@seleniumhq/side-model'
 
-export default function migrate(project) {
+export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
       commands: test.commands.map(c => {
         if (Commands[c.command]) {
           let newCmd = Object.assign({}, c)
-          if (c.target && c.target.name === ArgTypes.variableName.name) {
+          const type = Commands[c.command]
+          if (type.target?.name === ArgTypes.variableName.name) {
             newCmd.target = migrateVariableName(newCmd.target)
           }
-          if (c.value && c.value.name === ArgTypes.variableName.name) {
+          if (type.value?.name === ArgTypes.variableName.name) {
             newCmd.value = migrateVariableName(newCmd.value)
           }
           return newCmd
@@ -39,7 +40,7 @@ export default function migrate(project) {
   return r
 }
 
-function migrateVariableName(target) {
+function migrateVariableName(target: string) {
   return target.replace(/\$\{(\w+)\}/g, '$1')
 }
 

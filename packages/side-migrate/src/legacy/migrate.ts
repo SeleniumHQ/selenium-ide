@@ -20,8 +20,8 @@ import xmlescape from 'xml-escape'
 import xmlunescape from 'unescape'
 import {
   Commands,
-  CommandShape,
   ProjectShape,
+  SuiteShape,
   TestShape,
 } from '@seleniumhq/side-model'
 
@@ -30,15 +30,15 @@ export const FileTypes = {
   TestCase: 'testcase',
 }
 
-function isSuite(file) {
+function isSuite(file: string) {
   return file.includes('table id="suiteTable"')
 }
 
-function isTestCase(file) {
+function isTestCase(file: string) {
   return file.includes('http://selenium-ide.openqa.org/profiles/test-case')
 }
 
-export function verifyFile(file) {
+export function verifyFile(file: string) {
   if (isSuite(file)) {
     return FileTypes.Suite
   } else if (isTestCase(file)) {
@@ -48,10 +48,10 @@ export function verifyFile(file) {
   }
 }
 
-export function parseSuiteRequirements(suite) {
+export function parseSuiteRequirements(suite: string) {
   const regex = /<a href="(.*)">/g
   let lastResult = regex.exec(suite)
-  const results = {}
+  const results: Record<string, boolean> = {}
   while (lastResult) {
     results[lastResult[1]] = true
     lastResult = regex.exec(suite)
@@ -60,19 +60,29 @@ export function parseSuiteRequirements(suite) {
   return Object.keys(results)
 }
 
-export function migrateProject(files) {
-  const fileMap = {}
+type FileObj = { name: string; contents: string }
+export function migrateProject(files: FileObj[]) {
+  const fileMap: Record<string, string> = {}
   files.forEach(({ name, contents }) => {
     fileMap[name] = contents
   })
-  const project: Partial<ProjectShape> = {
+  const project: ProjectShape = {
+    id: 'xxxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxxx',
+    name: 'Migrated Project',
+    plugins: [],
+    snapshot: {
+      dependencies: {},
+      jest: { extraGlobals: [] },
+      tests: [],
+    },
+    suites: [],
+    tests: [],
     url: '',
     urls: [],
-    tests: [],
-    suites: [],
+    version: '3.0',
   }
-  const suites = []
-  const tests = []
+  const suites: string[] = []
+  const tests: string[] = []
   Object.keys(fileMap).forEach((fileName) => {
     if (isSuite(fileMap[fileName])) {
       suites.push(fileName)
@@ -81,9 +91,7 @@ export function migrateProject(files) {
     }
   })
   tests.forEach((testCaseName) => {
-    const { test, baseUrl } = migrateTestCase(
-      fileMap[testCaseName]
-    )
+    const { test, baseUrl } = migrateTestCase(fileMap[testCaseName])
     test.id = testCaseName
     project.tests.push(test as TestShape)
     project.urls = [...project.urls, baseUrl]
@@ -105,15 +113,18 @@ export function migrateProject(files) {
   return project
 }
 
-function migrateSuite(suite, fileMap, project) {
+function migrateSuite(suite: string, fileMap: Record<string, string>, project: ProjectShape) {
   const result = JSON.parse(convert.xml2json(fileMap[suite], { compact: true }))
-  const parsedSuite = {
+  const parsedSuite: SuiteShape = {
     id: suite,
     name: result.html.head.title._text,
+    persistSession: false,
+    parallel: false,
     tests: [],
+    timeout: 30,
   }
   project.suites.push(parsedSuite)
-  result.html.body.table.tbody.tr.forEach((testCase) => {
+  result.html.body.table.tbody.tr.forEach((testCase: any) => {
     if (testCase.td.a) {
       const testCaseName = testCase.td.a._attributes.href
       if (!fileMap[testCaseName]) {
@@ -127,7 +138,7 @@ function migrateSuite(suite, fileMap, project) {
   })
 }
 
-export function migrateTestCase(data): {
+export function migrateTestCase(data: string): {
   test: Partial<TestShape>
   baseUrl: string
 } {
@@ -141,8 +152,8 @@ export function migrateTestCase(data): {
   const test = {
     name: result.html.body.table.thead.tr.td._text,
     commands: tr
-      .filter((row) => row.td[0]._text && isImplementedWait(row.td[0]._text))
-      .map((row) => ({
+      .filter((row: any) => row.td[0]._text && isImplementedWait(row.td[0]._text))
+      .map((row: any) => ({
         command: row.td[0]._text && row.td[0]._text.replace('AndWait', ''),
         target: xmlunescape(parseTarget(row.td[1])),
         value: xmlunescape(row.td[2]._text || ''),
@@ -177,7 +188,7 @@ function sanitizeXml(data: string): string {
     .replace(/<!--(.|\s)*?-->/g, '')
 }
 
-function parseTarget(targetCell) {
+function parseTarget(targetCell: any) {
   if (targetCell._text) {
     if (targetCell._text instanceof Array) {
       return targetCell._text.join('\\n')
@@ -189,7 +200,7 @@ function parseTarget(targetCell) {
   }
 }
 
-function isImplementedWait(command) {
+function isImplementedWait(command: string) {
   if (/^wait/.test(command)) {
     return Commands[command]
   } else {

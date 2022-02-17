@@ -21,6 +21,7 @@ export interface CommandType {
   name: string
   description: string
   target?: ArgType
+  value?: ArgType
 }
 
 export interface CommandTypes {

@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from '@seleniumhq/side-model'
+import { Commands, ArgTypes, ProjectShape } from '@seleniumhq/side-model'
 
-export default function migrate(project) {
+export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
@@ -41,7 +41,7 @@ export default function migrate(project) {
   return r
 }
 
-function migrateScript(script) {
+function migrateScript(script: string) {
   return script
     .replace(/'\$\{(\w+)\}'/g, '${$1}')
     .replace(/`\$\{(\w+)\}`/g, '${$1}')

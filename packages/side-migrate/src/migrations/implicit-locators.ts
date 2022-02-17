@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Commands, ArgTypes } from '@seleniumhq/side-model'
+import { Commands, ArgTypes, ProjectShape } from '@seleniumhq/side-model'
 
-export default function migrate(project) {
+export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
@@ -25,10 +25,10 @@ export default function migrate(project) {
         if (Commands[c.command]) {
           let newCmd = Object.assign({}, c)
           const type = Commands[c.command]
-          if (c.target && c.target.name === ArgTypes.locator.name) {
+          if (type.target?.name === ArgTypes.locator.name) {
             newCmd.target = migrateLocator(newCmd.target)
           }
-          if (c.value && c.value.name === ArgTypes.locator.name) {
+          if (type.value?.name === ArgTypes.locator.name) {
             newCmd.value = migrateLocator(newCmd.value)
           }
           if (newCmd.targets) {
@@ -46,7 +46,7 @@ export default function migrate(project) {
   return r
 }
 
-function migrateLocator(locator) {
+function migrateLocator(locator: string) {
   const result = locator.match(/^([A-Za-z]+)=.+/)
   if (!result) {
     const implicitType = locator.indexOf('//') === -1 ? 'id' : 'xpath'

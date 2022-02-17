@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export default function migrate(project) {
+import { ProjectShape } from "@seleniumhq/side-model"
+
+export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
   r.tests = r.tests.map(test => {
     return Object.assign({}, test, {
@@ -33,7 +35,7 @@ export default function migrate(project) {
   return r
 }
 
-function migrateCommand(command) {
+function migrateCommand(command: string) {
   return command.replace(/waitFor/g, 'waitForElement')
 }
 

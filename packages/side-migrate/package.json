@@ -23,7 +23,10 @@
   "bugs": {
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/xml-escape": "1.1.0",
+    "@types/xml-js": "1.0.0"
+  },
   "dependencies": {
     "@seleniumhq/side-model": "^3.5.10",
     "unescape": "^1.0.1",

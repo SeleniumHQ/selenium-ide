@@ -4,11 +4,11 @@
 
 export interface CommandShape {
   id: string
-  comment: string
+  comment?: string
   command: string
   target: string
-  targets: [string, string][]
-  targetFallback?: string[]
+  targets?: [string, string][]
+  targetFallback?: [string, string][]
   value: string
   valueFallback?: string[]
   isBreakpoint?: boolean
