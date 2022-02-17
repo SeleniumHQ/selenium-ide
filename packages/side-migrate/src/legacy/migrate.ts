@@ -18,7 +18,12 @@
 import convert from 'xml-js'
 import xmlescape from 'xml-escape'
 import xmlunescape from 'unescape'
-import { Commands } from '@seleniumhq/side-model'
+import {
+  Commands,
+  CommandShape,
+  ProjectShape,
+  TestShape,
+} from '@seleniumhq/side-model'
 
 export const FileTypes = {
   Suite: 'suite',
@@ -60,7 +65,7 @@ export function migrateProject(files) {
   files.forEach(({ name, contents }) => {
     fileMap[name] = contents
   })
-  const project = {
+  const project: Partial<ProjectShape> = {
     url: '',
     urls: [],
     tests: [],
@@ -68,26 +73,31 @@ export function migrateProject(files) {
   }
   const suites = []
   const tests = []
-  Object.keys(fileMap).forEach(fileName => {
+  Object.keys(fileMap).forEach((fileName) => {
     if (isSuite(fileMap[fileName])) {
       suites.push(fileName)
     } else if (isTestCase(fileMap[fileName])) {
       tests.push(fileName)
     }
   })
-  tests.forEach(testCaseName => {
-    const { test, baseUrl } = migrateTestCase(fileMap[testCaseName])
+  tests.forEach((testCaseName) => {
+    const { test, baseUrl } = migrateTestCase(
+      fileMap[testCaseName]
+    )
     test.id = testCaseName
-    project.tests.push(test)
+    project.tests.push(test as TestShape)
     project.urls = [...project.urls, baseUrl]
   })
-  suites.forEach(suite => {
+  suites.forEach((suite) => {
     migrateSuite(suite, fileMap, project)
   })
   if (!suites.length) {
     project.suites.push({
+      id: 'xxxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxxx',
       name: 'Imported suite',
+      parallel: false,
       persistSession: true,
+      timeout: 30,
       tests,
     })
     project.name = 'Imported project'
@@ -103,7 +113,7 @@ function migrateSuite(suite, fileMap, project) {
     tests: [],
   }
   project.suites.push(parsedSuite)
-  result.html.body.table.tbody.tr.forEach(testCase => {
+  result.html.body.table.tbody.tr.forEach((testCase) => {
     if (testCase.td.a) {
       const testCaseName = testCase.td.a._attributes.href
       if (!fileMap[testCaseName]) {
@@ -117,7 +127,10 @@ function migrateSuite(suite, fileMap, project) {
   })
 }
 
-export function migrateTestCase(data) {
+export function migrateTestCase(data): {
+  test: Partial<TestShape>
+  baseUrl: string
+} {
   const sanitized = sanitizeXml(data)
   const result = JSON.parse(convert.xml2json(sanitized, { compact: true }))
   const baseUrl = result.html.head.link
@@ -128,8 +141,8 @@ export function migrateTestCase(data) {
   const test = {
     name: result.html.body.table.thead.tr.td._text,
     commands: tr
-      .filter(row => row.td[0]._text && isImplementedWait(row.td[0]._text))
-      .map(row => ({
+      .filter((row) => row.td[0]._text && isImplementedWait(row.td[0]._text))
+      .map((row) => ({
         command: row.td[0]._text && row.td[0]._text.replace('AndWait', ''),
         target: xmlunescape(parseTarget(row.td[1])),
         value: xmlunescape(row.td[2]._text || ''),
@@ -140,9 +153,9 @@ export function migrateTestCase(data) {
   return { test, baseUrl }
 }
 
-export function migrateUrls(test, url) {
+export function migrateUrls(test: TestShape, url: string): TestShape {
   return Object.assign({}, test, {
-    commands: test.commands.map(command => {
+    commands: test.commands.map((command) => {
       if (command.command === 'open') {
         return Object.assign({}, command, {
           target: new URL(command.target, url).href,
@@ -153,7 +166,7 @@ export function migrateUrls(test, url) {
   })
 }
 
-function sanitizeXml(data) {
+function sanitizeXml(data: string): string {
   return data
     .replace(/<br \/>/g, '\\n')
     .replace(/<link(.*")\s*\/{0}>/g, (_match, group) => `<link${group} />`)

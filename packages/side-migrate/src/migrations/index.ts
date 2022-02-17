@@ -25,6 +25,7 @@ import prompt from './prompt'
 import title from './title'
 import storeElementCount from './store-element-count'
 import targetFallback from './target-fallback'
+import { ProjectShape } from '@seleniumhq/side-model'
 
 export const migrators = {
   pause,
@@ -39,7 +40,13 @@ export const migrators = {
   targetFallback,
 }
 
-export default Object.keys(migrators).reduce((migs, migName) => {
+interface MigrationsLibrary {
+  [version: string]: {
+    [name: string]: (p: ProjectShape) => ProjectShape;
+  }
+}
+
+const migrations: MigrationsLibrary = Object.keys(migrators).reduce((migs, migName) => {
   const mig = migrators[migName]
   if (!migs[mig.version]) {
     migs[mig.version] = {}
@@ -48,3 +55,5 @@ export default Object.keys(migrators).reduce((migs, migName) => {
 
   return migs
 }, {})
+
+export default migrations;

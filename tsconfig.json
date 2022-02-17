@@ -11,6 +11,9 @@
       "path": "./packages/side-commons"
     },
     {
+      "path": "./packages/side-migrate"
+    },
+    {
       "path": "./packages/side-model"
     },
     {

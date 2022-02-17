@@ -15,22 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import migrations from './migrations'
+import { Commands, ArgTypes } from '@seleniumhq/side-model'
 
-export const VERSIONS = ['1.0', '1.1', '2.0', '3.0']
-
-export default function UpgradeProject(project) {
-  let r = project
-  VERSIONS.forEach(ver => {
-    // if the project's version is the same as the migration, it means we've already completed that migration
-    // TODO: switch to semver checks if we ever react an x.10 release
-    if (+project.version < +ver) {
-      Object.values(migrations[ver]).forEach(migrate => {
-        r = migrate(r)
-      })
-      r.version = ver
-    }
+export default function migrate(project) {
+  let r = Object.assign({}, project)
+  r.tests = r.tests.map(test => {
+    return Object.assign({}, test, {
+      commands: test.commands.map(c => {
+        if (Commands[c.command]) {
+          let newCmd = Object.assign({}, c)
+          if (c.target && c.target.name === ArgTypes.variableName.name) {
+            newCmd.target = migrateVariableName(newCmd.target)
+          }
+          if (c.value && c.value.name === ArgTypes.variableName.name) {
+            newCmd.value = migrateVariableName(newCmd.value)
+          }
+          return newCmd
+        }
+        return c
+      }),
+    })
   })
-
   return r
 }
+
+function migrateVariableName(target) {
+  return target.replace(/\$\{(\w+)\}/g, '$1')
+}
+
+migrate.version = '1.1'

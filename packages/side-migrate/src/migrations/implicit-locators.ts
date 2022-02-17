@@ -25,10 +25,10 @@ export default function migrate(project) {
         if (Commands[c.command]) {
           let newCmd = Object.assign({}, c)
           const type = Commands[c.command]
-          if (type.target && type.target.name === ArgTypes.locator.name) {
+          if (c.target && c.target.name === ArgTypes.locator.name) {
             newCmd.target = migrateLocator(newCmd.target)
           }
-          if (type.value && type.value.name === ArgTypes.locator.name) {
+          if (c.value && c.value.name === ArgTypes.locator.name) {
             newCmd.value = migrateLocator(newCmd.value)
           }
           if (newCmd.targets) {
