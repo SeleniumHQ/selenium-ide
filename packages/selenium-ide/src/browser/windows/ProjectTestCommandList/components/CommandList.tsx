@@ -6,7 +6,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import { Paper } from '@material-ui/core'
+import { Box, Divider, Paper, Typography } from '@material-ui/core'
 import { CommandsStateShape } from 'api/models/state/command'
 import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
@@ -30,6 +30,11 @@ const classNameFromCommandState = (
   return `command-state-${state}`
 }
 
+const camelToTitleCase = (text: string) => {
+  const result = text.replace(/([A-Z])/g, ' $1')
+  return result.charAt(0).toUpperCase() + result.slice(1)
+}
+
 const CommandList: FC<CommandListProps> = ({
   activeCommand,
   commandStates,
@@ -45,9 +50,7 @@ const CommandList: FC<CommandListProps> = ({
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Command</TableCell>
-            <TableCell>Target</TableCell>
-            <TableCell>Value</TableCell>
+            <TableCell>Commands</TableCell>
           </TableRow>
         </TableHead>
       </Table>
@@ -56,16 +59,21 @@ const CommandList: FC<CommandListProps> = ({
     <TableContainer className="width-100" sx={{ borderColor: 'primary.main' }}>
       <Table size="small" aria-label="commands-list">
         <TableBody>
-          {commands.map(({ command, id, target, value }) => (
+          {commands.map(({ command, id, target, value }, index) => (
             <TableRow
               className={classNameFromCommandState(commandStates[id])}
               key={id}
               onClick={() => setActiveCommand(id)}
               selected={id === activeCommand}
             >
-              <TableCell>{command}</TableCell>
-              <TableCell>{target}</TableCell>
-              <TableCell>{value}</TableCell>
+              {index === 0 ? null : <Divider />}
+              <Typography>
+                <Box sx={{ typography: 'body1', ml: 1 }}>{camelToTitleCase(command)}</Box>
+                {target ? <Divider variant="middle" /> : null}
+                <Box sx={{ typography: 'body2', ml: 2 }}>{target}</Box>
+                {value ? <Divider variant="middle" /> : null}
+                <Box sx={{ typography: 'body2', ml: 2 }}>{value}</Box>
+              </Typography>
             </TableRow>
           ))}
         </TableBody>
