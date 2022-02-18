@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
     "build": "yarn build:ts && yarn build:ide",
+    "build:ide:fast": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build:webpack",
     "build:ide": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build:webpack",
     "build:ts": "tsc --build --verbose",
     "clean": "lerna run clean --loglevel verbose",

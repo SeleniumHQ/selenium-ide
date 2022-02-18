@@ -1,98 +1,103 @@
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import fs from 'fs'
-import path from 'path'
-import kebabCase from 'lodash/fp/kebabCase'
-// eslint-disable-next-line node/no-unpublished-import
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import kebabCase from 'lodash/fp/kebabCase'
 
-interface BaseParameters {
-  entry: string
-  filename: string
-  target: string
-}
+import path from 'path'
+import { Configuration, WebpackPluginInstance } from 'webpack'
 
-// Our main process
-const configs = [
-  {
-    entry: path.join(__dirname, 'src', 'main', 'index.ts'),
-    filename: 'main',
-    target: 'electron-main',
-  },
+const commonPlugins: WebpackPluginInstance[] = [
+  new ForkTsCheckerWebpackPlugin(),
 ]
-
-const windows = fs.readdirSync(
-  path.join(__dirname, 'src', 'browser', 'windows')
-)
-windows.forEach((element) => {
-  const elementPath = path.join(__dirname, 'src', 'browser', 'windows', element)
-  const preloadPath = path.join(elementPath, 'preload.ts')
-  const filecaseElement = kebabCase(element)
-  if (fs.existsSync(preloadPath)) {
-    configs.push({
-      entry: preloadPath,
-      filename: `${filecaseElement}-preload`,
-      target: 'electron-preload',
-    })
-  }
-  const rendererPath = path.join(elementPath, 'renderer.tsx')
-  const rendererFallbackPath = path.join(elementPath, 'renderer.ts')
-  if (fs.existsSync(rendererPath)) {
-    configs.push({
-      entry: rendererPath,
-      filename: `${filecaseElement}-renderer`,
-      target: 'electron-renderer',
-    })
-  } else if (fs.existsSync(rendererFallbackPath)) {
-    configs.push({
-      entry: rendererFallbackPath,
-      filename: `${filecaseElement}-renderer`,
-      target: 'electron-renderer',
-    })
-  }
-})
-
-module.exports = configs.map(getConfig)
-
-function getConfig({ entry, filename, target }: BaseParameters) {
-  return {
-    entry,
-    // Workaround for ws module trying to require devDependencies
-    externals: ['utf-8-validate', 'bufferutil'],
-    mode: 'development',
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          loader: 'ts-loader',
-          exclude: /node_modules/,
+const commonConfig: Pick<
+  Configuration,
+  'externals' | 'mode' | 'module' | 'resolve' | 'output'
+> = {
+  externals: ['utf-8-validate', 'bufferutil'],
+  mode: 'development',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          transpileOnly: true,
         },
-        {
-          test: /\.css$/i,
-          use: ['style-loader', 'css-loader'],
-        },
-        {
-          test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-          loader: 'url-loader',
-        },
-      ],
-    },
-    resolve: {
-      alias: {
-        api: path.resolve(__dirname, 'src/api'),
-        browser: path.resolve(__dirname, 'src/browser'),
-        main: path.resolve(__dirname, 'src/main'),
       },
-      extensions: ['.tsx', '.ts', '.js'],
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader',
+      },
+    ],
+  },
+  resolve: {
+    alias: {
+      api: path.resolve(__dirname, 'src/api'),
+      browser: path.resolve(__dirname, 'src/browser'),
+      main: path.resolve(__dirname, 'src/main'),
     },
-    plugins: filename.includes('renderer') ? getBrowserPlugins(filename) : [],
-    output: {
-      filename: `${filename}-bundle.js`,
-      path: path.resolve(__dirname, 'dist'),
-    },
-    target,
-  }
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+  output: {
+    filename: '[name]-bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
 }
 
-function getBrowserPlugins(filename: string) {
+// Our renderer and preload files
+const windowData = fs
+  .readdirSync(path.join(__dirname, 'src', 'browser', 'windows'))
+  .map((filename) => [
+    kebabCase(filename),
+    path.join(__dirname, 'src', 'browser', 'windows', filename),
+  ])
+
+// Preload entries
+const preloadEntries = windowData
+  .filter(([, filepath]) => fs.existsSync(path.join(filepath, 'preload.ts')))
+  .map(([name, filepath]) => [name, path.join(filepath, 'preload.ts')])
+
+const preloadConfig: Configuration = {
+  ...commonConfig,
+  entry: Object.fromEntries(preloadEntries),
+  plugins: commonPlugins,
+  target: 'electron-preload',
+}
+
+// Renderer entries
+const rendererEntries = windowData
+  .filter(([, filepath]) => fs.existsSync(path.join(filepath, 'renderer.tsx')))
+  .map(([name, filepath]) => [name, path.join(filepath, 'renderer.tsx')])
+
+const rendererConfig: Configuration = {
+  ...commonConfig,
+  entry: Object.fromEntries(rendererEntries),
+  plugins: commonPlugins.concat(
+    Object.values(preloadEntries).map(
+      ([filename]) =>
+        getBrowserPlugin(filename) as unknown as WebpackPluginInstance
+    )
+  ),
+  target: 'electron-renderer',
+}
+
+const mainConfig: Configuration = {
+  ...commonConfig,
+  entry: {
+    main: path.join(__dirname, 'src', 'main', 'index.ts'),
+  },
+  plugins: commonPlugins,
+  target: 'electron-main',
+}
+
+export default [mainConfig, preloadConfig, rendererConfig]
+
+function getBrowserPlugin(filename: string) {
   const pluginHTML = new HtmlWebpackPlugin({
     filename: `${filename.slice(0, -9)}.html`,
     inject: false,
@@ -108,5 +113,5 @@ function getBrowserPlugins(filename: string) {
       </html>
     `,
   })
-  return [pluginHTML]
+  return pluginHTML
 }
