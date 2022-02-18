@@ -60,7 +60,7 @@ const windowData = fs
 // Preload entries
 const preloadEntries = windowData
   .filter(([, filepath]) => fs.existsSync(path.join(filepath, 'preload.ts')))
-  .map(([name, filepath]) => [name, path.join(filepath, 'preload.ts')])
+  .map(([name, filepath]) => [`${name}-preload`, path.join(filepath, 'preload.ts')])
 
 const preloadConfig: Configuration = {
   ...commonConfig,
@@ -72,13 +72,13 @@ const preloadConfig: Configuration = {
 // Renderer entries
 const rendererEntries = windowData
   .filter(([, filepath]) => fs.existsSync(path.join(filepath, 'renderer.tsx')))
-  .map(([name, filepath]) => [name, path.join(filepath, 'renderer.tsx')])
+  .map(([name, filepath]) => [`${name}-renderer`, path.join(filepath, 'renderer.tsx')])
 
 const rendererConfig: Configuration = {
   ...commonConfig,
   entry: Object.fromEntries(rendererEntries),
   plugins: commonPlugins.concat(
-    Object.values(preloadEntries).map(
+    Object.values(rendererEntries).map(
       ([filename]) =>
         getBrowserPlugin(filename) as unknown as WebpackPluginInstance
     )
