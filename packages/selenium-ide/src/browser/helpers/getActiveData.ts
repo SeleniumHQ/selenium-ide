@@ -22,17 +22,11 @@ export const getActiveSuite = (session: CoreSessionData): SuiteShape => {
 export const getActiveTest = (session: CoreSessionData): TestShape => {
   const { project, state: { activeTestID } } = session
 
-  return useMemo(
-    () => project.tests.find(hasID(activeTestID)) || defaultTest,
-    [activeTestID, project.id]
-  )
+  return project.tests.find(hasID(activeTestID)) || defaultTest;
 }
 
 export const getActiveCommand = (session: CoreSessionData, activeTest?: TestShape): CommandShape => {
   const { state: { activeCommandID } } = session
   const _activeTest = activeTest || getActiveTest(session);
-  return useMemo(
-    () => _activeTest.commands.find(hasID(activeCommandID)) || defaultCommand,
-    [activeCommandID, _activeTest.id]
-  )
+  return _activeTest.commands.find(hasID(activeCommandID)) || defaultCommand;
 };

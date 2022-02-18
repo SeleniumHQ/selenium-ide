@@ -6,9 +6,9 @@ export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...panelConfig,
-    x: display.bounds.width - 500,
+    x: display.bounds.width - 250,
     y: Math.floor(display.bounds.height / 2 - 310),
-    width: 500,
+    width: 250,
     height: 600,
     title: 'Command List',
   }
