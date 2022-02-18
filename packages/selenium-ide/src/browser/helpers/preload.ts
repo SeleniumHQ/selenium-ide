@@ -1,6 +1,6 @@
 import { contextBridge } from 'electron'
 import api from 'browser/api'
-import apiMutators from 'browser/api/Mutator'
+import apiMutators from 'browser/api/mutator'
 
 /**
  * Binds our API on initialization
