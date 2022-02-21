@@ -60,7 +60,10 @@ const windowData = fs
 // Preload entries
 const preloadEntries = windowData
   .filter(([, filepath]) => fs.existsSync(path.join(filepath, 'preload.ts')))
-  .map(([name, filepath]) => [`${name}-preload`, path.join(filepath, 'preload.ts')])
+  .map(([name, filepath]) => [
+    `${name}-preload`,
+    path.join(filepath, 'preload.ts'),
+  ])
 
 const preloadConfig: Configuration = {
   ...commonConfig,
@@ -72,7 +75,10 @@ const preloadConfig: Configuration = {
 // Renderer entries
 const rendererEntries = windowData
   .filter(([, filepath]) => fs.existsSync(path.join(filepath, 'renderer.tsx')))
-  .map(([name, filepath]) => [`${name}-renderer`, path.join(filepath, 'renderer.tsx')])
+  .map(([name, filepath]) => [
+    `${name}-renderer`,
+    path.join(filepath, 'renderer.tsx'),
+  ])
 
 const rendererConfig: Configuration = {
   ...commonConfig,
@@ -98,13 +104,19 @@ const mainConfig: Configuration = {
 export default [mainConfig, preloadConfig, rendererConfig]
 
 function getBrowserPlugin(filename: string) {
+  const componentName = filename.slice(0, -9)
+  const title = componentName
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
   const pluginHTML = new HtmlWebpackPlugin({
-    filename: `${filename.slice(0, -9)}.html`,
+    filename: `${componentName}.html`,
     inject: false,
     templateContent: () => `
       <!doctype html>
       <html>
         <head>
+          <title>${title}</title>
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>

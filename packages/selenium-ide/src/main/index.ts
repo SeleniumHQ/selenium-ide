@@ -8,12 +8,13 @@ import { MenuItemConstructorOptions } from 'electron/main'
 // Enable local debugging
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
-let session: Session;
+let session: Session
 contextMenu({
   prepend: (defaultActions, _parameters, browserWindow, _event) => {
+    session
     const actions: MenuItemConstructorOptions[] = []
     const win = browserWindow as BrowserWindow
-    if (win.focusable) {
+    if (win.title === 'Playback Window') {
       actions.push(defaultActions.inspect())
       return actions
     }
@@ -24,10 +25,9 @@ contextMenu({
   showSearchWithGoogle: false,
 })
 
-
 app.on('ready', async () => {
   session = await createSession(app, store)
-});
+})
 
 let allWindowsClosed = false
 // Respect the OSX convention of having the application in memory even

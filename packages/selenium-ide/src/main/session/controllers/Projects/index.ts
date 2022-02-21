@@ -5,6 +5,14 @@ import defaultProject from 'api/models/project'
 import RecentProjects from './Recent'
 import { BrowserWindow } from 'electron'
 
+const windowNames = [
+  'playback-window',
+  'test-manager',
+  'command-controls',
+  'playback-controls',
+]
+const mainWindowName = windowNames[0]
+const childWindowNames = windowNames.slice(1)
 export default class ProjectsController {
   constructor(session: Session) {
     this.session = session
@@ -15,20 +23,17 @@ export default class ProjectsController {
   project: ProjectShape
   session: Session
   async onProjectLoaded(project: ProjectShape): Promise<void> {
-    this.session.commands.init()
+    const {
+      session: { commands, windows },
+    } = this
+    commands.init()
     this.project = project
-    this.session.windows.close('splash')
-    await this.session.windows.open('project-playback-window')
-    await this.session.windows.open('project-test-list')
-    await this.session.windows.open('project-test-command-list')
-    await this.session.windows.open('project-playback-controls')
-
-    const childWindows = [
-      await this.session.windows.get('project-test-list'),
-      await this.session.windows.get('project-test-command-list'),
-      await this.session.windows.get('project-playback-controls'),
-    ]
-    const mainWindow = await this.session.windows.get('project-playback-window')
+    windows.close('splash')
+    await Promise.all(windowNames.map((name: string) => windows.open(name)))
+    const mainWindow = await windows.get(mainWindowName)
+    const childWindows = await Promise.all(
+      childWindowNames.map((name) => windows.get(name))
+    )
     mainWindow.on('focus', () => {
       childWindows.forEach((win) => {
         win.showInactive()

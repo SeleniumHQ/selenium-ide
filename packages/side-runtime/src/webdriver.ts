@@ -132,19 +132,21 @@ export default class WebDriverExecutor {
         .forBrowser(browserName)
         .build()
     }
+    // Figure out playback window from document.title
     if (!this.windowHandle) {
       const handles = await this.driver.getAllWindowHandles()
       for (let i = 0, ii = handles.length; i !== ii; i++) {
         await this.driver.switchTo().window(handles[i])
-        const isPlaybackWindow = await this.driver.executeScript(
-          'return window.playback;'
-        )
-        if (isPlaybackWindow) {
+        const title = await this.driver.getTitle();
+        if (title === 'Playback Window') {
           this.windowHandle = handles[i]
           break
         }
       }
+    } else {
+      this.driver.switchTo().window(this.windowHandle)
     }
+    // Figure out playback window on other side by checking window.title
     const electronWindows = BrowserWindow.getAllWindows()
     this.window = electronWindows.find(
       (window) => window.title === 'Playback Window'
