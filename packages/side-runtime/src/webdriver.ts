@@ -137,7 +137,7 @@ export default class WebDriverExecutor {
       const handles = await this.driver.getAllWindowHandles()
       for (let i = 0, ii = handles.length; i !== ii; i++) {
         await this.driver.switchTo().window(handles[i])
-        const title = await this.driver.getTitle();
+        const title = await this.driver.getTitle()
         if (title === 'Playback Window') {
           this.windowHandle = handles[i]
           break
@@ -147,10 +147,12 @@ export default class WebDriverExecutor {
       this.driver.switchTo().window(this.windowHandle)
     }
     // Figure out playback window on other side by checking window.title
-    const electronWindows = BrowserWindow.getAllWindows()
-    this.window = electronWindows.find(
-      (window) => window.title === 'Playback Window'
-    ) as BrowserWindow  
+    if (!this.window) {
+      const electronWindows = BrowserWindow.getAllWindows()
+      this.window = electronWindows.find(
+        (window) => window.title === 'Playback Window'
+      ) as BrowserWindow
+    }
     this.initialized = true
   }
 
