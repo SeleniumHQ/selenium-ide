@@ -41,7 +41,7 @@ export default class DriverController {
     capabilities = {
       'goog:chromeOptions': {
         debuggerAddress: 'localhost:8315',
-        w3c: false,
+        w3c: true,
       },
     },
     // The "9515" is the port opened by chrome driver.

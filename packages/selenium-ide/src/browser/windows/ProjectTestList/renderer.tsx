@@ -1,6 +1,5 @@
 import loadingID from 'api/constants/loadingID'
-import AppWrapper from 'browser/components/AppWrapper'
-import PanelNav from 'browser/components/PanelNav'
+import AppPanelWrapper from 'browser/components/AppPanelWrapper'
 import subscribeToSession from 'browser/helpers/subscribeToSession'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -18,10 +17,9 @@ const ProjectTestList = () => {
   }
 
   return (
-    <AppWrapper>
-      <PanelNav />
+    <AppPanelWrapper>
       <TestList activeTest={activeTestID} tests={project.tests} />
-    </AppWrapper>
+    </AppPanelWrapper>
   )
 }
 

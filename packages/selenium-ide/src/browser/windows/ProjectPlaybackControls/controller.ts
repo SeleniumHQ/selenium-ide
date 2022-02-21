@@ -6,6 +6,7 @@ export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...panelConfig,
+    alwaysOnTop: true,
     x: Math.floor(display.bounds.width / 2 - 200),
     y: 20,
     width: 400,

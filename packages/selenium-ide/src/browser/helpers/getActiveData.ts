@@ -3,7 +3,6 @@ import defaultCommand from 'api/models/project/command'
 import defaultSuite from 'api/models/project/suite'
 import defaultTest from 'api/models/project/test'
 import { CoreSessionData } from 'api/types'
-import { useMemo } from 'react'
 
 const hasID =
   (id2: string) =>
@@ -13,10 +12,7 @@ const hasID =
 export const getActiveSuite = (session: CoreSessionData): SuiteShape => {
   const { project, state: { activeSuiteID } } = session
 
-  return useMemo(
-    () => project.suites.find(hasID(activeSuiteID)) || defaultSuite,
-    [activeSuiteID, project.id]
-  )
+  return project.suites.find(hasID(activeSuiteID)) || defaultSuite;
 }
 
 export const getActiveTest = (session: CoreSessionData): TestShape => {

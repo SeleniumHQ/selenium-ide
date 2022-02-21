@@ -1,5 +1,4 @@
 export * as Chromedriver from './Chromedriver/controller'
-export * as ProjectCommandEditor from './ProjectCommandEditor/controller'
 export * as ProjectPlaybackControls from './ProjectPlaybackControls/controller'
 export * as ProjectPlaybackWindow from './ProjectPlaybackWindow/controller'
 export * as ProjectTestCommandList from './ProjectTestCommandList/controller'

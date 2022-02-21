@@ -9,8 +9,9 @@ export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...dimensions,
-    x: Math.floor(display.bounds.width / 2) - Math.floor(dimensions.width / 2) - 150,
-    y: Math.floor(display.bounds.height / 2) - Math.floor(dimensions.height / 2),
+    focusable: true,
+    x: Math.floor(display.bounds.width / 2) - Math.floor(dimensions.width / 2) - 50,
+    y: Math.floor(display.bounds.height / 2) - Math.floor(dimensions.height / 2) - 50,
     title: 'Playback Window',
   }
 }

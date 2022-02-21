@@ -2,16 +2,18 @@ import React from 'react'
 import { Paper } from '@material-ui/core'
 
 interface PanelNavProps {
-  vertical?: boolean
+  horizontal?: boolean
 }
 
-const PanelNav: React.FC<PanelNavProps> = ({ children, vertical }) => (
+export const NavSize = 14
+
+const PanelNav: React.FC<PanelNavProps> = ({ children, horizontal }) => (
   <Paper
-    className={vertical ? 'draggable panel-v-nav' : 'draggable panel-nav'}
+    className={horizontal ? 'draggable panel-v-nav my-1' : 'draggable panel-nav mx-1'}
     square
     variant="outlined"
   >
-    <Paper className='fill' elevation={4} square>
+    <Paper className='fill' elevation={16} square>
       {children}
     </Paper>
   </Paper>

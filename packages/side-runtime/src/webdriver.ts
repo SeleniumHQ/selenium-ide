@@ -145,7 +145,10 @@ export default class WebDriverExecutor {
         }
       }
     }
-    this.window = BrowserWindow.getFocusedWindow() as BrowserWindow
+    const electronWindows = BrowserWindow.getAllWindows()
+    this.window = electronWindows.find(
+      (window) => window.title === 'Playback Window'
+    ) as BrowserWindow  
     this.initialized = true
   }
 
@@ -194,7 +197,6 @@ export default class WebDriverExecutor {
     if (commandObject.opensWindow) {
       this[state].openedWindows = await this.driver.getAllWindowHandles()
     }
-
     await this.executeHook('onBeforeCommand', { command: commandObject })
   }
 

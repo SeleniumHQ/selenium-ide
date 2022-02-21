@@ -1,6 +1,5 @@
 import loadingID from 'api/constants/loadingID'
-import AppWrapper from 'browser/components/AppWrapper'
-import PanelNav from 'browser/components/PanelNav'
+import AppPanelWrapper from 'browser/components/AppPanelWrapper'
 import subscribeToSession from 'browser/helpers/subscribeToSession'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -14,10 +13,9 @@ const ProjectPlaybackControls = () => {
   }
 
   return (
-    <AppWrapper className='no-overflow-y'>
-      <PanelNav vertical />
+    <AppPanelWrapper horizontal>
       <TestControls state={state} />
-    </AppWrapper>
+    </AppPanelWrapper>
   )
 }
 

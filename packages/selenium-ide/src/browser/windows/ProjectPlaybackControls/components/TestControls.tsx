@@ -15,7 +15,7 @@ export interface TestControlsProps {
 const activeStates = ['recording', 'playing']
 
 const TestControls: FC<TestControlsProps> = ({ state }) => (
-  <div className="outside-v-nav">
+  <>
     {activeStates.includes(state.status) ? (
       <>
         <Tooltip title="Pause" aria-label="pause">
@@ -50,7 +50,7 @@ const TestControls: FC<TestControlsProps> = ({ state }) => (
         </Tooltip>
       </>
     )}
-  </div>
+  </>
 )
 
 export default TestControls

@@ -22,13 +22,11 @@ export default class ProjectsController {
     await this.session.windows.open('project-test-list')
     await this.session.windows.open('project-test-command-list')
     await this.session.windows.open('project-playback-controls')
-    await this.session.windows.open('project-command-editor')
 
     const childWindows = [
       await this.session.windows.get('project-test-list'),
       await this.session.windows.get('project-test-command-list'),
       await this.session.windows.get('project-playback-controls'),
-      await this.session.windows.get('project-command-editor'),
     ]
     const mainWindow = await this.session.windows.get('project-playback-window')
     mainWindow.on('focus', () => {

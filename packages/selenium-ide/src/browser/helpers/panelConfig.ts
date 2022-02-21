@@ -1,7 +1,6 @@
 import { BrowserWindowConstructorOptions } from 'electron'
 
 const panelConfig: BrowserWindowConstructorOptions = {
-  alwaysOnTop: true,
   center: false,
   frame: false,
   roundedCorners: false,

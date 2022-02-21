@@ -20,6 +20,9 @@
       "path": "./packages/side-runtime"
     },
     {
+      "path": "./packages/side-testkit"
+    },
+    {
       "path": "./packages/webdriver-testkit"
     }
   ]
