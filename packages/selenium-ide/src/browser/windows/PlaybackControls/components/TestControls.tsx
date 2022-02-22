@@ -7,6 +7,7 @@ import RecordIcon from '@material-ui/icons/FiberManualRecord'
 import { StateShape } from 'api/types'
 import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
+import badIndex from 'api/constants/badIndex'
 
 export interface TestControlsProps {
   state: StateShape
@@ -36,7 +37,11 @@ const TestControls: FC<TestControlsProps> = ({ state }) => (
         <Tooltip title="Play" aria-label="play">
           <PlayArrowIcon
             className="button m-2"
-            onClick={() => sideAPI.playback.play(state.activeTestID)}
+            onClick={() => {
+              state.playback.currentIndex === badIndex
+                ? sideAPI.playback.play(state.activeTestID)
+                : sideAPI.playback.resume()
+            }}
           />
         </Tooltip>
         <Tooltip title="Play Suite" aria-label="play-suite">

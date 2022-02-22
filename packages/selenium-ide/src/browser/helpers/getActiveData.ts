@@ -26,3 +26,14 @@ export const getActiveCommand = (session: CoreSessionData, activeTest?: TestShap
   const _activeTest = activeTest || getActiveTest(session);
   return _activeTest.commands.find(hasID(activeCommandID)) || defaultCommand;
 };
+
+export const getActiveCommandIndex = (session: CoreSessionData, activeTest?: TestShape): number => {
+  const { state: { activeCommandID } } = session
+  const _activeTest = activeTest || getActiveTest(session);
+  return _activeTest.commands.findIndex(hasID(activeCommandID));
+};
+
+export const getCommandIndex = (session: CoreSessionData, commandID: string, activeTest?: TestShape): number => {
+  const _activeTest = activeTest || getActiveTest(session);
+  return _activeTest.commands.findIndex(hasID(commandID));
+};

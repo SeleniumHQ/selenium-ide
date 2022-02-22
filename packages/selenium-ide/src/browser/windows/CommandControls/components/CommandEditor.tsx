@@ -5,12 +5,12 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Stack from '@material-ui/core/Stack'
+import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { CommandShape } from '@seleniumhq/side-model'
 import { CoreSessionData } from 'api/types'
 import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC, useMemo } from 'react'
-import UncontrolledTextField from './UncontrolledTextField'
 
 export interface CommandEditorProps {
   command: CommandShape
@@ -89,7 +89,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
           onInputChange={updateFieldAutoComplete('target')}
           options={(command.targets ?? []).map((target) => target.join('='))}
           renderInput={(params) => (
-            <UncontrolledTextField {...params} label="Target" name="target" />
+            <TextField {...params} label="Target" name="target" />
           )}
           size="small"
           value={command.target}
@@ -97,7 +97,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
         <FormHelperText>{commandData.target?.description ?? ''}</FormHelperText>
       </FormControl>
       <FormControl>
-        <UncontrolledTextField
+        <TextField
           disabled={!commandData.value}
           label="Value"
           name="value"
@@ -108,7 +108,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
         <FormHelperText>{commandData.value?.description ?? ''}</FormHelperText>
       </FormControl>
       <FormControl>
-        <UncontrolledTextField
+        <TextField
           label="Comment"
           name="comment"
           onChange={updateField('comment')}

@@ -8,37 +8,44 @@ import { CommandsStateShape } from './command'
  * Playback state, breakpoints, status, whatever is from within a session
  */
 
+export interface PlaybackStateShape {
+  commands: CommandsStateShape
+  currentIndex: number
+  currentTestIndex: number
+  stopIndex: number
+  tests: string[]
+}
+
+export const defaultPlaybackState: PlaybackStateShape = {
+  commands: {},
+  currentIndex: badIndex,
+  currentTestIndex: 0,
+  stopIndex: badIndex,
+  tests: [],
+}
+
 export interface StateShape {
   activeCommandID: string
   activeSuiteID: string
   activeTestID: string
   breakpoints: string[]
   commands: CommandTypes
+  logs: string[]
   status: 'idle' | 'paused' | 'playing' | 'recording'
-  playback: {
-    commands: CommandsStateShape;
-    currentIndex: number
-    currentTestIndex: number
-    stopIndex: number
-    tests: string[]
-  }
+  playback: PlaybackStateShape
 }
 
 export type Shape = StateShape
+
 const action: StateShape = {
   activeCommandID: loadingID,
   activeSuiteID: loadingID,
   activeTestID: loadingID,
   breakpoints: [],
   commands: {},
+  logs: [],
   status: 'idle',
-  playback: {
-    commands: {},
-    currentIndex: badIndex,
-    currentTestIndex: 0,
-    stopIndex: badIndex,
-    tests: [],
-  },
+  playback: defaultPlaybackState,
 }
 
 export default action

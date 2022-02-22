@@ -12,6 +12,7 @@ let session: Session
 contextMenu({
   prepend: (defaultActions, _parameters, browserWindow, _event) => {
     session
+    console.log(_event)
     const actions: MenuItemConstructorOptions[] = []
     const win = browserWindow as BrowserWindow
     if (win.title === 'Playback Window') {

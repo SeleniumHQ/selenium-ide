@@ -154,6 +154,9 @@
 .button {
   cursor: pointer;
 }
+.no-select {
+  user-select: none;
+}
 
 /**
  * Opacity

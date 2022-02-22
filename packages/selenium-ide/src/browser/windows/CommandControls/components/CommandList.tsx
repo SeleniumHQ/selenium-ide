@@ -18,7 +18,7 @@ const CommandList: FC<CommandListProps> = ({
   commands,
 }) => (
   <List
-    className="pos-rel flex flex-col flex-1 overflow-y"
+    className="no-select pos-rel flex flex-col flex-1 overflow-y"
     dense
     sx={{
       borderColor: 'primary.main',

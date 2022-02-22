@@ -5,14 +5,8 @@ import defaultProject from 'api/models/project'
 import RecentProjects from './Recent'
 import { BrowserWindow } from 'electron'
 
-const windowNames = [
-  'playback-window',
-  'test-manager',
-  'command-controls',
-  'playback-controls',
-]
-const mainWindowName = windowNames[0]
-const childWindowNames = windowNames.slice(1)
+const mainWindowNames = ['playback-window', 'command-controls']
+const childWindowNames = ['test-manager', 'playback-controls']
 export default class ProjectsController {
   constructor(session: Session) {
     this.session = session
@@ -29,31 +23,39 @@ export default class ProjectsController {
     commands.init()
     this.project = project
     windows.close('splash')
-    await Promise.all(windowNames.map((name: string) => windows.open(name)))
-    const mainWindow = await windows.get(mainWindowName)
+    await Promise.all(
+      mainWindowNames
+        .concat(childWindowNames)
+        .map((name: string) => windows.open(name))
+    )
+    const mainWindows = await Promise.all(
+      mainWindowNames.map((name) => windows.get(name))
+    )
     const childWindows = await Promise.all(
       childWindowNames.map((name) => windows.get(name))
     )
-    mainWindow.on('focus', () => {
-      childWindows.forEach((win) => {
-        win.showInactive()
-      })
-    })
-    mainWindow.on('blur', () => {
-      const windows = BrowserWindow.getAllWindows()
-      const anyWindowFocused = windows.reduce((focused, window) => {
-        if (focused) return true
-        return window.isFocused()
-      }, false)
-      if (!anyWindowFocused) {
+    mainWindows.forEach((mainWindow) => {
+      mainWindow.on('focus', () => {
         childWindows.forEach((win) => {
-          win.hide()
+          win.showInactive()
         })
-      }
-    })
-    mainWindow.on('closed', () => {
-      childWindows.forEach((win) => {
-        win.destroy()
+      })
+      mainWindow.on('blur', () => {
+        const windows = BrowserWindow.getAllWindows()
+        const anyWindowFocused = windows.reduce((focused, window) => {
+          if (focused) return true
+          return window.isFocused()
+        }, false)
+        if (!anyWindowFocused) {
+          childWindows.forEach((win) => {
+            win.hide()
+          })
+        }
+      })
+      mainWindow.on('closed', () => {
+        childWindows.forEach((win) => {
+          win.destroy()
+        })
       })
     })
   }

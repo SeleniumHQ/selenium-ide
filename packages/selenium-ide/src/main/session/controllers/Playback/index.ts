@@ -22,9 +22,11 @@ export default class PlaybackController {
 
   async pause() {
     this.isPlaying = false
+    await this.playback.pause()
   }
   async resume() {
     this.isPlaying = true
+    this.playback.resume()
   }
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
     this.playingTest = testID
