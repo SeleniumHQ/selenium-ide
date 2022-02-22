@@ -5,6 +5,7 @@ import * as driver from './commands/driver'
 import * as playback from './commands/playback'
 import * as plugins from './commands/plugins'
 import * as projects from './commands/projects'
+import * as recorder from './commands/recorder'
 import * as state from './commands/state'
 import * as suites from './commands/suites'
 import * as tests from './commands/tests'
@@ -19,6 +20,7 @@ export interface Api extends BaseApi {
   playback: typeof playback
   plugins: typeof plugins
   projects: typeof projects
+  recorder: typeof recorder
   state: typeof state
   suites: typeof suites
   tests: typeof tests
@@ -33,6 +35,7 @@ export const api: Api = {
   playback,
   plugins,
   projects,
+  recorder,
   state,
   suites,
   tests,

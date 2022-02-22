@@ -51,7 +51,11 @@ const TestControls: FC<TestControlsProps> = ({ state }) => (
           />
         </Tooltip>
         <Tooltip title="Record" aria-label="record">
-          <RecordIcon className="button m-2" color="error" />
+          <RecordIcon
+            className="button m-2"
+            color="error"
+            onClick={() => sideAPI.recorder.start(state.activeTestID)}
+          />
         </Tooltip>
       </>
     )}
