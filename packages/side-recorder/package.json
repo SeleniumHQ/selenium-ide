@@ -9,12 +9,9 @@
   "scripts": {
     "build": "webpack",
     "prepublishOnly": "yarn build",
-    "watch": "yarn build -w"
+    "watch": "webpack --watch"
   },
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"

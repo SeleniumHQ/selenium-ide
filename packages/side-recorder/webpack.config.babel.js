@@ -34,7 +34,7 @@ module.exports = {
     minimize: true,
   },
   output: {
-    path: path.resolve(__dirname, 'build/assets'),
+    path: path.resolve(__dirname, 'dist/assets'),
     filename: '[name].js',
     publicPath: '/assets/',
     libraryTarget: 'umd',

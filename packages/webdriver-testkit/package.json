@@ -10,7 +10,7 @@
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "prepublishOnly": "yarn clean && yarn build",
-    "watch": "yarn build -w",
+    "watch": "tsc --watch",
     "download-drivers": "node ./scripts/download-drivers.js"
   },
   "main": "dist/index.js",

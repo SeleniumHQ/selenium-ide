@@ -1,17 +1,20 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import contextMenu from 'electron-context-menu'
-import { Session } from './types'
+import { MenuItemConstructorOptions } from 'electron/main'
+import path from 'path'
 import store from './store'
 import createSession from './session'
-import { MenuItemConstructorOptions } from 'electron/main'
 
 // Enable local debugging
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
-let session: Session
+// Add record extension
+const recorderExtension = require.resolve('@seleniumhq/side-recorder')
+// @ts-expect-error
+session.loadExtension(path.join(recorderExtension, 'dist'));
+
 contextMenu({
   prepend: (defaultActions, _parameters, browserWindow, _event) => {
-    session
     console.log(_event)
     const actions: MenuItemConstructorOptions[] = []
     const win = browserWindow as BrowserWindow
@@ -27,7 +30,7 @@ contextMenu({
 })
 
 app.on('ready', async () => {
-  session = await createSession(app, store)
+  await createSession(app, store)
 })
 
 let allWindowsClosed = false
@@ -45,6 +48,6 @@ app.on('window-all-closed', () => {
 app.on('activate', async () => {
   if (allWindowsClosed) {
     allWindowsClosed = false
-    session = await createSession(app, store)
+    await createSession(app, store)
   }
 })

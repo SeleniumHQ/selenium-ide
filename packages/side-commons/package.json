@@ -10,7 +10,7 @@
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
     "prepublishOnly": "yarn clean && yarn build",
-    "watch": "yarn build -w"
+    "watch": "tsc --watch"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

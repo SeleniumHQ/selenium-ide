@@ -65,6 +65,8 @@
     "@material-ui/styled-engine-sc": "^5.0.0-beta.1",
     "@seleniumhq/get-driver": "^3.5.10",
     "@seleniumhq/side-model": "^3.5.10",
+    "@seleniumhq/side-recorder": "^3.5.10",
+    "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
     "@seleniumhq/side-runtime": "^3.5.10",
     "electron-context-menu": "^3.1.2",
     "electron-store": "^8.0.0",

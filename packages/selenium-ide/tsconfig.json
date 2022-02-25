@@ -12,4 +12,27 @@
     "rootDir": "src",
     "types": ["electron", "webpack-env"]
   },
+  "references": [
+    {
+      "path": "./packages/browser-info"
+    },
+    {
+      "path": "./packages/get-driver"
+    },
+    {
+      "path": "./packages/side-commons"
+    },
+    {
+      "path": "./packages/side-migrate"
+    },
+    {
+      "path": "./packages/side-model"
+    },
+    {
+      "path": "./packages/side-recorder-postprocessor"
+    },
+    {
+      "path": "./packages/side-runtime"
+    }
+  ]
 }

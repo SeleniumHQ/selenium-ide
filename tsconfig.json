@@ -17,6 +17,9 @@
       "path": "./packages/side-model"
     },
     {
+      "path": "./packages/side-recorder-postprocessor"
+    },
+    {
       "path": "./packages/side-runtime"
     },
     {

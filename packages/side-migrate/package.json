@@ -10,7 +10,7 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn clean && yarn build",
-    "watch": "yarn build -w"
+    "watch": "tsc --watch"
   },
   "main": "dist/migrate.js",
   "files": [

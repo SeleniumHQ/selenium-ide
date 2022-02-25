@@ -18,30 +18,35 @@
 import { URL } from 'url'
 import EventEmitter from 'events'
 import { events } from '@seleniumhq/side-commons'
+import { CommandShape } from '@seleniumhq/side-model'
 
 const EE = Symbol('event-emitter')
 
 export default class RecordPostprocessor {
-  constructor(baseUrl, commands = []) {
+  constructor(baseUrl: string, commands: CommandShape[] = []) {
     this.baseUrl = baseUrl
     this.commands = [...commands]
     this[EE] = new EventEmitter()
     events.mergeEventEmitter(this, this[EE])
   }
+  baseUrl: string
+  commands: CommandShape[]
+  lastRecordedCommand?: CommandShape;
+  [EE]: EventEmitter
 
-  add(index, step) {
+  add(index: number, step: CommandShape) {
     this.commands.splice(index, 0, step)
   }
 
-  remove(index) {
+  remove(index: number) {
     this.commands.splice(index, 1)
   }
 
-  replace(index, step) {
+  replace(index: number, step: CommandShape) {
     this.commands.splice(index, 1, step)
   }
 
-  record(index, { command, target, value }) {
+  record(index: number, { command, target, value }: CommandShape) {
     const newCommand = this.parseCommand(command, target, value)
     this._splice(index, 0, newCommand)
     this.lastRecordedCommand = newCommand
@@ -51,7 +56,7 @@ export default class RecordPostprocessor {
     this.postprocessDoubleClick(newCommand)
   }
 
-  recordOpensWindow(windowHandleName) {
+  recordOpensWindow(windowHandleName: string) {
     if (this.lastRecordedCommand) {
       const command = this.lastRecordedCommand
       command.opensWindow = true
@@ -60,15 +65,15 @@ export default class RecordPostprocessor {
     }
   }
 
-  parseCommand(command, target, value) {
+  parseCommand(command: string, target: string, value: string): CommandShape {
     if (command === 'open') {
       return {
         command,
         target: this.parseRecordedUrl(target),
         value: '',
-      }
+      } as CommandShape
     } else {
-      let step = {
+      let step: Partial<CommandShape> = {
         command,
       }
       if (Array.isArray(target)) {
@@ -83,11 +88,11 @@ export default class RecordPostprocessor {
       } else {
         step.value = value
       }
-      return step
+      return step as CommandShape
     }
   }
 
-  parseRecordedUrl(recordedUrl) {
+  parseRecordedUrl(recordedUrl: string) {
     const url = new URL(recordedUrl)
     if (url.origin === this.baseUrl) {
       return `${url.pathname}${url.search}`
@@ -96,10 +101,11 @@ export default class RecordPostprocessor {
     }
   }
 
-  postprocessDoubleClick(command) {
-    const isDoubleClick = command =>
+  postprocessDoubleClick(command: CommandShape) {
+    const isDoubleClick = (command: string) =>
       command === 'doubleClickAt' || command === 'doubleClick'
-    const isClick = command => command === 'click' || command === 'clickAt'
+    const isClick = (command: string) =>
+      command === 'click' || command === 'clickAt'
     if (isDoubleClick(command.command) && this.commands.length >= 3) {
       const index = this.commands.indexOf(command)
       const lastCommand = this.commands[index - 1]
@@ -115,8 +121,9 @@ export default class RecordPostprocessor {
   }
 
   postprocessSelectWindow() {
-    const command = {
+    const command: CommandShape = {
       command: 'storeWindowHandle',
+      id: 'storeWindowHandle-root',
       target: 'root',
       value: '',
     }
@@ -136,7 +143,7 @@ export default class RecordPostprocessor {
     this._splice(0, 0, command)
   }
 
-  _splice(index, removeCount, ...toAdd) {
+  _splice(index: number, removeCount: number, ...toAdd: CommandShape[]) {
     for (let i = 0; i < removeCount; i++) {
       const command = this.commands[index]
       this.commands.splice(index, 1)

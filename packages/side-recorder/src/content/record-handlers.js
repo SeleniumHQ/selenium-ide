@@ -18,7 +18,7 @@
 
 import browser from 'webextension-polyfill'
 import LocatorBuilders from './locator-builders'
-import { isTest, isFirefox } from './utils'
+import { isTest } from './utils'
 
 const locatorBuilders = new LocatorBuilders(window)
 export const handlers = []
