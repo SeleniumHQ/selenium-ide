@@ -35,7 +35,7 @@ export function isFirefox() {
  *
  * @param locator  the locator to parse
  */
-export function parse_locator(locator) {
+export function parse_locator(locator: string) {
   if (!locator) {
     throw new TypeError('Locator cannot be empty')
   }
@@ -56,7 +56,7 @@ export function parse_locator(locator) {
  *
  * @param element  an HTMLElement
  */
-export function getTagName(element) {
+export function getTagName(element: HTMLElement) {
   let tagName
   if (element && element.tagName && element.tagName.toLowerCase) {
     tagName = element.tagName.toLowerCase()

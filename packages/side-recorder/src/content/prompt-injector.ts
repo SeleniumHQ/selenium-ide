@@ -47,13 +47,8 @@ export function detach() {
 
 function attachPromptRecorder(record) {
   if (window === window.top) {
-    window.addEventListener('message', function(event) {
-      if (
-        event.source &&
-        event.source.top == window &&
-        event.data &&
-        event.data.direction == 'from-page-script'
-      ) {
+    window.addEventListener('message', function (event) {
+      if (event.data?.direction == 'from-page-script') {
         if (event.data.recordedType) {
           switch (event.data.recordedType) {
             case 'prompt':

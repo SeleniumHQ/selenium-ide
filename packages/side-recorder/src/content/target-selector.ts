@@ -17,8 +17,10 @@
 
 import browser from 'webextension-polyfill'
 
+type TargetSelectorCallback = (e: TargetSelector['e'], win: Window) => void
+
 export default class TargetSelector {
-  constructor(callback, cleanupCallback) {
+  constructor(callback: TargetSelectorCallback, cleanupCallback?: () => void) {
     this.callback = callback
     this.cleanupCallback = cleanupCallback
 
@@ -39,6 +41,14 @@ export default class TargetSelector {
     doc.addEventListener('click', this, true)
     doc.addEventListener('mouseout', this, true)
   }
+  banner: HTMLDivElement 
+  callback: TargetSelectorCallback
+  cleanupCallback: () => void;
+  div: HTMLDivElement
+  e: null
+  header: HTMLDivElement
+  r: null | Record<string, number>
+  win: Window
 
   cleanup() {
     try {

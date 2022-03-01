@@ -6,7 +6,7 @@
     "paths": {
       "api/*": ["./src/api/*"],
       "browser/*": ["./src/browser/*"],
-      "main/*": ["./src/main/*"],
+      "main/*": ["./src/main/*"]
     },
     "outDir": "dist",
     "rootDir": "src",
@@ -14,25 +14,25 @@
   },
   "references": [
     {
-      "path": "./packages/browser-info"
+      "path": "../browser-info"
     },
     {
-      "path": "./packages/get-driver"
+      "path": "../get-driver"
     },
     {
-      "path": "./packages/side-commons"
+      "path": "../side-commons"
     },
     {
-      "path": "./packages/side-migrate"
+      "path": "../side-migrate"
     },
     {
-      "path": "./packages/side-model"
+      "path": "../side-model"
     },
     {
-      "path": "./packages/side-recorder-postprocessor"
+      "path": "../side-recorder-postprocessor"
     },
     {
-      "path": "./packages/side-runtime"
+      "path": "../side-runtime"
     }
   ]
 }

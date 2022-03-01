@@ -18,16 +18,35 @@
 import browser from 'webextension-polyfill'
 import { handlers, observers } from './record-handlers'
 import { attach, detach } from './prompt-injector'
+import {
+  EventHandler,
+  ExpandedMessageEvent,
+  ExpandedMessageHandler,
+  ExpandedMutationObserver,
+} from '../types'
+
+export interface RecordingState {
+  typeTarget: HTMLElement | null
+  typeLock: number
+  focusTarget: HTMLInputElement | null
+  focusValue: string | null
+  tempValue: string | null
+  preventType: boolean
+  preventClickTwice: boolean
+  preventClick: boolean
+  enterTarget: HTMLElement | null
+  enterValue: string | null
+  tabCheck: HTMLElement | null
+}
 
 /**
  * @param {Window} window
  */
 export default class Recorder {
-  constructor(window) {
+  constructor(window: Window) {
     this.window = window
     this.eventListeners = {}
     this.attached = false
-    this.recordingState = {}
     this.frameLocation = ''
     this.inputTypes = Recorder.inputTypes
     this.recalculateFrameLocation = this.recalculateFrameLocation.bind(this)
@@ -35,17 +54,23 @@ export default class Recorder {
     this.detachRecorderHandler = this.detachRecorderHandler.bind(this)
     this.setWindowHandle = this.setWindowHandle.bind(this)
 
-    this.window.addEventListener('message', this.setWindowHandle)
     this.window.addEventListener('message', this.setActiveContext)
+    // @ts-expect-error
+    this.window.addEventListener('message', this.setWindowHandle)
+    // @ts-expect-error
     browser.runtime.onMessage.addListener(this.recalculateFrameLocation)
+    // @ts-expect-error
     browser.runtime.onMessage.addListener(this.attachRecorderHandler)
+    // @ts-expect-error
     browser.runtime.onMessage.addListener(this.detachRecorderHandler)
+    // @ts-expect-error
+    this.recordingState = {}
 
     browser.runtime
       .sendMessage({
         attachRecorderRequest: true,
       })
-      .then(shouldAttach => {
+      .then((shouldAttach) => {
         if (shouldAttach) {
           this.addRecorderTracingAttribute()
           this.attach()
@@ -59,19 +84,32 @@ export default class Recorder {
       await this.getFrameLocation()
     })()
   }
-
+  window: Window
+  eventListeners: Record<string, EventListener[]>
+  attached: boolean = false
+  recordingState: RecordingState
+  frameLocation: string
+  inputTypes: any[]
   addRecorderTracingAttribute() {
     this.window.document.body.setAttribute('data-side-attach-once-loaded', '')
   }
 
-  attachRecorderHandler(message, _sender, sendResponse) {
+  attachRecorderHandler: ExpandedMessageHandler = (
+    message,
+    _sender,
+    sendResponse
+  ) => {
     if (message.attachRecorder) {
       this.attach()
       sendResponse(true)
     }
   }
 
-  detachRecorderHandler(message, _sender, sendResponse) {
+  detachRecorderHandler: ExpandedMessageHandler = (
+    message,
+    _sender,
+    sendResponse
+  ) => {
     if (message.detachRecorder) {
       this.detach()
       sendResponse(true)
@@ -79,13 +117,19 @@ export default class Recorder {
   }
 
   /* record */
-  record(command, target, value, insertBeforeLastCommand, actualFrameLocation) {
+  record(
+    command: string,
+    target: string | string[][],
+    value: string | string[][],
+    insertBeforeLastCommand: boolean = false,
+    actualFrameLocation?: string
+  ) {
     return browser.runtime
       .sendMessage({
-        command: command,
-        target: target,
-        value: value,
-        insertBeforeLastCommand: insertBeforeLastCommand,
+        command,
+        target,
+        value,
+        insertBeforeLastCommand,
         frameLocation:
           actualFrameLocation != undefined
             ? actualFrameLocation
@@ -96,7 +140,7 @@ export default class Recorder {
       })
   }
 
-  setWindowHandle(event) {
+  setWindowHandle(event: ExpandedMessageEvent) {
     if (
       event.data &&
       event.data.direction === 'from-page-script' &&
@@ -109,7 +153,7 @@ export default class Recorder {
           sessionId: event.data.args.sessionId,
         })
         .then(() => {
-          event.source.postMessage(
+          ;(event.source as Window).postMessage(
             {
               id: event.data.id,
               direction: 'from-content-script',
@@ -120,7 +164,7 @@ export default class Recorder {
     }
   }
 
-  setActiveContext(event) {
+  setActiveContext(event: MessageEvent) {
     if (
       event.data &&
       event.data.direction === 'from-page-script' &&
@@ -133,7 +177,7 @@ export default class Recorder {
           sessionId: event.data.args.sessionId,
         })
         .then(() => {
-          event.source.postMessage(
+          ;(event.source as Window).postMessage(
             {
               id: event.data.id,
               direction: 'from-content-script',
@@ -147,7 +191,7 @@ export default class Recorder {
   /**
    * @param {string} eventKey
    */
-  parseEventKey(eventKey) {
+  parseEventKey(eventKey: string) {
     if (eventKey.match(/^C_/)) {
       return { eventName: eventKey.substring(2), capture: true }
     } else {
@@ -162,8 +206,8 @@ export default class Recorder {
         const eventName = eventInfo.eventName
         const capture = eventInfo.capture
 
-        const handlers = Recorder.eventHandlers[eventKey]
         this.eventListeners[eventKey] = []
+        const handlers = Recorder.eventHandlers[eventKey]
         for (let i = 0; i < handlers.length; i++) {
           this.window.document.addEventListener(
             eventName,
@@ -179,7 +223,7 @@ export default class Recorder {
       }
       this.attached = true
       this.recordingState = {
-        typeTarget: undefined,
+        typeTarget: null,
         typeLock: 0,
         focusTarget: null,
         focusValue: null,
@@ -246,7 +290,11 @@ export default class Recorder {
       .catch(() => {})
   }
 
-  recalculateFrameLocation(message, _sender, sendResponse) {
+  recalculateFrameLocation: ExpandedMessageHandler = (
+    message,
+    _sender,
+    sendResponse
+  ) => {
     if (message.recalculateFrameLocation) {
       ;(async () => {
         this.frameLocation = ''
@@ -255,68 +303,68 @@ export default class Recorder {
       })()
       return true
     }
+    return undefined
   }
-}
 
-/** @type {{ [key: string]: EventListener[] }} */
-Recorder.eventHandlers = {}
-/** @type {{ [observerName: string]: MutationObserver }} */
-Recorder.mutationObservers = {}
-/**
- * @param {string} handlerName
- * @param {string} eventName
- * @param {EventListener} handler
- * @param {boolean} options
- */
-Recorder.addEventHandler = function(handlerName, eventName, handler, options) {
-  handler.handlerName = handlerName
-  if (!options) options = false
-  let key = options ? 'C_' + eventName : eventName
-  if (!this.eventHandlers[key]) {
-    this.eventHandlers[key] = []
+  static eventHandlers: Record<string, EventListener[]> = {}
+  static mutationObservers: Record<string, ExpandedMutationObserver> = {}
+  public static addEventHandler = function (
+    handlerName: string,
+    eventName: string,
+    handler: EventHandler,
+    options?: boolean
+  ) {
+    handler.handlerName = handlerName
+    if (!options) options = false
+    let key = options ? 'C_' + eventName : eventName
+    if (!Recorder.eventHandlers[key]) {
+      Recorder.eventHandlers[key] = []
+    }
+    Recorder.eventHandlers[key].push(handler)
   }
-  this.eventHandlers[key].push(handler)
+
+  public static addMutationObserver = function (
+    observerName: string,
+    callback: MutationCallback,
+    config: any
+  ) {
+    const observer = new MutationObserver(callback) as ExpandedMutationObserver
+    observer.observerName = observerName
+    observer.config = config
+    Recorder.mutationObservers[observerName] = observer
+  }
+
+  static inputTypes: string[] = [
+    'text',
+    'password',
+    'file',
+    'datetime',
+    'datetime-local',
+    'date',
+    'month',
+    'time',
+    'week',
+    'number',
+    'range',
+    'email',
+    'url',
+    'search',
+    'tel',
+    'color',
+  ]
 }
-
-/**
- * @param {string} observerName
- * @param {MutationCallback} callback
- */
-Recorder.addMutationObserver = function(observerName, callback, config) {
-  const observer = new MutationObserver(callback)
-  observer.observerName = observerName
-  observer.config = config
-  this.mutationObservers[observerName] = observer
-}
-
-Recorder.inputTypes = [
-  'text',
-  'password',
-  'file',
-  'datetime',
-  'datetime-local',
-  'date',
-  'month',
-  'time',
-  'week',
-  'number',
-  'range',
-  'email',
-  'url',
-  'search',
-  'tel',
-  'color',
-]
-
-handlers.forEach(handler => {
+handlers.forEach((handler) => {
   Recorder.addEventHandler(...handler)
 })
 
-observers.forEach(observer => {
+observers.forEach((observer) => {
   Recorder.addMutationObserver(...observer)
 })
 
-function updateInputElementsOfRelevantType(action, win) {
+function updateInputElementsOfRelevantType(
+  action: (el: HTMLInputElement) => void,
+  win: Window
+) {
   let inp = win.document.getElementsByTagName('input')
   for (let i = 0; i < inp.length; i++) {
     if (Recorder.inputTypes.indexOf(inp[i].type) >= 0) {
@@ -325,28 +373,29 @@ function updateInputElementsOfRelevantType(action, win) {
   }
 }
 
-function focusEvent(recordingState, event) {
-  recordingState.focusTarget = event.target
-  recordingState.focusValue = recordingState.focusTarget.value
+function focusEvent(recordingState: RecordingState, event: FocusEvent) {
+  const target = event.target as HTMLInputElement
+  recordingState.focusTarget = target
+  recordingState.focusValue = (event.target as HTMLInputElement).value || ''
   recordingState.tempValue = recordingState.focusValue
   recordingState.preventType = false
 }
 
-function blurEvent(recordingState) {
+function blurEvent(recordingState: RecordingState) {
   recordingState.focusTarget = null
   recordingState.focusValue = null
   recordingState.tempValue = null
 }
 
-function attachInputListeners(recordingState, win) {
-  updateInputElementsOfRelevantType(input => {
+function attachInputListeners(recordingState: RecordingState, win: Window) {
+  updateInputElementsOfRelevantType((input) => {
     input.addEventListener('focus', focusEvent.bind(null, recordingState))
     input.addEventListener('blur', blurEvent.bind(null, recordingState))
   }, win)
 }
 
-function detachInputListeners(recordingState, win) {
-  updateInputElementsOfRelevantType(input => {
+function detachInputListeners(recordingState: RecordingState, win: Window) {
+  updateInputElementsOfRelevantType((input) => {
     input.removeEventListener('focus', focusEvent.bind(null, recordingState))
     input.removeEventListener('blur', blurEvent.bind(null, recordingState))
   }, win)

@@ -22,7 +22,7 @@ import TargetSelector from './target-selector'
 
 const locatorBuilders = new LocatorBuilders(window)
 
-window.addEventListener('message', event => {
+window.addEventListener('message', (event) => {
   if (
     event.data &&
     event.data.direction === 'from-page-script' &&
@@ -30,18 +30,20 @@ window.addEventListener('message', event => {
   ) {
     const element = window.document.querySelector(event.data.query)
     highlight(element).then(() => {
-      event.source.postMessage(
+      (event.source as Window).postMessage(
         {
           id: event.data.id,
           direction: 'from-content-script',
         },
-        '*'
+        {
+          targetOrigin: '*'
+        }
       )
     })
   }
 })
 
-let targetSelector
+let targetSelector: string
 
 browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === 'select') {
@@ -58,7 +60,7 @@ browser.runtime
   .sendMessage({
     attachSelectorRequest: true,
   })
-  .then(shouldAttach => {
+  .then((shouldAttach) => {
     if (shouldAttach) {
       startSelection()
     }
@@ -66,7 +68,7 @@ browser.runtime
   .catch(() => {})
 
 function startSelection() {
-  targetSelector = new TargetSelector(function(element, win) {
+  targetSelector = new TargetSelector(function (element, win) {
     if (element && win) {
       const target = locatorBuilders.buildAll(element)
       if (target != null && target instanceof Array) {
@@ -88,8 +90,8 @@ function cleanSelection() {
   targetSelector = null
 }
 
-function highlight(element) {
-  return new Promise(res => {
+function highlight(element: HTMLElement): Promise<void> {
+  return new Promise((res) => {
     const elementForInjectingStyle = document.createElement('link')
     elementForInjectingStyle.rel = 'stylesheet'
     elementForInjectingStyle.href = browser.runtime.getURL(
@@ -104,16 +106,15 @@ function highlight(element) {
     const bodyRects = document.documentElement.getBoundingClientRect()
     const elementRects = element.getBoundingClientRect()
     highlightElement.style.left =
-      parseInt(elementRects.left - bodyRects.left) + 'px'
-    highlightElement.style.top =
-      parseInt(elementRects.top - bodyRects.top) + 'px'
-    highlightElement.style.width = parseInt(elementRects.width) + 'px'
-    highlightElement.style.height = parseInt(elementRects.height) + 'px'
+      `${elementRects.left - bodyRects.left}px`
+    highlightElement.style.top = `${elementRects.top - bodyRects.top}px`
+    highlightElement.style.width = `${elementRects.width}px`
+    highlightElement.style.height = `${elementRects.height}px`
     highlightElement.style.position = 'absolute'
     highlightElement.style.zIndex = '100'
     highlightElement.style.display = 'block'
     highlightElement.style.pointerEvents = 'none'
-    scrollIntoViewIfNeeded(highlightElement, { centerIfNeeded: true })
+    scrollIntoViewIfNeeded(highlightElement, { block: 'center' })
     highlightElement.className = 'active-selenium-highlight'
     setTimeout(() => {
       document.body.removeChild(highlightElement)

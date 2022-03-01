@@ -28,6 +28,7 @@ module.exports = {
   mode: isProduction ? 'production' : 'development',
   entry: {
     background: ['./background'],
+    prompt: ['./content/prompt'],
     record: ['./content'],
   },
   optimization: {
@@ -40,47 +41,35 @@ module.exports = {
     libraryTarget: 'umd',
   },
   resolve: {
-    extensions: ['.js', '.json'],
+    extensions: ['.ts', '.js', '.json'],
   },
   module: {
     rules: [
       {
-        // "oneOf" will traverse all following loaders until one will
-        // match the requirements. When no loader matches it will fall
-        // back to the "file" loader at the end of the loader list.
-        oneOf: [
-          // Process JS with Babel.
-          {
-            test: /\.(js)$/,
-            include: [path.resolve(__dirname, 'src')],
-            use: [
-              {
-                loader: 'babel-loader',
-                options: {
-                  compact: true,
-                },
-              },
-            ],
-          },
-          // "file" loader makes sure assets end up in the `build` folder.
-          // When you `import` an asset, you get its filename.
-          // This loader don't uses a "test" so it will catch all modules
-          // that fall through the other loaders.
-          {
-            loader: 'file-loader',
-            // Exclude `js` files to keep "css" loader working as it injects
-            // it's runtime that would otherwise processed through "file" loader.
-            // Also exclude `html` and `json` extensions so they get processed
-            // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
-            options: {
-              name: 'media/[name].[hash:8].[ext]',
-            },
-          },
-          // ** STOP ** Are you adding a new loader?
-          // Make sure to add the new loader(s) before the "file" loader.
-        ],
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          transpileOnly: true,
+        },
       },
+      // "file" loader makes sure assets end up in the `build` folder.
+      // When you `import` an asset, you get its filename.
+      // This loader don't uses a "test" so it will catch all modules
+      // that fall through the other loaders.
+      {
+        loader: 'file-loader',
+        // Exclude `js` files to keep "css" loader working as it injects
+        // it's runtime that would otherwise processed through "file" loader.
+        // Also exclude `html` and `json` extensions so they get processed
+        // by webpacks internal loaders.
+        exclude: [/\.js$/, /\.html$/, /\.json$/],
+        options: {
+          name: 'media/[name].[hash:8].[ext]',
+        },
+      },
+      // ** STOP ** Are you adding a new loader?
+      // Make sure to add the new loader(s) before the "file" loader.
     ],
   },
   plugins: (isProduction
@@ -109,7 +98,6 @@ module.exports = {
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: 'background/config.js', to: './' },
-      { from: 'content/prompt.js', to: './' },
       { from: 'content/highlight.css', to: './' },
       { from: 'manifest.json', to: '../' },
       { from: 'icons', to: '../icons' },

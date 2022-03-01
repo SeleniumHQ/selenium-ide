@@ -2,7 +2,6 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import kebabCase from 'lodash/fp/kebabCase'
-
 import path from 'path'
 import { Configuration, WebpackPluginInstance } from 'webpack'
 

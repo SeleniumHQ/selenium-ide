@@ -38,7 +38,7 @@ const record = (command, target, value, insertBeforeLastCommand) => {
   )
 }
 
-const recordOpensWindow = windowHandleName => {
+const recordOpensWindow = (windowHandleName) => {
   return socket.send(
     JSON.stringify({
       type: 'recordOpensWindow',
@@ -67,7 +67,7 @@ const detach = () => window.recorder.detach()
 
 const selectElement = async (sessionId, windowName) => {
   let tab
-  Object.keys(windowSession.openedTabIds[sessionId]).forEach(tabId => {
+  Object.keys(windowSession.openedTabIds[sessionId]).forEach((tabId) => {
     if (windowSession.openedTabIds[sessionId][tabId] === windowName) {
       tab = tabId
     }
@@ -80,7 +80,7 @@ const selectElement = async (sessionId, windowName) => {
 }
 
 socket.on('open', () => {
-  socket.on('message', data => {
+  socket.on('message', (data) => {
     const { type, payload } = JSON.parse(data)
     if (type === 'attach') {
       attach(payload)
@@ -88,7 +88,7 @@ socket.on('open', () => {
       detach()
     } else if (type === 'select') {
       selectElement(payload.sessionId, payload.windowName)
-        .then(result => {
+        .then((result) => {
           return socket.send(
             JSON.stringify({
               type: 'select',
@@ -98,7 +98,7 @@ socket.on('open', () => {
             })
           )
         })
-        .catch(error => {
+        .catch((error) => {
           return socket.send(
             JSON.stringify({
               type: 'select',

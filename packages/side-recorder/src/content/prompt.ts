@@ -15,16 +15,44 @@
 // specific language governing permissions and limitations
 // under the License.
 
-window.__side = {}
+export {}
+
+interface SideModule {
+  attach: () => void
+  id: number
+  getFrameLocation: () => string
+  handler: (e: MessageEvent) => void
+  highlight: (el: HTMLElement) => void
+  postMessage: (
+    target: Window,
+    message: Record<string, any> & Partial<MessageEvent<any>>,
+    optDomain?: string
+  ) => Promise<Error | any>
+  promises: Record<
+    number,
+    { rej: (e: Error) => void; res: (result: any) => void }
+  >
+  setActiveContext: (sessionId: string) => void
+  setWindowHandle: (handle: string, sessionId: string) => void
+}
+
+declare global {
+  interface Window {
+    __originalPrompt: typeof window['prompt']
+    __originalConfirmation: typeof window['confirm']
+    __originalAlert: typeof window['alert']
+    __side: SideModule
+  }
+}
+
+window.__side = {} as SideModule
 
 window.__originalPrompt = window.prompt
 window.__originalConfirmation = window.confirm
 window.__originalAlert = window.alert
-
 window.__side.id = 0
 window.__side.promises = {}
-
-window.__side.postMessage = async (target, message) => {
+window.__side.postMessage = async (target, message, optDomain = '*') => {
   window.__side.id++
   const p = new Promise((res, rej) => {
     window.__side.promises[window.__side.id] = { res, rej }
@@ -35,13 +63,13 @@ window.__side.postMessage = async (target, message) => {
       direction: 'from-page-script',
       id: window.__side.id,
     },
-    '*'
+    optDomain
   )
 
   return p
 }
 
-window.addEventListener('message', event => {
+window.addEventListener('message', (event) => {
   if (
     event.source == window &&
     event.data &&
@@ -58,7 +86,7 @@ window.addEventListener('message', event => {
   }
 })
 
-window.__side.handler = event => {
+window.__side.handler = (event) => {
   if (
     event.source == window &&
     event.data &&
@@ -86,7 +114,7 @@ function autHasRecorderTracingAttribute() {
 
 function removeRecorderTracingAttribute() {
   if (autHasRecorderTracingAttribute())
-    window.document.body.removeAtrribute('data-side-attach-once-loaded')
+    window.document.body.removeAttribute('data-side-attach-once-loaded')
 }
 
 if (window == window.top) {
@@ -102,7 +130,7 @@ window.__side.getFrameLocation = () => {
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
       if (currentParentWindow.frames[idx] === currentWindow) {
         frameLocation = ':' + idx + frameLocation
-        currentWindow = currentParentWindow
+        currentWindow = currentParentWindow as Window & typeof globalThis
         break
       }
   }
@@ -125,7 +153,7 @@ window.__side.setWindowHandle = async (handle, sessionId) => {
   )
 }
 
-window.__side.setActiveContext = async sessionId => {
+window.__side.setActiveContext = async (sessionId) => {
   let frameLocation = window.__side.getFrameLocation()
   await window.__side.postMessage(
     window,
@@ -141,7 +169,7 @@ window.__side.setActiveContext = async sessionId => {
   )
 }
 
-window.__side.highlight = async element => {
+window.__side.highlight = async (element) => {
   element.setAttribute('data-side-highlight', '')
   await window.__side.postMessage(window, {
     action: 'find',
@@ -151,10 +179,10 @@ window.__side.highlight = async element => {
 }
 
 window.__side.attach = () => {
-  window.prompt = function(text, defaultText) {
+  window.prompt = function (text, defaultText) {
     let result = window.__originalPrompt(text, defaultText)
     let frameLocation = window.__side.getFrameLocation()
-    window.top.postMessage(
+    window.top?.postMessage(
       {
         direction: 'from-page-script',
         recordedType: 'prompt',
@@ -166,10 +194,10 @@ window.__side.attach = () => {
     )
     return result
   }
-  window.confirm = function(text) {
+  window.confirm = function (text) {
     let result = window.__originalConfirmation(text)
     let frameLocation = window.__side.getFrameLocation()
-    window.top.postMessage(
+    window.top?.postMessage(
       {
         direction: 'from-page-script',
         recordedType: 'confirm',
@@ -181,10 +209,10 @@ window.__side.attach = () => {
     )
     return result
   }
-  window.alert = function(text) {
+  window.alert = function (text) {
     let result = window.__originalAlert(text)
     let frameLocation = window.__side.getFrameLocation()
-    window.top.postMessage(
+    window.top?.postMessage(
       {
         direction: 'from-page-script',
         recordedType: 'alert',
