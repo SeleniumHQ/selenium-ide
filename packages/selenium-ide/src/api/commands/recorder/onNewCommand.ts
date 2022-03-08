@@ -3,11 +3,11 @@ import mainEventListener from 'main/api/classes/EventListener'
 
 export type OnNewCommandRecorder = [
   {
-    suite: number
-    test: string
     command: string
-    target: string
-    value: string
+    target: string | string[][]
+    value: string | string[][]
+    insertBeforeLastCommand?: boolean
+    frameLocation?: string
   }
 ]
 

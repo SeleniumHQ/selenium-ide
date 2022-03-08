@@ -1,7 +1,6 @@
 import { ipcRenderer } from 'electron'
 import identity from 'lodash/fp/identity'
 import { ApiHandler, ApiPromiseHandler, ThenArg } from 'api/types'
-import { LoadedWindow } from '../../types'
 
 const doAPI = <HANDLER extends ApiPromiseHandler>(
   path: string,
@@ -17,7 +16,7 @@ const doAPI = <HANDLER extends ApiPromiseHandler>(
   })
 
 interface HandlerConfig {
-  transform: (path: string, context: LoadedWindow) => ApiHandler
+  transform: (path: string, context: Window) => ApiHandler
 }
 
 const defaultHandlerConfig: HandlerConfig = {
@@ -26,7 +25,7 @@ const defaultHandlerConfig: HandlerConfig = {
 
 const Handler =
   <HANDLER extends ApiPromiseHandler>(config = defaultHandlerConfig) =>
-  (path: string, window: LoadedWindow) => {
+  (path: string, window: Window) => {
     const transform = config.transform(path, window) || identity
     return async (
       ...args: Parameters<HANDLER>

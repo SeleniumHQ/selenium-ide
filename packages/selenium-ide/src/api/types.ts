@@ -1,5 +1,4 @@
 import { ProjectShape } from '@seleniumhq/side-model'
-import { LoadedWindow } from 'browser/types'
 import { Session } from 'main/types'
 import { StateShape } from './models/state'
 
@@ -13,7 +12,7 @@ export type ApiPromiseHandler = (...args: any[]) => PromiseLike<any>
 
 export type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 export interface ApiEntry {
-  browser: (path: string, context: LoadedWindow) => any
+  browser: (path: string, context: Window) => any
   main: (path: string, context: Session) => any
   mutator?: (...args: any[]) => any
 }

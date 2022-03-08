@@ -17,15 +17,12 @@
 
 import browser from 'webextension-polyfill'
 
-let selecting
-
 export function select(tabId) {
   return new Promise((res, rej) => {
     ;(async () => {
       if (selecting) {
         await disableSelect()
         selecting.rej(new Error('Different call for selection sent'))
-        // eslint-disable-next-line require-atomic-updates
         selecting = null
       }
       await browser.tabs.sendMessage(tabId, {
@@ -51,13 +48,15 @@ export async function cancelSelect() {
 }
 
 async function disableSelect() {
-  await browser.tabs
-    .sendMessage(selecting.tabId, { action: 'select', selecting: false })
-    .catch(() => {})
+  if (selecting) {
+    await browser.tabs
+      .sendMessage(selecting.tabId, { action: 'select', selecting: false })
+      .catch(() => {})
+  }
 }
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (selecting && message.action === 'select') {
+  if (message.action === 'select') {
     disableSelect().then(() => {
       if (message.selectTarget) {
         selecting.res(message.target)

@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
-
 type TargetSelectorCallback = (e: TargetSelector['e'], win: Window) => void
 
 export default class TargetSelector {
@@ -35,19 +33,22 @@ export default class TargetSelector {
     this.r = null
     if (window === window.top) {
       this.showBanner(doc)
+      // @ts-expect-error
       doc.body.insertBefore(this.banner, div)
     }
     doc.addEventListener('mousemove', this, true)
     doc.addEventListener('click', this, true)
     doc.addEventListener('mouseout', this, true)
   }
-  banner: HTMLDivElement 
+  // @ts-expect-error
+  banner: HTMLDivElement
   callback: TargetSelectorCallback
-  cleanupCallback: () => void;
+  cleanupCallback?: () => void
   div: HTMLDivElement
-  e: null
-  header: HTMLDivElement
-  r: null | Record<string, number>
+  e: HTMLElement | null
+  // @ts-expect-error
+  header: HTMLDivElement | null
+  r: null | DOMRect
   win: Window
 
   cleanup() {
@@ -56,6 +57,7 @@ export default class TargetSelector {
         if (this.div.parentNode) {
           this.div.parentNode.removeChild(this.div)
         }
+        // @ts-expect-error
         this.div = null
       }
       if (this.header) {
@@ -75,20 +77,26 @@ export default class TargetSelector {
         throw e
       }
     }
+    // @ts-expect-error
     this.win = null
     if (this.cleanupCallback) {
       this.cleanupCallback()
     }
   }
 
-  handleEvent(evt) {
+  handleEvent(evt: MouseEvent) {
     switch (evt.type) {
       case 'mousemove':
-        this.highlight(evt.target.ownerDocument, evt.clientX, evt.clientY)
+        this.highlight(
+          // @ts-expect-error
+          evt.target.ownerDocument,
+          evt.clientX,
+          evt.clientY
+        )
         break
       case 'click':
         if (evt.button == 0 && this.e && this.callback) {
-          this.callback(this.e, this.win)
+          this.callback(this.e, this.win as Window)
         } //Right click would cancel the select
         evt.preventDefault()
         evt.stopPropagation()
@@ -101,19 +109,19 @@ export default class TargetSelector {
     }
   }
 
-  highlight(doc, x, y) {
+  highlight(doc: Document, x: number, y: number) {
     if (doc) {
       const e = doc.elementFromPoint(x, y)
       if (e && e.tagName === 'IFRAME') {
         this.removeHighlight()
         this.e = null
       } else if (e && e != this.e) {
-        this.highlightElement(e)
+        this.highlightElement(e as HTMLElement)
       }
     }
   }
 
-  highlightElement(element) {
+  highlightElement(element: HTMLElement) {
     if (element && element != this.e && element !== this.banner) {
       this.e = element
     } else {
@@ -134,8 +142,9 @@ export default class TargetSelector {
       this.r = r
       const style =
         'pointer-events: none; position: absolute; background-color: rgb(78, 171, 230); opacity: 0.4; border: 1px solid #0e0e0e; z-index: 1000000;'
-      const pos = `top:${r.top + this.win.scrollY}px; left:${r.left +
-        this.win.scrollX}px; width:${r.width}px; height:${r.height}px;`
+      const pos = `top:${r.top + this.win.scrollY}px; left:${
+        r.left + this.win.scrollX
+      }px; width:${r.width}px; height:${r.height}px;`
       this.div.setAttribute('style', style + pos)
     } else if (or) {
       this.div.setAttribute('style', 'display: none;')
@@ -146,7 +155,7 @@ export default class TargetSelector {
     this.div.setAttribute('style', 'display: none;')
   }
 
-  showBanner(doc) {
+  showBanner(doc: Document) {
     this.banner = doc.createElement('div')
     this.banner.setAttribute(
       'style',
@@ -157,10 +166,6 @@ export default class TargetSelector {
       'style',
       "pointer-events: none;display: flex;align-items: center;justify-content: center;flex-direction: row;position: fixed;top: 20%;left: 50%;transform: translateX(-50%);background: #f7f7f7;color: #114990;font-size: 22px;font-weight: 200;z-index: 10001;font-family: system, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;box-shadow: 0 7px 10px 0 rgba(0,0,0,0.1);border: 1px black solid; border-radius: 50px;padding: 10px;"
     )
-    const img = doc.createElement('img')
-    img.src = browser.runtime.getURL('/icons/icon_light128.png')
-    img.setAttribute('style', 'width: 28px;margin: 0 10px;')
-    header.appendChild(img)
     const span = doc.createElement('span')
     span.setAttribute(
       'style',

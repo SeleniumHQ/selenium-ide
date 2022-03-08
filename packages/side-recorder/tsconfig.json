@@ -1,10 +1,15 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*"],
-  "compilerOptions": {
-    "jsx": "react",
-    "outDir": "dist",
+  "compilerOptions": {, , "../selenium-ide/src/api/commands/recorder/target-selector.ts""../selenium-ide/src/browser/windows/PlaybackWindow/recorder/__mocks__"
+    "baseUrl": "./src",
     "rootDir": "src",
-    "types": ["electron", "webpack-env"]
-  }
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/__mocks__", "**/__tests__"],
+  "references": [
+    {
+      "path": "../side-recorder-postprocessor"
+    }
+  ]
 }

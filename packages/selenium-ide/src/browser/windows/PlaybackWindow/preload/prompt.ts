@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export {}
-
 interface SideModule {
   attach: () => void
   id: number
@@ -36,32 +34,23 @@ interface SideModule {
   setWindowHandle: (handle: string, sessionId: string) => void
 }
 
-declare global {
-  interface Window {
-    __originalPrompt: typeof window['prompt']
-    __originalConfirmation: typeof window['confirm']
-    __originalAlert: typeof window['alert']
-    __side: SideModule
-  }
-}
-
-window.__side = {} as SideModule
-
 window.__originalPrompt = window.prompt
 window.__originalConfirmation = window.confirm
 window.__originalAlert = window.alert
-window.__side.id = 0
-window.__side.promises = {}
-window.__side.postMessage = async (target, message, optDomain = '*') => {
-  window.__side.id++
+
+const sideModule = {} as SideModule
+sideModule.id = 0
+sideModule.promises = {}
+sideModule.postMessage = async (target, message, optDomain = '*') => {
+  sideModule.id++
   const p = new Promise((res, rej) => {
-    window.__side.promises[window.__side.id] = { res, rej }
+    sideModule.promises[sideModule.id] = { res, rej }
   })
   target.postMessage(
     {
       ...message,
       direction: 'from-page-script',
-      id: window.__side.id,
+      id: sideModule.id,
     },
     optDomain
   )
@@ -77,16 +66,16 @@ window.addEventListener('message', (event) => {
     event.data.id
   ) {
     if (event.data.error) {
-      window.__side.promises[event.data.id].rej(new Error(event.data.message))
+      sideModule.promises[event.data.id].rej(new Error(event.data.message))
     } else {
-      window.__side.promises[event.data.id].res(event.data.result)
+      sideModule.promises[event.data.id].res(event.data.result)
     }
     // potential memory leak so using delete
-    delete window.__side.promises[event.data.id]
+    delete sideModule.promises[event.data.id]
   }
 })
 
-window.__side.handler = (event) => {
+sideModule.handler = (event) => {
   if (
     event.source == window &&
     event.data &&
@@ -95,17 +84,20 @@ window.__side.handler = (event) => {
     if (event.data.attach) {
       attach()
     } else if (event.data.detach) {
-      window.prompt = window.__originalPrompt
-      window.confirm = window.__originalConfirmation
-      window.alert = window.__originalAlert
-      return
+      detach
     }
   }
 }
 
 function attach() {
-  window.__side.attach()
+  sideModule.attach()
   removeRecorderTracingAttribute()
+}
+
+function detach() {
+  window.prompt = window.__originalPrompt
+  window.confirm = window.__originalConfirmation
+  window.alert = window.__originalAlert
 }
 
 function autHasRecorderTracingAttribute() {
@@ -118,10 +110,10 @@ function removeRecorderTracingAttribute() {
 }
 
 if (window == window.top) {
-  window.addEventListener('message', window.__side.handler)
+  window.addEventListener('message', sideModule.handler)
 }
 
-window.__side.getFrameLocation = () => {
+sideModule.getFrameLocation = () => {
   let frameLocation = ''
   let currentWindow = window
   let currentParentWindow
@@ -138,8 +130,8 @@ window.__side.getFrameLocation = () => {
   return frameLocation
 }
 
-window.__side.setWindowHandle = async (handle, sessionId) => {
-  await window.__side.postMessage(
+sideModule.setWindowHandle = async (handle, sessionId) => {
+  await sideModule.postMessage(
     window,
     {
       direction: 'from-page-script',
@@ -153,9 +145,9 @@ window.__side.setWindowHandle = async (handle, sessionId) => {
   )
 }
 
-window.__side.setActiveContext = async (sessionId) => {
-  let frameLocation = window.__side.getFrameLocation()
-  await window.__side.postMessage(
+sideModule.setActiveContext = async (sessionId) => {
+  let frameLocation = sideModule.getFrameLocation()
+  await sideModule.postMessage(
     window,
     {
       direction: 'from-page-script',
@@ -169,19 +161,19 @@ window.__side.setActiveContext = async (sessionId) => {
   )
 }
 
-window.__side.highlight = async (element) => {
+sideModule.highlight = async (element) => {
   element.setAttribute('data-side-highlight', '')
-  await window.__side.postMessage(window, {
+  await sideModule.postMessage(window, {
     action: 'find',
     query: '*[data-side-highlight]',
   })
   element.removeAttribute('data-side-highlight')
 }
 
-window.__side.attach = () => {
+sideModule.attach = () => {
   window.prompt = function (text, defaultText) {
     let result = window.__originalPrompt(text, defaultText)
-    let frameLocation = window.__side.getFrameLocation()
+    let frameLocation = sideModule.getFrameLocation()
     window.top?.postMessage(
       {
         direction: 'from-page-script',
@@ -196,7 +188,7 @@ window.__side.attach = () => {
   }
   window.confirm = function (text) {
     let result = window.__originalConfirmation(text)
-    let frameLocation = window.__side.getFrameLocation()
+    let frameLocation = sideModule.getFrameLocation()
     window.top?.postMessage(
       {
         direction: 'from-page-script',
@@ -211,7 +203,7 @@ window.__side.attach = () => {
   }
   window.alert = function (text) {
     let result = window.__originalAlert(text)
-    let frameLocation = window.__side.getFrameLocation()
+    let frameLocation = sideModule.getFrameLocation()
     window.top?.postMessage(
       {
         direction: 'from-page-script',

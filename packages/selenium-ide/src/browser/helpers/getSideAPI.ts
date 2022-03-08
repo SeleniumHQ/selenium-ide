@@ -1,5 +1,3 @@
-import { LoadedWindow } from 'browser/types'
-
-const { sideAPI } = window as LoadedWindow
+const { sideAPI } = window
 
 export default sideAPI

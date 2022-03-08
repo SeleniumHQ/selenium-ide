@@ -1,12 +1,10 @@
 import { Button, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 import { Browser } from '@seleniumhq/get-driver'
 import AppWrapper from 'browser/components/AppWrapper'
-import { LoadedWindow } from 'browser/types'
+import sideAPI from 'browser/helpers/getSideAPI'
 import { BrowserInfo, BrowsersInfo } from 'main/types'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-
-const { sideAPI } = window as LoadedWindow
 
 const driverStates = {
   LIST_BROWSERS: 'Obtaining local browsers list...',

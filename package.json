@@ -17,7 +17,7 @@
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "yarn watch:ts & yarn watch:webpack",
-    "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --scope @seleniumhq/side-recorder --loglevel verbose watch",
+    "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
     "watch:ts": "tsc --build --verbose --watch",
     "preinstall": "node ./scripts/check-yarn.js",
     "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"

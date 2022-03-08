@@ -1,6 +1,5 @@
 import processApi from 'api/process'
 import { Api } from 'api/index'
-import { LoadedWindow } from '../types'
 
 /**
  * This Converts the chrome API type to something usable
@@ -15,5 +14,5 @@ export type BrowserApiMapper = {
 }
 
 export default processApi<BrowserApiMapper>((path, handler) =>
-  handler.browser(path, window as LoadedWindow)
+  handler.browser(path, window)
 )

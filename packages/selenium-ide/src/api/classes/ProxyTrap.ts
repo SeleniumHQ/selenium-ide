@@ -1,6 +1,5 @@
 import set from 'lodash/fp/set'
 import { ApiHandler } from 'api/types'
-import { LoadedWindow } from 'browser/types'
 import { Session } from 'main/types'
 
 type NotVagueShape = null | boolean | string | number
@@ -15,7 +14,7 @@ type VagueShape = VagueMapShape | VagueArrayShape
 function isVagueShape(obj: VagueShape | NotVagueShape): obj is VagueShape {
   return typeof obj === 'object' && obj !== null
 }
-export type Context = LoadedWindow | Session
+export type Context = Window | Session
 /**
  * This recursing bastard creates a nested proxy to trap edits to a shape
  * Mainly this is just used for the background page

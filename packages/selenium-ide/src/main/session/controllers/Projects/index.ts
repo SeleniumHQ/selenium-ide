@@ -4,11 +4,7 @@ import { Session } from 'main/types'
 import defaultProject from 'api/models/project'
 import RecentProjects from './Recent'
 import { BrowserWindow } from 'electron'
-import path from 'path'
 
-const recorderExtensionPath = path.resolve(
-  path.join(require.resolve('@seleniumhq/side-recorder'), '..', '..')
-)
 const mainWindowNames = ['playback-window', 'command-controls']
 const childWindowNames = ['test-manager', 'playback-controls']
 export default class ProjectsController {
@@ -35,7 +31,6 @@ export default class ProjectsController {
     const mainWindows = await Promise.all(
       mainWindowNames.map((name) => windows.get(name))
     )
-    mainWindows[0].webContents.session.loadExtension(recorderExtensionPath)
     const childWindows = await Promise.all(
       childWindowNames.map((name) => windows.get(name))
     )

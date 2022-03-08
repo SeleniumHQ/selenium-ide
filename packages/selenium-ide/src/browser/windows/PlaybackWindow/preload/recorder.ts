@@ -15,15 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
 import { handlers, observers } from './record-handlers'
 import { attach, detach } from './prompt-injector'
 import {
   EventHandler,
   ExpandedMessageEvent,
-  ExpandedMessageHandler,
   ExpandedMutationObserver,
-} from '../types'
+} from 'browser/types'
+import sideAPI from 'browser/helpers/getSideAPI'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -49,34 +48,25 @@ export default class Recorder {
     this.attached = false
     this.frameLocation = ''
     this.inputTypes = Recorder.inputTypes
-    this.recalculateFrameLocation = this.recalculateFrameLocation.bind(this)
-    this.attachRecorderHandler = this.attachRecorderHandler.bind(this)
-    this.detachRecorderHandler = this.detachRecorderHandler.bind(this)
-    this.setWindowHandle = this.setWindowHandle.bind(this)
-
+    this.setActiveContext = this.setActiveContext.bind(this)
     this.window.addEventListener('message', this.setActiveContext)
+
+    this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
     this.window.addEventListener('message', this.setWindowHandle)
-    // @ts-expect-error
-    browser.runtime.onMessage.addListener(this.recalculateFrameLocation)
-    // @ts-expect-error
-    browser.runtime.onMessage.addListener(this.attachRecorderHandler)
-    // @ts-expect-error
-    browser.runtime.onMessage.addListener(this.detachRecorderHandler)
+    window.sideAPI.recorder.onFrameRecalculate.addListener(() => this.getFrameLocation());
+    window.sideAPI.recorder.onToggleSelectMode.addListener((selected) => {
+      if (selected) this.attach();
+      else this.detach();
+    });
     // @ts-expect-error
     this.recordingState = {}
-
-    browser.runtime
-      .sendMessage({
-        attachRecorderRequest: true,
-      })
-      .then((shouldAttach) => {
-        if (shouldAttach) {
-          this.addRecorderTracingAttribute()
-          this.attach()
-        }
-      })
-      .catch(() => {})
+    sideAPI.recorder.requestAttach().then((shouldAttach) => {
+      if (shouldAttach) {
+        this.addRecorderTracingAttribute()
+        this.attach()
+      }
+    })
 
     // runs in the content script of each frame
     // e.g., once on load
@@ -94,28 +84,6 @@ export default class Recorder {
     this.window.document.body.setAttribute('data-side-attach-once-loaded', '')
   }
 
-  attachRecorderHandler: ExpandedMessageHandler = (
-    message,
-    _sender,
-    sendResponse
-  ) => {
-    if (message.attachRecorder) {
-      this.attach()
-      sendResponse(true)
-    }
-  }
-
-  detachRecorderHandler: ExpandedMessageHandler = (
-    message,
-    _sender,
-    sendResponse
-  ) => {
-    if (message.detachRecorder) {
-      this.detach()
-      sendResponse(true)
-    }
-  }
-
   /* record */
   record(
     command: string,
@@ -124,20 +92,16 @@ export default class Recorder {
     insertBeforeLastCommand: boolean = false,
     actualFrameLocation?: string
   ) {
-    return browser.runtime
-      .sendMessage({
-        command,
-        target,
-        value,
-        insertBeforeLastCommand,
-        frameLocation:
-          actualFrameLocation != undefined
-            ? actualFrameLocation
-            : this.frameLocation,
-      })
-      .catch(() => {
-        this.detach()
-      })
+    sideAPI.recorder.onNewCommand.dispatchEvent({
+      command,
+      target,
+      value,
+      insertBeforeLastCommand,
+      frameLocation:
+        actualFrameLocation != undefined
+          ? actualFrameLocation
+          : this.frameLocation,
+    })
   }
 
   setWindowHandle(event: ExpandedMessageEvent) {
@@ -146,14 +110,11 @@ export default class Recorder {
       event.data.direction === 'from-page-script' &&
       event.data.action === 'set-handle'
     ) {
-      browser.runtime
-        .sendMessage({
-          setWindowHandle: true,
-          handle: event.data.args.handle,
-          sessionId: event.data.args.sessionId,
-        })
+      sideAPI.recorder
+        .setWindowHandle(event.data.args.sessionId, event.data.args.handle)
         .then(() => {
-          ;(event.source as Window).postMessage(
+          const source = event.source as Window
+          source.postMessage(
             {
               id: event.data.id,
               direction: 'from-content-script',
@@ -170,14 +131,14 @@ export default class Recorder {
       event.data.direction === 'from-page-script' &&
       event.data.action === 'set-frame'
     ) {
-      browser.runtime
-        .sendMessage({
-          setActiveContext: true,
-          frameLocation: event.data.args.frameLocation,
-          sessionId: event.data.args.sessionId,
-        })
+      sideAPI.recorder
+        .setActiveContext(
+          event.data.args.sessionId,
+          event.data.args.frameLocation
+        )
         .then(() => {
-          ;(event.source as Window).postMessage(
+          const source = event.source as Window
+          source.postMessage(
             {
               id: event.data.id,
               direction: 'from-content-script',
@@ -285,38 +246,19 @@ export default class Recorder {
       }
     }
     this.frameLocation = 'root' + this.frameLocation
-    return browser.runtime
-      .sendMessage({ frameLocation: this.frameLocation })
-      .catch(() => {})
+    return sideAPI.recorder.setFrameLocation( this.frameLocation)
   }
 
-  recalculateFrameLocation: ExpandedMessageHandler = (
-    message,
-    _sender,
-    sendResponse
-  ) => {
-    if (message.recalculateFrameLocation) {
-      ;(async () => {
-        this.frameLocation = ''
-        await this.getFrameLocation()
-        sendResponse(true)
-      })()
-      return true
-    }
-    return undefined
-  }
-
-  static eventHandlers: Record<string, EventListener[]> = {}
+  static eventHandlers: Record<string, EventHandler[]> = {}
   static mutationObservers: Record<string, ExpandedMutationObserver> = {}
   public static addEventHandler = function (
     handlerName: string,
     eventName: string,
     handler: EventHandler,
-    options?: boolean
+    capture = false
   ) {
     handler.handlerName = handlerName
-    if (!options) options = false
-    let key = options ? 'C_' + eventName : eventName
+    let key = capture ? 'C_' + eventName : eventName
     if (!Recorder.eventHandlers[key]) {
       Recorder.eventHandlers[key] = []
     }

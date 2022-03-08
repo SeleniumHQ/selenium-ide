@@ -65,7 +65,6 @@
     "@material-ui/styled-engine-sc": "^5.0.0-beta.1",
     "@seleniumhq/get-driver": "^3.5.10",
     "@seleniumhq/side-model": "^3.5.10",
-    "@seleniumhq/side-recorder": "^3.5.10",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
     "@seleniumhq/side-runtime": "^3.5.10",
     "electron-context-menu": "^3.1.2",
@@ -77,10 +76,12 @@
     "react-dom": "^17.0.2",
     "selenium-webdriver": "^4.1.0",
     "spectron": "15.0.0",
+    "ua-parser-js": "^0.7.19",
     "use-immer": "0.6.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.63",
+    "@medv/finder": "^1.1.1",
     "@types/copy-webpack-plugin": "8.0.1",
     "@types/electron": "1.6.10",
     "@types/fs-extra": "^8.0.0",
@@ -92,13 +93,17 @@
     "electron": "^16.0.8",
     "electron-builder": "^22.14.13",
     "electron-chromedriver": "16.0.0",
+    "scroll-into-view-if-needed": "^2.2.20",
     "fork-ts-checker-webpack-plugin": "7.2.1", 
     "html-webpack-plugin": "^5.3.2",
     "npm-run-all": "^4.1.5",
     "style-loader": "^3.1.0",
     "ts-loader": "^9.2.3",
+    "ts-node": "^10.7.0",
     "typescript": "^4.5.4",
+    "ua-parser-js": "^0.7.19",
     "url-loader": "^4.1.1",
-    "webpack": "5.37.0"
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
   }
 }

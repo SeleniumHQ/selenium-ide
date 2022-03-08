@@ -2,9 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import defaultProject from 'api/models/project'
 import defaultState from 'api/models/state'
 import { CoreSessionData } from 'api/types'
-import { LoadedWindow } from 'browser/types'
-
-const { sideAPI } = window as LoadedWindow
+import sideAPI from './getSideAPI'
 
 const performSubscription = async (
   updateSession: Dispatch<SetStateAction<CoreSessionData>>

@@ -16,7 +16,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
 import LocatorBuilders from './locator-builders'
 import Recorder from './recorder'
 import { isTest } from './utils'
@@ -294,6 +293,7 @@ let mousedown: MouseEvent | undefined,
   selectMouseup: NodeJS.Timeout,
   selectMousedown: MouseEvent | undefined,
   mouseoverQ: MouseEvent[] | undefined = []
+
 // © Shuo-Heng Shih, SideeX Team
 handlers.push([
   'dragAndDrop',
@@ -572,7 +572,7 @@ observers.push([
     mutations.forEach(async (mutation) => {
       const removedNodes = await mutation.removedNodes
       if (removedNodes.length && removedNodes[0].nodeName === 'IFRAME') {
-        browser.runtime.sendMessage({ frameRemoved: true }).catch(() => {})
+        window.sideAPI.recorder.onFrameDeleted.dispatchEvent();
       }
     })
   },

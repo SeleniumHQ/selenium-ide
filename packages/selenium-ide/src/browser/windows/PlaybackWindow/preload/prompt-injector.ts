@@ -15,16 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import browser from 'webextension-polyfill'
+import './prompt'
+import Recorder from './recorder'
 
-let elementForInjectingScript
-elementForInjectingScript = document.createElement('script')
-elementForInjectingScript.src = browser.runtime.getURL('/assets/prompt.js')
-;(document.head || document.documentElement).appendChild(
-  elementForInjectingScript
-)
-
-export function attach(record) {
+export function attach(record: Recorder['record']) {
   window.postMessage(
     {
       direction: 'from-content-script',
@@ -45,7 +39,7 @@ export function detach() {
   )
 }
 
-function attachPromptRecorder(record) {
+function attachPromptRecorder(record: Recorder['record']) {
   if (window === window.top) {
     window.addEventListener('message', function (event) {
       if (event.data?.direction == 'from-page-script') {

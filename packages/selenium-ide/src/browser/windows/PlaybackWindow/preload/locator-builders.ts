@@ -17,7 +17,7 @@
 import { parse_locator } from './utils'
 import finder from '@medv/finder'
 
-const findElement = require('../third-party/find-element')
+const findElement = require('./third-party/find-element')
 
 type LocatorFunction = (e: HTMLElement, ctx?: any) => string | null
 

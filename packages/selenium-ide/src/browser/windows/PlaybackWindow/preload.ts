@@ -14,8 +14,24 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+import api from 'browser/api'
+import apiMutators from 'browser/api/mutator'
+import 'browser/highlight.css'
+import { contextBridge } from 'electron'
+import Recorder from './preload/recorder'
 
-import './find-select'
-import Recorder from './recorder'
-
-new Recorder(window)
+/**
+ * Binds our API on initialization
+ */
+process.once('loaded', async () => {
+  /**
+   * Expose it in the main context
+   */
+  contextBridge.exposeInMainWorld('sideAPI', {
+    recorder: api.recorder,
+    mutators: { recorder: apiMutators.recorder },
+  })
+  window.addEventListener('DOMContentLoaded', () => {
+    new Recorder(window)
+  })
+})
