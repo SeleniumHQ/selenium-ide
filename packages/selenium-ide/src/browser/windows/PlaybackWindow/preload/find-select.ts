@@ -18,7 +18,6 @@
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
 import LocatorBuilders from './locator-builders'
 import TargetSelector from './target-selector'
-import sideAPI from 'browser/helpers/getSideAPI'
 
 const locatorBuilders = new LocatorBuilders(window)
 
@@ -44,7 +43,7 @@ window.addEventListener('message', (event) => {
 
 let targetSelector: TargetSelector | null = null
 
-sideAPI.recorder.onToggleSelectMode.addListener((selecting) => {
+window.sideAPI.recorder.onToggleSelectMode.addListener((selecting) => {
   if (selecting) {
     startSelection()
   } else {
@@ -57,7 +56,7 @@ function startSelection() {
     if (element && win) {
       const target = locatorBuilders.buildAll(element)
       if (target != null && Array.isArray(target)) {
-        sideAPI.recorder.onSelectElement.dispatchEvent(target)
+        window.sideAPI.recorder.onSelectElement.dispatchEvent(target)
       }
     }
     targetSelector = null

@@ -1,5 +1,12 @@
 import { Session } from 'main/types'
 
+export interface RecordNewCommandInput {
+  command: string
+  target: string | string[][]
+  value: string | string[][]
+  insertBeforeLastCommand?: boolean
+  frameLocation?: string
+}
 export default class RecorderController {
   constructor(session: Session) {
     this.session = session
@@ -8,6 +15,10 @@ export default class RecorderController {
   currentTest: null | string = null
   isRecording = false
   session: Session
+  async recordNewCommand(cmd: RecordNewCommandInput): Promise<boolean> {
+    console.log('Recording new command', cmd)
+    return true
+  }
   async requestAttach(): Promise<boolean> {
     console.log('Request attach thingy?')
     return true

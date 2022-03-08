@@ -10,14 +10,9 @@ declare global {
     __originalPrompt: typeof window['prompt']
     __originalConfirmation: typeof window['confirm']
     __originalAlert: typeof window['alert']
-    __side: {
-
-
-    }
     sideAPI: FullBrowserAPI
   }
 }
-
 
 export type FullBrowserAPI = typeof Api & { mutators: typeof ApiMutators }
 

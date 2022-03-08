@@ -22,7 +22,6 @@ import {
   ExpandedMessageEvent,
   ExpandedMutationObserver,
 } from 'browser/types'
-import sideAPI from 'browser/helpers/getSideAPI'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -54,14 +53,16 @@ export default class Recorder {
     this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
     this.window.addEventListener('message', this.setWindowHandle)
-    window.sideAPI.recorder.onFrameRecalculate.addListener(() => this.getFrameLocation());
+    window.sideAPI.recorder.onFrameRecalculate.addListener(() =>
+      this.getFrameLocation()
+    )
     window.sideAPI.recorder.onToggleSelectMode.addListener((selected) => {
-      if (selected) this.attach();
-      else this.detach();
-    });
+      if (selected) this.attach()
+      else this.detach()
+    })
     // @ts-expect-error
     this.recordingState = {}
-    sideAPI.recorder.requestAttach().then((shouldAttach) => {
+    window.sideAPI.recorder.requestAttach().then((shouldAttach) => {
       if (shouldAttach) {
         this.addRecorderTracingAttribute()
         this.attach()
@@ -92,7 +93,7 @@ export default class Recorder {
     insertBeforeLastCommand: boolean = false,
     actualFrameLocation?: string
   ) {
-    sideAPI.recorder.onNewCommand.dispatchEvent({
+    window.sideAPI.recorder.recordNewCommand({
       command,
       target,
       value,
@@ -110,7 +111,7 @@ export default class Recorder {
       event.data.direction === 'from-page-script' &&
       event.data.action === 'set-handle'
     ) {
-      sideAPI.recorder
+      window.sideAPI.recorder
         .setWindowHandle(event.data.args.sessionId, event.data.args.handle)
         .then(() => {
           const source = event.source as Window
@@ -131,7 +132,7 @@ export default class Recorder {
       event.data.direction === 'from-page-script' &&
       event.data.action === 'set-frame'
     ) {
-      sideAPI.recorder
+      window.sideAPI.recorder
         .setActiveContext(
           event.data.args.sessionId,
           event.data.args.frameLocation
@@ -246,7 +247,7 @@ export default class Recorder {
       }
     }
     this.frameLocation = 'root' + this.frameLocation
-    return sideAPI.recorder.setFrameLocation( this.frameLocation)
+    return window.sideAPI.recorder.setFrameLocation(this.frameLocation)
   }
 
   static eventHandlers: Record<string, EventHandler[]> = {}

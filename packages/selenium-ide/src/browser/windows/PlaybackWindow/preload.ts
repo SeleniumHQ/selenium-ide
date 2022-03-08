@@ -16,8 +16,6 @@
 // under the License.
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
-import 'browser/highlight.css'
-import { contextBridge } from 'electron'
 import Recorder from './preload/recorder'
 
 /**
@@ -27,10 +25,7 @@ process.once('loaded', async () => {
   /**
    * Expose it in the main context
    */
-  contextBridge.exposeInMainWorld('sideAPI', {
-    recorder: api.recorder,
-    mutators: { recorder: apiMutators.recorder },
-  })
+  window.sideAPI = { ...api, mutators: apiMutators };
   window.addEventListener('DOMContentLoaded', () => {
     new Recorder(window)
   })
