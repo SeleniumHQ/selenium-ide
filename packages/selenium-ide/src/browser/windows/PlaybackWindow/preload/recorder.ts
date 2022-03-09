@@ -63,6 +63,7 @@ export default class Recorder {
     // @ts-expect-error
     this.recordingState = {}
     window.sideAPI.recorder.requestAttach().then((shouldAttach) => {
+      console.log('Checking initial attach?', shouldAttach)
       if (shouldAttach) {
         this.addRecorderTracingAttribute()
         this.attach()

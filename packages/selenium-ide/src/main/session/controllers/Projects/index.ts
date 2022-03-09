@@ -1,9 +1,10 @@
 import { ProjectShape } from '@seleniumhq/side-model'
+import defaultProject from 'api/models/project'
+import { BrowserWindow } from 'electron'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
-import defaultProject from 'api/models/project'
+import { join } from 'path'
 import RecentProjects from './Recent'
-import { BrowserWindow } from 'electron'
 
 const mainWindowNames = ['playback-window', 'command-controls']
 const childWindowNames = ['test-manager', 'playback-controls']
@@ -31,6 +32,15 @@ export default class ProjectsController {
     const mainWindows = await Promise.all(
       mainWindowNames.map((name) => windows.get(name))
     )
+    const [playbackWindow, commandEditor] = mainWindows;
+    playbackWindow.webContents.setWindowOpenHandler(() => ({
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        webPreferences: {
+          preload: join(__dirname, `playback-window-preload-bundle.js`),
+        },
+      },
+    }))
     const childWindows = await Promise.all(
       childWindowNames.map((name) => windows.get(name))
     )
@@ -52,10 +62,11 @@ export default class ProjectsController {
           })
         }
       })
-      mainWindow.on('closed', () => {
-        childWindows.forEach((win) => {
-          win.destroy()
-        })
+    })
+    playbackWindow.on('closed', () => {
+      commandEditor.destroy()
+      childWindows.forEach((win) => {
+        win.destroy()
       })
     })
   }

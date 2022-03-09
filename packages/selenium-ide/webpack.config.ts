@@ -1,5 +1,6 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import fs from 'fs'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import kebabCase from 'lodash/fp/kebabCase'
 import path from 'path'
@@ -86,7 +87,13 @@ const rendererConfig: Configuration = {
     Object.values(rendererEntries).map(
       ([filename]) =>
         getBrowserPlugin(filename) as unknown as WebpackPluginInstance
-    )
+    ),
+    new CopyWebpackPlugin({
+      patterns: [{
+        from: "src/browser/*.css",
+        to: "[name].css"
+      }]
+    })
   ),
   target: 'electron-renderer',
 }
@@ -116,6 +123,7 @@ function getBrowserPlugin(filename: string) {
       <html>
         <head>
           <title>${title}</title>
+          <link rel="stylesheet" href="index.css">
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>

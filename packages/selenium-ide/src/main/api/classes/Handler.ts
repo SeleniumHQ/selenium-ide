@@ -32,17 +32,17 @@ const Handler =
   (path: string, session: Session, mutator?: Mutator<HANDLER>) => {
     const handler = factory(path, session)
     ipcMain.on(path, async (_event, ...args) => {
-      // console.debug('Received API Request', path, ...args)
+      console.debug('Received API Request', path, ...args)
       const params = args as Parameters<HANDLER>
       const result = await handler(...params)
-      // console.debug('Resolved API Request', path, result)
+      console.debug('Resolved API Request', path, result)
       if (mutator) {
         const newState = mutator(getCore(session), { params, result })
         session.projects.project = newState.project
         session.state.state = newState.state
         session.api.state.onMutate.dispatchEvent(path, { params, result })
       }
-      session.windows.broadcast(`${path}.complete`, result)
+      _event.sender.send(`${path}.complete`, result)
     })
     return handler
   }
