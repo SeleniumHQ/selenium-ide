@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 import CommandEditor from './CommandEditor'
 import CommandList from './CommandList'
 import { CoreSessionData } from 'api/types'
-import Main from '../Main'
 import DrawerHeader from '../DrawerHeader'
 import { drawerWidth } from '../Drawer'
 
@@ -25,7 +24,7 @@ const CommandTab: React.FC<{
     setBottomOffset(commandEditorHeight + 10)
   }, [activeCommand.id])
   return (
-    <Main className="fill" open={open}>
+    <>
       <DrawerHeader />
       <CommandList
         activeCommand={activeCommandID}
@@ -51,7 +50,7 @@ const CommandTab: React.FC<{
           testID={activeTestID}
         />
       </Paper>
-    </Main>
+    </>
   )
 }
 

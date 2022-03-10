@@ -25,9 +25,10 @@ const CommandList: FC<CommandListProps> = ({
     sx={{
       borderColor: 'primary.main',
       marginBottom: `${bottomOffset + 10}px`,
+      marginTop: '48px',
     }}
     subheader={
-      <ListSubheader className="lh-36" sx={{ top: '47px', zIndex: 100 }}>
+      <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
         Commands
       </ListSubheader>
     }
