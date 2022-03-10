@@ -1,7 +1,8 @@
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AppWrapper from 'browser/components/AppWrapper'
-import { Paper, Typography } from '@material-ui/core'
 
 const ProjectPlaybackControls = () => (
   <AppWrapper>

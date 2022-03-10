@@ -57,12 +57,12 @@
     ]
   },
   "dependencies": {
-    "@emotion/react": "^11.4.0",
-    "@emotion/styled": "^11.3.0",
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
     "@fontsource/roboto": "^4.5.0",
-    "@material-ui/core": "^5.0.0-beta.1",
-    "@material-ui/icons": "^5.0.0-beta.1",
-    "@material-ui/styled-engine-sc": "^5.0.0-beta.1",
+    "@mui/icons-material": "^5.5.0",
+    "@mui/material": "^5.5.0",
+    "@mui/lab": "^5.0.0-alpha.72",
     "@seleniumhq/get-driver": "^3.5.10",
     "@seleniumhq/side-model": "^3.5.10",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
@@ -70,14 +70,12 @@
     "electron-context-menu": "^3.1.2",
     "electron-store": "^8.0.0",
     "fs-extra": "^8.1.0",
-    "immer": "9.0.7",
     "lodash": "4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "selenium-webdriver": "^4.1.0",
     "spectron": "15.0.0",
-    "ua-parser-js": "^0.7.19",
-    "use-immer": "0.6.0"
+    "ua-parser-js": "^0.7.19"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.63",

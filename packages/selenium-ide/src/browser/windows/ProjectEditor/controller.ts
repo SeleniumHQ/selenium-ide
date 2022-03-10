@@ -2,7 +2,7 @@ import panelConfig from 'browser/helpers/panelConfig'
 import { WindowConfig } from 'browser/types'
 import Electron from 'electron'
 
-const width = 350
+const width = 550
 export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {

@@ -1,12 +1,12 @@
-import { FormHelperText } from '@material-ui/core'
-import Autocomplete from '@material-ui/core/Autocomplete'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import Stack from '@material-ui/core/Stack'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import FormHelperText from '@mui/material/FormHelperText'
+import Autocomplete from '@mui/material/Autocomplete'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { CommandShape } from '@seleniumhq/side-model'
 import { CoreSessionData } from 'api/types'
 import sideAPI from 'browser/helpers/getSideAPI'
@@ -23,8 +23,6 @@ export interface MiniCommandShape {
   name: string
 }
 
-const stackClassName = 'flex flex-col p-4 bt overflow-y'
-const stackStyle = { border: 0, flex: '0 0 400px' }
 const CommandEditor: FC<CommandEditorProps> = ({
   command,
   commands,
@@ -51,7 +49,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
     }
   if (command.id === '-1') {
     return (
-      <Stack className={stackClassName} sx={stackStyle} spacing={1}>
+      <Stack className="p-4" spacing={1}>
         <Typography className="centered pt-4" variant="body2">
           No active command selected
         </Typography>
@@ -60,7 +58,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
   }
   const commandData = commands[command.command]
   return (
-    <Stack className={stackClassName} sx={stackStyle} spacing={1}>
+    <Stack className="p-4" spacing={1}>
       <FormControl>
         <InputLabel id="command-label">Command</InputLabel>
         <Select

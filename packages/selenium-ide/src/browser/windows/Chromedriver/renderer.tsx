@@ -1,9 +1,13 @@
-import { Button, Grid, MenuItem, Select, Typography } from '@material-ui/core'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Typography from '@mui/material/Typography'
 import { Browser } from '@seleniumhq/get-driver'
 import AppWrapper from 'browser/components/AppWrapper'
 import sideAPI from 'browser/helpers/getSideAPI'
 import { BrowserInfo, BrowsersInfo } from 'main/types'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const driverStates = {
@@ -70,7 +74,7 @@ const ProjectEditor = () => {
     }
   }, [driverStatus])
 
-  const processBrowserSelection = (e: ChangeEvent<{ value: string }>) => {
+  const processBrowserSelection = (e: SelectChangeEvent<{ value: string }>) => {
     const browser = browserFromString(e.target.value as string)
     if (browser.version) {
       console.log('Setting version', browser)
@@ -102,7 +106,7 @@ const ProjectEditor = () => {
                 size="small"
                 onChange={processBrowserSelection}
                 placeholder="Please select a browser"
-                value={browserToString(browserInfo.selected)}
+                value={browserToString(browserInfo.selected) as unknown as undefined}
               >
                 <MenuItem key={-1} value={'chrome|'}>
                   Please select a browser

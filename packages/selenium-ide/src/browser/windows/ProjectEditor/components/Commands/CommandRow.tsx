@@ -1,19 +1,17 @@
-import {
-  Box,
-  IconButton,
-  ListItem,
-  ListItemText,
-  useMediaQuery,
-} from '@material-ui/core'
-import PauseIcon from '@material-ui/icons/Pause'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
-import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
 
 const {
   state: { setActiveCommand },
-} = sideAPI
+  tests: { updateStep }
+} = window.sideAPI
 
 type ColorMode = 'light' | 'dark'
 
@@ -64,7 +62,7 @@ const updateIsBreakpoint = (
   commandID: string,
   isBreakpoint: boolean
 ) => {
-  sideAPI.tests.updateStep(testID, commandID, {
+  updateStep(testID, commandID, {
     isBreakpoint,
   })
 }

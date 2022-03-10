@@ -1,4 +1,4 @@
-import TextField, { TextFieldProps } from '@material-ui/core/TextField'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { noop } from 'lodash/fp'
 import React, { FC, useRef } from 'react'
 

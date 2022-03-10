@@ -6,8 +6,8 @@ import { Session } from 'main/types'
 import { join } from 'path'
 import RecentProjects from './Recent'
 
-const mainWindowNames = ['playback-window', 'command-controls']
-const childWindowNames = ['test-manager', 'playback-controls']
+const mainWindowNames = ['playback-window', 'project-editor']
+const childWindowNames = ['playback-controls']
 export default class ProjectsController {
   constructor(session: Session) {
     this.session = session

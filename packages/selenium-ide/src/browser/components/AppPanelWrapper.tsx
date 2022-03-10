@@ -1,4 +1,4 @@
-import { Paper } from '@material-ui/core'
+import { Paper } from '@mui/material'
 import React, { FC } from 'react'
 import AppWrapper from './AppWrapper'
 import PanelNav from './PanelNav'

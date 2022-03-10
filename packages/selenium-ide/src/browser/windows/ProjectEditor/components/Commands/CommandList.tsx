@@ -1,5 +1,6 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { List, ListSubheader } from '@material-ui/core'
+import List from '@mui/material/List'
+import ListSubheader from '@mui/material/ListSubheader'
 import { CommandsStateShape } from 'api/models/state/command'
 import React, { FC } from 'react'
 import CommandRow from './CommandRow'
@@ -7,6 +8,7 @@ import CommandRow from './CommandRow'
 export interface CommandListProps {
   activeCommand: string
   activeTest: string
+  bottomOffset: number
   commands: CommandShape[]
   commandStates: CommandsStateShape
 }
@@ -14,17 +16,18 @@ export interface CommandListProps {
 const CommandList: FC<CommandListProps> = ({
   activeCommand,
   activeTest,
+  bottomOffset,
   commandStates,
   commands,
 }) => (
   <List
-    className="no-select pos-rel flex flex-col flex-1 overflow-y"
     dense
     sx={{
       borderColor: 'primary.main',
+      marginBottom: `${bottomOffset + 10}px`,
     }}
     subheader={
-      <ListSubheader className="lh-36" sx={{ zIndex: 100 }}>
+      <ListSubheader className="lh-36" sx={{ top: '47px', zIndex: 100 }}>
         Commands
       </ListSubheader>
     }
