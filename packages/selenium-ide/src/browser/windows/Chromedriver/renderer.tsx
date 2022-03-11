@@ -5,7 +5,6 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 import { Browser } from '@seleniumhq/get-driver'
 import AppWrapper from 'browser/components/AppWrapper'
-import sideAPI from 'browser/helpers/getSideAPI'
 import { BrowserInfo, BrowsersInfo } from 'main/types'
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
@@ -42,7 +41,7 @@ const ProjectEditor = () => {
   useEffect(() => {
     switch (driverStatus) {
       case driverStateKeys.LIST_BROWSERS:
-        sideAPI.driver.listBrowsers().then(async (info) => {
+        window.sideAPI.driver.listBrowsers().then(async (info) => {
           setBrowserInfo(info)
           if (info.selected.version) {
             setDriverStatus(driverStateKeys.DOWNLOADING_DRIVER)
@@ -52,23 +51,23 @@ const ProjectEditor = () => {
         })
         break
       case driverStateKeys.SELECTED_BROWSER:
-        sideAPI.driver.selectBrowser(browserInfo.selected).then(() => {
+        window.sideAPI.driver.selectBrowser(browserInfo.selected).then(() => {
           setDriverStatus(driverStateKeys.DOWNLOADING_DRIVER)
         })
         break
       case driverStateKeys.DOWNLOADING_DRIVER:
-        sideAPI.driver.download(browserInfo.selected).then(() => {
+        window.sideAPI.driver.download(browserInfo.selected).then(() => {
           setDriverStatus(driverStateKeys.STARTING_DRIVER)
         })
         break
       case driverStateKeys.STARTING_DRIVER:
-        sideAPI.driver.startProcess(browserInfo.selected).then(() => {
+        window.sideAPI.driver.startProcess(browserInfo.selected).then(() => {
           setDriverStatus(driverStateKeys.COMPLETE)
         })
         break
       case driverStateKeys.COMPLETE:
-        sideAPI.windows.open('splash').then(() => {
-          sideAPI.windows.close('chromedriver')
+        window.sideAPI.windows.open('splash').then(() => {
+          window.sideAPI.windows.close('chromedriver')
         })
         break
     }

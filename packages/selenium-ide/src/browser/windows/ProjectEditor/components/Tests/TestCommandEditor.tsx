@@ -9,7 +9,6 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { CommandShape } from '@seleniumhq/side-model'
 import { CoreSessionData } from 'api/types'
-import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC, useMemo } from 'react'
 
 export interface CommandEditorProps {
@@ -37,13 +36,13 @@ const CommandEditor: FC<CommandEditorProps> = ({
   }
   const updateField = (name: string) => (e: any) => {
     console.log('Changing field ?', name, e.target.value)
-    sideAPI.tests.updateStep(testID, command.id, {
+    window.sideAPI.tests.updateStep(testID, command.id, {
       [name]: e.target.value,
     })
   }
   const updateFieldAutoComplete =
     (name: string) => (_e: any, value: string) => {
-      sideAPI.tests.updateStep(testID, command.id, {
+      window.sideAPI.tests.updateStep(testID, command.id, {
         [name]: value,
       })
     }

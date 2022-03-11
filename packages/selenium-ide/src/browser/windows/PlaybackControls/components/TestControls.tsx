@@ -5,7 +5,6 @@ import PauseIcon from '@mui/icons-material/Pause'
 import StopIcon from '@mui/icons-material/Stop'
 import RecordIcon from '@mui/icons-material/FiberManualRecord'
 import { StateShape } from 'api/types'
-import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
 import badIndex from 'api/constants/badIndex'
 
@@ -22,13 +21,13 @@ const TestControls: FC<TestControlsProps> = ({ state }) => (
         <Tooltip title="Pause" aria-label="pause">
           <PauseIcon
             className="button m-2"
-            onClick={() => sideAPI.playback.pause()}
+            onClick={() => window.sideAPI.playback.pause()}
           />
         </Tooltip>
         <Tooltip title="Stop" aria-label="stop">
           <StopIcon
             className="button m-2"
-            onClick={() => sideAPI.playback.stop()}
+            onClick={() => window.sideAPI.playback.stop()}
           />
         </Tooltip>
       </>
@@ -39,22 +38,22 @@ const TestControls: FC<TestControlsProps> = ({ state }) => (
             className="button m-2"
             onClick={() => {
               state.playback.currentIndex === badIndex
-                ? sideAPI.playback.play(state.activeTestID)
-                : sideAPI.playback.resume()
+                ? window.sideAPI.playback.play(state.activeTestID)
+                : window.sideAPI.playback.resume()
             }}
           />
         </Tooltip>
         <Tooltip title="Play Suite" aria-label="play-suite">
           <PlaylistPlayIcon
             className="button m-2"
-            onClick={() => sideAPI.playback.play(state.activeTestID)}
+            onClick={() => window.sideAPI.playback.play(state.activeTestID)}
           />
         </Tooltip>
         <Tooltip title="Record" aria-label="record">
           <RecordIcon
             className="button m-2"
             color="error"
-            onClick={() => sideAPI.recorder.start(state.activeTestID)}
+            onClick={() => window.sideAPI.recorder.start(state.activeTestID)}
           />
         </Tooltip>
       </>

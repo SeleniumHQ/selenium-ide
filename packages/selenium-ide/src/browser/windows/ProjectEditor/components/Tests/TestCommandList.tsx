@@ -3,7 +3,7 @@ import List from '@mui/material/List'
 import ListSubheader from '@mui/material/ListSubheader'
 import { CommandsStateShape } from 'api/models/state/command'
 import React, { FC } from 'react'
-import CommandRow from './CommandRow'
+import CommandRow from './TestCommandRow'
 
 export interface CommandListProps {
   activeCommand: string

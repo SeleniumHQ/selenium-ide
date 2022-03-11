@@ -6,22 +6,21 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import AppWrapper from 'browser/components/AppWrapper'
-import sideAPI from 'browser/helpers/getSideAPI'
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const ProjectEditor = () => {
   const [recentProjects, setRecentProjects] = useState<string[]>([])
   useEffect(() => {
-    sideAPI.projects.getRecent().then(setRecentProjects)
+    window.sideAPI.projects.getRecent().then(setRecentProjects)
   }, [])
   const loadProject = async () => {
-    const response = await sideAPI.dialogs.open()
+    const response = await window.sideAPI.dialogs.open()
     if (response.canceled) return
-    await sideAPI.projects.load(response.filePaths[0])
+    await window.sideAPI.projects.load(response.filePaths[0])
   }
   const newProject = async () => {
-    await sideAPI.projects.new()
+    await window.sideAPI.projects.new()
   }
 
   return (
@@ -50,7 +49,7 @@ const ProjectEditor = () => {
               <ListItem
                 disablePadding
                 key={index}
-                onClick={() => sideAPI.projects.load(filepath)}
+                onClick={() => window.sideAPI.projects.load(filepath)}
               >
                 <ListItemButton>
                   <ListItemText primary={filepath} />

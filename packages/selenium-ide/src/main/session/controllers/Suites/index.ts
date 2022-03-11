@@ -52,20 +52,13 @@ export default class SuitesController {
     project.suites.push(suite)
     return suite
   }
-  async delete(suiteID: string): Promise<boolean> {
-    const project = this.session.projects.project as ProjectShape
-    const index = project.suites.findIndex((suite) => suite.id === suiteID)
-    if (index !== -1) {
-      project.suites.splice(index, 1)
-    }
+  async delete(_suiteID: string): Promise<boolean> {
     return true
   }
-  async rename(suiteID: string, name: string): Promise<SuiteShape> {
-    const project = this.session.projects.project as ProjectShape
-    const suite = project.suites.find(
-      (suite) => suite.id === suiteID
-    ) as SuiteShape
-    suite.name = name
-    return suite
+  async update(
+    _suiteID: string,
+    _updates: Partial<Omit<SuiteShape, 'tests'>>
+  ): Promise<boolean> {
+    return true
   }
 }

@@ -1,13 +1,13 @@
 import Paper from '@mui/material/Paper'
 import { getActiveCommand, getActiveTest } from 'browser/helpers/getActiveData'
 import React, { useEffect } from 'react'
-import CommandEditor from './CommandEditor'
-import CommandList from './CommandList'
+import CommandEditor from './TestCommandEditor'
+import CommandList from './TestCommandList'
 import { CoreSessionData } from 'api/types'
-import DrawerHeader from '../DrawerHeader'
+import DrawerHeader from '../Drawer/Header'
 import { drawerWidth } from '../Drawer'
 
-const CommandTab: React.FC<{
+const TestsTab: React.FC<{
   open: boolean
   session: CoreSessionData
 }> = ({ open, session }) => {
@@ -54,4 +54,4 @@ const CommandTab: React.FC<{
   )
 }
 
-export default CommandTab
+export default TestsTab

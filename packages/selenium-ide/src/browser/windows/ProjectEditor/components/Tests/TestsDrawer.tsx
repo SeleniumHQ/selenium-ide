@@ -4,14 +4,14 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
 import { TestShape } from '@seleniumhq/side-model'
-import sideAPI from 'browser/helpers/getSideAPI'
 import React, { FC } from 'react'
+
 export interface TestListProps {
   activeTest: string
   tests: TestShape[]
 }
 
-const { state: { setActiveTest } } = sideAPI
+const { state: { setActiveTest } } = window.sideAPI
 
 const TestList: FC<TestListProps> = ({ activeTest, tests }) => (
   <List
