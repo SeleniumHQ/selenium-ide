@@ -17,6 +17,7 @@ export default class ProjectsController {
   recentProjects: RecentProjects
   project: ProjectShape
   session: Session
+
   async onProjectLoaded(project: ProjectShape): Promise<void> {
     const {
       session: { commands, windows },
@@ -32,7 +33,7 @@ export default class ProjectsController {
     const mainWindows = await Promise.all(
       mainWindowNames.map((name) => windows.get(name))
     )
-    const [playbackWindow, commandEditor] = mainWindows;
+    const [playbackWindow, commandEditor] = mainWindows
     playbackWindow.webContents.setWindowOpenHandler(() => ({
       action: 'allow',
       overrideBrowserWindowOptions: {
@@ -70,12 +71,15 @@ export default class ProjectsController {
       })
     })
   }
+
   async getActive(): Promise<ProjectShape> {
     return this.project as ProjectShape
   }
+
   async getRecent(): Promise<string[]> {
     return this.recentProjects.get()
   }
+
   async new(): Promise<ProjectShape> {
     const starterProject: ProjectShape = {
       id: '',
@@ -97,14 +101,23 @@ export default class ProjectsController {
     this.onProjectLoaded(starterProject)
     return starterProject
   }
+
   async load(filepath: string): Promise<ProjectShape> {
     const project = await this.load_v3(filepath)
     this.onProjectLoaded(project)
     return project
   }
+
   async save(filepath: string): Promise<boolean> {
     return this.save_v3(filepath)
   }
+
+  async update(
+    _updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
+  ): Promise<boolean> {
+    return true
+  }
+
   async load_v3(filepath: string): Promise<ProjectShape> {
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)

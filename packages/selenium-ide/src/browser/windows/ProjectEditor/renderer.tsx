@@ -19,6 +19,7 @@ import AppBar from './components/AppBar'
 import TabPanel from './components/Tab/Panel'
 import TabPanelMulti from './components/Tab/PanelMulti'
 import Drawer from './components/Drawer'
+import ProjectTab from './components/Project/ProjectTab'
 
 function a11yProps(index: number) {
   return {
@@ -34,16 +35,14 @@ const ProjectTestCommandList = () => {
     state: { activeSuiteID, activeTestID },
   } = session
 
-  const [openDrawer, setOpenDrawer] = React.useState(false)
-  const handleDrawerOpenDrawer = () => setOpenDrawer(true)
-
   const [tab, setTab] = React.useState(0)
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setTab(parseInt(newValue))
-  }
+  const [_openDrawer, setOpenDrawer] = React.useState(false)
+  const openDrawer = _openDrawer && tab !== 2
+
   if (id == loadingID) {
     return null
   }
+
   return (
     <AppWrapper>
       <Box sx={{ display: 'flex' }}>
@@ -53,20 +52,21 @@ const ProjectTestCommandList = () => {
               <IconButton
                 color="inherit"
                 aria-label="openDrawer drawer"
-                onClick={handleDrawerOpenDrawer}
+                onClick={() => setOpenDrawer(true)}
                 edge="start"
                 sx={{ mr: 2, ...(openDrawer && { display: 'none' }) }}
               >
                 <MenuIcon />
               </IconButton>
             </TabPanelMulti>
+            <TabPanel index={2} value={tab} />  
             <Typography variant="h6" noWrap component="div">
               Selenium IDE
             </Typography>
           </Toolbar>
           <Tabs
             value={tab}
-            onChange={handleChange}
+            onChange={(_e, v) => setTab(v)}
             indicatorColor="secondary"
             textColor="inherit"
             variant="fullWidth"
@@ -95,7 +95,7 @@ const ProjectTestCommandList = () => {
             <SuitesTab open={openDrawer} session={session} />
           </TabPanel>
           <TabPanel index={2} value={tab}>
-            Item Three
+            <ProjectTab open={openDrawer} session={session} />
           </TabPanel>
         </Main>
       </Box>

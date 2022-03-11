@@ -14,8 +14,10 @@ export const mutator: Mutator<Shape> = (
     'project.suites',
     (suites: SuiteShape[]) => {
       const suiteIndex = suites.findIndex((suite) => suite.id === suiteID)
-      return update(`${suiteIndex}.tests`, (tests: SuiteShape['tests']) =>
-        tests.filter((id) => id !== testID)
+      return update(
+        `${suiteIndex}.tests`,
+        (tests: SuiteShape['tests']) => tests.filter((id) => id !== testID),
+        suites
       )
     },
     session
