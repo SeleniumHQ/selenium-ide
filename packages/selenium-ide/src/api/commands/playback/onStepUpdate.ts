@@ -1,13 +1,11 @@
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
+import { getCommandIndex } from 'api/helpers/getActiveData'
 import { EventMutator } from 'api/types'
-import { getCommandIndex } from 'browser/helpers/getActiveData'
 import browserEventListener from 'browser/api/classes/EventListener'
 import merge from 'lodash/fp/merge'
 import mainEventListener from 'main/api/classes/EventListener'
 import { PlaybackStateShape } from 'api/models/state'
 
-export type TestID = string
-export type StepID = string
 export type OnStepUpdatePlayback = [
   PlaybackEventShapes['COMMAND_STATE_CHANGED']
 ]

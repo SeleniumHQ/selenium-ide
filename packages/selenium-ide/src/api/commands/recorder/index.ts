@@ -1,5 +1,6 @@
 export * as onFrameDeleted from './onFrameDeleted'
 export * as onFrameRecalculate from './onFrameRecalculate'
+export * as onNewWindow from './onNewWindow'
 export * as onSelectElement from './onSelectElement'
 export * as onToggleSelectMode from './onToggleSelectMode'
 export * as recordNewCommand from './recordNewCommand'

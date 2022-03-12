@@ -5,6 +5,7 @@ import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { join } from 'path'
 import RecentProjects from './Recent'
+import { randomUUID } from 'crypto'
 
 const mainWindowNames = ['playback-window', 'project-editor']
 const childWindowNames = ['playback-controls']
@@ -34,14 +35,17 @@ export default class ProjectsController {
       mainWindowNames.map((name) => windows.get(name))
     )
     const [playbackWindow, commandEditor] = mainWindows
-    playbackWindow.webContents.setWindowOpenHandler(() => ({
-      action: 'allow',
-      overrideBrowserWindowOptions: {
-        webPreferences: {
-          preload: join(__dirname, `playback-window-preload-bundle.js`),
+    playbackWindow.webContents.setWindowOpenHandler((details) => {
+      this.session.recorder.handleNewWindow(details)
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          webPreferences: {
+            preload: join(__dirname, `playback-window-preload-bundle.js`),
+          },
         },
-      },
-    }))
+      }
+    })
     const childWindows = await Promise.all(
       childWindowNames.map((name) => windows.get(name))
     )
@@ -82,14 +86,27 @@ export default class ProjectsController {
 
   async new(): Promise<ProjectShape> {
     const starterProject: ProjectShape = {
-      id: '',
+      id: randomUUID(),
       version: '3.0',
       name: 'New Project',
       url: 'http://www.google.com',
       urls: ['http://www.google.com'],
       plugins: [],
       suites: [],
-      tests: [],
+      tests: [
+        {
+          id: randomUUID(),
+          name: 'New Test',
+          commands: [
+            {
+              id: randomUUID(),
+              command: 'open',
+              target: '/',
+              value: '',
+            },
+          ],
+        },
+      ],
       snapshot: {
         dependencies: {},
         tests: [],

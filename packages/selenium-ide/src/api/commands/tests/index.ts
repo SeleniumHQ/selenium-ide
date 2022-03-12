@@ -1,7 +1,7 @@
 export * as addStep from './addStep'
 export * as create from './create'
-export * as rename from './rename'
 export * as delete from './delete'
 export * as removeStep from './removeStep'
+export * as rename from './rename'
 export * as reorderStep from './reorderStep'
 export * as updateStep from './updateStep'

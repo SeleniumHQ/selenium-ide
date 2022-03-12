@@ -37,7 +37,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ open, session: { project } }) => (
           label="Name"
           name="name"
           onChange={(e: any) => {
-            window.sideAPI.project.update(project.id, {
+            window.sideAPI.projects.update({
               name: e.target.value,
             })
           }}
@@ -50,7 +50,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ open, session: { project } }) => (
           label="URL"
           name="url"
           onChange={(e: any) => {
-            window.sideAPI.project.update(project.id, {
+            window.sideAPI.projects.update({
               url: e.target.value,
             })
           }}

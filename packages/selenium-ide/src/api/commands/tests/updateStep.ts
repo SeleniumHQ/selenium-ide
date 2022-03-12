@@ -23,7 +23,6 @@ export const mutator: Mutator<Shape> = (
     (command: CommandShape) => merge(command, step),
     session
   )
-  console.log(updatedSession.project.tests[0].commands[0])
   return updatedSession
 }
 

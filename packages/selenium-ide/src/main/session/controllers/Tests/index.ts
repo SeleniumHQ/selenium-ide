@@ -24,9 +24,14 @@ export default class TestsController {
   async addStep(
     _testID: string,
     _index: number,
-    _stepFields: Partial<CommandShape>
-  ): Promise<boolean> {
-    return true
+    stepFields: Partial<CommandShape> = {}
+  ): Promise<CommandShape> {
+    return {
+      id: randomUUID(),
+      command: stepFields.command || 'click',
+      target: stepFields.target || '',
+      value: stepFields.value || '',
+    }
   }
 
   async removeStep(_testID: string, _stepID: string): Promise<boolean> {

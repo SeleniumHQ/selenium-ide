@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper'
-import { getActiveCommand, getActiveTest } from 'browser/helpers/getActiveData'
+import { getActiveCommand, getActiveTest } from 'api/helpers/getActiveData'
 import React, { useEffect } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'

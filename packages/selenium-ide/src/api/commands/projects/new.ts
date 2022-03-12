@@ -7,6 +7,11 @@ export type Shape = Session['projects']['new']
 
 export const mutator: Mutator<Shape> = (session, { result }) => ({
   ...session,
+  state: {
+    ...session.state,
+    activeTestID: result.tests[0].id,
+    activeCommandID: result.tests[0].commands[0].id,
+  },
   project: result,
 })
 

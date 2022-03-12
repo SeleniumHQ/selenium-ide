@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper'
-import { getActiveSuite } from 'browser/helpers/getActiveData'
+import { getActiveSuite } from 'api/helpers/getActiveData'
 import React, { useEffect } from 'react'
 import SuiteEditor from './SuiteEditor'
 import SuiteTestList from './SuiteTestList'
