@@ -520,7 +520,7 @@ handlers.push([
 // © Shuo-Heng Shih, SideeX Team
 let nowNode = 0,
   nodeInsertedLocator: HTMLElement | undefined,
-  nodeInsertedAttrChange: string[][] | undefined
+  nodeInsertedAttrChange: [string, string][] | undefined
 handlers.push([
   'mouseOver',
   'mouseover',
@@ -614,7 +614,7 @@ observers.push([
         nodeInsertedLocator = undefined
       }
       if (nodeInsertedLocator) {
-        this.record('mouseOver', nodeInsertedAttrChange as string[][], '')
+        this.record('mouseOver', nodeInsertedAttrChange as [string, string][], '')
         mouseoutLocator = nodeInsertedLocator
         nodeInsertedLocator = undefined
         nodeInsertedAttrChange = undefined

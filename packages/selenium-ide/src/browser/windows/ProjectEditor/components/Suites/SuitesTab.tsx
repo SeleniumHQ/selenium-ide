@@ -1,28 +1,22 @@
 import Paper from '@mui/material/Paper'
 import { getActiveSuite } from 'api/helpers/getActiveData'
-import React, { useEffect } from 'react'
+import React from 'react'
 import SuiteEditor from './SuiteEditor'
 import SuiteTestList from './SuiteTestList'
 import { CoreSessionData } from 'api/types'
 import DrawerHeader from '../Drawer/Header'
-import { drawerWidth } from '../Drawer'
+import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 
 const SuitesTab: React.FC<{
-  open: boolean
   session: CoreSessionData
-}> = ({ open, session }) => {
+}> = ({ session }) => {
   const activeSuite = getActiveSuite(session)
   const {
     project: { tests },
     state: { activeSuiteID },
   } = session
 
-  const [bottomOffset, setBottomOffset] = React.useState(0)
-  useEffect(() => {
-    const suiteEditorHeight =
-      document.getElementById('suite-editor')?.clientHeight ?? 0
-    setBottomOffset(suiteEditorHeight + 10)
-  }, [activeSuite.id])
+  const bottomOffset = useHeightFromElement('suite-editor')
   return (
     <>
       <DrawerHeader />
@@ -39,8 +33,9 @@ const SuitesTab: React.FC<{
         sx={{
           position: 'fixed',
           bottom: 0,
-          left: open ? drawerWidth : 0,
+          left: 0,
           right: 0,
+          zIndex: 2000,
         }}
       >
         <SuiteEditor suite={activeSuite} />

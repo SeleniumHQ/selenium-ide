@@ -34,39 +34,16 @@ export default class TestsController {
     }
   }
 
-  async removeStep(_testID: string, _stepID: string): Promise<boolean> {
-    return true
-  }
-
-  async updateStep(
-    _testID: string,
-    _stepID: string,
-    _step: Partial<CommandShape>
-  ): Promise<boolean> {
-    return true
-  }
-
-  async reorderStep(
-    _testID: string,
-    _stepID: string,
-    _newIndex: number
-  ): Promise<boolean> {
-    return true
-  }
-
   async create(): Promise<TestShape> {
     return {
       id: randomUUID(),
       name: 'New Test',
-      commands: [],
+      commands: [{
+        id: randomUUID(),
+        command: 'open',
+        target: '/',
+        value: ''
+      }],
     }
-  }
-
-  async delete(_testID: string): Promise<boolean> {
-    return true
-  }
-
-  async rename(_testID: string, _name: string): Promise<boolean> {
-    return true
   }
 }

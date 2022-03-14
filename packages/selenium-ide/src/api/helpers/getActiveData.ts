@@ -3,11 +3,7 @@ import defaultCommand from 'api/models/project/command'
 import defaultSuite from 'api/models/project/suite'
 import defaultTest from 'api/models/project/test'
 import { CoreSessionData } from 'api/types'
-
-const hasID =
-  (id2: string) =>
-  ({ id }: { id: string }) =>
-    id2 === id
+import { hasID } from './hasID'
 
 export const getActiveSuite = (session: CoreSessionData): SuiteShape => {
   const { project, state: { activeSuiteID } } = session

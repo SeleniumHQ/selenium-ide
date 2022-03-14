@@ -1,9 +1,9 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import List from '@mui/material/List'
-import ListSubheader from '@mui/material/ListSubheader'
 import { CommandsStateShape } from 'api/models/state/command'
 import React, { FC } from 'react'
 import CommandRow from './TestCommandRow'
+import EditorToolbar from '../Drawer/EditorToolbar'
 
 export interface CommandListProps {
   activeCommand: string
@@ -28,9 +28,25 @@ const CommandList: FC<CommandListProps> = ({
       marginTop: '48px',
     }}
     subheader={
-      <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
-        Commands
-      </ListSubheader>
+      <EditorToolbar
+        disableGutters={false}
+        sx={{ top: '96px', zIndex: 100 }}
+        onAdd={() =>
+          window.sideAPI.tests.addStep(
+            activeTest,
+            Math.max(
+              commands.findIndex(({ id }) => id === activeCommand),
+              0
+            )
+          )
+        }
+        onRemove={
+          commands.length > 1
+            ? () => window.sideAPI.tests.removeStep(activeTest, activeCommand)
+            : undefined
+        }
+        text="Commands"
+      />
     }
   >
     {commands.map((command, index) => {

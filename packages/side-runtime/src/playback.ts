@@ -24,18 +24,20 @@ import Variables from './variables'
 import { WebDriverExecutor } from '.'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import { CommandNode, CommandType } from './playback-tree/command-node'
+import { BrowserWindow } from 'electron/main'
 
 const EE = 'event-emitter'
 const state = Symbol('state')
 const DELAY_INTERVAL = 10
 
 export interface PlaybackConstructorArgs {
-  executor: WebDriverExecutor
-  logger: Console
   baseUrl: string
-  variables: Variables
+  executor: WebDriverExecutor
   getTestByName: (name: string) => TestShape
+  logger: Console
   options?: Partial<PlaybackConstructorOptions>
+  playbackWindow: BrowserWindow
+  variables: Variables
 }
 export interface PlaybackConstructorOptions {
   pauseOnExceptions: boolean
@@ -55,16 +57,16 @@ export interface PlayOptions {
 
 export default class Playback {
   constructor({
-    executor,
-    logger,
     baseUrl,
-    variables,
+    executor,
     getTestByName,
+    logger,
     options = {},
+    playbackWindow,
+    variables,
   }: PlaybackConstructorArgs) {
-    this.executor = executor
     this.baseUrl = baseUrl
-    this.variables = variables || new Variables()
+    this.executor = executor
     this.getTestByName = getTestByName
     this.logger = logger
     this.options = Object.assign(
@@ -75,6 +77,8 @@ export default class Playback {
       },
       options
     )
+    this.playbackWindow = playbackWindow
+    this.variables = variables || new Variables()
     this[state] = {}
     // @ts-expect-error
     this[EE] = new EventEmitter()
@@ -88,12 +92,13 @@ export default class Playback {
     events.mergeEventEmitter(this, this[EE])
     this._run = this._run.bind(this)
   }
-  executor: WebDriverExecutor
   baseUrl: string
-  variables: Variables
+  executor: WebDriverExecutor
   getTestByName: PlaybackConstructorArgs['getTestByName']
   logger: Console
   options: PlaybackConstructorOptions;
+  playbackWindow: BrowserWindow
+  variables: Variables
   [state]: {
     initialized?: boolean
     lastSentCommandState?: PlaybackEventShapes['COMMAND_STATE_CHANGED']
@@ -290,8 +295,9 @@ export default class Playback {
     })
     await this.executor.init({
       baseUrl: this.baseUrl,
-      variables: this.variables,
       logger: this.logger,
+      variables: this.variables,
+      window: this.playbackWindow,
     })
   }
 

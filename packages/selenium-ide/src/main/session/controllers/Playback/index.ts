@@ -37,6 +37,7 @@ export default class PlaybackController {
       executor: this.session.driver.driver,
       getTestByName: (name: string) => this.session.tests.getByName(name),
       logger: console,
+      playbackWindow: await this.session.windows.get('playback-window'),
       variables: new Variables(),
     })
     this.playback = playback

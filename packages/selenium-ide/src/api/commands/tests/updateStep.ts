@@ -2,13 +2,15 @@ import { CommandShape } from '@seleniumhq/side-model'
 import merge from 'lodash/fp/merge'
 import update from 'lodash/fp/update'
 import browserHandler from 'browser/api/classes/Handler'
-import mainHandler from 'main/api/classes/Handler'
-import { Session } from 'main/types'
+import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { CoreSessionData, Mutator } from 'api/types'
+import { hasID } from 'api/helpers/hasID'
 
-export type Shape = Session['tests']['updateStep']
-
-const hasID = (id: string) => (obj: { id: string }) => obj.id === id
+export type Shape = (
+  testID: string,
+  stepID: string,
+  step: Partial<CommandShape>
+) => Promise<void>
 
 export const mutator: Mutator<Shape> = (
   session: CoreSessionData,
@@ -28,4 +30,4 @@ export const mutator: Mutator<Shape> = (
 
 export const browser = browserHandler<Shape>()
 
-export const main = mainHandler<Shape>()
+export const main = mainHandler<Shape>(passthrough)

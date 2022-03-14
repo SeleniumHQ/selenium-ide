@@ -85,6 +85,7 @@ export default class ProjectsController {
   }
 
   async new(): Promise<ProjectShape> {
+    const testID = randomUUID()
     const starterProject: ProjectShape = {
       id: randomUUID(),
       version: '3.0',
@@ -92,10 +93,19 @@ export default class ProjectsController {
       url: 'http://www.google.com',
       urls: ['http://www.google.com'],
       plugins: [],
-      suites: [],
-      tests: [
+      suites: [
         {
           id: randomUUID(),
+          name: 'New Suite',
+          parallel: false,
+          persistSession: false,
+          tests: [testID],
+          timeout: 30000,
+        },
+      ],
+      tests: [
+        {
+          id: testID,
           name: 'New Test',
           commands: [
             {

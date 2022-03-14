@@ -69,6 +69,7 @@ export interface WebDriverExecutorInitOptions {
   baseUrl: string
   logger: Console
   variables: Variables
+  window: BrowserWindow
 }
 
 export interface WebDriverExecutorCondEvalResult {
@@ -117,10 +118,11 @@ export default class WebDriverExecutor {
   logger?: Console;
   [state]?: any
 
-  async init({ baseUrl, logger, variables }: WebDriverExecutorInitOptions) {
+  async init({ baseUrl, logger, variables, window }: WebDriverExecutorInitOptions) {
     this.baseUrl = baseUrl
-    this.variables = variables
     this.logger = logger
+    this.variables = variables
+    this.window = window
     this[state] = {}
 
     if (!this.driver) {
@@ -138,20 +140,14 @@ export default class WebDriverExecutor {
       for (let i = 0, ii = handles.length; i !== ii; i++) {
         await this.driver.switchTo().window(handles[i])
         const title = await this.driver.getTitle()
-        if (title === 'Playback Window') {
+        const url = await this.driver.getCurrentUrl()
+        if (title === this.window.getTitle() && url === this.window.webContents.getURL()) {
           this.windowHandle = handles[i]
           break
         }
       }
     } else {
       this.driver.switchTo().window(this.windowHandle)
-    }
-    // Figure out playback window on other side by checking window.title
-    if (!this.window) {
-      const electronWindows = BrowserWindow.getAllWindows()
-      this.window = electronWindows.find(
-        (window) => window.title === 'Playback Window'
-      ) as BrowserWindow
     }
     this.initialized = true
   }

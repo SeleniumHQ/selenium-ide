@@ -1,36 +1,55 @@
 import Divider from '@mui/material/Divider'
-import MuiDrawer from '@mui/material/Drawer'
+import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import React from 'react'
 import DrawerHeader from './Header'
+import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 
 export const drawerWidth = 160
 
-export const drawerStyle = {
+export const drawerStyle = (footerHeight: number) => ({
   width: drawerWidth,
   flexShrink: 0,
   '& .MuiDrawer-paper': {
-    width: drawerWidth,
     boxSizing: 'border-box',
+    height: `calc(100% - ${footerHeight + 10}px)`,
+    width: drawerWidth,
   },
-}
+})
 
-interface DrawerProps {
+interface CustomDrawerProps extends DrawerProps {
+  footerID: string
+  header: React.ReactNode
   open: boolean
   setOpen: (b: boolean) => void
 }
 
-const Drawer: React.FC<DrawerProps> = ({ children, open, setOpen }) => (
-  <MuiDrawer variant="persistent" anchor="left" open={open} sx={drawerStyle}>
-    <DrawerHeader>
-      <IconButton onClick={() => setOpen(false)}>
-        <ChevronLeft />
-      </IconButton>
-    </DrawerHeader>
-    <Divider />
-    {children}
-  </MuiDrawer>
-)
+const Drawer: React.FC<CustomDrawerProps> = ({
+  children,
+  footerID,
+  header = null,
+  open,
+  setOpen,
+}) => {
+  const footerHeight = useHeightFromElement(footerID)
+  return (
+    <MuiDrawer
+      variant="persistent"
+      anchor="left"
+      open={open}
+      sx={drawerStyle(footerHeight)}
+    >
+      <DrawerHeader>
+        <IconButton onClick={() => setOpen(false)}>
+          <ChevronLeft />
+        </IconButton>
+        <span style={{ display: 'flex', flex: '1' }}>{header}</span>
+      </DrawerHeader>
+      <Divider sx={{ position: 'sticky', top: '46px' }} />
+      {children}
+    </MuiDrawer>
+  )
+}
 
 export default Drawer

@@ -1,28 +1,22 @@
 import Paper from '@mui/material/Paper'
 import { getActiveCommand, getActiveTest } from 'api/helpers/getActiveData'
-import React, { useEffect } from 'react'
+import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
+import React from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import { CoreSessionData } from 'api/types'
 import DrawerHeader from '../Drawer/Header'
-import { drawerWidth } from '../Drawer'
 
 const TestsTab: React.FC<{
-  open: boolean
   session: CoreSessionData
-}> = ({ open, session }) => {
+}> = ({ session }) => {
   const activeTest = getActiveTest(session)
   const activeCommand = getActiveCommand(session)
   const {
     state: { activeCommandID, activeTestID, commands, playback },
   } = session
 
-  const [bottomOffset, setBottomOffset] = React.useState(0)
-  useEffect(() => {
-    const commandEditorHeight =
-      document.getElementById('command-editor')?.clientHeight ?? 0
-    setBottomOffset(commandEditorHeight + 10)
-  }, [activeCommand.id])
+  const bottomOffset = useHeightFromElement('command-editor')
   return (
     <>
       <DrawerHeader />
@@ -40,8 +34,9 @@ const TestsTab: React.FC<{
         sx={{
           position: 'fixed',
           bottom: 0,
-          left: open ? drawerWidth : 0,
+          left: 0,
           right: 0,
+          zIndex: 2000,
         }}
       >
         <CommandEditor

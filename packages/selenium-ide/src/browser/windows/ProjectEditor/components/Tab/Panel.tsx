@@ -7,16 +7,10 @@ interface TabPanelProps {
   value: number
 }
 
-const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => (
-  <div
-    role="tabpanel"
-    hidden={value !== index}
-    id={`full-width-tabpanel-${index}`}
-    aria-labelledby={`full-width-tab-${index}`}
-    {...other}
-  >
+const TabPanel = ({ children, value, index }: TabPanelProps) => (
+  <>
     {value === index && children}
-  </div>
+  </>
 )
 
 export default TabPanel;

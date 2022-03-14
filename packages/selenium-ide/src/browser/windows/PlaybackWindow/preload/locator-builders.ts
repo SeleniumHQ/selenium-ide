@@ -55,9 +55,9 @@ export default class LocatorBuilders {
     }
   }
 
-  buildAll(el: HTMLElement) {
+  buildAll(el: HTMLElement): [string, string][] {
     let locator
-    let locators = []
+    let locators: [string, string][] = []
     for (let i = 0; i < LocatorBuilders.order.length; i++) {
       let finderName = LocatorBuilders.order[i]
       try {

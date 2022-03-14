@@ -1,14 +1,15 @@
 import { SuiteShape } from '@seleniumhq/side-model'
+import { hasID } from 'api/helpers/hasID'
+import { CoreSessionData, Mutator } from 'api/types'
+import browserHandler from 'browser/api/classes/Handler'
 import merge from 'lodash/fp/merge'
 import update from 'lodash/fp/update'
-import browserHandler from 'browser/api/classes/Handler'
-import mainHandler from 'main/api/classes/Handler'
-import { Session } from 'main/types'
-import { CoreSessionData, Mutator } from 'api/types'
+import mainHandler, { passthrough } from 'main/api/classes/Handler'
 
-export type Shape = Session['suites']['update']
-
-const hasID = (id: string) => (obj: { id: string }) => obj.id === id
+export type Shape = (
+  suiteID: string,
+  updates: Partial<Omit<SuiteShape, 'tests'>>
+) => Promise<void>
 
 export const mutator: Mutator<Shape> = (
   session: CoreSessionData,
@@ -25,4 +26,4 @@ export const mutator: Mutator<Shape> = (
 
 export const browser = browserHandler<Shape>()
 
-export const main = mainHandler<Shape>()
+export const main = mainHandler<Shape>(passthrough)

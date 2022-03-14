@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { ApiHandler, Mutator } from 'api/types'
+import { ApiHandler, EmptyApiHandler, Mutator } from 'api/types'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
 
@@ -25,6 +25,15 @@ const defaultHandler = <HANDLER extends ApiHandler>(
   throw new Error(`Missing method for path ${path}`)
 }
 
+const passThroughHandler = <HANDLER extends EmptyApiHandler>(
+  _path: string,
+  _session: Session,
+): AsyncHandler<HANDLER> => {
+  const handler = async (..._args: Parameters<HANDLER>) => {}
+  return handler as unknown as AsyncHandler<HANDLER>
+}
+export const passthrough = passThroughHandler
+
 const Handler =
   <HANDLER extends ApiHandler>(
     factory: HandlerFactory<HANDLER> = defaultHandler
@@ -32,10 +41,10 @@ const Handler =
   (path: string, session: Session, mutator?: Mutator<HANDLER>) => {
     const handler = factory(path, session)
     ipcMain.on(path, async (_event, ...args) => {
-      console.debug('Received API Request', path, ...args)
+      // console.debug('Received API Request', path, ...args)
       const params = args as Parameters<HANDLER>
       const result = await handler(...params)
-      console.debug('Resolved API Request', path, result)
+      // console.debug('Resolved API Request', path, result)
       if (mutator) {
         const newState = mutator(getCore(session), { params, result })
         session.projects.project = newState.project

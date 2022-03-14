@@ -5,6 +5,7 @@ import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
 import { Mutator } from 'api/types'
+import { hasID } from 'api/helpers/hasID'
 
 export type Shape = Session['tests']['addStep']
 
@@ -17,7 +18,7 @@ export const mutator: Mutator<Shape> = (
   const sessionWithNewCommand = update(
     'project.tests',
     (tests: TestShape[]) => {
-      const testIndex = tests.findIndex((test) => test.id === testID)
+      const testIndex = tests.findIndex(hasID(testID))
       return update(
         `${testIndex}.commands`,
         (commands: CommandShape[]) => {

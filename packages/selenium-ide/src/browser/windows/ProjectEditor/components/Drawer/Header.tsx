@@ -1,14 +1,19 @@
 import { styled } from '@mui/material/styles'
 
 // @ts-expect-error
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
+const DrawerHeader = styled('div')(({ theme }) => console.log(theme) || ({
   alignItems: 'center',
+  backgroundColor: theme.palette.background.paper,
+  borderBottom: '1px solid',
+  borderColor: theme.palette.action.focus,
+  display: 'flex',
   // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
   height: '47px !important',
-  minHeight: '47px !important',
   justifyContent: 'flex-end',
+  minHeight: '47px !important',
+  position: 'sticky',
+  top: 0,
+  zIndex: 100
 }))
 
 export default DrawerHeader

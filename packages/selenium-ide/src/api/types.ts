@@ -7,6 +7,7 @@ export { StateShape } from './models/state'
 export type VariadicArgs = any[]
 
 export type ApiHandler = (...args: any[]) => any
+export type EmptyApiHandler = (...args: any[]) => void
 
 export type ApiPromiseHandler = (...args: any[]) => PromiseLike<any>
 

@@ -102,6 +102,10 @@
 /**
  * Margin
  */
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -145,6 +149,8 @@
  * Line-Height
  */
 .lh-36 {
+  min-height: 36px !important;
+  height: 36px !important;
   line-height: 36px !important;
 }
 

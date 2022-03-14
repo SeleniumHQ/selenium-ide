@@ -18,7 +18,6 @@ import Main from './components/Main'
 import AppBar from './components/AppBar'
 import TabPanel from './components/Tab/Panel'
 import TabPanelMulti from './components/Tab/PanelMulti'
-import Drawer from './components/Drawer'
 import ProjectTab from './components/Project/ProjectTab'
 
 function a11yProps(index: number) {
@@ -36,7 +35,7 @@ const ProjectTestCommandList = () => {
   } = session
 
   const [tab, setTab] = React.useState(0)
-  const [_openDrawer, setOpenDrawer] = React.useState(false)
+  const [_openDrawer, setOpenDrawer] = React.useState(true)
   const openDrawer = _openDrawer && tab !== 2
 
   if (id == loadingID) {
@@ -59,7 +58,7 @@ const ProjectTestCommandList = () => {
                 <MenuIcon />
               </IconButton>
             </TabPanelMulti>
-            <TabPanel index={2} value={tab} />  
+            <TabPanel index={2} value={tab} />
             <Typography variant="h6" noWrap component="div">
               Selenium IDE
             </Typography>
@@ -78,21 +77,27 @@ const ProjectTestCommandList = () => {
           </Tabs>
         </AppBar>
         <TabPanel index={0} value={tab}>
-          <Drawer open={openDrawer} setOpen={setOpenDrawer}>
-            <TestsDrawer activeTest={activeTestID} tests={tests} />
-          </Drawer>
+          <TestsDrawer
+            activeTest={activeTestID}
+            open={openDrawer}
+            setOpen={setOpenDrawer}
+            tests={tests}
+          />
         </TabPanel>
         <TabPanel index={1} value={tab}>
-          <Drawer open={openDrawer} setOpen={setOpenDrawer}>
-            <SuitesDrawer activeSuite={activeSuiteID} suites={suites} />
-          </Drawer>
+          <SuitesDrawer
+            activeSuite={activeSuiteID}
+            open={openDrawer}
+            setOpen={setOpenDrawer}
+            suites={suites}
+          />
         </TabPanel>
         <Main className="fill" open={openDrawer}>
           <TabPanel index={0} value={tab}>
-            <TestsTab open={openDrawer} session={session} />
+            <TestsTab session={session} />
           </TabPanel>
           <TabPanel index={1} value={tab}>
-            <SuitesTab open={openDrawer} session={session} />
+            <SuitesTab session={session} />
           </TabPanel>
           <TabPanel index={2} value={tab}>
             <ProjectTab open={openDrawer} session={session} />

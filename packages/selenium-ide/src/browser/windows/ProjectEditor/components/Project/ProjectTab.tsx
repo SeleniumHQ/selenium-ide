@@ -20,7 +20,7 @@ export interface MiniProjectShape {
 const ProjectTab: FC<ProjectTabProps> = ({ open, session: { project } }) => (
   <Paper
     elevation={1}
-    id="suite-editor"
+    id="project-editor"
     square
     sx={{
       position: 'fixed',

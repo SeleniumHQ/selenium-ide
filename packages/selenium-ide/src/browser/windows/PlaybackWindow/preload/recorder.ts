@@ -89,8 +89,8 @@ export default class Recorder {
   /* record */
   record(
     command: string,
-    target: string | string[][],
-    value: string | string[][],
+    target: string | [string, string][],
+    value: string | [string, string][],
     insertBeforeLastCommand: boolean = false,
     actualFrameLocation?: string
   ) {

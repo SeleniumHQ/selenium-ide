@@ -6,12 +6,12 @@ import { mutator as recordNewCommandMutator } from './recordNewCommand'
 import { mutator as updateStepTestsMutator } from '../tests/updateStep'
 
 type windowID = string
-type switchToWindowStepID = string
-export type OnNewWindowRecorder = [windowID, switchToWindowStepID]
+type selectWindowStepID = string
+export type OnNewWindowRecorder = [windowID, selectWindowStepID]
 
 export const mutator: EventMutator<OnNewWindowRecorder> = (
   session,
-  [windowID, switchToWindowStepID]
+  [windowID, selectWindowStepID]
 ) => {
   const sessionWithPreviousStepUpdatedToOpenNewWindow = updateStepTestsMutator(
     session,
@@ -25,23 +25,23 @@ export const mutator: EventMutator<OnNewWindowRecorder> = (
           windowTimeout: 2000,
         },
       ],
-      result: true,
+      result: undefined,
     }
   )
-  const switchToWindowStep: CommandShape = {
-    id: switchToWindowStepID,
-    command: 'switchToWindow',
-    target: '${' + windowID + '}',
+  const selectWindowStep: CommandShape = {
+    id: selectWindowStepID,
+    command: 'selectWindow',
+    target: 'handle=${' + windowID + '}',
     value: '',
   }
-  const sessionWithSwitchToWindowStep = recordNewCommandMutator(
+  const sessionWithselectWindowStep = recordNewCommandMutator(
     sessionWithPreviousStepUpdatedToOpenNewWindow,
     {
-      params: [switchToWindowStep],
-      result: switchToWindowStep,
+      params: [selectWindowStep],
+      result: selectWindowStep,
     }
   )
-  return sessionWithSwitchToWindowStep
+  return sessionWithselectWindowStep
 }
 
 export const browser = browserEventListener<OnNewWindowRecorder>()

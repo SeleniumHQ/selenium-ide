@@ -4,6 +4,7 @@ import { Session } from 'main/types'
 import { AsyncReturnType, Mutator } from 'api/types'
 import loadingID from 'api/constants/loadingID'
 import { SuiteShape } from '@seleniumhq/side-model'
+import { hasID } from 'api/helpers/hasID'
 
 export type Shape = Session['projects']['load']
 export type Response = AsyncReturnType<Shape>
@@ -18,7 +19,7 @@ export const mutator: Mutator<Shape> = (session, { result }) => {
   const activeSuiteID = firstSuite.id
   const activeTestID = firstSuite.tests[0] ?? loadingID
   const activeCommandID =
-    result.tests.find((t) => t.id === activeTestID)?.commands?.[0]?.id ??
+    result.tests.find(hasID(activeTestID))?.commands?.[0]?.id ??
     loadingID
   return {
     project: result,
