@@ -40,20 +40,24 @@ const Handler =
   ) =>
   (path: string, session: Session, mutator?: Mutator<HANDLER>) => {
     const handler = factory(path, session)
-    ipcMain.on(path, async (_event, ...args) => {
-      // console.debug('Received API Request', path, ...args)
-      const params = args as Parameters<HANDLER>
+    const fullHandler = async (...params: Parameters<HANDLER>) => {
       const result = await handler(...params)
-      // console.debug('Resolved API Request', path, result)
       if (mutator) {
         const newState = mutator(getCore(session), { params, result })
         session.projects.project = newState.project
         session.state.state = newState.state
         session.api.state.onMutate.dispatchEvent(path, { params, result })
       }
+      return result
+    };
+    ipcMain.on(path, async (_event, ...args) => {
+      // console.debug('Received API Request', path, ...args)
+      const params = args as Parameters<HANDLER>
+      const result = await fullHandler(...params)
+      // console.debug('Resolved API Request', path, result)
       _event.sender.send(`${path}.complete`, result)
     })
-    return handler
+    return fullHandler
   }
 
 export default Handler

@@ -1,12 +1,13 @@
 import { Chrome } from '@seleniumhq/browser-info'
 import { Browser } from '@seleniumhq/get-driver'
-import { App, Menu } from 'electron'
+import { App } from 'electron'
 import Store from 'electron-store'
 import config from './store/config'
 import ArgTypesController from './session/controllers/ArgTypes'
 import CommandsController from './session/controllers/Commands'
 import DialogsController from './session/controllers/Dialogs'
 import DriverController from './session/controllers/Driver'
+import MenuController from './session/controllers/Menu'
 import PlaybackController from './session/controllers/Playback'
 import PluginsController from './session/controllers/Plugins'
 import ProjectsController from './session/controllers/Projects'
@@ -39,7 +40,7 @@ export interface Session {
   commands: CommandsController
   dialogs: DialogsController
   driver: DriverController
-  menu: Menu
+  menu: MenuController
   playback: PlaybackController
   plugins: PluginsController
   projects: ProjectsController

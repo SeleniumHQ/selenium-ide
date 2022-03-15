@@ -27,7 +27,7 @@ export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 const startDriver: StartDriver =
-  ({ app, store }) =>
+  ({ store }) =>
   ({ browser, version }) =>
     new Promise((resolve, reject) => {
       let initialized = false
@@ -92,10 +92,6 @@ const startDriver: StartDriver =
               reject(code)
             }
           }
-        })
-        app.on('before-quit', () => {
-          console.log('Killing driver')
-          driver.kill()
         })
       } else {
         resolve({

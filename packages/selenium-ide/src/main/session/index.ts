@@ -1,10 +1,11 @@
-import { App, Menu } from 'electron'
+import { App } from 'electron'
 import Api from '../api'
 import { Session, Storage } from '../types'
 import ArgTypesController from './controllers/ArgTypes'
 import CommandsController from './controllers/Commands'
 import DialogsController from './controllers/Dialogs'
 import DriverController from './controllers/Driver'
+import MenuController from './controllers/Menu'
 import PlaybackController from './controllers/Playback'
 import PluginsController from './controllers/Plugins'
 import ProjectsController from './controllers/Projects'
@@ -23,12 +24,12 @@ export default async function createSession(
   const partialSession: Partial<Session> = {
     app,
     dialogs: new DialogsController(),
-    menu: new Menu(),
     store,
   }
   partialSession.argTypes = new ArgTypesController(partialSession as Session)
   partialSession.commands = new CommandsController(partialSession as Session)
   partialSession.driver = new DriverController(partialSession as Session)
+  partialSession.menu = new MenuController(partialSession as Session)
   partialSession.playback = new PlaybackController(partialSession as Session)
   partialSession.plugins = new PluginsController(partialSession as Session)
   partialSession.projects = new ProjectsController(partialSession as Session)

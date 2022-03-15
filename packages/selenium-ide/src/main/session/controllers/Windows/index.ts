@@ -6,9 +6,13 @@ import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import { join } from 'path'
 
-const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8');
+const mainWindowName = 'playback-window'
+const childWindowNames = ['playback-controls', 'project-editor']
+const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
 
-export type WindowLoader = (opts?: BrowserWindowConstructorOptions) => BrowserWindow
+export type WindowLoader = (
+  opts?: BrowserWindowConstructorOptions
+) => BrowserWindow
 export interface WindowLoaderMap {
   [key: string]: WindowLoader
 }
@@ -18,14 +22,13 @@ export interface WindowLoaderFactoryMap {
 }
 const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
   Object.entries(windowConfigs).map(
-    ([key, { menus, window }]: [string, WindowConfig]) => {
+    ([key, { window }]: [string, WindowConfig]) => {
       const filename = kebabCase(key)
       const preloadPath = join(__dirname, `${filename}-preload-bundle.js`)
       const hasPreload = existsSync(preloadPath)
       const windowLoader: WindowLoaderFactory =
         (session: Session) =>
         (options: BrowserWindowConstructorOptions = {}) => {
-          if (menus) menus(session.menu)
           const windowConfig = window(session)
           const win = new BrowserWindow({
             ...windowConfig,
@@ -56,7 +59,6 @@ export default class WindowsController {
     this.session = session
     this.playbackWindows = []
     this.windows = {}
-
   }
   session: Session
   playbackWindows: BrowserWindow[]
@@ -69,10 +71,6 @@ export default class WindowsController {
     })
   }
 
-  async get(name: string): Promise<BrowserWindow> {
-    return this.windows[name]
-  }
-
   async close(name: string): Promise<boolean> {
     const window = this.windows[name]
     if (!window) {
@@ -83,7 +81,20 @@ export default class WindowsController {
     return true
   }
 
-  async open(name: string, opts: BrowserWindowConstructorOptions = {}): Promise<boolean> {
+  async closeAll(): Promise<void> {
+    this.windows = {}
+    const windows = BrowserWindow.getAllWindows()
+    windows.forEach((window) => window.close())
+  }
+
+  async get(name: string): Promise<BrowserWindow> {
+    return this.windows[name]
+  }
+
+  async open(
+    name: string,
+    opts: BrowserWindowConstructorOptions = {}
+  ): Promise<boolean> {
     if (!this.windowLoaders[name]) {
       throw new Error(`Invalid window name supplied '${name}'!`)
     }
@@ -109,7 +120,59 @@ export default class WindowsController {
         },
       },
     }))
-    window.webContents.on('did-create-window', win => this.handlePlaybackWindow(win));
-    window.on('closed', () => this.playbackWindows.splice(this.playbackWindows.indexOf(window)));
+    window.webContents.on('did-create-window', (win) =>
+      this.handlePlaybackWindow(win)
+    )
+    window.on('closed', () =>
+      this.playbackWindows.splice(this.playbackWindows.indexOf(window))
+    )
+  }
+
+  async onProjectLoaded() {
+    if (await this.get('splash')) {
+      this.close('splash')
+    }
+    await Promise.all(
+      [mainWindowName]
+        .concat(childWindowNames)
+        .map((name: string) => this.open(name))
+    )
+    const mainWindow = await this.get(mainWindowName)
+    mainWindow.webContents.setWindowOpenHandler((details) => {
+      this.session.recorder.handleNewWindow(details)
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          webPreferences: {
+            preload: join(__dirname, `playback-window-preload-bundle.js`),
+          },
+        },
+      }
+    })
+    const childWindows = await Promise.all(
+      childWindowNames.map((name) => this.get(name))
+    )
+    mainWindow.on('focus', () => {
+      childWindows.forEach((win) => {
+        win.showInactive()
+      })
+    })
+    mainWindow.on('blur', () => {
+      const windows = BrowserWindow.getAllWindows()
+      const anyWindowFocused = windows.reduce((focused, window) => {
+        if (focused) return true
+        return window.isFocused()
+      }, false)
+      if (!anyWindowFocused) {
+        childWindows.forEach((win) => {
+          win.hide()
+        })
+      }
+    })
+    mainWindow.on('closed', () => {
+      childWindows.forEach((win) => {
+        win.destroy()
+      })
+    })
   }
 }

@@ -1,79 +1,36 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
-import { BrowserWindow } from 'electron'
 import { promises as fs } from 'fs'
+import Api from 'main/api'
 import { Session } from 'main/types'
-import { join } from 'path'
-import RecentProjects from './Recent'
 import { randomUUID } from 'crypto'
+import RecentProjects from './Recent'
 
-const mainWindowNames = ['playback-window', 'project-editor']
-const childWindowNames = ['playback-controls']
 export default class ProjectsController {
   constructor(session: Session) {
     this.session = session
     this.recentProjects = new RecentProjects(session)
     this.project = defaultProject
   }
+  filepath?: string
   recentProjects: RecentProjects
   project: ProjectShape
   session: Session
 
-  async onProjectLoaded(project: ProjectShape): Promise<void> {
+  async close(): Promise<void> {
+    await this.session.windows.closeAll()
+  }
+
+  async onProjectLoaded(project: ProjectShape, filepath?: string): Promise<void> {
     const {
-      session: { commands, windows },
+      session: { commands, menu, windows },
     } = this
     commands.init()
+    this.filepath = filepath
+    this.session.api = await Api(this.session)
+    await menu.onProjectLoaded()
+    await windows.onProjectLoaded()
     this.project = project
-    windows.close('splash')
-    await Promise.all(
-      mainWindowNames
-        .concat(childWindowNames)
-        .map((name: string) => windows.open(name))
-    )
-    const mainWindows = await Promise.all(
-      mainWindowNames.map((name) => windows.get(name))
-    )
-    const [playbackWindow, commandEditor] = mainWindows
-    playbackWindow.webContents.setWindowOpenHandler((details) => {
-      this.session.recorder.handleNewWindow(details)
-      return {
-        action: 'allow',
-        overrideBrowserWindowOptions: {
-          webPreferences: {
-            preload: join(__dirname, `playback-window-preload-bundle.js`),
-          },
-        },
-      }
-    })
-    const childWindows = await Promise.all(
-      childWindowNames.map((name) => windows.get(name))
-    )
-    mainWindows.forEach((mainWindow) => {
-      mainWindow.on('focus', () => {
-        childWindows.forEach((win) => {
-          win.showInactive()
-        })
-      })
-      mainWindow.on('blur', () => {
-        const windows = BrowserWindow.getAllWindows()
-        const anyWindowFocused = windows.reduce((focused, window) => {
-          if (focused) return true
-          return window.isFocused()
-        }, false)
-        if (!anyWindowFocused) {
-          childWindows.forEach((win) => {
-            win.hide()
-          })
-        }
-      })
-    })
-    playbackWindow.on('closed', () => {
-      commandEditor.destroy()
-      childWindows.forEach((win) => {
-        win.destroy()
-      })
-    })
   }
 
   async getActive(): Promise<ProjectShape> {
@@ -131,7 +88,7 @@ export default class ProjectsController {
 
   async load(filepath: string): Promise<ProjectShape> {
     const project = await this.load_v3(filepath)
-    this.onProjectLoaded(project)
+    this.onProjectLoaded(project, filepath)
     return project
   }
 
@@ -141,7 +98,7 @@ export default class ProjectsController {
 
   async update(
     _updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
-  ): Promise<boolean> {
+  ): Promise<boolean> { 
     return true
   }
 

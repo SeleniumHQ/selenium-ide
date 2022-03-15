@@ -1,5 +1,5 @@
 import { CoreSessionData } from 'api/types'
-import { BrowserWindowConstructorOptions, Menu } from 'electron'
+import { BrowserWindowConstructorOptions } from 'electron'
 import { Session } from 'main/types'
 import Api from './api'
 import ApiMutators from './api/mutator'
@@ -21,7 +21,6 @@ export type CurriedApiField<Config extends any[], Shape> = (
 ) => (name: string, context: Session | Window) => Shape
 
 export interface WindowConfig {
-  menus?: (menu: Menu) => void
   window: (session: Session) => BrowserWindowConstructorOptions
 }
 
