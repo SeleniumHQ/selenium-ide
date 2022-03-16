@@ -1,6 +1,7 @@
-import processApi from 'api/process'
 import { Api } from 'api/index'
+import processApi from 'api/process'
 import { Session } from 'main/types'
+import { ipcMain } from 'electron'
 
 export type MainApiMapper = {
   [Namespace in keyof Api]: {
@@ -10,9 +11,11 @@ export type MainApiMapper = {
   }
 }
 
-export default (session: Session) =>
-  processApi<MainApiMapper>((name, handler) => {
+export default (session: Session) => {
+  ipcMain.removeAllListeners()
+  return processApi<MainApiMapper>((name, handler) => {
     if (handler.main) {
       return handler.main(name, session, handler.mutator)
     }
   })
+}

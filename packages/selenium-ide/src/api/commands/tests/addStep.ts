@@ -18,6 +18,7 @@ export const mutator: Mutator<Shape> = (
   const sessionWithNewCommand = update(
     'project.tests',
     (tests: TestShape[]) => {
+      console.log('Updating?')
       const testIndex = tests.findIndex(hasID(testID))
       return update(
         `${testIndex}.commands`,

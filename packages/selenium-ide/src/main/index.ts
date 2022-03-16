@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import contextMenu from 'electron-context-menu'
 import { MenuItemConstructorOptions } from 'electron/main'
 import store from './store'
@@ -41,7 +41,6 @@ let allWindowsClosed = false
 // after all windows have been closed
 app.on('window-all-closed', () => {
   allWindowsClosed = true
-  ipcMain.removeAllListeners()
   if (process.platform !== 'darwin') {
     app.quit()
   }

@@ -129,9 +129,7 @@ export default class WindowsController {
   }
 
   async onProjectLoaded() {
-    if (await this.get('splash')) {
-      this.close('splash')
-    }
+    await this.closeAll()
     await Promise.all(
       [mainWindowName]
         .concat(childWindowNames)

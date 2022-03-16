@@ -28,6 +28,7 @@ export default class ProjectsController {
     commands.init()
     this.filepath = filepath
     this.session.api = await Api(this.session)
+    this.session.driver.build({});
     await menu.onProjectLoaded()
     await windows.onProjectLoaded()
     this.project = project

@@ -51,10 +51,9 @@ const Handler =
       return result
     };
     ipcMain.on(path, async (_event, ...args) => {
-      // console.debug('Received API Request', path, ...args)
-      const params = args as Parameters<HANDLER>
-      const result = await fullHandler(...params)
-      // console.debug('Resolved API Request', path, result)
+      console.debug('Received API Request', path, ...args)
+      const result = await fullHandler(...args as Parameters<HANDLER>)
+      console.debug('Resolved API Request', path, result)
       _event.sender.send(`${path}.complete`, result)
     })
     return fullHandler
