@@ -10,6 +10,7 @@ export interface CommandShape {
   targets?: [string, string][]
   targetFallback?: [string, string][]
   value: string
+  values?: [string, string][]
   valueFallback?: [string, string][]
   isBreakpoint?: boolean
   skip?: boolean

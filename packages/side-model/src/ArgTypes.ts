@@ -20,11 +20,7 @@ export interface ArgType {
   description: string
 }
 
-export interface ArgTypes {
-  [key: string]: ArgType
-}
-
-export default {
+const argTypes = {
   alertText: {
     name: 'alert text',
     description: 'text to check',
@@ -166,4 +162,10 @@ export default {
     name: 'xpath',
     description: 'The xpath expression to evaluate.',
   },
-} as ArgTypes
+} as const
+
+
+export type ArgTypes = typeof argTypes;
+export type ArgNames = ArgTypes[keyof ArgTypes]['name'];
+
+export default argTypes

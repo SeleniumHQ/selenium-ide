@@ -21,7 +21,7 @@ const SuiteTestList: FC<SuiteTestListProps> = ({
     dense
     sx={{
       borderColor: 'primary.main',
-      marginBottom: `${bottomOffset + 10}px`,
+      marginBottom: `${bottomOffset}px`,
       marginTop: '48px',
     }}
     subheader={

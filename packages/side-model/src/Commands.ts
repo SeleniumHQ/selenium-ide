@@ -540,7 +540,7 @@ export default {
     description: `Soft assert that the expected element has not been chosen 
         in a select menu by its option attribute. The test will continue even if the verify fails.`,
     target: ArgTypes.selectLocator,
-    value: ArgTypes.option,
+    value: ArgTypes.optionLocator,
   },
   verifyNotText: {
     name: 'verify not text',
@@ -561,7 +561,7 @@ export default {
     description: `Soft assert that the expected element has been chosen in 
         a select menu by its option attribute. The test will continue even if the verify fails.`,
     target: ArgTypes.selectLocator,
-    value: ArgTypes.option,
+    value: ArgTypes.optionLocator,
   },
   verifyText: {
     name: 'verify text',

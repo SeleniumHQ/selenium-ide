@@ -39,6 +39,7 @@ const Handler =
       /**
        * Running the function
        */
+      
       const serverResult = await doAPI<HANDLER>(path, ...argsWithoutCallback)
       const result = transform(serverResult)
       console.debug(path, 'api complete', result)

@@ -13,7 +13,7 @@ export const drawerStyle = (footerHeight: number) => ({
   flexShrink: 0,
   '& .MuiDrawer-paper': {
     boxSizing: 'border-box',
-    height: `calc(100% - ${footerHeight + 10}px)`,
+    height: `calc(100% - ${footerHeight}px)`,
     width: drawerWidth,
   },
 })

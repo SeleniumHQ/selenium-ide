@@ -33,7 +33,7 @@
  * Flexbox
  */
 .flex {
-  display: flex;
+  display: flex !important;
 }
 .flex-1 {
   min-height: 0;
@@ -43,10 +43,10 @@
   flex: 0 0 auto;
 }
 .flex-col {
-  flex-direction: column;
+  flex-direction: column !important;
 }
 .flex-row {
-  flex-direction: row;
+  flex-direction: row !important;
 }
 
 /**
@@ -102,6 +102,18 @@
 /**
  * Margin
  */
+
+.ml-4 {
+  margin-left: 1rem !important;
+}
+.ml-5 {
+  margin-left: 1.5rem !important;
+}
+
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+
 .mx-2 {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -109,6 +121,11 @@
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .m-2 {
@@ -234,4 +251,12 @@
 }
 .command-state-errored {
   background-color: red;
+}
+
+.MuiAutocomplete-popper {
+  z-index: 3000 !important;
+}
+
+.MuiTooltip-popper {
+  z-index: 4000 !important;
 }
