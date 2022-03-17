@@ -1,8 +1,4 @@
-import FormHelperText from '@mui/material/FormHelperText'
-import Autocomplete from '@mui/material/Autocomplete'
-import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { CommandShape } from '@seleniumhq/side-model'
 import { CoreSessionData } from 'api/types'
