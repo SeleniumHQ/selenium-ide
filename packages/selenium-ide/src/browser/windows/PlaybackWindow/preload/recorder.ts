@@ -22,6 +22,7 @@ import {
   ExpandedMessageEvent,
   ExpandedMutationObserver,
 } from 'browser/types'
+import './find-select'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -56,10 +57,6 @@ export default class Recorder {
     window.sideAPI.recorder.onFrameRecalculate.addListener(() =>
       this.getFrameLocation()
     )
-    window.sideAPI.recorder.onToggleSelectMode.addListener((selected) => {
-      if (selected) this.attach()
-      else this.detach()
-    })
     // @ts-expect-error
     this.recordingState = {}
     window.sideAPI.recorder.requestAttach().then((shouldAttach) => {
@@ -70,11 +67,8 @@ export default class Recorder {
       }
     })
 
-    // runs in the content script of each frame
     // e.g., once on load
-    ;(async () => {
-      await this.getFrameLocation()
-    })()
+    this.getFrameLocation()
   }
   window: Window
   eventListeners: Record<string, EventListener[]>

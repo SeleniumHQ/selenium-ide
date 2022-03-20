@@ -19,44 +19,38 @@ import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
 import LocatorBuilders from './locator-builders'
 import TargetSelector from './target-selector'
 
-const locatorBuilders = new LocatorBuilders(window)
-
-window.addEventListener('message', (event) => {
-  if (
-    event.data?.direction === 'from-page-script' &&
-    event.data.action === 'find'
-  ) {
-    const element = window.document.querySelector(event.data.query)
-    highlight(element).then(() => {
-      (event.source as Window).postMessage(
-        {
-          id: event.data.id,
-          direction: 'from-content-script',
-        },
-        {
-          targetOrigin: '*'
-        }
-      )
-    })
-  }
-})
-
 let targetSelector: TargetSelector | null = null
 
-window.sideAPI.recorder.onToggleSelectMode.addListener((selecting) => {
+const locatorBuilders = new LocatorBuilders(window)
+
+window.addEventListener('message', processMessage)
+window.sideAPI.recorder.onRequestSelectElement.addListener(
+  processSelectionCommand
+)
+
+type RequestSelectElementHandlerParams = Parameters<
+  Parameters<
+    typeof window.sideAPI.recorder.onRequestSelectElement.addListener
+  >[0]
+>
+
+function processSelectionCommand(
+  selecting: RequestSelectElementHandlerParams[0],
+  field: RequestSelectElementHandlerParams[1]
+): void {
   if (selecting) {
-    startSelection()
+    startSelection(field)
   } else {
     cleanSelection()
   }
-})
+}
 
-function startSelection() {
+function startSelection(field: 'target' | 'value') {
   targetSelector = new TargetSelector(function (element, win) {
     if (element && win) {
       const target = locatorBuilders.buildAll(element)
       if (target != null && Array.isArray(target)) {
-        window.sideAPI.recorder.onSelectElement.dispatchEvent(target)
+        window.sideAPI.recorder.selectElement(field, target)
       }
     }
     targetSelector = null
@@ -64,8 +58,28 @@ function startSelection() {
 }
 
 function cleanSelection() {
-  (targetSelector as TargetSelector).cleanup()
+  ;(targetSelector as TargetSelector).cleanup()
   targetSelector = null
+}
+
+function processMessage(event: MessageEvent<any>) {
+  if (
+    event.data?.direction === 'from-page-script' &&
+    event.data.action === 'find'
+  ) {
+    const element = window.document.querySelector(event.data.query)
+    highlight(element).then(() => {
+      ;(event.source as Window).postMessage(
+        {
+          id: event.data.id,
+          direction: 'from-content-script',
+        },
+        {
+          targetOrigin: '*',
+        }
+      )
+    })
+  }
 }
 
 function highlight(element: HTMLElement): Promise<void> {
@@ -75,8 +89,7 @@ function highlight(element: HTMLElement): Promise<void> {
     document.body.appendChild(highlightElement)
     const bodyRects = document.documentElement.getBoundingClientRect()
     const elementRects = element.getBoundingClientRect()
-    highlightElement.style.left =
-      `${elementRects.left - bodyRects.left}px`
+    highlightElement.style.left = `${elementRects.left - bodyRects.left}px`
     highlightElement.style.top = `${elementRects.top - bodyRects.top}px`
     highlightElement.style.width = `${elementRects.width}px`
     highlightElement.style.height = `${elementRects.height}px`

@@ -1,11 +1,9 @@
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
 import { TestShape } from '@seleniumhq/side-model'
 import React, { FC } from 'react'
 import Drawer from '../Drawer'
 import EditorToolbar from '../Drawer/EditorToolbar'
+import RenamableListItem from '../Drawer/RenamableListItem'
 
 export interface TestListProps {
   activeTest: string
@@ -15,7 +13,8 @@ export interface TestListProps {
 }
 
 const {
-  state: { setActiveTest },
+  state: { setActiveTest: setSelected },
+  tests: { rename },
 } = window.sideAPI
 
 const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => (
@@ -44,11 +43,14 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => (
       }
     >
       {tests.map(({ id, name }) => (
-        <ListItem disablePadding key={id} onClick={() => setActiveTest(id)}>
-          <ListItemButton disableRipple selected={id === activeTest}>
-            <ListItemText>{name}</ListItemText>
-          </ListItemButton>
-        </ListItem>
+        <RenamableListItem
+          id={id}
+          key={id}
+          name={name}
+          rename={rename}
+          selected={id === activeTest}
+          setSelected={setSelected}
+        />
       ))}
     </List>
   </Drawer>

@@ -26,8 +26,12 @@ process.once('loaded', async () => {
    * Expose it in the main context
    */
   window.addEventListener('DOMContentLoaded', () => {
-    window.sideAPI = { ...api, mutators: apiMutators }
+    window.sideAPI = {
+      recorder: api.recorder,
+      // @ts-expect-error
+      mutators: { recorder: apiMutators.recorder },
+    }
     console.log('Initializing the recorder')
-    setTimeout(() => new Recorder(window), 500)
+    new Recorder(window)
   })
 })

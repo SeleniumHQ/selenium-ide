@@ -1,12 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { VariadicArgs } from 'api/types'
-
-export interface BaseListener<ARGS extends VariadicArgs> {
-  addListener: (listener: (...args: ARGS) => void) => void
-  hasListener: (listener: (...args: ARGS) => void) => boolean
-  dispatchEvent: (...args: ARGS) => void
-  removeListener: (listener: (...args: ARGS) => void) => void
-}
+import { BaseListener, VariadicArgs } from 'api/types'
 
 const baseListener = <ARGS extends VariadicArgs>(
   path: string
@@ -18,13 +11,14 @@ const baseListener = <ARGS extends VariadicArgs>(
       ipcRenderer.send(`${path}.addListener`)
       listeners.push(listener)
     },
-    hasListener(listener) {
-      return listeners.includes(listener)
-    },
     dispatchEvent(...args) {
       console.debug(path, 'dispatching event')
       listeners.forEach((fn) => fn(...args))
     },
+    hasListener(listener) {
+      return listeners.includes(listener)
+    },
+    listeners,
     removeListener(listener) {
       const index = listeners.indexOf(listener)
       ipcRenderer.send(`${path}.removeListener`)

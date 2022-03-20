@@ -1,7 +1,9 @@
 /**
  * Wrapper stuff
  */
- html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
   max-height: 100%;
@@ -25,9 +27,9 @@
 /**
  * Opacity utils
  */
- .o-25 {
-   opacity: 0.25
- }
+.o-25 {
+  opacity: 0.25;
+}
 
 /**
  * Flexbox
@@ -194,6 +196,8 @@
  */
 .draggable {
   -webkit-app-region: drag;
+  user-select: none;
+  cursor: move;
 }
 /**
  * Navbars on panel UX
@@ -231,6 +235,9 @@
   padding: 24px;
 }
 
+/*
+ * Playback command overlay colors
+ */
 .command-state-executing {
   background-color: blue;
 }
@@ -253,10 +260,19 @@
   background-color: red;
 }
 
+/*
+ * MUI Overrides
+ */
 .MuiAutocomplete-popper {
   z-index: 3000 !important;
 }
-
 .MuiTooltip-popper {
   z-index: 4000 !important;
+}
+
+.MuiList-dense {
+  padding-bottom: 0 !important;
+}
+.MuiList-dense :last-child {
+  border-bottom: 0 !important;
 }

@@ -1,16 +1,7 @@
 import { ipcMain, WebContents } from 'electron'
-import { EventMutator, VariadicArgs } from 'api/types'
+import { BaseListener, EventMutator, ListenerFn, VariadicArgs } from 'api/types'
 import { Session } from 'main/types'
 import getCore from '../helpers/getCore'
-
-export type ListenerFn<ARGS extends VariadicArgs> = (...args: ARGS) => void
-export interface BaseListener<ARGS extends VariadicArgs> {
-  addListener: (listener: ListenerFn<ARGS>) => void
-  hasListener: (listener: ListenerFn<ARGS>) => boolean
-  dispatchEvent: ListenerFn<ARGS>
-  listeners: ListenerFn<ARGS>[]
-  removeListener: (listener: ListenerFn<ARGS>) => void
-}
 
 const baseListener = <ARGS extends VariadicArgs>(
   path: string,

@@ -47,17 +47,22 @@ export type EventMutator<Type extends any> = (
   session: CoreSessionData,
   req: Type
 ) => CoreSessionData
+
 export type Mutator<Type extends ApiHandler> = (
   session: CoreSessionData,
   req: RequestData<Type>
 ) => CoreSessionData
 
-// This is shamelessly copied from here:
-// https://www.jpwilliams.dev/how-to-unpack-the-return-type-of-a-promise-in-typescript
-export type AsyncReturnType<T extends (...args: any) => any> = T extends (
-  ...args: any
-) => Promise<infer U>
-  ? U
-  : T extends (...args: any) => infer U
-  ? U
-  : any
+export type ListenerFn<ARGS extends VariadicArgs> = (...args: ARGS) => void
+
+export interface BaseListener<ARGS extends VariadicArgs> {
+  addListener: (listener: ListenerFn<ARGS>) => void
+  hasListener: (listener: ListenerFn<ARGS>) => boolean
+  dispatchEvent: ListenerFn<ARGS>
+  listeners: ListenerFn<ARGS>[]
+  removeListener: (listener: ListenerFn<ARGS>) => void
+}
+
+export type EventListenerParams<LISTENER extends BaseListener<any>> = Parameters<
+  Parameters<LISTENER['addListener']>[0]
+>

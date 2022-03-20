@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles'
 
-// @ts-expect-error
-const DrawerHeader = styled('div')(({ theme }) => console.log(theme) || ({
+const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.palette.background.paper,
   borderBottom: '1px solid',

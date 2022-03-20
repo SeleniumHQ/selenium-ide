@@ -1,8 +1,8 @@
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import AppWrapper from 'browser/components/AppWrapper'
+import renderWhenReady from 'browser/helpers/renderWhenReady'
 
 const ProjectPlaybackControls = () => (
   <AppWrapper>
@@ -14,5 +14,4 @@ const ProjectPlaybackControls = () => (
   </AppWrapper>
 )
 
-const domContainer = document.querySelector('#root')
-ReactDOM.render(React.createElement(ProjectPlaybackControls), domContainer)
+renderWhenReady(ProjectPlaybackControls)

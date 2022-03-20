@@ -5,9 +5,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 import { Browser } from '@seleniumhq/get-driver'
 import AppWrapper from 'browser/components/AppWrapper'
+import renderWhenReady from 'browser/helpers/renderWhenReady'
 import { BrowserInfo, BrowsersInfo } from 'main/types'
 import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
 
 const driverStates = {
   LIST_BROWSERS: 'Obtaining local browsers list...',
@@ -30,7 +30,7 @@ const browserFromString = (browserString: string): BrowserInfo => {
   return { browser: browser as Browser, version }
 }
 
-const ProjectEditor = () => {
+const DriverSelector = () => {
   const [browserInfo, setBrowserInfo] = useState<BrowsersInfo>({
     browsers: [],
     selected: { browser: 'chrome', version: '' },
@@ -133,5 +133,4 @@ const ProjectEditor = () => {
   )
 }
 
-const domContainer = document.querySelector('#root')
-ReactDOM.render(React.createElement(ProjectEditor), domContainer)
+renderWhenReady(DriverSelector)

@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import AppWrapper from 'browser/components/AppWrapper'
 import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
+import renderWhenReady from 'browser/helpers/renderWhenReady'
 
 const ProjectEditor = () => {
   const [recentProjects, setRecentProjects] = useState<string[]>([])
@@ -63,6 +63,4 @@ const ProjectEditor = () => {
   )
 }
 
-const domContainer = document.querySelector('#root')
-
-ReactDOM.render(React.createElement(ProjectEditor), domContainer)
+renderWhenReady(ProjectEditor)

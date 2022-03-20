@@ -9,7 +9,6 @@ import loadingID from 'api/constants/loadingID'
 import AppWrapper from 'browser/components/AppWrapper'
 import subscribeToSession from 'browser/helpers/subscribeToSession'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import SuitesDrawer from './components/Suites/SuitesDrawer'
 import SuitesTab from './components/Suites/SuitesTab'
 import TestsDrawer from './components/Tests/TestsDrawer'
@@ -19,6 +18,7 @@ import AppBar from './components/AppBar'
 import TabPanel from './components/Tab/Panel'
 import TabPanelMulti from './components/Tab/PanelMulti'
 import ProjectTab from './components/Project/ProjectTab'
+import renderWhenReady from 'browser/helpers/renderWhenReady'
 
 function a11yProps(index: number) {
   return {
@@ -92,7 +92,7 @@ const ProjectTestCommandList = () => {
             suites={suites}
           />
         </TabPanel>
-        <Main className="fill" open={openDrawer}>
+        <Main className="fill no-select" open={openDrawer}>
           <TabPanel index={0} value={tab}>
             <TestsTab session={session} />
           </TabPanel>
@@ -108,5 +108,4 @@ const ProjectTestCommandList = () => {
   )
 }
 
-const domContainer = document.querySelector('#root')
-ReactDOM.render(React.createElement(ProjectTestCommandList), domContainer)
+renderWhenReady(ProjectTestCommandList)
