@@ -47,8 +47,11 @@ export default class RecorderController {
   }
   async requestSelectElement(activate: boolean, fieldName: LocatorFields) {
     this.session.windows.getLastPlaybackWindow().focus()
-    this.session.api.recorder.onRequestSelectElement.dispatchEvent(activate, fieldName)
-  } 
+    this.session.api.recorder.onRequestSelectElement.dispatchEvent(
+      activate,
+      fieldName
+    )
+  }
   async setActiveContext(sessionID: string, frameLocation: string) {
     console.log('Setting active context', sessionID, frameLocation)
   }

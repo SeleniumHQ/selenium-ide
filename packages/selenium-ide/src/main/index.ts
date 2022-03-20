@@ -9,11 +9,12 @@ import { ChildProcess } from 'child_process'
 // Enable local debugging
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
+let session: Session;
 contextMenu({
   prepend: (defaultActions, _parameters, browserWindow, _event) => {
     const actions: MenuItemConstructorOptions[] = []
     const win = browserWindow as BrowserWindow
-    if (win.title === 'Playback Window') {
+    if (session.windows.playbackWindows.includes(win)) {
       actions.push(defaultActions.inspect())
       return actions
     }
@@ -24,7 +25,6 @@ contextMenu({
   showSearchWithGoogle: false,
 })
 
-let session: Session;
 app.on('ready', async () => {
   session = await createSession(app, store)
 })
