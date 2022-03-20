@@ -32,6 +32,8 @@ process.once('loaded', async () => {
       mutators: { recorder: apiMutators.recorder },
     }
     console.log('Initializing the recorder')
-    new Recorder(window)
+    setTimeout(() => {
+      new Recorder(window)
+    }, 500);
   })
 })

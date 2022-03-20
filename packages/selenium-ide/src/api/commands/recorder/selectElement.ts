@@ -1,10 +1,10 @@
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler, { passthrough } from 'main/api/classes/Handler'
-import { Mutator } from 'api/types'
+import { LocatorFields, Mutator } from 'api/types'
 import { mutator as updateStepMutator } from '../tests/updateStep'
 
 export type Shape = (
-  field: 'target' | 'value',
+  field: LocatorFields,
   element: [string, string][]
 ) => Promise<void>
 

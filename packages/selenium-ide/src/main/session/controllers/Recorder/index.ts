@@ -1,5 +1,6 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import { getActiveCommand } from 'api/helpers/getActiveData'
+import { LocatorFields } from 'api/types'
 import { randomInt, randomUUID } from 'crypto'
 import { Session } from 'main/types'
 
@@ -44,6 +45,10 @@ export default class RecorderController {
     console.log('Request attach thingy?')
     return true
   }
+  async requestSelectElement(activate: boolean, fieldName: LocatorFields) {
+    this.session.windows.getLastPlaybackWindow().focus()
+    this.session.api.recorder.onRequestSelectElement.dispatchEvent(activate, fieldName)
+  } 
   async setActiveContext(sessionID: string, frameLocation: string) {
     console.log('Setting active context', sessionID, frameLocation)
   }

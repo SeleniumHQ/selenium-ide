@@ -15,23 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { EventListenerParams, LocatorFields } from 'api/types'
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
 import LocatorBuilders from './locator-builders'
 import TargetSelector from './target-selector'
 
-let targetSelector: TargetSelector | null = null
+const init = () => {
+  window.addEventListener('message', processMessage)
+  window.sideAPI.recorder.onRequestSelectElement.addListener(
+    processSelectionCommand
+  )
+}
 
-const locatorBuilders = new LocatorBuilders(window)
-
-window.addEventListener('message', processMessage)
-window.sideAPI.recorder.onRequestSelectElement.addListener(
-  processSelectionCommand
-)
-
-type RequestSelectElementHandlerParams = Parameters<
-  Parameters<
-    typeof window.sideAPI.recorder.onRequestSelectElement.addListener
-  >[0]
+type RequestSelectElementHandlerParams = EventListenerParams<
+  typeof window.sideAPI.recorder.onRequestSelectElement
 >
 
 function processSelectionCommand(
@@ -45,7 +42,9 @@ function processSelectionCommand(
   }
 }
 
-function startSelection(field: 'target' | 'value') {
+let targetSelector: TargetSelector | null = null
+const locatorBuilders = new LocatorBuilders(window)
+function startSelection(field: LocatorFields) {
   targetSelector = new TargetSelector(function (element, win) {
     if (element && win) {
       const target = locatorBuilders.buildAll(element)
@@ -105,3 +104,5 @@ function highlight(element: HTMLElement): Promise<void> {
     }, 500)
   })
 }
+
+export default init

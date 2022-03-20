@@ -46,7 +46,12 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
           size="small"
           value={command[fieldName]}
         />
-        <IconButton className="flex-fixed ml-4">
+        <IconButton
+          className="flex-fixed ml-4"
+          onClick={() =>
+            window.sideAPI.recorder.requestSelectElement(true, fieldName)
+          }
+        >
           <AddToHomeScreenIcon />
         </IconButton>
       </div>

@@ -1,5 +1,5 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData, LocatorFields } from 'api/types'
 
 export interface CommandEditorProps {
   command: CommandShape
@@ -8,11 +8,11 @@ export interface CommandEditorProps {
 }
 
 export interface CommandArgFieldProps extends CommandEditorProps {
-  fieldName: 'target' | 'value'
+  fieldName: LocatorFields
 }
 
 export interface CommandFieldProps extends CommandEditorProps {
-  fieldName: 'comment' | 'target' | 'value'
+  fieldName: 'comment' | LocatorFields
 }
 
 export interface MiniCommandShape {

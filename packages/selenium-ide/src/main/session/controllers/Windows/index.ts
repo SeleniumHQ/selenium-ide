@@ -83,12 +83,16 @@ export default class WindowsController {
 
   async closeAll(): Promise<void> {
     this.windows = {}
+    this.playbackWindows = []
     const windows = BrowserWindow.getAllWindows()
     windows.forEach((window) => window.close())
   }
 
   async get(name: string): Promise<BrowserWindow> {
     return this.windows[name]
+  }
+  getLastPlaybackWindow(): BrowserWindow {
+    return this.playbackWindows[this.playbackWindows.length - 1]
   }
 
   async open(
@@ -106,6 +110,9 @@ export default class WindowsController {
       this.handlePlaybackWindow(window)
     }
     this.windows[name] = window
+    window.on('closed', () => {
+      delete this.windows[name]
+    })
     return true
   }
 
@@ -123,8 +130,16 @@ export default class WindowsController {
     window.webContents.on('did-create-window', (win) =>
       this.handlePlaybackWindow(win)
     )
+
+    window.on('focus', () => {
+      const windowIndex = this.playbackWindows.indexOf(window)
+      if (windowIndex !== this.playbackWindows.length - 1) {
+        this.playbackWindows.splice(windowIndex, 1)
+        this.playbackWindows.push(window)
+      }
+    })
     window.on('closed', () =>
-      this.playbackWindows.splice(this.playbackWindows.indexOf(window))
+      this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
     )
   }
 

@@ -22,7 +22,7 @@ import {
   ExpandedMessageEvent,
   ExpandedMutationObserver,
 } from 'browser/types'
-import './find-select'
+import initFindSelect from './find-select'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -66,7 +66,7 @@ export default class Recorder {
         this.attach()
       }
     })
-
+    initFindSelect()
     // e.g., once on load
     this.getFrameLocation()
   }

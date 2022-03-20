@@ -66,3 +66,5 @@ export interface BaseListener<ARGS extends VariadicArgs> {
 export type EventListenerParams<LISTENER extends BaseListener<any>> = Parameters<
   Parameters<LISTENER['addListener']>[0]
 >
+
+export type LocatorFields = 'target' | 'value'

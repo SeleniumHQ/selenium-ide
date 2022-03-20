@@ -1,9 +1,10 @@
+import { LocatorFields } from 'api/types'
 import browserEventListener from 'browser/api/classes/EventListener'
 import mainEventListener from 'main/api/classes/EventListener'
 
 export type OnRequestSelectElementRecorder = [
   boolean,
-  'target' | 'value'
+  LocatorFields
 ]
 
 export const browser = browserEventListener<OnRequestSelectElementRecorder>()
