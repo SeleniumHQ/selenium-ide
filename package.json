@@ -22,6 +22,9 @@
     "preinstall": "node ./scripts/check-yarn.js",
     "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "files": [],
   "jest": {
     "testURL": "http://localhost/index.html",
