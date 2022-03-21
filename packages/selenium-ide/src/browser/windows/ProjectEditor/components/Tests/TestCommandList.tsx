@@ -22,11 +22,6 @@ const CommandList: FC<CommandListProps> = ({
 }) => (
   <List
     dense
-    sx={{
-      borderColor: 'primary.main',
-      marginBottom: `${bottomOffset}px`,
-      marginTop: '48px',
-    }}
     subheader={
       <EditorToolbar
         disableGutters={false}
@@ -48,6 +43,11 @@ const CommandList: FC<CommandListProps> = ({
         text="Commands"
       />
     }
+    sx={{
+      borderColor: 'primary.main',
+      marginBottom: `${bottomOffset}px`,
+      marginTop: '48px',
+    }}
   >
     {commands.map((command, index) => {
       const { id } = command

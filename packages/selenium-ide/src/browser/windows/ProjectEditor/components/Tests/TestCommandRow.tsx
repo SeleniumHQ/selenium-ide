@@ -1,16 +1,17 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
-import React, { FC } from 'react'
+import { camelToTitleCase } from 'api/helpers/string'
+import ReorderableListItem from 'browser/components/ReorderableListItem'
+import React from 'react'
 
 const {
   state: { setActiveCommand },
-  tests: { updateStep }
+  tests: { updateStep },
 } = window.sideAPI
 
 type ColorMode = 'light' | 'dark'
@@ -35,11 +36,6 @@ const colorFromCommandState = (
     default:
       return 'transparent'
   }
-}
-
-const camelToTitleCase = (text: string) => {
-  const result = text.replace(/([A-Z])/g, ' $1')
-  return result.charAt(0).toUpperCase() + result.slice(1)
 }
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
@@ -67,24 +63,28 @@ const updateIsBreakpoint = (
   })
 }
 
-const CommandRow: FC<CommandRowProps> = ({
+const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
   commandState,
   command: { command, id, isBreakpoint, target, value },
+  index,
   selected,
 }) => {
-  const toggleBreakpoint = () =>
-    updateIsBreakpoint(activeTest, id, !isBreakpoint)
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     ? 'dark'
     : 'light'
+  const toggleBreakpoint = () =>
+    updateIsBreakpoint(activeTest, id, !isBreakpoint)
   const bgcolor = colorFromCommandState(commandState, prefersDarkMode)
   return (
-    <ListItem
+    <ReorderableListItem
       className="pos-rel"
       divider
-      key={id}
+      dragType='COMMAND'
+      id={id}
+      index={index}
       onClick={() => setActiveCommand(id)}
+      reorder={(...args) => window.sideAPI.tests.reorderStep(activeTest, ...args)}
       secondaryAction={
         <IconButton
           color={isBreakpoint ? 'success' : 'default'}
@@ -110,7 +110,7 @@ const CommandRow: FC<CommandRowProps> = ({
         className="fill pos-abs o-25"
         sx={{ bgcolor, marginLeft: -2, pointerEvents: 'none', zIndex: 75 }}
       />
-    </ListItem>
+    </ReorderableListItem>
   )
 }
 

@@ -7,13 +7,13 @@ import { hasID } from 'api/helpers/hasID'
 
 export type Shape = (
   testID: string,
-  stepID: string,
+  oldIndex: number,
   newIndex: number
 ) => Promise<void>
 
 export const mutator: Mutator<Shape> = (
   session: CoreSessionData,
-  { params: [testID, stepID, newIndex] }
+  { params: [testID, oldIndex, newIndex] }
 ) =>
   update(
     'project.tests',
@@ -22,9 +22,8 @@ export const mutator: Mutator<Shape> = (
       return update(
         `${testIndex}.commands`,
         (commands: CommandShape[]) => {
-          const index = commands.findIndex(hasID(stepID))
           const newCommands = commands.slice(0)
-          const [step] = newCommands.splice(index, 1)
+          const [step] = newCommands.splice(oldIndex, 1)
           newCommands.splice(newIndex, 0, step)
           return newCommands
         },
