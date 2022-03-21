@@ -190,7 +190,7 @@ import org.openqa.selenium.Keys;
 import java.util.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-public class LoginTest {
+public class ReusedmethodsTest {
   private WebDriver driver;
   private Map<String, Object> vars;
   JavascriptExecutor js;
@@ -213,6 +213,9 @@ public class LoginTest {
       driver.findElement(By.cssSelector(\\".fa\\")).click();
     }
   }
+  public void tinymethod() {
+    vars.put(\\"value\\", \\"field\\");
+  }
   @Test
   public void invalidcredentials() {
     vars.put(\\"username\\", \\"blah\\");
@@ -224,6 +227,13 @@ public class LoginTest {
     vars.put(\\"username\\", \\"tomsmith\\");
     vars.put(\\"password\\", \\"SuperSecretPassword!\\");
     login();
+  }
+  @Test
+  public void twomethods() {
+    vars.put(\\"username\\", \\"blah\\");
+    vars.put(\\"password\\", \\"blah\\");
+    login();
+    tinymethod();
   }
 }
 "

@@ -34,10 +34,12 @@ export const Commands = [
     'addSelection',
     {
       name: 'add selection',
-      description: `Add a selection to the set of options in a multi-select element.`,
+      description: `Add a selection to a set of options in a 
+        multi-select element using an option locator.
+        Option locators provide different ways of specifying a select element (e.g., label=, value=, id=, index=)`,
       type: TargetTypes.LOCATOR,
       target: ArgTypes.locator,
-      value: ArgTypes.value,
+      value: ArgTypes.optionLocator,
     },
   ],
   [
@@ -518,7 +520,8 @@ export const Commands = [
       name: 'remove selection',
       type: TargetTypes.LOCATOR,
       description: `Remove a selection from the set of selected options in a 
-        multi-select element using an option locator.`,
+        multi-select element using an option locator.
+        Option locators provide different ways of specifying a select element (e.g., label=, value=, id=, index=)`,
       target: ArgTypes.locator,
       value: ArgTypes.optionLocator,
     },

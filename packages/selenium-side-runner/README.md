@@ -18,10 +18,10 @@ or
 ```selenium-side-runner -c "browserName=chrome platform=MAC"```
 
 #### Passing nested capabilities
-```selenium-side-runner -c "chromeOptions.binary='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'"```
+```selenium-side-runner -c "goog:chromeOptions.binary='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'"```
 
 #### Chrome specific list capabilities (headless)
-```selenium-side-runner -c "chromeOptions.args=[disable-infobars, headless]"```
+```selenium-side-runner -c "goog:chromeOptions.args=[disable-infobars, headless]"```
 
 ### Running on remote WebDriver server
 ```selenium-side-runner --server http://localhost:4444/wd/hub```
