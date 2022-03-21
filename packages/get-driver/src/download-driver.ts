@@ -58,7 +58,7 @@ export default async function downloadDriver({
   }
 
   if (url.endsWith('.zip')) {
-    res.body.pipe(unzipper.Parse()).pipe(
+    res?.body?.pipe(unzipper.Parse()).pipe(
       new stream.Transform({
         objectMode: true,
         transform: function(entry, _e, cb) {
@@ -80,7 +80,7 @@ export default async function downloadDriver({
       })
     )
   } else {
-    res.body.pipe(
+    res?.body?.pipe(
       tar.t({
         filter: (path, _stat) => path === 'geckodriver',
         onentry: entry => {

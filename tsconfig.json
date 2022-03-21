@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "strictNullChecks": false
+  },
   "include": [],
   "references": [
     {
