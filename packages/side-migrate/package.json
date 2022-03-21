@@ -7,10 +7,10 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
+    "build": "tsc",
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn clean && yarn build",
-    "watch": "yarn build -w"
+    "watch": "tsc --watch"
   },
   "main": "dist/migrate.js",
   "files": [
@@ -23,7 +23,10 @@
   "bugs": {
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/xml-escape": "1.1.0",
+    "@types/xml-js": "1.0.0"
+  },
   "dependencies": {
     "@seleniumhq/side-model": "^3.5.10",
     "unescape": "^1.0.1",

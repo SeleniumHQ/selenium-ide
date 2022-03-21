@@ -1,0 +1,278 @@
+/**
+ * Wrapper stuff
+ */
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+/**
+ * Position utils
+ */
+.pos-rel {
+  position: relative;
+}
+.pos-abs {
+  position: absolute;
+}
+
+/**
+ * Opacity utils
+ */
+.o-25 {
+  opacity: 0.25;
+}
+
+/**
+ * Flexbox
+ */
+.flex {
+  display: flex !important;
+}
+.flex-1 {
+  min-height: 0;
+  flex: 1 1 1px;
+}
+.flex-initial {
+  flex: 0 0 auto;
+}
+.flex-col {
+  flex-direction: column !important;
+}
+.flex-row {
+  flex-direction: row !important;
+}
+
+/**
+ * Position
+ */
+.p-fixed {
+  position: fixed;
+}
+
+/**
+ * Overflow
+ */
+.overflow-y {
+  overflow-y: auto;
+}
+.no-overflow-y {
+  overflow-y: hidden;
+}
+
+/**
+ * Height
+ */
+.height-100 {
+  height: 100%;
+}
+
+/**
+ * Width
+ */
+.width-100 {
+  width: 100%;
+}
+
+/**
+ * Height x Width
+ */
+.fill {
+  height: 100%;
+  width: 100%;
+}
+
+/**
+ * Border
+ */
+.bt {
+  border-top: 1px solid;
+}
+
+.br {
+  border-right: 1px solid;
+}
+
+/**
+ * Margin
+ */
+
+.ml-4 {
+  margin-left: 1rem !important;
+}
+.ml-5 {
+  margin-left: 1.5rem !important;
+}
+
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+.m-4 {
+  margin: 1rem;
+}
+
+/**
+ * Padding
+ */
+.pt-0 {
+  padding-top: 0;
+}
+
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+/**
+ * Text-Align
+ */
+.centered {
+  text-align: center;
+}
+
+/**
+ * Line-Height
+ */
+.lh-36 {
+  min-height: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+}
+
+/**
+ * Buttons
+ */
+.button {
+  cursor: pointer;
+}
+.no-select {
+  user-select: none;
+}
+
+/**
+ * Opacity
+ */
+.opaque {
+  opacity: 1;
+  z-index: 10;
+}
+
+/**
+ * Electron drag handler
+ */
+.draggable {
+  -webkit-app-region: drag;
+  user-select: none;
+  cursor: move;
+}
+/**
+ * Navbars on panel UX
+ */
+.panel-nav {
+  position: fixed;
+  top: 0;
+  height: 14px;
+  width: 100%;
+  z-index: 150;
+}
+.panel-v-nav {
+  position: fixed;
+  left: 0;
+  height: 100%;
+  width: 14px;
+  z-index: 150;
+}
+.outside-v-nav {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  padding-left: 14px;
+}
+.outside-nav {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 14px;
+}
+
+.playback-text {
+  position: absolute;
+  top: 45%;
+  padding: 24px;
+}
+
+/*
+ * Playback command overlay colors
+ */
+.command-state-executing {
+  background-color: blue;
+}
+.command-state-pending {
+  background-color: yellow;
+}
+.command-state-skipped {
+  background-color: orange;
+}
+.command-state-passed {
+  background-color: green;
+}
+.command-state-undetermined {
+  background-color: palevioletred;
+}
+.command-state-failed {
+  background-color: orangered;
+}
+.command-state-errored {
+  background-color: red;
+}
+
+/*
+ * MUI Overrides
+ */
+.MuiAutocomplete-popper {
+  z-index: 3000 !important;
+}
+.MuiTooltip-popper {
+  z-index: 4000 !important;
+}
+
+.MuiList-dense {
+  padding-bottom: 0 !important;
+}
+.MuiList-dense :last-child {
+  border-bottom: 0 !important;
+}

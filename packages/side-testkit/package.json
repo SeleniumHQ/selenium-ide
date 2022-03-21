@@ -7,10 +7,10 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
+    "build": "tsc",
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn clean && yarn build",
-    "watch": "yarn build -w"
+    "watch": "tsc --watch"
   },
   "main": "dist/index.js",
   "files": [
@@ -25,5 +25,8 @@
   },
   "dependencies": {
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13"
   }
 }

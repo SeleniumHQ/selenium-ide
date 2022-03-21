@@ -21,6 +21,7 @@ export interface CommandType {
   name: string
   description: string
   target?: ArgType
+  value?: ArgType
 }
 
 export interface CommandTypes {
@@ -531,7 +532,7 @@ export default {
   verifyNotEditable: {
     name: 'verify not editable',
     description: `Soft assert whether the specified input element is not 
-        editable (e.g., hasn't been disabled). The test will continue even if the verify fails.`,
+        editable (e.g., has been disabled). The test will continue even if the verify fails.`,
     target: ArgTypes.locator,
   },
   verifyNotSelectedValue: {
@@ -539,7 +540,7 @@ export default {
     description: `Soft assert that the expected element has not been chosen 
         in a select menu by its option attribute. The test will continue even if the verify fails.`,
     target: ArgTypes.selectLocator,
-    value: ArgTypes.option,
+    value: ArgTypes.optionLocator,
   },
   verifyNotText: {
     name: 'verify not text',
@@ -560,7 +561,7 @@ export default {
     description: `Soft assert that the expected element has been chosen in 
         a select menu by its option attribute. The test will continue even if the verify fails.`,
     target: ArgTypes.selectLocator,
-    value: ArgTypes.option,
+    value: ArgTypes.optionLocator,
   },
   verifyText: {
     name: 'verify text',

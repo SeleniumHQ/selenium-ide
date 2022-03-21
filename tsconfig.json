@@ -1,33 +1,32 @@
 {
-  "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "lib": ["es2017", "dom"],
-    "declaration": true,
-    "declarationMap": true,
-    "composite": true,
-    "resolveJsonModule": false,
-    // "importHelpers": true,
-    // "isolatedModules": true,
-
-    "strict": true,
-
-    /* Additional Checks */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Module Resolution Options */
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "types": [
-      "node",
-      "jest"
-    ]
-  },
-  "exclude": [
-    "**/dist/**/*"
+  "include": [],
+  "references": [
+    {
+      "path": "./packages/browser-info"
+    },
+    {
+      "path": "./packages/get-driver"
+    },
+    {
+      "path": "./packages/side-commons"
+    },
+    {
+      "path": "./packages/side-migrate"
+    },
+    {
+      "path": "./packages/side-model"
+    },
+    {
+      "path": "./packages/side-recorder-postprocessor"
+    },
+    {
+      "path": "./packages/side-runtime"
+    },
+    {
+      "path": "./packages/side-testkit"
+    },
+    {
+      "path": "./packages/webdriver-testkit"
+    }
   ]
 }

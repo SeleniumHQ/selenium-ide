@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "scripts", "../side-recorder/src/renderer/target-selector.ts"],
+  "compilerOptions": {
+    "jsx": "react",
+    "paths": {
+      "api/*": ["./src/api/*"],
+      "browser/*": ["./src/browser/*"],
+      "main/*": ["./src/main/*"]
+    },
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["electron", "webpack-env"]
+  },
+  "references": [
+    {
+      "path": "../browser-info"
+    },
+    {
+      "path": "../get-driver"
+    },
+    {
+      "path": "../side-commons"
+    },
+    {
+      "path": "../side-migrate"
+    },
+    {
+      "path": "../side-model"
+    },
+    {
+      "path": "../side-recorder-postprocessor"
+    },
+    {
+      "path": "../side-runtime"
+    }
+  ]
+}

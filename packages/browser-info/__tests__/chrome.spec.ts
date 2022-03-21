@@ -22,8 +22,8 @@ import { Chrome } from '../src/chrome'
 import { sh, makeError } from '../src/sh'
 
 const { getBrowserInfo, ChromeChannel } = Chrome
-const mockSh = (sh as unknown) as jest.Mock<any, any>
-const mockPlatform = (os.platform as unknown) as jest.Mock<any, any>
+const mockSh = sh as unknown as jest.Mock<any, any>
+const mockPlatform = os.platform as unknown as jest.Mock<any, any>
 
 describe('chrome browser info', () => {
   describe('macOS', () => {
@@ -51,11 +51,12 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.stable)
       } catch (err) {
+        // @ts-expect-error
         expect(err.message).toBe('Unable to find Chrome installation')
       }
     })
     it('should get all chrome info', async () => {
-      mockSh.mockImplementation(binary => {
+      mockSh.mockImplementation((binary) => {
         if (binary.includes('Canary')) {
           return Promise.resolve({
             stdout: 'Google Chrome 79.0.3915.0 canary\n',
@@ -96,7 +97,7 @@ describe('chrome browser info', () => {
       mockSh.mockReset()
     })
     it('should get partial chrome info if some installations do not exist', async () => {
-      mockSh.mockImplementation(binary => {
+      mockSh.mockImplementation((binary) => {
         if (binary.includes('Canary')) {
           return Promise.resolve({
             stdout: 'Google Chrome 79.0.3915.0 canary\n',
@@ -153,6 +154,7 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.stable)
       } catch (err) {
+        // @ts-expect-error
         expect(err.message).toBe('Unable to find Chrome installation')
       }
     })
@@ -161,11 +163,12 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.canary)
       } catch (err) {
+        // @ts-expect-error
         expect(err.message).toBe('Unsupported channel canary')
       }
     })
     it('should get all chrome info', async () => {
-      mockSh.mockImplementation(binary => {
+      mockSh.mockImplementation((binary) => {
         if (binary.includes('beta')) {
           return Promise.resolve({
             stdout: 'Google Chrome 75.0.3770.75 beta\n',
@@ -193,7 +196,7 @@ describe('chrome browser info', () => {
       mockSh.mockReset()
     })
     it('should get partial chrome info if some installations do not exist', async () => {
-      mockSh.mockImplementation(binary => {
+      mockSh.mockImplementation((binary) => {
         if (binary.includes('beta')) {
           return Promise.reject(makeError('error', 1, '', ''))
         } else {

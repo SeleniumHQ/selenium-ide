@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import _arg from './ArgTypes'
-import _cmds from './Commands'
-
-export const ArgTypes = _arg
-export const Commands = _cmds
+export * from './types'
+export {default as ArgTypes} from './ArgTypes'
+export {default as Commands} from './Commands'

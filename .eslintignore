@@ -1,0 +1,7 @@
+# No wasted processing 
+**/node_modules
+**/dist
+**/.yarn
+**/tsconfig.tsbuildinfo
+**/gen
+**/trace

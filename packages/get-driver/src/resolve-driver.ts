@@ -30,7 +30,7 @@ export async function resolveDriverUrl({
 }) {
   switch (browser) {
     case 'electron': {
-      return `https://github.com/electron/electron/releases/download/v${version}/chromedriver-v${version}-${platform}-${arch}.zip`
+      throw new Error('Installation of electron browser handled by electron-chromedriver package');
     }
     case 'chrome': {
       return `https://chromedriver.storage.googleapis.com/${await getChromedriverVersion(
@@ -63,13 +63,13 @@ export function resolveDriverName({
   }`
 }
 
-export type Browser = 'electron' | 'chrome' | 'firefox'
+export type Browser = 'chrome' | 'electron' | 'firefox'
 
 export type Platform = NodeJS.Platform
 
 const DriverNames: BrowserToDriver = {
-  electron: 'chromedriver',
   chrome: 'chromedriver',
+  electron: 'chromedriver',
   firefox: 'geckodriver',
 }
 
