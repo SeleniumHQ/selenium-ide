@@ -70,6 +70,7 @@ Events that pop when a command was recorded.
 ##### Options
 
 - `tabId` - the tab id of the tab the command was recorded in.
+- `commandId` - the recorded command id.
 - `command` - the recorded command.
 - `target` - the recorded target.
 - `targets` - an optional list of all recorded targets along with their strategies.
