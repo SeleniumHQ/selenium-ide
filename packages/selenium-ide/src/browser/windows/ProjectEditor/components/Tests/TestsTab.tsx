@@ -5,7 +5,7 @@ import React from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import { CoreSessionData } from 'api/types'
-import DrawerHeader from '../Drawer/Header'
+import MainHeader from '../Main/Header'
 
 const TestsTab: React.FC<{
   session: CoreSessionData
@@ -19,7 +19,7 @@ const TestsTab: React.FC<{
   const bottomOffset = useHeightFromElement('command-editor')
   return (
     <>
-      <DrawerHeader />
+      <MainHeader />
       <CommandList
         activeCommand={activeCommandID}
         activeTest={activeTestID}

@@ -1,6 +1,6 @@
 import MuiAppBar, { AppBarProps } from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
-import { drawerWidth } from './Drawer';
+import { drawerWidth } from './Drawer'
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -19,4 +19,4 @@ const AppBar = styled(MuiAppBar, {
   }),
 }))
 
-export default AppBar;
+export default AppBar

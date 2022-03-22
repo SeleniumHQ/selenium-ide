@@ -144,6 +144,11 @@ body,
   padding-top: 0;
 }
 
+.py-3 {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
 .pt-4 {
   padding-top: 1rem;
 }
@@ -273,6 +278,6 @@ body,
 .MuiList-dense {
   padding-bottom: 0 !important;
 }
-.MuiList-dense :last-child {
+.MuiList-dense > :last-child {
   border-bottom: 0 !important;
 }

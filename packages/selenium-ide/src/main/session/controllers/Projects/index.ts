@@ -21,14 +21,17 @@ export default class ProjectsController {
     await this.session.windows.closeAll()
   }
 
-  async onProjectLoaded(project: ProjectShape, filepath?: string): Promise<void> {
+  async onProjectLoaded(
+    project: ProjectShape,
+    filepath?: string
+  ): Promise<void> {
     const {
       session: { commands, menu, windows },
     } = this
     commands.init()
     this.filepath = filepath
     this.session.api = await Api(this.session)
-    this.session.driver.build({});
+    this.session.driver.build({})
     await menu.onProjectLoaded()
     await windows.onProjectLoaded()
     this.project = project
@@ -99,7 +102,7 @@ export default class ProjectsController {
 
   async update(
     _updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
-  ): Promise<boolean> { 
+  ): Promise<boolean> {
     return true
   }
 

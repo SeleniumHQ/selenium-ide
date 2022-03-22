@@ -103,7 +103,7 @@ const ProjectTestCommandList = () => {
               <SuitesTab session={session} />
             </TabPanel>
             <TabPanel index={2} value={tab}>
-              <ProjectTab open={openDrawer} session={session} />
+              <ProjectTab session={session} />
             </TabPanel>
           </Main>
         </Box>

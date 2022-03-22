@@ -4,7 +4,7 @@ import React from 'react'
 import SuiteEditor from './SuiteEditor'
 import SuiteTestList from './SuiteTestList'
 import { CoreSessionData } from 'api/types'
-import DrawerHeader from '../Drawer/Header'
+import MainHeader from '../Main/Header'
 import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 
 const SuitesTab: React.FC<{
@@ -19,7 +19,7 @@ const SuitesTab: React.FC<{
   const bottomOffset = useHeightFromElement('suite-editor')
   return (
     <>
-      <DrawerHeader />
+      <MainHeader />
       <SuiteTestList
         activeSuite={activeSuiteID}
         allTests={tests}

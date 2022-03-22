@@ -1,4 +1,4 @@
-import storage from '../../../store'
+import storage from 'main/store'
 import { Session } from 'main/types'
 
 export default class PluginsController {
