@@ -1,13 +1,15 @@
 import { Session } from 'main/types'
-import Commands from '@seleniumhq/side-model/dist/Commands'
+import Commands, { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
 
 export default class CommandsController {
   constructor(session: Session) {
     this.session = session
+    this.commands = Commands
   }
+  commands: CommandTypes
   session: Session
-  async init() {
-    this.session.state.state.commands = Commands
+  async onProjectLoaded() {
+    this.session.state.state.commands = this.commands
     return Commands
   }
 }

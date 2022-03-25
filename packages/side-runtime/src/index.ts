@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export {default as Playback} from './playback'
-export {default as Variables} from './variables'
-export {default as WebDriverExecutor} from './webdriver'
+export { default as Playback } from './playback'
+export { default as Variables } from './variables'
+export { default as WebDriverExecutor } from './webdriver'
 import { CommandType as _CommandType } from './playback-tree/command-node'
 import createRecorderSyncronizer from './recording-syncronizer'
 import createRecorderSyncronizerForWebdriverExecutor from './recording-syncronizer-webdriver'

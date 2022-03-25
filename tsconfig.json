@@ -20,6 +20,9 @@
       "path": "./packages/side-model"
     },
     {
+      "path": "./packages/side-plugin-example"
+    },
+    {
       "path": "./packages/side-recorder-postprocessor"
     },
     {

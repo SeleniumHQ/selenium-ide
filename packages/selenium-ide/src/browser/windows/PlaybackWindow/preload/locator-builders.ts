@@ -143,7 +143,10 @@ export default class LocatorBuilders {
    * @param arrayToSort
    * @param sortOrderReference
    */
-  static _sortByRefOrder = function (arrayToSort: any[], sortOrderReference: any[]) {
+  static _sortByRefOrder = function (
+    arrayToSort: any[],
+    sortOrderReference: any[]
+  ) {
     let raLen = sortOrderReference.length
     arrayToSort.sort(function (a, b) {
       let ai = sortOrderReference.indexOf(a)
@@ -270,38 +273,45 @@ export default class LocatorBuilders {
 // order listed dictates priority
 // e.g., 1st listed is top priority
 
-LocatorBuilders.add('css:data-attr', function(this: LocatorBuilders, e: HTMLElement) {
-  const dataAttributes = ['data-test', 'data-test-id']
-  for (let i = 0; i < dataAttributes.length; i++) {
-    const attr = dataAttributes[i]
-    const value = e.getAttribute(attr)
-    if (attr) {
-      return `css=*[${attr}="${value}"]`
+LocatorBuilders.add(
+  'css:data-attr',
+  function (this: LocatorBuilders, e: HTMLElement) {
+    const dataAttributes = ['data-test', 'data-test-id']
+    for (let i = 0; i < dataAttributes.length; i++) {
+      const attr = dataAttributes[i]
+      const value = e.getAttribute(attr)
+      if (attr) {
+        return `css=*[${attr}="${value}"]`
+      }
     }
+    return null
   }
-  return null
-})
+)
 
-LocatorBuilders.add('id', function(this: LocatorBuilders, e: HTMLElement) {
+LocatorBuilders.add('id', function (this: LocatorBuilders, e: HTMLElement) {
   if (e.id) {
     return 'id=' + e.id
   }
   return null
 })
 
-LocatorBuilders.add('linkText', function(this: LocatorBuilders, e: HTMLElement) {
-  if (e.nodeName == 'A') {
-    let text = e.textContent || ''
-    if (!text.match(/^\s*$/)) {
-      return (
-        'linkText=' + text.replace(/\xA0/g, ' ').replace(/^\s*(.*?)\s*$/, '$1')
-      )
+LocatorBuilders.add(
+  'linkText',
+  function (this: LocatorBuilders, e: HTMLElement) {
+    if (e.nodeName == 'A') {
+      let text = e.textContent || ''
+      if (!text.match(/^\s*$/)) {
+        return (
+          'linkText=' +
+          text.replace(/\xA0/g, ' ').replace(/^\s*(.*?)\s*$/, '$1')
+        )
+      }
     }
+    return null
   }
-  return null
-})
+)
 
-LocatorBuilders.add('name', function(this: LocatorBuilders, _e: HTMLElement) {
+LocatorBuilders.add('name', function (this: LocatorBuilders, _e: HTMLElement) {
   const e = _e as HTMLInputElement
   if (e.name) {
     return 'name=' + e.name
@@ -309,28 +319,34 @@ LocatorBuilders.add('name', function(this: LocatorBuilders, _e: HTMLElement) {
   return null
 })
 
-LocatorBuilders.add('css:finder', function(this: LocatorBuilders, e: HTMLElement) {
-  return 'css=' + finder(e)
-})
-
-LocatorBuilders.add('xpath:link', function(this: LocatorBuilders, e: HTMLElement) {
-  if (e.nodeName == 'A') {
-    let text = e.textContent || ''
-    if (!text.match(/^\s*$/)) {
-      return this.preciseXPath(
-        '//' +
-          this.xpathHtmlElement('a') +
-          "[contains(text(),'" +
-          text.replace(/^\s+/, '').replace(/\s+$/, '') +
-          "')]",
-        e
-      )
-    }
+LocatorBuilders.add(
+  'css:finder',
+  function (this: LocatorBuilders, e: HTMLElement) {
+    return 'css=' + finder(e)
   }
-  return null
-})
+)
 
-LocatorBuilders.add('xpath:img', function(this: LocatorBuilders, _e) {
+LocatorBuilders.add(
+  'xpath:link',
+  function (this: LocatorBuilders, e: HTMLElement) {
+    if (e.nodeName == 'A') {
+      let text = e.textContent || ''
+      if (!text.match(/^\s*$/)) {
+        return this.preciseXPath(
+          '//' +
+            this.xpathHtmlElement('a') +
+            "[contains(text(),'" +
+            text.replace(/^\s+/, '').replace(/\s+$/, '') +
+            "')]",
+          e
+        )
+      }
+    }
+    return null
+  }
+)
+
+LocatorBuilders.add('xpath:img', function (this: LocatorBuilders, _e) {
   const e = _e as HTMLImageElement
   if (e.nodeName == 'IMG') {
     if (e.alt != '') {
@@ -365,7 +381,7 @@ LocatorBuilders.add('xpath:img', function(this: LocatorBuilders, _e) {
   return null
 })
 
-LocatorBuilders.add('xpath:attributes', function(this: LocatorBuilders, e) {
+LocatorBuilders.add('xpath:attributes', function (this: LocatorBuilders, e) {
   const PREFERRED_ATTRIBUTES = [
     'id',
     'name',
@@ -376,7 +392,11 @@ LocatorBuilders.add('xpath:attributes', function(this: LocatorBuilders, e) {
   ]
   let i = 0
 
-  const attributesXPath = (name: string, attNames: string[], attributes: Record<string, string>) => {
+  const attributesXPath = (
+    name: string,
+    attNames: string[],
+    attributes: Record<string, string>
+  ) => {
     let locator = '//' + this.xpathHtmlElement(name) + '['
     for (i = 0; i < attNames.length; i++) {
       if (i > 0) {
@@ -402,11 +422,7 @@ LocatorBuilders.add('xpath:attributes', function(this: LocatorBuilders, e) {
       let name = PREFERRED_ATTRIBUTES[i]
       if (attsMap[name] != null) {
         names.push(name)
-        let locator = attributesXPath(
-          e.nodeName.toLowerCase(),
-          names,
-          attsMap
-        )
+        let locator = attributesXPath(e.nodeName.toLowerCase(), names, attsMap)
         if (e == this.findElement(locator)) {
           return locator
         }
@@ -416,7 +432,7 @@ LocatorBuilders.add('xpath:attributes', function(this: LocatorBuilders, e) {
   return null
 })
 
-LocatorBuilders.add('xpath:idRelative', function(this: LocatorBuilders, e) {
+LocatorBuilders.add('xpath:idRelative', function (this: LocatorBuilders, e) {
   let path = ''
   let current = e
   while (current != null) {
@@ -445,7 +461,7 @@ LocatorBuilders.add('xpath:idRelative', function(this: LocatorBuilders, e) {
   return null
 })
 
-LocatorBuilders.add('xpath:href', function(this: LocatorBuilders, e) {
+LocatorBuilders.add('xpath:href', function (this: LocatorBuilders, e) {
   if (e.attributes && e.hasAttribute('href')) {
     let href = e.getAttribute('href') as string
     if (href.search(/^http?:\/\//) >= 0) {
@@ -472,27 +488,31 @@ LocatorBuilders.add('xpath:href', function(this: LocatorBuilders, e) {
   return null
 })
 
-LocatorBuilders.add('xpath:position', function(this: LocatorBuilders, e, opt_contextNode) {
-  let path = ''
-  let current = e
-  while (current != null && current != opt_contextNode) {
-    let currentPath
-    if (current.parentNode != null) {
-      currentPath = this.relativeXPathFromParent(current)
-    } else {
-      currentPath = '/' + this.xpathHtmlElement(current.nodeName.toLowerCase())
+LocatorBuilders.add(
+  'xpath:position',
+  function (this: LocatorBuilders, e, opt_contextNode) {
+    let path = ''
+    let current = e
+    while (current != null && current != opt_contextNode) {
+      let currentPath
+      if (current.parentNode != null) {
+        currentPath = this.relativeXPathFromParent(current)
+      } else {
+        currentPath =
+          '/' + this.xpathHtmlElement(current.nodeName.toLowerCase())
+      }
+      path = currentPath + path
+      let locator = '/' + path
+      if (e == this.findElement(locator)) {
+        return 'xpath=' + locator
+      }
+      current = current.parentNode as HTMLElement
     }
-    path = currentPath + path
-    let locator = '/' + path
-    if (e == this.findElement(locator)) {
-      return 'xpath=' + locator
-    }
-    current = current.parentNode as HTMLElement
+    return null
   }
-  return null
-})
+)
 
-LocatorBuilders.add('xpath:innerText', function(this: LocatorBuilders, el) {
+LocatorBuilders.add('xpath:innerText', function (this: LocatorBuilders, el) {
   if (el.innerText) {
     return `xpath=//${el.nodeName.toLowerCase()}[contains(.,'${el.innerText}')]`
   } else {

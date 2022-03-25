@@ -558,7 +558,11 @@ handlers.push([
   'mouseout',
   function (this: Recorder, event) {
     if (mouseoutLocator !== null && event.target === mouseoutLocator) {
-      this.record('mouseOut', locatorBuilders.buildAll(event.target as HTMLElement), '')
+      this.record(
+        'mouseOut',
+        locatorBuilders.buildAll(event.target as HTMLElement),
+        ''
+      )
     }
     mouseoutLocator = undefined
   },
@@ -572,7 +576,7 @@ observers.push([
     mutations.forEach(async (mutation) => {
       const removedNodes = await mutation.removedNodes
       if (removedNodes.length && removedNodes[0].nodeName === 'IFRAME') {
-        window.sideAPI.recorder.onFrameDeleted.dispatchEvent();
+        window.sideAPI.recorder.onFrameDeleted.dispatchEvent()
       }
     })
   },
@@ -614,7 +618,11 @@ observers.push([
         nodeInsertedLocator = undefined
       }
       if (nodeInsertedLocator) {
-        this.record('mouseOver', nodeInsertedAttrChange as [string, string][], '')
+        this.record(
+          'mouseOver',
+          nodeInsertedAttrChange as [string, string][],
+          ''
+        )
         mouseoutLocator = nodeInsertedLocator
         nodeInsertedLocator = undefined
         nodeInsertedAttrChange = undefined

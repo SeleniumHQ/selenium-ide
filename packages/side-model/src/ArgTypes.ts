@@ -15,11 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export interface ArgType {
-  name: string
-  description: string
-}
-
 const argTypes = {
   alertText: {
     name: 'alert text',
@@ -164,8 +159,11 @@ const argTypes = {
   },
 } as const
 
-
-export type ArgTypes = typeof argTypes;
-export type ArgNames = ArgTypes[keyof ArgTypes]['name'];
+export type ArgTypes = typeof argTypes
+export type ArgNames = ArgTypes[keyof ArgTypes]['name']
+export interface ArgType {
+  name: ArgNames
+  description: string
+}
 
 export default argTypes

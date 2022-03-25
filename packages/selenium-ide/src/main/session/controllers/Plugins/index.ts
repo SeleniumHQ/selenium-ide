@@ -1,10 +1,14 @@
+import { PluginShape } from '@seleniumhq/side-runtime'
 import storage from 'main/store'
 import { Session } from 'main/types'
+import { join } from 'path'
 
 export default class PluginsController {
   constructor(session: Session) {
     this.session = session
+    this.plugins = []
   }
+  plugins: PluginShape[]
   session: Session
   async attach(filepath: string) {
     const plugins = storage.get<'plugins'>('plugins', [])
@@ -21,5 +25,19 @@ export default class PluginsController {
   }
   async list() {
     return storage.get<'plugins'>('plugins')
+  }
+  async onProjectLoaded() {
+    const project = await this.session.projects.getActive()
+    const baseProjectPath = this.session.projects.filepath as string
+    const projectPlugins = project.plugins.filter(
+      (pluginPath) => typeof pluginPath === 'string'
+    )
+    const systemPlugins = storage.get<'plugins'>('plugins', [])
+    return projectPlugins.concat(systemPlugins).map((pluginPath) => {
+      const correctedPluginPath = pluginPath.startsWith('.')
+        ? join(baseProjectPath, pluginPath)
+        : pluginPath
+      return __non_webpack_require__(correctedPluginPath)
+    })
   }
 }
